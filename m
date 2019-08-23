@@ -2,125 +2,129 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761CBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5859C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FFD21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A208721848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Z8fHU3xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392862AbfHWUxF (ORCPT
+        id S2392935AbfHWUzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 16:53:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56408 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732398AbfHWUxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:53:04 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1F18010F23E0;
-        Fri, 23 Aug 2019 20:53:04 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA1704A9;
-        Fri, 23 Aug 2019 20:52:58 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>, stable@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] drm/i915: Call dma_set_max_seg_size() in i915_driver_hw_probe()
-Date:   Fri, 23 Aug 2019 16:52:51 -0400
-Message-Id: <20190823205251.14298-1-lyude@redhat.com>
+        Fri, 23 Aug 2019 16:55:24 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39277 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392871AbfHWUzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 16:55:24 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so6398279pgi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 13:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=DOMSbUFejjbvhh3syNx2mPd1ccD1hkCqGREmnUI4Bh4=;
+        b=Z8fHU3xaHyWUdk8aM+/Zr1k32eHFHXEUQIEGhm0QTklwjF6o2yeRak8xLVTnReEHws
+         mnfMwuQHrRUYoES3KexwZ32OsGrcnrb1s9qJzgF9ziCfP9tYYhWZXUSlT/TmnyHCQoSD
+         EH2wLU7ldNI647pM/cNY8j+L2MWrI3yOfrObg6w/dFr02If3S0v5jO00vVaybZ04gUw6
+         SZaeYbscZ35Rk1qZJNQq70E3JvuhKldBFpRGdwFURY39FdTznEdVQq7XzppcqHi7VNkr
+         hf3Uysejz+aJrF8U3J3YFeAoa5fEXvw8IQqJjVHzxN+LCfK73FdybzahiiwbNaM6mbwE
+         JLmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=DOMSbUFejjbvhh3syNx2mPd1ccD1hkCqGREmnUI4Bh4=;
+        b=kOgIl8vYekaLw5kQC6JzE8nJ6YSLREpwBBz23a3UovH7ksaInvxn3scGm+y9gtsvrR
+         TpiguDgPM+4UEOPfDBypUv3Q3p34axl8MbDnlFUiPvMBpoic5ZV3uBv9mNEBao2YiYoq
+         /KJZt4eHJV/drk6OQUEwM9ofmGWnKJqMWHkyP69ziF6twQew6lM5DEmEa6rJJ3I+Tyh9
+         U+JR4v614U+IcKyc7Xb5okqWwc5waCRpFINJ2+WXYKwqRREof5Oas/tFg4VxsJww8SlH
+         rZWoRRtxcaK4ycpcBknXy6F0yJCh8BCLKm8q4a00mFSz9j8A1VaFBXUN8C41Uraa43M1
+         7AWw==
+X-Gm-Message-State: APjAAAUV0wUm98joHVwdKJE3Ruwu1VN4pf54XCYGterzu21gpdr+urRD
+        uqEHUwb1rD791lv8HbMctMSnNHpNEEU=
+X-Google-Smtp-Source: APXvYqwWqXwZanA/RIBsBivTmQ7OMMhM9wxbpGObupZqpUyHXrFJ3OB2nqQJqczKD3p98hiZv47Gzg==
+X-Received: by 2002:a17:90a:f995:: with SMTP id cq21mr5481913pjb.27.1566593723715;
+        Fri, 23 Aug 2019 13:55:23 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:89d4:68d1:fc04:721])
+        by smtp.gmail.com with ESMTPSA id w10sm3132874pjv.23.2019.08.23.13.55.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 23 Aug 2019 13:55:23 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>,
+        Oleg Ivanov <balbes-150@yandex.ru>
+Subject: Re: [PATCH 3/3] arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
+In-Reply-To: <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
+References: <1566565717-5182-1-git-send-email-christianshewitt@gmail.com> <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
+Date:   Fri, 23 Aug 2019 13:55:22 -0700
+Message-ID: <7hv9uny539.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Fri, 23 Aug 2019 20:53:04 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, we don't call dma_set_max_seg_size() for i915 because we
-intentionally do not limit the segment length that the device supports.
-However, this results in a warning being emitted if we try to map
-anything larger than SZ_64K on a kernel with CONFIG_DMA_API_DEBUG_SG
-enabled:
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-[    7.751926] DMA-API: i915 0000:00:02.0: mapping sg segment longer
-than device claims to support [len=98304] [max=65536]
-[    7.751934] WARNING: CPU: 5 PID: 474 at kernel/dma/debug.c:1220
-debug_dma_map_sg+0x20f/0x340
+> Tested-by: Oleg Ivanov <balbes-150@yandex.ru>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 
-This was originally brought up on
-https://bugs.freedesktop.org/show_bug.cgi?id=108517 , and the consensus
-there was it wasn't really useful to set a limit (and that dma-debug
-isn't really all that useful for i915 in the first place). Unfortunately
-though, CONFIG_DMA_API_DEBUG_SG is enabled in the debug configs for
-various distro kernels. Since a WARN_ON() will disable automatic problem
-reporting (and cause any CI with said option enabled to start
-complaining), we really should just fix the problem.
+nit: empty changelog.  I'd rather see the changelog from patch2 here.
 
-Note that as me and Chris Wilson discussed, the other solution for this
-would be to make DMA-API not make such assumptions when a driver hasn't
-explicitly set a maximum segment size. But, taking a look at the commit
-which originally introduced this behavior, commit 78c47830a5cb
-("dma-debug: check scatterlist segments"), there is an explicit mention
-of this assumption and how it applies to devices with no segment size:
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+>  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 567 +++++++++++++++++++++
+>  2 files changed, 568 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 07b861f..21e2810 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+> new file mode 100644
+> index 0000000..27d1d62
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+> @@ -0,0 +1,567 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
 
-	Conversely, devices which are less limited than the rather
-	conservative defaults, or indeed have no limitations at all
-	(e.g. GPUs with their own internal MMU), should be encouraged to
-	set appropriate dma_parms, as they may get more efficient DMA
-	mapping performance out of it.
+This is a bit confusing.
 
-So unless there's any concerns (I'm open to discussion!), let's just
-follow suite and call dma_set_max_seg_size() with UINT_MAX as our limit
-to silence any warnings.
+I'm assuming you kept Neil's authorship because you copied from another
+g12b board.  If so, it would be helpful in the changelog to describe the
+origins of this file.  I'm assuming it was copied from odroid-n2 and
+then tweaked.  That's fine, just note that as "originally based on
+meson-g12b-odroid-c2".
 
-Changes since v3:
-* Drop patch for enabling CONFIG_DMA_API_DEBUG_SG in CI. It looks like
-  just turning it on causes the kernel to spit out bogus WARN_ONs()
-  during some igt tests which would otherwise require teaching igt to
-  disable the various DMA-API debugging options causing this. This is
-  too much work to be worth it, since DMA-API debugging is useless for
-  us. So, we'll just settle with this single patch to squelch WARN_ONs()
-  during driver load for users that have CONFIG_DMA_API_DEBUG_SG turned
-  on for some reason.
-* Move dma_set_max_seg_size() call into i915_driver_hw_probe() - Chris
-  Wilson
+Other than that, thanks a lot for your work on adding these new boards!
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.18+
----
- drivers/gpu/drm/i915/i915_drv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Neil, I'm starting to see a lot of duplication in the g12b .dtb files.
+Should we start thinking about factoring out some of the common stuff
+that's standard across all these boards?
 
-diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index b5b2a64753e6..020696726f9e 100644
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -1279,6 +1279,12 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
- 
- 	pci_set_master(pdev);
- 
-+	/*
-+	 * We don't have a max segment size, so set it to the max so sg's
-+	 * debugging layer doesn't complain
-+	 */
-+	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
-+
- 	/* overlay on gen2 is broken and can't address above 1G */
- 	if (IS_GEN(dev_priv, 2)) {
- 		ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(30));
--- 
-2.21.0
-
+Kevin
