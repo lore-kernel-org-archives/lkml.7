@@ -2,119 +2,90 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DF8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51001C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F7E2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A4E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391801AbfHWMje (ORCPT
+        id S2394847AbfHWMmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:39:34 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:51619 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391161AbfHWMjd (ORCPT
+        Fri, 23 Aug 2019 08:42:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46026 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393272AbfHWMmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:39:33 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: RZNuFDnl1BBXOhwfHF/9hW+Lc4xuyvpZaKis9sXHXxKK7TVC50toYnMKpU9L/2ypdjbLtNZGhA
- gyUZ9oN7oqyib/Zf9AZ7Q+TALCOkqSrfFXiPkVGfIGfU1cQx+S1HxMBRZLk/x1NyWgxRlPr+18
- bAoiz5xf+d7MS0TeuWs3iIMAlh3Xczyq1JMUNbvI0fUTWp0kmD91I+2tQTBtC+3h6doQKWjLSA
- AQ+mWfj3StDmNH2mvy9qwgOrvEIdKn4GG2NKazN7+M9QixbWVZ/6IlWSDL86XRYN6fi2wdapjm
- Lfc=
-X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
-   d="scan'208";a="46368782"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Aug 2019 05:39:32 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 23 Aug 2019 05:39:31 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 23 Aug 2019 05:39:31 -0700
-Date:   Fri, 23 Aug 2019 14:39:30 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <davem@davemloft.net>, <UNGLinuxDriver@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <allan.nielsen@microchip.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH 1/3] net: Add HW_BRIDGE offload feature
-Message-ID: <20190823123929.ta4ikozz7jwkwbo2@soft-dev3.microsemi.net>
-References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
- <1566500850-6247-2-git-send-email-horatiu.vultur@microchip.com>
- <20190822200817.GD21295@lunn.ch>
+        Fri, 23 Aug 2019 08:42:08 -0400
+Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6DA8528C1A1;
+        Fri, 23 Aug 2019 13:42:05 +0100 (BST)
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/1] counter: cros_ec: Add sync sensor driver
+Date:   Fri, 23 Aug 2019 14:41:26 +0200
+Message-Id: <cover.1566563833.git.fabien.lahoudere@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190822200817.GD21295@lunn.ch>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 08/22/2019 22:08, Andrew Lunn wrote:
-> External E-Mail
-> 
-> 
-> > +/* Determin if the SW bridge can be offloaded to HW. Return true if all
-> > + * the interfaces of the bridge have the feature NETIF_F_HW_SWITCHDEV set
-> > + * and have the same netdev_ops.
-> > + */
-> 
-> Hi Horatiu
-> 
-> Why do you need these restrictions. The HW bridge should be able to
-> learn that a destination MAC address can be reached via the SW
-> bridge. The software bridge can then forward it out the correct
-> interface.
-> 
-> Or are you saying your hardware cannot learn from frames which come
-> from the CPU?
-> 
-> 	Andrew
-> 
-Hi Andrew,
+Some chromebook EC provides a counter to get all vsync coming from the back
+camera.
+This series introduces a patch coming from chromebook kernel 4.4 designed as an
+IIO counter. As IIO counter will be deprecated in favor of counter, I rebase the
+original patch and support the new counter API.
 
-I do not believe that our HW can learn from frames which comes from the
-CPU, at least not in the way they are injected today. But in case of Ocelot
-(and the next chip we are working on), we have other issues in mixing with
-foreign interfaces which is why we have the check in
-ocelot_netdevice_dev_check.
+The serie need to be merged after https://lkml.org/lkml/2019/7/9/305
 
-More important, as we responded to Nikolay, we properly introduced this
-restriction for the wrong reasons.
+Changes since v1:
+- Drop code related to IIO_COUNT
+- Add external attribute to the counter driver
+- Add cros_ec_sensors_sync.c to MAINTAINERS file
 
-In SW bridge I will remove all these restrictions and only set ports in
-promisc mode only if NETIF_F_HW_BRIDGE is not set.
-Then in the network driver I can see if a foreign interface is added to
-the bridge, and when that happens I can set the port in promisc mode.
-Then the frames will be flooded to the SW bridge which eventually will
-send to the foreign interface.
+Gwendal Grignou (1):
+  counter: cros_ec: Add synchronization sensor
+
+ Documentation/driver-api/generic-counter.rst  |   3 +
+ MAINTAINERS                                   |   7 +
+ drivers/counter/Kconfig                       |   9 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/counter.c                     |   2 +
+ drivers/counter/cros_ec_sensors_sync.c        | 208 ++++++++++++++++++
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |   1 +
+ drivers/mfd/cros_ec_dev.c                     |   3 +
+ include/linux/counter.h                       |   1 +
+ 9 files changed, 235 insertions(+)
+ create mode 100644 drivers/counter/cros_ec_sensors_sync.c
+
 -- 
-/Horatiu
+2.20.1
+
