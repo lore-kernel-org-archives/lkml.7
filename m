@@ -7,64 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59519C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFCBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3031B21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1199221726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsLTQ6Oc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G1xW6LLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392123AbfHWKHR (ORCPT
+        id S2392175AbfHWKHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:07:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54331 "EHLO
+        Fri, 23 Aug 2019 06:07:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53353 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391998AbfHWKHD (ORCPT
+        with ESMTP id S2391917AbfHWKG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:07:03 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so8365892wme.4
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:07:02 -0700 (PDT)
+        Fri, 23 Aug 2019 06:06:59 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 10so8363000wmp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=txsHPtmH/4H2/WnX6EiFrXzeHkL+qrKcHt+2DoU5kzQ=;
-        b=zsLTQ6OcR9Dk0Qa39F2DDnmWFcluUGtQg+KpRb+bwLN1VIK3mhupCJbjkodp3dI4Fe
-         iqWh9+beI2fEZPtXQqBILn5x5It/sxsv7zun4Zt7NVFJsPhAfH/gGhkWLaF7nzV25Hc0
-         Y6hQwhCfGnfnrHTNZljsbuzWLq9L02poSqq/DJOxzCk4+RvvBqiV2Z/5YZzof/Ut4PgM
-         rSlB1fo+5JK7gqGVKFIa3UWXy2A+xNE3hLhLeLjzdhmTLmP4MXsdi7osPx/D/EFFnDwM
-         ztznERXTlzizlp25hDlJ4CRX4E7X4+QrQsYOYPrtn6xK68tfMik0P0I788C2hxA69/YK
-         MX0g==
+        bh=eaF1NgI3/tCvQBGNuV2Ozkr5swOUz9Q1YNoph3dPfCA=;
+        b=G1xW6LLifBzrZM98pMoqJppw5kCp9ljlnOSzFRZtPclDF6fw8Cd2RUQbL0e+HEm3Vh
+         XX47d4h6nOFaDu8xJVs81qT+pZ+mIy7lRkoybJ7YhLjSgksA+EHlJsTjucE5uYSVAZvo
+         +maJ1dWGYioVbSCriunnxWS+VkjLwTXWXByvsLbX0bDs9OJaHQFzEhMuBh8ecp61O0fp
+         jZVCvAk73YWOGRf70F/tbiI2HeEnsfYcO/0xZjti62IB6C9kIYLIC/r+QNPhKKbJ21zv
+         TM0sAUn4q+jETQpBFdyuPj7eFjqls67JbdbpT3rW6taBVOyeCNlkgILM5x1fMUnJlyaO
+         dEBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=txsHPtmH/4H2/WnX6EiFrXzeHkL+qrKcHt+2DoU5kzQ=;
-        b=eZxAw5J23RpPuP8joEyXEyTHYs9orshBXU7YAm5Va+3HWlNJvlziw9kvBAbexFuhRe
-         bao2UuTwcX8l8/glbiMKQQHBe+1WxADSGgv+KS4hRPTKipaZwJuChLWWxl9j++3nbK7N
-         dHjfAWuTrK3UxdH+QxriGSR5ns0MbNQYjU+uAA/LofGX3g7pnxENoTPEwt1kkrUhZiJY
-         n3wf+BW3hwvNpAwh8YTOStW+6yCtMALg8/zfYzmhnqMDRbd5y3Sv4/m6kFCkVmsbQrRF
-         BApniqLk7lIRAbAoV4E/czJw6QhAwhEiVjVkiXG/8B0XRVZZvnWia7M4nLMPM8if5Svs
-         wlOw==
-X-Gm-Message-State: APjAAAWgJAsrH2OvIijSaGaYoeVJp/ZXGAGpgz2hsK9wcFrSylM3xo0/
-        lPSDpDfpL9hhrY1+poNANCzI/DNKwBg=
-X-Google-Smtp-Source: APXvYqwl1Fa7hd6dx3UhLaTaNR2R/23JKahB21Ecq5hVeBT4VSAziAuQCdksN46+5xAra8IOI9h+wA==
-X-Received: by 2002:a1c:a80a:: with SMTP id r10mr4148894wme.103.1566554821626;
-        Fri, 23 Aug 2019 03:07:01 -0700 (PDT)
+        bh=eaF1NgI3/tCvQBGNuV2Ozkr5swOUz9Q1YNoph3dPfCA=;
+        b=A5rkSuV61Epzf9c7YQ+W7zkk6gFFLqXxKvDGemSXKkrL+lM2GXhnmsgMlPBsqenf6c
+         eeoO5VZKp4RgPqwNas67Qaljeim4/HcFEGydZ5qezD8BuGZxhpznjkM1In6lsQPojJrE
+         cvu+F5S3pfHJ4+58+J4OQqDuYgnroaN2aoTywJBbZ846M084E28/3OZOSTinXEOfs3jX
+         43lKAib6Bct32so4L92GFJg1nEsriHSbRiIxhFj+8k6qVE5EFDMRLhMPgYzKtyYcT6Ex
+         riHPi6FHHbWQ/6Cpg+HaaIlmx2qeHhlcqVKgSQ/8vlI0CVEwgMWJs8LJ4Un0Z/KVJwyv
+         UXqQ==
+X-Gm-Message-State: APjAAAVDgN3/Cr0ADy1XCdcedZglBeEzqlpdbetX7SaNyc8J4obx4fJS
+        2+pFWTg82MnilGAxs9Lb6Pvd6A==
+X-Google-Smtp-Source: APXvYqxr6Ve5WHV7MVzIMJCJhqJK17mYKT2gjF4J7C7qQDdftl2ahoRPHgxRAJkI418O2EeBBSReLQ==
+X-Received: by 2002:a1c:2015:: with SMTP id g21mr4100755wmg.33.1566554817994;
+        Fri, 23 Aug 2019 03:06:57 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q124sm2058048wma.33.2019.08.23.03.07.00
+        by smtp.gmail.com with ESMTPSA id q124sm2058048wma.33.2019.08.23.03.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 03:07:00 -0700 (PDT)
+        Fri, 23 Aug 2019 03:06:57 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     arnd@arndb.de, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mayank Chopra <mak.chopra@codeaurora.org>
-Subject: [PATCH 5/5] misc: fastrpc: free dma buf scatter list
-Date:   Fri, 23 Aug 2019 11:06:22 +0100
-Message-Id: <20190823100622.3892-6-srinivas.kandagatla@linaro.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mayank Chopra <mak.chopra@codeaurora.org>,
+        Abhinav Asati <asatiabhi@codeaurora.org>,
+        Vamsi Singamsetty <vamssi@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 2/5] misc: fastrpc: Don't reference rpmsg_device after remove
+Date:   Fri, 23 Aug 2019 11:06:19 +0100
+Message-Id: <20190823100622.3892-3-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
 References: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
@@ -75,41 +78,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma buf scatter list is never freed, free it!
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Orignally detected by kmemleak:
-  backtrace:
-    [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
-    [<ffffff8008373284>] sg_kmalloc+0x38/0x60
-    [<ffffff8008373144>] __sg_alloc_table+0x60/0x110
-    [<ffffff800837321c>] sg_alloc_table+0x28/0x58
-    [<ffffff800837336c>] __sg_alloc_table_from_pages+0xc0/0x1ac
-    [<ffffff800837346c>] sg_alloc_table_from_pages+0x14/0x1c
-    [<ffffff8008097a3c>] __iommu_get_sgtable+0x5c/0x8c
-    [<ffffff800850a1d0>] fastrpc_dma_buf_attach+0x84/0xf8
-    [<ffffff80085114bc>] dma_buf_attach+0x70/0xc8
-    [<ffffff8008509efc>] fastrpc_map_create+0xf8/0x1e8
-    [<ffffff80085086f4>] fastrpc_device_ioctl+0x508/0x900
-    [<ffffff80082428c8>] compat_SyS_ioctl+0x128/0x200
-    [<ffffff80080832c4>] el0_svc_naked+0x34/0x38
-    [<ffffffffffffffff>] 0xffffffffffffffff
+As fastrpc_rpmsg_remove() returns the rpdev of the channel context is no
+longer a valid object, so ensure to update the channel context to no
+longer reference the old object and guard in the invoke code path
+against dereferencing it.
 
-Reported-by: Mayank Chopra <mak.chopra@codeaurora.org>
+TEST=stop and start remote proc1 using sysfs
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Mayank Chopra <mak.chopra@codeaurora.org>
+Signed-off-by: Abhinav Asati <asatiabhi@codeaurora.org>
+Signed-off-by: Vamsi Singamsetty <vamssi@codeaurora.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/misc/fastrpc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/fastrpc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index eee2bb398947..47ae84afac2e 100644
+index c019e867e7fa..59ee6de26229 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -550,6 +550,7 @@ static void fastrpc_dma_buf_detatch(struct dma_buf *dmabuf,
- 	mutex_lock(&buffer->lock);
- 	list_del(&a->node);
- 	mutex_unlock(&buffer->lock);
-+	sg_free_table(&a->sgt);
- 	kfree(a);
+@@ -913,6 +913,9 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+ 	if (!fl->sctx)
+ 		return -EINVAL;
+ 
++	if (!fl->cctx->rpdev)
++		return -EPIPE;
++
+ 	ctx = fastrpc_context_alloc(fl, kernel, sc, args);
+ 	if (IS_ERR(ctx))
+ 		return PTR_ERR(ctx);
+@@ -1495,6 +1498,7 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+ 	misc_deregister(&cctx->miscdev);
+ 	of_platform_depopulate(&rpdev->dev);
+ 
++	cctx->rpdev = NULL;
+ 	fastrpc_channel_ctx_put(cctx);
  }
  
 -- 
