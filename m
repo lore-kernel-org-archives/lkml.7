@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD77C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABCDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296A821897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6617321743
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733303AbfHWBH7 (ORCPT
+        id S2387500AbfHWBII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 21:07:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:38011 "EHLO mga01.intel.com"
+        Thu, 22 Aug 2019 21:08:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37991 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732739AbfHWBHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 21:07:14 -0400
+        id S1732535AbfHWBHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 21:07:12 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 18:07:12 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 18:07:11 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,419,1559545200"; 
-   d="scan'208";a="186733504"
+   d="scan'208";a="186733492"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2019 18:07:11 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 07/13] KVM: x86: Add explicit flag for forced emulation on #UD
-Date:   Thu, 22 Aug 2019 18:07:03 -0700
-Message-Id: <20190823010709.24879-8-sean.j.christopherson@intel.com>
+Subject: [RESEND PATCH 03/13] KVM: x86: Refactor kvm_vcpu_do_singlestep() to remove out param
+Date:   Thu, 22 Aug 2019 18:06:59 -0700
+Message-Id: <20190823010709.24879-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190823010709.24879-1-sean.j.christopherson@intel.com>
 References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
@@ -50,51 +50,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an explicit emulation type for forced #UD emulation and use it to
-detect that KVM should unconditionally inject a #UD instead of falling
-into its standard emulation failure handling.
+Return the single-step emulation result directly instead of via an out
+param.  Presumably at some point in the past kvm_vcpu_do_singlestep()
+could be called with *r==EMULATE_USER_EXIT, but that is no longer the
+case, i.e. all callers are happy to overwrite their own return variable.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/x86.c              | 5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d1d5b5ca1195..a38c93362945 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1318,6 +1318,7 @@ enum emulation_result {
- #define EMULTYPE_TRAP_UD	    (1 << 1)
- #define EMULTYPE_SKIP		    (1 << 2)
- #define EMULTYPE_ALLOW_RETRY	    (1 << 3)
-+#define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
- #define EMULTYPE_VMWARE_GP	    (1 << 5)
- int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
- int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 228ca71d5b01..a1f9e36b2d58 100644
+index c6de5bc4fa5e..fe847f8eb947 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -5337,7 +5337,7 @@ int handle_ud(struct kvm_vcpu *vcpu)
- 				sig, sizeof(sig), &e) == 0 &&
- 	    memcmp(sig, "\xf\xbkvm", sizeof(sig)) == 0) {
- 		kvm_rip_write(vcpu, kvm_rip_read(vcpu) + sizeof(sig));
--		emul_type = 0;
-+		emul_type = EMULTYPE_TRAP_UD_FORCED;
- 	}
+@@ -6377,7 +6377,7 @@ static int kvm_vcpu_check_hw_bp(unsigned long addr, u32 type, u32 dr7,
+ 	return dr6;
+ }
  
- 	er = kvm_emulate_instruction(vcpu, emul_type);
-@@ -6532,7 +6532,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
- 		trace_kvm_emulate_insn_start(vcpu);
- 		++vcpu->stat.insn_emulation;
- 		if (r != EMULATION_OK)  {
--			if (emulation_type & EMULTYPE_TRAP_UD)
-+			if ((emulation_type & EMULTYPE_TRAP_UD) ||
-+			    (emulation_type & EMULTYPE_TRAP_UD_FORCED))
- 				return EMULATE_FAIL;
- 			if (reexecute_instruction(vcpu, cr2, write_fault_to_spt,
- 						emulation_type))
+-static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
++static int kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_run *kvm_run = vcpu->run;
+ 
+@@ -6386,10 +6386,10 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+ 		kvm_run->debug.arch.pc = vcpu->arch.singlestep_rip;
+ 		kvm_run->debug.arch.exception = DB_VECTOR;
+ 		kvm_run->exit_reason = KVM_EXIT_DEBUG;
+-		*r = EMULATE_USER_EXIT;
+-	} else {
+-		kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
++		return EMULATE_USER_EXIT;
+ 	}
++	kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
++	return EMULATE_DONE;
+ }
+ 
+ int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+@@ -6410,7 +6410,7 @@ int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ 	 * that sets the TF flag".
+ 	 */
+ 	if (unlikely(rflags & X86_EFLAGS_TF))
+-		kvm_vcpu_do_singlestep(vcpu, &r);
++		r = kvm_vcpu_do_singlestep(vcpu);
+ 	return r == EMULATE_DONE;
+ }
+ EXPORT_SYMBOL_GPL(kvm_skip_emulated_instruction);
+@@ -6613,7 +6613,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+ 		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+ 		kvm_rip_write(vcpu, ctxt->eip);
+ 		if (r == EMULATE_DONE && ctxt->tf)
+-			kvm_vcpu_do_singlestep(vcpu, &r);
++			r = kvm_vcpu_do_singlestep(vcpu);
+ 		if (!ctxt->have_exception ||
+ 		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
+ 			__kvm_set_rflags(vcpu, ctxt->eflags);
 -- 
 2.22.0
 
