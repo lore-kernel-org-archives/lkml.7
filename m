@@ -2,198 +2,162 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AC1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD34AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4414B23402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B1C23402
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389221AbfHWCL3 (ORCPT
+        id S2389290AbfHWCMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:11:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47022 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389163AbfHWCL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:11:28 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B48DB550CF
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:11:27 +0000 (UTC)
-Received: by mail-io1-f72.google.com with SMTP id f5so4122044ioo.11
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 19:11:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t+ZBnkkc6flUSqLwDF2ju3CQEpll/ZB3gVcng2w0c/E=;
-        b=Fip5K0PpE11F1GO5jMj+Bg7e9sh+BaREhBcTiUsptBPQtjnjxk4gACQu4kF2u3wuQa
-         mu4xqIBrMJjxv7108182075MQP1dDYjNF4XRgGApOcaGlKwz4lwbxmN68SidCEuLFMi+
-         JZ20kIh3uNdtWyA68xnuVWWzoQ4aNflf2xuEqcgHlzV/mq/png1cabqCAPvVbdhgS0NQ
-         VwcVi4qAl+bTQcgRMjwsIxoLvjwL8ajAlA33KApFiKEw5Ze3b0zwPQ6Sz+jlF8AgWOMc
-         vAALuiWBdti4sAVMUdzvF13SUV6niS3ka4qXJJZmEx2QTV+gQXNc+wGfpOSOU4ObWSxl
-         Pdrw==
-X-Gm-Message-State: APjAAAXYeqycvX/5KZH+S54MtzzMk6017FFyedCyGUjjImuvntDE4FXa
-        zJ6Lme8y5oSoWybcUcCjsbCkdhBQUmJ7QA7tiRJyN7yb/wok6JUvY3CyaOMj9/O7eQXY1mNsunV
-        pA+haTSBChsQyTM6a0iRstXgkIXfGju5Vlnla98G5
-X-Received: by 2002:a5d:9dd8:: with SMTP id 24mr2841427ioo.249.1566526287069;
-        Thu, 22 Aug 2019 19:11:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw6TD5jcMGMYhszqvCI11Yg+cgMO/QSdoVkVkKc1A45jKCCcxKMZSfaQ2fkmmZORaURFGVhJlKD4PP/o2Q6l9I=
-X-Received: by 2002:a5d:9dd8:: with SMTP id 24mr2841416ioo.249.1566526286821;
- Thu, 22 Aug 2019 19:11:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822025328.17151-1-kasong@redhat.com> <ff049b95-92a3-52ab-7ee8-01051a597cff@amd.com>
-In-Reply-To: <ff049b95-92a3-52ab-7ee8-01051a597cff@amd.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 23 Aug 2019 10:11:15 +0800
-Message-ID: <CACPcB9daWhyvqB_QEvnLuvp5BiZ4cSOoj6KaP8mcSUEiQGFC_w@mail.gmail.com>
-Subject: Re: [PATCH] x86/kdump: Reserve extra memory when SME or SEV is active
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thu, 22 Aug 2019 22:12:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56346 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730401AbfHWCMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:12:08 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7N29Pp7027687;
+        Thu, 22 Aug 2019 22:11:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uj3jqxdp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 22:11:53 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7N2Bdd1032424;
+        Thu, 22 Aug 2019 22:11:52 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uj3jqxdnr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 22:11:52 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7N24beW014765;
+        Fri, 23 Aug 2019 02:11:51 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02dal.us.ibm.com with ESMTP id 2ue976uuxr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Aug 2019 02:11:51 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7N2BpKl33554896
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 02:11:51 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16D60B205F;
+        Fri, 23 Aug 2019 02:11:51 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4FAFB2064;
+        Fri, 23 Aug 2019 02:11:50 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.207.73])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 23 Aug 2019 02:11:50 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A48D616C1D4F; Thu, 22 Aug 2019 19:11:50 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 19:11:50 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Scott Wood <swood@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190823021150.GM28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-2-swood@redhat.com>
+ <20190821233358.GU28441@linux.ibm.com>
+ <20190822133955.GA29841@google.com>
+ <20190822152706.GB28441@linux.ibm.com>
+ <20190823015009.GA152050@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823015009.GA152050@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908230021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:35 PM Lendacky, Thomas
-<Thomas.Lendacky@amd.com> wrote:
->
-> On 8/21/19 9:53 PM, Kairui Song wrote:
-> > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
-> > SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> > is active, to support DMA of devices that not support address with the
-> > encrypt bit.
-> >
-> > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> >
-> > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> > encryption") will always force SWIOTLB to be enabled when SEV is active
-> > in all cases.
-> >
-> > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> > and this is also true for kdump kernel. As a result kdump kernel will
-> > run out of already scarce pre-reserved memory easily.
-> >
-> > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> > is specified or any offset is used. As for the high reservation case, an
-> > extra low memory region will always be reserved and that is enough for
-> > SWIOTLB. Else if the offset format is used, user should be fully aware
-> > of any possible kdump kernel memory requirement and have to organize the
-> > memory usage carefully.
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >  arch/x86/kernel/setup.c | 26 +++++++++++++++++++++++---
-> >  1 file changed, 23 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index bbe35bf879f5..ed91fa9d9f6e 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -528,7 +528,7 @@ static int __init reserve_crashkernel_low(void)
-> >
-> >  static void __init reserve_crashkernel(void)
-> >  {
-> > -     unsigned long long crash_size, crash_base, total_mem;
-> > +     unsigned long long crash_size, crash_base, total_mem, mem_enc_req;
-> >       bool high = false;
-> >       int ret;
-> >
-> > @@ -550,6 +550,17 @@ static void __init reserve_crashkernel(void)
-> >               return;
-> >       }
-> >
-> > +     /*
-> > +      * When SME/SEV is active, it will always required an extra SWIOTLB
-> > +      * region.
-> > +      */
-> > +     if (sme_active() || sev_active()) {
->
-> You can use mem_encrypt_active() here in place of the two checks.
+On Thu, Aug 22, 2019 at 09:50:09PM -0400, Joel Fernandes wrote:
+> On Thu, Aug 22, 2019 at 08:27:06AM -0700, Paul E. McKenney wrote:
+> > On Thu, Aug 22, 2019 at 09:39:55AM -0400, Joel Fernandes wrote:
+> > > On Wed, Aug 21, 2019 at 04:33:58PM -0700, Paul E. McKenney wrote:
+> > > > On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
+> > > > > A plain local_bh_disable() is documented as creating an RCU critical
+> > > > > section, and (at least) rcutorture expects this to be the case.  However,
+> > > > > in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
+> > > > > preempt_count() directly.  Even if RCU were changed to check
+> > > > > in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
+> > > > > 
+> > > > > Fix this by calling rcu_read_lock() from local_bh_disable(), and update
+> > > > > rcu_read_lock_bh_held() accordingly.
+> > > > 
+> > > > Cool!  Some questions and comments below.
+> > > > 
+> > > > 							Thanx, Paul
+> > > > 
+> > > > > Signed-off-by: Scott Wood <swood@redhat.com>
+> > > > > ---
+> > > > > Another question is whether non-raw spinlocks are intended to create an
+> > > > > RCU read-side critical section due to implicit preempt disable.
+> > > > 
+> > > > Hmmm...  Did non-raw spinlocks act like rcu_read_lock_sched()
+> > > > and rcu_read_unlock_sched() pairs in -rt prior to the RCU flavor
+> > > > consolidation?  If not, I don't see why they should do so after that
+> > > > consolidation in -rt.
+> > > 
+> > > May be I am missing something, but I didn't see the connection between
+> > > consolidation and this patch. AFAICS, this patch is so that
+> > > rcu_read_lock_bh_held() works at all on -rt. Did I badly miss something?
+> > 
+> > I was interpreting Scott's question (which would be excluded from the
+> > git commit log) as relating to a possible follow-on patch.
+> > 
+> > The question is "how special can non-raw spinlocks be in -rt?".  From what
+> > I can see, they have been treated as sleeplocks from an RCU viewpoint,
+> > so maybe that should continue to be the case.  It does deserve some
+> > thought because in mainline a non-raw spinlock really would block a
+> > post-consolidation RCU grace period, even in PREEMPT kernels.
+> > 
+> > But then again, you cannot preempt a non-raw spinlock in mainline but
+> > you can in -rt, so extending that exception to RCU is not unreasonable.
+> > 
+> > Either way, we do need to make a definite decision and document it.
+> > If I were forced to make a decision right now, I would follow the old
+> > behavior, so that only raw spinlocks were guaranteed to block RCU grace
+> > periods.  But I am not being forced, so let's actually discuss and make
+> > a conscious decision.  ;-)
+> 
+> I think non-raw spinlocks on -rt should at least do rcu_read_lock() so that
+> any driver or kernel code that depends on this behavior and works on non-rt
+> also works on -rt. It also removes the chance a kernel developer may miss
+> documentation and accidentally forget that their code may break on -rt. I am
+> curious to see how much this design pattern appears in the kernel
+> (spin_lock'ed section "intended" as an RCU-reader by code sequences).
+> 
+> Logically speaking, to me anything that disables preemption on non-RT should
+> do rcu_read_lock() on -rt so that from RCU's perspective, things are working.
+> But I wonder where we would draw the line and if the bar is to need actual
+> examples of usage patterns to make a decision..
+> 
+> Any thoughts?
 
-That's a very good suggestion.
+Yes.  Let's listen to what the -rt guys have to say.  After all, they
+are the ones who would be dealing with any differences in semantics.
 
->
-> > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> > +             pr_info("Memory encryption is active, crashkernel needs %ldMB extra memory\n",
-> > +                             (unsigned long)(mem_enc_req >> 20));
->
-> There is a point below where you zero out this value, so should this
-> be issued later only if mem_enc_req is non-zero?
-
-Yes that's true, but currently if zero out this value when ",high" is
-used, then an extra low memory region will be reserved, so this
-message will not be very confusing I think? as the required extra
-memory is now in the low memory region. And for the "@offset" case
-this could be a hint for users. And if the reserve failed due to
-enlarged crashkernel size, the user may also be better aware of what
-is causing the failure by this message.
-
->
-> Also, looks like one too many tabs.
->
-> > +     } else
->
-> Since you used braces on the if path, you need braces on the else path.
-
-OK, will fix the code style issues.
-
->
-> Thanks,
-> Tom
->
-> > +             mem_enc_req = 0;
-> > +
-> >       /* 0 means: find the address automatically */
-> >       if (!crash_base) {
-> >               /*
-> > @@ -563,11 +574,19 @@ static void __init reserve_crashkernel(void)
-> >               if (!high)
-> >                       crash_base = memblock_find_in_range(CRASH_ALIGN,
-> >                                               CRASH_ADDR_LOW_MAX,
-> > -                                             crash_size, CRASH_ALIGN);
-> > -             if (!crash_base)
-> > +                                             crash_size + mem_enc_req,
-> > +                                             CRASH_ALIGN);
-> > +             /*
-> > +              * For high reservation, an extra low memory for SWIOTLB will
-> > +              * always be reserved later, so no need to reserve extra
-> > +              * memory for memory encryption case here.
-> > +              */
-> > +             if (!crash_base) {
-> > +                     mem_enc_req = 0;
-> >                       crash_base = memblock_find_in_range(CRASH_ALIGN,
-> >                                               CRASH_ADDR_HIGH_MAX,
-> >                                               crash_size, CRASH_ALIGN);
-> > +             }
-> >               if (!crash_base) {
-> >                       pr_info("crashkernel reservation failed - No suitable area found.\n");
-> >                       return;
-> > @@ -583,6 +602,7 @@ static void __init reserve_crashkernel(void)
-> >                       return;
-> >               }
-> >       }
-> > +     crash_size += mem_enc_req;
-> >       ret = memblock_reserve(crash_base, crash_size);
-> >       if (ret) {
-> >               pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
-> >
-
-
-
--- 
-Best Regards,
-Kairui Song
+							Thanx, Paul
