@@ -2,117 +2,139 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80280C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF78C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5139221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CD32070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmVf6U+Y"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P9VVZsT/";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fjrbc7sU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404431AbfHWGaS (ORCPT
+        id S2404490AbfHWGdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 02:30:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38389 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404394AbfHWGaR (ORCPT
+        Fri, 23 Aug 2019 02:33:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38402 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404394AbfHWGdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 02:30:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w11so4523510plp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 23:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PHgzB7LXrFsDHZMpQ3e7AmMOPq1F2h1b1Flup3dGb5k=;
-        b=nmVf6U+Yw+OIUaxMQF9WI05AI4EhxwHVlvr9jNM9Mzf4LtCySIgvRnABT0drXl/Kis
-         l/wu4O3seA8e2RjFyD55Ap6vvdgyjod1M+SkK9OdEvqHDNEUptuvtJf6uFhvOefo55+R
-         Km9j2WA4OKdaIs5EYafyWLbr5V6BWczzcQDPT3XRVLeyNV1f89PkF0RKG/DSb0iuVvuo
-         iOl2JqlK6yCs+pJHPX7yxVhztxpoWikKPOygzOJCL9uy3aex32hj/v1wKebi/+GIFQzc
-         XV1SghbYCKRCBiN+//pCHXI/EJkBbY+8kI2U1fufbtIr5VM0cksWsDaa9tzzrKYMzmO0
-         qIIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PHgzB7LXrFsDHZMpQ3e7AmMOPq1F2h1b1Flup3dGb5k=;
-        b=iPtC0JnSTXkuh1zf9LUbgJrr+BqxkiqYzQue5iCyzh7hwOeWxVsCEnAXJHhDdbhlHU
-         TKbTRbjPWefYG5qHfkC/+AGnZHIWZgBv6bBa4T1NiqH7p6spI9g+PyzYTMB3ACiBsTIb
-         ehdLfU2u0uCxoJUL6ucFfYsIZ4PE+3+DMJWjjHRuuPLyrIE5Y51r28BM4pajsK//zN3P
-         b7Ua8zD0FAm+Pmuoo+46/oNqv1/nvEYRuXNiYlXxc8b/z2dofgd85xN/Q+IjqX1N30KB
-         kb3Avo3GKbqOl9ukNQX50J7x+TMo+m1yNlPyb74konJSPPBeZzCD4ueaJjKnrTTT5OPg
-         8PGg==
-X-Gm-Message-State: APjAAAXWjHC2l5/JzwxirKdH2MyYwFGj3BYxFF3KUK5I65+1b21zeXTD
-        +72tK8a6PbwbXFOnYRsYS6U=
-X-Google-Smtp-Source: APXvYqzjM1750tRhH/gnLvOqHn8wNbky+a9NAExFz6f74r1T0MfI+OlLiPsk82HDNkLmauL6eirrdg==
-X-Received: by 2002:a17:902:2f43:: with SMTP id s61mr2885601plb.22.1566541816984;
-        Thu, 22 Aug 2019 23:30:16 -0700 (PDT)
-Received: from FINLAND.cbr.squiz.net.au (220-245-33-70.static.tpgi.com.au. [220.245.33.70])
-        by smtp.gmail.com with ESMTPSA id o1sm1195408pjp.0.2019.08.22.23.30.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 23:30:16 -0700 (PDT)
-From:   Adam Zerella <adam.zerella@gmail.com>
-Cc:     Adam Zerella <adam.zerella@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pcmcia/i82092: Refactored dprintk macro for pr_debug().
-Date:   Fri, 23 Aug 2019 16:29:49 +1000
-Message-Id: <20190823062951.1168-1-adam.zerella@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 23 Aug 2019 02:33:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 244F0608FF; Fri, 23 Aug 2019 06:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566541980;
+        bh=yvPPEbiA0dO2JM5eqiWWwHAyED2F4hy53lfw9rvMlI8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P9VVZsT/URkSpKPusCTly8oVRG3d9TG/6fumN6hrX9jNOxVYfbXZjDFtZsRYzTtgv
+         emP0M6HPxUVWiFPvJ8Z27rFHBTaHti55xw4kIIswrAIgzY0UudrTgcPm3NrAEIJyXy
+         x/87EUVGojb3DyUf58hTyTxume35xUMyy9N164EA=
+Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC270608FF;
+        Fri, 23 Aug 2019 06:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566541978;
+        bh=yvPPEbiA0dO2JM5eqiWWwHAyED2F4hy53lfw9rvMlI8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fjrbc7sUIUIuysAgmzvyibBauRWbxHgy3Y/FY6IJukmgCcdPm+y2P+TdgqtoFX6o7
+         ueezJLwhR2iXnlApYYEKrMr+GZFL4nUj0yTtszWLoWRyvpRDudcsyiWq/VpyAyueyG
+         UMWB8zaUuOJVzADTSJfNKeEBsCXN+anEONPjWPuU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC270608FF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+To:     joro@8bytes.org, agross@kernel.org, will.deacon@arm.com,
+        robin.murphy@arm.com, iommu@lists.linux-foundation.org
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v4 0/3] Qcom smmu-500 wait-for-safe handling for sdm845
+Date:   Fri, 23 Aug 2019 12:02:45 +0530
+Message-Id: <20190823063248.13295-1-vivek.gautam@codeaurora.org>
+X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As pointed out in https://kernelnewbies.org/KernelJanitors/Todo
-this patch replaces the outdated macro of DPRINTK for pr_debug()
+Previous version of the patches are at [1]:
 
-To: Dominik Brodowski <linux@dominikbrodowski.net>
-To: Thomas Gleixner <tglx@linutronix.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Adam Zerella <adam.zerella@gmail.com>
-To: linux-kernel@vger.kernel.org
-Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
----
- drivers/pcmcia/i82092.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Qcom's implementation of smmu-500 on sdm845 adds a hardware logic called
+wait-for-safe. This logic helps in meeting the invalidation requirements
+from 'real-time clients', such as display and camera. This wait-for-safe
+logic ensures that the invalidations happen after getting an ack from these
+devices.
+In this patch-series we are disabling this wait-for-safe logic from the
+arm-smmu driver's probe as with this enabled the hardware tries to
+throttle invalidations from 'non-real-time clients', such as USB and UFS.
 
-diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-index ec54a2aa5cb8..e1929520c20e 100644
---- a/drivers/pcmcia/i82092.c
-+++ b/drivers/pcmcia/i82092.c
-@@ -117,9 +117,9 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 		
- 		if (card_present(i)) {
- 			sockets[i].card_state = 3;
--			dprintk(KERN_DEBUG "i82092aa: slot %i is occupied\n",i);
-+			pr_debug("i82092aa: slot %i is occupied\n", i);
- 		} else {
--			dprintk(KERN_DEBUG "i82092aa: slot %i is vacant\n",i);
-+			pr_debug("i82092aa: slot %i is vacant\n", i);
- 		}
- 	}
- 		
-@@ -128,7 +128,7 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 	pci_write_config_byte(dev, 0x50, configbyte); /* PCI Interrupt Routing Register */
- 
- 	/* Register the interrupt handler */
--	dprintk(KERN_DEBUG "Requesting interrupt %i \n",dev->irq);
-+	pr_debug("Requesting interrupt %i\n", dev->irq);
- 	if ((ret = request_irq(dev->irq, i82092aa_interrupt, IRQF_SHARED, "i82092aa", i82092aa_interrupt))) {
- 		printk(KERN_ERR "i82092aa: Failed to register IRQ %d, aborting\n", dev->irq);
- 		goto err_out_free_res;
+For detailed information please refer to patch [3/4] in this series.
+I have included the device tree patch too in this series for someone who
+would like to test out this. Here's a branch [2] that gets display on MTP
+SDM845 device.
+
+This patch series is inspired from downstream work to handle under-performance
+issues on real-time clients on sdm845. In downstream we add separate page table
+ops to handle TLB maintenance and toggle wait-for-safe in tlb_sync call so that
+achieve required performance for display and camera [3, 4].
+
+Changes since v3:
+ * Based on arm-smmu implementation cleanup series [5] by Robin Murphy which is
+   already merged in Will's tree [6].
+ * Implemented the sdm845 specific reset hook which does arm_smmu_device_reset()
+   followed by making SCM call to disable the wait-for-safe logic.
+ * Removed depedency for SCM call on any dt flag. We invariably try to disable
+   the wait-for-safe logic on sdm845. The platforms such as mtp845, and db845
+   that implement handlers for this particular SCM call should be able disable
+   wait-for-safe logic.
+   Other platforms such as cheza don't enable the wait-for-safe logic at all
+   from their bootloaders. So there's no need to disable the same.
+ * No change in SCM call patches 1 & 2.
+
+Changes since v2:
+ * Dropped the patch to add atomic io_read/write scm API.
+ * Removed support for any separate page table ops to handle wait-for-safe.
+   Currently just disabling this wait-for-safe logic from arm_smmu_device_probe()
+   to achieve performance on USB/UFS on sdm845.
+ * Added a device tree patch to add smmu option for fw-implemented support
+   for SCM call to take care of SAFE toggling.
+
+Changes since v1:
+ * Addressed Will and Robin's comments:
+    - Dropped the patch[4] that forked out __arm_smmu_tlb_inv_range_nosync(),
+      and __arm_smmu_tlb_sync().
+    - Cleaned up the errata patch further to use downstream polling mechanism
+      for tlb sync.
+ * No change in SCM call patches - patches 1 to 3.
+
+[1] https://lore.kernel.org/patchwork/cover/1087453/
+[2] https://github.com/vivekgautam1/linux/tree/v5.2-rc4/sdm845-display-working
+[3] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7
+[4] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=8696005aaaf745de68f57793c1a534a34345c30a
+[5] https://patchwork.kernel.org/patch/11096265/
+[6] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+
+Vivek Gautam (3):
+  firmware: qcom_scm-64: Add atomic version of qcom_scm_call
+  firmware/qcom_scm: Add scm call to handle smmu errata
+  iommu: arm-smmu-impl: Add sdm845 implementation hook
+
+ drivers/firmware/qcom_scm-32.c |   5 ++
+ drivers/firmware/qcom_scm-64.c | 149 +++++++++++++++++++++++++++++------------
+ drivers/firmware/qcom_scm.c    |   6 ++
+ drivers/firmware/qcom_scm.h    |   5 ++
+ drivers/iommu/arm-smmu-impl.c  |  27 +++++++-
+ include/linux/qcom_scm.h       |   2 +
+ 6 files changed, 149 insertions(+), 45 deletions(-)
+
 -- 
-2.20.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
