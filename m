@@ -2,113 +2,143 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD20C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AA222CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0784D2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391503AbfHWOIj (ORCPT
+        id S2392736AbfHWOQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:08:39 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:31071 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390154AbfHWOIi (ORCPT
+        Fri, 23 Aug 2019 10:16:55 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:40603 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388188AbfHWOQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:08:38 -0400
-Received: from [192.168.1.41] ([90.126.160.115])
-        by mwinf5d06 with ME
-        id se8M200092Vh0YS03e8M18; Fri, 23 Aug 2019 16:08:36 +0200
-X-ME-Helo: [192.168.1.41]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 23 Aug 2019 16:08:36 +0200
-X-ME-IP: 90.126.160.115
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_ethernet=3a_Delete_unnecessary_checks_b?=
- =?UTF-8?Q?efore_the_macro_call_=e2=80=9cdev=5fkfree=5fskb=e2=80=9d?=
-To:     Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        intel-wired-lan@lists.osuosl.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        UNGLinuxDriver@microchip.com,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Doug Berger <opendmb@gmail.com>,
-        Douglas Miller <dougmill@linux.ibm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Cc:     kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <af1ae1cf-4a01-5e3a-edc2-058668487137@web.de>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <4ab7f2a5-f472-f462-9d4c-7c8d5237c44e@wanadoo.fr>
-Date:   Fri, 23 Aug 2019 16:08:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 10:16:54 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7NEGjPq023423
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Aug 2019 10:16:46 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 0C42042049E; Fri, 23 Aug 2019 10:16:45 -0400 (EDT)
+Date:   Fri, 23 Aug 2019 10:16:45 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Ayush Ranjan <ayushr2@illinois.edu>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Ext4 documentation fixes.
+Message-ID: <20190823141644.GG8130@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ayush Ranjan <ayushr2@illinois.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CA+UE=SPyMXZUhHFm0KgvihPdaE=yH5ra6n1C4XhKgM6aGheo=A@mail.gmail.com>
+ <20190823031801.GD8130@mit.edu>
+ <71dfe444-3efb-5f1c-d8a1-bb0e98002fd1@mixmax.com>
 MIME-Version: 1.0
-In-Reply-To: <af1ae1cf-4a01-5e3a-edc2-058668487137@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <71dfe444-3efb-5f1c-d8a1-bb0e98002fd1@mixmax.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Aug 23, 2019 at 04:56:42AM +0000, Ayush Ranjan wrote:
+> Hey Ted!
+> Thanks for reviewing! The comment in fs/ext4/ext4.h:ext4_group_desc:bg_checksum
+> says that the crc16 checksum formula should be crc16(sb_uuid+group+desc). I
+> think group over here denotes group number.
+> 
+> Briefly looking through fs/ext4/super.c:ext4_group_desc_csum() suggests that:
+> - For the new metadata_csum algorithm, only the group number and the block
+> descriptor are included in the checksum. So the formula should be
+> crc32c(group+desc) & 0xFFF (this looks like a bug as this should also include sb
+> UUID?)
+> - For the old crc16 algorithm, the sb UUID, group number and the block
+> descriptor are included in the checksum. So the formula should be
+> crc16(sb\_uuid+group+desc). (should remain unchanged)
 
-in this patch, there is one piece that looked better before. (see below)
+Thanks for the research and explanation.  I think I'm going to change
+that to be:
 
-Removing the 'if (skb)' is fine, but concatening everything in one 
-statement just to save 2 variables and a few LOC is of no use, IMHO, and 
-the code is less readable.
+crc{16,32c}(sb_uuid + group_num + bg_desc)
 
-just my 2c.
+That should make it clearer what is meant.
 
-
-CJ
+     	    	    	    	 - Ted
 
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c 
-b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index d3a0b614dbfa..8b19ddcdafaa 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2515,19 +2515,14 @@ static int bcmgenet_dma_teardown(struct 
-bcmgenet_priv *priv)
-  static void bcmgenet_fini_dma(struct bcmgenet_priv *priv)
-  {
-      struct netdev_queue *txq;
--    struct sk_buff *skb;
--    struct enet_cb *cb;
-      int i;
 
-      bcmgenet_fini_rx_napi(priv);
-      bcmgenet_fini_tx_napi(priv);
 
--    for (i = 0; i < priv->num_tx_bds; i++) {
--        cb = priv->tx_cbs + i;
--        skb = bcmgenet_free_tx_cb(&priv->pdev->dev, cb);
--        if (skb)
--            dev_kfree_skb(skb);
--    }
-+    for (i = 0; i < priv->num_tx_bds; i++)
-+ dev_kfree_skb(bcmgenet_free_tx_cb(&priv->pdev->dev,
-+                          priv->tx_cbs + i));
 
-      for (i = 0; i < priv->hw_params->tx_queues; i++) {
-          txq = netdev_get_tx_queue(priv->dev, priv->tx_rings[i].queue);
+
+
+
+> 
+> Ayush Ranjan
+> University of Illinois - Urbana Champaign | May 2020
+> Bachelors of Science in Computer Science and Mathematics
+> Business Minor | Gies College of Business
+> 
+> 
+> On Fri, Aug 23, 2019 at 8:48 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >
+> > On Thu, Aug 15, 2019 at 09:11:51AM -0700, Ayush Ranjan wrote:
+> > > This commit aims to fix the following issues in ext4 documentation:
+> > > - Flexible block group docs said that the aim was to group block
+> > > � metadata together instead of block group metadata.
+> > > - The documentation consistly uses "location" instead of "block number".
+> > > � It is easy to confuse location to be an absolute offset on disk. Added
+> > > � a line to clarify all location values are in terms of block numbers.
+> > > - Dirent2 docs said that the rec_len field is shortened instead of the
+> > > � name_len field.
+> > > - Typo in bg_checksum description.
+> > > - Inode size is 160 bytes now, and hence i_extra_isize is now 32.
+> > > - Cluster size formula was incorrect, it did not include the +10 to
+> > > � s_log_cluster_size value.
+> > > - Typo: there were two s_wtime_hi in the superblock struct.
+> > > - Superblock struct was outdated, added the new fields which were part
+> > > � of s_reserved earlier.
+> > > - Multiple mount protection seems to be implemented in fs/ext4/mmp.c.
+> > >
+> > > Signed-off-by: Ayush Ranjan <ayushr2@illinois.edu>
+> >
+> > Fixed with one minor typo fix:
+> >
+> > > diff --git a/Documentation/filesystems/ext4/group_descr.rst
+> > > b/Documentation/filesystems/ext4/group_descr.rst
+> > > index 0f783ed88..feb5c613d 100644
+> > > --- a/Documentation/filesystems/ext4/group_descr.rst
+> > > +++ b/Documentation/filesystems/ext4/group_descr.rst
+> > > @@ -100,7 +100,7 @@ The block group descriptor is laid out in ``struct
+> > > ext4_group_desc``.
+> > > � � � - \_\_le16
+> > > � � � - bg\_checksum
+> > > � � � - Group descriptor checksum; crc16(sb\_uuid+group+desc) if the
+> > > - � � � RO\_COMPAT\_GDT\_CSUM feature is set, or
+> crc32c(sb\_uuid+group\_desc) &
+> > > + � � � RO\_COMPAT\_GDT\_CSUM feature is set, or crc32c(sb\_uuid+group+desc)
+> &
+> > > � � � � 0xFFFF if the RO\_COMPAT\_METADATA\_CSUM feature is set.
+> >
+> > The correct checksum should be "crc16(sb\_uuid+group\_desc)" or
+> > "crc32c(sb\_uuid+group\_desc)". �That is, it's previous line which
+> > needed modification.
+> >
+> > � � � � � � � � � � � � � � � � � � � � - Ted
