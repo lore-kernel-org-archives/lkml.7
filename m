@@ -2,181 +2,132 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CACC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C78C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87934233FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566554893;
-	bh=Crf5MDMj/lbQANBrYTEedXUjRJ1Lg0gXyJkpryyhpFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SK2A5iAIwRyBqYh6aM93iRPR+srGSIrt6PzoD2wmzG40L5S8rmaEkIzmyGZ8ycTBV
-	 RaBuJfh0AqEetLtVrgJuheHVNbHz+H2SqdqFHh0B90wbIWPuiVpWHtuaCVXXEyX34i
-	 gRzlaZs5PlMvjYlxwW1hnk20wmk+GLboI87Pdo8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 481C021726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403949AbfHWKIM (ORCPT
+        id S2393932AbfHWKJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:08:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44900 "EHLO mail.kernel.org"
+        Fri, 23 Aug 2019 06:09:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53682 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403911AbfHWKIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:08:11 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726394AbfHWKJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 06:09:23 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930E2233FD;
-        Fri, 23 Aug 2019 10:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566554890;
-        bh=Crf5MDMj/lbQANBrYTEedXUjRJ1Lg0gXyJkpryyhpFA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2I9aABEKFe19P/u13VQXXoUe/QJfkyZhnE0fm2bEYfevqJkdBCeLFRhuL9BGhTqm9
-         9b22xeAubdeOR3pRDInaRFfTkcxdZ8PwA+INjNhzq3Q9XM97koWPu16tcri5SeaQ3o
-         1/OE/G1oAP9zb5aK6WuNSUUQXiGCCu+BxkVjsYOQ=
-Date:   Fri, 23 Aug 2019 12:08:07 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     megous@megous.com
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        by mx1.redhat.com (Postfix) with ESMTPS id 7DA53804F2;
+        Fri, 23 Aug 2019 10:09:23 +0000 (UTC)
+Received: from localhost (ovpn-117-204.ams2.redhat.com [10.36.117.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 870DB5D6B2;
+        Fri, 23 Aug 2019 10:09:22 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 11:09:21 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Dexuan Cui <decui@microsoft.com>,
+        virtualization@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: orange-pi-3: Enable WiFi
-Message-ID: <20190823100807.22heh2gahi7owo4e@flea>
-References: <20190823094228.6540-1-megous@megous.com>
+Subject: Re: [PATCH v2 11/11] vsock_test: wait for the remote to close the
+ connection
+Message-ID: <20190823100921.GD12092@stefanha-x1.localdomain>
+References: <20190801152541.245833-1-sgarzare@redhat.com>
+ <20190801152541.245833-12-sgarzare@redhat.com>
+ <20190820082828.GA9855@stefanha-x1.localdomain>
+ <20190822091546.qcns2kot6tzju7yv@steredhat>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sx4erx44vln7kzi7"
+        protocol="application/pgp-signature"; boundary="2iBwrppp/7QCDedR"
 Content-Disposition: inline
-In-Reply-To: <20190823094228.6540-1-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190822091546.qcns2kot6tzju7yv@steredhat>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 23 Aug 2019 10:09:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---sx4erx44vln7kzi7
+--2iBwrppp/7QCDedR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Aug 22, 2019 at 11:15:46AM +0200, Stefano Garzarella wrote:
+> On Tue, Aug 20, 2019 at 09:28:28AM +0100, Stefan Hajnoczi wrote:
+> > On Thu, Aug 01, 2019 at 05:25:41PM +0200, Stefano Garzarella wrote:
+> > > +/* Wait for the remote to close the connection */
+> > > +void vsock_wait_remote_close(int fd)
+> > > +{
+> > > +	struct epoll_event ev;
+> > > +	int epollfd, nfds;
+> > > +
+> > > +	epollfd =3D epoll_create1(0);
+> > > +	if (epollfd =3D=3D -1) {
+> > > +		perror("epoll_create1");
+> > > +		exit(EXIT_FAILURE);
+> > > +	}
+> > > +
+> > > +	ev.events =3D EPOLLRDHUP | EPOLLHUP;
+> > > +	ev.data.fd =3D fd;
+> > > +	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) =3D=3D -1) {
+> > > +		perror("epoll_ctl");
+> > > +		exit(EXIT_FAILURE);
+> > > +	}
+> > > +
+> > > +	nfds =3D epoll_wait(epollfd, &ev, 1, TIMEOUT * 1000);
+> > > +	if (nfds =3D=3D -1) {
+> > > +		perror("epoll_wait");
+> > > +		exit(EXIT_FAILURE);
+> > > +	}
+> > > +
+> > > +	if (nfds =3D=3D 0) {
+> > > +		fprintf(stderr, "epoll_wait timed out\n");
+> > > +		exit(EXIT_FAILURE);
+> > > +	}
+> > > +
+> > > +	assert(nfds =3D=3D 1);
+> > > +	assert(ev.events & (EPOLLRDHUP | EPOLLHUP));
+> > > +	assert(ev.data.fd =3D=3D fd);
+> > > +
+> > > +	close(epollfd);
+> > > +}
+> >=20
+> > Please use timeout_begin()/timeout_end() so that the test cannot hang.
+> >=20
+>=20
+> I used the TIMEOUT macro in the epoll_wait() to avoid the hang.
+> Do you think is better to use the timeout_begin()/timeout_end()?
+> In this case, should I remove the timeout in the epoll_wait()?
 
-On Fri, Aug 23, 2019 at 11:42:28AM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is called
-> bcm43356 and can be used with the brcmfmac driver. The module is powered by
-> the two always on regulators (not AXP805).
->
-> WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
-> configured so that it sets up an 1.8V input bias on this port. This is done
-> by the pio driver by reading the vcc-pg-supply voltage.
->
-> You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
-> configuration that can be found in the Xulongs's repository for H6:
->
-> https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
->
-> Mainline brcmfmac driver expects the firmware and nvram at the following
-> paths relative to the firmware directory:
->
->   brcm/brcmfmac43456-sdio.bin
->   brcm/brcmfmac43456-sdio.txt
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->
-> Since RTC patches for H6 were merged, this can now go in too, if it looks ok.
->
-> Other patches for this WiFi chip support were merged in previous cycles,
-> so this just needs enabling in DTS now.
->
-> Sorry for the links in the commit log, but this information is useful,
-> even if the link itself goes bad. Any pointer what to google for
-> (file names, tree name) is great for anyone searching in the future.
+Oops, you're right.  There are no other blocking calls in this function
+so the existing patch is fine.
 
-I understand, but this should (also?) be in the wiki. Please add it
-there too.
+Thanks,
+Stefan
 
-> Please take a look.
->
-> Thank you,
-> 	Ondrej
->
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> index eda9d5f640b9..49d954369087 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -56,6 +56,34 @@
->  		regulator-max-microvolt = <5000000>;
->  		regulator-always-on;
->  	};
-> +
-> +	reg_vcc33_wifi: vcc33-wifi {
-> +		/* Always on 3.3V regulator for WiFi and BT */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc33-wifi";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_vcc5v>;
-> +	};
-> +
-> +	reg_vcc_wifi_io: vcc-wifi-io {
-> +		/* Always on 1.8V/300mA regulator for WiFi and BT IO */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc-wifi-io";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_vcc33_wifi>;
-> +	};
-> +
-> +	wifi_pwrseq: wifi_pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		clocks = <&rtc 1>;
-> +		clock-names = "ext_clock";
-> +		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
-> +		post-power-on-delay-ms = <200>;
-> +	};
->  };
->
->  &cpu0 {
-> @@ -91,6 +119,25 @@
->  	status = "okay";
->  };
->
-> +&mmc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc1_pins>;
-
-This is the default already. I've removed it and applied.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---sx4erx44vln7kzi7
+--2iBwrppp/7QCDedR
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV+7BwAKCRDj7w1vZxhR
-xdUoAP9lf+bDRTFhwEM+MuhxjkNWf8b3rdWTvPeIslZaYzUokAD+O9BdXFqXhK6Q
-TawAIlkWp7SHKOU0NdRWhmLzQZyaJwM=
-=YyL0
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1fu1EACgkQnKSrs4Gr
+c8jQlQf/e7aGXCiFEXR/fv7L4FF9eS7lMkOgWamvi2VQREbzelZCJ2YN+WJbgScs
+AoWswurbMlnTinfdZGo2iSdsB+8Y1Ufkivjv4thTUNOSkBF2M8Wxk3DG2Pnbttu4
++x3W1QWUop0vp8vw5w/P8zxG5k5AkwZu1CT9EbPv4eCUeCG9awehnr+dS5ThKl2S
+tktgQl1Xn8C+drVb1J3hB8FPtuHp7MQ7uLNUJdNwwjBWVFXYTneOV83Y058VnWv+
+SQnba6jDppi9aUSbvew7xpiMLwcIMstMjl9i62+fOjJnedQhWjMlmYXvRP7fC+lw
+4a8sOFnOeh3zkFN9tpxISsv+LKpzvg==
+=CuTk
 -----END PGP SIGNATURE-----
 
---sx4erx44vln7kzi7--
+--2iBwrppp/7QCDedR--
