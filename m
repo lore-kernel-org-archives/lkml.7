@@ -2,164 +2,81 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0213C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD54C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DDA2341A
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Yf6o5wqG"
+	by mail.kernel.org (Postfix) with ESMTP id C5DBC23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403974AbfHWC7K (ORCPT
+        id S2404008AbfHWDA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:59:10 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:35065 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389290AbfHWC7J (ORCPT
+        Thu, 22 Aug 2019 23:00:58 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:28841 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfHWDA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:59:09 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x7N2wDua012632;
-        Fri, 23 Aug 2019 11:58:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x7N2wDua012632
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566529093;
-        bh=8CosFU0pC2ctS3iNrA/qY5iVZIjxaMWMDqXin1AO7LU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Yf6o5wqGOxca7n5PZXCSlYBzIInSYk2Nv000Mt4NIkIcVz8rSQnsvfW9PIZDlqqz0
-         i+1vweVR5eCqZA9iFLtHZBDlwPvVpHEBx9KqCAlPxb6TKfs0dhwEOheTQszwfiXHGh
-         mICZM+hR7tjISdF+WMNRDRQcnIm15BifexxXESwU1HLbSKHZuQJdOk6+e7CIz9gJg9
-         fJhD1Hzo0Xf8I2uTeVJBSDg1x5lA63RoFQsFktDIrLe8W+WhDu2v3KWb8JkRbkXDUa
-         itg2weW3P3uSJsRhiHk787sKx07cUMeivpemvawtu7fd0UUdwJVmItVGR86sMyZFzE
-         UKe55y3NyZxRQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: omap2: move platform-specific asm-offset.h to arch/arm/mach-omap2
-Date:   Fri, 23 Aug 2019 11:58:08 +0900
-Message-Id: <20190823025808.11875-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 22 Aug 2019 23:00:58 -0400
+IronPort-SDR: p14kMnk0aX0YGYzg3kcVCPZw9DaYEhmvsxEP0z9bXolExNR9v9YskXn4vVFpAAjb35hjkOnkLI
+ 3Cr/YcaNI4eO3Auo8rikDvs/3i+hLYTt5cpnkdbpm1fH+kzqO2Pze97W49o+KkxfKO+HKhx0QW
+ sgMxTlzPfdVFxnB9Hmd6Pkv9Ag4BjpbOtPRAuv6UZLWWIXTZ8sY88+GDSFhgYohOLHuDPq+nOP
+ Qgl3YmHtwuAoB4hCM05XCB+gECmKE2zWkIKnb3zOZjk8rhcMbfpbAb2rSKeUHt/7IHtfjSZF/8
+ JtU=
+X-IronPort-AV: E=Sophos;i="5.64,419,1559548800"; 
+   d="scan'208";a="40698267"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 22 Aug 2019 19:00:57 -0800
+IronPort-SDR: yV9y16DZfOfxIg2BldZupgi/cOE5jHMBl0/1ufpmF4FlrC3oj8zYK03Gixy8zxKKnsihQNffg5
+ xF6jxus5gc+NQlmGtI9MOJn190h7XmYtsRfhrYgxi+yOMfOiOfOILrO6oykYCsuh5iwg3VOkRR
+ x7E2UeBC7kcS9EGu7duXMTd5mfbbHiKEmNUZBtIsFlRBO8znARn+dfdDBUIuVczR+EYvCUO9pr
+ 2NgdbV7yycWhtXYv+WJRNOAzzsJ2rEF5mLjLmiAtlVy/NyuFC3vColsdufbc/nCxkIA/nYOCzk
+ gZo=
+Subject: Re: [PATCH v1 31/63] Input: atmel_mxt_ts - add memory access
+ interface via sysfs
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816083451.18947-1-jiada_wang@mentor.com>
+ <20190816083451.18947-2-jiada_wang@mentor.com>
+ <20190816172920.GK121898@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <94d1ef09-811b-4109-e3d4-4f4f4e9ac89c@mentor.com>
+Date:   Fri, 23 Aug 2019 12:00:49 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190816172920.GK121898@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-<generated/ti-pm-asm-offsets.h> is only generated and included by
-arch/arm/mach-omap2/, so it does not need to reside in the globally
-visible include/generated/.
+Hi Dmitry
 
-I renamed it to arch/arm/mach-omap2/pm-asm-offsets.h since the prefix
-'ti-' is just redundant in mach-omap2/.
+On 2019/08/17 2:29, Dmitry Torokhov wrote:
+> On Fri, Aug 16, 2019 at 05:34:19PM +0900, Jiada Wang wrote:
+>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>
+>> Atmel maXTouch chips can be addressed via an "Object Based Protocol" which
+>> defines how i2c registers are mapped to different functions within the
+>> chips. This interface exposes the register map and allows user-space
+>> utilities to inspect and alter object configuration, and to view diagnostic
+>> data, while the device is running.
+> 
+> I'd say if we want this we should look into write support in regmap and
+> switching the driver over.
+> 
+since switch to regmap is non-trival, I will drop this patch in v2 patchset
 
-My main motivation of this change is to avoid the race condition for
-the parallel build (-j) when CONFIG_IKHEADERS is enabled.
-
-When it is enabled, all the headers under include/ are archived into
-kernel/kheaders_data.tar.xz and exposed in the sysfs.
-
-In the parallel build, we have no idea in which order files are built.
-
- - If ti-pm-asm-offsets.h is built before kheaders_data.tar.xz,
-   the header will be included in the archive. Probably nobody will
-   use it, but it is harmless except that it will increase the archive
-   size needlessly.
-
- - If kheaders_data.tar.xz is built before ti-pm-asm-offsets.h,
-   the header will not be included in the archive. However, in the next
-   build, the archive will be re-generated to include the newly-found
-   ti-pm-asm-offsets.h. This is not nice from the build system point
-   of view.
-
- - If ti-pm-asm-offsets.h and kheaders_data.tar.xz are built at the
-   same time, the corrupted header might be included in the archive,
-   which does not look nice either.
-
-This commit fixes the race.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Tested-by: Keerthy <j-keerthy@ti.com>
----
-
- arch/arm/mach-omap2/.gitignore  | 1 +
- arch/arm/mach-omap2/Makefile    | 5 +++--
- arch/arm/mach-omap2/sleep33xx.S | 2 +-
- arch/arm/mach-omap2/sleep43xx.S | 2 +-
- 4 files changed, 6 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/mach-omap2/.gitignore
-
-diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
-new file mode 100644
-index 000000000000..79a8d6ea7152
---- /dev/null
-+++ b/arch/arm/mach-omap2/.gitignore
-@@ -0,0 +1 @@
-+pm-asm-offsets.h
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index 600650551621..21c6d4bca3c0 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -223,9 +223,10 @@ obj-y					+= omap_phy_internal.o
- 
- obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
- 
--include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
-+$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
- 	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
- 
--$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
-+$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
- 
- targets += pm-asm-offsets.s
-+clean-files += pm-asm-offsets.h
-diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
-index 68fee339d3f1..dc221249bc22 100644
---- a/arch/arm/mach-omap2/sleep33xx.S
-+++ b/arch/arm/mach-omap2/sleep33xx.S
-@@ -6,7 +6,6 @@
-  *	Dave Gerlach, Vaibhav Bedia
-  */
- 
--#include <generated/ti-pm-asm-offsets.h>
- #include <linux/linkage.h>
- #include <linux/platform_data/pm33xx.h>
- #include <linux/ti-emif-sram.h>
-@@ -15,6 +14,7 @@
- 
- #include "iomap.h"
- #include "cm33xx.h"
-+#include "pm-asm-offsets.h"
- 
- #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
- #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
-diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
-index c1f4e4852644..90d2907a2eb2 100644
---- a/arch/arm/mach-omap2/sleep43xx.S
-+++ b/arch/arm/mach-omap2/sleep43xx.S
-@@ -6,7 +6,6 @@
-  *	Dave Gerlach, Vaibhav Bedia
-  */
- 
--#include <generated/ti-pm-asm-offsets.h>
- #include <linux/linkage.h>
- #include <linux/ti-emif-sram.h>
- #include <linux/platform_data/pm33xx.h>
-@@ -19,6 +18,7 @@
- #include "iomap.h"
- #include "omap-secure.h"
- #include "omap44xx.h"
-+#include "pm-asm-offsets.h"
- #include "prm33xx.h"
- #include "prcm43xx.h"
- 
--- 
-2.17.1
-
+Thanks,
+Jiada
+> Thanks.
+> 
