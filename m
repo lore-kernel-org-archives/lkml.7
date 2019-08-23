@@ -2,103 +2,70 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6BCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4963C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208B623406
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=python.org header.i=@python.org header.b="cgi9YwqS"
+	by mail.kernel.org (Postfix) with ESMTP id 82D3323407
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404245AbfHWDq4 (ORCPT
+        id S2390077AbfHWDvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:46:56 -0400
-Received: from mail.python.org ([188.166.95.178]:57968 "EHLO mail.python.org"
+        Thu, 22 Aug 2019 23:51:01 -0400
+Received: from gate.crashing.org ([63.228.1.57]:48256 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732929AbfHWDqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:46:55 -0400
-X-Greylist: delayed 621 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Aug 2019 23:46:54 EDT
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com [66.111.4.227])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.python.org (Postfix) with ESMTPSA id 46F6Wg5B4XzpBSW;
-        Thu, 22 Aug 2019 23:36:31 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=python.org; s=200901;
-        t=1566531392; bh=CDubURVQzkE9HS3aSBAwGhw/+EAk4NT202GmBHhNOwM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cgi9YwqS332lSKx2f8UKapWer/pUFkQQP7Jh38bFzQcvjm6Zmbqg+/S4y8ryxdeAJ
-         s9JktrB861diA5jLBegINe8qqz0b9omWKSUlau9dEUQ/hdu5BX/J+peRVvSN9JmGWf
-         Xxt/W77qm+MJm44qth9H0ok/gP7qy2BBsnYyXwdI=
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 4AE0721C39;
-        Thu, 22 Aug 2019 23:36:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 22 Aug 2019 23:36:30 -0400
-X-ME-Sender: <xms:PV9fXUh18pKP3YfAfekO2PaHCXvlkWevDg8KGDxc5IZomgTmPGt21g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegjedgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuvghnjhgrmhhi
-    nhcurfgvthgvrhhsohhnuceosggvnhhjrghmihhnsehphihthhhonhdrohhrgheqnecukf
-    hppedujeegrddvudehrdehrdduudegnecurfgrrhgrmhepmhgrihhlfhhrohhmpegstghp
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqddvtdduieekfeefjedquddule
-    eitdeiheefqdgsvghnjhgrmhhinheppehphihthhhonhdrohhrghesfhgrshhtmhgrihhl
-    rdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:PV9fXXfuOij21U7HU5weVyPC87FpAVktpTpfd5vGIDBOSs7b5fFQ1w>
-    <xmx:PV9fXcigMzy8wY1Dn3veMcHbQbxTBS88TNNVP0NZIMHpQgQNi8A0cA>
-    <xmx:PV9fXXffF-E1mfxBjkjzBkDyeuXsoolaHEpoE3iPQAuKFW8lKnRg6g>
-    <xmx:Pl9fXZFvRURQfJGHZ_Vzh9QOXxXajd2A5x6IGpiyLgpXxHvAI1z8UQ>
-Received: from localhost.localdomain (114.sub-174-215-5.myvzw.com [174.215.5.114])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC950D6005D;
-        Thu, 22 Aug 2019 23:36:28 -0400 (EDT)
-From:   Benjamin Peterson <benjamin@python.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] perf trace beauty ioctl: fix off-by-one error in table
-Date:   Thu, 22 Aug 2019 20:36:25 -0700
-Message-Id: <20190823033625.18814-1-benjamin@python.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726416AbfHWDvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 23:51:01 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7N3oO9e029949;
+        Thu, 22 Aug 2019 22:50:25 -0500
+Message-ID: <6744172c01e6c6798943fb076f4bb336f260bd5b.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4 2/4] nvme-pci: Add support for variable IO SQ element
+ size
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org, Paul Pawlowski <paul@mrarm.io>
+Date:   Fri, 23 Aug 2019 13:50:24 +1000
+In-Reply-To: <8545a898-e80c-5ab6-6f9f-f351955db5f0@grimberg.me>
+References: <20190807075122.6247-1-benh@kernel.crashing.org>
+         <20190807075122.6247-3-benh@kernel.crashing.org>
+         <20190822002818.GA10391@lst.de>
+         <87e1fea1c297ef98f989175b3041c69e8b7de020.camel@kernel.crashing.org>
+         <4fc11568-73fe-c8b5-ac29-d49daee9abad@grimberg.me>
+         <fb5aa2db6b54edab69a8abad254b346dd3d7b205.camel@kernel.crashing.org>
+         <8545a898-e80c-5ab6-6f9f-f351955db5f0@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While tracing a program that calls isatty(3), I noticed that strace reported
-TCGETS for the request argument of the underlying ioctl(2) syscall while perf
-trace reported TCSETS. strace is corrrect. The bug in perf was due to the tty
-ioctl beauty table starting at 0x5400 rather than 0x5401.
+On Thu, 2019-08-22 at 19:52 -0700, Sagi Grimberg wrote:
+> > > I'll fix it. Note that I'm going to take it out of the tree soon
+> > > because it will have conflicts with Jens for-5.4/block, so we
+> > > will send it to Jens after the initial merge window, after he
+> > > rebases off of Linus.
+> > 
+> > Conflicts too hard to fixup at merge time ? Otherwise I could just
+> > rebase on top of Jens and put in a topic branch...
+> 
+> The quirk enumeration conflicts with 5.3-rc. Not a big deal, just
+> thought it'd be easier to handle that way.
+> 
+> Rebasing on top of Jens won't help because his for-5.4/block which
+> does not have the rc code yet.
 
-Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
-Signed-off-by: Benjamin Peterson <benjamin@python.org>
----
- tools/perf/trace/beauty/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok sure, do as you prefer. Let me know if you want me to do anything.
 
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 52242fa4072b..e19eb6ea361d 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -21,7 +21,7 @@
- static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
- {
- 	static const char *ioctl_tty_cmd[] = {
--	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-+	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
- 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
- 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
- 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
--- 
-2.20.1
+Cheers,
+Ben.
+
 
