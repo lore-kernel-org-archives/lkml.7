@@ -2,130 +2,166 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16BEC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D817EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E5321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0460233A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:18:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JPCoQLPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389635AbfHWHNo (ORCPT
+        id S1733020AbfHWHSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:13:44 -0400
-Received: from shell.v3.sk ([90.176.6.54]:40112 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731093AbfHWHNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:13:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id F065CD7697;
-        Fri, 23 Aug 2019 09:13:39 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yGh66jtHXRfw; Fri, 23 Aug 2019 09:13:36 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 46C8AD7698;
-        Fri, 23 Aug 2019 09:13:36 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 9QtK_aypLOFJ; Fri, 23 Aug 2019 09:13:35 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id D11F1D7697;
-        Fri, 23 Aug 2019 09:13:34 +0200 (CEST)
-Message-ID: <0897fa54f487f481bf8770ed516578b6f4f53380.camel@v3.sk>
-Subject: Re: [PATCH v2 16/20] ARM: mmp: add SMP support
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Olof Johansson <olof@lixom.net>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Stephen Boyd <sboyd@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 23 Aug 2019 09:13:33 +0200
-In-Reply-To: <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
-         <20190822092643.593488-17-lkundrak@v3.sk>
-         <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 23 Aug 2019 03:18:55 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:31923 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbfHWHSy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:18:54 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190823071852epoutp027bde5c304213d375c6efab8881f6e3e0~9fCJHrfAl0151301513epoutp02G
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 07:18:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190823071852epoutp027bde5c304213d375c6efab8881f6e3e0~9fCJHrfAl0151301513epoutp02G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566544732;
+        bh=+fYE/jWK1CRZuDZ2tVBT+Ef/F2Gp0hZ+OjNZD7CcuN0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=JPCoQLPyMnwUsXcRJAb87lIbwjVAz8UJnhO9geXbleKdINR95oS+Pk7MPNyeSIKlr
+         Ie5LM4HsFuPx33ZSSTfcMnvc55/lFYB3Po/KTATm56/rPppRH16qhqPtM2q1rTtoUK
+         Y+RZMMMZQWD9EG8hvLGNnIEbSL4l0oI/7oyWJQfs=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20190823071851epcas2p2a4a203c12c80c1285afac51eb7c84d8f~9fCIdn5SC1459514595epcas2p2h;
+        Fri, 23 Aug 2019 07:18:51 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.182]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 46FCS92KMhzMqYkd; Fri, 23 Aug
+        2019 07:18:49 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        47.3F.04112.9539F5D5; Fri, 23 Aug 2019 16:18:49 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190823071848epcas2p3fe4d229d22b14162c354f88a29f366c2~9fCGBJdVk1882918829epcas2p3k;
+        Fri, 23 Aug 2019 07:18:48 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190823071848epsmtrp10b85cadf4258caf7cfd003e7d6717ccd~9fCF-zuWg1973319733epsmtrp1u;
+        Fri, 23 Aug 2019 07:18:48 +0000 (GMT)
+X-AuditID: b6c32a48-f37ff70000001010-57-5d5f935942ee
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        77.E5.03706.8539F5D5; Fri, 23 Aug 2019 16:18:48 +0900 (KST)
+Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190823071848epsmtip1133664f58af60792a11a792437cc8f99~9fCFn2bUi1770217702epsmtip1x;
+        Fri, 23 Aug 2019 07:18:48 +0000 (GMT)
+From:   "boojin.kim" <boojin.kim@samsung.com>
+To:     "'Herbert Xu'" <herbert@gondor.apana.org.au>
+Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
+        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 6/9] dm crypt: support diskcipher
+Date:   Fri, 23 Aug 2019 16:18:47 +0900
+Message-ID: <002b01d55983$01b40320$051c0960$@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdVZgoTeM6vEQWOMSaO8aX0QkbtHrA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0xTVxjN7Xt9r6JdrqVudw3bujc0EQO2ne0uC2xmY/jMTMSZuOjGujf6
+        Uoj9lb6WqdmEbFAB2dAYEQoSf8XNbgQtiMS1hCCs4kSyEYwarVskqwIriIABRdbycOO/853v
+        nPt9J1+ujFAcoVWyApuLd9o4C0MlkK2XVhtStx8y5mrC1XI8OVFG4qYrvxL4pztVFP7tcK8E
+        1/eVkDgYrZPixsBTAu8fSsKDTV4C35jxSHHVvWEC9/WdpbH/3nUpDt5ag++GpyW4tuE2hf84
+        sQEPNUyROBDsIXH/xXoKd81VAVzT1y7BnnOTAJdWTtM41Pjx+pfZljM3JWxJ85dsa8dKtr/X
+        zfp95RR7+3qAYptPFbG/HHskYb+52k2wo+0DFPt9iw+wj/yv5izbYcnI5zkT71Tztjy7qcBm
+        zmQ+3Gp836g3aLSp2nT8FqO2cVY+k8nalJOaXWCJZWfUhZzFHaNyOEFg1r6T4bS7Xbw63y64
+        MhneYbI4tFpHmsBZBbfNnJZnt76t1Wh0+pjyc0v+yPkfpY4QvevOz2GiGBynKsASGYLrUPnI
+        abICJMgUsA2gga4wIRbjAEWiE7RYTAE0fqD2P0v0/jAdxwoYBOjxRLYoegDQ04fnpfEGBdeg
+        5pAPxLESatAF/xMQFxHwGY0GxzvJeCMR6lG4a3/sVZmMhCtRw6QxTsthOmo82kOJeDnqqR2c
+        lxPwNXThn3pCXEKN2nqHQdyqhGnIU+IUJUpUV+5ZkEzT6Er/chFnobpvRyUiTkRDoRZaxCr0
+        oMqzgIvQwOmT84ERrATo6szzxpvI+/e++VkEXI2aLq6NQwTfQF23FjZ7AZVdmqVFWo7KPArR
+        mIyOjvdLRFqFxir3ijSLhh6XggPgde+iiN5FEb2Lsnj/H3sMkD7wIu8QrGZe0DnWLb60H8x/
+        ihS2DXRc29QJoAwwy+SXKz7LVUi5QmG3tRMgGcEo5YUHY5TcxO3ewzvtRqfbwgudQB87wEFC
+        tSLPHvtiNpdRq9cZDJp0PdYbdJh5Se5fevNTBTRzLn4nzzt453OfRLZEVQzWp3SsqI8EehAc
+        G/xA+D0yV5R8ZiL4SQgmrNr6Q7mueOmN4u+UjRHSvfH+u9fYVaaxqZzWuj0j1dtqyo7MKLt3
+        Hv6o4VDyX1knc7/elr1xy+xkS0Yi0335meYLvW/vn9GkVONcYPNs5Kz2q+pXkvZ17zrVXjlq
+        vlvzXulszY7pJ5HoQ4YU8jltCuEUuH8B2IqajSoEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsWy7bCSnG7E5PhYg87bihZfv3SwWKw/dYzZ
+        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
+        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
+        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
+        mT3e77vK5tG3ZRWjx+dNcgE8UVw2Kak5mWWpRfp2CVwZb7auYC04zl5xd8095gbGhWxdjJwc
+        EgImEu9evGYHsYUEdjNK9B0xgYhLSWxt38MMYQtL3G85wtrFyAVU85xR4syCxWANbALaEpuP
+        r2IEsUUEDCS2b/oNZjMLTOOQ2PVBHMQWFjCVuHekG2gZBweLgKrEvK/xIGFeAUuJtXNPskHY
+        ghInZz5hASlhFtCTaNsINUVeYvvbOVAnKEjsOPuaEaREBKSkpQiiRERidmcb8wRGwVlIBs1C
+        GDQLyaBZSDoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjn8tzR2Ml5fEH2IU
+        4GBU4uEt6IiLFWJNLCuuzD3EKMHBrCTCWzYRKMSbklhZlVqUH19UmpNafIhRmoNFSZz3ad6x
+        SCGB9MSS1OzU1ILUIpgsEwenVAPj/OSa9W1d/dfS9K63n54b1X3C+cSWAqnD/vI1HyIsY87q
+        y9e/2CLn6c+WUXD5Ym3vnseaC/u2PP5mt3a5zZYUj0uvzY7c3Zv15QDjJeHpgkwt3gwHH/eF
+        CF+KdStfHfH8kRKHhM5DuXgjtzMbfnMVufJKnMreU1zOr6S3rV5ln++hk4tZLD4qsRRnJBpq
+        MRcVJwIAsdKINPsCAAA=
+X-CMS-MailID: 20190823071848epcas2p3fe4d229d22b14162c354f88a29f366c2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190823071848epcas2p3fe4d229d22b14162c354f88a29f366c2
+References: <CGME20190823071848epcas2p3fe4d229d22b14162c354f88a29f366c2@epcas2p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 09:36 -0700, Florian Fainelli wrote:
-> On 8/22/19 2:26 AM, Lubomir Rintel wrote:
-> > Used to bring up the second core on MMP3.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v1:
-> > - Wrap SW_BRANCH_VIRT_ADDR with __pa_symbol()
-> > 
-> >  arch/arm/mach-mmp/Makefile  |  3 +++
-> >  arch/arm/mach-mmp/platsmp.c | 33 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 36 insertions(+)
-> >  create mode 100644 arch/arm/mach-mmp/platsmp.c
-> > 
-> > diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
-> > index 322c1c97dc900..7b3a7f979eece 100644
-> > --- a/arch/arm/mach-mmp/Makefile
-> > +++ b/arch/arm/mach-mmp/Makefile
-> > @@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
-> >  obj-$(CONFIG_CPU_PXA910)	+= pm-pxa910.o
-> >  obj-$(CONFIG_CPU_MMP2)		+= pm-mmp2.o
-> >  endif
-> > +ifeq ($(CONFIG_SMP),y)
-> > +obj-$(CONFIG_MACH_MMP3_DT)	+= platsmp.o
-> > +endif
-> >  
-> >  # board support
-> >  obj-$(CONFIG_MACH_ASPENITE)	+= aspenite.o
-> > diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
-> > new file mode 100644
-> > index 0000000000000..98d5ef23623cb
-> > --- /dev/null
-> > +++ b/arch/arm/mach-mmp/platsmp.c
-> > @@ -0,0 +1,33 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
-> > + */
-> > +#include <linux/io.h>
-> > +#include <asm/smp_scu.h>
-> > +#include <asm/smp.h>
-> > +#include "addr-map.h"
-> > +
-> > +#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
-> > +
-> > +static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> > +{
-> > +	/*
-> > +	 * Apparently, the boot ROM on the second core spins on this
-> > +	 * register becoming non-zero and then jumps to the address written
-> > +	 * there. No IPIs involved.
-> > +	 */
-> > +	__raw_writel(virt_to_phys(secondary_startup),
-> > +			__pa_symbol(SW_BRANCH_VIRT_ADDR));
-> 
-> That looks wrong, the __pa_symbol() is applicable to secondary_startup,
-> while SW_BRANCH_VIRT_ADDR does not need that.
+On Fri, Aug 23, 2019 at 01:28:37PM +0900, Herbert Xu wrote:
+>
+> No.  If you're after total offload then the crypto API is not for
+> you.  What we can support is the offloading of encryption/decryption
+> over many sectors.
+>
+> Cheers,
 
-Whoops, sorry for that. Will fix in the next patch version in a few
-days.
+FMP doesn't use encrypt/decrypt of crypto API because it doesn't
+expose cipher-text to DRAM.
+But, Crypto API has many useful features such as cipher management,
+cipher allocation with cipher name, key management and test manager.
+All these features are useful for FMP.
+FMP has been cerified with FIPS as below by using test vectors and
+test manager of Crypto API.
+https://csrc.nist.gov/projects/cryptographic-module-validation-program/Certi
+ficate/3255
+https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-pr
+ogram/documents/security-policies/140sp3255.pdf
+
+Can't I use crypto APIs to take advantage of this?
+I want to find a good way that FMP can use crypto API.
 
 Thanks
-Lubo
+Boojin Kim.
 
