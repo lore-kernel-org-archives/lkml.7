@@ -2,92 +2,120 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B0CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F5EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF71923406
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9EE823429
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391653AbfHWDmY (ORCPT
+        id S2389534AbfHWDpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:42:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60332 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732546AbfHWDmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:42:24 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8BC8A4FF4B98D984327F;
-        Fri, 23 Aug 2019 11:42:19 +0800 (CST)
-Received: from localhost (10.177.220.209) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
- 11:42:10 +0800
-From:   <zhangsha.zhang@huawei.com>
-To:     <j.vosburgh@gmail.com>, <vfalico@gmail.com>, <andy@greyhouse.net>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhangsha.zhang@huawei.com>, <yuehaibing@huawei.com>,
-        <hunongda@huawei.com>, <alex.chen@huawei.com>
-Subject: [PATCH v2] bonding: force enable lacp port after link state recovery for 802.3ad
-Date:   Fri, 23 Aug 2019 11:42:09 +0800
-Message-ID: <20190823034209.14596-1-zhangsha.zhang@huawei.com>
-X-Mailer: git-send-email 2.17.0.windows.1
+        Thu, 22 Aug 2019 23:45:47 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:47706 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729659AbfHWDpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 23:45:47 -0400
+X-UUID: 8113fb132fd943e38ce1561fa061410c-20190823
+X-UUID: 8113fb132fd943e38ce1561fa061410c-20190823
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1501840037; Fri, 23 Aug 2019 11:45:41 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 23 Aug 2019 11:45:34 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 23 Aug 2019 11:45:34 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Subject: [PATCH v5 00/10] Add Support for MediaTek PMIC MT6358
+Date:   Fri, 23 Aug 2019 11:45:21 +0800
+Message-ID: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.177.220.209]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: 724ACC656101C80D0D4B68F2D13233D42BCF3B5D896D6C75D5318436924E44E62000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sha Zhang <zhangsha.zhang@huawei.com>
+This patchset including refactoring interrupt add support to MT6358 PMIC.
+MT6358 is the primary PMIC for MT8183 platform.
 
-After the commit 334031219a84 ("bonding/802.3ad: fix slave link
-initialization transition states") merged,
-the slave's link status will be changed to BOND_LINK_FAIL
-from BOND_LINK_DOWN in the following scenario:
-- Driver reports loss of carrier and
-  bonding driver receives NETDEV_DOWN notifier
-- slave's duplex and speed is zerod and
-  its port->is_enabled is cleard to 'false';
-- Driver reports link recovery and
-  bonding driver receives NETDEV_UP notifier;
-- If speed/duplex getting failed here, the link status
-  will be changed to BOND_LINK_FAIL;
-- The MII monotor later recover the slave's speed/duplex
-  and set link status to BOND_LINK_UP, but remains
-  the 'port->is_enabled' to 'false'.
+changes since v4:
+- fix some comments for mfd driver.
+- fix some coding style issues for regulator driver.
+- merge the same voltage tables and index tables for regulator driver.
+- remove regulator-always-on for vemc.
+- change mtk rtc struct and variable naming.
+- use of_device_get_match_data() to replace of_match_device() for rtc
+  driver.
 
-In this scenario, the lacp port will not be enabled even its speed
-and duplex are valid. The bond will not send LACPDU's, and its
-state is 'AD_STATE_DEFAULTED' forever. The simplest fix I think
-is to call bond_3ad_handle_link_change() in bond_miimon_commit,
-this function can enable lacp after port slave speed check.
-As enabled, the lacp port can run its state machine normally
-after link recovery.
+Hsin-Hsiung Wang (8):
+  mfd: mt6397: clean up code
+  mfd: mt6397: extract irq related code from core driver
+  mfd: mt6397: modify suspend/resume behavior
+  dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
+  regulator: Add document for MT6358 regulator
+  mfd: Add support for the MediaTek MT6358 PMIC
+  regulator: mt6358: Add support for MT6358 regulator
+  arm64: dts: mt6358: add PMIC MT6358 related nodes
 
-Signed-off-by: Sha Zhang <zhangsha.zhang@huawei.com>
----
- drivers/net/bonding/bond_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ran Bi (2):
+  rtc: mt6397: fix alarm register overwrite
+  rtc: mt6397: Add support for the MediaTek MT6358 RTC
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 931d9d9..ef4ec99 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2206,7 +2206,7 @@ static void bond_miimon_commit(struct bonding *bond)
- 			 */
- 			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
- 			    slave->link == BOND_LINK_UP)
--				bond_3ad_adapter_speed_duplex_changed(slave);
-+				bond_3ad_handle_link_change(slave, BOND_LINK_UP);
- 			continue;
- 
- 		case BOND_LINK_UP:
+ Documentation/devicetree/bindings/mfd/mt6397.txt   |  11 +-
+ .../bindings/regulator/mt6358-regulator.txt        | 358 ++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt6358.dtsi           | 361 ++++++++++++++
+ drivers/mfd/Makefile                               |   4 +-
+ drivers/mfd/mt6358-irq.c                           | 231 +++++++++
+ drivers/mfd/mt6397-core.c                          | 281 ++++-------
+ drivers/mfd/mt6397-irq.c                           | 214 ++++++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/mt6358-regulator.c               | 549 +++++++++++++++++++++
+ drivers/rtc/rtc-mt6397.c                           |  85 +++-
+ include/linux/mfd/mt6358/core.h                    | 158 ++++++
+ include/linux/mfd/mt6358/registers.h               | 282 +++++++++++
+ include/linux/mfd/mt6397/core.h                    |  15 +
+ include/linux/regulator/mt6358-regulator.h         |  56 +++
+ 15 files changed, 2393 insertions(+), 222 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
+ create mode 100644 drivers/mfd/mt6358-irq.c
+ create mode 100644 drivers/mfd/mt6397-irq.c
+ create mode 100644 drivers/regulator/mt6358-regulator.c
+ create mode 100644 include/linux/mfd/mt6358/core.h
+ create mode 100644 include/linux/mfd/mt6358/registers.h
+ create mode 100644 include/linux/regulator/mt6358-regulator.h
+
 -- 
-1.8.3.1
+1.9.1
 
