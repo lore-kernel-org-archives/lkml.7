@@ -2,143 +2,106 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470D5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21393C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABA523402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="flcLM5FZ"
+	by mail.kernel.org (Postfix) with ESMTP id 015CA23402
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391174AbfHWCf3 (ORCPT
+        id S2391215AbfHWCg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:35:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33719 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390609AbfHWCf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:35:28 -0400
-Received: by mail-io1-f65.google.com with SMTP id z3so16662193iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 19:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Ob+A4xxX2bRSxLGz92/UzTEvC1yWM8JcjhiXKDPfB8=;
-        b=flcLM5FZxA1UdTl+5MfostzBYwQfyv1yb87DaSzrnDrUwd/ZNj4K4T/rHszC/sFQMH
-         ADUFV/N/N6vulg+PsFB9LiJOba7WYzMsXqe7TkwmxiwQw++HUI5Q9lwxgsadqj5kp36o
-         7ir9Ftxz3Frpzbh7dbD9IWl/fAPy+uyEwFD9Qu0xwImVT/66UuNo3m+3vDu9rqcZdHGP
-         dJuOAFAhp3e0iD0AWnqz3VAQtqcjnUDCLFkZZiPVDrJq83kU9d3bg+KlteAnZK+XFKE6
-         M2BK3WAwQy2tydaBr0xJ2dcLV8QJVxM3CxkgnlBsNXoibdFYaWIIutqUzeXdd2gExoTy
-         FEcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Ob+A4xxX2bRSxLGz92/UzTEvC1yWM8JcjhiXKDPfB8=;
-        b=Kjpy0NNaPJGkVXwjcSb+7Fu8wqbQq0ihKIx01gmgbvrracecLGRFLHycMrsMIb4vjZ
-         DICARbi1yls82b1NMno+lwerTAUAYN5ZbMn4mPtcbQAE9MjVYGDZlhkzQSGBN5VfGzoE
-         KJ0jpb36t7kiSW7UDJ90hWDGE7IPvwsElyL5+pjgztnBlwQpqxUixZNR00pSegTJc0E0
-         ZrYlN6rMsImER82Wx+M7/hd9xBzUv3gT1nNIHO/2ekfjEBwjo7aU92wW6QrIA51Vvo2g
-         XXSXulEGKu5B7l/3WRyV8mCLYr31XEeklBYjwdswUbBj5to6bZOYuE6wc+q0rEvTT3b6
-         WCMA==
-X-Gm-Message-State: APjAAAWMGEDbSayhHsxhhjm4qK4Tj0cPpbZAhrjA4vxs+OGSTBrSuaSY
-        vnm2JF8B9yG+VKr2myWAxozAfE0vmJvBMykVa/be3A==
-X-Google-Smtp-Source: APXvYqxk0KBtXTDXCH7sq1BDWGn2tzcj3BOrK9VJXXJYjin28Niwi8IhH6bIWJT+jY7Hn20R6XsnRrLk/vFE/AUzyqo=
-X-Received: by 2002:a6b:c581:: with SMTP id v123mr3719443iof.158.1566527727590;
- Thu, 22 Aug 2019 19:35:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190821064226epcas2p2835b8a9084988b79107e54abfc5e7dab@epcas2p2.samsung.com>
- <004101d557eb$98b00060$ca100120$@samsung.com> <6ea5e5db-4dd4-719f-3b3e-b89099636ea6@kernel.dk>
-In-Reply-To: <6ea5e5db-4dd4-719f-3b3e-b89099636ea6@kernel.dk>
-From:   Satya Tangirala <satyat@google.com>
-Date:   Thu, 22 Aug 2019 19:35:16 -0700
-Message-ID: <CAA+FYZc6G0xk7Dhx0b9xNRoK+b+DpfuS+OK4wn4bpKpFPiiGUQ@mail.gmail.com>
-Subject: Re: [PATCH 5/9] block: support diskcipher
-To:     Jens Axboe <axboe@kernel.dk>, boojin.kim@samsung.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-crypto@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+        Thu, 22 Aug 2019 22:36:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43326 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389663AbfHWCgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:36:25 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 901B718C4271;
+        Fri, 23 Aug 2019 02:36:25 +0000 (UTC)
+Received: from ovpn-117-150.phx2.redhat.com (ovpn-117-150.phx2.redhat.com [10.3.117.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B026D600CD;
+        Fri, 23 Aug 2019 02:36:21 +0000 (UTC)
+Message-ID: <2981acb99554a80211118350975577ab8faa3a2d.camel@redhat.com>
+Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
+From:   Scott Wood <swood@redhat.com>
+To:     paulmck@linux.ibm.com
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Date:   Thu, 22 Aug 2019 21:36:21 -0500
+In-Reply-To: <20190821233358.GU28441@linux.ibm.com>
+References: <20190821231906.4224-1-swood@redhat.com>
+         <20190821231906.4224-2-swood@redhat.com>
+         <20190821233358.GU28441@linux.ibm.com>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 23 Aug 2019 02:36:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 5:10 AM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 8/21/19 12:42 AM, boojin.kim wrote:
-> > This patch supports crypto information to be maintained via BIO
-> > and passed to the storage driver.
-> >
-> > To do this, 'bi_aux_private', 'REQ_CYPTE' and 'bi_dun' are added
-> > to the block layer.
-> >
-> > 'bi_aux_private' is added for loading additional private information into
-> > BIO.
-> > 'REQ_CRYPT' is added to distinguish that bi_aux_private is being used
-> > for diskcipher.
-> > F2FS among encryption users uses DUN(device unit number) as
-> > the IV(initial vector) for cryptographic operations.
-> > DUN is stored in 'bi_dun' of bi_iter as a specific value for each BIO.
-> >
-> > Before attempting to merge the two BIOs, the operation is also added to
-> > verify that the crypto information contained in two BIOs is consistent.
->
-> This isn't going to happen. With this, and the inline encryption
-> proposed by Google, we'll bloat the bio even more. At least the Google
-> approach didn't include bio iter changes as well.
->
-> Please work it out between yourselves so we can have a single, clean
-> abstraction that works for both.
->
-> --
-> Jens Axboe
->
+On Wed, 2019-08-21 at 16:33 -0700, Paul E. McKenney wrote:
+> On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> > index 388ace315f32..d6e357378732 100644
+> > --- a/include/linux/rcupdate.h
+> > +++ b/include/linux/rcupdate.h
+> > @@ -615,10 +615,12 @@ static inline void rcu_read_unlock(void)
+> >  static inline void rcu_read_lock_bh(void)
+> >  {
+> >  	local_bh_disable();
+> > +#ifndef CONFIG_PREEMPT_RT_FULL
+> >  	__acquire(RCU_BH);
+> >  	rcu_lock_acquire(&rcu_bh_lock_map);
+> >  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> >  			 "rcu_read_lock_bh() used illegally while idle");
+> > +#endif
+> 
+> Any chance of this using "if (!IS_ENABLED(CONFIG_PREEMPT_RT_FULL))"?
+> We should be OK providing a do-nothing __maybe_unused rcu_bh_lock_map
+> for lockdep-enabled -rt kernels, right?
 
-Hi Boojin,
+OK.
 
-We're very keen to make sure that our approach to inline encryption can
-work with diverse hardware, including Samsung's FMP hardware; if you
-can see any issues with using our approach with your hardware please
-let us know.
+> > @@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip,
+> > > > unsigned int cnt)
+> >  	WARN_ON_ONCE(count < 0);
+> >  	local_irq_enable();
+> >  
+> > -	if (!in_atomic())
+> > +	if (!in_atomic()) {
+> > +		rcu_read_unlock();
+> >  		local_unlock(bh_lock);
+> > +	}
+> 
+> The return from in_atomic() is guaranteed to be the same at
+> local_bh_enable() time as was at the call to the corresponding
+> local_bh_disable()?
 
-We understand that a possible concern for getting FMP working with our
-patch series for Inline Encryption Support at
+That's an existing requirement on RT (which rcutorture currently violates)
+due to bh_lock.
 
-https://lore.kernel.org/linux-block/20190821075714.65140-1-satyat@google.com/
+> I could have sworn that I ran afoul of this last year.  Might these
+> added rcu_read_lock() and rcu_read_unlock() calls need to check for
+> CONFIG_PREEMPT_RT_FULL?
 
-is that unlike some inline encryption hardware (and also unlike the JEDEC
-UFS v2.1 spec), FMP doesn't have the concept of a limited number of
-keyslots - to address that difference we have a "passthrough keyslot
-manager", which we put up on top of our patch series for inline encryption
-support at
+This code is already under a PREEMPT_RT_FULL ifdef.
 
-https://android-review.googlesource.com/c/kernel/common/+/980137/2
+-Scott
 
-Setting up a passthrough keyslot manager in the request queue of a
-device allows the device to receive a bio's encryption context as-is with
-the bio, which is what FMP would prefer. Are there any issues with
-using the passthrough keyslot manager for FMP?
 
-Thanks!
-Satya
