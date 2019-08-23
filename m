@@ -2,376 +2,222 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56715C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E842EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E582173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E1C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:28:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DPbWDrNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389590AbfHWRYg (ORCPT
+        id S2389721AbfHWR2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:24:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:37614 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389289AbfHWRY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:24:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB43C1570;
-        Fri, 23 Aug 2019 10:24:28 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 720F33F246;
-        Fri, 23 Aug 2019 10:24:27 -0700 (PDT)
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-Date:   Fri, 23 Aug 2019 18:23:40 +0100
-Message-Id: <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
+        Fri, 23 Aug 2019 13:28:03 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37765 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389289AbfHWR2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:28:02 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d1so6126237pgp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JpGZpvS6y7xgN7XnzsEu5TdSqjOQTKTe7TuWBgzpXxk=;
+        b=DPbWDrNSkF3m3LM0LR49Pzw0ikWe08dHQLzlDwCCEd7SbY6lXjBe4g0E0/Oh0SS+8L
+         1E2R3whjpm/iFQXBpTT4okhqcaJ9ZnLIQH02NXVEugo9GHSE50Jg8iFRbsmg/FsPppnw
+         MrLpLS4WEb0jVHfL7Ku4uZCHChd+71dF0jelCrk2VXPZsc/GseLHkRq3LfohfXHpj4oa
+         AeTShyhb7KisbZpowlWSJWUH5/NPhwM3qX6O9qpBe+sFL60yTW4cJ4vUQwBWpprLutHO
+         5jYbqQDNL1N504EYpXBVjn24evq+dP/NDByqBukweHmVAjQPQCqMp6Hlv66N/RkoT59S
+         yfsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JpGZpvS6y7xgN7XnzsEu5TdSqjOQTKTe7TuWBgzpXxk=;
+        b=sq8aJ1dPS2ttQkrjtA3wOWm7OhYmO7Vc3jAzv7tl1QSbonf4g5nmWQsjLJz3/regrO
+         DaF3sTWIwmgZ/ktR3Qjl9888jPHkRmGzOCzyq1qZDHkUiu5H0HsZrT+bmwu0W0gnLVJ5
+         bNJt+LgsUuAmZMfAS0Aw7+fzCjc1QhtL7dDAV0TqvqNioIbFas+6dTwde5wXyenZSjJI
+         UWfaTSiKDnJy7SvzsuRJvpgmiXSq8oQP999IqX6KbHQtby3vgbpCYy8NLA9p+YlIjzbe
+         HYz3f/wis52wFyhhFBkk1um6ZTU7WYPKQ+AmEHret/cbGFVaLSQ9NMK/3t9cf2NJ60m+
+         HEyQ==
+X-Gm-Message-State: APjAAAWOyOeoZ3SXCt8RfrhjBe3OaANFdTpWpZHr5lam9nIlHA7hKdws
+        /kyKvolromHTZYD2CKnjjjGNaVYLlCH+l7rI0jEPVA==
+X-Google-Smtp-Source: APXvYqxO41uhCLsTUJZzB3icsTW0bMGI+WWDOYyKC539Pf/Fhot22x5RnB49yWHNSNlX8BLD0YS+A9/mQTKWddz6BQY=
+X-Received: by 2002:a63:b919:: with SMTP id z25mr4863766pge.201.1566581281074;
+ Fri, 23 Aug 2019 10:28:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190820232046.50175-1-brendanhiggins@google.com>
+ <20190820232046.50175-2-brendanhiggins@google.com> <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+ <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com> <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
+In-Reply-To: <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 23 Aug 2019 10:27:49 -0700
+Message-ID: <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
+Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
+To:     shuah <shuah@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ELF program properties will needed for detecting whether to enable
-optional architecture or ABI features for a new ELF process.
+On Fri, Aug 23, 2019 at 10:05 AM shuah <shuah@kernel.org> wrote:
+>
+> On 8/23/19 10:48 AM, Brendan Higgins wrote:
+> > On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
+> >>
+> >> Hi Brendan,
+> >>
+> >> On 8/20/19 5:20 PM, Brendan Higgins wrote:
+> >>> Add core facilities for defining unit tests; this provides a common way
+> >>> to define test cases, functions that execute code which is under test
+> >>> and determine whether the code under test behaves as expected; this also
+> >>> provides a way to group together related test cases in test suites (here
+> >>> we call them test_modules).
+> >>>
+> >>> Just define test cases and how to execute them for now; setting
+> >>> expectations on code will be defined later.
+> >>>
+> >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> >>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> >>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> >>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> >>> ---
+> >>>    include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
+> >>>    kunit/Kconfig        |  17 ++++
+> >>>    kunit/Makefile       |   1 +
+> >>>    kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
+> >>>    4 files changed, 388 insertions(+)
+> >>>    create mode 100644 include/kunit/test.h
+> >>>    create mode 100644 kunit/Kconfig
+> >>>    create mode 100644 kunit/Makefile
+> >>>    create mode 100644 kunit/test.c
+> >>>
+> >>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> >>> new file mode 100644
+> >>> index 0000000000000..e0b34acb9ee4e
+> >>> --- /dev/null
+> >>> +++ b/include/kunit/test.h
+> >>> @@ -0,0 +1,179 @@
+> >>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>> +/*
+> >>> + * Base unit test (KUnit) API.
+> >>> + *
+> >>> + * Copyright (C) 2019, Google LLC.
+> >>> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> >>> + */
+> >>> +
+> >>> +#ifndef _KUNIT_TEST_H
+> >>> +#define _KUNIT_TEST_H
+> >>> +
+> >>> +#include <linux/types.h>
+> >>> +
+> >>> +struct kunit;
+> >>> +
+> >>> +/**
+> >>> + * struct kunit_case - represents an individual test case.
+> >>> + * @run_case: the function representing the actual test case.
+> >>> + * @name: the name of the test case.
+> >>> + *
+> >>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
+> >>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
+> >>> + * test case is associated with a &struct kunit_suite and will be run after the
+> >>> + * suite's init function and followed by the suite's exit function.
+> >>> + *
+> >>> + * A test case should be static and should only be created with the KUNIT_CASE()
+> >>> + * macro; additionally, every array of test cases should be terminated with an
+> >>> + * empty test case.
+> >>> + *
+> >>> + * Example:
+> >>
+> >> Can you fix these line continuations. It makes it very hard to read.
+> >> Sorry for this late comment. These comments lines are longer than 80
+> >> and wrap.
+> >
+> > None of the lines in this commit are over 80 characters in column
+> > width. Some are exactly 80 characters (like above).
+> >
+> > My guess is that you are seeing the diff added text (+ ), which when
+> > you add that to a line which is exactly 80 char in length ends up
+> > being over 80 char in email. If you apply the patch you will see that
+> > they are only 80 chars.
+> >
+> >>
+> >> There are several comment lines in the file that are way too long.
+> >
+> > Note that checkpatch also does not complain about any over 80 char
+> > lines in this file.
+> >
+> > Sorry if I am misunderstanding what you are trying to tell me. Please
+> > confirm either way.
+> >
+>
+> WARNING: Avoid unnecessary line continuations
+> #258: FILE: include/kunit/test.h:137:
+> +                */                                                            \
+>
+> total: 0 errors, 2 warnings, 388 lines checked
 
-For now, there are no generic properties that we care about, so do
-nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
+Ah, okay so you don't like the warning about the line continuation.
+That's not because it is over 80 char, but because there is a line
+continuation after a comment. I don't really see a way to get rid of
+it without removing the comment from inside the macro.
 
-Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-phdrs entry (if any), and notify each property to the arch code.
+I put this TODO there in the first place a Luis' request, and I put it
+in the body of the macro because this macro already had a kernel-doc
+comment and I didn't think that an implementation detail TODO belonged
+in the user documentation.
 
-For now, the added code is not used.
+> Go ahead fix these. It appears there are few lines that either longer
+> than 80. In general, I keep them around 75, so it is easier read.
 
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Sorry, the above is the only checkpatch warning other than the
+reminder to update the MAINTAINERS file.
 
----
-
-Changes since RFC v1:
-
- * Fix stupid typo in IS_ENABLED().
-
- * Fix premature dereference of possibly-NULL phdr in
-   parse_elf_properties().
-
- * Demote BUG_ON() to WARN_ON(), and add comments to explain why they
-   should never fire.
-
-   These are only for development and should probably go away before
-   merge.
-
- * Enforce that there are no duplicate properties and that the
-   properties are sorted on pr_type.
-
-   This is not strictly necessary for kernel safety or for correct
-   handling of valid ELF files, but may help flag up binaries from duff
-   linkers which we would otherwise silently execute.
-
- * Shuffle parse_elf_properties() logic to move as many checks as
-   possible into parse_elf_property().  This keeps most checks in the
-   same function as the code that relies on them, and simplifies the
-   outer parsing loop.
-
-   parse_elf_properties's cursor is now just a byte offset into the
-   note, which makes comparisons more straightfward and reduces the
-   amount of pointer casting a bit.
----
- fs/binfmt_elf.c          | 124 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/compat_binfmt_elf.c   |   4 ++
- include/linux/elf.h      |  19 ++++++++
- include/uapi/linux/elf.h |   4 ++
- 4 files changed, 151 insertions(+)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index d4e11b2..d6541e8 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -39,12 +39,18 @@
- #include <linux/sched/coredump.h>
- #include <linux/sched/task_stack.h>
- #include <linux/sched/cputime.h>
-+#include <linux/sizes.h>
-+#include <linux/types.h>
- #include <linux/cred.h>
- #include <linux/dax.h>
- #include <linux/uaccess.h>
- #include <asm/param.h>
- #include <asm/page.h>
- 
-+#ifndef ELF_COMPAT
-+#define ELF_COMPAT 0
-+#endif
-+
- #ifndef user_long_t
- #define user_long_t long
- #endif
-@@ -690,6 +696,108 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
- #endif
- }
- 
-+static int parse_elf_property(const char *data, size_t *off, size_t datasz,
-+			      struct arch_elf_state *arch,
-+			      bool have_prev_type, u32 *prev_type)
-+{
-+	size_t size, step;
-+	const struct gnu_property *pr;
-+	int ret;
-+
-+	if (*off == datasz)
-+		return -ENOENT;
-+
-+	if (WARN_ON(*off > datasz || *off % elf_gnu_property_align))
-+		return -EIO;
-+
-+	size = datasz - *off;
-+	if (size < sizeof(*pr))
-+		return -EIO;
-+
-+	pr = (const struct gnu_property *)(data + *off);
-+	if (pr->pr_datasz > size - sizeof(*pr))
-+		return -EIO;
-+
-+	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
-+	if (step > size)
-+		return -EIO;
-+
-+	/* Properties are supposed to be unique and sorted on pr_type: */
-+	if (have_prev_type && pr->pr_type <= *prev_type)
-+		return -EIO;
-+	*prev_type = pr->pr_type;
-+
-+	ret = arch_parse_elf_property(pr->pr_type,
-+				      data + *off + sizeof(*pr),
-+				      pr->pr_datasz, ELF_COMPAT, arch);
-+	if (ret)
-+		return ret;
-+
-+	*off += step;
-+	return 0;
-+}
-+
-+#define NOTE_DATA_SZ SZ_1K
-+#define GNU_PROPERTY_TYPE_0_NAME "GNU"
-+#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
-+
-+static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
-+				struct arch_elf_state *arch)
-+{
-+	union {
-+		struct elf_note nhdr;
-+		char data[NOTE_DATA_SZ];
-+	} note;
-+	loff_t pos;
-+	ssize_t n;
-+	size_t off, datasz;
-+	int ret;
-+	bool have_prev_type;
-+	u32 prev_type;
-+
-+	if (!IS_ENABLED(CONFIG_ARCH_USE_GNU_PROPERTY) || !phdr)
-+		return 0;
-+
-+	/* load_elf_binary() shouldn't call us unless this is true... */
-+	if (WARN_ON(phdr->p_type != PT_GNU_PROPERTY))
-+		return -EIO;
-+
-+	/* If the properties are crazy large, that's too bad (for now): */
-+	if (phdr->p_filesz > sizeof(note))
-+		return -ENOEXEC;
-+
-+	pos = phdr->p_offset;
-+	n = kernel_read(f, &note, phdr->p_filesz, &pos);
-+
-+	BUILD_BUG_ON(sizeof(note) < sizeof(note.nhdr) + NOTE_NAME_SZ);
-+	if (n < 0 || n < sizeof(note.nhdr) + NOTE_NAME_SZ)
-+		return -EIO;
-+
-+	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
-+	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
-+	    strncmp(note.data + sizeof(note.nhdr),
-+		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
-+		return -EIO;
-+
-+	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
-+		       elf_gnu_property_align);
-+	if (off > n)
-+		return -EIO;
-+
-+	if (note.nhdr.n_descsz > n - off)
-+		return -EIO;
-+	datasz = off + note.nhdr.n_descsz;
-+
-+	have_prev_type = false;
-+	do {
-+		ret = parse_elf_property(note.data, &off, datasz, arch,
-+					 have_prev_type, &prev_type);
-+		have_prev_type = true;
-+	} while (!ret);
-+
-+	return ret == -ENOENT ? 0 : ret;
-+}
-+
- static int load_elf_binary(struct linux_binprm *bprm)
- {
- 	struct file *interpreter = NULL; /* to shut gcc up */
-@@ -697,6 +805,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	int load_addr_set = 0;
- 	unsigned long error;
- 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
-+	struct elf_phdr *elf_property_phdata = NULL;
- 	unsigned long elf_bss, elf_brk;
- 	int bss_prot = 0;
- 	int retval, i;
-@@ -744,6 +853,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		char *elf_interpreter;
- 		loff_t pos;
- 
-+		if (elf_ppnt->p_type == PT_GNU_PROPERTY) {
-+			elf_property_phdata = elf_ppnt;
-+			continue;
-+		}
-+
- 		if (elf_ppnt->p_type != PT_INTERP)
- 			continue;
- 
-@@ -839,9 +953,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			goto out_free_dentry;
- 
- 		/* Pass PT_LOPROC..PT_HIPROC headers to arch code */
-+		elf_property_phdata = NULL;
- 		elf_ppnt = interp_elf_phdata;
- 		for (i = 0; i < loc->interp_elf_ex.e_phnum; i++, elf_ppnt++)
- 			switch (elf_ppnt->p_type) {
-+			case PT_GNU_PROPERTY:
-+				elf_property_phdata = elf_ppnt;
-+				break;
-+
- 			case PT_LOPROC ... PT_HIPROC:
- 				retval = arch_elf_pt_proc(&loc->interp_elf_ex,
- 							  elf_ppnt, interpreter,
-@@ -852,6 +971,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			}
- 	}
- 
-+	retval = parse_elf_properties(interpreter ?: bprm->file,
-+				      elf_property_phdata, &arch_state);
-+	if (retval)
-+		goto out_free_dentry;
-+
- 	/*
- 	 * Allow arch code to reject the ELF at this point, whilst it's
- 	 * still possible to return an error to the code that invoked
-diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
-index b7f9ffa..f9ee476 100644
---- a/fs/compat_binfmt_elf.c
-+++ b/fs/compat_binfmt_elf.c
-@@ -17,6 +17,8 @@
- #include <linux/elfcore-compat.h>
- #include <linux/time.h>
- 
-+#define ELF_COMPAT	1
-+
- /*
-  * Rename the basic ELF layout types to refer to the 32-bit class of files.
-  */
-@@ -28,11 +30,13 @@
- #undef	elf_shdr
- #undef	elf_note
- #undef	elf_addr_t
-+#undef	elf_gnu_property_align
- #define elfhdr		elf32_hdr
- #define elf_phdr	elf32_phdr
- #define elf_shdr	elf32_shdr
- #define elf_note	elf32_note
- #define elf_addr_t	Elf32_Addr
-+#define elf_gnu_property_align	elf32_gnu_property_align
- 
- /*
-  * Some data types as stored in coredump.
-diff --git a/include/linux/elf.h b/include/linux/elf.h
-index 4485499..d9779c0 100644
---- a/include/linux/elf.h
-+++ b/include/linux/elf.h
-@@ -22,6 +22,9 @@
- 	SET_PERSONALITY(ex)
- #endif
- 
-+#define elf32_gnu_property_align	4
-+#define elf64_gnu_property_align	8
-+
- #if ELF_CLASS == ELFCLASS32
- 
- extern Elf32_Dyn _DYNAMIC [];
-@@ -32,6 +35,7 @@ extern Elf32_Dyn _DYNAMIC [];
- #define elf_addr_t	Elf32_Off
- #define Elf_Half	Elf32_Half
- #define Elf_Word	Elf32_Word
-+#define elf_gnu_property_align	elf32_gnu_property_align
- 
- #else
- 
-@@ -43,6 +47,7 @@ extern Elf64_Dyn _DYNAMIC [];
- #define elf_addr_t	Elf64_Off
- #define Elf_Half	Elf64_Half
- #define Elf_Word	Elf64_Word
-+#define elf_gnu_property_align	elf64_gnu_property_align
- 
- #endif
- 
-@@ -64,4 +69,18 @@ struct gnu_property {
-   __u32 pr_datasz;
- };
- 
-+struct arch_elf_state;
-+
-+#ifndef CONFIG_ARCH_USE_GNU_PROPERTY
-+static inline int arch_parse_elf_property(u32 type, const void *data,
-+					  size_t datasz, bool compat,
-+					  struct arch_elf_state *arch)
-+{
-+	return 0;
-+}
-+#else
-+extern int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
-+				   bool compat, struct arch_elf_state *arch);
-+#endif
-+
- #endif /* _LINUX_ELF_H */
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index c377314..20900f4 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -368,6 +368,7 @@ typedef struct elf64_shdr {
-  * Notes used in ET_CORE. Architectures export some of the arch register sets
-  * using the corresponding note types via the PTRACE_GETREGSET and
-  * PTRACE_SETREGSET requests.
-+ * The note name for all these is "LINUX".
-  */
- #define NT_PRSTATUS	1
- #define NT_PRFPREG	2
-@@ -430,6 +431,9 @@ typedef struct elf64_shdr {
- #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode */
- #define NT_MIPS_MSA	0x802		/* MIPS SIMD registers */
- 
-+/* Note types with note name "GNU" */
-+#define NT_GNU_PROPERTY_TYPE_0	5
-+
- /* Note header in a PT_NOTE section */
- typedef struct elf32_note {
-   Elf32_Word	n_namesz;	/* Name size */
--- 
-2.1.4
-
+Are you saying you want me to go through and make all the lines fit in
+75 char column width? I hope not because that is going to be a pretty
+substantial change to make.
