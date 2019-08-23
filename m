@@ -2,189 +2,225 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFAAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E47C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669C323406
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1011C23426
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNR/OnrF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JWV4ioQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391589AbfHWDiy (ORCPT
+        id S2391607AbfHWDkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:38:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42462 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732546AbfHWDiy (ORCPT
+        Thu, 22 Aug 2019 23:40:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37604 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732546AbfHWDkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:38:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id e20so16804801iob.9;
-        Thu, 22 Aug 2019 20:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9AVmOGbIsZQv/2ofQ4IWa2M0lJ73id2YbZ5T55/p234=;
-        b=PNR/OnrFCJ9qWeHxxTo4/BXyJ5MRxGDYxwDBxmStRgGs9mHapBSw1jexOrtcuQr3k5
-         VIPHTSUmPR01mjhRc7xOPXvEMXgvOveli84/jJ+G2N9BRaN5RJCA0wk9EGvgcuL8GGrE
-         Ob4Zj2UVDkKerW26MCqxscJxkdJ8WWmphgGxwZXiTLWp2qY6wpVkGmlBPs5p+pbZlyDe
-         y0QBO52bDZ/SDBK51ArRMrize4hT0+HK93PKe+uj1A/B1jittjlnsD2J5aXj56sLqToN
-         VwNwt4DP854MhJWMb4Ua81ZQJ8AQP/QdlUEusPHxtgPFeZVsd4pDwXihfCxmbWvG3AZ3
-         cQ1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9AVmOGbIsZQv/2ofQ4IWa2M0lJ73id2YbZ5T55/p234=;
-        b=jLptAbjMwCpVWbl7SHkvQU70miVw8cglCvYIlI6G1gIinypJvIXgzcPb7R61xBMNaD
-         qOudDyHmLwBG8CqpmyOWiFMwcP7tnGG2tImpsGYDyIk1plKiQw33d21xdu+YdRImy+zS
-         e64isnsIy/9+WK83BdwTSGsAgO5u/wseHNbDuOj7r+b1OidH6286p8AqWTSHJN/B08xp
-         56sSZ6Kfj1Bc1zRq+0NJhDAmpT/BB/tXi47tMQUT8spYQUNj7FETmr9Egf2PO2wiG8gr
-         E04ek13KGXK7TW0MWErt85y0jizFN846ClIi3uziULQHw6Qx0KMwUyUH8hMbe77WnXAV
-         fbqg==
-X-Gm-Message-State: APjAAAVoZo/4ZIkcUFHNyw/GjJTDTETKTkl/ZZcaQr/iA7+hs8L6eYRK
-        muZ0RK6ERLmQSQOmbH4pmhMMK6Mgi3xL
-X-Google-Smtp-Source: APXvYqxOSeQzfdWxi6gD2CNj2oB78c97wZV62Bm56NMa2OFeGRqMmzwosu33VmbJlnggbs0myRlUzg==
-X-Received: by 2002:a6b:4a11:: with SMTP id w17mr3777472iob.21.1566531532816;
-        Thu, 22 Aug 2019 20:38:52 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id y19sm1221442ioj.62.2019.08.22.20.38.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 22 Aug 2019 20:38:52 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 23:38:50 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers: hv: vmbus: Introduce latency testing
-Message-ID: <20190823033850.GA41496@Test-Virtual-Machine>
-References: <cover.1566266609.git.brandonbonaby94@gmail.com>
- <ebca54bf70d2af53de419c1b7ac8db5b77b888cb.1566266609.git.brandonbonaby94@gmail.com>
- <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Thu, 22 Aug 2019 23:40:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7N3dsco056152;
+        Thu, 22 Aug 2019 22:39:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566531594;
+        bh=81SSEYa5Fp4dwV5qila9E6vwCoCXnItQiSYD67zCfW8=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=JWV4ioQFP6IoggZOdMcyoaMP1ZYasXYOhchN4C+7LKmF5GWY/fxycdv4+VTJvOnBp
+         CG/i6CCa5N2V806C2ZUm4j1Uvw9GWhxQp1m80ztT3LFuMkB56p1qu+TsGUuUsqEtiH
+         l2geahbl0GLEirpyHJqBtlG/34hOoHWZDlmJRhBY=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7N3dsgV012046
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 22 Aug 2019 22:39:54 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
+ Aug 2019 22:39:54 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 22 Aug 2019 22:39:54 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7N3dmoK102238;
+        Thu, 22 Aug 2019 22:39:49 -0500
+Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-6-xiaowei.bao@nxp.com>
+ <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+ <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <11e9b2c3-f4d0-2f82-bb14-45c38a1419e4@ti.com>
+Date:   Fri, 23 Aug 2019 09:09:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >  endmenu
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > index 09829e15d4a0..c9c63a4033cd 100644
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -357,6 +357,9 @@ void vmbus_on_event(unsigned long data)
-> > 
-> >  	trace_vmbus_on_event(channel);
-> > 
-> > +#ifdef CONFIG_HYPERV_TESTING
-> > +	hv_debug_delay_test(channel, INTERRUPT_DELAY);
-> > +#endif /* CONFIG_HYPERV_TESTING */
+Hi,
+
+(Fixed Lorenzo's email address. All the patches in the series have wrong email id)
+
+On 23/08/19 8:09 AM, Xiaowei Bao wrote:
 > 
-> You are following Vitaly's suggestion to use #ifdef's so no code is
-> generated when HYPERV_TESTING is not enabled.  However, this
-> direct approach to using #ifdef's really clutters the code and makes
-> it harder to read and follow.  The better approach is to use the
-> #ifdef in the include file where the functions are defined.  If
-> HYPERV_TESTING is not enabled, provide a #else that defines
-> the function with an empty implementation for which the compiler
-> will generate no code.   An as example, see the function definition
-> for hyperv_init() in arch/x86/include/asm/mshyperv.h.  There are
-> several functions treated similarly in that include file.
 > 
+>> -----Original Message-----
+>> From: Kishon Vijay Abraham I <kishon@ti.com>
+>> Sent: 2019年8月22日 19:44
+>> To: Xiaowei Bao <xiaowei.bao@nxp.com>; bhelgaas@google.com;
+>> robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+>> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.co; arnd@arndb.de;
+>> gregkh@linuxfoundation.org; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
+>> Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+>> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+>> linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>> linuxppc-dev@lists.ozlabs.org; andrew.murray@arm.com
+>> Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+>> capability with different PEX
+>>
+>> Hi,
+>>
+>> On 22/08/19 4:52 PM, Xiaowei Bao wrote:
+>>> The different PCIe controller in one board may be have different
+>>> capability of MSI or MSIX, so change the way of getting the MSI
+>>> capability, make it more flexible.
+>>
+>> please use different pci_epc_features table for different boards.
+> Thanks, I think that it will be more flexible to dynamically get MSI or MSIX capability,
+> Thus, we will not need to define the pci_epc_feature for different boards.
 
-I checked out the code in arch/x86/include/asm/mshyperv.h, after
-thinking about it, I'm wondering if it would be better just to have
-two files one called hv_debugfs.c and the other hyperv_debugfs.h.
-I could put the code definitions in hv_debugfs.c and at the top
-include the hyperv_debugfs.h file which would house the declarations
-of these functions under the ifdef. Then like you alluded too use
-an #else statement that would have the null implementations of the
-above functions. Then put an #include "hyperv_debugfs.h" in the
-hyperv_vmbus.h file. I figured instead of putting the code directly
-into the vmbus_drv.c file it might be best to put them in a seperate
-file like hv_debugfs.c. This way when we start adding more tests we
-don't bloat the vmbus_drv.c file unnecessarily. The hv_debugfs.c
-file would have the #ifdef CONFIG_HYPERV_TESTING at the top so if
-its not enabled  those null implementations in "hyperv_debugfs.h"
-woud kick in anywhere that included the hyperv_vmbus.h file which
-is what we want.
+Is the restriction because you cannot have different compatible for different
+boards?
 
-what do you think?
+Thanks
+Kishon
 
-> 
-> >  	do {
-> >  		void (*callback_fn)(void *);
-> > 
-> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> > index 362e70e9d145..edf14f596d8c 100644
-> > --- a/drivers/hv/hyperv_vmbus.h
-> > +++ b/drivers/hv/hyperv_vmbus.h
-> > @@ -357,4 +357,24 @@ enum hvutil_device_state {
-> >  	HVUTIL_DEVICE_DYING,     /* driver unload is in progress */
-> >  };
-> > 
-> > +#ifdef CONFIG_HYPERV_TESTING
-> > +#include <linux/debugfs.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/err.h>
-> 
-> Generally #include files should go at the top of the file, even if they
-> are only needed conditionally.
->
-
-I see , will change
-
-> > +#define TESTING "hyperv"
-> 
-> I'm not seeing what this line is for, or how it is used.
-
-I used it as the top level name for the dentry that
-would appear in debugfs but now I realize its actually
-not needed, so i'll remove this.
-
-> > --- a/include/linux/hyperv.h
-> > +++ b/include/linux/hyperv.h
-> > @@ -926,6 +926,21 @@ struct vmbus_channel {
-> >  	 * full outbound ring buffer.
-> >  	 */
-> >  	u64 out_full_first;
-> > +
-> > +#ifdef CONFIG_HYPERV_TESTING
-> > +	/* enabling/disabling fuzz testing on the channel (default is false)*/
-> > +	bool fuzz_testing_state;
-> > +
-> > +	/* Interrupt delay will delay the guest from emptying the ring buffer
-> > +	 * for a specific amount of time. The delay is in microseconds and will
-> > +	 * be between 1 to a maximum of 1000, its default is 0 (no delay).
-> > +	 * The  Message delay will delay guest reading on a per message basis
-> > +	 * in microseconds between 1 to 1000 with the default being 0
-> > +	 * (no delay).
-> > +	 */
-> > +	u32 fuzz_testing_interrupt_delay;
-> > +	u32 fuzz_testing_message_delay;
-> > +#endif /* CONFIG_HYPERV_TESTING */
-> 
-> For fields in a data structure like this, you don't have much choice
-> but to put the #ifdef directly inline.  However, for small fields like this
-> and where the data structure isn't size sensitive, you could consider
-> omitting the #ifdef and just always including the fields even when
-> HYPERV_TESTING is not enabled.  I don't have a strong preference
-> either way.
->
-
-I'll take the ifdefs out since the fields aren't too big
-
+>>
+>> Thanks
+>> Kishon
+>>>
+>>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> ---
+>>> v2:
+>>>  - Remove the repeated assignment code.
+>>>
+>>>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 26
+>>> +++++++++++++++++++-------
+>>>  1 file changed, 19 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> index 4e92a95..8461f62 100644
+>>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+>>> @@ -22,6 +22,7 @@
+>>>
+>>>  struct ls_pcie_ep {
+>>>  	struct dw_pcie		*pci;
+>>> +	struct pci_epc_features	*ls_epc;
+>>>  };
+>>>
+>>>  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+>>> @@ -40,25 +41,26 @@ static const struct of_device_id
+>> ls_pcie_ep_of_match[] = {
+>>>  	{ },
+>>>  };
+>>>
+>>> -static const struct pci_epc_features ls_pcie_epc_features = {
+>>> -	.linkup_notifier = false,
+>>> -	.msi_capable = true,
+>>> -	.msix_capable = false,
+>>> -};
+>>> -
+>>>  static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
+>>> dw_pcie_ep *ep)  {
+>>> -	return &ls_pcie_epc_features;
+>>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+>>> +
+>>> +	return pcie->ls_epc;
+>>>  }
+>>>
+>>>  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)  {
+>>>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+>>>  	enum pci_barno bar;
+>>>
+>>>  	for (bar = BAR_0; bar <= BAR_5; bar++)
+>>>  		dw_pcie_ep_reset_bar(pci, bar);
+>>> +
+>>> +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
+>>> +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
+>>>  }
+>>>
+>>>  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no, @@
+>>> -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct platform_device
+>> *pdev)
+>>>  	struct device *dev = &pdev->dev;
+>>>  	struct dw_pcie *pci;
+>>>  	struct ls_pcie_ep *pcie;
+>>> +	struct pci_epc_features *ls_epc;
+>>>  	struct resource *dbi_base;
+>>>  	int ret;
+>>>
+>>> @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct
+>> platform_device *pdev)
+>>>  	if (!pci)
+>>>  		return -ENOMEM;
+>>>
+>>> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
+>>> +	if (!ls_epc)
+>>> +		return -ENOMEM;
+>>> +
+>>>  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> "regs");
+>>>  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+>>>  	if (IS_ERR(pci->dbi_base))
+>>> @@ -139,6 +146,11 @@ static int __init ls_pcie_ep_probe(struct
+>> platform_device *pdev)
+>>>  	pci->ops = &ls_pcie_ep_ops;
+>>>  	pcie->pci = pci;
+>>>
+>>> +	ls_epc->linkup_notifier = false,
+>>> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+>>> +
+>>> +	pcie->ls_epc = ls_epc;
+>>> +
+>>>  	platform_set_drvdata(pdev, pcie);
+>>>
+>>>  	ret = ls_add_pcie_ep(pcie, pdev);
+>>>
