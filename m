@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9A8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2880EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F8A22CE3
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D972133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfHXGF0 (ORCPT
+        id S1727688AbfHXGFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 02:05:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39022 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbfHXGFY (ORCPT
+        Sat, 24 Aug 2019 02:05:31 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41752 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbfHXGFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 02:05:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so7050424pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 23:05:23 -0700 (PDT)
+        Sat, 24 Aug 2019 02:05:21 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so7056343pgg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 23:05:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Gm/XdTYkIOoGkuaPCMNGz5/LttF1ivxSvkXXovWunI0=;
-        b=O71ltPSDYJos+ApmyeXzPFSjwWDXEwNrdjoQ7LXqC6RC7DHq2+MhCU19JjqogkO3HK
-         NtgmZD2pe9SKYgFr6hEYQp29gFJQA5AorPMg9CyKpzdMisp4OQoP3qb0xDWd4Askn+DC
-         D/ch6Qw5U3JLz4tW10LgVTahQJ/mJr2w8ML3QUNIlDs0y6UxMXHFEwZUvnPdeBqdGVfS
-         JjBHSJOF84HsAyaCjMIjNa2y+Hw6XZ8AlIt3MnrB+rMCgWlM4mxkDjd5tDr1cnSIMDZZ
-         CMSZbEP+iy/0QS+nW+e5zk1EQa92UEv7HtcJBkFzCST0BdOryA9XTsoCaHnBWQ2D0tOE
-         ejAQ==
-X-Gm-Message-State: APjAAAXvMwdf7T6u9ILJWHjdXbzDEIpUWwefhb8jfjWHY6mSCzuTFabb
-        kD3bXk4T4h2WJ9G3XYxW/Gs=
-X-Google-Smtp-Source: APXvYqwmfor3l/pjL1JO7B0xRehhEkmmsL56ceOI3qUBevHOc/J6b9Pkqdbh/AZX7l3kmFz1Xu+HUg==
-X-Received: by 2002:a17:90a:bb92:: with SMTP id v18mr9033125pjr.78.1566626721980;
-        Fri, 23 Aug 2019 23:05:21 -0700 (PDT)
+        bh=e0HkBOqN0uylntPEgaS0w5fFqAg/V/5vucjq9zDrym4=;
+        b=snxF3JsuC9Y7gNcVB0od4XmiPo2nkAysHZ6JhhN3fEUJwTRJc8SagE0MDwHowYQXrX
+         HkuqArFEZnQwD5K8TF4/v8yl9AEiGMA/6MNAJOBz8r9xAbGCAqWemwSOjE4DD6Ju/SI4
+         O368ezZl8SLn2CuCx8vV/umBHKhzAckmTYnjL3oLAt7SPIPqlqyJbGFbK+R0HHuRMiKR
+         rVJBlv/Flg82fxkha5sHZw+qC4vyOUi2a5X0pboAX0xTI0LPNkut4hzq+LLL2NmHAfra
+         29Adof19cYq/FjFZkk/b7kpR905rPXFyF2Wh08Yj3eR+FsD7wqZ8/YIEmnfCN+lwETVH
+         CXnw==
+X-Gm-Message-State: APjAAAX2rzuP/04Sr0FT7YZCxeO4VxzbTRcZORe7xJoMIJ0iRCMAIDR8
+        VjN7OUEVkOKyEnFfB1xpx2Y=
+X-Google-Smtp-Source: APXvYqx9gXJzI9J8fiAP62+h4JpKDgeEO0hkmJGEPYIRc227/M4bn+76DWdLzq9rZZVUz2tyt4qmjQ==
+X-Received: by 2002:a63:f048:: with SMTP id s8mr6940406pgj.26.1566626720775;
+        Fri, 23 Aug 2019 23:05:20 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id w2sm4300882pjr.27.2019.08.23.23.05.20
+        by smtp.gmail.com with ESMTPSA id w2sm4300882pjr.27.2019.08.23.23.05.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 23:05:21 -0700 (PDT)
+        Fri, 23 Aug 2019 23:05:19 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Thomas Garnier <thgarnie@chromium.org>,
         Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>
-Subject: [PATCH 7/7] x86/current: Aggressive caching of current
-Date:   Fri, 23 Aug 2019 15:44:24 -0700
-Message-Id: <20190823224424.15296-8-namit@vmware.com>
+Subject: [PATCH 6/7] x86/percpu: Optimized arch_raw_cpu_ptr()
+Date:   Fri, 23 Aug 2019 15:44:23 -0700
+Message-Id: <20190823224424.15296-7-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190823224424.15296-1-namit@vmware.com>
 References: <20190823224424.15296-1-namit@vmware.com>
@@ -60,142 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current_task is supposed to be constant in each thread and therefore
-does not need to be reread. There is already an attempt to cache it
-using inline assembly, using this_cpu_read_stable(), which hides the
-dependency on the read memory address.
+Implementing arch_raw_cpu_ptr() in C, allows the compiler to perform
+better optimizations, such as setting an appropriate base to compute
+the address instead of an add instruction.
 
-However, this caching is not working very well. For example,
-sync_mm_rss() still reads current_task twice for no reason.
+The benefit of this computation is relevant only when using compiler
+segment qualifiers. It is inapplicable to use this method when the
+address size is greater than the maximum operand size, as it is when
+building vdso32.
 
-Allow more aggressive caching by aliasing current_task to
-into a constant const_current_task and reading from the constant copy.
-Doing so requires the compiler to support x86 segment qualifiers.
-Hide const_current_task in a different compilation unit to avoid the
-compiler from assuming that the value is constant during compilation.
+Distinguish between the two cases in which preemption is disabled (as
+happens when this_cpu_ptr() is used) and enabled (when raw_cpu_ptr() is
+used).
+
+This allows optimizations, for instance in rcu_dynticks_eqs_exit(),
+the following code:
+
+  mov    $0x2bbc0,%rax
+  add    %gs:0x7ef07570(%rip),%rax	# 0x10358 <this_cpu_off>
+  lock xadd %edx,0xd8(%rax)
+
+Turns with this patch into:
+
+  mov    %gs:0x7ef08aa5(%rip),%rax	# 0x10358 <this_cpu_off>
+  lock xadd %edx,0x2bc58(%rax)
 
 Signed-off-by: Nadav Amit <namit@vmware.com>
 ---
- arch/x86/include/asm/current.h | 30 ++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/Makefile   |  1 +
- arch/x86/kernel/cpu/common.c   |  7 +------
- arch/x86/kernel/cpu/current.c  | 16 ++++++++++++++++
- include/linux/compiler.h       |  2 +-
- 5 files changed, 49 insertions(+), 7 deletions(-)
- create mode 100644 arch/x86/kernel/cpu/current.c
+ arch/x86/include/asm/percpu.h | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
-index 3e204e6140b5..7f093e81a647 100644
---- a/arch/x86/include/asm/current.h
-+++ b/arch/x86/include/asm/current.h
-@@ -10,11 +10,41 @@ struct task_struct;
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 13987f9bc82f..3d82df27d45c 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -73,20 +73,41 @@
+ #endif /* USE_X86_SEG_SUPPORT */
  
- DECLARE_PER_CPU(struct task_struct *, current_task);
+ #define __my_cpu_offset		this_cpu_read(this_cpu_off)
++#define __raw_my_cpu_offset	__this_cpu_read(this_cpu_off)
++#define __my_cpu_ptr(ptr)	(__my_cpu_type(*ptr) *)(uintptr_t)(ptr)
  
-+#if USE_X86_SEG_SUPPORT
-+
++#if USE_X86_SEG_SUPPORT && !defined(BUILD_VDSO32) && defined(CONFIG_X86_64)
 +/*
-+ * Hold a constant alias for current_task, which would allow to avoid caching of
-+ * current task.
++ * Efficient implementation for cases in which the compiler supports C segments.
++ * Allows the compiler to perform additional optimizations that can save more
++ * instructions.
 + *
-+ * We must mark const_current_task with the segment qualifiers, as otherwise gcc
-+ * would do redundant reads of const_current_task.
++ * This optimized version can only be used if the pointer size equals to native
++ * operand size, which does not happen when vdso32 is used.
 + */
-+DECLARE_PER_CPU(struct task_struct * const __percpu_seg_override, const_current_task);
-+
-+static __always_inline struct task_struct *get_current(void)
-+{
-+
-+	/*
-+	 * GCC is missing functionality of removing segment qualifiers, which
-+	 * messes with per-cpu infrastructure that holds local copies. Use
-+	 * __raw_cpu_read to avoid holding any copy.
-+	 */
-+	return __raw_cpu_read(, const_current_task);
-+}
-+
-+#else /* USE_X86_SEG_SUPPORT */
-+
-+/*
-+ * Without segment qualifier support, the per-cpu infrastrucutre is not
-+ * suitable for reading constants, so use this_cpu_read_stable() in this case.
-+ */
- static __always_inline struct task_struct *get_current(void)
- {
- 	return this_cpu_read_stable(current_task);
- }
- 
-+#endif /* USE_X86_SEG_SUPPORT */
-+
- #define current get_current()
- 
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index d7a1e5a9331c..d816f03a37d7 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -19,6 +19,7 @@ CFLAGS_common.o		:= $(nostackp)
- 
- obj-y			:= cacheinfo.o scattered.o topology.o
- obj-y			+= common.o
-+obj-y			+= current.o
- obj-y			+= rdrand.o
- obj-y			+= match.o
- obj-y			+= bugs.o
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 5cc2d51cc25e..5f7c9ee57802 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1619,13 +1619,8 @@ DEFINE_PER_CPU_FIRST(struct fixed_percpu_data,
- EXPORT_PER_CPU_SYMBOL_GPL(fixed_percpu_data);
- 
++#define __arch_raw_cpu_ptr_qual(qual, ptr)				\
++({									\
++	(qual typeof(*(ptr)) __kernel __force *)((uintptr_t)(ptr) +	\
++						__my_cpu_offset);	\
++})
++#else /* USE_X86_SEG_SUPPORT && !defined(BUILD_VDSO32) && defined(CONFIG_X86_64) */
  /*
-- * The following percpu variables are hot.  Align current_task to
-- * cacheline size such that they fall in the same cacheline.
-+ * The following percpu variables are hot.
+  * Compared to the generic __my_cpu_offset version, the following
+  * saves one instruction and avoids clobbering a temp register.
   */
--DEFINE_PER_CPU(struct task_struct *, current_task) ____cacheline_aligned =
--	&init_task;
--EXPORT_PER_CPU_SYMBOL(current_task);
--
- DEFINE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
- DEFINE_PER_CPU(unsigned int, irq_count) __visible = -1;
- 
-diff --git a/arch/x86/kernel/cpu/current.c b/arch/x86/kernel/cpu/current.c
-new file mode 100644
-index 000000000000..3238c6e34984
---- /dev/null
-+++ b/arch/x86/kernel/cpu/current.c
-@@ -0,0 +1,16 @@
-+#include <linux/sched/task.h>
-+#include <asm/current.h>
+-#define arch_raw_cpu_ptr(ptr)				\
++#define __arch_raw_cpu_ptr_qual(qual, ptr)		\
+ ({							\
+ 	unsigned long tcp_ptr__;			\
+-	asm volatile("add " __percpu_arg(1) ", %0"	\
++	asm qual ("add " __percpu_arg(1) ", %0"		\
+ 		     : "=r" (tcp_ptr__)			\
+ 		     : "m" (__my_cpu_var(this_cpu_off)),\
+ 		       "0" (ptr));			\
+ 	(typeof(*(ptr)) __kernel __force *)tcp_ptr__;	\
+ })
++#endif /* USE_X86_SEG_SUPPORT && !defined(BUILD_VDSO32) && defined(CONFIG_X86_64) */
 +
-+/*
-+ * Align current_task to cacheline size such that they fall in the same
-+ * cacheline.
-+ */
-+DEFINE_PER_CPU(struct task_struct *, current_task) ____cacheline_aligned =
-+	&init_task;
-+EXPORT_PER_CPU_SYMBOL(current_task);
-+
-+#if USE_X86_SEG_SUPPORT
-+DECLARE_PER_CPU(struct task_struct * const __percpu_seg_override, const_current_task)
-+	__attribute__((alias("current_task")));
-+EXPORT_PER_CPU_SYMBOL(const_current_task);
-+#endif
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index f0fd5636fddb..1b6ee9ab6373 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -299,7 +299,7 @@ unsigned long read_word_at_a_time(const void *addr)
-  */
- #define __ADDRESSABLE(sym) \
- 	static void * __section(".discard.addressable") __used \
--		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
-+		__PASTE(__addressable_##sym, __LINE__) = (void *)(uintptr_t)&sym;
- 
- /**
-  * offset_to_ptr - convert a relative memory offset to an absolute pointer
++#define arch_raw_cpu_ptr(ptr)				__arch_raw_cpu_ptr_qual(volatile, ptr)
++#define arch_raw_cpu_ptr_preemption_disabled(ptr)	__arch_raw_cpu_ptr_qual( , ptr)
+ #else /* CONFIG_SMP */
+ #define __percpu_seg_override
+ #define __percpu_prefix		""
 -- 
 2.17.1
 
