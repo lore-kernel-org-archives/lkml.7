@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC466C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47E9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F3223405
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94DE523404
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389743AbfHWCMf (ORCPT
+        id S2389429AbfHWCMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:12:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33728 "EHLO
+        Thu, 22 Aug 2019 22:12:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33708 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389361AbfHWCMV (ORCPT
+        with ESMTP id S1730401AbfHWCMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:12:21 -0400
+        Thu, 22 Aug 2019 22:12:17 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0z3p-0000xy-Px; Fri, 23 Aug 2019 04:12:17 +0200
+        id 1i0z3m-0000w9-QA; Fri, 23 Aug 2019 04:12:14 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 791A11C0883;
-        Fri, 23 Aug 2019 04:12:17 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:12:17 -0000
-From:   tip-bot2 for Frederic Weisbecker <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 648201C07E4;
+        Fri, 23 Aug 2019 04:12:14 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:12:14 -0000
+From:   tip-bot2 for Thomas Gleixner <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] hrtimer: Improve comments on handling priority
- inversion against softirq
- kthread
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>
-In-Reply-To: <20190820132656.GC2093@lenoir>
-References: <20190820132656.GC2093@lenoir>
+Subject: [tip: timers/core] posix-cpu-timers: Remove tsk argument from
+ run_posix_cpu_timers()
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <20190819143801.945469967@linutronix.de>
+References: <20190819143801.945469967@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156652633741.11664.5398841645445804148.tip-bot2@tip-bot2>
+Message-ID: <156652633417.11637.2192098489035972415.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -58,73 +58,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     0bee3b601b77dbe7981b5474ae8758d6bf60177a
-Gitweb:        https://git.kernel.org/tip/0bee3b601b77dbe7981b5474ae8758d6bf60177a
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Tue, 20 Aug 2019 15:12:23 +02:00
+Commit-ID:     dce3e8fd039cc1b62760b3ad6822cf04c262cd0e
+Gitweb:        https://git.kernel.org/tip/dce3e8fd039cc1b62760b3ad6822cf04c262cd0e
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 19 Aug 2019 16:31:47 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 20 Aug 2019 22:05:46 +02:00
+CommitterDate: Wed, 21 Aug 2019 20:27:16 +02:00
 
-hrtimer: Improve comments on handling priority inversion against softirq kthread
+posix-cpu-timers: Remove tsk argument from run_posix_cpu_timers()
 
-The handling of a priority inversion between timer cancelling and a a not
-well defined possible preemption of softirq kthread is not very clear.
+It's always current. Don't give people wrong ideas.
 
-Especially in the posix timers side it's unclear why there is a specific RT
-wait callback.
-
-All the nice explanations can be found in the initial changelog of
-f61eff83cec9 (hrtimer: Prepare support for PREEMPT_RT").
-
-Extract the detailed informations from there and put it into comments.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190820132656.GC2093@lenoir
----
- kernel/time/hrtimer.c      | 14 ++++++++++----
- kernel/time/posix-timers.c |  6 ++++++
- 2 files changed, 16 insertions(+), 4 deletions(-)
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lkml.kernel.org/r/20190819143801.945469967@linutronix.de
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 4991227..8333537 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1201,10 +1201,16 @@ static void hrtimer_sync_wait_running(struct hrtimer_cpu_base *cpu_base,
-  * deletion of a timer failed because the timer callback function was
-  * running.
-  *
-- * This prevents priority inversion, if the softirq thread on a remote CPU
-- * got preempted, and it prevents a life lock when the task which tries to
-- * delete a timer preempted the softirq thread running the timer callback
-- * function.
-+ * This prevents priority inversion: if the soft irq thread is preempted
-+ * in the middle of a timer callback, then calling del_timer_sync() can
-+ * lead to two issues:
-+ *
-+ *  - If the caller is on a remote CPU then it has to spin wait for the timer
-+ *    handler to complete. This can result in unbound priority inversion.
-+ *
-+ *  - If the caller originates from the task which preempted the timer
-+ *    handler on the same CPU, then spin waiting for the timer handler to
-+ *    complete is never going to end.
+---
+ include/linux/posix-timers.h   | 2 +-
+ kernel/time/posix-cpu-timers.c | 5 +++--
+ kernel/time/timer.c            | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
+index 26c636d..033374b 100644
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -118,7 +118,7 @@ struct k_itimer {
+ 	struct rcu_head		rcu;
+ };
+ 
+-void run_posix_cpu_timers(struct task_struct *task);
++void run_posix_cpu_timers(void);
+ void posix_cpu_timers_exit(struct task_struct *task);
+ void posix_cpu_timers_exit_group(struct task_struct *task);
+ void set_process_cpu_timer(struct task_struct *task, unsigned int clock_idx,
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 98223d2..387e0e8 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1137,11 +1137,12 @@ static inline int fastpath_timer_check(struct task_struct *tsk)
+  * already updated our counts.  We need to check if any timers fire now.
+  * Interrupts are disabled.
   */
- void hrtimer_cancel_wait_running(const struct hrtimer *timer)
+-void run_posix_cpu_timers(struct task_struct *tsk)
++void run_posix_cpu_timers(void)
  {
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 9e37783..0ec5b7a 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -810,6 +810,12 @@ static void common_timer_wait_running(struct k_itimer *timer)
- 	hrtimer_cancel_wait_running(&timer->it.real.timer);
+-	LIST_HEAD(firing);
++	struct task_struct *tsk = current;
+ 	struct k_itimer *timer, *next;
+ 	unsigned long flags;
++	LIST_HEAD(firing);
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 673c6a0..0e315a2 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1728,7 +1728,7 @@ void update_process_times(int user_tick)
+ #endif
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+-		run_posix_cpu_timers(p);
++		run_posix_cpu_timers();
  }
  
-+/*
-+ * On PREEMPT_RT this prevent priority inversion against softirq kthread in
-+ * case it gets preempted while executing a timer callback. See comments in
-+ * hrtimer_cancel_wait_running. For PREEMPT_RT=n this just results in a
-+ * cpu_relax().
-+ */
- static struct k_itimer *timer_wait_running(struct k_itimer *timer,
- 					   unsigned long *flags)
- {
+ /**
