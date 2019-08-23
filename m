@@ -2,171 +2,120 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA40C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9576C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCB921019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912A0206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:11:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404857AbfHWSDp (ORCPT
+        id S2404561AbfHWSL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 14:03:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39088 "EHLO mx1.redhat.com"
+        Fri, 23 Aug 2019 14:11:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:36340 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404603AbfHWSDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 14:03:45 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CE14D3082231;
-        Fri, 23 Aug 2019 18:03:44 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17E12600C1;
-        Fri, 23 Aug 2019 18:03:44 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 14:03:42 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     bsegall@google.com
-Cc:     Dave Chiluk <chiluk+linux@indeed.com>, Qian Cai <cai@lca.pw>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next v2] sched/fair: fix -Wunused-but-set-variable
- warnings
-Message-ID: <20190823180342.GC14209@pauld.bos.csb>
-References: <1566326455-8038-1-git-send-email-cai@lca.pw>
- <xm26tvaaifoy.fsf@bsegall-linux.svl.corp.google.com>
- <CAC=E7cWYSEAjUhgN5vBECmR5ATXWmt4M7n8sNN0xXStEsb4YjA@mail.gmail.com>
- <xm26h867iyfx.fsf@bsegall-linux.svl.corp.google.com>
+        id S2388081AbfHWSL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 14:11:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 11:11:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
+   d="scan'208";a="379832334"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Aug 2019 11:11:56 -0700
+Subject: Re: [PATCH 0/3] libnvdimm/security: Enumerate the frozen state and
+ other cleanups
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Jeff Moyer <jmoyer@redhat.com>, linux-kernel@vger.kernel.org
+References: <156583201347.2815870.4687949334637966672.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.jiang@intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ o6nmKbYpUAltQObU2w==
+Message-ID: <20fe41f4-80d7-521b-0517-267e3754c372@intel.com>
+Date:   Fri, 23 Aug 2019 11:11:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xm26h867iyfx.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 23 Aug 2019 18:03:44 +0000 (UTC)
+In-Reply-To: <156583201347.2815870.4687949334637966672.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:28:02AM -0700 bsegall@google.com wrote:
-> Dave Chiluk <chiluk+linux@indeed.com> writes:
+
+
+On 8/14/19 6:20 PM, Dan Williams wrote:
+> Jeff reported a scenario where ndctl was failing to unlock DIMMs [1].
+> Through the course of debug it was discovered that the security
+> interface on the DIMMs was in the 'frozen' state disallowing unlock, or
+> any security operation.  Unfortunately the kernel only showed that the
+> DIMMs were 'locked', not 'locked' and 'frozen'.
 > 
-> > On Wed, Aug 21, 2019 at 12:36 PM <bsegall@google.com> wrote:
-> >>
-> >> Qian Cai <cai@lca.pw> writes:
-> >>
-> >> > The linux-next commit "sched/fair: Fix low cpu usage with high
-> >> > throttling by removing expiration of cpu-local slices" [1] introduced a
-> >> > few compilation warnings,
-> >> >
-> >> > kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-> >> > kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used
-> >> > [-Wunused-but-set-variable]
-> >> > kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-> >> > kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used
-> >> > [-Wunused-but-set-variable]
-> >> >
-> >> > Also, __refill_cfs_bandwidth_runtime() does no longer update the
-> >> > expiration time, so fix the comments accordingly.
-> >> >
-> >> > [1] https://lore.kernel.org/lkml/1558121424-2914-1-git-send-email-chiluk+linux@indeed.com/
-> >> >
-> >> > Signed-off-by: Qian Cai <cai@lca.pw>
-> >>
-> >> Reviewed-by: Ben Segall <bsegall@google.com>
-> >>
-> >> > ---
-> >> >
-> >> > v2: Keep hrtimer_forward_now() in start_cfs_bandwidth() per Ben.
-> >> >
-> >> >  kernel/sched/fair.c | 19 ++++++-------------
-> >> >  1 file changed, 6 insertions(+), 13 deletions(-)
-> >> >
-> >> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >> > index 84959d3285d1..06782491691f 100644
-> >> > --- a/kernel/sched/fair.c
-> >> > +++ b/kernel/sched/fair.c
-> >> > @@ -4354,21 +4354,16 @@ static inline u64 sched_cfs_bandwidth_slice(void)
-> >> >  }
-> >> >
-> >> >  /*
-> >> > - * Replenish runtime according to assigned quota and update expiration time.
-> >> > - * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-> >> > - * additional synchronization around rq->lock.
-> >> > + * Replenish runtime according to assigned quota. We use sched_clock_cpu
-> >> > + * directly instead of rq->clock to avoid adding additional synchronization
-> >> > + * around rq->lock.
-> >> >   *
-> >> >   * requires cfs_b->lock
-> >> >   */
-> >> >  void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
-> >> >  {
-> >> > -     u64 now;
-> >> > -
-> >> > -     if (cfs_b->quota == RUNTIME_INF)
-> >> > -             return;
-> >> > -
-> >> > -     now = sched_clock_cpu(smp_processor_id());
-> >> > -     cfs_b->runtime = cfs_b->quota;
-> >> > +     if (cfs_b->quota != RUNTIME_INF)
-> >> > +             cfs_b->runtime = cfs_b->quota;
-> >> >  }
-> >> >
-> >> >  static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-> >> > @@ -4989,15 +4984,13 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-> >> >
-> >> >  void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
-> >> >  {
-> >> > -     u64 overrun;
-> >> > -
-> >> >       lockdep_assert_held(&cfs_b->lock);
-> >> >
-> >> >       if (cfs_b->period_active)
-> >> >               return;
-> >> >
-> >> >       cfs_b->period_active = 1;
-> >> > -     overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-> >> > +     hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-> >> >       hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
-> >> >  }
-> >
-> > Looks good.
-> > Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-> >
-> > Sorry for the slow response, I was on vacation.
-> >
-> > @Ben do you think it would be useful to still capture overrun, and
-> > WARN on any overruns?  We wouldn't expect overruns, but their
-> > existence would indicate an over-loaded node or too short of a
-> > cfs_period.  Additionally, it would be interesting to see if we could
-> > capture the offset between when the bandwidth was refilled, and when
-> > the timer was supposed to fire.  I've always done all my calculations
-> > assuming that the timer fires and is handled exceedingly close to the
-> > time it was supposed to fire.  Although, if the node is running that
-> > overloaded you probably have many more problems than worrying about
-> > timer warnings.
+> Introduce a new sysfs 'frozen' attribute so that ndctl can reflect the
+> "security-operations-allowed" state independently of the lock status.
+> Then, followup with cleanups related to replacing a security-state-enum
+> with a set of flags.
 > 
-> That "overrun" there is not really an overrun - it's the number of
-> complete periods the timer has been inactive for. It was used so that a
-> given tg's period timer would keep the same
-> phase/offset/whatever-you-call-it, even if it goes idle for a while,
-> rather than having the next period start N ms after a task wakes up.
+> [1]: https://lists.01.org/pipermail/linux-nvdimm/2019-August/022856.html
+> ---
 > 
-> Also, poor choices by userspace is not generally something the kernel
-> generally WARNs on, as I understand it.
+> Dan Williams (3):
+>       libnvdimm/security: Introduce a 'frozen' attribute
+>       libnvdimm/security: Tighten scope of nvdimm->busy vs security operations
+>       libnvdimm/security: Consolidate 'security' operations
+> 
+> 
+>  drivers/acpi/nfit/intel.c        |   65 +++++++-----
+>  drivers/nvdimm/bus.c             |    2 
+>  drivers/nvdimm/dimm_devs.c       |  134 ++++++--------------------
+>  drivers/nvdimm/nd-core.h         |   51 ++++------
+>  drivers/nvdimm/security.c        |  199 +++++++++++++++++++++++++-------------
+>  include/linux/libnvdimm.h        |    9 +-
+>  tools/testing/nvdimm/dimm_devs.c |   19 +---
+>  7 files changed, 231 insertions(+), 248 deletions(-)
+> 
 
-I don't think it matters in the start_cfs_bandwidth case, anyway. We do 
-effectively check in sched_cfs_period_timer. 
-
-Cleanup looks okay to me as well.
-
-
-Cheers,
-Phil
-
--- 
+For the series
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Thanks.
