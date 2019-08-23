@@ -2,85 +2,105 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CF4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFAEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E0D2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAAB21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405520AbfHWPch convert rfc822-to-8bit (ORCPT
+        id S2405589AbfHWPdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:32:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60344 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395561AbfHWPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:32:37 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 00569369DA
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 15:32:37 +0000 (UTC)
-Received: by mail-qt1-f197.google.com with SMTP id z15so10265951qts.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 08:32:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CzTSQNQPZbM6Os80kdEUxpLn3GKCd61LRBEy94bV1tM=;
-        b=b8HvOe5odF9keqbdttIW9I4EgTaWqy6HVOIwB8ZN85lxvvCCAU1DONR2T84nNAEqVW
-         n3yqCwDogTaoZJGo9Npd2BE8PNqYfouUdxB8ZyIv11zLPWaLl9ZZF28LWw8/vnW6P0CX
-         pRUA/KlBxH2Ejp5SAzYnReyPDvQ6vEtRnp7qwkB4aBMPORyrZD+Iy9vCe59wen5CggjY
-         oUGIZy3syaa5+7CMZdDGehV4XR3zUDPndd3ZzOzojjtGJteOOHqsqtfcn59q6CXhRFiI
-         RcFxDAsNtfRFAjgQ4/8QStbiqqc2UzaM6EPKqQsCisolZC1cNyHIyhzZWcTxfHWCcJKs
-         UIvA==
-X-Gm-Message-State: APjAAAXEHTPY55XK5o/agBZ43f2sncgxxFiPYpB3Nen2PGy6dwXbCtk4
-        Spjb6IP2S2dQCfzRMrmZCrkMploJYHPCpY6H1BxGXA3j5UiHmJWZnun1o7liSImkrVvyqYeMieV
-        oXmDeNowTU/uAgKTiXJpSN24Ne6wGbKn1O6+MjLa+
-X-Received: by 2002:ac8:60a:: with SMTP id d10mr5192668qth.31.1566574356272;
-        Fri, 23 Aug 2019 08:32:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwqJK+0IGboWflSxwP9GvVCqRjZSsVtPfraXZdPGofDZ9SYXqP58SXv8qNU9ASj7ybsQZ0n8lhigHT9PPjRxQk=
-X-Received: by 2002:ac8:60a:: with SMTP id d10mr5192654qth.31.1566574356106;
- Fri, 23 Aug 2019 08:32:36 -0700 (PDT)
+        Fri, 23 Aug 2019 11:33:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35969 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405326AbfHWPdP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:33:15 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i1BYu-0005As-Og; Fri, 23 Aug 2019 17:33:12 +0200
+Date:   Fri, 23 Aug 2019 17:33:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 01/38] posix-cpu-timers: Provide task validation
+ functions
+In-Reply-To: <20190821230319.GD22020@lenoir>
+Message-ID: <alpine.DEB.2.21.1908231732030.1896@nanos.tec.linutronix.de>
+References: <20190821190847.665673890@linutronix.de> <20190821192919.326097175@linutronix.de> <20190821223356.GC22020@lenoir> <20190821230319.GD22020@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190822201849.28924-1-pedro@pedrovanzella.com>
- <CAO-hwJKQcTpmk8cVf-YmKu2awXv_53=qfpy2yfmy2rgMu_DEug@mail.gmail.com>
- <e6014a01-1094-9ec7-9b37-2abdf70e305f@pedrovanzella.com> <CAO-hwJ+=dAyFnUfiPSmiGpzYTj=9BPDdeKQOY7UoCOvwQ5CH7Q@mail.gmail.com>
- <3c37ccc992d7979358e8472fbf52a583c6e1068f.camel@archlinux.org>
-In-Reply-To: <3c37ccc992d7979358e8472fbf52a583c6e1068f.camel@archlinux.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 23 Aug 2019 17:32:24 +0200
-Message-ID: <CAO-hwJLQT6Oj2mvDTtQsOHLOTLFeB=_e6ZQZVj2tz92CZUU17A@mail.gmail.com>
-Subject: Re: [Resubmit] Read battery voltage from Logitech Gaming mice
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-Cc:     Pedro Vanzella <pedro@pedrovanzella.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 4:48 PM Filipe Laíns <lains@archlinux.org> wrote:
->
-> On Fri, 2019-08-23 at 16:32 +0200, Benjamin Tissoires wrote:
-> > The problem I have with quirks, and that I explained to Filipe on IRC
-> > is that this is kernel ABI. Even if there is a very low chance we have
-> > someone using this, re-using the same drv_data bit in the future might
-> > break someone's device.
->
-> But we can reserve those bits. I don't expect there to be a ton of
-> devices that need to be quirked, so using the remaining bits should be
-> perfectly fine. Do you agree?
+On Thu, 22 Aug 2019, Frederic Weisbecker wrote:
+> On Thu, Aug 22, 2019 at 12:33:56AM +0200, Frederic Weisbecker wrote:
+> > On Wed, Aug 21, 2019 at 09:08:48PM +0200, Thomas Gleixner wrote:
+> > > The code contains three slightly different copies of validating whether a
+> > > given clock resolves to a valid task and whether the current caller has
+> > > permissions to access it.
+> > > 
+> > > Create central functions. Replace check_clock() as a first step and rename
+> > > it to something sensible.
+> > > 
+> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > > ---
+> > >  kernel/time/posix-cpu-timers.c |   65 +++++++++++++++++++++++++++--------------
+> > >  1 file changed, 44 insertions(+), 21 deletions(-)
+> > > 
+> > > --- a/kernel/time/posix-cpu-timers.c
+> > > +++ b/kernel/time/posix-cpu-timers.c
+> > > @@ -35,27 +35,52 @@ void update_rlimit_cpu(struct task_struc
+> > >  	spin_unlock_irq(&task->sighand->siglock);
+> > >  }
+> > >  
+> > > -static int check_clock(const clockid_t which_clock)
+> > > +/*
+> > > + * Functions for validating access to tasks.
+> > > + */
+> > > +static struct task_struct *lookup_task(const pid_t pid, bool thread)
+> > >  {
+> > > -	int error = 0;
+> > >  	struct task_struct *p;
+> > > -	const pid_t pid = CPUCLOCK_PID(which_clock);
+> > >  
+> > > -	if (CPUCLOCK_WHICH(which_clock) >= CPUCLOCK_MAX)
+> > > -		return -EINVAL;
+> > > +	if (!pid)
+> > > +		return thread ? current : current->group_leader;
+> > >  
+> > > -	if (pid == 0)
+> > > -		return 0;
+> > > +	p = find_task_by_vpid(pid);
+> > > +	if (!p || p == current)
+> > > +		return p;
+> > 
+> > What if (p == current && !thread && !has_group_leader_pid(p)) ?
+> 
+> Ah looking at the next patch, posix_cpu_clock_get_task() and posix_cpu_clock_getres()
+> had different ad-hoc checks for this specific case.
+> 
+> clock_getres() used to return -EINVAL while clock_get() doesn't
+> care. They certainly should agree in their behaviour. I'm not sure which
+> one is correct. It probably doesn't matter much.
 
-Nope. If the code is not ready for upstream, it should not be included.
+Let me stare on the different variants again
 
-Cheers,
-Benjamin
+Thanks,
+
+	tglx
