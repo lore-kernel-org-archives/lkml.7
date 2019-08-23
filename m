@@ -2,94 +2,158 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88481C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D9CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D05B21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77E9233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hvtDkSp8"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Hk7FYPxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfHWJLs (ORCPT
+        id S1727141AbfHWJOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:11:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45837 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfHWJLr (ORCPT
+        Fri, 23 Aug 2019 05:14:00 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:31796 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfHWJOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:11:47 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l1so8162062lji.12
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:11:46 -0700 (PDT)
+        Fri, 23 Aug 2019 05:14:00 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: cNqvVtt9a3IDeqOscB8kEVPfUd32aq023tmhdicUVbdb+KvxdLvb+EqCtmMRreIYRIi+p0jJX+
+ 50Ym5+FqhNLBnhxZeE/6zt5Czp2rqN0VWFBjJSXmjDz4PFPKs3ZRjrytc/qiB3BSOzlZRh7nhI
+ esNictdDGjkj0EUQATj3ttgqs1MDunv1uw5D334EMOamyqGV5RJC9KoqlXI0B09CoJnn7Hj6Ph
+ vBcNA6gt8fmVejW0L1jsY6O/tx3wMFI/xoZoBrauW1rqdOXRkO9kk1kPlEXh/I3IKNJTXv+4N6
+ FM4=
+X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
+   d="scan'208";a="46273240"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Aug 2019 02:13:58 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 23 Aug 2019 02:13:58 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 23 Aug 2019 02:13:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BrdbAv9EtE1fDJiFTNFI5EljBHUP1X42It2ORpbl6EILE1ScEGsKdDAK6U3Tdo/4l4FkaU3YFYJwCnKQGcwYfufifbWvXTESIKWL4T346Su6iEjn3m3WOQKG47q85n0u1lOZ8/OA3dxA2jTuomamVV9B38fbLT79WhPfsfY/zxtX/UWpYxWsTp3nd38Q1xXFXN5xEnjPZCzlAzGbIY1ZDhuTAocusUGrBhUnWci8CKuI4dO8C9PSCQfgYikTKtutAW9uVCl/B7OvaEPxoGAPVrckHVsuB9ij7I1VLX2reN+5De/cuJWJo1e36ojUirsR/F649sn6aYiCLHVgCF27Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bcf7zRSxm5W2Bk6tPrmrK65rz9pk1nI9QZjjnnZKrXQ=;
+ b=hHWeSDOiwXrGkHLja59IHnePhXR46uIbIm3qcr7nNVzAwW1WRXG2gfnf7D+I4YWArj4bwmPuFMBDncTpPSEvqK/UTR7yONbBGTZh/+ruNZ3+FGddP7Sx6Ofkk3zRqB+BXlM9EN60Wy55a+GDfjvPSL3w+2XWGfjvBE+APYxdLyW6tTtX3gqemAx3Y9gTtX1h5rNij117R0mJh2nEJX3chOEFgE3NvwR/j1+/pzSgR60452MCWSN+20AWj+OSCnXibuIlO64nbEELUelbRIL3sCbJNLd7/tmWvQmOVVxxmxOSnXamCK9yNZgJkixtzMqZeXZp/6ozr49ssXh8Hy4Xrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tpf4Sd4sB67NX/Z0IE/0oo2kV9MKJkg6CHsjIEFd3KU=;
-        b=hvtDkSp8ReBY5hdjK4hImGWVQ5NMpTNhQhINoHc1bbkSFgdb9Ax378WM+rfSMd7TCd
-         L5l9M+I6EkospSpiXQDtwe2KUNFaY2oZKO90OtBFOJJtJ0a0TfO39AMXgnZR9blwIYlv
-         Bn7Kp3XyLiXa7GqljQL1bpD/u1+yjvbd7/u5+1xFfEEes5ciwJse2zTxFKWjCXwlfi1e
-         7QnEKFbiHGibHqdyTK9H31/3ROaam4eu36TGTJRdAOlxXIv6UmJUvr7R0+aLXYdllKZT
-         TwebQ7MADWX7zYvyWeDktJ1SQBr0JH4mC7Erji6wztasivkKVX8d9kwXk3bW8B77kz6N
-         dOSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tpf4Sd4sB67NX/Z0IE/0oo2kV9MKJkg6CHsjIEFd3KU=;
-        b=NXpTpp+RFKO0Zkp21qAIOHEy3vrfRviuXkiYheY9ZbxQZ5JFWovMmy+LDGit2ic/h5
-         J9utfqzUfUJoap3E12I82uwxe1LmO9paNY7NjUvJLWQ54r47SjHh5y3IETtvKVB6SNV9
-         TPM8v0dy5bWMcviP9i6cvcmPV5r9h0OfY798/hylH4yqOB1qy08tBCR710vkt55eAMDN
-         8DU/SEUCyydfKsAfCnVUsp+qPxzDF1Jy0u4qDEg0IdlfQyXXibsnLO0IuqU8ruxqdmWe
-         LXkTowfBgUrSbiUftSM9Ov6dtgYvt7v5ByCgN1w2IuN9Ifkjq78SJY9pvDbKENVmOyG0
-         XkJQ==
-X-Gm-Message-State: APjAAAWabZfJ5K+yHhM2JdRyFQFuaPkjy0n+UNbXsqzyVJoBXPhSeFz/
-        mqBv6Xa+sSOURkCRpyhqfu/psV4Vyyzr119rmlTmEA==
-X-Google-Smtp-Source: APXvYqz37lVtHx2l7gPIBZDv+uBLRAQ6u2yeaTKA4VZIsyOtvW1TJ9Q5d2CBYS6UXGuidR9DURFQ3Mx2hHusBqV3J30=
-X-Received: by 2002:a2e:b174:: with SMTP id a20mr2344817ljm.108.1566551505375;
- Fri, 23 Aug 2019 02:11:45 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bcf7zRSxm5W2Bk6tPrmrK65rz9pk1nI9QZjjnnZKrXQ=;
+ b=Hk7FYPxFtjI+UqxHDYiBSXdNP1hABbUNY7s+Tt06SV+TxgaHi+3M+LjCRw1ajQWmkuy5j/hBdvqr77Kq0ShEpkEAfW5kBuwKQ8bq2IzXUY8t0j4L5ZBb6HSWuswz2hauW1HWUeQpDnZinhKnDIi7lrvvAaM0Ao537nyv2rhpA74=
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
+ MWHPR11MB1437.namprd11.prod.outlook.com (10.172.53.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Fri, 23 Aug 2019 09:13:57 +0000
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::410a:9d4b:b1df:2134]) by MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::410a:9d4b:b1df:2134%12]) with mapi id 15.20.2178.020; Fri, 23 Aug
+ 2019 09:13:57 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <sebastian.duda@fau.de>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <lukas.bulwahn@gmail.com>,
+        <Ludovic.Desroches@microchip.com>, <alexandre.belloni@bootlin.com>
+Subject: Re: Status of Subsystems - MICROCHIP SAMA5D2-COMPATIBLE PIOBU GPIO
+Thread-Topic: Status of Subsystems - MICROCHIP SAMA5D2-COMPATIBLE PIOBU GPIO
+Thread-Index: AQHVWZMXcPl+3nOggkK/p91ZWTeY5Q==
+Date:   Fri, 23 Aug 2019 09:13:57 +0000
+Message-ID: <f73f5db7-edcd-f579-ec2a-e42bf92c044d@microchip.com>
+References: <d2bdb45a-3571-5989-8278-6f5c7d9839f2@fau.de>
+In-Reply-To: <d2bdb45a-3571-5989-8278-6f5c7d9839f2@fau.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LNXP265CA0082.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:76::22) To MWHPR11MB1662.namprd11.prod.outlook.com
+ (2603:10b6:301:e::15)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [213.41.198.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 667b0b06-8074-4a6f-f53f-08d727aa3a1d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1437;
+x-ms-traffictypediagnostic: MWHPR11MB1437:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB1437A7C30B9EA9B37EE595E2E0A40@MWHPR11MB1437.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(346002)(366004)(199004)(45074003)(189003)(81156014)(8676002)(5660300002)(36756003)(86362001)(6512007)(76176011)(25786009)(966005)(6436002)(6306002)(52116002)(64756008)(8936002)(66476007)(66446008)(66066001)(66556008)(3846002)(2906002)(6116002)(66946007)(7736002)(4326008)(478600001)(186003)(14454004)(31696002)(2616005)(476003)(316002)(4744005)(446003)(11346002)(256004)(54906003)(53936002)(6246003)(26005)(6506007)(6916009)(386003)(99286004)(53546011)(102836004)(229853002)(6486002)(81166006)(71190400001)(71200400001)(486006)(31686004)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1437;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wSzHt9mvaJnHyjhCgsjoww6rtwrpvGbULz/CuIYQHjNm2VCWuwxvCNeNiXOfo7oKO8qNWibuLZDQIO5z+DavCZWJrmnqXIaCqkVyyPy546H9NNgs6e5wBS2eWV1EdoHKIDIMhGak63IqoeEN4C57mGE4dfo8BahH0h1QxmwCdLwFjSm9cNWbS8J9KBXdtLB4lC8BCopZ+g7+R0FYzAEpzzGaxwcxKNLNPaneKpC2bYnQrfoQCIb260Vlt8YtZTMqqsbGwieZTO13GGhpklqyV1eYcdtlkB8VOZqE08wUySgEc75hHYQU4UKNqd27g8v79aVCxjuRkneYqx9b1KkJ/NQK0UJZMOcAszZLqM5yB0+ReOyyiIf43JFSjNTBFhXoJGrnFTkCK4qvz2EkyTaSg9BmZkdckbetkrvHQ18VN3A=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <23C79482857EE14793949EFCB96DAB9D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190814110035.13451-1-ramon.fried@linux.intel.com>
-In-Reply-To: <20190814110035.13451-1-ramon.fried@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 11:11:33 +0200
-Message-ID: <CACRpkda7_YP7FC0e4JnaXJNB_aGMFbNdjN8kdKfHZ0LVnkyopg@mail.gmail.com>
-Subject: Re: [PATCH v3] gpiolib: Take MUX usage into account
-To:     Ramon Fried <ramon.fried@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 667b0b06-8074-4a6f-f53f-08d727aa3a1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 09:13:57.0489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XWjjOFHtWA16+i+rhNJvFVPEf3MZG4srPjHietVoKE0eYTJHdNR2L8nVu4qyyRnuElJB/+HSbO2NmtMLZh/A7CTxMsAgrMNzkAcaGOSWmjY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1437
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 1:01 PM Ramon Fried <ramon.fried@linux.intel.com> wrote:
+Sebastian,
 
-> From: Stefan Wahren <stefan.wahren@i2se.com>
->
-> The user space like gpioinfo only see the GPIO usage but not the
-> MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
-> pin is free/safe to use. So take the MUX usage of strict pinmux controllers
-> into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Tested-by: Ramon Fried <rfried.dev@gmail.com>
-> Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
-> ---
-> v3:
-> * Remove the debug message and replace with comment in code.
+On 20/08/2019 at 15:27, Sebastian Duda wrote:
+> Hello Andrei,
+>=20
+> in my master thesis, I'm using the association of subsystems to
+> maintainers/reviewers and its status given in the MAINTAINERS file.
+> During the research I noticed that there are several subsystems without
+> a status in the maintainers file. One of them is the subsystem
+> `MICROCHIP SAMA5D2-COMPATIBLE PIOBU GPIO` where you're mentioned as
+> maintainer.
+>=20
+> Is it intended not to mention a status for your subsystems?
+> What is the current status of your subsystem?
 
-This V3 version applied to the pinctrl tree for testing with
-Stefan's ACK.
+I've just removed this entry and merged it with other gpio/pinctrl=20
+driver's entry:
+https://lore.kernel.org/linux-arm-kernel/20190823083158.2649-1-nicolas.ferr=
+e@microchip.com/
 
-Thanks for hashing this out.
-
-Yours,
-Linus Walleij
+Best regards,
+--=20
+Nicolas Ferre
