@@ -2,93 +2,97 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB940C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8272C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6F722CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA6D206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566556100;
+	bh=/E5JUjiVVTZL1/2NgiVKzh6rSDnh6yNikPOcBaHVxFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kDaHUqjs2NkyCJLnZRuF/Agm7jdTmDTyZDk3K6LifM71JRKXR+iQ3Y7binHxMpcFt
+	 o0lCrNHQTx8lVo/7h1jrKy7FJPXRhw2CCZoHRgRhXLDgZw2AcNMocWxAg9YmnycPOC
+	 icmj7H4W4fSKAtUMdn8JCyyavdUWhrFOyRXRdAls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392178AbfHWK1f (ORCPT
+        id S2392342AbfHWK2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:27:35 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50830 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731002AbfHWK1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:27:35 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CEF3E200314;
-        Fri, 23 Aug 2019 12:27:33 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 360BE20070E;
-        Fri, 23 Aug 2019 12:27:29 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 44783402B3;
-        Fri, 23 Aug 2019 18:27:23 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
-Subject: [v1] arm64: dts: ls1028a: Remove some fixed-clock definiation
-Date:   Fri, 23 Aug 2019 18:17:31 +0800
-Message-Id: <20190823101731.12609-1-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 23 Aug 2019 06:28:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55448 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731002AbfHWK2T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 06:28:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/E5JUjiVVTZL1/2NgiVKzh6rSDnh6yNikPOcBaHVxFQ=; b=NDsUSsnr95zSwKVYQ3WivbAxp
+        nxEjNHJjq5bl9MbaBxUkWhwzEv1O1o6KoHcw7hVZs5QW/H3TE2kjXqHy454n/mkmfpizXc4yyP1kt
+        uFOqkG0tZRE/NQJGuVEjlz4StMNKfsJ0+RYPJ369e4eA/gd7U+Nd8bRi8Q5FZ3oj/+jfs=;
+Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i16no-0002jC-VF; Fri, 23 Aug 2019 10:28:16 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id A8203D02CD0; Fri, 23 Aug 2019 11:28:16 +0100 (BST)
+Date:   Fri, 23 Aug 2019 11:28:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE
+ when it's not ours
+Message-ID: <20190823102816.GN23391@sirena.co.uk>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+ <20190822211514.19288-3-olteanv@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SLfjTIIQuAzj8yil"
+Content-Disposition: inline
+In-Reply-To: <20190822211514.19288-3-olteanv@gmail.com>
+X-Cookie: Don't SANFORIZE me!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace pclk/aclk/mclk fixed-clock clock provider with platform clockgen
-pre-divider provider, those clocks should be driven by the CGA_PLL2/2.
 
-More details please refer Reference Manual.
+--SLfjTIIQuAzj8yil
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+On Fri, Aug 23, 2019 at 12:15:11AM +0300, Vladimir Oltean wrote:
+> The DSPI interrupt can be shared between two controllers at least on the
+> LX2160A. In that case, the driver for one controller might misbehave and
+> consume the other's interrupt. Fix this by actually checking if any of
+> the bits in the status register have been asserted.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 024d6fbd07ea..0fa3e29cb603 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -90,20 +90,6 @@
- 		clocks = <&osc_27m>;
- 	};
- 
--	aclk: clock-axi {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <650000000>;
--		clock-output-names= "aclk";
--	};
--
--	pclk: clock-apb {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <650000000>;
--		clock-output-names= "pclk";
--	};
--
- 	reboot {
- 		compatible ="syscon-reboot";
- 		regmap = <&dcfg>;
-@@ -885,7 +871,8 @@
- 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "DE", "SE";
--		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
-+		clocks = <&dpclk>, <&clockgen 2 2>, <&clockgen 2 2>,
-+			 <&clockgen 2 2>;
- 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
- 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
- 		arm,malidp-arqos-value = <0xd000d000>;
--- 
-2.17.1
+It would be better to have done this as the first patch before
+the restructuring, that way we could send this as a fix - the
+refactoring while good doesn't really fit with stable.
 
+--SLfjTIIQuAzj8yil
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fv78ACgkQJNaLcl1U
+h9Cv4gf+PlempNcDKec7OiBxdWny+wFPRO1wq7OKtAEtzU2wFvuZYAjGYbCciUyw
+cKlSUJ9T9Lg4Rq9PTM7CbmY3FobaqJyqTeZT6cADZE1QZoTJD78lQxB8XmJtRBu1
+r8z6XPbgLbRnws9lzRQIDdRvdIX4DO9sFiY/M+9nbbMGbGbkYKbHNk5461pHEV45
+c9lCEgHX62vJerrt0jxfomw50W8tEaqhZ9q6dg1zXwuXjXMmPBPQNnTkexYuco8L
+PIfr5fq2cFMOH0hvXdim2H8spTU3tizQQlZS7NeXkaC8tgE4vBYibF1BYnoCfuos
+AYL6TZxFXh9I5JM/fUCBs+qbLtbneg==
+=lQOn
+-----END PGP SIGNATURE-----
+
+--SLfjTIIQuAzj8yil--
