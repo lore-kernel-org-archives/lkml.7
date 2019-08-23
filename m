@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C527C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B37C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7730623401
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533EE23402
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392900AbfHWH6T (ORCPT
+        id S2392967AbfHWH6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:58:19 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:10978 "EHLO
+        Fri, 23 Aug 2019 03:58:25 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:19793 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392061AbfHWH5t (ORCPT
+        with ESMTP id S2391585AbfHWH5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:57:49 -0400
-X-UUID: cbd8f6cc14af49b6b4be9276cdad155f-20190823
-X-UUID: cbd8f6cc14af49b6b4be9276cdad155f-20190823
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 23 Aug 2019 03:57:45 -0400
+X-UUID: 89cba42284774cf391c4534491d031d3-20190823
+X-UUID: 89cba42284774cf391c4534491d031d3-20190823
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1406150217; Fri, 23 Aug 2019 15:57:33 +0800
+        with ESMTP id 366808245; Fri, 23 Aug 2019 15:57:26 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 23 Aug 2019 15:57:31 +0800
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 23 Aug 2019 15:57:25 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 23 Aug 2019 15:57:30 +0800
+ Transport; Fri, 23 Aug 2019 15:57:23 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,105 +52,97 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-mediatek@lists.infradead.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH next v10 07/11] usb: roles: Add fwnode_usb_role_switch_get() function
-Date:   Fri, 23 Aug 2019 15:57:17 +0800
-Message-ID: <1566547041-20804-8-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v10 03/11] dt-bindings: usb: add binding for USB GPIO based connection detection driver
+Date:   Fri, 23 Aug 2019 15:57:13 +0800
+Message-ID: <1566547041-20804-4-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: FFDB3100BE96F835206B5ED36C104E555BB0BC15C54D47328B38EB93D80304E72000:8
+X-TM-SNTS-SMTP: FD9589739300909CA56E293F40181825AF4B9B059052C45CAC2B5FAC465AF4E92000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+It's used to support dual role switch via GPIO when use Type-B
+receptacle, typically the USB ID pin is connected to an input
+GPIO, and also used to enable/disable device when the USB Vbus
+pin is connected to an input GPIO.
 
-The fwnode_usb_role_switch_get() function is exactly the
-same as usb_role_switch_get(), except that it takes struct
-fwnode_handle as parameter instead of struct device.
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Tested-by: Biju Das <biju.das@bp.renesas.com>
 ---
-v10:
-  revert changes of v9
+v9~v10 no changes
 
-v9:
- replace signed-off-by by suggested-by Heikki
+v8 changes:
+ 1. rename the title
+ 2. change the compatible as "linux,usb-conn-gpio" instead of
+    "linux,typeb-conn-gpio"
 
-v8: no changes
+v7 changes:
+ 1. add description for device only mode
 
-v7: 
- add signed-off-by Chunfeng and tested-by Biju
+v6 changes:
+ 1. remove status and port nodes in example
+ 2. make vbus-supply as optional property
 
-v6:
-  new patch
+v5 changes:
+ 1. treat type-B connector as child device of USB controller's, but not
+    as a separate virtual device, suggested by Rob
+ 2. put connector's port node under connector node, suggested by Rob
+
+v4 no changes
+
+v3 changes:
+ 1. treat type-B connector as a virtual device, but not child device of
+    USB controller's
+
+v2 changes:
+  1. new patch to make binding clear suggested by Hans
 ---
- drivers/usb/roles/class.c | 20 ++++++++++++++++++++
- include/linux/usb/role.h  |  7 +++++++
- 2 files changed, 27 insertions(+)
+ .../devicetree/bindings/usb/usb-conn-gpio.txt | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 0526efbc4922..2abb6fe384ca 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -123,6 +123,26 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_get);
- 
-+/**
-+ * fwnode_usb_role_switch_get - Find USB role switch linked with the caller
-+ * @fwnode: The caller device node
-+ *
-+ * This is similar to the usb_role_switch_get() function above, but it searches
-+ * the switch using fwnode instead of device entry.
-+ */
-+struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
-+{
-+	struct usb_role_switch *sw;
+diff --git a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+new file mode 100644
+index 000000000000..d4d107fedc22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+@@ -0,0 +1,31 @@
++USB GPIO Based Connection Detection
 +
-+	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
-+					  usb_role_switch_match);
-+	if (!IS_ERR_OR_NULL(sw))
-+		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
++This is typically used to switch dual role mode from the USB ID pin connected
++to an input GPIO, and also used to enable/disable device mode from the USB
++Vbus pin connected to an input GPIO.
 +
-+	return sw;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
++Required properties:
++- compatible : should include "linux,usb-conn-gpio" and "usb-b-connector".
++- id-gpios, vbus-gpios : input gpios, either one of them must be present,
++	and both can be present as well.
++	see connector/usb-connector.txt
 +
- /**
-  * usb_role_switch_put - Release handle to a switch
-  * @sw: USB Role Switch
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index da2b9641b877..2d77f97df72d 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -47,6 +47,7 @@ struct usb_role_switch_desc {
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
-+struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *node);
- void usb_role_switch_put(struct usb_role_switch *sw);
- 
- struct usb_role_switch *
-@@ -70,6 +71,12 @@ static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
- 	return ERR_PTR(-ENODEV);
- }
- 
-+static inline struct usb_role_switch *
-+fwnode_usb_role_switch_get(struct fwnode_handle *node)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
++Optional properties:
++- vbus-supply : can be present if needed when supports dual role mode.
++	see connector/usb-connector.txt
 +
- static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
- 
- static inline struct usb_role_switch *
++- Sub-nodes:
++	- port : can be present.
++		see graph.txt
++
++Example:
++
++&mtu3 {
++	connector {
++		compatible = "linux,usb-conn-gpio", "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
++		vbus-supply = <&usb_p0_vbus>;
++	};
++};
 -- 
 2.23.0
 
