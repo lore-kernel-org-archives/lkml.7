@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E67C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BF5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459A82173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFF921848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566563894;
-	bh=u1fFAltv70/gK8oZNeOJaa/VCeBDrBEdaCNPc9Klrxw=;
+	s=default; t=1566563898;
+	bh=M6s7Kh+FCW1xFY18pObgGWDhfbn3Y4+TQL2ToNtjFWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVUBBCcBdt1xIgWN80ThUDQfRII9eNZn3gyfmv2iGXebBnwC2XjFV0uAsD0fcAVdf
-	 hHovEv/6PIInBKabsNQ8NlyLfVMWvs75uNwl3hUrY631/2nP+BmCtNBYtcwiZ/zUBr
-	 IYF0hWbdBtjifFAdWwf/sAaGh5j4MYrGp/PiJS7w=
+	b=DebJ7/aa4cXDrsGiRCy9zlIU/QZnCY1DvSCsqehLraFgut1qeNRnXb/ejFmBwWv2J
+	 7wNXX/WAoTI+ll7WmAe65r7Jf5Ql0yL/A9iJNBJAeKDo/sQhPSHY11CjurQYSgFIWY
+	 yYfTGgFPBumdHnNs4xcGAYFncBZ8csU3NZiTYvAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394825AbfHWMiM (ORCPT
+        id S1732702AbfHWMiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:38:12 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40794 "EHLO
+        Fri, 23 Aug 2019 08:38:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37123 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394791AbfHWMhv (ORCPT
+        with ESMTP id S2393115AbfHWMhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:37:51 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h8so13260446edv.7;
-        Fri, 23 Aug 2019 05:37:50 -0700 (PDT)
+        Fri, 23 Aug 2019 08:37:45 -0400
+Received: by mail-ed1-f65.google.com with SMTP id f22so13261381edt.4;
+        Fri, 23 Aug 2019 05:37:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G8GHc1gsebr19dOVRPy+WGuFpKv95AVuhTZoYxXuGp4=;
-        b=N8Mw3bcE6Uz9tdbA+i9zC40nYruDHrRGaqv8SOa1ygE+nCesxhTotS7tSuBGgwIXSD
-         nnl8la43zyHyb9J2zfULJYJHazU2Y1nHJht0r2QzveEEXquzjkuwi57WXeqGo6IUjiaq
-         XQIXw2WeqgunQZxsQru5cI+R78dHIcfB36MGlJIM6kBd/ZzID6ena0aBLSsBWJ4WJX3y
-         POvHrs6Q3s94wHS5w/AjMZuT8Ax9IlV1o+Oa49hlAQKbpix16u7727hOCVT56LFkh1K7
-         Xnkyzwrw2kN8Sg3C/3K+/PJGst94i9Sk7Td2I6CIuje3H1CwhShcGUDO92cWrZBrZeI0
-         q5Kg==
-X-Gm-Message-State: APjAAAVttimHxzZ1KBo9EhDTMQMSkMm7ykww/8Dqph9SJ7459L0jthVQ
-        vEMzDhPBPprYY7QPKaGZeKg=
-X-Google-Smtp-Source: APXvYqxJl9WqCxbu3k+xan6VXrMOyl0gKP0Kc5twQ2SoQfORvdIdUGEqxjk2XVWSKGEj1FV6aimmQQ==
-X-Received: by 2002:a50:e68d:: with SMTP id z13mr4182976edm.142.1566563869950;
-        Fri, 23 Aug 2019 05:37:49 -0700 (PDT)
+        bh=TQDKuRwKWXsE4cqCDj1O7R1+PybASpMYa+6ozs2PYn0=;
+        b=e+ek23PECyqBD1bW7FHYyiLQQAQiYSuSfQ/lqQ9dCi72Wq7HpSVW85ePNxr8ReQCkY
+         OPpwxIH+ojCwmIIZOKp3KoP+kn9NN9EflNOKN8e4B0DiNoQGby+k4HRnKX/pRJPejwaC
+         qkTnl31qbgkPH851H5TB04VQ75T2/p7SYZIH6xvzP4XAwHYye1tUxKzO2vzCEK6wCOkb
+         mc5kyq4oQLUYVahrEWrerYyL+hwOSGVVEmsNLMfuzoVIXJ7lLhGwZLiRyn6ngm96bH8N
+         ypw2hxFF/wNfHhVcJR1RSi6mMfqsRRIE/BVWioWyjvWCKMzt7rD5CVWhBJMysz7TP2Ly
+         ZkcA==
+X-Gm-Message-State: APjAAAV8RGuc8m8LE4dxboVpQKEKERkr9m9Vnr8qPPN3fEZKCFzFM79y
+        f6kwZGoybeMZFS6QI62m2CM=
+X-Google-Smtp-Source: APXvYqyhg+pbF2r8JVvzlfziGDuaIUOwdnhvJneGPjM77WmKPH/8Unv6pAwYfE123Sfva7Jm0QuqSA==
+X-Received: by 2002:aa7:d397:: with SMTP id x23mr4100673edq.11.1566563863837;
+        Fri, 23 Aug 2019 05:37:43 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id 9sm389687ejw.63.2019.08.23.05.37.48
+        by smtp.gmail.com with ESMTPSA id 9sm389687ejw.63.2019.08.23.05.37.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 05:37:48 -0700 (PDT)
+        Fri, 23 Aug 2019 05:37:42 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -58,9 +58,9 @@ To:     Philipp Zabel <p.zabel@pengutronix.de>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jacopo Mondi <jacopo@jmondi.org>
 Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v3 7/7] imx214: Use v4l2_ctrl_new_area helper
-Date:   Fri, 23 Aug 2019 14:37:37 +0200
-Message-Id: <20190823123737.7774-7-ribalda@kernel.org>
+Subject: [PATCH v3 3/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
+Date:   Fri, 23 Aug 2019 14:37:33 +0200
+Message-Id: <20190823123737.7774-3-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190823123737.7774-1-ribalda@kernel.org>
 References: <20190823123737.7774-1-ribalda@kernel.org>
@@ -71,68 +71,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of creating manually the V4L2_CID_UNIT_CELL_SIZE control, lets
-use the helper.
+A struct v4l2_area containing the width and the height of a rectangular
+area.
 
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 ---
- drivers/media/i2c/imx214.c | 29 ++++++++---------------------
- 1 file changed, 8 insertions(+), 21 deletions(-)
+ Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index cc0a013ba7da..625617d4c81a 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -942,26 +942,6 @@ static int __maybe_unused imx214_resume(struct device *dev)
- 	return ret;
- }
- 
--static void unit_size_init(const struct v4l2_ctrl *ctrl, u32 idx,
--		     union v4l2_ctrl_ptr ptr)
--{
--	ptr.p_area->width = 1120;
--	ptr.p_area->height = 1120;
--}
--
--static const struct v4l2_ctrl_type_ops unit_size_ops = {
--	.init = unit_size_init,
--};
--
--static struct v4l2_ctrl *new_unit_size_ctrl(struct v4l2_ctrl_handler *handler)
--{
--	static struct v4l2_ctrl_config ctrl = {
--		.id = V4L2_CID_UNIT_CELL_SIZE,
--		.type_ops = &unit_size_ops,
--	};
--
--	return v4l2_ctrl_new_custom(handler, &ctrl, NULL);
--}
- static int imx214_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
-@@ -969,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
- 	static const s64 link_freq[] = {
- 		IMX214_DEFAULT_LINK_FREQ,
- 	};
-+	struct v4l2_area unit_size = {
-+		.width = 1120,
-+		.height = 1120,
-+	};
- 	int ret;
- 
- 	ret = imx214_parse_fwnode(dev);
-@@ -1050,7 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
- 					     V4L2_CID_EXPOSURE,
- 					     0, 3184, 1, 0x0c70);
- 
--	imx214->unit_size = new_unit_size_ctrl(&imx214->ctrls);
-+	imx214->unit_size = v4l2_ctrl_new_area(&imx214->ctrls,
-+					       &imx214_ctrl_ops,
-+					       V4L2_CID_UNIT_CELL_SIZE,
-+					       &unit_size);
- 
- 	ret = imx214->ctrls.error;
- 	if (ret) {
+diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+index a3d56ffbf4cc..c09d06ef2b08 100644
+--- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
++++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+@@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
+       - n/a
+       - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
+ 	quantization matrices for stateless video decoders.
++    * - ``V4L2_CTRL_TYPE_AREA``
++      - n/a
++      - n/a
++      - n/a
++      - A struct :c:type:`v4l2_area`, containing the width and the height
++        of a rectangular area.
+     * - ``V4L2_CTRL_TYPE_H264_SPS``
+       - n/a
+       - n/a
 -- 
 2.23.0.rc1
 
