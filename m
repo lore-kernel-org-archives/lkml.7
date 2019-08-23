@@ -2,96 +2,120 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE46C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B43C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDAE2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4ED02173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qT4vb9DL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbM8IWYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395249AbfHWO1R (ORCPT
+        id S2395258AbfHWO1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:27:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39763 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730899AbfHWO1Q (ORCPT
+        Fri, 23 Aug 2019 10:27:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40625 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730899AbfHWO1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:27:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id z3so5699069pln.6;
-        Fri, 23 Aug 2019 07:27:16 -0700 (PDT)
+        Fri, 23 Aug 2019 10:27:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c3so8811463wrd.7
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 07:27:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ldRxgJQS6I0QKjcD0nHWVCTjrbElRw3Yu8CRLOd8S7c=;
-        b=qT4vb9DLjy7f+7+Nvo05drV8GPuG5ecVjyDI1mACH3DgxmQUq0EmQFkJEbPRezns4l
-         8AX/TnukB0MUVrr6WT6qO04SRc3Oh0rLaNNubQ425EiXYLK7Ll4idUn56dh4qaXTNhgF
-         OVaWuqnSh5vuyBVVEEsm+4fzFyJNTERKnjhf6WLptxskAiaJ1FQ54VK1599i9PWGC+UJ
-         t1cHcqt1mbZGgZLv5lmRhTwxXVmPLqXZEHoYTujFBNANO03hE4sUzMi3uJmkfg3UVz+R
-         Xw9Jk+hEXEUuLWjd9j32AJk7RQjIDSj7RUp9T4TeacvnvPImTfHxbqXJRqfBok+199LN
-         MkEg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sHvSmoSmDvSNNSbRGXLQshanw3+uRXJ2ONHrn0tkDQw=;
+        b=FbM8IWYZ48uigQRt74quaG0kgIsk63LbOofdZ7aZ/X3GPHw9i9wE8vAFm+8UOr4HTH
+         inTl5+HR2mSHUBimT06Tj+Votem5Mnyi3Rg+n4wVW0XAiM7kBBkCvW+UPqG/6t2YXfNz
+         Lqajld73G2hYvdl4tBzYPY0czexNPhw6iOPiy9dlydQJD4C5gBh3jaZxkHkB770BEk7A
+         0zyspsIsNB3Uw93jTqgWRG9Q+3tP2Cd18IfmuZKtRkPWp6c6BzCeuVgppDQzkrlqzqJV
+         ZhT+Yltq0PJl5dShimADgOXbcirLgeLpp5wjDN7ZhczER0MaVTE2NFNvVJvTHQn4dZUr
+         c7Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ldRxgJQS6I0QKjcD0nHWVCTjrbElRw3Yu8CRLOd8S7c=;
-        b=rHPXv54IfTksoQs4PKqM3WCDSxwOWaDG+fS6R/tisXwJtGpbfCWKmzoCp9oOfbZBP8
-         KZE0O5N0japyxuTbnoDDkU78qO50rFF04CaZB6IlsKlnctJFRr2I/G4GQ85dJCLfefZw
-         PuSdMcmyUnFDrMOX81VJQfbgBM5saDl8YgrEMf95q9/ucARwkPQ67mYtbl8LAB+P1yed
-         IOLXM38vTg1dBhrdwJTXFbLbNX0ShE+4a5rDJ06Pnd385Q3DKqrS0iEqMzffSHw2fCks
-         xcZKhykdlPNLC2BywXWdm1+uzkM3FFqgy/eqKOabLw+bxaBE/Al39D/bz4xpM9Vz97c1
-         9F+g==
-X-Gm-Message-State: APjAAAVTEYeRICzym75B0Oj7Luipi8VSbemWXXcs+zK/0CbjKfwpR2jw
-        cERNQxcPQxLJACY3rmg11NST1ZmW
-X-Google-Smtp-Source: APXvYqyQxH+lk/mbnsMY9/gm9V+MoCrxoehW1nfBNGH5sNVwJitFkA1bDi4dWRFQN1A4qGjti1IWqA==
-X-Received: by 2002:a17:902:da8:: with SMTP id 37mr5030928plv.69.1566570435596;
-        Fri, 23 Aug 2019 07:27:15 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id v21sm2695083pfe.131.2019.08.23.07.27.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 07:27:15 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/78] 4.4.190-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sHvSmoSmDvSNNSbRGXLQshanw3+uRXJ2ONHrn0tkDQw=;
+        b=dZhwsFZFGnsGdP6XFelIBV7x2VsDi5FIxasThjjFCeT7cJ5hKSDWjKKcMR0Ib/nVnr
+         BrtmT5xlm5tVQDnpNiCWLWd8htAAyBDk73FMknmUmT+uliPINF3DbIQLHbK0nuN7eYn0
+         0/BwqnDpqiu9ANT3COKb1RHDJpy+Prn2voTJiOQ4wYSbKgNwl7rK0mwHql2ub5oSYeYt
+         NGezBA7TMI4cCAXL5QrRyKw9D5TFmoIxZvfaTcw+Yc8TZN8vScM0PKb4GXxBjXWx/6KY
+         aoU3BuQnO64wEMm6r2J30jXu9JDrn6Vs6uAY3FrJ0TXVv0zQmzVBUDpZ/oMwc7fCFw0r
+         d0JA==
+X-Gm-Message-State: APjAAAUxZ5RzS7SkNt/WSC/h7PFy0sMde96p2Z87wxtuuNBiaUknvdGj
+        9dMipZS3wTEcUZAabu9qHb8=
+X-Google-Smtp-Source: APXvYqzoHLcPGI5/I3s5TfP34APAeTrtIVfTwQ2dZtv9Cb2F7V2w5S+w8XJjF7009QdBgdTq5D3dbA==
+X-Received: by 2002:adf:f206:: with SMTP id p6mr5788787wro.216.1566570440610;
+        Fri, 23 Aug 2019 07:27:20 -0700 (PDT)
+Received: from andrea ([167.220.196.36])
+        by smtp.gmail.com with ESMTPSA id h23sm4368017wml.43.2019.08.23.07.27.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 23 Aug 2019 07:27:19 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 16:27:08 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190822171832.012773482@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b1b51135-74d8-35ff-6921-631f8e0e09e6@roeck-us.net>
-Date:   Fri, 23 Aug 2019 07:27:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new
+ printk ringbuffer implementation
+Message-ID: <20190823142708.GA2068@andrea>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-2-john.ogness@linutronix.de>
+ <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
+ <20190820092731.GA14137@jagdpanzerIV>
+ <87a7c3f4uj.fsf@linutronix.de>
+ <20190822135052.dp4dvav6fy2ajzkx@pathway.suse.cz>
+ <20190822173801.GA2218@andrea>
+ <20190823104713.mtxarc3ywtnryd2d@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823104713.mtxarc3ywtnryd2d@pathway.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 10:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.190 release.
-> There are 78 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> I am not suggesting to remove all comments. Some human readable
+> explanation is important as long as the code is developed by humans.
 > 
-> Responses should be made by Sat 24 Aug 2019 05:18:13 PM UTC.
-> Anything received after that time might be too late.
+> I think that I'll have to accept also the extra comments if you are
+> really going to use them to check the consistency by a tool. Or
+> if they are really used for review by some people.
+
+Glad to hear this.  Thank you, Petr.
+
+
+> Do all this manuals, tools, people use any common syntax, please?
+> Would it be usable in our case as well?
 > 
+> I would like to avoid reinventing the wheel. Also I do not want
+> to create a dialect for few people that other potentially interested
+> parties will not understand.
 
-Build results:
-	total: 170 pass: 170 fail: 0
-Qemu test results:
-	total: 324 pass: 324 fail: 0
+Right; I think that terms such as "(barrier) matching", "reads-from"
+and "overwrites" are commonly used to refer to litmus tests.  (The
+various primitives/instructions are of course specific to the given
+context: the language, the memory model, etc. )
 
-Guenter
+IOW, I'd say that that wheel _and a common denominator here can be
+represented by the notion of "litmus test".  I'm not suggesting to
+reinvent this wheel of course; my point was more along the lines of
+"let's use the wheel, it'll be helpful..."  ;-)
+
+  Andrea
