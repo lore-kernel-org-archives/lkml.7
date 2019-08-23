@@ -2,70 +2,240 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4963C3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85F2C3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 04:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D3323407
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13822341F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 04:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPEXTBIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390077AbfHWDvB (ORCPT
+        id S1726620AbfHWEBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:51:01 -0400
-Received: from gate.crashing.org ([63.228.1.57]:48256 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbfHWDvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:51:01 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7N3oO9e029949;
-        Thu, 22 Aug 2019 22:50:25 -0500
-Message-ID: <6744172c01e6c6798943fb076f4bb336f260bd5b.camel@kernel.crashing.org>
-Subject: Re: [PATCH v4 2/4] nvme-pci: Add support for variable IO SQ element
- size
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org, Paul Pawlowski <paul@mrarm.io>
-Date:   Fri, 23 Aug 2019 13:50:24 +1000
-In-Reply-To: <8545a898-e80c-5ab6-6f9f-f351955db5f0@grimberg.me>
-References: <20190807075122.6247-1-benh@kernel.crashing.org>
-         <20190807075122.6247-3-benh@kernel.crashing.org>
-         <20190822002818.GA10391@lst.de>
-         <87e1fea1c297ef98f989175b3041c69e8b7de020.camel@kernel.crashing.org>
-         <4fc11568-73fe-c8b5-ac29-d49daee9abad@grimberg.me>
-         <fb5aa2db6b54edab69a8abad254b346dd3d7b205.camel@kernel.crashing.org>
-         <8545a898-e80c-5ab6-6f9f-f351955db5f0@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 23 Aug 2019 00:01:47 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34335 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfHWEBr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 00:01:47 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d3so4793664plr.1;
+        Thu, 22 Aug 2019 21:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EQmZs4bhJ2tusrHJ4UkPwecm4Xg1wfPEyrYFz1dn5S4=;
+        b=sPEXTBIsaQKcLgyU4WEMUwBz/RSuyDYl4oSaO59GPlOIdYqfjnRtoK0h/hH0PME7Gk
+         sqEMAgczQjBHrQaF929uzwqNNZ2xydaC+7KC/h446tHCUIkj/V8TfOmYcQpMkZGJjnEt
+         l5GeD6YVDoJqxZQHpiLamyq4NTsHOcpQQMDTcagA0m+XZLAczsSCCeFtddF8WpeyNb1b
+         ZwIT4zRmIIZIeQpE1TOb9EHOFWLg9ZTC39YaRo0n0HbPN2GVV0PVWzabbfLx+QJLaTkL
+         1ew/8Jq0rvaQFbpmEAc9xNBhEeY0p9FLH/R5bSD48eqYOXsXfsRPMJ3RdaSgDGI6T37H
+         lgCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EQmZs4bhJ2tusrHJ4UkPwecm4Xg1wfPEyrYFz1dn5S4=;
+        b=d3QF48+wXyCM78MSs03zrQX6a/PmNq/TKKqJPrpfyLoRZzE2lm4dXtrxby17KzzhMS
+         bLNkMz0l9707ZAWneY+lz5kTHLMXB/UEd0jess3Chf5YQFwG9gUHQ/EciQ4RxI9KmKXa
+         AD05N3hqI5nlHjofKKvVuIj4sJyMwSHScylv2LaUBIDR4XTWz2bzsjkrRXAAmjhDEJsN
+         7+MZ5QKqyxnFQG4eSyFIr7i1wC2r/dwwyKF0ros+lRLp9TVzp5eXTy16WbG/1JCZXsFu
+         JuNRAUy90Ku944FnhfzzpU5pfHJhpg82jj+yGPPeM8Xo0JQ6SLMVXIiYnucnPQ/I3mae
+         S0AA==
+X-Gm-Message-State: APjAAAUeQ58rPfYrjb4eYcKsw1xrwEj8gLyaTTOu1uZZUJE8WaVnedQn
+        le80Q9eGUbhSWHRlXZLkA7M=
+X-Google-Smtp-Source: APXvYqwMOBwXvwUojtN+YVxyNiMy6OhcAozyWm0kv1YbVbQgIW7Bjiei4TaZSxDordWkstYKsd6WSQ==
+X-Received: by 2002:a17:902:581:: with SMTP id f1mr2355479plf.246.1566532905917;
+        Thu, 22 Aug 2019 21:01:45 -0700 (PDT)
+Received: from localhost ([2601:1c0:5200:e554::6bd7])
+        by smtp.gmail.com with ESMTPSA id r1sm678945pgv.70.2019.08.22.21.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 21:01:45 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drm/msm/dpu: remove some impossible error checking
+Date:   Thu, 22 Aug 2019 21:00:10 -0700
+Message-Id: <20190823040103.22289-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 19:52 -0700, Sagi Grimberg wrote:
-> > > I'll fix it. Note that I'm going to take it out of the tree soon
-> > > because it will have conflicts with Jens for-5.4/block, so we
-> > > will send it to Jens after the initial merge window, after he
-> > > rebases off of Linus.
-> > 
-> > Conflicts too hard to fixup at merge time ? Otherwise I could just
-> > rebase on top of Jens and put in a topic branch...
-> 
-> The quirk enumeration conflicts with 5.3-rc. Not a big deal, just
-> thought it'd be easier to handle that way.
-> 
-> Rebasing on top of Jens won't help because his for-5.4/block which
-> does not have the rc code yet.
+From: Rob Clark <robdclark@chromium.org>
 
-Ok sure, do as you prefer. Let me know if you want me to do anything.
+I'm sure there is plenty more to remove.. this is just some of the ones
+I noticed.
 
-Cheers,
-Ben.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   | 19 -------------------
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c  |  3 ---
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |  5 -----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c    |  3 ---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  5 -----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_vbif.c      | 10 ----------
+ 6 files changed, 45 deletions(-)
 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 0e2f74163a16..ed677cf2e1af 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1428,12 +1428,6 @@ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
+ 	int pending_kickoff_cnt;
+ 	u32 ret = UINT_MAX;
+ 
+-	if (!drm_enc || !phys) {
+-		DPU_ERROR("invalid argument(s), drm_enc %d, phys_enc %d\n",
+-				drm_enc != 0, phys != 0);
+-		return;
+-	}
+-
+ 	if (!phys->hw_pp) {
+ 		DPU_ERROR("invalid pingpong hw\n");
+ 		return;
+@@ -1566,11 +1560,6 @@ static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
+ 	uint32_t i, pending_flush;
+ 	unsigned long lock_flags;
+ 
+-	if (!dpu_enc) {
+-		DPU_ERROR("invalid encoder\n");
+-		return;
+-	}
+-
+ 	pending_flush = 0x0;
+ 
+ 	/* update pending counts and trigger kickoff ctl flush atomically */
+@@ -1798,10 +1787,6 @@ void dpu_encoder_prepare_for_kickoff(struct drm_encoder *drm_enc, bool async)
+ 	bool needs_hw_reset = false;
+ 	unsigned int i;
+ 
+-	if (!drm_enc) {
+-		DPU_ERROR("invalid args\n");
+-		return;
+-	}
+ 	dpu_enc = to_dpu_encoder_virt(drm_enc);
+ 
+ 	trace_dpu_enc_prepare_kickoff(DRMID(drm_enc));
+@@ -1837,10 +1822,6 @@ void dpu_encoder_kickoff(struct drm_encoder *drm_enc, bool async)
+ 	ktime_t wakeup_time;
+ 	unsigned int i;
+ 
+-	if (!drm_enc) {
+-		DPU_ERROR("invalid encoder\n");
+-		return;
+-	}
+ 	DPU_ATRACE_BEGIN("encoder_kickoff");
+ 	dpu_enc = to_dpu_encoder_virt(drm_enc);
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+index 1b3ab909f367..2923b63d95fe 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+@@ -720,9 +720,6 @@ static int dpu_encoder_phys_cmd_wait_for_vblank(
+ static void dpu_encoder_phys_cmd_handle_post_kickoff(
+ 		struct dpu_encoder_phys *phys_enc)
+ {
+-	if (!phys_enc)
+-		return;
+-
+ 	/**
+ 	 * re-enable external TE, either for the first time after enabling
+ 	 * or if disabled for Autorefresh
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index 5055a5eec869..737fe963a490 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -612,11 +612,6 @@ static void dpu_encoder_phys_vid_handle_post_kickoff(
+ {
+ 	unsigned long lock_flags;
+ 
+-	if (!phys_enc) {
+-		DPU_ERROR("invalid encoder\n");
+-		return;
+-	}
+-
+ 	/*
+ 	 * Video mode must flush CTL before enabling timing engine
+ 	 * Video encoders need to turn on their interfaces now
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+index b2f7b0e886b5..179e8d52cadb 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+@@ -102,9 +102,6 @@ static inline void dpu_hw_ctl_update_pending_flush(struct dpu_hw_ctl *ctx,
+ 
+ static u32 dpu_hw_ctl_get_pending_flush(struct dpu_hw_ctl *ctx)
+ {
+-	if (!ctx)
+-		return 0x0;
+-
+ 	return ctx->pending_flush_mask;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index 681955eb286f..b8d264bd15df 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -490,11 +490,6 @@ static int _dpu_kms_drm_obj_init(struct dpu_kms *dpu_kms)
+ 	int primary_planes_idx = 0, cursor_planes_idx = 0, i, ret;
+ 	int max_crtc_count;
+ 
+-	if (!dpu_kms || !dpu_kms->dev || !dpu_kms->dev->dev) {
+-		DPU_ERROR("invalid dpu_kms\n");
+-		return -EINVAL;
+-	}
+-
+ 	dev = dpu_kms->dev;
+ 	priv = dev->dev_private;
+ 	catalog = dpu_kms->catalog;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_vbif.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_vbif.c
+index 8bc3aea7cd86..f98a882318d1 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_vbif.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_vbif.c
+@@ -264,11 +264,6 @@ void dpu_vbif_clear_errors(struct dpu_kms *dpu_kms)
+ 	struct dpu_hw_vbif *vbif;
+ 	u32 i, pnd, src;
+ 
+-	if (!dpu_kms) {
+-		DPU_ERROR("invalid argument\n");
+-		return;
+-	}
+-
+ 	for (i = 0; i < ARRAY_SIZE(dpu_kms->hw_vbif); i++) {
+ 		vbif = dpu_kms->hw_vbif[i];
+ 		if (vbif && vbif->ops.clear_errors) {
+@@ -286,11 +281,6 @@ void dpu_vbif_init_memtypes(struct dpu_kms *dpu_kms)
+ 	struct dpu_hw_vbif *vbif;
+ 	int i, j;
+ 
+-	if (!dpu_kms) {
+-		DPU_ERROR("invalid argument\n");
+-		return;
+-	}
+-
+ 	for (i = 0; i < ARRAY_SIZE(dpu_kms->hw_vbif); i++) {
+ 		vbif = dpu_kms->hw_vbif[i];
+ 		if (vbif && vbif->cap && vbif->ops.set_mem_type) {
+-- 
+2.21.0
 
