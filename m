@@ -7,43 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FF1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38291C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FCB23426
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F387F2341D
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390549AbfHWC2V (ORCPT
+        id S2391034AbfHWC2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:28:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33789 "EHLO
+        Thu, 22 Aug 2019 22:28:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33810 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390214AbfHWC2M (ORCPT
+        with ESMTP id S2389611AbfHWC2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:28:12 -0400
+        Thu, 22 Aug 2019 22:28:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0zJ9-00018w-Rc; Fri, 23 Aug 2019 04:28:08 +0200
+        id 1i0zJB-00019p-Fu; Fri, 23 Aug 2019 04:28:09 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5A4FE1C0883;
-        Fri, 23 Aug 2019 04:28:07 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:28:07 -0000
-From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F2C461C0890;
+        Fri, 23 Aug 2019 04:28:08 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:28:08 -0000
+From:   tip-bot2 for Alexey Budankov <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf ui: Introduce non-interactive ui__info_window()
- function
+Subject: [tip: perf/core] perf report: Prefer DWARF callstacks to LBR ones
+ when captured both
 Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <tip-uat0f89vfwl2w52kv9wzwd8a@git.kernel.org>
-References: <tip-uat0f89vfwl2w52kv9wzwd8a@git.kernel.org>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+In-Reply-To: <ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com>
+References: <ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <156652728730.12695.7062987604434542716.tip-bot2@tip-bot2>
+Message-ID: <156652728884.12704.14948438831949421867.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -60,99 +65,196 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     9b01611934c045ac7ca71aebf5ee1906951d6bce
-Gitweb:        https://git.kernel.org/tip/9b01611934c045ac7ca71aebf5ee1906951d6bce
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 19 Aug 2019 16:38:24 -03:00
+Commit-ID:     10ccbc1cc0b8a05a5c8491630d36d1e2672036c1
+Gitweb:        https://git.kernel.org/tip/10ccbc1cc0b8a05a5c8491630d36d1e2672036c1
+Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
+AuthorDate:    Fri, 09 Aug 2019 18:31:28 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 20 Aug 2019 12:21:49 -03:00
+CommitterDate: Tue, 20 Aug 2019 12:20:16 -03:00
 
-perf ui: Introduce non-interactive ui__info_window() function
+perf report: Prefer DWARF callstacks to LBR ones when captured both
 
-Sometimes we want just to print a message on the center of the screen,
-like in 'perf top' while we wait for the minimum amount of samples to be
-collected before sorting and showing them.
+Display DWARF based callchains when the perf.data file contains raw thread
+stack data as LBR callstack data.
 
-Also expose __ui__info_window() as an optimization for cases where such
-message is to be printed while holding the ui lock.
+Commiter testing:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+This changes the output from the branch stack based one, i.e. without
+this patch, for the same file as in the previous csets:
+
+  # perf report --stdio
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 13  of event 'cycles'
+  # Event count (approx.): 13
+  #
+  # Overhead  Command  Source Shared Object  Source Symbol                Target Symbol                              Basic Block Cycles
+  # ........  .......  ....................  ...........................  .........................................  ..................
+  #
+       7.69%  ls       libpthread-2.29.so    [.] _init                    [.] __pthread_initialize_minimal_internal  6827
+       7.69%  ls       ld-2.29.so            [k] _start                   [k] _dl_start                              -
+       7.69%  ls       ld-2.29.so            [.] _dl_start_user           [.] _dl_init                               -24790
+       7.69%  ls       ld-2.29.so            [k] _dl_start                [k] _dl_sysdep_start                       278
+       7.69%  ls       ld-2.29.so            [k] dl_main                  [k] _dl_map_object_deps                    15581
+       7.69%  ls       ld-2.29.so            [k] open_verify.constprop.0  [k] lseek64                                4228
+       7.69%  ls       ld-2.29.so            [k] _dl_map_object           [k] open_verify.constprop.0                55
+       7.69%  ls       ld-2.29.so            [k] openaux                  [k] _dl_map_object                         67
+       7.69%  ls       ld-2.29.so            [k] _dl_map_object_deps      [k] 0x00007f441b57c090                     112
+       7.69%  ls       ld-2.29.so            [.] call_init.part.0         [.] _init                                  334
+       7.69%  ls       ld-2.29.so            [.] _dl_init                 [.] call_init.part.0                       383
+       7.69%  ls       ld-2.29.so            [k] _dl_sysdep_start         [k] dl_main                                45
+       7.69%  ls       ld-2.29.so            [k] _dl_catch_exception      [k] openaux                                116
+
+  #
+  # (Tip: For memory address profiling, try: perf mem record / perf mem report)
+  #
+
+To the one that shows call chains:
+
+  # perf report --stdio
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 10  of event 'cycles'
+  # Event count (approx.): 3204047
+  #
+  # Children      Self  Command  Shared Object       Symbol
+  # ........  ........  .......  ..................  .........................................
+  #
+      55.01%     0.00%  ls       [kernel.vmlinux]    [k] entry_SYSCALL_64_after_hwframe
+              |
+              ---entry_SYSCALL_64_after_hwframe
+                 do_syscall_64
+                 |
+                  --16.01%--__x64_sys_execve
+                            __do_execve_file.isra.0
+                            search_binary_handler
+                            load_elf_binary
+                            elf_map
+                            vm_mmap_pgoff
+                            do_mmap
+                            mmap_region
+                            perf_event_mmap
+                            perf_iterate_sb
+                            perf_iterate_ctx
+                            perf_event_mmap_output
+                            perf_output_copy
+                            memcpy_erms
+
+      55.01%    39.00%  ls       [kernel.vmlinux]    [k] do_syscall_64
+              |
+              |--39.00%--0xffffffffffffffff
+              |          _dl_map_object
+              |          open_verify.constprop.0
+              |          __lseek64 (inlined)
+              |          entry_SYSCALL_64_after_hwframe
+              |          do_syscall_64
+              |
+               --16.01%--do_syscall_64
+                         __x64_sys_execve
+                         __do_execve_file.isra.0
+                         search_binary_handler
+                         load_elf_binary
+                         elf_map
+                         vm_mmap_pgoff
+                         do_mmap
+                         mmap_region
+                         perf_event_mmap
+                         perf_iterate_sb
+                         perf_iterate_ctx
+                         perf_event_mmap_output
+                         perf_output_copy
+                         memcpy_erms
+
+      42.95%    42.95%  ls       libpthread-2.29.so  [.] __pthread_initialize_minimal_internal
+              |
+              ---_init
+                 __pthread_initialize_minimal_internal
+
+      42.95%     0.00%  ls       libpthread-2.29.so  [.] _init
+              |
+              ---_init
+                 __pthread_initialize_minimal_internal
+
+  <SNIP>
+
+  #
+  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
+  #
+  #
+
+The branch stack view be explicitely selected using:
+
+  # perf report -h branch-stack
+
+   Usage: perf report [<options>]
+
+      -b, --branch-stack    use branch records for per branch histogram filling
+
+  #
+
+I.e. after this patch:
+
+  # perf report -b --stdio
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 13  of event 'cycles'
+  # Event count (approx.): 13
+  #
+  # Overhead  Command  Source Shared Object  Source Symbol                Target Symbol                              Basic Block Cycles
+  # ........  .......  ....................  ...........................  .........................................  ..................
+  #
+       7.69%  ls       libpthread-2.29.so    [.] _init                    [.] __pthread_initialize_minimal_internal  6827
+       7.69%  ls       ld-2.29.so            [k] _start                   [k] _dl_start                              -
+       7.69%  ls       ld-2.29.so            [.] _dl_start_user           [.] _dl_init                               -24790
+       7.69%  ls       ld-2.29.so            [k] _dl_start                [k] _dl_sysdep_start                       278
+       7.69%  ls       ld-2.29.so            [k] dl_main                  [k] _dl_map_object_deps                    15581
+       7.69%  ls       ld-2.29.so            [k] open_verify.constprop.0  [k] lseek64                                4228
+       7.69%  ls       ld-2.29.so            [k] _dl_map_object           [k] open_verify.constprop.0                55
+       7.69%  ls       ld-2.29.so            [k] openaux                  [k] _dl_map_object                         67
+       7.69%  ls       ld-2.29.so            [k] _dl_map_object_deps      [k] 0x00007f441b57c090                     112
+       7.69%  ls       ld-2.29.so            [.] call_init.part.0         [.] _init                                  334
+       7.69%  ls       ld-2.29.so            [.] _dl_init                 [.] call_init.part.0                       383
+       7.69%  ls       ld-2.29.so            [k] _dl_sysdep_start         [k] dl_main                                45
+       7.69%  ls       ld-2.29.so            [k] _dl_catch_exception      [k] openaux                                116
+
+  #
+  # (Tip: Show current config key-value pairs: perf config --list)
+  #
+  #
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-uat0f89vfwl2w52kv9wzwd8a@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/tui/util.c | 23 +++++++++++++++--------
- tools/perf/ui/util.h     |  2 ++
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ tools/perf/builtin-report.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
-index 5d65ea8..1163df8 100644
---- a/tools/perf/ui/tui/util.c
-+++ b/tools/perf/ui/tui/util.c
-@@ -162,8 +162,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
- 	return key;
- }
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 5e003d0..79dfb11 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1281,6 +1281,8 @@ int cmd_report(int argc, const char **argv)
  
--int ui__question_window(const char *title, const char *text,
--			const char *exit_msg, int delay_secs)
-+void __ui__info_window(const char *title, const char *text, const char *exit_msg)
- {
- 	int x, y;
- 	int max_len = 0, nr_lines = 0;
-@@ -185,8 +184,6 @@ int ui__question_window(const char *title, const char *text,
- 		t = sep + 1;
- 	}
+ 	has_br_stack = perf_header__has_feat(&session->header,
+ 					     HEADER_BRANCH_STACK);
++	if (perf_evlist__combined_sample_type(session->evlist) & PERF_SAMPLE_STACK_USER)
++		has_br_stack = false;
  
--	pthread_mutex_lock(&ui__lock);
--
- 	max_len += 2;
- 	nr_lines += 2;
- 	if (exit_msg)
-@@ -206,19 +203,29 @@ int ui__question_window(const char *title, const char *text,
- 	max_len -= 2;
- 	SLsmg_write_wrapped_string((unsigned char *)text, y, x,
- 				   nr_lines, max_len, 1);
--	SLsmg_gotorc(y + nr_lines - 2, x);
--	SLsmg_write_nstring((char *)" ", max_len);
--	SLsmg_gotorc(y + nr_lines - 1, x);
- 	if (exit_msg) {
- 		SLsmg_gotorc(y + nr_lines - 2, x);
- 		SLsmg_write_nstring((char *)" ", max_len);
- 		SLsmg_gotorc(y + nr_lines - 1, x);
- 		SLsmg_write_nstring((char *)exit_msg, max_len);
- 	}
--	SLsmg_refresh();
-+}
- 
-+void ui__info_window(const char *title, const char *text)
-+{
-+	pthread_mutex_lock(&ui__lock);
-+	__ui__info_window(title, text, NULL);
-+	SLsmg_refresh();
- 	pthread_mutex_unlock(&ui__lock);
-+}
- 
-+int ui__question_window(const char *title, const char *text,
-+			const char *exit_msg, int delay_secs)
-+{
-+	pthread_mutex_lock(&ui__lock);
-+	__ui__info_window(title, text, exit_msg);
-+	SLsmg_refresh();
-+	pthread_mutex_unlock(&ui__lock);
- 	return ui__getch(delay_secs);
- }
- 
-diff --git a/tools/perf/ui/util.h b/tools/perf/ui/util.h
-index 5e44223..4089194 100644
---- a/tools/perf/ui/util.h
-+++ b/tools/perf/ui/util.h
-@@ -8,6 +8,8 @@ int ui__getch(int delay_secs);
- int ui__popup_menu(int argc, char * const argv[]);
- int ui__help_window(const char *text);
- int ui__dialog_yesno(const char *msg);
-+void __ui__info_window(const char *title, const char *text, const char *exit_msg);
-+void ui__info_window(const char *title, const char *text);
- int ui__question_window(const char *title, const char *text,
- 			const char *exit_msg, int delay_secs);
+ 	setup_forced_leader(&report, session->evlist);
  
