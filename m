@@ -2,143 +2,164 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB39C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0213C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA1F21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DDA2341A
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:59:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Yf6o5wqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403944AbfHWCya (ORCPT
+        id S2403974AbfHWC7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:54:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27144 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731416AbfHWCy3 (ORCPT
+        Thu, 22 Aug 2019 22:59:10 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:35065 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389290AbfHWC7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:54:29 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7N2qKGZ110341;
-        Thu, 22 Aug 2019 22:54:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uj3jqyg43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 22:54:20 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7N2sKLE114247;
-        Thu, 22 Aug 2019 22:54:20 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uj3jqyg3m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 22:54:19 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7N2otnr025174;
-        Fri, 23 Aug 2019 02:54:18 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma05wdc.us.ibm.com with ESMTP id 2ue976es6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 23 Aug 2019 02:54:18 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7N2sIhF47841552
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 02:54:18 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EA9EB2064;
-        Fri, 23 Aug 2019 02:54:18 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DC50B205F;
-        Fri, 23 Aug 2019 02:54:18 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.207.73])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 23 Aug 2019 02:54:18 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 09EF616C3FC8; Thu, 22 Aug 2019 19:54:18 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 19:54:18 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
-Message-ID: <20190823025417.GO28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190821231906.4224-1-swood@redhat.com>
- <20190821231906.4224-2-swood@redhat.com>
- <20190821233358.GU28441@linux.ibm.com>
- <2981acb99554a80211118350975577ab8faa3a2d.camel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2981acb99554a80211118350975577ab8faa3a2d.camel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908230030
+        Thu, 22 Aug 2019 22:59:09 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x7N2wDua012632;
+        Fri, 23 Aug 2019 11:58:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x7N2wDua012632
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566529093;
+        bh=8CosFU0pC2ctS3iNrA/qY5iVZIjxaMWMDqXin1AO7LU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yf6o5wqGOxca7n5PZXCSlYBzIInSYk2Nv000Mt4NIkIcVz8rSQnsvfW9PIZDlqqz0
+         i+1vweVR5eCqZA9iFLtHZBDlwPvVpHEBx9KqCAlPxb6TKfs0dhwEOheTQszwfiXHGh
+         mICZM+hR7tjISdF+WMNRDRQcnIm15BifexxXESwU1HLbSKHZuQJdOk6+e7CIz9gJg9
+         fJhD1Hzo0Xf8I2uTeVJBSDg1x5lA63RoFQsFktDIrLe8W+WhDu2v3KWb8JkRbkXDUa
+         itg2weW3P3uSJsRhiHk787sKx07cUMeivpemvawtu7fd0UUdwJVmItVGR86sMyZFzE
+         UKe55y3NyZxRQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: omap2: move platform-specific asm-offset.h to arch/arm/mach-omap2
+Date:   Fri, 23 Aug 2019 11:58:08 +0900
+Message-Id: <20190823025808.11875-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 09:36:21PM -0500, Scott Wood wrote:
-> On Wed, 2019-08-21 at 16:33 -0700, Paul E. McKenney wrote:
-> > On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
-> > > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> > > index 388ace315f32..d6e357378732 100644
-> > > --- a/include/linux/rcupdate.h
-> > > +++ b/include/linux/rcupdate.h
-> > > @@ -615,10 +615,12 @@ static inline void rcu_read_unlock(void)
-> > >  static inline void rcu_read_lock_bh(void)
-> > >  {
-> > >  	local_bh_disable();
-> > > +#ifndef CONFIG_PREEMPT_RT_FULL
-> > >  	__acquire(RCU_BH);
-> > >  	rcu_lock_acquire(&rcu_bh_lock_map);
-> > >  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> > >  			 "rcu_read_lock_bh() used illegally while idle");
-> > > +#endif
-> > 
-> > Any chance of this using "if (!IS_ENABLED(CONFIG_PREEMPT_RT_FULL))"?
-> > We should be OK providing a do-nothing __maybe_unused rcu_bh_lock_map
-> > for lockdep-enabled -rt kernels, right?
-> 
-> OK.
-> 
-> > > @@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip,
-> > > > > unsigned int cnt)
-> > >  	WARN_ON_ONCE(count < 0);
-> > >  	local_irq_enable();
-> > >  
-> > > -	if (!in_atomic())
-> > > +	if (!in_atomic()) {
-> > > +		rcu_read_unlock();
-> > >  		local_unlock(bh_lock);
-> > > +	}
-> > 
-> > The return from in_atomic() is guaranteed to be the same at
-> > local_bh_enable() time as was at the call to the corresponding
-> > local_bh_disable()?
-> 
-> That's an existing requirement on RT (which rcutorture currently violates)
-> due to bh_lock.
-> 
-> > I could have sworn that I ran afoul of this last year.  Might these
-> > added rcu_read_lock() and rcu_read_unlock() calls need to check for
-> > CONFIG_PREEMPT_RT_FULL?
-> 
-> This code is already under a PREEMPT_RT_FULL ifdef.
+<generated/ti-pm-asm-offsets.h> is only generated and included by
+arch/arm/mach-omap2/, so it does not need to reside in the globally
+visible include/generated/.
 
-Good enough, then!
+I renamed it to arch/arm/mach-omap2/pm-asm-offsets.h since the prefix
+'ti-' is just redundant in mach-omap2/.
 
-							Thanx, Paul
+My main motivation of this change is to avoid the race condition for
+the parallel build (-j) when CONFIG_IKHEADERS is enabled.
+
+When it is enabled, all the headers under include/ are archived into
+kernel/kheaders_data.tar.xz and exposed in the sysfs.
+
+In the parallel build, we have no idea in which order files are built.
+
+ - If ti-pm-asm-offsets.h is built before kheaders_data.tar.xz,
+   the header will be included in the archive. Probably nobody will
+   use it, but it is harmless except that it will increase the archive
+   size needlessly.
+
+ - If kheaders_data.tar.xz is built before ti-pm-asm-offsets.h,
+   the header will not be included in the archive. However, in the next
+   build, the archive will be re-generated to include the newly-found
+   ti-pm-asm-offsets.h. This is not nice from the build system point
+   of view.
+
+ - If ti-pm-asm-offsets.h and kheaders_data.tar.xz are built at the
+   same time, the corrupted header might be included in the archive,
+   which does not look nice either.
+
+This commit fixes the race.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Keerthy <j-keerthy@ti.com>
+---
+
+ arch/arm/mach-omap2/.gitignore  | 1 +
+ arch/arm/mach-omap2/Makefile    | 5 +++--
+ arch/arm/mach-omap2/sleep33xx.S | 2 +-
+ arch/arm/mach-omap2/sleep43xx.S | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/mach-omap2/.gitignore
+
+diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+new file mode 100644
+index 000000000000..79a8d6ea7152
+--- /dev/null
++++ b/arch/arm/mach-omap2/.gitignore
+@@ -0,0 +1 @@
++pm-asm-offsets.h
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index 600650551621..21c6d4bca3c0 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -223,9 +223,10 @@ obj-y					+= omap_phy_internal.o
+ 
+ obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
+ 
+-include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
++$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+ 	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+ 
+-$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
++$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+ 
+ targets += pm-asm-offsets.s
++clean-files += pm-asm-offsets.h
+diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+index 68fee339d3f1..dc221249bc22 100644
+--- a/arch/arm/mach-omap2/sleep33xx.S
++++ b/arch/arm/mach-omap2/sleep33xx.S
+@@ -6,7 +6,6 @@
+  *	Dave Gerlach, Vaibhav Bedia
+  */
+ 
+-#include <generated/ti-pm-asm-offsets.h>
+ #include <linux/linkage.h>
+ #include <linux/platform_data/pm33xx.h>
+ #include <linux/ti-emif-sram.h>
+@@ -15,6 +14,7 @@
+ 
+ #include "iomap.h"
+ #include "cm33xx.h"
++#include "pm-asm-offsets.h"
+ 
+ #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
+ #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
+diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+index c1f4e4852644..90d2907a2eb2 100644
+--- a/arch/arm/mach-omap2/sleep43xx.S
++++ b/arch/arm/mach-omap2/sleep43xx.S
+@@ -6,7 +6,6 @@
+  *	Dave Gerlach, Vaibhav Bedia
+  */
+ 
+-#include <generated/ti-pm-asm-offsets.h>
+ #include <linux/linkage.h>
+ #include <linux/ti-emif-sram.h>
+ #include <linux/platform_data/pm33xx.h>
+@@ -19,6 +18,7 @@
+ #include "iomap.h"
+ #include "omap-secure.h"
+ #include "omap44xx.h"
++#include "pm-asm-offsets.h"
+ #include "prm33xx.h"
+ #include "prcm43xx.h"
+ 
+-- 
+2.17.1
+
