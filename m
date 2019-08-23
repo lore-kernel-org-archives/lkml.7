@@ -2,92 +2,107 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FFBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAB5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AB220850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:18:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ctpsqG1k"
+	by mail.kernel.org (Postfix) with ESMTP id B761F21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566600296;
+	bh=fFvje1qpo1eY2QTU8IwCjfW86qCM3kOhRzG6iXlRJvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iG6bISef3qNmk3pskvWlF1mbpuUOcuS9wWU9UKCtmYb/ALM7uMd2x2BJ2ujQzNWX8
+	 cDxo79kOjRIp5/zW+iskIouryMBmyl+ZEIrGXNaACDMXWR8HSSy77Rw0i7TVbeC2h+
+	 3KN/9Fz/OmvTBtp7PqfqU2W3Ya5vDUzZaldqH2pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437009AbfHWWS2 (ORCPT
+        id S1726030AbfHWWoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 18:18:28 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13864 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405239AbfHWWSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 18:18:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6066240001>; Fri, 23 Aug 2019 15:18:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 23 Aug 2019 15:18:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 23 Aug 2019 15:18:12 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 23 Aug
- 2019 22:18:07 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 23 Aug 2019 22:18:07 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d60661e0003>; Fri, 23 Aug 2019 15:18:06 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 0/2] mm/hmm: two bug fixes for hmm_range_fault()
-Date:   Fri, 23 Aug 2019 15:17:51 -0700
-Message-ID: <20190823221753.2514-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 23 Aug 2019 18:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbfHWWoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 18:44:08 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB1A21019;
+        Fri, 23 Aug 2019 22:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566600247;
+        bh=fFvje1qpo1eY2QTU8IwCjfW86qCM3kOhRzG6iXlRJvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HvKA8x9/Jh1X1J3OgdWjZPZjkGfnuxKDsbyurtFWMHjibm6ytbhZL5VfGA+dJgPWS
+         1NX+tRja2MLnl/k65RaRiAhzNPjf/RgSdJlGNqhhhCoet3q4R8GiFc3Ui0r3JfeVsr
+         alYAD8EUtBzzHq4K9D9IRAcmHiHe0cRKptYWvbxg=
+Date:   Sat, 24 Aug 2019 00:44:05 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 26/38] posix-cpu-timers: Make expiry checks array based
+Message-ID: <20190823224404.GG18880@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192921.695481430@linutronix.de>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566598693; bh=Z6axOFKbUvqsjcFqMxwwOrZTql7QqKTfP0heWnYU1Z8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=ctpsqG1kNxP+YzsOTUXs7AwK5TY2o4ZmwFLtokaKLQ4zXNU31nsT4X7JyHtFGc5fe
-         O8xIorB0RJZR6/3g7TN0cjxJ0/JlP3grcpjxY6NHweE6/eyjaFRSeeYH/peSmE7G5E
-         6FiA1tTrxCHIAWyCwjMVD8eWRBvO37Z3HtCxaHyPi8tCz1GQZvv+j03ery4xJu2Nvb
-         rik3UshHudfzSfYw2qCWIlQKCR9d0zLt50+Q354r5dPupAuz4gjV8IJsaeiLwrVPAQ
-         M/0ar3v6Up8fbsIC/Ld11+CbgBG306Z+AOrZZelEg4l+GgDLY6zz0F1xBu2md0eZ1G
-         mlS04Yqu1Mb/w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821192921.695481430@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have been working on converting Jerome's hmm_dummy driver and self
-tests into a stand-alone set of tests to be included in
-tools/testing/selftests/vm and came across these two bug fixes in the
-process. The tests aren't quite ready to be posted as a patch.
-I'm posting the fixes now since I thought they shouldn't wait.
-They should probably have a fixes line but with all the HMM changes,
-I wasn't sure exactly which commit to use.
+On Wed, Aug 21, 2019 at 09:09:13PM +0200, Thomas Gleixner wrote:
+> The expiry cache is an array indexed by clock ids. The new sample functions
+> allow to retrieve a corresponding array of samples.
+> 
+> Convert the fastpath expiry checks to make use of the new sample functions
+> and do the comparisons on the sample and the expiry array.
+> 
+> Make the check for the expiry array being zero array based as well.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-These are based on top of Jason's latest hmm branch.
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-Ralph Campbell (2):
-  mm/hmm: hmm_range_fault() NULL pointer bug
-  mm/hmm: hmm_range_fault() infinite loop
+Just a few boring neats:
 
- mm/hmm.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+>  /**
+> - * task_cputime_expired - Compare two task_cputime entities.
+> + * task_cputimers_expired - Compare two task_cputime entities.
 
---=20
-2.20.1
+s/task_cputime/clock arrays ?
 
+>   *
+> - * @sample:	The task_cputime structure to be checked for expiration.
+> - * @expires:	Expiration times, against which @sample will be checked.
+> + * @samples:	Array of current samples for the CPUCLOCK clocks
+> + * @expiries:	Array of expiry values for the CPUCLOCK clocks
+>   *
+> - * Checks @sample against @expires to see if any field of @sample has expired.
+> - * Returns true if any field of the former is greater than the corresponding
+> - * field of the latter if the latter field is set.  Otherwise returns false.
+> + * Returns true if any mmember of @samples is greater than the corresponding
+
+s/mmember/member
+
+> + * member of @expiries if that member is non zero. False otherwise
+>   */
+> -static inline int task_cputime_expired(const struct task_cputime *sample,
+> -					const struct task_cputime *expires)
+> +static inline bool task_cputimers_expired(const u64 *sample, const u64 *expiries)
+
+s/sample/samples to agree with above documented parameters.
+
+Thanks.
