@@ -7,217 +7,179 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E842EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E1C2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E3C206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DPbWDrNS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BvZ0YZDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389721AbfHWR2D (ORCPT
+        id S2389884AbfHWR2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:28:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37765 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389289AbfHWR2C (ORCPT
+        Fri, 23 Aug 2019 13:28:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37821 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389408AbfHWR2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:28:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d1so6126237pgp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:28:02 -0700 (PDT)
+        Fri, 23 Aug 2019 13:28:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y9so6503262pfl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JpGZpvS6y7xgN7XnzsEu5TdSqjOQTKTe7TuWBgzpXxk=;
-        b=DPbWDrNSkF3m3LM0LR49Pzw0ikWe08dHQLzlDwCCEd7SbY6lXjBe4g0E0/Oh0SS+8L
-         1E2R3whjpm/iFQXBpTT4okhqcaJ9ZnLIQH02NXVEugo9GHSE50Jg8iFRbsmg/FsPppnw
-         MrLpLS4WEb0jVHfL7Ku4uZCHChd+71dF0jelCrk2VXPZsc/GseLHkRq3LfohfXHpj4oa
-         AeTShyhb7KisbZpowlWSJWUH5/NPhwM3qX6O9qpBe+sFL60yTW4cJ4vUQwBWpprLutHO
-         5jYbqQDNL1N504EYpXBVjn24evq+dP/NDByqBukweHmVAjQPQCqMp6Hlv66N/RkoT59S
-         yfsA==
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=LlY7R9oI63QnnjzzCPznegjo2e3AtB25U8NRGe3mrEs=;
+        b=BvZ0YZDVcFNF6hXlr+zCDxRH/ZfbM+zmnthSBPpJuKXNATNKTSumVzYUQobMNMz7k2
+         9tCfAUdSZw6Wg09MCJ2wgBoJtl/6fzJ+VeBv4MQOkEs1MJdW/79R7W/2rX4YqMTgaQB1
+         3Hk23csdEwwAWZLu1/wn0ChPrM1VAgzmWX4LwjC3uJKeH4TLQxxYKTmfO1I4xA2HyRG6
+         tUXDO+yATvuHlj0+gINMfXyzEUe/hqmrUu0L0+vuf61xGgik6LI6YGPu7YLe6D9BGj+n
+         OQ/JjSOj4RWjdoxFOtwzKwzuVlPNPNdSx/xVnamfoHWz82uSiuAnimE9lJdhDSpU+bB/
+         8Gpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JpGZpvS6y7xgN7XnzsEu5TdSqjOQTKTe7TuWBgzpXxk=;
-        b=sq8aJ1dPS2ttQkrjtA3wOWm7OhYmO7Vc3jAzv7tl1QSbonf4g5nmWQsjLJz3/regrO
-         DaF3sTWIwmgZ/ktR3Qjl9888jPHkRmGzOCzyq1qZDHkUiu5H0HsZrT+bmwu0W0gnLVJ5
-         bNJt+LgsUuAmZMfAS0Aw7+fzCjc1QhtL7dDAV0TqvqNioIbFas+6dTwde5wXyenZSjJI
-         UWfaTSiKDnJy7SvzsuRJvpgmiXSq8oQP999IqX6KbHQtby3vgbpCYy8NLA9p+YlIjzbe
-         HYz3f/wis52wFyhhFBkk1um6ZTU7WYPKQ+AmEHret/cbGFVaLSQ9NMK/3t9cf2NJ60m+
-         HEyQ==
-X-Gm-Message-State: APjAAAWOyOeoZ3SXCt8RfrhjBe3OaANFdTpWpZHr5lam9nIlHA7hKdws
-        /kyKvolromHTZYD2CKnjjjGNaVYLlCH+l7rI0jEPVA==
-X-Google-Smtp-Source: APXvYqxO41uhCLsTUJZzB3icsTW0bMGI+WWDOYyKC539Pf/Fhot22x5RnB49yWHNSNlX8BLD0YS+A9/mQTKWddz6BQY=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr4863766pge.201.1566581281074;
- Fri, 23 Aug 2019 10:28:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820232046.50175-1-brendanhiggins@google.com>
- <20190820232046.50175-2-brendanhiggins@google.com> <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
- <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com> <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
-In-Reply-To: <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 23 Aug 2019 10:27:49 -0700
-Message-ID: <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
-Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
-To:     shuah <shuah@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=LlY7R9oI63QnnjzzCPznegjo2e3AtB25U8NRGe3mrEs=;
+        b=MPHuqB1dTDo/3h/1wv6wyLKgPVCgvnInMMbHFjierIx8TY9aETnqVFDYMAqrOaBuNP
+         ftWxZ3RS8g4+5pNzAjlM5NZLmGnPdPuwMgJK8bwQuk7csmTrf5mkXXp3XbtO+XnGPJoc
+         XqlG3msmCPFXy6z69ONJEjYo3/jslbb6SdvhZlQCKdjwh95ZtSIYh0JUIibx06Pz4KiL
+         245UU9UKw7ee695VAUD//vpZUaEpDX+EjIZMYL79h2Bw1BgmebDRWELQKp/EJm1Xi9lb
+         lJ0H4Yqhzmsn+Hv0v25iapRcccxpkzI8Iy/5m9VbRvwWNx48KjHZuKFpWkl8lZVDZ8JA
+         f7uw==
+X-Gm-Message-State: APjAAAXyv1Or3CN51gFDlYSeLFiWwXpxAXH16yntr6vxtHutC4hCfTzV
+        sbTq7L8YAKnetmTrJJ2dJbjfWAj30N8hAQ==
+X-Google-Smtp-Source: APXvYqxtbzehrWPSMGS6smJQ1eQuNO9A6R78aqo2uXT8q3zM7yrGaCk+z5elmBa+J61atiOTjZFvFQ==
+X-Received: by 2002:a17:90a:8991:: with SMTP id v17mr6239174pjn.120.1566581284844;
+        Fri, 23 Aug 2019 10:28:04 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id f63sm3804969pfa.144.2019.08.23.10.28.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 10:28:03 -0700 (PDT)
+From:   bsegall@google.com
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Phil Auld <pauld@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next v2] sched/fair: fix -Wunused-but-set-variable warnings
+References: <1566326455-8038-1-git-send-email-cai@lca.pw>
+        <xm26tvaaifoy.fsf@bsegall-linux.svl.corp.google.com>
+        <CAC=E7cWYSEAjUhgN5vBECmR5ATXWmt4M7n8sNN0xXStEsb4YjA@mail.gmail.com>
+Date:   Fri, 23 Aug 2019 10:28:02 -0700
+In-Reply-To: <CAC=E7cWYSEAjUhgN5vBECmR5ATXWmt4M7n8sNN0xXStEsb4YjA@mail.gmail.com>
+        (Dave Chiluk's message of "Fri, 23 Aug 2019 09:48:08 -0500")
+Message-ID: <xm26h867iyfx.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:05 AM shuah <shuah@kernel.org> wrote:
+Dave Chiluk <chiluk+linux@indeed.com> writes:
+
+> On Wed, Aug 21, 2019 at 12:36 PM <bsegall@google.com> wrote:
+>>
+>> Qian Cai <cai@lca.pw> writes:
+>>
+>> > The linux-next commit "sched/fair: Fix low cpu usage with high
+>> > throttling by removing expiration of cpu-local slices" [1] introduced a
+>> > few compilation warnings,
+>> >
+>> > kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
+>> > kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used
+>> > [-Wunused-but-set-variable]
+>> > kernel/sched/fair.c: In function 'start_cfs_bandwidth':
+>> > kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used
+>> > [-Wunused-but-set-variable]
+>> >
+>> > Also, __refill_cfs_bandwidth_runtime() does no longer update the
+>> > expiration time, so fix the comments accordingly.
+>> >
+>> > [1] https://lore.kernel.org/lkml/1558121424-2914-1-git-send-email-chiluk+linux@indeed.com/
+>> >
+>> > Signed-off-by: Qian Cai <cai@lca.pw>
+>>
+>> Reviewed-by: Ben Segall <bsegall@google.com>
+>>
+>> > ---
+>> >
+>> > v2: Keep hrtimer_forward_now() in start_cfs_bandwidth() per Ben.
+>> >
+>> >  kernel/sched/fair.c | 19 ++++++-------------
+>> >  1 file changed, 6 insertions(+), 13 deletions(-)
+>> >
+>> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> > index 84959d3285d1..06782491691f 100644
+>> > --- a/kernel/sched/fair.c
+>> > +++ b/kernel/sched/fair.c
+>> > @@ -4354,21 +4354,16 @@ static inline u64 sched_cfs_bandwidth_slice(void)
+>> >  }
+>> >
+>> >  /*
+>> > - * Replenish runtime according to assigned quota and update expiration time.
+>> > - * We use sched_clock_cpu directly instead of rq->clock to avoid adding
+>> > - * additional synchronization around rq->lock.
+>> > + * Replenish runtime according to assigned quota. We use sched_clock_cpu
+>> > + * directly instead of rq->clock to avoid adding additional synchronization
+>> > + * around rq->lock.
+>> >   *
+>> >   * requires cfs_b->lock
+>> >   */
+>> >  void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
+>> >  {
+>> > -     u64 now;
+>> > -
+>> > -     if (cfs_b->quota == RUNTIME_INF)
+>> > -             return;
+>> > -
+>> > -     now = sched_clock_cpu(smp_processor_id());
+>> > -     cfs_b->runtime = cfs_b->quota;
+>> > +     if (cfs_b->quota != RUNTIME_INF)
+>> > +             cfs_b->runtime = cfs_b->quota;
+>> >  }
+>> >
+>> >  static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+>> > @@ -4989,15 +4984,13 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>> >
+>> >  void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+>> >  {
+>> > -     u64 overrun;
+>> > -
+>> >       lockdep_assert_held(&cfs_b->lock);
+>> >
+>> >       if (cfs_b->period_active)
+>> >               return;
+>> >
+>> >       cfs_b->period_active = 1;
+>> > -     overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
+>> > +     hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
+>> >       hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
+>> >  }
 >
-> On 8/23/19 10:48 AM, Brendan Higgins wrote:
-> > On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
-> >>
-> >> Hi Brendan,
-> >>
-> >> On 8/20/19 5:20 PM, Brendan Higgins wrote:
-> >>> Add core facilities for defining unit tests; this provides a common way
-> >>> to define test cases, functions that execute code which is under test
-> >>> and determine whether the code under test behaves as expected; this also
-> >>> provides a way to group together related test cases in test suites (here
-> >>> we call them test_modules).
-> >>>
-> >>> Just define test cases and how to execute them for now; setting
-> >>> expectations on code will be defined later.
-> >>>
-> >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> >>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> >>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> >>> ---
-> >>>    include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
-> >>>    kunit/Kconfig        |  17 ++++
-> >>>    kunit/Makefile       |   1 +
-> >>>    kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
-> >>>    4 files changed, 388 insertions(+)
-> >>>    create mode 100644 include/kunit/test.h
-> >>>    create mode 100644 kunit/Kconfig
-> >>>    create mode 100644 kunit/Makefile
-> >>>    create mode 100644 kunit/test.c
-> >>>
-> >>> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> >>> new file mode 100644
-> >>> index 0000000000000..e0b34acb9ee4e
-> >>> --- /dev/null
-> >>> +++ b/include/kunit/test.h
-> >>> @@ -0,0 +1,179 @@
-> >>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>> +/*
-> >>> + * Base unit test (KUnit) API.
-> >>> + *
-> >>> + * Copyright (C) 2019, Google LLC.
-> >>> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> >>> + */
-> >>> +
-> >>> +#ifndef _KUNIT_TEST_H
-> >>> +#define _KUNIT_TEST_H
-> >>> +
-> >>> +#include <linux/types.h>
-> >>> +
-> >>> +struct kunit;
-> >>> +
-> >>> +/**
-> >>> + * struct kunit_case - represents an individual test case.
-> >>> + * @run_case: the function representing the actual test case.
-> >>> + * @name: the name of the test case.
-> >>> + *
-> >>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
-> >>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
-> >>> + * test case is associated with a &struct kunit_suite and will be run after the
-> >>> + * suite's init function and followed by the suite's exit function.
-> >>> + *
-> >>> + * A test case should be static and should only be created with the KUNIT_CASE()
-> >>> + * macro; additionally, every array of test cases should be terminated with an
-> >>> + * empty test case.
-> >>> + *
-> >>> + * Example:
-> >>
-> >> Can you fix these line continuations. It makes it very hard to read.
-> >> Sorry for this late comment. These comments lines are longer than 80
-> >> and wrap.
-> >
-> > None of the lines in this commit are over 80 characters in column
-> > width. Some are exactly 80 characters (like above).
-> >
-> > My guess is that you are seeing the diff added text (+ ), which when
-> > you add that to a line which is exactly 80 char in length ends up
-> > being over 80 char in email. If you apply the patch you will see that
-> > they are only 80 chars.
-> >
-> >>
-> >> There are several comment lines in the file that are way too long.
-> >
-> > Note that checkpatch also does not complain about any over 80 char
-> > lines in this file.
-> >
-> > Sorry if I am misunderstanding what you are trying to tell me. Please
-> > confirm either way.
-> >
+> Looks good.
+> Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
 >
-> WARNING: Avoid unnecessary line continuations
-> #258: FILE: include/kunit/test.h:137:
-> +                */                                                            \
+> Sorry for the slow response, I was on vacation.
 >
-> total: 0 errors, 2 warnings, 388 lines checked
+> @Ben do you think it would be useful to still capture overrun, and
+> WARN on any overruns?  We wouldn't expect overruns, but their
+> existence would indicate an over-loaded node or too short of a
+> cfs_period.  Additionally, it would be interesting to see if we could
+> capture the offset between when the bandwidth was refilled, and when
+> the timer was supposed to fire.  I've always done all my calculations
+> assuming that the timer fires and is handled exceedingly close to the
+> time it was supposed to fire.  Although, if the node is running that
+> overloaded you probably have many more problems than worrying about
+> timer warnings.
 
-Ah, okay so you don't like the warning about the line continuation.
-That's not because it is over 80 char, but because there is a line
-continuation after a comment. I don't really see a way to get rid of
-it without removing the comment from inside the macro.
+That "overrun" there is not really an overrun - it's the number of
+complete periods the timer has been inactive for. It was used so that a
+given tg's period timer would keep the same
+phase/offset/whatever-you-call-it, even if it goes idle for a while,
+rather than having the next period start N ms after a task wakes up.
 
-I put this TODO there in the first place a Luis' request, and I put it
-in the body of the macro because this macro already had a kernel-doc
-comment and I didn't think that an implementation detail TODO belonged
-in the user documentation.
-
-> Go ahead fix these. It appears there are few lines that either longer
-> than 80. In general, I keep them around 75, so it is easier read.
-
-Sorry, the above is the only checkpatch warning other than the
-reminder to update the MAINTAINERS file.
-
-Are you saying you want me to go through and make all the lines fit in
-75 char column width? I hope not because that is going to be a pretty
-substantial change to make.
+Also, poor choices by userspace is not generally something the kernel
+generally WARNs on, as I understand it.
