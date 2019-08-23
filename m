@@ -2,133 +2,112 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7F9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E50C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B022166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="k4J1jLt5"
+	by mail.kernel.org (Postfix) with ESMTP id 189C32166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566557448;
+	bh=yxp5UOti4R1xBPBqA/dNUmgQ3NvW7i84TKOl//Cm3xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QMZlm1FY3cIdn7OFTeQ50VoRwf7TAQvpY27Sfv47Mnd32HP3t1IOKxBrvUnylPjrf
+	 3kKl0gGm7ScoN7PKw5mBmWZ9bwTeQhu4TGWTw5emW+MrSWsaSwTOCk/3DWPDPEZPJi
+	 OQL1GEaQf//dNwaFHjXgcweY2kURvTSDJT17ErtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392402AbfHWKui (ORCPT
+        id S2392490AbfHWKur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:50:38 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58354 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390368AbfHWKuh (ORCPT
+        Fri, 23 Aug 2019 06:50:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36728 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730991AbfHWKuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:50:37 -0400
+        Fri, 23 Aug 2019 06:50:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WkOQCblr80QvbCUn50ub1k7R9QW4QXimQCrstjhJulY=; b=k4J1jLt5xf5Toe+k9bx1wwguJ
-        vYlPNgJrJp7Xj6lXdkaSZp0zW62cVygjuvPjUtNzwK8aaZK1N0u0FadQyAIeqLP0mOGgnYHcLetlG
-        TOo8DaK5OvHqipsTSTfwPqSnjyqWl+QYpdKWm/xKpwlzcWReb+8Q4PWf4j0MW7h5hVZ1mo7Rw5bzR
-        xx9ClQNRWKxgB5LvwGo4YlI3K7mnoDuQ/y8Vv1eTHN8OLb09sX/rsVUl1qEqNPoWsUQxPbJSjzjc/
-        HFpJ8CYTvTc7S2oWL5Zlul/F72cyK/yPX1BUZPiTX24VSUl4I80o0potbMpKuZ2XFO3sixXngqmB4
-        35GAnc6Fg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:55914)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i179G-0004B2-0g; Fri, 23 Aug 2019 11:50:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i179A-0000B7-JJ; Fri, 23 Aug 2019 11:50:20 +0100
-Date:   Fri, 23 Aug 2019 11:50:20 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        patches@armlinux.org.uk, mchehab@kernel.org, james.morse@arm.com,
-        jlu@pengutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Message-ID: <20190823105020.GZ13294@shell.armlinux.org.uk>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
- <20190823104621.GY13294@shell.armlinux.org.uk>
+         bh=060aY2SvBvRsi+LXzaIKeXVNx7xgGjdwSKM7GY3p9xA=; b=oduc+DsbRrpu3jf0jLDJS5FOa
+        63bXAeIN9aWbEeoL51nMfK5x6c28+tpCDRmWuMMu0MSZrQtkD+cqNFuOorJnjeT7UtivPMrgsGylP
+        //rqxYzJSU/Kg8mUk9WgH/Pcju0lhsLM+Ocmi14qa8yaj+ZIcsd7buVSuU7VRTbg5YxF0=;
+Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i179Y-0002uZ-UD; Fri, 23 Aug 2019 10:50:44 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 95F21D02CD0; Fri, 23 Aug 2019 11:50:44 +0100 (BST)
+Date:   Fri, 23 Aug 2019 11:50:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE
+ when it's not ours
+Message-ID: <20190823105044.GO23391@sirena.co.uk>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+ <20190822211514.19288-3-olteanv@gmail.com>
+ <20190823102816.GN23391@sirena.co.uk>
+ <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hl1kWnBARzJiTscN"
 Content-Disposition: inline
-In-Reply-To: <20190823104621.GY13294@shell.armlinux.org.uk>
+In-Reply-To: <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
+X-Cookie: Don't SANFORIZE me!!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:46:21AM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Jul 12, 2019 at 03:48:57PM +1200, Chris Packham wrote:
-> > From: Jan Luebbe <jlu@pengutronix.de>
-> > 
-> > The macro name is too generic, so add a AURORA_ prefix.
-> > 
-> > Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-> > Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > ---
-> >  arch/arm/include/asm/hardware/cache-aurora-l2.h | 2 +-
-> 
-> I can't apply this series - this file does not exist in my tree, and
-> from what git tells me, it never has existed.  Maybe it's in someone
-> elses tree?
 
-I think the file is in my tree, just as arch/arm/mm/cache-aurora-l2.h
-which is where it has been since it was originally submitted in 2012.
+--hl1kWnBARzJiTscN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> >  arch/arm/mm/cache-l2x0.c                        | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/include/asm/hardware/cache-aurora-l2.h
-> > index c86124769831..dc5c479ec4c3 100644
-> > --- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
-> > +++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
-> > @@ -41,7 +41,7 @@
-> >  #define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
-> >  	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
-> >  
-> > -#define MAX_RANGE_SIZE		1024
-> > +#define AURORA_MAX_RANGE_SIZE	1024
-> >  
-> >  #define AURORA_WAY_SIZE_SHIFT	2
-> >  
-> > diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> > index 428d08718107..83b733a1f1e6 100644
-> > --- a/arch/arm/mm/cache-l2x0.c
-> > +++ b/arch/arm/mm/cache-l2x0.c
-> > @@ -1352,8 +1352,8 @@ static unsigned long aurora_range_end(unsigned long start, unsigned long end)
-> >  	 * since cache range operations stall the CPU pipeline
-> >  	 * until completion.
-> >  	 */
-> > -	if (end > start + MAX_RANGE_SIZE)
-> > -		end = start + MAX_RANGE_SIZE;
-> > +	if (end > start + AURORA_MAX_RANGE_SIZE)
-> > +		end = start + AURORA_MAX_RANGE_SIZE;
-> >  
-> >  	/*
-> >  	 * Cache range operations can't straddle a page boundary.
-> > -- 
-> > 2.22.0
-> > 
-> > 
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+On Fri, Aug 23, 2019 at 01:30:27PM +0300, Vladimir Oltean wrote:
+> On Fri, 23 Aug 2019 at 13:28, Mark Brown <broonie@kernel.org> wrote:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> > It would be better to have done this as the first patch before
+> > the restructuring, that way we could send this as a fix - the
+> > refactoring while good doesn't really fit with stable.
+
+> Did you see this?
+> https://lkml.org/lkml/2019/8/22/1542
+
+I'm not online enough to readily follow that link right now, I
+did apply another patch for a similar issue though.  If that's
+a different version of the same change please don't do that,
+sending multiple conflicting versions of the same thing creates
+conflicts and makes everything harder to work with.
+
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
+
+--hl1kWnBARzJiTscN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fxQMACgkQJNaLcl1U
+h9AOHgf8CAS5RBRoxTFZUsrmCEnLyMFYb7aueuSKLUE+iKi+G3NldiLt7pzFIU9d
+svVlmYRKAks8vzJMW/BxQgaB+YfMGd8dUWEqCs2XORYRDLRd8MM5OIXZ89kda74l
+SOBsfcmjetVLeO9Ws85HuXjl+zSyl3Rxa4AjW5B9hgIjw6gDZqCuA8bkUFq3xmTN
+GMB3B+QB+friWpL3FuMcJiv6+PQU5Ing/NzphvWj18U6o5pzfxwQkv0iYVdhxsbN
+2CtENUmGQ7A9IffnFv1FrRykxq16/VWEUjYblhuiTS5sYNRKiOmywWILnghWEGZZ
+betTGkaDXFODaV43fus34BO8Ynd/7g==
+=/HjI
+-----END PGP SIGNATURE-----
+
+--hl1kWnBARzJiTscN--
