@@ -2,91 +2,113 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD51C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937982173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:07:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pLeDF2JR"
+	by mail.kernel.org (Postfix) with ESMTP id 06AA222CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389721AbfHWOHS (ORCPT
+        id S2391503AbfHWOIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:07:18 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38652 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfHWOHS (ORCPT
+        Fri, 23 Aug 2019 10:08:39 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:31071 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390154AbfHWOIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:07:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YKuQj4mAn7Ly5b7a4x9QRIt1a/TDbvR4K88H+PiPWaY=; b=pLeDF2JRWvn5cV6HVnEDw3VLF
-        m6eg1WFTuIkTWXy/lA95iK0Ff+Ac3qqG7mLkMqzJnT5sh0kFAMPkyhTnHF0ObSzu5cOOSYXkv4tyS
-        okxtf6Uc8yCdeZ7c236qvdKh/NoFGDK7/Ti7lMgUFd/or3ObdSQstPTL+isWWUyFCgJzKIwdrWHHk
-        uLGRqW0XJlsVnbiO99fDPHpYfC+GXdqwSgf/L2sUCn3oi6eZ3yKbdS/Tkg4RD1eqsMG/kHAbOtFYt
-        0i3/a/MJg+FHF9xSxttoVoi9RtyiTlKVAaynNJpYkhjPA4JQF/8KRtSwV6XEQw2gbS58lOIvz97TV
-        NeA22XXQQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i1ACp-00023P-9v; Fri, 23 Aug 2019 14:06:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A117307510;
-        Fri, 23 Aug 2019 16:05:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 99EF9202245FF; Fri, 23 Aug 2019 16:06:15 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 16:06:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 3/4] kernel.h: Add non_block_start/end()
-Message-ID: <20190823140615.GJ2369@hirez.programming.kicks-ass.net>
-References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
- <20190820081902.24815-4-daniel.vetter@ffwll.ch>
- <20190820202440.GH11147@phenom.ffwll.local>
- <20190822161428.c9e4479207386d34745ea111@linux-foundation.org>
- <CAKMK7uGw_7uD=wH3bcR9xXSxAcAuYTLOZt3ue4TEvst1D0KzLQ@mail.gmail.com>
- <20190823121234.GB12968@ziepe.ca>
- <CAKMK7uHzSkd2j4MvSMoHhCaSE0BT0zMo9osF4FUBYwNZrVfYDA@mail.gmail.com>
+        Fri, 23 Aug 2019 10:08:38 -0400
+Received: from [192.168.1.41] ([90.126.160.115])
+        by mwinf5d06 with ME
+        id se8M200092Vh0YS03e8M18; Fri, 23 Aug 2019 16:08:36 +0200
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 23 Aug 2019 16:08:36 +0200
+X-ME-IP: 90.126.160.115
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_ethernet=3a_Delete_unnecessary_checks_b?=
+ =?UTF-8?Q?efore_the_macro_call_=e2=80=9cdev=5fkfree=5fskb=e2=80=9d?=
+To:     Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        intel-wired-lan@lists.osuosl.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Doug Berger <opendmb@gmail.com>,
+        Douglas Miller <dougmill@linux.ibm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Cc:     kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <af1ae1cf-4a01-5e3a-edc2-058668487137@web.de>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <4ab7f2a5-f472-f462-9d4c-7c8d5237c44e@wanadoo.fr>
+Date:   Fri, 23 Aug 2019 16:08:20 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uHzSkd2j4MvSMoHhCaSE0BT0zMo9osF4FUBYwNZrVfYDA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <af1ae1cf-4a01-5e3a-edc2-058668487137@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 03:42:47PM +0200, Daniel Vetter wrote:
-> I'm assuming the lockdep one will land, so not going to resend that.
+Hi,
 
-I was assuming you'd wake the might_lock_nested() along with the i915
-user through the i915/drm tree. If want me to take some or all of that,
-lemme know.
+in this patch, there is one piece that looked better before. (see below)
+
+Removing the 'if (skb)' is fine, but concatening everything in one 
+statement just to save 2 variables and a few LOC is of no use, IMHO, and 
+the code is less readable.
+
+just my 2c.
+
+
+CJ
+
+
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c 
+b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index d3a0b614dbfa..8b19ddcdafaa 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -2515,19 +2515,14 @@ static int bcmgenet_dma_teardown(struct 
+bcmgenet_priv *priv)
+  static void bcmgenet_fini_dma(struct bcmgenet_priv *priv)
+  {
+      struct netdev_queue *txq;
+-    struct sk_buff *skb;
+-    struct enet_cb *cb;
+      int i;
+
+      bcmgenet_fini_rx_napi(priv);
+      bcmgenet_fini_tx_napi(priv);
+
+-    for (i = 0; i < priv->num_tx_bds; i++) {
+-        cb = priv->tx_cbs + i;
+-        skb = bcmgenet_free_tx_cb(&priv->pdev->dev, cb);
+-        if (skb)
+-            dev_kfree_skb(skb);
+-    }
++    for (i = 0; i < priv->num_tx_bds; i++)
++ dev_kfree_skb(bcmgenet_free_tx_cb(&priv->pdev->dev,
++                          priv->tx_cbs + i));
+
+      for (i = 0; i < priv->hw_params->tx_queues; i++) {
+          txq = netdev_get_tx_queue(priv->dev, priv->tx_rings[i].queue);
