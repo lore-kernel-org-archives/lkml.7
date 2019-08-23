@@ -2,110 +2,155 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A539C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E14C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C48322CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566553381;
-	bh=4BEiFIOchDOtB8GlIw0hoo4htbbbRiQng1M6bTh6Z2o=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=mmSs9Kimx/c310E2xRccbW7EFkbA9+TsFL4u3MP4DXDvxpiKOb3Py1YDrxgh6zPGy
-	 H174qSIIqYC9nVy5Ubkf0K9RMQr0uxTprHVQkeQ8LZtm6M0qh1NF/I6CISr+spnte3
-	 OURb6+eLQbtr4o1RCETOpdXDy1YZUfMc4zA31sks=
+	by mail.kernel.org (Postfix) with ESMTP id 83F4A22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388289AbfHWJnA (ORCPT
+        id S2388472AbfHWJo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:43:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:58646 "EHLO foss.arm.com"
+        Fri, 23 Aug 2019 05:44:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:58694 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387777AbfHWJm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:42:59 -0400
+        id S2387777AbfHWJo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:44:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7C19337;
-        Fri, 23 Aug 2019 02:42:58 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62C63F246;
-        Fri, 23 Aug 2019 02:42:56 -0700 (PDT)
-Subject: Re: [PATCH v2 00/20] Initial support for Marvell MMP3 SoC
-To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-References: <20190822092643.593488-1-lkundrak@v3.sk>
- <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
- <424d2881edcaf7cedbfa5cbbf2e73aaff5355df3.camel@v3.sk>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <08a0e65e-4a80-f611-e36e-8e3f70fa8113@kernel.org>
-Date:   Fri, 23 Aug 2019 10:42:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FB50337;
+        Fri, 23 Aug 2019 02:44:27 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E259E3F246;
+        Fri, 23 Aug 2019 02:44:26 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 10:44:25 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
+ nodes
+Message-ID: <20190823094424.GB14582@e119886-lin.cambridge.arm.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190822164815.GA12855@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <424d2881edcaf7cedbfa5cbbf2e73aaff5355df3.camel@v3.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822164815.GA12855@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/08/2019 08:21, Lubomir Rintel wrote:
-> On Thu, 2019-08-22 at 11:31 +0100, Marc Zyngier wrote:
->> On 22/08/2019 10:26, Lubomir Rintel wrote:
->>> Hi, 
->>>
->>> this is a second spin of a patch set that adds support for the Marvell
->>> MMP3 processor. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad
->>> FZ-A1 tablet and Dell Wyse 3020 Tx0D thin clients. 
->>>
->>> Compared to v1, there's a handful of fixes in response to reviews. Patch
->>> 02/20 is new. Details in individual patches.
->>>  
->>> Apart from the adjustments in mach-mmp/, the patch makes necessary 
->>> changes to the irqchip driver and adds an USB2 PHY driver. The latter 
->>> has a dependency on the mach-mmp/ changes, so it can't be submitted 
->>> separately.
->>>  
->>> The patch set has been tested to work on Wyse Tx0D and not ruin MMP2 
->>> support on XO-1.75. 
->>
->> How do you want this series to be merged? I'm happy to take the irqchip
->> related patches as well as the corresponding DT change (once reviewed)
->> through my tree.
+On Thu, Aug 22, 2019 at 05:48:15PM +0100, Lorenzo Pieralisi wrote:
+> On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
+> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > 
+> > On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+> > controller is not fixed, it is determined by the selected
+> > SerDes protocol. The current num-lanes indicates the max lanes
+> > PCIe controller can support up to, instead of the lanes assigned
+> > to the PCIe controller. This can result in PCIe link training fail
+> > after hot-reset.
+> > 
+> > Hou Zhiqiang (4):
+> >   dt-bindings: PCI: designware: Remove the num-lanes from Required
+> >     properties
+> >   PCI: dwc: Return directly when num-lanes is not found
+> >   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
+> >   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
+> > 
+> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+> >  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
+> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
+> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
+> >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
+> >  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
+> >  8 files changed, 4 insertions(+), 22 deletions(-)
 > 
-> I was hoping for the Arm SoC tree, because there are some dependencies
-> (MMP3 USB PHY depends on MMP3 SoC).
+> What a mess.
 > 
-> That said, the irqchip patches are rather independent and the only
-> downside of them going in via a different tree will be that the other
-> tree that will lack them won't boot on MMP3 (things will compile
-> though). I don't know if that's okay. What's typically done in cases
-> like these?
+> I am going to apply these but first if anyone can explain to
+> me what commit 907fce090253 was _supposed_ to to I would
+> be grateful, I read it multiple times but I still have not
+> understood it. This series does the right thing but why things
 
-I usually take the irqchip patches that can be built standalone (without
-dependency on header files, for example). If you want them to go via
-another tree, stick my
+The DWC controller drivers all implement a .host_init callback -
+some of the drivers choose to call dw_pcie_setup_rc from their
+callback which, amongst other things will set up/train the link.
 
-	Acked-by: Marc Zyngier <maz@kernel.org>
+As far as I can tell, dw_pcie_setup_rc is the only user of pp->lanes.
+Therefore for hardware where the link is already set up by firmware
+and thus dw_pcie_setup_rc is never called - it is unnecessary to
+read the DT value for pp->lanes. So the first hunk in 907fce090253
+gets rid of the error and makes the num-lanes property optional.
 
-on patches #6 through #9.
+However this opens up the possibility of a DT misconfiguration for
+other controllers that do call dw_pcie_setup_rc, i.e. they set
+num-lanes to 0 when it is required. Therefore the second hunk
+ensures that an error is emitted when num-lanes was needed but not
+provided.
+
+> are they way they are in the mainline honestly I have no
+> idea, this does not make any sense in the slightest:
+> 
+> ret = of_property_read_u32(np, "num-lanes", &lanes);
+> if (ret)
+> 	lanes = 0;
+
+Please note that the code below is in a different function to the
+code above.
+
+> 
+> /* Set the number of lanes */
+> val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+> val &= ~PORT_LINK_MODE_MASK;
+> switch (lanes) {
+> case 1:
+> 	val |= PORT_LINK_MODE_1_LANES;
+> 	break;
+> case 2:
+> 	val |= PORT_LINK_MODE_2_LANES;
+> 	break;
+> case 4:
+> 	val |= PORT_LINK_MODE_4_LANES;
+> 	break;
+> case 8:
+> 	val |= PORT_LINK_MODE_8_LANES;
+> 	break;
+> default:
+> 	dev_err(pci->dev, "num-lanes %u: invalid value\n", lanes);
+> 	return;
+> }
+> 
+> why do we need to set lanes to 0 if num-lanes is not present ? To print
+> an error message ?
+
+At this point in time, the controller is trying to train the link but
+it doesn't know how many lanes, so we need to error. We don't error when
+reading the device tree earlier - because at that point in time we don't
+know if num-lanes is optional or not.
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Andrew Murray
+
+> 
+> I really do not understand this code.
+> 
+> Lorenzo
