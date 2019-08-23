@@ -2,71 +2,76 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6572C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AC9C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E5B2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914DA2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:46:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391092AbfHWMnW (ORCPT
+        id S2393201AbfHWMqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:43:22 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49915 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbfHWMnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:43:21 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3AD631C000B;
-        Fri, 23 Aug 2019 12:43:18 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 14:43:18 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [1/3] rtc/fsl: support flextimer for lx2160a
-Message-ID: <20190823124318.GA9844@piout.net>
-References: <20190823095740.12280-1-biwen.li@nxp.com>
+        Fri, 23 Aug 2019 08:46:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5209 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388016AbfHWMqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:46:14 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EFD9016D994DD546A2AB;
+        Fri, 23 Aug 2019 20:46:10 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
+ 20:46:03 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <bruno.thomsen@gmail.com>, <linux@roeck-us.net>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] rtc: pcf2127: Fix build error without CONFIG_WATCHDOG_CORE
+Date:   Fri, 23 Aug 2019 20:45:53 +0800
+Message-ID: <20190823124553.19364-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823095740.12280-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/08/2019 17:57:38+0800, Biwen Li wrote:
-> The patch supports flextimer for lx2160a
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  drivers/rtc/rtc-fsl-ftm-alarm.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> index 4f7259c2d6a3..2b81525f6db8 100644
-> --- a/drivers/rtc/rtc-fsl-ftm-alarm.c
-> +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> @@ -313,6 +313,7 @@ static const struct of_device_id ftm_rtc_match[] = {
->  	{ .compatible = "fsl,ls1088a-ftm-alarm", },
->  	{ .compatible = "fsl,ls208xa-ftm-alarm", },
->  	{ .compatible = "fsl,ls1028a-ftm-alarm", },
-> +	{ .compatible = "fsl,lx2160a-ftm-alarm", },
+If WATCHDOG_CORE is not set, build fails:
 
-Couldn't that have been part of the previous patch series?...
+drivers/rtc/rtc-pcf2127.o: In function `pcf2127_probe.isra.6':
+drivers/rtc/rtc-pcf2127.c:478: undefined reference to `devm_watchdog_register_device'
 
+Add WATCHDOG_CORE Kconfig dependency to fix this.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/rtc/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 25af63d..9dce7dc 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -886,6 +886,8 @@ config RTC_DRV_DS3232_HWMON
+ config RTC_DRV_PCF2127
+ 	tristate "NXP PCF2127"
+ 	depends on RTC_I2C_AND_SPI
++	depends on WATCHDOG
++	select WATCHDOG_CORE
+ 	help
+ 	  If you say yes here you get support for the NXP PCF2127/29 RTC
+ 	  chips with integrated quartz crystal for industrial applications.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
+
+
