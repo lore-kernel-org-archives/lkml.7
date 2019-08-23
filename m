@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4C9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DD5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA58C21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B2C21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404908AbfHWHBD (ORCPT
+        id S2404940AbfHWHBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:01:03 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:28305 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404825AbfHWHAr (ORCPT
+        Fri, 23 Aug 2019 03:01:08 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:19460 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730788AbfHWHAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:00:47 -0400
-X-UUID: db88dd1f74574e0388bb8f928a007f56-20190823
-X-UUID: db88dd1f74574e0388bb8f928a007f56-20190823
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 23 Aug 2019 03:00:45 -0400
+X-UUID: f0c96abe2e424797b1a73797ecb722ac-20190823
+X-UUID: f0c96abe2e424797b1a73797ecb722ac-20190823
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1064793824; Fri, 23 Aug 2019 15:00:24 +0800
+        with ESMTP id 425247334; Fri, 23 Aug 2019 15:00:31 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 23 Aug 2019 15:00:16 +0800
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 23 Aug 2019 15:00:29 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 23 Aug 2019 15:00:15 +0800
+ Transport; Fri, 23 Aug 2019 15:00:28 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,40 +42,83 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH 01/11] dt-bindings: phy-mtk-tphy: add two optional properties for u2phy
-Date:   Fri, 23 Aug 2019 15:00:08 +0800
-Message-ID: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 10/11] phy: phy-mtk-tphy: add a new reference clock
+Date:   Fri, 23 Aug 2019 15:00:17 +0800
+Message-ID: <9f0cb4bbcba6083c6244a4c1520500c83097755f.1566542697.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
+References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 7EFDBC5C3B5D1A8683947C55EFDED4DCC5C21582BB30387B921ACFE14F6B4FD72000:8
+X-TM-SNTS-SMTP: C8DAF2C64A9722ABE63B8A0CA29A72D4775103B83B3765CEB5FEF01392666EB72000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two optional properties, one for J-K test, another for disconnect
-threshold, both of them can be used to debug disconnection issues.
+Usually the digital and anolog phys use the same reference clock,
+but some platforms have two separate reference clocks for each of
+them, so add another optional clock to support them.
+In order to keep the clock names consistent with PHY IP's, change
+the da_ref for anolog phy and ref clock for digital phy.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/phy/mediatek/phy-mtk-tphy.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-index a5f7a4f0dbc1..d5b327f85fa2 100644
---- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-@@ -52,6 +52,8 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
- - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
- - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
- - mediatek,bc12	: bool, enable BC12 of u2phy if support it
-+- mediatek,discth	: u32, the voltage of disconnect threshold
-+- mediatek,intr	: u32, the value of internal R (resistance)
+diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
+index c6424fd2a06d..237e2c3fd4dc 100644
+--- a/drivers/phy/mediatek/phy-mtk-tphy.c
++++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+@@ -298,7 +298,8 @@ struct mtk_phy_instance {
+ 		struct u2phy_banks u2_banks;
+ 		struct u3phy_banks u3_banks;
+ 	};
+-	struct clk *ref_clk;	/* reference clock of anolog phy */
++	struct clk *ref_clk;	/* reference clock of (digital) phy */
++	struct clk *da_ref_clk;	/* reference clock of anolog phy */
+ 	u32 index;
+ 	u8 type;
+ 	int eye_src;
+@@ -925,6 +926,13 @@ static int mtk_phy_init(struct phy *phy)
+ 		return ret;
+ 	}
  
- Example:
++	ret = clk_prepare_enable(instance->da_ref_clk);
++	if (ret) {
++		dev_err(tphy->dev, "failed to enable da_ref\n");
++		clk_disable_unprepare(instance->ref_clk);
++		return ret;
++	}
++
+ 	switch (instance->type) {
+ 	case PHY_TYPE_USB2:
+ 		u2_phy_instance_init(tphy, instance);
+@@ -984,6 +992,7 @@ static int mtk_phy_exit(struct phy *phy)
+ 		u2_phy_instance_exit(tphy, instance);
  
+ 	clk_disable_unprepare(instance->ref_clk);
++	clk_disable_unprepare(instance->da_ref_clk);
+ 	return 0;
+ }
+ 
+@@ -1170,6 +1179,14 @@ static int mtk_tphy_probe(struct platform_device *pdev)
+ 			retval = PTR_ERR(instance->ref_clk);
+ 			goto put_child;
+ 		}
++
++		instance->da_ref_clk =
++			devm_clk_get_optional(&phy->dev, "da_ref");
++		if (IS_ERR(instance->da_ref_clk)) {
++			dev_err(dev, "failed to get da_ref_clk(id-%d)\n", port);
++			retval = PTR_ERR(instance->da_ref_clk);
++			goto put_child;
++		}
+ 	}
+ 
+ 	provider = devm_of_phy_provider_register(dev, mtk_phy_xlate);
 -- 
 2.23.0
 
