@@ -2,141 +2,123 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E1DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035E6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D13020870
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA95E20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="siISpHlf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Nj2jUYvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404840AbfHWPGa (ORCPT
+        id S1733268AbfHWPIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:06:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35392 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732875AbfHWPG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:06:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n4so5947576pgv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 08:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=br2IEBdfnW2qlqV7gg30Z/xwOIaLVKl9bGEeCZKa9NU=;
-        b=siISpHlfibAjTzKXmzvMvdMERCB8h0biNAphsfX2uljz+Okx2iR9rML7xRX4aOLa45
-         G2Hej+2b3/xvgrJGt6vMT5MM5nsOSJlENKdRtjHjvUJYWQAlFT+/8pulaatvnRMmo79z
-         0vukJARO++UdwvA5MaHWvvNNJIPqDVj0WCKJPkAR+5MH3mym60HW3KXHiGIHzkv05VCZ
-         0NxHuTPkQs6KXJ3UTB1TiigWz2Ng1xU/GS8zTf5yLSmcpn+KulnVCOObrJ61y9nmhV9L
-         c4l+BHt6kJeYQPHrpEbAmDFvHFLQG3KJB8Tkyo6KKDqpKlSLiWT6xNYcDeeOa/3qsrCT
-         BepQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=br2IEBdfnW2qlqV7gg30Z/xwOIaLVKl9bGEeCZKa9NU=;
-        b=DBQmpVmM8b/Er8ra1RFmyP4WJ+0SE3aY1AH3s2IMIuFUmzdzTGzeHyNPdMwrrdeDoi
-         lzq608nT8vT/N8+iTS4iHRt+JrMPxixPU+87/JGSo7PcxZJlRDZjvKGFbGmtG7b81O4w
-         gO3cCp9V2RtniovNKEtu96fDd8OjLLOO7wBfzKxnUUeVjcaxRybsfNQsxWhHXfJzVRh2
-         YMfm5u5VbnuFcxN81mgAxnbh2UBAWrIesHeN8IPb1c/byCgZxeyMpJtwazvmwHC0VX80
-         nGMv8ZIJ5gq/MjfRUYAXwN9tjeEL92uc8t8EOnepxbD97xP1OXXd3t88zRpzvs2llmKT
-         tOMA==
-X-Gm-Message-State: APjAAAVIVe++EciZ5o7dXPu2Rn014sm522WfH3jHCmpe66GeT96v/Tzs
-        40841eXIzqu8IrTGnlrppdfYww==
-X-Google-Smtp-Source: APXvYqzhBqSLYP5ApPK5mE0oG+RMyTUh1JqA9ZAmyyVrzxAloBECYA84RJ5XVFzKAvGUUyuOwLrT5w==
-X-Received: by 2002:a17:90a:be07:: with SMTP id a7mr5731477pjs.88.1566572788803;
-        Fri, 23 Aug 2019 08:06:28 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:89d4:68d1:fc04:721])
-        by smtp.gmail.com with ESMTPSA id fa14sm2699525pjb.12.2019.08.23.08.06.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 23 Aug 2019 08:06:27 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, ulf.hansson@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] soc: amlogic: Add support for Everything-Else power domains controller
-In-Reply-To: <0ac1cf30-1796-a549-e195-0f94c4a85993@baylibre.com>
-References: <20190821114121.10430-1-narmstrong@baylibre.com> <20190821114121.10430-3-narmstrong@baylibre.com> <7hzhk25ct3.fsf@baylibre.com> <b6cfb770-76eb-00b1-e088-1a73b7978f33@baylibre.com> <7hzhk12b6m.fsf@baylibre.com> <0ac1cf30-1796-a549-e195-0f94c4a85993@baylibre.com>
-Date:   Fri, 23 Aug 2019 08:06:26 -0700
-Message-ID: <7h36hr2a6l.fsf@baylibre.com>
+        Fri, 23 Aug 2019 11:08:06 -0400
+Received: from mout.gmx.net ([212.227.17.20]:57817 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729205AbfHWPIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:08:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566572864;
+        bh=FJrNtZLJ9O8CMVkyLcr48QqzXGXcTSAtecZT8iHOtS4=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=Nj2jUYvlG8QdOfEBTnvGjnm76eu5nRMMP8HEsN7HpHqaaq2hoWpEPu1ivnURk98/G
+         dHQwBcJmATIhnPhR9C8peNbwlg+Hi1p1vipxPsQKnxK6Lg7xWFk55FQ92mnP9+nuSL
+         31EO8or1oJ+QJJ298ODQhBYAnTPslAaBfXtyt+bY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.159.16.108] ([80.187.106.162]) by mail.gmx.com (mrgmx102
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0MSHax-1hdv0O471n-00TWaV; Fri, 23
+ Aug 2019 17:07:44 +0200
+Date:   Fri, 23 Aug 2019 17:07:40 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <0fcdea56-c6fc-993d-1520-be40ff03df2d@gmail.com>
+References: <trinity-584a4b1c-18c9-43ae-8c1a-5057933ad905-1566501837738@3c-app-gmx-bs43> <20190822193015.GK23391@sirena.co.uk> <trinity-5d117f0d-9f34-4a2b-8a12-1cd34152c108-1566505724458@3c-app-gmx-bs43> <20190823100424.GL23391@sirena.co.uk> <trinity-2f905f45-85d8-4343-8613-31dda5f7556f-1566561616610@3c-app-gmx-bs11> <0fcdea56-c6fc-993d-1520-be40ff03df2d@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: Aw: Re: Re: BUG: devm_regulator_get returns EPROBE_DEFER (5.3-rc5..next-20190822) for bpi-r2/mt7623/mt7530
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        =?ISO-8859-1?Q?Ren=E9_van_Dorst?= <opensource@vdorst.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <3545020D-0E15-4DD9-BAA4-D9D51DD32018@public-files.de>
+X-Provags-ID: V03:K1:YsgQwbyNJz44H8WNTbQoqWkAoTTTDL9J/eJCT/HLtNKPUl5IbOZ
+ 2qolE6gCzfKGBluJMNwd9+DjK/WWWE44zCV/3ebKojRJAsBH/Xm8CtFziJnr1TXbhO/W9KZ
+ Z7paSVQnHMHW3yij6GmzVAB3FD9PqPrSFoIVczfRxk9KUDsvFTjFPGcqw3qv78En5TSJPua
+ 1JKqGwJUlJ4In70JcYRdw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GO77rwsP3rs=:jLlx2+yQG70PK0jBr7Wxjn
+ /TZcsERFVnLm9DoScza92VJXMfGkdGhN+oeM3w7V64afP3VH36zKAZQ4x60IEar3rRDj9Z54b
+ MyvqeKadYqRBZAgeQyB8PKFsyXDwW3V7eQWrStReKnP+4DPWAQBQej+PLNJaVGabtIvkKLUmi
+ u/5hwBO8qBWatFuTW5SGVsfh6f57N4s4mU3RIn+OaBNfgE9Rt+RxxblTUNuT3oash53I9DsjS
+ T2B0mFc5xjT0FZHlazxMkDE9d/6ftS50p2szwnAyGKNp8sCeEKn0cxlYbue5S5I9K9CfXHRHh
+ EA9eVQZ5z89yAmPS+dfVr3BhkiL13RrWMSPBzzAKjUFDq5DyW/1Cs3Pz282oHwtEfCRpFdG6o
+ xUOHqqEAYCegLNCf1wgyKOCj9KMu/2mM6M422HjqWYh+Gg/oiV0EWxnwCVCfjiJmqtoEnSkuL
+ dUSjPk/rinxdNbUOMw6ntjn5SM+LWHhm4y/9mMpgHZOM1sGOyTZaxzjLmtmQdkspa2MQGRfI2
+ WRlGrGFjaqjqXT5LhumllPpDBXjrDkMqhNmTX1uAIyN+/01I8vIzYlVMjensvBFZnivl7Ztg+
+ BJhJrTFKp6NoiAoWBrifE3IkZmiVo2aa5iTYFA+tbyw127u+KcF8SHXEVFzhSdrSlwfdCN/ng
+ LXAbCurctstKH1EKDbWwskAjd2pV4HgMYGphMEOrGl23AbP4qniTQqo+7rQYNw8RyeoaLruyw
+ t3TTT6iURUz/pPUDwwP80wyWsjhaYuRFVKAtBdZQHxRtyoHMiMPVwvK0vZe26zAkO/8p4pR6v
+ B2E7p6sgelu5jAYNOD2QmG487QHf70ia2GYEv6od0K1Wg061VDeA/29lOw+9Oh6n6dLGTqzTf
+ K8Tk9axlK4LTq+PpuMI82QQP5ieHVY/O+OUk78NWRONqInx/+e61mzZHE/fEISB5cQO/z4NMH
+ pTG+TTuFWoHEP+OU1fv8NYBJggAmBPyuY9om1uw8SiVWDJoJjVkJcOwc3ugoMv3bvTEAavsy2
+ zSgll3zTWbqevaRlZwZzRhnAZPA8Dqs4FE7+UfEo8vgpSUO8raMj923DDXoI/puHimFFyEUn2
+ 6t81+l+P3+RxFWX/cmZJJF1ppO8wyvcspJtQhmAXaFP903FvthbQgKikJ2HvtQ0AJ9niTnEQb
+ Lkt61DMWvWiHx1wVAJLYk9HBN6HhVZ+UkQusmz9iN7ZaMvqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Hi
 
-[...]
+Am 23=2E August 2019 16:43:47 MESZ schrieb Matthias Brugger <matthias=2Ebg=
+g@gmail=2Ecom>:
+>On 23/08/2019 14:00, Frank Wunderlich wrote:
+>> in working version i only get this message in dmesg which
+>> looks like a device-binding:
+>>=20
+>> mt6323-regulator mt6323-regulator: Chip ID =3D 0x2023
 
->>> It's for legacy when VPU is initialized from vendor U-Boot, look at commit :
->>> 339cd0ea082287ea8e2b7e7159a5a33665a2cbe3 "soc: amlogic: meson-gx-pwrc-vpu: fix power-off when powered by bootloader"
->>>
->>>     In the case the VPU power domain has been powered on by the bootloader
->>>     and no driver are attached to this power domain, the genpd will power it
->>>     off after a certain amount of time, but the clocks hasn't been enabled
->>>     by the kernel itself and the power-off will trigger some faults.
->>>     This patch enable the clocks to have a coherent state for an eventual
->>>     poweroff and switches to the pm_domain_always_on_gov governor.
->> 
->> The key phrase there being "and no driver is attached".  Now that we
->> have a driver, it claims this domain so I don't think it will be
->> powered off:
->> 
->> # cat /sys/kernel/debug/pm_genpd/pm_genpd_summary 
->> domain                          status          slaves
->>     /device                                             runtime status
->> ----------------------------------------------------------------------
->> ETH                             on              
->>     /devices/platform/soc/ff3f0000.ethernet             unsupported
->> AUDIO                           off-0           
->> GE2D                            off-0           
->> PCI                             off-0           
->> USB                             on              
->>     /devices/platform/soc/ffe09000.usb                  active
->> NNA                             off-0           
->> VPU                             on              
->>     /devices/platform/soc/ff900000.vpu                  unsupported
->> 
->> In my tests with a framebuffer console (over HDMI), I don't see the
->> display being powered off.
+>> mt6397 1000d000=2Epwrap:mt6323: unsupported chip: 0x0
+
+>These are commit IDs from linux-next=2E At least file from 20190822
+>should
+>pinpoint you to the correct commits=2E
 >
-> It's in the case where the driver is a module loaded by the post-initramfs
-> system after the genpd timeout, or if the display driver is disabled.
+>@frank: please don't use commit IDs from linux-next as the history
+>get's
+>rewritten every day and the IDs can change=2E Better search the tree to
+>which they
+>got applied and use the commit IDs from there (stating, of course,
+>which tree
+>you are looking at)=2E
+
+Is there any easy way to get the right tree?
+
+Can you give me an example bases on this commit? I thought adding the comm=
+it-subject is enough to find it also in a dynamic tree
+
+>Looking at commit
+>a4872e80ce7d ("mfd: mt6397: Extract IRQ related code from core driver")
 >
-> In the later I had some system failures when vendor u-boot enabled the
-> display and genpd disabled the power domain later on.
+>you can see that it doesn't just move the code but also adds new logic
+>in
+>mt6397_irq_init()=2E :(
 
-OK, thanks for the explanation.  I get it now.
+I take a look at this function,thank you pointing to it
 
->> 
->>> I could set always-on governor only if the domain was already enabled,
->>> what do you think ?
->> 
->> I don't think that's necessary now that we have a driver.  We really
->> want to be able to power-down this domain when the display is not in
->> use, and if you use always_on, that will never happen.
->> 
->>> And seems I'm also missing the "This patch enable the clocks".
->> 
->> I'm not sure what patch you're referring to.
->
-> It's also added in 339cd0ea082287ea8e2b7e7159a5a33665a2cbe3 "soc: amlogic: meson-gx-pwrc-vpu: fix power-off when powered by bootloader"
->
-> I would like to keep the same behavior as meson-gx-pwrc-vpu, since it works fine
-> and we debugged all the issues we got.
+>It seems your chip_id is not supported yet=2E So you will have to find
+>out which
+>one it is and add it to the switch=2E
 
-OK, that's fine with me.
-
-We'll have to revist when we start using runtime PM enabled drviers and
-want to power down the display IPs on idle, but that's fine to do later.
-
-Thanks,
-
-Kevin
+have posted it above ;) (0x2023)
