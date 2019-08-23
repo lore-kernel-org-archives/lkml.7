@@ -2,117 +2,112 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05604C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB18D22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5AF22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="j+jFpA5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393232AbfHWMQT (ORCPT
+        id S2393186AbfHWMQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:16:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45608 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389773AbfHWMQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:16:18 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 78ABB5F6FD15DD49C872;
-        Fri, 23 Aug 2019 20:16:08 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
- 20:15:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <sfrench@samba.org>
-CC:     <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] cifs: remove set but not used variables
-Date:   Fri, 23 Aug 2019 20:15:35 +0800
-Message-ID: <20190823121535.76296-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 23 Aug 2019 08:16:52 -0400
+Received: from onstation.org ([52.200.56.107]:50720 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387637AbfHWMQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:16:51 -0400
+Received: from localhost.localdomain (wsip-184-191-162-253.sd.sd.cox.net [184.191.162.253])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id B5FEB3E83A;
+        Fri, 23 Aug 2019 12:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1566562610;
+        bh=eh6YeVR/aaRQNy0BfSesizLKEGUOODPOyckdT4m9Imk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j+jFpA5dm8HNQPPS6RDTSJGMa2v6pL8IZuN0d/WDqF0vpib3TTBvrwAd/SWd0ynsI
+         AZQSp3DLmHdo4EA5Wz6xya3DkGu31B5rttiRE4YhsOhRZualg9mChcRFkRrPkI+fdr
+         4Yu0F/g+nstdUJFxyEqzR/9w+M6tnc+9KJ2zRDzM=
+From:   Brian Masney <masneyb@onstation.org>
+To:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        jcrouse@codeaurora.org
+Subject: [PATCH v7 0/7] qcom: add OCMEM support
+Date:   Fri, 23 Aug 2019 05:16:30 -0700
+Message-Id: <20190823121637.5861-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
+that is needed in order to support some a3xx and a4xx-based GPUs
+upstream. This is based on Rob Clark's patch series that he submitted
+in October 2015 and I am resubmitting updated patches with his
+permission. See the individual patches for the changelog.
 
-fs/cifs/file.c: In function cifs_lock:
-fs/cifs/file.c:1696:24: warning: variable cinode set but not used [-Wunused-but-set-variable]
-fs/cifs/file.c: In function cifs_write:
-fs/cifs/file.c:1765:23: warning: variable cifs_sb set but not used [-Wunused-but-set-variable]
-fs/cifs/file.c: In function collect_uncached_read_data:
-fs/cifs/file.c:3578:20: warning: variable tcon set but not used [-Wunused-but-set-variable]
+This was tested with the GPU on a LG Nexus 5 (hammerhead) phone and
+this will work on other msm8974-based systems. For a summary of what
+currently works upstream on the Nexus 5, see my status page at
+https://masneyb.github.io/nexus-5-upstream/.
 
-'cinode' is never used since introduced by
-commit 03776f4516bc ("CIFS: Simplify byte range locking code")
-'cifs_sb' is not used since commit cb7e9eabb2b5 ("CIFS: Use
-multicredits for SMB 2.1/3 writes").
-'tcon' is not used since commit d26e2903fc10 ("smb3: fix bytes_read statistics")
+Changes since v6:
+- link to gmu-sram child node in device tree
+- add ranges property to ocmem example in adreno GMU example (patch 2)
+  to match bindings in patch 1
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/cifs/file.c | 7 -------
- 1 file changed, 7 deletions(-)
+See individual patches for changelogs for previous versions.
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index ab07ae8..f16f6d2 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1693,7 +1693,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
- 	bool posix_lck = false;
- 	struct cifs_sb_info *cifs_sb;
- 	struct cifs_tcon *tcon;
--	struct cifsInodeInfo *cinode;
- 	struct cifsFileInfo *cfile;
- 	__u32 type;
- 
-@@ -1710,7 +1709,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
- 	cifs_read_flock(flock, &type, &lock, &unlock, &wait_flag,
- 			tcon->ses->server);
- 	cifs_sb = CIFS_FILE_SB(file);
--	cinode = CIFS_I(file_inode(file));
- 
- 	if (cap_unix(tcon->ses) &&
- 	    (CIFS_UNIX_FCNTL_CAP & le64_to_cpu(tcon->fsUnixInfo.Capability)) &&
-@@ -1762,7 +1760,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
- 	int rc = 0;
- 	unsigned int bytes_written = 0;
- 	unsigned int total_written;
--	struct cifs_sb_info *cifs_sb;
- 	struct cifs_tcon *tcon;
- 	struct TCP_Server_Info *server;
- 	unsigned int xid;
-@@ -1770,8 +1767,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
- 	struct cifsInodeInfo *cifsi = CIFS_I(d_inode(dentry));
- 	struct cifs_io_parms io_parms;
- 
--	cifs_sb = CIFS_SB(dentry->d_sb);
--
- 	cifs_dbg(FYI, "write %zd bytes to offset %lld of %pd\n",
- 		 write_size, *offset, dentry);
- 
-@@ -3575,10 +3570,8 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx)
- 	struct cifs_readdata *rdata, *tmp;
- 	struct iov_iter *to = &ctx->iter;
- 	struct cifs_sb_info *cifs_sb;
--	struct cifs_tcon *tcon;
- 	int rc;
- 
--	tcon = tlink_tcon(ctx->cfile->tlink);
- 	cifs_sb = CIFS_SB(ctx->cfile->dentry->d_sb);
- 
- 	mutex_lock(&ctx->aio_mutex);
+Brian Masney (5):
+  dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+  dt-bindings: display: msm: gmu: add optional ocmem property
+  soc: qcom: add OCMEM driver
+  drm/msm/gpu: add ocmem init/cleanup functions
+  ARM: qcom_defconfig: add ocmem support
+
+Rob Clark (2):
+  firmware: qcom: scm: add OCMEM lock/unlock interface
+  firmware: qcom: scm: add support to restore secure config to
+    qcm_scm-32
+
+ .../devicetree/bindings/display/msm/gmu.txt   |  51 +++
+ .../devicetree/bindings/sram/qcom,ocmem.yaml  |  96 ++++
+ arch/arm/configs/qcom_defconfig               |   1 +
+ drivers/firmware/qcom_scm-32.c                |  52 ++-
+ drivers/firmware/qcom_scm-64.c                |  12 +
+ drivers/firmware/qcom_scm.c                   |  53 +++
+ drivers/firmware/qcom_scm.h                   |   9 +
+ drivers/gpu/drm/msm/Kconfig                   |   1 +
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |  28 +-
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.h         |   3 +-
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |  25 +-
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.h         |   3 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  40 ++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h       |  10 +
+ drivers/soc/qcom/Kconfig                      |  10 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/ocmem.c                      | 433 ++++++++++++++++++
+ include/linux/qcom_scm.h                      |  26 ++
+ include/soc/qcom/ocmem.h                      |  62 +++
+ 19 files changed, 871 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
+ create mode 100644 drivers/soc/qcom/ocmem.c
+ create mode 100644 include/soc/qcom/ocmem.h
+
 -- 
-2.7.4
-
+2.21.0
 
