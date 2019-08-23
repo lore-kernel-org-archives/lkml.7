@@ -2,144 +2,140 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35433C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC3C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0184122CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01F222CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGM9hG+O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h8cIzFHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393247AbfHWI4m (ORCPT
+        id S2393343AbfHWI5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:56:42 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44225 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731191AbfHWI4l (ORCPT
+        Fri, 23 Aug 2019 04:57:17 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37392 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731806AbfHWI5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:56:41 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 44so10468890qtg.11;
-        Fri, 23 Aug 2019 01:56:41 -0700 (PDT)
+        Fri, 23 Aug 2019 04:57:17 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c9so6600737lfh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BTnwn95++Op3SfWaQCpErhny3AGKGOkNMopDRr3KEu0=;
-        b=XGM9hG+O9FrtwGIUWPwCuNTLzgN5bUJNVOdp91Dv6P29Tf98HvbRWmcKJgXEV2Sltk
-         a/FGMeI+jQm6Cnbljsb4PP7+Rps+vijt9Tl+Ok3H7Nx9hPDNqdeBNSNT9uGApXuKB77p
-         znW6hCrBJaBUzMIyr7X5xCXO8zJPz7mf9NAsllLvQQJyWI8SLKyx8qo2EOi4S2KjifRA
-         YNijyfUgRbsPX6iKiJtYYHGxQJ2WSTJgruCSddFw2ven0W06L34HaA6/YHUKDbjT3elK
-         rtdipgAhPX6uK1bSEXs0Y8/KAFRGawESHEzu8GmwFTS39BbHuwHJ1xRa5G1CdI2CxYji
-         vytA==
+         :cc;
+        bh=a/R2J79LKOKlLeZ/xIkFf9uifEgRMGT7tAE/FX+J+fk=;
+        b=h8cIzFHRwV5mKvh20JVoTWYAVSCIkWyjSzPx/vFSHkOSlO5Q4g9CCbm+693s4TXchd
+         FgS3UGD0guDUAw5xUViOFwLDP+ix8kP+F+oK5Shgc5An7QkANVSs7IZOKKfE0WiEXnef
+         kPY2tdrxMXtW0xoIni2RPvEfgFvOX+gRUf2nclzTLsMc0FJCRgdhGKlGBy3IVnZWfltC
+         LqxGoZo26oS2KvwARlRA8I8eNM6EWNRO4SaOtPtGfw1U39DRvi2A98cs++ugvTCGYM7d
+         2Ge1VMDoj2+9Xy/800qepwswucADX+MTC27muULbqLYD+3WVK9Ym9l1yrBdICpClSvpX
+         HflQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BTnwn95++Op3SfWaQCpErhny3AGKGOkNMopDRr3KEu0=;
-        b=BbZnykNjILalLM/ZoBKG9r+duO/lRSZ1kT1UXahAT8rHYBj+jFjymyYY5FqpWmJ9Mt
-         BPNerFHPmlss5gOprNg8KbN+acAtTyZt2fUnCEpkwHBtRPYSxlZKY5LzSOoFQ8cSKEpo
-         w4F0SkEz9OH7v4rJzsDH+UP6vQQiWlon2AvU57XwjLeV6Dul4dKg56mi0FcNzc2CbUMm
-         uiw4z2jBO5wTge9+w/+PGWsA9IbDFNURIxd1M3Gh6VyMj3W5NemcUX8Wk6bqRUVjdl3A
-         1/X/zQcj0Zz/DiEoiTEaE5bUZl69VSTVpSMikdcmNvPY28lWviMjxaDDKU2ZyEYUJkAo
-         11iA==
-X-Gm-Message-State: APjAAAWgjnMH2jrxJO2ebolVZwd0Ol4czvp3++qgkGH+jcScl0zm9I+x
-        iY29h5OoO05L9D0kOIOQEIYtiB+DL1GEmpdQlGQ=
-X-Google-Smtp-Source: APXvYqyL3NooS+2ggd9zdNLJemCTsHJDuV1xwpwNqzfrpaDL4nGuZMIk0c7+MO0U4L91B22FYl5jAdI4ch3Cf5er3Uk=
-X-Received: by 2002:ac8:2d2c:: with SMTP id n41mr3667775qta.28.1566550600739;
- Fri, 23 Aug 2019 01:56:40 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=a/R2J79LKOKlLeZ/xIkFf9uifEgRMGT7tAE/FX+J+fk=;
+        b=T49S8r6tHO/4k2swLeHbLBRhROw4TqnmXyE//ktR87FXvBxIVgV1g0WCjXLWecYpD1
+         OBGneHWm1cwXJqAWCsegLr4GZEhY8Mg0AUx594uc9FxhkPRNWeo5CSlsq8iBH/PpCgYV
+         8+bTY8+dygvT34bTt4172cfiMrJbTUPgSOlPDAYRPck0jx3jNwDteVu8NJ5ZwPMutWsI
+         fLyjoju5PI9h90R4NWfH/o0rY7QGsBjJyzjpzGRYkgCLns6X9dTF137JuwHENCA7raL/
+         8ZF09g64YxhyofWBE1YCRLRpqGzY1w+l3nfwq+9GAwp2im3Q619E+DGmatDQi+2OH0k5
+         5aQg==
+X-Gm-Message-State: APjAAAWv/mqnBk2JIXW4o17qtiiYvnlyj+2fZKar7CEe0V8PJL6tj4Vi
+        JYX3ZXtbOku+zSUfMBDycz1GCgtADWR6oSLd+Ozh6w==
+X-Google-Smtp-Source: APXvYqyiIRQnPqOMRMnznsHxW2APqKA5JW/FUTpLK9hj/I1LedUm+QCEFmX2UPpcBK5I9whssuW2AmLbJBfUVKBqcLU=
+X-Received: by 2002:ac2:5939:: with SMTP id v25mr2135109lfi.115.1566550635185;
+ Fri, 23 Aug 2019 01:57:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1566540652.git.han_mao@c-sky.com> <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
-In-Reply-To: <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Fri, 23 Aug 2019 16:56:04 +0800
-Message-ID: <CAEbi=3fbe9zbsLyfA=s9gHtAFJrp5Ox0jWoAqcZudQ_xODicgA@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] riscv: Add perf callchain support
-To:     Mao Han <han_mao@c-sky.com>
-Cc:     linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com> <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+In-Reply-To: <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Aug 2019 10:57:03 +0200
+Message-ID: <CACRpkdZa_sQgvWC3ic0NxrVi9gS1cNTsV-wa-SDpA0e5kutBRw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/11] pinctrl: mediatek: avoid virtual gpio trying to
+ set reg
+To:     Mars Cheng <mars.cheng@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        mtk01761 <wendell.lin@mediatek.com>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mao,
+On Mon, Aug 19, 2019 at 11:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
 
-Mao Han <han_mao@c-sky.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8823=E6=97=A5 =
-=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:16=E5=AF=AB=E9=81=93=EF=BC=9A
-
+> for virtual gpios, they should not do reg setting and
+> should behave as expected for eint function.
 >
-> This patch add support for perf callchain sampling on riscv platform.
-> The return address of leaf function is retrieved from pt_regs as
-> it is not saved in the outmost frame.
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+
+This does not explain what a "virtual GPIO" is in this
+context, so please elaborate. What is this? Why does
+it exist? What is it used for?
+
+GPIO is "general purpose input/output" and it is a
+pretty rubbery category already as it is, so we need
+to define our terms pretty strictly.
+
+> +bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
+> +{
+> +       const struct mtk_pin_desc *desc;
+> +       bool virt_gpio = false;
+> +
+> +       if (gpio_n >= hw->soc->npins)
+> +               return virt_gpio;
+> +
+> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
+> +
+> +       if (desc->funcs &&
+> +           desc->funcs[desc->eint.eint_m].name == 0)
+
+NULL check is done like this:
+
+if (desc->funcs && !desc->funcs[desc->eint.eint_m].name)
+
+> +               virt_gpio = true;
+
+So why is this GPIO "virtual" because it does not have
+a name in the funcs table?
+
+> @@ -278,6 +295,9 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
+>         if (err)
+>                 return err;
 >
-> Signed-off-by: Mao Han <han_mao@c-sky.com>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Greentime Hu <green.hu@gmail.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: linux-riscv <linux-riscv@lists.infradead.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Guo Ren <guoren@kernel.org>
-> ---
->  arch/riscv/Makefile                |   3 +
->  arch/riscv/kernel/Makefile         |   3 +-
->  arch/riscv/kernel/perf_callchain.c | 115 +++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 120 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/kernel/perf_callchain.c
+> +       if (mtk_is_virt_gpio(hw, gpio_n))
+> +               return 0;
 
-I just tested "./perf record -e cpu-clock --call-graph fp ls" on
-Unleashed board and I got this failure.
-I take a look at it. It seem failed in here. Do you have any idea?
-It seems fine in Qemu.
+So does this mean we always succeed in setting a GPIO as eint
+if it is virtual? Why? Explanatory comment is needed.
 
-1 *frame =3D *((struct stackframe *)frame->fp - 1);
-ffffffe0001a198c: 00863a83 ld s5,8(a2)
-ffffffe0001a1990: ff093903 ld s2,-16(s2)
+> @@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+>         const struct mtk_pin_desc *desc;
+>         int value, err;
+>
+> +       if (mtk_is_virt_gpio(hw, gpio))
+> +               return 1;
 
-./perf record -e cpu-clock --call-graph fp ls
-[ 9619.423884] hrtimer: interrupt took 733000 ns
-[ 9619.977017] Unable to handle kernel paging request at virtual
-address ffffffffffffff94
-[ 9620.214736] Oops [#1]
-[ 9620.289893] Modules linked in:
-[ 9620.391378] CPU: 0 PID: 264 Comm: ls Not tainted
-5.3.0-rc5-00003-gb008f6bcd67c #4
-[ 9620.640176] sepc: ffffffe0001a198c ra : ffffffe0001a199a sp :
-ffffffe000093720
-[ 9620.880366] gp : ffffffe00097dad8 tp : ffffffe000082e40 t0 : 00000000000=
-46000
-[ 9621.120564] t1 : 0000000000000002 t2 : 0000000000000007 s0 : ffffffe0000=
-93760
-[ 9621.360768] s1 : ffffffe000093788 a0 : 0000000000000003 a1 : 00000000000=
-00000
-[ 9621.600991] a2 : ffffffffffffff8c a3 : 0000000000001fa0 a4 : 00000000000=
-00010
-[ 9621.841181] a5 : 0000000000000002 a6 : 0000000000000001 a7 : ffffffe079b=
-34e10
-[ 9622.081400] s2 : ffffffffffffff9c s3 : ffffffe000000000 s4 : 00000000000=
-01ff8
-[ 9622.321618] s5 : ffffffe000093da0 s6 : ffffffe00097d540 s7 : ffffffe07a1=
-517a0
-[ 9622.561811] s8 : 000008bf01c7ff60 s9 : ffffffe000235b2a s10: 00000002000=
-00120
-[ 9622.802015] s11: 0000000000000001 t3 : ffffffe079b34e00 t4 : 00000000000=
-00001
-[ 9623.042194] t5 : 0000000000000008 t6 : ffffffe0009208d0
-[ 9623.218785] sstatus: 0000000200000100 sbadaddr: ffffffffffffff94
-scause: 000000000000000d
-[ 9623.490850] ---[ end trace 49043f28e856d84d ]---
-[ 9623.644217] Kernel panic - not syncing: Fatal exception in interrupt
-[ 9623.855470] SMP: stopping secondary CPUs
-[ 9623.985955] ---[ end Kernel panic - not syncing: Fatal exception in
-interrupt ]---
+Why are "virtual GPIOs" always inputs?
+
+Yours,
+Linus Walleij
