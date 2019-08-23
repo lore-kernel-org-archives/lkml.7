@@ -2,71 +2,72 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A54BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F43C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B4621019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215D021848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566583204;
-	bh=9zVW5Yk668xQEC2olWzJtm5tuua0+bS6EI+R3XCsOmk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=cuAtHVKNswRBI+zfj38OxVbBfOVP4b2NbLv8h3hgMON2tCfj3E/EjAN0ZNw00rI5K
-	 qNISHPcoegjcQNAJ8d9mphV9drfya8X8oRZqMeqs3wQyZW4JYY1FKvNFga4ov+834M
-	 HWUe9t28GGJemoFwXu/vaeIKBgaGE7aYjf6AvRh4=
+	s=default; t=1566583213;
+	bh=NDvJ1QzGmaK9TQIh6SAFor70uhluXcdgV1e2jycGWBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vICTYFwX9Pm3WHr6MmD7IS/7dbWe95JjwZcF38IPzABcd1MdbAGh1vjwfUn7UDTII
+	 zgu4BTksWgx9gUbx/2BwQEqTujs+NImbe7wJGjz3znRG5jiTSfTgr0BLxbkm7z0nFA
+	 L5Xzt25pmTeHdELbwpP4SnAnABU/kc/ko1IO7mD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390199AbfHWSAD (ORCPT
+        id S2390290AbfHWSAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 14:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
+        Fri, 23 Aug 2019 14:00:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388081AbfHWSAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 14:00:03 -0400
-Subject: Re: [GIT PULL] xfs: fixes for 5.3-rc6
+        id S2388081AbfHWSAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 14:00:10 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1034B21874;
+        Fri, 23 Aug 2019 18:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566583202;
-        bh=9zVW5Yk668xQEC2olWzJtm5tuua0+bS6EI+R3XCsOmk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=rczOryyI1KRAthWWeQFwSk76y5X0I2W4iBJfDnAy2Asp6qDKtALLHsHzm6cghmxUR
-         Zf+qQIr3V58Rs1U8v43kuECBZzdvcmz/G/Pm3RrkjCLW22yUfNZfIXwHhNcWi4rhYH
-         h7i3w31mox1yDpRaw/lMWMibM0gN0VStjUXcZD+8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190823163439.GL1037350@magnolia>
-References: <20190823163439.GL1037350@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190823163439.GL1037350@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.3-fixes-4
-X-PR-Tracked-Commit-Id: b68271609c4f16a79eae8069933f64345afcf888
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f576518c9ab5a6fbc7a4b9bbfc9be31aa18a1cc7
-Message-Id: <156658320245.8315.16229472322057905698.pr-tracker-bot@kernel.org>
-Date:   Fri, 23 Aug 2019 18:00:02 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        s=default; t=1566583209;
+        bh=NDvJ1QzGmaK9TQIh6SAFor70uhluXcdgV1e2jycGWBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZS6CeaWny0IFuOgnOJIKZDAovewPOgeTsuJaBlPzE7GOYooqtdoVc15hr2cGJImEf
+         PWBj5pvnLTFeFR74uPcrrxy6qMlY/laTRrYLpCmWmlT4sKK6dyidFw5Y2u1V4UZwHr
+         eiRaywWKK+SM4bGzz07GunPeDQozw+J5Gpbbaud4=
+Date:   Fri, 23 Aug 2019 20:00:07 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 22/38] posix-cpu-timers: Simplify
+ set_process_cpu_timer()
+Message-ID: <20190823180006.GC18880@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192921.303316423@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821192921.303316423@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 23 Aug 2019 09:34:39 -0700:
+On Wed, Aug 21, 2019 at 09:09:09PM +0200, Thomas Gleixner wrote:
+> The expiry cache can now be accessed as an array. Replace the per clock
+> checks with a simple comparison of the clock indexed array member.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.3-fixes-4
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f576518c9ab5a6fbc7a4b9bbfc9be31aa18a1cc7
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
