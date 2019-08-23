@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4806EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E02FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CDA23406
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C0623406
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390493AbfHWC2S (ORCPT
+        id S2390630AbfHWC2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:28:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33796 "EHLO
+        Thu, 22 Aug 2019 22:28:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33787 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390216AbfHWC2M (ORCPT
+        with ESMTP id S2389429AbfHWC2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 22:28:12 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0zJA-00019E-OT; Fri, 23 Aug 2019 04:28:08 +0200
+        id 1i0zJ9-00018e-BF; Fri, 23 Aug 2019 04:28:07 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C4DA61C07E4;
-        Fri, 23 Aug 2019 04:28:07 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:28:07 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D22811C07E4;
+        Fri, 23 Aug 2019 04:28:06 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:28:06 -0000
 From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf ui: Make 'exit_msg' optional in
- ui__question_window()
+Subject: [tip: perf/core] perf ui browser: Allow specifying message to show
+ when no samples are
+ available to display
 Cc:     linux-kernel@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <tip-pnx1dn17bsz7lqt9ty95nnjx@git.kernel.org>
-References: <tip-pnx1dn17bsz7lqt9ty95nnjx@git.kernel.org>
+In-Reply-To: <tip-89ciceg8cy4442he3t0jzo3f@git.kernel.org>
+References: <tip-89ciceg8cy4442he3t0jzo3f@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156652728773.12698.1207944733354060591.tip-bot2@tip-bot2>
+Message-ID: <156652728679.12691.16260831939328577053.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -60,62 +61,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     9e79ff77e4195e40e7a47a2001132db66e25d541
-Gitweb:        https://git.kernel.org/tip/9e79ff77e4195e40e7a47a2001132db66e25d541
+Commit-ID:     2284cf8074ff12b6304665618f81ced3aa0b41de
+Gitweb:        https://git.kernel.org/tip/2284cf8074ff12b6304665618f81ced3aa0b41de
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 19 Aug 2019 16:09:50 -03:00
+AuthorDate:    Mon, 19 Aug 2019 16:43:58 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 20 Aug 2019 12:21:27 -03:00
+CommitterDate: Tue, 20 Aug 2019 12:22:18 -03:00
 
-perf ui: Make 'exit_msg' optional in ui__question_window()
+perf ui browser: Allow specifying message to show when no samples are available to display
 
-We will not need it when refactoring this function to be
-non-interactive, so make it optional.
+The 'perf top' tool will use that to avoid having a initial blank screen
+while collecting the minimum number of samples to sort and display.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-pnx1dn17bsz7lqt9ty95nnjx@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-89ciceg8cy4442he3t0jzo3f@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/tui/util.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ tools/perf/ui/browser.c | 2 ++
+ tools/perf/ui/browser.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
-index fe5e571..5d65ea8 100644
---- a/tools/perf/ui/tui/util.c
-+++ b/tools/perf/ui/tui/util.c
-@@ -188,7 +188,9 @@ int ui__question_window(const char *title, const char *text,
- 	pthread_mutex_lock(&ui__lock);
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index d227d74..c797a85 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -347,6 +347,8 @@ static int __ui_browser__refresh(struct ui_browser *browser)
+ 	SLsmg_fill_region(browser->y + row + browser->extra_title_lines, browser->x,
+ 			  browser->rows - row, width, ' ');
  
- 	max_len += 2;
--	nr_lines += 4;
-+	nr_lines += 2;
-+	if (exit_msg)
-+		nr_lines += 2;
- 	y = SLtt_Screen_Rows / 2 - nr_lines / 2,
- 	x = SLtt_Screen_Cols / 2 - max_len / 2;
++	if (browser->nr_entries == 0 && browser->no_samples_msg)
++		__ui__info_window(NULL, browser->no_samples_msg, NULL);
+ 	return 0;
+ }
  
-@@ -199,14 +201,20 @@ int ui__question_window(const char *title, const char *text,
- 		SLsmg_write_string((char *)title);
- 	}
- 	SLsmg_gotorc(++y, x);
--	nr_lines -= 2;
-+	if (exit_msg)
-+		nr_lines -= 2;
- 	max_len -= 2;
- 	SLsmg_write_wrapped_string((unsigned char *)text, y, x,
- 				   nr_lines, max_len, 1);
- 	SLsmg_gotorc(y + nr_lines - 2, x);
- 	SLsmg_write_nstring((char *)" ", max_len);
- 	SLsmg_gotorc(y + nr_lines - 1, x);
--	SLsmg_write_nstring((char *)exit_msg, max_len);
-+	if (exit_msg) {
-+		SLsmg_gotorc(y + nr_lines - 2, x);
-+		SLsmg_write_nstring((char *)" ", max_len);
-+		SLsmg_gotorc(y + nr_lines - 1, x);
-+		SLsmg_write_nstring((char *)exit_msg, max_len);
-+	}
- 	SLsmg_refresh();
- 
- 	pthread_mutex_unlock(&ui__lock);
+diff --git a/tools/perf/ui/browser.h b/tools/perf/ui/browser.h
+index dc14441..3678eb8 100644
+--- a/tools/perf/ui/browser.h
++++ b/tools/perf/ui/browser.h
+@@ -23,6 +23,7 @@ struct ui_browser {
+ 	void	      *priv;
+ 	const char    *title;
+ 	char	      *helpline;
++	const char    *no_samples_msg;
+ 	void 	      (*refresh_dimensions)(struct ui_browser *browser);
+ 	unsigned int  (*refresh)(struct ui_browser *browser);
+ 	void	      (*write)(struct ui_browser *browser, void *entry, int row);
