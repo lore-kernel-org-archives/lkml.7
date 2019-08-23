@@ -2,202 +2,141 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C279BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52EFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C5D22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961B322CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395334AbfHWOdG (ORCPT
+        id S2395349AbfHWOdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:33:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49848 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390716AbfHWOdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:33:05 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F099C83F3C
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 14:33:04 +0000 (UTC)
-Received: by mail-qk1-f197.google.com with SMTP id y67so9156106qkc.14
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 07:33:04 -0700 (PDT)
+        Fri, 23 Aug 2019 10:33:10 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:56909 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390716AbfHWOdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:33:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id m13so11200233ioj.23
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 07:33:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WAme3bkkJ+z3Qaa0evl+EyyRu31KuZX6C53UkTEC/Gg=;
-        b=Vgb/eiTnGBsZL1I5IThtteaaqcid9Cc9hHQf7T3ChQO++woaqzH6eH7BHm+TyFwJUu
-         tI/UjvkhSPHfQ09XfWOrrC/yCcqGo4PyRMLFegbYBLwZmUmp2NCEl5ku+mFwwBEIjCDD
-         TSNQViMcUELrw9xOh6Umgvv55UsREikri+gVwVIKjRpohvZ1faDJA5gyqftHJhNZy5yv
-         6NGvy/afZmt35SVgqz7GrIY8rOg6hpah0RM/ktPesLFh6TTA1tuwalQogW8lLtljVHuR
-         PRunrgzdfj1hywM1oYCG9mtw+JQDScsV5ol48NszQTWsAoSA0+onODh8uRM1j379lgZD
-         1pcQ==
-X-Gm-Message-State: APjAAAWC+8yuOzgZQVidyvSs/L7bGx3GIG7cnxkmrES4Cp1xZgZo6sds
-        PdDost5hrFZFe0ou2xOZRB9jsUza5872f0gyfE5DQujQs0IBbmCs7QQjNrlPx5T2/mTR4QGXhyk
-        zcrYQTigoEDphiKTWTQvKIh17hLjPgQwF2nlpibTt
-X-Received: by 2002:a05:620a:1310:: with SMTP id o16mr4043627qkj.27.1566570784299;
-        Fri, 23 Aug 2019 07:33:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwbykObo+3+44r4UuZMZ22BwKoZcxnQ/KoH9p6VN5hL1eBq5fByxj5ezCmvyxv/EU/tPrTWvsrSL9dqfWDF76o=
-X-Received: by 2002:a05:620a:1310:: with SMTP id o16mr4043607qkj.27.1566570784058;
- Fri, 23 Aug 2019 07:33:04 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tq7Jw6SrnSfUoJ4hJwFy3Z1HYUI0Qv2w/PUYUtFSAsM=;
+        b=pikQ2etggshnTqZLFMNoGmr6+vnVnsrMJ/pyjC2Fmj/Z15VfphQUlTXbrzSOxd+uFx
+         5leG2m4PjA/GA3M02xDY14bkuQxoQpiAih9raTtTbCb4RZCvAeNfjHp795ca0ay0PYYL
+         w/w04ClCUz/ANX3mWv7KWtDK6pIR4YOlRxdrnj20mELlXhllQ8+gF0Gs1WCE5RMGrm0q
+         hs2SdDV+8DKSJmLoN8HJI08B/SraV4R0pBpf2Jq96OhzPzrzhIOKYdB1c2zqoL6cyg2m
+         JnyVcKF3ZnLekXI3t49cpJh3FynNldnF7kSSAHdNe7IegJcL2U2IKjYJlMDEf3NldHmv
+         6GVA==
+X-Gm-Message-State: APjAAAVkV+otuLiekiMCAnyt+Sx0XizmysOto8k+41BUt2ZFX72m9U69
+        YwV1voOMzNF7JV8nD0uxHQmpu3AZfjh2BY4AH4lkNUr1HhWS
+X-Google-Smtp-Source: APXvYqzS/77kZr9waqajqpiOTNdu3Q5rrmDv7WcWt+0cT0dt5T+e06aDEiHc0nrDV+PZ9oeBuIkbnstfUzz7eSdx9Fhh/qEI1JfM
 MIME-Version: 1.0
-References: <20190822201849.28924-1-pedro@pedrovanzella.com>
- <CAO-hwJKQcTpmk8cVf-YmKu2awXv_53=qfpy2yfmy2rgMu_DEug@mail.gmail.com> <e6014a01-1094-9ec7-9b37-2abdf70e305f@pedrovanzella.com>
-In-Reply-To: <e6014a01-1094-9ec7-9b37-2abdf70e305f@pedrovanzella.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 23 Aug 2019 16:32:52 +0200
-Message-ID: <CAO-hwJ+=dAyFnUfiPSmiGpzYTj=9BPDdeKQOY7UoCOvwQ5CH7Q@mail.gmail.com>
-Subject: Re: [Resubmit] Read battery voltage from Logitech Gaming mice
-To:     Pedro Vanzella <pedro@pedrovanzella.com>,
-        Bastien Nocera <hadess@hadess.net>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5e:a811:: with SMTP id c17mr6793074ioa.122.1566570786561;
+ Fri, 23 Aug 2019 07:33:06 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 07:33:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003fac1d0590c9afef@google.com>
+Subject: WARNING in sk_msg_check_to_free
+From:   syzbot <syzbot+ea3c54a7b2364123d818@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 4:22 PM Pedro Vanzella <pedro@pedrovanzella.com> wrote:
->
-> Hi Benjamin,
->
-> On 8/23/19 4:25 AM, Benjamin Tissoires wrote:
-> > Hi Pedro,
-> >
-> > On Thu, Aug 22, 2019 at 10:19 PM Pedro Vanzella <pedro@pedrovanzella.com> wrote:
-> >>
-> >> Resumitting this after having rebased it against the latest changes.
-> >
-> > thanks for resubmitting. Sorry I wasn't able to provide feedback on
-> > the last revision
-> >
->
-> No worries, I know how these things are.
->
-> >>
-> >> The gaming line of Logitech devices doesn't use the old hidpp20
-> >> feature for battery level reporting. Instead, they report the
-> >> current voltage of the battery, in millivolts.
-> >>
-> >> This patch set handles this case by adding a quirk to the
-> >> devices we know to have this new feature, in both wired
-> >> and wireless mode.
-> >
-> > So the quirk is in the end a bad idea after all. I had some chats with
-> > Filipe that made me realize this.
->
-> I actually resubmitted by Filipe's request, since the patches weren't
-> applying cleanly anymore. The idea was to apply these patches and in the
-> future refactor the code to use the feature discovery routines.
->
-> > Re-reading our previous exchanges also made me understood why I wasn't
-> > happy with the initial submission: for every request the code was
-> > checking both features 0x1000 and 0x1001 when we can remember this
-> > once and for all during hidpp_initialize_battery().
->
-> Yeah I wasn't too happy about this either, but since there was nothing
-> prohibiting some device to have both features enabled, I thought this
-> wasn't too horrible.
+Hello,
 
-I honestly don't think we will find one device that has both features
-enabled. It doesn't make sense as the "new" feature allows for fine
-tuning in the software, which would be moot if you also enable the
-percentage.
+syzbot found the following crash on:
 
->
-> >
-> > So I think we should remove the useless quirk in the end (bad idea
-> > from me, I concede), and instead during hidpp_initialize_battery() set
-> > the correct HIDPP_CAPABILITY_*.
-> > Not entirely sure if we should try to call 0x1000, or 0x1001 or if we
-> > should rely on the 0x0001 feature to know which feature is available,
-> > but this should be implementation detail.
->
-> I like the idea of calling 0x0001 once on device boot much better. I
-> think we could easily just fetch the location for the features we know
-> about and want to deal with once only. This also makes sure we support
-> every single device that supports this feature, so that is a huge plus.
->
-> In fact, I think we should _not_ call 0x0001 on battery init, but only
-> call battery init _after_ we called 0x0001 and discovered either 0x1000
-> or 0x1001 (or the solar battery feature, or any other one that might
-> crop up in the feature).
+HEAD commit:    fed07ef3 Merge tag 'mlx5-updates-2019-08-21' of git://git...
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=150102bc600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e34a4fe936eac597
+dashboard link: https://syzkaller.appspot.com/bug?extid=ea3c54a7b2364123d818
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-ack for that
+Unfortunately, I don't have any reproducer for this crash yet.
 
->
-> >
-> >>
-> >> This version of the patch set is better split, as well as adding the
-> >> quirk to make sure we don't needlessly probe every device connected.
-> >
-> > It is for sure easy to review, but doesn't make much sense in the end.
-> > I think we should squash all the patches together as you are just
-> > adding one feature in the driver, and it is a little bit disturbing to
-> > first add the quirk that has no use, then set up the structs when they
-> > are not used, and so on, so forth.
->
-> You're right. My first instinct was to send a single patch. As much as I
-> tested this, I always feel like breaking the patch up post-facto will
-> break a git bisect in the future and everyone will hate me :P
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ea3c54a7b2364123d818@syzkaller.appspotmail.com
 
-as long as the patches are compiling and are not breaking, git bisect
-will not be a problem. However, we might end up with the last one,
-which is not very explicit in what it does as it just enables the
-features implemented previously.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 14478 at include/linux/skmsg.h:129  
+sk_msg_check_to_free.isra.0.part.0+0x15/0x19 include/linux/skmsg.h:129
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 14478 Comm: syz-executor.0 Not tainted 5.3.0-rc5+ #143
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:sk_msg_check_to_free.isra.0.part.0+0x15/0x19  
+include/linux/skmsg.h:129
+Code: 77 ff ff ff e8 4e de 03 fc eb 96 4c 89 f7 e8 e4 dd 03 fc eb c3 55 48  
+89 e5 e8 f9 b4 c9 fb 48 c7 c7 80 3a 48 88 e8 c1 55 b3 fb <0f> 0b 5d c3 e8  
+e4 b4 c9 fb e8 dd ff ff ff 48 8b 45 d0 0f b6 00 41
+RSP: 0018:ffff88806381fb98 EFLAGS: 00010286
+RAX: 0000000000000024 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c2456 RDI: ffffed100c703f65
+RBP: ffff88806381fb98 R08: 0000000000000024 R09: ffffed1015d060d1
+R10: ffffed1015d060d0 R11: ffff8880ae830687 R12: 000000000000000d
+R13: ffff8880986c1550 R14: 0000000000000001 R15: 0000000000000007
+  sk_msg_check_to_free include/linux/skmsg.h:129 [inline]
+  __sk_msg_free.cold+0xa/0x2e net/core/skmsg.c:190
+  sk_msg_free+0x44/0x60 net/core/skmsg.c:207
+  tls_sw_release_resources_tx+0x268/0x6b0 net/tls/tls_sw.c:2092
+  tls_sk_proto_cleanup net/tls/tls_main.c:275 [inline]
+  tls_sk_proto_close+0x6a7/0x990 net/tls/tls_main.c:305
+  inet_release+0xed/0x200 net/ipv4/af_inet.c:427
+  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x413511
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffdca8135c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000413511
+RDX: 0000001b31920000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 0000000025038832 R09: 0000000025038836
+R10: 00007ffdca8136a0 R11: 0000000000000293 R12: 000000000075bf20
+R13: 000000000009f412 R14: 0000000000760b20 R15: ffffffffffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
->
-> So we (you, me and Filipe) should probably come up with an action plan
-> here. The way I see it there are two issues here: one is adding this
-> feature, and the other is refactoring to use feature discovery for all
-> features. There are advantages and disadvantages to doing one or another
-> first and we might want to discuss that.
->
-> By merging this first (probably after I resubmit it as a single squashed
-> patch) we get to test it a bit better and have a usable feature sooner.
-> Plenty of people have been requesting this and there is plenty of stuff
-> that can be built on top of it, but only once this is actually merged I
-> think.
->
-> On the other hand, by first refactoring the rest of the code to use
-> 0x0001 we avoid some rework on this patch. It should be minor, as most
-> functions here do all the heavy lifting after the initial feature
-> discovery, and are thus mostly independent from how that is done.
->
-> I'm happy either way, so just let me know what you guys decide.
 
-I think we should merge your v3 squashed series with a slight
-autodetection during battery init, like the method you used in the v1.
-This would remove the quirk, but keep the straightforward commands
-when addressing battery data.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Relying on 0x0001 should be done separately and can come in in a later
-patch IMO (unless you plan to work on it, in which case you can send
-both at once).
-
-The problem I have with quirks, and that I explained to Filipe on IRC
-is that this is kernel ABI. Even if there is a very low chance we have
-someone using this, re-using the same drv_data bit in the future might
-break someone's device.
-
->
-> If you guys (or anyone else reading this on the public list, really) has
-> any input - naming things being notoriosly hard, I'm actually happy with
-> nitpicking - I'd appreciate it. On that note, come to think of it, I'm
-> not 100% sure reporting the voltage in milivolts is the standard way. I
-> looked through the docs, but found no solid guideline. It was either
-> that or a float, so I think I made the right call here, but still.
-
-I am not sure either. Adding Bastien as he has a lot more experience in upower.
-
-But I am under the impression that the kernel part is more "try to
-deal with whatever the hardware provides, and deal with it in user
-space".
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
