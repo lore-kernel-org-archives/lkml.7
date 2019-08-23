@@ -2,287 +2,179 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394E8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A89C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0001E233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DFE233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NOXREWx4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A2nTNPGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388584AbfHWIEy (ORCPT
+        id S2388837AbfHWIGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:04:54 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10803 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729922AbfHWIEx (ORCPT
+        Fri, 23 Aug 2019 04:06:54 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43104 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731543AbfHWIGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:04:53 -0400
+        Fri, 23 Aug 2019 04:06:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h15so8006289ljg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566547492; x=1598083492;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=QH2Lv/LpUhd8u3hbB6A5tS3kD8z+tWSKTxDXj667gvQ=;
-  b=NOXREWx4E9h3aWOsKgcVqZ6BM9gVVmAC2sEN/r7PFDYLfqiVFKggWr20
-   /N8K9/lmkQWXcT8dxuVHRyEA6/rYX850PxeRnNyr6vxlJK2NXzbxoRX7s
-   NU2StXI3L5bSLcFukM7HYssRF19pASm3P6k3ZIKslW/+pyGhwXo5r3Oko
-   A=;
-X-IronPort-AV: E=Sophos;i="5.64,420,1559520000"; 
-   d="scan'208";a="696735630"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Aug 2019 08:04:47 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 65D64C08F7;
-        Fri, 23 Aug 2019 08:04:42 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 08:04:41 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.244) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 08:04:37 +0000
-Subject: Re: [PATCH v5 18/20] RISC-V: KVM: Add SBI v0.1 support
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Anup Patel <anup@brainfault.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Atish Patra" <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
- <20190822084131.114764-19-anup.patel@wdc.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <40911e08-e0ce-a2b8-24d4-9cf357432850@amazon.com>
-Date:   Fri, 23 Aug 2019 10:04:34 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+ArWT4WMkl9MoDwdiTdKW+nRIiufhcAmFCR9Jk6ZDzw=;
+        b=A2nTNPGNygd0MA9nBCCgyH7F/hjYYE8xBjs4KMxp0K16IYqYf4Az8ALleufCFuMHsd
+         zzNDH6H5lFC8qUunVnTITtUcmceRGwWKnKNMHt3V4kFzikMbL7lLdXyTWWKCiyEKGPGS
+         bUULd8WE3Udx7HxMaE3CuLlAVo3VJzWTKqu25N4Cf0qP0OYSAEsvR4F9qwON19dOqNdf
+         MXpAPWBlSGbFdb7XHB+xcwk0jTKawx7YxiE58emCAXKSYCQHUL+WXxU8YYa0yl4QQj7+
+         isnGVjYN09o6+bGLOcENZ3e1Q6FqoxUc5PiRAZIDB/n2Nys0RmnxEggHbxwysqIZKedb
+         jUhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+ArWT4WMkl9MoDwdiTdKW+nRIiufhcAmFCR9Jk6ZDzw=;
+        b=uRviSc5UQcir9aLWkRubZgDABppa/xDWxtw7cJJoaJaQAgJ/6BqdWiEQvvfeOBlwb3
+         8NQXkIDqnRcRLggUR+smwlfcjKvHH5sTjERyVZdWJuQlVQmGqMki6M2miojngLQc+6th
+         M9BsSYlVceNC4XT70m7EE/itfPx08b0+i8zwJTfRAkryakoFqX+Z33GrzMVD6LIgHJ2d
+         mPsPNJH35kaeF7ZBKM0v69qJ3ZGc+6C47ru8KiR3HPn6WkHfLzhzM5HxNEgeh6NDTogb
+         hjOmZEOgdr90d87PClOzvReik3JHF+khk4gPJuepj4bXikPWlLRKkfEwkWSWRS87C1yT
+         Gh6Q==
+X-Gm-Message-State: APjAAAWg1RR+Q43RpiqK8FdlcXz1kOKdelwhrdB9YB8vVY1NNK60p7Sb
+        Ph21nK+n9UNYmAgWAmGBPfMIki8SXoZpHLsSf8dlyw==
+X-Google-Smtp-Source: APXvYqxAaMCcHxRgbmSzz6e6F39TOLpgRipavHulpe3LTQLSMuep2kDTkYjZ7K/A8ANnk4J/1mpzG5cyT7MvFtR+o0o=
+X-Received: by 2002:a2e:a0c3:: with SMTP id f3mr2094342ljm.123.1566547611404;
+ Fri, 23 Aug 2019 01:06:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190822084131.114764-19-anup.patel@wdc.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.244]
-X-ClientProxiedBy: EX13D04UWA001.ant.amazon.com (10.43.160.47) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+References: <20190822171731.012687054@linuxfoundation.org>
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 23 Aug 2019 13:36:40 +0530
+Message-ID: <CA+G9fYuKX2mgPZfqnqJBx-01tgVEaEbJk-T_5b4LdhkGpoXQLA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/85] 4.19.68-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.19 10:46, Anup Patel wrote:
-> From: Atish Patra <atish.patra@wdc.com>
-> 
-> The KVM host kernel running in HS-mode needs to handle SBI calls coming
-> from guest kernel running in VS-mode.
-> 
-> This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
-> implemented correctly except remote tlb flushes. For remote TLB flushes,
-> we are doing full TLB flush and this will be optimized in future.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/riscv/include/asm/kvm_host.h |   2 +
->   arch/riscv/kvm/Makefile           |   2 +-
->   arch/riscv/kvm/vcpu_exit.c        |   3 +
->   arch/riscv/kvm/vcpu_sbi.c         | 119 ++++++++++++++++++++++++++++++
->   4 files changed, 125 insertions(+), 1 deletion(-)
->   create mode 100644 arch/riscv/kvm/vcpu_sbi.c
-> 
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index 2af3a179c08e..0b1eceaef59f 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -241,4 +241,6 @@ bool kvm_riscv_vcpu_has_interrupt(struct kvm_vcpu *vcpu);
->   void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
->   void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
->   
-> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu);
-> +
->   #endif /* __RISCV_KVM_HOST_H__ */
-> diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-> index 3e0c7558320d..b56dc1650d2c 100644
-> --- a/arch/riscv/kvm/Makefile
-> +++ b/arch/riscv/kvm/Makefile
-> @@ -9,6 +9,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
->   kvm-objs := $(common-objs-y)
->   
->   kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
-> -kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-> +kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
->   
->   obj-$(CONFIG_KVM)	+= kvm.o
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index fbc04fe335ad..87b83fcf9a14 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -534,6 +534,9 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   		    (vcpu->arch.guest_context.hstatus & HSTATUS_STL))
->   			ret = stage2_page_fault(vcpu, run, scause, stval);
->   		break;
-> +	case EXC_SUPERVISOR_SYSCALL:
-> +		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-> +			ret = kvm_riscv_vcpu_sbi_ecall(vcpu);
->   	default:
->   		break;
->   	};
-> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> new file mode 100644
-> index 000000000000..5793202eb514
-> --- /dev/null
-> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> @@ -0,0 +1,119 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-> + *
-> + * Authors:
-> + *     Atish Patra <atish.patra@wdc.com>
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/kvm_host.h>
-> +#include <asm/csr.h>
-> +#include <asm/kvm_vcpu_timer.h>
-> +
-> +#define SBI_VERSION_MAJOR			0
-> +#define SBI_VERSION_MINOR			1
-> +
-> +/* TODO: Handle traps due to unpriv load and redirect it back to VS-mode */
+On Thu, 22 Aug 2019 at 22:57, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.68 release.
+> There are 85 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 24 Aug 2019 05:15:49 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.68-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Ugh, another one of those? Can't you just figure out a way to recover 
-from the page fault? Also, you want to combine this with the instruction 
-load logic, so that we have a single place that guest address space 
-reads go through.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> +static unsigned long kvm_sbi_unpriv_load(const unsigned long *addr,
-> +					 struct kvm_vcpu *vcpu)
-> +{
-> +	unsigned long flags, val;
-> +	unsigned long __hstatus, __sstatus;
-> +
-> +	local_irq_save(flags);
-> +	__hstatus = csr_read(CSR_HSTATUS);
-> +	__sstatus = csr_read(CSR_SSTATUS);
-> +	csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
-> +	csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus);
-> +	val = *addr;
-> +	csr_write(CSR_HSTATUS, __hstatus);
-> +	csr_write(CSR_SSTATUS, __sstatus);
-> +	local_irq_restore(flags);
-> +
-> +	return val;
-> +}
-> +
-> +static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu, u32 type)
-> +{
-> +	int i;
-> +	struct kvm_vcpu *tmp;
-> +
-> +	kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-> +		tmp->arch.power_off = true;
-> +	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-> +
-> +	memset(&vcpu->run->system_event, 0, sizeof(vcpu->run->system_event));
-> +	vcpu->run->system_event.type = type;
-> +	vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-> +}
-> +
-> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu)
-> +{
-> +	int ret = 1;
-> +	u64 next_cycle;
-> +	int vcpuid;
-> +	struct kvm_vcpu *remote_vcpu;
-> +	ulong dhart_mask;
-> +	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-> +
-> +	if (!cp)
-> +		return -EINVAL;
-> +	switch (cp->a7) {
-> +	case SBI_SET_TIMER:
-> +#if __riscv_xlen == 32
-> +		next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
-> +#else
-> +		next_cycle = (u64)cp->a0;
-> +#endif
-> +		kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
+Summary
+------------------------------------------------------------------------
 
-Ah, this is where the timer set happens. I still don't understand how 
-this takes the frequency bit into account?
+kernel: 4.19.68-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 1ca4133a7b4ede95223d2f4e85900ad6565ca8f9
+git describe: v4.19.67-86-g1ca4133a7b4e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.67-86-g1ca4133a7b4e
 
-> +		break;
-> +	case SBI_CONSOLE_PUTCHAR:
-> +		/* Not implemented */
-> +		cp->a0 = -ENOTSUPP;
-> +		break;
-> +	case SBI_CONSOLE_GETCHAR:
-> +		/* Not implemented */
-> +		cp->a0 = -ENOTSUPP;
-> +		break;
 
-These two should be covered by the default case.
+No regressions (compared to build v4.19.67)
 
-> +	case SBI_CLEAR_IPI:
-> +		kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_SOFT);
-> +		break;
-> +	case SBI_SEND_IPI:
-> +		dhart_mask = kvm_sbi_unpriv_load((unsigned long *)cp->a0, vcpu);
-> +		for_each_set_bit(vcpuid, &dhart_mask, BITS_PER_LONG) {
-> +			remote_vcpu = kvm_get_vcpu_by_id(vcpu->kvm, vcpuid);
-> +			kvm_riscv_vcpu_set_interrupt(remote_vcpu, IRQ_S_SOFT);
-> +		}
-> +		break;
-> +	case SBI_SHUTDOWN:
-> +		kvm_sbi_system_shutdown(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN);
-> +		ret = 0;
-> +		break;
-> +	case SBI_REMOTE_FENCE_I:
-> +		sbi_remote_fence_i(NULL);
-> +		break;
-> +	/*
-> +	 * TODO: There should be a way to call remote hfence.bvma.
-> +	 * Preferred method is now a SBI call. Until then, just flush
-> +	 * all tlbs.
-> +	 */
-> +	case SBI_REMOTE_SFENCE_VMA:
-> +		/*TODO: Parse vma range.*/
-> +		sbi_remote_sfence_vma(NULL, 0, 0);
-> +		break;
-> +	case SBI_REMOTE_SFENCE_VMA_ASID:
-> +		/*TODO: Parse vma range for given ASID */
-> +		sbi_remote_sfence_vma(NULL, 0, 0);
-> +		break;
-> +	default:
-> +		cp->a0 = ENOTSUPP;
-> +		break;
 
-Please just send unsupported SBI events into user space.
+No fixes (compared to build v4.19.67)
 
-Alex
+Ran 24105 total tests in the following environments and test suites.
 
-> +	};
-> +
-> +	if (ret >= 0)
-> +		cp->sepc += 4;
-> +
-> +	return ret;
-> +}
-> 
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* spectre-meltdown-checker-test
+* ltp-fs-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
