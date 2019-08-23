@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CACC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D66C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1912341A
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01AA23406
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391664AbfHWDpz (ORCPT
+        id S2404049AbfHWDqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:45:55 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:24018 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388187AbfHWDpu (ORCPT
+        Thu, 22 Aug 2019 23:46:02 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:47706 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390863AbfHWDpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:45:50 -0400
-X-UUID: cba9c52c78ec4cd18799fcfa143a144e-20190823
-X-UUID: cba9c52c78ec4cd18799fcfa143a144e-20190823
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        Thu, 22 Aug 2019 23:45:55 -0400
+X-UUID: e64cf142f9194a6dab415b04025ad60a-20190823
+X-UUID: e64cf142f9194a6dab415b04025ad60a-20190823
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
         (envelope-from <hsin-hsiung.wang@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 743670991; Fri, 23 Aug 2019 11:45:42 +0800
+        with ESMTP id 1596718171; Fri, 23 Aug 2019 11:45:41 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Fri, 23 Aug 2019 11:45:35 +0800
@@ -53,9 +53,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
         <srv_heupstream@mediatek.com>
-Subject: [PATCH v5 08/10] arm64: dts: mt6358: add PMIC MT6358 related nodes
-Date:   Fri, 23 Aug 2019 11:45:29 +0800
-Message-ID: <1566531931-9772-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v5 05/10] regulator: Add document for MT6358 regulator
+Date:   Fri, 23 Aug 2019 11:45:26 +0800
+Message-ID: <1566531931-9772-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
@@ -67,36 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add PMIC MT6358 related nodes which is for MT8183 platform
+add dt-binding document for MediaTek MT6358 PMIC
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt6358.dtsi | 361 +++++++++++++++++++++++++++++++
- 1 file changed, 361 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
+ .../bindings/regulator/mt6358-regulator.txt        | 358 +++++++++++++++++++++
+ 1 file changed, 358 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+diff --git a/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
 new file mode 100644
-index 0000000..69bca17
+index 0000000..9a90a92
 --- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-@@ -0,0 +1,361 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
++++ b/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+@@ -0,0 +1,358 @@
++MediaTek MT6358 Regulator
 +
-+&pwrap {
-+	pmic: mt6358 {
++All voltage regulators provided by the MT6358 PMIC are described as the
++subnodes of the MT6358 regulators node. Each regulator is named according
++to its regulator type, buck_<name> and ldo_<name>. The definition for each
++of these nodes is defined using the standard binding for regulators at
++Documentation/devicetree/bindings/regulator/regulator.txt.
++
++The valid names for regulators are::
++BUCK:
++  buck_vdram1, buck_vcore, buck_vpa, buck_vproc11, buck_vproc12, buck_vgpu,
++  buck_vs2, buck_vmodem, buck_vs1
++LDO:
++  ldo_vdram2, ldo_vsim1, ldo_vibr, ldo_vrf12, ldo_vio18, ldo_vusb, ldo_vcamio,
++  ldo_vcamd, ldo_vcn18, ldo_vfe28, ldo_vsram_proc11, ldo_vcn28, ldo_vsram_others,
++  ldo_vsram_gpu, ldo_vxo22, ldo_vefuse, ldo_vaux18, ldo_vmch, ldo_vbif28,
++  ldo_vsram_proc12, ldo_vcama1, ldo_vemc, ldo_vio28, ldo_va12, ldo_vrf18,
++  ldo_vcn33_bt, ldo_vcn33_wifi, ldo_vcama2, ldo_vmc, ldo_vldo28, ldo_vaud28,
++  ldo_vsim2
++
++Example:
++
++	pmic {
 +		compatible = "mediatek,mt6358";
-+		interrupt-controller;
-+		interrupt-parent = <&pio>;
-+		interrupts = <182 IRQ_TYPE_LEVEL_HIGH>;
-+		#interrupt-cells = <2>;
-+
-+		mt6358codec: mt6358codec {
-+			compatible = "mediatek,mt6358-sound";
-+		};
 +
 +		mt6358regulator: mt6358regulator {
 +			compatible = "mediatek,mt6358-regulator";
@@ -109,7 +118,6 @@ index 0000000..69bca17
 +				regulator-ramp-delay = <12500>;
 +				regulator-enable-ramp-delay = <0>;
 +				regulator-always-on;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vcore_reg: buck_vcore {
@@ -119,7 +127,6 @@ index 0000000..69bca17
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
 +				regulator-always-on;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vpa_reg: buck_vpa {
@@ -128,7 +135,6 @@ index 0000000..69bca17
 +				regulator-max-microvolt = <3650000>;
 +				regulator-ramp-delay = <50000>;
 +				regulator-enable-ramp-delay = <250>;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vproc11_reg: buck_vproc11 {
@@ -138,7 +144,6 @@ index 0000000..69bca17
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
 +				regulator-always-on;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vproc12_reg: buck_vproc12 {
@@ -148,7 +153,6 @@ index 0000000..69bca17
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
 +				regulator-always-on;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vgpu_reg: buck_vgpu {
@@ -157,7 +161,6 @@ index 0000000..69bca17
 +				regulator-max-microvolt = <1293750>;
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vs2_reg: buck_vs2 {
@@ -176,7 +179,6 @@ index 0000000..69bca17
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <900>;
 +				regulator-always-on;
-+				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vs1_reg: buck_vs1 {
@@ -359,6 +361,7 @@ index 0000000..69bca17
 +				regulator-min-microvolt = <2900000>;
 +				regulator-max-microvolt = <3300000>;
 +				regulator-enable-ramp-delay = <60>;
++				regulator-always-on;
 +			};
 +
 +			mt6358_vio28_reg: ldo_vio28 {
@@ -436,12 +439,7 @@ index 0000000..69bca17
 +				regulator-enable-ramp-delay = <540>;
 +			};
 +		};
-+
-+		mt6358rtc: mt6358rtc {
-+			compatible = "mediatek,mt6358-rtc";
-+		};
 +	};
-+};
 -- 
 1.9.1
 
