@@ -2,117 +2,161 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9328C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1058CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC7E2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566581790;
-	bh=I+q0DDKZZ2CbEjDpmYe9VqaMEDkMv33qzg1hGIO7uoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JMhF2tQosOwZjsQ8QLpg1OynNmHGv7bESIJVHQ5kM2Dl1F2H27oudHc4e3qZZoBDX
-	 ahTa5JElomKNovnj2hJ3xmRkUuRs/5q/U0eNraKYbVgDnUR7PXC8y+Mu9JPUXprUH/
-	 R7DI/45wQ93YPNQKdKC8z8/x0FAqAVYiWhZr+Ayo=
+	by mail.kernel.org (Postfix) with ESMTP id D10FC2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLHtmtxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404105AbfHWRg3 (ORCPT
+        id S2404188AbfHWRgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:36:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390003AbfHWRg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:36:29 -0400
-Received: from localhost (unknown [104.129.198.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14E82133F;
-        Fri, 23 Aug 2019 17:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566581788;
-        bh=I+q0DDKZZ2CbEjDpmYe9VqaMEDkMv33qzg1hGIO7uoQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fhOXlTCjlQ7esRMzA0VNFm6JOFIuomOFvQQqBrg2XAWSN1GHC1WXj4IgMXYFqMswp
-         WqjM3iTXmeGgvwrF5pNlZqFA319qckAkAvF5QkpVJauQ/HtKXbR5/FbBkYJZ6zI/Qk
-         ZfkOE0wX5O5ry4x62TQsqt4cZBZu8PnXtDfTOQkk=
-Date:   Fri, 23 Aug 2019 10:36:27 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Stefan Lippers-Hollmann <s.l-h@gmx.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
-Message-ID: <20190823173627.GA1040@kroah.com>
-References: <20190822170811.13303-1-sashal@kernel.org>
- <20190822172619.GA22458@kroah.com>
- <20190823000527.0ea91c6b@mir>
- <20190822233847.GB24034@kroah.com>
- <20190823024248.11e2dac3@mir>
- <20190823062853.GC1581@sasha-vm>
+        Fri, 23 Aug 2019 13:36:38 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42260 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404120AbfHWRgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:36:37 -0400
+Received: by mail-io1-f65.google.com with SMTP id e20so21808994iob.9;
+        Fri, 23 Aug 2019 10:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sG7Oz4tvlMM9D073f9jigVody4k5I2Lxm5iPrqf1t3c=;
+        b=VLHtmtxk+kIuuTecA1rRwr2eiqLViPkFFbL1AhBsBkoC/sY5DGnPavOBKPzDloXNXz
+         4pjNGcTejGbcDiOT/0xvOPV6sA3giWUAzDpAmbkuK7qkuFdtH0Dw1bCTrE70r6gf3ZvG
+         ZAML6M1a2hXQ4MT24lRkKGnpYFDNSy0rsSQ4GwWIOg8ptQN6hkjFiBiFy1VfP8NSZ0A9
+         km5P1g1g86OAs1YHbRXOtoEVTUGNTk2ezba6PmeyAVdPjcL4/rj/jOTcOMzAn6H/e2nj
+         h32oFnFWWFj8MiuA9TNQEn911C0IfbDwh7qTN3YQWMuCr5Z6c98gFiaw83IWMlxT3XoS
+         UQ3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sG7Oz4tvlMM9D073f9jigVody4k5I2Lxm5iPrqf1t3c=;
+        b=IvqTI3/3UKDdGa+zjYjtM504+O+zsLBEcx7B34MB46i504aBwYoDWyt23MPAqZCZRH
+         gXmuWe/7snFRQxOUG/vCpMHRB0Q9jSWMA9zpUgBXQUQ+yn+cLhpW3hr8E6uHC9pdCZtf
+         wteKNPtj2+J6F303dTWCtmXDqS+ktCTpQmMrtSw3cHoir2/LO3KaRvatA8fw1t90lhPt
+         ou6llh0mTwlBdfesHIIkSB3GFB3AOdqVtMKnBuq9nbknf6Uq1zLO1UEIK3hiy5TpfyJd
+         8zRHlRe1QG8LGr/u85X7n8UEVS3tEjR7GtkB+eUSoXPjSbozHb7EfbzqGBZ8mT1+CI39
+         iVHg==
+X-Gm-Message-State: APjAAAWWbbReqVo7c0yCX5Bxgj+f+39KjZZIeLfwjKSBNhkfHg6NNMKA
+        4yo9vm0V9spFMXUqYIrQKw==
+X-Google-Smtp-Source: APXvYqw7tNl24KnjTijUUlCAayNH+6INZQwey5kTzsCzyNQ6z754f4S45VQpIQU6ki7yyFC/WsWFBg==
+X-Received: by 2002:a05:6638:213:: with SMTP id e19mr5734428jaq.119.1566581796175;
+        Fri, 23 Aug 2019 10:36:36 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id y25sm5539253iol.59.2019.08.23.10.36.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 23 Aug 2019 10:36:35 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 13:36:33 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] drivers: hv: vmbus: Introduce latency testing
+Message-ID: <20190823173633.GA43233@Test-Virtual-Machine>
+References: <cover.1566266609.git.brandonbonaby94@gmail.com>
+ <ebca54bf70d2af53de419c1b7ac8db5b77b888cb.1566266609.git.brandonbonaby94@gmail.com>
+ <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
+ <20190823033850.GA41496@Test-Virtual-Machine>
+ <DM5PR21MB01379300AF2B441D0B53692DD7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190823062853.GC1581@sasha-vm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <DM5PR21MB01379300AF2B441D0B53692DD7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 02:28:53AM -0400, Sasha Levin wrote:
-> On Fri, Aug 23, 2019 at 02:42:48AM +0200, Stefan Lippers-Hollmann wrote:
-> > Hi
-> > 
-> > On 2019-08-22, Greg KH wrote:
-> > > On Fri, Aug 23, 2019 at 12:05:27AM +0200, Stefan Lippers-Hollmann wrote:
-> > > > On 2019-08-22, Greg KH wrote:
-> > > > > On Thu, Aug 22, 2019 at 01:05:56PM -0400, Sasha Levin wrote:
-> > [...]
-> > > > It might be down to kernel.org mirroring, but the patch file doesn't
-> > > > seem to be available yet (404), both in the wrong location listed
-> > > > above - and the expected one under
+On Fri, Aug 23, 2019 at 04:44:09PM +0000, Michael Kelley wrote:
+> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Thursday, August 22, 2019 8:39 PM
+> > > > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> > > > index 09829e15d4a0..c9c63a4033cd 100644
+> > > > --- a/drivers/hv/connection.c
+> > > > +++ b/drivers/hv/connection.c
+> > > > @@ -357,6 +357,9 @@ void vmbus_on_event(unsigned long data)
 > > > >
-> > > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
-> > [...]
-> > > Ah, no, it's not a mirroring problem, Sasha and I didn't know if anyone
-> > > was actually using the patch files anymore, so it was simpler to do a
-> > > release without them to see what happens. :)
-> > > 
-> > > Do you rely on these, or can you use the -rc git tree or the quilt
-> > > series?  If you do rely on them, we will work to fix this, it just
-> > > involves some scripting that we didn't get done this morning.
+> > > >  	trace_vmbus_on_event(channel);
+> > > >
+> > > > +#ifdef CONFIG_HYPERV_TESTING
+> > > > +	hv_debug_delay_test(channel, INTERRUPT_DELAY);
+> > > > +#endif /* CONFIG_HYPERV_TESTING */
+> > >
+> > > You are following Vitaly's suggestion to use #ifdef's so no code is
+> > > generated when HYPERV_TESTING is not enabled.  However, this
+> > > direct approach to using #ifdef's really clutters the code and makes
+> > > it harder to read and follow.  The better approach is to use the
+> > > #ifdef in the include file where the functions are defined.  If
+> > > HYPERV_TESTING is not enabled, provide a #else that defines
+> > > the function with an empty implementation for which the compiler
+> > > will generate no code.   An as example, see the function definition
+> > > for hyperv_init() in arch/x86/include/asm/mshyperv.h.  There are
+> > > several functions treated similarly in that include file.
+> > >
 > > 
-> > "Rely" is a strong word, I can adapt if they're going away, but
-> > I've been using them so far, as in (slightly simplified):
+> > I checked out the code in arch/x86/include/asm/mshyperv.h, after
+> > thinking about it, I'm wondering if it would be better just to have
+> > two files one called hv_debugfs.c and the other hyperv_debugfs.h.
+> > I could put the code definitions in hv_debugfs.c and at the top
+> > include the hyperv_debugfs.h file which would house the declarations
+> > of these functions under the ifdef. Then like you alluded too use
+> > an #else statement that would have the null implementations of the
+> > above functions. Then put an #include "hyperv_debugfs.h" in the
+> > hyperv_vmbus.h file. I figured instead of putting the code directly
+> > into the vmbus_drv.c file it might be best to put them in a seperate
+> > file like hv_debugfs.c. This way when we start adding more tests we
+> > don't bloat the vmbus_drv.c file unnecessarily. The hv_debugfs.c
+> > file would have the #ifdef CONFIG_HYPERV_TESTING at the top so if
+> > its not enabled  those null implementations in "hyperv_debugfs.h"
+> > woud kick in anywhere that included the hyperv_vmbus.h file which
+> > is what we want.
 > > 
-> > $ cd patches/upstream/
-> > $ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-5.2.9.xz
-> > $ xz -d patch-5.2.9.xz
-> > $ wget https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
-> > $ gunzip patch-5.2.10-rc1.gz
-> > $ vim ../series
-> > $ quilt ...
+> > what do you think?
 > > 
-> > I can switch to importing the quilt queue with some sed magic (and I
-> > already do that, if interesting or just a larger amounts of patches are
-> > queuing up for more than a day or two), but using the -rc patches has
-> > been convenient in that semi-manual workflow, also to make sure to really
-> > get and test the formal -rc patch, rather than something inbetween.
 > 
-> An easy way to generate a patch is to just use the git.kernel.org web
-> interface. A patch for 5.2.10-rc1 would be:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.2.y&id2=v5.2.9
+> I'll preface my comments by saying that how code gets structured
+> into files is always a bit of a judgment call.  The goal is to group code
+> into sensible chunks to make it easy to understand and to make it
+> easy to modify and extend later.  The latter is a prediction about the
+> future, which may or may not be accurate.   For the former, what's
+> "easy to understand," is often in the eye of the beholder.  So you may
+> get different opinions from different reviewers.
 > 
-> Personally this patch upload story sounded to me like a pre-git era
-> artifact...
+> That said, I like the idea of a separate hv_debugfs.c file to contain
+> the implementation of the various functions you have added to
+> provide the fuzzing capability.   I'm less convinced about the value
+> of a separate hyperv_debugfs.h file.   I think you have one big
+> #ifdef CONFIG_HYPERV_TESTING followed by the declarations of
+> the functions in hv_debugfs.c, followed by #else and null
+> implementations of those functions.  This is 20 lines of code or so,
+> and could easily go in hyperv_vmbus.h.
+> 
+> For the new hv_debugfs.c, you can avoid the need for
+> #ifdef CONFIG_HYPERV_TESTING by modifying the Makefile in
+> drivers/hv so that hv_debugfs.o is built only if CONFIG_HYPERV_TESTING
+> is defined.  Look at the current Makefile to see how this is done
+> with CONFIG_HYPERV_UTILS and CONFIG_HYPERV_BALLOON.
+> 
+> Michael
+>
 
-Given that we no longer do patches for Linus's -rc releases for the past
-few years, maybe it is time to move to do the same for the stable
-releases to be consistent.
+I see, that does make sense, I'll go ahead and add these changes.
 
-thanks,
+thanks
 
-greg k-h
+branden bonaby
