@@ -2,127 +2,93 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047C1C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37A0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD94420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B56420850
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dWgkEgDh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yj9GHaIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392216AbfHWTzf (ORCPT
+        id S2392286AbfHWTzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:55:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36463 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391184AbfHWTze (ORCPT
+        Fri, 23 Aug 2019 15:55:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51446 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392200AbfHWTzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:55:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w2so7133234pfi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 12:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=XSuUd9OEGM9MvHYqOjSgFcq1+jiet00ohcphBFN2Ku8=;
-        b=dWgkEgDhmeOPeVMVxyU16XbDSKz71EbP3utlMhzj6QfaQGskBbniwQYN+sBfh3k0xb
-         0PmQLGTCDY0XpXU+vDBLhhb5yU46oI93m+K4FlVEYGQjPSMutR0JTTQmnhdR1X2NSPMy
-         u0FnEFgr4h7tUOan2G5M2Hdu5n0p9wSKMXE1Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=XSuUd9OEGM9MvHYqOjSgFcq1+jiet00ohcphBFN2Ku8=;
-        b=rCcXGNo7hX8ptAMNBcb2MGdfaVz8LG8BTK8sSxxSbHMImDZOR9mBiGT6WFCKWyeAoh
-         HuQnYKf4wKw+k9fe1D42HADWFcrF1+R+sY5yTbkfbhKP1VJFVX1UN0wGhyDua2s/3/bK
-         ZN2zflJMVZQ2OCLAurPre24tocNgyrRRSiLmlAwHvAZepACXDipJQ2V3Ch9at1FYHX7r
-         hQOVA/isaoCF15qQ/PJsvlpFYahhkVVRkik3Z99UW/awaoQMasW8y+nH065woTzd9QmW
-         5x0zBmVHFLM2u9KlK4R738l2RXJWPcQjaiotTgW5aETpl6KFRNfdoon71s4FdOp1Q/v8
-         IEiw==
-X-Gm-Message-State: APjAAAWGYS8gPwmcKQOKhNM5XJGvgaiHJ01715knJJ1PeZbXzFws1Bb3
-        pkrLWofpB827AC06NmLsB6xVew==
-X-Google-Smtp-Source: APXvYqyq8jAYcKixRslluX5x4YdzavP7W/24Hgq4J76S4aAIIp+mnMo1+VzRsYdY/OZPgDmD6B+xKg==
-X-Received: by 2002:aa7:9907:: with SMTP id z7mr6952346pff.13.1566590133824;
-        Fri, 23 Aug 2019 12:55:33 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id a1sm2550230pgh.61.2019.08.23.12.55.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 12:55:33 -0700 (PDT)
-Subject: Re: [PATCH 1/7] fs: introduce kernel_pread_file* support
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-2-scott.branden@broadcom.com>
- <s5hsgpsqd49.wl-tiwai@suse.de>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <5227a1bb-52e5-d547-2650-b06bee259012@broadcom.com>
-Date:   Fri, 23 Aug 2019 12:55:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 15:55:35 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NJtRxr044090;
+        Fri, 23 Aug 2019 14:55:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566590127;
+        bh=s0XicrLXuGI/HXmhbkjUlUHssBuuijSTQe3NjyOcpYc=;
+        h=From:To:CC:Subject:Date;
+        b=Yj9GHaINlCrLeqpl554w/KOYgdyGojesoH0OC4jJaXLz1xIV/29ZxiqNurw1BKwk+
+         Bi15b+mYcRCSC18HK3TvzCX7kClgG+vCVvYPenvVu3hYbTQgnCbf3N/pdxzwvF3RdF
+         +jW4fAByG5Pfe9cLExhlaOpInKNEQwp4hXmLz/7A=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NJtRCG069056
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 23 Aug 2019 14:55:27 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 23
+ Aug 2019 14:55:27 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 23 Aug 2019 14:55:27 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NJtRZL004700;
+        Fri, 23 Aug 2019 14:55:27 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
+Date:   Fri, 23 Aug 2019 14:55:23 -0500
+Message-ID: <20190823195523.20950-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
-In-Reply-To: <s5hsgpsqd49.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Takashi
+Fix the coccinelle issues found in the TI LMU common code
 
-On 2019-08-23 5:29 a.m., Takashi Iwai wrote:
-> On Thu, 22 Aug 2019 21:24:45 +0200,
-> Scott Branden wrote:
->> Add kernel_pread_file* support to kernel to allow for partial read
->> of files with an offset into the file.  Existing kernel_read_file
->> functions call new kernel_pread_file functions with offset=0 and
->> flags=KERNEL_PREAD_FLAG_WHOLE.
-> Would this change passes the security check like ima?
-> I thought security_kernel_post_read_file() checks the whole content
-> for calculating the hash...
+drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned expression compared with zero: ramp_down < 0
+drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned expression compared with zero: ramp_up < 0
 
-It passes the fw_run_tests.sh.  How do you test the firmware loader 
-passes this security check?
+Fixes: f717460ba4d7 ("leds: TI LMU: Add common code for TI LMU devices")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-ti-lmu-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
+index adc7293004f1..c9ab40d5a6ba 100644
+--- a/drivers/leds/leds-ti-lmu-common.c
++++ b/drivers/leds/leds-ti-lmu-common.c
+@@ -84,7 +84,7 @@ static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
+ int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
+ {
+ 	struct regmap *regmap = lmu_bank->regmap;
+-	u8 ramp, ramp_up, ramp_down;
++	int ramp, ramp_up, ramp_down;
+ 
+ 	if (lmu_bank->ramp_up_usec == 0 && lmu_bank->ramp_down_usec == 0) {
+ 		ramp_up = 0;
+-- 
+2.22.0.214.g8dca754b1e
 
-What exactly does this ima do?  How do you enable/disable using it?
-
-Any reasonable device would check the integrity of the firmware image 
-being loaded to it.
-
-And, if part of a security model, authenticate the image.
-
-Whatever security check you are referring to is not needed by 
-request_firmware_into_buf when loading
-
-a partial file into a buffer.
-
-
->
->
-> thanks,
->
-> Takashi
