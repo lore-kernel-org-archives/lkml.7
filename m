@@ -2,147 +2,107 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176AEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2952FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E238421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6NTSam0"
+	by mail.kernel.org (Postfix) with ESMTP id E61BB2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566578082;
+	bh=wKJz9YOkE0fj8OFVZwyerZJCWFSIUVaGmXLkqc4eHQU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=2tIhb8Ni85y9MiAMa/YlMK9F6xE5JY9g0UfXCRMSzad/59hvHhGEyFYf/T29gXWsA
+	 3JlcDy60u7GUpzPiQcKPV/X/5pShWnZ6hiNakAMhKKsx8snYtdh1x/GINMdQtsStSF
+	 4uImo7t02jUbPMD+PEylGQzVlmjOe/e4CucCARjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436764AbfHWQci (ORCPT
+        id S2436775AbfHWQel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 12:32:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46054 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436736AbfHWQcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 12:32:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so5854991plr.12;
-        Fri, 23 Aug 2019 09:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=N2qESvJr/1pmMF3Ae2nRMhv+Yh2vmLQcSbPIwWU4XqU=;
-        b=L6NTSam0xaVt4B1J7FbhhrgYZP5WgZ6n71bwbPTlq2kKZHhL5RuqZ8ASRxgVGcNDJO
-         4l6xeLN7Amq8qyJuqZ8BKsmzBSpjL0fBodG1aqg3UfhX6kRDtMkALRfnDKWE7ZtTH7JU
-         RoRqaR659oAqLh7aS3qTx0YfSYjWqVcQisBLf5f40AGfUPg4zHD9y+BvYW210M62/e1W
-         7h05jsT5TrcwvoaMS3lN7XLJ+2/CPSU7xhD0XTVGn7lURuVtuAk5VFS3WSqmsxHNh93W
-         7XOSKSrxSSfOiGwWmK9wJy7maWwdg9vnZ9JZRC7OyTup80tmVAixLvHOureZG0T2CZLA
-         BMZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=N2qESvJr/1pmMF3Ae2nRMhv+Yh2vmLQcSbPIwWU4XqU=;
-        b=djy3bmJbeZOWUcQ8FIvnDgis+46EnmEUAi+E8COaVS+RiQrSo1vUkyEndC03WR2LbN
-         32zyq2E+92hdrDqz/KWKIc9byoNgdAU3w9uLRM669uau7ZNA2V3vkybnHkD3aBG+yKW1
-         oAl26Xet5QcpTqLwtLX3OsNohnIeTExCGGFj76fku+F5MudtjTAGR5a6oLkSepUVypyQ
-         HuIWvsjd47dPHR6YpszxGB0e/vitpOYZ4YrxZPICbu2aN0/K0f8RoBWOOJ/ct6knmNu9
-         2Rz2SL0I1iBbyg6oGsfwBKakz1x1Rg2K1jadkdxRxMwmqeND60ttrF1Yx7XIhUt3+fF8
-         jRlA==
-X-Gm-Message-State: APjAAAUaD09s78AWFhvuwk5+H4whQNEJRrcPWeUUBjGKsC1CBqtQKLQb
-        1cwwi4xGRvjs70aXh6+9Hts=
-X-Google-Smtp-Source: APXvYqyacElY5Z9Q1CVjkdFuKXjzLiIAcvlHdRQz9qpZxIchxNE4oR4O04kSRxy29esYPVZIl+YGdg==
-X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr5842278plb.240.1566577954950;
-        Fri, 23 Aug 2019 09:32:34 -0700 (PDT)
-Received: from localhost.localdomain ([139.198.121.136])
-        by smtp.gmail.com with ESMTPSA id u7sm3060251pfm.96.2019.08.23.09.32.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 23 Aug 2019 09:32:34 -0700 (PDT)
-From:   Feng Sun <loyou85@gmail.com>
-To:     davem@davemloft.net
-Cc:     edumazet@google.com, dsterba@suse.com, dbanerje@akamai.com,
-        fw@strlen.de, davej@codemonkey.org.uk, tglx@linutronix.de,
-        matwey@sai.msu.ru, sakari.ailus@linux.intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Feng Sun <loyou85@gmail.com>,
-        Xiaojun Zhao <xiaojunzhao141@gmail.com>
-Subject: [PATCH] net: fix skb use after free in netpoll_send_skb_on_dev
-Date:   Sat, 24 Aug 2019 00:32:00 +0800
-Message-Id: <1566577920-20956-1-git-send-email-loyou85@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 23 Aug 2019 12:34:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389827AbfHWQek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 12:34:40 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA325205C9;
+        Fri, 23 Aug 2019 16:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566578079;
+        bh=wKJz9YOkE0fj8OFVZwyerZJCWFSIUVaGmXLkqc4eHQU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ehiQ1jlRR/1ZPpGwcgYweF1sBjS3BoFZw8yWbXh+J9bvjP69gPEORLQDgIv2FL39H
+         9RS7AS3meA/8h7f3zoEwyfRexpZzYQ77Nxegt4U0hM8YkKPtQT8+ikxsLdO+MEu1bM
+         tj7Fg349rFcEk89yvGJrTch0tBDOPf6oAInCZ0AM=
+Date:   Fri, 23 Aug 2019 09:34:39 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fixes for 5.3-rc6
+Message-ID: <20190823163439.GL1037350@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-("tun: return NET_XMIT_DROP for dropped packets"),
-when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-netpoll_send_skb_on_dev will run into two use after free cases:
-1. retry netpoll_start_xmit with freed skb;
-2. queue freed skb in npinfo->txq.
+Hi Linus,
 
-hit the first case with following kernel log:
+Here are a few more bug fixes that trickled in since the last pull.
+They've survived the usual xfstests runs and merge cleanly with this
+morning's master.  Please let me know if anything strange happens.
 
-[  117.864773] kernel BUG at mm/slub.c:306!
-[  117.864773] invalid opcode: 0000 [#1] SMP PTI
-[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
-[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
-[  117.864781] Call Trace:
-[  117.864781]  ? tun_net_xmit+0x21c/0x460
-[  117.864781]  kfree_skbmem+0x4e/0x60
-[  117.864782]  kfree_skb+0x3a/0xa0
-[  117.864782]  tun_net_xmit+0x21c/0x460
-[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
-[  117.864789]  ? skb_clone+0x53/0xd0
-[  117.864790]  ? __skb_clone+0x2e/0x120
-[  117.864790]  deliver_clone+0x37/0x50 [bridge]
-[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
-[  117.864791]  br_flood+0x6c/0x130 [bridge]
-[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
-[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
-[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
-[  117.864793]  console_unlock+0x386/0x4e0
-[  117.864793]  vprintk_emit+0x17e/0x280
-[  117.864794]  vprintk_default+0x29/0x50
-[  117.864794]  vprintk_func+0x4c/0xbc
-[  117.864794]  printk+0x58/0x6f
-[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
-[  117.864795]  kthread+0x104/0x140
-[  117.864795]  ? 0xffffffffc05b1000
-[  117.864796]  ? kthread_park+0x80/0x80
-[  117.864796]  ret_from_fork+0x35/0x40
+I expect there to be one more pull request tomorrow for the fix to that
+quota related inode unlock bug that we were reviewing last night, but it
+will continue to soak in the testing machine for several more hours.
 
-Signed-off-by: Feng Sun <loyou85@gmail.com>
-Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
----
- net/core/netpoll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--D
 
-diff --git a/net/core/netpoll.c b/net/core/netpoll.c
-index 2cf27da..b4bffe6 100644
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -335,7 +335,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
- 
- 				HARD_TX_UNLOCK(dev, txq);
- 
--				if (status == NETDEV_TX_OK)
-+				if (status == NETDEV_TX_OK || status == NET_XMIT_DROP)
- 					break;
- 
- 			}
-@@ -352,7 +352,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
- 
- 	}
- 
--	if (status != NETDEV_TX_OK) {
-+	if (status != NETDEV_TX_OK && status != NET_XMIT_DROP) {
- 		skb_queue_tail(&npinfo->txq, skb);
- 		schedule_delayed_work(&npinfo->tx_work,0);
- 	}
--- 
-2.7.4
+The following changes since commit 8612de3f7ba6e900465e340516b8313806d27b2d:
 
+  xfs: don't crash on null attr fork xfs_bmapi_read (2019-08-12 09:32:44 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.3-fixes-4
+
+for you to fetch changes up to b68271609c4f16a79eae8069933f64345afcf888:
+
+  fs/xfs: Fix return code of xfs_break_leased_layouts() (2019-08-19 18:15:28 -0700)
+
+----------------------------------------------------------------
+Changes since last update:
+- Fix missing compat ioctl handling for get/setlabel
+- Fix missing ioctl pointer sanitization on s390
+- Fix a page locking deadlock in the dedupe comparison code
+- Fix inadequate locking in reflink code w.r.t. concurrent directio
+- Fix broken error detection when breaking layouts
+
+----------------------------------------------------------------
+Christoph Hellwig (2):
+      xfs: fall back to native ioctls for unhandled compat ones
+      xfs: compat_ioctl: use compat_ptr()
+
+Darrick J. Wong (2):
+      vfs: fix page locking deadlocks when deduping files
+      xfs: fix reflink source file racing with directio writes
+
+Ira Weiny (1):
+      fs/xfs: Fix return code of xfs_break_leased_layouts()
+
+ fs/read_write.c      | 49 +++++++++++++++++++++++++++++++++-------
+ fs/xfs/xfs_ioctl32.c | 56 +++-------------------------------------------
+ fs/xfs/xfs_pnfs.c    |  2 +-
+ fs/xfs/xfs_reflink.c | 63 ++++++++++++++++++++++++++++++----------------------
+ 4 files changed, 82 insertions(+), 88 deletions(-)
