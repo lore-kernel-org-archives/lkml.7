@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CA2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AF1C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CC02133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AE32133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfHXGC7 (ORCPT
+        id S1727388AbfHXGDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 02:02:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43577 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbfHXGCx (ORCPT
+        Sat, 24 Aug 2019 02:03:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43582 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbfHXGC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 02:02:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so6865066pld.10
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 23:02:52 -0700 (PDT)
+        Sat, 24 Aug 2019 02:02:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so6865122pld.10
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 23:02:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3G8HEOe7eXPD1fWB/xFr4j8ciVKkGakI4AxhAmUtJ1c=;
-        b=alfhXhYqB/pnb7GEQ9TeRF6Ky+DxvZIJ5G0ke3e2fBOL/DmaSTi3xj3d6O4aKuz7TR
-         w8JgYt826IeXM6B4kJJEV9aew/zKi64eeMq2JKThQDVOCKNQ2extSL9K0eeqdZDNkqDt
-         ZSumrL0EkLm3njoYcoFcPlrO3IBwgJkonRO/zdg//uowFQ/IPw38farQAVXIQQWWBX+Z
-         lvGYwCoaW6fZ/8FZrsjpo4NRD29rRPvTpoqn1FCiU6IwiDWmTqYQ0G3WD7W3QbpjeAyG
-         QW3cDOrdemf6tXEdhuIE1exw1uERUrDkJHjMvJljI6FTsr+hehqDg99vWJhgnw6SPjIn
-         JcAQ==
-X-Gm-Message-State: APjAAAVMwfEl9P0IPZB5/mtwkcw493q/pcXm+Ncj0WFlj9B2u0I+ONwH
-        ay2GOhapkJOhd0Il+3k9ePk=
-X-Google-Smtp-Source: APXvYqz3Y9sBPV5GIYAbTLsPLvCLDfW2AfGPZdC4UxumljHytMHRB3nvaozEoa4LV1pjeHvFyGFWhA==
-X-Received: by 2002:a17:902:d70e:: with SMTP id w14mr8346097ply.339.1566626572203;
-        Fri, 23 Aug 2019 23:02:52 -0700 (PDT)
+        bh=yQmvpe+T4cj+4Y3PYlBtzIZazSTk3vEicHeRtboqFPE=;
+        b=i3RjvQv1p1+ga3QmE1WALQEAcpZq5wEHO7zx+2ZdcSw2wrL3C6HUhz1EV40msOQm7R
+         NXEbvL8wXlfdgI1b1N+k91JT8h+fCY5i71jxYVtEz/omQB/tX/6fPhEnbk2QF36SA2KT
+         L6UxCsK8aXX5BUZeJlUU5sbf7EG5/dsGLmHiFypv2NFr5kz9uUdvNBA4VP3H2UMtT59m
+         mjsB2kwYMNjjDBToT41ewCQ2QIo10gsel6jbL0jYX2ayq3KkUfi6UEav+WyfhoKNoOrT
+         OyYk10qS1jfDNOn48YrB1qp8tYa85B2YZV1YswbRTywtE7XAkVEG6saPxrArV0SGzJOz
+         qvRw==
+X-Gm-Message-State: APjAAAUq9Lv3y9Zs084+WnGhKDvExG934+LnBV2+kC6ZWGcnYtY4JzWb
+        pQXyHmnfo6UcQlwKksOUdoo=
+X-Google-Smtp-Source: APXvYqzw1snjNVuL3nM1dQtSjBtbLdhm9qVAcSizLuZxmSKdfWljVUQCBqtqrIvsyIjid4IUe3ggYA==
+X-Received: by 2002:a17:902:a40d:: with SMTP id p13mr8558501plq.92.1566626574911;
+        Fri, 23 Aug 2019 23:02:54 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id i11sm6505645pfk.34.2019.08.23.23.02.50
+        by smtp.gmail.com with ESMTPSA id i11sm6505645pfk.34.2019.08.23.23.02.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 23:02:51 -0700 (PDT)
+        Fri, 23 Aug 2019 23:02:54 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>
-Subject: [PATCH v4 6/9] x86/mm/tlb: Do not make is_lazy dirty for no reason
-Date:   Fri, 23 Aug 2019 15:41:50 -0700
-Message-Id: <20190823224153.15223-7-namit@vmware.com>
+Subject: [PATCH v4 8/9] x86/mm/tlb: Remove UV special case
+Date:   Fri, 23 Aug 2019 15:41:52 -0700
+Message-Id: <20190823224153.15223-9-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190823224153.15223-1-namit@vmware.com>
 References: <20190823224153.15223-1-namit@vmware.com>
@@ -61,34 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Blindly writing to is_lazy for no reason, when the written value is
-identical to the old value, makes the cacheline dirty for no reason.
-Avoid making such writes to prevent cache coherency traffic for no
-reason.
+SGI UV TLB flushes is outdated and will be replaced with compatible
+smp_call_many APIC function in the future. For now, simplify the code by
+removing the UV special case.
 
-Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Acked-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 ---
- arch/x86/mm/tlb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 25 -------------------------
+ 1 file changed, 25 deletions(-)
 
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 24c9839e3d9b..1393b3cd3697 100644
+index 1393b3cd3697..3dca146edcf1 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -322,7 +322,8 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
- 		__flush_tlb_all();
- 	}
- #endif
--	this_cpu_write(cpu_tlbstate_shared.is_lazy, false);
-+	if (was_lazy)
-+		this_cpu_write(cpu_tlbstate_shared.is_lazy, false);
+@@ -679,31 +679,6 @@ void native_flush_tlb_multi(const struct cpumask *cpumask,
+ 		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
+ 				(info->end - info->start) >> PAGE_SHIFT);
  
+-	if (is_uv_system()) {
+-		/*
+-		 * This whole special case is confused.  UV has a "Broadcast
+-		 * Assist Unit", which seems to be a fancy way to send IPIs.
+-		 * Back when x86 used an explicit TLB flush IPI, UV was
+-		 * optimized to use its own mechanism.  These days, x86 uses
+-		 * smp_call_function_many(), but UV still uses a manual IPI,
+-		 * and that IPI's action is out of date -- it does a manual
+-		 * flush instead of calling flush_tlb_func().  This
+-		 * means that the percpu tlb_gen variables won't be updated
+-		 * and we'll do pointless flushes on future context switches.
+-		 *
+-		 * Rather than hooking native_flush_tlb_multi() here, I think
+-		 * that UV should be updated so that smp_call_function_many(),
+-		 * etc, are optimal on UV.
+-		 */
+-		flush_tlb_func((void *)info);
+-
+-		cpumask = uv_flush_tlb_others(cpumask, info);
+-		if (cpumask)
+-			smp_call_function_many(cpumask, flush_tlb_func,
+-					       (void *)info, 1);
+-		return;
+-	}
+-
  	/*
- 	 * The membarrier system call requires a full memory barrier and
+ 	 * If no page tables were freed, we can skip sending IPIs to
+ 	 * CPUs in lazy TLB mode. They will flush the CPU themselves
 -- 
 2.17.1
 
