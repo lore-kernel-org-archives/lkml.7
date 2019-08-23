@@ -2,286 +2,121 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F8AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD4AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689D32339D
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48CA2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="yKB40M81"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RD8NISLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbfHWLVy (ORCPT
+        id S1732994AbfHWLX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:21:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33953 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfHWLVy (ORCPT
+        Fri, 23 Aug 2019 07:23:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39274 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732503AbfHWLX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:21:54 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s18so8319480wrn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 04:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vdrvMv/f5RhT0oKtOYt+vGch+ye3w2fzkU92C9WXmi4=;
-        b=yKB40M81u3P9jcBjgCSP2BBA466Cs6Kma/DUmGyoZ0qBBPF/8eectJtZn3Z2YHUZ4y
-         a7y2CFusjtZrAx1+rsb1BBeOG+iSmDnLHYqA/R3r6zk4lL2MqVIM/d/qR1HhSi54n1lH
-         vty9zYG2tu7Xnx0xy+txTcsnN4d0Ev3T9Uq+k6RDLaWv53Ijs07M5OI7uZwkIiBn++tj
-         k81mZFnhC0pIgvjr3Yfw4ic9EApHQPcEsT3cPlzw7WFI53vpLYTDTLStz2s1rS53TptP
-         6upw6YMQz0lw/FFCzVM+VCCanF34aCj0UxVfN5hhUn3f7/Cj5an/u2lQeSIHl1Qq1nfa
-         rWGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vdrvMv/f5RhT0oKtOYt+vGch+ye3w2fzkU92C9WXmi4=;
-        b=rQApqr+q6050jGKIpFiyRN206L+ZXbZUWil1FdJDjbcSC0M4S8GfgKbcqibnZLO2Jl
-         3hzonhH7+lK2VDtPE9fA9SZDxlXUbdxWH41pb8xmhf5xwU8cdEt3XxzpknP/78KMcomc
-         CruTNpwWi5p+/pH4TTyy6J4yzngyBJqJPO/l8KAaDRHud1dfH9dKDJWf0Hsj7DtbK7iS
-         /B60Mcsd/1vSoO3yKUoCm8AT3Xww5fKl4YpGcnGzqZgjW4K2vdV3REyusHen06eHHPlN
-         9t7nIsLiMXkiL5DoJ4hzZ7vSAAGbkoV1dAnF2sq2SwReX2S+oqs2PYw/R22plxzBQLAp
-         1zQA==
-X-Gm-Message-State: APjAAAWV0aJaFN4yXBzuvVa0dp4ZlY42m5yE5CX0FDTGoiOKWHflLEiN
-        aEN4Fr/Dggk/G5EjiqUzNY0scJFgx4qFAGIZVuSgPw==
-X-Google-Smtp-Source: APXvYqwxICw/0ZHX6I0dCk0HldrXSs1fpHSG4cT5Hh5ZKrhcdTDqfX3JBb9+eTwqVsGhNmbVp6ETTaFtfeobWRQOww4=
-X-Received: by 2002:a05:6000:10cf:: with SMTP id b15mr4559812wrx.180.1566559310727;
- Fri, 23 Aug 2019 04:21:50 -0700 (PDT)
+        Fri, 23 Aug 2019 07:23:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NBNlkR149956;
+        Fri, 23 Aug 2019 11:23:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=SdNd7drI7dBuyeCQbZ8YKtn/6WhBqgp8Qth2Lct/Uqc=;
+ b=RD8NISLgLJq2hDUy6AQZt1HKW0j2MUCmqL8gi6dxto3Bw5KU9ov5bn7QBZBtiLQDN9aA
+ kiIELxEoOwKbUjloR2wllpTKSrsmiLI3JPcSFNLhqWlVMGNqHGQMNPomGt1nforqbqTJ
+ kudhmuXPv6FmXtaIqbdkr0ya+lgMdsC+OGmAMcVmbEYflG+4ROM5e5FBDNfHu7qvPTXW
+ Yt7ZPOaFgD8Bck6ujNbXw95IrjTXzoBCfG3aI1Ee/e2pZ7V+TT/HX+CV/HnYrdB9K/v4
+ mNtUxJ5oTO6Vqri9Jv5hiaKk6IDAh7oWRXZIqTqRIKhZCibl4JRZFGHHN/eSfB2hSq6M pw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2uea7rc6je-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 11:23:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NBNSCQ011888;
+        Fri, 23 Aug 2019 11:23:46 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2uj1y0dqnu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 11:23:46 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7NBNjpX028469;
+        Fri, 23 Aug 2019 11:23:46 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 23 Aug 2019 04:23:45 -0700
+Date:   Fri, 23 Aug 2019 14:23:37 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        linux-wimax@intel.com, "David S . Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] wimax/i2400m: fix calculation of index, remove sizeof
+Message-ID: <20190823112337.GB23408@kadam>
+References: <20190823085230.6225-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-14-anup.patel@wdc.com>
- <77b9ff3c-292f-ee17-ddbb-134c0666fde7@amazon.com> <CAAhSdy1h+m0gA2pro-XAb4qhe0Q+8knjW+8+6jaz3efOdKWskA@mail.gmail.com>
- <a44f86ac-8902-0aa3-1eee-013ac97d667b@amazon.com> <CAAhSdy20D=t5hbeWDi=1XmNAe5rwvNyjMth-WUwrVe+HcagVpg@mail.gmail.com>
- <58899115-88a3-5167-2ed4-886498648f63@amazon.com>
-In-Reply-To: <58899115-88a3-5167-2ed4-886498648f63@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 23 Aug 2019 16:51:39 +0530
-Message-ID: <CAAhSdy3mvfwrz4PkT-iMqwBBRKH7b911DuoPp7JHAkGTHwtDmA@mail.gmail.com>
-Subject: Re: [PATCH v5 13/20] RISC-V: KVM: Implement stage2 page table programming
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823085230.6225-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908230121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908230121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 7:39 PM Alexander Graf <graf@amazon.com> wrote:
->
->
->
-> On 22.08.19 15:58, Anup Patel wrote:
-> > On Thu, Aug 22, 2019 at 6:57 PM Alexander Graf <graf@amazon.com> wrote:
-> >>
-> >>
-> >>
-> >> On 22.08.19 14:38, Anup Patel wrote:
-> >>> On Thu, Aug 22, 2019 at 5:58 PM Alexander Graf <graf@amazon.com> wrote:
-> >>>>
-> >>>> On 22.08.19 10:45, Anup Patel wrote:
-> >>>>> This patch implements all required functions for programming
-> >>>>> the stage2 page table for each Guest/VM.
-> >>>>>
-> >>>>> At high-level, the flow of stage2 related functions is similar
-> >>>>> from KVM ARM/ARM64 implementation but the stage2 page table
-> >>>>> format is quite different for KVM RISC-V.
-> >>>>>
-> >>>>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >>>>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>>>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>>>> ---
-> >>>>>     arch/riscv/include/asm/kvm_host.h     |  10 +
-> >>>>>     arch/riscv/include/asm/pgtable-bits.h |   1 +
-> >>>>>     arch/riscv/kvm/mmu.c                  | 637 +++++++++++++++++++++++++-
-> >>>>>     3 files changed, 638 insertions(+), 10 deletions(-)
-> >>>>>
-> >>>>> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> >>>>> index 3b09158f80f2..a37775c92586 100644
-> >>>>> --- a/arch/riscv/include/asm/kvm_host.h
-> >>>>> +++ b/arch/riscv/include/asm/kvm_host.h
-> >>>>> @@ -72,6 +72,13 @@ struct kvm_mmio_decode {
-> >>>>>         int shift;
-> >>>>>     };
-> >>>>>
-> >>>>> +#define KVM_MMU_PAGE_CACHE_NR_OBJS   32
-> >>>>> +
-> >>>>> +struct kvm_mmu_page_cache {
-> >>>>> +     int nobjs;
-> >>>>> +     void *objects[KVM_MMU_PAGE_CACHE_NR_OBJS];
-> >>>>> +};
-> >>>>> +
-> >>>>>     struct kvm_cpu_context {
-> >>>>>         unsigned long zero;
-> >>>>>         unsigned long ra;
-> >>>>> @@ -163,6 +170,9 @@ struct kvm_vcpu_arch {
-> >>>>>         /* MMIO instruction details */
-> >>>>>         struct kvm_mmio_decode mmio_decode;
-> >>>>>
-> >>>>> +     /* Cache pages needed to program page tables with spinlock held */
-> >>>>> +     struct kvm_mmu_page_cache mmu_page_cache;
-> >>>>> +
-> >>>>>         /* VCPU power-off state */
-> >>>>>         bool power_off;
-> >>>>>
-> >>>>> diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-> >>>>> index bbaeb5d35842..be49d62fcc2b 100644
-> >>>>> --- a/arch/riscv/include/asm/pgtable-bits.h
-> >>>>> +++ b/arch/riscv/include/asm/pgtable-bits.h
-> >>>>> @@ -26,6 +26,7 @@
-> >>>>>
-> >>>>>     #define _PAGE_SPECIAL   _PAGE_SOFT
-> >>>>>     #define _PAGE_TABLE     _PAGE_PRESENT
-> >>>>> +#define _PAGE_LEAF      (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC)
-> >>>>>
-> >>>>>     /*
-> >>>>>      * _PAGE_PROT_NONE is set on not-present pages (and ignored by the hardware) to
-> >>>>> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> >>>>> index 2b965f9aac07..9e95ab6769f6 100644
-> >>>>> --- a/arch/riscv/kvm/mmu.c
-> >>>>> +++ b/arch/riscv/kvm/mmu.c
-> >>>>> @@ -18,6 +18,432 @@
-> >>>>>     #include <asm/page.h>
-> >>>>>     #include <asm/pgtable.h>
-> >>>>>
-> >>>>> +#ifdef CONFIG_64BIT
-> >>>>> +#define stage2_have_pmd              true
-> >>>>> +#define stage2_gpa_size              ((phys_addr_t)(1ULL << 39))
-> >>>>> +#define stage2_cache_min_pages       2
-> >>>>> +#else
-> >>>>> +#define pmd_index(x)         0
-> >>>>> +#define pfn_pmd(x, y)                ({ pmd_t __x = { 0 }; __x; })
-> >>>>> +#define stage2_have_pmd              false
-> >>>>> +#define stage2_gpa_size              ((phys_addr_t)(1ULL << 32))
-> >>>>> +#define stage2_cache_min_pages       1
-> >>>>> +#endif
-> >>>>> +
-> >>>>> +static int stage2_cache_topup(struct kvm_mmu_page_cache *pcache,
-> >>>>> +                           int min, int max)
-> >>>>> +{
-> >>>>> +     void *page;
-> >>>>> +
-> >>>>> +     BUG_ON(max > KVM_MMU_PAGE_CACHE_NR_OBJS);
-> >>>>> +     if (pcache->nobjs >= min)
-> >>>>> +             return 0;
-> >>>>> +     while (pcache->nobjs < max) {
-> >>>>> +             page = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-> >>>>> +             if (!page)
-> >>>>> +                     return -ENOMEM;
-> >>>>> +             pcache->objects[pcache->nobjs++] = page;
-> >>>>> +     }
-> >>>>> +
-> >>>>> +     return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void stage2_cache_flush(struct kvm_mmu_page_cache *pcache)
-> >>>>> +{
-> >>>>> +     while (pcache && pcache->nobjs)
-> >>>>> +             free_page((unsigned long)pcache->objects[--pcache->nobjs]);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void *stage2_cache_alloc(struct kvm_mmu_page_cache *pcache)
-> >>>>> +{
-> >>>>> +     void *p;
-> >>>>> +
-> >>>>> +     if (!pcache)
-> >>>>> +             return NULL;
-> >>>>> +
-> >>>>> +     BUG_ON(!pcache->nobjs);
-> >>>>> +     p = pcache->objects[--pcache->nobjs];
-> >>>>> +
-> >>>>> +     return p;
-> >>>>> +}
-> >>>>> +
-> >>>>> +struct local_guest_tlb_info {
-> >>>>> +     struct kvm_vmid *vmid;
-> >>>>> +     gpa_t addr;
-> >>>>> +};
-> >>>>> +
-> >>>>> +static void local_guest_tlb_flush_vmid_gpa(void *info)
-> >>>>> +{
-> >>>>> +     struct local_guest_tlb_info *infop = info;
-> >>>>> +
-> >>>>> +     __kvm_riscv_hfence_gvma_vmid_gpa(READ_ONCE(infop->vmid->vmid_version),
-> >>>>> +                                      infop->addr);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void stage2_remote_tlb_flush(struct kvm *kvm, gpa_t addr)
-> >>>>> +{
-> >>>>> +     struct local_guest_tlb_info info;
-> >>>>> +     struct kvm_vmid *vmid = &kvm->arch.vmid;
-> >>>>> +
-> >>>>> +     /* TODO: This should be SBI call */
-> >>>>> +     info.vmid = vmid;
-> >>>>> +     info.addr = addr;
-> >>>>> +     preempt_disable();
-> >>>>> +     smp_call_function_many(cpu_all_mask, local_guest_tlb_flush_vmid_gpa,
-> >>>>> +                            &info, true);
-> >>>>
-> >>>> This is all nice and dandy on the toy 4 core systems we have today, but
-> >>>> it will become a bottleneck further down the road.
-> >>>>
-> >>>> How many VMIDs do you have? Could you just allocate a new one every time
-> >>>> you switch host CPUs? Then you know exactly which CPUs to flush by
-> >>>> looking at all your vcpu structs and a local field that tells you which
-> >>>> pCPU they're on at this moment.
-> >>>>
-> >>>> Either way, it's nothing that should block inclusion. For today, we're fine.
-> >>>
-> >>> We are not happy about this either.
-> >>>
-> >>> Other two options, we have are:
-> >>> 1. Have SBI calls for remote HFENCEs
-> >>> 2. Propose RISC-V ISA extension for remote FENCEs
-> >>>
-> >>> Option1 is mostly extending SBI spec and implementing it in runtime
-> >>> firmware.
-> >>>
-> >>> Option2 is ideal solution but requires consensus among wider audience
-> >>> in RISC-V foundation.
-> >>>
-> >>> At this point, we are fine with a simple solution.
-> >>
-> >> It's fine to explicitly IPI other CPUs to flush their TLBs. What is not
-> >> fine is to IPI *all* CPUs to flush their TLBs.
-> >
-> > Ahh, this should have been cpu_online_mask instead of cpu_all_mask
-> >
-> > I will update this in next revision.
->
-> What I was trying to say is that you only want to flush currently
-> running other vcpus and add a hint for all the others saying "please
-> flush the next time you come up".
->
-> I think we had a mechanism for that somewhere in the EVENT magic.
->
-> But as I said, this is a performance optimization - that's something I'm
-> happy to delay. Security and user space ABI are the bits I'm worried
-> about at this stage.
+On Fri, Aug 23, 2019 at 09:52:30AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The subtraction of the two pointers is automatically scaled by the
+> size of the size of the object the pointers point to, so the division
+> by sizeof(*i2400m->barker) is incorrect.  Fix this by removing the
+> division.  Also make index an unsigned int to clean up a checkpatch
+> warning.
+> 
+> Addresses-Coverity: ("Extra sizeof expression")
+> Fixes: aba3792ac2d7 ("wimax/i2400m: rework bootrom initialization to be more flexible")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/wimax/i2400m/fw.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
+> index 489cba9b284d..599a703af6eb 100644
+> --- a/drivers/net/wimax/i2400m/fw.c
+> +++ b/drivers/net/wimax/i2400m/fw.c
+> @@ -399,8 +399,7 @@ int i2400m_is_boot_barker(struct i2400m *i2400m,
+>  	 * associated with the device. */
+>  	if (i2400m->barker
+>  	    && !memcmp(buf, i2400m->barker, sizeof(i2400m->barker->data))) {
+> -		unsigned index = (i2400m->barker - i2400m_barker_db)
+> -			/ sizeof(*i2400m->barker);
+> +		unsigned int index = i2400m->barker - i2400m_barker_db;
+>  		d_printf(2, dev, "boot barker cache-confirmed #%u/%08x\n",
+>  			 index, le32_to_cpu(i2400m->barker->data[0]));
 
-I had thought about this previously. This will be certainly a good
-optimization. Let me add a TODO comment here so that we don't
-forget it.
+It's only used for this debug output.  You may as well just delete it.
 
-Regards,
-Anup
+>  		return 0;
 
->
->
-> Alex
+regards,
+dan carpenter
+
