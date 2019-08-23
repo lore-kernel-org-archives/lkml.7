@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9ABC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41FEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E7C22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD0922CF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kC/lzVfZ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2BMhpGV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405056AbfHWHDG (ORCPT
+        id S2405083AbfHWHDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:03:06 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37764 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405005AbfHWHDD (ORCPT
+        Fri, 23 Aug 2019 03:03:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52046 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405045AbfHWHDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:03:03 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d16so8025944wme.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:03:02 -0700 (PDT)
+        Fri, 23 Aug 2019 03:03:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k1so7890183wmi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8bvFZYOOWbciidOH/I9lMYm8n7mRLKVoh4XQnIxXums=;
-        b=kC/lzVfZUUGHHcb62P+i2HWLr9INMDQhZtTuS0Kq4wKm7wg7inFaRwCJpNk76Bx6So
-         CYiDAlrHSUIxo6WCwRzJrEDJH3bqOiOonb17PcyiVgjIHahlQOLr8fwKe1X2PPEzrUuo
-         GYxq7XLR9WGQX6zGLYZ6uMM/UiYY7iqmHlke51UUHC0z3FbZlYZTXYXgJ0BlyoTy9ERG
-         mrpN+gGOem0lozxhG03hrWjtAfYvlA0kp4T6QmStAZRZEDjKajpigB+H3x8NbWbxN72C
-         F4oCPfKynoeEE67PoD8GOOB9uT2FnJ3z5ju01qFhgz0zH9F/LOOzt6l6hgxAQ0fmhjUA
-         n+SA==
+        bh=Y6OlL/eR9h1Ghc3Dkq2YBZdnDsKxiiGiMpQwldNFWsU=;
+        b=2BMhpGV4rttepJcUT2dvXB1b06ryYYyen4bJHkUiI5sHw3e49HDqSL3QaWqKk6BSoL
+         HOBVmHBBbNTqVMQQyQxkDtCyqXxTjgmyJpsziONpWxz9pjtbbeuR1oeMGaamdsWw8ixU
+         j7U5hyLej/ao83Mhm+S4vaGsTqPSK4ZRFL1JJbX4P4C8PrQ8B15ebcV4bpDlt1ZhREx8
+         sfxd15gWro4lsT3pMjDrh4Vl4VLHHv1Kdz3sNhqJ+AcRXZcH4AWZnDapyzZjEuqrBRiB
+         0gOR0HSheZa6D0C8ZZHELom0N/K7XWnUtnPDIklurgcwHf/V8QHqphX90dAQo1JOzVRm
+         mYww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8bvFZYOOWbciidOH/I9lMYm8n7mRLKVoh4XQnIxXums=;
-        b=XA/g3tU3LN6aFeEbNXUaNCHrXE2MjbudVFnXb00aOSYLsTPLAFKBgZcCGhAUH66+Ti
-         bIl7QUW2K6Ajc9Ny1HNXBkX4YzlNuJGfidUj6ZlzA8h7kyMyw2am6PsBXIBJLDRjBgNq
-         fQvCC8wHKRVQnYuZ3L25xYia6boWXY4hAd07prQVeQ9BEbHxTOtspLPZMMoXlzHkDQjL
-         Z6lKtQ92zJ9jFjPEDaVoe+wHmk3gzFpkCjAS7Vdh6snmukgGfjN+NLza1sqaRyxN3k54
-         NjewSSECovpn9I0eBtXS94BCbLVrBoLKlF8MWvPXyKgia3wT9NCnfFHU6yYIv7pcSkhw
-         iyBA==
-X-Gm-Message-State: APjAAAVWNus72tSj/3gPeAiZkFSVWWOCPx1lH1/uWEaE2Q3wjXHTgS+L
-        Zp11FJK+42OoVdT9wK9M2yGDhw==
-X-Google-Smtp-Source: APXvYqxlo25gmqlaRYG7TGhQ/LohMFW/zSGas3jbT1AdbAPrDC365o7N9sowEhnteOW5MHE7iRgFHA==
-X-Received: by 2002:a05:600c:296:: with SMTP id 22mr3045698wmk.148.1566543781652;
-        Fri, 23 Aug 2019 00:03:01 -0700 (PDT)
+        bh=Y6OlL/eR9h1Ghc3Dkq2YBZdnDsKxiiGiMpQwldNFWsU=;
+        b=GEz0rlcorzVNEtxoikg5nUOQ1i/KBlhFoK1jPpvJD2sPXhThisiPGu+48oYASCGP2L
+         XefWvonsGtsBSP6HRxBQOJMevl1clostHGT8/f5OpmSh1KqarY3rHZp20LqQLKhkuxkJ
+         hLDzAB9HWW+sNGEM4onNOYqP3d9kARQIqCjmBE5JdVKULHwlvh2hnNwabhTxjYwnGIJr
+         xawUdyAHEh40WqvZm1oygq7KQlxSlkJZ5LJUonI5PZ3MssVf/574gibzlZS2pTbvwJvs
+         pDBi6zA/zw8bqcWeV1G9/REcfvcAlwPfjD7BHkkA5t+YcGsFOpdOIGzcvP1WejCrMA1g
+         g/nA==
+X-Gm-Message-State: APjAAAWq+Xs3so+didIKzDSi8icwt3tzqbf27gIgeZN4LqjgBzQj5UOB
+        qKWUfv7J4pf5kkfstFTwuFEDvQ==
+X-Google-Smtp-Source: APXvYqxtN07laBxLSGSpNPngo3T29VHr60UhoGb5uhAhV6UuO0Ye5M829fLDQKUyMxekNg94cOFQNQ==
+X-Received: by 2002:a1c:541e:: with SMTP id i30mr3210905wmb.54.1566543784635;
+        Fri, 23 Aug 2019 00:03:04 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a26sm1741833wmg.45.2019.08.23.00.03.00
+        by smtp.gmail.com with ESMTPSA id a26sm1741833wmg.45.2019.08.23.00.03.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 00:03:01 -0700 (PDT)
+        Fri, 23 Aug 2019 00:03:04 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
@@ -63,9 +63,9 @@ Cc:     linux-amlogic@lists.infradead.org,
         devicetree@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RESEND PATCH v2 08/14] arm64: dts: meson-gxl: fix internal phy compatible
-Date:   Fri, 23 Aug 2019 09:02:42 +0200
-Message-Id: <20190823070248.25832-9-narmstrong@baylibre.com>
+Subject: [RESEND PATCH v2 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
+Date:   Fri, 23 Aug 2019 09:02:45 +0200
+Message-Id: <20190823070248.25832-12-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
 References: <20190823070248.25832-1-narmstrong@baylibre.com>
@@ -77,27 +77,27 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: ethernet-phy@8: compatible: ['ethernet-phy-id0181.4400', 'ethernet-phy-ieee802.3-c22'] is not valid under any of the given schemas
+meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 7a3b674db11f..49ff0a7d0210 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -709,7 +709,7 @@
- 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+index c1e58a69d434..4770ecac3d85 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+@@ -11,7 +11,7 @@
+ #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
  
- 			internal_phy: ethernet-phy@8 {
--				compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
-+				compatible = "ethernet-phy-id0181.4400";
- 				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <8>;
- 				max-speed = <100>;
+ / {
+-	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
++	compatible = "amediatech,x96-max", "amlogic,g12a";
+ 	model = "Shenzhen Amediatech Technology Co., Ltd X96 Max";
+ 
+ 	aliases {
 -- 
 2.22.0
 
