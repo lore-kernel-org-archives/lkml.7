@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C0DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74AAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9B322CF7
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D70022CF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389267AbfHWHTN (ORCPT
+        id S2392589AbfHWHTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:19:13 -0400
+        Fri, 23 Aug 2019 03:19:21 -0400
 Received: from mga18.intel.com ([134.134.136.126]:55023 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732030AbfHWHTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:19:10 -0400
+        id S2389165AbfHWHTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:19:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 00:19:09 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 00:19:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
-   d="scan'208";a="180619571"
+   d="scan'208";a="180619613"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Aug 2019 00:19:04 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 23 Aug 2019 00:19:13 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Joerg Roedel <joro@8bytes.org>,
@@ -48,10 +47,11 @@ Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
         Stefano Stabellini <sstabellini@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v7 3/7] swiotlb: Split size parameter to map/unmap APIs
-Date:   Fri, 23 Aug 2019 15:17:31 +0800
-Message-Id: <20190823071735.30264-4-baolu.lu@linux.intel.com>
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v7 5/7] iommu/vt-d: Check whether device requires bounce buffer
+Date:   Fri, 23 Aug 2019 15:17:33 +0800
+Message-Id: <20190823071735.30264-6-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190823071735.30264-1-baolu.lu@linux.intel.com>
 References: <20190823071735.30264-1-baolu.lu@linux.intel.com>
@@ -60,191 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This splits the size parameter to swiotlb_tbl_map_single() and
-swiotlb_tbl_unmap_single() into an alloc_size and a mapping_size
-parameter, where the latter one is rounded up to the iommu page
-size.
+This adds a helper to check whether a device needs to
+use bounce buffer. It also provides a boot time option
+to disable the bounce buffer. Users can use this to
+prevent the iommu driver from using the bounce buffer
+for performance gain.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Xu Pengfei <pengfei.xu@intel.com>
+Tested-by: Mika Westerberg <mika.westerberg@intel.com>
 ---
- drivers/xen/swiotlb-xen.c |  8 ++++----
- include/linux/swiotlb.h   |  8 ++++++--
- kernel/dma/direct.c       |  2 +-
- kernel/dma/swiotlb.c      | 30 +++++++++++++++++++-----------
- 4 files changed, 30 insertions(+), 18 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 5 +++++
+ drivers/iommu/intel-iommu.c                     | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index ae1df496bf38..adcabd9473eb 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -386,8 +386,8 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
- 	 */
- 	trace_swiotlb_bounced(dev, dev_addr, size, swiotlb_force);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 47d981a86e2f..aaca73080097 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1732,6 +1732,11 @@
+ 			Note that using this option lowers the security
+ 			provided by tboot because it makes the system
+ 			vulnerable to DMA attacks.
++		nobounce [Default off]
++			Disable bounce buffer for unstrusted devices such as
++			the Thunderbolt devices. This will treat the untrusted
++			devices as the trusted ones, hence might expose security
++			risks of DMA attacks.
  
--	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, dir,
--				     attrs);
-+	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys,
-+				     size, size, dir, attrs);
- 	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
- 		return DMA_MAPPING_ERROR;
+ 	intel_idle.max_cstate=	[KNL,HW,ACPI,X86]
+ 			0	disables intel_idle and fall back on acpi_idle.
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 8316e57f047c..b1ab3526e6fa 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -360,6 +360,7 @@ static int dmar_forcedac;
+ static int intel_iommu_strict;
+ static int intel_iommu_superpage = 1;
+ static int iommu_identity_mapping;
++static int intel_no_bounce;
  
-@@ -397,7 +397,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
- 	 * Ensure that the address returned is DMA'ble
- 	 */
- 	if (unlikely(!dma_capable(dev, dev_addr, size))) {
--		swiotlb_tbl_unmap_single(dev, map, size, dir,
-+		swiotlb_tbl_unmap_single(dev, map, size, size, dir,
- 				attrs | DMA_ATTR_SKIP_CPU_SYNC);
- 		return DMA_MAPPING_ERROR;
- 	}
-@@ -433,7 +433,7 @@ static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
+ #define IDENTMAP_ALL		1
+ #define IDENTMAP_GFX		2
+@@ -373,6 +374,8 @@ EXPORT_SYMBOL_GPL(intel_iommu_gfx_mapped);
+ static DEFINE_SPINLOCK(device_domain_lock);
+ static LIST_HEAD(device_domain_list);
  
- 	/* NOTE: We use dev_addr here, not paddr! */
- 	if (is_xen_swiotlb_buffer(dev_addr))
--		swiotlb_tbl_unmap_single(hwdev, paddr, size, dir, attrs);
-+		swiotlb_tbl_unmap_single(hwdev, paddr, size, size, dir, attrs);
- }
- 
- static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index 361f62bb4a8e..cde3dc18e21a 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -46,13 +46,17 @@ enum dma_sync_target {
- 
- extern phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 					  dma_addr_t tbl_dma_addr,
--					  phys_addr_t phys, size_t size,
-+					  phys_addr_t phys,
-+					  size_t mapping_size,
-+					  size_t alloc_size,
- 					  enum dma_data_direction dir,
- 					  unsigned long attrs);
- 
- extern void swiotlb_tbl_unmap_single(struct device *hwdev,
- 				     phys_addr_t tlb_addr,
--				     size_t size, enum dma_data_direction dir,
-+				     size_t mapping_size,
-+				     size_t alloc_size,
-+				     enum dma_data_direction dir,
- 				     unsigned long attrs);
- 
- extern void swiotlb_tbl_sync_single(struct device *hwdev,
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 795c9b095d75..a7f2a0163426 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -297,7 +297,7 @@ void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
- 		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
- 
- 	if (unlikely(is_swiotlb_buffer(phys)))
--		swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs);
-+		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
- }
- EXPORT_SYMBOL(dma_direct_unmap_page);
- 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 9de232229063..89066efa3840 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -444,7 +444,9 @@ static void swiotlb_bounce(phys_addr_t orig_addr, phys_addr_t tlb_addr,
- 
- phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 				   dma_addr_t tbl_dma_addr,
--				   phys_addr_t orig_addr, size_t size,
-+				   phys_addr_t orig_addr,
-+				   size_t mapping_size,
-+				   size_t alloc_size,
- 				   enum dma_data_direction dir,
- 				   unsigned long attrs)
- {
-@@ -464,6 +466,9 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 		pr_warn_once("%s is active and system is using DMA bounce buffers\n",
- 			     sme_active() ? "SME" : "SEV");
- 
-+	if (WARN_ON(mapping_size > alloc_size))
-+		return (phys_addr_t)DMA_MAPPING_ERROR;
++#define device_needs_bounce(d) (!intel_no_bounce && dev_is_untrusted(d))
 +
- 	mask = dma_get_seg_boundary(hwdev);
+ /*
+  * Iterate over elements in device_domain_list and call the specified
+  * callback @fn against each element.
+@@ -455,6 +458,9 @@ static int __init intel_iommu_setup(char *str)
+ 			printk(KERN_INFO
+ 				"Intel-IOMMU: not forcing on after tboot. This could expose security risk for tboot\n");
+ 			intel_iommu_tboot_noforce = 1;
++		} else if (!strncmp(str, "nobounce", 8)) {
++			pr_info("Intel-IOMMU: No bounce buffer. This could expose security risks of DMA attacks\n");
++			intel_no_bounce = 1;
+ 		}
  
- 	tbl_dma_addr &= mask;
-@@ -481,8 +486,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 	 * For mappings greater than or equal to a page, we limit the stride
- 	 * (and hence alignment) to a page size.
- 	 */
--	nslots = ALIGN(size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
--	if (size >= PAGE_SIZE)
-+	nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
-+	if (alloc_size >= PAGE_SIZE)
- 		stride = (1 << (PAGE_SHIFT - IO_TLB_SHIFT));
- 	else
- 		stride = 1;
-@@ -547,7 +552,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 	spin_unlock_irqrestore(&io_tlb_lock, flags);
- 	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
- 		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu (slots), used %lu (slots)\n",
--			 size, io_tlb_nslabs, tmp_io_tlb_used);
-+			 alloc_size, io_tlb_nslabs, tmp_io_tlb_used);
- 	return (phys_addr_t)DMA_MAPPING_ERROR;
- found:
- 	io_tlb_used += nslots;
-@@ -562,7 +567,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
- 		io_tlb_orig_addr[index+i] = orig_addr + (i << IO_TLB_SHIFT);
- 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
- 	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
--		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_TO_DEVICE);
-+		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_TO_DEVICE);
- 
- 	return tlb_addr;
- }
-@@ -571,21 +576,24 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
-  * tlb_addr is the physical address of the bounce buffer to unmap.
-  */
- void swiotlb_tbl_unmap_single(struct device *hwdev, phys_addr_t tlb_addr,
--			      size_t size, enum dma_data_direction dir,
--			      unsigned long attrs)
-+			      size_t mapping_size, size_t alloc_size,
-+			      enum dma_data_direction dir, unsigned long attrs)
- {
- 	unsigned long flags;
--	int i, count, nslots = ALIGN(size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
-+	int i, count, nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
- 	int index = (tlb_addr - io_tlb_start) >> IO_TLB_SHIFT;
- 	phys_addr_t orig_addr = io_tlb_orig_addr[index];
- 
-+	if (WARN_ON(mapping_size > alloc_size))
-+		return;
-+
- 	/*
- 	 * First, sync the memory before unmapping the entry
- 	 */
- 	if (orig_addr != INVALID_PHYS_ADDR &&
- 	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
- 	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
--		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_FROM_DEVICE);
-+		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_FROM_DEVICE);
- 
- 	/*
- 	 * Return the buffer to the free list by setting the corresponding
-@@ -665,14 +673,14 @@ bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
- 
- 	/* Oh well, have to allocate and map a bounce buffer. */
- 	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
--			*phys, size, dir, attrs);
-+			*phys, size, size, dir, attrs);
- 	if (*phys == (phys_addr_t)DMA_MAPPING_ERROR)
- 		return false;
- 
- 	/* Ensure that the address returned is DMA'ble */
- 	*dma_addr = __phys_to_dma(dev, *phys);
- 	if (unlikely(!dma_capable(dev, *dma_addr, size))) {
--		swiotlb_tbl_unmap_single(dev, *phys, size, dir,
-+		swiotlb_tbl_unmap_single(dev, *phys, size, size, dir,
- 			attrs | DMA_ATTR_SKIP_CPU_SYNC);
- 		return false;
- 	}
+ 		str += strcspn(str, ",");
 -- 
 2.17.1
 
