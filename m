@@ -2,85 +2,99 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABE1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A8F21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC682166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="WTTeFnBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389968AbfHWLHe (ORCPT
+        id S2405087AbfHWLHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:07:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:60306 "EHLO foss.arm.com"
+        Fri, 23 Aug 2019 07:07:43 -0400
+Received: from nbd.name ([46.4.11.11]:50230 "EHLO nbd.name"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbfHWLHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:07:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8065337;
-        Fri, 23 Aug 2019 04:07:32 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 417653F246;
-        Fri, 23 Aug 2019 04:07:31 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 12:07:22 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
- nodes
-Message-ID: <20190823110714.GA10257@e121166-lin.cambridge.arm.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+        id S1726247AbfHWLHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 07:07:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LAv14xBDaIohDD4Erb5BrR+vAz31vPo/+adgvMu/7MI=; b=WTTeFnBGKMij/9WAFwDZZNzF/l
+        MZhKH7Q5CiuYF/JbZXYqsh+5Xro6Xdbvd2+WDyE4PbxiqqJkalSn2ELmivO8QVSTSGZfsDsUWx7V8
+        psfREPo2Cp8c/TrZvzeL1uqyEHUGavDIg267Vx3+/9lQf9GkFC6oXJZ+rZyk6k6U66CM=;
+Received: from p54ae9443.dip0.t-ipconnect.de ([84.174.148.67] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1i17Pu-0005Ev-QB; Fri, 23 Aug 2019 13:07:38 +0200
+Subject: Re: [PATCH][next] mac80211: minstrel_ht: fix infinite loop because
+ supported is not being shifted
+To:     Colin King <colin.king@canonical.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190822122034.28664-1-colin.king@canonical.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <accffa31-b954-0dcd-6c42-44fad63b96e2@nbd.name>
+Date:   Fri, 23 Aug 2019 13:07:37 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190822122034.28664-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On 2019-08-22 14:20, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> controller is not fixed, it is determined by the selected
-> SerDes protocol. The current num-lanes indicates the max lanes
-> PCIe controller can support up to, instead of the lanes assigned
-> to the PCIe controller. This can result in PCIe link training fail
-> after hot-reset.
+> Currently the for-loop will spin forever if variable supported is
+> non-zero because supported is never changed.  Fix this by adding in
+> the missing right shift of supported.
 > 
-> Hou Zhiqiang (4):
->   dt-bindings: PCI: designware: Remove the num-lanes from Required
->     properties
->   PCI: dwc: Return directly when num-lanes is not found
->   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
->   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
->  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
->  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
->  8 files changed, 4 insertions(+), 22 deletions(-)
+> Addresses-Coverity: ("Infinite loop")
+> Fixes: 48cb39522a9d ("mac80211: minstrel_ht: improve rate probing for devices with static fallback")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Felix Fietkau <nbd@nbd.name>
 
-Applied to pci/dwc for v5.4, thanks.
+Thanks,
 
-Lorenzo
+- Felix
