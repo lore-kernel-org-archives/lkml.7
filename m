@@ -2,157 +2,210 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A34AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A8CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC53F2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B706321726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ksIuzB7/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifwPUCV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394357AbfHWPou (ORCPT
+        id S2436511AbfHWPo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:44:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37457 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405936AbfHWPoj (ORCPT
+        Fri, 23 Aug 2019 11:44:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40634 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387803AbfHWPo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:44:39 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z11so9060894wrt.4
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 08:44:38 -0700 (PDT)
+        Fri, 23 Aug 2019 11:44:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h8so14120897edv.7;
+        Fri, 23 Aug 2019 08:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OmtWBO1n+ZKCQXJ6AqaMInrPsxYx+c+GGrvrczYdURo=;
-        b=ksIuzB7/OWZsHX54bVPcYMM69ePDkVsFJvpeEsHhF4PW4hBLzg2GjNxDflSD0UxGMp
-         oUPTkgr1sIAZB+gvKG18hZ+lflkeq5Qp2Hcu2B7FcIiXjqdOMd8OV7ZUpGMSRaauI8z6
-         gk0gPdGbNJ8fqcQeu+zQBcoHyd60DwagCxo/tT/DELtGbZNhdsU/gIQheaGCQXHSSO6P
-         pR9CDJACYL2tVEc58sL42M5ylPgsFhTsBprDYuZ+gTLeUo2mNooGOlRUnQkNjikrZo8g
-         47PfvX2DrhrsX2aNzyo71qmww6NQa+NCvxlECIBP+t+mLecpfoUs6Bq/+99b6bvxRSxO
-         GCoQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d/83ox4KovBLVs9+wu2Ln3TWWfMCmDPxiPVmwOKOEgQ=;
+        b=ifwPUCV1IDq2mF9Z3fqzldLBwX5i4cPpMTw+M9LSQ5siNrDk0xO5yotEatu4yROrcl
+         YEcau9L/Fdpx5Cr5523gvUnKJuPdNZtMwbrstnAJqzIViTqJ7sW8plBs05sQnniVEJXz
+         1X/0l/KhX9vxKeus6U5uZ2cg40yVYAyUn1dGXeaxb+RMNEmSgE5oAy/M23qNKMvJ/h0U
+         cSsWcF+k2pJVfBHWOKRf/0aqL+zecteNEJS5nhfSR86uJeLDW9RqVJUQTk71BQ7is3UY
+         oDn0n0EfU/lFhr6V2p9BpbTK1xVEtFKn1/1SLFrVuu0E8GIXnYnWGtBKwyMYIAee5E1O
+         +5MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OmtWBO1n+ZKCQXJ6AqaMInrPsxYx+c+GGrvrczYdURo=;
-        b=q66VRsnP/hTBwHW3SoBwEDRNLScVrqNrmXvrFxQX1Xd+rUmODrwh4K33d/c/Do4yNO
-         9Y1c/MQewrWmuBhQw01RDUqII4Nuy5w6OiuIz1XNbRYZeG4LLpOxsBKlpJdRQkRKxCbv
-         IS2ZhytFrqbRAV85UF9XVJFCXo0qS0IZNoqsz7ZMZU6V23GZurzVtYTiV+X2gb38+34u
-         T5/ZReoshPLWw5IN4FdHHrtbUxvt0XiC/k0wDuB6wQ+efehm/FpLJLhkl6mUtq8xSlxm
-         e8g1OKKsnmkSM0ZFIz81Mllk7OaitqNgH9PNeuyb5ModGz6JsTBlGP2mxuXRr5jDbLha
-         sztg==
-X-Gm-Message-State: APjAAAVIKHoAioYTXIDpKeLe4yAxe7abQg4C1Yxq6xiriuAVe5vfeVF2
-        G32CVxqEdmRXy+xGIOuCGFPekFtq8V0=
-X-Google-Smtp-Source: APXvYqwijk5AmRYmJRxLF0wlW75lhH46QFkzLlttL1bzSCN8eI/O+klK5GLvJSjNodHvRP0l4Z6f6g==
-X-Received: by 2002:a5d:63d1:: with SMTP id c17mr2612595wrw.3.1566575077641;
-        Fri, 23 Aug 2019 08:44:37 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id v7sm3567342wrn.41.2019.08.23.08.44.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 08:44:37 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/2] arm64: dts: meson: g12a: add reset to tdm formatters
-Date:   Fri, 23 Aug 2019 17:44:32 +0200
-Message-Id: <20190823154432.16268-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190823154432.16268-1-jbrunet@baylibre.com>
-References: <20190823154432.16268-1-jbrunet@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=d/83ox4KovBLVs9+wu2Ln3TWWfMCmDPxiPVmwOKOEgQ=;
+        b=lKZ8rM4E1uUAF/3oHShCDR7d4Xul/WdDhmqvGccjh/DUlo/KFVkqoNNB0NgfTGsHbc
+         gpOZmKVb22fevQrMbEoTOrKLvB62eVaAOAToZB6dulr1nRHqGi/oV93A2TyXn5MHGcdd
+         7QIyK5fSTt8lARoHuEB6yjFHg6pirSebtqKUOZjzRC0m6Pi/WlSF9pAuTaVAtvGQOayX
+         vCKYlfM+ms1vw0/iyRdxh97RXcn9Ld4PUff/7M9F2/9lcLf54az/Vc4GqpUn6rDbEqG7
+         vqA+VLzBTucUyOJAJ5lSjlJpOXJmkfd2KpIDdODpbJA8vmRrftYN49/lM7mSTa/GiOBf
+         G7Pg==
+X-Gm-Message-State: APjAAAXQiY0O879/fmTiEnbcZVFxRwQkjFHao4yrzoquf3354k+gpDHc
+        T7Kx8gHCjxYeXQ3C4WMez15AJ3QGXUQ=
+X-Google-Smtp-Source: APXvYqztVgzCLUoCO2LNZZOg1lG/LZkOBiohpX07xs+EYRdFG8Pr6qrJO1qaXBnpC1/Q544Bk7DYMw==
+X-Received: by 2002:a17:906:f211:: with SMTP id gt17mr4795967ejb.263.1566575094470;
+        Fri, 23 Aug 2019 08:44:54 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.137.147])
+        by smtp.gmail.com with ESMTPSA id w19sm592772edt.41.2019.08.23.08.44.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Aug 2019 08:44:53 -0700 (PDT)
+Subject: Re: [PATCH v2 03/11] dt-bindings: irq: mtk,sysirq: add support for
+ mt6779
+To:     Mars Cheng <mars.cheng@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+ <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <72f68d3b-1011-5746-7bb0-8bc40ce0961d@gmail.com>
+Date:   Fri, 23 Aug 2019 17:44:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reset to the TDM formatters of the g12a. This helps
-with channel mapping when a playback/capture uses more than 1 lane.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index edbc30572958..ee1b71284a83 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
-+#include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
- #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
- 
- / {
-@@ -1543,6 +1544,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x300 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_A";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_A>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_A>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK_SEL>,
-@@ -1558,6 +1560,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x340 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_B";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_B>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_B>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK_SEL>,
-@@ -1573,6 +1576,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x380 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_C";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_C>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_C>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK_SEL>,
-@@ -1588,6 +1592,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x3c0 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_LB";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_LB>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_LB>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK_SEL>,
-@@ -1627,6 +1632,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x500 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_A";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-@@ -1641,6 +1647,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x540 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_B";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_B>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
-@@ -1655,6 +1662,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x580 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_C";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_C>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
--- 
-2.21.0
+On 19/08/2019 11:21, Mars Cheng wrote:
+> Add binding documentation of mediatek,sysirq for mt6779 SoC.
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index 0e312fe..84ced3f 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>  	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
+>  	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
+>  	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
+> +	"mediatek,mt6779-sysirq", "mediatek,mt6577-sysirq": for MT6779
+>  	"mediatek,mt6765-sysirq", "mediatek,mt6577-sysirq": for MT6765
+>  	"mediatek,mt6755-sysirq", "mediatek,mt6577-sysirq": for MT6755
+>  	"mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq": for MT6592
+> 
