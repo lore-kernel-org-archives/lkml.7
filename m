@@ -2,206 +2,125 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA5BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C885C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D706022CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF1E22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hAwpzdDC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L6eKFF9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403994AbfHWNBF (ORCPT
+        id S2404285AbfHWNDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:01:05 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43702 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732009AbfHWNBF (ORCPT
+        Fri, 23 Aug 2019 09:03:41 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38238 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404041AbfHWNDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:01:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NCxn5q030914;
-        Fri, 23 Aug 2019 12:59:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=q1YFds1n7Qh/8LU09a4jYgqooViF70CNseso+AlkhGY=;
- b=hAwpzdDCTkBOE6635+bwzBSv311UvDTX1d5V9ezgBAyj4vbl5FTx8kD8tQ78QtObEAg0
- ZuLDE5EUqW31G+FYQ3pydtPPewh386nL6tD+VPOj4GNl3GqeM+ZX6qP9NigMDMQslPOO
- SEq31rTTHrbtqu/JIY94h67fn6+Db/TOcsdihatX2p9WfwyQdyY07mx5nALfx4+btz0M
- ebfonlwCy12tRNTcuN5swBI0luspQzi4s0/X1s9Iiq1NH85cirDnvRcHGWGfTKDDOoKX
- S6qpjeiAuGBSr7GEH0u7Ov7a6YPTP6JVTRw/qhWCutlVzxk+PNLm4HwTNhnmtgu3TCnj 2Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uea7rcm8f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 12:59:51 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NCwqWv037826;
-        Fri, 23 Aug 2019 12:59:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2uj1y0g3r5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 12:59:13 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7NCwXl2013250;
-        Fri, 23 Aug 2019 12:58:33 GMT
-Received: from [192.168.14.112] (/109.64.228.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 23 Aug 2019 05:58:33 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RESEND PATCH 02/13] KVM: x86: Clean up
- handle_emulation_failure()
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <87a7c0p74i.fsf@vitty.brq.redhat.com>
-Date:   Fri, 23 Aug 2019 15:58:28 +0300
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <339D775E-5B6B-4CD2-B799-3F8CC5A3E12F@oracle.com>
-References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
- <20190823010709.24879-3-sean.j.christopherson@intel.com>
- <87a7c0p74i.fsf@vitty.brq.redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908230136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908230136
+        Fri, 23 Aug 2019 09:03:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d/8OC8qK7AH729RYuk/u+nW1ro0Plfkg+QQGzVTANr8=; b=L6eKFF9ypk0LmLF7nc13NiAyN
+        mVRGyMd+ZBjHbHJ4c7M9bpNUm5oNB/WN4clmoDYOV5w9NxfGmHN4Oc9nJLnKrqA2IqJupzfpaUCih
+        i6TM+ZI/b+3wKv8eGVaiGjoPNwpEJgeRxtsn2oRbCYrEjl177tgUquVVTTGwqCxaa+Mk8vtpxAe+i
+        LgpsrSIZ2p0NgK8v40CccfhA0F52zEj6Z7Dt5hUDQqZIxwzsfTVoThPb9CniCM6fo9hW1iFiqGELu
+        lLMCC1/KQJDmngOsHyqlvYmu4JexwiqDedr62bPBsRiDVcIWHl+0Q3HzBGF7vxSKwi77m7yMieOpv
+        GzIX+B6NA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i19Dy-0001bh-5e; Fri, 23 Aug 2019 13:03:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A027D307510;
+        Fri, 23 Aug 2019 15:02:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 11044202245C4; Fri, 23 Aug 2019 15:03:23 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 15:03:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ganapatrao Kulkarni <gklkml16@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Subject: Re: [PATCH] perf cgroups: Don't rotate events for cgroups
+ unnecessarily
+Message-ID: <20190823130322.GO2349@hirez.programming.kicks-ass.net>
+References: <20190601082722.44543-1-irogers@google.com>
+ <20190621082422.GH3436@hirez.programming.kicks-ass.net>
+ <CAP-5=fW7sMjQEHm+1e=cdAi+ZyP53UyU7xhAbnouMApuxYqrhw@mail.gmail.com>
+ <20190624075520.GC3436@hirez.programming.kicks-ass.net>
+ <CAP-5=fU=xbP39b6WZV4h92g6Ub_w4tH2JdApw5t6DTyZqxShUQ@mail.gmail.com>
+ <CAKTKpr6m7YzqJ7U2icNHq7ZwoG0pw8ws_EHcLR+-T6ZeEfe15Q@mail.gmail.com>
+ <20190823115946.GM2349@hirez.programming.kicks-ass.net>
+ <CAKTKpr5N6thBR+SJ8rdRTCEjv+7GVsw3R9EY+cKTGexz-yr4sg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKTKpr5N6thBR+SJ8rdRTCEjv+7GVsw3R9EY+cKTGexz-yr4sg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 23, 2019 at 06:26:34PM +0530, Ganapatrao Kulkarni wrote:
+> On Fri, Aug 23, 2019 at 5:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Fri, Aug 23, 2019 at 04:13:46PM +0530, Ganapatrao Kulkarni wrote:
+> >
+> > > We are seeing regression with our uncore perf driver(Marvell's
+> > > ThunderX2, ARM64 server platform) on 5.3-Rc1.
+> > > After bisecting, it turned out to be this patch causing the issue.
+> >
+> > Funnily enough; the email you replied to didn't contain a patch.
+> 
+> Hmm sorry, not sure why the patch is clipped-off, I see it in my inbox.
 
+Your email is in a random spot of the discussion for me. At least it was
+fairly easy to find the related patch.
 
-> On 23 Aug 2019, at 12:23, Vitaly Kuznetsov <vkuznets@redhat.com> =
-wrote:
->=20
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->=20
->> When handling emulation failure, return the emulation result directly
->> instead of capturing it in a local variable.  Future patches will =
-move
->> additional cases into handle_emulation_failure(), clean up the cruft
->> before so there isn't an ugly mix of setting a local variable and
->> returning directly.
->>=20
->> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> ---
->> arch/x86/kvm/x86.c | 10 ++++------
->> 1 file changed, 4 insertions(+), 6 deletions(-)
->>=20
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index cd425f54096a..c6de5bc4fa5e 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -6207,24 +6207,22 @@ =
-EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
->>=20
->> static int handle_emulation_failure(struct kvm_vcpu *vcpu, int =
-emulation_type)
->> {
->> -	int r =3D EMULATE_DONE;
->> -
->> 	++vcpu->stat.insn_emulation_fail;
->> 	trace_kvm_emulate_insn_failed(vcpu);
->>=20
->> 	if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
->> 		return EMULATE_FAIL;
->>=20
->> +	kvm_queue_exception(vcpu, UD_VECTOR);
->> +
->> 	if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) =3D=3D 0) =
-{
->> 		vcpu->run->exit_reason =3D KVM_EXIT_INTERNAL_ERROR;
->> 		vcpu->run->internal.suberror =3D =
-KVM_INTERNAL_ERROR_EMULATION;
->> 		vcpu->run->internal.ndata =3D 0;
->> -		r =3D EMULATE_USER_EXIT;
->> +		return EMULATE_USER_EXIT;
->> 	}
->>=20
->> -	kvm_queue_exception(vcpu, UD_VECTOR);
->> -
->> -	return r;
->> +	return EMULATE_DONE;
->> }
->>=20
->> static bool reexecute_instruction(struct kvm_vcpu *vcpu, gva_t cr2,
->=20
-> No functional change,
->=20
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->=20
-> Just for self-education, what sane userspace is supposed to do when it
-> sees KVM_EXIT_INTERNAL_ERROR other than kill the guest? Why does it =
-make
-> sense to still prepare to inject '#UD=E2=80=99
->=20
-> --=20
-> Vitaly
+> > > Test case:
+> > > Load module and run perf for more than 4 events( we have 4 counters,
+> > > event multiplexing takes place for more than 4 events), then unload
+> > > module.
+> > > With this sequence of testing, the system hangs(soft lockup) after 2
+> > > or 3 iterations. Same test runs for hours on 5.2.
+> > >
+> > > while [ 1 ]
+> > > do
+> > >         rmmod thunderx2_pmu
+> > >         modprobe thunderx2_pmu
+> > >         perf stat -a -e \
+> > >         uncore_dmc_0/cnt_cycles/,\
+> > >         uncore_dmc_0/data_transfers/,\
+> > >         uncore_dmc_0/read_txns/,\
+> > >         uncore_dmc_0/config=0xE/,\
+> > >         uncore_dmc_0/write_txns/ sleep 1
+> > >         sleep 2
+> > > done
+> >
+> > Can you reproduce without the module load+unload? I don't think people
+> > routinely unload modules.
+> 
+> The issue wont happen, if module is not unloaded/reloaded.
+> IMHO, this could be potential bug!
 
-The commit which introduced this behaviour seems to be
-6d77dbfc88e3 ("KVM: inject #UD if instruction emulation fails and exit =
-to userspace")
-
-I actually agree with Vitaly. It made more sense that the ABI would be =
-that
-on internal emulation failure, we just return to userspace and allow it =
-to handle
-the scenario however it likes. If it wishes to queue #UD on vCPU and =
-resume
-guest in case CPL=3D=3D3 then it made sense that this logic would only =
-be in userspace.
-Thus, there is no need for KVM to queue a #UD from kernel on this =
-scenario...
-
-What=E2=80=99s even weirder is that this ABI was then further broken by =
-2 later commits:
-First, fc3a9157d314 ("KVM: X86: Don't report L2 emulation failures to =
-user-space")
-changed behaviour to avoid reporting emulation error in case vCPU in =
-guest-mode.
-Then, a2b9e6c1a35a ("KVM: x86: Don't report guest userspace emulation =
-error to userspace")
-Changed behaviour similarly to avoid reporting emulation error in case =
-vCPU CPL!=3D0.
-In both cases, only #UD is injected to guest without userspace being =
-aware of it.
-
-Problem is that if we would change this ABI to not queue #UD on =
-emulation error,
-we will definitely break userspace VMMs that rely on it when they =
-re-enter into guest
-in this scenario and expect #UD to be injected.
-Therefore, the only way to change this behaviour is to introduce a new =
-KVM_CAP
-that needs to be explicitly enabled from userspace.
-But because most likely most userspace VMMs just terminate guest in case
-of emulation-failure, it=E2=80=99s probably not worth it and Sean=E2=80=99=
-s commit is good enough.
-
-For the commit itself:
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-
--Liran
-
+Does the softlockup give a useful stacktrace? I don't have a thunderx2
+so I cannot reproduce.
 
 
