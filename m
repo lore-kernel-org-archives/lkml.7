@@ -2,173 +2,178 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91A4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980D9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873DB22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566561084;
-	bh=gZ1OAdl/FGFFkG/ZAMQY2iqDkoQ/OUIjQTL2Q9nMCZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Os8A7l/09DZ58CAjllEMJVRBbQJU5xeY1hRbhx0qwS6PHRnBXLJM0DCsSD/zcIbZG
-	 IjjBTXp+7hpo0rn1zoXktW//AiIFFa3ILWtl9Es4GxnfWLCDBzP+1NsdXhra5aBicB
-	 GCI9rJlZvOWFBB0qytbr2GCwFlRDvCsNeO18WDrw=
+	by mail.kernel.org (Postfix) with ESMTP id 6F58221848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393146AbfHWLvX (ORCPT
+        id S2405114AbfHWLvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:51:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
+        Fri, 23 Aug 2019 07:51:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55836 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732231AbfHWLvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:51:23 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2393148AbfHWLvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 07:51:32 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 589F521848;
-        Fri, 23 Aug 2019 11:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566561081;
-        bh=gZ1OAdl/FGFFkG/ZAMQY2iqDkoQ/OUIjQTL2Q9nMCZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qUX6dxAr+Ck008LADXrYu3bm/WDq3Mn3GAyJx6jet+W98akkFUlXl91SAKG2X7K2u
-         /JpTShgQVrddhaMEp9RgrtV9jCt/3XNjX2rjz/cMBxUBXJQvxKO3AfULcpIgI+y0uU
-         tlrCP2E7Ic0qkX+0rGUUCslWmMr5jtVkzC/Kk3pI=
-Date:   Fri, 23 Aug 2019 13:51:19 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: orange-pi-3: Enable WiFi
-Message-ID: <20190823115119.lsfvabrwqpijkr2k@flea>
-References: <20190823094228.6540-1-megous@megous.com>
- <20190823100807.22heh2gahi7owo4e@flea>
- <CAGb2v65mDt8t2sceTzKvYP6XVHJgikXyYMc+xWxZFkTJ+LZ1fg@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 40DD811A13
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 11:51:31 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id t9so4717696wrx.9
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 04:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=h8apOMQcMnkR0Xh2bX2ZYhURLs98LXNDVyrmuOfYteo=;
+        b=iT2mWlLUtF1SHtapB/VVIUJu3BcNNqOId7eR4UNXewn8LaHCDjWb7xgdblF5Ir0hJ6
+         EvxJ0PavCVQKjtl46kuTBz38Y2+zg7NwnBNm9/p4gZdtDKMaG91mBy56He/pFJQTewUt
+         HwL3zL6puJmpEhkO2sOhtRzVgaWBTmwYBw8cePc8Y7p7rOqupM/O+1lWtg1U1pnzoYrQ
+         uzuOk/ppzj4i+NHn8lEbAPqaP16+6s9T1YFU9uAyRyEsOaYhSH9v1Kj9ZJupWmj2xqWc
+         Ky3Ucptake8gfBoG+9xxJ/vjvOgdY9M1X3p2qv8NrCmxJdOxQ5pHpyuTkg34M58NdSrk
+         Idrw==
+X-Gm-Message-State: APjAAAVvBX5pZNKJ+zexiQISa4sD8uJ9mObBFr9F9f7lEp7UTVEvD5qo
+        sFzjv88bU5/1eQ1EP0k2mmZD1ZoiZBXurfTOMEtGin+puW4WfHbpJAMESdh8juZmVoNku3Eo2kC
+        9U2EpmweDQENWbMeXN+vtdwgj
+X-Received: by 2002:a1c:8187:: with SMTP id c129mr4749717wmd.32.1566561089895;
+        Fri, 23 Aug 2019 04:51:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyjnmwlYvislsMs2UJ/v8ZJ0/n+8yf6ansBAOCch+OGC2DEsaKbLG57Jwsh/MiBGehwvmAwkw==
+X-Received: by 2002:a1c:8187:: with SMTP id c129mr4749700wmd.32.1566561089650;
+        Fri, 23 Aug 2019 04:51:29 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id v7sm2641709wrn.41.2019.08.23.04.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 04:51:28 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [RESEND PATCH 05/13] KVM: x86: Don't attempt VMWare emulation on #GP with non-zero error code
+In-Reply-To: <20190823010709.24879-6-sean.j.christopherson@intel.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com> <20190823010709.24879-6-sean.j.christopherson@intel.com>
+Date:   Fri, 23 Aug 2019 13:51:28 +0200
+Message-ID: <87y2zknlq7.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ssnkgdje7jzcgsqx"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65mDt8t2sceTzKvYP6XVHJgikXyYMc+xWxZFkTJ+LZ1fg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
---ssnkgdje7jzcgsqx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Aug 23, 2019 at 06:10:30PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Aug 23, 2019 at 6:08 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Fri, Aug 23, 2019 at 11:42:28AM +0200, megous@megous.com wrote:
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is called
-> > > bcm43356 and can be used with the brcmfmac driver. The module is powered by
-> > > the two always on regulators (not AXP805).
-> > >
-> > > WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
-> > > configured so that it sets up an 1.8V input bias on this port. This is done
-> > > by the pio driver by reading the vcc-pg-supply voltage.
-> > >
-> > > You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
-> > > configuration that can be found in the Xulongs's repository for H6:
-> > >
-> > > https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
-> > >
-> > > Mainline brcmfmac driver expects the firmware and nvram at the following
-> > > paths relative to the firmware directory:
-> > >
-> > >   brcm/brcmfmac43456-sdio.bin
-> > >   brcm/brcmfmac43456-sdio.txt
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > ---
-> > >
-> > > Since RTC patches for H6 were merged, this can now go in too, if it looks ok.
-> > >
-> > > Other patches for this WiFi chip support were merged in previous cycles,
-> > > so this just needs enabling in DTS now.
-> > >
-> > > Sorry for the links in the commit log, but this information is useful,
-> > > even if the link itself goes bad. Any pointer what to google for
-> > > (file names, tree name) is great for anyone searching in the future.
-> >
-> > I understand, but this should (also?) be in the wiki. Please add it
-> > there too.
-> >
-> > > Please take a look.
-> > >
-> > > Thank you,
-> > >       Ondrej
-> > >
-> > >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
-> > >  1 file changed, 48 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > index eda9d5f640b9..49d954369087 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > > @@ -56,6 +56,34 @@
-> > >               regulator-max-microvolt = <5000000>;
-> > >               regulator-always-on;
-> > >       };
-> > > +
-> > > +     reg_vcc33_wifi: vcc33-wifi {
-> > > +             /* Always on 3.3V regulator for WiFi and BT */
-> > > +             compatible = "regulator-fixed";
-> > > +             regulator-name = "vcc33-wifi";
-> > > +             regulator-min-microvolt = <3300000>;
-> > > +             regulator-max-microvolt = <3300000>;
-> > > +             regulator-always-on;
-> > > +             vin-supply = <&reg_vcc5v>;
-> > > +     };
-> > > +
-> > > +     reg_vcc_wifi_io: vcc-wifi-io {
-> > > +             /* Always on 1.8V/300mA regulator for WiFi and BT IO */
-> > > +             compatible = "regulator-fixed";
-> > > +             regulator-name = "vcc-wifi-io";
-> > > +             regulator-min-microvolt = <1800000>;
-> > > +             regulator-max-microvolt = <1800000>;
-> > > +             regulator-always-on;
-> > > +             vin-supply = <&reg_vcc33_wifi>;
-> > > +     };
-> > > +
-> > > +     wifi_pwrseq: wifi_pwrseq {
+> The VMware backdoor hooks #GP faults on IN{S}, OUT{S}, and RDPMC, none
+> of which generate a non-zero error code for their #GP.  Re-injecting #GP
+> instead of attempting emulation on a non-zero error code will allow a
+> future patch to move #GP injection (for emulation failure) into
+> kvm_emulate_instruction() without having to plumb in the error code.
 >
-> IIRC we shouldn't use underscores in node names. Maxime can you fix that up?
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Done, thanks!
-Maxime
+(I just need to get this off my chest)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+There was a long-standing issue with #GP interception: in case the
+exception has nothing to do with VMware we were getting into infinite
+loop of #GPs (and not #GP -> #DF -> #TF), e.g. here is a trace of 
+platform_info selftest:
 
---ssnkgdje7jzcgsqx
-Content-Type: application/pgp-signature; name="signature.asc"
+           <...>-43752 [001]  3615.602298: kvm_exit:             reason EXIT_MSR rip 0x4015c2 info 0 0
+           <...>-43752 [001]  3615.602299: kvm_msr:              msr_read ce = 0x0 (#GP)
+           <...>-43752 [001]  3615.602300: kvm_inj_exception:    #GP (0x0)
+           <...>-43752 [001]  3615.602301: kvm_entry:            vcpu 0
+           <...>-43752 [001]  3615.602302: kvm_exit:             reason EXIT_EXCP_GP rip 0x4015c2 info 6a 0
+           <...>-43752 [001]  3615.602308: kvm_emulate_insn:     0:4015c2: 0f 32
+           <...>-43752 [001]  3615.602308: kvm_inj_exception:    #GP (0x6a)
+           <...>-43752 [001]  3615.602309: kvm_entry:            vcpu 0
+           <...>-43752 [001]  3615.602310: kvm_exit:             reason EXIT_EXCP_GP rip 0x4015c2 info 6a 0
+           <...>-43752 [001]  3615.602312: kvm_emulate_insn:     0:4015c2: 0f 32
+           <...>-43752 [001]  3615.602312: kvm_inj_exception:    #GP (0x6a)
+           <...>-43752 [001]  3615.602313: kvm_entry:            vcpu 0
+  and so on.
 
------BEGIN PGP SIGNATURE-----
+This commit fixes the issue as the second #GP has error code:
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV/TNwAKCRDj7w1vZxhR
-xVrNAQCa1MgrCyh7oN19ZsZE9syJ4qiyl3P8YsI1dtR48YhAWgD/QaSQYVBFbqmM
-cWqnn8wDHbjoMqrBbhbYTmLG4+iStA4=
-=GDJL
------END PGP SIGNATURE-----
+           <...>-52213 [006]  3740.739495: kvm_entry:            vcpu 0
+           <...>-52213 [006]  3740.739496: kvm_exit:             reason EXIT_MSR rip 0x4015c2 info 0 0
+           <...>-52213 [006]  3740.739497: kvm_msr:              msr_read ce = 0x0 (#GP)
+           <...>-52213 [006]  3740.739502: kvm_inj_exception:    #GP (0x0)
+           <...>-52213 [006]  3740.739503: kvm_entry:            vcpu 0
+           <...>-52213 [006]  3740.739504: kvm_exit:             reason EXIT_EXCP_GP rip 0x4015c2 info 6a 0
+           <...>-52213 [006]  3740.739505: kvm_inj_exception:    #DF (0x0)
+           <...>-52213 [006]  3740.739506: kvm_entry:            vcpu 0
+           <...>-52213 [006]  3740.739507: kvm_exit:             reason EXIT_EXCP_GP rip 0x4015c2 info 42 0
+           <...>-52213 [006]  3740.739508: kvm_fpu:              unload
+           <...>-52213 [006]  3740.739510: kvm_userspace_exit:   reason KVM_EXIT_SHUTDOWN (8)
 
---ssnkgdje7jzcgsqx--
+I'm not exactly sure this covers all possible cases as there might be
+other cases when error code is not set but this is definitely an
+improvement.
+
+Reviewed-and-tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+> ---
+>  arch/x86/kvm/svm.c     | 6 +++++-
+>  arch/x86/kvm/vmx/vmx.c | 7 ++++++-
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 5a42f9c70014..b96a119690f4 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -2772,11 +2772,15 @@ static int gp_interception(struct vcpu_svm *svm)
+>  
+>  	WARN_ON_ONCE(!enable_vmware_backdoor);
+>  
+
+In case you'll be respinning for whatever reason, could you please add a
+short comment here (and vmx) saying something like "#GP interception for
+VMware backdoor emulation only handles IN{S}, OUT{S}, and RDPMC and none
+of these have a non-zero error code set" (I don't like the fact that
+we'll need to have two copies of it but I can't think of a better place
+for it).
+
+> +	if (error_code) {
+> +		kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
+> +		return 1;
+> +	}
+>  	er = kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE);
+>  	if (er == EMULATE_USER_EXIT)
+>  		return 0;
+>  	else if (er != EMULATE_DONE)
+> -		kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
+> +		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
+>  	return 1;
+>  }
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 6ecf773825e2..3ee0dd304bc7 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4509,11 +4509,16 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  
+>  	if (!vmx->rmode.vm86_active && is_gp_fault(intr_info)) {
+>  		WARN_ON_ONCE(!enable_vmware_backdoor);
+> +
+> +		if (error_code) {
+> +			kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
+> +			return 1;
+> +		}
+>  		er = kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE);
+>  		if (er == EMULATE_USER_EXIT)
+>  			return 0;
+>  		else if (er != EMULATE_DONE)
+> -			kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
+> +			kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
+>  		return 1;
+>  	}
+
+-- 
+Vitaly
