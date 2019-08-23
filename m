@@ -2,119 +2,86 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D3DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEA2C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF95321874
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:37:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Evlsr1hD"
+	by mail.kernel.org (Postfix) with ESMTP id 39E8222CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566585667;
+	bh=VM+OYc/SUZhk1E669gVwpgQdtu7CqZ2mSkTDahzPDIs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Ex2NP13N4e9F/iszYid7G68NsRItwRRBKJZugffXQGJTWxq/rXfZy43TFDnMU8vVC
+	 WkcS47n5zTVD6tzemWtnfKxuSXvyFIZmiiYyfklK7MFniYC15yDJKOje2rxjejC1CA
+	 Ftil2bYypJjvg1gh1TVc0BxYYqyGBd4HfRmrR8j8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390557AbfHWShq (ORCPT
+        id S2390709AbfHWSlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 14:37:46 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39856 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390289AbfHWShp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 14:37:45 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 125so9016375qkl.6
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 11:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=K6bpuQL+cink1ifj2JHG6nbNFjIxQlV3Y84jEqbo5vk=;
-        b=Evlsr1hDPf8Jv3i32l+rkNwnF8sbK1RXp7eJDrXIB0v22CQWyR4hjiujIN8EScs0XK
-         aOue7YpJS7cr+GnCDLT3WQGWlbXO6bJ47iubX42e6CtXu1L+bFEpGmWzS7TGPbTokak+
-         s1xqseqdQLw4Fx2v3FMdv45K65jzf3QcPwysGBxhN3kOy5HUnoDMI9590lgDx/oVfKN7
-         et0xqEGrg9eNJMUVmP43aIgoISsB2vBPvdIZfVo83x+KGS1NqY5l6hboYmDDBKCgVskr
-         sahbHb87yBHuDno0v/v/5E0vpqojYcgyYYCk25qJV85iB2tqSfV0urJIZaGsjDpcU7hT
-         LcfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K6bpuQL+cink1ifj2JHG6nbNFjIxQlV3Y84jEqbo5vk=;
-        b=QIL0mSxCSQxNBmHqP4zm35tNJ76jojRTnYAzDBWhXzfCKq2Yk1Pm1prdSNdGgmgKEu
-         HigyC7t1hK9VnLCiYfxDPYwO0n1qxnPvP9mK7ADM1xPqjTuP9fbXtFFL4WY3PQD5iYPd
-         Y4CwQnp3dXD/dxYuvYt70NuUxpMqQJDFWRsR5XJ7CZg8KrfP+NmAtgy5DzC2pcjT0vC0
-         ugfeavSrEJLTpRyY2TWaDyiRAacXGPJHRD0UleEpejkA1t5rYqELrHrxqqvIGWhNsc+t
-         9NKBDtwGjs/BqpbWbygvbp6ikO2SWUlyPq4Hm/bupMOi7LDESj+NWo8/nWUid+2gH+07
-         P6EQ==
-X-Gm-Message-State: APjAAAVKdYMOPWIrT87951drI6iyBklor5BKgiv704tcK/4qEtGvKtNA
-        NJoH/Jpe68UqhGqGws6YNnF+wQ==
-X-Google-Smtp-Source: APXvYqz1XZyujdK0IAvMbZFvo+vEeUsWSNzj0vDry/nXK/m98CjK2Dr8Rm6LZJn4cNZVgaeOnHT1qQ==
-X-Received: by 2002:a37:6146:: with SMTP id v67mr5406438qkb.493.1566585464569;
-        Fri, 23 Aug 2019 11:37:44 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x69sm1834380qkb.4.2019.08.23.11.37.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 11:37:43 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     daniel@ffwll.ch
-Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
-        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] gpu/drm: fix a -Wstringop-truncation warning
-Date:   Fri, 23 Aug 2019 14:37:06 -0400
-Message-Id: <1566585426-2952-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 23 Aug 2019 14:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390289AbfHWSlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 14:41:06 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9773C21874;
+        Fri, 23 Aug 2019 18:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566585665;
+        bh=VM+OYc/SUZhk1E669gVwpgQdtu7CqZ2mSkTDahzPDIs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qDnT51Nl/3OwNQxMEg/6TTVghnSir4vH9HLM3x+CWYce9vWNCsWhxUXkJl50hFW+N
+         BhAnvKKex0dKsXRFtr5eSWPtEixhytVxKnQJOkgBTOhOcOwePOUF65dSkVjJ8zfH0i
+         ej1NXzg8PSkfP9mXbhiuOI3g93S7tZv+6tBJgUv0=
+Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        shuah <shuah@kernel.org>
+References: <20190822170811.13303-1-sashal@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
+Date:   Fri, 23 Aug 2019 12:41:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:21,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:38,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/rcupdate.h:27,
-                 from ./include/linux/rculist.h:11,
-                 from ./include/linux/pid.h:5,
-                 from ./include/linux/sched.h:14,
-                 from ./include/linux/uaccess.h:5,
-                 from drivers/gpu/drm/drm_property.c:24:
-In function 'strncpy',
-    inlined from 'drm_property_create' at
-drivers/gpu/drm/drm_property.c:130:2:
-./include/linux/string.h:305:9: warning: '__builtin_strncpy' specified
-bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On 8/22/19 11:05 AM, Sasha Levin wrote:
+> 
+> This is the start of the stable review cycle for the 5.2.10 release.
+> There are 135 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+>          https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz
 
-Fix it by using strscpy() which will always return a valid string, and
-doesn't unnecessarily force the tail of the destination buffer to be
-zeroed.
+I am seeing "Sorry I can't find your kernels". Is this posted?
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/gpu/drm/drm_property.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> or in the git tree and branch at:
+>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> and the diffstat can be found below.
+>
 
-diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
-index 892ce636ef72..66ec2cc7a559 100644
---- a/drivers/gpu/drm/drm_property.c
-+++ b/drivers/gpu/drm/drm_property.c
-@@ -127,8 +127,7 @@ struct drm_property *drm_property_create(struct drm_device *dev,
- 	property->num_values = num_values;
- 	INIT_LIST_HEAD(&property->enum_list);
- 
--	strncpy(property->name, name, DRM_PROP_NAME_LEN);
--	property->name[DRM_PROP_NAME_LEN-1] = '\0';
-+	strscpy(property->name, name, DRM_PROP_NAME_LEN);
- 
- 	list_add_tail(&property->head, &dev->mode_config.property_list);
- 
--- 
-1.8.3.1
+thanks,
+-- Shuah
 
