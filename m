@@ -2,66 +2,97 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47790C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4212AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248A62166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087972133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566557813;
+	bh=XMYUYwS4xYJB1tScvMJj8X2+biRzQ88WZUibIeAmnok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wpY5s1EsQKl+NXsWqz2adgU9dgCAbZsWa2vU55YBQOFvd3blKn2f8U1itKrC/wJ4k
+	 Fx40UUbRYMolFgTY1exKqud8D8juN8MjYw29rm9PVkvmbLjEXilQ1NushKf48lMrcy
+	 TPi72+iflp3FQyLXZyC+jvlnlwJJjxU5P9pMkvDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392670AbfHWKvm (ORCPT
+        id S2389128AbfHWK4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:51:42 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:57794 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730991AbfHWKvl (ORCPT
+        Fri, 23 Aug 2019 06:56:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46980 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731756AbfHWK4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:51:41 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46FJ9l2qlDz1rGRc;
-        Fri, 23 Aug 2019 12:51:39 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46FJ9l2TjCz1qqkV;
-        Fri, 23 Aug 2019 12:51:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id funYEpq1XLjl; Fri, 23 Aug 2019 12:51:38 +0200 (CEST)
-X-Auth-Info: STQJys8Qs0uQp8jPsYNHRNPU6hiQQiJ6TDsRYhTz6+w=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 23 Aug 2019 12:51:38 +0200 (CEST)
-Subject: Re: [PATCH] Input: ili210x - switch to using threaded IRQ
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20190811161104.GA43556@dtor-ws>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <1bee0866-d022-2adf-3734-aeb2689d28f1@denx.de>
-Date:   Fri, 23 Aug 2019 12:34:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 06:56:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=koiWObzq5rTKtpZczJCbXwdbVcOOLP/YJmcfb1IFvJg=; b=G/YbZ2CAkQ86wEx4LmYJ+yV3W
+        XyHFenI917EjqhYjceApNe4nnZfkQWCd28y1DCC6+HCc7JkibNaHrxNW8X6Ri8bn3o137XoVq92kt
+        JrWsEVTXUpTQpjx8gjBjZIRgwAvnl4i0iUprflZsVmcYlOKkTvxFdYGaKW+ssAQcsSyKw=;
+Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i17FS-0002vG-5l; Fri, 23 Aug 2019 10:56:50 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id CEF79D02BF1; Fri, 23 Aug 2019 11:56:49 +0100 (BST)
+Date:   Fri, 23 Aug 2019 11:56:49 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] Fix shared IRQ behavior in spi-fsl-dspi
+Message-ID: <20190823105649.GP23391@sirena.co.uk>
+References: <20190822212450.21420-1-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190811161104.GA43556@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OGLMwEELQbPC02lM"
+Content-Disposition: inline
+In-Reply-To: <20190822212450.21420-1-olteanv@gmail.com>
+X-Cookie: Don't SANFORIZE me!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/19 6:11 PM, Dmitry Torokhov wrote:
-> Let's switch the driver to using threaded IRQ so that we do not need to
-> manage the interrupt and work separately, and we do not acknowledge
-> interrupt until we finished handling it completely.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On ILI2117
-Tested-by: Marek Vasut <marex@denx.de>
+--OGLMwEELQbPC02lM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 23, 2019 at 12:24:49AM +0300, Vladimir Oltean wrote:
+> This patch is taken out of the "Poll mode for NXP DSPI driver" series
+> and respun against the "for-4.20" branch.
+> $(git describe --tags 13aed2392741) shows:
+> v4.20-rc1-18-g13aed2392741
+
+Please don't send cover letters for single patches, if there is anything
+that needs saying put it in the changelog of the patch or after the ---
+if it's administrative stuff.  This reduces mail volume and ensures that=20
+any important information is recorded in the changelog rather than being
+lost.=20
+
+--OGLMwEELQbPC02lM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fxnEACgkQJNaLcl1U
+h9ASIQf/SKt+WpRN4Gf/NlepPXBNfqGFEvuWS2se0FwyKunIaQlk4lzGfX1kEI/4
+N+RMdtnCKkjtIcByafumflx4xoBo3AXOh1PV5eVN2wdsBHu1sep+dgNKh5UYVFTs
+x9W6ghQaxtkFSecDC1bmvY+m8q2hWnDC3Q0AjbLlqaM7yPh70sXh7SR2fRnekKCE
+stJavztU7SumHzpVenm+8zOw+6SPLe6wjUk7KK6tGzMHGLrtwWJnGMtCuBnwfhQU
+W9NigLpkbj+DgajGbqz7uG8cqIHmVN8/UECeHXmMdsm2LN+oq138TGLQLGBRFTkD
+91hT+SbfV96ycUSDNHYPi4BrH+JHlg==
+=XdkG
+-----END PGP SIGNATURE-----
+
+--OGLMwEELQbPC02lM--
