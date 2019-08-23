@@ -2,167 +2,177 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA78C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0434C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC7D2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D121233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:37:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="T1iJyU/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732949AbfHWKfs (ORCPT
+        id S2387647AbfHWKhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:35:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:59758 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbfHWKfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:35:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3D64337;
-        Fri, 23 Aug 2019 03:35:46 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F78B3F246;
-        Fri, 23 Aug 2019 03:35:45 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 11:35:36 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
- nodes
-Message-ID: <20190823103529.GA6956@e121166-lin.cambridge.arm.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
- <20190822164815.GA12855@e121166-lin.cambridge.arm.com>
- <20190823094424.GB14582@e119886-lin.cambridge.arm.com>
+        Fri, 23 Aug 2019 06:37:06 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58082 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728903AbfHWKhG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 06:37:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B9eC/SwMJI5wiLehGZuNUOPWsE6j+AyjN0GvMo8gtyU=; b=T1iJyU/i9x2rnee8Nc30yXEbn
+        b4M1dmKyjCguakhSrpU6MivpFpuJOVelgMwGVtVrc0kQk+Hujc/VPcjZXH6p6H4qK2UstUU/s5Ojl
+        KG1E3U5ZmdRmtaKye78/jJ4qBiRNQDLbBEx8DjhZPZH1agfp9dS+ELhAKPkv2JRaMAs23qkMfDue2
+        3oCcXrTBDHVlWrG03tpnxvSj6M0V5Y+Eejd6ESfr4xcfTqq4BFLnzOUQ+2zTshQjY8jsVJFTwEfFv
+        JRvrFRvWPmpDWIxaZJ9scQddSdG65ZJXIUZXlj9/saC4dQaWXcDib7fX+7jWsuvq6PWLJF+E+x4Na
+        gjBirzRPw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60050)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i16wF-00045J-L4; Fri, 23 Aug 2019 11:36:59 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i16wA-00009v-LB; Fri, 23 Aug 2019 11:36:54 +0100
+Date:   Fri, 23 Aug 2019 11:36:54 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Chris Clayton <chris2553@googlemail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org,
+        shuah@kernel.org, sthotton@marvell.com, andre.przywara@arm.com,
+        arnd@arndb.de, salyzyn@android.com, huw@codeweavers.com,
+        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
+        will.deacon@arm.com, linux-mips@vger.kernel.org,
+        ralf@linux-mips.org, 0x7f454c46@gmail.com, paul.burton@mips.com,
+        linux-kselftest@vger.kernel.org, linux@rasmusvillemoes.dk,
+        tglx@linutronix.de, vincenzo.frascino@arm.com, pcc@google.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Regression in 5.3-rc1 and later
+Message-ID: <20190823103654.GX13294@shell.armlinux.org.uk>
+References: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190823094424.GB14582@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:44:25AM +0100, Andrew Murray wrote:
-> On Thu, Aug 22, 2019 at 05:48:15PM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > 
-> > > On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> > > controller is not fixed, it is determined by the selected
-> > > SerDes protocol. The current num-lanes indicates the max lanes
-> > > PCIe controller can support up to, instead of the lanes assigned
-> > > to the PCIe controller. This can result in PCIe link training fail
-> > > after hot-reset.
-> > > 
-> > > Hou Zhiqiang (4):
-> > >   dt-bindings: PCI: designware: Remove the num-lanes from Required
-> > >     properties
-> > >   PCI: dwc: Return directly when num-lanes is not found
-> > >   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
-> > >   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
-> > > 
-> > >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
-> > >  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
-> > >  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
-> > >  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
-> > >  8 files changed, 4 insertions(+), 22 deletions(-)
-> > 
-> > What a mess.
-> > 
-> > I am going to apply these but first if anyone can explain to
-> > me what commit 907fce090253 was _supposed_ to to I would
-> > be grateful, I read it multiple times but I still have not
-> > understood it. This series does the right thing but why things
-> 
-> The DWC controller drivers all implement a .host_init callback -
-> some of the drivers choose to call dw_pcie_setup_rc from their
-> callback which, amongst other things will set up/train the link.
-> 
-> As far as I can tell, dw_pcie_setup_rc is the only user of pp->lanes.
-> Therefore for hardware where the link is already set up by firmware
-> and thus dw_pcie_setup_rc is never called - it is unnecessary to
-> read the DT value for pp->lanes. So the first hunk in 907fce090253
-> gets rid of the error and makes the num-lanes property optional.
-> 
-> However this opens up the possibility of a DT misconfiguration for
-> other controllers that do call dw_pcie_setup_rc, i.e. they set
-> num-lanes to 0 when it is required. Therefore the second hunk
-> ensures that an error is emitted when num-lanes was needed but not
-> provided.
+Hi,
 
-Yes, the problem is not 907fce090253, it is subsequent changes
-(ie feb85d9b1c47 AFAICS).
+To everyone on the long Cc list...
 
-> > are they way they are in the mainline honestly I have no
-> > idea, this does not make any sense in the slightest:
-> > 
-> > ret = of_property_read_u32(np, "num-lanes", &lanes);
-> > if (ret)
-> > 	lanes = 0;
-> 
-> Please note that the code below is in a different function to the
-> code above.
+What's happening with this?  I was about to merge the patches for 32-bit
+ARM, which I don't want to do if doing so will cause this regression on
+32-bit ARM as well.
 
-In the mainline kernel they are in the same function
-ie dw_pcie_setup() and as reported here current code
-does not make any sense.
+Thanks.
 
-Anyway merging these patches, thanks for having a look.
+On Thu, Aug 22, 2019 at 07:57:59AM +0100, Chris Clayton wrote:
+> Hi everyone,
+> 
+> Firstly, apologies to anyone on the long cc list that turns out not to be particularly interested in the following, but
+> you were all marked as cc'd in the commit message below.
+> 
+> I've found a problem that isn't present in 5.2 series or 4.19 series kernels, and seems to have arrived in 5.3-rc1. The
+> problem is that if I suspend (to ram) my laptop, on resume 14 minutes or more after suspending, I have no networking
+> functionality. If I resume the laptop after 13 minutes or less, networking works fine. I haven't tried to get finer
+> grained timings between 13 and 14 minutes, but can do if it would help.
+> 
+> ifconfig shows that wlan0 is still up and still has its assigned ip address but, for instance, a ping of any other
+> device on my network, fails as does pinging, say, kernel.org. I've tried "downing" the network with (/sbin/ifdown) and
+> unloading the iwlmvm module and then reloading the module and "upping" (/sbin/ifup) the network, but my network is still
+> unusable. I should add that the problem also manifests if I hibernate the laptop, although my testing of this has been
+> minimal. I can do more if required.
+> 
+> As I say, the problem first appears in 5.3-rc1, so I've bisected between 5.2.0 and 5.3-rc1 and that concluded with:
+> 
+> [chris:~/kernel/linux]$ git bisect good
+> 7ac8707479886c75f353bfb6a8273f423cfccb23 is the first bad commit
+> commit 7ac8707479886c75f353bfb6a8273f423cfccb23
+> Author: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Date:   Fri Jun 21 10:52:49 2019 +0100
+> 
+>     x86/vdso: Switch to generic vDSO implementation
+> 
+>     The x86 vDSO library requires some adaptations to take advantage of the
+>     newly introduced generic vDSO library.
+> 
+>     Introduce the following changes:
+>      - Modification of vdso.c to be compliant with the common vdso datapage
+>      - Use of lib/vdso for gettimeofday
+> 
+>     [ tglx: Massaged changelog and cleaned up the function signature formatting ]
+> 
+>     Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>     Cc: linux-arch@vger.kernel.org
+>     Cc: linux-arm-kernel@lists.infradead.org
+>     Cc: linux-mips@vger.kernel.org
+>     Cc: linux-kselftest@vger.kernel.org
+>     Cc: Catalin Marinas <catalin.marinas@arm.com>
+>     Cc: Will Deacon <will.deacon@arm.com>
+>     Cc: Arnd Bergmann <arnd@arndb.de>
+>     Cc: Russell King <linux@armlinux.org.uk>
+>     Cc: Ralf Baechle <ralf@linux-mips.org>
+>     Cc: Paul Burton <paul.burton@mips.com>
+>     Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>     Cc: Mark Salyzyn <salyzyn@android.com>
+>     Cc: Peter Collingbourne <pcc@google.com>
+>     Cc: Shuah Khan <shuah@kernel.org>
+>     Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+>     Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>     Cc: Huw Davies <huw@codeweavers.com>
+>     Cc: Shijith Thotton <sthotton@marvell.com>
+>     Cc: Andre Przywara <andre.przywara@arm.com>
+>     Link: https://lkml.kernel.org/r/20190621095252.32307-23-vincenzo.frascino@arm.com
+> 
+>  arch/x86/Kconfig                         |   3 +
+>  arch/x86/entry/vdso/Makefile             |   9 ++
+>  arch/x86/entry/vdso/vclock_gettime.c     | 245 ++++---------------------------
+>  arch/x86/entry/vdso/vdsox32.lds.S        |   1 +
+>  arch/x86/entry/vsyscall/Makefile         |   2 -
+>  arch/x86/entry/vsyscall/vsyscall_gtod.c  |  83 -----------
+>  arch/x86/include/asm/pvclock.h           |   2 +-
+>  arch/x86/include/asm/vdso/gettimeofday.h | 191 ++++++++++++++++++++++++
+>  arch/x86/include/asm/vdso/vsyscall.h     |  44 ++++++
+>  arch/x86/include/asm/vgtod.h             |  75 +---------
+>  arch/x86/include/asm/vvar.h              |   7 +-
+>  arch/x86/kernel/pvclock.c                |   1 +
+>  12 files changed, 284 insertions(+), 379 deletions(-)
+>  delete mode 100644 arch/x86/entry/vsyscall/vsyscall_gtod.c
+>  create mode 100644 arch/x86/include/asm/vdso/gettimeofday.h
+>  create mode 100644 arch/x86/include/asm/vdso/vsyscall.h
+> 
+> To confirm my bisection was correct, I did a git checkout of 7ac8707479886c75f353bfb6a8273f423cfccb2. As expected, the
+> kernel exhibited the problem I've described. However, a kernel built at the immediately preceding (parent?) commit
+> (bfe801ebe84f42b4666d3f0adde90f504d56e35b) has a working network after a (>= 14minute) suspend/resume cycle.
+> 
+> As the module name implies, I'm using wireless networking. The hardware is detected as "Intel(R) Wireless-AC 9260
+> 160MHz, REV=0x324" by iwlwifi.
+> 
+> I'm more than happy to provide additional diagnostics (but may need a little hand-holding) and to apply diagnostic or
+> fix patches, but please cc me on any reply as I'm not subscribed to any of the kernel-related mailing lists.
+> 
+> Chris
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-Lorenzo
-
-> > /* Set the number of lanes */
-> > val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
-> > val &= ~PORT_LINK_MODE_MASK;
-> > switch (lanes) {
-> > case 1:
-> > 	val |= PORT_LINK_MODE_1_LANES;
-> > 	break;
-> > case 2:
-> > 	val |= PORT_LINK_MODE_2_LANES;
-> > 	break;
-> > case 4:
-> > 	val |= PORT_LINK_MODE_4_LANES;
-> > 	break;
-> > case 8:
-> > 	val |= PORT_LINK_MODE_8_LANES;
-> > 	break;
-> > default:
-> > 	dev_err(pci->dev, "num-lanes %u: invalid value\n", lanes);
-> > 	return;
-> > }
-> > 
-> > why do we need to set lanes to 0 if num-lanes is not present ? To print
-> > an error message ?
-> 
-> At this point in time, the controller is trying to train the link but
-> it doesn't know how many lanes, so we need to error. We don't error when
-> reading the device tree earlier - because at that point in time we don't
-> know if num-lanes is optional or not.
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
-> > 
-> > I really do not understand this code.
-> > 
-> > Lorenzo
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
