@@ -2,159 +2,139 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258D5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3363C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC16E21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA851233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUnOqF6u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGcqT2L9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404272AbfHWNTc (ORCPT
+        id S2405447AbfHWNU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:19:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38029 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731365AbfHWNTb (ORCPT
+        Fri, 23 Aug 2019 09:20:29 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34425 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404322AbfHWNU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:19:31 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g17so8636163wrr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 06:19:30 -0700 (PDT)
+        Fri, 23 Aug 2019 09:20:26 -0400
+Received: by mail-qt1-f193.google.com with SMTP id q4so11144879qtp.1;
+        Fri, 23 Aug 2019 06:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LZPOX0INdRlOUvoefxV/HDc1vutqvPxYj4fWM1wy0rw=;
-        b=mUnOqF6uNCM6LcdyehIFjzjsqAEof9B3kEFEJZUVN62H3iSJhkiiVCYHQ96YMhS7pg
-         WWQxX7Zi4CQ/Hh3F8NxgU/YpVIdxTlD8WDG2Qtaq/ydXMvpj3C8idH/Ml46oVakYSRxD
-         6W3Tj1DIeuKn/rRGwr3eC0wJZCyMqsBKqGFmTNSeBrrr23oJNlbCIcaHm6u6FFoocaC/
-         nmyGYShss+ThniPimc4+KAPMoD9enuctPgOIRGG+NrkXuYMVi7TBln7NIqhMZxoyR75g
-         wPyvuX4jjMhc9QpsgJzCdI02ckNVcKlWZfPj2tL4KCFYZJviAwZuhb6IEUrGk3yGizqd
-         /Z6g==
+         :cc:content-transfer-encoding;
+        bh=1LfnWFWs0YWvUwvqhsL90T++L1EYbaF8DCL5i8TnlTQ=;
+        b=IGcqT2L9Wkft5cAwK651j3W3eBHxve8x0C4MyikQws9NcZLM190a7/AA3JZ1HtXWpy
+         GdGzRMoVVUREaXD/dkNg6XQgREa2yhuygZpG1qGG7MEL2Hf2V3TlohAf1wgBYw4asGVS
+         iZG2a+U7LL18sOQP9/LmObdflOitwFE4afnCDwhPo9LKKZdkGqSxdF18BsijKXc4C+qU
+         I04eNIzpKktFUyypNR34I9HyQBVBufsb9RUKdTcB7yETG7bHE7Od/XvFgGtMSbaUy7Un
+         8iRj4oNsHd+pb7mswL7+8gOIzrxF05qPOBd0o5ksLHEvQCipM/Q8OP9zEV82Cs3yc5oF
+         LzUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LZPOX0INdRlOUvoefxV/HDc1vutqvPxYj4fWM1wy0rw=;
-        b=WUj5FFGtDlhqELbJNr0gNzoMhh5io4Ho1UjozFoz58Cy22Sf3+UEIz9tWlh2f+S4L0
-         G4xBuvGAhf8BdwGT5imj61WIoXndcpjaeXTv8wLzMSOEobYmuDi4j9PmWna4B5umEVEH
-         eVXensCby5G4CLBAMZzbgA5lYBEv0rX9u4zRqSeTqFO+qnohPROJ37iMdbMwXjjfouuw
-         pw17kj4VwZMc7Gm0cxFHEkT6Fadj0Ctutb8kouUV11HGJ1ME/paW/eDeius1mgykqX+2
-         btkwfB4bY8SAYivC/kPnFDhBJP9r75ZaPLS/A5D6XEYyg1Tq5j0oBGCb4kz+ncCfnLqA
-         yWuA==
-X-Gm-Message-State: APjAAAX6Qqb/o5+rQga3gNSzBDN2CEXbhPSs+hFBc8Qfg4wznULfFuzj
-        e9Id81Zi37MMQ8/9ErHS4tHpH+ZOliOlmCUI3VQ=
-X-Google-Smtp-Source: APXvYqwyGM+XjqB1+xj7Yj+k9wbVw5I8l/PwOau11tLzSRWm/a4VmG0taIHdQ+qFDPb+UCQEGmlZKo4bD9c+QGFI4wc=
-X-Received: by 2002:a5d:5408:: with SMTP id g8mr5348355wrv.201.1566566369129;
- Fri, 23 Aug 2019 06:19:29 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1LfnWFWs0YWvUwvqhsL90T++L1EYbaF8DCL5i8TnlTQ=;
+        b=brEH7N+bW7HHW94T6SUYRun/EZFF2317VKNtaId2V02F+V7777R17OrQ+7CF9+goTb
+         JQn3cjTbAP32H9vFiaHgr9d/0ESvU/9PStuCln4Z3m7u7G6lkgudrA27+A0gRurCWo+L
+         uc79PCeKgSrCa3kHxXrFSpH1HXDa66Frzh5m2fcL2OdmYZFk+mnkugI3Ywg1X1LTI0xV
+         quJK/8bJigr+p0i4FQrfJZ1TvvJM0JHX+iKhqtZJng58N/siUrJCX9jZkya2TO7kSLhb
+         5GP56Kifp9riAXEkMtjXTUUtkJg4y2osjK08tvARsEcGvtM8vYCKB/G7leSOHd0+aycI
+         7LDw==
+X-Gm-Message-State: APjAAAWBPRGcR4BiFweSxcMlA76mwU4N19eUnYjmXwuOVZDpR55vzx4a
+        IjNo+f6J+StNbWJNUbbv3KhfxlZ0iRWYXNTl6Zg=
+X-Google-Smtp-Source: APXvYqzwV94dsSIn/VkYPZoc4KCCI+cdmF8oVTo1U8feC63LjNcIddNEQlDaT+/Y6KbvgkLYv+gJ6MnwAOt5WD+BwGo=
+X-Received: by 2002:a0c:abca:: with SMTP id k10mr3794577qvb.177.1566566425657;
+ Fri, 23 Aug 2019 06:20:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190823125939.30012-1-yuehaibing@huawei.com>
-In-Reply-To: <20190823125939.30012-1-yuehaibing@huawei.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 23 Aug 2019 16:19:17 +0300
-Message-ID: <CAEnQRZA3reBF=H58596-e1xRLHLz5pVHZVhVgiXEmbV-wwOctg@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Make some functions static
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <CGME20190822171243eucas1p12213f2239d6c36be515dade41ed7470b@eucas1p1.samsung.com>
+ <20190822171237.20798-1-i.maximets@samsung.com> <CAKgT0UepBGqx=FiqrdC-r3kvkMxVAHonkfc6rDt_HVQuzahZPQ@mail.gmail.com>
+ <CALDO+SYhU4krmBO8d4hsDGm+BuUAR4qMv=WzVa=jAx27+g9KnA@mail.gmail.com> <217e90f5-206a-bb80-6699-f6dd750b57d9@intel.com>
+In-Reply-To: <217e90f5-206a-bb80-6699-f6dd750b57d9@intel.com>
+From:   William Tu <u9012063@gmail.com>
+Date:   Fri, 23 Aug 2019 06:19:49 -0700
+Message-ID: <CALDO+SZGXKW_PMrL_AarT3i8WPcM0X=RkEhTnKCDnUkS1cOH0Q@mail.gmail.com>
+Subject: Re: [PATCH net v3] ixgbe: fix double clean of tx descriptors with xdp
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Ilya Maximets <i.maximets@samsung.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Eelco Chaudron <echaudro@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 4:12 PM YueHaibing <yuehaibing@huawei.com> wrote:
+On Thu, Aug 22, 2019 at 11:10 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.c=
+om> wrote:
 >
-> Fix sparse warnings:
+> On 2019-08-22 19:32, William Tu wrote:
+> > On Thu, Aug 22, 2019 at 10:21 AM Alexander Duyck
+> > <alexander.duyck@gmail.com> wrote:
+> >>
+> >> On Thu, Aug 22, 2019 at 10:12 AM Ilya Maximets <i.maximets@samsung.com=
+> wrote:
+> >>>
+> >>> Tx code doesn't clear the descriptors' status after cleaning.
+> >>> So, if the budget is larger than number of used elems in a ring, some
+> >>> descriptors will be accounted twice and xsk_umem_complete_tx will mov=
+e
+> >>> prod_tail far beyond the prod_head breaking the completion queue ring=
+.
+> >>>
+> >>> Fix that by limiting the number of descriptors to clean by the number
+> >>> of used descriptors in the tx ring.
+> >>>
+> >>> 'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
+> >>> 'ixgbe_xsk_clean_tx_ring()' since we're allowed to directly use
+> >>> 'next_to_clean' and 'next_to_use' indexes.
+> >>>
+> >>> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+> >>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> >>> ---
+> >>>
+> >>> Version 3:
+> >>>    * Reverted some refactoring made for v2.
+> >>>    * Eliminated 'budget' for tx clean.
+> >>>    * prefetch returned.
+> >>>
+> >>> Version 2:
+> >>>    * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
+> >>>      'ixgbe_xsk_clean_tx_ring()'.
+> >>>
+> >>>   drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 29 ++++++++---------=
+---
+> >>>   1 file changed, 11 insertions(+), 18 deletions(-)
+> >>
+> >> Thanks for addressing my concerns.
+> >>
+> >> Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > Thanks.
+> >
+> > Tested-by: William Tu <u9012063@gmail.com>
+> >
 >
-> sound/soc/sof/imx/imx8.c:104:6: warning: symbol 'imx8_dsp_handle_reply' was not declared. Should it be static?
-> sound/soc/sof/imx/imx8.c:115:6: warning: symbol 'imx8_dsp_handle_request' was not declared. Should it be static?
-> sound/soc/sof/imx/imx8.c:336:5: warning: symbol 'imx8_get_bar_index' was not declared. Should it be static?
-> sound/soc/sof/imx/imx8.c:341:6: warning: symbol 'imx8_ipc_msg_data' was not declared. Should it be static?
-> sound/soc/sof/imx/imx8.c:348:5: warning: symbol 'imx8_ipc_pcm_params' was not declared. Should it be static?
+> Will, thanks for testing! For this patch, did you notice any performance
+> degradation?
 >
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-
-> ---
->  sound/soc/sof/imx/imx8.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-> index e502f58..6404724 100644
-> --- a/sound/soc/sof/imx/imx8.c
-> +++ b/sound/soc/sof/imx/imx8.c
-> @@ -101,7 +101,7 @@ static int imx8_get_window_offset(struct snd_sof_dev *sdev, u32 id)
->         return MBOX_OFFSET;
->  }
->
-> -void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
-> +static void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
->  {
->         struct imx8_priv *priv = imx_dsp_get_data(ipc);
->         unsigned long flags;
-> @@ -112,7 +112,7 @@ void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
->         spin_unlock_irqrestore(&priv->sdev->ipc_lock, flags);
->  }
->
-> -void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
-> +static void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
->  {
->         struct imx8_priv *priv = imx_dsp_get_data(ipc);
->
-> @@ -333,21 +333,21 @@ static int imx8_remove(struct snd_sof_dev *sdev)
->  }
->
->  /* on i.MX8 there is 1 to 1 match between type and BAR idx */
-> -int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
-> +static int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
->  {
->         return type;
->  }
->
-> -void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
-> -                      struct snd_pcm_substream *substream,
-> -                      void *p, size_t sz)
-> +static void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
-> +                             struct snd_pcm_substream *substream,
-> +                             void *p, size_t sz)
->  {
->         sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
->  }
->
-> -int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
-> -                       struct snd_pcm_substream *substream,
-> -                       const struct sof_ipc_pcm_params_reply *reply)
-> +static int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
-> +                              struct snd_pcm_substream *substream,
-> +                              const struct sof_ipc_pcm_params_reply *reply)
->  {
->         return 0;
->  }
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+No noticeable performance degradation seen this time.
+Thanks,
+William
