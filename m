@@ -2,55 +2,115 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D74C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D923E2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992BB2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566595777;
+	bh=ZV+fupm2OxmGNUN9I13TY4AS2aAfxXaWtpzMiPsb/3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cxeNJ3jPf0mfrJoHu+SmmCN8w+SSv/b5dPyxokEEa/dQgyUUMaUaSTnEScM/0MNCK
+	 NJA0AkekDqNZhCBVUgvB/tWvq1a1K7fzAz54zVpOzmwMdFvynK2hS8CzF/0MuI1DAk
+	 F8xiPH1HkTLRK/JIabCXCYCZClHoozeFJbmGX50w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392810AbfHWV33 (ORCPT
+        id S2406194AbfHWV3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 17:29:29 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38092 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729718AbfHWV32 (ORCPT
+        Fri, 23 Aug 2019 17:29:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36104 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388346AbfHWV3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 17:29:28 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 08D2E1543B283;
-        Fri, 23 Aug 2019 14:29:28 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 14:29:16 -0700 (PDT)
-Message-Id: <20190823.142916.238167013292929213.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/9] rxrpc: Fix use of skb_cow_data()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <27348.1566550348@warthog.procyon.org.uk>
-References: <20190822.121207.731320146177703787.davem@davemloft.net>
-        <156647655350.10908.12081183247715153431.stgit@warthog.procyon.org.uk>
-        <27348.1566550348@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 23 Aug 2019 14:29:28 -0700 (PDT)
+        Fri, 23 Aug 2019 17:29:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w2so7311475pfi.3;
+        Fri, 23 Aug 2019 14:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=tHc2UDznI/uoDADxr2vQBdjC4lDElZPoW7dMZcPdM2Q=;
+        b=m2dginuydqnbCe8vxP0ntkIoZHFCc3EB2k3XGvkrRKngxa34uBnGCjRmOhBRW0uhZJ
+         KoEIp7+xjseLZiMLy6xSmC2acDa8qX7kqQNgAZ+IPGXdWy/7zHDRKJXzL5gGu68itb9k
+         4o2aIEA4fC6dBIsf3BfgMbP6jQdCJnBFAyql3vj4UW3t3/Ld9Jn6ctpCC7liXOcQDreJ
+         MoT9NVl/N0sgxePWMmqZPHw+u3HwERHeOTtJDFj67NHYW7Mo8D1M2dEm8p56xIik9iSr
+         LlXQh7uz5+yc7Hs8gW3sZAwNgfBkV6HO5YDxYpncg4jctwrzpqLEEpqcGi4tHQfOZ66G
+         p0+A==
+X-Gm-Message-State: APjAAAVmFk7MKjHw6+IxSuju98Ry9UjZhy9nLKjBoWWufffU2WujLl3H
+        TSn9JSBBG2PmZpORZp/Szc7+7XfM
+X-Google-Smtp-Source: APXvYqxNyAjgfQduz6dW+l+bgFvSrwQm451XbPDad0xibowVRhhovyr8KMcZhhgAtL2K2wTE+28YyA==
+X-Received: by 2002:a17:90a:1202:: with SMTP id f2mr7076664pja.39.1566595775063;
+        Fri, 23 Aug 2019 14:29:35 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d128sm3626577pfa.42.2019.08.23.14.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 14:29:34 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A98D6404D5; Fri, 23 Aug 2019 21:29:32 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 21:29:32 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kselftest@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
+Subject: Re: [PATCH 1/7] fs: introduce kernel_pread_file* support
+Message-ID: <20190823212932.GY16384@42.do-not-panic.com>
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+ <20190822192451.5983-2-scott.branden@broadcom.com>
+ <s5hsgpsqd49.wl-tiwai@suse.de>
+ <5227a1bb-52e5-d547-2650-b06bee259012@broadcom.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5227a1bb-52e5-d547-2650-b06bee259012@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Fri, 23 Aug 2019 09:52:28 +0100
+On Fri, Aug 23, 2019 at 12:55:30PM -0700, Scott Branden wrote:
+> Hi Takashi
+> 
+> On 2019-08-23 5:29 a.m., Takashi Iwai wrote:
+> > On Thu, 22 Aug 2019 21:24:45 +0200,
+> > Scott Branden wrote:
+> > > Add kernel_pread_file* support to kernel to allow for partial read
+> > > of files with an offset into the file.  Existing kernel_read_file
+> > > functions call new kernel_pread_file functions with offset=0 and
+> > > flags=KERNEL_PREAD_FLAG_WHOLE.
+> > Would this change passes the security check like ima?
+> > I thought security_kernel_post_read_file() checks the whole content
+> > for calculating the hash...
+> 
+> It passes the fw_run_tests.sh.  How do you test the firmware loader passes
+> this security check?
 
-> Question for you: how likely is a newly received buffer, through a UDP socket,
-> to be 'cloned'?
+Its not a security check per code, its an audit of the code, to ensure
+that no new cases are not covered and its why I had CC'd Mimi. The
+question lies in *if* the approach exposes a new interface which cannot
+be attested. Its unclear to me if we can attest currently through
+security modules the fallback interface, as there are not APIs with a
+respective callback yet.
 
-Very unlikely, I'd say.
+  Luis
