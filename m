@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642C6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 23:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05A4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 23:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455F220578
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 23:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85C220578
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 23:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfHWX12 (ORCPT
+        id S1727681AbfHWX1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 19:27:28 -0400
+        Fri, 23 Aug 2019 19:27:48 -0400
 Received: from mga11.intel.com ([192.55.52.93]:21160 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfHWX1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727362AbfHWX1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 23 Aug 2019 19:27:20 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from fmsmga003.fm.intel.com ([10.253.24.29])
   by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 16:27:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
-   d="scan'208";a="187009670"
+   d="scan'208";a="187009680"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
   by FMSMGA003.fm.intel.com with ESMTP; 23 Aug 2019 16:27:19 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -33,9 +33,9 @@ To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v7 5/8] PCI/AER: Allow clearing Error Status Register in FF mode
-Date:   Fri, 23 Aug 2019 16:24:10 -0700
-Message-Id: <a94f144148189881340cca94291c7e66fcc16122.1566602170.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v7 7/8] PCI/DPC: Clear AER registers in EDR mode
+Date:   Fri, 23 Aug 2019 16:24:12 -0700
+Message-Id: <488a4234f356a2eddcb1ab64e322b182351142a6.1566602170.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1566602170.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1566602170.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -49,62 +49,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
 As per PCI firmware specification r3.2 Downstream Port Containment
-Related Enhancements ECN, sec 4.5.1, table 4-6, Error Disconnect
-Recover (EDR) support allows OS to handle error recovery and
-clearing Error Registers even in FF mode. So remove FF mode checks in
-pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
-and pci_cleanup_aer_error_status_regs() functions.
+Related Enhancements ECN, OS is responsible for clearing the AER
+registers in EDR mode. So clear AER registers in dpc_process_error()
+function.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Keith Busch <keith.busch@intel.com>
 ---
- drivers/pci/pcie/aer.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/pci/pcie/dpc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b45bc47d04fe..e1509bb900c5 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -383,9 +383,6 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
- 	if (!pos)
- 		return -EIO;
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index fafc55c00fe0..de2d892bc7c4 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -275,6 +275,10 @@ static void dpc_process_error(struct dpc_dev *dpc)
+ 		pci_aer_clear_fatal_status(pdev);
+ 	}
  
--	if (pcie_aer_get_firmware_first(dev))
--		return -EIO;
--
- 	/* Clear status bits for ERR_NONFATAL errors only */
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-@@ -406,9 +403,6 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
- 	if (!pos)
- 		return;
- 
--	if (pcie_aer_get_firmware_first(dev))
--		return;
--
- 	/* Clear status bits for ERR_FATAL errors only */
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-@@ -430,9 +424,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
- 	if (!pos)
- 		return -EIO;
- 
--	if (pcie_aer_get_firmware_first(dev))
--		return -EIO;
--
- 	port_type = pci_pcie_type(dev);
- 	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
- 		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
-@@ -455,7 +446,8 @@ void pci_aer_init(struct pci_dev *dev)
- 	if (dev->aer_cap)
- 		dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
- 
--	pci_cleanup_aer_error_status_regs(dev);
-+	if (!pcie_aer_get_firmware_first(dev))
-+		pci_cleanup_aer_error_status_regs(dev);
- }
- 
- void pci_aer_exit(struct pci_dev *dev)
++	/* In EDR mode, OS is responsible for clearing AER registers */
++	if (dpc->firmware_dpc)
++		pci_cleanup_aer_error_status_regs(pdev);
++
+ 	/*
+ 	 * Irrespective of whether the DPC event is triggered by
+ 	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
 -- 
 2.21.0
 
