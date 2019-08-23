@@ -2,153 +2,111 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B662EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2FAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEA222CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:23:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="bilh2T+p"
+	by mail.kernel.org (Postfix) with ESMTP id 68E2022CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390769AbfHWIX6 (ORCPT
+        id S2390803AbfHWIZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:23:58 -0400
-Received: from mail-eopbgr750073.outbound.protection.outlook.com ([40.107.75.73]:21828
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730759AbfHWIX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:23:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A/h8n3LsLIXkvKYXgI3+GRbb4p5SlKZgaA6ArI12uYhVTI4RNsVNvaIiUD3kReVyXYs/XjNLtrjmmhrp7dS1aytDWe4ydT1unqlzotW/9rlMJjRfEFdAmj0bJiLXevwrqMxcV+nOHiN7MKD2htnhQB3f/UHQ7cu4hqYjjQBTQENqawGqpJg1pfkOdAbt0OCfXcoONVcidGu57KPajj/8v0resr2A1pITxs+IosO9UJB2Fr67XVs64xtDQ7LtlUoH80k6yRQ8RtfIFQTAbYgOTG0KxcBsur5lfMecrUN951x3RTykcztThAyenl8bedNaIVdgXNHDN7LnPbTFQruuKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iy5QS3g0RzZQTaIaRlnQxBdsVWHbTBKAt+bk9KCI/HY=;
- b=QHvzM/ZYdLsUwyGD8Lgs/qNIz6KmUjwGIJv2mFSU/aZvWaUCq4kt6XyJkLn2EnI4H7DztW/kEYKsOUgbRvgEVw6p6eTMa2PWBxVplXFx0MjjcfKFSdkbxIpnxURNJTw2drPo3VeawxPzj7bv8Nlw4UPTdP5WmfaDxFPsMYNV3X77YNn5cB4BLnmqUnEslmW5ustO0gr7RBzFFAY7Xrf8iBIexIwvtFELA+DUjZ1nXvbIRoaUC6AgSAg8YukPrz0rlVTklWoDpvvW/Kf2vKPVk17OUK794xalD1q9FKqUkRCuSxygcn+9vyBdIH3Zxt7EC3ZoI4uvZzjA0KTCDLua5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iy5QS3g0RzZQTaIaRlnQxBdsVWHbTBKAt+bk9KCI/HY=;
- b=bilh2T+peQDMFrlbQTv5Jv/drVQTTiDV5G8tOmVlrPNMwfKqGMMwrflLGQa+j10nXcjKJoKfBJWJhD6Mak/OSne6MsLvVBrT92gFkrhWJPXD2XJ6w0WYXVXDDYcH+dmfWBtNwSof65vpdJD+2BD9MQURBjST5adm+Wsh/4qmv3M=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.231.93) by
- CH2PR02MB6840.namprd02.prod.outlook.com (20.180.5.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Fri, 23 Aug 2019 08:23:55 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::5c58:16c0:d226:4c96]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::5c58:16c0:d226:4c96%2]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
- 08:23:54 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Derek Kiernan <dkiernan@xilinx.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH 3/4] misc: xilinx_sdfec: Prevent a divide by zero in
- xsdfec_reg0_write()
-Thread-Topic: [PATCH 3/4] misc: xilinx_sdfec: Prevent a divide by zero in
- xsdfec_reg0_write()
-Thread-Index: AQHVV+98zNjK4dF6zEutfzCzk1SLDacIZ9kA
-Date:   Fri, 23 Aug 2019 08:23:54 +0000
-Message-ID: <CH2PR02MB6359602748E6F8BB56E586B9CBA40@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <20190821070606.GA26957@mwanda> <20190821070953.GC26957@mwanda>
-In-Reply-To: <20190821070953.GC26957@mwanda>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 32f8f6db-ef76-4703-7b5a-08d727a33cd2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR02MB6840;
-x-ms-traffictypediagnostic: CH2PR02MB6840:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB68402EA5515C6F90CDA747CBCBA40@CH2PR02MB6840.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(199004)(13464003)(189003)(66476007)(66556008)(64756008)(66446008)(66946007)(76176011)(305945005)(66066001)(86362001)(52536014)(476003)(11346002)(7736002)(446003)(33656002)(3846002)(6116002)(6506007)(14444005)(14454004)(74316002)(7696005)(53546011)(256004)(316002)(2906002)(6436002)(5660300002)(6246003)(25786009)(71190400001)(99286004)(8676002)(110136005)(81156014)(81166006)(54906003)(71200400001)(9686003)(8936002)(76116006)(186003)(53936002)(102836004)(6636002)(478600001)(486006)(4326008)(229853002)(55016002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6840;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oaDclW6SmLyqiAsVKLHN5vJbdtqcLM+1/OV2zl9/jDomZmvPIx/8bfl8D5s7rG553lgRGPi4pwfAB/1APdnnXQGH+Yle9Xd0QAUbP/tdbvM3izuHa+tHmlqLY7ARQKwQ2hsnqERcNk2V5SQ5/Wd8V/Gnqi50z45kFr+fQBqYKXGx98Kh7apqdsBUmRXKgAUmzY9a0muBjSxhqdwWo+xd8ViwdTSaF/Hjl02KrsyQ87g0W5P1KNlP8Qw6WUEa8e03YX0+C2Knw/id7SK1jY7H/rUe2CuLoZE6dPduOofob+siVTY+rd1218lmPyuMT3M4Vs/yxKrzyz1VTuFiULmgu+qPsf8rIWk3lWkoo8X7q5KkQf2+j5el3dqF+LGiNNDn96t2+JG8M1uCs2EkROfwTZKi0goyPQm2GdqG9LCSmMI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 23 Aug 2019 04:25:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58050 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730759AbfHWIZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 04:25:58 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A76580F7C
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 08:25:58 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id f28so9196903qtg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:25:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VjFqKkU/rr1wSVqQW2FjKWVFmd3zU0NlYrJ5LLeu7CA=;
+        b=dsL3TSzVovLBxcgt4fHVpQ8V+17DO7Mdx7geX0kb0tTZs/QQaLFpNIJ2kgaWI4hreM
+         tB7444G7Y0/1JdtvA0O+a9al7AuMClpuLoGVO5gk7DJnTL1XmyROgezcgHlU9l7eBIq9
+         HQchW/56xaOH6ka4GwnYpVCHuFVNyGd73PKF5bKdrTsAjIdWV0Z9UKswZU35O6w5d1Tv
+         kztt7fE25OnLOkyEQiGeHj/Z6QF+lwx15WKN7m3vF6wuZp1lU4HoAvf9T4VJTM096HTU
+         mGEnWUCe6qnTeANcQ/F2u+93RxGUzs60y0FauhlgPw7BGhGXdOSdiyXKDplzZ8UkgrsP
+         8zpA==
+X-Gm-Message-State: APjAAAUVAR9cgi0XdQF4DuuNT4noFBDV+mEkJqm347uc7uQfaMySlv1O
+        zkmfuvj/M7GSiQKAIHu4UsvLHzCFAucVVGL3FBNNwFSv6HFLDeQ2EQUyKEYz1BoBErlegHeI/OO
+        TYGruJNWgIHpyH49gbXxoBh3j4Ko6aJhicP62ci+u
+X-Received: by 2002:a37:7cc3:: with SMTP id x186mr2952751qkc.169.1566548757932;
+        Fri, 23 Aug 2019 01:25:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxNX4lU3xyrEi8AXJCSV1OukASjVTtdoDCQ51j+nsk2GbCz5NAdQVvXyjy2qAxcjjN6hawR5X8aynRxBKBw8WM=
+X-Received: by 2002:a37:7cc3:: with SMTP id x186mr2952739qkc.169.1566548757737;
+ Fri, 23 Aug 2019 01:25:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32f8f6db-ef76-4703-7b5a-08d727a33cd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 08:23:54.8764
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +PsNjo+rYeYQIMUs9dzPHkZXqZworoGpLoDay4le+SpNrjeZkc1gvHlSKITdVwVKbTHFivNx+rkU7eExTh+ilg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6840
+References: <20190822201849.28924-1-pedro@pedrovanzella.com>
+In-Reply-To: <20190822201849.28924-1-pedro@pedrovanzella.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 23 Aug 2019 10:25:46 +0200
+Message-ID: <CAO-hwJKQcTpmk8cVf-YmKu2awXv_53=qfpy2yfmy2rgMu_DEug@mail.gmail.com>
+Subject: Re: [Resubmit] Read battery voltage from Logitech Gaming mice
+To:     Pedro Vanzella <pedro@pedrovanzella.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Hi Pedro,
 
-> -----Original Message-----
-> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> Sent: Wednesday 21 August 2019 08:10
-> To: Derek Kiernan <dkiernan@xilinx.com>; Dragan Cvetic <draganc@xilinx.co=
-m>
-> Cc: Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfounda=
-tion.org>; Michal Simek <michals@xilinx.com>;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; kerne=
-l-janitors@vger.kernel.org
-> Subject: [PATCH 3/4] misc: xilinx_sdfec: Prevent a divide by zero in xsdf=
-ec_reg0_write()
->=20
-> The "psize" value comes from the user so we need to verify that it's
-> non-zero before we check if "n % psize" or it will crash.
->=20
-> Fixes: 20ec628e8007 ("misc: xilinx_sdfec: Add ability to configure LDPC")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> The parentheses in this condition are a no-op.  They're just confusing.
-> Perhaps something else was intended?
->=20
->  drivers/misc/xilinx_sdfec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> index 813b82c59360..3fc53d20abf3 100644
-> --- a/drivers/misc/xilinx_sdfec.c
-> +++ b/drivers/misc/xilinx_sdfec.c
-> @@ -460,7 +460,7 @@ static int xsdfec_reg0_write(struct xsdfec_dev *xsdfe=
-c, u32 n, u32 k, u32 psize,
->  {
->  	u32 wdata;
->=20
-> -	if (n < XSDFEC_REG0_N_MIN || n > XSDFEC_REG0_N_MAX ||
-> +	if (n < XSDFEC_REG0_N_MIN || n > XSDFEC_REG0_N_MAX || psize =3D=3D 0 ||
->  	    (n > XSDFEC_REG0_N_MUL_P * psize) || n <=3D k || ((n % psize) !=3D =
-0)) {
->  		dev_dbg(xsdfec->dev, "N value is not in range");
->  		return -EINVAL;
-> --
-> 2.20.1
+On Thu, Aug 22, 2019 at 10:19 PM Pedro Vanzella <pedro@pedrovanzella.com> wrote:
+>
+> Resumitting this after having rebased it against the latest changes.
 
-Reviewed-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+thanks for resubmitting. Sorry I wasn't able to provide feedback on
+the last revision
 
-Thanks,
-Dragan
+>
+> The gaming line of Logitech devices doesn't use the old hidpp20
+> feature for battery level reporting. Instead, they report the
+> current voltage of the battery, in millivolts.
+>
+> This patch set handles this case by adding a quirk to the
+> devices we know to have this new feature, in both wired
+> and wireless mode.
+
+So the quirk is in the end a bad idea after all. I had some chats with
+Filipe that made me realize this.
+Re-reading our previous exchanges also made me understood why I wasn't
+happy with the initial submission: for every request the code was
+checking both features 0x1000 and 0x1001 when we can remember this
+once and for all during hidpp_initialize_battery().
+
+So I think we should remove the useless quirk in the end (bad idea
+from me, I concede), and instead during hidpp_initialize_battery() set
+the correct HIDPP_CAPABILITY_*.
+Not entirely sure if we should try to call 0x1000, or 0x1001 or if we
+should rely on the 0x0001 feature to know which feature is available,
+but this should be implementation detail.
+
+>
+> This version of the patch set is better split, as well as adding the
+> quirk to make sure we don't needlessly probe every device connected.
+
+It is for sure easy to review, but doesn't make much sense in the end.
+I think we should squash all the patches together as you are just
+adding one feature in the driver, and it is a little bit disturbing to
+first add the quirk that has no use, then set up the structs when they
+are not used, and so on, so forth.
+
+Cheers,
+Benjamin
+
+>
+>
