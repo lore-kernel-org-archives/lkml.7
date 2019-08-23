@@ -2,68 +2,137 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF91C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59317C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4467522CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566578715;
-	bh=401L9q2plDtCB5nU2+0tkCczmKLSc0y/pUJJJtq7f2g=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0Let43dm+GtSAYy437xLvYV3cSh6iATAhkR6e1Gx+6OAi9ArtmONXPYmynPAXv3k9
-	 J3pijUXYgyEDZ4rapLTLAh6Q3aAyC4hCL4hvgwNi2KFyVh/6w3jbP+c0mjfJYafPMX
-	 sFT84T2gaB7/i0iaIHU2+uWqiLPZ6BH/qzW96xdA=
+	by mail.kernel.org (Postfix) with ESMTP id 2E80521848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:47:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A7XzNgI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406003AbfHWQpO (ORCPT
+        id S2391509AbfHWQrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 12:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387833AbfHWQpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 12:45:07 -0400
-Subject: Re: [GIT PULL] Ceph fixes for 5.3-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566578706;
-        bh=401L9q2plDtCB5nU2+0tkCczmKLSc0y/pUJJJtq7f2g=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Max1r8WF0jIUIgOCVzJPygSwsKi1zjMmDtSrk8Fytt5AhG0By6fDfivSiOx7wNmCt
-         azjsPD8LYOIahrUcG0+a/xAMo/9nueWP+rAYb5nCu/JuUbImVMVkxY/ZUTLzEVR0wQ
-         hd41WLhe6T4bXkE/bcKQd+DIA4ElZka3oF+tzy4I=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190823122726.15050-1-idryomov@gmail.com>
-References: <20190823122726.15050-1-idryomov@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190823122726.15050-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
- tags/ceph-for-5.3-rc6
-X-PR-Tracked-Commit-Id: a561372405cf6bc6f14239b3a9e57bb39f2788b0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4e5639449069d12e95edc10b63acf170843e1706
-Message-Id: <156657870685.6801.1793404829962707462.pr-tracker-bot@kernel.org>
-Date:   Fri, 23 Aug 2019 16:45:06 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 23 Aug 2019 12:47:35 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46494 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388580AbfHWQrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 12:47:35 -0400
+Received: by mail-qk1-f193.google.com with SMTP id p13so8690628qkg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 09:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dh4aupUSPEjaFwU/NhNXf74efZLkJgrHRqRRjH9BeWs=;
+        b=A7XzNgI0KJT1ALbnvZWNpvrTQu/KHNrBEO0JR/Jb9GSgs/OFf3H1ueLEpTSYkVYy18
+         Bk8T7jMqgVh0PkZ4I2cJAOhNnRfcPkWjInhhLGbGryWtk+1wfLkrVy0iO2VNKpiS/MrP
+         XnjTrbYLTUbjAbqEsIusPE+oCrRLJ25Okx89n9T+l3WmpXJDcnOvU6OcMaMyJE5GxRJj
+         T5woAb75ZA6Z/QcUFcjGdHwU9PabZY3nMitqx2yIo8bxixSx7TrIgq4QlX1f0xGuQGhv
+         r6PSSzzPiJesCr5odnaBlcacIftCwrXyPtxkJd81MlrKyDGJ2xgyqsnePP+e1gSAZJaf
+         FvQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dh4aupUSPEjaFwU/NhNXf74efZLkJgrHRqRRjH9BeWs=;
+        b=X3lX4JSrg9N5vAozHj/8DToFDf2qag4oJJ7FSc8xpax0f+yLk5XOuGfj2qckDvtjY2
+         4i7tDQDTytPLHWYR0yeGIYm2T2pB+rW4uBhCpQgR6GEg53RKX48rTFDYpM25fMbCTwL0
+         4K3I7qjKJpwvoD5uH/o6Ac0agX6WQtH2VxIddGPkjT53Q8i++2lcWuWZ+DCM60t/Jisr
+         t2KH93/N47VO6OkOudCteE+nNLEENukutxvgoJTkGMVr+CRk6JWeyXKoQsjDvoS/gXCl
+         HNlvZm4NgfxKtwLgNKGhivDDNjRItfFGXNWYGC4KR8qRxgxL7t5BmhSl0DNdnJdr2U5P
+         79TQ==
+X-Gm-Message-State: APjAAAUJqnlrdgFGsd0J+1hS0ek0igMSWeXFz8BD/f/4TshBOJl2JCUO
+        GcBh8Zr3cWVVEdusj5GuVZcVPdl2ftdnUpFrFSjNliZf
+X-Google-Smtp-Source: APXvYqzPFPnFPo2BBK8L7fBOyBgBifpvaCSzm1+mO6efraLAi3ZBRs2nuLPzNVcI9rVDbEkCCZm094jtVKJT+6wtOws=
+X-Received: by 2002:a37:a388:: with SMTP id m130mr5153053qke.250.1566578854478;
+ Fri, 23 Aug 2019 09:47:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190820222403.GB8120@kroah.com> <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+ <20190822133538.GA16793@kroah.com> <e8d3ce30-8c61-048e-2606-f8a4e8f08d87@i-love.sakura.ne.jp>
+ <20190822164249.GA12551@kroah.com> <CACT4Y+Z0yCAwie83Oqd7XBNgQjWtEkuEg5WJCd6rW-ZMWqosxg@mail.gmail.com>
+ <433f12f7-cc17-c88b-4f26-7f45eee42884@i-love.sakura.ne.jp>
+ <CACT4Y+YCNR5_M29juV9-2UDj55BJVuYbj7bzbjtMDM_odut1Pg@mail.gmail.com> <f89b6329-37f5-e0ac-03aa-a58edc4267e4@i-love.sakura.ne.jp>
+In-Reply-To: <f89b6329-37f5-e0ac-03aa-a58edc4267e4@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 23 Aug 2019 09:47:23 -0700
+Message-ID: <CACT4Y+bJrPcEpdEFNPHZGm3ZtJ=ybba9SFbZUm_J6eTuOufeCA@mail.gmail.com>
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 23 Aug 2019 14:27:26 +0200:
+On Fri, Aug 23, 2019 at 1:17 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/08/23 8:59, Dmitry Vyukov wrote:
+> >> Can't we introduce a kernel config which selectively blocks specific actions?
+> >> If we don't need to worry about bypassing blacklist checks, we will be able to
+> >> enable syz_execute_func() again.
+> >
+> >
+> > We can consider this, but we need some set of good use cases first.
+> > For /dev/{mem,kmem} we disable them with config, right?
+>
+> /dev/{mem,kmem} can be disabled by kernel config options. But
+>
+> >                                                         That looks
+> > like the right thing to do because we don't want fuzzer to do anything
+> > with these files anyway.
+>
+> I don't think so. To examine as corner as possible (e.g. lock dependency),
+> I consider that even doing
+>
+> ----------
+> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> +static char dummybuf[PAGE_SIZE];
+> +#endif
+> ----------
+>
+> ----------
+>                         ptr = xlate_dev_mem_ptr(p);
+>                         if (!ptr) {
+>                                 if (written)
+>                                         break;
+>                                 return -EFAULT;
+>                         }
+> +#ifndef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+>                         copied = copy_from_user(ptr, buf, sz);
+> +#else
+> +                       copied = copy_from_user(dummybuf, buf, min(sizeof(dummybuf), sz));
+> +#endif
+>                         unxlate_dev_mem_ptr(p, ptr);
+> ----------
+>
+> makes sense, for copy_from_user() might find new lock dependency
+> which would otherwise be unnoticed.
+>
+> >                          So this won't be a good use case for
+> > CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING.
+> > Fuzzer can also reliably filter out based on syscall numbers of
+> > top-level argument values. The potential problem is with (1)
+> > pointers/indirect memory and (2) where blacklisting some top-level
+> > argument values would backlist too much (e.g. prohibiting 3rd ioctl
+> > argument 0 entirely).
+>
+> I consider that functions that freezes processes/filesystems,
+> reboots/shutdowns a system, changes console loglevels can be blocked
+> as well. Trying to examine up to last-second conditional branches will
+> catch more bugs (e.g. bugs in error recovery paths).
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-5.3-rc6
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4e5639449069d12e95edc10b63acf170843e1706
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Well, ok, sounds reasonable. If you can take on upstreaming such
+config, we will definitely enable it on syzbot.
