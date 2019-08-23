@@ -2,149 +2,146 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4F4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575CFC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46802070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6BA2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=apple.com header.i=@apple.com header.b="cEp+bzrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392736AbfHWUvU (ORCPT
+        id S2392822AbfHWUwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 16:51:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41158 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388903AbfHWUvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:51:20 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DC55D88305;
-        Fri, 23 Aug 2019 20:51:19 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 958F719C4F;
-        Fri, 23 Aug 2019 20:51:14 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 14:51:13 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Cc:     <eric.auger@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <linuxarm@huawei.com>, <john.garry@huawei.com>,
-        <xuwei5@hisilicon.com>, <kevin.tian@intel.com>
-Subject: Re: [PATCH v8 0/6] vfio/type1: Add support for valid iova list
- management
-Message-ID: <20190823145113.5ea47e22@x1.home>
-In-Reply-To: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
-References: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 23 Aug 2019 20:51:20 +0000 (UTC)
+        Fri, 23 Aug 2019 16:52:40 -0400
+Received: from ma1-aaemail-dr-lapp03.apple.com ([17.171.2.72]:50576 "EHLO
+        ma1-aaemail-dr-lapp03.apple.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388903AbfHWUwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 16:52:40 -0400
+X-Greylist: delayed 14139 seconds by postgrey-1.27 at vger.kernel.org; Fri, 23 Aug 2019 16:52:38 EDT
+Received: from pps.filterd (ma1-aaemail-dr-lapp03.apple.com [127.0.0.1])
+        by ma1-aaemail-dr-lapp03.apple.com (8.16.0.27/8.16.0.27) with SMTP id x7NGl67H021488;
+        Fri, 23 Aug 2019 09:56:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=sender : date : from :
+ to : cc : subject : message-id : references : mime-version : content-type
+ : in-reply-to; s=20180706;
+ bh=/tjc82cNm90GSgZrWQRnXfPRIfOr22HZzEQE7A6BHWs=;
+ b=cEp+bzrYcEmXIIz5n0VSZM/fr4+A7VmKYd8L6fMUb4IjP5VSn+svZ8+YYkWg4QdLYAlU
+ QfT8MkQYOmkYx7nvMdWIo/GV+4XZLExSY3jxJ1TPRu1eF0nd4lrWy0QYp8pY9PUFKwmS
+ C+7ys/hUwjj4jazJt/+clOopLbGHCLPqmclQ//b8smDoJ+IHOXKAvRvdXnSPRY8Hgf7o
+ dPB8w684YlZ1EqVzGW4feOUrc0uXmtpzBKhAc2JAp0jPyv8F98TQ0V91m7XGMhAThfhn
+ rwWEZyAQJ9jtLdG3HCfY89ZQqIDz8KM1/3tIBM6cJiolU3CrjfWqZ+TZfOD+UHtjOVYd Vw== 
+Received: from mr2-mtap-s02.rno.apple.com (mr2-mtap-s02.rno.apple.com [17.179.226.134])
+        by ma1-aaemail-dr-lapp03.apple.com with ESMTP id 2uegk9smu4-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 23 Aug 2019 09:56:49 -0700
+Received: from nwk-mmpp-sz09.apple.com
+ (nwk-mmpp-sz09.apple.com [17.128.115.80]) by mr2-mtap-s02.rno.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) with ESMTPS id <0PWP007ZN8EOLK30@mr2-mtap-s02.rno.apple.com>; Fri,
+ 23 Aug 2019 09:56:48 -0700 (PDT)
+Received: from process_milters-daemon.nwk-mmpp-sz09.apple.com by
+ nwk-mmpp-sz09.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) id <0PWP001008CD5U00@nwk-mmpp-sz09.apple.com>; Fri,
+ 23 Aug 2019 09:56:48 -0700 (PDT)
+X-Va-A: 
+X-Va-T-CD: 8dfacd7d860744253dab6e7e01223206
+X-Va-E-CD: 6346fcbc6eba018940f1068423a83824
+X-Va-R-CD: d3cd177ea40623cbe9364e7db0a8edec
+X-Va-CD: 0
+X-Va-ID: 5d8bf003-5b91-4c02-a5b3-106ab8d5bf09
+X-V-A:  
+X-V-T-CD: 8dfacd7d860744253dab6e7e01223206
+X-V-E-CD: 6346fcbc6eba018940f1068423a83824
+X-V-R-CD: d3cd177ea40623cbe9364e7db0a8edec
+X-V-CD: 0
+X-V-ID: 702b5730-8d3e-48b1-9c52-0346125a5260
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,,
+ definitions=2019-08-23_07:,, signatures=0
+Received: from localhost ([17.192.155.217]) by nwk-mmpp-sz09.apple.com
+ (Oracle Communications Messaging Server 8.0.2.4.20190507 64bit (built May  7
+ 2019)) with ESMTPSA id <0PWP003LP8ENRF40@nwk-mmpp-sz09.apple.com>; Fri,
+ 23 Aug 2019 09:56:48 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 09:56:47 -0700
+From:   Christoph Paasch <cpaasch@apple.com>
+To:     Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Cc:     matthieu.baerts@tessares.net, aprout@ll.mit.edu,
+        davem@davemloft.net, edumazet@google.com,
+        gregkh@linuxfoundation.org, jonathan.lemon@gmail.com,
+        jtl@netflix.com, linux-kernel@vger.kernel.org, mkubecek@suse.cz,
+        ncardwell@google.com, sashal@kernel.org, stable@vger.kernel.org,
+        ycheng@google.com
+Subject: Re: [PATCH] tcp: fix tcp_rtx_queue_tail in case of empty retransmit
+ queue
+Message-id: <20190823165647.GJ5994@MacBook-Pro-64.local>
+References: <529376a4-cf63-f225-ce7c-4747e9966938@tessares.net>
+ <20190823125054.30070-1-tim.froidcoeur@tessares.net>
+MIME-version: 1.0
+Content-type: text/plain; charset=us-ascii
+Content-disposition: inline
+In-reply-to: <20190823125054.30070-1-tim.froidcoeur@tessares.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-23_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 17:06:31 +0100
-Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
+On 23/08/19 - 14:50:54, Tim Froidcoeur wrote:
+> Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
+> triggers following stack trace:
+> 
+> [25244.848046] kernel BUG at ./include/linux/skbuff.h:1406!
+> [25244.859335] RIP: 0010:skb_queue_prev+0x9/0xc
+> [25244.888167] Call Trace:
+> [25244.889182]  <IRQ>
+> [25244.890001]  tcp_fragment+0x9c/0x2cf
+> [25244.891295]  tcp_write_xmit+0x68f/0x988
+> [25244.892732]  __tcp_push_pending_frames+0x3b/0xa0
+> [25244.894347]  tcp_data_snd_check+0x2a/0xc8
+> [25244.895775]  tcp_rcv_established+0x2a8/0x30d
+> [25244.897282]  tcp_v4_do_rcv+0xb2/0x158
+> [25244.898666]  tcp_v4_rcv+0x692/0x956
+> [25244.899959]  ip_local_deliver_finish+0xeb/0x169
+> [25244.901547]  __netif_receive_skb_core+0x51c/0x582
+> [25244.903193]  ? inet_gro_receive+0x239/0x247
+> [25244.904756]  netif_receive_skb_internal+0xab/0xc6
+> [25244.906395]  napi_gro_receive+0x8a/0xc0
+> [25244.907760]  receive_buf+0x9a1/0x9cd
+> [25244.909160]  ? load_balance+0x17a/0x7b7
+> [25244.910536]  ? vring_unmap_one+0x18/0x61
+> [25244.911932]  ? detach_buf+0x60/0xfa
+> [25244.913234]  virtnet_poll+0x128/0x1e1
+> [25244.914607]  net_rx_action+0x12a/0x2b1
+> [25244.915953]  __do_softirq+0x11c/0x26b
+> [25244.917269]  ? handle_irq_event+0x44/0x56
+> [25244.918695]  irq_exit+0x61/0xa0
+> [25244.919947]  do_IRQ+0x9d/0xbb
+> [25244.921065]  common_interrupt+0x85/0x85
+> [25244.922479]  </IRQ>
+> 
+> tcp_rtx_queue_tail() (called by tcp_fragment()) can call
+> tcp_write_queue_prev() on the first packet in the queue, which will trigger
+> the BUG in tcp_write_queue_prev(), because there is no previous packet.
+> 
+> This happens when the retransmit queue is empty, for example in case of a
+> zero window.
+> 
+> Patch is needed for 4.4, 4.9 and 4.14 stable branches.
+> 
+> Fixes: 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
+> Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+>  include/net/tcp.h | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-> This is to revive this series which almost made to 4.18 but got dropped
-> as Alex found an issue[1] with IGD and USB devices RMRR region being
-> reported as reserved regions.
-> 
-> Thanks to Eric for his work here[2]. It provides a way to exclude
-> these regions while reporting the valid iova regions and this respin
-> make use of that.
-> 
-> Please note that I don't have a platform to verify the reported RMRR
-> issue and appreciate testing on those platforms.
-> 
-> Thanks,
-> Shameer
-> 
-> [1] https://lkml.org/lkml/2018/6/5/760
-> [2] https://lore.kernel.org/patchwork/cover/1083072/
-> 
-> v7-->v8
->   -Rebased to 5.3-rc1
->   -Addressed comments from Alex and Eric. Please see
->    individual patch history.
->   -Added Eric's R-by to patches 4/5/6
-> 
-> v6-->v7
->  -Rebased to 5.2-rc6 + Eric's patches
->  -Added logic to exclude IOMMU_RESV_DIRECT_RELAXABLE reserved memory
->   region type(patch #2).
->  -Dropped patch #4 of v6 as it is already part of mainline.
->  -Addressed "container with only an mdev device will have an empty list"
->   case(patches 4/6 & 5/6 - Suggested by Alex)
-> 
-> Old
-> ----
-> This series introduces an iova list associated with a vfio 
-> iommu. The list is kept updated taking care of iommu apertures,
-> and reserved regions. Also this series adds checks for any conflict
-> with existing dma mappings whenever a new device group is attached to
-> the domain.
-> 
-> User-space can retrieve valid iova ranges using VFIO_IOMMU_GET_INFO
-> ioctl capability chains. Any dma map request outside the valid iova
-> range will be rejected.
-> 
-> v5 --> v6
-> 
->  -Rebased to 4.17-rc1
->  -Changed the ordering such that previous patch#7 "iommu/dma: Move
->   PCI window region reservation back...")  is now patch #4. This
->   will avoid any bisection issues pointed out by Alex.
->  -Added Robins's Reviewed-by tag for patch#4
-> 
-> v4 --> v5
-> Rebased to next-20180315.
->  
->  -Incorporated the corner case bug fix suggested by Alex to patch #5.
->  -Based on suggestions by Alex and Robin, added patch#7. This
->   moves the PCI window  reservation back in to DMA specific path.
->   This is to fix the issue reported by Eric[1].
-> 
-> v3 --> v4
->  Addressed comments received for v3.
->  -dma_addr_t instead of phys_addr_t
->  -LIST_HEAD() usage.
->  -Free up iova_copy list in case of error.
->  -updated logic in filling the iova caps info(patch #5)
-> 
-> RFCv2 --> v3
->  Removed RFC tag.
->  Addressed comments from Alex and Eric:
->  - Added comments to make iova list management logic more clear.
->  - Use of iova list copy so that original is not altered in
->    case of failure.
-> 
-> RFCv1 --> RFCv2
->  Addressed comments from Alex:
-> -Introduced IOVA list management and added checks for conflicts with 
->  existing dma map entries during attach/detach.
-> 
-> Shameer Kolothum (6):
->   vfio/type1: Introduce iova list and add iommu aperture validity check
->   vfio/type1: Check reserved region conflict and update iova list
->   vfio/type1: Update iova list on detach
->   vfio/type1: check dma map request is within a valid iova range
->   vfio/type1: Add IOVA range capability support
->   vfio/type1: remove duplicate retrieval of reserved regions
-> 
->  drivers/vfio/vfio_iommu_type1.c | 518 +++++++++++++++++++++++++++++++-
->  include/uapi/linux/vfio.h       |  26 +-
->  2 files changed, 531 insertions(+), 13 deletions(-)
-> 
+Reviewed-by: Christoph Paasch <cpaasch@apple.com>
 
-Applied to the vfio next branch for v5.4 with Eric's additional reviews.
-Thanks!
-
-Alex
