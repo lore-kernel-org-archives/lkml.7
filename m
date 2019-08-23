@@ -2,137 +2,88 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8252DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55EEA204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC03B204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlCSJVwx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OIQ0AQe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbfHWJts (ORCPT
+        id S2388777AbfHWJvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:49:48 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34712 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729716AbfHWJtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:49:47 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so5511425pgc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4pKJfLts+ii68aI+WC2XZXU7J3w8Upzj8e1MnFrdmK8=;
-        b=VlCSJVwxNCkO9SjHAgCO85lM05XJjw9MAyN2ZHwcdAFbq29drolRzfkqvR5K9YOs7v
-         djh8km3I9oCvdlwwSc210g0KpzYa+ZAp+mm9Bv9bQNzzO2w8NiKf1glGFBP7QDf1U/h+
-         Mi3PXFA+9bsYQ4O3pt4wUuQFj2Xs/iw/dTWb0DzhuLVToDvk1Sa5ekxtbRcj3qEOhA9U
-         oWhnS+mz3YhgHmQy8ga+K1P39hi7Yt3GooTZtMbauGNW5nW+Dod0CVLD+0GZPIpo80xJ
-         3ZjTVwiag9dDBP3Jcqalso6C2qAeOEjBLb7uMox04HDLise2KQfEkFqeHMa4HEvWpxS1
-         upUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4pKJfLts+ii68aI+WC2XZXU7J3w8Upzj8e1MnFrdmK8=;
-        b=GmZ3JTqyxXmWaVRQSVLrldv5BrQ065DC88KVMy/R2jqE/T3uAR6QKDirrsc9LrhxQs
-         4SKn1TWtE8nt8G+hpMA1KNlPOPFZPZbDgA0Mv1EmqTywnIk+3tcOqZCRVkYujpeobeug
-         T7qr7suXTJIRf+HV3iBWSoa6qKK1f5X4VyOy6uRmS53IuIVREGJshaEq3Kv3hyHgLNcH
-         sovS4lj/EA5doKrjYefMP+TA4N1Vs8Mqmn+DlfdrGrWTWfaUlzG5pF8YjUNj8y5aAGLP
-         urUbUMxf4I0mg+GECe8YX1rFmt0aVO4WXoR8JQ5LD36mav0CQVIMj1NxV36br/luCVt7
-         gbdA==
-X-Gm-Message-State: APjAAAWx1opPtypTNPEMotfjnNGTYjp2rGF/Se/RjDdCVhWPsPlXk/r3
-        xweKvU5HxkTsDxl8d+LavbI=
-X-Google-Smtp-Source: APXvYqwmyRgsTR2bIVNhj65qQ9q0WLiJj3ErBAlEDENAyR78vnECqs6yufwWYgqaPVatxGWqgGnYTg==
-X-Received: by 2002:a17:90a:fe5:: with SMTP id 92mr4328993pjz.35.1566553786972;
-        Fri, 23 Aug 2019 02:49:46 -0700 (PDT)
-Received: from localhost ([110.70.58.156])
-        by smtp.gmail.com with ESMTPSA id j5sm2088113pfi.104.2019.08.23.02.49.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 02:49:46 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 18:49:43 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new
- printk ringbuffer implementation
-Message-ID: <20190823094943.GA15662@jagdpanzerIV>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
- <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
- <20190820092731.GA14137@jagdpanzerIV>
- <87a7c3f4uj.fsf@linutronix.de>
- <20190822135052.dp4dvav6fy2ajzkx@pathway.suse.cz>
+        Fri, 23 Aug 2019 05:51:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:58791 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729716AbfHWJvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:51:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46FGrZ5WXvz9sBp;
+        Fri, 23 Aug 2019 19:51:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566553903;
+        bh=QLzdlGUP2qHEZlzxsdrO1oxIaTROUs3zT3IbbobvE7g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OIQ0AQe8iVVw+fLNrQ3/q3fEyUTbhCJOv+E7jYQc56hj8wHO9ciUq6b3puZ+SsVWg
+         U3ypD9L3ICPtB+2DIDezTalchGkvMfdIwnNlj3yqOnjaNR7ZoV8e0hAKf5sQK8EMBs
+         F9iaUP2FALOTinEVzVIUvpOairD4gj5T6+zMGKsZ1HEXFrSNeEjvmD8SQxT8ccAW+q
+         b+ZoVCAbHWv0gwYVJmN8vYQcIgnRCFwQVHIq9CfgG9nX/hwbTQoNjaKcHY8rxekZdU
+         LLMJWX6q3AECF4OYK5YD2/mQK43bTkuN0t5nrexc/7PXSbIf5GSNCju8gplHR/DU4i
+         pEDwzdqnBm+2Q==
+Date:   Fri, 23 Aug 2019 19:51:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: linux-next: Signed-off-by missing for commit in the drm tree
+Message-ID: <20190823195140.3bc7821c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822135052.dp4dvav6fy2ajzkx@pathway.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="Sig_/eDkqsrvY0P4s280mUgHpOaC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (08/22/19 15:50), Petr Mladek wrote:
-[..]
-> I could understand that you spend a lot of time on creating the
-> labels and that they are somehow useful for you.
->
-> But I am not using them and I hope that I will not have to:
->
->   + Grepping takes a lot of time, especially over several files.
+--Sig_/eDkqsrvY0P4s280mUgHpOaC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-But without labels one still has to grep. A label at least points
-to one exact location.
+Hi all,
 
->   + Grepping is actually not enough. It is required to read
->     the following comment or code to realize what the label is for.
->
->   + Several barriers have multiple dependencies. Grepping one
->     label helps to check that one connection makes sense.
->     But it is hard to keep all relations in head to confirm
->     that they are complete and make sense overall.
+Commit
 
-Hmm. Labels don't add dependencies per se. Those tricky and hard to
-follow dependencies will still be there, even if we'd remove
-labels from comments. Labels just attempt to document them and
-to show the intent.
+  88b703527ba7 ("drm/nouveau/kms/gf119-: add ctm property support")
 
-The most important label, which should be added, is John's cell
-phone number. So people can call/text him when something is not
-working ;)
+is missing a Signed-off-by from its committer.
 
->   + There are about 50 labels in the code. "Entry Lifecycle"
->     section in dataring.c talks about 8 step. One would
->     expect that it would require 8 read and 8 write barriers.
-> 
->     Even coordination of 16 barriers might be complicated to check.
->     Where 50 is just scary.
-> 
->   + It seems to be a newly invented format and it is not documented.
->     I personally do not understand it completely, for example,
->     the meaning of "RELEASE from jA->cD->hA to jB".
+--=20
+Cheers,
+Stephen Rothwell
 
-I was under impression that this is the lingo used by LMM, but
-can't find it in Documentation.
+--Sig_/eDkqsrvY0P4s280mUgHpOaC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I agree, things can be improved and, may be, standardized.
-It feels that tooling is a big part of the problem here.
+-----BEGIN PGP SIGNATURE-----
 
-	-ss
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ftywACgkQAVBC80lX
+0Gy+gwgAm56anyFuDl42rt7iwMXlmwMaWLDH7JyiYBHCx4Wl6oD/R98T0D1eT4dX
+KgRF54RSZcmpneQDgwqGv/zSKC3xl4vF6+/gzguw5M5KQZiHriYoNp2PV9/o+kWm
+5/5sz/REq3DHb4uk07BZ+iUbRFPoifRpim5d2KOmV2IwNMfiNln64weFUgNH3E3A
+ODZWQ68HuOsV1JdkMUzutP+VrMKIJsHT/6Bb7Q74SlVzZ9D27QbKnkYA0bPzdNUX
+EIyARO8EbMx72nCPP+Nze2UVa/LZG7DWNHWyPL0kw+w1mE3zBLmDT1g9qlgfIf2p
+Csxt1kTjoHzphZkicet6jxRZzycyZw==
+=EDY5
+-----END PGP SIGNATURE-----
+
+--Sig_/eDkqsrvY0P4s280mUgHpOaC--
