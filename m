@@ -2,104 +2,97 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A91C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7194C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE5422CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7Wm2w11"
+	by mail.kernel.org (Postfix) with ESMTP id A8F6D22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390860AbfHWHoe (ORCPT
+        id S2390883AbfHWHr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:44:34 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34477 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388503AbfHWHod (ORCPT
+        Fri, 23 Aug 2019 03:47:59 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:40469 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728519AbfHWHr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:44:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b29so6461150lfq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
-        b=I7Wm2w112kZVo5kWC7G4B9lxgpkpfdDFoX4S5HugYjmAlJg9Z0erMI9NUjIR6JI91X
-         Ksvwc+eyUbldOgsBbz65LlhuXXdpscFzJc1vJ07sq2yZe6jlm9x/fvoK0tql9th3ci1/
-         CS+DHzG+MT0BgLZQuteblBYRpuXfutqgO3hdFI44CeD329VZcVFLu1vQ44gVVuzeSVII
-         9p9q/El026NdnM9A+3b7963AZEg2TEzK3EH31+tAvlgORlD7In2/scnhEcL1feu4ST/1
-         DZzgp81ZoP5eiSFgyUIMgsd2vNRj0qHbQfnJPxqefeos6vZgInxz5UN2yqRGIAW1wRLF
-         a/Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
-        b=aFl+TyhLwAHDXzEtZs7SxsQ1qmQOt/mlHuQK7MB2L1ZpBMz0EBYquPRkCYx+zN/Ln/
-         rLQNo9uRtYbJql8iy7CJZYaw4JodT/PpUe/WCeM+mOVTAnDqQ4bnWuqfKYEWwa2nBedp
-         rdUWXEo3F/6QKNHdp/2A1+wuB8yfq/eU/JID9/32mi6hXAXpkmv/g3ajmskN0WMXbTgS
-         lG0k91bYzUSTFdYzjQneB5fafbF570+3HByKz94izejlqyeSN6h/dnFEhSJc3OrFB/RZ
-         j55tiWJ2akcfaUIIDkZfdjLi2Eezk96oCACIkdLI9iz95Bdy7hlzU9KMChWEpdbA+G7s
-         yEwg==
-X-Gm-Message-State: APjAAAVe4kbBo+KQ/EUPuTPHw4zjoUZelkPlJ9FdUmYRjnbBSn9tQkYw
-        dYM4B7VE40RPwLGzner+h54f87IWWPAiuSzcvXYUYFJyZsg=
-X-Google-Smtp-Source: APXvYqyNoQgfYc8y4pHvuwV6KbLFLXwLC/iwoPTjq9ZJq+M/tH/JxhgIoE9IKKUF7jG7d7iHWjhzOuKCY0Oof3gDTrw=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr1828413lfg.165.1566546271241;
- Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
+        Fri, 23 Aug 2019 03:47:58 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 42D4210000C;
+        Fri, 23 Aug 2019 07:47:55 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 09:47:54 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v8 0/5] media: Allwinner A10 CSI support
+Message-ID: <20190823074754.z23rx62o5do4pu3z@flea>
+References: <cover.85d78dd1a3b44fe4cde1b65a9b1eb3b95daea7cc.1566462064.git-series.maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
- <20190809163334.489360-5-arnd@arndb.de>
-In-Reply-To: <20190809163334.489360-5-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 09:44:19 +0200
-Message-ID: <CACRpkdajapOw+fsEx1fqG3FL-n-WYmOUoGw_HGRHd730h+uv-w@mail.gmail.com>
-Subject: Re: [PATCH 5/7] ARM: xscale: fix multi-cpu compilation
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p5b5zggpj4lv77ke"
+Content-Disposition: inline
+In-Reply-To: <cover.85d78dd1a3b44fe4cde1b65a9b1eb3b95daea7cc.1566462064.git-series.maxime.ripard@bootlin.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 6:33 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> Building a combined ARMv4+XScale kernel produces these
-> and other build failures:
+--p5b5zggpj4lv77ke
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Aug 22, 2019 at 10:21:11AM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 >
-> /tmp/copypage-xscale-3aa821.s: Assembler messages:
-> /tmp/copypage-xscale-3aa821.s:167: Error: selected processor does not support `pld [r7,#0]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:168: Error: selected processor does not support `pld [r7,#32]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:169: Error: selected processor does not support `pld [r1,#0]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:170: Error: selected processor does not support `pld [r1,#32]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:171: Error: selected processor does not support `pld [r7,#64]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:176: Error: selected processor does not support `ldrd r4,r5,[r7],#8' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:180: Error: selected processor does not support `strd r4,r5,[r1],#8' in ARM mode
+> Hi,
+>
+> Here is a series introducing the support for the A10 (and SoCs of the same
+> generation) CMOS Sensor Interface (called CSI, not to be confused with
+> MIPI-CSI, which isn't support by that IP).
+>
+> That interface is pretty straightforward, but the driver has a few issues
+> that I wanted to bring up:
+>
+>   * The only board I've been testing this with has an ov5640 sensor
+>     attached, which doesn't work with the upstream driver. Copying the
+>     Allwinner init sequence works though, and this is how it has been
+>     tested. Testing with a second sensor would allow to see if it's an
+>     issue on the CSI side or the sensor side.
+>   * We don't have support for the ISP at the moment, but this can be added
+>     eventually.
 
-OK we certainly need this.
+Applied patch 4.
 
-> Add an explict .arch armv5 in the inline assembly to allow the ARMv5
-> specific instructions regardless of the compiler -march= target.
+Maxime
 
-You probably mean...
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> +.arch xscale                                   \n\
->         pld     [%0, #0]                        \n\
+--p5b5zggpj4lv77ke
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Explicit .arch xscale rather than .arch armv5.
+-----BEGIN PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV+aKgAKCRDj7w1vZxhR
+xRMwAP0fMmxNQd3iwRCBEhylWiBgjth2nBRFWwaoecI6PiXhjQD8Cr8Op739M9P5
+ELbAfEs0KtHW7ro3qTMi5KruzloAGgU=
+=+ikl
+-----END PGP SIGNATURE-----
+
+--p5b5zggpj4lv77ke--
