@@ -2,93 +2,164 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CF5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9BEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFDA22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B92E22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O/Fl63Jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405711AbfHWNpc (ORCPT
+        id S2390326AbfHWNso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:45:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:34726 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731976AbfHWNpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:45:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98D7928;
-        Fri, 23 Aug 2019 06:45:29 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E46C83F718;
-        Fri, 23 Aug 2019 06:45:28 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 14:45:27 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.co, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 05/10] PCI: layerscape: Fix some format issue of the
- code
-Message-ID: <20190823134527.GG14582@e119886-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-5-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822112242.16309-5-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Fri, 23 Aug 2019 09:48:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38594 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfHWNsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 09:48:43 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NDi8VK077850;
+        Fri, 23 Aug 2019 13:47:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=4xCfLNK2wN3hPijM+vMM5ZVmeko4jot4h3NeZzL1u2A=;
+ b=O/Fl63Jt422X/PY7uqXkb6Iz/+QRa8D+z7ngT/K/+Wqw5V1bfwC4mjtRuiuEeZ/5YvIz
+ y3OT+st3kfjXJ3qqyAMai0vhDhqK8s3Nf7dzU/EpIB3LnUHWCDNH/W2sGBwCr5Xz0tF5
+ qtM00YdrcJ1ZAQBRH7kDtmQDtEWqtFclVbf58V4eowbpkQQICEs5BtNiB8TSP7qDgHSb
+ GzYGLsrDEDmLkyPUTRqi9iCn+RPR/Pmf35ySUhJKtb0Jm0e/Oosiaexr60LJJGCaPK0s
+ uv0JklV+NyrAdQC0a3NS4bKyc8rlV3PMnO7qMBlsF7wsg+SVf6AaXAivC8+WeDLpjYh2 Mw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2ue9hq4rt1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 13:47:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NDcgD8040205;
+        Fri, 23 Aug 2019 13:47:21 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2uj8kqcn0v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 13:47:21 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7NDlIwG004344;
+        Fri, 23 Aug 2019 13:47:19 GMT
+Received: from [192.168.14.112] (/109.64.228.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 23 Aug 2019 06:47:18 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RESEND PATCH 07/13] KVM: x86: Add explicit flag for forced
+ emulation on #UD
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190823010709.24879-8-sean.j.christopherson@intel.com>
+Date:   Fri, 23 Aug 2019 16:47:14 +0300
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9E01A06E-FD3E-4D43-9FFE-6FFE3BAC269A@oracle.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
+ <20190823010709.24879-8-sean.j.christopherson@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908230141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908230142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 07:22:37PM +0800, Xiaowei Bao wrote:
-> Fix some format issue of the code in EP driver.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
+> On 23 Aug 2019, at 4:07, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>=20
+> Add an explicit emulation type for forced #UD emulation and use it to
+> detect that KVM should unconditionally inject a #UD instead of falling
+> into its standard emulation failure handling.
+>=20
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+The name "forced emulation on #UD" is not clear to me.
+
+If I understand correctly, EMULTYPE_TRAP_UD is currently used to =
+indicate
+that in case the x86 emulator fails to decode instruction, the caller =
+would like
+the x86 emulator to fail early such that it can handle this condition =
+properly.
+Thus, I would rename it EMULTYPE_TRAP_DECODE_FAILURE.
+
+But this new flag seems to do the same. So I=E2=80=99m left confused.
+I=E2=80=99m probably missing something trivial here.
+
+-Liran
 
 > ---
-> v2:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index be61d96..4e92a95 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -62,7 +62,7 @@ static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
->  }
->  
->  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				  enum pci_epc_irq_type type, u16 interrupt_num)
-> +				enum pci_epc_irq_type type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
-> @@ -86,7 +86,7 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
->  };
->  
->  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
-> -					struct platform_device *pdev)
-> +				 struct platform_device *pdev)
->  {
->  	struct dw_pcie *pci = pcie->pci;
->  	struct device *dev = pci->dev;
-> -- 
-> 2.9.5
-> 
+> arch/x86/include/asm/kvm_host.h | 1 +
+> arch/x86/kvm/x86.c              | 5 +++--
+> 2 files changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/x86/include/asm/kvm_host.h =
+b/arch/x86/include/asm/kvm_host.h
+> index d1d5b5ca1195..a38c93362945 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1318,6 +1318,7 @@ enum emulation_result {
+> #define EMULTYPE_TRAP_UD	    (1 << 1)
+> #define EMULTYPE_SKIP		    (1 << 2)
+> #define EMULTYPE_ALLOW_RETRY	    (1 << 3)
+> +#define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
+> #define EMULTYPE_VMWARE_GP	    (1 << 5)
+> int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int =
+emulation_type);
+> int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 228ca71d5b01..a1f9e36b2d58 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5337,7 +5337,7 @@ int handle_ud(struct kvm_vcpu *vcpu)
+> 				sig, sizeof(sig), &e) =3D=3D 0 &&
+> 	    memcmp(sig, "\xf\xbkvm", sizeof(sig)) =3D=3D 0) {
+> 		kvm_rip_write(vcpu, kvm_rip_read(vcpu) + sizeof(sig));
+> -		emul_type =3D 0;
+> +		emul_type =3D EMULTYPE_TRAP_UD_FORCED;
+> 	}
+>=20
+> 	er =3D kvm_emulate_instruction(vcpu, emul_type);
+> @@ -6532,7 +6532,8 @@ int x86_emulate_instruction(struct kvm_vcpu =
+*vcpu,
+> 		trace_kvm_emulate_insn_start(vcpu);
+> 		++vcpu->stat.insn_emulation;
+> 		if (r !=3D EMULATION_OK)  {
+> -			if (emulation_type & EMULTYPE_TRAP_UD)
+> +			if ((emulation_type & EMULTYPE_TRAP_UD) ||
+> +			    (emulation_type & EMULTYPE_TRAP_UD_FORCED))
+> 				return EMULATE_FAIL;
+> 			if (reexecute_instruction(vcpu, cr2, =
+write_fault_to_spt,
+> 						emulation_type))
+> --=20
+> 2.22.0
+>=20
+
