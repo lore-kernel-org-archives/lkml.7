@@ -2,249 +2,124 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B929FC3A589
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7156FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8147822CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6FB22CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ctGEYVlW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsZhZA5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392057AbfHWFX7 (ORCPT
+        id S2392082AbfHWF2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 01:23:59 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:21152 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391862AbfHWFX7 (ORCPT
+        Fri, 23 Aug 2019 01:28:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42517 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392067AbfHWF2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 01:23:59 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7N5JkbU014621
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 22:23:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=X5cZafEMOtA9egvlal74E4vlPa7kd0hNN9ns5h5N+qo=;
- b=ctGEYVlWD8wU9maXCXQcfvBbT8vpAUm1XXo6OdVD8gyR+f6d4RyRLp8JlPq1Y4gaGCTN
- AOxFtlHkziUfafdHchD7yRhYc/62tmGYzmOCgVDBjsFcnOgSINHtIxET93NPNmUb5TZr
- NG2/qjY7BZSaUUOIAj7mjO0KQfCUyUWzGm0= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uj416h5x0-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 22:23:58 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 22 Aug 2019 22:23:56 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id AA25B62E2FD5; Thu, 22 Aug 2019 22:23:50 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        <stable@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH] x86/mm: Do not split_large_page() for set_kernel_text_rw()
-Date:   Thu, 22 Aug 2019 22:23:35 -0700
-Message-ID: <20190823052335.572133-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Fri, 23 Aug 2019 01:28:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b16so7402376wrq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 22:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0jZOuGomjvqGYTjnoHRQnEezUC30S/yYktb2hSFP7WE=;
+        b=ZsZhZA5toWhhCMR8ORZnkeX18nS/RQ2ih4MGR5PbRXW4fGxvgYg41L5YkbhqfuMXAg
+         mkAKeh3DAtZHZr2Hy8m1ZZEyMd0RYkpIVNOinUsUm9LSyeaZL5xjE5mDmFb6hBOgPoP4
+         x3XX/VTD9ZCimPxO3iHOWmMSWKM9ozmfQpa5ODTu03PSPfBQAxVrqHRR4i7tCTvrEuvD
+         8S4CM2B8GSezAVMEVwuJrKF8O2JJxynlNW2q3whLIqL8iKIymONrlRfa354T15nmpb9t
+         YQQLUdqtjyw97shJg5StkamMN1OCVetEtqsQEjw5m9+DxyojtsUay/oeJ2Pz6F1jVb2r
+         84zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0jZOuGomjvqGYTjnoHRQnEezUC30S/yYktb2hSFP7WE=;
+        b=EaNhgp6+IoX2Vg1t6sojoi6pbuwORAKl7ucg+2X30DkOK9nayDi6bIwWbtXBDNZCtr
+         xwc9+NZ/EbcBSTdKxMTyI9mwtmU30US/ey2fz+n4ZJIIx6dhu1swjAPZc9vkGdjBHJbn
+         za/to6yJ82IzBoE4SwSUM5k4lp9oWd4EtntJkBcvEL5iPkNcFD+RGTsHkU7x0VK5h6br
+         omIIrL0t1XXTSP6TBJLZFT0z/4q++VtzZYzSzWB3OxM2G5BVkyiOBWymvVyu4a69Vpl3
+         gE41IeFXaMd7nkmXRUjhiSCRqYPsl3aYwsDVWyOM4N68Ge7HXeW3Fw5vydMPVFPy7D7U
+         Ivyg==
+X-Gm-Message-State: APjAAAXZeOk5c7QoDogESwCJpVCSHbHRt6/VNjCrqXIQsjKOKP6yO370
+        u6ktUwd4eHLy9L7gS7nqKs0=
+X-Google-Smtp-Source: APXvYqz0Z2vhDlK0hJlhKifI62Nz2sFkvKxwoKaEwtT65rtUxiNhzfI4E7Wt5QqqMivW9WMKUI00cg==
+X-Received: by 2002:a5d:50cb:: with SMTP id f11mr2663367wrt.277.1566538127201;
+        Thu, 22 Aug 2019 22:28:47 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id w5sm2377262wmm.43.2019.08.22.22.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 22:28:46 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 22:28:44 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Miles Chen =?utf-8?B?KOmZs+awkeaouik=?= 
+        <miles.chen@mediatek.com>, Tri Vo <trong@google.com>
+Subject: Re: [PATCH v3] ARM: UNWINDER_FRAME_POINTER implementation for Clang
+Message-ID: <20190823052844.GA70417@archlinux-threadripper>
+References: <CAKwvOd=wKUhnWr4UhVvgn6NYh+=zQOpMmKG9d_zEqaKLa4_9FA@mail.gmail.com>
+ <20190822183022.130790-1-nhuck@google.com>
+ <CAKwvOdn6av8bX4xUtuuKeJQdiQU+_Ty2aM8wtjP9+teU0Gt6Yg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-23_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908230057
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdn6av8bX4xUtuuKeJQdiQU+_Ty2aM8wtjP9+teU0Gt6Yg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As 4k pages check was removed from cpa [1], set_kernel_text_rw() leads to
-split_large_page() for all kernel text pages. This means a single kprobe
-will put all kernel text in 4k pages:
+On Thu, Aug 22, 2019 at 01:02:05PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> On Thu, Aug 22, 2019 at 11:30 AM Nathan Huckleberry <nhuck@google.com> wrote:
+> >
+> > The stackframe setup when compiled with clang is different.
+> > Since the stack unwinder expects the gcc stackframe setup it
+> > fails to print backtraces. This patch adds support for the
+> > clang stackframe setup.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/35
+> > Cc: clang-built-linux@googlegroups.com
+> > Suggested-by: Tri Vo <trong@google.com>
+> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> 
+> Great, thanks for following up on the suggestions from code review.
+> Since this is going to go up via the arm tree, which has its own
+> process, please add my:
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> to the commit message, then submit the patch to the maintainer's patch
+> tracking system:
+> https://www.armlinux.org.uk/developer/patches/info.php
+> (create a login, sign in, then visit:
+> https://www.armlinux.org.uk/developer/patches/add.php . I think the
+> correct thing is to put the first line of the commit in the summary
+> field, next/master as the kernel version (I applied/tested off of
+> -next), then the rest of the commit message body in the Patch Notes
+> field.  Make sure to attach the patch file.  Finally, it should appear
+> at https://www.armlinux.org.uk/developer/patches/section.php?section=0
+> I think within 24hrs).
 
-  root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
-  0xffffffff81000000-0xffffffff82400000     20M  ro    PSE      x  pmd
+Also for the record, I came across this a couple of months ago, Catalin
+Marinas had a git config alias that could be used for sending one patch
+to the patches email address so that you don't have to muck around the
+web interface:
 
-  root@ ~# echo ONE_KPROBE >> /sys/kernel/debug/tracing/kprobe_events
-  root@ ~# echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+https://lore.kernel.org/lkml/20190624144924.GE29120@arrakis.emea.arm.com/
 
-  root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
-  0xffffffff81000000-0xffffffff82400000     20M  ro             x  pte
+Web interface works fine but I prefer everything via the command line :)
 
-To fix this issue, introduce CPA_FLIP_TEXT_RW to bypass "Text RO" check
-in static_protections().
-
-Two helper functions set_text_rw() and set_text_ro() are added to flip
-_PAGE_RW bit for kernel text.
-
-[1] commit 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
-
-Fixes: 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
-Cc: stable@vger.kernel.org  # v4.20+
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- arch/x86/mm/init_64.c     |  4 ++--
- arch/x86/mm/mm_internal.h |  4 ++++
- arch/x86/mm/pageattr.c    | 34 +++++++++++++++++++++++++---------
- 3 files changed, 31 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index a6b5c653727b..5745fdcc429e 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1276,7 +1276,7 @@ void set_kernel_text_rw(void)
- 	 * mapping will always be RO. Refer to the comment in
- 	 * static_protections() in pageattr.c
- 	 */
--	set_memory_rw(start, (end - start) >> PAGE_SHIFT);
-+	set_text_rw(start, (end - start) >> PAGE_SHIFT);
- }
- 
- void set_kernel_text_ro(void)
-@@ -1293,7 +1293,7 @@ void set_kernel_text_ro(void)
- 	/*
- 	 * Set the kernel identity mapping for text RO.
- 	 */
--	set_memory_ro(start, (end - start) >> PAGE_SHIFT);
-+	set_text_ro(start, (end - start) >> PAGE_SHIFT);
- }
- 
- void mark_rodata_ro(void)
-diff --git a/arch/x86/mm/mm_internal.h b/arch/x86/mm/mm_internal.h
-index eeae142062ed..65b84b471770 100644
---- a/arch/x86/mm/mm_internal.h
-+++ b/arch/x86/mm/mm_internal.h
-@@ -24,4 +24,8 @@ void update_cache_mode_entry(unsigned entry, enum page_cache_mode cache);
- 
- extern unsigned long tlb_single_page_flush_ceiling;
- 
-+int set_text_rw(unsigned long addr, int numpages);
-+
-+int set_text_ro(unsigned long addr, int numpages);
-+
- #endif	/* __X86_MM_INTERNAL_H */
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 6a9a77a403c9..44a885df776d 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -66,6 +66,7 @@ static DEFINE_SPINLOCK(cpa_lock);
- #define CPA_ARRAY 2
- #define CPA_PAGES_ARRAY 4
- #define CPA_NO_CHECK_ALIAS 8 /* Do not search for aliases */
-+#define CPA_FLIP_TEXT_RW 0x10 /* allow flip _PAGE_RW for kernel text */
- 
- #ifdef CONFIG_PROC_FS
- static unsigned long direct_pages_count[PG_LEVEL_NUM];
-@@ -516,7 +517,7 @@ static inline void check_conflict(int warnlvl, pgprot_t prot, pgprotval_t val,
-  */
- static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
- 					  unsigned long pfn, unsigned long npg,
--					  int warnlvl)
-+					  int warnlvl, unsigned int cpa_flags)
- {
- 	pgprotval_t forbidden, res;
- 	unsigned long end;
-@@ -535,9 +536,11 @@ static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
- 	check_conflict(warnlvl, prot, res, start, end, pfn, "Text NX");
- 	forbidden = res;
- 
--	res = protect_kernel_text_ro(start, end);
--	check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
--	forbidden |= res;
-+	if (!(cpa_flags & CPA_FLIP_TEXT_RW)) {
-+		res = protect_kernel_text_ro(start, end);
-+		check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
-+		forbidden |= res;
-+	}
- 
- 	/* Check the PFN directly */
- 	res = protect_pci_bios(pfn, pfn + npg - 1);
-@@ -819,7 +822,7 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
- 	 * extra conditional required here.
- 	 */
- 	chk_prot = static_protections(old_prot, lpaddr, old_pfn, numpages,
--				      CPA_CONFLICT);
-+				      CPA_CONFLICT, cpa->flags);
- 
- 	if (WARN_ON_ONCE(pgprot_val(chk_prot) != pgprot_val(old_prot))) {
- 		/*
-@@ -855,7 +858,7 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
- 	 * protection requirement in the large page.
- 	 */
- 	new_prot = static_protections(req_prot, lpaddr, old_pfn, numpages,
--				      CPA_DETECT);
-+				      CPA_DETECT, cpa->flags);
- 
- 	/*
- 	 * If there is a conflict, split the large page.
-@@ -906,7 +909,7 @@ static void split_set_pte(struct cpa_data *cpa, pte_t *pte, unsigned long pfn,
- 	if (!cpa->force_static_prot)
- 		goto set;
- 
--	prot = static_protections(ref_prot, address, pfn, npg, CPA_PROTECT);
-+	prot = static_protections(ref_prot, address, pfn, npg, CPA_PROTECT, 0);
- 
- 	if (pgprot_val(prot) == pgprot_val(ref_prot))
- 		goto set;
-@@ -1504,7 +1507,7 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
- 
- 		cpa_inc_4k_install();
- 		new_prot = static_protections(new_prot, address, pfn, 1,
--					      CPA_PROTECT);
-+					      CPA_PROTECT, 0);
- 
- 		new_prot = pgprot_clear_protnone_bits(new_prot);
- 
-@@ -1707,7 +1710,7 @@ static int change_page_attr_set_clr(unsigned long *addr, int numpages,
- 	cpa.curpage = 0;
- 	cpa.force_split = force_split;
- 
--	if (in_flag & (CPA_ARRAY | CPA_PAGES_ARRAY))
-+	if (in_flag & (CPA_ARRAY | CPA_PAGES_ARRAY | CPA_FLIP_TEXT_RW))
- 		cpa.flags |= in_flag;
- 
- 	/* No alias checking for _NX bit modifications */
-@@ -1983,11 +1986,24 @@ int set_memory_ro(unsigned long addr, int numpages)
- 	return change_page_attr_clear(&addr, numpages, __pgprot(_PAGE_RW), 0);
- }
- 
-+int set_text_ro(unsigned long addr, int numpages)
-+{
-+	return change_page_attr_set_clr(&addr, numpages, __pgprot(0),
-+					__pgprot(_PAGE_RW), 0, CPA_FLIP_TEXT_RW,
-+					NULL);
-+}
-+
- int set_memory_rw(unsigned long addr, int numpages)
- {
- 	return change_page_attr_set(&addr, numpages, __pgprot(_PAGE_RW), 0);
- }
- 
-+int set_text_rw(unsigned long addr, int numpages)
-+{
-+	return change_page_attr_set_clr(&addr, numpages, __pgprot(_PAGE_RW),
-+					__pgprot(0), 0, CPA_FLIP_TEXT_RW, NULL);
-+}
-+
- int set_memory_np(unsigned long addr, int numpages)
- {
- 	return change_page_attr_clear(&addr, numpages, __pgprot(_PAGE_PRESENT), 0);
--- 
-2.17.1
-
+Cheers,
+Nathan
