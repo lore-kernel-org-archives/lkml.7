@@ -2,200 +2,321 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913D8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82957C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644862133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566558171;
-	bh=pHBJD1+HE3M5iI1+ac8xggHerVpV43KYu363xDm9wl8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=CLv8Rv62Q5ACMTZVerg45iYAKjluvZCNVt3K3F3uKfe4gFFcoDBb9WBPJ6tza1EzZ
-	 AvrdpW/h1Ok91qwjMIpRCMiQipup6CaDg03SyUXmgB/+A8eMh4z63yJ0EJV5i7DWtN
-	 RMm0xhV8HlR0fE1WjncW0oNHDioBDAH+TlM+04Ws=
+	by mail.kernel.org (Postfix) with ESMTP id 3229F20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:04:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="VQVQnrUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405025AbfHWLCu (ORCPT
+        id S2390965AbfHWLEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:02:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56462 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403857AbfHWLCa (ORCPT
+        Fri, 23 Aug 2019 07:04:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46830 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729690AbfHWLEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:02:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=81XkYAt1dlSIAEhjcYLBf1Q8HHzaz4ERhe2Y36L5NpU=; b=HA+ZvtLmbC5b
-        2CMe30cWTu+37mZVf6jhdYOzE/2v5+oiRnQoFhWodGW8rGsjKQM9A/8S92CVLkHc1ha893mE5y4UP
-        5oeHZngsl8rpdmKOH1pqStlzux82HGoKqS27JxA9eygefyRGX84QfBQAFaRUaKY8ZY8uapEp3UjxI
-        SN0fg=;
-Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i17Kt-0002wH-IE; Fri, 23 Aug 2019 11:02:27 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 4885AD02CD3; Fri, 23 Aug 2019 12:02:27 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org
-Subject: Applied "spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt" to the spi tree
-In-Reply-To: <20190822211514.19288-2-olteanv@gmail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190823110227.4885AD02CD3@fitzroy.sirena.org.uk>
-Date:   Fri, 23 Aug 2019 12:02:27 +0100 (BST)
+        Fri, 23 Aug 2019 07:04:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so8226031wru.13
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 04:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ygfIpc5apaxRo+gk58vjhr3w3ln7J604+QM3c4R2roQ=;
+        b=VQVQnrURdnPzhIrabeH5DtvjFIUJ7ZIjRkrIUgxeou+tMh2L/UjgAA9hf3ChtnuOsR
+         KI1cDth9m3TkdG1zz9zyr59VL8jXXYZrBWaZoKSxUJYBhqP2A/JiN1oP163a7lrwlZBK
+         8IP4uJfpuSht6hcsCGktzEZxPhCUST2hQ0V9T7fG0fo/JXm3lrw7zSMuu3NkRfSN7g7Z
+         jqISKCYSsAute1hCed0/6lVnTfMQsWqp1J/4ly+4rFDXMWgQDUSPMBzfyI6ItLio36Xb
+         e76cTaidDb7ILaRBRCLxsZOfr8TLE/ulgdqzYjUsU0zF7Uk+Nmb9dISwWgIpsdV+Kdq2
+         9rSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ygfIpc5apaxRo+gk58vjhr3w3ln7J604+QM3c4R2roQ=;
+        b=Q+7NJMtYzeb0/r7YAUNc0EKja+SrlyhtX9K+nsWjqWd2c2pC1nZ4b0u8n8vvkqXXlM
+         f1AiNWBzICLjiTMt1+5D5b8DyVNRGZKOnxtHjIsfI3CzS3heLxkaHlvoDyGhCFB9uzg3
+         yt1l2xNrQ4ZVYsjhbsdI210Eae2C0do0rmdo8acI3L9A4Mbjzh9OTelfdiMHWixaQc8x
+         uwp6JmvZlizMX5H8UiMlnxG3iF2NXkb704eXQUwpeIC4hQLMeIHMy5Z5i8hMy3C7urBE
+         tfp3pbJ2Bqcwmx8r1KoJnVCqqurWR3G5urhsWsvRyHR6kJllPlhQaF2sTpeZV2v16JWL
+         bBzw==
+X-Gm-Message-State: APjAAAVYmHyMUDPICA6AjnzJJvd1Pzg5Lo6tqwCSEz0HUy72JW4GWgYb
+        i1AeQ6HIwBfZP2PoRz0IZ4p4lonQel6T2Dbtb7BD8A==
+X-Google-Smtp-Source: APXvYqyGTcFpwVXeR8p0rFxkPUmfj0ZXcu+4OQoD1Tzt7QkIB/fNyXgSbNMHu3m0BsuivcaxOqd8c8yXlsMZ8ZAGYKc=
+X-Received: by 2002:adf:f641:: with SMTP id x1mr4581017wrp.179.1566558286135;
+ Fri, 23 Aug 2019 04:04:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-16-anup.patel@wdc.com>
+ <09d74212-4fa3-d64c-5a63-d556e955b88c@amazon.com>
+In-Reply-To: <09d74212-4fa3-d64c-5a63-d556e955b88c@amazon.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 23 Aug 2019 16:34:33 +0530
+Message-ID: <CAAhSdy36q5-x8cXM=M5S3cnE2nvCMhcsfuQayVt7jahd58HWFw@mail.gmail.com>
+Subject: Re: [PATCH v5 15/20] RISC-V: KVM: Add timer functionality
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Aug 23, 2019 at 1:23 PM Alexander Graf <graf@amazon.com> wrote:
+>
+> On 22.08.19 10:46, Anup Patel wrote:
+> > From: Atish Patra <atish.patra@wdc.com>
+> >
+> > The RISC-V hypervisor specification doesn't have any virtual timer
+> > feature.
+> >
+> > Due to this, the guest VCPU timer will be programmed via SBI calls.
+> > The host will use a separate hrtimer event for each guest VCPU to
+> > provide timer functionality. We inject a virtual timer interrupt to
+> > the guest VCPU whenever the guest VCPU hrtimer event expires.
+> >
+> > The following features are not supported yet and will be added in
+> > future:
+> > 1. A time offset to adjust guest time from host time
+> > 2. A saved next event in guest vcpu for vm migration
+>
+> Implementing these 2 bits right now should be trivial. Why wait?
 
-   spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
+We were waiting for HTIMEDELTA CSR to be merged so we
+deferred this items.
 
-has been applied to the spi tree at
+>
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >   arch/riscv/include/asm/kvm_host.h       |   4 +
+> >   arch/riscv/include/asm/kvm_vcpu_timer.h |  32 +++++++
+> >   arch/riscv/kvm/Makefile                 |   2 +-
+> >   arch/riscv/kvm/vcpu.c                   |   6 ++
+> >   arch/riscv/kvm/vcpu_timer.c             | 106 ++++++++++++++++++++++++
+> >   drivers/clocksource/timer-riscv.c       |   8 ++
+> >   include/clocksource/timer-riscv.h       |  16 ++++
+> >   7 files changed, 173 insertions(+), 1 deletion(-)
+> >   create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
+> >   create mode 100644 arch/riscv/kvm/vcpu_timer.c
+> >   create mode 100644 include/clocksource/timer-riscv.h
+> >
+> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> > index ab33e59a3d88..d2a2e45eefc0 100644
+> > --- a/arch/riscv/include/asm/kvm_host.h
+> > +++ b/arch/riscv/include/asm/kvm_host.h
+> > @@ -12,6 +12,7 @@
+> >   #include <linux/types.h>
+> >   #include <linux/kvm.h>
+> >   #include <linux/kvm_types.h>
+> > +#include <asm/kvm_vcpu_timer.h>
+> >
+> >   #ifdef CONFIG_64BIT
+> >   #define KVM_MAX_VCPUS                       (1U << 16)
+> > @@ -167,6 +168,9 @@ struct kvm_vcpu_arch {
+> >       unsigned long irqs_pending;
+> >       unsigned long irqs_pending_mask;
+> >
+> > +     /* VCPU Timer */
+> > +     struct kvm_vcpu_timer timer;
+> > +
+> >       /* MMIO instruction details */
+> >       struct kvm_mmio_decode mmio_decode;
+> >
+> > diff --git a/arch/riscv/include/asm/kvm_vcpu_timer.h b/arch/riscv/include/asm/kvm_vcpu_timer.h
+> > new file mode 100644
+> > index 000000000000..df67ea86988e
+> > --- /dev/null
+> > +++ b/arch/riscv/include/asm/kvm_vcpu_timer.h
+> > @@ -0,0 +1,32 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
+> > + *
+> > + * Authors:
+> > + *   Atish Patra <atish.patra@wdc.com>
+> > + */
+> > +
+> > +#ifndef __KVM_VCPU_RISCV_TIMER_H
+> > +#define __KVM_VCPU_RISCV_TIMER_H
+> > +
+> > +#include <linux/hrtimer.h>
+> > +
+> > +#define VCPU_TIMER_PROGRAM_THRESHOLD_NS              1000
+> > +
+> > +struct kvm_vcpu_timer {
+> > +     bool init_done;
+> > +     /* Check if the timer is programmed */
+> > +     bool is_set;
+> > +     struct hrtimer hrt;
+> > +     /* Mult & Shift values to get nanosec from cycles */
+> > +     u32 mult;
+> > +     u32 shift;
+> > +};
+> > +
+> > +int kvm_riscv_vcpu_timer_init(struct kvm_vcpu *vcpu);
+> > +int kvm_riscv_vcpu_timer_deinit(struct kvm_vcpu *vcpu);
+> > +int kvm_riscv_vcpu_timer_reset(struct kvm_vcpu *vcpu);
+> > +int kvm_riscv_vcpu_timer_next_event(struct kvm_vcpu *vcpu,
+> > +                                 unsigned long ncycles);
+>
+> This function never gets called?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+It's called from SBI emulation.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>
+> > +
+> > +#endif
+> > diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
+> > index c0f57f26c13d..3e0c7558320d 100644
+> > --- a/arch/riscv/kvm/Makefile
+> > +++ b/arch/riscv/kvm/Makefile
+> > @@ -9,6 +9,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
+> >   kvm-objs := $(common-objs-y)
+> >
+> >   kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
+> > -kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o
+> > +kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
+> >
+> >   obj-$(CONFIG_KVM)   += kvm.o
+> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> > index 6124077d154f..018fca436776 100644
+> > --- a/arch/riscv/kvm/vcpu.c
+> > +++ b/arch/riscv/kvm/vcpu.c
+> > @@ -54,6 +54,8 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+> >
+> >       memcpy(cntx, reset_cntx, sizeof(*cntx));
+> >
+> > +     kvm_riscv_vcpu_timer_reset(vcpu);
+> > +
+> >       WRITE_ONCE(vcpu->arch.irqs_pending, 0);
+> >       WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
+> >   }
+> > @@ -108,6 +110,9 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+> >       cntx->hstatus |= HSTATUS_SP2P;
+> >       cntx->hstatus |= HSTATUS_SPV;
+> >
+> > +     /* Setup VCPU timer */
+> > +     kvm_riscv_vcpu_timer_init(vcpu);
+> > +
+> >       /* Reset VCPU */
+> >       kvm_riscv_reset_vcpu(vcpu);
+> >
+> > @@ -116,6 +121,7 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+> >
+> >   void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> >   {
+> > +     kvm_riscv_vcpu_timer_deinit(vcpu);
+> >       kvm_riscv_stage2_flush_cache(vcpu);
+> >       kmem_cache_free(kvm_vcpu_cache, vcpu);
+> >   }
+> > diff --git a/arch/riscv/kvm/vcpu_timer.c b/arch/riscv/kvm/vcpu_timer.c
+> > new file mode 100644
+> > index 000000000000..a45ca06e1aa6
+> > --- /dev/null
+> > +++ b/arch/riscv/kvm/vcpu_timer.c
+> > @@ -0,0 +1,106 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
+> > + *
+> > + * Authors:
+> > + *     Atish Patra <atish.patra@wdc.com>
+> > + */
+> > +
+> > +#include <linux/errno.h>
+> > +#include <linux/err.h>
+> > +#include <linux/kvm_host.h>
+> > +#include <clocksource/timer-riscv.h>
+> > +#include <asm/csr.h>
+> > +#include <asm/kvm_vcpu_timer.h>
+> > +
+> > +static enum hrtimer_restart kvm_riscv_vcpu_hrtimer_expired(struct hrtimer *h)
+> > +{
+> > +     struct kvm_vcpu_timer *t = container_of(h, struct kvm_vcpu_timer, hrt);
+> > +     struct kvm_vcpu *vcpu = container_of(t, struct kvm_vcpu, arch.timer);
+> > +
+> > +     t->is_set = false;
+> > +     kvm_riscv_vcpu_set_interrupt(vcpu, IRQ_S_TIMER);
+> > +
+> > +     return HRTIMER_NORESTART;
+> > +}
+> > +
+> > +static u64 kvm_riscv_delta_cycles2ns(u64 cycles, struct kvm_vcpu_timer *t)
+> > +{
+> > +     unsigned long flags;
+> > +     u64 cycles_now, cycles_delta, delta_ns;
+> > +
+> > +     local_irq_save(flags);
+> > +     cycles_now = get_cycles64();
+> > +     if (cycles_now < cycles)
+> > +             cycles_delta = cycles - cycles_now;
+> > +     else
+> > +             cycles_delta = 0;
+> > +     delta_ns = (cycles_delta * t->mult) >> t->shift;
+> > +     local_irq_restore(flags);
+> > +
+> > +     return delta_ns;
+> > +}
+> > +
+> > +static int kvm_riscv_vcpu_timer_cancel(struct kvm_vcpu_timer *t)
+> > +{
+> > +     if (!t->init_done || !t->is_set)
+> > +             return -EINVAL;
+> > +
+> > +     hrtimer_cancel(&t->hrt);
+> > +     t->is_set = false;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +int kvm_riscv_vcpu_timer_next_event(struct kvm_vcpu *vcpu,
+> > +                                 unsigned long ncycles)
+> > +{
+> > +     struct kvm_vcpu_timer *t = &vcpu->arch.timer;
+> > +     u64 delta_ns = kvm_riscv_delta_cycles2ns(ncycles, t);
+>
+> ... in fact, I feel like I'm missing something obvious here. How does
+> the guest trigger the timer event? What is the argument it uses for that
+> and how does that play with the tbfreq in the earlier patch?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+We have SBI call inferface between Hypervisor and Guest. One of the
+SBI call allows Guest to program time event. The next event is specified
+as absolute cycles. The Guest can read time using TIME CSR which
+returns system timer value (@ tbfreq freqency).
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Guest Linux will know the tbfreq from DTB passed by QEMU/KVMTOOL
+and it has to be same as Host tbfreq.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+The TBFREQ config register visible to user-space is a read-only CONFIG
+register which tells user-space tools (QEMU/KVMTOOL) about Host tbfreq.
 
-Thanks,
-Mark
+Regards,
+Anup
 
-From 12fb61a973935c63f2580b3b053017cc14b51f42 Mon Sep 17 00:00:00 2001
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Fri, 23 Aug 2019 00:15:10 +0300
-Subject: [PATCH] spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
-
-If the entire function depends on the SPI status register having the
-interrupt bits asserted, then just check it and exit early if those bits
-aren't set (such as in the case of the shared IRQ being triggered for
-the other peripheral). Cosmetic patch.
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Link: https://lore.kernel.org/r/20190822211514.19288-2-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-fsl-dspi.c | 79 +++++++++++++++++++-------------------
- 1 file changed, 40 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 790cb02fc181..c90db7db4121 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -658,47 +658,48 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
- 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
- 
-+	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
-+		return IRQ_HANDLED;
-+
-+	/* Get transfer counter (in number of SPI transfers). It was
-+	 * reset to 0 when transfer(s) were started.
-+	 */
-+	regmap_read(dspi->regmap, SPI_TCR, &spi_tcr);
-+	spi_tcnt = SPI_TCR_GET_TCNT(spi_tcr);
-+	/* Update total number of bytes that were transferred */
-+	msg->actual_length += spi_tcnt * dspi->bytes_per_word;
-+
-+	trans_mode = dspi->devtype_data->trans_mode;
-+	switch (trans_mode) {
-+	case DSPI_EOQ_MODE:
-+		dspi_eoq_read(dspi);
-+		break;
-+	case DSPI_TCFQ_MODE:
-+		dspi_tcfq_read(dspi);
-+		break;
-+	default:
-+		dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
-+			trans_mode);
-+			return IRQ_HANDLED;
-+	}
- 
--	if (spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)) {
--		/* Get transfer counter (in number of SPI transfers). It was
--		 * reset to 0 when transfer(s) were started.
--		 */
--		regmap_read(dspi->regmap, SPI_TCR, &spi_tcr);
--		spi_tcnt = SPI_TCR_GET_TCNT(spi_tcr);
--		/* Update total number of bytes that were transferred */
--		msg->actual_length += spi_tcnt * dspi->bytes_per_word;
--
--		trans_mode = dspi->devtype_data->trans_mode;
--		switch (trans_mode) {
--		case DSPI_EOQ_MODE:
--			dspi_eoq_read(dspi);
--			break;
--		case DSPI_TCFQ_MODE:
--			dspi_tcfq_read(dspi);
--			break;
--		default:
--			dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
--				trans_mode);
--				return IRQ_HANDLED;
--		}
-+	if (!dspi->len) {
-+		dspi->waitflags = 1;
-+		wake_up_interruptible(&dspi->waitq);
-+		return IRQ_HANDLED;
-+	}
- 
--		if (!dspi->len) {
--			dspi->waitflags = 1;
--			wake_up_interruptible(&dspi->waitq);
--		} else {
--			switch (trans_mode) {
--			case DSPI_EOQ_MODE:
--				dspi_eoq_write(dspi);
--				break;
--			case DSPI_TCFQ_MODE:
--				dspi_tcfq_write(dspi);
--				break;
--			default:
--				dev_err(&dspi->pdev->dev,
--					"unsupported trans_mode %u\n",
--					trans_mode);
--			}
--		}
-+	switch (trans_mode) {
-+	case DSPI_EOQ_MODE:
-+		dspi_eoq_write(dspi);
-+		break;
-+	case DSPI_TCFQ_MODE:
-+		dspi_tcfq_write(dspi);
-+		break;
-+	default:
-+		dev_err(&dspi->pdev->dev,
-+			"unsupported trans_mode %u\n",
-+			trans_mode);
- 	}
- 
- 	return IRQ_HANDLED;
--- 
-2.20.1
-
+>
+>
+> Alex
+>
