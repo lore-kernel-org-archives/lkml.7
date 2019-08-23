@@ -2,108 +2,106 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41700C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F07AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1110D22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xj/QnMIM"
+	by mail.kernel.org (Postfix) with ESMTP id F13FA2339D
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395058AbfHWM4a (ORCPT
+        id S2394995AbfHWM4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:56:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58904 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395018AbfHWM40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:56:26 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NCuMxp103966;
-        Fri, 23 Aug 2019 07:56:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566564982;
-        bh=j4TqG6chto4nwAxIP2tkUry0a7Nx+tqpySHSQ8Tzdn4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xj/QnMIMuz/G6lYM9K3Z6SF5gzH3wKmEwidvHzuoPr1dmPCsuL9uTFe4UxAZ1pCIW
-         PB3n+SJ2NjWyUmkin4yOE2oGALZvQC/RqMWs8ruxJTWyDJs++sKLpreegQ08f62g08
-         79e+1t3RnndM2JSCCcgh6PxG3uTkMqArQcSiomUw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NCuLhe016495
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 23 Aug 2019 07:56:22 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 23
- Aug 2019 07:56:10 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 23 Aug 2019 07:56:10 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NCtwki092319;
-        Fri, 23 Aug 2019 07:56:08 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-Subject: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved channel ranges
-Date:   Fri, 23 Aug 2019 15:56:17 +0300
-Message-ID: <20190823125618.8133-5-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190823125618.8133-1-peter.ujfalusi@ti.com>
-References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
+        Fri, 23 Aug 2019 08:56:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8367 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394976AbfHWM4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:56:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 05:56:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
+   d="scan'208";a="208538168"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Aug 2019 05:56:07 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i196q-00035N-LO; Fri, 23 Aug 2019 15:56:04 +0300
+Date:   Fri, 23 Aug 2019 15:56:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, alan@linux.intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
+Message-ID: <20190823125604.GS30120@smile.fi.intel.com>
+References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
+ <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
+ <20190822090208.GJ30120@smile.fi.intel.com>
+ <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
+ <20190822130429.GN30120@smile.fi.intel.com>
+ <a6717e97-01cf-771c-8467-be5946528dd0@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6717e97-01cf-771c-8467-be5946528dd0@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similarly to paRAM slots, channels can be used by other cores.
+On Fri, Aug 23, 2019 at 11:37:38AM +0800, Tanwar, Rahul wrote:
+> On 22/8/2019 9:04 PM, Andy Shevchenko wrote:
+> > On Thu, Aug 22, 2019 at 05:26:33PM +0800, Tanwar, Rahul wrote:
+> > > On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
+> > > > On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
+> > > > > Use a newly introduced optional "status" property of "motorola,mc146818"
+> > > > > compatible DT node to determine if RTC is supported. Skip read/write from
+> > > > > RTC device only when this node is present and status is "disabled". In all
+> > > > > other cases, proceed as before.
+> > > > Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
+> > > 
+> > > get_wallclock() and set_wallclock() are function pointers of platform_ops
+> > > 
+> > > which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
+> > > 
+> > > at init time. Since adding a new platform to override these functions is
+> > > 
+> > > discouraged, so the only way is to modify RTC get/set functions.
+> > Shouldn't it be platform agnostic code?
+> > So, my point is, instead of hacking two functions, perhaps better to avoid them
+> > at all.
+> 
+> Sorry, i could not understand your point. The changes are platform
+> 
+> agnostic i.e. it doesn't break existing use cases. Are you recommending
+> 
+> to add a new platform and make changes there ?
 
-Add optional property to configure the reserved channel ranges.
+Nope, I propose to do something like
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+void __init foo()
+{
+	if (platform has RTC)
+		return;
 
-diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-index 4bbc94d829c8..1198682ada99 100644
---- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-@@ -42,6 +42,9 @@ Optional properties:
- - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
- 		the driver, they are allocated to be used by for example the
- 		DSP. See example.
-+- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
-+		the driver, they are allocated to be used by for example the
-+		DSP. See example.
- 
- ------------------------------------------------------------------------------
- eDMA3 Transfer Controller
-@@ -91,6 +94,8 @@ edma: edma@49000000 {
- 	ti,edma-memcpy-channels = <20 21>;
- 	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
- 	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-+	/* The following channels are reserved: 35-44 */
-+	ti,edma-reserved-chan-ranges = <35 10>;
- };
- 
- edma_tptc0: tptc@49800000 {
+	set_wallclock = noop;
+	get_wallclock = noop;
+}
+
 -- 
-Peter
+With Best Regards,
+Andy Shevchenko
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
