@@ -2,69 +2,75 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D57C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5043FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEC422CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F7222CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393108AbfHWIwb (ORCPT
+        id S2393200AbfHWIwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:52:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39038 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbfHWIwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:52:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7B3CF8980F2;
-        Fri, 23 Aug 2019 08:52:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6734117D08;
-        Fri, 23 Aug 2019 08:52:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190822.121207.731320146177703787.davem@davemloft.net>
-References: <20190822.121207.731320146177703787.davem@davemloft.net> <156647655350.10908.12081183247715153431.stgit@warthog.procyon.org.uk>
-To:     David Miller <davem@davemloft.net>
-Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/9] rxrpc: Fix use of skb_cow_data()
+        Fri, 23 Aug 2019 04:52:37 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35579 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393110AbfHWIwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 04:52:35 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i15J8-0006z2-K5; Fri, 23 Aug 2019 08:52:30 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        linux-wimax@intel.com, "David S . Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] wimax/i2400m: fix calculation of index, remove sizeof
+Date:   Fri, 23 Aug 2019 09:52:30 +0100
+Message-Id: <20190823085230.6225-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27347.1566550348.1@warthog.procyon.org.uk>
-Date:   Fri, 23 Aug 2019 09:52:28 +0100
-Message-ID: <27348.1566550348@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 23 Aug 2019 08:52:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller <davem@davemloft.net> wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> Why don't you just do an skb_unshare() at the beginning when you know that
-> you'll need to do that?
+The subtraction of the two pointers is automatically scaled by the
+size of the size of the object the pointers point to, so the division
+by sizeof(*i2400m->barker) is incorrect.  Fix this by removing the
+division.  Also make index an unsigned int to clean up a checkpatch
+warning.
 
-I was trying to defer any copying to process context rather than doing it in
-softirq context to spend less time in softirq context - plus that way I can
-use GFP_NOIO (kafs) or GFP_KERNEL (direct AF_RXRPC socket) rather than
-GFP_ATOMIC if the api supports it.
+Addresses-Coverity: ("Extra sizeof expression")
+Fixes: aba3792ac2d7 ("wimax/i2400m: rework bootrom initialization to be more flexible")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wimax/i2400m/fw.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I don't remember now why I used skb_cow_data() rather than skb_unshare() - but
-it was probably because the former leaves the sk_buff object itself intact,
-whereas the latter replaces it.  I can switch to using skb_unshare() instead.
+diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
+index 489cba9b284d..599a703af6eb 100644
+--- a/drivers/net/wimax/i2400m/fw.c
++++ b/drivers/net/wimax/i2400m/fw.c
+@@ -399,8 +399,7 @@ int i2400m_is_boot_barker(struct i2400m *i2400m,
+ 	 * associated with the device. */
+ 	if (i2400m->barker
+ 	    && !memcmp(buf, i2400m->barker, sizeof(i2400m->barker->data))) {
+-		unsigned index = (i2400m->barker - i2400m_barker_db)
+-			/ sizeof(*i2400m->barker);
++		unsigned int index = i2400m->barker - i2400m_barker_db;
+ 		d_printf(2, dev, "boot barker cache-confirmed #%u/%08x\n",
+ 			 index, le32_to_cpu(i2400m->barker->data[0]));
+ 		return 0;
+-- 
+2.20.1
 
-Question for you: how likely is a newly received buffer, through a UDP socket,
-to be 'cloned'?
-
-David
