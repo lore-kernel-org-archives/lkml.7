@@ -2,74 +2,72 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E8EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECD4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380772054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:37:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DLE5dtkN"
+	by mail.kernel.org (Postfix) with ESMTP id 6A21021848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395370AbfHWOh2 (ORCPT
+        id S2395380AbfHWOh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:37:28 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55234 "EHLO vps0.lunn.ch"
+        Fri, 23 Aug 2019 10:37:57 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62650 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395343AbfHWOh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:37:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=85+g8r/87Gl6rz/13I7lQBuILwhzvTeolNUackSyhdE=; b=DLE5dtkNXj21pg9xWey0gj5lv3
-        gVeu8vMRHsdpwHRljny1Sy6ofa4Axmf/RUICa0JRaqZkPTJWgnRLcleFHwv/kvjmPIkGC+RR6tkim
-        RUGJ2Jdf4/qiNS5jSfD34HLB2QFWQiBBLRQ3oS4dJXrQH1HKK2oPNekSqA+58D+vqXAw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i1Ags-0004X4-Ru; Fri, 23 Aug 2019 16:37:22 +0200
-Date:   Fri, 23 Aug 2019 16:37:22 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hayes Wang <hayeswang@realtek.com>
-Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 0/2] r8152: save EEE
-Message-ID: <20190823143722.GE21295@lunn.ch>
-References: <1394712342-15778-304-Taiwan-albertk@realtek.com>
- <1394712342-15778-311-Taiwan-albertk@realtek.com>
+        id S2393066AbfHWOh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:37:57 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 07:37:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
+   d="scan'208";a="196492866"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Aug 2019 07:37:55 -0700
+Date:   Fri, 23 Aug 2019 07:37:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [RESEND PATCH 01/13] KVM: x86: Relocate MMIO exit stats counting
+Message-ID: <20190823143755.GA6713@linux.intel.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
+ <20190823010709.24879-2-sean.j.christopherson@intel.com>
+ <87d0gwp7ix.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1394712342-15778-311-Taiwan-albertk@realtek.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <87d0gwp7ix.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 03:33:39PM +0800, Hayes Wang wrote:
-> v4:
-> For patch #2, remove redundant calling of "ocp_reg_write(tp, OCP_EEE_ADV, 0)".
+On Fri, Aug 23, 2019 at 11:15:18AM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> v3:
-> For patch #2, fix the mistake caused by copying and pasting.
+> > Move the stat.mmio_exits update into x86_emulate_instruction().  This is
+> > both a bug fix, e.g. the current update flows will incorrectly increment
+> > mmio_exits on emulation failure, and a preparatory change to set the
+> > stage for eliminating EMULATE_DONE and company.
+> >
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> v2:
-> Adjust patch #1. The EEE has been disabled in the beginning of
-> r8153_hw_phy_cfg() and r8153b_hw_phy_cfg(), so only check if
-> it is necessary to enable EEE.
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> This, however, makes me wonder why this is handled in x86-specific code
+> in the first place, can we just count KVM_EXIT_MMIO exits when handling
+> KVM_RUN?
 
-Hi Hayes
-
-That was 3 revisions of the patches in less than 30 minutes. Slow
-down, take your time, review your work yourself before posting it,
-etc.
-
-Aim for no more than one revision, posted to the list, per day.
-
-    Andrew
+struct kvm_vcpu_stat is arch specific.  At a glance, everyone is counting
+similar things, but often in slightly different ways.  E.g. PowerPC and
+ARM count MMIO exits, but PowerPC counts all exits, ARM has separate
+counters for in-kernel vs. userspace, and x86 counts only userspace.
