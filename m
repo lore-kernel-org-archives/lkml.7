@@ -2,169 +2,175 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2301CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62623C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4562166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382592166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="T5sIc6AL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDrSWemF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389725AbfHWKmb (ORCPT
+        id S2390181AbfHWKoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:42:31 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52128 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388655AbfHWKmb (ORCPT
+        Fri, 23 Aug 2019 06:44:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38010 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389475AbfHWKn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:42:31 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190823104229euoutp0130209f8913cd1e7aabf5700a8a8970aa~9hz7qcEH62159621596euoutp017
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:42:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190823104229euoutp0130209f8913cd1e7aabf5700a8a8970aa~9hz7qcEH62159621596euoutp017
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566556949;
-        bh=/+8sX1IwLtd70Fz4kr7IaaRknglBZi+mCocggncPzmQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=T5sIc6ALwC9iPZFhwAFv/qdzKSKIHieA5RuGoO6sc8SqRkTDZ04EwMnISK4isuLF1
-         1+ZRNeel+AjN6YD9mD35qOPsEPz9u7HeabjMFlwcDdUNtMbNo8OrttcHZONSYxWeoZ
-         yQ/5RdGifp+pMCyOxz1SIEldQjTAQ58jTOus1sHc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190823104228eucas1p186ef5140430ad48c986e5e56202d7b43~9hz61FU-92136521365eucas1p1B;
-        Fri, 23 Aug 2019 10:42:28 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id E2.92.04469.413CF5D5; Fri, 23
-        Aug 2019 11:42:28 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190823104228eucas1p2ce9162667a7fac65d3bf4abfa38253e7~9hz6GWqJR0355603556eucas1p2K;
-        Fri, 23 Aug 2019 10:42:28 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190823104227eusmtrp16ee00847a73b5142e0981d52aaf6f641~9hz52bcv90951109511eusmtrp1X;
-        Fri, 23 Aug 2019 10:42:27 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-68-5d5fc314047d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 6E.EE.04166.313CF5D5; Fri, 23
-        Aug 2019 11:42:27 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190823104227eusmtip2e7c89f5bb809d018b40bbd2c3a1aea7b~9hz5f3nw20575205752eusmtip27;
-        Fri, 23 Aug 2019 10:42:27 +0000 (GMT)
-Subject: Re: [PATCH v6] ata/pata_buddha: Probe via modalias instead of
- initcall
-To:     Max Staudt <max@enpas.org>
-Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
-        linux-m68k@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glaubitz@physik.fu-berlin.de, schmitzmic@gmail.com,
-        geert@linux-m68k.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <7d3c4379-23bd-ef3a-e725-86516097850a@samsung.com>
-Date:   Fri, 23 Aug 2019 12:42:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 23 Aug 2019 06:43:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id p12so19047787iog.5
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LguLqmbBWbPdKueS6f8s+iff5p51lzL0SO42xI76Zlw=;
+        b=fDrSWemFkny3Xi2K12jcJc98rev4rMqe2wMpCQgAviDgObYJUXPWHc9Yt9XpjBwBUz
+         STREfMnY1KZSW+oPJqgSP0pmfhebOHzlqyROP42H77xNprtAiNhkslCM08eb9WfpHPfU
+         OP73A2HkgHa2tyuE7RPtgdPBAr32STFtxJVKq8KbuLpuORKWF4m/xE7G58iYTo+syOQ5
+         zN7LbjEq+AsHG9ki0on2TW23QGAhO8wRxsQK3uFbgDby06D6+aWt61ER/wSVRJ5RzlZX
+         7TK531VydE+W5sTS16+Vak0h0OMVJSysg4J/iTAC3ql6WjwY+zJ1rOeFBj97zij8s4U5
+         Za6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LguLqmbBWbPdKueS6f8s+iff5p51lzL0SO42xI76Zlw=;
+        b=Hidm3s52Td6OzvpuLs56LDjHjYvU3PR6f1+0AVnkVdW/IFtNAVJY3LW0t+0A6aSZrW
+         Znpu6yCi2rSrQVL15Dpe7JRTqhS0BEC+l9aFVBRrQC1Hyaf+YNEWPBTwXOM66Yoj2WUk
+         knTf7Fy5t1PkIQERFxn6/yddl32ByWB/gty5HIzV6NIYmDiKUEUmw7QTC6EbajMEDqPj
+         I5EnjkY5faR78rEKF1l7jonsezSwOv34AECX6JNkW2B98Q/4ygwCDPJbEv/Z0C4w1Axi
+         1oV0HuwmJ+bd9yzKun3U83SC6pYvL2vavRBfqVj7zfy3aT6vLE249SC+r5rkf5WzA9jq
+         /pXQ==
+X-Gm-Message-State: APjAAAWcQaa6OPUdCzThrnxTvS46OLZCvZEB087cAB23nZcidvIeh4tc
+        k9j27mAYgfDhaNQFRyrUHCV6/1YuQKGSZn/0smQ=
+X-Google-Smtp-Source: APXvYqwvE5etieJ+BSLkV7jGzhBvKdUSHisPxx0L/1Ko14iO5GUnhe+tuipbm3da27eeCtegwyLCvgYIrY4rnnu0IDc=
+X-Received: by 2002:a6b:6a15:: with SMTP id x21mr5790479iog.40.1566557038542;
+ Fri, 23 Aug 2019 03:43:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190820165715.15185-1-max@enpas.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsWy7djPc7oih+NjDVrmylusvtvPZvHs1l4m
-        i9nvlS2O7XjEZHF51xw2i93v7zNaPGz6wGQxt3U6uwOHx+Gvm9k8ds66y+5x+Wypx6HDHYwe
-        B8+dY/T4vEkugC2KyyYlNSezLLVI3y6BK2Pn3ymsBU28FatX32dvYJzP1cXIySEhYCIxde8l
-        ti5GLg4hgRWMEv83nWGCcL4wStxdcIkVwvnMKLH7x0d2mJa1Kz9BJZYzShzbsoQNJCEk8JZR
-        YusJERBbWCBQ4tenWYwgtoiAnMTH1quMIA3MAtsYJY6efgU2iU3ASmJi+yqwIl4BO4mWZxPA
-        bBYBVYmXTXuYQWxRgQiJ+8c2sELUCEqcnPmEBcTmFDCWeL1hDlgNs4C4xK0n85kgbHmJ7W8h
-        4hICh9glbq2Bsl0knu5cxARhC0u8Or4F6hsZidOTe1hAjpMQWMco8bfjBTOEs51RYvnkf2wQ
-        VdYSh49fBLqCA2iDpsT6XfogpoSAo8TFv7IQJp/EjbeCECfwSUzaNp0ZIswr0dEmBDFDTWLD
-        sg1sMFu7dq5knsCoNAvJY7OQPDMLyTOzENYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqXrpec
-        n7uJEZiSTv87/mkH49dLSYcYBTgYlXh4T3TFxQqxJpYVV+YeYpTgYFYS4S2bCBTiTUmsrEot
-        yo8vKs1JLT7EKM3BoiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAqHLk8k6XdVd5u6JvVKv8
-        VCpKbd724cCsx7VqG3w2SCrr7hEye5ovl3jp+iRJM//2U2Juu+3+nZbRW8nkmCHbfCvrR23A
-        8m+OCt1N+TLSyqWr2Bb+NJ3s+iOB5eoB00N/TK6FKJpd3i3Bn9PatY9ryfkLLy8Kz1NVuN/+
-        VUK9vmWB779yO4P/SizFGYmGWsxFxYkAJawZ7kUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xe7rCh+NjDVZd07ZYfbefzeLZrb1M
-        FrPfK1sc2/GIyeLyrjlsFrvf32e0eNj0gclibut0dgcOj8NfN7N57Jx1l93j8tlSj0OHOxg9
-        Dp47x+jxeZNcAFuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5m
-        WWqRvl2CXsbOv1NYC5p4K1avvs/ewDifq4uRk0NCwERi7cpPrF2MXBxCAksZJQ5ve8LexcgB
-        lJCROL6+DKJGWOLPtS42iJrXjBL3PqxkB0kICwRK/Po0ixHEFhGQk/jYepURpIhZYBujxNdr
-        0xkhOtoYJe6snsIEUsUmYCUxsX0VWAevgJ1Ey7MJYDaLgKrEy6Y9zCC2qECExJn3K1ggagQl
-        Ts58AmZzChhLvN4wB6yGWUBd4s+8S1C2uMStJ/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFp
-        WcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMwDrcd+7l5B+OljcGHGAU4GJV4eE90xcUK
-        sSaWFVfmHmKU4GBWEuEtmwgU4k1JrKxKLcqPLyrNSS0+xGgK9NxEZinR5HxgisgriTc0NTS3
-        sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cCY+XwmU21jUeuOpYt/LJuS4edX
-        9jDV/Nukg5EG6/3jexVY468e5T9c9Oj3/GmachqtDRMXT7xQJvSYpT7vaWbi//ubcpwN5oum
-        GHe0se9YbrPpmF7KQlvHmZdEtaWlU/52TBaf4CUMjOmJDzQezDzXFFHtdvtJZ4RH48J1zz88
-        e3heQ1Lz3iIlluKMREMt5qLiRAAiHiZD2QIAAA==
-X-CMS-MailID: 20190823104228eucas1p2ce9162667a7fac65d3bf4abfa38253e7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190820165731epcas2p340cc3421251987896b857da4ec42038e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190820165731epcas2p340cc3421251987896b857da4ec42038e
-References: <CGME20190820165731epcas2p340cc3421251987896b857da4ec42038e@epcas2p3.samsung.com>
-        <20190820165715.15185-1-max@enpas.org>
+References: <20190601082722.44543-1-irogers@google.com> <20190621082422.GH3436@hirez.programming.kicks-ass.net>
+ <CAP-5=fW7sMjQEHm+1e=cdAi+ZyP53UyU7xhAbnouMApuxYqrhw@mail.gmail.com>
+ <20190624075520.GC3436@hirez.programming.kicks-ass.net> <CAP-5=fU=xbP39b6WZV4h92g6Ub_w4tH2JdApw5t6DTyZqxShUQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fU=xbP39b6WZV4h92g6Ub_w4tH2JdApw5t6DTyZqxShUQ@mail.gmail.com>
+From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
+Date:   Fri, 23 Aug 2019 16:13:46 +0530
+Message-ID: <CAKTKpr6m7YzqJ7U2icNHq7ZwoG0pw8ws_EHcLR+-T6ZeEfe15Q@mail.gmail.com>
+Subject: Re: [PATCH] perf cgroups: Don't rotate events for cgroups unnecessarily
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
 Hi,
 
-On 8/20/19 6:57 PM, Max Staudt wrote:
-> Up until now, the pata_buddha driver would only check for cards on
-> initcall time. Now, the kernel will call its probe function as soon
-> as a compatible card is detected.
-> 
-> v6: Only do the drvdata workaround for X-Surf (remove breaks otherwise)
->     Style
-> 
-> v5: Remove module_exit(): There's no good way to handle the X-Surf hack.
->     Also include a workaround to save X-Surf's drvdata in case zorro8390
->     is active.
-> 
-> v4: Clean up pata_buddha_probe() by using ent->driver_data.
->     Support X-Surf via late_initcall()
-> 
-> v3: Clean up devm_*, implement device removal.
-> 
-> v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
->     git diff --ignore-space-change
-> 
-> Signed-off-by: Max Staudt <max@enpas.org>
-> ---
->  drivers/ata/pata_buddha.c | 231 +++++++++++++++++++++++++++-------------------
->  1 file changed, 138 insertions(+), 93 deletions(-)
-> 
-> diff --git a/drivers/ata/pata_buddha.c b/drivers/ata/pata_buddha.c
-> index 11a8044ff..9e1b57866 100644
-> --- a/drivers/ata/pata_buddha.c
-> +++ b/drivers/ata/pata_buddha.c
+We are seeing regression with our uncore perf driver(Marvell's
+ThunderX2, ARM64 server platform) on 5.3-Rc1.
+After bisecting, it turned out to be this patch causing the issue.
 
-[...]
+Test case:
+Load module and run perf for more than 4 events( we have 4 counters,
+event multiplexing takes place for more than 4 events), then unload
+module.
+With this sequence of testing, the system hangs(soft lockup) after 2
+or 3 iterations. Same test runs for hours on 5.2.
 
-> +static struct zorro_driver pata_buddha_driver = {
-> +	.name           = "pata_buddha",
-> +	.id_table       = pata_buddha_zorro_tbl,
-> +	.probe          = pata_buddha_probe,
-> +	.remove         = pata_buddha_remove,
-> +	.driver  = {
-> +		.suppress_bind_attrs = true,
+while [ 1 ]
+do
+        rmmod thunderx2_pmu
+        modprobe thunderx2_pmu
+        perf stat -a -e \
+        uncore_dmc_0/cnt_cycles/,\
+        uncore_dmc_0/data_transfers/,\
+        uncore_dmc_0/read_txns/,\
+        uncore_dmc_0/config=0xE/,\
+        uncore_dmc_0/write_txns/ sleep 1
+        sleep 2
+done
 
-I thought that we had agreed that this is not needed?
+Is this patch tested adequately?
 
-With that fixed:
+On Fri, Jun 28, 2019 at 3:18 AM Ian Rogers <irogers@google.com> wrote:
+>
+> group_index On Mon, Jun 24, 2019 at 12:55 AM Peter Zijlstra
+> <peterz@infradead.org> wrote:
+> >
+> > On Fri, Jun 21, 2019 at 11:01:29AM -0700, Ian Rogers wrote:
+> > > On Fri, Jun 21, 2019 at 1:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > On Sat, Jun 01, 2019 at 01:27:22AM -0700, Ian Rogers wrote:
+> > > > > @@ -3325,6 +3331,15 @@ static int flexible_sched_in(struct perf_event *event, void *data)
+> > > > >                       sid->can_add_hw = 0;
+> > > > >       }
+> > > > >
+> > > > > +     /*
+> > > > > +      * If the group wasn't scheduled then set that multiplexing is necessary
+> > > > > +      * for the context. Note, this won't be set if the event wasn't
+> > > > > +      * scheduled due to event_filter_match failing due to the earlier
+> > > > > +      * return.
+> > > > > +      */
+> > > > > +     if (event->state == PERF_EVENT_STATE_INACTIVE)
+> > > > > +             sid->ctx->rotate_necessary = 1;
+> > > > > +
+> > > > >       return 0;
+> > > > >  }
+> > > >
+> > > > That looked odd; which had me look harder at this function which
+> > > > resulted in the below. Should we not terminate the context interation
+> > > > the moment one flexible thingy fails to schedule?
+> > >
+> > > If we knew all the events were hardware events then this would be
+> > > true, as there may be software events that always schedule then the
+> > > continued iteration is necessary.
+> >
+> > But this is the 'old' code, where this is guaranteed by the context.
+> > That is, if this is a hardware context; there wil only be software
+> > events due to them being in a group with hardware events.
+> >
+> > If this is a software group, then we'll never fail to schedule and we'll
+> > not get in this branch to begin with.
+> >
+> > Or am I now confused for having been staring at two different code-bases
+> > at the same time?
+>
+> I believe you're right and I'd overlooked this. I think there is a
+> more efficient version of this code possible that I can follow up
+> with. There are 3 perf_event_contexts, potentially a sw and hw context
+> within the task_struct and one per-CPU in perf_cpu_context. With this
+> change I'm focussed on improving rotation of cgroup events that appear
+> system wide within the per-CPU context. Without cgroup events the
+> system wide events don't need to be iterated over during scheduling
+> in. The branch that can set rotate_necessary will only be necessary
+> for the task hardware events. For system wide events, considered with
+> cgroup mode scheduling in, the branch is necessary as rotation may be
+> necessary. It'd be possible to have variants of flexible_sched_in that
+> behave differently in the task software event context, and the system
+> wide and task hardware contexts.
+>
+> I have a series of patches related to Kan Liang's cgroup
+> perf_event_groups improvements. I'll mail these out and see if I can
+> avoid the branch in the task software event context case.
+>
+> Thanks,
+> Ian
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Thanks,
+Ganapat
