@@ -2,205 +2,344 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF559C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48898C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C6C21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:52:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvlqHn0L"
+	by mail.kernel.org (Postfix) with ESMTP id 128972173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436570AbfHWPwB (ORCPT
+        id S2436590AbfHWPwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:52:01 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38270 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfHWPwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:52:00 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so14157654edo.5;
-        Fri, 23 Aug 2019 08:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iyqrdjipyXAujuXf+ThiuGW6nNdgnVLRywofD+cV01o=;
-        b=rvlqHn0L1193g1bK59aDzW5QFZ7INT6gNf3Fv0WGM522kqXV05cx99QeADHrYojnOT
-         bBasDwlDXOn41HN2QOKRtrcmmRM/G/wE+Uf+ceza0tFj3kPXujfHkI9QSDImmXugxTec
-         H3ligJeorzjo88okJUYQ4pB8lIuFR0SMKGoanMIsO8C+dtiAz1c8MZ8YuILQnH+aZJt/
-         cOXURAuFat+IaVpuPsi9LaIbMhbPf7HoLIHmQ1jayg4BTXyEMV8DF8j6t7RC4mKrXHxm
-         EuY6VOaCVkBiEbxCEAd65AWT3RWP2OmhZCENtrfZkCgrsV1F3lsIQNjsexKJP8/NIOMK
-         IPBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=iyqrdjipyXAujuXf+ThiuGW6nNdgnVLRywofD+cV01o=;
-        b=D1yzr/aRTHmEwXlmsa6rW4vNtsUZFfe77clNJSvzORSTSPEf1MS7Nj1ZnnIXk4KtG+
-         l1WzphhUn9LZPEoYpB6Cx/z713RHtTWrb2hdc8hTSVjBLxAPUgmxvelX3nDKNT+hv4pD
-         qX+SWwHRnA9o/AoEo0kStFaOG6Ku2VlY8tHe0MoYAvAybkozcIb/f/cNBt1Ci8y+6gxq
-         BpYJzNrz6EJ4FL0xhZWPYij2eeNKtuMTk0qXkdClcbsRDLK0Hx2B4EkVVbhSIWgcDJuj
-         Owb5k6TO1Z4SPk3IUd1GRJ+ENPO5zcouen2yoeBT6pM+Ix69GR/SoAFHTypfL/7XNVst
-         uz+g==
-X-Gm-Message-State: APjAAAWonhuyXuvnvTf35Oq7eAGklI2CX1td+xTBZ4NAbWvt2mGUNSaK
-        L/XHjbUJfAJQFq4r8Q5r1TYj9NdcPzA=
-X-Google-Smtp-Source: APXvYqznB5coGlLh9coLbb8PuXMvVnSjrTSolQ3eNOBqxBxf0JB7bBx1R5LOZE7siYfusUythAV2EA==
-X-Received: by 2002:aa7:d5d3:: with SMTP id d19mr5432403eds.103.1566575517699;
-        Fri, 23 Aug 2019 08:51:57 -0700 (PDT)
-Received: from ziggy.stardust ([37.223.137.147])
-        by smtp.gmail.com with ESMTPSA id k12sm469254ejz.79.2019.08.23.08.51.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Aug 2019 08:51:57 -0700 (PDT)
-Subject: Re: [PATCH v2 03/11] dt-bindings: irq: mtk,sysirq: add support for
- mt6779
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Cc:     Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
+        Fri, 23 Aug 2019 11:52:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48514 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbfHWPwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:52:33 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C8A4106E288;
+        Fri, 23 Aug 2019 15:52:32 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C48F1001938;
+        Fri, 23 Aug 2019 15:52:31 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 09:52:29 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Jiri Pirko <jiri@resnulli.us>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
-        mtk01761 <wendell.lin@mediatek.com>,
-        linux-clk <linux-clk@vger.kernel.org>
-References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
- <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
- <CACRpkdY4sVV5oyFa+a30dY2A9tsKpzTeuQ8ChmnXcm-5_eZkVA@mail.gmail.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <827cd581-8fa0-d59b-f21c-de16f8c2ee50@gmail.com>
-Date:   Fri, 23 Aug 2019 17:51:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        cjia <cjia@nvidia.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190823095229.210e1e84@x1.home>
+In-Reply-To: <AM0PR05MB4866867150DAABA422F25FF8D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190820225722.237a57d2@x1.home>
+        <AM0PR05MB4866AE8FC4AA3CC24B08B326D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190820232622.164962d3@x1.home>
+        <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190822092903.GA2276@nanopsycho.orion>
+        <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190822095823.GB2276@nanopsycho.orion>
+        <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190822121936.GC2276@nanopsycho.orion>
+        <AM0PR05MB4866F9650CF73FC671972127D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190823081221.GG2276@nanopsycho.orion>
+        <AM0PR05MB4866DED407D6F1C653D5D560D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190823082820.605deb07@x1.home>
+        <AM0PR05MB4866867150DAABA422F25FF8D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdY4sVV5oyFa+a30dY2A9tsKpzTeuQ8ChmnXcm-5_eZkVA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 23 Aug 2019 15:52:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 23 Aug 2019 14:53:06 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-On 23/08/2019 10:51, Linus Walleij wrote:
-> On Mon, Aug 19, 2019 at 11:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
+> > -----Original Message-----
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Friday, August 23, 2019 7:58 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>; David S . Miller
+> > <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>; Cornelia
+> > Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; cjia <cjia@nvidia.com>; netdev@vger.kernel.org
+> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > 
+> > On Fri, 23 Aug 2019 08:14:39 +0000
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > Hi Alex,
+> > >
+> > >  
+> > > > -----Original Message-----
+> > > > From: Jiri Pirko <jiri@resnulli.us>
+> > > > Sent: Friday, August 23, 2019 1:42 PM
+> > > > To: Parav Pandit <parav@mellanox.com>
+> > > > Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
+> > > > <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>; Kirti
+> > > > Wankhede <kwankhede@nvidia.com>; Cornelia Huck  
+> > <cohuck@redhat.com>;  
+> > > > kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
+> > > > <cjia@nvidia.com>; netdev@vger.kernel.org
+> > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > >
+> > > > Thu, Aug 22, 2019 at 03:33:30PM CEST, parav@mellanox.com wrote:  
+> > > > >
+> > > > >  
+> > > > >> -----Original Message-----
+> > > > >> From: Jiri Pirko <jiri@resnulli.us>
+> > > > >> Sent: Thursday, August 22, 2019 5:50 PM
+> > > > >> To: Parav Pandit <parav@mellanox.com>
+> > > > >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
+> > > > >> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
+> > > > >> Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck  
+> > > > <cohuck@redhat.com>;  
+> > > > >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
+> > > > >> <cjia@nvidia.com>; netdev@vger.kernel.org
+> > > > >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > > >>
+> > > > >> Thu, Aug 22, 2019 at 12:04:02PM CEST, parav@mellanox.com wrote:  
+> > > > >> >
+> > > > >> >  
+> > > > >> >> -----Original Message-----
+> > > > >> >> From: Jiri Pirko <jiri@resnulli.us>
+> > > > >> >> Sent: Thursday, August 22, 2019 3:28 PM
+> > > > >> >> To: Parav Pandit <parav@mellanox.com>
+> > > > >> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
+> > > > >> >> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
+> > > > >> >> Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck  
+> > > > >> <cohuck@redhat.com>;  
+> > > > >> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
+> > > > >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
+> > > > >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > > >> >>
+> > > > >> >> Thu, Aug 22, 2019 at 11:42:13AM CEST, parav@mellanox.com wrote:  
+> > > > >> >> >
+> > > > >> >> >  
+> > > > >> >> >> -----Original Message-----
+> > > > >> >> >> From: Jiri Pirko <jiri@resnulli.us>
+> > > > >> >> >> Sent: Thursday, August 22, 2019 2:59 PM
+> > > > >> >> >> To: Parav Pandit <parav@mellanox.com>
+> > > > >> >> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri
+> > > > >> >> >> Pirko <jiri@mellanox.com>; David S . Miller
+> > > > >> >> >> <davem@davemloft.net>; Kirti Wankhede
+> > > > >> >> >> <kwankhede@nvidia.com>; Cornelia Huck  
+> > > > >> >> <cohuck@redhat.com>;  
+> > > > >> >> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
+> > > > >> >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
+> > > > >> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev
+> > > > >> >> >> core
+> > > > >> >> >>
+> > > > >> >> >> Wed, Aug 21, 2019 at 08:23:17AM CEST, parav@mellanox.com  
+> > wrote:  
+> > > > >> >> >> >
+> > > > >> >> >> >  
+> > > > >> >> >> >> -----Original Message-----
+> > > > >> >> >> >> From: Alex Williamson <alex.williamson@redhat.com>
+> > > > >> >> >> >> Sent: Wednesday, August 21, 2019 10:56 AM
+> > > > >> >> >> >> To: Parav Pandit <parav@mellanox.com>
+> > > > >> >> >> >> Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller
+> > > > >> >> >> >> <davem@davemloft.net>; Kirti Wankhede
+> > > > >> >> >> >> <kwankhede@nvidia.com>; Cornelia Huck
+> > > > >> >> >> >> <cohuck@redhat.com>; kvm@vger.kernel.org;
+> > > > >> >> >> >> linux-kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
+> > > > >> >> >> >> netdev@vger.kernel.org
+> > > > >> >> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and
+> > > > >> >> >> >> mdev core
+> > > > >> >> >> >>  
+> > > > >> >> >> >> > > > > Just an example of the alias, not proposing how it's set.
+> > > > >> >> >> >> > > > > In fact, proposing that the user does not set
+> > > > >> >> >> >> > > > > it, mdev-core provides one  
+> > > > >> >> >> >> > > automatically.  
+> > > > >> >> >> >> > > > >  
+> > > > >> >> >> >> > > > > > > Since there seems to be some prefix
+> > > > >> >> >> >> > > > > > > overhead, as I ask about above in how many
+> > > > >> >> >> >> > > > > > > characters we actually have to work with in
+> > > > >> >> >> >> > > > > > > IFNAMESZ, maybe we start with
+> > > > >> >> >> >> > > > > > > 8 characters (matching your "index"
+> > > > >> >> >> >> > > > > > > namespace) and expand as necessary for  
+> > > > >> >> >> disambiguation.  
+> > > > >> >> >> >> > > > > > > If we can eliminate overhead in IFNAMESZ,
+> > > > >> >> >> >> > > > > > > let's start with  
+> > > > >> 12.  
+> > > > >> >> >> >> > > > > > > Thanks,
+> > > > >> >> >> >> > > > > > >  
+> > > > >> >> >> >> > > > > > If user is going to choose the alias, why does
+> > > > >> >> >> >> > > > > > it have to be limited to  
+> > > > >> >> >> >> sha1?  
+> > > > >> >> >> >> > > > > > Or you just told it as an example?
+> > > > >> >> >> >> > > > > >
+> > > > >> >> >> >> > > > > > It can be an alpha-numeric string.  
+> > > > >> >> >> >> > > > >
+> > > > >> >> >> >> > > > > No, I'm proposing a different solution where
+> > > > >> >> >> >> > > > > mdev-core creates an alias based on an
+> > > > >> >> >> >> > > > > abbreviated sha1.  The user does not provide the  
+> > > > >> >> >> >> alias.  
+> > > > >> >> >> >> > > > >  
+> > > > >> >> >> >> > > > > > Instead of mdev imposing number of characters
+> > > > >> >> >> >> > > > > > on the alias, it should be best  
+> > > > >> >> >> >> > > > > left to the user.  
+> > > > >> >> >> >> > > > > > Because in future if netdev improves on the
+> > > > >> >> >> >> > > > > > naming scheme, mdev will be  
+> > > > >> >> >> >> > > > > limiting it, which is not right.  
+> > > > >> >> >> >> > > > > > So not restricting alias size seems right to me.
+> > > > >> >> >> >> > > > > > User configuring mdev for networking devices
+> > > > >> >> >> >> > > > > > in a given kernel knows what  
+> > > > >> >> >> >> > > > > user is doing.  
+> > > > >> >> >> >> > > > > > So user can choose alias name size as it finds suitable.  
+> > > > >> >> >> >> > > > >
+> > > > >> >> >> >> > > > > That's not what I'm proposing, please read again.
+> > > > >> >> >> >> > > > > Thanks,  
+> > > > >> >> >> >> > > >
+> > > > >> >> >> >> > > > I understood your point. But mdev doesn't know how
+> > > > >> >> >> >> > > > user is going to use  
+> > > > >> >> >> >> > > udev/systemd to name the netdev.  
+> > > > >> >> >> >> > > > So even if mdev chose to pick 12 characters, it
+> > > > >> >> >> >> > > > could result in  
+> > > > >> >> collision.  
+> > > > >> >> >> >> > > > Hence the proposal to provide the alias by the
+> > > > >> >> >> >> > > > user, as user know the best  
+> > > > >> >> >> >> > > policy for its use case in the environment its using.  
+> > > > >> >> >> >> > > > So 12 character sha1 method will still work by user.  
+> > > > >> >> >> >> > >
+> > > > >> >> >> >> > > Haven't you already provided examples where certain
+> > > > >> >> >> >> > > drivers or subsystems have unique netdev prefixes?
+> > > > >> >> >> >> > > If mdev provides a unique alias within the
+> > > > >> >> >> >> > > subsystem, couldn't we simply define a netdev prefix
+> > > > >> >> >> >> > > for the mdev subsystem and avoid all other
+> > > > >> >> >> >> > > collisions?  I'm not in favor of the user providing
+> > > > >> >> >> >> > > both a uuid and an alias/instance.  Thanks,
+> > > > >> >> >> >> > >  
+> > > > >> >> >> >> > For a given prefix, say ens2f0, can two UUID->sha1
+> > > > >> >> >> >> > first 9 characters have  
+> > > > >> >> >> >> collision?
+> > > > >> >> >> >>
+> > > > >> >> >> >> I think it would be a mistake to waste so many chars on
+> > > > >> >> >> >> a prefix, but
+> > > > >> >> >> >> 9 characters of sha1 likely wouldn't have a collision
+> > > > >> >> >> >> before we have 10s of thousands of devices.  Thanks,
+> > > > >> >> >> >>
+> > > > >> >> >> >> Alex  
+> > > > >> >> >> >
+> > > > >> >> >> >Jiri, Dave,
+> > > > >> >> >> >Are you ok with it for devlink/netdev part?
+> > > > >> >> >> >Mdev core will create an alias from a UUID.
+> > > > >> >> >> >
+> > > > >> >> >> >This will be supplied during devlink port attr set such
+> > > > >> >> >> >as,
+> > > > >> >> >> >
+> > > > >> >> >> >devlink_port_attrs_mdev_set(struct devlink_port *port,
+> > > > >> >> >> >const char *mdev_alias);
+> > > > >> >> >> >
+> > > > >> >> >> >This alias is used to generate representor netdev's  
+> > phys_port_name.  
+> > > > >> >> >> >This alias from the mdev device's sysfs will be used by
+> > > > >> >> >> >the udev/systemd to  
+> > > > >> >> >> generate predicable netdev's name.  
+> > > > >> >> >> >Example: enm<mdev_alias_first_12_chars>  
+> > > > >> >> >>
+> > > > >> >> >> What happens in unlikely case of 2 UUIDs collide?
+> > > > >> >> >>  
+> > > > >> >> >Since users sees two devices with same phys_port_name, user
+> > > > >> >> >should destroy  
+> > > > >> >> recently created mdev and recreate mdev with different UUID?
+> > > > >> >>
+> > > > >> >> Driver should make sure phys port name wont collide,  
+> > > > >> >So when mdev creation is initiated, mdev core calculates the
+> > > > >> >alias and if there  
+> > > > >> is any other mdev with same alias exist, it returns -EEXIST error
+> > > > >> before progressing further.  
+> > > > >> >This way user will get to know upfront in event of collision
+> > > > >> >before the mdev  
+> > > > >> device gets created.  
+> > > > >> >How about that?  
+> > > > >>
+> > > > >> Sounds fine to me. Now the question is how many chars do we want to  
+> > have.  
+> > > > >>  
+> > > > >12 characters from Alex's suggestion similar to git?  
+> > > >
+> > > > Ok.
+> > > >  
+> > >
+> > > Can you please confirm this scheme looks good now? I like to get patches  
+> > started.
+> > 
+> > My only concern is your comment that in the event of an abbreviated
+> > sha1 collision (as exceptionally rare as that might be at 12-chars), we'd fail the
+> > device create, while my original suggestion was that vfio-core would add an
+> > extra character to the alias.  For non-networking devices, the sha1 is
+> > unnecessary, so the extension behavior seems preferred.  The user is only
+> > responsible to provide a unique uuid.  Perhaps the failure behavior could be
+> > applied based on the mdev device_api.  A module option on mdev to specify the
+> > default number of alias chars would also be useful for testing so that we can set
+> > it low enough to validate the collision behavior.  Thanks,
+> >   
 > 
->> Add binding documentation of mediatek,sysirq for mt6779 SoC.
->>
->> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> 
-> I'm relying on Sean to review this and ACK when he's pleased
-> with the result.
-> 
+> Idea is to have mdev alias as optional.
+> Each mdev_parent says whether it wants mdev_core to generate an alias
+> or not. So only networking device drivers would set it to true.
+> For rest, alias won't be generated, and won't be compared either
+> during creation time. User continue to provide only uuid.
 
-I suppose you meant 4/11, right :)
+Ok
 
-Regards,
-Matthias
+> I am tempted to have alias collision detection only within children
+> mdevs of the same parent, but doing so will always mandate to prefix
+> in netdev name. And currently we are left with only 3 characters to
+> prefix it, so that may not be good either. Hence, I think mdev core
+> wide alias is better with 12 characters.
+
+I suppose it depends on the API, if the vendor driver can ask the mdev
+core for an alias as part of the device creation process, then it could
+manage the netdev namespace for all its devices, choosing how many
+characters to use, and fail the creation if it can't meet a uniqueness
+requirement.  IOW, mdev-core would always provide a full sha1 and
+therefore gets itself out of the uniqueness/collision aspects.
+
+> I do not understand how an extra character reduces collision, if
+> that's what you meant.
+
+If the default were for example 3-chars, we might already have device
+'abc'.  A collision would expose one more char of the new device, so we
+might add device with alias 'abcd'.  I mentioned previously that this
+leaves an issue for userspace that we can't change the alias of device
+abc, so without additional information, userspace can only determine via
+elimination the mapping of alias to device, but userspace has more
+information available to it in the form of sysfs links.
+
+> Module options are almost not encouraged
+> anymore with other subsystems/drivers.
+
+We don't live in a world of absolutes.  I agree that the defaults
+should work in the vast majority of cases.  Requiring a user to twiddle
+module options to make things work is undesirable, verging on a bug.  A
+module option to enable some specific feature, unsafe condition, or test
+that is outside of the typical use case is reasonable, imo.
+
+> For testing collision rate, a sample user space script and sample
+> mtty is easy and get us collision count too. We shouldn't put that
+> using module option in production kernel. I practically have the code
+> ready to play with; Changing 12 to smaller value is easy with module
+> reload.
+> 
+> #define MDEV_ALIAS_LEN 12
+
+If it can't be tested with a shipping binary, it probably won't be
+tested.  Thanks,
+
+Alex
