@@ -2,82 +2,94 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74463C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5F4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4652022CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA5E22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:50:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZXrBT73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391017AbfHWHtv (ORCPT
+        id S2391063AbfHWHuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:49:51 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:52824 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390903AbfHWHtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:49:51 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7N7lHxn011155
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Fri, 23 Aug 2019 00:47:53 -0700
-Received: from pek-xsun-d1.wrs.com (128.224.162.163) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
- 14.3.468.0; Fri, 23 Aug 2019 00:47:13 -0700
-From:   Xulin Sun <xulin.sun@windriver.com>
-To:     <kvalo@codeaurora.org>
-CC:     <stefan.wahren@i2se.com>, <xulin.sun@windriver.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <brcm80211-dev-list@cypress.com>,
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        <linux-wireless@vger.kernel.org>, <arend.vanspriel@broadcom.com>,
-        <franky.lin@broadcom.com>, <hante.meuleman@broadcom.com>,
-        <chi-hsien.lin@cypress.com>, <wright.feng@cypress.com>,
-        <davem@davemloft.net>, <stanley.hsu@cypress.com>
-Subject: [PATCH] brcmfmac: replace strncpy() by strscpy()
-Date:   Fri, 23 Aug 2019 15:47:08 +0800
-Message-ID: <20190823074708.20081-1-xulin.sun@windriver.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 23 Aug 2019 03:50:52 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33858 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732840AbfHWHuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:50:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b29so6473105lfq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AROq8DpxBavGw3rOZlBsIIIgdgdRJheHWzoZIaKAbGU=;
+        b=eZXrBT737nM6L8Pa5XlEQuC0rQBRrzfTsrl7Tw0vIf6llspePcFP3Z99vwe48Xo+q+
+         xOKOeB2kfRG07WTIk/J/GStBuxjjfJKMkzmaTv+HZxcu+unxdyhXqKmAcj8A6lXg4nll
+         Wh5bMJd1ogfOrPxcDidGKUBQ9eIYg8/0B5MHQGTrHe/GPKG/Ds+nI4dND4hFOoU+Mdgs
+         nuA64AWazxNszt2zSzknLq2Go1nWPLVQW2G+zpe8aY/JKdzYSFUXNP4Zweqq/FTXRHef
+         Gx6CccrR4hrMSojSHJjv1mmNtPTOQ5L/PyeCjpMZX9KG+V+MXVOELXgnFpiPNT0xvQjA
+         UKqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AROq8DpxBavGw3rOZlBsIIIgdgdRJheHWzoZIaKAbGU=;
+        b=Xu1ESmRaJI2hyxiAX+72vLULWymUDA5QRtoIOXdLkIfup7S9b9CKXs6zbPN0GRr1QN
+         GBswQZSTzSd7achKi2OIrHHesQoHkFwiZbznEWiP36Mzgvdbes4NX+KmE4aSsG7khTY9
+         +HdkPBJFDRbKtYFSUrsUj3FWuqQ5OVKKe87WN/Pu+DdQgbZo8FsSM+MLFhYce6KlHycR
+         lrdOmVA768dfLuxNbHq4u/Ei8i4efrUVn52UvJ66FUoJ1Ctd2H43YeviDKsNlYmjZMiD
+         E7WoCuxWJB572c7yn417XG1jiLvGqma7peQV8z2QCajsvdHmU1pnS+vDajAtKLOpAsXw
+         1MbA==
+X-Gm-Message-State: APjAAAWTdPjQsjPOLOA9ffBZRWmwahkwhR8Ysv903jdV4gGG6GqQRj/3
+        OjklaDRQb7aS0uW+43fghW+kJ4WVmjoHd1LCyoTsNw==
+X-Google-Smtp-Source: APXvYqy4LEAB6weVbikWw4omf6hTp96l46dy0piklsM9lAxP3u3RWDVFhgst2bdXR83kAe94+v5z+0MY4UWyNN2QLmo=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr1990286lfp.61.1566546650115;
+ Fri, 23 Aug 2019 00:50:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Aug 2019 09:50:38 +0200
+Message-ID: <CACRpkdY0+eQXknPPj2vz9-Zo9cQHJQafbUC97mOQvEuzbX-qtw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Improve MediaTek pinctrl v2 and make backward
+ compatible to smartphone mass production usage
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The strncpy() may truncate the copied string,
-replace it by the safer strscpy().
+On Tue, Aug 13, 2019 at 10:53 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
 
-To avoid below compile warning with gcc 8.2:
+> This patch improves MediaTek pinctrl v2 and makes backward compatible to
+> current smartphone mass production usage by:
+> 1.Check gpio pin number and use binary search in control address lookup
+> 2.Supporting driving setting without mapping current to register value
+> 3.Correct usage of PIN_CONFIG get/set implementation
 
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:In function 'brcmf_vndr_ie':
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:4227:2:
-warning: 'strncpy' output truncated before terminating nul copying 3 bytes from a string of the same length [-Wstringop-truncation]
-  strncpy(iebuf, add_del_cmd, VNDR_IE_CMD_LEN - 1);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I rely on Sean to review and get this in shape.
 
-Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> 4.Backward compatible to previous Mediatek's bias-pull usage
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index b6d0df354b36..7ad60374fa96 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -4226,9 +4226,7 @@ brcmf_parse_vndr_ies(const u8 *vndr_ie_buf, u32 vndr_ie_len,
- static u32
- brcmf_vndr_ie(u8 *iebuf, s32 pktflag, u8 *ie_ptr, u32 ie_len, s8 *add_del_cmd)
- {
--
--	strncpy(iebuf, add_del_cmd, VNDR_IE_CMD_LEN - 1);
--	iebuf[VNDR_IE_CMD_LEN - 1] = '\0';
-+	strscpy(iebuf, add_del_cmd, VNDR_IE_CMD_LEN);
- 
- 	put_unaligned_le32(1, &iebuf[VNDR_IE_COUNT_OFFSET]);
- 
--- 
-2.17.1
+This is fine as long as the new style of using explicit pull
+setting also works. It's nice to be compatible.
 
+> 5.Add support for pin configuration dump via sysfs
+
+Do you mean debugfs? You should use debugfs for debug.
+sysfs is subject to ABI rules.
+
+Yours,
+Linus Walleij
