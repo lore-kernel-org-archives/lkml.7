@@ -2,49 +2,136 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346D2C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210B2C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1582B20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1DD2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 22:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Hen0jCZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436988AbfHWWSL (ORCPT
+        id S2406247AbfHWWSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 18:18:11 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38572 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392604AbfHWWSK (ORCPT
+        Fri, 23 Aug 2019 18:18:14 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10166 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404808AbfHWWSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 18:18:10 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BD44F1543CF90;
-        Fri, 23 Aug 2019 15:18:09 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 15:18:09 -0700 (PDT)
-Message-Id: <20190823.151809.442664848668672070.davem@davemloft.net>
-To:     cai@lca.pw
-Cc:     saeedm@mellanox.com, leon@kernel.org, moshe@mellanox.com,
-        ferasda@mellanox.com, eranbe@mellanox.com, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/mlx5: fix a -Wstringop-truncation warning
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1566590183-9898-1-git-send-email-cai@lca.pw>
-References: <1566590183-9898-1-git-send-email-cai@lca.pw>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 23 Aug 2019 15:18:10 -0700 (PDT)
+        Fri, 23 Aug 2019 18:18:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6066230000>; Fri, 23 Aug 2019 15:18:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 23 Aug 2019 15:18:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 23 Aug 2019 15:18:11 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 23 Aug
+ 2019 22:18:10 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 23 Aug
+ 2019 22:18:08 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 23 Aug 2019 22:18:08 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d6066200001>; Fri, 23 Aug 2019 15:18:08 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christoph Hellwig" <hch@lst.de>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH 1/2] mm/hmm: hmm_range_fault() NULL pointer bug
+Date:   Fri, 23 Aug 2019 15:17:52 -0700
+Message-ID: <20190823221753.2514-2-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190823221753.2514-1-rcampbell@nvidia.com>
+References: <20190823221753.2514-1-rcampbell@nvidia.com>
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566598691; bh=KyPc8c5coEeaWyED4oOxl50+aKdesFPM9yZHDro83x0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=Hen0jCZnlwep5U1y8LSyUogocyncUlU8ncNOkdizYSGrpz0PWiTpWbpyXqvih6gF+
+         3qM1vKPirI+eZhD9UBcD2rfGfX74o53wuqQ2rhVZQESI2bl/mdp0CgojyL1mtxb5Ob
+         ir8YSrHdcr998BKtxBB/eEKh7i1GORjBa8cuXwOmDZ/V0k9Iyw4bAWSCMlLHs4ccfk
+         Wt5oaufB+AfvTNVTT0Pq9TclkBcHR/CNerxUzXKz8H04CUc/qNXXq93VqSEU5uK80W
+         pCzPYHqan8YLxW66Ob9wjgncemYyfZJiszrN4yrr0WCyhls1D6yjDovJ7pYDNxAIfA
+         +LLT4nPogr8Bg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Although hmm_range_fault() calls find_vma() to make sure that a vma exists
+before calling walk_page_range(), hmm_vma_walk_hole() can still be called
+with walk->vma =3D=3D NULL if the start and end address are not contained
+within the vma range.
 
-Saeed, I assume I'll get this from you.
+ hmm_range_fault() /* calls find_vma() but no range check */
+  walk_page_range() /* calls find_vma(), sets walk->vma =3D NULL */
+   __walk_page_range()
+    walk_pgd_range()
+     walk_p4d_range()
+      walk_pud_range()
+       hmm_vma_walk_hole()
+        hmm_vma_walk_hole_()
+         hmm_vma_do_fault()
+          handle_mm_fault(vma=3D0)
+
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ mm/hmm.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/mm/hmm.c b/mm/hmm.c
+index fc05c8fe78b4..29371485fe94 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -229,6 +229,9 @@ static int hmm_vma_do_fault(struct mm_walk *walk, unsig=
+ned long addr,
+ 	struct vm_area_struct *vma =3D walk->vma;
+ 	vm_fault_t ret;
+=20
++	if (!vma)
++		goto err;
++
+ 	if (hmm_vma_walk->flags & HMM_FAULT_ALLOW_RETRY)
+ 		flags |=3D FAULT_FLAG_ALLOW_RETRY;
+ 	if (write_fault)
+@@ -239,12 +242,14 @@ static int hmm_vma_do_fault(struct mm_walk *walk, uns=
+igned long addr,
+ 		/* Note, handle_mm_fault did up_read(&mm->mmap_sem)) */
+ 		return -EAGAIN;
+ 	}
+-	if (ret & VM_FAULT_ERROR) {
+-		*pfn =3D range->values[HMM_PFN_ERROR];
+-		return -EFAULT;
+-	}
++	if (ret & VM_FAULT_ERROR)
++		goto err;
+=20
+ 	return -EBUSY;
++
++err:
++	*pfn =3D range->values[HMM_PFN_ERROR];
++	return -EFAULT;
+ }
+=20
+ static int hmm_pfns_bad(unsigned long addr,
+--=20
+2.20.1
+
