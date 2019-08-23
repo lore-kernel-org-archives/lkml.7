@@ -2,122 +2,90 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD431C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCA8C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD6D206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528E0206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVR+ZIdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389058AbfHWK3F (ORCPT
+        id S2403948AbfHWKal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:29:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53940 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726142AbfHWK3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:29:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 49845ACB4;
-        Fri, 23 Aug 2019 10:29:03 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 12:29:02 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new
- printk ringbuffer implementation
-Message-ID: <20190823102902.c2l2h3qinykrcmep@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
- <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
- <20190820092731.GA14137@jagdpanzerIV>
- <87a7c3f4uj.fsf@linutronix.de>
- <20190823055445.GA7195@jagdpanzerIV>
+        Fri, 23 Aug 2019 06:30:41 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40679 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfHWKak (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 06:30:40 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h8so12714210edv.7;
+        Fri, 23 Aug 2019 03:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TlctfPOJYF69OAlthO3Jpuu+JP9IVaCbpbZ9v8rQAo0=;
+        b=FVR+ZIdpi0FOEKmjXRTy63GE/Fb+8Nj09R9Hb9rx9a5tyUCyBp9QXXAtBL3GVEUASs
+         FAhsCm3J+fSk2K8xKw+RpHHe7/iR4kw5wZ1WUa4A8uorwQ5Xp1Q09+XxOw/+ERkBL5EP
+         Xp/46GyQFxzkseJXnD5DAgXKcpZ8xVZPsRHGLdUA21+vwqJWCQYV+j50x9V/5YCgkVQp
+         g7hNqU4YUuwQJhR+zM0P4RMccJ4msXFbL17AxHjX5LYB4xG6sCiJ+jkh52usO3lO75eJ
+         6xE0pNzvC86UGs2U9QU2IzUIDDA92E80fxV4V4G04OVLOtaJ86GCmRi6wrpviZ/D9ZoF
+         GmqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TlctfPOJYF69OAlthO3Jpuu+JP9IVaCbpbZ9v8rQAo0=;
+        b=L9EeIzK5w1MrVmjjYrQgxFX5WuYis/GSS+MKoOzuOdF7TTlYL1S5pN1Dm1pZvvE7rA
+         y8ZxwaTkg+z6qIVIjj/ejAJSF4UCxgwybQGkLKNhOJOG1faBQsAjFCRfGqwyEcgeR9ky
+         mBrimgU+PEJwQzJYkjQvy0GKJ/ZAMU5crklVhl04LsyPWOj7IEhFvvoVhL+jg5Fq6ukw
+         hDEnddAPEMAyFTA9xLjU7WoLaDQ33hjz4sRzLHR1S6J4NmiLLl8MpLdQkaSJTuCIIFa5
+         j4M+MmGNytAnhuxt2wh6hlR3QbQICw0fPkJN9DrK7aYA9tbjaaWX5Wccn7XB2vlu9AQ5
+         gDGw==
+X-Gm-Message-State: APjAAAXG7BO/8kJZUqa6v4EJJ7G2nXPCzg1C8Cuag48aEm7AQMWOBBcJ
+        91NhZYlzFxY5KvjNw0wGintWZ0+GuZVQnzCjq3+0Pp3v
+X-Google-Smtp-Source: APXvYqwU+WLrIxH7nF9oZF/ISakCY60kbv3zwf2JFk1dfPXI/S5KtfKclsfYea6mT1tpLtCP+0/2QsZzG9x+Jf7pUyo=
+X-Received: by 2002:a17:906:4683:: with SMTP id a3mr3446920ejr.47.1566556238576;
+ Fri, 23 Aug 2019 03:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823055445.GA7195@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-3-olteanv@gmail.com>
+ <20190823102816.GN23391@sirena.co.uk>
+In-Reply-To: <20190823102816.GN23391@sirena.co.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 23 Aug 2019 13:30:27 +0300
+Message-ID: <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when
+ it's not ours
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-08-23 14:54:45, Sergey Senozhatsky wrote:
-> On (08/21/19 07:46), John Ogness wrote:
-> [..]
-> > The labels are necessary for the technical documentation of the
-> > barriers. And, after spending much time in this, I find them very
-> > useful. But I agree that there needs to be a better way to assign label
-> > names.
-> [..]
-> > > Where dp stands for descriptor push. For dataring we can add a 'dr'
-> > > prefix, to avoid confusion with desc barriers, which have 'd' prefix.
-> > > And so on. Dunno.
-> > 
-> > Yeah, I spent a lot of time going in circles on this one.
-> [..]
-> > I hope that we can agree that the labels are important. And that a
-> > formal documentation of the barriers is also important. Yes, they are a
-> > lot of work, but I find it makes it a lot easier to go back to the code
-> > after I've been away for a while. Even now, as I go through your
-> > feedback on code that I wrote over a month ago, I find the formal
-> > comments critical to quickly understand _exactly_ why the memory
-> > barriers exist.
-> 
-> Yeah. I like those tagsi/labels, and appreciate your efforts.
-> 
-> Speaking about it in general, not necessarily related to printk patch set.
-> With or without labels/tags we still have to grep. But grep-ing is much
-> easier when we have labels/tags. Otherwise it's sometimes hard to understand
-> what to grep for - _acquire, _relaxed, smp barrier, write_once, or
-> anything else.
+Hi Mark,
 
-Grepping is not needed when function names are used in the comment
-and cscope might be used. Each function should be short
-and easy enough so that any nested label can be found by eyes.
+On Fri, 23 Aug 2019 at 13:28, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Aug 23, 2019 at 12:15:11AM +0300, Vladimir Oltean wrote:
+> > The DSPI interrupt can be shared between two controllers at least on the
+> > LX2160A. In that case, the driver for one controller might misbehave and
+> > consume the other's interrupt. Fix this by actually checking if any of
+> > the bits in the status register have been asserted.
+>
+> It would be better to have done this as the first patch before
+> the restructuring, that way we could send this as a fix - the
+> refactoring while good doesn't really fit with stable.
 
-A custom script is an alternative but it would be better to use
-existing tools.
+Did you see this?
+https://lkml.org/lkml/2019/8/22/1542
 
-In each case, two letter labels would get redundant sooner or later
-when the semantic gets used widely. And I hope that we use a semantic
-that is going to be used widely.
-
-> > Perhaps we should choose labels that are more clear, like:
-> > 
-> >     dataring_push:A
-> >     dataring_push:B
-> > 
-> > Then we would see comments like:
-> > 
-> >     Memory barrier involvement:
-> > 
-> >     If _dataring_pop:B reads from dataring_datablock_setid:A, then
-> >     _dataring_pop:C reads from dataring_push:G.
-> [..]
-> >     RELEASE from dataring_push:E to dataring_datablock_setid:A
-> >        matching
-> >     ACQUIRE from _dataring_pop:B to _dataring_pop:E
-> 
-> I thought about it. That's very informative, albeit pretty hard to maintain.
-> The same applies to drA or prA and any other context dependent prefix.
-
-The maintenance is my concern as well. The labels should be primary
-for an automatized consistency checker. They make sense only when
-they are in sync with the code.
-
-Best Regards,
-Petr
+Regards,
+-Vladimir
