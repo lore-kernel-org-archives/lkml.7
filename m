@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3612C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A96BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F4A21019
+	by mail.kernel.org (Postfix) with ESMTP id E51DD2070B
 	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oYAcHGJo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XWLQMu9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392235AbfHWG12 (ORCPT
+        id S2404301AbfHWG1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 02:27:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46277 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731346AbfHWG11 (ORCPT
+        Fri, 23 Aug 2019 02:27:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44405 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731346AbfHWG1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 02:27:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q139so5746788pfc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 23:27:27 -0700 (PDT)
+        Fri, 23 Aug 2019 02:27:35 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c81so5752726pfc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 23:27:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eIxzCYSNGJ1lxWeqSNSG7GyRTQIEX53i0hzKbiv7trI=;
-        b=oYAcHGJo8ofm/V8t0u6PfkdzCvMo9lhgUsLDM+hHk312lUWwjVZ3d6nDug4JPZSN3X
-         QqmiKNRhCUXxhGpc6d+pfIlXAau/c1AsyqGim1EuG4SG0OgIE4MpCnwlPim8AYqMQ8c/
-         HHanRPbBAApz31OdNVb7GKkN00vYG1ur60uXY=
+        bh=0pVReU3L4xNNWo9+KatKn65E5Ld718QqqaoOMK1fJHQ=;
+        b=XWLQMu9+3h/iiKrPiQ+ZajD1bYKREAVWGm/oN5kfGiIkOsaUVYdGD9oABeJ9b7IO95
+         wRhqWd249jRsuQlRX40CtosYmC+jw3LZvtQL8AMXe8oqmHGDPyr2fP3Cm+1a0czCyU35
+         v0Pu4/ZcYMgi0gTjwMpbG7TgTOb7IRXYbkvOs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eIxzCYSNGJ1lxWeqSNSG7GyRTQIEX53i0hzKbiv7trI=;
-        b=ZDW9tpthAynLPkFZWUr7XM5eTzbKRD2/R2zQdGeYWAUmch9lAyIVbGcHXZCNaWXprl
-         ySsfBJcnmueagY9pernneFmPWC46micYXp92AlEcwy/m1uZlMqqsHHLCRUU1ICHvQLFT
-         JqklFXirDwfssb503zTa5IAXKqB1srr9rDqHz/1sCAIm1X9Fd22tYi5zesgoQvAbW3F6
-         Sv0JL2FWQJqMhKBRmxSAQgTpfmP8BMIZTt5/iBFtzPuWNyKQ83ty0dU8VP9Zl+UhOAg3
-         T6OfhTCiDuyxe3SMUe2FveSmanAEFiRxoYTgve3xUD9HlW/AN2v3ftmDyIKivQ3B76e4
-         V07A==
-X-Gm-Message-State: APjAAAXSZAKQKmMsz/1cjed5IyXxrZDq5a3q7Lej0pBfbowv5XBJj6a7
-        dyutuqaNbT9lx+fS5cXZ3GEZdg==
-X-Google-Smtp-Source: APXvYqxRb14mUGIehiZPCWEcwvXqS00EzwwRDVOu4cdqpm/Bv8WL2Qhx+S2boAghlhKJWrsDxZM+NQ==
-X-Received: by 2002:a65:6448:: with SMTP id s8mr2545974pgv.223.1566541646783;
-        Thu, 22 Aug 2019 23:27:26 -0700 (PDT)
+        bh=0pVReU3L4xNNWo9+KatKn65E5Ld718QqqaoOMK1fJHQ=;
+        b=c41gpVO1mgKQQ1ZJJcw6XBswu2tE0G2qiIysfpB83XIDPLSI7i6WHF/HVceP1BkIUf
+         FGKkmjh+/RNELGdGQfXleNT8pCSM+HoD2XMZ9Ycbj5ZsLcJb/YwKmISZNG+AomGWMOjG
+         ltHzP3iuiaR3rF6uIYbENE9Z67fsIly7tFj5d0tZ1qg0sUMgAvWhmrOC1jzhBTgMfukp
+         86ho1aJdPkS0X8DmTYE7B6XluAtz2hP3v7L5UmTYivJAI5ko3KlDMcr1Qe0B623TmS5K
+         jYT5gvZcM4QEFl2ElsbRPTcjvQjOnz65g46Y/pQ+r9FYCIl3fbRKKQFL4IxrPE0PIT4g
+         8GEA==
+X-Gm-Message-State: APjAAAUSz1KCvzCoG1sBDQjGiP8HFzKoA++VVu2OXo1txpn+z6u7f6qS
+        gW4SN7t+8JzkCMFeYGKNcw5TvQ==
+X-Google-Smtp-Source: APXvYqz0Nb4vLW/Rppgb80/OXeYgQhAO9pkk8UoujB6MiOthueFuVt1sTRT03Pr+UQuClClNGMHy1w==
+X-Received: by 2002:a17:90a:bf0e:: with SMTP id c14mr3519541pjs.140.1566541654373;
+        Thu, 22 Aug 2019 23:27:34 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id q13sm2139671pfl.124.2019.08.22.23.27.20
+        by smtp.gmail.com with ESMTPSA id q13sm2139671pfl.124.2019.08.22.23.27.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 22 Aug 2019 23:27:26 -0700 (PDT)
+        Thu, 22 Aug 2019 23:27:33 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org,
         "Theodore Y . Ts'o" <tytso@mit.edu>
@@ -96,9 +96,9 @@ Cc:     Russell King <linux@armlinux.org.uk>,
         Jiri Kosina <jkosina@suse.cz>,
         Mukesh Ojha <mojha@codeaurora.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v10 1/3] arm64: map FDT as RW for early_init_dt_scan()
-Date:   Fri, 23 Aug 2019 14:24:50 +0800
-Message-Id: <20190823062452.127528-2-hsinyi@chromium.org>
+Subject: [PATCH v10 2/3] fdt: add support for rng-seed
+Date:   Fri, 23 Aug 2019 14:24:51 +0800
+Message-Id: <20190823062452.127528-3-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190823062452.127528-1-hsinyi@chromium.org>
 References: <20190823062452.127528-1-hsinyi@chromium.org>
@@ -109,121 +109,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently in arm64, FDT is mapped to RO before it's passed to
-early_init_dt_scan(). However, there might be some codes
-(eg. commit "fdt: add support for rng-seed") that need to modify FDT
-during init. Map FDT to RO after early fixups are done.
+Introducing a chosen node, rng-seed, which is an entropy that can be
+passed to kernel called very early to increase initial device
+randomness. Bootloader should provide this entropy and the value is
+read from /chosen/rng-seed in DT.
+
+Obtain of_fdt_crc32 for CRC check after early_init_dt_scan_nodes(),
+since early_init_dt_scan_chosen() would modify fdt to erase rng-seed.
+
+Add a new interface add_bootloader_randomness() for rng-seed use case.
+Depends on whether the seed is trustworthy, rng seed would be passed to
+add_hwgenerator_randomness(). Otherwise it would be passed to
+add_device_randomness(). Decision is controlled by kernel config
+RANDOM_TRUST_BOOTLOADER.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-No change since v7
+Change from v9:
+* reword kconfig
+* use IS_ENABLED for config
 ---
- arch/arm64/include/asm/mmu.h |  2 +-
- arch/arm64/kernel/kaslr.c    |  5 +----
- arch/arm64/kernel/setup.c    |  9 ++++++++-
- arch/arm64/mm/mmu.c          | 15 +--------------
- 4 files changed, 11 insertions(+), 20 deletions(-)
+ drivers/char/Kconfig   |  9 +++++++++
+ drivers/char/random.c  | 14 ++++++++++++++
+ drivers/of/fdt.c       | 14 ++++++++++++--
+ include/linux/random.h |  1 +
+ 4 files changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-index fd6161336653..f217e3292919 100644
---- a/arch/arm64/include/asm/mmu.h
-+++ b/arch/arm64/include/asm/mmu.h
-@@ -126,7 +126,7 @@ extern void init_mem_pgprot(void);
- extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
- 			       unsigned long virt, phys_addr_t size,
- 			       pgprot_t prot, bool page_mappings_only);
--extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
-+extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
- extern void mark_linear_text_alias_ro(void);
- 
- #define INIT_MM_CONTEXT(name)	\
-diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
-index 5a59f7567f9c..416f537bf614 100644
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -62,9 +62,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
- 	return default_cmdline;
- }
- 
--extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
--				       pgprot_t prot);
--
- /*
-  * This routine will be executed with the kernel mapped at its default virtual
-  * address, and if it returns successfully, the kernel will be remapped, and
-@@ -93,7 +90,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
- 	 * attempt at mapping the FDT in setup_machine()
- 	 */
- 	early_fixmap_init();
--	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
-+	fdt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
- 	if (!fdt)
- 		return 0;
- 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 57ff38600828..56f664561754 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -170,9 +170,13 @@ static void __init smp_build_mpidr_hash(void)
- 
- static void __init setup_machine_fdt(phys_addr_t dt_phys)
- {
--	void *dt_virt = fixmap_remap_fdt(dt_phys);
-+	int size;
-+	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
- 	const char *name;
- 
-+	if (dt_virt)
-+		memblock_reserve(dt_phys, size);
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index 96156c729a31..df0fc997dc3e 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -551,3 +551,12 @@ config RANDOM_TRUST_CPU
+ 	has not installed a hidden back door to compromise the CPU's
+ 	random number generation facilities. This can also be configured
+ 	at boot with "random.trust_cpu=on/off".
 +
- 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
- 		pr_crit("\n"
- 			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
-@@ -184,6 +188,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
- 			cpu_relax();
- 	}
- 
-+	/* Early fixups are done, map the FDT as read-only now */
-+	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++config RANDOM_TRUST_BOOTLOADER
++	bool "Trust the bootloader to initialize Linux's CRNG"
++	help
++	Some bootloaders can provide entropy to increase the kernel's initial
++	device randomness. Say Y here to assume the entropy provided by the
++	booloader is trustworthy so it will be added to the kernel's entropy
++	pool. Otherwise, say N here so it will be regarded as device input that
++	only mixes the entropy pool.
+\ No newline at end of file
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 5d5ea4ce1442..566922df4b7b 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2445,3 +2445,17 @@ void add_hwgenerator_randomness(const char *buffer, size_t count,
+ 	credit_entropy_bits(poolp, entropy);
+ }
+ EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
 +
- 	name = of_flat_dt_get_machine_name();
- 	if (!name)
- 		return;
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index e67bab4d613e..1586d7fbf26a 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -877,7 +877,7 @@ void __set_fixmap(enum fixed_addresses idx,
- 	}
++/* Handle random seed passed by bootloader.
++ * If the seed is trustworthy, it would be regarded as hardware RNGs. Otherwise
++ * it would be regarded as device data.
++ * The decision is controlled by CONFIG_RANDOM_TRUST_BOOTLOADER.
++ */
++void add_bootloader_randomness(const void *buf, unsigned int size)
++{
++	if (IS_ENABLED(CONFIG_RANDOM_TRUST_BOOTLOADER))
++		add_hwgenerator_randomness(buf, size, size * 8);
++	else
++		add_device_randomness(buf, size);
++}
++EXPORT_SYMBOL_GPL(add_bootloader_randomness);
+\ No newline at end of file
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 9cdf14b9aaab..7d97ab6d0e31 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -24,6 +24,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/random.h>
+ 
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -1044,6 +1045,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ {
+ 	int l;
+ 	const char *p;
++	const void *rng_seed;
+ 
+ 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+ 
+@@ -1078,6 +1080,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	pr_debug("Command line is: %s\n", (char*)data);
+ 
++	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
++	if (rng_seed && l > 0) {
++		add_bootloader_randomness(rng_seed, l);
++
++		/* try to clear seed so it won't be found. */
++		fdt_nop_property(initial_boot_params, node, "rng-seed");
++	}
++
+ 	/* break now */
+ 	return 1;
+ }
+@@ -1166,8 +1176,6 @@ bool __init early_init_dt_verify(void *params)
+ 
+ 	/* Setup flat device-tree pointer */
+ 	initial_boot_params = params;
+-	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+-				fdt_totalsize(initial_boot_params));
+ 	return true;
  }
  
--void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
-+void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
- {
- 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
- 	int offset;
-@@ -930,19 +930,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
- 	return dt_virt;
+@@ -1197,6 +1205,8 @@ bool __init early_init_dt_scan(void *params)
+ 		return false;
+ 
+ 	early_init_dt_scan_nodes();
++	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
++				fdt_totalsize(initial_boot_params));
+ 	return true;
  }
  
--void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
--{
--	void *dt_virt;
--	int size;
--
--	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
--	if (!dt_virt)
--		return NULL;
--
--	memblock_reserve(dt_phys, size);
--	return dt_virt;
--}
--
- int __init arch_ioremap_p4d_supported(void)
- {
- 	return 0;
+diff --git a/include/linux/random.h b/include/linux/random.h
+index 1f7dced2bba6..f189c927fdea 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -19,6 +19,7 @@ struct random_ready_callback {
+ };
+ 
+ extern void add_device_randomness(const void *, unsigned int);
++extern void add_bootloader_randomness(const void *, unsigned int);
+ 
+ #if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
+ static inline void add_latent_entropy(void)
 -- 
 2.20.1
 
