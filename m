@@ -2,196 +2,331 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831D3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F212339D
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="uTYtomk7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ypi5VS69"
+	by mail.kernel.org (Postfix) with ESMTP id 5D93A2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395184AbfHWOWW (ORCPT
+        id S2395198AbfHWOWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:22:22 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:35829 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731879AbfHWOWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:22:21 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 9C1793C2;
-        Fri, 23 Aug 2019 10:22:19 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 23 Aug 2019 10:22:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        pedrovanzella.com; h=subject:to:cc:references:from:message-id
-        :date:mime-version:in-reply-to:content-type
-        :content-transfer-encoding; s=fm3; bh=EfJbH9OnjtKj3CUw1B8NweZdaH
-        ec7Po9qpFZEwcvYrI=; b=uTYtomk7fnjsuB+Qb5dnNGMqMMgTm04p3WAXh1nrFw
-        VrUGpe3iGSZJihcXwupkzpdsl844IOyfiMTtEJ2D2ZN1P4Izy9OWKPsDiiRplT0u
-        /GGeP5ET0MnTglPST/YwV7JZApPyDHbOiDahyyHohaSE1XBlLW5gRkV/73yYpxxB
-        WYec5KddR4eSh4cbtnhEosVKTZImz6Q7uoJWnWGpQCRlnvkCvXaDg09vD0Lvoc4A
-        Iw+3cYVb/earPt4J0iQZkEQISMj65sWa0dYFQARifzJ+cBp4dgcPqttxd7ZobNqq
-        GUHuEsYysLBCHfMM7LOanGZhWn8+ouMQkiD9aGvDNg+g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=EfJbH9OnjtKj3CUw1B8NweZdaHec7Po9qpFZEwcvY
-        rI=; b=Ypi5VS697rlEot91gUSkgrcHUdK2a07L4aMrA3pGXWHgOzVLij/BUvcrv
-        I6/rMBokzP2V6lJWqoPBtLlH3P/VxF+m3rP64b9gcxukzl+aw2UZFOioGkbZHCBw
-        FzztRDjnSbIvuUL9zJ2cd3uo1mgLk13jABNBrquUa+vKKOBf470IE19c6pbXUhsW
-        t1Z6DC6vgOmKqT4tyZqqVC6AJF+RsXbGi1pbJTAJ4mlhpjbU2GHhwxXnpBHcOiMi
-        cWjWbDNZktVLrCt0K0CClrNcZ0g1gG8OgTHjCqI0M4G41BeviGGVe2XP56vRw8bj
-        atFZ2CEHBzTtja5v/QLqnuqSFDTgg==
-X-ME-Sender: <xms:mvZfXaeV44b2Cp0xkv_oTz9chBGil9v4vBfen-eicCJcn_HhT6PXJg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegkedgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomheprfgvughr
-    ohcugggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomh
-    eqnecukfhppedujeegrdekkedrledrudegleenucfrrghrrghmpehmrghilhhfrhhomhep
-    phgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomhenucevlhhushhtvghrufhiii
-    gvpedt
-X-ME-Proxy: <xmx:mvZfXSAfu7NKSfBc49k2vXugBfcbbdNOeBhXCzt-i6IrD06dYvb04Q>
-    <xmx:mvZfXcZ_BTcCmRhooDg7M0CpmpjKx6iKXB25pOp_dN4KzizMKvNDQA>
-    <xmx:mvZfXS5SgzMLSnrmfc-aCqIUaDStoYIbchQ5YYnKIyn8P7h20lH2pQ>
-    <xmx:m_ZfXUMkWbjiD7l1h3BGQtdFc8Xh2M61BihaKKk0EV9Dhf0YkuyPEg>
-Received: from [192.168.2.40] (toroon020aw-lp130-07-174-88-9-149.dsl.bell.ca [174.88.9.149])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E5E098005C;
-        Fri, 23 Aug 2019 10:22:17 -0400 (EDT)
-Subject: Re: [Resubmit] Read battery voltage from Logitech Gaming mice
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=c3=adns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <20190822201849.28924-1-pedro@pedrovanzella.com>
- <CAO-hwJKQcTpmk8cVf-YmKu2awXv_53=qfpy2yfmy2rgMu_DEug@mail.gmail.com>
-From:   Pedro Vanzella <pedro@pedrovanzella.com>
-Message-ID: <e6014a01-1094-9ec7-9b37-2abdf70e305f@pedrovanzella.com>
-Date:   Fri, 23 Aug 2019 10:22:14 -0400
+        Fri, 23 Aug 2019 10:22:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:35296 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731879AbfHWOWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:22:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9A4528;
+        Fri, 23 Aug 2019 07:22:46 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5606E3F718;
+        Fri, 23 Aug 2019 07:22:45 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH v3 10/10] arm64: Retrieve stolen time as paravirtualized
+ guest
+To:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-11-steven.price@arm.com>
+ <6040a45c-fc39-a33e-c6a4-7baa586c247c@huawei.com>
+Message-ID: <29cd1304-6b4d-05ef-3c08-6b4ba769c8fa@arm.com>
+Date:   Fri, 23 Aug 2019 15:22:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAO-hwJKQcTpmk8cVf-YmKu2awXv_53=qfpy2yfmy2rgMu_DEug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <6040a45c-fc39-a33e-c6a4-7baa586c247c@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
-
-On 8/23/19 4:25 AM, Benjamin Tissoires wrote:
-> Hi Pedro,
+On 23/08/2019 12:45, Zenghui Yu wrote:
+> Hi Steven,
 > 
-> On Thu, Aug 22, 2019 at 10:19 PM Pedro Vanzella <pedro@pedrovanzella.com> wrote:
+> On 2019/8/21 23:36, Steven Price wrote:
+>> Enable paravirtualization features when running under a hypervisor
+>> supporting the PV_TIME_ST hypercall.
 >>
->> Resumitting this after having rebased it against the latest changes.
-> 
-> thanks for resubmitting. Sorry I wasn't able to provide feedback on
-> the last revision
-> 
-
-No worries, I know how these things are.
-
+>> For each (v)CPU, we ask the hypervisor for the location of a shared
+>> page which the hypervisor will use to report stolen time to us. We set
+>> pv_time_ops to the stolen time function which simply reads the stolen
+>> value from the shared page for a VCPU. We guarantee single-copy
+>> atomicity using READ_ONCE which means we can also read the stolen
+>> time for another VCPU than the currently running one while it is
+>> potentially being updated by the hypervisor.
 >>
->> The gaming line of Logitech devices doesn't use the old hidpp20
->> feature for battery level reporting. Instead, they report the
->> current voltage of the battery, in millivolts.
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>   arch/arm64/include/asm/paravirt.h |   9 +-
+>>   arch/arm64/kernel/paravirt.c      | 148 ++++++++++++++++++++++++++++++
+>>   arch/arm64/kernel/time.c          |   3 +
+>>   include/linux/cpuhotplug.h        |   1 +
+>>   4 files changed, 160 insertions(+), 1 deletion(-)
 >>
->> This patch set handles this case by adding a quirk to the
->> devices we know to have this new feature, in both wired
->> and wireless mode.
+>> diff --git a/arch/arm64/include/asm/paravirt.h
+>> b/arch/arm64/include/asm/paravirt.h
+>> index 799d9dd6f7cc..125c26c42902 100644
+>> --- a/arch/arm64/include/asm/paravirt.h
+>> +++ b/arch/arm64/include/asm/paravirt.h
+>> @@ -21,6 +21,13 @@ static inline u64 paravirt_steal_clock(int cpu)
+>>   {
+>>       return pv_ops.time.steal_clock(cpu);
+>>   }
+>> -#endif
+>> +
+>> +int __init kvm_guest_init(void);
+>> +
+>> +#else
+>> +
+>> +#define kvm_guest_init()
+>> +
+>> +#endif // CONFIG_PARAVIRT
+>>     #endif
+>> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+>> index 4cfed91fe256..ea8dbbbd3293 100644
+>> --- a/arch/arm64/kernel/paravirt.c
+>> +++ b/arch/arm64/kernel/paravirt.c
+>> @@ -6,13 +6,161 @@
+>>    * Author: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+>>    */
+>>   +#define pr_fmt(fmt) "kvmarm-pv: " fmt
+>> +
+>> +#include <linux/arm-smccc.h>
+>> +#include <linux/cpuhotplug.h>
+>>   #include <linux/export.h>
+>> +#include <linux/io.h>
+>>   #include <linux/jump_label.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/psci.h>
+>> +#include <linux/reboot.h>
+>> +#include <linux/slab.h>
+>>   #include <linux/types.h>
+>> +
+>>   #include <asm/paravirt.h>
+>> +#include <asm/pvclock-abi.h>
+>> +#include <asm/smp_plat.h>
+>>     struct static_key paravirt_steal_enabled;
+>>   struct static_key paravirt_steal_rq_enabled;
+>>     struct paravirt_patch_template pv_ops;
+>>   EXPORT_SYMBOL_GPL(pv_ops);
+>> +
+>> +struct kvmarm_stolen_time_region {
+>> +    struct pvclock_vcpu_stolen_time *kaddr;
+>> +};
+>> +
+>> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region,
+>> stolen_time_region);
+>> +
+>> +static bool steal_acc = true;
+>> +static int __init parse_no_stealacc(char *arg)
+>> +{
+>> +    steal_acc = false;
+>> +    return 0;
+>> +}
+>> +
+>> +early_param("no-steal-acc", parse_no_stealacc);
+>> +
+>> +/* return stolen time in ns by asking the hypervisor */
+>> +static u64 kvm_steal_clock(int cpu)
+>> +{
+>> +    struct kvmarm_stolen_time_region *reg;
+>> +
+>> +    reg = per_cpu_ptr(&stolen_time_region, cpu);
+>> +    if (!reg->kaddr) {
+>> +        pr_warn_once("stolen time enabled but not configured for cpu
+>> %d\n",
+>> +                 cpu);
+>> +        return 0;
+>> +    }
+>> +
+>> +    return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
+>> +}
+>> +
+>> +static int disable_stolen_time_current_cpu(void)
+>> +{
+>> +    struct kvmarm_stolen_time_region *reg;
+>> +
+>> +    reg = this_cpu_ptr(&stolen_time_region);
+>> +    if (!reg->kaddr)
+>> +        return 0;
+>> +
+>> +    memunmap(reg->kaddr);
+>> +    memset(reg, 0, sizeof(*reg));
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int stolen_time_dying_cpu(unsigned int cpu)
+>> +{
+>> +    return disable_stolen_time_current_cpu();
+>> +}
+>> +
+>> +static int init_stolen_time_cpu(unsigned int cpu)
+>> +{
+>> +    struct kvmarm_stolen_time_region *reg;
+>> +    struct arm_smccc_res res;
+>> +
+>> +    reg = this_cpu_ptr(&stolen_time_region);
+>> +
+>> +    arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
+>> +
+>> +    if ((long)res.a0 < 0)
+>> +        return -EINVAL;
+>> +
+>> +    reg->kaddr = memremap(res.a0,
+>> +                  sizeof(struct pvclock_vcpu_stolen_time),
+>> +                  MEMREMAP_WB);
 > 
-> So the quirk is in the end a bad idea after all. I had some chats with
-> Filipe that made me realize this.
+> cpuhp callbacks can be invoked in atomic context (see:
+>     secondary_start_kernel ->
+>     notify_cpu_starting ->
+>     invoke callbacks),
+> but memremap might sleep...
+> 
+> Try to run a DEBUG_ATOMIC_SLEEP enabled PV guest, I guess we will be
+> greeted by the Sleep-in-Atomic-Context BUG.  We need an alternative
+> here?
 
-I actually resubmitted by Filipe's request, since the patches weren't 
-applying cleanly anymore. The idea was to apply these patches and in the 
-future refactor the code to use the feature discovery routines.
+Actually I had run DEBUG_ATOMIC_SLEEP and not seen any issue. But I
+think that's because of the way I've configured the region in my kvmtool
+changes. I'm hitting the path where the memory region is in the linear
+map of the kernel and so no actual remapping is needed and hence
+memremap doesn't sleep (the shared structure is in a reserved region of
+RAM).
 
-> Re-reading our previous exchanges also made me understood why I wasn't
-> happy with the initial submission: for every request the code was
-> checking both features 0x1000 and 0x1001 when we can remember this
-> once and for all during hidpp_initialize_battery().
+But even changing the memory layout of the guest so the call goes into
+ioremap_page_range() (which contains a might_sleep()) I'm not seeing any
+problems.
 
-Yeah I wasn't too happy about this either, but since there was nothing 
-prohibiting some device to have both features enabled, I thought this 
-wasn't too horrible.
+Am I missing something? I have to admit I don't entirely follow the
+early start up - perhaps it's a simple as DEBUG_ATOMIC_SLEEP doesn't
+work this early in boot?
+
+>> +
+>> +    if (!reg->kaddr) {
+>> +        pr_warn("Failed to map stolen time data structure\n");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    if (le32_to_cpu(reg->kaddr->revision) != 0 ||
+>> +        le32_to_cpu(reg->kaddr->attributes) != 0) {
+>> +        pr_warn("Unexpected revision or attributes in stolen time
+>> data\n");
+>> +        return -ENXIO;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int kvm_arm_init_stolen_time(void)
+>> +{
+>> +    int ret;
+>> +
+>> +    ret = cpuhp_setup_state(CPUHP_AP_ARM_KVMPV_STARTING,
+>> +                "hypervisor/kvmarm/pv:starting",
+>> +                init_stolen_time_cpu, stolen_time_dying_cpu);
+>> +    if (ret < 0)
+>> +        return ret;
+>> +    return 0;
+>> +}
+>> +
+>> +static bool has_kvm_steal_clock(void)
+>> +{
+>> +    struct arm_smccc_res res;
+>> +
+>> +    /* To detect the presence of PV time support we require SMCCC
+>> 1.1+ */
+>> +    if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+>> +        return false;
+>> +
+>> +    arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+>> +                 ARM_SMCCC_HV_PV_FEATURES, &res);
+>> +
+>> +    if (res.a0 != SMCCC_RET_SUCCESS)
+>> +        return false;
+>> +
+>> +    arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_FEATURES,
+>> +                 ARM_SMCCC_HV_PV_TIME_ST, &res);
+>> +
+>> +    if (res.a0 != SMCCC_RET_SUCCESS)
+>> +        return false;
+>> +
+>> +    return true;
+>> +}
+>> +
+>> +int __init kvm_guest_init(void)
+>> +{
+>> +    int ret = 0;
+> 
+> And this look like a redundant initialization?
+
+Yes - that should go, thanks for spotting it.
+
+Steve
 
 > 
-> So I think we should remove the useless quirk in the end (bad idea
-> from me, I concede), and instead during hidpp_initialize_battery() set
-> the correct HIDPP_CAPABILITY_*.
-> Not entirely sure if we should try to call 0x1000, or 0x1001 or if we
-> should rely on the 0x0001 feature to know which feature is available,
-> but this should be implementation detail.
-
-I like the idea of calling 0x0001 once on device boot much better. I 
-think we could easily just fetch the location for the features we know 
-about and want to deal with once only. This also makes sure we support 
-every single device that supports this feature, so that is a huge plus.
-
-In fact, I think we should _not_ call 0x0001 on battery init, but only 
-call battery init _after_ we called 0x0001 and discovered either 0x1000 
-or 0x1001 (or the solar battery feature, or any other one that might 
-crop up in the feature).
-
 > 
+> Thanks,
+> zenghui
+> 
+>> +
+>> +    if (!has_kvm_steal_clock())
+>> +        return 0;
+>> +
+>> +    ret = kvm_arm_init_stolen_time();
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    pv_ops.time.steal_clock = kvm_steal_clock;
+>> +
+>> +    static_key_slow_inc(&paravirt_steal_enabled);
+>> +    if (steal_acc)
+>> +        static_key_slow_inc(&paravirt_steal_rq_enabled);
+>> +
+>> +    pr_info("using stolen time PV\n");
+>> +
+>> +    return 0;
+>> +}
+>> diff --git a/arch/arm64/kernel/time.c b/arch/arm64/kernel/time.c
+>> index 0b2946414dc9..a52aea14c6ec 100644
+>> --- a/arch/arm64/kernel/time.c
+>> +++ b/arch/arm64/kernel/time.c
+>> @@ -30,6 +30,7 @@
+>>     #include <asm/thread_info.h>
+>>   #include <asm/stacktrace.h>
+>> +#include <asm/paravirt.h>
+>>     unsigned long profile_pc(struct pt_regs *regs)
+>>   {
+>> @@ -65,4 +66,6 @@ void __init time_init(void)
+>>         /* Calibrate the delay loop directly */
+>>       lpj_fine = arch_timer_rate / HZ;
+>> +
+>> +    kvm_guest_init();
+>>   }
+>> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+>> index 068793a619ca..89d75edb5750 100644
+>> --- a/include/linux/cpuhotplug.h
+>> +++ b/include/linux/cpuhotplug.h
+>> @@ -136,6 +136,7 @@ enum cpuhp_state {
+>>       /* Must be the last timer callback */
+>>       CPUHP_AP_DUMMY_TIMER_STARTING,
+>>       CPUHP_AP_ARM_XEN_STARTING,
+>> +    CPUHP_AP_ARM_KVMPV_STARTING,
+>>       CPUHP_AP_ARM_CORESIGHT_STARTING,
+>>       CPUHP_AP_ARM64_ISNDEP_STARTING,
+>>       CPUHP_AP_SMPCFD_DYING,
 >>
->> This version of the patch set is better split, as well as adding the
->> quirk to make sure we don't needlessly probe every device connected.
 > 
-> It is for sure easy to review, but doesn't make much sense in the end.
-> I think we should squash all the patches together as you are just
-> adding one feature in the driver, and it is a little bit disturbing to
-> first add the quirk that has no use, then set up the structs when they
-> are not used, and so on, so forth.
 
-You're right. My first instinct was to send a single patch. As much as I 
-tested this, I always feel like breaking the patch up post-facto will 
-break a git bisect in the future and everyone will hate me :P
-
-So we (you, me and Filipe) should probably come up with an action plan 
-here. The way I see it there are two issues here: one is adding this 
-feature, and the other is refactoring to use feature discovery for all 
-features. There are advantages and disadvantages to doing one or another 
-first and we might want to discuss that.
-
-By merging this first (probably after I resubmit it as a single squashed 
-patch) we get to test it a bit better and have a usable feature sooner. 
-Plenty of people have been requesting this and there is plenty of stuff 
-that can be built on top of it, but only once this is actually merged I 
-think.
-
-On the other hand, by first refactoring the rest of the code to use 
-0x0001 we avoid some rework on this patch. It should be minor, as most 
-functions here do all the heavy lifting after the initial feature 
-discovery, and are thus mostly independent from how that is done.
-
-I'm happy either way, so just let me know what you guys decide.
-
-If you guys (or anyone else reading this on the public list, really) has 
-any input - naming things being notoriosly hard, I'm actually happy with 
-nitpicking - I'd appreciate it. On that note, come to think of it, I'm 
-not 100% sure reporting the voltage in milivolts is the standard way. I 
-looked through the docs, but found no solid guideline. It was either 
-that or a float, so I think I made the right call here, but still.
-
-- Pedro
-
-> 
-> Cheers,
-> Benjamin
-> 
->>
->>
