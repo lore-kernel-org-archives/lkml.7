@@ -2,100 +2,95 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6E9C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6ACC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A7C21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QhVuHj1d"
+	by mail.kernel.org (Postfix) with ESMTP id 791DA23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394481AbfHWMW6 (ORCPT
+        id S2394567AbfHWMYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:22:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37870 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731856AbfHWMW6 (ORCPT
+        Fri, 23 Aug 2019 08:24:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35244 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731856AbfHWMYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:22:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V/BSRc/5Dyzi5nNWjFuzygHkjpKjWnqloHD8aW/Vxqo=; b=QhVuHj1dAZl1mSQGXJo2iAGCW
-        hgIo2M3LHfplbLuqjQQKsp+jqghpnaWYkE+8TJagxpAooKMVQSfkyCiWzwg0J/FebKHV2fgd5dRkD
-        62k1PTj5cLwTATA9cUqki8XfXOsA+hV4kL5THNjT0pglSIqU3PgXGRmhGuQI+/mv+yaebEm22DsFZ
-        NsW/tHvQOSWbR9a8c7n66Br1OziopIZBpxN0M1Rr5TYPorCcXRqMoWvj4KXCSJZtqjcrT7O74s0uW
-        yu/81Xxv4oF8izJ2tOAHVHMs3+/ib0gg12YdbCPetCqufa/tIbQUDfbnN9QLO9xSKQaHM0oj+tX+W
-        gWXahD2LQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i18ab-0007UH-8z; Fri, 23 Aug 2019 12:22:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 48F1A307691;
-        Fri, 23 Aug 2019 14:22:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 67A3B201E04D9; Fri, 23 Aug 2019 14:22:42 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 14:22:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 3/4] kernel.h: Add non_block_start/end()
-Message-ID: <20190823122242.GN2349@hirez.programming.kicks-ass.net>
-References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
- <20190820081902.24815-4-daniel.vetter@ffwll.ch>
- <20190820202440.GH11147@phenom.ffwll.local>
- <20190822161428.c9e4479207386d34745ea111@linux-foundation.org>
- <CAKMK7uGw_7uD=wH3bcR9xXSxAcAuYTLOZt3ue4TEvst1D0KzLQ@mail.gmail.com>
- <20190823121234.GB12968@ziepe.ca>
+        Fri, 23 Aug 2019 08:24:12 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i18bw-0001pd-7m; Fri, 23 Aug 2019 14:24:08 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E1ECF1C04F3;
+        Fri, 23 Aug 2019 14:24:06 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 12:24:06 -0000
+From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf evlist: Add missing xyarray.h header
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <tip-hkizv6gojwfklj9ezaiiztll@git.kernel.org>
+References: <tip-hkizv6gojwfklj9ezaiiztll@git.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Message-ID: <156656304630.32099.9208613779761474375.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
+ these emails
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20190823121234.GB12968@ziepe.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 09:12:34AM -0300, Jason Gunthorpe wrote:
+The following commit has been merged into the perf/core branch of tip:
 
-> I still haven't heard a satisfactory answer why a whole new scheme is
-> needed and a simple:
-> 
->    if (IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP))
->         preempt_disable()
-> 
-> isn't sufficient to catch the problematic cases during debugging??
-> IMHO the fact preempt is changed by the above when debugging is not
-> material here. I think that information should be included in the
-> commit message at least.
+Commit-ID:     e14e5497d5253712e1545f79ad93309499ffb544
+Gitweb:        https://git.kernel.org/tip/e14e5497d5253712e1545f79ad93309499ffb544
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 21 Aug 2019 13:58:12 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Thu, 22 Aug 2019 17:16:56 -03:00
 
-That has a much larger impact and actually changes behaviour, while the
-relatively simple patch Daniel proposed only adds a warning but doesn't
-affect behaviour.
+perf evlist: Add missing xyarray.h header
+
+It gets it very indirectly, via evsel.h -> counts.h, and since counts.h
+doesn't need xyarray.h at all, add it here before we remove it there.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-hkizv6gojwfklj9ezaiiztll@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evlist.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 8582560..68b7c94 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -37,6 +37,8 @@
+ #include <perf/evsel.h>
+ #include <perf/cpumap.h>
+ 
++#include <internal/xyarray.h>
++
+ #ifdef LACKS_SIGQUEUE_PROTOTYPE
+ int sigqueue(pid_t pid, int sig, const union sigval value);
+ #endif
