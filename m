@@ -2,234 +2,135 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97B9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87694C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883202173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xvtk9haJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6605C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404729AbfHWNdf (ORCPT
+        id S2405598AbfHWNfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:33:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43156 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733015AbfHWNdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:33:35 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NDSaHH035134;
-        Fri, 23 Aug 2019 13:32:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=fOikTEfQGIl6ktHo2eL3LrS9Yj2SyK/u3QU2D5gHy54=;
- b=Xvtk9haJbvXryrASHZdNbInPEj71E4onYPMTfaRS9hgLE2MuDzehwgdcEllCqcuc3Lkd
- JsL1R8pZblB0edAjxU+s3bynWMJ3NG8wigalbYrzBfHExpOwiZgF6WfScZRRe3Jo+MXI
- rMN/pZk8oGB63u0TchZW6FX3OGUiGgsH4TfcNlyWb8uWzyfQMAaJdf8iTMD7nzrd4/LB
- pkq6Ib/CF8KDQYKxXrBa7cwGckpzLmjI6Z/m7qNTk/FaGLfhEnjWznNQXk3UNeiPiTns
- F8/VI4Fd4Hg9aEv558vMByw/GJCluNdWmVsOCzqhGIOIqI+bTx0iUZryY1nXGjKsOQGf xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ue90u4vpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 13:32:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NDSTh9149327;
-        Fri, 23 Aug 2019 13:32:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2ujca83xe5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 13:32:10 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7NDW97p027285;
-        Fri, 23 Aug 2019 13:32:09 GMT
-Received: from [192.168.14.112] (/109.64.228.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 23 Aug 2019 06:32:09 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RESEND PATCH 04/13] KVM: x86: Drop EMULTYPE_NO_UD_ON_FAIL as a
- standalone type
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <4993FDBF-6641-43E9-BCEE-7F5FE58561E9@oracle.com>
-Date:   Fri, 23 Aug 2019 16:32:05 +0300
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CB2B4523-AA0C-4931-BD1E-9F63FA114EF0@oracle.com>
-References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
- <20190823010709.24879-5-sean.j.christopherson@intel.com>
- <4993FDBF-6641-43E9-BCEE-7F5FE58561E9@oracle.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908230139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908230139
+        Fri, 23 Aug 2019 09:35:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:34574 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfHWNfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 09:35:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F95D28;
+        Fri, 23 Aug 2019 06:35:43 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BBA83F718;
+        Fri, 23 Aug 2019 06:35:42 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 14:35:41 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.co, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 02/10] PCI: designware-ep: Add the doorbell mode of
+ MSI-X in EP mode
+Message-ID: <20190823133540.GE14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-2-xiaowei.bao@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822112242.16309-2-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 22, 2019 at 07:22:34PM +0800, Xiaowei Bao wrote:
+> Add the doorbell mode of MSI-X in EP mode.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - Remove the macro of no used.
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h    | 12 ++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 3e2b740..b8388f8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -480,6 +480,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	return 0;
+>  }
+>  
+> +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
+> +				       u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	u32 msg_data;
+> +
+> +	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
+> +		   (interrupt_num - 1);
+> +
+> +	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
+> +
+> +	return 0;
+> +}
+> +
+>  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			      u16 interrupt_num)
+>  {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index a0fdbf7..895a9ef 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -88,6 +88,9 @@
+>  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
+>  #define PCIE_DBI_RO_WR_EN		BIT(0)
+>  
+> +#define PCIE_MSIX_DOORBELL		0x948
+> +#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
+> +
+>  /*
+>   * iATU Unroll-specific register definitions
+>   * From 4.80 core version the address translation will be made by unroll
+> @@ -400,6 +403,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			     u8 interrupt_num);
+>  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			     u16 interrupt_num);
+> +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
+> +				       u16 interrupt_num);
+>  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
+>  #else
+>  static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+> @@ -432,6 +437,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	return 0;
+>  }
+>  
+> +static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep,
+> +						     u8 func_no,
+> +						     u16 interrupt_num)
+> +{
+> +	return 0;
+> +}
+> +
 
+Looks OK to me.
 
-> On 23 Aug 2019, at 16:21, Liran Alon <liran.alon@oracle.com> wrote:
->=20
->=20
->=20
->> On 23 Aug 2019, at 4:07, Sean Christopherson =
-<sean.j.christopherson@intel.com> wrote:
->>=20
->> The "no #UD on fail" is used only in the VMWare case, and for the =
-VMWare
->> scenario it really means "#GP instead of #UD on fail".  Remove the =
-flag
->> in preparation for moving all fault injection into the emulation flow
->> itself, which in turn will allow eliminating EMULATE_DONE and =
-company.
->>=20
->> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->=20
-> When I created the commit which introduced this
-> e23661712005 ("KVM: x86: Add emulation_type to not raise #UD on =
-emulation failure")
-> I intentionally introduced a new flag to emulation_type instead of =
-using EMULTYPE_VMWARE
-> as I thought it=E2=80=99s weird to couple this behaviour specifically =
-with VMware emulation.
-> As it made sense to me that there could be more scenarios in which =
-some VMExit handler
-> would like to use the x86 emulator but in case of failure want to =
-decide what would be
-> the failure handling from the outside. I also didn=E2=80=99t want the =
-x86 emulator to be aware
-> of VMware interception internals.
->=20
-> Having said that, one could argue that the x86 emulator already knows =
-about the VMware
-> interception internals because of how x86_emulate_instruction() use =
-is_vmware_backdoor_opcode()
-> and from the mere existence of EMULTYPE_VMWARE. So I think it=E2=80=99s =
-legit to decide
-> that we will just move all the VMware interception logic into the x86 =
-emulator. Including
-> handling emulation failures. But then, I would make this patch of =
-yours to also
-> modify handle_emulation_failure() to queue #GP to guest directly =
-instead of #GP intercept
-> in VMX/SVM to do so.
-> I see you do it in a later patch "KVM: x86: Move #GP injection for =
-VMware into x86_emulate_instruction()"
-> but I think this should just be squashed with this patch to make =
-sense.
->=20
-> To sum-up, I agree with your approach but I recommend you squash this =
-patch and patch 6 of the series to one
-> and change commit message to explain that you just move entire =
-handling of VMware interception into
-> the x86 emulator. Instead of providing explanations such as VMware =
-emulation is the only one that use
-> =E2=80=9Cno #UD on fail=E2=80=9D.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-After reading patch 5 as-well, I would recommend to first apply patch 5 =
-(filter out #GP with error-code !=3D 0)
-and only then apply 4+6.
-
--Liran
-
->=20
-> The diff itself looks fine to me, therefore:
-> Reviewed-by: Liran Alon <liran.alon@oracle.com>
->=20
-> -Liran
->=20
->=20
->> ---
->> arch/x86/include/asm/kvm_host.h | 1 -
->> arch/x86/kvm/svm.c              | 3 +--
->> arch/x86/kvm/vmx/vmx.c          | 3 +--
->> arch/x86/kvm/x86.c              | 2 +-
->> 4 files changed, 3 insertions(+), 6 deletions(-)
->>=20
->> diff --git a/arch/x86/include/asm/kvm_host.h =
-b/arch/x86/include/asm/kvm_host.h
->> index 44a5ce57a905..dd6bd9ed0839 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -1318,7 +1318,6 @@ enum emulation_result {
->> #define EMULTYPE_TRAP_UD	    (1 << 1)
->> #define EMULTYPE_SKIP		    (1 << 2)
->> #define EMULTYPE_ALLOW_RETRY	    (1 << 3)
->> -#define EMULTYPE_NO_UD_ON_FAIL	    (1 << 4)
->> #define EMULTYPE_VMWARE		    (1 << 5)
->> int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int =
-emulation_type);
->> int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
->> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
->> index 1f220a85514f..5a42f9c70014 100644
->> --- a/arch/x86/kvm/svm.c
->> +++ b/arch/x86/kvm/svm.c
->> @@ -2772,8 +2772,7 @@ static int gp_interception(struct vcpu_svm =
-*svm)
->>=20
->> 	WARN_ON_ONCE(!enable_vmware_backdoor);
->>=20
->> -	er =3D kvm_emulate_instruction(vcpu,
->> -		EMULTYPE_VMWARE | EMULTYPE_NO_UD_ON_FAIL);
->> +	er =3D kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE);
->> 	if (er =3D=3D EMULATE_USER_EXIT)
->> 		return 0;
->> 	else if (er !=3D EMULATE_DONE)
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 18286e5b5983..6ecf773825e2 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -4509,8 +4509,7 @@ static int handle_exception_nmi(struct kvm_vcpu =
-*vcpu)
->>=20
->> 	if (!vmx->rmode.vm86_active && is_gp_fault(intr_info)) {
->> 		WARN_ON_ONCE(!enable_vmware_backdoor);
->> -		er =3D kvm_emulate_instruction(vcpu,
->> -			EMULTYPE_VMWARE | EMULTYPE_NO_UD_ON_FAIL);
->> +		er =3D kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE);
->> 		if (er =3D=3D EMULATE_USER_EXIT)
->> 			return 0;
->> 		else if (er !=3D EMULATE_DONE)
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index fe847f8eb947..e0f0e14d8fac 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -6210,7 +6210,7 @@ static int handle_emulation_failure(struct =
-kvm_vcpu *vcpu, int emulation_type)
->> 	++vcpu->stat.insn_emulation_fail;
->> 	trace_kvm_emulate_insn_failed(vcpu);
->>=20
->> -	if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
->> +	if (emulation_type & EMULTYPE_VMWARE)
->> 		return EMULATE_FAIL;
->>=20
->> 	kvm_queue_exception(vcpu, UD_VECTOR);
->> --=20
->> 2.22.0
->>=20
->=20
-
+>  static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  {
+>  }
+> -- 
+> 2.9.5
+> 
