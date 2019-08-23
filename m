@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E92C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA05C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B7720850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5EB22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390464AbfHWJzJ (ORCPT
+        id S2390609AbfHWJzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:55:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55440 "EHLO mx1.redhat.com"
+        Fri, 23 Aug 2019 05:55:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:14973 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389561AbfHWJzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:55:07 -0400
+        id S2390355AbfHWJzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:55:09 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DCDF3064FCF;
-        Fri, 23 Aug 2019 09:55:07 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C503D3D956;
+        Fri, 23 Aug 2019 09:55:08 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-60.ams2.redhat.com [10.36.116.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D7EC6092D;
-        Fri, 23 Aug 2019 09:55:04 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61DD76092D;
+        Fri, 23 Aug 2019 09:55:08 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 52D9231E80; Fri, 23 Aug 2019 11:55:03 +0200 (CEST)
+        id B47C631E88; Fri, 23 Aug 2019 11:55:03 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
@@ -37,69 +37,91 @@ Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
         Daniel Vetter <daniel@ffwll.ch>,
         virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 02/18] drm/virtio: switch virtio_gpu_wait_ioctl() to gem helper.
-Date:   Fri, 23 Aug 2019 11:54:47 +0200
-Message-Id: <20190823095503.2261-3-kraxel@redhat.com>
+Subject: [PATCH v8 05/18] drm/virtio: drop no_wait argument from virtio_gpu_object_reserve
+Date:   Fri, 23 Aug 2019 11:54:50 +0200
+Message-Id: <20190823095503.2261-6-kraxel@redhat.com>
 In-Reply-To: <20190823095503.2261-1-kraxel@redhat.com>
 References: <20190823095503.2261-1-kraxel@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 23 Aug 2019 09:55:07 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 23 Aug 2019 09:55:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use drm_gem_reservation_object_wait() in virtio_gpu_wait_ioctl().
-This also makes the ioctl run lockless.
-
-v5: handle lookup failure.
-v2: use reservation_object_test_signaled_rcu for VIRTGPU_WAIT_NOWAIT.
+All callers pass no_wait = false.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_drv.h   | 5 ++---
+ drivers/gpu/drm/virtio/virtgpu_gem.c   | 4 ++--
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 4 ++--
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 0a88ef11b9d3..74b6bad01d7f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -466,23 +466,20 @@ static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
- 			    struct drm_file *file)
- {
- 	struct drm_virtgpu_3d_wait *args = data;
--	struct drm_gem_object *gobj = NULL;
--	struct virtio_gpu_object *qobj = NULL;
-+	struct drm_gem_object *obj;
-+	long timeout = 15 * HZ;
- 	int ret;
--	bool nowait = false;
- 
--	gobj = drm_gem_object_lookup(file, args->handle);
--	if (gobj == NULL)
--		return -ENOENT;
-+	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
-+		obj = drm_gem_object_lookup(file, args->handle);
-+		if (obj == NULL)
-+			return -ENOENT;
-+		ret = dma_resv_test_signaled_rcu(obj->resv, true);
-+		drm_gem_object_put_unlocked(obj);
-+		return ret ? 0 : -EBUSY;
-+	}
- 
--	qobj = gem_to_virtio_gpu_obj(gobj);
--
--	if (args->flags & VIRTGPU_WAIT_NOWAIT)
--		nowait = true;
--	ret = virtio_gpu_object_wait(qobj, nowait);
--
--	drm_gem_object_put_unlocked(gobj);
--	return ret;
-+	return drm_gem_dma_resv_wait(file, args->handle, true, timeout);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 3e0a53309c5b..d886c0e3502a 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -398,12 +398,11 @@ static inline u64 virtio_gpu_object_mmap_offset(struct virtio_gpu_object *bo)
+ 	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
  }
  
- static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+-static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo,
+-					 bool no_wait)
++static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo)
+ {
+ 	int r;
+ 
+-	r = ttm_bo_reserve(&bo->tbo, true, no_wait, NULL);
++	r = ttm_bo_reserve(&bo->tbo, true, false, NULL);
+ 	if (unlikely(r != 0)) {
+ 		if (r != -ERESTARTSYS) {
+ 			struct virtio_gpu_device *qdev =
+diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
+index 292566146814..6fe6f72f64d1 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_gem.c
++++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
+@@ -142,7 +142,7 @@ int virtio_gpu_gem_object_open(struct drm_gem_object *obj,
+ 	if (!vgdev->has_virgl_3d)
+ 		return 0;
+ 
+-	r = virtio_gpu_object_reserve(qobj, false);
++	r = virtio_gpu_object_reserve(qobj);
+ 	if (r)
+ 		return r;
+ 
+@@ -163,7 +163,7 @@ void virtio_gpu_gem_object_close(struct drm_gem_object *obj,
+ 	if (!vgdev->has_virgl_3d)
+ 		return;
+ 
+-	r = virtio_gpu_object_reserve(qobj, false);
++	r = virtio_gpu_object_reserve(qobj);
+ 	if (r)
+ 		return;
+ 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 74b6bad01d7f..285824c42e19 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -377,7 +377,7 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
+ 
+ 	qobj = gem_to_virtio_gpu_obj(gobj);
+ 
+-	ret = virtio_gpu_object_reserve(qobj, false);
++	ret = virtio_gpu_object_reserve(qobj);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -427,7 +427,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+ 
+ 	qobj = gem_to_virtio_gpu_obj(gobj);
+ 
+-	ret = virtio_gpu_object_reserve(qobj, false);
++	ret = virtio_gpu_object_reserve(qobj);
+ 	if (ret)
+ 		goto out;
+ 
 -- 
 2.18.1
 
