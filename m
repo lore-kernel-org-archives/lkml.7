@@ -2,105 +2,179 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF98BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73579C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858EF21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566582240;
-	bh=5+lhchtJYRPd1IgdCHPyEugqeonz+HlG1kNBjHafB3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Puy6nRpdMu3lQY9yTnmhtUgTBlcy+zJEtTq3LOJptyw5gXGWFpevqMKJI2j82Z8Zp
-	 UOKPrYdGvCrkLVhMNIFM1BtGjfkpmPg3yXNOUvhqUDZCE8zTS42QiKnRDjZZc3Z42H
-	 q9+KGzMe/NZLecsFBMW9oFnf49ZL+RB0trx5G/sQ=
+	by mail.kernel.org (Postfix) with ESMTP id 439C52082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="pqS/M5HH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hQ8EOI38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732168AbfHWRn7 (ORCPT
+        id S2404141AbfHWRph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfHWRn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:43:59 -0400
-Received: from localhost (unknown [104.129.198.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01A782082F;
-        Fri, 23 Aug 2019 17:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566582238;
-        bh=5+lhchtJYRPd1IgdCHPyEugqeonz+HlG1kNBjHafB3U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sguKy5qxO5G+XQgTyhqcxRAp7a5BJU7Wx6e07cSjbuBIKQPDE7m9kfXuQTL/cFssZ
-         Up6hbdt2HozekL5jClJAnX6Tgk7L5zDfx4H8EYNfRhuoyxLrGYVmvrBamtb0lSh0Qy
-         kDzHg+U6j0Cw/qGrqzyC1c8X8Pt9zyzjSpO2QuCI=
-Date:   Fri, 23 Aug 2019 10:43:57 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Adam Zerella <adam.zerella@gmail.com>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pcmcia/i82092: Refactored dprintk macro for pr_debug().
-Message-ID: <20190823174357.GA8052@kroah.com>
-References: <20190823062951.1168-1-adam.zerella@gmail.com>
+        Fri, 23 Aug 2019 13:45:37 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:53497 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732546AbfHWRph (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:45:37 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id C3C1221B1B;
+        Fri, 23 Aug 2019 13:45:35 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 23 Aug 2019 13:45:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=lVyCGBXSSCQnZhOtnYu7o00wJCF
+        IuFyiGIL5jBbRwvM=; b=pqS/M5HHZRe9l1FTP3lKTN3VxYTHoZrG+1jx5XrXKs6
+        NKXFWVkypiRzzQW8nY5A6Lqvcxmfpy2I7L2xMRyIL4S5Tl4eOvFRUk7gofwc1XUL
+        OQU8FyODmC4h6F5N7MCvz6EUgt0vI++U8NV1BUHUhvzMgLBWWejNHPN5IMtShEqt
+        htjxO9uoHY2M1Vrze1Eq1vh0M0rQFnMxWkxPmou84ibMxWQBkhj764wDg8KdzgJV
+        pSxF2v4clDocer6tWxQXm8qJbI1loTV84wiQ5i+VC5efEdWmPWQ9vgnp0CdNkbKp
+        QGTyHB3gyjvTqy94udFl8dleHOrabBlrfLyJloEILAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=lVyCGB
+        XSSCQnZhOtnYu7o00wJCFIuFyiGIL5jBbRwvM=; b=hQ8EOI38+Zo+wkz2wmlf9g
+        1lj9csv/Rn0hRiJzgSfwpqRBJpJ9ptBQZu4O7hC3rQWwSZ9tWBkOhFj4bbvnDIJu
+        /WkJ33B7x7wd9F5B0X2g6PG2//CJM2fdBKetaOf5+cEaJg1fQmnkem0iTgN2KH7Z
+        ZKti0TgK0tzZwyS7r8dbsb7GaEQiYNnYEZ/4CiGQeyUdQXAo7hMCDi78JhGtTFs1
+        6OeecKsv8b1TcGuM1iNQkJ5pFw4BIFQU7AdIUoYrAN+kbEnX/23uPXM9Z38H66bf
+        e103m3qrtefxwT7/AyygBU+2r0ZyJG3ivkWTxctVNGLQ1k0Rr9Qm5DXPLZ2JevOQ
+        ==
+X-ME-Sender: <xms:PyZgXapDP1g87-lbaE7Tv3cS9vmXfzUGPr2uP2cqZFO5i-1owGEAcA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegkedguddugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinheplhhkmhhlrd
+    horhhgnecukfhppedutdegrdduvdelrdduleekrddvfeehnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:PyZgXVxRt3CVJKTVS5XFlqfxC8i-9J_lEWmxzMGYZ0Glo2N1OeofQA>
+    <xmx:PyZgXca1myLW02AtsGM-PaJrN1fHDl1Nrz8fRZj5yJUli2n3BDHPSA>
+    <xmx:PyZgXaDJzrZRzkAnFV-SZh7BaqTSikPeFXQe_YTaBvtmZ64IxMGx3Q>
+    <xmx:PyZgXdD-zUy_Ofm_Sh81ssT6Pftx6rJIqKRWSRg5s1gcdPP5TD9X-g>
+Received: from localhost (unknown [104.129.198.235])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4DCD7D60062;
+        Fri, 23 Aug 2019 13:45:35 -0400 (EDT)
+Date:   Fri, 23 Aug 2019 10:45:34 -0700
+From:   Greg KH <greg@kroah.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     gregkh@linuxfoundation.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajatxjain@gmail.com
+Subject: Re: [PATCH 2/2] PCI/AER: Split the AER stats into multiple sysfs
+ attributes
+Message-ID: <20190823174534.GC8052@kroah.com>
+References: <20190821231513.36454-1-rajatja@google.com>
+ <20190821231513.36454-2-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190823062951.1168-1-adam.zerella@gmail.com>
+In-Reply-To: <20190821231513.36454-2-rajatja@google.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 04:29:49PM +1000, Adam Zerella wrote:
-> As pointed out in https://kernelnewbies.org/KernelJanitors/Todo
-> this patch replaces the outdated macro of DPRINTK for pr_debug()
+On Wed, Aug 21, 2019 at 04:15:13PM -0700, Rajat Jain wrote:
+> Split the AER stats into multiple sysfs atributes. Note that
+> this changes the ABI of the AER stats, but hopefully, there
+> aren't active users that need to change. This is how the AERs
+> are being exposed now:
 > 
-> To: Dominik Brodowski <linux@dominikbrodowski.net>
-> To: Thomas Gleixner <tglx@linutronix.de>
-> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> To: Adam Zerella <adam.zerella@gmail.com>
-> To: linux-kernel@vger.kernel.org
-> Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
+> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats # ls -l
+> total 0
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit0_RxErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit12_Timeout
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit13_NonFatalErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit14_CorrIntErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit15_HeaderOF
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit6_BadTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit7_BadDLLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 correctable_bit8_Rollover
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit0_Undefined
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit12_TLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit13_FCP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit14_CmpltTO
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit15_CmpltAbrt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit16_UnxCmplt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit17_RxOF
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit18_MalfTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit19_ECRC
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit20_UnsupReq
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit21_ACSViol
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit22_UncorrIntErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit23_BlockedTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit24_AtomicOpBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit25_TLPBlockedErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit26_PoisonTLPBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit4_DLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 fatal_bit5_SDES
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit0_Undefined
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit12_TLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit13_FCP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit14_CmpltTO
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit15_CmpltAbrt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit16_UnxCmplt
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit17_RxOF
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit18_MalfTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit19_ECRC
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit20_UnsupReq
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit21_ACSViol
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit22_UncorrIntErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit23_BlockedTLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit24_AtomicOpBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit25_TLPBlockedErr
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit26_PoisonTLPBlocked
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit4_DLP
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 nonfatal_bit5_SDES
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_cor
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_fatal
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_device_err_nonfatal
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_cor
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_fatal
+> -r--r--r--. 1 root root 4096 Aug 20 16:35 total_rootport_err_nonfatal
+> localhost /sys/devices/pci0000:00/0000:00:1c.0/aer_stats #
+> 
+> Each file is has a single counter value. Single file containing all
+> stats was frowned upon and discussed here:
+> https://lkml.org/lkml/2019/6/28/220
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 > ---
->  drivers/pcmcia/i82092.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> I personally think that this makes it a little overwhelming for a human,
+> e.g. I could look at total but don't exactly know while file to look at
+> next in order to drill down. But I couldn't think of any other way. Some
+> problems I'd have liked to fix but they require deeper surgery:
 > 
-> diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-> index ec54a2aa5cb8..e1929520c20e 100644
-> --- a/drivers/pcmcia/i82092.c
-> +++ b/drivers/pcmcia/i82092.c
-> @@ -117,9 +117,9 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
->  		
->  		if (card_present(i)) {
->  			sockets[i].card_state = 3;
-> -			dprintk(KERN_DEBUG "i82092aa: slot %i is occupied\n",i);
-> +			pr_debug("i82092aa: slot %i is occupied\n", i);
->  		} else {
-> -			dprintk(KERN_DEBUG "i82092aa: slot %i is vacant\n",i);
-> +			pr_debug("i82092aa: slot %i is vacant\n", i);
+> * Now each PCI device sysfs node will have a sub-directory called aer_stats.
+>   (The subdirectory will have attributes only if it supports AER, but
+>    the sub directory will always be present). 
+> 
+> * This patch isn't re-using the strings array like it was using earlier.
+>   I thought of adding the attribute group at run time, so it will take
+>   care of both the problems, but can only do that after device_add() call,
+>   I think.
+> 
+> If we are comfortable introducing a call to a new function
+> pci_aer_stats_init() after call to device_add() in in pci_device_add(),
+> the above problems can be fixed.
+> 
+>  drivers/pci/pcie/aer.c | 166 +++++++++++++++++++++++++++++------------
+>  1 file changed, 119 insertions(+), 47 deletions(-)
 
-These really should use dev_dbg() instead, as this is a driver and you
-have access to a real device here.
-
-
->  		}
->  	}
->  		
-> @@ -128,7 +128,7 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
->  	pci_write_config_byte(dev, 0x50, configbyte); /* PCI Interrupt Routing Register */
->  
->  	/* Register the interrupt handler */
-> -	dprintk(KERN_DEBUG "Requesting interrupt %i \n",dev->irq);
-> +	pr_debug("Requesting interrupt %i\n", dev->irq);
-
-Same here.
+You need a Documentation/ABI/ update for the new sysfs files before we
+can properly review this to see if you are doing what you think you are
+doing :)
 
 thanks,
 
