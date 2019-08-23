@@ -2,207 +2,153 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA530C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A91921848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7052173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:51:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="osxCFJBJ"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="H+HISbVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394763AbfHWMug (ORCPT
+        id S2394861AbfHWMvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:50:36 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:27097 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394663AbfHWMu2 (ORCPT
+        Fri, 23 Aug 2019 08:51:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38711 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388720AbfHWMvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:50:28 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x7NCoNJK023800
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 21:50:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x7NCoNJK023800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566564624;
-        bh=F471OW9t2ZS0Cr+hU6yK0V0fBRMBkYv4fz1YEoZsFCM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=osxCFJBJaUFzQTJDoCHztEDBRLE7N0XtnUoH3PXS99RekTt4wCr2RR1ROZNA3kDzd
-         eRpvE0Py4TqWo5v1GmaBUiAcvQApvW0/7rjI9ulX2PQui4SiVTo7JlhzBEHnGNAWfY
-         ExWEGeAtnuXNAMOVq5MIIm4ulQUQJjR6Fij3KbaKWaA9FQaV2BBJUeR/v3QqmjafS9
-         927D43oFuOSAhogofEYm7dFcPqCE9smAq6lTLTG/7n3TiDVhgbEE89570+l5jBp1Kx
-         4hNbCwWH2W7sDN2pJhvXhEg4das+Kt+4NLXtDoKuy4VZy1hxGKOdm+GCEU70vS9HbN
-         vxJ1eiwApo0aQ==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id u203so2367699vku.3
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 05:50:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAXBHhiBfr731rtqIT/Anyqbiqh757MVvIdHwru6Z14VaXTtL6UC
-        3QkFdgK76ZwocOaZBELWcIfhEwo12A78y73uRuU=
-X-Google-Smtp-Source: APXvYqxytd8QlJTq69f9lxdUjhx/DenuZ0/veMMfLu4F7VZPoazhMOPCkfW9uzkg0tlmrnt9FRPi6FGpMeFu0xEpa2c=
-X-Received: by 2002:a1f:5dc2:: with SMTP id r185mr2256017vkb.64.1566564622689;
- Fri, 23 Aug 2019 05:50:22 -0700 (PDT)
+        Fri, 23 Aug 2019 08:51:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so13324017edo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 05:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=cxGB3E3Dpp1yDP4jAkeEWM2QENDtyV5kXzP97Ck1UME=;
+        b=H+HISbVXO5Ou2+ULlynRYFvCVacwi2wTGQNmdqqSg6GhjE3K6x2NU05g+ANqkaS2Tg
+         v/Y/wWLvYdzSigN1Dx+2+6J/0c3kGjgxcL0hU65MmQj1Nl7cqvupAhZthRfyWWb/aiYt
+         OeYjMOU2x/pYq0Gf/iBlrpnfSP9+XlYEqhqFQCu2g3BOuG0WXy7kBf3SnIDW0/mRc/87
+         +PZXRxI9bf8O0SVZ5XChRzyMtDdvliTnIxEkp3jFieYLLePpSN/WlwxOv02P3lF8LwoO
+         i9jmnLgP9UuO9ijtGUVdoUrvgXiAJE/UeCNvQp8gaCgqzUtwuCJHXqHXnL8kq0mSjtIu
+         49kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=cxGB3E3Dpp1yDP4jAkeEWM2QENDtyV5kXzP97Ck1UME=;
+        b=iE+oCUSeoc1kHYfkFkOgoRQ1puer2xOoya8U5tCqeD7I1cWnhzuid6D0oKOqh5N2b1
+         046/e9RU7EE6XM86hASf+iUaage074nnAJtSRqlVQhefxrYQYwvDxKOxAvU3s1CIqRzK
+         qLCgW72/G9DRBmN+mpG9E0K1XrlcxIjz69bs+uwgm5pXQjn7yqL2iURW46zV8DMNFz6G
+         tOyktvv1cXGqVr/bDsbrwfvsgair+y4rqo6V3F04IpjPaJLM+wIi0ku6pvQ1I2Ehr5cW
+         zkCgIJnfjCHFuGUIpmqUqd96hEwmaxZRRdsXtnvji/juScwinAFAf6ZZAkEhloP7aXFv
+         i3zw==
+X-Gm-Message-State: APjAAAW0c3z+NauQUTkpw8m5IX20KQ2FaX3G4iPnxaOidEyfzi4Nq3zW
+        mrg1irMR7WaC2YYiB94TPc56uE0qrbBaKNTWVrgEiMOfbBeWCUzEmPV6se0BI3h5nGdIuZayEY1
+        42jx3+g+/wnDG2kG2IA==
+X-Google-Smtp-Source: APXvYqx7Il3cbcuBGS0G4Gf/ngHSYZN6BaS1ImaXZTzj2fEr2FKhpsLrihFvWPoO9NeVA7yAmcfrSg==
+X-Received: by 2002:a17:906:191b:: with SMTP id a27mr4104873eje.84.1566564673555;
+        Fri, 23 Aug 2019 05:51:13 -0700 (PDT)
+Received: from localhost.localdomain (hag0-main.tessares.net. [87.98.252.165])
+        by smtp.gmail.com with ESMTPSA id l9sm509233eds.96.2019.08.23.05.51.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 05:51:12 -0700 (PDT)
+From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
+To:     matthieu.baerts@tessares.net
+Cc:     aprout@ll.mit.edu, cpaasch@apple.com, davem@davemloft.net,
+        edumazet@google.com, gregkh@linuxfoundation.org,
+        jonathan.lemon@gmail.com, jtl@netflix.com,
+        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
+        ncardwell@google.com, sashal@kernel.org, stable@vger.kernel.org,
+        tim.froidcoeur@tessares.net, ycheng@google.com
+Subject: [PATCH] tcp: fix tcp_rtx_queue_tail in case of empty retransmit queue
+Date:   Fri, 23 Aug 2019 14:50:54 +0200
+Message-Id: <20190823125054.30070-1-tim.froidcoeur@tessares.net>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <529376a4-cf63-f225-ce7c-4747e9966938@tessares.net>
+References: <529376a4-cf63-f225-ce7c-4747e9966938@tessares.net>
 MIME-Version: 1.0
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-3-nicoleotsuka@gmail.com>
-In-Reply-To: <20190506223334.1834-3-nicoleotsuka@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 23 Aug 2019 21:49:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com>
-Message-ID: <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for
- single pages
-To:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thierry Reding <treding@nvidia.com>,
-        Kees Cook <keescook@chromium.org>, iamjoonsoo.kim@lge.com,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 7:36 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> The addresses within a single page are always contiguous, so it's
-> not so necessary to always allocate one single page from CMA area.
-> Since the CMA area has a limited predefined size of space, it may
-> run out of space in heavy use cases, where there might be quite a
-> lot CMA pages being allocated for single pages.
->
-> However, there is also a concern that a device might care where a
-> page comes from -- it might expect the page from CMA area and act
-> differently if the page doesn't.
->
-> This patch tries to use the fallback alloc_pages path, instead of
-> one-page size allocations from the global CMA area in case that a
-> device does not have its own CMA area. This'd save resources from
-> the CMA global area for more CMA allocations, and also reduce CMA
-> fragmentations resulted from trivial allocations.
->
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
+triggers following stack trace:
 
+[25244.848046] kernel BUG at ./include/linux/skbuff.h:1406!
+[25244.859335] RIP: 0010:skb_queue_prev+0x9/0xc
+[25244.888167] Call Trace:
+[25244.889182]  <IRQ>
+[25244.890001]  tcp_fragment+0x9c/0x2cf
+[25244.891295]  tcp_write_xmit+0x68f/0x988
+[25244.892732]  __tcp_push_pending_frames+0x3b/0xa0
+[25244.894347]  tcp_data_snd_check+0x2a/0xc8
+[25244.895775]  tcp_rcv_established+0x2a8/0x30d
+[25244.897282]  tcp_v4_do_rcv+0xb2/0x158
+[25244.898666]  tcp_v4_rcv+0x692/0x956
+[25244.899959]  ip_local_deliver_finish+0xeb/0x169
+[25244.901547]  __netif_receive_skb_core+0x51c/0x582
+[25244.903193]  ? inet_gro_receive+0x239/0x247
+[25244.904756]  netif_receive_skb_internal+0xab/0xc6
+[25244.906395]  napi_gro_receive+0x8a/0xc0
+[25244.907760]  receive_buf+0x9a1/0x9cd
+[25244.909160]  ? load_balance+0x17a/0x7b7
+[25244.910536]  ? vring_unmap_one+0x18/0x61
+[25244.911932]  ? detach_buf+0x60/0xfa
+[25244.913234]  virtnet_poll+0x128/0x1e1
+[25244.914607]  net_rx_action+0x12a/0x2b1
+[25244.915953]  __do_softirq+0x11c/0x26b
+[25244.917269]  ? handle_irq_event+0x44/0x56
+[25244.918695]  irq_exit+0x61/0xa0
+[25244.919947]  do_IRQ+0x9d/0xbb
+[25244.921065]  common_interrupt+0x85/0x85
+[25244.922479]  </IRQ>
 
-This commit (bd2e75633c8012fc8a7431c82fda66237133bf7e)
-broke the DMA for my MMC driver in the following way:
+tcp_rtx_queue_tail() (called by tcp_fragment()) can call
+tcp_write_queue_prev() on the first packet in the queue, which will trigger
+the BUG in tcp_write_queue_prev(), because there is no previous packet.
 
+This happens when the retransmit queue is empty, for example in case of a
+zero window.
 
+Patch is needed for 4.4, 4.9 and 4.14 stable branches.
 
+Fixes: 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ include/net/tcp.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-[    1.876755] mmc0: ADMA error
-[    1.883385] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-[    1.889834] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-[    1.896284] mmc0: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000001
-[    1.902733] mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-[    1.909182] mmc0: sdhci: Present:   0x01ff02f6 | Host ctl: 0x00000019
-[    1.915631] mmc0: sdhci: Power:     0x0000000b | Blk gap:  0x00000000
-[    1.922081] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x0000fa07
-[    1.928530] mmc0: sdhci: Timeout:   0x0000000b | Int stat: 0x00000001
-[    1.934981] mmc0: sdhci: Int enab:  0x03ff008b | Sig enab: 0x03ff008b
-[    1.941429] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-[    1.947880] mmc0: sdhci: Caps:      0x546ec800 | Caps_1:   0x00000000
-[    1.954329] mmc0: sdhci: Cmd:       0x0000083a | Max curr: 0x00000000
-[    1.960778] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffff
-[    1.967229] mmc0: sdhci: Resp[2]:   0x320f5903 | Resp[3]:  0x3fd05e00
-[    1.973678] mmc0: sdhci: Host ctl2: 0x00000000
-[    1.978125] mmc0: sdhci: ADMA Err:  0x00000001 | ADMA Ptr: 0x000000013965b200
-[    1.985271] mmc0: sdhci: ============================================
-[    1.991758] mmc0: error -5 whilst initialising MMC card
-[    1.991913] 43fb0000.uart: ttyS1 at MMIO 0x43fb0000 (irq = 0,
-base_baud = 768000) is a 16550A
-[    2.011011] hctosys: unable to open rtc device (rtc0)
-[    2.017694] Freeing unused kernel memory: 2368K
-[    2.027131] Run /init as init process
-Starting syslogd: OK
-Starting klogd: OK
-Initializing random number generator... [    2.074399] random: dd:
-uninitialized urandom read (512 bytes read)
-done.
-Starting network: OK
-[    2.109593] mmc0: ADMA error
-[    2.112488] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-[    2.118941] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-[    2.125389] mmc0: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000001
-[    2.131840] mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-[    2.138289] mmc0: sdhci: Present:   0x01ff02f6 | Host ctl: 0x00000019
-[    2.144738] mmc0: sdhci: Power:     0x0000000b | Blk gap:  0x00000000
-[    2.151188] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00004e47
-[    2.157637] mmc0: sdhci: Timeout:   0x0000000b | Int stat: 0x00000001
-[    2.164087] mmc0: sdhci: Int enab:  0x03ff008b | Sig enab: 0x03ff008b
-[    2.170536] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-[    2.176987] mmc0: sdhci: Caps:      0x546ec800 | Caps_1:   0x00000000
-[    2.183435] mmc0: sdhci: Cmd:       0x0000083a | Max curr: 0x00000000
-[    2.189886] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffff
-[    2.196335] mmc0: sdhci: Resp[2]:   0x320f5903 | Resp[3]:  0x3fd05e00
-[    2.202784] mmc0: sdhci: Host ctl2: 0x00000000
-[    2.207232] mmc0: sdhci: ADMA Err:  0x00000001 | ADMA Ptr: 0x000000013965b200
-[    2.214379] mmc0: sdhci: ============================================
-
-[    2.220881] mmc0: error -5 whilst initialising MMC card
-Welcome to Buildroot
-buildroot login: [    2.332786] mmc0: ADMA error
-[    2.335668] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-[    2.342119] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-[    2.348568] mmc0: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000001
-[    2.355018] mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-[    2.361468] mmc0: sdhci: Present:   0x01ff02f6 | Host ctl: 0x00000019
-[    2.367917] mmc0: sdhci: Power:     0x0000000b | Blk gap:  0x00000000
-[    2.374367] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x0000f447
-[    2.380816] mmc0: sdhci: Timeout:   0x0000000b | Int stat: 0x00000001
-[    2.387267] mmc0: sdhci: Int enab:  0x03ff008b | Sig enab: 0x03ff008b
-[    2.393716] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-[    2.400166] mmc0: sdhci: Caps:      0x546ec800 | Caps_1:   0x00000000
-[    2.406615] mmc0: sdhci: Cmd:       0x0000083a | Max curr: 0x00000000
-[    2.413065] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffff
-[    2.419515] mmc0: sdhci: Resp[2]:   0x320f5903 | Resp[3]:  0x3fd05e00
-[    2.425963] mmc0: sdhci: Host ctl2: 0x00000000
-[    2.430412] mmc0: sdhci: ADMA Err:  0x00000001 | ADMA Ptr: 0x000000013965b200
-[    2.437557] mmc0: sdhci: ============================================
-[    2.444031] mmc0: error -5 whilst initialising MMC card
-[    2.572203] mmc0: ADMA error
-[    2.575089] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-[    2.581540] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-[    2.587989] mmc0: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000001
-[    2.594439] mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-[    2.600889] mmc0: sdhci: Present:   0x01ef02f6 | Host ctl: 0x00000019
-[    2.607339] mmc0: sdhci: Power:     0x0000000b | Blk gap:  0x00000000
-[    2.613788] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x0000e8c7
-[    2.620237] mmc0: sdhci: Timeout:   0x0000000b | Int stat: 0x00000001
-[    2.626686] mmc0: sdhci: Int enab:  0x03ff008b | Sig enab: 0x03ff008b
-[    2.633137] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-[    2.639586] mmc0: sdhci: Caps:      0x546ec800 | Caps_1:   0x00000000
-[    2.646036] mmc0: sdhci: Cmd:       0x0000083a | Max curr: 0x00000000
-[    2.652485] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffff
-[    2.658936] mmc0: sdhci: Resp[2]:   0x320f5903 | Resp[3]:  0x3fd05e00
-[    2.665384] mmc0: sdhci: Host ctl2: 0x00000000
-[    2.669832] mmc0: sdhci: ADMA Err:  0x00000001 | ADMA Ptr: 0x000000013965b200
-[    2.676979] mmc0: sdhci: ============================================
-[    2.683450] mmc0: error -5 whilst initialising MMC card
-
-CTRL-A Z for help | 115200 8N1 | NOR | Minicom 2.7.1 | VT102 | Offline
-| ttyUSB0
-
-Reverting this commit fixed the problem.
-
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 9de2c8cdcc51..1e70ca75c8bf 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1705,6 +1705,10 @@ static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
+ {
+ 	struct sk_buff *skb = tcp_send_head(sk);
+ 
++	/* empty retransmit queue, for example due to zero window */
++	if (skb == tcp_write_queue_head(sk))
++		return NULL;
++
+ 	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
+ }
+ 
+-- 
+2.23.0
 
 
 -- 
-Best Regards
-Masahiro Yamada
+
+
+Disclaimer: https://www.tessares.net/mail-disclaimer/ 
+<https://www.tessares.net/mail-disclaimer/>
+
+
