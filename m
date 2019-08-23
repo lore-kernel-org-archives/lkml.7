@@ -2,155 +2,111 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D02C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD65BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE299233FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A351F2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qjJP3CPD"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hYL+u0eQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfHWAuu (ORCPT
+        id S1732419AbfHWAwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 20:50:50 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:38833 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730401AbfHWAut (ORCPT
+        Thu, 22 Aug 2019 20:52:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40325 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730401AbfHWAwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 20:50:49 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190823005045epoutp03566116bf7cd4e6f52ef204059bb8bcdb~9ZvRlOrAj2230622306epoutp03b
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:50:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190823005045epoutp03566116bf7cd4e6f52ef204059bb8bcdb~9ZvRlOrAj2230622306epoutp03b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566521445;
-        bh=f2ThUHwqU6SxyDkaBykTiPQlcm0wcRMy3IpQiQiChcs=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=qjJP3CPDZUoPqC+TllhSHlEzayDCNEEA/ZeZhRffZlSa6IWzZNyyy/WghomGNCSH3
-         Ll12acSDQNebr7Gm85XsT73lLM+iAcMPvCd+fTuz8IXicflKfBccxTrV2stA77r50K
-         SbznIaYWExt+HtvjAggHXAnol3/leqScWyxLjaic=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20190823005044epcas2p4d26d2085b61ee54bd5954b1c574ebbe6~9ZvRA3S2Y1951719517epcas2p4w;
-        Fri, 23 Aug 2019 00:50:44 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.40.184]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 46F2rL3vD7zMqYkk; Fri, 23 Aug
-        2019 00:50:42 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5E.38.04149.2683F5D5; Fri, 23 Aug 2019 09:50:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6~9ZvObUZVL1059310593epcas2p3U;
-        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190823005041epsmtrp1e67b842e0eeb29d74f2dcb22b227f249~9ZvOaIzfb2194621946epsmtrp1o;
-        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
-X-AuditID: b6c32a46-fd5ff70000001035-b2-5d5f38625f08
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F7.1A.03706.1683F5D5; Fri, 23 Aug 2019 09:50:41 +0900 (KST)
-Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190823005041epsmtip2748af0669304060f493849067826a76f~9ZvOI_Fjj0682606826epsmtip2h;
-        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
-From:   "boojin.kim" <boojin.kim@samsung.com>
-To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
-Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Eric Biggers'" <ebiggers@kernel.org>,
-        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
-        "'Chao Yu'" <chao@kernel.org>,
-        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
-        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
-        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
-        "'Mike Snitzer'" <snitzer@redhat.com>,
-        "'Alasdair Kergon'" <agk@redhat.com>,
-        "'Jens Axboe'" <axboe@kernel.dk>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Kukjin Kim'" <kgene@kernel.org>,
-        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
-        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/9] crypt: Add diskcipher
-Date:   Fri, 23 Aug 2019 09:50:41 +0900
-Message-ID: <00da01d5594c$c9d87390$5d895ab0$@samsung.com>
+        Thu, 22 Aug 2019 20:52:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so4697615pgj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 17:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hzy36hhVXFi6wqDa1Z1jG9B3/csgmeqFSkjTTR5TT8o=;
+        b=hYL+u0eQoTbpWIVtYnginblV5imhgI8XxMCyi9l7/HBpQMrxDA/vdrxCnNultRSBkY
+         P5JMBNUxfa2VHB72aDX+cgK5x5Pg+SVWjdRnWHlGNng1tFEMrua/lr9A/QngXcR9+PIr
+         z8i7RNwUNfD9CTp7+geP9YlxQpiKIiEyRI9jk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hzy36hhVXFi6wqDa1Z1jG9B3/csgmeqFSkjTTR5TT8o=;
+        b=X5w9Uc+DZp09/NBqgzX9287NoqLKKyZ5klu1TAzznGXBMBYP+yGE32fILS7bc5bmkh
+         uqctiKWKQf3y46N475ewptKxNjhmz8DHWROXAIhRD5/7FzipjQeEn37g/3Lndz2X6rgc
+         bz6O0Rob6byHejVHRZOp/LjRifciRBXDgMmxGBBtXOOWN4APp+qAj8ZwqK7Tm76Ig8vv
+         1/DV+wcDWKYnxYMk3AuLOiqQx0ZNlezYwCyHyDptEbqKiOfjMMTirnp+Ls/KTTE/3yKX
+         Yqa7CwgcuJdF74x/4IncTH4/HS2Noi5uXSVYzTbWNetlcMcQyumrFH84zLec9xDY07nx
+         Al9g==
+X-Gm-Message-State: APjAAAX8xDt2UWS2Sokq76hv7Ke/UGhssByMmYv5BrVTw0Ng2dZsLOb5
+        /sufZBrszdoAqmjLgVC0+6Lnsd7m8Ew=
+X-Google-Smtp-Source: APXvYqyGds7sD98KClwP8vPM/hhwyoxGqLWwe/lQvhK2aDW5qJOTjJFAOfarEo2F9FxknbT8y5v6yg==
+X-Received: by 2002:a63:7d49:: with SMTP id m9mr1704700pgn.161.1566521540968;
+        Thu, 22 Aug 2019 17:52:20 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g1sm460656pgg.27.2019.08.22.17.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 17:52:20 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 20:52:18 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 3/3] rcu: Disable use_softirq on PREEMPT_RT
+Message-ID: <20190823005218.GA36261@google.com>
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-4-swood@redhat.com>
+ <20190822135953.GB29841@google.com>
+ <c44d6ab34f2f4e4a5d36036cc8b356a3f4f3519b.camel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AdVZTE1TDvDE+uWuReO+5O58h7ifGg==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLsWRmVeSWpSXmKPExsWy7bCmhW6SRXysweKVkhZfv3SwWKw/dYzZ
-        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
-        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
-        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
-        mT3e77vK5tG3ZRWjx+dNcgE8UTk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koK
-        eYm5qbZKLj4Bum6ZOUC/KymUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKDA0L9IoT
-        c4tL89L1kvNzrQwNDIxMgSoTcjI6Ly5kKvjFXLFyz1PWBsaJzF2MnBwSAiYSL6bdBLK5OIQE
-        djBKHLn/Csr5xCix9PRDFgjnG6PEowUX2GFafl3vYoNI7GWUuPn/HVTLS0aJna+nsoBUsQlo
-        S2w+vooRxBYR0JXYfGM5O0gRs8A/doknnw6BFQkL6EnMeLCYCcRmEVCV2PysF2gsBwevgKXE
-        q49qIGFeAUGJkzOfgJUzC8hLbH87B+pwBYkdZ19DzdeTeN4xnR2iRkRidmcb2EESAj/ZJSb9
-        ameBaHCR6JtwBcoWlnh1fAvUO1ISL/vboOx6iavLFrNDNPcwSpz5BZMwlpj1rJ0R5DhmAU2J
-        9bv0QUwJAWWJI7egbuOT6Dj8lx0izCvR0SYE0agiMffTZSaIsJTEh546iLCHRPPBDrYJjIqz
-        kDw5C8mTs5A8Mwth7QJGllWMYqkFxbnpqcVGBUbIkb2JEZwvtNx2MC4553OIUYCDUYmHt6Aj
-        LlaINbGsuDL3EKMEB7OSCG/ZRKAQb0piZVVqUX58UWlOavEhRlNgFExklhJNzgfmsrySeENT
-        IzMzA0tTC1MzIwslcd5N3DdjhATSE0tSs1NTC1KLYPqYODilGhhb2VZ9bj/4j9m9Iuf7vUUs
-        J3MWHf0j1lTS2eO4QTdzw8b5G6K8pjDqvjtzN9nhxX13G1vnkq0G1TZrtL/4bHvHupRDP5rx
-        VqSo+KHqV+sObK02DLrOElD9o+/Xi+W1bfOcdJRutyZXXz9cM4dTcjbnAX/x5gzHh1uvntDf
-        efu79KO5c470TF6hxFKckWioxVxUnAgA7+Q96S0EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsWy7bCSvG6iRXyswZrzuhZfv3SwWKw/dYzZ
-        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
-        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
-        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
-        mT3e77vK5tG3ZRWjx+dNcgE8UVw2Kak5mWWpRfp2CVwZnRcXMhX8Yq5YuecpawPjROYuRk4O
-        CQETiV/Xu9i6GLk4hAR2M0qc+72aHSIhJbG1fQ9UkbDE/ZYjrBBFzxklDhw4BVbEJqAtsfn4
-        KkYQW0RAV2LzjeVgcWaBaRwSuz6Ig9jCAnoSMx4sZgKxWQRUJTY/6wXaxsHBK2Ap8eqjGkiY
-        V0BQ4uTMJywgYWag8raNjBBT5CW2v50DdYKCxI6zr6E26Uk875gOtUlEYnZnG/MERsFZSCbN
-        Qpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECE4BWpo7GC8viT/E
-        KMDBqMTDW9ARFyvEmlhWXJl7iFGCg1lJhLdsIlCINyWxsiq1KD++qDQntfgQozQHi5I479O8
-        Y5FCAumJJanZqakFqUUwWSYOTqkGxpkCz5+oMws9PX3b/Iwkf+SF3W8rQ53jHge67jXfcttX
-        XfWf/YkDt2PWHm6XO/JJRet0fPHMFRtncfxadl8yhy+f9dwq5ZWcKeFMbiHrX7L3Sj37OZvd
-        4obsuk/CfvZi882OzLqbKXEtsXAff8/CwM0+Hnof3BSz71z2LO/ouybA31ka2n+AWYmlOCPR
-        UIu5qDgRAIuCqND9AgAA
-X-CMS-MailID: 20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6
-References: <CGME20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6@epcas2p3.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c44d6ab34f2f4e4a5d36036cc8b356a3f4f3519b.camel@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Aug 2019 at 17:37, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Your patch looks corrupted - wrapped by mailer. The easiest way
-> usually is to use git format-patch and git send-email - then you do
-> not have to worry about formatting etc.
->
-> Best regards,
-> Krzysztof
+On Thu, Aug 22, 2019 at 02:31:17PM -0500, Scott Wood wrote:
+> On Thu, 2019-08-22 at 09:59 -0400, Joel Fernandes wrote:
+> > On Wed, Aug 21, 2019 at 06:19:06PM -0500, Scott Wood wrote:
+> > > I think the prohibition on use_softirq can be dropped once RT gets the
+> > > latest RCU code, but the question of what use_softirq should default
+> > > to on PREEMPT_RT remains.
+> > 
+> > Independent of the question of what use_softirq should default to, could
+> > we
+> > test RT with latest RCU code now to check if the deadlock goes away?  That
+> > way, maybe we can find any issues in current RCU that cause scheduler
+> > deadlocks in the situation you pointed. The reason I am asking is because
+> > recently additional commits [1] try to prevent deadlock and it'd be nice
+> > to
+> > ensure that other conditions are not lingering (I don't think they are but
+> > it'd be nice to be sure).
+> > 
+> > I am happy to do such testing myself if you want, however what does it
+> > take
+> > to apply the RT patchset to the latest mainline? Is it an achievable feat?
+> 
+> I did run such a test (cherry picking all RCU patches that aren't already in
+> RT, plus your RFC patch to rcu_read_unlock_special, rather than applying RT
+> to current mainline) with rcutorture plus a looping kernel build overnight,
+> and didn't see any splats with or without use_softirq.
 
-I'm using outlook instead of 'git send-email' because of workplace policy.
-It's probably broken when I copied the code.
-Thanks for your notice. I will be more careful.
+Cool, that's good to know you didn't see splats!
 
-Thanks for your reply
-Boojin Kim.
+thanks,
+
+ - Joel
 
