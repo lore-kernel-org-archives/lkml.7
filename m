@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD40C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6CBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A89123404
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD7A23404
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389467AbfHWCMW (ORCPT
+        id S2389663AbfHWCMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:12:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33711 "EHLO
+        Thu, 22 Aug 2019 22:12:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33731 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389300AbfHWCMS (ORCPT
+        with ESMTP id S2389411AbfHWCMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:12:18 -0400
+        Thu, 22 Aug 2019 22:12:22 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0z3n-0000wA-45; Fri, 23 Aug 2019 04:12:15 +0200
+        id 1i0z3q-0000yW-DL; Fri, 23 Aug 2019 04:12:18 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C578E1C0883;
-        Fri, 23 Aug 2019 04:12:14 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:12:14 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 143421C07E4;
+        Fri, 23 Aug 2019 04:12:18 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:12:18 -0000
 From:   tip-bot2 for Thomas Gleixner <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Sanitize bogus WARNONS
+Subject: [tip: timers/core] posix-timers: Use a callback for cancel
+ synchronization on PREEMPT_RT
 Cc:     linux-kernel@vger.kernel.org,
         Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-In-Reply-To: <20190819143801.846497772@linutronix.de>
-References: <20190819143801.846497772@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixenr <anna-maria@linutronix.de>
+In-Reply-To: <20190819143801.656864506@linutronix.de>
+References: <20190819143801.656864506@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156652633476.11645.833680996843703655.tip-bot2@tip-bot2>
+Message-ID: <156652633800.11667.5499751485130399187.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -57,97 +59,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     692117c1f7a6770ed41dd8f277cd9fed1dfb16f1
-Gitweb:        https://git.kernel.org/tip/692117c1f7a6770ed41dd8f277cd9fed1dfb16f1
+Commit-ID:     ec8f954a40da8cd3d159713b608e901f0cd909a9
+Gitweb:        https://git.kernel.org/tip/ec8f954a40da8cd3d159713b608e901f0cd909a9
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 19 Aug 2019 16:31:46 +02:00
+AuthorDate:    Fri, 02 Aug 2019 07:35:59 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 21 Aug 2019 20:27:15 +02:00
+CommitterDate: Tue, 20 Aug 2019 22:05:46 +02:00
 
-posix-cpu-timers: Sanitize bogus WARNONS
+posix-timers: Use a callback for cancel synchronization on PREEMPT_RT
 
-Warning when p == NULL and then proceeding and dereferencing p does not
-make any sense as the kernel will crash with a NULL pointer dereference
-right away.
+Posix timer delete retry loops are affected by the same priority inversion
+and live lock issues as the other timers.
+    
+Provide a RT specific synchronization function which keeps a reference to
+the timer by holding rcu read lock to prevent the timer from being freed,
+dropping the timer lock and invoking the timer specific wait function via a
+new callback.
+    
+This does not yet cover posix CPU timers because they need more special
+treatment on PREEMPT_RT.
 
-Bailing out when p == NULL and returning an error code does not cure the
-underlying problem which caused p to be NULL. Though it might allow to
-do proper debugging.
+[ This is folded into the original attempt which did not use a callback. ]
 
-Same applies to the clock id check in set_process_cpu_timer().
-
-Clean them up and make them return without trying to do further damage.
-
+Originally-by: Anna-Maria Gleixenr <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190819143801.846497772@linutronix.de
-
+Link: https://lkml.kernel.org/r/20190819143801.656864506@linutronix.de
 ---
- kernel/time/posix-cpu-timers.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ kernel/time/alarmtimer.c   | 14 ++++++++++++++
+ kernel/time/posix-timers.c | 18 +++++++++++++++++-
+ kernel/time/posix-timers.h |  1 +
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index 742d4a4..98223d2 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -375,7 +375,8 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
- 	struct sighand_struct *sighand;
- 	struct task_struct *p = timer->it.cpu.task;
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 3694744..ec32876 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -606,6 +606,19 @@ static int alarm_timer_try_to_cancel(struct k_itimer *timr)
+ }
  
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return -EINVAL;
- 
- 	/*
- 	 * Protect against sighand release/switch in exit/exec and process/
-@@ -581,7 +582,8 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	u64 old_expires, new_expires, old_incr, val;
- 	int ret;
- 
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return -EINVAL;
- 
- 	/*
- 	 * Use the to_ktime conversion because that clamps the maximum
-@@ -716,10 +718,11 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 
- static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
- {
--	u64 now;
- 	struct task_struct *p = timer->it.cpu.task;
-+	u64 now;
- 
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return;
- 
- 	/*
- 	 * Easy part: convert the reload time.
-@@ -1001,12 +1004,13 @@ static void check_process_timers(struct task_struct *tsk,
-  */
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
- {
-+	struct task_struct *p = timer->it.cpu.task;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
--	struct task_struct *p = timer->it.cpu.task;
- 	u64 now;
- 
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return;
- 
- 	/*
- 	 * Fetch the current sample and update the timer's expiry time.
-@@ -1203,7 +1207,9 @@ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
- 	u64 now;
- 	int ret;
- 
--	WARN_ON_ONCE(clock_idx == CPUCLOCK_SCHED);
-+	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
-+		return;
+ /**
++ * alarm_timer_wait_running - Posix timer callback to wait for a timer
++ * @timr:	Pointer to the posixtimer data struct
++ *
++ * Called from the core code when timer cancel detected that the callback
++ * is running. @timr is unlocked and rcu read lock is held to prevent it
++ * from being freed.
++ */
++static void alarm_timer_wait_running(struct k_itimer *timr)
++{
++	hrtimer_cancel_wait_running(&timr->it.alarm.alarmtimer.timer);
++}
 +
- 	ret = cpu_timer_sample_group(clock_idx, tsk, &now);
++/**
+  * alarm_timer_arm - Posix timer callback to arm a timer
+  * @timr:	Pointer to the posixtimer data struct
+  * @expires:	The new expiry time
+@@ -834,6 +847,7 @@ const struct k_clock alarm_clock = {
+ 	.timer_forward		= alarm_timer_forward,
+ 	.timer_remaining	= alarm_timer_remaining,
+ 	.timer_try_to_cancel	= alarm_timer_try_to_cancel,
++	.timer_wait_running	= alarm_timer_wait_running,
+ 	.nsleep			= alarm_timer_nsleep,
+ };
+ #endif /* CONFIG_POSIX_TIMERS */
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 3e663f9..9e37783 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -805,13 +805,25 @@ static int common_hrtimer_try_to_cancel(struct k_itimer *timr)
+ 	return hrtimer_try_to_cancel(&timr->it.real.timer);
+ }
  
- 	if (oldval && ret != -EINVAL) {
++static void common_timer_wait_running(struct k_itimer *timer)
++{
++	hrtimer_cancel_wait_running(&timer->it.real.timer);
++}
++
+ static struct k_itimer *timer_wait_running(struct k_itimer *timer,
+ 					   unsigned long *flags)
+ {
++	const struct k_clock *kc = READ_ONCE(timer->kclock);
+ 	timer_t timer_id = READ_ONCE(timer->it_id);
+ 
++	/* Prevent kfree(timer) after dropping the lock */
++	rcu_read_lock();
+ 	unlock_timer(timer, *flags);
+-	cpu_relax();
++
++	if (!WARN_ON_ONCE(!kc->timer_wait_running))
++		kc->timer_wait_running(timer);
++
++	rcu_read_unlock();
+ 	/* Relock the timer. It might be not longer hashed. */
+ 	return lock_timer(timer_id, flags);
+ }
+@@ -1255,6 +1267,7 @@ static const struct k_clock clock_realtime = {
+ 	.timer_forward		= common_hrtimer_forward,
+ 	.timer_remaining	= common_hrtimer_remaining,
+ 	.timer_try_to_cancel	= common_hrtimer_try_to_cancel,
++	.timer_wait_running	= common_timer_wait_running,
+ 	.timer_arm		= common_hrtimer_arm,
+ };
+ 
+@@ -1270,6 +1283,7 @@ static const struct k_clock clock_monotonic = {
+ 	.timer_forward		= common_hrtimer_forward,
+ 	.timer_remaining	= common_hrtimer_remaining,
+ 	.timer_try_to_cancel	= common_hrtimer_try_to_cancel,
++	.timer_wait_running	= common_timer_wait_running,
+ 	.timer_arm		= common_hrtimer_arm,
+ };
+ 
+@@ -1300,6 +1314,7 @@ static const struct k_clock clock_tai = {
+ 	.timer_forward		= common_hrtimer_forward,
+ 	.timer_remaining	= common_hrtimer_remaining,
+ 	.timer_try_to_cancel	= common_hrtimer_try_to_cancel,
++	.timer_wait_running	= common_timer_wait_running,
+ 	.timer_arm		= common_hrtimer_arm,
+ };
+ 
+@@ -1315,6 +1330,7 @@ static const struct k_clock clock_boottime = {
+ 	.timer_forward		= common_hrtimer_forward,
+ 	.timer_remaining	= common_hrtimer_remaining,
+ 	.timer_try_to_cancel	= common_hrtimer_try_to_cancel,
++	.timer_wait_running	= common_timer_wait_running,
+ 	.timer_arm		= common_hrtimer_arm,
+ };
+ 
+diff --git a/kernel/time/posix-timers.h b/kernel/time/posix-timers.h
+index de5daa6..897c29e 100644
+--- a/kernel/time/posix-timers.h
++++ b/kernel/time/posix-timers.h
+@@ -24,6 +24,7 @@ struct k_clock {
+ 	int	(*timer_try_to_cancel)(struct k_itimer *timr);
+ 	void	(*timer_arm)(struct k_itimer *timr, ktime_t expires,
+ 			     bool absolute, bool sigev_none);
++	void	(*timer_wait_running)(struct k_itimer *timr);
+ };
+ 
+ extern const struct k_clock clock_posix_cpu;
