@@ -2,81 +2,105 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A749BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EB62173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E79B23401
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfHWAJN (ORCPT
+        id S1730588AbfHWAYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 20:09:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43284 "EHLO mx1.redhat.com"
+        Thu, 22 Aug 2019 20:24:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11269 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbfHWAJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 20:09:13 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EA4923082D9E;
-        Fri, 23 Aug 2019 00:09:12 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A175D600CD;
-        Fri, 23 Aug 2019 00:09:11 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] drm/i915: Enable CONFIG_DMA_API_DEBUG_SG for intel-ci
-Date:   Thu, 22 Aug 2019 20:09:03 -0400
-Message-Id: <20190823000903.12675-1-lyude@redhat.com>
-In-Reply-To: <20190822203127.24648-2-lyude@redhat.com>
-References: <20190822203127.24648-2-lyude@redhat.com>
+        id S1727377AbfHWAYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 20:24:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 17:24:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,419,1559545200"; 
+   d="scan'208";a="173314320"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga008.jf.intel.com with ESMTP; 22 Aug 2019 17:24:44 -0700
+Date:   Thu, 22 Aug 2019 17:24:44 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] mm/gup: introduce vaddr_pin_pages_remote(),
+ FOLL_PIN
+Message-ID: <20190823002443.GA19517@iweiny-DESK2.sc.intel.com>
+References: <20190821040727.19650-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 23 Aug 2019 00:09:13 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821040727.19650-1-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we've fixed i915 so that it sets a max SG segment length and
-gotten rid of the relevant warnings, let's enable
-CONFIG_DMA_API_DEBUG_SG for intel-ci so that we can catch issues like
-this in the future as well.
+On Tue, Aug 20, 2019 at 09:07:24PM -0700, John Hubbard wrote:
+> Hi Ira,
+> 
+> This is for your tree. I'm dropping the RFC because this aspect is
+> starting to firm up pretty well.
+> 
+> I've moved FOLL_PIN inside the vaddr_pin_*() routines, and moved
+> FOLL_LONGTERM outside, based on our recent discussions. This is
+> documented pretty well within the patches.
+> 
+> Note that there are a lot of references in comments and commit
+> logs, to vaddr_pin_pages(). We'll want to catch all of those if
+> we rename that. I am pushing pretty hard to rename it to
+> vaddr_pin_user_pages().
+> 
+> v1 of this may be found here:
+> https://lore.kernel.org/r/20190812015044.26176-1-jhubbard@nvidia.com
 
-Changes since v2:
-* Also select DMA_API_DEBUG - Chris Wilson
+I am really sorry about this...
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
----
- drivers/gpu/drm/i915/Kconfig.debug | 2 ++
- 1 file changed, 2 insertions(+)
+I think it is fine to pull these in...  There are some nits which are wrong but
+I think with the XDP complication and Daves' objection I think the vaddr_pin
+information is going to need reworking.  So the documentation there is probably
+wrong.  But until we know what it is going to be we should just take this.
 
-diff --git a/drivers/gpu/drm/i915/Kconfig.debug b/drivers/gpu/drm/i915/Kconfig.debug
-index 00786a142ff0..cb929d0218e8 100644
---- a/drivers/gpu/drm/i915/Kconfig.debug
-+++ b/drivers/gpu/drm/i915/Kconfig.debug
-@@ -32,6 +32,8 @@ config DRM_I915_DEBUG
- 	select DRM_DEBUG_SELFTEST
- 	select DMABUF_SELFTESTS
- 	select SW_SYNC # signaling validation framework (igt/syncobj*)
-+        select DMA_API_DEBUG
-+        select DMA_API_DEBUG_SG
- 	select DRM_I915_SW_FENCE_DEBUG_OBJECTS
- 	select DRM_I915_SELFTEST
- 	select DRM_I915_DEBUG_RUNTIME_PM
--- 
-2.21.0
+Do you have a branch with this on it?
 
+The patches don't seem to apply.  Looks like they got corrupted somewhere...
+
+:-/
+
+Thanks,
+Ira
+
+> 
+> John Hubbard (3):
+>   For Ira: tiny formatting tweak to kerneldoc
+>   mm/gup: introduce FOLL_PIN flag for get_user_pages()
+>   mm/gup: introduce vaddr_pin_pages_remote(), and invoke it
+> 
+>  drivers/infiniband/core/umem.c |  1 +
+>  include/linux/mm.h             | 61 ++++++++++++++++++++++++++++++----
+>  mm/gup.c                       | 40 ++++++++++++++++++++--
+>  mm/process_vm_access.c         | 23 +++++++------
+>  4 files changed, 106 insertions(+), 19 deletions(-)
+> 
+> -- 
+> 2.22.1
+> 
+> 
