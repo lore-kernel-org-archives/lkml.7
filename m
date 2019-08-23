@@ -2,225 +2,92 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E47C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B0CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1011C23426
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JWV4ioQF"
+	by mail.kernel.org (Postfix) with ESMTP id BF71923406
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391607AbfHWDkT (ORCPT
+        id S2391653AbfHWDmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:40:19 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37604 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732546AbfHWDkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:40:18 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7N3dsco056152;
-        Thu, 22 Aug 2019 22:39:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566531594;
-        bh=81SSEYa5Fp4dwV5qila9E6vwCoCXnItQiSYD67zCfW8=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=JWV4ioQFP6IoggZOdMcyoaMP1ZYasXYOhchN4C+7LKmF5GWY/fxycdv4+VTJvOnBp
-         CG/i6CCa5N2V806C2ZUm4j1Uvw9GWhxQp1m80ztT3LFuMkB56p1qu+TsGUuUsqEtiH
-         l2geahbl0GLEirpyHJqBtlG/34hOoHWZDlmJRhBY=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7N3dsgV012046
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 22 Aug 2019 22:39:54 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
- Aug 2019 22:39:54 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 22 Aug 2019 22:39:54 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7N3dmoK102238;
-        Thu, 22 Aug 2019 22:39:49 -0500
-Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
- capability with different PEX
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-6-xiaowei.bao@nxp.com>
- <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
- <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <11e9b2c3-f4d0-2f82-bb14-45c38a1419e4@ti.com>
-Date:   Fri, 23 Aug 2019 09:09:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 23:42:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60332 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732546AbfHWDmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 23:42:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8BC8A4FF4B98D984327F;
+        Fri, 23 Aug 2019 11:42:19 +0800 (CST)
+Received: from localhost (10.177.220.209) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
+ 11:42:10 +0800
+From:   <zhangsha.zhang@huawei.com>
+To:     <j.vosburgh@gmail.com>, <vfalico@gmail.com>, <andy@greyhouse.net>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhangsha.zhang@huawei.com>, <yuehaibing@huawei.com>,
+        <hunongda@huawei.com>, <alex.chen@huawei.com>
+Subject: [PATCH v2] bonding: force enable lacp port after link state recovery for 802.3ad
+Date:   Fri, 23 Aug 2019 11:42:09 +0800
+Message-ID: <20190823034209.14596-1-zhangsha.zhang@huawei.com>
+X-Mailer: git-send-email 2.17.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.177.220.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Sha Zhang <zhangsha.zhang@huawei.com>
 
-(Fixed Lorenzo's email address. All the patches in the series have wrong email id)
+After the commit 334031219a84 ("bonding/802.3ad: fix slave link
+initialization transition states") merged,
+the slave's link status will be changed to BOND_LINK_FAIL
+from BOND_LINK_DOWN in the following scenario:
+- Driver reports loss of carrier and
+  bonding driver receives NETDEV_DOWN notifier
+- slave's duplex and speed is zerod and
+  its port->is_enabled is cleard to 'false';
+- Driver reports link recovery and
+  bonding driver receives NETDEV_UP notifier;
+- If speed/duplex getting failed here, the link status
+  will be changed to BOND_LINK_FAIL;
+- The MII monotor later recover the slave's speed/duplex
+  and set link status to BOND_LINK_UP, but remains
+  the 'port->is_enabled' to 'false'.
 
-On 23/08/19 8:09 AM, Xiaowei Bao wrote:
-> 
-> 
->> -----Original Message-----
->> From: Kishon Vijay Abraham I <kishon@ti.com>
->> Sent: 2019年8月22日 19:44
->> To: Xiaowei Bao <xiaowei.bao@nxp.com>; bhelgaas@google.com;
->> robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
->> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.co; arnd@arndb.de;
->> gregkh@linuxfoundation.org; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
->> Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
->> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
->> linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> linuxppc-dev@lists.ozlabs.org; andrew.murray@arm.com
->> Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
->> capability with different PEX
->>
->> Hi,
->>
->> On 22/08/19 4:52 PM, Xiaowei Bao wrote:
->>> The different PCIe controller in one board may be have different
->>> capability of MSI or MSIX, so change the way of getting the MSI
->>> capability, make it more flexible.
->>
->> please use different pci_epc_features table for different boards.
-> Thanks, I think that it will be more flexible to dynamically get MSI or MSIX capability,
-> Thus, we will not need to define the pci_epc_feature for different boards.
+In this scenario, the lacp port will not be enabled even its speed
+and duplex are valid. The bond will not send LACPDU's, and its
+state is 'AD_STATE_DEFAULTED' forever. The simplest fix I think
+is to call bond_3ad_handle_link_change() in bond_miimon_commit,
+this function can enable lacp after port slave speed check.
+As enabled, the lacp port can run its state machine normally
+after link recovery.
 
-Is the restriction because you cannot have different compatible for different
-boards?
+Signed-off-by: Sha Zhang <zhangsha.zhang@huawei.com>
+---
+ drivers/net/bonding/bond_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Kishon
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 931d9d9..ef4ec99 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2206,7 +2206,7 @@ static void bond_miimon_commit(struct bonding *bond)
+ 			 */
+ 			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
+ 			    slave->link == BOND_LINK_UP)
+-				bond_3ad_adapter_speed_duplex_changed(slave);
++				bond_3ad_handle_link_change(slave, BOND_LINK_UP);
+ 			continue;
+ 
+ 		case BOND_LINK_UP:
+-- 
+1.8.3.1
 
->>
->> Thanks
->> Kishon
->>>
->>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
->>> ---
->>> v2:
->>>  - Remove the repeated assignment code.
->>>
->>>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 26
->>> +++++++++++++++++++-------
->>>  1 file changed, 19 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> index 4e92a95..8461f62 100644
->>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
->>> @@ -22,6 +22,7 @@
->>>
->>>  struct ls_pcie_ep {
->>>  	struct dw_pcie		*pci;
->>> +	struct pci_epc_features	*ls_epc;
->>>  };
->>>
->>>  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
->>> @@ -40,25 +41,26 @@ static const struct of_device_id
->> ls_pcie_ep_of_match[] = {
->>>  	{ },
->>>  };
->>>
->>> -static const struct pci_epc_features ls_pcie_epc_features = {
->>> -	.linkup_notifier = false,
->>> -	.msi_capable = true,
->>> -	.msix_capable = false,
->>> -};
->>> -
->>>  static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
->>> dw_pcie_ep *ep)  {
->>> -	return &ls_pcie_epc_features;
->>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
->>> +
->>> +	return pcie->ls_epc;
->>>  }
->>>
->>>  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)  {
->>>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
->>>  	enum pci_barno bar;
->>>
->>>  	for (bar = BAR_0; bar <= BAR_5; bar++)
->>>  		dw_pcie_ep_reset_bar(pci, bar);
->>> +
->>> +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
->>> +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
->>>  }
->>>
->>>  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no, @@
->>> -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct platform_device
->> *pdev)
->>>  	struct device *dev = &pdev->dev;
->>>  	struct dw_pcie *pci;
->>>  	struct ls_pcie_ep *pcie;
->>> +	struct pci_epc_features *ls_epc;
->>>  	struct resource *dbi_base;
->>>  	int ret;
->>>
->>> @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct
->> platform_device *pdev)
->>>  	if (!pci)
->>>  		return -ENOMEM;
->>>
->>> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
->>> +	if (!ls_epc)
->>> +		return -ENOMEM;
->>> +
->>>  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> "regs");
->>>  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
->>>  	if (IS_ERR(pci->dbi_base))
->>> @@ -139,6 +146,11 @@ static int __init ls_pcie_ep_probe(struct
->> platform_device *pdev)
->>>  	pci->ops = &ls_pcie_ep_ops;
->>>  	pcie->pci = pci;
->>>
->>> +	ls_epc->linkup_notifier = false,
->>> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
->>> +
->>> +	pcie->ls_epc = ls_epc;
->>> +
->>>  	platform_set_drvdata(pdev, pcie);
->>>
->>>  	ret = ls_add_pcie_ep(pcie, pdev);
->>>
