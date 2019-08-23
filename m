@@ -2,81 +2,113 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02F2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D30AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB7322CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EA922CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="egKRBOY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390245AbfHWMTS (ORCPT
+        id S2394452AbfHWMTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:19:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60602 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729276AbfHWMTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:19:18 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8F36B7A8C45E8AFA8067;
-        Fri, 23 Aug 2019 20:19:15 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
- 20:19:08 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <gregkh@linuxfoundation.org>,
-        <yuehaibing@huawei.com>, <tglx@linutronix.de>,
-        <denis.ciocca@st.com>, <Jonathan.Cameron@huawei.com>
-CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] iio: st_sensors: Fix build error
-Date:   Fri, 23 Aug 2019 20:18:52 +0800
-Message-ID: <20190823121852.75108-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 23 Aug 2019 08:19:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35543 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731647AbfHWMTT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:19:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k2so8459848wrq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 05:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OYnKooGAz/mlH//vFYVeCnlGLtd4YMyaR7dMhD5g3Ao=;
+        b=egKRBOY6T+iHEx6i2bpwOVrDK5E+iUy/1Jr2VP37Xdy4TLrla+q4pkZndjdXqnHiHK
+         mtaTLIxuZBDXoLfDMhs4tYjjWnmMGtyl5dLbT1yCedbE7MMf8Mh90hvJdKJp+3qcI/tW
+         MtUpYrMIf91Fd5vQMkm5yeMAHyx2FZ7jSNafbeDlyDfN9gxyJjsa4K1f68DNVX5C0VpA
+         4zzgHgKKf74NPSusdkLYUGCaL7ep7967MErfnLWERuCwcRGWnaSBe7OQYYS/k/DQ+e8I
+         Pj5tnbOCxnwiNxiDgpGICI9Do0qy2STOJpt8GCil1Kr5guweLZFAsmmdrDdHNVzdPm2z
+         iUUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OYnKooGAz/mlH//vFYVeCnlGLtd4YMyaR7dMhD5g3Ao=;
+        b=TMKjA8zWkRd1eHENlQZy4d0KsFn1/XY8ddJZFVbATwLwdG2MZ6eiCeiZr0OvEGOX53
+         1bRMcnDzLJo2gNtWYQK2H+9hPQzB6jrTp4orOl/ovyu3zRTdNLTeTVityOwk0Ym6F8pE
+         xexcx4yV0Lc1rbrZ/U3P53WJO8ddZOPE5BalJErGV9NxLyPlnGdwIxy3lNmrBC1jos0v
+         +8upK3z5ZR7R+njk6KD2XUdjMLF4bx70ICYzofBjHbcO6VHmrOY5xY8z1LSZdYNiqgFf
+         r4tOkLsyeXf3WAtc4lwcDvG3MndNpnOy/hjokifDwIV8Qgj5U3u22VZFsbQEbdTECCcB
+         lWnQ==
+X-Gm-Message-State: APjAAAXVSuMejbdCtN3ypyxcP4IR01lIP5T743M6IKbCuHUR2Eef6DG/
+        Z6Q6Px9oHVXuqmouuZRuTyFqa3V3ILYA+rLZVVIDwQ==
+X-Google-Smtp-Source: APXvYqyiffUPdRbthtoeU5iHSxUcXZATp2nwKI/3hiwIGiM2dZnwJz+txTHd6WA3LOy2smUSPUERZ3sDle/MwMI8wro=
+X-Received: by 2002:adf:f641:: with SMTP id x1mr4992458wrp.179.1566562756752;
+ Fri, 23 Aug 2019 05:19:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20190822084131.114764-1-anup.patel@wdc.com> <8a2a9ea6-5636-e79a-b041-580159e703b2@amazon.com>
+ <CAAhSdy2RC6Gw708wZs+FM56UkkyURgbupwdeTak7VcyarY9irg@mail.gmail.com>
+ <757C929B-D26C-46D9-98E8-1191E3B86F3C@amazon.com> <fda67a5d-6984-c3ef-8125-7805d927f15b@redhat.com>
+In-Reply-To: <fda67a5d-6984-c3ef-8125-7805d927f15b@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 23 Aug 2019 17:49:05 +0530
+Message-ID: <CAAhSdy1k96m8GinxAhcfRL_gOxCzK+ODfyjDxCmr-AF2ycntwA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/20] KVM RISC-V Support
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Graf (AWS), Alexander" <graf@amazon.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IIO_ST_SENSORS_CORE select IIO_ST_SENSORS_I2C
-unconditionally, if REGMAP_I2C is not set, build fails
+On Fri, Aug 23, 2019 at 5:40 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 23/08/19 13:44, Graf (AWS), Alexander wrote:
+> >> Overall, I'm quite happy with the code. It's a very clean implementation
+> >> of a KVM target.
+>
+> Yup, I said the same even for v1 (I prefer recursive implementation of
+> page table walking but that's all I can say).
+>
+> >> I will send v6 next week. I will try my best to implement unpriv
+> >> trap handling in v6 itself.
+> > Are you sure unpriv is the only exception that can hit there? What
+> > about NMIs? Do you have #MCs yet (ECC errors)? Do you have something
+> > like ARM's #SError which can asynchronously hit at any time because
+> > of external bus (PCI) errors?
+>
+> As far as I know, all interrupts on RISC-V are disabled by
+> local_irq_disable()/local_irq_enable().
 
-drivers/iio/common/st_sensors/st_sensors_i2c.o: In function `st_sensors_i2c_configure':
-st_sensors_i2c.c:(.text+0x58): undefined reference to `__devm_regmap_init_i2c'
+Yes, we don't have per-CPU interrupts for async bus errors or
+non-maskable interrupts. The local_irq_disable() and local_irq_enable()
+affect all interrupts (excepts traps).
 
-This patch selects REGMAP_I2C to fix it.
-IIO_ST_SENSORS_SPI is similar to SPI issue.
+Although, the async bus errors can certainly be routed to Linux
+via PLIC (interrupt-controller) as regular peripheral interrupts.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 062809ef7733 ("iio: make st_sensors drivers use regmap")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/iio/common/st_sensors/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Regards,
+Anup
 
-diff --git a/drivers/iio/common/st_sensors/Kconfig b/drivers/iio/common/st_sensors/Kconfig
-index 91b98e1..16d973f 100644
---- a/drivers/iio/common/st_sensors/Kconfig
-+++ b/drivers/iio/common/st_sensors/Kconfig
-@@ -5,8 +5,10 @@
- 
- config IIO_ST_SENSORS_I2C
- 	tristate
-+	select REGMAP_I2C
- 
- config IIO_ST_SENSORS_SPI
-+	select REGMAP_SPI
- 	tristate
- 
- config IIO_ST_SENSORS_CORE
--- 
-2.7.4
-
-
+>
+> Paolo
