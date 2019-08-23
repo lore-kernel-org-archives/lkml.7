@@ -2,181 +2,80 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E364CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DBFC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC63B21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JFyoK31K"
+	by mail.kernel.org (Postfix) with ESMTP id 1AEFC21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394674AbfHWM0E (ORCPT
+        id S2394680AbfHWM0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:26:04 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:35653 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731573AbfHWM0E (ORCPT
+        Fri, 23 Aug 2019 08:26:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35290 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfHWM0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:26:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566563162; x=1598099162;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gTCdg8J2VOjRvubNIG/WreNywvWkf7+OZpzbGKuI4Ds=;
-  b=JFyoK31KFnHL4Wb4H8wIkDag8zwWZGfji1MRz3wmQgZSAxQvTX7IHgGx
-   2Hfmuj03GXxNXohrmo41kIeaBeYIiRecN5ED8kedZun02wWs14jFp25C+
-   nqD/DOJ/B2UQuMBWWiQkQ2kz2dyOfIcnSPtVrG2nsR5suLC2yXiyIliJJ
-   8=;
-X-IronPort-AV: E=Sophos;i="5.64,421,1559520000"; 
-   d="scan'208";a="781001403"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 23 Aug 2019 12:26:01 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 65A74A2CD2;
-        Fri, 23 Aug 2019 12:25:57 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 12:25:56 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.191) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 12:25:52 +0000
-Subject: Re: [PATCH v5 15/20] RISC-V: KVM: Add timer functionality
-To:     Anup Patel <anup@brainfault.org>
-CC:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
- <20190822084131.114764-16-anup.patel@wdc.com>
- <09d74212-4fa3-d64c-5a63-d556e955b88c@amazon.com>
- <CAAhSdy36q5-x8cXM=M5S3cnE2nvCMhcsfuQayVt7jahd58HWFw@mail.gmail.com>
- <CA3A6A8A-0227-4B92-B892-86A0C7CA369E@amazon.com>
- <CAAhSdy2FFmCZJhNnMojp8QbiD-t6=4XrNtE9KGnCG_-mPb19-A@mail.gmail.com>
- <e369eba6-e659-2892-9cb9-a631dd10153a@amazon.com>
- <CAAhSdy2sknED0W5-SpS4cP46cnS6biHYs_jRDgCj_Ucw5PUYzg@mail.gmail.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <655b1724-c3ca-9913-328b-59e434d40d96@amazon.com>
-Date:   Fri, 23 Aug 2019 14:25:50 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Fri, 23 Aug 2019 08:26:15 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i18do-0001xv-4e; Fri, 23 Aug 2019 14:26:04 +0200
+Date:   Fri, 23 Aug 2019 14:25:58 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+cc:     Will Deacon <will@kernel.org>,
+        Chris Clayton <chris2553@googlemail.com>,
+        linux-arch@vger.kernel.org, vincenzo.frascino@arm.com,
+        linux-mips@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        arnd@arndb.de, huw@codeweavers.com, andre.przywara@arm.com,
+        daniel.lezcano@linaro.org, will.deacon@arm.com,
+        LKML <linux-kernel@vger.kernel.org>, ralf@linux-mips.org,
+        salyzyn@android.com, paul.burton@mips.com,
+        linux@rasmusvillemoes.dk, 0x7f454c46@gmail.com,
+        catalin.marinas@arm.com, pcc@google.com, sthotton@marvell.com,
+        shuah@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: Regression in 5.3-rc1 and later
+In-Reply-To: <20190823111712.GB13294@shell.armlinux.org.uk>
+Message-ID: <alpine.DEB.2.21.1908231424230.1896@nanos.tec.linutronix.de>
+References: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com> <20190823103654.GX13294@shell.armlinux.org.uk> <20190823104050.o6golaa4fmdd7np5@willie-the-truck> <20190823111712.GB13294@shell.armlinux.org.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy2sknED0W5-SpS4cP46cnS6biHYs_jRDgCj_Ucw5PUYzg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.162.191]
-X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 23 Aug 2019, Russell King - ARM Linux admin wrote:
 
-
-On 23.08.19 14:11, Anup Patel wrote:
-> On Fri, Aug 23, 2019 at 5:19 PM Alexander Graf <graf@amazon.com> wrote:
->>
->>
->>
->> On 23.08.19 13:46, Anup Patel wrote:
->>> On Fri, Aug 23, 2019 at 5:03 PM Graf (AWS), Alexander <graf@amazon.com> wrote:
->>>>
->>>>
->>>>
->>>>> Am 23.08.2019 um 13:05 schrieb Anup Patel <anup@brainfault.org>:
->>>>>
->>>>>> On Fri, Aug 23, 2019 at 1:23 PM Alexander Graf <graf@amazon.com> wrote:
->>>>>>
->>>>>>> On 22.08.19 10:46, Anup Patel wrote:
->>>>>>> From: Atish Patra <atish.patra@wdc.com>
->>>>>>>
->>>>>>> The RISC-V hypervisor specification doesn't have any virtual timer
->>>>>>> feature.
->>>>>>>
->>>>>>> Due to this, the guest VCPU timer will be programmed via SBI calls.
->>>>>>> The host will use a separate hrtimer event for each guest VCPU to
->>>>>>> provide timer functionality. We inject a virtual timer interrupt to
->>>>>>> the guest VCPU whenever the guest VCPU hrtimer event expires.
->>>>>>>
->>>>>>> The following features are not supported yet and will be added in
->>>>>>> future:
->>>>>>> 1. A time offset to adjust guest time from host time
->>>>>>> 2. A saved next event in guest vcpu for vm migration
->>>>>>
->>>>>> Implementing these 2 bits right now should be trivial. Why wait?
->>>>>
->>
->> [...]
->>
->>>>>> ... in fact, I feel like I'm missing something obvious here. How does
->>>>>> the guest trigger the timer event? What is the argument it uses for that
->>>>>> and how does that play with the tbfreq in the earlier patch?
->>>>>
->>>>> We have SBI call inferface between Hypervisor and Guest. One of the
->>>>> SBI call allows Guest to program time event. The next event is specified
->>>>> as absolute cycles. The Guest can read time using TIME CSR which
->>>>> returns system timer value (@ tbfreq freqency).
->>>>>
->>>>> Guest Linux will know the tbfreq from DTB passed by QEMU/KVMTOOL
->>>>> and it has to be same as Host tbfreq.
->>>>>
->>>>> The TBFREQ config register visible to user-space is a read-only CONFIG
->>>>> register which tells user-space tools (QEMU/KVMTOOL) about Host tbfreq.
->>>>
->>>> And it's read-only because you can not trap on TB reads?
->>>
->>> There is no TB registers.
->>>
->>> The tbfreq can only be know through DT/ACPI kind-of HW description
->>> for both Host and Guest.
->>>
->>> The KVM user-space tool needs to know TBFREQ so that it can set correct
->>> value in generated DT for Guest Linux.
->>
->> So what access methods do get influenced by TBFREQ? If it's only the SBI
->> timer, we can control the frequency, which means we can make TBFREQ
->> read/write.
+> On Fri, Aug 23, 2019 at 11:40:50AM +0100, Will Deacon wrote:
+> > On Fri, Aug 23, 2019 at 11:36:54AM +0100, Russell King - ARM Linux admin wrote:
+> > > To everyone on the long Cc list...
+> > > 
+> > > What's happening with this?  I was about to merge the patches for 32-bit
+> > > ARM, which I don't want to do if doing so will cause this regression on
+> > > 32-bit ARM as well.
+> > 
+> > tglx fixed it:
+> > 
+> > https://lkml.kernel.org/r/alpine.DEB.2.21.1908221257580.1983@nanos.tec.linutronix.de
+> > 
+> > which I assume is getting routed as a fix via -tip.
 > 
-> There are two things influenced by TBFREQ:
-> 1. TIME CSR which is a free running counter
-> 2. SBI calls for programming next timer event
-> 
-> The Guest TIME CSR will be at same rate as Host TIME CSR so
-> we cannot show different TBFREQ to Guest Linux.
-> 
-> In future, we will be having a dedicated RISC-V timer extension which
-> will have all programming done via CSRs but until then we are stuck
-> with TIME CSR + SBI call combination.
+> Right, so Chris reported the issue to everyone involved.  Tglx's
+> reply severely trimmed the Cc list so folk like me had no idea what
+> was going on, removing even the mailing lists.  On the face of it,
+> it looks like an intentional attempt to cut people out of the loop
+> who really should've been kept in the loop.  Yea, that's just great.
 
-Please make sure that in a future revision of the spec either
-
-   a) TIME CSR can be trapped or
-   b) TIME CSR can be virtualized (virtual TIME READ has offset and 
-multiplier on phys TIME READ applied)
-
-and the same goes for the timer extension - either make it all trappable 
-or all propery adjustable. You need to be double cautious there that 
-people don't design something that breaks live migration between hosts 
-that have a different TBFREQ.
-
+Sorry that was no intentional attempt to cut anyone out of the
+loop. Trimmed it too agressively without applying much brain.
 
 Thanks,
 
-Alex
+	tglx
