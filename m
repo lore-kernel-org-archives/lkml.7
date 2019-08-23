@@ -2,130 +2,159 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68950C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258D5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4779E22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC16E21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUnOqF6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392116AbfHWNNp (ORCPT
+        id S2404272AbfHWNTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:13:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35005 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731783AbfHWNNo (ORCPT
+        Fri, 23 Aug 2019 09:19:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38029 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731365AbfHWNTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:13:44 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i19Np-0000Gv-Lb; Fri, 23 Aug 2019 15:13:37 +0200
-Message-ID: <1566566016.3023.21.camel@pengutronix.de>
-Subject: Re: [PATCH v3 5/7] media: v4l2-core: Add new helper for area
- controls
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Date:   Fri, 23 Aug 2019 15:13:36 +0200
-In-Reply-To: <CAPybu_0iodVnn1Fa5BFi7zc7ugwpN926wCJaoKU548zqrNJ5iw@mail.gmail.com>
-References: <20190823123737.7774-1-ribalda@kernel.org>
-         <20190823123737.7774-5-ribalda@kernel.org>
-         <1566564998.3023.13.camel@pengutronix.de>
-         <CAPybu_0iodVnn1Fa5BFi7zc7ugwpN926wCJaoKU548zqrNJ5iw@mail.gmail.com>
+        Fri, 23 Aug 2019 09:19:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so8636163wrr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 06:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LZPOX0INdRlOUvoefxV/HDc1vutqvPxYj4fWM1wy0rw=;
+        b=mUnOqF6uNCM6LcdyehIFjzjsqAEof9B3kEFEJZUVN62H3iSJhkiiVCYHQ96YMhS7pg
+         WWQxX7Zi4CQ/Hh3F8NxgU/YpVIdxTlD8WDG2Qtaq/ydXMvpj3C8idH/Ml46oVakYSRxD
+         6W3Tj1DIeuKn/rRGwr3eC0wJZCyMqsBKqGFmTNSeBrrr23oJNlbCIcaHm6u6FFoocaC/
+         nmyGYShss+ThniPimc4+KAPMoD9enuctPgOIRGG+NrkXuYMVi7TBln7NIqhMZxoyR75g
+         wPyvuX4jjMhc9QpsgJzCdI02ckNVcKlWZfPj2tL4KCFYZJviAwZuhb6IEUrGk3yGizqd
+         /Z6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LZPOX0INdRlOUvoefxV/HDc1vutqvPxYj4fWM1wy0rw=;
+        b=WUj5FFGtDlhqELbJNr0gNzoMhh5io4Ho1UjozFoz58Cy22Sf3+UEIz9tWlh2f+S4L0
+         G4xBuvGAhf8BdwGT5imj61WIoXndcpjaeXTv8wLzMSOEobYmuDi4j9PmWna4B5umEVEH
+         eVXensCby5G4CLBAMZzbgA5lYBEv0rX9u4zRqSeTqFO+qnohPROJ37iMdbMwXjjfouuw
+         pw17kj4VwZMc7Gm0cxFHEkT6Fadj0Ctutb8kouUV11HGJ1ME/paW/eDeius1mgykqX+2
+         btkwfB4bY8SAYivC/kPnFDhBJP9r75ZaPLS/A5D6XEYyg1Tq5j0oBGCb4kz+ncCfnLqA
+         yWuA==
+X-Gm-Message-State: APjAAAX6Qqb/o5+rQga3gNSzBDN2CEXbhPSs+hFBc8Qfg4wznULfFuzj
+        e9Id81Zi37MMQ8/9ErHS4tHpH+ZOliOlmCUI3VQ=
+X-Google-Smtp-Source: APXvYqwyGM+XjqB1+xj7Yj+k9wbVw5I8l/PwOau11tLzSRWm/a4VmG0taIHdQ+qFDPb+UCQEGmlZKo4bD9c+QGFI4wc=
+X-Received: by 2002:a5d:5408:: with SMTP id g8mr5348355wrv.201.1566566369129;
+ Fri, 23 Aug 2019 06:19:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190823125939.30012-1-yuehaibing@huawei.com>
+In-Reply-To: <20190823125939.30012-1-yuehaibing@huawei.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Fri, 23 Aug 2019 16:19:17 +0300
+Message-ID: <CAEnQRZA3reBF=H58596-e1xRLHLz5pVHZVhVgiXEmbV-wwOctg@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Make some functions static
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-23 at 15:05 +0200, Ricardo Ribalda Delgado wrote:
-> On Fri, Aug 23, 2019 at 2:56 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > 
-> > On Fri, 2019-08-23 at 14:37 +0200, Ricardo Ribalda Delgado wrote:
-> > > Adding a V4L2_CID_UNIT_CELL_SIZE control requires a lot of boilerplate,
-> > > try to minimize it by adding a new helper.
-> > > 
-> > > Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > > ---
-> > >  drivers/media/v4l2-core/v4l2-ctrls.c | 25 ++++++++++++++++++++++++-
-> > >  include/media/v4l2-ctrls.h           | 16 ++++++++++++++++
-> > >  2 files changed, 40 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > index b3bf458df7f7..33e48f0aec1a 100644
-> > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > @@ -2660,7 +2660,6 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
-> > >  }
-> > >  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
-> > > 
-> > > -/* Helper function for standard integer menu controls */
-> > 
-> > Why move this ...
-> > 
-> > >  struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
-> > >                       const struct v4l2_ctrl_ops *ops,
-> > >                       u32 id, u8 _max, u8 _def, const s64 *qmenu_int)
-> > > @@ -2684,6 +2683,30 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
-> > >  }
-> > >  EXPORT_SYMBOL(v4l2_ctrl_new_int_menu);
-> > > 
-> > > +static void area_init(const struct v4l2_ctrl *ctrl, u32 idx,
-> > > +             union v4l2_ctrl_ptr ptr)
-> > > +{
-> > > +     memcpy(ptr.p_area, ctrl->priv, sizeof(*ptr.p_area));
-> > > +}
-> > > +
-> > > +static const struct v4l2_ctrl_type_ops area_ops = {
-> > > +     .init = area_init,
-> > > +};
-> > > +
-> > > +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
-> > > +                                  const struct v4l2_ctrl_ops *ops,
-> > > +                                  u32 id, const struct v4l2_area *area)
-> > > +{
-> > > +     static struct v4l2_ctrl_config ctrl = {
-> > > +             .id = V4L2_CID_UNIT_CELL_SIZE,
-> > > +             .type_ops = &area_ops,
-> > > +     };
-> > > +
-> > > +     return v4l2_ctrl_new_custom(hdl, &ctrl, (void *)area);
-> > > +}
-> > > +EXPORT_SYMBOL(v4l2_ctrl_new_area);
-> > > +
-> > > +/* Helper function for standard integer menu controls */
-> > 
-> > ... here?
-> 
-> Because I screwed up :). Let me fix that sorry.
-> 
-> I will push all your changes to:
-> 
-> https://github.com/ribalda/linux/tree/unit-size-v4
-> 
-> plus any other comment and then I will wait 2-3 days for resend
+On Fri, Aug 23, 2019 at 4:12 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fix sparse warnings:
+>
+> sound/soc/sof/imx/imx8.c:104:6: warning: symbol 'imx8_dsp_handle_reply' was not declared. Should it be static?
+> sound/soc/sof/imx/imx8.c:115:6: warning: symbol 'imx8_dsp_handle_request' was not declared. Should it be static?
+> sound/soc/sof/imx/imx8.c:336:5: warning: symbol 'imx8_get_bar_index' was not declared. Should it be static?
+> sound/soc/sof/imx/imx8.c:341:6: warning: symbol 'imx8_ipc_msg_data' was not declared. Should it be static?
+> sound/soc/sof/imx/imx8.c:348:5: warning: symbol 'imx8_ipc_pcm_params' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Awesome, thanks! Feel free to add
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+> ---
+>  sound/soc/sof/imx/imx8.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+> index e502f58..6404724 100644
+> --- a/sound/soc/sof/imx/imx8.c
+> +++ b/sound/soc/sof/imx/imx8.c
+> @@ -101,7 +101,7 @@ static int imx8_get_window_offset(struct snd_sof_dev *sdev, u32 id)
+>         return MBOX_OFFSET;
+>  }
+>
+> -void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
+> +static void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
+>  {
+>         struct imx8_priv *priv = imx_dsp_get_data(ipc);
+>         unsigned long flags;
+> @@ -112,7 +112,7 @@ void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
+>         spin_unlock_irqrestore(&priv->sdev->ipc_lock, flags);
+>  }
+>
+> -void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
+> +static void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
+>  {
+>         struct imx8_priv *priv = imx_dsp_get_data(ipc);
+>
+> @@ -333,21 +333,21 @@ static int imx8_remove(struct snd_sof_dev *sdev)
+>  }
+>
+>  /* on i.MX8 there is 1 to 1 match between type and BAR idx */
+> -int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
+> +static int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
+>  {
+>         return type;
+>  }
+>
+> -void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
+> -                      struct snd_pcm_substream *substream,
+> -                      void *p, size_t sz)
+> +static void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
+> +                             struct snd_pcm_substream *substream,
+> +                             void *p, size_t sz)
+>  {
+>         sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
+>  }
+>
+> -int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
+> -                       struct snd_pcm_substream *substream,
+> -                       const struct sof_ipc_pcm_params_reply *reply)
+> +static int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
+> +                              struct snd_pcm_substream *substream,
+> +                              const struct sof_ipc_pcm_params_reply *reply)
+>  {
+>         return 0;
+>  }
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
