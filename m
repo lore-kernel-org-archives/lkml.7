@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF7CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F61C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE7822CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A1A22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y3j3iCJE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="frizW8oO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405132AbfHWHDM (ORCPT
+        id S2405153AbfHWHDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:03:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38493 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405069AbfHWHDI (ORCPT
+        Fri, 23 Aug 2019 03:03:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35601 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405085AbfHWHDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:03:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g17so7618210wrr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:03:07 -0700 (PDT)
+        Fri, 23 Aug 2019 03:03:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k2so7625728wrq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DKp/3tQaH/+CAXC5vPIgbu9pLlo8VAlZxJspdFK2/l0=;
-        b=y3j3iCJEVDtu7oGjTnedwcQgrl2JHBVZOJrVixukWgmdfKEeK/FW8LAE0L8dTexkRn
-         ZxN5FN5t2WY8yWY87/2pUYi5BlR1oB/YcUs6FxnPf7bVE7hjIyhbxVfDzR/34SXwtsMm
-         WV5ZcPjM2SHrPP20E44e3c4XoV9qgfI1+3kyWS8iBvi7TOz3F679oEBfjvf1U7BprN3r
-         50SB9ZCwTIwoPKvEBgusHzOI3zirbI07qz3AvoKZhUZ7xM3YynCN5GlgwBN8ne8DOWCZ
-         yAeZMagJzM0DmDCvwcojhMb9CVGEmRQSy71orEyPT/3AD1BhhPXb/fcAPFgeb+oqmf5j
-         GvYw==
+        bh=IQx7JwpS0dFVohc6lFcL0uMhZduD4nFAlJhvbz7oju8=;
+        b=frizW8oO7RTj7zLjZEQTJ7YrRH6o8XwnlJ5ppDPHuhN06xYzcYSWb4XI0JK2BBi+LE
+         KFMkhjhEmv4y1y1S5cj4ivI7lgc06JpvIFOMoYiTI7zK/TJmMJ2sl6/NOo9gzS0+Q148
+         5jq2a7apmT9wpJmGejm2rVlRz5BnW7K5aPk4QHpaNp+ut4x7/fvGH1Gf/5HXMO0YPAB9
+         URj3Q2N4I1ugCxMGFvcWi+DfrA6AQ3VqhsbStK8UX+gH8t8+eQjGCwnW1dj12lCk9IHb
+         sxGwiZOQF7Qx7Lc7x4LPk3+7JT/4qnVce7Axi98OTasK724G5xQj8xP/y5myJ6XtlKWT
+         yNZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DKp/3tQaH/+CAXC5vPIgbu9pLlo8VAlZxJspdFK2/l0=;
-        b=JdoKAMGUmCR9Z2Bp9GrKx+C94ZznDNkVUxyT6IZhC1K92VyQI49pfRsL0J/9TDp32C
-         z2sJh8neNKdMiKlLBgE455BymPep38ySPBr8SEuZ7TUVBoKWDooGK76QrK37MzwLIWhp
-         PuZd4GE9cIqiG5zbr3I/QfHDlqtHdKlAJ5NipgsazkcByAjwEGCOz0ZpgKHCcPLmtPXS
-         FX0QelEfvb54l7zbS/YLkfJJHS9Q70dCUUOwQpsUCaj53heG6cSie3fE0YNVx9+qU44t
-         psoLf1qXO4KwoVqm1DYaYQvT3mFwBKGl4FeR2onbcOzjtwd/nK0aYH3TmS4fzfR0cvja
-         szjg==
-X-Gm-Message-State: APjAAAWRSC6zletI++xAdKo5pzxCX9MmqpLWUNh3LOXceY4c4MG1Drrn
-        KJ3Jt9plbBzABR4Ht7N/9L870d9CRCStLQ==
-X-Google-Smtp-Source: APXvYqzHQysbTFU4MseJMlikAoQNVPMZIuTg9LNrYO5FU4enKFF06okMREZkZdmBoHmutZTGESobKA==
-X-Received: by 2002:adf:b60c:: with SMTP id f12mr2522969wre.231.1566543786329;
-        Fri, 23 Aug 2019 00:03:06 -0700 (PDT)
+        bh=IQx7JwpS0dFVohc6lFcL0uMhZduD4nFAlJhvbz7oju8=;
+        b=g/mIynNF6X63uSZ+yQYJ2LkOcgyXN92Rbq4uk6hwt6Y7VQQHJ7ZePi3IXKrk43oYuT
+         SKMZeUOKLezGyl8Dul4SdNvweKJIUKgZxesEQCH6iTo3KEnzWqRTzCUb2JL/hujMWmny
+         qe/krD/ACsvbmHqEBgh9xzpj/MwJfpPq9oGyf8wpv8pNLQofrL8g/NWHx9bdAP6l0TX4
+         hJnGRYdywre4oWBASajqAY5w2pvujDHVmrHUkUE/hUA0BWMi9MRWVKsinzWBC5UXaUCw
+         ax4Srjajnn8v72m+upEWhPns4wqqVXdSMejjU9asKoz9R9gz7uOTygcMgjfdBt0MKBmB
+         8lKA==
+X-Gm-Message-State: APjAAAXeo1naIPzC2/0uQuv3DXB/oRTJoAxSRAlTpXOFoZ4ajnBJXN46
+        via1Cav9nVjWH5zl7rA0kEIL+Q==
+X-Google-Smtp-Source: APXvYqyG3fWgn+EfbbDhHE9+n7t57vKkhDEcSlm3CiYkSu7TA+hKhqcBk13nKpJ6b9bGoYNrpu6eKA==
+X-Received: by 2002:a5d:4d81:: with SMTP id b1mr465745wru.27.1566543787901;
+        Fri, 23 Aug 2019 00:03:07 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a26sm1741833wmg.45.2019.08.23.00.03.05
+        by smtp.gmail.com with ESMTPSA id a26sm1741833wmg.45.2019.08.23.00.03.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 00:03:05 -0700 (PDT)
+        Fri, 23 Aug 2019 00:03:06 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
@@ -63,9 +63,9 @@ Cc:     linux-amlogic@lists.infradead.org,
         devicetree@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RESEND PATCH v2 13/14] arm64: dts: meson-gxbb-p201: fix snps, reset-delays-us format
-Date:   Fri, 23 Aug 2019 09:02:47 +0200
-Message-Id: <20190823070248.25832-14-narmstrong@baylibre.com>
+Subject: [RESEND PATCH v2 14/14] arm64: dts: meson: fix boards regulators states format
+Date:   Fri, 23 Aug 2019 09:02:48 +0200
+Message-Id: <20190823070248.25832-15-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
 References: <20190823070248.25832-1-narmstrong@baylibre.com>
@@ -77,26 +77,122 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxbb-p201.dt.yaml: ethernet@c9410000: snps,reset-delays-us: [[0, 10000, 1000000]] is too short
+meson-gxbb-odroidc2.dt.yaml: gpio-regulator-tf_io: states:0: Additional items are not allowed (1800000, 1 were unexpected)
+meson-gxbb-odroidc2.dt.yaml: gpio-regulator-tf_io: states:0: [3300000, 0, 1800000, 1] is too long
+meson-gxbb-nexbox-a95x.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+meson-gxbb-nexbox-a95x.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+meson-gxbb-p200.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+meson-gxbb-p200.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+meson-gxl-s905x-hwacom-amazetv.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+meson-gxl-s905x-hwacom-amazetv.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+meson-gxbb-p201.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+meson-gxbb-p201.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+meson-g12b-odroid-n2.dt.yaml: gpio-regulator-tf_io: states:0: Additional items are not allowed (1800000, 1 were unexpected)
+meson-g12b-odroid-n2.dt.yaml: gpio-regulator-tf_io: states:0: [3300000, 0, 1800000, 1] is too long
+meson-gxl-s905x-nexbox-a95x.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
+meson-gxl-s905x-nexbox-a95x.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts          | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts        | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts           | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi              | 4 ++--
+ .../arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts   | 4 ++--
+ 6 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-index 56e0dd1ff55c..150a82f3b2d7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-@@ -21,6 +21,6 @@
- 	phy-mode = "rmii";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 6cfc2c69bb4f..7c0cf510fd16 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -66,8 +66,8 @@
+ 		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+ 		gpios-states = <0>;
  
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
--	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-delays-us = <0>, <10000>, <1000000>;
- 	snps,reset-active-low;
- };
+-		states = <3300000 0
+-			  1800000 1>;
++		states = <3300000 0>,
++			 <1800000 1>;
+ 	};
+ 
+ 	flash_1v8: regulator-flash_1v8 {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index b636912a2715..afcf8a9f667b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -75,8 +75,8 @@
+ 		gpios-states = <1>;
+ 
+ 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
+-		states = <1800000 0
+-			  3300000 1>;
++		states = <1800000 0>,
++			 <3300000 1>;
+ 	};
+ 
+ 	vddio_boot: regulator-vddio_boot {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 9972b1515da6..6039adda12ee 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -77,8 +77,8 @@
+ 		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
+ 		gpios-states = <0>;
+ 
+-		states = <3300000 0
+-			  1800000 1>;
++		states = <3300000 0>,
++			 <1800000 1>;
+ 	};
+ 
+ 	vcc1v8: regulator-vcc1v8 {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index e8f925871edf..89f7b41b0e9e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -46,8 +46,8 @@
+ 		gpios-states = <1>;
+ 
+ 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
+-		states = <1800000 0
+-			  3300000 1>;
++		states = <1800000 0>,
++			 <3300000 1>;
+ 
+ 		regulator-settling-time-up-us = <10000>;
+ 		regulator-settling-time-down-us = <150000>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+index 796baea7a0bf..c8d74e61dec1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+@@ -38,8 +38,8 @@
+ 		gpios-states = <1>;
+ 
+ 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
+-		states = <1800000 0
+-			  3300000 1>;
++		states = <1800000 0>,
++			 <3300000 1>;
+ 	};
+ 
+ 	vddio_boot: regulator-vddio_boot {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+index 26907ac82930..c433a031841f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+@@ -38,8 +38,8 @@
+ 		gpios-states = <1>;
+ 
+ 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
+-		states = <1800000 0
+-			  3300000 1>;
++		states = <1800000 0>,
++			 <3300000 1>;
+ 	};
+ 
+ 	vddio_boot: regulator-vddio_boot {
 -- 
 2.22.0
 
