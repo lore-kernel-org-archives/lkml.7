@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DD5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10BDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B2C21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC2D22CF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404940AbfHWHBI (ORCPT
+        id S2404966AbfHWHBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:01:08 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:19460 "EHLO
+        Fri, 23 Aug 2019 03:01:10 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:23576 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730788AbfHWHAp (ORCPT
+        with ESMTP id S2404781AbfHWHAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 23 Aug 2019 03:00:45 -0400
-X-UUID: f0c96abe2e424797b1a73797ecb722ac-20190823
-X-UUID: f0c96abe2e424797b1a73797ecb722ac-20190823
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+X-UUID: 297960a702c442eda0a57460489ea381-20190823
+X-UUID: 297960a702c442eda0a57460489ea381-20190823
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 425247334; Fri, 23 Aug 2019 15:00:31 +0800
+        with ESMTP id 2125242881; Fri, 23 Aug 2019 15:00:21 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 23 Aug 2019 15:00:29 +0800
+ 15.0.1395.4; Fri, 23 Aug 2019 15:00:19 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 23 Aug 2019 15:00:28 +0800
+ Transport; Fri, 23 Aug 2019 15:00:18 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,83 +42,45 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH 10/11] phy: phy-mtk-tphy: add a new reference clock
-Date:   Fri, 23 Aug 2019 15:00:17 +0800
-Message-ID: <9f0cb4bbcba6083c6244a4c1520500c83097755f.1566542697.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 03/11] dt-bindings: phy-mtk-tphy: remove unused u3phya_ref clock
+Date:   Fri, 23 Aug 2019 15:00:10 +0800
+Message-ID: <35d020857cd0e2fdc77023dad36221288d7a5fe1.1566542697.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
 References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: C8DAF2C64A9722ABE63B8A0CA29A72D4775103B83B3765CEB5FEF01392666EB72000:8
+X-TM-SNTS-SMTP: AFB47EF1EF1B19C41F781419CAA71991B6DDCF6912925CB33B8A20BA9351CEE42000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Usually the digital and anolog phys use the same reference clock,
-but some platforms have two separate reference clocks for each of
-them, so add another optional clock to support them.
-In order to keep the clock names consistent with PHY IP's, change
-the da_ref for anolog phy and ref clock for digital phy.
+The u3phya_ref clock is already moved into sub-node, and
+renamed as ref clock, no used anymore now, so remove it
+to avoid confusion
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/phy/mediatek/phy-mtk-tphy.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index c6424fd2a06d..237e2c3fd4dc 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -298,7 +298,8 @@ struct mtk_phy_instance {
- 		struct u2phy_banks u2_banks;
- 		struct u3phy_banks u3_banks;
- 	};
--	struct clk *ref_clk;	/* reference clock of anolog phy */
-+	struct clk *ref_clk;	/* reference clock of (digital) phy */
-+	struct clk *da_ref_clk;	/* reference clock of anolog phy */
- 	u32 index;
- 	u8 type;
- 	int eye_src;
-@@ -925,6 +926,13 @@ static int mtk_phy_init(struct phy *phy)
- 		return ret;
- 	}
+diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+index 1c18bf10b2fe..dbc143ed5999 100644
+--- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
++++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+@@ -13,10 +13,6 @@ Required properties (controller (parent) node):
+ 		  "mediatek,mt8173-u3phy";
+ 		  make use of "mediatek,generic-tphy-v1" on mt2701 instead and
+ 		  "mediatek,generic-tphy-v2" on mt2712 instead.
+- - clocks	: (deprecated, use port's clocks instead) a list of phandle +
+-		  clock-specifier pairs, one for each entry in clock-names
+- - clock-names	: (deprecated, use port's one instead) must contain
+-		  "u3phya_ref": for reference clock of usb3.0 analog phy.
  
-+	ret = clk_prepare_enable(instance->da_ref_clk);
-+	if (ret) {
-+		dev_err(tphy->dev, "failed to enable da_ref\n");
-+		clk_disable_unprepare(instance->ref_clk);
-+		return ret;
-+	}
-+
- 	switch (instance->type) {
- 	case PHY_TYPE_USB2:
- 		u2_phy_instance_init(tphy, instance);
-@@ -984,6 +992,7 @@ static int mtk_phy_exit(struct phy *phy)
- 		u2_phy_instance_exit(tphy, instance);
- 
- 	clk_disable_unprepare(instance->ref_clk);
-+	clk_disable_unprepare(instance->da_ref_clk);
- 	return 0;
- }
- 
-@@ -1170,6 +1179,14 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 			retval = PTR_ERR(instance->ref_clk);
- 			goto put_child;
- 		}
-+
-+		instance->da_ref_clk =
-+			devm_clk_get_optional(&phy->dev, "da_ref");
-+		if (IS_ERR(instance->da_ref_clk)) {
-+			dev_err(dev, "failed to get da_ref_clk(id-%d)\n", port);
-+			retval = PTR_ERR(instance->da_ref_clk);
-+			goto put_child;
-+		}
- 	}
- 
- 	provider = devm_of_phy_provider_register(dev, mtk_phy_xlate);
+ Required nodes	: a sub-node is required for each port the controller
+ 		  provides. Address range information including the usual
 -- 
 2.23.0
 
