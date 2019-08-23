@@ -2,362 +2,178 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1490C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1051FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE7022CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA5B22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="DrZSBSnn"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Mfz0sRoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389499AbfHWMAh (ORCPT
+        id S2388263AbfHWMAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:00:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40621 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388734AbfHWMAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:00:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c5so8648363wmb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 05:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OSQOts4ipVHATDu6heXOLEB9yAN6oLXukpEFzyk4HhI=;
-        b=DrZSBSnnerm1nTBP6O1oDPJ0z6pJRSpAdz0d2wiiUuwlIBmAm9CprQ8nyazH6uA2C3
-         pXc5PzpTl/6kORYuCe0/7l9RX8jM7+/7VHUIOfX8/58cDr+eyG/ypphB3yAzWNCpb1UP
-         uyDMF+L/T/9c7G7Uz6aswtuOiEMOGLcYV0wv8TbYwVNT4cF42Jj6P6hIs7VSp6X7eUJp
-         aJp8J7wtTFEm45Vm3JzSatBtrFumurV0T860Jdoy3xD9HRhKH32o0/2fjYHKaOs4A7Ke
-         D9KU8OOwuNZ1R3b/2W3U9KceDsUekaG4cU17DkcVn4dWQ5qZGvEMwESGpYYXjMa42871
-         shhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OSQOts4ipVHATDu6heXOLEB9yAN6oLXukpEFzyk4HhI=;
-        b=uUfsg6Il/FWe2kSZgEaa8g89Dw3tdu1RFReSzXfb6MD001nTOrpubHW2NtH51iH4/K
-         B24cDCGF6cPwEuoICcHfgRIdSxxbC5JI8ihAQqKshuIE9aoxQctIJH/+hAjBYLfPDSVu
-         4U32AC4iAaMoNwwPZYT5pOuPQW+8Zk7UE3wfj95nlf6CIvCk1xQRVIzg3+IdZ0AAObSz
-         Kd5ZSwNOikFgU+RKSizMSXgXFKRjIhTF/MXORcw7vlzFWPf5hiTxHiMaGcaO0y5MeiMK
-         uebIQDHYu2oQrdiWOUd+wnSu1J9agGH4e6OHYQFOWT2b/WcyY/xmPF4Sx5sy8KKZY96K
-         hICQ==
-X-Gm-Message-State: APjAAAXYrE1GFSwyMr/ZfN/TMC9+JkszAYif6QhM/KEudLolXMmXPpdE
-        22h3Od7pqK54nY/b/0fsdNmpmjd4wmpcWD7U7QDxJQ==
-X-Google-Smtp-Source: APXvYqzDJ2bL2ZEqUMC77UjPEaX3Atc+xH9gWgYd+nMeHAC2w8FjQWWV++aw3vHMHmBcyCwGNKb7JQ1+8tkZPfmoL1U=
-X-Received: by 2002:a05:600c:2411:: with SMTP id 17mr4432346wmp.171.1566561632980;
- Fri, 23 Aug 2019 05:00:32 -0700 (PDT)
+        Fri, 23 Aug 2019 08:00:39 -0400
+Received: from mout.gmx.net ([212.227.15.15]:51627 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388734AbfHWMAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:00:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566561616;
+        bh=7uurcdjt1pmuPWMDE7aso5Yad1UCHW6aP/em6TNpjuY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Mfz0sRoaAZdo1EVRhSEewVIdbP3GGiVgQiWc4Y5gwYCCJymIoiUrXSbGqaL6ujXKp
+         VCHKiKyQ0mG246vLmsRpYVESsx3NThbOE8KD38pmCFAbMF9rNJ+f73EoMWghYbrV1y
+         oFV1lSg4UV+6jLBuJxGM1IqGWn6Ss9vGElBRY9q0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.154.8] ([217.61.154.8]) by web-mail.gmx.net
+ (3c-app-gmx-bs11.server.lan [172.19.170.62]) (via HTTP); Fri, 23 Aug 2019
+ 14:00:16 +0200
 MIME-Version: 1.0
-References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-19-anup.patel@wdc.com>
- <40911e08-e0ce-a2b8-24d4-9cf357432850@amazon.com> <CAAhSdy3CvvYh59c=OomLZgweWREBhJj_eeH80OkU=7MMCwyiCQ@mail.gmail.com>
- <B29D1609-18FC-4327-8B34-33CB914042E7@amazon.com>
-In-Reply-To: <B29D1609-18FC-4327-8B34-33CB914042E7@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 23 Aug 2019 17:30:21 +0530
-Message-ID: <CAAhSdy2eVDqCDnFT9WrboQn+ERhwDFU6UtBaCQp_C7HshLZ+Yw@mail.gmail.com>
-Subject: Re: [PATCH v5 18/20] RISC-V: KVM: Add SBI v0.1 support
-To:     "Graf (AWS), Alexander" <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <trinity-2f905f45-85d8-4343-8613-31dda5f7556f-1566561616610@3c-app-gmx-bs11>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Mark Brown" <broonie@kernel.org>
+Cc:     "Liam Girdwood" <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>,
+        "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>,
+        "Lee Jones" <lee.jones@linaro.org>
+Subject: Aw: Re:  Re: BUG: devm_regulator_get returns EPROBE_DEFER
+ (5.3-rc5..next-20190822) for bpi-r2/mt7623/mt7530
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 23 Aug 2019 14:00:16 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20190823100424.GL23391@sirena.co.uk>
+References: <trinity-584a4b1c-18c9-43ae-8c1a-5057933ad905-1566501837738@3c-app-gmx-bs43>
+ <20190822193015.GK23391@sirena.co.uk>
+ <trinity-5d117f0d-9f34-4a2b-8a12-1cd34152c108-1566505724458@3c-app-gmx-bs43>
+ <20190823100424.GL23391@sirena.co.uk>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:4oV9+ee+6El0HLRs2W95csYW5AXq49DnxYVQONxY9IZMFf61P45ZDW+O+/cY9Xfhy/liD
+ 5yba4Mn1sDmlhLQXQmi4hpVI+CgHG+jge9lMRX8PMEcMzJOlYwQ5WiNeVHB67YWUfd4C/SNCeHuc
+ Lc4iVTwPptXGTxjj6qX/obf7YOID6e62FAkh7Y/8Xg6r7xlOQoYpRyErSZ01KgWioHfyEWrTxMfh
+ jFQjB/JfbwjwaVXWqzdPAcE813uRh1+9pidEoT266QA3raAaKhnYmOb9IfTUDuNb6iipSGLFxm1k
+ JQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1gveNljnRH4=:IFYeteQjU1im3ch0YoBiil
+ tatpL2DwoDvC8wCdBuUoQXu9CycEhxXWGet+e52M7NHdBL62FlVlBvNAlJM9LlhR7VqQxMBlT
+ gSskEcZVO6TtErPk7cVCGmhAE4vGHVhb3tP+4GDV/eu3fCEifLLad80tqBUfqQpTjeBeoSDbJ
+ UzgdqSeSBziaxcXCwlVUb+DhQRIrLi9Da9H7/3XANr/NPnm7nfPBOm/d9PVXt+hpfWlRDYzDB
+ 3J/8xSblKKhM3ZurWTqaXkxEjZycLXS7/lEsEXL+DymJKtxwpYmdeZtDSDRtWq11t0oU0Qg8m
+ rTOPf7RE3tv29UdwTOhJ63D25OW1h3z8TIM0/ur1AXsc9aJCQIknpONNZFJuwCgOa6EWWXi0D
+ B4syyeSGSInU6VlHwUIojk3GYnYkiqVFnw3m6doBEnLJFy9jK0MtUzP6cHCeoyWgyh+6KgQbg
+ nL3pvNy1Sp5dgo1f3F0mk6BCYzy16dzSq037cRDMrQyllm0vSgsy4vQ88LEjY7Izr7aL1Sm/w
+ Sgrx1R3mkPfYjLAx6vawbefupVYV+0dSy/Z1ImZNLyo3fX0hR020iBc4DlkB08KTlJ5TuTx3C
+ TpeTxhTk5f+7GpiomFTOSCBCQJyB5uaNugoUMWEeXHyfHbedfJ0Fxpk+XkrExV2NlRo1ZeDej
+ e41UGpXVIzkG9N1VpmYHT3xJXIQYSiCEHdu56SmwfDhxLrQ==
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 5:09 PM Graf (AWS), Alexander <graf@amazon.com> wro=
-te:
->
->
->
-> > Am 23.08.2019 um 13:18 schrieb Anup Patel <anup@brainfault.org>:
-> >
-> >> On Fri, Aug 23, 2019 at 1:34 PM Alexander Graf <graf@amazon.com> wrote=
-:
-> >>
-> >>> On 22.08.19 10:46, Anup Patel wrote:
-> >>> From: Atish Patra <atish.patra@wdc.com>
-> >>>
-> >>> The KVM host kernel running in HS-mode needs to handle SBI calls comi=
-ng
-> >>> from guest kernel running in VS-mode.
-> >>>
-> >>> This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
-> >>> implemented correctly except remote tlb flushes. For remote TLB flush=
-es,
-> >>> we are doing full TLB flush and this will be optimized in future.
-> >>>
-> >>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>> ---
-> >>>  arch/riscv/include/asm/kvm_host.h |   2 +
-> >>>  arch/riscv/kvm/Makefile           |   2 +-
-> >>>  arch/riscv/kvm/vcpu_exit.c        |   3 +
-> >>>  arch/riscv/kvm/vcpu_sbi.c         | 119 ++++++++++++++++++++++++++++=
-++
-> >>>  4 files changed, 125 insertions(+), 1 deletion(-)
-> >>>  create mode 100644 arch/riscv/kvm/vcpu_sbi.c
-> >>>
-> >>> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/a=
-sm/kvm_host.h
-> >>> index 2af3a179c08e..0b1eceaef59f 100644
-> >>> --- a/arch/riscv/include/asm/kvm_host.h
-> >>> +++ b/arch/riscv/include/asm/kvm_host.h
-> >>> @@ -241,4 +241,6 @@ bool kvm_riscv_vcpu_has_interrupt(struct kvm_vcpu=
- *vcpu);
-> >>>  void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
-> >>>  void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
-> >>>
-> >>> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu);
-> >>> +
-> >>>  #endif /* __RISCV_KVM_HOST_H__ */
-> >>> diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-> >>> index 3e0c7558320d..b56dc1650d2c 100644
-> >>> --- a/arch/riscv/kvm/Makefile
-> >>> +++ b/arch/riscv/kvm/Makefile
-> >>> @@ -9,6 +9,6 @@ ccflags-y :=3D -Ivirt/kvm -Iarch/riscv/kvm
-> >>>  kvm-objs :=3D $(common-objs-y)
-> >>>
-> >>>  kvm-objs +=3D main.o vm.o vmid.o tlb.o mmu.o
-> >>> -kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-> >>> +kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi=
-.o
-> >>>
-> >>>  obj-$(CONFIG_KVM)   +=3D kvm.o
-> >>> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> >>> index fbc04fe335ad..87b83fcf9a14 100644
-> >>> --- a/arch/riscv/kvm/vcpu_exit.c
-> >>> +++ b/arch/riscv/kvm/vcpu_exit.c
-> >>> @@ -534,6 +534,9 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, st=
-ruct kvm_run *run,
-> >>>                  (vcpu->arch.guest_context.hstatus & HSTATUS_STL))
-> >>>                      ret =3D stage2_page_fault(vcpu, run, scause, stv=
-al);
-> >>>              break;
-> >>> +     case EXC_SUPERVISOR_SYSCALL:
-> >>> +             if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-> >>> +                     ret =3D kvm_riscv_vcpu_sbi_ecall(vcpu);
-> >>>      default:
-> >>>              break;
-> >>>      };
-> >>> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> >>> new file mode 100644
-> >>> index 000000000000..5793202eb514
-> >>> --- /dev/null
-> >>> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> >>> @@ -0,0 +1,119 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +/**
-> >>> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-> >>> + *
-> >>> + * Authors:
-> >>> + *     Atish Patra <atish.patra@wdc.com>
-> >>> + */
-> >>> +
-> >>> +#include <linux/errno.h>
-> >>> +#include <linux/err.h>
-> >>> +#include <linux/kvm_host.h>
-> >>> +#include <asm/csr.h>
-> >>> +#include <asm/kvm_vcpu_timer.h>
-> >>> +
-> >>> +#define SBI_VERSION_MAJOR                    0
-> >>> +#define SBI_VERSION_MINOR                    1
-> >>> +
-> >>> +/* TODO: Handle traps due to unpriv load and redirect it back to VS-=
-mode */
-> >>
-> >> Ugh, another one of those? Can't you just figure out a way to recover
-> >> from the page fault? Also, you want to combine this with the instructi=
-on
-> >> load logic, so that we have a single place that guest address space
-> >> reads go through.
-> >
-> > Walking Guest page table would be more expensive compared to implementi=
-ng
-> > a trap handling mechanism.
-> >
-> > We will be adding trap handling mechanism for reading instruction and r=
-eading
-> > load.
-> >
-> > Both these operations are different in following ways:
-> > 1. RISC-V instructions are variable length. We get to know exact instru=
-ction
-> >    length only after reading first 16bits
-> > 2. We need to set VSSTATUS.MXR bit when reading instruction for
-> >    execute-only Guest pages.
->
-> Yup, sounds like you could solve that with a trivial if() based on "read =
-instruction" or not, no? If you want to, feel free to provide short version=
-s that do only read ins/data, but I would really like to see the whole "dat=
-a reads become guest reads" magic to be funneled through a single function =
-(in C, can be inline unrolled in asm of course)
->
-> >
-> >>
-> >>> +static unsigned long kvm_sbi_unpriv_load(const unsigned long *addr,
-> >>> +                                      struct kvm_vcpu *vcpu)
-> >>> +{
-> >>> +     unsigned long flags, val;
-> >>> +     unsigned long __hstatus, __sstatus;
-> >>> +
-> >>> +     local_irq_save(flags);
-> >>> +     __hstatus =3D csr_read(CSR_HSTATUS);
-> >>> +     __sstatus =3D csr_read(CSR_SSTATUS);
-> >>> +     csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTAT=
-US_SPRV);
-> >>> +     csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus);
-> >>> +     val =3D *addr;
-> >>> +     csr_write(CSR_HSTATUS, __hstatus);
-> >>> +     csr_write(CSR_SSTATUS, __sstatus);
-> >>> +     local_irq_restore(flags);
-> >>> +
-> >>> +     return val;
-> >>> +}
-> >>> +
-> >>> +static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu, u32 type)
-> >>> +{
-> >>> +     int i;
-> >>> +     struct kvm_vcpu *tmp;
-> >>> +
-> >>> +     kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-> >>> +             tmp->arch.power_off =3D true;
-> >>> +     kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-> >>> +
-> >>> +     memset(&vcpu->run->system_event, 0, sizeof(vcpu->run->system_ev=
-ent));
-> >>> +     vcpu->run->system_event.type =3D type;
-> >>> +     vcpu->run->exit_reason =3D KVM_EXIT_SYSTEM_EVENT;
-> >>> +}
-> >>> +
-> >>> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu)
-> >>> +{
-> >>> +     int ret =3D 1;
-> >>> +     u64 next_cycle;
-> >>> +     int vcpuid;
-> >>> +     struct kvm_vcpu *remote_vcpu;
-> >>> +     ulong dhart_mask;
-> >>> +     struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
-> >>> +
-> >>> +     if (!cp)
-> >>> +             return -EINVAL;
-> >>> +     switch (cp->a7) {
-> >>> +     case SBI_SET_TIMER:
-> >>> +#if __riscv_xlen =3D=3D 32
-> >>> +             next_cycle =3D ((u64)cp->a1 << 32) | (u64)cp->a0;
-> >>> +#else
-> >>> +             next_cycle =3D (u64)cp->a0;
-> >>> +#endif
-> >>> +             kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
-> >>
-> >> Ah, this is where the timer set happens. I still don't understand how
-> >> this takes the frequency bit into account?
-> >
-> > Explained it in PATCH17 comments.
-> >
-> >>
-> >>> +             break;
-> >>> +     case SBI_CONSOLE_PUTCHAR:
-> >>> +             /* Not implemented */
-> >>> +             cp->a0 =3D -ENOTSUPP;
-> >>> +             break;
-> >>> +     case SBI_CONSOLE_GETCHAR:
-> >>> +             /* Not implemented */
-> >>> +             cp->a0 =3D -ENOTSUPP;
-> >>> +             break;
-> >>
-> >> These two should be covered by the default case.
-> >
-> > Sure, I will update.
-> >
-> >>
-> >>> +     case SBI_CLEAR_IPI:
-> >>> +             kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_SOFT);
-> >>> +             break;
-> >>> +     case SBI_SEND_IPI:
-> >>> +             dhart_mask =3D kvm_sbi_unpriv_load((unsigned long *)cp-=
->a0, vcpu);
-> >>> +             for_each_set_bit(vcpuid, &dhart_mask, BITS_PER_LONG) {
-> >>> +                     remote_vcpu =3D kvm_get_vcpu_by_id(vcpu->kvm, v=
-cpuid);
-> >>> +                     kvm_riscv_vcpu_set_interrupt(remote_vcpu, IRQ_S=
-_SOFT);
-> >>> +             }
-> >>> +             break;
-> >>> +     case SBI_SHUTDOWN:
-> >>> +             kvm_sbi_system_shutdown(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN=
-);
-> >>> +             ret =3D 0;
-> >>> +             break;
-> >>> +     case SBI_REMOTE_FENCE_I:
-> >>> +             sbi_remote_fence_i(NULL);
-> >>> +             break;
-> >>> +     /*
-> >>> +      * TODO: There should be a way to call remote hfence.bvma.
-> >>> +      * Preferred method is now a SBI call. Until then, just flush
-> >>> +      * all tlbs.
-> >>> +      */
-> >>> +     case SBI_REMOTE_SFENCE_VMA:
-> >>> +             /*TODO: Parse vma range.*/
-> >>> +             sbi_remote_sfence_vma(NULL, 0, 0);
-> >>> +             break;
-> >>> +     case SBI_REMOTE_SFENCE_VMA_ASID:
-> >>> +             /*TODO: Parse vma range for given ASID */
-> >>> +             sbi_remote_sfence_vma(NULL, 0, 0);
-> >>> +             break;
-> >>> +     default:
-> >>> +             cp->a0 =3D ENOTSUPP;
-> >>> +             break;
-> >>
-> >> Please just send unsupported SBI events into user space.
-> >
-> > For unsupported SBI calls, we should be returning error to the
-> > Guest Linux so that do something about it. This is in accordance
-> > with the SBI spec.
->
-> That's up to user space (QEMU / kvmtool) to decide. If user space wants t=
-o implement the  console functions (like we do on s390), it should have the=
- chance to do so.
+> Gesendet: Freitag, 23. August 2019 um 12:04 Uhr
+> Von: "Mark Brown" <broonie@kernel.org>
 
-The SBI_CONSOLE_PUTCHAR and SBI_CONSOLE_GETCHAR are
-for debugging only. These calls are deprecated in SBI v0.2 onwards
-because we now have earlycon for early prints in Linux RISC-V.
+> Can you run a git bisect to try to identify the commit that
+> caused things to fail?
 
-The RISC-V Guest will generally have it's own MMIO based UART
-which will be the default console.
+i have not figured out, how to rebase linux-next on my current (working) c=
+odebase :) (failes on file untouched by me at Patch 3/7000+)
 
-Due to these reasons, we have not implemented these SBI calls.
+> Look to see if there is a device driver bound to that device, or
+> check if the parent regulator is visible in /sys/class/regulators.
+> You'll also see a mesage printed out for each regulator as it
+> instantiates in the boot logs, you can check there too.
 
-If we still want user-space to implement this then we will require
-separate exit reasons and we are trying to avoid adding RISC-V
-specific exit reasons/ioctls in KVM user-space ABI.
+in working version i only get this message in dmesg which
+looks like a device-binding:
 
-The absence of SBI_CONSOLE_PUTCHAR/GETCHAR certainly
-does not block anyone in debugging Guest Linux because we have
-earlycon support in Linux RISC-V.
+mt6323-regulator mt6323-regulator: Chip ID =3D 0x2023
 
-Regards,
-Anup
+this is my regulator: mt6323_vpa_reg
 
->
-> Alex
->
+defined in arch/arm/boot/dts/mt6323.dtsi
+
+&pwrap {
+	pmic: mt6323 {
+	  mt6323regulator: mt6323regulator{
+		compatible =3D "mediatek,mt6323-regulator";
+		mt6323_vpa_reg: buck_vpa{
+			regulator-name =3D "vpa";
+			regulator-min-microvolt =3D < 500000>;
+			regulator-max-microvolt =3D <3650000>;
+		};
+	  };
+	};
+};
+
+parent regulator is then
+mt6323regulator: mt6323regulator
+
+which is the one i see i dmesg.
+
+in working version i see the regulator in sys-fs
+
+cat /sys/class/regulator/regulator.*/name | grep vpa
+vpa
+
+=2D------------------------------------------------------------------
+
+so, now to the non-working regulator:
+
+dmesg do not have such entry ;(
+
+regulators-list in /sys/class only containing the dummy and some fixed reg=
+ulators
+
+cat /sys/class/regulator/regulator.*/name
+regulator-dummy
+fixed-1.8V
+fixed-3.3V
+fixed-5V
+
+in arch/arm/boot/dts/mt*.dts and Makefile there is no change between
+working and non-working version.
+in drivers/regulators only the 2 files where i had reverted the
+changes manually without success.
+
+where can be the cause for no more binding main-regulator?
+
+are these strange messages related to this problem?
+
+mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
+
+another strange line is this:
+
+mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
+
+so the pwrap above regulator is affected too
+
+and here are many changes in 2 files...
+
+git diff --name-only non-working..working -- drivers/mfd/mt6397-*
+drivers/mfd/mt6397-core.c
+drivers/mfd/mt6397-irq.c
+
+which brings me to this 2 commits:
+
+a4872e80ce7d mfd: mt6397: Extract IRQ related code from core driver
+708cb5cc3fde mfd: mt6397: Rename macros to something more readable
+
+after reverting those 2 regulators are working again.
+Adding both Signed-off-People to CC to keep them informed that a fix is ne=
+eded
+
+> Please fix your mail client to word wrap within paragraphs at something
+> substantially less than 80 columns.  Doing this makes your messages much
+> easier to read and reply to.
+
+i currently write in webmailer, where i cannot set this setting,
+i try to add manual linebreak in long lines, ok?
+
+regards Frank
