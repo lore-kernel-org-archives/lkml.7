@@ -2,161 +2,87 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BE4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB46AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0793D20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="En6rZKh6"
+	by mail.kernel.org (Postfix) with ESMTP id B9A3F20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566573140;
+	bh=t/5AlJJtmiUbeuZcsxa1fs1TDs8PURgYTsF1IbHIL1Q=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ijUiMaJN02XysI9mtrtzwIEvqeJmtnkTV7pMkOLW+m09swjFxwQKHsTHr8ta312ZZ
+	 OY0k+9Fx6KCuvE823MqyTGB71bWirFkO/VBWy8iQyLsuym1nq8WCwsLnszlzDkx/N/
+	 ga3hnDFXy7GQGacwUfAaSs/8VCjmZytFrKJSYruA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387704AbfHWPLQ (ORCPT
+        id S2395509AbfHWPMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:11:16 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49656 "EHLO mail.skyhub.de"
+        Fri, 23 Aug 2019 11:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfHWPLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:11:16 -0400
-Received: from zn.tnic (p200300EC2F0BC5003C7EECCB3B09C289.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:c500:3c7e:eccb:3b09:c289])
+        id S1726043AbfHWPMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:12:19 -0400
+Received: from redbean (ip5f5adbf1.dynamic.kabel-deutschland.de [95.90.219.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EAC461EC0965;
-        Fri, 23 Aug 2019 17:11:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566573075;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=b5OajGcKlUzWLv0D9hOietO7TBDXlB4QeydeInAiM1U=;
-        b=En6rZKh6gnwK0ugWDw0d5WdJ4gYJH+oyeDp0Knj5UAuniBHv0myYEVjakE4wm3yIIqLDuc
-        Q8VjltThviuuIT0oLjHC7w+wn7C4bbtArHCOsm9jwTy5aTf+U9AC6leYqdFAhMdeMWFgtL
-        etOaAVJlys5onganwKUPjhIL5sDN6CI=
-Date:   Fri, 23 Aug 2019 17:11:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 7/8] EDAC/amd64: Support Asymmetric Dual-Rank DIMMs
-Message-ID: <20190823151110.GB28379@zn.tnic>
-References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
- <20190821235938.118710-8-Yazen.Ghannam@amd.com>
- <20190823112628.GA28379@zn.tnic>
- <SN6PR12MB2639B5F8445D90154BA8860AF8A40@SN6PR12MB2639.namprd12.prod.outlook.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE6A20578;
+        Fri, 23 Aug 2019 15:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566573138;
+        bh=t/5AlJJtmiUbeuZcsxa1fs1TDs8PURgYTsF1IbHIL1Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=100Lhf1pxmh9C/vzMaADa9vQCA6Axmg2l6mIT/iNYjCH/75aBF2wASeIRpvm6gPgN
+         K/8hYHaLTl9+vMkf3uNvfMBaEJiBhKucCG96qjpp0oAoUHdA0R/ztnep/vWdpytYjx
+         XW1KNyjCbhevB3+yEuFWcwUN5ZEc9GOht59BHfHE=
+Date:   Fri, 23 Aug 2019 17:12:13 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] modules fixes for v5.3-rc6
+Message-ID: <20190823151213.wdjaslloway6ng4u@redbean>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2639B5F8445D90154BA8860AF8A40@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OS:   Linux redbean 4.18.16-100.fc27.x86_64 x86_64
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 01:27:50PM +0000, Ghannam, Yazen wrote:
-> Yes, sorry I missed that.
+Hi Linus,
 
-Ok, fixed. Version below. So I'm queueing all patches up to and
-including this one. I have some more comments for the remaining ones but
-they can wait.
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-Thx.
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
----
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-Date: Thu, 22 Aug 2019 00:00:02 +0000
-Subject: [PATCH] EDAC/amd64: Support asymmetric dual-rank DIMMs
+are available in the Git repository at:
 
-Future AMD systems will support asymmetric dual-rank DIMMs. These are
-DIMMs where the ranks are of different sizes.
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.3-rc6
 
-The even rank will use the Primary Even Chip Select registers and the
-odd rank will use the Secondary Odd Chip Select registers.
+for you to fetch changes up to 3b5be16c7e90a69c93349d210766250fffcb54bd:
 
-Recognize if a Secondary Odd Chip Select is being used. Use the
-Secondary Odd Address Mask when calculating the chip select size.
+  modules: page-align module section allocations only for arches supporting strict module rwx (2019-08-21 10:43:56 +0200)
 
- [ bp: move csrow_sec_enabled() to the header, fix CS_ODD define and
-   tone-down the capitalized words spelling. ]
+----------------------------------------------------------------
+Modules fixes for v5.3-rc6
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190821235938.118710-8-Yazen.Ghannam@amd.com
----
- drivers/edac/amd64_edac.c | 16 +++++++++++++---
- drivers/edac/amd64_edac.h |  3 ++-
- 2 files changed, 15 insertions(+), 4 deletions(-)
+- Fix BUG_ON() being triggered in frob_text() due to non-page-aligned module
+  sections
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 23251bba8eb6..18ba9c898389 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -790,9 +790,11 @@ static void debug_dump_dramcfg_low(struct amd64_pvt *pvt, u32 dclr, int chan)
- 
- #define CS_EVEN_PRIMARY		BIT(0)
- #define CS_ODD_PRIMARY		BIT(1)
-+#define CS_EVEN_SECONDARY	BIT(2)
-+#define CS_ODD_SECONDARY	BIT(3)
- 
--#define CS_EVEN			CS_EVEN_PRIMARY
--#define CS_ODD			CS_ODD_PRIMARY
-+#define CS_EVEN			(CS_EVEN_PRIMARY | CS_EVEN_SECONDARY)
-+#define CS_ODD			(CS_ODD_PRIMARY | CS_ODD_SECONDARY)
- 
- static int f17_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
- {
-@@ -804,6 +806,10 @@ static int f17_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
- 	if (csrow_enabled(2 * dimm + 1, ctrl, pvt))
- 		cs_mode |= CS_ODD_PRIMARY;
- 
-+	/* Asymmetric dual-rank DIMM support. */
-+	if (csrow_sec_enabled(2 * dimm + 1, ctrl, pvt))
-+		cs_mode |= CS_ODD_SECONDARY;
-+
- 	return cs_mode;
- }
- 
-@@ -1600,7 +1606,11 @@ static int f17_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
- 	 */
- 	dimm = csrow_nr >> 1;
- 
--	addr_mask_orig = pvt->csels[umc].csmasks[dimm];
-+	/* Asymmetric dual-rank DIMM support. */
-+	if ((csrow_nr & 1) && (cs_mode & CS_ODD_SECONDARY))
-+		addr_mask_orig = pvt->csels[umc].csmasks_sec[dimm];
-+	else
-+		addr_mask_orig = pvt->csels[umc].csmasks[dimm];
- 
- 	/*
- 	 * The number of zero bits in the mask is equal to the number of bits
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index 68f12de6e654..8addc4d95577 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -169,7 +169,8 @@
- #define DCSM0				0x60
- #define DCSM1				0x160
- 
--#define csrow_enabled(i, dct, pvt)	((pvt)->csels[(dct)].csbases[(i)] & DCSB_CS_ENABLE)
-+#define csrow_enabled(i, dct, pvt)	((pvt)->csels[(dct)].csbases[(i)]     & DCSB_CS_ENABLE)
-+#define csrow_sec_enabled(i, dct, pvt)	((pvt)->csels[(dct)].csbases_sec[(i)] & DCSB_CS_ENABLE)
- 
- #define DRAM_CONTROL			0x78
- 
--- 
-2.21.0
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 
+----------------------------------------------------------------
+He Zhe (1):
+      modules: page-align module section allocations only for arches supporting strict module rwx
 
--- 
-Regards/Gruss,
-    Boris.
+Jessica Yu (1):
+      modules: always page-align module section allocations
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+ kernel/module.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
