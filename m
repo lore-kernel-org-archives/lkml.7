@@ -2,123 +2,232 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160C3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C1BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13B42173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBD72173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="huT97VPn"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SUjo8NWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404409AbfHWUAq (ORCPT
+        id S2392499AbfHWUCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 16:00:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40522 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403768AbfHWUAq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:00:46 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so6326565pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 13:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=q5hCNWmuFRqUpgzAusy3QlIl24Uhrc1t1PhVr0FXqic=;
-        b=huT97VPn2PYKYmr2xcn7IY3JM0O0RXwEGiPTUWSOOx3QCX0aDdFp15Jo5TbRCuzLxR
-         aAv9K8s0vCLiZCcznIwvhtKG2qFIsxYjEN/xbLg8hPSx969ehlvWioXLUqOP1h865gzp
-         eCYeQVTOmE56LsN68b+gH77N/p6s20vFurSIfDb8Itm0gYJXfqQdSMIhv3E5igV+03nn
-         jK2EFocrbWf39WrnO+7QlUygYIWU3OnGAEY3Tu0l7RvUi48BEtQ7fWshymtj+pw9yDjL
-         OMQZOfNdAiigDbP1KJCnSCMZRTVxxwvBTXcAtzGhrF+OdAbtuKBvz1NI/OZFF/qYEqfr
-         GOiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=q5hCNWmuFRqUpgzAusy3QlIl24Uhrc1t1PhVr0FXqic=;
-        b=jcZNaIuLRVCQoVUOROnrcpOEnD+oSxcvnlz2XgfikojUJ690kTjuElidBb97uzb2cH
-         /yn73A8gByG5M5agMC+DRTKiG6wpgi3x1Yrv+xE59uXSuqQaCS9iPaXzfFf8YKTRwe2b
-         Nd1LprROb/MEGFlcU8IVdzNqJtVfJ/rg51LuXpb0gTGgu66l6OHzXkXmdQD0krAQkXy+
-         /k3n+QEL+hjM9YJRmejKwzyPvCmF0ObsKIyMYH7WsyrwQvPWtLOo7ZJQDIM8Qy9KQOWh
-         8bT1EafuaKD+DDRmLUUWzYl2902EsQaICbKTgmB14yB8QUodtT2xgUUuf/22sOXK39L0
-         dJaQ==
-X-Gm-Message-State: APjAAAUsKuc5FlUTtndq0qOuyaRZKU4gnEGZZP36i4021v4DXgWY1M0R
-        rzn61xfGhqNmeZRrBwq7AvyjVg==
-X-Google-Smtp-Source: APXvYqwh5S1SS//KgWADX5JFH89HHbvxamv59gzqAF3717qs3u0Ty+ezBNwx0A/+2twKCoHLaOGXUw==
-X-Received: by 2002:a63:eb56:: with SMTP id b22mr5554435pgk.355.1566590445173;
-        Fri, 23 Aug 2019 13:00:45 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id k5sm3070431pjl.32.2019.08.23.13.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 13:00:44 -0700 (PDT)
-From:   bsegall@google.com
-To:     Liangyan <liangyan.peng@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
-        xlpang@linux.alibaba.com
-Subject: Re: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
-References: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
-Date:   Fri, 23 Aug 2019 13:00:43 -0700
-In-Reply-To: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
-        (Liangyan's message of "Thu, 15 Aug 2019 02:00:21 +0800")
-Message-ID: <xm26d0gvirdg.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Fri, 23 Aug 2019 16:02:17 -0400
+Received: from mail-eopbgr780135.outbound.protection.outlook.com ([40.107.78.135]:20101
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731433AbfHWUCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 16:02:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X5JtAxjZZvqXqsW8KDxxQ57OoKtN+v/cQJFRGlm8Cpex5J2/+sM3Z8kxzSXOli7fBklPDxTZon7UvNbZIt/r9mlu6c2/maxQ2F8cCBVUxhZovFNNyu4KckwkZd7QWYU6WiHVdhw43KisguFISyJsrba7CUKqzFUwAPI+PHwMbCb/GCbr3Is17JTkx7m1EPY2w96CPccdOM4PdyiIyljCtfDFd4x/H77J12xuNfF61b+35HR6isKedKtfG7sejDIXKYwOyT/4UCmKnmBGfnYUrUKPAJvelUjTB2rb1NDsIrKVbLjapligilQ6Mn1xRhGNSIm1YsCgyhJaLweoWqjGRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PfBjRekI2JdXph6+vahyKvdntD8Lv/3yFdk/y+H9h7s=;
+ b=dSbY1RGkFOmyFN3W7YzZtKx2EzPRyKTcExvgSR/DuHMe4H2VF9gA4OkRk5UjgDsG85eQZ4rxmnKKqryG0GUKAWt9rfnqAumbi49H7N4wCxXcip2+fh3XG/YMwbFfIw5h++c2OSfTp19aeb80Hk53kYbU83TG+hiPS8s1jNUJoJfBDN/dTfuZ5QUqydRqBMauQiiRVAhGviGLFE08WS6OOpR6/eGJTNB73N9g0aIe6H7GB2fzUiw/JY0lr4mXvR3IzC58Ac05lEuuWxvZS+h5Vp35BKkN2JbeFegz7hBaw06F22E7WrB0vXr3XMMAi8H3nv9tGeqToZqKg14W/Qt5bA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PfBjRekI2JdXph6+vahyKvdntD8Lv/3yFdk/y+H9h7s=;
+ b=SUjo8NWbK58plLekubemO2HZQae1VKYDrSi2V9IkmCYFi2YfzXxJpBBItKQpO0BYsC1vAyjqinNFC+F41A/kl2uOhwzOZ4dzarYOVC2os3DEUl7jtuj2h1mw1QY2HaULE8WIpO4Tb2qAw23YqE830z2la1krgvxIurJrQt3W+2k=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0281.namprd21.prod.outlook.com (10.173.174.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.3; Fri, 23 Aug 2019 20:02:12 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Fri, 23 Aug 2019
+ 20:02:12 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels by
+ force upon suspend
+Thread-Topic: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels
+ by force upon suspend
+Thread-Index: AQHVVvngIm13qifSzE6BddexMOZgK6cJK+3g
+Date:   Fri, 23 Aug 2019 20:02:12 +0000
+Message-ID: <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
+ <1566265863-21252-11-git-send-email-decui@microsoft.com>
+In-Reply-To: <1566265863-21252-11-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:02:10.5815340Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9569c2bc-1aff-407a-a5da-655ff005400a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2ee8d121-e0b6-4154-9bb5-08d72804c9d1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0281;
+x-ms-traffictypediagnostic: DM5PR21MB0281:|DM5PR21MB0281:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB0281EE7554F38CF0D9E35B22D7A40@DM5PR21MB0281.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(189003)(199004)(1511001)(186003)(2201001)(8990500004)(26005)(10090500001)(8936002)(8676002)(9686003)(6506007)(102836004)(86362001)(14454004)(81166006)(2501003)(52536014)(81156014)(74316002)(3846002)(305945005)(71190400001)(15650500001)(14444005)(256004)(4326008)(76176011)(33656002)(7696005)(66946007)(6116002)(5660300002)(2906002)(71200400001)(53936002)(7736002)(316002)(22452003)(66446008)(11346002)(446003)(76116006)(476003)(486006)(6436002)(229853002)(110136005)(66556008)(66476007)(25786009)(478600001)(64756008)(10290500003)(99286004)(6246003)(55016002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0281;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: W/1SFnfBP+3cQb4Di8kNUa9A9WEAHYBB0XjkBbrolUe034l/izBcKdUgjrG2QJzC1NY4Z+hA8823sLalzlNFR+vHWr6x3cznfGLdjkQLAJ6Nf+V3Z4cdN8a3P95Ssn6RttKMHuvfMltOunJNuwDqW2eNDFk4EhS0EEFSWdCQLocP06L+f4xBiQBVXu3mPJt6+fOwW2ZGvSpfGaUnLMUb1vkRTzsxaxkrp/p8nZHWuGBBKtG9X4eeWlAJ05tlKbH/zJubTtZh7eaX1ok+U8jyGLgNk3wWf1na7+yogFfSGtxG3B2QuXfCt33L4nVobiwHqwin65z5msEBhGGg5EfkYvav98DQ3g26P346LO3C5aAS6ENLaJbQgpIJwhTSFDy0BC0hHhihxvCQktgaRoj3QJ5iKUfZ3VWeQHIU3DgX0Lk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ee8d121-e0b6-4154-9bb5-08d72804c9d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 20:02:12.6282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FzXq0WsoMB1/S3zFyiLu7qEfi6yX1DxdRe80zZGDpM26Uy30CEX1RFsupzoveD7sLPZmi/w5SzRMxMaYb3K7xFre7UpriFahSCUTG/QrLSI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0281
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Liangyan <liangyan.peng@linux.alibaba.com> writes:
+From: Dexuan Cui <decui@microsoft.com> Sent: Monday, August 19, 2019 6:52 P=
+M
+>=20
+> Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force for
+> hibernation. There is no better method to clean up the channels since
+> some of the channels may still be referenced by the userspace apps when
+> hiberantin is triggered: in this case, the "rescind" fields of the
 
-> do_sched_cfs_period_timer() will refill cfs_b runtime and call
-> distribute_cfs_runtime() to unthrottle cfs_rq, sometimes cfs_b->runtime
-> will allocate all quota to one cfs_rq incorrectly.
-> This will cause other cfs_rq can't get runtime and will be throttled.
-> We find that one throttled cfs_rq has non-negative
-> cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
-> in snippet: distribute_cfs_runtime() {
-> runtime = -cfs_rq->runtime_remaining + 1; }.
-> This cast will cause that runtime will be a large number and
-> cfs_b->runtime will be subtracted to be zero at last.
->
-> This commit prevents cfs_rq to be assgined new runtime if it has been
-> throttled to avoid the above incorrect type cast.
->
-> Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+s/hiberantin/hibernation/
 
-Could you mention in the message that this a throttled cfs_rq can have
-account_cfs_rq_runtime called on it because it is throttled before
-idle_balance, and the idle_balance calls update_rq_clock to add time
-that is accounted to the task.
-
-I think this solution is less risky than unthrottling
-in this area, so other than that:
-
-Reviewed-by: Ben Segall <bsegall@google.com>
-
-
+> channels are set, and the apps will thoroughly destroy the channels
+> after hibernation.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > ---
->  kernel/sched/fair.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 81fd8a2a605b..b14d67d28138 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4068,6 +4068,8 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
->  	if (likely(cfs_rq->runtime_remaining > 0))
->  		return;
->  
-> +	if (cfs_rq->throttled)
-> +		return;
->  	/*
->  	 * if we're unable to extend our runtime we resched so that the active
->  	 * hierarchy can be throttled
+>  drivers/hv/vmbus_drv.c | 55
+> ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index ce9974b..2bea669 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/sched/task_stack.h>
+>=20
+>  #include <asm/mshyperv.h>
+> +#include <linux/delay.h>
+>  #include <linux/notifier.h>
+>  #include <linux/ptrace.h>
+>  #include <linux/screen_info.h>
+> @@ -1069,6 +1070,41 @@ void vmbus_on_msg_dpc(unsigned long data)
+>  	vmbus_signal_eom(msg, message_type);
+>  }
+>=20
+> +/*
+> + * Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force f=
+or
+> + * hibernation, because hv_sock connections can not persist across hiber=
+nation.
+> + */
+> +static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
+> +{
+> +	struct onmessage_work_context *ctx;
+> +	struct vmbus_channel_rescind_offer *rescind;
+> +
+> +	WARN_ON(!is_hvsock_channel(channel));
+> +
+> +	/*
+> +	 * sizeof(*ctx) is small and the allocation should really not fail,
+> +	 * otherwise the state of the hv_sock connections ends up in limbo.
+> +	 */
+> +	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL | __GFP_NOFAIL);
+> +
+> +	/*
+> +	 * So far, these are not really used by Linux. Just set them to the
+> +	 * reasonable values conforming to the definitions of the fields.
+> +	 */
+> +	ctx->msg.header.message_type =3D 1;
+> +	ctx->msg.header.payload_size =3D sizeof(*rescind);
+> +
+> +	/* These values are actually used by Linux. */
+> +	rescind =3D (struct vmbus_channel_rescind_offer *)ctx->msg.u.payload;
+> +	rescind->header.msgtype =3D CHANNELMSG_RESCIND_CHANNELOFFER;
+> +	rescind->child_relid =3D channel->offermsg.child_relid;
+> +
+> +	INIT_WORK(&ctx->work, vmbus_onmessage_work);
+> +
+> +	queue_work_on(vmbus_connection.connect_cpu,
+> +		      vmbus_connection.work_queue,
+> +		      &ctx->work);
+> +}
+>=20
+>  /*
+>   * Direct callback for channels using other deferred processing
+> @@ -2091,6 +2127,25 @@ static int vmbus_acpi_add(struct acpi_device *devi=
+ce)
+>=20
+>  static int vmbus_bus_suspend(struct device *dev)
+>  {
+> +	struct vmbus_channel *channel;
+> +
+> +	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
+> +		/*
+> +		 * We wait here until any channel offer is currently
+> +		 * being processed.
+> +		 */
+
+The wording of the comment is a bit off.  Maybe
+
+		/*
+		 * We wait here until the completion of any channel
+		 * offers that are currently in progress.
+		 */
+
+> +		msleep(1);
+> +	}
+> +
+> +	mutex_lock(&vmbus_connection.channel_mutex);
+> +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
+> +		if (!is_hvsock_channel(channel))
+> +			continue;
+> +
+> +		vmbus_force_channel_rescinded(channel);
+> +	}
+> +	mutex_unlock(&vmbus_connection.channel_mutex);
+> +
+>  	vmbus_initiate_unload(false);
+>=20
+>  	vmbus_connection.conn_state =3D DISCONNECTED;
+> --
+> 1.8.3.1
+
+Modulo the nits:
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
