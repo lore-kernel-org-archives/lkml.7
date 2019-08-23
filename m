@@ -2,259 +2,148 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF26FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69750C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9521523426
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D26F23402
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XfZZy0yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391146AbfHWC2m (ORCPT
+        id S2390593AbfHWCfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:28:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33812 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390337AbfHWC2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:28:18 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0zJC-00019x-1G; Fri, 23 Aug 2019 04:28:10 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 83D9C1C07E4;
-        Fri, 23 Aug 2019 04:28:09 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:28:09 -0000
-From:   tip-bot2 for Alexey Budankov <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report: Dump LBR callstack data by -D jointly
- with thread stack
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-In-Reply-To: <aa82e5dd-def2-0ca8-a064-db9e2e8ad076@linux.intel.com>
-References: <aa82e5dd-def2-0ca8-a064-db9e2e8ad076@linux.intel.com>
+        Thu, 22 Aug 2019 22:35:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48211 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfHWCfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:35:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46F58r1Kg0z9s7T;
+        Fri, 23 Aug 2019 12:35:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566527710;
+        bh=2w1O39fqBqmJqk2tKtjRcxFlQifasUHv32rpJh2IRwA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XfZZy0yZXUgWfHiKlwnCmKvR2luZQAumTBvqYfNTThPqJ3pV1r/DjeUFfknOrE8SG
+         orHdQ/oOKYB0i8B7w6yOqtHKGp+Org4V/Wgi/HMts0TNPYnCMt8kBae0hBH+RBEQoZ
+         plO0+Z/xIR4DBlSOJpU8THCCaabT1XCOXQsezEOLZLUYwW76fiGTyW9Pv7bYocLRBr
+         LQixqqy7NSaBqcSAIMS0RswWq1s54XXkps9/dlC89LqPk/ca49BWBueXfOh6uK1hIo
+         yXZr6vRJ8ezuWAfIoUiFGoicUa5i0NQao22H3fnwgEgyUJWBC+Do1fz17xPhig+8GM
+         XXjB0sXTPLILQ==
+Date:   Fri, 23 Aug 2019 12:35:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: linux-next: manual merge of the net-next tree with the pci tree
+Message-ID: <20190823123507.197cac03@canb.auug.org.au>
 MIME-Version: 1.0
-Message-ID: <156652728940.12707.17186855532932836374.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
- these emails
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/tzrOwkngRKoyGZRQEgxv1R=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+--Sig_/tzrOwkngRKoyGZRQEgxv1R=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     d2720c3dad58def723f9617f7cf2a48c752ef50a
-Gitweb:        https://git.kernel.org/tip/d2720c3dad58def723f9617f7cf2a48c752ef50a
-Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Fri, 09 Aug 2019 18:26:30 +03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 20 Aug 2019 12:19:44 -03:00
+Hi all,
 
-perf report: Dump LBR callstack data by -D jointly with thread stack
+Today's linux-next merge of the net-next tree got conflicts in:
 
-Make perf report -D command print captured LBR callstack chain when it is
-collected together with raw thread stack data:
+  drivers/pci/Kconfig
+  drivers/pci/controller/pci-hyperv.c
 
-  2752673087247083 0x5d10 [0x548]: PERF_RECORD_SAMPLE(IP, 0x4002): 5841/5841: 0x40121f period: 1543862 addr: 0
-  ... FP chain: nr:0
-  ... branch callstack: nr:3
-  .....  0: 00000000004011d0
-  .....  1: 00007f393c388411
-  .....  2: 0000000000401098
-  ... user regs: mask 0xff0fff ABI 64-bit
-  .... AX    0x34e7
-  .... BX    0x7fff5f6dd3c0
-  .... CX    0xffffffff
-  .... DX    0x34e6
-  .... SI    0x7f393c5268d0
-  .... DI    0x0
-  .... BP    0x401260
-  .... SP    0x7fff5f6dd3c0
-  .... IP    0x40121f
-  .... FLAGS 0x29f
-  .... CS    0x33
-  .... SS    0x2b
-  .... R8    0x7f393c526800
-  .... R9    0x7f393c525da0
-  .... R10   0xfffffffffffff70a
-  .... R11   0x246
-  .... R12   0x401070
-  .... R13   0x7fff5f6ddcb0
-  .... R14   0x0
-  .... R15   0x0
-  ... ustack: size 1024, offset 0x130
-   . data_src: 0x5080021
-   ... thread: stack_test:5841
-   ...... dso: /root/abudanko/stacks/stack_test
+between commit:
 
-Committer testing:
+  f58ba5e3f686 ("PCI: pci-hyperv: Fix build errors on non-SYSFS config")
+  44b1ece783ff ("PCI: hv: Detect and fix Hyper-V PCI domain number collisio=
+n")
 
-  # perf record -g --call-graph dwarf,1024 -j stack,u ls > /dev/null
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.042 MB perf.data (10 samples) ]
-  #
+from the pci tree and commit:
 
-Before:
+  348dd93e40c1 ("PCI: hv: Add a Hyper-V PCI interface driver for software b=
+ackchannel interface")
 
-  # perf report -D |& grep PERF_RECORD_SAMPLE -A28 | tail -29
-  67538909824483 0xa7a0 [0x560]: PERF_RECORD_SAMPLE(IP, 0x4002): 9721/9721: 0x7f441b2b1e20 period: 1376095 addr: 0
-  ... FP chain: nr:0
-  ... user regs: mask 0xff0fff ABI 64-bit
-  .... AX    0x7f441b2b1000
-  .... BX    0x7f441b55b970
-  .... CX    0x7fff6e2db218
-  .... DX    0x7fff6e2db218
-  .... SI    0x7fff6e2db208
-  .... DI    0x1
-  .... BP    0x1
-  .... SP    0x7fff6e2db178
-  .... IP    0x7f441b2b1e20
-  .... FLAGS 0x20a
-  .... CS    0x33
-  .... SS    0x2b
-  .... R8    0x1
-  .... R9    0x7f441b371c18
-  .... R10   0x7f441b5a5f10
-  .... R11   0x202
-  .... R12   0x7fff6e2db208
-  .... R13   0x7fff6e2db218
-  .... R14   0x7f441b5a7150
-  .... R15   0x0
-  ... ustack: size 1024, offset 0x148
-   . data_src: 0x5080021
-   ... thread: ls:9721
-   ...... dso: /usr/lib64/libpthread-2.29.so
+from the net-next tree.
 
-  0xad00 [0x60]: event: 10
-  #
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-After:
+--=20
+Cheers,
+Stephen Rothwell
 
-  # perf report -D |& grep PERF_RECORD_SAMPLE -A31 | tail -32
-  67538909824483 0xa7a0 [0x560]: PERF_RECORD_SAMPLE(IP, 0x4002): 9721/9721: 0x7f441b2b1e20 period: 1376095 addr: 0
-  ... FP chain: nr:0
-  ... branch callstack: nr:4
-  .....  0: 00007f441b2b1e20
-  .....  1: 00007f441b58af1a
-  .....  2: 00007f441b58b0e1
-  .....  3: 00007f441b57c145
-  ... user regs: mask 0xff0fff ABI 64-bit
-  .... AX    0x7f441b2b1000
-  .... BX    0x7f441b55b970
-  .... CX    0x7fff6e2db218
-  .... DX    0x7fff6e2db218
-  .... SI    0x7fff6e2db208
-  .... DI    0x1
-  .... BP    0x1
-  .... SP    0x7fff6e2db178
-  .... IP    0x7f441b2b1e20
-  .... FLAGS 0x20a
-  .... CS    0x33
-  .... SS    0x2b
-  .... R8    0x1
-  .... R9    0x7f441b371c18
-  .... R10   0x7f441b5a5f10
-  .... R11   0x202
-  .... R12   0x7fff6e2db208
-  .... R13   0x7fff6e2db218
-  .... R14   0x7f441b5a7150
-  .... R15   0x0
-  ... ustack: size 1024, offset 0x148
-   . data_src: 0x5080021
-   ... thread: ls:9721
-   ...... dso: /usr/lib64/libpthread-2.29.so
-  #
+diff --cc drivers/pci/Kconfig
+index 232042722261,c313de96a357..000000000000
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@@ -181,7 -181,8 +181,8 @@@ config PCI_LABE
+ =20
+  config PCI_HYPERV
+          tristate "Hyper-V PCI Frontend"
+ -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_=
+64
+ +        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && S=
+YSFS
++ 	select PCI_HYPERV_INTERFACE
+          help
+            The PCI device frontend driver allows the kernel to import arbi=
+trary
+            PCI devices from a PCI backend to support PCI driver domains.
+diff --cc drivers/pci/controller/pci-hyperv.c
+index 3a56de6b2ec2,9c93ac2215b7..000000000000
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@@ -2810,9 -3050,11 +3113,14 @@@ static void __exit exit_hv_pci_drv(void
+ =20
+  static int __init init_hv_pci_drv(void)
+  {
+ +	/* Set the invalid domain number's bit, so it will not be used */
+ +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+ +
++ 	/* Initialize PCI block r/w interface */
++ 	hvpci_block_ops.read_block =3D hv_read_config_block;
++ 	hvpci_block_ops.write_block =3D hv_write_config_block;
++ 	hvpci_block_ops.reg_blk_invalidate =3D hv_register_block_invalidate;
++=20
+  	return vmbus_driver_register(&hv_pci_drv);
+  }
+ =20
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/aa82e5dd-def2-0ca8-a064-db9e2e8ad076@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/session.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+--Sig_/tzrOwkngRKoyGZRQEgxv1R=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index b9fe71d..82e0438 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1051,23 +1051,30 @@ static void callchain__printf(struct evsel *evsel,
- 		       i, callchain->ips[i]);
- }
- 
--static void branch_stack__printf(struct perf_sample *sample)
-+static void branch_stack__printf(struct perf_sample *sample, bool callstack)
- {
- 	uint64_t i;
- 
--	printf("... branch stack: nr:%" PRIu64 "\n", sample->branch_stack->nr);
-+	printf("%s: nr:%" PRIu64 "\n",
-+		!callstack ? "... branch stack" : "... branch callstack",
-+		sample->branch_stack->nr);
- 
- 	for (i = 0; i < sample->branch_stack->nr; i++) {
- 		struct branch_entry *e = &sample->branch_stack->entries[i];
- 
--		printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
--			i, e->from, e->to,
--			(unsigned short)e->flags.cycles,
--			e->flags.mispred ? "M" : " ",
--			e->flags.predicted ? "P" : " ",
--			e->flags.abort ? "A" : " ",
--			e->flags.in_tx ? "T" : " ",
--			(unsigned)e->flags.reserved);
-+		if (!callstack) {
-+			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
-+				i, e->from, e->to,
-+				(unsigned short)e->flags.cycles,
-+				e->flags.mispred ? "M" : " ",
-+				e->flags.predicted ? "P" : " ",
-+				e->flags.abort ? "A" : " ",
-+				e->flags.in_tx ? "T" : " ",
-+				(unsigned)e->flags.reserved);
-+		} else {
-+			printf("..... %2"PRIu64": %016" PRIx64 "\n",
-+				i, i > 0 ? e->from : e->to);
-+		}
- 	}
- }
- 
-@@ -1217,8 +1224,8 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
- 	if (evsel__has_callchain(evsel))
- 		callchain__printf(evsel, sample);
- 
--	if ((sample_type & PERF_SAMPLE_BRANCH_STACK) && !perf_evsel__has_branch_callstack(evsel))
--		branch_stack__printf(sample);
-+	if (sample_type & PERF_SAMPLE_BRANCH_STACK)
-+		branch_stack__printf(sample, perf_evsel__has_branch_callstack(evsel));
- 
- 	if (sample_type & PERF_SAMPLE_REGS_USER)
- 		regs_user__printf(sample);
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fUNsACgkQAVBC80lX
+0Gw0Sgf+LjUNk01+W+n9S8sWmfNWLqaKRFDu0zPU655BKTUdkNzw0VUPddKCO0UP
+/aZwvRZpDp81htm41iBqe5NNi+jEO2CcLfgYoRgY8wNgYArIUKzbwqLfxNbAoO7X
+4djAHjLFqqcVlfC72cqO++OERpZDDHDxn0qvqmXch7jKEMX9WMiW01hny3aXa1UN
+pFkP7HEDwI4m1WR360dUWzI5tceuvreC8oeKjH05U7Nvs/Y3B6k664bnH5jHl6o+
+VU1q56ZOrK2jBHRPohahnZCNzvByLciT+EaTndk/4c9YJnLzrvQZTdeOo6cxJ8uD
+wYTRMY5NOkCr3/+BpHGojkgUBKXG7Q==
+=V7ms
+-----END PGP SIGNATURE-----
+
+--Sig_/tzrOwkngRKoyGZRQEgxv1R=--
