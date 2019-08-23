@@ -2,121 +2,201 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ACCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF93CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF72F21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="JPDZS28o"
+	by mail.kernel.org (Postfix) with ESMTP id A637D233A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566579941;
+	bh=nxBLgk8vy88bDQ4Gy8gLYJzufdYGTQ7XtUM6JqEXDA0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lqLaknwioc9C78P1d7GjFVO4VTw1HHMRY96IlAsWHW5ZSPKWWVTKZU7Ji/2al6SWK
+	 Le1CWeoRyILY7+V+g3HIbE3+6GH5f8CAhzDLC4UbhNogG60LvPfXhoDP9cSKhwDdbY
+	 TxkDaFqrk2qeKaKyU8MGYsf9lwtYiH5XStcAdCyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbfHWQ4j (ORCPT
+        id S1731457AbfHWRFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 12:56:39 -0400
-Received: from us-smtp-delivery-168.mimecast.com ([216.205.24.168]:51799 "EHLO
-        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728493AbfHWQ4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 12:56:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
-        s=mimecast20190405; t=1566579395;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tNGQZG0MaK5D5PV6OvBC2tWAbsDx8KCpuqSoA/QVh2g=;
-        b=JPDZS28ow+PFRsINNY1Z5Vnt6npjZcDqbVKj/nUX0bCnE0ar43GhwM27SwV3ZMjkIx+4s8
-        GCsXoLWw7GxmFq/OuqGAH1Fjqdz8OETIrsTWeSv08qT1BX5YqDgA6xCyBOmHw0qROVIW5i
-        M7YdZa5f/TmJAUkw+WtMsczT9+yT7GY=
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com
- (mail-co1nam05lp2059.outbound.protection.outlook.com [104.47.48.59]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-OWICPnAKMEmQuXkwUKRBlw-1; Fri, 23 Aug 2019 12:56:33 -0400
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3739.namprd06.prod.outlook.com (10.167.236.144) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Fri, 23 Aug 2019 16:56:29 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::1c8:1be2:2f2a:1cde]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::1c8:1be2:2f2a:1cde%2]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
- 16:56:29 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "biwen.li@nxp.com" <biwen.li@nxp.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [1/3] rtc/fsl: support flextimer for lx2160a
-Thread-Topic: [1/3] rtc/fsl: support flextimer for lx2160a
-Thread-Index: AQHVWZqlHeXpJlnWHEW4zoEmDhv/8qcI9DMA
-Date:   Fri, 23 Aug 2019 16:56:28 +0000
-Message-ID: <1566579388.5029.8.camel@impinj.com>
-References: <20190823095740.12280-1-biwen.li@nxp.com>
-In-Reply-To: <20190823095740.12280-1-biwen.li@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6eb7bd08-c138-440d-236f-08d727ead7c2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3739;
-x-ms-traffictypediagnostic: MWHPR0601MB3739:
-x-microsoft-antispam-prvs: <MWHPR0601MB3739E8865DA468ADE0388311D3A40@MWHPR0601MB3739.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(396003)(376002)(136003)(346002)(366004)(199004)(189003)(3846002)(5660300002)(2616005)(64756008)(66556008)(446003)(11346002)(476003)(186003)(6116002)(91956017)(76116006)(229853002)(8676002)(486006)(66946007)(76176011)(25786009)(66476007)(81166006)(36756003)(256004)(4326008)(66446008)(305945005)(7736002)(99286004)(478600001)(86362001)(53936002)(316002)(2501003)(6436002)(14454004)(81156014)(2906002)(6512007)(6486002)(103116003)(66066001)(8936002)(6506007)(102836004)(26005)(54906003)(71190400001)(6246003)(110136005)(71200400001)(2201001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3739;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PhC6vAhMXpGMpoMrquQT7nlkw1+ch9v84QGbD0+eeUp5c6E9Xmm6YykK54p8WGl1x/5lsqnp6fia0ANSR7CPA+tABxm+BZzhk/hwUAkJQ9vNt3k4libpXWZYCf8lVkNyedrdMnRAZpKin3Yz+sWI/PfJg3d/nZ+z0p73n2LGjt/0VwavvNHa87+IvpdL7QdvwfY9ZlSpPxydT8O6aKzcKFPmMh0i1gjTgMRI8fDQg5UcOQed0RJgJswSEcatE7MYtZUFOaNIBhapEB6cVLkBdoRw1Ba6jQ+rN9ZPlgoOvy05i+LSXTvkvfJzABX9ty1u8DHufyirIZ4e5RTCxJKn/rwddTA09Abio0qsajhRRsS3y60d488rGIQ+M1Qy5gZeq+BJfLzrwYmCjAjVr+cyFBXH83jZgwM/wTzFyqy8r7Y=
-x-ms-exchange-transport-forked: True
-Content-ID: <3C3797AA81BCF84B8CB1E3A7DE501830@namprd06.prod.outlook.com>
+        Fri, 23 Aug 2019 13:05:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfHWRFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:05:40 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE5222CE3;
+        Fri, 23 Aug 2019 17:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566579938;
+        bh=nxBLgk8vy88bDQ4Gy8gLYJzufdYGTQ7XtUM6JqEXDA0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=O30aLpnr4wR6RV3N8mtzuIwqjR4pVRciIGqcKMKqRxgQeexe3DQTFu7wLf0ucs6pd
+         f7LERWiM15wbjLXop4rZCGtrGB+P5H5sTrfEx/6zUqN9gIAyJVuBsS52i6gSBIEa3N
+         Okrm+v4nJmDbL6aK4SO4xEICK/zDQDTaPoFPQAwI=
+Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        shuah <shuah@kernel.org>
+References: <20190820232046.50175-1-brendanhiggins@google.com>
+ <20190820232046.50175-2-brendanhiggins@google.com>
+ <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+ <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
+Date:   Fri, 23 Aug 2019 11:05:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6eb7bd08-c138-440d-236f-08d727ead7c2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 16:56:28.9151
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dTweQXnKOB0xWWPxfUJPkxk4qwnueorL16SQqzEihGeqwVPrC0aNCLL2pRlJwAtkafEPEkV/mNbys9RdL0xe2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3739
-X-MC-Unique: OWICPnAKMEmQuXkwUKRBlw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTIzIGF0IDE3OjU3ICswODAwLCBCaXdlbiBMaSB3cm90ZToNCj4gVGhl
-IHBhdGNoIHN1cHBvcnRzIGZsZXh0aW1lciBmb3IgbHgyMTYwYQ0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ydGMvcnRj
-LWZzbC1mdG0tYWxhcm0uYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0uYyBiL2Ry
-aXZlcnMvcnRjL3J0Yy1mc2wtDQo+IGZ0bS1hbGFybS5jDQo+IGluZGV4IDRmNzI1OWMyZDZhMy4u
-MmI4MTUyNWY2ZGI4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3J0Yy9ydGMtZnNsLWZ0bS1hbGFy
-bS5jDQo+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLmMNCj4gQEAgLTMxMyw2
-ICszMTMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBmdG1fcnRjX21hdGNo
-W10NCj4gPSB7DQo+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iLCB9
-LA0KPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMjA4eGEtZnRtLWFsYXJtIiwgfSwNCj4gIAl7
-IC5jb21wYXRpYmxlID0gImZzbCxsczEwMjhhLWZ0bS1hbGFybSIsIH0sDQo+ICsJeyAuY29tcGF0
-aWJsZSA9ICJmc2wsbHgyMTYwYS1mdG0tYWxhcm0iLCB9LA0KPiAgCXsgfSwNCj4gIH07DQo+ICAN
-Cg0KU2luY2UgdGhlcmUncyBubyBkYXRhIGFzc29jaWF0ZWQgd2l0aCBlYWNoIGNvbXBhdGlibGUs
-IGl0IGRvZXNuJ3Qgc2VlbQ0KbGlrZSB0aGVyZSdzIGFueSBuZWVkIHRvIGFkZCBhIG5ldyBvbmUu
-DQoNCldoYXQncyBub3JtYWxseSBkb25lIGlzIGFkZCB0d28gY29tcGF0aWJsZXMgaW4gdGhlIGR0
-cywgdGhlIGJhc2UNCnZlcnNpb24gYW5kIHRoZSBzcGVjaWZpYyB2ZXJzaW9uLCBlLmcuOg0KDQor
-CQlyY3BtOiByY3BtQDFlMzQwNDAgew0KKwkJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGEtcmNw
-bSIsICJmc2wscW9yaXEtY3BtLTIuMSsiOw0KDQpPciBpbiB0aGlzIGNhc2UsIGNvbXBhdGlibGUg
-PSAiZnNsLGx4MjE2MGEtZnRtLWFsYXJtIiwgImZzbCxsczEwODhhLWZ0bS1hbGFybSI7DQoNClRo
-ZW4gdGhlcmUncyBubyBuZWVkIHRvIGFkZCB0byB0aGUgZHJpdmVyIGxpc3Qu
+On 8/23/19 10:48 AM, Brendan Higgins wrote:
+> On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
+>>
+>> Hi Brendan,
+>>
+>> On 8/20/19 5:20 PM, Brendan Higgins wrote:
+>>> Add core facilities for defining unit tests; this provides a common way
+>>> to define test cases, functions that execute code which is under test
+>>> and determine whether the code under test behaves as expected; this also
+>>> provides a way to group together related test cases in test suites (here
+>>> we call them test_modules).
+>>>
+>>> Just define test cases and how to execute them for now; setting
+>>> expectations on code will be defined later.
+>>>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>>> ---
+>>>    include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
+>>>    kunit/Kconfig        |  17 ++++
+>>>    kunit/Makefile       |   1 +
+>>>    kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
+>>>    4 files changed, 388 insertions(+)
+>>>    create mode 100644 include/kunit/test.h
+>>>    create mode 100644 kunit/Kconfig
+>>>    create mode 100644 kunit/Makefile
+>>>    create mode 100644 kunit/test.c
+>>>
+>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+>>> new file mode 100644
+>>> index 0000000000000..e0b34acb9ee4e
+>>> --- /dev/null
+>>> +++ b/include/kunit/test.h
+>>> @@ -0,0 +1,179 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * Base unit test (KUnit) API.
+>>> + *
+>>> + * Copyright (C) 2019, Google LLC.
+>>> + * Author: Brendan Higgins <brendanhiggins@google.com>
+>>> + */
+>>> +
+>>> +#ifndef _KUNIT_TEST_H
+>>> +#define _KUNIT_TEST_H
+>>> +
+>>> +#include <linux/types.h>
+>>> +
+>>> +struct kunit;
+>>> +
+>>> +/**
+>>> + * struct kunit_case - represents an individual test case.
+>>> + * @run_case: the function representing the actual test case.
+>>> + * @name: the name of the test case.
+>>> + *
+>>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
+>>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
+>>> + * test case is associated with a &struct kunit_suite and will be run after the
+>>> + * suite's init function and followed by the suite's exit function.
+>>> + *
+>>> + * A test case should be static and should only be created with the KUNIT_CASE()
+>>> + * macro; additionally, every array of test cases should be terminated with an
+>>> + * empty test case.
+>>> + *
+>>> + * Example:
+>>
+>> Can you fix these line continuations. It makes it very hard to read.
+>> Sorry for this late comment. These comments lines are longer than 80
+>> and wrap.
+> 
+> None of the lines in this commit are over 80 characters in column
+> width. Some are exactly 80 characters (like above).
+> 
+> My guess is that you are seeing the diff added text (+ ), which when
+> you add that to a line which is exactly 80 char in length ends up
+> being over 80 char in email. If you apply the patch you will see that
+> they are only 80 chars.
+> 
+>>
+>> There are several comment lines in the file that are way too long.
+> 
+> Note that checkpatch also does not complain about any over 80 char
+> lines in this file.
+> 
+> Sorry if I am misunderstanding what you are trying to tell me. Please
+> confirm either way.
+> 
+
+WARNING: Avoid unnecessary line continuations
+#258: FILE: include/kunit/test.h:137:
++		 */							       \
+
+total: 0 errors, 2 warnings, 388 lines checked
+
+Go ahead fix these. It appears there are few lines that either longer
+than 80. In general, I keep them around 75, so it is easier read.
+
+thanks,
+-- Shuah
+
 
