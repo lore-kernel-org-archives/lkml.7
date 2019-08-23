@@ -2,103 +2,92 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B6EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F2EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2AD23400
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S0TNK/8x";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QSCwredS"
+	by mail.kernel.org (Postfix) with ESMTP id 125D3233FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405202AbfHWITV (ORCPT
+        id S2405228AbfHWITZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:19:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43176 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbfHWITV (ORCPT
+        Fri, 23 Aug 2019 04:19:25 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:35197 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729113AbfHWITX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:19:21 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DF62761516; Fri, 23 Aug 2019 08:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566548360;
-        bh=vFwga+0IfhrFsfBYhg/cHAIL5p0BsKH8JyMfnbxIjyI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S0TNK/8x7x3o52rGZNsIPeSKkCzkUs/MwiBvSaniE0BVJh/zsBiXwFyUJkqJxn1AL
-         mymMqoX3Ha80hUcf5dt3hEKh4pt+NBcAwJobLNMtr2CUgYGd9W1Py8dHWtqQdgtQPL
-         txZkSOJDpto4VK8sxX/0SwyhNxsElPKNFuRNyQZg=
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 725C4614DC;
-        Fri, 23 Aug 2019 08:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566548358;
-        bh=vFwga+0IfhrFsfBYhg/cHAIL5p0BsKH8JyMfnbxIjyI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSCwredS855Uk/ETPwO5bF/kNrXerdPvOdnNpZUurt0yO5L29oUl47ry+8ZgMtIhD
-         RnwEINdIj4vaLj/xkr6lqM4Ct35TeuB/j7lBTujz1zDljEwXprZ2xa6nqp/slkibsS
-         RKVKJ7gVzZiM3oHrp5MEbuvA9pAfqznkE2Ip98l8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 725C4614DC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, ulf.hansson@linaro.org,
-        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 6/6] arm64: dts: Add rsc power domain for sdm845
-Date:   Fri, 23 Aug 2019 13:47:03 +0530
-Message-Id: <20190823081703.17325-7-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190823081703.17325-1-mkshah@codeaurora.org>
-References: <20190823081703.17325-1-mkshah@codeaurora.org>
+        Fri, 23 Aug 2019 04:19:23 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8809F60007;
+        Fri, 23 Aug 2019 08:19:20 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 10:19:20 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     megous@megous.com
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 3/3] arm64: dts: sun50i-h6: Add support for RTC and
+ fix the clock tree
+Message-ID: <20190823081920.xxqg6w7tlnvvkzlx@flea>
+References: <20190820151934.3860-1-megous@megous.com>
+ <20190820151934.3860-4-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bvvuqig3adpl6wgr"
+Content-Disposition: inline
+In-Reply-To: <20190820151934.3860-4-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add rsc power domain to enable sending sleep and wake votes
-using generic power domain infrastructure.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+--bvvuqig3adpl6wgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 0e7f36d2a7d9..1ea61464e666 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -669,6 +669,7 @@
- 
- 		CLUSTER_PD: cluster-pd {
- 			#power-domain-cells = <0>;
-+			power-domains = <&apps_rsc>;
- 			domain-idle-states = <&CLUSTER_SLEEP_0>;
- 		};
- 	};
-@@ -2587,6 +2588,7 @@
- 					  <SLEEP_TCS   3>,
- 					  <WAKE_TCS    3>,
- 					  <CONTROL_TCS 1>;
-+			#power-domain-cells = <0>;
- 
- 			rpmhcc: clock-controller {
- 				compatible = "qcom,sdm845-rpmh-clk";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+On Tue, Aug 20, 2019 at 05:19:34PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> This patch adds RTC node and fixes the clock properties and nodes
+> to reflect the real clock tree.
+>
+> The device nodes for the internal oscillator and osc32k are removed,
+> as these clocks are now provided by the RTC device. Clock references
+> are fixed accordingly, too.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
+The prefix should be "arm64: dts: allwinner: h6:"
+
+I've fixed it up and applied it.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--bvvuqig3adpl6wgr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV+hiAAKCRDj7w1vZxhR
+xQlxAP9kdMuf4hAYTBGWFaQzFVjFmqRMRi1y/pCcJ+PHKLK3TAD8DZOSzZhHJZFE
+oscKRT3ZVaryNY1pphYVt0LlyyDu2Q0=
+=Ngr3
+-----END PGP SIGNATURE-----
+
+--bvvuqig3adpl6wgr--
