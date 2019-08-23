@@ -2,99 +2,313 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEF6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F0EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1C421019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA022133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jrdwbs49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405818AbfHWPgI (ORCPT
+        id S2405828AbfHWPgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:36:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:36412 "EHLO foss.arm.com"
+        Fri, 23 Aug 2019 11:36:12 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:41585 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfHWPgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:36:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B44D528;
-        Fri, 23 Aug 2019 08:36:07 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94E0B3F246;
-        Fri, 23 Aug 2019 08:36:06 -0700 (PDT)
-Subject: Re: cleanup the walk_page_range interface
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Thomas_Hellstr=c3=b6m?= <thomas@shipmail.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <20190808154240.9384-1-hch@lst.de>
- <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
- <20190816062751.GA16169@infradead.org> <20190823134308.GH12847@mellanox.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <ad8179e2-f404-1e48-e366-fcd1f139a202@arm.com>
-Date:   Fri, 23 Aug 2019 16:36:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726964AbfHWPgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:36:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46FQTx5xXzz9tyfQ;
+        Fri, 23 Aug 2019 17:36:05 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=jrdwbs49; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id WDbwHxX_DhSu; Fri, 23 Aug 2019 17:36:05 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46FQTx4mJgz9tyfP;
+        Fri, 23 Aug 2019 17:36:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566574565; bh=taOtIuFOLV3LderGgGTjI+WsiQvKgWM+udHMcArbX6M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jrdwbs496wJTnFOi+YyWfXwhY8qwVNB0jqtWxzq8O7jdWqAEs6fgwBupPWtqkn6tW
+         We6YpPGdJoOPsuVQ8I46mS95AAi/0qZbDIltmVIynzY+r9+A1hSbpc6u8i812/EJWR
+         s7P9dl9hXeNuIMQYpYOGUgCKH13wi6Ydtu5bQIR4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 475018B895;
+        Fri, 23 Aug 2019 17:36:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6H3uH_qZt4h0; Fri, 23 Aug 2019 17:36:07 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 07E788B882;
+        Fri, 23 Aug 2019 17:36:07 +0200 (CEST)
+Subject: Re: [PATCH 3/3] powerpc: use __builtin_trap() in BUG/WARN macros.
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <a6781075192afe0c909ce7d091de7931183a5d93.1566219503.git.christophe.leroy@c-s.fr>
+ <20510ce03cc9463f1c9e743c1d93b939de501b53.1566219503.git.christophe.leroy@c-s.fr>
+ <20190819132313.GH31406@gate.crashing.org>
+ <dbafc03a-6eda-d9a3-c451-d242f03b01d9@c-s.fr>
+ <20190819143700.GK31406@gate.crashing.org>
+ <44a19633-f2a9-79f9-da7c-16ba64a66600@c-s.fr>
+ <20190819154531.GM31406@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <6931c0d8-8aa8-8039-fc7f-8e2026b94036@c-s.fr>
+Date:   Fri, 23 Aug 2019 15:35:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190823134308.GH12847@mellanox.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190819154531.GM31406@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/08/2019 14:43, Jason Gunthorpe wrote:
-> On Thu, Aug 15, 2019 at 11:27:51PM -0700, Christoph Hellwig wrote:
->> On Thu, Aug 08, 2019 at 10:50:37AM -0700, Linus Torvalds wrote:
->>> On Thu, Aug 8, 2019 at 8:42 AM Christoph Hellwig <hch@lst.de> wrote:
+
+
+On 08/19/2019 03:45 PM, Segher Boessenkool wrote:
+> On Mon, Aug 19, 2019 at 05:05:46PM +0200, Christophe Leroy wrote:
+>> Le 19/08/2019 à 16:37, Segher Boessenkool a écrit :
+>>> On Mon, Aug 19, 2019 at 04:08:43PM +0200, Christophe Leroy wrote:
+>>>> Le 19/08/2019 à 15:23, Segher Boessenkool a écrit :
+>>>>> On Mon, Aug 19, 2019 at 01:06:31PM +0000, Christophe Leroy wrote:
+>>>>>> Note that we keep using an assembly text using "twi 31, 0, 0" for
+>>>>>> inconditional traps because GCC drops all code after
+>>>>>> __builtin_trap() when the condition is always true at build time.
+>>>>>
+>>>>> As I said, it can also do this for conditional traps, if it can prove
+>>>>> the condition is always true.
 >>>>
->>>> this series is based on a patch from Linus to split the callbacks
->>>> passed to walk_page_range and walk_page_vma into a separate structure
->>>> that can be marked const, with various cleanups from me on top.
+>>>> But we have another branch for 'always true' and 'always false' using
+>>>> __builtin_constant_p(), which don't use __builtin_trap(). Is there
+>>>> anything wrong with that ?:
 >>>
->>> The whole series looks good to me. Ack.
->>>
->>>> Note that both Thomas and Steven have series touching this area pending,
->>>> and there are a couple consumer in flux too - the hmm tree already
->>>> conflicts with this series, and I have potential dma changes on top of
->>>> the consumers in Thomas and Steven's series, so we'll probably need a
->>>> git tree similar to the hmm one to synchronize these updates.
->>>
->>> I'd be willing to just merge this now, if that helps. The conversion
->>> is mechanical, and my only slight worry would be that at least for my
->>> original patch I didn't build-test the (few) non-x86
->>> architecture-specific cases. But I did end up looking at them fairly
->>> closely  (basically using some grep/sed scripts to see that the
->>> conversions I did matched the same patterns). And your changes look
->>> like obvious improvements too where any mistake would have been caught
->>> by the compiler.
->>>
->>> So I'm not all that worried from a functionality standpoint, and if
->>> this will help the next merge window, I'll happily pull now.
+>>> The compiler might not realise it is constant when it evaluates the
+>>> __builtin_constant_p, but only realises it later.  As the documentation
+>>> for the builtin says:
+>>>    A return of 0 does not indicate that the
+>>>    value is _not_ a constant, but merely that GCC cannot prove it is a
+>>>    constant with the specified value of the '-O' option.
 >>
->> So what is the plan forward?  Probably a little late for 5.3,
->> so queue it up in -mm for 5.4 and deal with the conflicts in at least
->> hmm?  Queue it up in the hmm tree even if it doesn't 100% fit?
+>> So you mean GCC would not be able to prove that
+>> __builtin_constant_p(cond) is always true but it would be able to prove
+>> that if (cond)  is always true ?
 > 
-> Did we make a decision on this? Due to travel & LPC I'd like to
-> finalize the hmm tree next week.
+> Not sure what you mean, sorry.
+> 
+>> And isn't there a away to tell GCC that '__builtin_trap()' is
+>> recoverable in our case ?
+> 
+> No, GCC knows that a trap will never fall through.
+> 
+>>> I think it may work if you do
+>>>
+>>> #define BUG_ON(x) do {						\
+>>> 	if (__builtin_constant_p(x)) {				\
+>>> 		if (x)						\
+>>> 			BUG();					\
+>>> 	} else {						\
+>>> 		BUG_ENTRY("", 0);				\
+>>> 		if (x)						\
+>>> 			__builtin_trap();			\
+>>> 	}							\
+>>> } while (0)
+>>
+>> It doesn't work:
+> 
+> You need to make a BUG_ENTRY so that it refers to the *following* trap
+> instruction, if you go this way.
+> 
+>>> I don't know how BUG_ENTRY works exactly.
+>>
+>> It's basic, maybe too basic: it adds an inline asm with a label, and
+>> adds a .long in the __bug_table section with the address of that label.
+>>
+>> When putting it after the __builtin_trap(), I changed it to using the
+>> address before the one of the label which is always the twxx instruction
+>> as far as I can see.
+>>
+>> #define BUG_ENTRY(insn, flags, ...)			\
+>> 	__asm__ __volatile__(				\
+>> 		"1:	" insn "\n"			\
+>> 		".section __bug_table,\"aw\"\n"		\
+>> 		"2:\t" PPC_LONG "1b, %0\n"		\
+>> 		"\t.short %1, %2\n"			\
+>> 		".org 2b+%3\n"				\
+>> 		".previous\n"				\
+>> 		: : "i" (__FILE__), "i" (__LINE__),	\
+>> 		  "i" (flags),				\
+>> 		  "i" (sizeof(struct bug_entry)),	\
+>> 		  ##__VA_ARGS__)
+> 
+> #define MY_BUG_ENTRY(lab, flags)			\
+> 	__asm__ __volatile__(				\
+> 		".section __bug_table,\"aw\"\n"		\
+> 		"2:\t" PPC_LONG "%4, %0\n"		\
+> 		"\t.short %1, %2\n"			\
+> 		".org 2b+%3\n"				\
+> 		".previous\n"				\
+> 		: : "i" (__FILE__), "i" (__LINE__),	\
+> 		  "i" (flags),				\
+> 		  "i" (sizeof(struct bug_entry)),	\
+> 		  "i" (lab))
+> 
+> called as
+> 
+> #define BUG_ON(x) do {						\
+> 	MY_BUG_ENTRY(&&lab, 0);					\
+> 	lab: if (x)						\
+> 		__builtin_trap();				\
+> } while (0)
+> 
+> not sure how reliable that works -- *if* it works, I just typed that in
+> without testing or anything -- but hopefully you get the idea.
+> 
 
-I was planning on rebasing my series on this and posting it for 5.4 - I
-hadn't actually realised this hasn't been picked up yet. I haven't had
-much time to look at this recently.
+I've not been able to make it work. GCC puts the label (.L2 and .L6) 
+outside of the function, so the instruction preceding the label is blr, 
+not the trap.
 
-FWIW you can add for the series:
+#define _EMIT_BUG_ENTRY				\
+	".section __bug_table,\"aw\"\n"		\
+	"2:\t" PPC_LONG "%4, %0\n"		\
+	"\t.short %1, %2\n"			\
+	".org 2b+%3\n"				\
+	".previous\n"
 
-Acked-by: Steven Price <steven.price@arm.com>
+#define BUG_ENTRY(flags, label)				\
+	__asm__ __volatile__(				\
+		_EMIT_BUG_ENTRY				\
+		: : "i" (__FILE__), "i" (__LINE__),	\
+		  "i" (flags),				\
+		  "i" (sizeof(struct bug_entry)),	\
+		  "i" (label - 4))
 
-Steve
+#define __recoverable_trap()	asm volatile ("twi 31, 0, 0;");
+
+#define __WARN_FLAGS(flags) do {				\
+	__label__ label;					\
+	BUG_ENTRY(BUGFLAG_WARNING | (flags), &&label);		\
+	__recoverable_trap();					\
+	label: ;						\
+} while (0)
+
+#define WARN_ON(x) ({						\
+	int __ret_warn_on = !!(x);				\
+	if (__builtin_constant_p(__ret_warn_on)) {		\
+		if (__ret_warn_on)				\
+			__WARN_TAINT(TAINT_WARN);		\
+	} else {						\
+		__label__ label;				\
+		BUG_ENTRY(BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN), &&label);	\
+		if (__ret_warn_on)				\
+			__builtin_trap();			\
+		label: ;					\
+	}							\
+	unlikely(__ret_warn_on);				\
+})
+
+void test_warn1(unsigned long long a)
+{
+	WARN_ON(a);
+}
+
+void test_warn2(unsigned long a)
+{
+	WARN_ON(a);
+}
+
+00000000 <test_warn1>:
+    0:	7c 63 23 78 	or      r3,r3,r4
+    4:	0f 03 00 00 	twnei   r3,0
+    8:	4e 80 00 20 	blr
+
+0000000c <test_warn2>:
+    c:	0f 03 00 00 	twnei   r3,0
+   10:	4e 80 00 20 	blr
+
+RELOCATION RECORDS FOR [__bug_table]:
+OFFSET   TYPE              VALUE
+00000000 R_PPC_ADDR32      .text+0x00000008
+00000004 R_PPC_ADDR32      .rodata.str1.4
+0000000c R_PPC_ADDR32      .text+0x00000010
+00000010 R_PPC_ADDR32      .rodata.str1.4
+
+
+	.file	"test.c"
+	.section	".text"
+.Ltext0:
+	.align 2
+	.globl test_warn1
+	.type	test_warn1, @function
+test_warn1:
+.LFB598:
+	.file 1 "arch/powerpc/mm/test.c"
+	.loc 1 34 0
+.LBB2:
+.LBB3:
+	.loc 1 35 0
+#APP
+  # 35 "arch/powerpc/mm/test.c" 1
+	.section __bug_table,"aw"
+2:	.long .L2-4, .LC0
+	.short 35, 2305
+.org 2b+12
+.previous
+
+  # 0 "" 2
+#NO_APP
+	or 3,3,4
+	twnei 3,0
+	blr
+.L3:
+.L2:
+.LBE3:
+.LBE2:
+.LFE598:
+	.size	test_warn1, .-test_warn1
+	.align 2
+	.globl test_warn2
+	.type	test_warn2, @function
+test_warn2:
+.LFB599:
+	.loc 1 39 0
+.LBB4:
+.LBB5:
+	.loc 1 40 0
+#APP
+  # 40 "arch/powerpc/mm/test.c" 1
+	.section __bug_table,"aw"
+2:	.long .L6-4, .LC0
+	.short 40, 2305
+.org 2b+12
+.previous
+
+  # 0 "" 2
+#NO_APP
+	twnei 3,0
+	blr
+.L7:
+.L6:
+.LBE5:
+.LBE4:
+.LFE599:
+
+Any idea ?
+
+Christophe
