@@ -2,111 +2,302 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE71C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC56CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90A021019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Xusb0Xj6"
+	by mail.kernel.org (Postfix) with ESMTP id 819F220656
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388584AbfHWRRQ (ORCPT
+        id S2388810AbfHWRSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:17:16 -0400
-Received: from mout.gmx.net ([212.227.17.20]:51531 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387641AbfHWRRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:17:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566580580;
-        bh=KAOdaynKbihaITcaFt4WqiyRLZbtSP/RJI/uMxSYwAA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Xusb0Xj64yL0T6lEq8KfvIbQDlrHe2gC7RLsib5J7rTaqGSAMg6/Ur+73Ny2qekSq
-         8r9+RAb9gtoR7XFFc6mC31NlMvYo3q3cgFMEtFchyGoO/+De2yJYzL5qDkxhAlZ746
-         XuwMFuSlD//ORk1PvvrRpTE0thLPtaGwE/GSjqz4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.154.8] ([217.61.154.8]) by web-mail.gmx.net
- (3c-app-gmx-bs75.server.lan [172.19.170.219]) (via HTTP); Fri, 23 Aug 2019
- 19:16:20 +0200
+        Fri, 23 Aug 2019 13:18:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55946 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388289AbfHWRSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:18:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B29DCAC93;
+        Fri, 23 Aug 2019 17:18:03 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 19:18:02 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: numlist API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk
+ ringbuffer implementation
+Message-ID: <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Matthias Brugger" <matthias.bgg@gmail.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        "Rob Herring" <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        "Richard Fontana" <rfontana@redhat.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Eddie Huang" <eddie.huang@mediatek.com>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        linux-rtc@vger.kernel.org
-Subject: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related
- code from core driver
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 23 Aug 2019 19:16:20 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
- <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
- <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
- <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
- <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:M6tggHu2jkIqLMSHLX83dNUDyHrefgQf8IujR0hyiRKzkuklyndiHW9nYGEkuLXCbOFMO
- SU+tldv0OOjj7fhdIotEInIhprMyKcHFTkDmg3Efi+cKsHLNCA4guu9ErTmP0DGbBBpZpN41036a
- tuKt30R+dNFMZUaZY7u53km3KLRC2mt9/svU71MSZNnuo+/30tBC7dIXkuBB4vRLB+OQsdK4O50+
- XX6VyQNrBSgCyXPZ1HhTjjLmG/rbSC9Y4CbSc2JU2HAPRc62AwxY1qZsv6BFDYP7/gsYLXNh4pyc
- 20=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TOoEHewdCY8=:S/v5Ky3YBDWNjot/2PylTF
- kK4NljRpELNyO9TgpRHOWLeukFdMAosLfLxz3bWRabDlr3Sfb/rlMknadYnt7/PvLo2b3piM1
- smjOdh6YxQQuRfqIMtvhk5i6BbszdW3monJEzwT+6Kky7MJIES1cblfZ11cvocxi2NZInCaCT
- rTdZFThb/PDsgySQMgfbLL3ETPBcAQS+YtdZRS/7hDoiNYkYpCyxw0xZ+LbUOd02TY9KFuoNh
- +Eb/5DGmKIn7gvJKawUveefsQvtzoYPVBUrPR/IgdXMpyce7AHlatkvq0lxNp098Yy+tO995P
- 1zQq4mgbIHnkw3zZkhw0IBAYfpBGkTqhmrzJQ7+ePW2AEZ2zwzZY08fuv/O0X6DEXqO2dELtd
- /zDW//zdP5Ns35UQN/VOEl6zp+/NzWh6kfYCtQ/eW3Ns2eFrdreUSaJBzmH18vpsMZ86rpmXS
- ib8TdXaLtUf981KqYi0y3TWbY8KkzmW0VtFuAc7arSxVf/ZSdRhFM07FyiD4uwDASn+EVYLU8
- JOkoLAghKWioW2JbWYU3cAdvK47ZHFdRFzdXFMSJePxEGvew4Y+hNXk1icKwNpUZjMtHzDvBF
- 0b6mmpA96LbZ7PR6g8lsDIU2M+8snOHHumaDSNyt+N2sZFA4EMTfFaMec5EZR45lxuMBlvd3w
- sipzH8uF4e4HsVt40jHmE4miAlyyc1ED5nuwyGLE0/9eNzw==
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807222634.1723-2-john.ogness@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Freitag, 23. August 2019 um 17:42 Uhr
-> Von: "Matthias Brugger" <matthias.bgg@gmail.com>
+On Thu 2019-08-08 00:32:26, John Ogness wrote:
+> --- /dev/null
+> +++ b/kernel/printk/numlist.c
+> @@ -0,0 +1,375 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/sched.h>
+> +#include "numlist.h"
 
-> I suppose that's because 3/10 has code that should be in 2/10 and for so=
-me
-> reason 3/10 was not pushed for linux-next inclusion. Although it has the=
- same
-> Acked-for-mfd-by tag.
->
-> @Frank, can you test if adding 3/10 to your code base fixes the issue?
+struct numlist is really special variant of a list. Let me to
+do a short summary:
 
-adding part 3 [1] seems to fix the issue too
+   + FIFO queue interface
 
-[    4.960051] mt6323-regulator mt6323-regulator: Chip ID =3D 0x2023
+   + nodes sequentially numbered
 
-thanks
+   + nodes referenced by ID instead pointers to avoid ABA problems
+     + requires custom node() callback to get pointer for given ID
 
-[1] https://patchwork.kernel.org/patch/11110509/
+   + lockless access:
+     + pushed nodes must not longer get modified by push() caller
+     + pop() caller gets exclusive write access, except that they
+       must modify ID first and do smp_wmb() later
+
+   + pop() does not work:
+     + tail node is "busy"
+	+ needs a custom callback that defines when a node is busy
+     + tail is the last node
+	+ needed for lockless sequential numbering
+
+I will start with one inevitable question ;-) Is it realistic to find
+another user for this API, please?
+
+I am not sure that all the indirections, caused by the generic API,
+are worth the gain.
+
+
+Well, the separate API makes sense anyway. I have some ideas that
+might make it cleaner.
+
+The barriers are because of validating the ID. Now we have:
+
+	struct nl_node {
+		unsigned long	seq;
+		unsigned long	next_id;
+	};
+
+that is used in:
+
+	struct prb_desc {
+		/* private */
+		atomic_long_t		id;
+		struct dr_desc		desc;
+		struct nl_node		list;
+	};
+
+What will happen when we move id from struct prb_desc into struct nl_node?
+
+	struct nl_node {
+		unsigned long	seq;
+		atomic_long_t	id;
+		unsigned long	next_id;
+	};
+
+	struct prb_desc {
+		struct dr_desc		desc;
+		struct nl_node		list;
+	};
+
+
+Then the "node" callback might just return the structure. It makes
+perfect sense. struct nl_node is always static for a given id.
+
+For the printk ringbuffer it would look like:
+
+struct nl_node *prb_nl_get_node(unsigned long id, void *nl_user)
+{
+	struct printk_ringbuffer *rb = (struct printk_ringbuffer *)nl_user;
+	struct prb_desc *d = to_desc(rb, id);
+
+	return &d->list;
+}
+
+I would also hide the callback behind a generic wrapper:
+
+struct nl_node *numlist_get_node(struct numlist *nl, unsigned long id)
+{
+	return nl->get_node(id, nl->user_data);
+}
+
+
+Then we could have nicely symetric and self contained barriers
+in numlist_read():
+
+bool numlist_read(struct numlist *nl, unsigned long id, unsigned long *seq,
+		  unsigned long *next_id)
+{
+	struct nl_node *n;
+	unsigned long cur_id;
+
+	n = numlist_get_node(nl, id);
+	if (!n)
+		return false;
+
+	/*
+	 * Make sure that seq and next_id values will be read
+	 * for the expected id.
+	 */
+	cur_id = atomic_long_read_acquire(&n->id);
+	if (cur_id != id)
+		return false;
+
+	if (seq) {
+		*seq = n->seq;
+
+	if (next_id)
+		*next_id = n->next_id;
+	}
+
+	/*
+	 * Make sure that seq and next_id values were read for
+	 * the expected ID.
+	 */
+	cur_id = atomic_long_read_release(&n->id);
+
+	return cur_id == id;
+}
+
+numlist_push() might be the same, except the I would
+remove several WRITE_ONCE as discussed in another mail:
+
+void numlist_push(struct numlist *nl, struct nl_node *n)
+{
+	unsigned long head_id;
+	unsigned long seq;
+	unsigned long r;
+
+	/* Setup the node to be a list terminator: next_id == id. */
+	n->next_id = n->id;
+
+	do {
+		do {
+			head_id = atomic_long_read(&nl->head_id);
+		} while (!numlist_read(nl, head_id, &seq, NULL));
+
+		n->seq = seq + 1;
+
+		/*
+		 * This store_release() guarantees that @seq and @next are
+		 * stored before the node with @id is visible to any popping
+		 * writers.
+		 * 
+		 * It pairs with the acquire() when tail_id gets updated
+		 * in headlist_pop();
+		 */
+	} while (atomic_long_cmpxchg_release(&nl->head_id, head_id, id) !=
+			head_id);
+
+	n = nl->get_node(nl, head_id);
+
+	/*
+	 * This barrier makes sure that nl->head_id already points to
+	 * the newly pushed node.
+	 *
+	 * It pairs with acquire when new id is written in numlist_pop().
+	 * It allows to pop() and reuse this node. It can not longer
+	 * be the last one.
+	 */
+	smp_store_release(&n->next_id, id);
+}
+
+Then I would add a symetric callback that would generate ID for
+a newly popped struct. It will allow to set new ID in the numlist
+API and have the barriers symetric. Something like:
+
+unsined long prb_new_node_id(unsigned long old_id, , void *nl_user)
+{
+	struct printk_ringbuffer *rb = (struct printk_ringbuffer *)nl_user;
+
+	return id + DESCS_COUNT(rb);
+}
+
+Then we could hide it in
+
+unsigned long numlist_get_new_id(struct numlist *nl, unsigned long id)
+{
+	return nl->get_new_id(id, nl->user_data);
+}
+
+and do
+
+struct nl_node *numlist_pop(struct numlist *nl)
+{
+	struct nl_node *n;
+	unsigned long tail_id;
+	unsigned long next_id;
+	unsigned long r;
+
+	tail_id = atomic_long_read(&nl->tail_id);
+
+	do {
+		do {
+			tail_id = atomic_long_read(&nl->tail_id);
+		} while (!numlist_read(nl, tail_id, NULL, &next_id));
+
+		/* Make sure the node is not the only node on the list. */
+		if (next_id == tail_id)
+			return NULL;
+
+		/* Make sure the node is not busy. */
+		if (nl->busy(tail_id, nl->busy_arg))
+			return NULL;
+
+		/*
+		 * Make sure that nl->tail_id is update before
+		 * we start modyfying the popped node.
+		 *
+		 * It pairs with release() when head_id is
+		 * pushed in numlist_push().
+		 */
+	} while (atomic_long_cmpxchg_acquire(&nl->tail_id,
+					tail_id, next_id) !=
+		  tail_id);
+
+	/* Got exclusive write access to the node. */
+	n = numlist_get_node(nl, tail_id);
+
+	tail_id = numlist_get_new_id(tail_id, nl);
+	/*
+	 * Make sure that we set new ID before we allow
+	 * more changes in user structure handled by this node.
+	 *
+	 * It pairs with release() barrier when the node is
+	 * pushed into the numlist again, gets linked to
+	 * the previous node and can't be modified anymore.
+	 * See numlist_push().
+	 */
+	atomic_long_set_acquire(&d->id, atomic_long_read(&d->id) +
+				DESCS_COUNT(rb));
+
+	return n;
+}
+
+I hope that it makes some sense. I feel exhausted. It is Friday
+evening here. I just wanted to send it because it looked like the most
+constructive idea that I had this week. And I wanted to send something
+more positive ;-)
+
+Best Regards,
+Petr
