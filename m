@@ -2,62 +2,64 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17B6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F671C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772C72339D
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246A122CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vjbu0oxD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ma39mbRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395020AbfHWM4S (ORCPT
+        id S2395033AbfHWM4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:56:18 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59260 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732824AbfHWM4K (ORCPT
+        Fri, 23 Aug 2019 08:56:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46416 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394996AbfHWM4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:56:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NCu3ku076487;
-        Fri, 23 Aug 2019 07:56:04 -0500
+        Fri, 23 Aug 2019 08:56:14 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NCu8hU073766;
+        Fri, 23 Aug 2019 07:56:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566564964;
-        bh=90F2Ku1Xn8M7W9QVFhYhs3tdIyL07/aRX/oyDTbPkQM=;
-        h=From:To:CC:Subject:Date;
-        b=vjbu0oxDaj/Z/q8NQPAemQSd1aSsfSI2xT2o831AZa+07dKUXjZFWW/vKhp7Gsf2A
-         8y9RuVmeskLNZ60kCzGY6UDJQ++Kw8IUgrsFye+VFKF6h6Fs7/gi88FtyEhyk+WzVt
-         S+VTFIsDkI5uG5LpKX/832LrD010lPyKiyP4ZmsM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NCu3uB015093
+        s=ti-com-17Q1; t=1566564968;
+        bh=4p8x7v8EaQ++SIjoJmr4MK1Cg7JXqSOfe+y4BO9Mvv8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ma39mbRlT65De5gN1ZfuqkKvk3VI5qahfCk9z+mz41wwyAKyaEIXAwShQhP/YTkxO
+         cSVx5vr5PFc4cSizYXixue33OmXD7hPyD2QqY44YC4hTjM9+12UhG9eVETFAX+hO44
+         SzPJ0SoUoGucEYxknHIDKx8JqmApUJ4OVeWPCtf8=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NCu8uG080903
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 23 Aug 2019 07:56:03 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 23 Aug 2019 07:56:08 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 23
- Aug 2019 07:56:01 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2019 07:56:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 23 Aug 2019 07:56:01 -0500
+ Frontend Transport; Fri, 23 Aug 2019 07:56:07 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NCtwke092319;
-        Fri, 23 Aug 2019 07:55:59 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NCtwkh092319;
+        Fri, 23 Aug 2019 07:56:06 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
 CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-omap@vger.kernel.org>
-Subject: [PATCH 0/5] dmaengine: ti: edma: Multicore usage related fixes
-Date:   Fri, 23 Aug 2019 15:56:13 +0300
-Message-ID: <20190823125618.8133-1-peter.ujfalusi@ti.com>
+Subject: [PATCH 3/5] dmaengine: ti: edma: Use bitmap_set() instead of open coded edma_set_bits()
+Date:   Fri, 23 Aug 2019 15:56:16 +0300
+Message-ID: <20190823125618.8133-4-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190823125618.8133-1-peter.ujfalusi@ti.com>
+References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -67,35 +69,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+bitmap_set() is the standard way of setting an area in the bitfield.
 
-When other cores want to use EDMA for their use cases Linux was not playing
-nicely.
-By design EDMA is supporting shared use with shadow regions. Linux is using
-region0, others can be used by other cores.
-
-In order to not break multicore shared usage of EDMA:
-- do not reset paRAM slots which is not allocated for Linux (reserved paRAM
-  slots)
-- Only reset region0 access registers, do not touch other regions
-- Add option for reserved channels which should not be used by Linux in a similar
-  fashion as we already have for reserved paRAM slots.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (5):
-  dmaengine: ti: edma: Do not reset reserved paRAM slots
-  dmaengine: ti: edma: Only reset region0 access registers
-  dmaengine: ti: edma: Use bitmap_set() instead of open coded
-    edma_set_bits()
-  dt-bindings: dma: ti-edma: Add option for reserved channel ranges
-  dmaengine: ti: edma: Add support for handling reserved channels
+ drivers/dma/ti/edma.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
- .../devicetree/bindings/dma/ti-edma.txt       |   5 +
- drivers/dma/ti/edma.c                         | 190 +++++++++++-------
- 2 files changed, 123 insertions(+), 72 deletions(-)
-
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 87450431f336..ba7c4f07fcd6 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
++#include <linux/bitmap.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -423,12 +424,6 @@ static inline void edma_param_or(struct edma_cc *ecc, int offset, int param_no,
+ 	edma_or(ecc, EDMA_PARM + offset + (param_no << 5), or);
+ }
+ 
+-static inline void edma_set_bits(int offset, int len, unsigned long *p)
+-{
+-	for (; len > 0; len--)
+-		set_bit(offset + (len - 1), p);
+-}
+-
+ static void edma_assign_priority_to_queue(struct edma_cc *ecc, int queue_no,
+ 					  int priority)
+ {
+@@ -2254,7 +2249,7 @@ static int edma_probe(struct platform_device *pdev)
+ {
+ 	struct edma_soc_info	*info = pdev->dev.platform_data;
+ 	s8			(*queue_priority_mapping)[2];
+-	int			i, off, ln;
++	int			i, off;
+ 	const s16		(*rsv_slots)[2];
+ 	const s16		(*xbar_chans)[2];
+ 	int			irq;
+@@ -2342,11 +2337,9 @@ static int edma_probe(struct platform_device *pdev)
+ 		/* Set the reserved slots in inuse list */
+ 		rsv_slots = info->rsv->rsv_slots;
+ 		if (rsv_slots) {
+-			for (i = 0; rsv_slots[i][0] != -1; i++) {
+-				off = rsv_slots[i][0];
+-				ln = rsv_slots[i][1];
+-				edma_set_bits(off, ln, ecc->slot_inuse);
+-			}
++			for (i = 0; rsv_slots[i][0] != -1; i++)
++				bitmap_set(ecc->slot_inuse, rsv_slots[i][0],
++					   rsv_slots[i][1]);
+ 		}
+ 	}
+ 
 -- 
 Peter
 
