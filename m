@@ -2,120 +2,113 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BF8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93356C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58B921874
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="NO4fkVwy"
+	by mail.kernel.org (Postfix) with ESMTP id 675972070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392531AbfHWUmv (ORCPT
+        id S2392594AbfHWUqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 16:42:51 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]:40762 "EHLO
-        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388903AbfHWUmv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:42:51 -0400
-Received: by mail-qt1-f182.google.com with SMTP id g4so2645029qtq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 13:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Gczk+EJ8LxiAJI5OXwLa8ocoZrZoy01MrH8K/Y4PQHo=;
-        b=NO4fkVwyZOzQ/jSY0fP4yNcBFegJIfr7DOj3i3cPTHYzoRZTwyuWBpEa98d2K9BeU1
-         w9TLAVPgZ67+NSAnmOobUyVFk4m5rb+6gmKOAmRXM4PC4hQ2D3uxHt3ndHkhZR62ZCLt
-         K4EaZD22/3qIqn5pd3RsjcXmQRRWVDdHlyAa0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Gczk+EJ8LxiAJI5OXwLa8ocoZrZoy01MrH8K/Y4PQHo=;
-        b=UGUYPLJAHxlHJ6iW1QOuaKCiQJ4yvD2K7p5EQD3ur4waJ1C2cXrIkU1OTIyUO9zKN1
-         Pxx2fDy4FEmXjDWcKRstAnf89Z7XKFjEf/We/y5RCucB2Vnq/rhvnBDAV5mBnFqIkT5Q
-         A6cGEqXA5qH9qcB/joqsJvoPU/dgwqrshL9+nFQeRM5kX4fvKA+W64NUIczksC3xHtG2
-         dM9gRrW3FoE0bjo5Eehr5EJlkIdUNOlTmvbAWNyR61ZGgZSKEROVkp2fxJ/+ZUPzve5k
-         /1XIsozlIYhqdlbDp5OCVIMSyZT1z+Obte9/aVifeFlL9MY4P/2fYg2stsjX8IoxLUcl
-         CrXA==
-X-Gm-Message-State: APjAAAU8U23hFpyqtvNEdPOsNxCrhsq5OTeXBrZ9uSVF58eCilB39tww
-        hROw9IDAZskEeZgje9LhXKzyOQ==
-X-Google-Smtp-Source: APXvYqytAYNNbcRat+bBg8hwTH66h+K38k0PAtCbhOGXrxMnRHXuaSiJ+xe4YsFGfUxUv3X9Wkfv8g==
-X-Received: by 2002:ac8:739a:: with SMTP id t26mr6718674qtp.65.1566592970244;
-        Fri, 23 Aug 2019 13:42:50 -0700 (PDT)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id e7sm1664614qtp.91.2019.08.23.13.42.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 13:42:49 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Fri, 23 Aug 2019 16:42:47 -0400 (EDT)
-X-X-Sender: vince@macbook-air
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [patch] perf tool buffer overflow in
- perf_header__read_build_ids
-In-Reply-To: <20190726190541.GC20482@kernel.org>
-Message-ID: <alpine.DEB.2.21.1908231641170.7106@macbook-air>
-References: <alpine.DEB.2.21.1907231100440.14532@macbook-air> <alpine.DEB.2.21.1907231639120.14532@macbook-air> <20190726190541.GC20482@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 23 Aug 2019 16:46:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40996 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388903AbfHWUqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 16:46:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BF2F33090FC5;
+        Fri, 23 Aug 2019 20:46:00 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F1E05DD61;
+        Fri, 23 Aug 2019 20:45:49 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 14:45:49 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     hexin <hexin.op@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hexin <hexin15@baidu.com>,
+        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
+Subject: Re: [PATCH v3] vfio_pci: Restore original state on release
+Message-ID: <20190823144549.58dce8e7@x1.home>
+In-Reply-To: <1566444919-3331-1-git-send-email-hexin15@baidu.com>
+References: <1566444919-3331-1-git-send-email-hexin15@baidu.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 23 Aug 2019 20:46:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019, Arnaldo Carvalho de Melo wrote:
+On Thu, 22 Aug 2019 11:35:19 +0800
+hexin <hexin.op@gmail.com> wrote:
 
-> Em Tue, Jul 23, 2019 at 04:42:30PM -0400, Vince Weaver escreveu:
-> > my perf_tool_fuzzer has found another issue, this one a buffer overflow
-> > in perf_header__read_build_ids.  The build id filename is read in with a 
-> > filename length read from the perf.data file, but this can be longer than
-> > PATH_MAX which will smash the stack.
-> > 
-> > This might not be the right fix, not sure if filename should be NUL
-> > terminated or not.
-> > 
-> > Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-> > 
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index c24db7f4909c..9a893a26e678 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -2001,6 +2001,9 @@ static int perf_header__read_build_ids(struct perf_header *header,
-> >  			perf_event_header__bswap(&bev.header);
-> >  
-> >  		len = bev.header.size - sizeof(bev);
-> > +
-> > +		if (len>PATH_MAX) len=PATH_MAX;
-> > +
+> vfio_pci_enable() saves the device's initial configuration information
+> with the intent that it is restored in vfio_pci_disable().  However,
+> the commit referenced in Fixes: below replaced the call to
+> __pci_reset_function_locked(), which is not wrapped in a state save
+> and restore, with pci_try_reset_function(), which overwrites the
+> restored device state with the current state before applying it to the
+> device.  Reinstate use of __pci_reset_function_locked() to return to
+> the desired behavior.
 > 
-> Humm, I wonder if we shouldn't just declare the whole file invalid like
-> you did with the previous patch?
-> 
-> - Arnaldo
-> 
-> >  		if (readn(input, filename, len) != len)
-> >  			goto out;
-> >  		/*
- 
-did we ever decide how to fix this issue?  Or were you waiting on a 
-followup patch from me?
+> Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+> Signed-off-by: hexin <hexin15@baidu.com>
+> Signed-off-by: Liu Qi <liuqi16@baidu.com>
+> Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+> ---
 
-This is actually an exploitable security bug if you can convince someone 
-to run "perf" on an untrusted perf.data file.
+Applied to vfio next branch for v5.4.  Thanks,
 
-Vince
+Alex
+
+> v2->v3:
+> - change commit log 
+> v1->v2:
+> - add fixes tag
+> - add comment to warn 
+> 
+> [1] https://lore.kernel.org/linux-pci/1565926427-21675-1-git-send-email-hexin15@baidu.com
+> [2] https://lore.kernel.org/linux-pci/1566042663-16694-1-git-send-email-hexin15@baidu.com
+> 
+>  drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 703948c..0220616 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+>  	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+>  
+>  	/*
+> -	 * Try to reset the device.  The success of this is dependent on
+> -	 * being able to lock the device, which is not always possible.
+> +	 * Try to get the locks ourselves to prevent a deadlock. The
+> +	 * success of this is dependent on being able to lock the device,
+> +	 * which is not always possible.
+> +	 * We can not use the "try" reset interface here, which will
+> +	 * overwrite the previously restored configuration information.
+>  	 */
+> -	if (vdev->reset_works && !pci_try_reset_function(pdev))
+> -		vdev->needs_reset = false;
+> +	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
+> +		if (device_trylock(&pdev->dev)) {
+> +			if (!__pci_reset_function_locked(pdev))
+> +				vdev->needs_reset = false;
+> +			device_unlock(&pdev->dev);
+> +		}
+> +		pci_cfg_access_unlock(pdev);
+> +	}
+>  
+>  	pci_restore_state(pdev);
+>  out:
+
