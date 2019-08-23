@@ -2,154 +2,141 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E7BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A1AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5EC21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80B222CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 16:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566578395;
+	bh=NberAb6RZePTR4llSoS/DhB3hnE6XdcSWhGXwO73v/U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jR0CkqHpBkgqkHy4RY7V1yey35isVzcQ4rmBYYu5bmvMHCZpyVYTr3Vmoo8R/kdmu
+	 AGj1ctlMFEHiJtWl4ePdxEtYKzflJPRSXfsCs9jyo3wB21t8pimlezVLhbs7VxBwkM
+	 uyjFLe1duAA/lU4QlQxESwcKXAgWvwIhS7r1CggE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436802AbfHWQg2 convert rfc822-to-8bit (ORCPT
+        id S2436821AbfHWQjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 12:36:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5649 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391229AbfHWQg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 12:36:28 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6A6D7791BB853EF10449;
-        Sat, 24 Aug 2019 00:36:25 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 24 Aug 2019
- 00:36:14 +0800
-Date:   Fri, 23 Aug 2019 17:36:03 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     zhangfei <zhangfei.gao@linaro.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Zaibo Xu <xuzaibo@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        "Kenneth Lee" <liguozhu@hisilicon.com>,
-        <linux-accelerators@lists.ozlabs.org>
-Subject: Re: [PATCH 2/2] uacce: add uacce module
-Message-ID: <20190823173603.00001b3d@huawei.com>
-In-Reply-To: <b5d9fe84-abfd-c8ca-d059-e186e1609e06@linaro.org>
-References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
-        <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
-        <20190815175424.00002256@huawei.com>
-        <b5d9fe84-abfd-c8ca-d059-e186e1609e06@linaro.org>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 23 Aug 2019 12:39:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41309 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390847AbfHWQjy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 12:39:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m24so9420904ljg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 09:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CYa2Qs9up8NB/MJ/vRw1SFbPvn8eAXmUwSsfTYCDL7Y=;
+        b=XkWUUMSRzE5E25LIeu2aWU/YvR9XtsEwVeRadTbQUk9LjnsvBxBiDlE7qwO1sPnZA7
+         KK5kRhKMUepicmyYQQ3ZXbwTfCBAitbTw7pRRFO/qKau+JS4en5EWAVqIsm+3WUnleJ/
+         jSRB918U2RKdk59cOw24NZWNHRc65JoSyJdBs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CYa2Qs9up8NB/MJ/vRw1SFbPvn8eAXmUwSsfTYCDL7Y=;
+        b=nbHoTDlGVF5ChMVT20gXOzJnumd0IzLTpTGCN06sTIPCZEYTn/DIDE7IqHh/0BKTda
+         s1dOMov7QR8JJ8XntX3RanMAgMjVK8zm/8ItZQHSL8zBq2YgBmZOoBQtRFWb58kCP/op
+         IbJyOs5bxm9B17HjKNTPt22A9eTYmUjkPlkqfzr9gk30PvzvVmJglc297nDnjX9UIrLX
+         tSeTWQU5fdmB5hoN8uFPvHCuUtgDKoYbWCzEN6MIB372TjcfXn89YM0QQhYkCyggurmY
+         VG4uzS/c8b5ywe8nk4ygUo0eDzFhs1elWLG42qQwnTimgbyYDxy335VvSQk0R9qGyfrg
+         VQFA==
+X-Gm-Message-State: APjAAAXpFKPmFR4HlyAKBDhDoP0MOY+mCQGJvIQwIAfJ6webxe1Uzzsm
+        UdQVD7hNnPb25bh/4NK7jjYZzFrMwWg=
+X-Google-Smtp-Source: APXvYqwTf3FYU3FXFYW3utHOcwRZh+QtfYE1yilH+G/bbRKOA2bDxl4ojZgvRM39hPkh2+4O+Dj1bw==
+X-Received: by 2002:a2e:4601:: with SMTP id t1mr3625149lja.102.1566578391507;
+        Fri, 23 Aug 2019 09:39:51 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id g12sm647948lfc.96.2019.08.23.09.39.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Aug 2019 09:39:50 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id x18so9477337ljh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 09:39:50 -0700 (PDT)
+X-Received: by 2002:a05:651c:1104:: with SMTP id d4mr3485159ljo.90.1566578390307;
+ Fri, 23 Aug 2019 09:39:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com> <20190823091636.GA10064@gmail.com>
+In-Reply-To: <20190823091636.GA10064@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 23 Aug 2019 09:39:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
+Message-ID: <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 23 Aug 2019 17:21:33 +0800
-zhangfei <zhangfei.gao@linaro.org> wrote:
+On Fri, Aug 23, 2019 at 2:16 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+> > +      */
+> > +     if (fatal_signal_pending(current)) {
+> > +             if (!(error_code & X86_PF_USER))
+> > +                     no_context(regs, error_code, address, 0, 0);
+>
+> Since the 'signal' parameter to no_context() is 0, will there be another
+> signal generated? I don't think so - so the comment looks wrong to me,
+> unless I'm missing something.
 
-> Hi, Jonathan
-Hi zhangfei,
+The old case only handled the kernel case - which never added a signal
+at all, it just failed the access (and results in EFAULT or similar,
+but nobody cares since the whole point is that the process is going to
+be killed).
 
-> 
-> Thanks for your careful review and good suggestion.
-> Sorry for late response, I am checking one detail.
+The *changed* case handles user space accesses too - by just returning
+without any new signal being generated. The old case would fall
+through to the "generate SIGSEGV", which seems pointless and wrong
+(and also possibly generates misleading messages in the kernel logs).
 
-I have reviews on patches from years ago that I still haven't replied to ;)
+> Other than that, what we are skipping here if a KILL signal is pending is
+> the printout of oops information if the fault is a kernel one.
+>
+> Not sure that's a good idea in general: carefully timing a KILL signal
+> would allow the 'stealth probing' of otherwise oops generating addresses?
 
-> 
-> On 2019/8/16 上午12:54, Jonathan Cameron wrote:
-> > On Wed, 14 Aug 2019 17:34:25 +0800
-> > Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> >  
-> >> From: Kenneth Lee <liguozhu@hisilicon.com>
-> >>
-> >> Uacce is the kernel component to support WarpDrive accelerator
-> >> framework. It provides register/unregister interface for device drivers
-> >> to expose their hardware resource to the user space. The resource is
-> >> taken as "queue" in WarpDrive.  
-> > It's a bit confusing to have both the term UACCE and WarpDrive in here.
-> > I'd just use the uacce name in all comments etc.  
-> Yes, make sense
-> >  
-> >> Uacce create a chrdev for every registration, the queue is allocated to
-> >> the process when the chrdev is opened. Then the process can access the
-> >> hardware resource by interact with the queue file. By mmap the queue
-> >> file space to user space, the process can directly put requests to the
-> >> hardware without syscall to the kernel space.
-> >>
-> >> Uacce also manages unify addresses between the hardware and user space
-> >> of the process. So they can share the same virtual address in the
-> >> communication.
-> >>
-> >> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
-> >> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-> >> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> >> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>  
-> > I would strip this back to which ever case is of most interest (SVA I guess?)
-> > and only think about adding support for the others if necessary at a later date.
-> > (or in later patches).  
-> Do you mean split the patch and send sva part first?
+That sounds really like a non-issue to me. Plus the old code ALREADY
+did that exact thing. The only _new_ case is that it does is silently
+for user page faults.
 
-Either:
-1) SVA only in the first series, second series can do other options.
-2) Patch N for SVA only, N+1... for other features.
+> I.e. I'm not sure this hunk is necessary or even a good idea.
 
-I don't mind which, but I want to be able to see just one case and
-review that before taking into account the affect of the more complex cases.
+As mentioned, the new code doesn't change the case you are talking about at all.
 
+The new code only changes the case of this happening from user space,
+when it doesn't generate a pointless signal and a pointless possible
+show_signal_msg() garbage for a user mode access that was denied due
+to the new
 
-> >> +
-> >> +static int uacce_qfr_alloc_pages(struct uacce_qfile_region *qfr)
-> >> +{
-> >> +	int gfp_mask = GFP_ATOMIC | __GFP_ZERO;  
-> > More readable to just have this inline.  
-> Yes, all right.
-> >  
-> >> +	int i, j;
-> >> +
-...
+> > +     if (flags & FAULT_FLAG_KILLABLE) {
+> > +             if (fatal_signal_pending(current))
+> > +                     return VM_FAULT_SIGSEGV;
+> > +     }
 
-> >> +static int uacce_set_iommu_domain(struct uacce *uacce)
-> >> +{
-> >> +	struct iommu_domain *domain;
-> >> +	struct iommu_group *group;
-> >> +	struct device *dev = uacce->pdev;
-> >> +	bool resv_msi;
-> >> +	phys_addr_t resv_msi_base = 0;
-> >> +	int ret;
-> >> +
-> >> +	if ((uacce->flags & UACCE_DEV_NOIOMMU) ||
-> >> +	    (uacce->flags & UACCE_DEV_PASID))
-> >> +		return 0;
-> >> +
-> >> +	/*
-> >> +	 * We don't support multiple register for the same dev in RFC version ,
-> >> +	 * will add it in formal version  
-> > So this effectively multiple complete uacce interfaces for one device.
-> > Is there a known usecase for that?  
-> Here is preventing one device with multiple algorithm and register 
-> multi-times,
-> and without sva, they can not be distinguished.
+code in handle_mm_fault().
 
-Isn't that a bug in the device driver?
+And you said that new code looks fine to you, but you didn't seem to
+realize that it causes stupid incorrect kernel messages to be printed
+("segfault at xyz" etc) that are completely wrong.
 
-> >> +	 */
-> >> +	ret = class_for_each_device(uacce_class, NULL, uacce->pdev,
-> >> +				    uacce_dev_match);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	/* allocate and attach a unmanged domain */
+Because it's not a "real" SIGSEGV. It gets repressed by the fact that
+there's a fatal signal pending.
 
-...
+Otherwise we'd have to add a whole new case of VM_FAULT_xyz..
 
-
+             Linus
