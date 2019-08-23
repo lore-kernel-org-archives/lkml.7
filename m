@@ -2,227 +2,117 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E16C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9328C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0550C233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC7E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566581676;
-	bh=MnDHgmtHVoUC5O71SAn2lWqY/5HpVQR/a6wzW32r/Fg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=TR9M8LhO0FEPUfJCeKGe2/tpYzyIuZujXhf0v9poQte4l+nI7kOxb/sQnMEqQji4x
-	 +qwtKVrYxbWlmN42PAGsPfO/jlDna/yVsT2JcGMOUfJWKL25X3yr8BmqeLSmtLReIh
-	 XJ/7XteRgSiONC/NEItTO14z5YrHNOv8i1L8cDlc=
+	s=default; t=1566581790;
+	bh=I+q0DDKZZ2CbEjDpmYe9VqaMEDkMv33qzg1hGIO7uoQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JMhF2tQosOwZjsQ8QLpg1OynNmHGv7bESIJVHQ5kM2Dl1F2H27oudHc4e3qZZoBDX
+	 ahTa5JElomKNovnj2hJ3xmRkUuRs/5q/U0eNraKYbVgDnUR7PXC8y+Mu9JPUXprUH/
+	 R7DI/45wQ93YPNQKdKC8z8/x0FAqAVYiWhZr+Ayo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404075AbfHWRef (ORCPT
+        id S2404105AbfHWRg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39100 "EHLO mail.kernel.org"
+        Fri, 23 Aug 2019 13:36:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403948AbfHWRee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:34:34 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2390003AbfHWRg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:36:29 -0400
+Received: from localhost (unknown [104.129.198.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36324206DD;
-        Fri, 23 Aug 2019 17:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14E82133F;
+        Fri, 23 Aug 2019 17:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566581673;
-        bh=MnDHgmtHVoUC5O71SAn2lWqY/5HpVQR/a6wzW32r/Fg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DDGJEOge//QDHu5P/vX2Lr/yo3am86JXIqoxGkq+riYVFfL/XboZECe6klOycuvjb
-         0tvO9qW2HYpJH2K0hh1IidNs4DOI3GsR/6TrYboK8nXgYEBgvB+Swim4YYBu7T63cY
-         lmqN2dgfMn6DPtS4BUA+cmQbdZtcfgd6quNsnZlI=
-Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        shuah <shuah@kernel.org>
-References: <20190820232046.50175-1-brendanhiggins@google.com>
- <20190820232046.50175-2-brendanhiggins@google.com>
- <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
- <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
- <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
- <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <42c6235c-c586-8de1-1913-7cf1962c6066@kernel.org>
-Date:   Fri, 23 Aug 2019 11:34:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        s=default; t=1566581788;
+        bh=I+q0DDKZZ2CbEjDpmYe9VqaMEDkMv33qzg1hGIO7uoQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fhOXlTCjlQ7esRMzA0VNFm6JOFIuomOFvQQqBrg2XAWSN1GHC1WXj4IgMXYFqMswp
+         WqjM3iTXmeGgvwrF5pNlZqFA319qckAkAvF5QkpVJauQ/HtKXbR5/FbBkYJZ6zI/Qk
+         ZfkOE0wX5O5ry4x62TQsqt4cZBZu8PnXtDfTOQkk=
+Date:   Fri, 23 Aug 2019 10:36:27 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Stefan Lippers-Hollmann <s.l-h@gmx.de>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
+Message-ID: <20190823173627.GA1040@kroah.com>
+References: <20190822170811.13303-1-sashal@kernel.org>
+ <20190822172619.GA22458@kroah.com>
+ <20190823000527.0ea91c6b@mir>
+ <20190822233847.GB24034@kroah.com>
+ <20190823024248.11e2dac3@mir>
+ <20190823062853.GC1581@sasha-vm>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823062853.GC1581@sasha-vm>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/19 11:27 AM, Brendan Higgins wrote:
-> On Fri, Aug 23, 2019 at 10:05 AM shuah <shuah@kernel.org> wrote:
->>
->> On 8/23/19 10:48 AM, Brendan Higgins wrote:
->>> On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
->>>>
->>>> Hi Brendan,
->>>>
->>>> On 8/20/19 5:20 PM, Brendan Higgins wrote:
->>>>> Add core facilities for defining unit tests; this provides a common way
->>>>> to define test cases, functions that execute code which is under test
->>>>> and determine whether the code under test behaves as expected; this also
->>>>> provides a way to group together related test cases in test suites (here
->>>>> we call them test_modules).
->>>>>
->>>>> Just define test cases and how to execute them for now; setting
->>>>> expectations on code will be defined later.
->>>>>
->>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->>>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
->>>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->>>>> ---
->>>>>     include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
->>>>>     kunit/Kconfig        |  17 ++++
->>>>>     kunit/Makefile       |   1 +
->>>>>     kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
->>>>>     4 files changed, 388 insertions(+)
->>>>>     create mode 100644 include/kunit/test.h
->>>>>     create mode 100644 kunit/Kconfig
->>>>>     create mode 100644 kunit/Makefile
->>>>>     create mode 100644 kunit/test.c
->>>>>
->>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
->>>>> new file mode 100644
->>>>> index 0000000000000..e0b34acb9ee4e
->>>>> --- /dev/null
->>>>> +++ b/include/kunit/test.h
->>>>> @@ -0,0 +1,179 @@
->>>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>>> +/*
->>>>> + * Base unit test (KUnit) API.
->>>>> + *
->>>>> + * Copyright (C) 2019, Google LLC.
->>>>> + * Author: Brendan Higgins <brendanhiggins@google.com>
->>>>> + */
->>>>> +
->>>>> +#ifndef _KUNIT_TEST_H
->>>>> +#define _KUNIT_TEST_H
->>>>> +
->>>>> +#include <linux/types.h>
->>>>> +
->>>>> +struct kunit;
->>>>> +
->>>>> +/**
->>>>> + * struct kunit_case - represents an individual test case.
->>>>> + * @run_case: the function representing the actual test case.
->>>>> + * @name: the name of the test case.
->>>>> + *
->>>>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
->>>>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
->>>>> + * test case is associated with a &struct kunit_suite and will be run after the
->>>>> + * suite's init function and followed by the suite's exit function.
->>>>> + *
->>>>> + * A test case should be static and should only be created with the KUNIT_CASE()
->>>>> + * macro; additionally, every array of test cases should be terminated with an
->>>>> + * empty test case.
->>>>> + *
->>>>> + * Example:
->>>>
->>>> Can you fix these line continuations. It makes it very hard to read.
->>>> Sorry for this late comment. These comments lines are longer than 80
->>>> and wrap.
->>>
->>> None of the lines in this commit are over 80 characters in column
->>> width. Some are exactly 80 characters (like above).
->>>
->>> My guess is that you are seeing the diff added text (+ ), which when
->>> you add that to a line which is exactly 80 char in length ends up
->>> being over 80 char in email. If you apply the patch you will see that
->>> they are only 80 chars.
->>>
->>>>
->>>> There are several comment lines in the file that are way too long.
->>>
->>> Note that checkpatch also does not complain about any over 80 char
->>> lines in this file.
->>>
->>> Sorry if I am misunderstanding what you are trying to tell me. Please
->>> confirm either way.
->>>
->>
->> WARNING: Avoid unnecessary line continuations
->> #258: FILE: include/kunit/test.h:137:
->> +                */                                                            \
->>
->> total: 0 errors, 2 warnings, 388 lines checked
+On Fri, Aug 23, 2019 at 02:28:53AM -0400, Sasha Levin wrote:
+> On Fri, Aug 23, 2019 at 02:42:48AM +0200, Stefan Lippers-Hollmann wrote:
+> > Hi
+> > 
+> > On 2019-08-22, Greg KH wrote:
+> > > On Fri, Aug 23, 2019 at 12:05:27AM +0200, Stefan Lippers-Hollmann wrote:
+> > > > On 2019-08-22, Greg KH wrote:
+> > > > > On Thu, Aug 22, 2019 at 01:05:56PM -0400, Sasha Levin wrote:
+> > [...]
+> > > > It might be down to kernel.org mirroring, but the patch file doesn't
+> > > > seem to be available yet (404), both in the wrong location listed
+> > > > above - and the expected one under
+> > > >
+> > > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
+> > [...]
+> > > Ah, no, it's not a mirroring problem, Sasha and I didn't know if anyone
+> > > was actually using the patch files anymore, so it was simpler to do a
+> > > release without them to see what happens. :)
+> > > 
+> > > Do you rely on these, or can you use the -rc git tree or the quilt
+> > > series?  If you do rely on them, we will work to fix this, it just
+> > > involves some scripting that we didn't get done this morning.
+> > 
+> > "Rely" is a strong word, I can adapt if they're going away, but
+> > I've been using them so far, as in (slightly simplified):
+> > 
+> > $ cd patches/upstream/
+> > $ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-5.2.9.xz
+> > $ xz -d patch-5.2.9.xz
+> > $ wget https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
+> > $ gunzip patch-5.2.10-rc1.gz
+> > $ vim ../series
+> > $ quilt ...
+> > 
+> > I can switch to importing the quilt queue with some sed magic (and I
+> > already do that, if interesting or just a larger amounts of patches are
+> > queuing up for more than a day or two), but using the -rc patches has
+> > been convenient in that semi-manual workflow, also to make sure to really
+> > get and test the formal -rc patch, rather than something inbetween.
 > 
-> Ah, okay so you don't like the warning about the line continuation.
-> That's not because it is over 80 char, but because there is a line
-> continuation after a comment. I don't really see a way to get rid of
-> it without removing the comment from inside the macro.
+> An easy way to generate a patch is to just use the git.kernel.org web
+> interface. A patch for 5.2.10-rc1 would be:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.2.y&id2=v5.2.9
 > 
-> I put this TODO there in the first place a Luis' request, and I put it
-> in the body of the macro because this macro already had a kernel-doc
-> comment and I didn't think that an implementation detail TODO belonged
-> in the user documentation.
-> 
->> Go ahead fix these. It appears there are few lines that either longer
->> than 80. In general, I keep them around 75, so it is easier read.
-> 
-> Sorry, the above is the only checkpatch warning other than the
-> reminder to update the MAINTAINERS file.
-> 
-> Are you saying you want me to go through and make all the lines fit in
-> 75 char column width? I hope not because that is going to be a pretty
-> substantial change to make.
-> 
+> Personally this patch upload story sounded to me like a pre-git era
+> artifact...
 
-There are two things with these comment lines. One is checkpatch
-complaining and the other is general readability.
-
-Please go ahead and adjust them.
+Given that we no longer do patches for Linus's -rc releases for the past
+few years, maybe it is time to move to do the same for the stable
+releases to be consistent.
 
 thanks,
--- Shuah
+
+greg k-h
