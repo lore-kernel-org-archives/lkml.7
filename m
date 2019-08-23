@@ -2,105 +2,144 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDADC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8652CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0CE21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5D521874
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566588565;
+	bh=uIK4gKr6LBqWcnb2353Sxa3YV4CobVhslIIjwr3IInY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ObGkbcNh72Jam9Ik7yDa2O9JhxdDWY7O3p+moAjAAylaDNqGwmypqwITNYibevnmZ
+	 wmKT3Hq+lbUMcZM15xokcIrM4EWJ1t4iIwPGzdXOVeQIagNJK53ICLk55mNv/Tiolb
+	 aw8EqSOE+z2zIx+pYyEwnGuIIfROaLFL8Kt3WOCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391598AbfHWT2w (ORCPT
+        id S2391646AbfHWT3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:28:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40720 "EHLO mx1.redhat.com"
+        Fri, 23 Aug 2019 15:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbfHWT2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:28:51 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2391604AbfHWT3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 15:29:23 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 225788AB25C;
-        Fri, 23 Aug 2019 19:28:51 +0000 (UTC)
-Received: from ovpn-117-150.phx2.redhat.com (ovpn-117-150.phx2.redhat.com [10.3.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82BF8600C1;
-        Fri, 23 Aug 2019 19:28:47 +0000 (UTC)
-Message-ID: <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
-Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
- indicate involuntary sleep
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Date:   Fri, 23 Aug 2019 14:28:46 -0500
-In-Reply-To: <20190823162024.47t7br6ecfclzgkw@linutronix.de>
-References: <20190821231906.4224-1-swood@redhat.com>
-         <20190821231906.4224-3-swood@redhat.com>
-         <20190823162024.47t7br6ecfclzgkw@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mail.kernel.org (Postfix) with ESMTPSA id C880F21874;
+        Fri, 23 Aug 2019 19:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566588562;
+        bh=uIK4gKr6LBqWcnb2353Sxa3YV4CobVhslIIjwr3IInY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X599OQxOO+nrYPeYotid93GGbP3k2bq7c7WrUd2ZmIe5Vg4vdw7aZUxBr+vMLehmw
+         JJk9MQUwo2BckT04EGL40gX/Pfd67dhXfy46H34ENlXtsZls4eu3nVnLu1N8mBYQWC
+         NOMfO7t3dKM+CHmhGzxF40Nx2QbGnoQU0BdHYZuE=
+Date:   Fri, 23 Aug 2019 14:29:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH 1/3] PCI: Add PCI_ERROR_RESPONSE definition
+Message-ID: <20190823192920.GA127465@google.com>
+References: <20190822200551.129039-1-helgaas@kernel.org>
+ <20190822200551.129039-2-helgaas@kernel.org>
+ <20190823104415.GC14582@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 23 Aug 2019 19:28:51 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823104415.GC14582@e119886-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-23 at 18:20 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-08-21 18:19:05 [-0500], Scott Wood wrote:
-> > Without this, rcu_note_context_switch() will complain if an RCU read
-> > lock is held when migrate_enable() calls stop_one_cpu().
+On Fri, Aug 23, 2019 at 11:44:15AM +0100, Andrew Murray wrote:
+> On Thu, Aug 22, 2019 at 03:05:49PM -0500, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > Signed-off-by: Scott Wood <swood@redhat.com>
-> > ---
-> > v2: Added comment.
+> > An MMIO read from a PCI device that doesn't exist or doesn't respond causes
+> > a PCI error.  There's no real data to return to satisfy the CPU read, so
+> > most hardware fabricates ~0 data.
 > > 
-> > If my migrate disable changes aren't taken, then pin_current_cpu()
-> > will also need to use sleeping_lock_inc() because calling
-> > __read_rt_lock() bypasses the usual place it's done.
+> > Add a PCI_ERROR_RESPONSE definition for that and use it where appropriate
+> > to make these checks consistent and easier to find.
 > > 
-> >  include/linux/sched.h    | 4 ++--
-> >  kernel/rcu/tree_plugin.h | 2 +-
-> >  kernel/sched/core.c      | 8 ++++++++
-> >  3 files changed, 11 insertions(+), 3 deletions(-)
-> > 
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -7405,7 +7405,15 @@ void migrate_enable(void)
-> >  			unpin_current_cpu();
-> >  			preempt_lazy_enable();
-> >  			preempt_enable();
-> > +
-> > +			/*
-> > +			 * sleeping_lock_inc suppresses a debug check for
-> > +			 * sleeping inside an RCU read side critical section
-> > +			 */
-> > +			sleeping_lock_inc();
-> >  			stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
-> > +			sleeping_lock_dec();
+> > Note that successful reads *also* may return ~0 data, so additional
+> > information (e.g., knowledge that ~0 is not a valid register value) is
+> > needed to reliably identify errors.
+
+> > -	 * generally synthesize ~0 data to complete the read (except when
+> > -	 * CRS SV is enabled and the read was for the Vendor ID; in that
+> > -	 * case it synthesizes 0x0001 data).
+> > +	 * generally synthesize ~0 data (PCI_ERROR_RESPONSE) to complete
+> > +	 * the read (except when CRS SV is enabled and the read was for the
+> > +	 * Vendor ID; in that case it synthesizes 0x0001 data).
 > 
-> this looks like an ugly hack. This sleeping_lock_inc() is used where we
-> actually hold a sleeping lock and schedule() which is okay. But this
-> would mean we hold a RCU lock and schedule() anyway. Is that okay?
+> There are some other areas in drivers/pci where comments also refer to ~0
+> and similar:
+> 
+> $ git grep -i ffffffff drivers/pci/ | grep \*
+> drivers/pci/access.c:            * have been written as 0xFFFFFFFF if hardware error happens
+> drivers/pci/controller/dwc/pci-keystone.c: * bus error instead of returning 0xffffffff. This handler always returns 0
+> drivers/pci/controller/pci-xgene.c:      * ready") instead of 0xFFFFFFFF ("device does not exist").  This
+> drivers/pci/controller/pcie-iproc.c:     * eventually return the wrong data (0xffffffff).
+> drivers/pci/pci.c: * FFFFFFFFs on the command line.)
+> 
+> I've removed anything in the above list that doesn't look like a good candidate
+> for PCI_ERROR_RESPONSE.
+> 
+> Perhaps there is some value for replacing "~0" with "~0 (PCI_ERROR_RESPONSE)"
+> in the comments too?
 
-Perhaps the name should be changed, but the concept is the same -- RT-
-specific sleeping which should be considered involuntary for the purpose of
-debug checks.  Voluntary sleeping is not allowed in an RCU critical section
-because it will break the critical section on certain flavors of RCU, but
-that doesn't apply to the flavor used on RT.  Sleeping for a long time in an
-RCU critical section would also be a bad thing, but that also doesn't apply
-here.
+Good idea, I'll take a look at those.
 
--Scott
+> >  		pdev->cfg_size = PCI_CFG_SPACE_EXP_SIZE;
+> >  		if (pci_read_config_dword(pdev, PCI_CFG_SPACE_SIZE, &status) !=
+> > -		    PCIBIOS_SUCCESSFUL || (status == 0xffffffff))
+> > +		    PCIBIOS_SUCCESSFUL || (status == (u32) PCI_ERROR_RESPONSE))
+> 
+> The casts are necessary but slightly annoying. Have you considered something
+> like:
+> 
+> #define SET_PCI_ERROR_RESPONSE(val)	(val = ((typeof(val))(~0ULL)))
+> #define RESPONSE_IS_PCI_ERROR(val)	(val == ((typeof(val))(~0ULL)))
 
+I hadn't thought of that, but I really like the idea.  Thanks, I think
+I'll try that out!
 
+> >  			pdev->cfg_size = PCI_CFG_SPACE_SIZE;
+> >  
+> >  		if (pci_find_saved_cap(pdev, PCI_CAP_ID_EXP))
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 9e700d9f9f28..d64fd3788061 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -123,6 +123,13 @@ enum pci_interrupt_pin {
+> >  /* The number of legacy PCI INTx interrupts */
+> >  #define PCI_NUM_INTX	4
+> >  
+> > +/*
+> > + * Reading from a device that doesn't respond typically returns ~0.  A
+> > + * successful read from a device may also return ~0, so you need additional
+> > + * information to reliably identify errors.
+> > + */
+> > +#define PCI_ERROR_RESPONSE		(~0ULL)
+> > +
+> >  /*
+> >   * pci_power_t values must match the bits in the Capabilities PME_Support
+> >   * and Control/Status PowerState fields in the Power Management capability.
+> > -- 
+> > 2.23.0.187.g17f5b7556c-goog
+> > 
