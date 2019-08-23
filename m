@@ -2,113 +2,188 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3755C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A802BC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9165B2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701C42339D
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ipr3DGEF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYmytlO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395446AbfHWOxN (ORCPT
+        id S2395456AbfHWOxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:53:13 -0400
-Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:59878
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388352AbfHWOxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:53:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n6gl4Rvu0sJ9YWTgu3Fcp7jMLsHeoisiFUckSluQ7vdc5sYkeLnowqn9xdGDgs6V8QJC1FY5SVLH367fZMXDmdpzGVLyokn9/J+S57LjBCPz34cXN3DN9Z7F2o+V3n99QQR1Ec7cehCvVw9Td1Yta65gxG6EpOM45jm2W1cHtQT3i00UQWNAsa51XJssjWuy/mXYH9wWqntxGdS8PxZjrHdj8Ztd+Z705VKdM7998xBpM07elUHoUzdzHvdSYmKIGUv2+vPrW4/GFXgodqV9XHMKJPXeEGcrYv8w5w+120Ya5lB7b+ZkXeCHfEWyMWD4/J32xthcxh/FSwjpiIWCzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LR5oPBZ0AnRu2lpuX9hdO6CmfCI5fpnSgIagu0L8s1s=;
- b=nBeKJ2a5xzwr7WU+vhByRc8P1NPHFwo0u1bH+OYxyXrZzYcZIhqPEJjzbeALeJUnD5Lpq43LP1to/+UWXbn1xqqi2tVY2lBkOzmyMTkO1Bj+M34nHyOj6Tawbuu/cDYzbdBYUD3tXBu+E6pYGRc5zqAc7w4dkRImTDbHlM18+DWIyoApk0qUJVGwkF5IADlomwP7HDkhf/Fvp6lYkfd9HDyAiGd3UPDRTgXw+qTmefFm+ccYRjJMBZy6ebaqNFR10BGc/qqeg0c8Ha70TxCuec6sA1+qV4V6GtCIAZgbLC+6BsGJEbrusWbdLnIPzi4i7YsgAx7k0Lsp2n3Y/8OUeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LR5oPBZ0AnRu2lpuX9hdO6CmfCI5fpnSgIagu0L8s1s=;
- b=ipr3DGEFdPwaolo3BezY2CgFyO5mZ9sN0bqiBwF1kAmNUiPs49Y8UND6fjGx2gSmmx+HKLBDYsaaeF4QWmTizLvis3lSoMqwIolF8wryp2ea4h7v+V9wXWSF0/WWvqzZvz6RUEt8y6fddY9GoZkq3mkICHiPp3+/pG6MB7nZFp4=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6561.eurprd05.prod.outlook.com (20.179.36.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Fri, 23 Aug 2019 14:53:06 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
- 14:53:06 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Jiri Pirko <jiri@resnulli.us>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAWJU4CAAcVCEIAABCsAgAAWVtCAABCDgIAAzoewgAAqE4CAAECFQIAAFWyAgAAGbNCAABfqAIAAErcwgAjpulCAAJkHAIAAnVNggAAbk4CAAAOYgIAABpwAgAAAVrCAAAfEAIAADNCggAHJU4CAAAIMEIAABiaAgAAA2ACAACadAIAAFGdwgAE42YCAAABasIAAaLIAgAAC1QA=
-Date:   Fri, 23 Aug 2019 14:53:06 +0000
-Message-ID: <AM0PR05MB4866867150DAABA422F25FF8D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190820225722.237a57d2@x1.home>
-        <AM0PR05MB4866AE8FC4AA3CC24B08B326D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190820232622.164962d3@x1.home>
-        <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822092903.GA2276@nanopsycho.orion>
-        <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822095823.GB2276@nanopsycho.orion>
-        <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822121936.GC2276@nanopsycho.orion>
-        <AM0PR05MB4866F9650CF73FC671972127D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823081221.GG2276@nanopsycho.orion>
-        <AM0PR05MB4866DED407D6F1C653D5D560D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190823082820.605deb07@x1.home>
-In-Reply-To: <20190823082820.605deb07@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c89c3969-7092-4515-588e-08d727d99ba3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6561;
-x-ms-traffictypediagnostic: AM0PR05MB6561:
-x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB65617DF15E64E60E625D9CF3D1A40@AM0PR05MB6561.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(13464003)(199004)(189003)(476003)(52536014)(102836004)(55236004)(6246003)(66066001)(25786009)(3846002)(316002)(71200400001)(71190400001)(4326008)(53546011)(6506007)(6916009)(6436002)(478600001)(99286004)(8676002)(76176011)(81166006)(81156014)(55016002)(6116002)(74316002)(7696005)(229853002)(9686003)(86362001)(8936002)(14454004)(5660300002)(486006)(186003)(30864003)(305945005)(561944003)(9456002)(33656002)(54906003)(2906002)(64756008)(66446008)(446003)(11346002)(66556008)(66476007)(76116006)(7736002)(53936002)(66946007)(26005)(14444005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6561;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uI+7vo3NYo7KoccN3rphehY8+BsriFigJZSXwapHx0I2/267J4a6KRBOW0cVGmwFxDM0MtPIM+hvh5C4uQZ7x8BI1URkHgBm5sA20ZhwLJSiHfYZlGETMwJaCV9k0Sh1zYZfRQEJuEQ/sKZWHZE+ZjEmbgwbwu6x5SpMhREuSZytdk6rTnW67vQcBkTbiLt3IItCToAyWoIY5wNJ6iWqPxyuyCvQiZqi/Hxx2i172Ye+SdQ1Od6MKNYPzD5qfR9/VuxMOI+bjEpL1MW3R8jSifKQIKsXUVzI0SOp/yaCpFUwsA/2qbl3fZS1HHiLck/N+0mlfhs2xf7OZPBNg+PZ335LCoPe2fx+JEsy9ec1YFNogSQmjG/e5NA5g8UJ/8gl67E5WwGGSGcQGRkcu9jOqakupJD95VBAAd5HCr/MbGI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 23 Aug 2019 10:53:51 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42653 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731256AbfHWOxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:53:51 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m44so13846241edd.9;
+        Fri, 23 Aug 2019 07:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zgl387QkD2iiqhSO+GDAgWSNL5E+i+hM/fHygMH0Lh0=;
+        b=VYmytlO1v4Svp/a/Jz+6DoaHSFi87t5Bf72MJplc3IH6y/CMnQvWGbIQy1Ge+llXt+
+         z/kRwUoWrKnqhF6GXG0NnNLx5YrZLXJxCJ2I1GUD9JJaDxlERoFKJ1oEHbFBDKQlOSDs
+         amFvqJsFQeqZdG++Z6TdfGGT9G3D/gxgUZ6by+x4d8OzeKnaeK7hUzm62yj1C3X7SkzT
+         MnowufOZs+d4bRtdbKk93L4dj+FerwtE6s5fD2pe8pQX010Rh+XO23ekMT10HazEI7L/
+         RgMhrLzJlpEXJXo/0Bvs732rruaE6pYWDyUcTxw2G5KmJcivJfVcmdcHVGnN25uo+Uzc
+         1LbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zgl387QkD2iiqhSO+GDAgWSNL5E+i+hM/fHygMH0Lh0=;
+        b=caxj964EpDj2KA6g2h/Rrj4dbVTlGtBDLeZHMtx9ivsXSAvoWXssuQaa4dvjEI10gi
+         mKRxCk4hVvbzE1AWfXydtO9vdswdi02/pm5tsT6+QwUux7Ccl7zFNeusT48Q0ZU8AiX3
+         SkBR5ueS7Hk0XltDz0yTsv/CQUnpClrdrkts6lO4yi2FnVA4U+I4Dug6tX3rUJ5lD4e/
+         Np4GQaV1HssXo5xXSm6mWOR8wV2xHLzBSxY3vW5bvgJ19c0cEgzKmTBjOjkOXyLEkul3
+         Y7PGrD5HQFL/cu5/p/yu9IzT5GVTD6fHKien4Gb92LQErZqta2mHJ2VTFHTt2OIFDRRU
+         mmqQ==
+X-Gm-Message-State: APjAAAXIXCt1t7BMPk8J5d+kAZLwiFS8X55oWYGN3ptXvvcqdU31iRjG
+        OwV5EZp3i8Do4fzd8EYV+aI=
+X-Google-Smtp-Source: APXvYqxVy6AX4x2czv/ljIOE9Qcym6jmbl1ZVItw545AFJybfTz/tHgfW14Eu8jBOn3YICtxKuvzMg==
+X-Received: by 2002:a50:9738:: with SMTP id c53mr4978319edb.221.1566572028048;
+        Fri, 23 Aug 2019 07:53:48 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.137.147])
+        by smtp.gmail.com with ESMTPSA id a3sm441172eje.90.2019.08.23.07.53.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Aug 2019 07:53:47 -0700 (PDT)
+Subject: Re: [PATCH v5 02/10] mfd: mt6397: extract irq related code from core
+ driver
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <d32fed91-5d7a-a6fb-535b-fca9e311df42@gmail.com>
+Date:   Fri, 23 Aug 2019 16:53:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c89c3969-7092-4515-588e-08d727d99ba3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 14:53:06.7595
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bj0+0U+mLGY+IgtDJmf/asbzL3WHfGoR2wB/EqBwucBQeLi4YKfdgk2arUlAuwLOmTEUscXv7L/ncmQsFoNwCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6561
+In-Reply-To: <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -116,299 +191,423 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, August 23, 2019 7:58 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>; David =
-S . Miller
-> <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>; Cornelia
-> Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; cjia <cjia@nvidia.com>; netdev@vger.kernel.org
-> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
->=20
-> On Fri, 23 Aug 2019 08:14:39 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > Hi Alex,
-> >
-> >
-> > > -----Original Message-----
-> > > From: Jiri Pirko <jiri@resnulli.us>
-> > > Sent: Friday, August 23, 2019 1:42 PM
-> > > To: Parav Pandit <parav@mellanox.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
-> > > <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>; Kirti
-> > > Wankhede <kwankhede@nvidia.com>; Cornelia Huck
-> <cohuck@redhat.com>;
-> > > kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > >
-> > > Thu, Aug 22, 2019 at 03:33:30PM CEST, parav@mellanox.com wrote:
-> > > >
-> > > >
-> > > >> -----Original Message-----
-> > > >> From: Jiri Pirko <jiri@resnulli.us>
-> > > >> Sent: Thursday, August 22, 2019 5:50 PM
-> > > >> To: Parav Pandit <parav@mellanox.com>
-> > > >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
-> > > >> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
-> > > >> Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck
-> > > <cohuck@redhat.com>;
-> > > >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > > >>
-> > > >> Thu, Aug 22, 2019 at 12:04:02PM CEST, parav@mellanox.com wrote:
-> > > >> >
-> > > >> >
-> > > >> >> -----Original Message-----
-> > > >> >> From: Jiri Pirko <jiri@resnulli.us>
-> > > >> >> Sent: Thursday, August 22, 2019 3:28 PM
-> > > >> >> To: Parav Pandit <parav@mellanox.com>
-> > > >> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
-> > > >> >> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
-> > > >> >> Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck
-> > > >> <cohuck@redhat.com>;
-> > > >> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > > >> >>
-> > > >> >> Thu, Aug 22, 2019 at 11:42:13AM CEST, parav@mellanox.com wrote:
-> > > >> >> >
-> > > >> >> >
-> > > >> >> >> -----Original Message-----
-> > > >> >> >> From: Jiri Pirko <jiri@resnulli.us>
-> > > >> >> >> Sent: Thursday, August 22, 2019 2:59 PM
-> > > >> >> >> To: Parav Pandit <parav@mellanox.com>
-> > > >> >> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri
-> > > >> >> >> Pirko <jiri@mellanox.com>; David S . Miller
-> > > >> >> >> <davem@davemloft.net>; Kirti Wankhede
-> > > >> >> >> <kwankhede@nvidia.com>; Cornelia Huck
-> > > >> >> <cohuck@redhat.com>;
-> > > >> >> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > >> >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > >> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev
-> > > >> >> >> core
-> > > >> >> >>
-> > > >> >> >> Wed, Aug 21, 2019 at 08:23:17AM CEST, parav@mellanox.com
-> wrote:
-> > > >> >> >> >
-> > > >> >> >> >
-> > > >> >> >> >> -----Original Message-----
-> > > >> >> >> >> From: Alex Williamson <alex.williamson@redhat.com>
-> > > >> >> >> >> Sent: Wednesday, August 21, 2019 10:56 AM
-> > > >> >> >> >> To: Parav Pandit <parav@mellanox.com>
-> > > >> >> >> >> Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller
-> > > >> >> >> >> <davem@davemloft.net>; Kirti Wankhede
-> > > >> >> >> >> <kwankhede@nvidia.com>; Cornelia Huck
-> > > >> >> >> >> <cohuck@redhat.com>; kvm@vger.kernel.org;
-> > > >> >> >> >> linux-kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
-> > > >> >> >> >> netdev@vger.kernel.org
-> > > >> >> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and
-> > > >> >> >> >> mdev core
-> > > >> >> >> >>
-> > > >> >> >> >> > > > > Just an example of the alias, not proposing how i=
-t's set.
-> > > >> >> >> >> > > > > In fact, proposing that the user does not set
-> > > >> >> >> >> > > > > it, mdev-core provides one
-> > > >> >> >> >> > > automatically.
-> > > >> >> >> >> > > > >
-> > > >> >> >> >> > > > > > > Since there seems to be some prefix
-> > > >> >> >> >> > > > > > > overhead, as I ask about above in how many
-> > > >> >> >> >> > > > > > > characters we actually have to work with in
-> > > >> >> >> >> > > > > > > IFNAMESZ, maybe we start with
-> > > >> >> >> >> > > > > > > 8 characters (matching your "index"
-> > > >> >> >> >> > > > > > > namespace) and expand as necessary for
-> > > >> >> >> disambiguation.
-> > > >> >> >> >> > > > > > > If we can eliminate overhead in IFNAMESZ,
-> > > >> >> >> >> > > > > > > let's start with
-> > > >> 12.
-> > > >> >> >> >> > > > > > > Thanks,
-> > > >> >> >> >> > > > > > >
-> > > >> >> >> >> > > > > > If user is going to choose the alias, why does
-> > > >> >> >> >> > > > > > it have to be limited to
-> > > >> >> >> >> sha1?
-> > > >> >> >> >> > > > > > Or you just told it as an example?
-> > > >> >> >> >> > > > > >
-> > > >> >> >> >> > > > > > It can be an alpha-numeric string.
-> > > >> >> >> >> > > > >
-> > > >> >> >> >> > > > > No, I'm proposing a different solution where
-> > > >> >> >> >> > > > > mdev-core creates an alias based on an
-> > > >> >> >> >> > > > > abbreviated sha1.  The user does not provide the
-> > > >> >> >> >> alias.
-> > > >> >> >> >> > > > >
-> > > >> >> >> >> > > > > > Instead of mdev imposing number of characters
-> > > >> >> >> >> > > > > > on the alias, it should be best
-> > > >> >> >> >> > > > > left to the user.
-> > > >> >> >> >> > > > > > Because in future if netdev improves on the
-> > > >> >> >> >> > > > > > naming scheme, mdev will be
-> > > >> >> >> >> > > > > limiting it, which is not right.
-> > > >> >> >> >> > > > > > So not restricting alias size seems right to me=
-.
-> > > >> >> >> >> > > > > > User configuring mdev for networking devices
-> > > >> >> >> >> > > > > > in a given kernel knows what
-> > > >> >> >> >> > > > > user is doing.
-> > > >> >> >> >> > > > > > So user can choose alias name size as it finds =
-suitable.
-> > > >> >> >> >> > > > >
-> > > >> >> >> >> > > > > That's not what I'm proposing, please read again.
-> > > >> >> >> >> > > > > Thanks,
-> > > >> >> >> >> > > >
-> > > >> >> >> >> > > > I understood your point. But mdev doesn't know how
-> > > >> >> >> >> > > > user is going to use
-> > > >> >> >> >> > > udev/systemd to name the netdev.
-> > > >> >> >> >> > > > So even if mdev chose to pick 12 characters, it
-> > > >> >> >> >> > > > could result in
-> > > >> >> collision.
-> > > >> >> >> >> > > > Hence the proposal to provide the alias by the
-> > > >> >> >> >> > > > user, as user know the best
-> > > >> >> >> >> > > policy for its use case in the environment its using.
-> > > >> >> >> >> > > > So 12 character sha1 method will still work by user=
-.
-> > > >> >> >> >> > >
-> > > >> >> >> >> > > Haven't you already provided examples where certain
-> > > >> >> >> >> > > drivers or subsystems have unique netdev prefixes?
-> > > >> >> >> >> > > If mdev provides a unique alias within the
-> > > >> >> >> >> > > subsystem, couldn't we simply define a netdev prefix
-> > > >> >> >> >> > > for the mdev subsystem and avoid all other
-> > > >> >> >> >> > > collisions?  I'm not in favor of the user providing
-> > > >> >> >> >> > > both a uuid and an alias/instance.  Thanks,
-> > > >> >> >> >> > >
-> > > >> >> >> >> > For a given prefix, say ens2f0, can two UUID->sha1
-> > > >> >> >> >> > first 9 characters have
-> > > >> >> >> >> collision?
-> > > >> >> >> >>
-> > > >> >> >> >> I think it would be a mistake to waste so many chars on
-> > > >> >> >> >> a prefix, but
-> > > >> >> >> >> 9 characters of sha1 likely wouldn't have a collision
-> > > >> >> >> >> before we have 10s of thousands of devices.  Thanks,
-> > > >> >> >> >>
-> > > >> >> >> >> Alex
-> > > >> >> >> >
-> > > >> >> >> >Jiri, Dave,
-> > > >> >> >> >Are you ok with it for devlink/netdev part?
-> > > >> >> >> >Mdev core will create an alias from a UUID.
-> > > >> >> >> >
-> > > >> >> >> >This will be supplied during devlink port attr set such
-> > > >> >> >> >as,
-> > > >> >> >> >
-> > > >> >> >> >devlink_port_attrs_mdev_set(struct devlink_port *port,
-> > > >> >> >> >const char *mdev_alias);
-> > > >> >> >> >
-> > > >> >> >> >This alias is used to generate representor netdev's
-> phys_port_name.
-> > > >> >> >> >This alias from the mdev device's sysfs will be used by
-> > > >> >> >> >the udev/systemd to
-> > > >> >> >> generate predicable netdev's name.
-> > > >> >> >> >Example: enm<mdev_alias_first_12_chars>
-> > > >> >> >>
-> > > >> >> >> What happens in unlikely case of 2 UUIDs collide?
-> > > >> >> >>
-> > > >> >> >Since users sees two devices with same phys_port_name, user
-> > > >> >> >should destroy
-> > > >> >> recently created mdev and recreate mdev with different UUID?
-> > > >> >>
-> > > >> >> Driver should make sure phys port name wont collide,
-> > > >> >So when mdev creation is initiated, mdev core calculates the
-> > > >> >alias and if there
-> > > >> is any other mdev with same alias exist, it returns -EEXIST error
-> > > >> before progressing further.
-> > > >> >This way user will get to know upfront in event of collision
-> > > >> >before the mdev
-> > > >> device gets created.
-> > > >> >How about that?
-> > > >>
-> > > >> Sounds fine to me. Now the question is how many chars do we want t=
-o
-> have.
-> > > >>
-> > > >12 characters from Alex's suggestion similar to git?
-> > >
-> > > Ok.
-> > >
-> >
-> > Can you please confirm this scheme looks good now? I like to get patche=
-s
-> started.
->=20
-> My only concern is your comment that in the event of an abbreviated
-> sha1 collision (as exceptionally rare as that might be at 12-chars), we'd=
- fail the
-> device create, while my original suggestion was that vfio-core would add =
-an
-> extra character to the alias.  For non-networking devices, the sha1 is
-> unnecessary, so the extension behavior seems preferred.  The user is only
-> responsible to provide a unique uuid.  Perhaps the failure behavior could=
- be
-> applied based on the mdev device_api.  A module option on mdev to specify=
- the
-> default number of alias chars would also be useful for testing so that we=
- can set
-> it low enough to validate the collision behavior.  Thanks,
->=20
+On 23/08/2019 05:45, Hsin-Hsiung Wang wrote:
+> In order to support different types of irq design, we decide to add
+> separate irq drivers for different design and keep mt6397 mfd core
+> simple and reusable to all generations of PMICs so far.
+> 
+> Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile            |   3 +-
+>  drivers/mfd/mt6397-core.c       | 146 --------------------------------
+>  drivers/mfd/mt6397-irq.c        | 181 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h |   9 ++
+>  4 files changed, 192 insertions(+), 147 deletions(-)
+>  create mode 100644 drivers/mfd/mt6397-irq.c
+> 
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f026ada..9a96325 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -241,7 +241,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+> -obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+> +mt6397-objs	:= mt6397-core.o mt6397-irq.o
+> +obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+>  
+>  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+>  obj-$(CONFIG_MFD_ALTERA_SYSMGR) += altera-sysmgr.o
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index c070862..93c8881 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -18,10 +18,6 @@
+>  #define MT6397_RTC_BASE		0xe000
+>  #define MT6397_RTC_SIZE		0x3e
+>  
+> -#define MT6323_CHIP_ID		0x23
+> -#define MT6391_CHIP_ID		0x91
+> -#define MT6397_CHIP_ID		0x97
+> -
+>  static const struct resource mt6397_rtc_resources[] = {
+>  	{
+>  		.start = MT6397_RTC_BASE,
+> @@ -86,148 +82,6 @@
+>  	}
+>  };
+>  
+> -static void mt6397_irq_lock(struct irq_data *data)
+> -{
+> -	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -
+> -	mutex_lock(&mt6397->irqlock);
+> -}
+> -
+> -static void mt6397_irq_sync_unlock(struct irq_data *data)
+> -{
+> -	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -
+> -	regmap_write(mt6397->regmap, mt6397->int_con[0],
+> -		     mt6397->irq_masks_cur[0]);
+> -	regmap_write(mt6397->regmap, mt6397->int_con[1],
+> -		     mt6397->irq_masks_cur[1]);
+> -
+> -	mutex_unlock(&mt6397->irqlock);
+> -}
+> -
+> -static void mt6397_irq_disable(struct irq_data *data)
+> -{
+> -	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -	int shift = data->hwirq & 0xf;
+> -	int reg = data->hwirq >> 4;
+> -
+> -	mt6397->irq_masks_cur[reg] &= ~BIT(shift);
+> -}
+> -
+> -static void mt6397_irq_enable(struct irq_data *data)
+> -{
+> -	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> -	int shift = data->hwirq & 0xf;
+> -	int reg = data->hwirq >> 4;
+> -
+> -	mt6397->irq_masks_cur[reg] |= BIT(shift);
+> -}
+> -
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mt6397_irq_set_wake(struct irq_data *irq_data, unsigned int on)
+> -{
+> -	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(irq_data);
+> -	int shift = irq_data->hwirq & 0xf;
+> -	int reg = irq_data->hwirq >> 4;
+> -
+> -	if (on)
+> -		mt6397->wake_mask[reg] |= BIT(shift);
+> -	else
+> -		mt6397->wake_mask[reg] &= ~BIT(shift);
+> -
+> -	return 0;
+> -}
+> -#else
+> -#define mt6397_irq_set_wake NULL
+> -#endif
+> -
+> -static struct irq_chip mt6397_irq_chip = {
+> -	.name = "mt6397-irq",
+> -	.irq_bus_lock = mt6397_irq_lock,
+> -	.irq_bus_sync_unlock = mt6397_irq_sync_unlock,
+> -	.irq_enable = mt6397_irq_enable,
+> -	.irq_disable = mt6397_irq_disable,
+> -	.irq_set_wake = mt6397_irq_set_wake,
+> -};
+> -
+> -static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+> -		int irqbase)
+> -{
+> -	unsigned int status;
+> -	int i, irq, ret;
+> -
+> -	ret = regmap_read(mt6397->regmap, reg, &status);
+> -	if (ret) {
+> -		dev_err(mt6397->dev, "Failed to read irq status: %d\n", ret);
+> -		return;
+> -	}
+> -
+> -	for (i = 0; i < 16; i++) {
+> -		if (status & BIT(i)) {
+> -			irq = irq_find_mapping(mt6397->irq_domain, irqbase + i);
+> -			if (irq)
+> -				handle_nested_irq(irq);
+> -		}
+> -	}
+> -
+> -	regmap_write(mt6397->regmap, reg, status);
+> -}
+> -
+> -static irqreturn_t mt6397_irq_thread(int irq, void *data)
+> -{
+> -	struct mt6397_chip *mt6397 = data;
+> -
+> -	mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
+> -	mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
+> -
+> -	return IRQ_HANDLED;
+> -}
+> -
+> -static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> -					irq_hw_number_t hw)
+> -{
+> -	struct mt6397_chip *mt6397 = d->host_data;
+> -
+> -	irq_set_chip_data(irq, mt6397);
+> -	irq_set_chip_and_handler(irq, &mt6397_irq_chip, handle_level_irq);
+> -	irq_set_nested_thread(irq, 1);
+> -	irq_set_noprobe(irq);
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct irq_domain_ops mt6397_irq_domain_ops = {
+> -	.map = mt6397_irq_domain_map,
+> -};
+> -
+> -static int mt6397_irq_init(struct mt6397_chip *mt6397)
+> -{
+> -	int ret;
+> -
+> -	mutex_init(&mt6397->irqlock);
+> -
+> -	/* Mask all interrupt sources */
+> -	regmap_write(mt6397->regmap, mt6397->int_con[0], 0x0);
+> -	regmap_write(mt6397->regmap, mt6397->int_con[1], 0x0);
+> -
+> -	mt6397->irq_domain = irq_domain_add_linear(mt6397->dev->of_node,
+> -		MT6397_IRQ_NR, &mt6397_irq_domain_ops, mt6397);
+> -	if (!mt6397->irq_domain) {
+> -		dev_err(mt6397->dev, "could not create irq domain\n");
+> -		return -ENOMEM;
+> -	}
+> -
+> -	ret = devm_request_threaded_irq(mt6397->dev, mt6397->irq, NULL,
+> -		mt6397_irq_thread, IRQF_ONESHOT, "mt6397-pmic", mt6397);
+> -	if (ret) {
+> -		dev_err(mt6397->dev, "failed to register irq=%d; err: %d\n",
+> -			mt6397->irq, ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  #ifdef CONFIG_PM_SLEEP
+>  static int mt6397_irq_suspend(struct device *dev)
+>  {
+> diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+> new file mode 100644
+> index 0000000..b2d3ce1
+> --- /dev/null
+> +++ b/drivers/mfd/mt6397-irq.c
+> @@ -0,0 +1,181 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/mt6323/core.h>
+> +#include <linux/mfd/mt6323/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/mfd/mt6397/registers.h>
+> +
+> +static void mt6397_irq_lock(struct irq_data *data)
+> +{
+> +	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +
+> +	mutex_lock(&mt6397->irqlock);
+> +}
+> +
+> +static void mt6397_irq_sync_unlock(struct irq_data *data)
+> +{
+> +	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +
+> +	regmap_write(mt6397->regmap, mt6397->int_con[0],
+> +		     mt6397->irq_masks_cur[0]);
+> +	regmap_write(mt6397->regmap, mt6397->int_con[1],
+> +		     mt6397->irq_masks_cur[1]);
+> +
+> +	mutex_unlock(&mt6397->irqlock);
+> +}
+> +
+> +static void mt6397_irq_disable(struct irq_data *data)
+> +{
+> +	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +	int shift = data->hwirq & 0xf;
+> +	int reg = data->hwirq >> 4;
+> +
+> +	mt6397->irq_masks_cur[reg] &= ~BIT(shift);
+> +}
+> +
+> +static void mt6397_irq_enable(struct irq_data *data)
+> +{
+> +	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+> +	int shift = data->hwirq & 0xf;
+> +	int reg = data->hwirq >> 4;
+> +
+> +	mt6397->irq_masks_cur[reg] |= BIT(shift);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int mt6397_irq_set_wake(struct irq_data *irq_data, unsigned int on)
+> +{
+> +	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(irq_data);
+> +	int shift = irq_data->hwirq & 0xf;
+> +	int reg = irq_data->hwirq >> 4;
+> +
+> +	if (on)
+> +		mt6397->wake_mask[reg] |= BIT(shift);
+> +	else
+> +		mt6397->wake_mask[reg] &= ~BIT(shift);
+> +
+> +	return 0;
+> +}
+> +#else
+> +#define mt6397_irq_set_wake NULL
+> +#endif
+> +
+> +static struct irq_chip mt6397_irq_chip = {
+> +	.name = "mt6397-irq",
+> +	.irq_bus_lock = mt6397_irq_lock,
+> +	.irq_bus_sync_unlock = mt6397_irq_sync_unlock,
+> +	.irq_enable = mt6397_irq_enable,
+> +	.irq_disable = mt6397_irq_disable,
+> +	.irq_set_wake = mt6397_irq_set_wake,
+> +};
+> +
+> +static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+> +				  int irqbase)
+> +{
+> +	unsigned int status;
+> +	int i, irq, ret;
+> +
+> +	ret = regmap_read(mt6397->regmap, reg, &status);
+> +	if (ret) {
+> +		dev_err(mt6397->dev, "Failed to read irq status: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	for (i = 0; i < 16; i++) {
+> +		if (status & BIT(i)) {
+> +			irq = irq_find_mapping(mt6397->irq_domain, irqbase + i);
+> +			if (irq)
+> +				handle_nested_irq(irq);
+> +		}
+> +	}
+> +
+> +	regmap_write(mt6397->regmap, reg, status);
+> +}
+> +
+> +static irqreturn_t mt6397_irq_thread(int irq, void *data)
+> +{
+> +	struct mt6397_chip *mt6397 = data;
+> +
+> +	mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
+> +	mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +				 irq_hw_number_t hw)
+> +{
+> +	struct mt6397_chip *mt6397 = d->host_data;
+> +
+> +	irq_set_chip_data(irq, mt6397);
+> +	irq_set_chip_and_handler(irq, &mt6397_irq_chip, handle_level_irq);
+> +	irq_set_nested_thread(irq, 1);
+> +	irq_set_noprobe(irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops mt6397_irq_domain_ops = {
+> +	.map = mt6397_irq_domain_map,
+> +};
+> +
+> +int mt6397_irq_init(struct mt6397_chip *chip)
+> +{
+> +	int ret;
+> +
+> +	mutex_init(&chip->irqlock);
+> +
+> +	switch (chip->chip_id) {
+> +	case MT6323_CHIP_ID:
+> +		chip->int_con[0] = MT6323_INT_CON0;
+> +		chip->int_con[1] = MT6323_INT_CON1;
+> +		chip->int_status[0] = MT6323_INT_STATUS0;
+> +		chip->int_status[1] = MT6323_INT_STATUS1;
+> +		break;
+> +
+> +	case MT6391_CHIP_ID:
+> +	case MT6397_CHIP_ID:
+> +		chip->int_con[0] = MT6397_INT_CON0;
+> +		chip->int_con[1] = MT6397_INT_CON1;
+> +		chip->int_status[0] = MT6397_INT_STATUS0;
+> +		chip->int_status[1] = MT6397_INT_STATUS1;
+> +		break;
+> +
 
-Idea is to have mdev alias as optional.
-Each mdev_parent says whether it wants mdev_core to generate an alias or no=
-t.
-So only networking device drivers would set it to true.
-For rest, alias won't be generated, and won't be compared either during cre=
-ation time.
-User continue to provide only uuid.
-I am tempted to have alias collision detection only within children mdevs o=
-f the same parent, but doing so will always mandate to prefix in netdev nam=
-e.
-And currently we are left with only 3 characters to prefix it, so that may =
-not be good either.
-Hence, I think mdev core wide alias is better with 12 characters.
+Just stumbled over this in linux-next. I personally would prefer to have two
+patches, one that moves the code and another one that adds the switch etc.
 
-I do not understand how an extra character reduces collision, if that's wha=
-t you meant.
-Module options are almost not encouraged anymore with other subsystems/driv=
-ers.
+This way it would be much easier to realize this change.
+Not sure if this is still possible, because it seems to be in one of Lee's
+repositories already. (and if Lee thinks the same as I do, of course)
 
-For testing collision rate, a sample user space script and sample mtty is e=
-asy and get us collision count too.
-We shouldn't put that using module option in production kernel.
-I practically have the code ready to play with; Changing 12 to smaller valu=
-e is easy with module reload.
+Regards,
+Matthias
 
-#define MDEV_ALIAS_LEN 12
 
-> Alex
->=20
-> > > >> >> in this case that it does
-> > > >> >> not provide 2 same attrs for 2 different ports.
-> > > >> >> Hmm, so the order of creation matters. That is not good.
-> > > >> >>
-> > > >> >> >>
-> > > >> >> >> >I took Ethernet mdev as an example.
-> > > >> >> >> >New prefix 'm' stands for mediated device.
-> > > >> >> >> >Remaining 12 characters are first 12 chars of the mdev alia=
-s.
-> > > >> >> >>
-> > > >> >> >> Does this resolve the identification of devlink port represe=
-ntor?
-> > > >> >> >Not sure if I understood your question correctly, attemping
-> > > >> >> >to answer
-> > > >> below.
-> > > >> >> >phys_port_name of devlink port is defined by the first 12
-> > > >> >> >characters of mdev
-> > > >> >> alias.
-> > > >> >> >> I assume you want to use the same 12(or so) chars, don't you=
-?
-> > > >> >> >Mdev's netdev will also use the same mdev alias from the
-> > > >> >> >sysfs to rename
-> > > >> >> netdev name from ethX to enm<mdev_alias>, where en=3DEtherenet,
-> > > >> m=3Dmdev.
-> > > >> >> >
-> > > >> >> >So yes, same 12 characters are use for mdev's netdev and mdev
-> > > >> >> >devlink port's
-> > > >> >> phys_port_name.
-> > > >> >> >
-> > > >> >> >Is that what are you asking?
-> > > >> >>
-> > > >> >> Yes. Then you have 3 chars to handle the rest of the name (pci,=
- pf)...
-
+> +	default:
+> +		dev_err(chip->dev, "unsupported chip: 0x%x\n", chip->chip_id);
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Mask all interrupt sources */
+> +	regmap_write(chip->regmap, chip->int_con[0], 0x0);
+> +	regmap_write(chip->regmap, chip->int_con[1], 0x0);
+> +
+> +	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+> +						 MT6397_IRQ_NR,
+> +						 &mt6397_irq_domain_ops,
+> +						 chip);
+> +	if (!chip->irq_domain) {
+> +		dev_err(chip->dev, "could not create irq domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
+> +					mt6397_irq_thread, IRQF_ONESHOT,
+> +					"mt6397-pmic", chip);
+> +	if (ret) {
+> +		dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
+> +			chip->irq, ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/core.h
+> index 25a95e7..9320c2a 100644
+> --- a/include/linux/mfd/mt6397/core.h
+> +++ b/include/linux/mfd/mt6397/core.h
+> @@ -7,6 +7,12 @@
+>  #ifndef __MFD_MT6397_CORE_H__
+>  #define __MFD_MT6397_CORE_H__
+>  
+> +enum chip_id {
+> +	MT6323_CHIP_ID = 0x23,
+> +	MT6391_CHIP_ID = 0x91,
+> +	MT6397_CHIP_ID = 0x97,
+> +};
+> +
+>  enum mt6397_irq_numbers {
+>  	MT6397_IRQ_SPKL_AB = 0,
+>  	MT6397_IRQ_SPKR_AB,
+> @@ -54,6 +60,9 @@ struct mt6397_chip {
+>  	u16 irq_masks_cache[2];
+>  	u16 int_con[2];
+>  	u16 int_status[2];
+> +	u16 chip_id;
+>  };
+>  
+> +int mt6397_irq_init(struct mt6397_chip *chip);
+> +
+>  #endif /* __MFD_MT6397_CORE_H__ */
+> 
