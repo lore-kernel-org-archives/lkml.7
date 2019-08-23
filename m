@@ -2,311 +2,96 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BB3C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9805C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEB922CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B989721019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392754AbfHWHFD (ORCPT
+        id S2390645AbfHWHKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:05:03 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:60900 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392683AbfHWHE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:04:58 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7N74vIn011425, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7N74vIn011425
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 23 Aug 2019 15:04:57 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Fri, 23 Aug 2019
- 15:04:55 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next v2 2/2] r8152: add a helper function about setting EEE
-Date:   Fri, 23 Aug 2019 15:04:12 +0800
-Message-ID: <1394712342-15778-307-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-305-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-304-Taiwan-albertk@realtek.com>
- <1394712342-15778-305-Taiwan-albertk@realtek.com>
+        Fri, 23 Aug 2019 03:10:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:6425 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728332AbfHWHKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:10:43 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 00:10:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
+   d="scan'208";a="196419917"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Aug 2019 00:10:38 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 23 Aug 2019 10:10:37 +0300
+Date:   Fri, 23 Aug 2019 10:10:37 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Matthias Andree <matthias.andree@gmx.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Justin Forbes <jmforbes@linuxtx.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add missing link delays required by the PCIe spec
+Message-ID: <20190823071037.GP19908@lahna.fi.intel.com>
+References: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
+ <9f741e3a-0878-b914-39d8-a64a02484cb5@gmx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f741e3a-0878-b914-39d8-a64a02484cb5@gmx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper funtcion "rtl_eee_enable" for setting EEE. Besides, I
-move r8153_eee_en() and r8153b_eee_en(). And, I remove r8152b_enable_eee(),
-r8153_set_eee(), and r8153b_set_eee().
+On Thu, Aug 22, 2019 at 08:29:09PM +0200, Matthias Andree wrote:
+> Am 21.08.19 um 14:45 schrieb Mika Westerberg:
+> > Hi all,
+> >
+> > As the changelog says this is reworked version that tries to avoid reported
+> > issues while at the same time fix the missing delays so we can get ICL
+> > systems and at least the one system with Titan Ridge controller working
+> > properly.
+> >
+> > @Matthias, @Paul and @Nicholas: it would be great if you could try the
+> > patch on top of v5.4-rc5+ and verify that it does not cause any issues on
+> > your systems.
+> >
+> >  drivers/pci/pci-driver.c |  19 ++++++
+> >  drivers/pci/pci.c        | 127 ++++++++++++++++++++++++++++++++++++---
+> >  drivers/pci/pci.h        |   1 +
+> >  3 files changed, 137 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index a8124e47bf6e..9aec78ed8907 100644
+> 
+> ...
+> 
+> Mika, Bjorn, Rafael,
+> 
+> quick smoke test, this test applied with git-am on top
+> v5.3-rc5-149-gbb7ba8069de9, reboot, suspend, wake, suspend, wake,
+> hibernate, wake, looks good to me. The top of git log --pretty-short is
+> shown below.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 166 +++++++++++++++++++---------------------
- 1 file changed, 77 insertions(+), 89 deletions(-)
+Thanks for testing!
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index a7aa48bee732..220079a8882f 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -3202,14 +3202,75 @@ static void r8152_eee_en(struct r8152 *tp, bool enable)
- 	ocp_reg_write(tp, OCP_EEE_CONFIG3, config3);
- }
- 
--static void r8152b_enable_eee(struct r8152 *tp)
-+static void r8153_eee_en(struct r8152 *tp, bool enable)
- {
--	if (tp->eee_en) {
--		r8152_eee_en(tp, true);
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, tp->eee_adv);
-+	u32 ocp_data;
-+	u16 config;
-+
-+	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EEE_CR);
-+	config = ocp_reg_read(tp, OCP_EEE_CFG);
-+
-+	if (enable) {
-+		ocp_data |= EEE_RX_EN | EEE_TX_EN;
-+		config |= EEE10_EN;
- 	} else {
--		r8152_eee_en(tp, false);
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
-+		ocp_data &= ~(EEE_RX_EN | EEE_TX_EN);
-+		config &= ~EEE10_EN;
-+	}
-+
-+	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EEE_CR, ocp_data);
-+	ocp_reg_write(tp, OCP_EEE_CFG, config);
-+}
-+
-+static void r8153b_eee_en(struct r8152 *tp, bool enable)
-+{
-+	r8153_eee_en(tp, enable);
-+
-+	if (enable)
-+		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_EEE, 0);
-+	else
-+		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_EEE);
-+}
-+
-+static void rtl_eee_enable(struct r8152 *tp, bool enable)
-+{
-+	switch (tp->version) {
-+	case RTL_VER_01:
-+	case RTL_VER_02:
-+	case RTL_VER_07:
-+		if (enable) {
-+			r8152_eee_en(tp, true);
-+			r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV,
-+					tp->eee_adv);
-+		} else {
-+			r8152_eee_en(tp, false);
-+			r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
-+		}
-+		break;
-+	case RTL_VER_03:
-+	case RTL_VER_04:
-+	case RTL_VER_05:
-+	case RTL_VER_06:
-+		if (enable) {
-+			r8153_eee_en(tp, true);
-+			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
-+		} else {
-+			r8153_eee_en(tp, true);
-+			ocp_reg_write(tp, OCP_EEE_ADV, 0);
-+		}
-+		break;
-+	case RTL_VER_08:
-+	case RTL_VER_09:
-+		if (enable) {
-+			r8153b_eee_en(tp, true);
-+			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
-+		} else {
-+			r8153b_eee_en(tp, true);
-+			ocp_reg_write(tp, OCP_EEE_ADV, 0);
-+		}
-+		break;
-+	default:
-+		break;
- 	}
- }
- 
-@@ -3231,7 +3292,7 @@ static void rtl8152_disable(struct r8152 *tp)
- 
- static void r8152b_hw_phy_cfg(struct r8152 *tp)
- {
--	r8152b_enable_eee(tp);
-+	rtl_eee_enable(tp, tp->eee_en);
- 	r8152_aldps_en(tp, true);
- 	r8152b_enable_fc(tp);
- 
-@@ -3425,36 +3486,6 @@ static void r8153b_aldps_en(struct r8152 *tp, bool enable)
- 		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_ALDPS);
- }
- 
--static void r8153_eee_en(struct r8152 *tp, bool enable)
--{
--	u32 ocp_data;
--	u16 config;
--
--	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EEE_CR);
--	config = ocp_reg_read(tp, OCP_EEE_CFG);
--
--	if (enable) {
--		ocp_data |= EEE_RX_EN | EEE_TX_EN;
--		config |= EEE10_EN;
--	} else {
--		ocp_data &= ~(EEE_RX_EN | EEE_TX_EN);
--		config &= ~EEE10_EN;
--	}
--
--	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EEE_CR, ocp_data);
--	ocp_reg_write(tp, OCP_EEE_CFG, config);
--}
--
--static void r8153b_eee_en(struct r8152 *tp, bool enable)
--{
--	r8153_eee_en(tp, enable);
--
--	if (enable)
--		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_EEE, 0);
--	else
--		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_EEE);
--}
--
- static void r8153b_enable_fc(struct r8152 *tp)
- {
- 	r8152b_enable_fc(tp);
-@@ -3470,7 +3501,7 @@ static void r8153_hw_phy_cfg(struct r8152 *tp)
- 	r8153_aldps_en(tp, false);
- 
- 	/* disable EEE before updating the PHY parameters */
--	r8153_eee_en(tp, false);
-+	rtl_eee_enable(tp, false);
- 	ocp_reg_write(tp, OCP_EEE_ADV, 0);
- 
- 	if (tp->version == RTL_VER_03) {
-@@ -3502,10 +3533,8 @@ static void r8153_hw_phy_cfg(struct r8152 *tp)
- 	sram_write(tp, SRAM_10M_AMP1, 0x00af);
- 	sram_write(tp, SRAM_10M_AMP2, 0x0208);
- 
--	if (tp->eee_en) {
--		r8153_eee_en(tp, true);
--		ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
--	}
-+	if (tp->eee_en)
-+		rtl_eee_enable(tp, true);
- 
- 	r8153_aldps_en(tp, true);
- 	r8152b_enable_fc(tp);
-@@ -3545,7 +3574,7 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
- 	r8153b_aldps_en(tp, false);
- 
- 	/* disable EEE before updating the PHY parameters */
--	r8153b_eee_en(tp, false);
-+	rtl_eee_enable(tp, false);
- 	ocp_reg_write(tp, OCP_EEE_ADV, 0);
- 
- 	r8153b_green_en(tp, test_bit(GREEN_ETHERNET, &tp->flags));
-@@ -3608,10 +3637,8 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
- 
- 	r8153b_ups_flags_w1w0(tp, ups_flags, 0);
- 
--	if (tp->eee_en) {
--		r8153b_eee_en(tp, true);
--		ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
--	}
-+	if (tp->eee_en)
-+		rtl_eee_enable(tp, true);
- 
- 	r8153b_aldps_en(tp, true);
- 	r8153b_enable_fc(tp);
-@@ -4930,12 +4957,7 @@ static int r8152_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
- 	tp->eee_en = eee->eee_enabled;
- 	tp->eee_adv = val;
- 
--	r8152_eee_en(tp, eee->eee_enabled);
--
--	if (eee->eee_enabled)
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, val);
--	else
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
-+	rtl_eee_enable(tp, tp->eee_en);
- 
- 	return 0;
- }
-@@ -4963,40 +4985,6 @@ static int r8153_get_eee(struct r8152 *tp, struct ethtool_eee *eee)
- 	return 0;
- }
- 
--static int r8153_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
--{
--	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
--
--	tp->eee_en = eee->eee_enabled;
--	tp->eee_adv = val;
--
--	r8153_eee_en(tp, eee->eee_enabled);
--
--	if (eee->eee_enabled)
--		ocp_reg_write(tp, OCP_EEE_ADV, val);
--	else
--		ocp_reg_write(tp, OCP_EEE_ADV, 0);
--
--	return 0;
--}
--
--static int r8153b_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
--{
--	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
--
--	tp->eee_en = eee->eee_enabled;
--	tp->eee_adv = val;
--
--	r8153b_eee_en(tp, eee->eee_enabled);
--
--	if (eee->eee_enabled)
--		ocp_reg_write(tp, OCP_EEE_ADV, val);
--	else
--		ocp_reg_write(tp, OCP_EEE_ADV, 0);
--
--	return 0;
--}
--
- static int
- rtl_ethtool_get_eee(struct net_device *net, struct ethtool_eee *edata)
- {
-@@ -5382,7 +5370,7 @@ static int rtl_ops_init(struct r8152 *tp)
- 		ops->down		= rtl8153_down;
- 		ops->unload		= rtl8153_unload;
- 		ops->eee_get		= r8153_get_eee;
--		ops->eee_set		= r8153_set_eee;
-+		ops->eee_set		= r8152_set_eee;
- 		ops->in_nway		= rtl8153_in_nway;
- 		ops->hw_phy_cfg		= r8153_hw_phy_cfg;
- 		ops->autosuspend_en	= rtl8153_runtime_enable;
-@@ -5400,7 +5388,7 @@ static int rtl_ops_init(struct r8152 *tp)
- 		ops->down		= rtl8153b_down;
- 		ops->unload		= rtl8153b_unload;
- 		ops->eee_get		= r8153_get_eee;
--		ops->eee_set		= r8153b_set_eee;
-+		ops->eee_set		= r8152_set_eee;
- 		ops->in_nway		= rtl8153_in_nway;
- 		ops->hw_phy_cfg		= r8153b_hw_phy_cfg;
- 		ops->autosuspend_en	= rtl8153b_runtime_enable;
--- 
-2.21.0
+> Couldn't test on v5.4-rc5 though as I've handed off my time machine for
+> repairs,
+> I seem to recall they said something about the flux compensator.
 
+:)
