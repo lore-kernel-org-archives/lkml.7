@@ -2,238 +2,331 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64147C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA56EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334F221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC52233FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W8GIVaB8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I2Manzko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387568AbfHWRQR (ORCPT
+        id S2387842AbfHWRQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:16:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33628 "EHLO
+        Fri, 23 Aug 2019 13:16:29 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44008 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731264AbfHWRQQ (ORCPT
+        with ESMTP id S2387641AbfHWRQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:16:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so6870385pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:16:16 -0700 (PDT)
+        Fri, 23 Aug 2019 13:16:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v12so6851398pfn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9DzZ5tBJ/5ijRD9+7u3gl0wIvugmOxHsruYTm4QtT68=;
-        b=W8GIVaB8rGd7EMVaNvOWNGQGtO9OcfY9IZT6A8PjRQ91C89zSJg3XjiR1yVXhwRPbb
-         u4Pb2XSQRoKBkkwhobhc797pbff4PCdeI/YFbVjytv9OOacmvwEiHOWTQW4Vg9R3e6kK
-         UzN2P3fA95DeRAJgAtcuKBAoHWxW/jtMFR/F3BFQzh/j2mKrrodtqPq9FaZ9oIaf9N39
-         Wu0zMWAJk10iKxakmUkvFm7omvf3hiXYq/OtK89i5NiI1u7iEUzWT78HrjLOJv5zTEIS
-         MVRd7Efjon5tGQoDDmkzS4/gUIlBtaScz28mn5RTtmbFU1Bj59SKxsvYkpV5UDJQH/9p
-         fvEA==
+         :cc:content-transfer-encoding;
+        bh=m/DpmKdoj0HbvB1qyNNmkuLxnsG1UWxBDMu6haWmyfk=;
+        b=I2Manzko/wGlM7GadUNr7MneDIkFgtNuaQWW3gusvAFqTyc8UVSsEi3dDb9uISZ2ro
+         7may81ewFA6iYVo9Z18pBkn4Oz93u3RfOKzFDOip3vm+2DLwTnfXcs/joHVNcml8En9b
+         zdO9R63vAW9+Pwl+1DpVnp8qtBcA9DX4tyyjs3ofuYlA8isRTR4ddKXSkTstLl6QA+qi
+         l3EStFuqjtYP4+yXgxc0vrW8hnCjFApot2SnqF7I0WWb2VdFSEGCNTRsSvMlQY1lzHpD
+         MojsrcbWPLdXgagxhii2RojbgeHI7+C721+ZoHS7S1Tec8PtPKa3xsOOPtKVca5ysW7s
+         ygnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9DzZ5tBJ/5ijRD9+7u3gl0wIvugmOxHsruYTm4QtT68=;
-        b=ZaJ6bz+ZLsY2w6ylI0Ipqt0zyEjaXQFMvlx3pwbNJEg5VNHKb7Nz7rFRNr2I3/iVy4
-         O7kXdFvqJfQ9cWwQUbH2RX4xUfu5g1loh5q/Qk8sKlwCuPcALVrhxw85NLcw81aDnbKH
-         hgKAErii9vk8NNue1flSqfr30cIGJfzDN2BfVf2JEdA4mev8EmqtDMI6/Y7ME4IgVOsU
-         omfPzF2asx3ygav1A5zywQD6S2UI5znPEQv+7rQlz/PrYdjXORTV0a4id8gIqDzrzNZr
-         Khqxd8kPVyc6xwgtpxbDpqszylgZoKut5bUdXUAtNAsEzsR1tPXXlaboJwB9LOCO3pt4
-         4eeQ==
-X-Gm-Message-State: APjAAAUz8seKAOcKDxozjjFvrbWCdHuTh33/+okqHlHvAM4P66XS++kc
-        rKBZRX1cmjOLqUa+jnGmGX/ttylBqi9ec5S7GTvQHw==
-X-Google-Smtp-Source: APXvYqw0fR/sRLo6BnRDukhLtAs2eJY/rIk8qs41s14k4IrSkE1bJcwERqNuLHJycTJLHJ/oxhk3lu2nSZCIfJ55mSg=
-X-Received: by 2002:a17:90a:ac02:: with SMTP id o2mr6420803pjq.134.1566580575131;
- Fri, 23 Aug 2019 10:16:15 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=m/DpmKdoj0HbvB1qyNNmkuLxnsG1UWxBDMu6haWmyfk=;
+        b=XIsd1z5P0G6fkrNlgLmYTsR9fHQmk+Cs4Z3edEJzM7FJY0sRwgxRqn/zbkEMENzum4
+         AfpDTckkaEwH2qzZZ0RTmC+/aCnB++cNz9dH8AV7Wct6lyDTWNZ9WtsIhRb2ZcTsm0xq
+         YrebRJlWum3vAeiSahakgNUU9U1EnhPpAsF+qAuY/RGkJx9/XGcnT4CdPCxBEtYjIVfz
+         vQww6Ve+JfVx4qQXi7K+iZJe20B2a1lo8N2WBxqd2hOO/nyV0KZYQr8/Y5eTs2d8sueX
+         IeYWWvIziKRJAahqugteNC9ljJDplCIEnda16ig52zxBVGN56BXgQAZqGwMNwRX4o28E
+         Q2Og==
+X-Gm-Message-State: APjAAAXYVXOFzg/XsKR6FOiORjZg7+oC4pE4ZaKkmDiPQg3tP3Oosr4F
+        nS5U4EWkvTCVpmTYu931HXb9HXCUrEUM68YTR78ZMFZ3hwDCSg==
+X-Google-Smtp-Source: APXvYqxT7RxeOMCTj3qivid/BR4Ce4YdmJ0i6gdLDgbf88ZUnnm2E6y14200bmYlmMGL1hZWLgGhIoRJAPtDpVNlNDU=
+X-Received: by 2002:a17:90a:6581:: with SMTP id k1mr6320376pjj.47.1566580586731;
+ Fri, 23 Aug 2019 10:16:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190729211014.39333-1-ndesaulniers@google.com>
- <alpine.LFD.2.21.1907292302451.16059@eddie.linux-mips.org>
- <CAKwvOd==SCBrj=cZ7Ax5F87+-bPMS9AtGSxp+NWp_+yDCg4R-A@mail.gmail.com> <CAKwvOdkXLhEuLiQ_ukE75zEg=Sw5-4BLHHCFqcZ0oyTEX3pWTQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdkXLhEuLiQ_ukE75zEg=Sw5-4BLHHCFqcZ0oyTEX3pWTQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 23 Aug 2019 10:16:04 -0700
-Message-ID: <CAKwvOdmGax-WgXeKEnTq8+Xe0+Z5d2k4_Ad1vw0uOiO2NJ0bkg@mail.gmail.com>
-Subject: Re: [PATCH] mips: avoid explicit UB in assignment of mips_io_port_base
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
+References: <cover.1561386715.git.andreyknvl@google.com> <0999c80cd639b78ae27c0674069d552833227564.1561386715.git.andreyknvl@google.com>
+ <6af3f619-4356-2f67-ed76-92beceb1e0a0@arm.com>
+In-Reply-To: <6af3f619-4356-2f67-ed76-92beceb1e0a0@arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 23 Aug 2019 19:16:15 +0200
+Message-ID: <CAAeHK+yhbUcuLhoetjGUbqM4j9fX84hbwmxzNPF+e1zXj6nKNw@mail.gmail.com>
+Subject: Re: [PATCH v18 15/15] selftests, arm64: add a selftest for passing
+ tagged pointers to kernel
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        regehr@cs.utah.edu, Philip Reames <listmail@philipreames.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:15 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+On Fri, Aug 23, 2019 at 3:56 PM Cristian Marussi
+<cristian.marussi@arm.com> wrote:
 >
-> Hi Paul,
-> Bumping this thread; we'd really like to be able to boot test another
-> ISA in our CI.  This lone patch is affecting our ability to boot.  Can
-> you please pick it up?
-> https://lore.kernel.org/lkml/20190729211014.39333-1-ndesaulniers@google.com/
+> Hi Andrey
+>
+> On 24/06/2019 15:33, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends kernel ABI to allow to pa=
+ss
+> > tagged user pointers (with the top byte set to something else other tha=
+n
+> > 0x00) as syscall arguments.
+> >
+> > This patch adds a simple test, that calls the uname syscall with a
+> > tagged user pointer as an argument. Without the kernel accepting tagged
+> > user pointers the test fails with EFAULT.
+> >
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  tools/testing/selftests/arm64/.gitignore      |  1 +
+> >  tools/testing/selftests/arm64/Makefile        | 11 +++++++
+> >  .../testing/selftests/arm64/run_tags_test.sh  | 12 ++++++++
+> >  tools/testing/selftests/arm64/tags_test.c     | 29 +++++++++++++++++++
+> >  4 files changed, 53 insertions(+)
+> >  create mode 100644 tools/testing/selftests/arm64/.gitignore
+> >  create mode 100644 tools/testing/selftests/arm64/Makefile
+> >  create mode 100755 tools/testing/selftests/arm64/run_tags_test.sh
+> >  create mode 100644 tools/testing/selftests/arm64/tags_test.c
+>
+> After building a fresh Kernel from arm64/for-next-core from scratch at:
+>
+> commit 239ab658bea3b387424501e7c416640d6752dc0c
+> Merge: 6bfa3134bd3a 42d038c4fb00 1243cb6a676f d55c5f28afaf d06fa5a118f1 3=
+4b5560db40d
+> Author: Will Deacon <will@kernel.org>
+> Date:   Thu Aug 22 18:23:53 2019 +0100
+>
+>     Merge branches 'for-next/error-injection', 'for-next/tbi', 'for-next/=
+psci-cpuidle', 'for-next/cpu-topology' and 'for-next/52-bit-kva' into for-n=
+ext/core
+>
+>
+> KSFT arm64 tests build is broken for me, both setting or not KBUILD_OUTPU=
+T=3D
+>
+> 13:30 $ make TARGETS=3Darm64 kselftest-clean
+> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+> rm -f -r /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/tags_=
+test
+> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>
+> =E2=9C=94 ~/ARM/dev/src/pdsw/linux [arm64_for_next_core|=E2=80=A68=E2=9A=
+=91 23]
+>
+> 13:30 $ make TARGETS=3Darm64 kselftest
+> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the co=
+mpat vDSO will not be built
+> make --no-builtin-rules INSTALL_HDR_PATH=3D$BUILD/usr \
+>         ARCH=3Darm64 -C ../../.. headers_install
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/unifdef
+> ...
+> ...
+>   HDRINST usr/include/asm/msgbuf.h
+>   HDRINST usr/include/asm/shmbuf.h
+>   INSTALL /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/usr/includ=
+e
+> /opt/toolchains/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin/aarch64-=
+linux-gnu-gcc     tags_test.c  -o /home/crimar01/ARM/dev/src/pdsw/out_linux=
+//kselftest/arm64/tags_test
+> tags_test.c: In function =E2=80=98main=E2=80=99:
+> tags_test.c:21:12: error: =E2=80=98PR_SET_TAGGED_ADDR_CTRL=E2=80=99 undec=
+lared (first use in this function); did you mean =E2=80=98PR_GET_TID_ADDRES=
+S=E2=80=99?
+>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) =3D=
+=3D 0)
+>             ^~~~~~~~~~~~~~~~~~~~~~~
+>             PR_GET_TID_ADDRESS
+> tags_test.c:21:12: note: each undeclared identifier is reported only once=
+ for each function it appears in
+> tags_test.c:21:37: error: =E2=80=98PR_TAGGED_ADDR_ENABLE=E2=80=99 undecla=
+red (first use in this function); did you mean =E2=80=98PR_GET_DUMPABLE=E2=
+=80=99?
+>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) =3D=
+=3D 0)
+>                                      ^~~~~~~~~~~~~~~~~~~~~
+>                                      PR_GET_DUMPABLE
+> ../lib.mk:138: recipe for target '/home/crimar01/ARM/dev/src/pdsw/out_lin=
+ux//kselftest/arm64/tags_test' failed
+> make[3]: *** [/home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/=
+tags_test] Error 1
+> Makefile:136: recipe for target 'all' failed
+> make[2]: *** [all] Error 2
+> /home/crimar01/ARM/dev/src/pdsw/linux/Makefile:1237: recipe for target 'k=
+selftest' failed
+> make[1]: *** [kselftest] Error 2
+> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+> Makefile:179: recipe for target 'sub-make' failed
+> make: *** [sub-make] Error 2
+>
+> Despite seeing KSFT installing Kernel Headers, they cannot be found.
+>
+> Fixing this patch like this make it work for me:
+>
+> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selft=
+ests/arm64/Makefile
+> index a61b2e743e99..f9f79fb272f0 100644
+> --- a/tools/testing/selftests/arm64/Makefile
+> +++ b/tools/testing/selftests/arm64/Makefile
+> @@ -4,6 +4,7 @@
+>  ARCH ?=3D $(shell uname -m 2>/dev/null || echo not)
+>
+>  ifneq (,$(filter $(ARCH),aarch64 arm64))
+> +CFLAGS +=3D -I../../../../usr/include/
+>  TEST_GEN_PROGS :=3D tags_test
+>  TEST_PROGS :=3D run_tags_test.sh
+>  endif
+>
+> but is not really a proper fix since it does NOT account for case in whic=
+h you have
+> installed the Kernel Headers in a non standard location like when you use=
+ KBUILD_OUTPUT.
+>
+> Am I missing something ?
 
-Hi Paul,
-Following up with this link that explains the undefined behavior issue more:
-https://wiki.sei.cmu.edu/confluence/display/c/EXP05-C.+Do+not+cast+away+a+const+qualification
-Please reconsider accepting this patch.
+Hm, PR_SET_TAGGED_ADDR_CTRL is defined in include/uapi/linux/prctl.h,
+and the test has #include <sys/prctl.h> so as long as you've updated
+your kernel headers this should work.
 
->
-> On Wed, Aug 7, 2019 at 2:12 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > Sorry for the delayed response, literally sent the patch then went on vacation.
-> >
-> > On Mon, Jul 29, 2019 at 3:16 PM Maciej W. Rozycki <macro@linux-mips.org> wrote:
-> > >
-> > > On Mon, 29 Jul 2019, Nick Desaulniers wrote:
-> > >
-> > > > The code in question is modifying a variable declared const through
-> > > > pointer manipulation.  Such code is explicitly undefined behavior, and
-> > > > is the lone issue preventing malta_defconfig from booting when built
-> > > > with Clang:
-> > > >
-> > > > If an attempt is made to modify an object defined with a const-qualified
-> > > > type through use of an lvalue with non-const-qualified type, the
-> > > > behavior is undefined.
-> > > >
-> > > > LLVM is removing such assignments. A simple fix is to not declare
-> > > > variables const that you plan on modifying.  Limiting the scope would be
-> > > > a better method of preventing unwanted writes to such a variable.
-> >
-> > This is now documented in the LLVM release notes for Clang-9:
-> > https://github.com/llvm/llvm-project/commit/e39e79358fcdd5d8ad809defaa821f0bbfa809a5
-> >
-> > > >
-> > > > Further, the code in question mentions "compiler bugs" without any links
-> > > > to bug reports, so it is difficult to know if the issue is resolved in
-> > > > GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
-> > > > 4.1.1. The minimal supported version of GCC in the Linux kernel is
-> > > > currently 4.6.
-> > >
-> > >  It's somewhat older than that.  My investigation points to:
-> > >
-> > > commit c94e57dcd61d661749d53ee876ab265883b0a103
-> > > Author: Ralf Baechle <ralf@linux-mips.org>
-> > > Date:   Sun Nov 25 09:25:53 2001 +0000
-> > >
-> > >     Cleanup of include/asm-mips/io.h.  Now looks neat and harmless.
-> >
-> > Oh indeed, great find!
-> >
-> > So it looks to me like the order of events is:
-> > 1. https://github.com/jaaron/linux-mips-ip30/commit/c94e57dcd61d661749d53ee876ab265883b0a103
-> > in 2001 first introduces the UB.  mips_io_port_base is defined
-> > non-const in arch/mips/kernel/setup.c, but then declared extern const
-> > (and modified via UB) in include/asm-mips/io.h.  A setter is created,
-> > but not a getter (I'll revisit this below).  This appears to work (due
-> > to luck) for a few years until:
-> > 2. https://github.com/mpe/linux-fullhistory/commit/966f4406d903a4214fdc74bec54710c6232a95b8
-> > in 2006 adds a compiler barrier (reload all variables) and this
-> > appears to work.  The commit message mentions that reads after
-> > modification of the const variable were buggy (likely GCC started
-> > taking advantage of the explicit UB around this time as well).  This
-> > isn't a fix for UB (more thoughts below), but appears to work.
-> > 3. https://github.com/llvm/llvm-project/commit/b45631090220b732e614b5530bbd1d230eb9d38e
-> > in 2019 removes writes to const variables in LLVM as that's explicit
-> > UB.  We observe the boot failure in mips and narrow it down to this
-> > instance.
-> >
-> > I can see how throwing a compiler barrier in there made subsequent
-> > reads after UB writes appear to work, but that was more due to luck
-> > and implementation details of GCC than the heart of the issue (ie. not
-> > writing code that is explicitly undefined behavior)(and could change
-> > in future versions of GCC).  Stated another way, the fix for explicit
-> > UB is not hacks, but avoiding the UB by rewriting the problematic
-> > code.
-> >
-> > > However the purpose of the arrangement does not appear to me to be
-> > > particularly specific to a compiler version.
-> > >
-> > > > For what its worth, there was UB before the commit in question, it just
-> > > > added a barrier and got lucky IRT codegen. I don't think there's any
-> > > > actual compiler bugs related, just runtime bugs due to UB.
-> > >
-> > >  Does your solution preserves the original purpose of the hack though as
-> > > documented in the comment you propose to be removed?
-> >
-> > The function modified simply writes to a global variable.  It's not
-> > clear to my why the value about to be modified would EVER be loaded
-> > before modification.
-> >
-> > >  Clearly it was defined enough to work for almost 18 years, so it would be
-> > > good to keep the optimisation functionally by using different means that
-> > > do not rely on UB.
-> >
-> > "Defined enough" ???
-> > https://youtu.be/Aq_1l316ow8?t=17
-> >
-> > > This variable is assigned at most once throughout the
-> > > life of the kernel and then early on, so considering it r/w with all the
-> > > consequences for all accesses does not appear to me to be a good use of
-> > > it.
-> >
-> > Note: it's not possible to express the semantics of a "write once
-> > variable" in C short of static initialization (AFAIK, without explicit
-> > violation of UB, but Cunningham's Law may apply).
-> >
-> > (set_io_port_base is called in ~20 places)
-> >
-> > Thinking more about this while I was away, I think what this code has
-> > needed since 2001 is proper encapsulation.  If you want a variable
-> > that is written from one place only, but readable throughout, then the
-> > pattern I'd use is:
-> >
-> > 1. declare a getter in a .h file.
-> > 2. define/qualify `mips_io_port_base` as `static` and non-const in a
-> > .c file where it's modified.
-> > 3. define the getter and setter in the above .c file.
-> >
-> > That would rely on linkage to limit the visibility of the symbol for
-> > modification.  But, we'd then need to export the getter, vs the symbol
-> > itself.  There's also on the order of ~20 call sites that would need
-> > to be changed to invoke the getter rather than read the raw variable.
-> > Also, it's unlikely the getter gets inlined across translation units
-> > (short of LTO, which the mainline kernel doesn't support today).
-> >
-> > I think my patch here (https://lkml.org/lkml/2019/7/29/1636) is
-> > minimally and much less invasive.
-> >
-> > >  Maybe a piece of inline asm to hide the initialisation or suchlike then?
-> >
-> > I think that would still be UB as the definition would not be changed;
-> > you'd still be modifying a variable declared const.
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
->
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+(I'm OOO next week, I'll see if I can reproduce this once I'm back).
 
 
 
--- 
-Thanks,
-~Nick Desaulniers
+>
+> Thanks
+>
+> Cristian
+>
+> >
+> > diff --git a/tools/testing/selftests/arm64/.gitignore b/tools/testing/s=
+elftests/arm64/.gitignore
+> > new file mode 100644
+> > index 000000000000..e8fae8d61ed6
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/arm64/.gitignore
+> > @@ -0,0 +1 @@
+> > +tags_test
+> > diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/sel=
+ftests/arm64/Makefile
+> > new file mode 100644
+> > index 000000000000..a61b2e743e99
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/arm64/Makefile
+> > @@ -0,0 +1,11 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +# ARCH can be overridden by the user for cross compiling
+> > +ARCH ?=3D $(shell uname -m 2>/dev/null || echo not)
+> > +
+> > +ifneq (,$(filter $(ARCH),aarch64 arm64))
+> > +TEST_GEN_PROGS :=3D tags_test
+> > +TEST_PROGS :=3D run_tags_test.sh
+> > +endif
+> > +
+> > +include ../lib.mk
+> > diff --git a/tools/testing/selftests/arm64/run_tags_test.sh b/tools/tes=
+ting/selftests/arm64/run_tags_test.sh
+> > new file mode 100755
+> > index 000000000000..745f11379930
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/arm64/run_tags_test.sh
+> > @@ -0,0 +1,12 @@
+> > +#!/bin/sh
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +echo "--------------------"
+> > +echo "running tags test"
+> > +echo "--------------------"
+> > +./tags_test
+> > +if [ $? -ne 0 ]; then
+> > +     echo "[FAIL]"
+> > +else
+> > +     echo "[PASS]"
+> > +fi
+> > diff --git a/tools/testing/selftests/arm64/tags_test.c b/tools/testing/=
+selftests/arm64/tags_test.c
+> > new file mode 100644
+> > index 000000000000..22a1b266e373
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/arm64/tags_test.c
+> > @@ -0,0 +1,29 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
+> > +#include <unistd.h>
+> > +#include <stdint.h>
+> > +#include <sys/prctl.h>
+> > +#include <sys/utsname.h>
+> > +
+> > +#define SHIFT_TAG(tag)               ((uint64_t)(tag) << 56)
+> > +#define SET_TAG(ptr, tag)    (((uint64_t)(ptr) & ~SHIFT_TAG(0xff)) | \
+> > +                                     SHIFT_TAG(tag))
+> > +
+> > +int main(void)
+> > +{
+> > +     static int tbi_enabled =3D 0;
+> > +     struct utsname *ptr, *tagged_ptr;
+> > +     int err;
+> > +
+> > +     if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0=
+) =3D=3D 0)
+> > +             tbi_enabled =3D 1;
+> > +     ptr =3D (struct utsname *)malloc(sizeof(*ptr));
+> > +     if (tbi_enabled)
+> > +             tagged_ptr =3D (struct utsname *)SET_TAG(ptr, 0x42);
+> > +     err =3D uname(tagged_ptr);
+> > +     free(ptr);
+> > +
+> > +     return err;
+> > +}
+> >
+>
