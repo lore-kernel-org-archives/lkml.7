@@ -2,135 +2,86 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4A1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6B6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DBA23404
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B2A2341A
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403866AbfHWCuM (ORCPT
+        id S2403897AbfHWCwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:50:12 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5203 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbfHWCuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:50:11 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 46EEB239800F4B6F10CA;
-        Fri, 23 Aug 2019 10:50:00 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 23 Aug 2019 10:49:51 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Yang Guo <guoyang2@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        "Andreas Dilger" <adilger.kernel@dilger.ca>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH] ext4: change the type of ext4 cache stats to percpu_counter to improve performance
-Date:   Fri, 23 Aug 2019 10:47:34 +0800
-Message-ID: <1566528454-13725-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 22 Aug 2019 22:52:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40274 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731416AbfHWCwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:52:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h3so4665121pls.7
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 19:52:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vsjEFYHyrGgVCCvRlXGASNKdZOa3t1osr8ZE4zyjGFA=;
+        b=uYofnmpa/2wk4WPK/nU2tKOXUXHkFAv1GZ2HWSowSktAoUNo5psFNaRPwohjvTicyD
+         Eub9rdsh5vxsS4nf1E2LgVzP4gvB5kmi0KLswDKbTTsQvAGxTnF2lxy5coru7519TeuN
+         K9ETq1QuWN+TC5NXi0kJh9Vhpso7StqfufL8AtEwljetyra9Fo5E7RSykRbsul9a+4it
+         cFcq/RFUUTKb1QuT9v86InGVgJ1kPgs5o2ymTFLsiyXpcVlT37z8Bz7TG83CO/p48o6y
+         QrAba0ehc65F6B3ECLXhkMEv+r7TpyJiZSpy80fcB99onEMiEHEzlGHj5bBz73mtJ1CD
+         574A==
+X-Gm-Message-State: APjAAAWrd0x+/XEuQEXFxRD/4NJbDyrQjX/GEN1AYF0D4cpK5E9GA/ie
+        o078uH1xJEdnhQavge7IIiGyDadx
+X-Google-Smtp-Source: APXvYqzYllyu+AowB9AkQJiIriO5jx5po3tyFxRYIlq4oot4Ib4PM/wOMPVf1zzBqf1XJeoreiOXlg==
+X-Received: by 2002:a17:902:8f85:: with SMTP id z5mr2204532plo.328.1566528738795;
+        Thu, 22 Aug 2019 19:52:18 -0700 (PDT)
+Received: from ?IPv6:2601:647:4800:973f:a183:2905:6842:b7c? ([2601:647:4800:973f:a183:2905:6842:b7c])
+        by smtp.gmail.com with ESMTPSA id d189sm838746pfd.165.2019.08.22.19.52.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 19:52:18 -0700 (PDT)
+Subject: Re: [PATCH v4 2/4] nvme-pci: Add support for variable IO SQ element
+ size
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org, Paul Pawlowski <paul@mrarm.io>
+References: <20190807075122.6247-1-benh@kernel.crashing.org>
+ <20190807075122.6247-3-benh@kernel.crashing.org>
+ <20190822002818.GA10391@lst.de>
+ <87e1fea1c297ef98f989175b3041c69e8b7de020.camel@kernel.crashing.org>
+ <4fc11568-73fe-c8b5-ac29-d49daee9abad@grimberg.me>
+ <fb5aa2db6b54edab69a8abad254b346dd3d7b205.camel@kernel.crashing.org>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <8545a898-e80c-5ab6-6f9f-f351955db5f0@grimberg.me>
+Date:   Thu, 22 Aug 2019 19:52:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <fb5aa2db6b54edab69a8abad254b346dd3d7b205.camel@kernel.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Guo <guoyang2@huawei.com>
 
-@es_stats_cache_hits and @es_stats_cache_misses are accessed frequently in
-ext4_es_lookup_extent function, it would influence the ext4 read/write
-performance in NUMA system.
-Let's optimize it using percpu_counter, it is profitable for the
-performance.
+>> I'll fix it. Note that I'm going to take it out of the tree soon
+>> because it will have conflicts with Jens for-5.4/block, so we
+>> will send it to Jens after the initial merge window, after he
+>> rebases off of Linus.
+> 
+> Conflicts too hard to fixup at merge time ? Otherwise I could just
+> rebase on top of Jens and put in a topic branch...
 
-The test command is as below:
-fio -name=randwrite -numjobs=8 -filename=/mnt/test1 -rw=randwrite
--ioengine=libaio -direct=1 -iodepth=64 -sync=0 -norandommap -group_reporting
--runtime=120 -time_based -bs=4k -size=5G
+The quirk enumeration conflicts with 5.3-rc. Not a big deal, just
+thought it'd be easier to handle that way.
 
-And the result is better 10% than the initial implement:
-without the patch，IOPS=197k, BW=770MiB/s (808MB/s)(90.3GiB/120002msec)
-with the patch,  IOPS=218k, BW=852MiB/s (894MB/s)(99.9GiB/120002msec)
-
-Cc: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Andreas Dilger <adilger.kernel@dilger.ca>
-Signed-off-by: Yang Guo <guoyang2@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
- fs/ext4/extents_status.c | 20 +++++++++++++-------
- fs/ext4/extents_status.h |  4 ++--
- 2 files changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
-index 7521de2dcf3a..7699e80ae236 100644
---- a/fs/ext4/extents_status.c
-+++ b/fs/ext4/extents_status.c
-@@ -947,9 +947,9 @@ int ext4_es_lookup_extent(struct inode *inode, ext4_lblk_t lblk,
- 		es->es_pblk = es1->es_pblk;
- 		if (!ext4_es_is_referenced(es1))
- 			ext4_es_set_referenced(es1);
--		stats->es_stats_cache_hits++;
-+		percpu_counter_inc(&stats->es_stats_cache_hits);
- 	} else {
--		stats->es_stats_cache_misses++;
-+		percpu_counter_inc(&stats->es_stats_cache_misses);
- 	}
- 
- 	read_unlock(&EXT4_I(inode)->i_es_lock);
-@@ -1235,9 +1235,9 @@ int ext4_seq_es_shrinker_info_show(struct seq_file *seq, void *v)
- 	seq_printf(seq, "stats:\n  %lld objects\n  %lld reclaimable objects\n",
- 		   percpu_counter_sum_positive(&es_stats->es_stats_all_cnt),
- 		   percpu_counter_sum_positive(&es_stats->es_stats_shk_cnt));
--	seq_printf(seq, "  %lu/%lu cache hits/misses\n",
--		   es_stats->es_stats_cache_hits,
--		   es_stats->es_stats_cache_misses);
-+	seq_printf(seq, "  %llu/%llu cache hits/misses\n",
-+		   percpu_counter_sum_positive(&es_stats->es_stats_cache_hits),
-+		   percpu_counter_sum_positive(&es_stats->es_stats_cache_misses));
- 	if (inode_cnt)
- 		seq_printf(seq, "  %d inodes on list\n", inode_cnt);
- 
-@@ -1264,8 +1264,14 @@ int ext4_es_register_shrinker(struct ext4_sb_info *sbi)
- 	sbi->s_es_nr_inode = 0;
- 	spin_lock_init(&sbi->s_es_lock);
- 	sbi->s_es_stats.es_stats_shrunk = 0;
--	sbi->s_es_stats.es_stats_cache_hits = 0;
--	sbi->s_es_stats.es_stats_cache_misses = 0;
-+	err = percpu_counter_init(&sbi->s_es_stats.es_stats_cache_hits, 0,
-+				  GFP_KERNEL);
-+	if (err)
-+		return err;
-+	err = percpu_counter_init(&sbi->s_es_stats.es_stats_cache_misses, 0,
-+				  GFP_KERNEL);
-+	if (err)
-+		return err;
- 	sbi->s_es_stats.es_stats_scan_time = 0;
- 	sbi->s_es_stats.es_stats_max_scan_time = 0;
- 	err = percpu_counter_init(&sbi->s_es_stats.es_stats_all_cnt, 0, GFP_KERNEL);
-diff --git a/fs/ext4/extents_status.h b/fs/ext4/extents_status.h
-index 131a8b7df265..e722dd9bd06e 100644
---- a/fs/ext4/extents_status.h
-+++ b/fs/ext4/extents_status.h
-@@ -70,8 +70,8 @@ struct ext4_es_tree {
- 
- struct ext4_es_stats {
- 	unsigned long es_stats_shrunk;
--	unsigned long es_stats_cache_hits;
--	unsigned long es_stats_cache_misses;
-+	struct percpu_counter es_stats_cache_hits;
-+	struct percpu_counter es_stats_cache_misses;
- 	u64 es_stats_scan_time;
- 	u64 es_stats_max_scan_time;
- 	struct percpu_counter es_stats_all_cnt;
--- 
-2.7.4
-
+Rebasing on top of Jens won't help because his for-5.4/block which
+does not have the rc code yet.
