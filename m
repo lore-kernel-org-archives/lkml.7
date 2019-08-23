@@ -2,103 +2,171 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE64C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EB6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC86622CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w0B3dzBT"
+	by mail.kernel.org (Postfix) with ESMTP id 4BCF922CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393377AbfHWI7W (ORCPT
+        id S2392593AbfHWJCP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:59:22 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43387 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732254AbfHWI7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:59:21 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c19so6577861lfm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GxUgalfpHvlU7G4S1EP7MwtQKJLrxEoCVtsJwnBq2SU=;
-        b=w0B3dzBTa3+JyrZeVRsr9ly//+C08gCfIk8KvddiJai9vJRoezhj54mrdyVwb1cbFl
-         sRPkN+bru2wP4dmVDTkn20UOrljSktzElsDLmYwfeNBsz3BkNKlwWa6y0Kr4+GWEfwG1
-         YK9K3GDGdmw/+mt4yBZZ0rCBOvJ2wRiMivQwwjJJnFfQXf1LiACtdWqo7SnZbI9pSXdG
-         FdguDX7EHD7VaI4fG3ApljZIFeKDUrSvlzeHp0Se0NWNeZNXwlDemX+J/tIyKK2beWBF
-         YkS5UFt+u6TP+JMCmWolrRdMU/+bvPBegM8ACCpr9RWdg/IGiTuhMcKbWCZioaHt7WP/
-         FWEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GxUgalfpHvlU7G4S1EP7MwtQKJLrxEoCVtsJwnBq2SU=;
-        b=dXpiZoO7ajYHAF6Dc8z5o38NkiKMlRHZa/8nNkbMOFIgBm9CK2X8KktgDd0X7CJpW2
-         79Nqixwwso1rQUWvKSecaV2ucSd8fj2pa6CVNa1lZjCjUdfxWjCJI2DxD2lRY3n01ylt
-         Fm56UOO/5r9kXobUaXXe4bLdaNxJweZ25NgqKL4Ic9VQipC5icA3lNI5NgaJaY2vD0SP
-         rG6Dn0FTwV0iINgyYU/zJbnbG0C0+yrTJTOqPEosied2TzfiPzzqmT45gygxEmiixhog
-         Y2Tf7iSQCZXD4H9D8QVJVHORAeabrkNwdDIuzEm4HFdfrZdr3ZSdbQaz/SUx/MAiw0dW
-         u/2w==
-X-Gm-Message-State: APjAAAV7JbwINz4I6zNLstW/N6XHY3XzNLjNT9wS4ycWemhxUPLQzGmU
-        w7IRNfX2YmtlNXPR8gyF2y1i/QyOSbob2PeW5ITTtg==
-X-Google-Smtp-Source: APXvYqw5ndRJYH6Pq0vRfXqvSpTurLxTZpp9+LCmk3CwLeQH9ygW2pVl8/ZMQ7YOPv6vJPkMu932f3Yxr6LWZ0GzqPI=
-X-Received: by 2002:a19:ed11:: with SMTP id y17mr2096873lfy.141.1566550759342;
- Fri, 23 Aug 2019 01:59:19 -0700 (PDT)
+        Fri, 23 Aug 2019 05:02:15 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33189 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725797AbfHWJCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:02:15 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 6F78A2E4A07633C5F2BB;
+        Fri, 23 Aug 2019 10:02:13 +0100 (IST)
+Received: from LHREML524-MBS.china.huawei.com ([169.254.2.92]) by
+ LHREML712-CAH.china.huawei.com ([10.201.108.35]) with mapi id 14.03.0415.000;
+ Fri, 23 Aug 2019 10:02:04 +0100
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>
+Subject: RE: [PATCH v8 0/6] vfio/type1: Add support for valid iova list
+ management
+Thread-Topic: [PATCH v8 0/6] vfio/type1: Add support for valid iova list
+ management
+Thread-Index: AQHVQXDhdShLmk/XY0uPF9nH4SmJKKcIn6ow
+Date:   Fri, 23 Aug 2019 09:02:04 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F396F22@lhreml524-mbs.china.huawei.com>
+References: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
+In-Reply-To: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.202.227.237]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
- <1566206502-4347-7-git-send-email-mars.cheng@mediatek.com> <CAGp9LzoVwNxY8Q3G4hxpa7=orsEox+J0mNamag70wyjrGvDiZw@mail.gmail.com>
-In-Reply-To: <CAGp9LzoVwNxY8Q3G4hxpa7=orsEox+J0mNamag70wyjrGvDiZw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 10:59:08 +0200
-Message-ID: <CACRpkdbZY2vZBaEXDMsjLxA1NGYWirhCdspu0W-foXJX=Fd4yg@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] pinctrl: mediatek: add pinctrl support for
- MT6779 SoC
-To:     Sean Wang <sean.wang@kernel.org>
-Cc:     Mars Cheng <mars.cheng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
-        mtk01761 <wendell.lin@mediatek.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 8:12 PM Sean Wang <sean.wang@kernel.org> wrote:
-> On Mon, Aug 19, 2019 at 2:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
-> >
-> > This adds MT6779 pinctrl driver based on MediaTek pinctrl-paris core.
-> >
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > Signed-off-by: Andy Teng <andy.teng@mediatek.com>
->
-> Acked-by: Sean Wang <sean.wang@kernel.org>
+Hi Alex,
 
-Please look at the DT bindings as well when you have time, and
-especially the "virtual GPIO" patch, I don't understand that at all.
+A gentle ping on this. Please let me know.
 
-I suspect the "virtual GPIO" is maybe more about something that
-should be done by setting up the valid_mask in the gpio_chip
-or something.
+Thanks,
+Shameer
 
-Yours,
-Linus Walleij
+> -----Original Message-----
+> From: Shameerali Kolothum Thodi
+> Sent: 23 July 2019 17:07
+> To: alex.williamson@redhat.com; eric.auger@redhat.com
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
+> Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
+> kevin.tian@intel.com; Shameerali Kolothum Thodi
+> <shameerali.kolothum.thodi@huawei.com>
+> Subject: [PATCH v8 0/6] vfio/type1: Add support for valid iova list management
+> 
+> This is to revive this series which almost made to 4.18 but got dropped
+> as Alex found an issue[1] with IGD and USB devices RMRR region being
+> reported as reserved regions.
+> 
+> Thanks to Eric for his work here[2]. It provides a way to exclude
+> these regions while reporting the valid iova regions and this respin
+> make use of that.
+> 
+> Please note that I don't have a platform to verify the reported RMRR
+> issue and appreciate testing on those platforms.
+> 
+> Thanks,
+> Shameer
+> 
+> [1] https://lkml.org/lkml/2018/6/5/760
+> [2] https://lore.kernel.org/patchwork/cover/1083072/
+> 
+> v7-->v8
+>   -Rebased to 5.3-rc1
+>   -Addressed comments from Alex and Eric. Please see
+>    individual patch history.
+>   -Added Eric's R-by to patches 4/5/6
+> 
+> v6-->v7
+>  -Rebased to 5.2-rc6 + Eric's patches
+>  -Added logic to exclude IOMMU_RESV_DIRECT_RELAXABLE reserved memory
+>   region type(patch #2).
+>  -Dropped patch #4 of v6 as it is already part of mainline.
+>  -Addressed "container with only an mdev device will have an empty list"
+>   case(patches 4/6 & 5/6 - Suggested by Alex)
+> 
+> Old
+> ----
+> This series introduces an iova list associated with a vfio
+> iommu. The list is kept updated taking care of iommu apertures,
+> and reserved regions. Also this series adds checks for any conflict
+> with existing dma mappings whenever a new device group is attached to
+> the domain.
+> 
+> User-space can retrieve valid iova ranges using VFIO_IOMMU_GET_INFO
+> ioctl capability chains. Any dma map request outside the valid iova
+> range will be rejected.
+> 
+> v5 --> v6
+> 
+>  -Rebased to 4.17-rc1
+>  -Changed the ordering such that previous patch#7 "iommu/dma: Move
+>   PCI window region reservation back...")  is now patch #4. This
+>   will avoid any bisection issues pointed out by Alex.
+>  -Added Robins's Reviewed-by tag for patch#4
+> 
+> v4 --> v5
+> Rebased to next-20180315.
+> 
+>  -Incorporated the corner case bug fix suggested by Alex to patch #5.
+>  -Based on suggestions by Alex and Robin, added patch#7. This
+>   moves the PCI window  reservation back in to DMA specific path.
+>   This is to fix the issue reported by Eric[1].
+> 
+> v3 --> v4
+>  Addressed comments received for v3.
+>  -dma_addr_t instead of phys_addr_t
+>  -LIST_HEAD() usage.
+>  -Free up iova_copy list in case of error.
+>  -updated logic in filling the iova caps info(patch #5)
+> 
+> RFCv2 --> v3
+>  Removed RFC tag.
+>  Addressed comments from Alex and Eric:
+>  - Added comments to make iova list management logic more clear.
+>  - Use of iova list copy so that original is not altered in
+>    case of failure.
+> 
+> RFCv1 --> RFCv2
+>  Addressed comments from Alex:
+> -Introduced IOVA list management and added checks for conflicts with
+>  existing dma map entries during attach/detach.
+> 
+> Shameer Kolothum (6):
+>   vfio/type1: Introduce iova list and add iommu aperture validity check
+>   vfio/type1: Check reserved region conflict and update iova list
+>   vfio/type1: Update iova list on detach
+>   vfio/type1: check dma map request is within a valid iova range
+>   vfio/type1: Add IOVA range capability support
+>   vfio/type1: remove duplicate retrieval of reserved regions
+> 
+>  drivers/vfio/vfio_iommu_type1.c | 518 +++++++++++++++++++++++++++++++-
+>  include/uapi/linux/vfio.h       |  26 +-
+>  2 files changed, 531 insertions(+), 13 deletions(-)
+> 
+> --
+> 2.17.1
+> 
+
