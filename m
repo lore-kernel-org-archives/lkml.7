@@ -2,103 +2,93 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9E6C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592DBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF31622CF7
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3918D22CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388954AbfHWHV2 (ORCPT
+        id S2390225AbfHWHWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:21:28 -0400
-Received: from shell.v3.sk ([90.176.6.54]:40155 "EHLO shell.v3.sk"
+        Fri, 23 Aug 2019 03:22:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21539 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731211AbfHWHV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:21:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 55174D7697;
-        Fri, 23 Aug 2019 09:21:24 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id pMkOYpuRgxH6; Fri, 23 Aug 2019 09:21:20 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E8F49D7699;
-        Fri, 23 Aug 2019 09:21:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5ToaOpSmwFul; Fri, 23 Aug 2019 09:21:19 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id B15DFD7697;
-        Fri, 23 Aug 2019 09:21:18 +0200 (CEST)
-Message-ID: <424d2881edcaf7cedbfa5cbbf2e73aaff5355df3.camel@v3.sk>
-Subject: Re: [PATCH v2 00/20] Initial support for Marvell MMP3 SoC
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Date:   Fri, 23 Aug 2019 09:21:17 +0200
-In-Reply-To: <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
-         <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S1731211AbfHWHWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:22:14 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 00:22:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
+   d="scan'208";a="196424280"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Aug 2019 00:22:10 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 23 Aug 2019 10:22:09 +0300
+Date:   Fri, 23 Aug 2019 10:22:09 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 0/3] PCI: Add PCI_ERROR_RESPONSE, check for errors
+Message-ID: <20190823072209.GR19908@lahna.fi.intel.com>
+References: <20190822200551.129039-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822200551.129039-1-helgaas@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 11:31 +0100, Marc Zyngier wrote:
-> On 22/08/2019 10:26, Lubomir Rintel wrote:
-> > Hi, 
-> > 
-> > this is a second spin of a patch set that adds support for the Marvell
-> > MMP3 processor. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad
-> > FZ-A1 tablet and Dell Wyse 3020 Tx0D thin clients. 
-> > 
-> > Compared to v1, there's a handful of fixes in response to reviews. Patch
-> > 02/20 is new. Details in individual patches.
-> >  
-> > Apart from the adjustments in mach-mmp/, the patch makes necessary 
-> > changes to the irqchip driver and adds an USB2 PHY driver. The latter 
-> > has a dependency on the mach-mmp/ changes, so it can't be submitted 
-> > separately.
-> >  
-> > The patch set has been tested to work on Wyse Tx0D and not ruin MMP2 
-> > support on XO-1.75. 
+On Thu, Aug 22, 2019 at 03:05:48PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> How do you want this series to be merged? I'm happy to take the irqchip
-> related patches as well as the corresponding DT change (once reviewed)
-> through my tree.
-
-I was hoping for the Arm SoC tree, because there are some dependencies
-(MMP3 USB PHY depends on MMP3 SoC).
-
-That said, the irqchip patches are rather independent and the only
-downside of them going in via a different tree will be that the other
-tree that will lack them won't boot on MMP3 (things will compile
-though). I don't know if that's okay. What's typically done in cases
-like these?
-
-
-> Thanks,
+> Reads from a PCI device may fail if the device has been turned off (put
+> into D3cold), removed, or if some other error occurs.  The PCI host bridge
+> typically fabricates ~0 data to complete the CPU's read.
 > 
-> 	M.
+> We check for that in a few places, but not in a consistent way.  This
+> series adds a PCI_ERROR_RESPONSE definition to make the checks more
+> consistent and easier to find.  Note that ~0 may indicate a PCI error, but
+> it may also be valid read data, so you need more information (such as
+> knowing that a register can never contain ~0) before concluding that it's
+> an error.
+> 
+> This series also adds a new check for PCI_ERROR_RESPONSE in the power
+> management code because that code frequently encounters devices in D3cold,
+> where we previously misinterpreted ~0 data.  It also uses pci_power_name()
+> to print D-state names more consistently.
+> 
+> Rafael, I didn't add your Reviewed-by to "PCI / PM: Return error when
+> changing power state from D3cold" because I made small changes to try to
+> make the messages more consistent, and I didn't want to presume they'd be
+> OK with you.
+> 
+> Changes since v1:
+>   - Add Rafael's Reviewed-By to the first two patches
+>   - Drop "PCI / PM: Check for error when reading PME status" because Rafael
+>     pointed out that some devices can signal PME even when in D3cold, so
+>     this would require additional rework
+>   - Drop "PCI / PM: Check for error when reading Power State" because
+>     Rafael thinks it's mostly redundant
+> 
+> Bjorn Helgaas (3):
+>   PCI: Add PCI_ERROR_RESPONSE definition
+>   PCI / PM: Decode D3cold power state correctly
+>   PCI / PM: Return error when changing power state from D3cold
 
-Thank you
-Lubo
+For the whole series,
 
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
