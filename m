@@ -2,86 +2,185 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35A2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00750C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7650D22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566563198;
-	bh=ypX1o2hsCuFhuHU1jRTYCJPB+2mmYAusUPZwUYutOEU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=eJnRaOA0njZTFAQX8ns1jN1WmpIh3c7A/iqZtZACF/mj6Jyaz9xI8ipEhhyAdXeRa
-	 BnTohiv57iuKkY9kMn61RUsjxX29dtWkxyO04KaKD6YSYY+6VhA+Yg8NGAx+oakNFg
-	 4aC/rCbrmq/2wyIGC85F42ufNEYhM1lasEGzm5L0=
+	by mail.kernel.org (Postfix) with ESMTP id C61B322CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394686AbfHWM0h (ORCPT
+        id S2394692AbfHWM1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbfHWM0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:26:37 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74CC21848;
-        Fri, 23 Aug 2019 12:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566563196;
-        bh=ypX1o2hsCuFhuHU1jRTYCJPB+2mmYAusUPZwUYutOEU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=N//QOvIGXpermGaHXdkc+saq9orHM12iIj1Oi8bs3n86Nf4QJ8dt7eGg1zswdtcwO
-         yJKIVRyFYIx5j2dT07NE/kDUo88ce4U6lWJn3u/xJfso2b9RFC2KvqQYvw7xAeywis
-         KMbW6gT1AHZUxvxtm1kemzr14n0dWuA8iH/uRCFM=
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCH] media: sun4i: Make sun4i_csi_formats static
-Date:   Fri, 23 Aug 2019 14:26:32 +0200
-Message-Id: <20190823122632.30610-1-mripard@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Fri, 23 Aug 2019 08:27:00 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:47047 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfHWM1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:27:00 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 3S8itRCuubr4EQaKc4s3EZsIR7USEjhVpMEtX0XZbLRyd+EQ/NmmRmwm3FyrAsbIrk2xPmCziy
+ fewUzlskOel/niB0yw4VgPs59T34AvaS72F9Ohy72cJyCuZ95662cInGheRlwdRMoaUksM3G38
+ g9kd4VWekM407ITBX9ra8XgO9RYOaDAkZIJuxlipHDeato+TC3T7ktrp7equ+E3xb8M1jfyVJL
+ zq+nMhxQoxuJGeh1Yy2Uoy6CGdgxe84GYMBkjjkQ1kMad+mjpo1sBmE0N95yHWkH51UkmVWhKR
+ zLc=
+X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
+   d="scan'208";a="46293208"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Aug 2019 05:26:59 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 23 Aug 2019 05:26:58 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 23 Aug 2019 05:26:58 -0700
+Date:   Fri, 23 Aug 2019 14:26:58 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <UNGLinuxDriver@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <allan.nielsen@microchip.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH 0/3] Add NETIF_F_HW_BRIDGE feature
+Message-ID: <20190823122657.njk2tcgur2zu74i7@soft-dev3.microsemi.net>
+References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
+ <1e16da88-08c5-abd5-0a3e-b8e6c3db134a@cumulusnetworks.com>
+ <b2c52206-82d1-ef28-aeec-a5dcdbe9df6c@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <b2c52206-82d1-ef28-aeec-a5dcdbe9df6c@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+The 08/23/2019 01:26, Nikolay Aleksandrov wrote:
+> External E-Mail
+> 
+> 
+> On 8/23/19 1:09 AM, Nikolay Aleksandrov wrote:
+> > On 22/08/2019 22:07, Horatiu Vultur wrote:
+> >> Current implementation of the SW bridge is setting the interfaces in
+> >> promisc mode when they are added to bridge if learning of the frames is
+> >> enabled.
+> >> In case of Ocelot which has HW capabilities to switch frames, it is not
+> >> needed to set the ports in promisc mode because the HW already capable of
+> >> doing that. Therefore add NETIF_F_HW_BRIDGE feature to indicate that the
+> >> HW has bridge capabilities. Therefore the SW bridge doesn't need to set
+> >> the ports in promisc mode to do the switching.
+> >> This optimization takes places only if all the interfaces that are part
+> >> of the bridge have this flag and have the same network driver.
+> >>
+> >> If the bridge interfaces is added in promisc mode then also the ports part
+> >> of the bridge are set in promisc mode.
+> >>
+> >> Horatiu Vultur (3):
+> >>   net: Add HW_BRIDGE offload feature
+> >>   net: mscc: Use NETIF_F_HW_BRIDGE
+> >>   net: mscc: Implement promisc mode.
+> >>
+> >>  drivers/net/ethernet/mscc/ocelot.c | 26 ++++++++++++++++++++++++--
+> >>  include/linux/netdev_features.h    |  3 +++
+> >>  net/bridge/br_if.c                 | 29 ++++++++++++++++++++++++++++-
+> >>  net/core/ethtool.c                 |  1 +
+> >>  4 files changed, 56 insertions(+), 3 deletions(-)
+> >>
+> > 
+> 
 
-The sun4i_csi_formats array is only used in sun4i_v4l2.c, so it doesn't
-make any sense to have it !static.
+Hi Nikolay,
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Just to clarify:
+> > IMO the name is misleading.
+> - that's not mandatory or anything, just saying people might get confused when they see it
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
-index 772b0fc5920f..967bdb99221c 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
-@@ -18,7 +18,7 @@
- #define CSI_DEFAULT_WIDTH	640
- #define CSI_DEFAULT_HEIGHT	480
- 
--const struct sun4i_csi_format sun4i_csi_formats[] = {
-+const static struct sun4i_csi_format sun4i_csi_formats[] = {
- 	/* YUV422 inputs */
- 	{
- 		.mbus		= MEDIA_BUS_FMT_YUYV8_2X8,
+Naming is hard, I properly need to go back and find a better name once
+the patch is more mature and the problem/purpose is better understood.
+
+But you are right, this is a bad name, I will find a better one.
+> 
+> > Why do the devices have to be from the same driver ?
+After seeing yours and Andrews comments I realize that I try to do two
+things, but I have only explained one of them.
+
+Here is what I was trying to do:
+A. Prevent ports from going into promisc mode, if it is not needed.
+B. Prevent adding the CPU to the flood-mask (in Ocelot we have a
+flood-mask controlling who should be included when flooding due to
+destination unknown).
+
+We have been thinking of these two as the same thing, but they are in
+fact quite different. It is because of "B" we had to require all the
+devices to be controlled by the same Switch.
+
+For item "A" I do not think we need this restriction. In this patch we
+will continue only focusing on item "A".
+
+Sorry for the confusion. I will do a new patch that does not have this
+restriction (which will also make it simpler).
+
+It just needs to check for the flag NETIF_F_HW_BRIDGE and if it is not
+set then set the port in promisc mode.
+
+To solve item "B", the network driver needs to detect if there is a
+foreign interfaces added to the bridge. If that is the case then to add
+the CPU port to the flooding mask otherwise no. But this part will be in
+a different patch series.
+
+> > This is too specific targeting some devices.
+Maybe I was wrong to mention specific HW in the commit message. The
+purpose of the patch was to add an optimization (not to copy all the
+frames to the CPU) for HW that is capable of learning and flooding the
+frames.
+
+I would expect that most switching HW would benefit from this.
+
+> > The bridge should not care what's the port device, it should be the other way
+Not sure I understand how that could be done. Are you suggesting that
+the flag belongs to another structure? If you have something specific in
+mind, then please let us know.
+
+> That was mostly a rhetorical question, it's obvious why but please add an explanation
+> at least in the commit message and please fix the typos in the comment. Also HW
+> is capable of doing switching, this needs some clarification that the whole process
+> stays in HW IIUC. More details here would be great.
+
+Yes, I will add more details in the commit message and in code.
+> > around, so adding device-specific code to the bridge is not ok. Isn't there a solution
+> > where you can use NETDEV_JOIN and handle it all from your driver ?
+> > Would all HW-learned entries be hidden from user-space in this case ?
+
+Yes, they would. But if the network driver will call
+'call_switchdev_notifiers' with SWITCHDEV_FDB_ADD_TO_BRIDGE and
+SWITCHDEV_FDB_DEL_TO_BRIDGE then the SW will see these entries.
+> > 
+> I.e. isn't there a way to do this without introducing a new feature flag ?
+I do not have any better ideas.
+>  
+> 
+
 -- 
-2.21.0
-
+/Horatiu
