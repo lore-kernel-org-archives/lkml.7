@@ -2,268 +2,227 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE299C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E16C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FD6206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0550C233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566581676;
+	bh=MnDHgmtHVoUC5O71SAn2lWqY/5HpVQR/a6wzW32r/Fg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=TR9M8LhO0FEPUfJCeKGe2/tpYzyIuZujXhf0v9poQte4l+nI7kOxb/sQnMEqQji4x
+	 +qwtKVrYxbWlmN42PAGsPfO/jlDna/yVsT2JcGMOUfJWKL25X3yr8BmqeLSmtLReIh
+	 XJ/7XteRgSiONC/NEItTO14z5YrHNOv8i1L8cDlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403944AbfHWRdt (ORCPT
+        id S2404075AbfHWRef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:33:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38602 "EHLO mx1.redhat.com"
+        Fri, 23 Aug 2019 13:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403837AbfHWRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:33:48 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2403948AbfHWRee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:34:34 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7002308624A;
-        Fri, 23 Aug 2019 17:33:47 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-105.ams2.redhat.com [10.36.116.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD8255D9CA;
-        Fri, 23 Aug 2019 17:33:41 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     yuzenghui@huawei.com, zhang.zhanghailiang@huawei.com,
-        wanghaibin.wang@huawei.com, james.morse@arm.com,
-        qemu-arm@nongnu.org, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, peter.maydell@linaro.org,
-        andre.przywara@arm.com
-Subject: [PATCH] KVM: arm/arm64: vgic: Use a single IO device per redistributor
-Date:   Fri, 23 Aug 2019 19:33:30 +0200
-Message-Id: <20190823173330.23342-1-eric.auger@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 36324206DD;
+        Fri, 23 Aug 2019 17:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566581673;
+        bh=MnDHgmtHVoUC5O71SAn2lWqY/5HpVQR/a6wzW32r/Fg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DDGJEOge//QDHu5P/vX2Lr/yo3am86JXIqoxGkq+riYVFfL/XboZECe6klOycuvjb
+         0tvO9qW2HYpJH2K0hh1IidNs4DOI3GsR/6TrYboK8nXgYEBgvB+Swim4YYBu7T63cY
+         lmqN2dgfMn6DPtS4BUA+cmQbdZtcfgd6quNsnZlI=
+Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        shuah <shuah@kernel.org>
+References: <20190820232046.50175-1-brendanhiggins@google.com>
+ <20190820232046.50175-2-brendanhiggins@google.com>
+ <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+ <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
+ <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
+ <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <42c6235c-c586-8de1-1913-7cf1962c6066@kernel.org>
+Date:   Fri, 23 Aug 2019 11:34:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 23 Aug 2019 17:33:48 +0000 (UTC)
+In-Reply-To: <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment we use 2 IO devices per GICv3 redistributor: one
-one for the RD_base frame and one for the SGI_base frame.
+On 8/23/19 11:27 AM, Brendan Higgins wrote:
+> On Fri, Aug 23, 2019 at 10:05 AM shuah <shuah@kernel.org> wrote:
+>>
+>> On 8/23/19 10:48 AM, Brendan Higgins wrote:
+>>> On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
+>>>>
+>>>> Hi Brendan,
+>>>>
+>>>> On 8/20/19 5:20 PM, Brendan Higgins wrote:
+>>>>> Add core facilities for defining unit tests; this provides a common way
+>>>>> to define test cases, functions that execute code which is under test
+>>>>> and determine whether the code under test behaves as expected; this also
+>>>>> provides a way to group together related test cases in test suites (here
+>>>>> we call them test_modules).
+>>>>>
+>>>>> Just define test cases and how to execute them for now; setting
+>>>>> expectations on code will be defined later.
+>>>>>
+>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>>>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>>>>> ---
+>>>>>     include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
+>>>>>     kunit/Kconfig        |  17 ++++
+>>>>>     kunit/Makefile       |   1 +
+>>>>>     kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
+>>>>>     4 files changed, 388 insertions(+)
+>>>>>     create mode 100644 include/kunit/test.h
+>>>>>     create mode 100644 kunit/Kconfig
+>>>>>     create mode 100644 kunit/Makefile
+>>>>>     create mode 100644 kunit/test.c
+>>>>>
+>>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+>>>>> new file mode 100644
+>>>>> index 0000000000000..e0b34acb9ee4e
+>>>>> --- /dev/null
+>>>>> +++ b/include/kunit/test.h
+>>>>> @@ -0,0 +1,179 @@
+>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>> +/*
+>>>>> + * Base unit test (KUnit) API.
+>>>>> + *
+>>>>> + * Copyright (C) 2019, Google LLC.
+>>>>> + * Author: Brendan Higgins <brendanhiggins@google.com>
+>>>>> + */
+>>>>> +
+>>>>> +#ifndef _KUNIT_TEST_H
+>>>>> +#define _KUNIT_TEST_H
+>>>>> +
+>>>>> +#include <linux/types.h>
+>>>>> +
+>>>>> +struct kunit;
+>>>>> +
+>>>>> +/**
+>>>>> + * struct kunit_case - represents an individual test case.
+>>>>> + * @run_case: the function representing the actual test case.
+>>>>> + * @name: the name of the test case.
+>>>>> + *
+>>>>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
+>>>>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
+>>>>> + * test case is associated with a &struct kunit_suite and will be run after the
+>>>>> + * suite's init function and followed by the suite's exit function.
+>>>>> + *
+>>>>> + * A test case should be static and should only be created with the KUNIT_CASE()
+>>>>> + * macro; additionally, every array of test cases should be terminated with an
+>>>>> + * empty test case.
+>>>>> + *
+>>>>> + * Example:
+>>>>
+>>>> Can you fix these line continuations. It makes it very hard to read.
+>>>> Sorry for this late comment. These comments lines are longer than 80
+>>>> and wrap.
+>>>
+>>> None of the lines in this commit are over 80 characters in column
+>>> width. Some are exactly 80 characters (like above).
+>>>
+>>> My guess is that you are seeing the diff added text (+ ), which when
+>>> you add that to a line which is exactly 80 char in length ends up
+>>> being over 80 char in email. If you apply the patch you will see that
+>>> they are only 80 chars.
+>>>
+>>>>
+>>>> There are several comment lines in the file that are way too long.
+>>>
+>>> Note that checkpatch also does not complain about any over 80 char
+>>> lines in this file.
+>>>
+>>> Sorry if I am misunderstanding what you are trying to tell me. Please
+>>> confirm either way.
+>>>
+>>
+>> WARNING: Avoid unnecessary line continuations
+>> #258: FILE: include/kunit/test.h:137:
+>> +                */                                                            \
+>>
+>> total: 0 errors, 2 warnings, 388 lines checked
+> 
+> Ah, okay so you don't like the warning about the line continuation.
+> That's not because it is over 80 char, but because there is a line
+> continuation after a comment. I don't really see a way to get rid of
+> it without removing the comment from inside the macro.
+> 
+> I put this TODO there in the first place a Luis' request, and I put it
+> in the body of the macro because this macro already had a kernel-doc
+> comment and I didn't think that an implementation detail TODO belonged
+> in the user documentation.
+> 
+>> Go ahead fix these. It appears there are few lines that either longer
+>> than 80. In general, I keep them around 75, so it is easier read.
+> 
+> Sorry, the above is the only checkpatch warning other than the
+> reminder to update the MAINTAINERS file.
+> 
+> Are you saying you want me to go through and make all the lines fit in
+> 75 char column width? I hope not because that is going to be a pretty
+> substantial change to make.
+> 
 
-Instead we can use a single IO device per redistributor (the 2
-frames are contiguous). This saves slots on the KVM_MMIO_BUS
-which is currently limited to NR_IOBUS_DEVS (1000).
+There are two things with these comment lines. One is checkpatch
+complaining and the other is general readability.
 
-This change allows to instantiate up to 512 redistributors and may
-speed the guest boot with a large number of VCPUs.
+Please go ahead and adjust them.
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
----
- include/kvm/arm_vgic.h           |  1 -
- virt/kvm/arm/vgic/vgic-init.c    |  1 -
- virt/kvm/arm/vgic/vgic-mmio-v3.c | 81 ++++++++++----------------------
- 3 files changed, 24 insertions(+), 59 deletions(-)
-
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 7a30524a80ee..004f6e9d3b05 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -311,7 +311,6 @@ struct vgic_cpu {
- 	 * parts of the redistributor.
- 	 */
- 	struct vgic_io_device	rd_iodev;
--	struct vgic_io_device	sgi_iodev;
- 	struct vgic_redist_region *rdreg;
- 
- 	/* Contains the attributes and gpa of the LPI pending tables. */
-diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-index bdbc297d06fb..eaff7031a089 100644
---- a/virt/kvm/arm/vgic/vgic-init.c
-+++ b/virt/kvm/arm/vgic/vgic-init.c
-@@ -192,7 +192,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
- 	int i;
- 
- 	vgic_cpu->rd_iodev.base_addr = VGIC_ADDR_UNDEF;
--	vgic_cpu->sgi_iodev.base_addr = VGIC_ADDR_UNDEF;
- 
- 	INIT_LIST_HEAD(&vgic_cpu->ap_list_head);
- 	raw_spin_lock_init(&vgic_cpu->ap_list_lock);
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index c45e2d7e942f..400067085cab 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -515,7 +515,8 @@ static const struct vgic_register_region vgic_v3_dist_registers[] = {
- 		VGIC_ACCESS_32bit),
- };
- 
--static const struct vgic_register_region vgic_v3_rdbase_registers[] = {
-+static const struct vgic_register_region vgic_v3_rd_registers[] = {
-+	/* RD_base registers */
- 	REGISTER_DESC_WITH_LENGTH(GICR_CTLR,
- 		vgic_mmio_read_v3r_ctlr, vgic_mmio_write_v3r_ctlr, 4,
- 		VGIC_ACCESS_32bit),
-@@ -540,44 +541,42 @@ static const struct vgic_register_region vgic_v3_rdbase_registers[] = {
- 	REGISTER_DESC_WITH_LENGTH(GICR_IDREGS,
- 		vgic_mmio_read_v3_idregs, vgic_mmio_write_wi, 48,
- 		VGIC_ACCESS_32bit),
--};
--
--static const struct vgic_register_region vgic_v3_sgibase_registers[] = {
--	REGISTER_DESC_WITH_LENGTH(GICR_IGROUPR0,
-+	/* SGI_base registers */
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_IGROUPR0,
- 		vgic_mmio_read_group, vgic_mmio_write_group, 4,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH(GICR_ISENABLER0,
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_ISENABLER0,
- 		vgic_mmio_read_enable, vgic_mmio_write_senable, 4,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH(GICR_ICENABLER0,
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_ICENABLER0,
- 		vgic_mmio_read_enable, vgic_mmio_write_cenable, 4,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH_UACCESS(GICR_ISPENDR0,
-+	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ISPENDR0,
- 		vgic_mmio_read_pending, vgic_mmio_write_spending,
- 		vgic_v3_uaccess_read_pending, vgic_v3_uaccess_write_pending, 4,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH_UACCESS(GICR_ICPENDR0,
-+	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ICPENDR0,
- 		vgic_mmio_read_pending, vgic_mmio_write_cpending,
- 		vgic_mmio_read_raz, vgic_mmio_uaccess_write_wi, 4,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH_UACCESS(GICR_ISACTIVER0,
-+	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ISACTIVER0,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
- 		NULL, vgic_mmio_uaccess_write_sactive,
- 		4, VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH_UACCESS(GICR_ICACTIVER0,
-+	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ICACTIVER0,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
- 		NULL, vgic_mmio_uaccess_write_cactive,
- 		4, VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH(GICR_IPRIORITYR0,
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_IPRIORITYR0,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, 32,
- 		VGIC_ACCESS_32bit | VGIC_ACCESS_8bit),
--	REGISTER_DESC_WITH_LENGTH(GICR_ICFGR0,
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_ICFGR0,
- 		vgic_mmio_read_config, vgic_mmio_write_config, 8,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH(GICR_IGRPMODR0,
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_IGRPMODR0,
- 		vgic_mmio_read_raz, vgic_mmio_write_wi, 4,
- 		VGIC_ACCESS_32bit),
--	REGISTER_DESC_WITH_LENGTH(GICR_NSACR,
-+	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_NSACR,
- 		vgic_mmio_read_raz, vgic_mmio_write_wi, 4,
- 		VGIC_ACCESS_32bit),
- };
-@@ -607,9 +606,8 @@ int vgic_register_redist_iodev(struct kvm_vcpu *vcpu)
- 	struct vgic_dist *vgic = &kvm->arch.vgic;
- 	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
- 	struct vgic_io_device *rd_dev = &vcpu->arch.vgic_cpu.rd_iodev;
--	struct vgic_io_device *sgi_dev = &vcpu->arch.vgic_cpu.sgi_iodev;
- 	struct vgic_redist_region *rdreg;
--	gpa_t rd_base, sgi_base;
-+	gpa_t rd_base;
- 	int ret;
- 
- 	if (!IS_VGIC_ADDR_UNDEF(vgic_cpu->rd_iodev.base_addr))
-@@ -631,52 +629,31 @@ int vgic_register_redist_iodev(struct kvm_vcpu *vcpu)
- 	vgic_cpu->rdreg = rdreg;
- 
- 	rd_base = rdreg->base + rdreg->free_index * KVM_VGIC_V3_REDIST_SIZE;
--	sgi_base = rd_base + SZ_64K;
- 
- 	kvm_iodevice_init(&rd_dev->dev, &kvm_io_gic_ops);
- 	rd_dev->base_addr = rd_base;
- 	rd_dev->iodev_type = IODEV_REDIST;
--	rd_dev->regions = vgic_v3_rdbase_registers;
--	rd_dev->nr_regions = ARRAY_SIZE(vgic_v3_rdbase_registers);
-+	rd_dev->regions = vgic_v3_rd_registers;
-+	rd_dev->nr_regions = ARRAY_SIZE(vgic_v3_rd_registers);
- 	rd_dev->redist_vcpu = vcpu;
- 
- 	mutex_lock(&kvm->slots_lock);
- 	ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, rd_base,
--				      SZ_64K, &rd_dev->dev);
-+				      2 * SZ_64K, &rd_dev->dev);
- 	mutex_unlock(&kvm->slots_lock);
- 
- 	if (ret)
- 		return ret;
- 
--	kvm_iodevice_init(&sgi_dev->dev, &kvm_io_gic_ops);
--	sgi_dev->base_addr = sgi_base;
--	sgi_dev->iodev_type = IODEV_REDIST;
--	sgi_dev->regions = vgic_v3_sgibase_registers;
--	sgi_dev->nr_regions = ARRAY_SIZE(vgic_v3_sgibase_registers);
--	sgi_dev->redist_vcpu = vcpu;
--
--	mutex_lock(&kvm->slots_lock);
--	ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, sgi_base,
--				      SZ_64K, &sgi_dev->dev);
--	if (ret) {
--		kvm_io_bus_unregister_dev(kvm, KVM_MMIO_BUS,
--					  &rd_dev->dev);
--		goto out;
--	}
--
- 	rdreg->free_index++;
--out:
--	mutex_unlock(&kvm->slots_lock);
--	return ret;
-+	return 0;
- }
- 
- static void vgic_unregister_redist_iodev(struct kvm_vcpu *vcpu)
- {
- 	struct vgic_io_device *rd_dev = &vcpu->arch.vgic_cpu.rd_iodev;
--	struct vgic_io_device *sgi_dev = &vcpu->arch.vgic_cpu.sgi_iodev;
- 
- 	kvm_io_bus_unregister_dev(vcpu->kvm, KVM_MMIO_BUS, &rd_dev->dev);
--	kvm_io_bus_unregister_dev(vcpu->kvm, KVM_MMIO_BUS, &sgi_dev->dev);
- }
- 
- static int vgic_register_all_redist_iodevs(struct kvm *kvm)
-@@ -826,8 +803,8 @@ int vgic_v3_has_attr_regs(struct kvm_device *dev, struct kvm_device_attr *attr)
- 		iodev.base_addr = 0;
- 		break;
- 	case KVM_DEV_ARM_VGIC_GRP_REDIST_REGS:{
--		iodev.regions = vgic_v3_rdbase_registers;
--		iodev.nr_regions = ARRAY_SIZE(vgic_v3_rdbase_registers);
-+		iodev.regions = vgic_v3_rd_registers;
-+		iodev.nr_regions = ARRAY_SIZE(vgic_v3_rd_registers);
- 		iodev.base_addr = 0;
- 		break;
- 	}
-@@ -985,21 +962,11 @@ int vgic_v3_redist_uaccess(struct kvm_vcpu *vcpu, bool is_write,
- 			   int offset, u32 *val)
- {
- 	struct vgic_io_device rd_dev = {
--		.regions = vgic_v3_rdbase_registers,
--		.nr_regions = ARRAY_SIZE(vgic_v3_rdbase_registers),
-+		.regions = vgic_v3_rd_registers,
-+		.nr_regions = ARRAY_SIZE(vgic_v3_rd_registers),
- 	};
- 
--	struct vgic_io_device sgi_dev = {
--		.regions = vgic_v3_sgibase_registers,
--		.nr_regions = ARRAY_SIZE(vgic_v3_sgibase_registers),
--	};
--
--	/* SGI_base is the next 64K frame after RD_base */
--	if (offset >= SZ_64K)
--		return vgic_uaccess(vcpu, &sgi_dev, is_write, offset - SZ_64K,
--				    val);
--	else
--		return vgic_uaccess(vcpu, &rd_dev, is_write, offset, val);
-+	return vgic_uaccess(vcpu, &rd_dev, is_write, offset, val);
- }
- 
- int vgic_v3_line_level_info_uaccess(struct kvm_vcpu *vcpu, bool is_write,
--- 
-2.20.1
-
+thanks,
+-- Shuah
