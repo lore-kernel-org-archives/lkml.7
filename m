@@ -2,419 +2,111 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4B9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE71C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA8F22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90A021019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Xusb0Xj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388288AbfHWRQp (ORCPT
+        id S2388584AbfHWRRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:16:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42538 "EHLO mx1.redhat.com"
+        Fri, 23 Aug 2019 13:17:16 -0400
+Received: from mout.gmx.net ([212.227.17.20]:51531 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387641AbfHWRQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:16:44 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F31203DE31;
-        Fri, 23 Aug 2019 17:16:43 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D061C18E30;
-        Fri, 23 Aug 2019 17:16:41 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 11:16:41 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Jiri Pirko <jiri@resnulli.us>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190823111641.7f928917@x1.home>
-In-Reply-To: <AM0PR05MB4866E33AF7203DE47F713FAAD1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190820225722.237a57d2@x1.home>
-        <AM0PR05MB4866AE8FC4AA3CC24B08B326D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190820232622.164962d3@x1.home>
-        <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822092903.GA2276@nanopsycho.orion>
-        <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822095823.GB2276@nanopsycho.orion>
-        <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822121936.GC2276@nanopsycho.orion>
-        <AM0PR05MB4866F9650CF73FC671972127D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823081221.GG2276@nanopsycho.orion>
-        <AM0PR05MB4866DED407D6F1C653D5D560D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823082820.605deb07@x1.home>
-        <AM0PR05MB4866867150DAABA422F25FF8D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823095229.210e1e84@x1.home>
-        <AM0PR05MB4866E33AF7203DE47F713FAAD1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        id S2387641AbfHWRRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:17:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566580580;
+        bh=KAOdaynKbihaITcaFt4WqiyRLZbtSP/RJI/uMxSYwAA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Xusb0Xj64yL0T6lEq8KfvIbQDlrHe2gC7RLsib5J7rTaqGSAMg6/Ur+73Ny2qekSq
+         8r9+RAb9gtoR7XFFc6mC31NlMvYo3q3cgFMEtFchyGoO/+De2yJYzL5qDkxhAlZ746
+         XuwMFuSlD//ORk1PvvrRpTE0thLPtaGwE/GSjqz4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.154.8] ([217.61.154.8]) by web-mail.gmx.net
+ (3c-app-gmx-bs75.server.lan [172.19.170.219]) (via HTTP); Fri, 23 Aug 2019
+ 19:16:20 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 23 Aug 2019 17:16:44 +0000 (UTC)
+Message-ID: <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Matthias Brugger" <matthias.bgg@gmail.com>
+Cc:     linux-mediatek@lists.infradead.org,
+        "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Sean Wang" <sean.wang@mediatek.com>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Rob Herring" <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Eddie Huang" <eddie.huang@mediatek.com>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        linux-rtc@vger.kernel.org
+Subject: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related
+ code from core driver
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 23 Aug 2019 19:16:20 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+ <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
+ <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
+ <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:M6tggHu2jkIqLMSHLX83dNUDyHrefgQf8IujR0hyiRKzkuklyndiHW9nYGEkuLXCbOFMO
+ SU+tldv0OOjj7fhdIotEInIhprMyKcHFTkDmg3Efi+cKsHLNCA4guu9ErTmP0DGbBBpZpN41036a
+ tuKt30R+dNFMZUaZY7u53km3KLRC2mt9/svU71MSZNnuo+/30tBC7dIXkuBB4vRLB+OQsdK4O50+
+ XX6VyQNrBSgCyXPZ1HhTjjLmG/rbSC9Y4CbSc2JU2HAPRc62AwxY1qZsv6BFDYP7/gsYLXNh4pyc
+ 20=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TOoEHewdCY8=:S/v5Ky3YBDWNjot/2PylTF
+ kK4NljRpELNyO9TgpRHOWLeukFdMAosLfLxz3bWRabDlr3Sfb/rlMknadYnt7/PvLo2b3piM1
+ smjOdh6YxQQuRfqIMtvhk5i6BbszdW3monJEzwT+6Kky7MJIES1cblfZ11cvocxi2NZInCaCT
+ rTdZFThb/PDsgySQMgfbLL3ETPBcAQS+YtdZRS/7hDoiNYkYpCyxw0xZ+LbUOd02TY9KFuoNh
+ +Eb/5DGmKIn7gvJKawUveefsQvtzoYPVBUrPR/IgdXMpyce7AHlatkvq0lxNp098Yy+tO995P
+ 1zQq4mgbIHnkw3zZkhw0IBAYfpBGkTqhmrzJQ7+ePW2AEZ2zwzZY08fuv/O0X6DEXqO2dELtd
+ /zDW//zdP5Ns35UQN/VOEl6zp+/NzWh6kfYCtQ/eW3Ns2eFrdreUSaJBzmH18vpsMZ86rpmXS
+ ib8TdXaLtUf981KqYi0y3TWbY8KkzmW0VtFuAc7arSxVf/ZSdRhFM07FyiD4uwDASn+EVYLU8
+ JOkoLAghKWioW2JbWYU3cAdvK47ZHFdRFzdXFMSJePxEGvew4Y+hNXk1icKwNpUZjMtHzDvBF
+ 0b6mmpA96LbZ7PR6g8lsDIU2M+8snOHHumaDSNyt+N2sZFA4EMTfFaMec5EZR45lxuMBlvd3w
+ sipzH8uF4e4HsVt40jHmE4miAlyyc1ED5nuwyGLE0/9eNzw==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 23 Aug 2019 16:14:04 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+> Gesendet: Freitag, 23. August 2019 um 17:42 Uhr
+> Von: "Matthias Brugger" <matthias.bgg@gmail.com>
 
-> > -----Original Message-----
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Friday, August 23, 2019 9:22 PM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>; David S . Miller
-> > <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>; Cornelia
-> > Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; cjia <cjia@nvidia.com>; netdev@vger.kernel.org
-> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > 
-> > On Fri, 23 Aug 2019 14:53:06 +0000
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >   
-> > > > -----Original Message-----
-> > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > Sent: Friday, August 23, 2019 7:58 PM
-> > > > To: Parav Pandit <parav@mellanox.com>
-> > > > Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>;
-> > > > David S . Miller <davem@davemloft.net>; Kirti Wankhede
-> > > > <kwankhede@nvidia.com>; Cornelia Huck <cohuck@redhat.com>;
-> > > > kvm@vger.kernel.org; linux- kernel@vger.kernel.org; cjia
-> > > > <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > > >
-> > > > On Fri, 23 Aug 2019 08:14:39 +0000
-> > > > Parav Pandit <parav@mellanox.com> wrote:
-> > > >  
-> > > > > Hi Alex,
-> > > > >
-> > > > >  
-> > > > > > -----Original Message-----
-> > > > > > From: Jiri Pirko <jiri@resnulli.us>
-> > > > > > Sent: Friday, August 23, 2019 1:42 PM
-> > > > > > To: Parav Pandit <parav@mellanox.com>
-> > > > > > Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
-> > > > > > <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
-> > > > > > Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck  
-> > > > <cohuck@redhat.com>;  
-> > > > > > kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > > > > <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > > > > >
-> > > > > > Thu, Aug 22, 2019 at 03:33:30PM CEST, parav@mellanox.com wrote:  
-> > > > > > >
-> > > > > > >  
-> > > > > > >> -----Original Message-----
-> > > > > > >> From: Jiri Pirko <jiri@resnulli.us>
-> > > > > > >> Sent: Thursday, August 22, 2019 5:50 PM
-> > > > > > >> To: Parav Pandit <parav@mellanox.com>
-> > > > > > >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
-> > > > > > >> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
-> > > > > > >> Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck  
-> > > > > > <cohuck@redhat.com>;  
-> > > > > > >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > > > > >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > > > > >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev
-> > > > > > >> core
-> > > > > > >>
-> > > > > > >> Thu, Aug 22, 2019 at 12:04:02PM CEST, parav@mellanox.com wrote:  
-> > > > > > >> >
-> > > > > > >> >  
-> > > > > > >> >> -----Original Message-----
-> > > > > > >> >> From: Jiri Pirko <jiri@resnulli.us>
-> > > > > > >> >> Sent: Thursday, August 22, 2019 3:28 PM
-> > > > > > >> >> To: Parav Pandit <parav@mellanox.com>
-> > > > > > >> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri
-> > > > > > >> >> Pirko <jiri@mellanox.com>; David S . Miller
-> > > > > > >> >> <davem@davemloft.net>; Kirti Wankhede
-> > > > > > >> >> <kwankhede@nvidia.com>; Cornelia Huck  
-> > > > > > >> <cohuck@redhat.com>;  
-> > > > > > >> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > > > > >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > > > > >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev
-> > > > > > >> >> core
-> > > > > > >> >>
-> > > > > > >> >> Thu, Aug 22, 2019 at 11:42:13AM CEST, parav@mellanox.com  
-> > wrote:  
-> > > > > > >> >> >
-> > > > > > >> >> >  
-> > > > > > >> >> >> -----Original Message-----
-> > > > > > >> >> >> From: Jiri Pirko <jiri@resnulli.us>
-> > > > > > >> >> >> Sent: Thursday, August 22, 2019 2:59 PM
-> > > > > > >> >> >> To: Parav Pandit <parav@mellanox.com>
-> > > > > > >> >> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri
-> > > > > > >> >> >> Pirko <jiri@mellanox.com>; David S . Miller
-> > > > > > >> >> >> <davem@davemloft.net>; Kirti Wankhede
-> > > > > > >> >> >> <kwankhede@nvidia.com>; Cornelia Huck  
-> > > > > > >> >> <cohuck@redhat.com>;  
-> > > > > > >> >> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
-> > > > > > >> >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > > > > >> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and
-> > > > > > >> >> >> mdev core
-> > > > > > >> >> >>
-> > > > > > >> >> >> Wed, Aug 21, 2019 at 08:23:17AM CEST,
-> > > > > > >> >> >> parav@mellanox.com  
-> > > > wrote:  
-> > > > > > >> >> >> >
-> > > > > > >> >> >> >  
-> > > > > > >> >> >> >> -----Original Message-----
-> > > > > > >> >> >> >> From: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > >> >> >> >> Sent: Wednesday, August 21, 2019 10:56 AM
-> > > > > > >> >> >> >> To: Parav Pandit <parav@mellanox.com>
-> > > > > > >> >> >> >> Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller
-> > > > > > >> >> >> >> <davem@davemloft.net>; Kirti Wankhede
-> > > > > > >> >> >> >> <kwankhede@nvidia.com>; Cornelia Huck
-> > > > > > >> >> >> >> <cohuck@redhat.com>; kvm@vger.kernel.org;
-> > > > > > >> >> >> >> linux-kernel@vger.kernel.org; cjia
-> > > > > > >> >> >> >> <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > > > > >> >> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and
-> > > > > > >> >> >> >> mdev core
-> > > > > > >> >> >> >>  
-> > > > > > >> >> >> >> > > > > Just an example of the alias, not proposing how it's  
-> > set.  
-> > > > > > >> >> >> >> > > > > In fact, proposing that the user does not
-> > > > > > >> >> >> >> > > > > set it, mdev-core provides one  
-> > > > > > >> >> >> >> > > automatically.  
-> > > > > > >> >> >> >> > > > >  
-> > > > > > >> >> >> >> > > > > > > Since there seems to be some prefix
-> > > > > > >> >> >> >> > > > > > > overhead, as I ask about above in how
-> > > > > > >> >> >> >> > > > > > > many characters we actually have to work
-> > > > > > >> >> >> >> > > > > > > with in IFNAMESZ, maybe we start with
-> > > > > > >> >> >> >> > > > > > > 8 characters (matching your "index"
-> > > > > > >> >> >> >> > > > > > > namespace) and expand as necessary for  
-> > > > > > >> >> >> disambiguation.  
-> > > > > > >> >> >> >> > > > > > > If we can eliminate overhead in
-> > > > > > >> >> >> >> > > > > > > IFNAMESZ, let's start with  
-> > > > > > >> 12.  
-> > > > > > >> >> >> >> > > > > > > Thanks,
-> > > > > > >> >> >> >> > > > > > >  
-> > > > > > >> >> >> >> > > > > > If user is going to choose the alias, why
-> > > > > > >> >> >> >> > > > > > does it have to be limited to  
-> > > > > > >> >> >> >> sha1?  
-> > > > > > >> >> >> >> > > > > > Or you just told it as an example?
-> > > > > > >> >> >> >> > > > > >
-> > > > > > >> >> >> >> > > > > > It can be an alpha-numeric string.  
-> > > > > > >> >> >> >> > > > >
-> > > > > > >> >> >> >> > > > > No, I'm proposing a different solution where
-> > > > > > >> >> >> >> > > > > mdev-core creates an alias based on an
-> > > > > > >> >> >> >> > > > > abbreviated sha1.  The user does not provide
-> > > > > > >> >> >> >> > > > > the  
-> > > > > > >> >> >> >> alias.  
-> > > > > > >> >> >> >> > > > >  
-> > > > > > >> >> >> >> > > > > > Instead of mdev imposing number of
-> > > > > > >> >> >> >> > > > > > characters on the alias, it should be best  
-> > > > > > >> >> >> >> > > > > left to the user.  
-> > > > > > >> >> >> >> > > > > > Because in future if netdev improves on
-> > > > > > >> >> >> >> > > > > > the naming scheme, mdev will be  
-> > > > > > >> >> >> >> > > > > limiting it, which is not right.  
-> > > > > > >> >> >> >> > > > > > So not restricting alias size seems right to me.
-> > > > > > >> >> >> >> > > > > > User configuring mdev for networking
-> > > > > > >> >> >> >> > > > > > devices in a given kernel knows what  
-> > > > > > >> >> >> >> > > > > user is doing.  
-> > > > > > >> >> >> >> > > > > > So user can choose alias name size as it finds  
-> > suitable.  
-> > > > > > >> >> >> >> > > > >
-> > > > > > >> >> >> >> > > > > That's not what I'm proposing, please read again.
-> > > > > > >> >> >> >> > > > > Thanks,  
-> > > > > > >> >> >> >> > > >
-> > > > > > >> >> >> >> > > > I understood your point. But mdev doesn't know
-> > > > > > >> >> >> >> > > > how user is going to use  
-> > > > > > >> >> >> >> > > udev/systemd to name the netdev.  
-> > > > > > >> >> >> >> > > > So even if mdev chose to pick 12 characters,
-> > > > > > >> >> >> >> > > > it could result in  
-> > > > > > >> >> collision.  
-> > > > > > >> >> >> >> > > > Hence the proposal to provide the alias by the
-> > > > > > >> >> >> >> > > > user, as user know the best  
-> > > > > > >> >> >> >> > > policy for its use case in the environment its using.  
-> > > > > > >> >> >> >> > > > So 12 character sha1 method will still work by user.  
-> > > > > > >> >> >> >> > >
-> > > > > > >> >> >> >> > > Haven't you already provided examples where
-> > > > > > >> >> >> >> > > certain drivers or subsystems have unique netdev  
-> > prefixes?  
-> > > > > > >> >> >> >> > > If mdev provides a unique alias within the
-> > > > > > >> >> >> >> > > subsystem, couldn't we simply define a netdev
-> > > > > > >> >> >> >> > > prefix for the mdev subsystem and avoid all
-> > > > > > >> >> >> >> > > other collisions?  I'm not in favor of the user
-> > > > > > >> >> >> >> > > providing both a uuid and an alias/instance.
-> > > > > > >> >> >> >> > > Thanks,
-> > > > > > >> >> >> >> > >  
-> > > > > > >> >> >> >> > For a given prefix, say ens2f0, can two UUID->sha1
-> > > > > > >> >> >> >> > first 9 characters have  
-> > > > > > >> >> >> >> collision?
-> > > > > > >> >> >> >>
-> > > > > > >> >> >> >> I think it would be a mistake to waste so many chars
-> > > > > > >> >> >> >> on a prefix, but
-> > > > > > >> >> >> >> 9 characters of sha1 likely wouldn't have a
-> > > > > > >> >> >> >> collision before we have 10s of thousands of
-> > > > > > >> >> >> >> devices.  Thanks,
-> > > > > > >> >> >> >>
-> > > > > > >> >> >> >> Alex  
-> > > > > > >> >> >> >
-> > > > > > >> >> >> >Jiri, Dave,
-> > > > > > >> >> >> >Are you ok with it for devlink/netdev part?
-> > > > > > >> >> >> >Mdev core will create an alias from a UUID.
-> > > > > > >> >> >> >
-> > > > > > >> >> >> >This will be supplied during devlink port attr set
-> > > > > > >> >> >> >such as,
-> > > > > > >> >> >> >
-> > > > > > >> >> >> >devlink_port_attrs_mdev_set(struct devlink_port *port,
-> > > > > > >> >> >> >const char *mdev_alias);
-> > > > > > >> >> >> >
-> > > > > > >> >> >> >This alias is used to generate representor netdev's  
-> > > > phys_port_name.  
-> > > > > > >> >> >> >This alias from the mdev device's sysfs will be used
-> > > > > > >> >> >> >by the udev/systemd to  
-> > > > > > >> >> >> generate predicable netdev's name.  
-> > > > > > >> >> >> >Example: enm<mdev_alias_first_12_chars>  
-> > > > > > >> >> >>
-> > > > > > >> >> >> What happens in unlikely case of 2 UUIDs collide?
-> > > > > > >> >> >>  
-> > > > > > >> >> >Since users sees two devices with same phys_port_name,
-> > > > > > >> >> >user should destroy  
-> > > > > > >> >> recently created mdev and recreate mdev with different UUID?
-> > > > > > >> >>
-> > > > > > >> >> Driver should make sure phys port name wont collide,  
-> > > > > > >> >So when mdev creation is initiated, mdev core calculates the
-> > > > > > >> >alias and if there  
-> > > > > > >> is any other mdev with same alias exist, it returns -EEXIST
-> > > > > > >> error before progressing further.  
-> > > > > > >> >This way user will get to know upfront in event of collision
-> > > > > > >> >before the mdev  
-> > > > > > >> device gets created.  
-> > > > > > >> >How about that?  
-> > > > > > >>
-> > > > > > >> Sounds fine to me. Now the question is how many chars do we
-> > > > > > >> want to  
-> > > > have.  
-> > > > > > >>  
-> > > > > > >12 characters from Alex's suggestion similar to git?  
-> > > > > >
-> > > > > > Ok.
-> > > > > >  
-> > > > >
-> > > > > Can you please confirm this scheme looks good now? I like to get
-> > > > > patches  
-> > > > started.
-> > > >
-> > > > My only concern is your comment that in the event of an abbreviated
-> > > > sha1 collision (as exceptionally rare as that might be at 12-chars),
-> > > > we'd fail the device create, while my original suggestion was that
-> > > > vfio-core would add an extra character to the alias.  For
-> > > > non-networking devices, the sha1 is unnecessary, so the extension
-> > > > behavior seems preferred.  The user is only responsible to provide a
-> > > > unique uuid.  Perhaps the failure behavior could be applied based on
-> > > > the mdev device_api.  A module option on mdev to specify the default
-> > > > number of alias chars would also be useful for testing so that we
-> > > > can set it low enough to validate the collision behavior.  Thanks,
-> > > >  
-> > >
-> > > Idea is to have mdev alias as optional.
-> > > Each mdev_parent says whether it wants mdev_core to generate an alias
-> > > or not. So only networking device drivers would set it to true.
-> > > For rest, alias won't be generated, and won't be compared either
-> > > during creation time. User continue to provide only uuid.  
-> > 
-> > Ok
-> >   
-> > > I am tempted to have alias collision detection only within children
-> > > mdevs of the same parent, but doing so will always mandate to prefix
-> > > in netdev name. And currently we are left with only 3 characters to
-> > > prefix it, so that may not be good either. Hence, I think mdev core
-> > > wide alias is better with 12 characters.  
-> > 
-> > I suppose it depends on the API, if the vendor driver can ask the mdev core for
-> > an alias as part of the device creation process, then it could manage the netdev
-> > namespace for all its devices, choosing how many characters to use, and fail
-> > the creation if it can't meet a uniqueness requirement.  IOW, mdev-core would
-> > always provide a full sha1 and therefore gets itself out of the
-> > uniqueness/collision aspects.
-> >   
-> This doesn't work. At mdev core level 20 bytes sha1 are unique, so
-> mdev core allowed to create a mdev.
+> I suppose that's because 3/10 has code that should be in 2/10 and for so=
+me
+> reason 3/10 was not pushed for linux-next inclusion. Although it has the=
+ same
+> Acked-for-mfd-by tag.
+>
+> @Frank, can you test if adding 3/10 to your code base fixes the issue?
 
-The mdev vendor driver has the opportunity to fail the device creation
-in mdev_parent_ops.create().
+adding part 3 [1] seems to fix the issue too
 
-> And then devlink core chooses
-> only 6 bytes (12 characters) and there is collision. Things fall
-> apart. Since mdev provides unique uuid based scheme, it's the mdev
-> core's ownership to provide unique aliases.
+[    4.960051] mt6323-regulator mt6323-regulator: Chip ID =3D 0x2023
 
-You're suggesting/contemplating multiple solutions here, 3-char prefix +
-12-char sha1 vs <parent netdev> + ?-char sha1.  Also, the 15-char
-total limit is imposed by an external subsystem, where the vendor
-driver is the gateway between that subsystem and mdev.  How would mdev
-integrate with another subsystem that maybe only has 9-chars
-available?  Would the vendor driver API specify "I need an alias" or
-would it specify "I need an X-char length alias"?  Does it make sense
-that mdev-core would fail creation of a device if there's a collision
-in the 12-char address space between different subsystems?  For
-example, does enm0123456789ab really collide with xyz0123456789ab?  So
-if mdev were to provided a 40-char sha1, is it possible that the vendor
-driver could consume this in its create callback, truncate it to the
-number of chars required by the vendor driver's subsystem, and
-determine whether a collision exists?
+thanks
 
-> > > I do not understand how an extra character reduces collision, if
-> > > that's what you meant.  
-> > 
-> > If the default were for example 3-chars, we might already have
-> > device 'abc'.  A collision would expose one more char of the new
-> > device, so we might add device with alias 'abcd'.  I mentioned
-> > previously that this leaves an issue for userspace that we can't
-> > change the alias of device abc, so without additional information,
-> > userspace can only determine via elimination the mapping of alias
-> > to device, but userspace has more information available to it in
-> > the form of sysfs links. 
-> > > Module options are almost not encouraged anymore with other
-> > > subsystems/drivers.  
-> > 
-> > We don't live in a world of absolutes.  I agree that the defaults
-> > should work in the vast majority of cases.  Requiring a user to
-> > twiddle module options to make things work is undesirable, verging
-> > on a bug.  A module option to enable some specific feature, unsafe
-> > condition, or test that is outside of the typical use case is
-> > reasonable, imo. 
-> > > For testing collision rate, a sample user space script and sample
-> > > mtty is easy and get us collision count too. We shouldn't put
-> > > that using module option in production kernel. I practically have
-> > > the code ready to play with; Changing 12 to smaller value is easy
-> > > with module reload.
-> > >
-> > > #define MDEV_ALIAS_LEN 12  
-> > 
-> > If it can't be tested with a shipping binary, it probably won't be
-> > tested.  Thanks, 
-> It is not the role of mdev core to expose collision
-> efficiency/deficiency of the sha1. It can be tested outside before
-> mdev choose to use it.
-
-The testing I'm considering is the user and kernel response to a
-collision.
- 
-> I am saying we should test with 12 characters with 10,000 or more
-> devices and see how collision occurs. Even if collision occurs, mdev
-> returns EEXIST status indicating user to pick a different UUID for
-> those rare conditions.
-
-The only way we're going to see collision with a 12-char sha1 is if we
-burn the CPU cycles to find uuids that collide in that space.  10,000
-devices is not remotely enough to generate a collision in that address
-space.  That puts a prerequisite in place that in order to test
-collision, someone needs to know certain magic inputs.  OTOH, if we
-could use a shorter abbreviation, collisions are trivial to test
-experimentally.  Thanks,
-
-Alex
+[1] https://patchwork.kernel.org/patch/11110509/
