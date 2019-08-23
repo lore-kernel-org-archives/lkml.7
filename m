@@ -2,86 +2,179 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E5DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2AEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2355F233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A42233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sA3b4HdX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cUOH+YhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389209AbfHWIAd (ORCPT
+        id S1732590AbfHWICo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:00:33 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42147 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730532AbfHWIAc (ORCPT
+        Fri, 23 Aug 2019 04:02:44 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39116 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731606AbfHWICo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:00:32 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l14so7999145ljj.9
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:00:31 -0700 (PDT)
+        Fri, 23 Aug 2019 04:02:44 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x4so8020027ljj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2MWurloFC424CUmSqLbHj0wb/3z06n1cb9tNRKzCOz0=;
-        b=sA3b4HdX77h7s/fsgrnjxNpZZL2Q2H0A0yDHqxZ97wKFl/4wY6a1hIV5EQoqmrzZ7r
-         f4Z8cqeST9COrJKBqhuaiYdi+KUCmgfbGSP1wKpdmxquge83gpeW3HfaT5SCIGS5uwVG
-         3veKuafvjamg3UGf5XlzSwsesSMNOTzddh4Ge5Tqp+I26zHMONWLgzNiAq0o81va1Jc1
-         emEV0eUjqLBewyOer5y+Dho936IyFhHQSxCZlZqIw1KZGcbRpXPMFujKyY+ryczpp+Yx
-         sISvmhOjokZhZ62yOeO8PFUTc2yZ4Hf2TWU69qgzlCyG7Oq+xQhaGlB5ijax6S+LsHQL
-         jClg==
+         :cc:content-transfer-encoding;
+        bh=rL4KTmANqkNL+vqRdcGR+JlDxVov3q/FihV0pTPq55I=;
+        b=cUOH+YhTQ1B3AbSjszPSM6uIzUwdE72M6buSuNva38RPEITpkIxXx3yOyDD4FhIhxo
+         82NcQT46kaj31sQkj1DGHefJ1jL7aa2bV65of/4mQ5SQaEfsVf8N3sEsW53Bjg6vTWux
+         m5d/SaKZxcEZR/S8Zdzh+Src0Zc8fRqg7tHEzt53ta2J84sCTb+dTp47kmee4f7nESjA
+         XxJzZlipTEi3CgD2Z+oVXJieTUk8Ap0785ntqXwtSbzzw/EdykG1hYxBI0a2BvF4tCBm
+         /PniiCCLjAL5t0RmCt9qJTm7ul/9YxhRhjqNBvi91Alz19dkzYHrXTKPYWJVk2qpPQEy
+         8i2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2MWurloFC424CUmSqLbHj0wb/3z06n1cb9tNRKzCOz0=;
-        b=UP9otYVFihio/TTLfK873/On/ZrDUGJo/3GUU5Sax64G6gT1B4VGbbg5HdgFo55QRk
-         GItVdtusUmNjGR6mqIYuFdG6FdVjE2nSxd5tzS8aosRJtP1J8u7uYpSpM3lGEIekYYrC
-         CFumrDrBITMHq+EOaItKagZVFmNK5FLoaV0Kei3/Ddde5AfC7hXnho6Xc2JMsaRhPi7V
-         N4bzwY0oSX65eOlvic9nojlFSFoACOinyCbSykMgSmqTRBAgmiayLHstWHOh9c2GK+O9
-         oYAVfkmdEFK18c/0SQWu2s113XJOsqW27mgT3qwJVyjpi4ij0gNU1+GMCpMAwFrfSxJn
-         Jq2A==
-X-Gm-Message-State: APjAAAVIOLWFv3z3caik/OwBEm+2sqvpZspa9IYPKxljDggZ3EL7LRTg
-        Z6ABc8IpW4sSAxO8jpLEIjp7Du15z8Yx5/R3Mui+jQ==
-X-Google-Smtp-Source: APXvYqzLQ5ClEUlmAOPmQjblokk+7eUHmNQEQGStJEPG0CbEku6phix8tVMaf7PE4m+a0XscjlciF/e0C/PJmTAj7dk=
-X-Received: by 2002:a2e:781a:: with SMTP id t26mr2091021ljc.28.1566547230567;
- Fri, 23 Aug 2019 01:00:30 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rL4KTmANqkNL+vqRdcGR+JlDxVov3q/FihV0pTPq55I=;
+        b=fzSt9hP97pXD+C40TNwg/kRIC8FAp5nHfJ8tkqObd0IdHfY4ecijjDkbTaeyTpmS8a
+         s86T7Or8THBpK1SAntCsUzcGaqpqABu8EaBORJpi9L7h2QCxmGpLf0ctUdygMVsitcyq
+         5XryuGSgikWJMK/NP6ajWufeM5xRzD0QBod6hwu8vz1sabQZwboguBhEpz1s5fN5PtGn
+         rkTyyJ7Y+cCIus9Mu/ILnv7JutdASptxJymshBZtuVJhWF4HUfizW5OGo5HFwX2pfRis
+         ulqtJtNwQ5kSZTxoV5WzJ6Cv6Ol8M1mfTA7oMQLd/Mbr98ePK1KTKJxlukunZ6XXKbpj
+         miAQ==
+X-Gm-Message-State: APjAAAUQV7p23XX4M3YHi2g97j0PngaUkxKAAjRgjDcCZV7llIif2tyN
+        kECDf/BbBk+a3/BPmWyR2WeT7eBE8c9MOspHB8vDww==
+X-Google-Smtp-Source: APXvYqxUcMiVaMm7wZ/mZoeHT4PGedcrXbkbTYajtt3LM0QrRqqHkenjrWPFoaPogeBoFH6/U9dyQ3W1tVW5HWDlUFo=
+X-Received: by 2002:a2e:800a:: with SMTP id j10mr2084390ljg.137.1566547361926;
+ Fri, 23 Aug 2019 01:02:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814123512.6017-1-vkoul@kernel.org> <20190814123512.6017-3-vkoul@kernel.org>
-In-Reply-To: <20190814123512.6017-3-vkoul@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 10:00:19 +0200
-Message-ID: <CACRpkdbANSzMbO2dDGrfFK=KP_ZCkoaOA7xG4zirhzo7hHG_ag@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8150l support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190822171728.445189830@linuxfoundation.org>
+In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 23 Aug 2019 13:32:30 +0530
+Message-ID: <CA+G9fYtbzzKzrVW=yBFsOGQVUTviny4Dnv1bYZSp2bn4hd--MQ@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/103] 4.9.190-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 2:36 PM Vinod Koul <vkoul@kernel.org> wrote:
-
-> Add support for the PM8150l GPIO support to the Qualcomm PMIC GPIO
-> binding.
+On Thu, 22 Aug 2019 at 22:53, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> This is the start of the stable review cycle for the 4.9.190 release.
+> There are 103 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 24 Aug 2019 05:15:44 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.190-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Patch applied.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Yours,
-Linus Walleij
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.190-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 7a35fdc061cdc806d06bb3a34ed5c9c0d08ffc0d
+git describe: v4.9.189-104-g7a35fdc061cd
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.189-104-g7a35fdc061cd
+
+
+No regressions (compared to build v4.9.189)
+
+
+No fixes (compared to build v4.9.189)
+
+Ran 22554 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
