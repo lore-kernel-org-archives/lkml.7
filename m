@@ -2,302 +2,96 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95861C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2168C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A07206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VxXfe8pL"
+	by mail.kernel.org (Postfix) with ESMTP id 8C4362173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566581624;
+	bh=94RX8Vqgfb7MEDIB8FPZqdl8Vii0/A5/FbL6pBjOnH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2VBrheFgCxWJvSmVeOk6dGbTH/afgFEA9LEAywpYbthLsGGnhLlmbR3fTFEG12cc8
+	 H4n8AwGBU7daa6RmDNx0+QdL9Wjs8rtbRAwMI9G08m9KL4oDqXM4l8+/iR263iXrET
+	 yDWzddpOasveQAG/liMW/5imJpXdrjt4+sHIN7Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389968AbfHWR3z (ORCPT
+        id S2403831AbfHWRdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:29:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38707 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388602AbfHWR3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:29:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w11so5465860plp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=alUW1stmBrI7idmX7VFNM2NmCkBFWLxpof5b2mJKsQA=;
-        b=VxXfe8pLByLI8ALA2THx5oxMcF4zTV75S+tBUJe4bv/27FKBCtrloXfnrZbdeDmHUq
-         4rIADuyMSS9rL27z+omKU4/se57SeJnXXd3blHhw5SmXoRVPVZtodzWTXQMrh21u0Gbo
-         JBApFEVn0wm+B/CpzHLFOioRXyq4bVZH0pwhoU89WZ5XElLL/wIQLb3Hcy7QKilQB+Bc
-         Yl5XX8H9X0Txbk40GT+Z9t7FIZHRLk/2DJRW2dgD1X3+2X77NJffukow2E82t40J+Ge0
-         +Neseze+yDWPALPHxSlzRZvtdZ+DwWreRdevOsUfJROBAOB9n98SEgOF75Ql6kpgx/V3
-         7mlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=alUW1stmBrI7idmX7VFNM2NmCkBFWLxpof5b2mJKsQA=;
-        b=XI8JPG9XYlrC9MREDi+fsb/jL39DJ86HiMkVyccQuFETedxFz8z28A/dbXIgIoLlQR
-         PhFku+a6Zh6SSP3lMrQ08NC3T6pH54FifUYWsvyvFL94X8LoPBEG+PRTjTEWMapq+sVF
-         EaHKPTyavddO4ibjJeABAZhP9YCr6Ly+u2Md1nsWEfuRCB2zJK9H+gudEIj7CwREixYD
-         zCheDTG6lw/JCPXz0whuyrK+T4dD6yWZUhxzJyOIGkCI/lbNTi+bnuCSGUrZpHxdvJHg
-         PJioX03J3Ono3zQwsfjI+y3gecWX07RCfad/tIXNk86PhkRXhSE70dvUjpvaIWuwQInS
-         0FyA==
-X-Gm-Message-State: APjAAAWIa9XPTcxZFkYoHD0Oo3OVVepCySjZbzkxrwRKl6SrC1C6PcSt
-        GmBe016u2d6MlJuhR4F4FcAg7ZIIHNTpy3+PXZYhDQ==
-X-Google-Smtp-Source: APXvYqzHUy+hMsbzCFad9X7B6vA89yKoPy1iJfqq70Zbf/AzzEkD87zdWu1MseDqJJQlc//HG9Zj6D2hLzWlUsMCylE=
-X-Received: by 2002:a17:902:7049:: with SMTP id h9mr6205424plt.232.1566581393252;
- Fri, 23 Aug 2019 10:29:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820232046.50175-1-brendanhiggins@google.com>
- <20190820232046.50175-10-brendanhiggins@google.com> <ae6722ce-80ac-5840-5c4b-6f6726e4239d@kernel.org>
- <CAFd5g451bF2-RGZ3wT9gO1FOu+8e8yQO9evvxtQQ9Vkh4UUhVQ@mail.gmail.com> <93cad898-78c8-2bd4-f1c7-5d34fdfbb7cb@kernel.org>
-In-Reply-To: <93cad898-78c8-2bd4-f1c7-5d34fdfbb7cb@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 23 Aug 2019 10:29:41 -0700
-Message-ID: <CAFd5g47=7SoXUt1Lq8fNg86xRLq=gjdf-htrHGJJYq9e86WKTA@mail.gmail.com>
-Subject: Re: [PATCH v14 09/18] kunit: test: add support for test abort
-To:     shuah <shuah@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Fri, 23 Aug 2019 13:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389882AbfHWRdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:33:43 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF43D206DD;
+        Fri, 23 Aug 2019 17:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566581622;
+        bh=94RX8Vqgfb7MEDIB8FPZqdl8Vii0/A5/FbL6pBjOnH4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PshLJnEHQZalu73RYtFPsHig0dozCCKriuCSEuWJRIfkOBE/mCyLmAE+xN5aTcU4Q
+         KXIaZeZyAUCW877VntFkydybUeO5XcR309rHSvbr6YZOH76tRvZ6gaHIXY+xL6HTHn
+         LQnmnRIB7Vd2HRK3lt/F66cnhcZ3s4vGkfchZYhI=
+Date:   Fri, 23 Aug 2019 19:33:39 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 20/38] posix-cpu-timers: Provide array based access to
+ expiry cache
+Message-ID: <20190823173338.GA18880@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192921.105793824@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821192921.105793824@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:07 AM shuah <shuah@kernel.org> wrote:
->
-> On 8/23/19 10:56 AM, Brendan Higgins wrote:
-> > On Fri, Aug 23, 2019 at 8:36 AM shuah <shuah@kernel.org> wrote:
-> >>
-> >> Hi Brendan,
-> >>
-> >> On 8/20/19 5:20 PM, Brendan Higgins wrote:
-> >>> Add support for aborting/bailing out of test cases, which is needed for
-> >>> implementing assertions.
-> >>>
-> >>> An assertion is like an expectation, but bails out of the test case
-> >>> early if the assertion is not met. The idea with assertions is that you
-> >>> use them to state all the preconditions for your test. Logically
-> >>> speaking, these are the premises of the test case, so if a premise isn't
-> >>> true, there is no point in continuing the test case because there are no
-> >>> conclusions that can be drawn without the premises. Whereas, the
-> >>> expectation is the thing you are trying to prove.
-> >>>
-> >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> >>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> >>> ---
-> >>>    include/kunit/test.h      |   2 +
-> >>>    include/kunit/try-catch.h |  75 +++++++++++++++++++++
-> >>>    kunit/Makefile            |   3 +-
-> >>>    kunit/test.c              | 137 +++++++++++++++++++++++++++++++++-----
-> >>>    kunit/try-catch.c         | 118 ++++++++++++++++++++++++++++++++
-> >>>    5 files changed, 319 insertions(+), 16 deletions(-)
-> >>>    create mode 100644 include/kunit/try-catch.h
-> >>>    create mode 100644 kunit/try-catch.c
-> >>>
-> >>> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> >>> index 6917b186b737a..390ce02f717b6 100644
-> >>> --- a/include/kunit/test.h
-> >>> +++ b/include/kunit/test.h
-> >>> @@ -10,6 +10,7 @@
-> >>>    #define _KUNIT_TEST_H
-> >>>
-> >>>    #include <kunit/assert.h>
-> >>> +#include <kunit/try-catch.h>
-> >>>    #include <linux/kernel.h>
-> >>>    #include <linux/slab.h>
-> >>>    #include <linux/types.h>
-> >>> @@ -167,6 +168,7 @@ struct kunit {
-> >>>
-> >>>        /* private: internal use only. */
-> >>>        const char *name; /* Read only after initialization! */
-> >>> +     struct kunit_try_catch try_catch;
-> >>>        /*
-> >>>         * success starts as true, and may only be set to false during a test
-> >>>         * case; thus, it is safe to update this across multiple threads using
-> >>> diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-> >>> new file mode 100644
-> >>> index 0000000000000..404f336cbdc85
-> >>> --- /dev/null
-> >>> +++ b/include/kunit/try-catch.h
-> >>> @@ -0,0 +1,75 @@
-> >>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>> +/*
-> >>> + * An API to allow a function, that may fail, to be executed, and recover in a
-> >>> + * controlled manner.
-> >>> + *
-> >>> + * Copyright (C) 2019, Google LLC.
-> >>> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> >>> + */
-> >>> +
-> >>> +#ifndef _KUNIT_TRY_CATCH_H
-> >>> +#define _KUNIT_TRY_CATCH_H
-> >>> +
-> >>> +#include <linux/types.h>
-> >>> +
-> >>> +typedef void (*kunit_try_catch_func_t)(void *);
-> >>> +
-> >>> +struct completion;
-> >>> +struct kunit;
-> >>> +
-> >>> +/**
-> >>> + * struct kunit_try_catch - provides a generic way to run code which might fail.
-> >>> + * @test: The test case that is currently being executed.
-> >>> + * @try_completion: Completion that the control thread waits on while test runs.
-> >>> + * @try_result: Contains any errno obtained while running test case.
-> >>> + * @try: The function, the test case, to attempt to run.
-> >>> + * @catch: The function called if @try bails out.
-> >>> + * @context: used to pass user data to the try and catch functions.
-> >>> + *
-> >>> + * kunit_try_catch provides a generic, architecture independent way to execute
-> >>> + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
-> >>> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
-> >>> + * is stopped at the site of invocation and @catch is called.
-> >>> + *
-> >>> + * struct kunit_try_catch provides a generic interface for the functionality
-> >>> + * needed to implement kunit->abort() which in turn is needed for implementing
-> >>> + * assertions. Assertions allow stating a precondition for a test simplifying
-> >>> + * how test cases are written and presented.
-> >>> + *
-> >>> + * Assertions are like expectations, except they abort (call
-> >>> + * kunit_try_catch_throw()) when the specified condition is not met. This is
-> >>> + * useful when you look at a test case as a logical statement about some piece
-> >>> + * of code, where assertions are the premises for the test case, and the
-> >>> + * conclusion is a set of predicates, rather expectations, that must all be
-> >>> + * true. If your premises are violated, it does not makes sense to continue.
-> >>> + */
-> >>> +struct kunit_try_catch {
-> >>> +     /* private: internal use only. */
-> >>> +     struct kunit *test;
-> >>> +     struct completion *try_completion;
-> >>> +     int try_result;
-> >>> +     kunit_try_catch_func_t try;
-> >>> +     kunit_try_catch_func_t catch;
-> >>> +     void *context;
-> >>> +};
-> >>> +
-> >>> +void kunit_try_catch_init(struct kunit_try_catch *try_catch,
-> >>> +                       struct kunit *test,
-> >>> +                       kunit_try_catch_func_t try,
-> >>> +                       kunit_try_catch_func_t catch);
-> >>> +
-> >>> +void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context);
-> >>> +
-> >>> +void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
-> >>> +
-> >>> +static inline int kunit_try_catch_get_result(struct kunit_try_catch *try_catch)
-> >>> +{
-> >>> +     return try_catch->try_result;
-> >>> +}
-> >>> +
-> >>> +/*
-> >>> + * Exposed for testing only.
-> >>> + */
-> >>> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
-> >>> +
-> >>> +#endif /* _KUNIT_TRY_CATCH_H */
-> >>> diff --git a/kunit/Makefile b/kunit/Makefile
-> >>> index 4e46450bcb3a8..c9176c9c578c6 100644
-> >>> --- a/kunit/Makefile
-> >>> +++ b/kunit/Makefile
-> >>> @@ -1,6 +1,7 @@
-> >>>    obj-$(CONFIG_KUNIT) +=                      test.o \
-> >>>                                        string-stream.o \
-> >>> -                                     assert.o
-> >>> +                                     assert.o \
-> >>> +                                     try-catch.o
-> >>>
-> >>>    obj-$(CONFIG_KUNIT_TEST) +=         string-stream-test.o
-> >>>
-> >>> diff --git a/kunit/test.c b/kunit/test.c
-> >>> index 3cbceb34b3b36..ded9895143209 100644
-> >>> --- a/kunit/test.c
-> >>> +++ b/kunit/test.c
-> >>> @@ -7,7 +7,9 @@
-> >>>     */
-> >>>
-> >>>    #include <kunit/test.h>
-> >>> +#include <kunit/try-catch.h>
-> >>>    #include <linux/kernel.h>
-> >>> +#include <linux/sched/debug.h>
-> >>>
-> >>>    static void kunit_set_failure(struct kunit *test)
-> >>>    {
-> >>> @@ -162,6 +164,19 @@ static void kunit_fail(struct kunit *test, struct kunit_assert *assert)
-> >>>        WARN_ON(string_stream_destroy(stream));
-> >>>    }
-> >>>
-> >>> +static void __noreturn kunit_abort(struct kunit *test)
-> >>> +{
-> >>> +     kunit_try_catch_throw(&test->try_catch); /* Does not return. */
-> >>> +
-> >>> +     /*
-> >>> +      * Throw could not abort from test.
-> >>> +      *
-> >>> +      * XXX: we should never reach this line! As kunit_try_catch_throw is
-> >>> +      * marked __noreturn.
-> >>> +      */
-> >>> +     BUG();
-> >>
-> >>
-> >> I recall discussion on this. What's the point in keeping thie
-> >> BUG() around when it doesn't even reach? It can even be a
-> >> WARN_ON() in that case right?
-> >
-> > Originally I had BUG() here, and Frank (I think it was Frank, sorry it
-> > was a while ago) told me it should be WARN_ON(). In v12 Stephen told
-> > me it should be BUG(), and nobody objected so I went back to making it
-> > a BUG() (note I also mentioned this change on the cover letter of v13
-> > and still no one objected).
-> >
->
-> Yeah. Sorry for the confusing advice. WARN_ON() or nothing is the right
-> thing here. I have been cleaning BUG() and WARN_ON() that aren't needed.
->
-> I would just delete BUG all together.
+On Wed, Aug 21, 2019 at 09:09:07PM +0200, Thomas Gleixner wrote:
+> Using struct task_cputime for the expiry cache is a pretty odd choice and
+> comes with magic defines to rename the fields for usage in the expiry
+> cache.
+> 
+> struct task_cputime is basically a u64 array with 3 members, but it has
+> distinct members.
+> 
+> The expiry cache content is different than the content of task_cputime
+> because
+> 
+>   expiry[PROF]  = task_cputime.stime + task_cputime.utime
+>   expiry[VIRT]  = task_cputime.utime
+>   expiry[SCHED] = task_cputime.sum_exec_runtime
+> 
+> So there is no direct mapping between task_cputime and the expiry cache and
+> the #define based remapping is just a horrible hack.
+> 
+> Having the expiry cache array based allows further simplification of the
+> expiry code.
+> 
+> To avoid an all in one cleanup which is hard to review add a temporary
+> anonymous union into struct task_cputime which allows array based access to
+> it. That requires to reorder the members. Add a build time sanity check to
+> validate that the members are at the same place.
+> 
+> The union and the build time checks will be removed after conversion.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Alright, that's fine. I will send out a new patch set that removes
-this once we get the discussion on 01/18 resolved.
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
