@@ -2,129 +2,116 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53875C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59519C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311E421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3031B21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsLTQ6Oc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392079AbfHWKHM convert rfc822-to-8bit (ORCPT
+        id S2392123AbfHWKHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:07:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47066 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392021AbfHWKHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:07:04 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E9D12756
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:07:03 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id r10so9392022qte.4
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:07:03 -0700 (PDT)
+        Fri, 23 Aug 2019 06:07:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54331 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391998AbfHWKHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 06:07:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so8365892wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:07:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=txsHPtmH/4H2/WnX6EiFrXzeHkL+qrKcHt+2DoU5kzQ=;
+        b=zsLTQ6OcR9Dk0Qa39F2DDnmWFcluUGtQg+KpRb+bwLN1VIK3mhupCJbjkodp3dI4Fe
+         iqWh9+beI2fEZPtXQqBILn5x5It/sxsv7zun4Zt7NVFJsPhAfH/gGhkWLaF7nzV25Hc0
+         Y6hQwhCfGnfnrHTNZljsbuzWLq9L02poSqq/DJOxzCk4+RvvBqiV2Z/5YZzof/Ut4PgM
+         rSlB1fo+5JK7gqGVKFIa3UWXy2A+xNE3hLhLeLjzdhmTLmP4MXsdi7osPx/D/EFFnDwM
+         ztznERXTlzizlp25hDlJ4CRX4E7X4+QrQsYOYPrtn6xK68tfMik0P0I788C2hxA69/YK
+         MX0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1qTrupegLo3u3nuR5XIE3rXtDob+SQqNerz4BULqfAk=;
-        b=Ew7r3o/CfYfz4fYWXrSDgtHv6wkEdf0zhGiwwEHBYkDpUWYpICcqd/xCrwoMte+wut
-         PbJvvSckRxeaMUJcBahWZGH8ciJg7VXPiCzLBNimXndjlF6QFXANrzXhKpchz34EoF6z
-         pPwHf+v/KHDWTX4L11poxbvrKVBWn/xbCFMevJUS2YQ/je2TR7gw/hiuiv+DD3UfTU+1
-         7UAHqhAcc18B+3Upu6JlWOaURujCOVztA8tbAPjM5WfHuOwlzW1Hwi+50A97WskBfteB
-         dMV03SDgYxH95sQRNafTYMP/dj+DxquAuDQs2+0zEANbHXAaedPujY2GGJ6b3Tkp12FE
-         IQTQ==
-X-Gm-Message-State: APjAAAVOgRfIKh7CGCz/YqwjJZp4WjtDVe9hCLZbECEHvFFrKujOIk7H
-        mX06poWkI+f7/SxwlBHH85kL5waosCdZv1qsBeX0+2FEjRQ/ISmzTnPLcw8C1WlKhLym01FL/Pt
-        /s0ZxPIQXPAiBF/WsPCyUl8a+Vv6c0zMTao/kP/AK
-X-Received: by 2002:ad4:4974:: with SMTP id p20mr3008444qvy.29.1566554822994;
-        Fri, 23 Aug 2019 03:07:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxNwW5Vj+CElg3egvLGrz0tB/3keOZ4CzgCNyFMXCyW2lgOmeoRIPAm0sFQuM0jFiHntpZDy1KFOILCqvhXN5s=
-X-Received: by 2002:ad4:4974:: with SMTP id p20mr3008436qvy.29.1566554822772;
- Fri, 23 Aug 2019 03:07:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=txsHPtmH/4H2/WnX6EiFrXzeHkL+qrKcHt+2DoU5kzQ=;
+        b=eZxAw5J23RpPuP8joEyXEyTHYs9orshBXU7YAm5Va+3HWlNJvlziw9kvBAbexFuhRe
+         bao2UuTwcX8l8/glbiMKQQHBe+1WxADSGgv+KS4hRPTKipaZwJuChLWWxl9j++3nbK7N
+         dHjfAWuTrK3UxdH+QxriGSR5ns0MbNQYjU+uAA/LofGX3g7pnxENoTPEwt1kkrUhZiJY
+         n3wf+BW3hwvNpAwh8YTOStW+6yCtMALg8/zfYzmhnqMDRbd5y3Sv4/m6kFCkVmsbQrRF
+         BApniqLk7lIRAbAoV4E/czJw6QhAwhEiVjVkiXG/8B0XRVZZvnWia7M4nLMPM8if5Svs
+         wlOw==
+X-Gm-Message-State: APjAAAWgJAsrH2OvIijSaGaYoeVJp/ZXGAGpgz2hsK9wcFrSylM3xo0/
+        lPSDpDfpL9hhrY1+poNANCzI/DNKwBg=
+X-Google-Smtp-Source: APXvYqwl1Fa7hd6dx3UhLaTaNR2R/23JKahB21Ecq5hVeBT4VSAziAuQCdksN46+5xAra8IOI9h+wA==
+X-Received: by 2002:a1c:a80a:: with SMTP id r10mr4148894wme.103.1566554821626;
+        Fri, 23 Aug 2019 03:07:01 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id q124sm2058048wma.33.2019.08.23.03.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 03:07:00 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     arnd@arndb.de, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mayank Chopra <mak.chopra@codeaurora.org>
+Subject: [PATCH 5/5] misc: fastrpc: free dma buf scatter list
+Date:   Fri, 23 Aug 2019 11:06:22 +0100
+Message-Id: <20190823100622.3892-6-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
+References: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <20190730122458.5275-1-lains@archlinux.org>
-In-Reply-To: <20190730122458.5275-1-lains@archlinux.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 23 Aug 2019 12:06:51 +0200
-Message-ID: <CAO-hwJJ2kFoAp8at_a+KRfjivZ2VnbNDXsx=BBQbiEDLZ==3Sg@mail.gmail.com>
-Subject: Re: [PATCH v2] hid-logitech-dj: add the new Lightspeed receiver
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-Cc:     Nestor Lopez Casado <nlopezcasad@logitech.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 2:26 PM Filipe Laíns <lains@archlinux.org> wrote:
->
-> This patchs adds the new Lightspeed receiver. Currently it seems to only
-> be used in the G305.
->
-> Signed-off-by: Filipe Laíns <lains@archlinux.org>
+dma buf scatter list is never freed, free it!
 
-Applied to for-5.4/logitech
+Orignally detected by kmemleak:
+  backtrace:
+    [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
+    [<ffffff8008373284>] sg_kmalloc+0x38/0x60
+    [<ffffff8008373144>] __sg_alloc_table+0x60/0x110
+    [<ffffff800837321c>] sg_alloc_table+0x28/0x58
+    [<ffffff800837336c>] __sg_alloc_table_from_pages+0xc0/0x1ac
+    [<ffffff800837346c>] sg_alloc_table_from_pages+0x14/0x1c
+    [<ffffff8008097a3c>] __iommu_get_sgtable+0x5c/0x8c
+    [<ffffff800850a1d0>] fastrpc_dma_buf_attach+0x84/0xf8
+    [<ffffff80085114bc>] dma_buf_attach+0x70/0xc8
+    [<ffffff8008509efc>] fastrpc_map_create+0xf8/0x1e8
+    [<ffffff80085086f4>] fastrpc_device_ioctl+0x508/0x900
+    [<ffffff80082428c8>] compat_SyS_ioctl+0x128/0x200
+    [<ffffff80080832c4>] el0_svc_naked+0x34/0x38
+    [<ffffffffffffffff>] 0xffffffffffffffff
 
-Cheers,
-Benjamin
+Reported-by: Mayank Chopra <mak.chopra@codeaurora.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/misc/fastrpc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  drivers/hid/hid-ids.h         |  3 ++-
->  drivers/hid/hid-logitech-dj.c | 13 +++++++++++--
->  2 files changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index fb19eefbc0b3..61b954fcfc2e 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -768,7 +768,8 @@
->  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER           0xc52f
->  #define USB_DEVICE_ID_LOGITECH_UNIFYING_RECEIVER_2     0xc532
->  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_2         0xc534
-> -#define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED        0xc539
-> +#define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1      0xc539
-> +#define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1    0xc53f
->  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_POWERPLAY 0xc53a
->  #define USB_DEVICE_ID_SPACETRAVELLER   0xc623
->  #define USB_DEVICE_ID_SPACENAVIGATOR   0xc626
-> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-> index 4a68960b131f..d718f01f56d3 100644
-> --- a/drivers/hid/hid-logitech-dj.c
-> +++ b/drivers/hid/hid-logitech-dj.c
-> @@ -968,7 +968,12 @@ static void logi_hidpp_recv_queue_notif(struct hid_device *hdev,
->                 logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report, &workitem);
->                 break;
->         case 0x0c:
-> -               device_type = "eQUAD Lightspeed";
-> +               device_type = "eQUAD Lightspeed 1";
-> +               logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report, &workitem);
-> +               workitem.reports_supported |= STD_KEYBOARD;
-> +               break;
-> +       case 0x0d:
-> +               device_type = "eQUAD Lightspeed 1_1";
->                 logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report, &workitem);
->                 workitem.reports_supported |= STD_KEYBOARD;
->                 break;
-> @@ -1832,7 +1837,11 @@ static const struct hid_device_id logi_dj_receivers[] = {
->          .driver_data = recvr_type_hidpp},
->         { /* Logitech lightspeed receiver (0xc539) */
->           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
-> -               USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED),
-> +               USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1),
-> +        .driver_data = recvr_type_gaming_hidpp},
-> +       { /* Logitech lightspeed receiver (0xc53f) */
-> +         HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
-> +               USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1),
->          .driver_data = recvr_type_gaming_hidpp},
->         { /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
->           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_MX3000_RECEIVER),
-> --
-> 2.22.0
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index eee2bb398947..47ae84afac2e 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -550,6 +550,7 @@ static void fastrpc_dma_buf_detatch(struct dma_buf *dmabuf,
+ 	mutex_lock(&buffer->lock);
+ 	list_del(&a->node);
+ 	mutex_unlock(&buffer->lock);
++	sg_free_table(&a->sgt);
+ 	kfree(a);
+ }
+ 
+-- 
+2.21.0
+
