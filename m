@@ -2,142 +2,166 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA33C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E660C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777F022CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566565576;
-	bh=Nf/JHz2p9KJqWjrRjR6tfsaXgxZ88ZigCZLa5Q1S3bM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B9FRL3DhQpdzNfcKN/ILTM56JiLEW8ctqeEgZ0Hs0cI9Z9T4Np9iOHp2epwVZkm22
-	 9sYlVZtkjkqA0ucDHccI6iEUwqv9eBLQHrQHEbapJXePZz7enatNJf5BFP5XAwfw3W
-	 LwAnJNibvqAVZasslEO8/nwPqh9usvlrW7cOrGDA=
+	by mail.kernel.org (Postfix) with ESMTP id E3B6822CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h4CBYNUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393508AbfHWNGP (ORCPT
+        id S2404326AbfHWNGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731379AbfHWNGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:06:14 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93E9A22CEC;
-        Fri, 23 Aug 2019 13:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566565573;
-        bh=Nf/JHz2p9KJqWjrRjR6tfsaXgxZ88ZigCZLa5Q1S3bM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CHNv/XEs6tkYE1iNbZUMWfxQUU+XSGU7o/AtPXdNfc3m4vKot0wrNydubMFckNxRx
-         +aj3HGZ32cAvIoOeJl8MMU2JCTbjN1H/gopEEQQhAaVcQAmzLYALQ4cZ9auh34+FEu
-         VcQHe0R8mMhVMLoaSsPwrpSyD3j5V5W0Qxp94Zv0=
-Received: by mail-lj1-f171.google.com with SMTP id l1so8771255lji.12;
-        Fri, 23 Aug 2019 06:06:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAWIiLAVQBgv9DWa0Ou38SE+vzxnlGovKB0Eh2NrEhtPIC8+LGpq
-        jSPPWAd8Kf1RyuvA42NiY/mjrxHP7NHCQLCksSo=
-X-Google-Smtp-Source: APXvYqx494yOQTDUqmJi8lTHGRnu27kjJqD2UIMZu2KQSLjkcVtSK0kWsEnyN0xJ1mxBj8zZ985ITaXoQJmmX5Pwe6s=
-X-Received: by 2002:a2e:8856:: with SMTP id z22mr2895409ljj.71.1566565571829;
- Fri, 23 Aug 2019 06:06:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190823123737.7774-1-ribalda@kernel.org> <20190823123737.7774-5-ribalda@kernel.org>
- <1566564998.3023.13.camel@pengutronix.de>
-In-Reply-To: <1566564998.3023.13.camel@pengutronix.de>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Fri, 23 Aug 2019 15:05:55 +0200
-X-Gmail-Original-Message-ID: <CAPybu_0iodVnn1Fa5BFi7zc7ugwpN926wCJaoKU548zqrNJ5iw@mail.gmail.com>
-Message-ID: <CAPybu_0iodVnn1Fa5BFi7zc7ugwpN926wCJaoKU548zqrNJ5iw@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] media: v4l2-core: Add new helper for area controls
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 23 Aug 2019 09:06:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38884 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbfHWNGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 09:06:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NCxm5m010521;
+        Fri, 23 Aug 2019 13:05:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=MuPLFBBB6HlSfaFhBNJHUtH268k8NYIFg0rgKZBwcr0=;
+ b=h4CBYNUtdlreVkjpLwTRNorXJL4O0Yoq6NNvwidvsBodx2bzfK6GomiOQDiJwXqyAmax
+ hmeRxhtFu0yOMp/a9xXAYgPBKlt5Y/J4Btjc6h+wiCzRQtRAWu6i0oh2icz0SucF5U5C
+ vo+wT677ynLULK7OgPv3FyieePLWUhweFxfaDXWYisrZ92YZ/k0WV5xpndtVivVG00m/
+ JhZ+DWDou6vWe53Q23vH2rR0lw3pVgTQubQMaC11XpfSr6amHyit7VYvGttsPyDVZArk
+ hGBl2/T+SgnP2obq/v57ZAqfyQqWAHNBybAoBknPabAfVIUnFPTbMemJnP2iJ1IFg600 CA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ue90u4ran-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 13:05:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7NCxw7m173397;
+        Fri, 23 Aug 2019 13:05:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2uhusfnvc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 13:05:22 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7ND5Lcl017722;
+        Fri, 23 Aug 2019 13:05:22 GMT
+Received: from [192.168.14.112] (/109.64.228.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 23 Aug 2019 06:05:21 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RESEND PATCH 03/13] KVM: x86: Refactor kvm_vcpu_do_singlestep()
+ to remove out param
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190823010709.24879-4-sean.j.christopherson@intel.com>
+Date:   Fri, 23 Aug 2019 16:05:17 +0300
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E0397025-1437-4D47-B94D-8BE9EC89BD91@oracle.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
+ <20190823010709.24879-4-sean.j.christopherson@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908230136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908230136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 2:56 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
->
-> On Fri, 2019-08-23 at 14:37 +0200, Ricardo Ribalda Delgado wrote:
-> > Adding a V4L2_CID_UNIT_CELL_SIZE control requires a lot of boilerplate,
-> > try to minimize it by adding a new helper.
-> >
-> > Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-ctrls.c | 25 ++++++++++++++++++++++++-
-> >  include/media/v4l2-ctrls.h           | 16 ++++++++++++++++
-> >  2 files changed, 40 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > index b3bf458df7f7..33e48f0aec1a 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > @@ -2660,7 +2660,6 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
-> >  }
-> >  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
-> >
-> > -/* Helper function for standard integer menu controls */
->
-> Why move this ...
->
-> >  struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
-> >                       const struct v4l2_ctrl_ops *ops,
-> >                       u32 id, u8 _max, u8 _def, const s64 *qmenu_int)
-> > @@ -2684,6 +2683,30 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
-> >  }
-> >  EXPORT_SYMBOL(v4l2_ctrl_new_int_menu);
-> >
-> > +static void area_init(const struct v4l2_ctrl *ctrl, u32 idx,
-> > +             union v4l2_ctrl_ptr ptr)
-> > +{
-> > +     memcpy(ptr.p_area, ctrl->priv, sizeof(*ptr.p_area));
-> > +}
-> > +
-> > +static const struct v4l2_ctrl_type_ops area_ops = {
-> > +     .init = area_init,
-> > +};
-> > +
-> > +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
-> > +                                  const struct v4l2_ctrl_ops *ops,
-> > +                                  u32 id, const struct v4l2_area *area)
-> > +{
-> > +     static struct v4l2_ctrl_config ctrl = {
-> > +             .id = V4L2_CID_UNIT_CELL_SIZE,
-> > +             .type_ops = &area_ops,
-> > +     };
-> > +
-> > +     return v4l2_ctrl_new_custom(hdl, &ctrl, (void *)area);
-> > +}
-> > +EXPORT_SYMBOL(v4l2_ctrl_new_area);
-> > +
-> > +/* Helper function for standard integer menu controls */
->
-> ... here?
-Because I screwed up :). Let me fix that sorry.
-
-I will push all your changes to:
-
-https://github.com/ribalda/linux/tree/unit-size-v4
-
-plus any other comment and then I will wait 2-3 days for resend
 
 
->
-> Looks to me like this comment should stay attached to
-> v4l2_ctrl_new_int_menu.
->
-> regards
-> Philipp
+> On 23 Aug 2019, at 4:06, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>=20
+> Return the single-step emulation result directly instead of via an out
+> param.  Presumably at some point in the past kvm_vcpu_do_singlestep()
+> could be called with *r=3D=3DEMULATE_USER_EXIT, but that is no longer =
+the
+> case, i.e. all callers are happy to overwrite their own return =
+variable.
+>=20
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> arch/x86/kvm/x86.c | 12 ++++++------
+> 1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6de5bc4fa5e..fe847f8eb947 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6377,7 +6377,7 @@ static int kvm_vcpu_check_hw_bp(unsigned long =
+addr, u32 type, u32 dr7,
+> 	return dr6;
+> }
+>=20
+> -static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+> +static int kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu)
+> {
+> 	struct kvm_run *kvm_run =3D vcpu->run;
+>=20
+> @@ -6386,10 +6386,10 @@ static void kvm_vcpu_do_singlestep(struct =
+kvm_vcpu *vcpu, int *r)
+> 		kvm_run->debug.arch.pc =3D vcpu->arch.singlestep_rip;
+> 		kvm_run->debug.arch.exception =3D DB_VECTOR;
+> 		kvm_run->exit_reason =3D KVM_EXIT_DEBUG;
+> -		*r =3D EMULATE_USER_EXIT;
+> -	} else {
+> -		kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
+> +		return EMULATE_USER_EXIT;
+> 	}
+> +	kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
+> +	return EMULATE_DONE;
+> }
+>=20
+> int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> @@ -6410,7 +6410,7 @@ int kvm_skip_emulated_instruction(struct =
+kvm_vcpu *vcpu)
+> 	 * that sets the TF flag".
+> 	 */
+> 	if (unlikely(rflags & X86_EFLAGS_TF))
+> -		kvm_vcpu_do_singlestep(vcpu, &r);
+> +		r =3D kvm_vcpu_do_singlestep(vcpu);
+> 	return r =3D=3D EMULATE_DONE;
+> }
+> EXPORT_SYMBOL_GPL(kvm_skip_emulated_instruction);
+> @@ -6613,7 +6613,7 @@ int x86_emulate_instruction(struct kvm_vcpu =
+*vcpu,
+> 		vcpu->arch.emulate_regs_need_sync_to_vcpu =3D false;
+> 		kvm_rip_write(vcpu, ctxt->eip);
+> 		if (r =3D=3D EMULATE_DONE && ctxt->tf)
+> -			kvm_vcpu_do_singlestep(vcpu, &r);
+> +			r =3D kvm_vcpu_do_singlestep(vcpu);
+> 		if (!ctxt->have_exception ||
+> 		    exception_type(ctxt->exception.vector) =3D=3D =
+EXCPT_TRAP)
+> 			__kvm_set_rflags(vcpu, ctxt->eflags);
+> --=20
+> 2.22.0
+>=20
+
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+
+-Liran
+
+
