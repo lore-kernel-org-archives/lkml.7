@@ -2,131 +2,200 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD25C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1230EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726DE233A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D610E233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566551803;
+	bh=ig1oY3Gk4hujplrVFJKMzN7PnrvQFo36iRWo+iWWqkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OISXnafjXBWC1W04f9CZqRh7uK8kU83pitIbgvXT1VHRRlBO4wk8VEhrvfkJ9RKSg
+	 hDUdsEKeEWfFWZ2kofeq7rpwEnmq0PqfmNZmT5oCo7u+ToYWi0KrISW1M1Q0DBOgP/
+	 c3OuSVUH58yK2iTfHfV7HBdTrlZMOykLG/YX7q8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfHWJPW (ORCPT
+        id S1727431AbfHWJQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:15:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39640 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbfHWJPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:15:21 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 76DCBC054C52
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 09:15:21 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id a2so4533488wrs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:15:21 -0700 (PDT)
+        Fri, 23 Aug 2019 05:16:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36871 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727388AbfHWJQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:16:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d16so8388234wme.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Odks+ErX+hIA4ewl4ttjOOGrZDWZFdEEcirN8+AeNs8=;
+        b=rhTX/afIXQTAHpDwoa5MH7lj/6sJJ1gqoaiSZucVEKf5iVZW+MCxJfUQd8YBiqJY6x
+         at3m/4xcqEmwV505gX4IQuA0Qfr5mMbRP+PXP4Ct9Qnfr0WTqvLQihp2djuqtf5zRa1D
+         XucR9eKWKKwYGZfLHfTC3YaWaePxCu3kQsdkn0vlHXLLoHKTg+50G/GV6+ScGEL3+dmQ
+         sZQakmPtlqoP0ZYwL/XHJE90Ml360yN5nSlDW8wxG2bCXtzI9TbIGDZ04J9I9sdeKvhN
+         ZMhGTa8l0cxfYl2GJup4Y4J7Ws/6qiuVbMuFybJ5EHMlwRyAGgm/OUz2ay+VUmIzZsa3
+         AZYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Fogl+Xs+eEecVqlA/+UJZO2WdJiNWt+Dkg9XFhlgz2U=;
-        b=FywVFYnFUes2gkk0clwRiD4teDnbfLzBibTaZNsdRSTytM7+wc9Pw3e+mZzpvC9c0X
-         jmC1bBgG2qRY08ZWx4TrdyW7EsYqzg/lbc5q1rin+A6J2lGNEyZ+yvLqe9oUsIUU68kI
-         ZX+wmFxTXXeWUqq8aJzcYyrRi/zsGcNz1/cuNRDTcoNfdTKiLgt6f22pntWmYag2qS2Q
-         cxYcSJaKcereGILjYVkLSuaTLnJ4SMNjxdULXpf/m+MaicmsHLrhrX6QtnzZtO2Ia5HU
-         GGzGmVcgKBDWAtmngK4Q/ikiTg4tAgJZdypTJzv9Xey0itDqWNxbaF7ydVoC0+0Lhrbq
-         6UEg==
-X-Gm-Message-State: APjAAAWwghxgn8dU3qHk2e4adZ4r9Hnkk7xKOiLgyQNNZjOVLXg/WizH
-        z/ufldAQ1sD8kVoD9PO/p85YAbqD20DQEXRbWbmAiQV43gHNj6HQrp0Mt30o4ytgTibvNQWB9Fs
-        em6pZmTQtQRAYLpvdwA638gKt
-X-Received: by 2002:adf:dcc2:: with SMTP id x2mr3492103wrm.295.1566551720231;
-        Fri, 23 Aug 2019 02:15:20 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzCFMlFThRSbr0p2bFyKMbVO+GhKtybrGNQbyE4KaJLTqw6rB3fsEgDC8WW2wselB1EwGJhig==
-X-Received: by 2002:adf:dcc2:: with SMTP id x2mr3492071wrm.295.1566551719960;
-        Fri, 23 Aug 2019 02:15:19 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a142sm3258237wme.2.2019.08.23.02.15.18
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Odks+ErX+hIA4ewl4ttjOOGrZDWZFdEEcirN8+AeNs8=;
+        b=H9iIKUhFs9bS0ycBVHGGRBr9BoH/O2IfQJvdEolt3AWHABDHTs2E5Ata66iXdDtFAB
+         qiKLXVXoEbzpiTZyJk/SeykNSj6184hg7ESFx1iU2nrhRwRL27tJ+Y6uhqX3RyYdh2J0
+         Lbdhy2pufBBt1PjBONo/7pcyIkFrDyO6awU+aQx0/ErkekeC/whf34MCuyVRFhld5oqs
+         MTVZ3NwCKfuU7qfxK6gT9kUiN/B1KaItgWdvzJHSFupqUUkvCdWbV/LwotIdxeAvL3Ns
+         ogbNj7+vr8eDQAZe15uGOAgk5Z2OjNsB+QRvd5ugKv6/Pdxfvv2kKiHQhv80HAEVxptM
+         suoA==
+X-Gm-Message-State: APjAAAXklEvYHMCzzr0/4dnwkHx8pt4qd+fWnN5PfAKS/YsZjib+wstQ
+        +4Nbvk/qNzzqKTcvB0PQz6o=
+X-Google-Smtp-Source: APXvYqyC7WAZZ/iuT3W5IPij2we/v5r/wuqbKvnMdDKnNwdKb5zahmj0rDxv1+irC+6iZLaVVBnxRw==
+X-Received: by 2002:a1c:3d89:: with SMTP id k131mr3698839wma.24.1566551799445;
+        Fri, 23 Aug 2019 02:16:39 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id n9sm2466186wrx.76.2019.08.23.02.16.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 02:15:19 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [RESEND PATCH 01/13] KVM: x86: Relocate MMIO exit stats counting
-In-Reply-To: <20190823010709.24879-2-sean.j.christopherson@intel.com>
-References: <20190823010709.24879-1-sean.j.christopherson@intel.com> <20190823010709.24879-2-sean.j.christopherson@intel.com>
-Date:   Fri, 23 Aug 2019 11:15:18 +0200
-Message-ID: <87d0gwp7ix.fsf@vitty.brq.redhat.com>
+        Fri, 23 Aug 2019 02:16:38 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 11:16:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+Message-ID: <20190823091636.GA10064@gmail.com>
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> Move the stat.mmio_exits update into x86_emulate_instruction().  This is
-> both a bug fix, e.g. the current update flows will incorrectly increment
-> mmio_exits on emulation failure, and a preparatory change to set the
-> stage for eliminating EMULATE_DONE and company.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> On Tue, Aug 20, 2019 at 3:07 PM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> >
+> > syzbot found that a thread can stall for minutes inside read_mem()
+> > after that thread was killed by SIGKILL [1]. Reading 2GB at one read()
+> > is legal, but delaying termination of killed thread for minutes is bad.
+> 
+> Side note: we might even just allow regular signals to interrupt
+> /dev/mem reads. We already do that for /dev/zero, and the risk of
+> breaking something is likely fairly low since nothing should use that
+> thing anyway.
+> 
+> Also, if it takes minutes to delay killing things, that implies that
+> we're probably still faulting in pages for the read_mem(). Which
+> points to another possible thing we could do in general: just don't
+> bother to handle page faults when a fatal signal is pending.
+> 
+> That situation might happen for other random cases too, and is not
+> limited to /dev/mem. So maybe it's worth trying? Does that essentially
+> fix the /dev/mem read case too in practice?
+> 
+> COMPLETELY untested patch attached, it may or may not make a
+> difference (and it may or may not work at all ;)
+> 
+>                 Linus
 
-This, however, makes me wonder why this is handled in x86-specific code
-in the first place, can we just count KVM_EXIT_MMIO exits when handling
-KVM_RUN?
+>  arch/x86/mm/fault.c | 15 ++++++++++++---
+>  mm/memory.c         |  5 +++++
+>  2 files changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 9ceacd1156db..d6c029a6cb90 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -1033,8 +1033,15 @@ static noinline void
+>  mm_fault_error(struct pt_regs *regs, unsigned long error_code,
+>  	       unsigned long address, vm_fault_t fault)
+>  {
+> -	if (fatal_signal_pending(current) && !(error_code & X86_PF_USER)) {
+> -		no_context(regs, error_code, address, 0, 0);
+> +	/*
+> +	 * If we already have a fatal signal, don't bother adding
+> +	 * a new one. If it's a kernel access, just make it fail,
+> +	 * and if it's a user access just return to let the process
+> +	 * die.
+> +	 */
+> +	if (fatal_signal_pending(current)) {
+> +		if (!(error_code & X86_PF_USER))
+> +			no_context(regs, error_code, address, 0, 0);
 
-> ---
->  arch/x86/kvm/mmu.c     | 2 --
->  arch/x86/kvm/vmx/vmx.c | 1 -
->  arch/x86/kvm/x86.c     | 2 ++
->  3 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-> index 4c45ff0cfbd0..845e39d8a970 100644
-> --- a/arch/x86/kvm/mmu.c
-> +++ b/arch/x86/kvm/mmu.c
-> @@ -5437,8 +5437,6 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gva_t cr2, u64 error_code,
->  	case EMULATE_DONE:
->  		return 1;
->  	case EMULATE_USER_EXIT:
-> -		++vcpu->stat.mmio_exits;
-> -		/* fall through */
->  	case EMULATE_FAIL:
->  		return 0;
->  	default:
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 570a233e272b..18286e5b5983 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5200,7 +5200,6 @@ static int handle_invalid_guest_state(struct kvm_vcpu *vcpu)
->  		err = kvm_emulate_instruction(vcpu, 0);
+Since the 'signal' parameter to no_context() is 0, will there be another 
+signal generated? I don't think so - so the comment looks wrong to me, 
+unless I'm missing something.
+
+Other than that, what we are skipping here if a KILL signal is pending is 
+the printout of oops information if the fault is a kernel one.
+
+Not sure that's a good idea in general: carefully timing a KILL signal 
+would allow the 'stealth probing' of otherwise oops generating addresses? 
+Arguably it would only be a marginally useful facility to any attacker, 
+but it doesn't feel right to me to skip the printing of bad faults if 
+they occur.
+
+I.e. I'm not sure this hunk is necessary or even a good idea.
+
+
+
+>  		return;
+>  	}
 >  
->  		if (err == EMULATE_USER_EXIT) {
-> -			++vcpu->stat.mmio_exits;
->  			ret = 0;
->  			goto out;
+> @@ -1389,7 +1396,8 @@ void do_user_addr_fault(struct pt_regs *regs,
+>  			return;
 >  		}
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b4cfd786d0b6..cd425f54096a 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6598,6 +6598,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+>  retry:
+> -		down_read(&mm->mmap_sem);
+> +		if (down_read_killable(&mm->mmap_sem))
+> +			goto fatal_signal;
+>  	} else {
+>  		/*
+>  		 * The above down_read_trylock() might have succeeded in
+> @@ -1455,6 +1463,7 @@ void do_user_addr_fault(struct pt_regs *regs,
+>  				goto retry;
 >  		}
->  		r = EMULATE_USER_EXIT;
->  	} else if (vcpu->mmio_needed) {
-> +		++vcpu->stat.mmio_exits;
+>  
+> +fatal_signal:
+>  		/* User mode? Just return to handle the fatal exception */
+>  		if (flags & FAULT_FLAG_USER)
+>  			return;
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e2bb51b6242e..7ad62f96b08e 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3988,6 +3988,11 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+>  					    flags & FAULT_FLAG_REMOTE))
+>  		return VM_FAULT_SIGSEGV;
+>  
+> +	if (flags & FAULT_FLAG_KILLABLE) {
+> +		if (fatal_signal_pending(current))
+> +			return VM_FAULT_SIGSEGV;
+> +	}
 > +
->  		if (!vcpu->mmio_is_write)
->  			writeback = false;
->  		r = EMULATE_USER_EXIT;
+>  	/*
+>  	 * Enable the memcg OOM handling for faults triggered in user
+>  	 * space.  Kernel faults are handled more gracefully.
 
--- 
-Vitaly
+This part looks good to me, assuming someone tests it and it solves the 
+bug :-)
+
+Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
