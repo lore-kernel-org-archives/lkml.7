@@ -2,101 +2,177 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E37C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A99C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F044422CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7A522CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Jbc9GqKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394061AbfHWO4Z (ORCPT
+        id S2394127AbfHWO4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:56:25 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:43927 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfHWO4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:56:24 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id C5C4F100004;
-        Fri, 23 Aug 2019 14:56:21 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 16:56:21 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 05/10] ARM: dts: sunxi: a80: Add msgbox node
-Message-ID: <20190823145621.pxl4jrux7izflzmg@flea>
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-6-samuel@sholland.org>
- <20190820081528.7g2lo4njkut5lanu@flea>
- <f3e3420e-450a-7d41-edf8-776c0cd5a320@sholland.org>
+        Fri, 23 Aug 2019 10:56:34 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60373 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727553AbfHWO4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:56:33 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46FPcG0nRmzB09ZS;
+        Fri, 23 Aug 2019 16:56:30 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Jbc9GqKP; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 2rHp3I-2Vtpq; Fri, 23 Aug 2019 16:56:29 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46FPcF6NMhzB09ZC;
+        Fri, 23 Aug 2019 16:56:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566572189; bh=OI5GHq47X1nTERXFvUyR0kQiOKWY2e+J37f4LmmPrNY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Jbc9GqKPr/hqfA4XKs/kGdvXGkEvdLqPL1bi5AhR1Aa7FZ+VrO24iU1QbeQ3tebl5
+         jatTPIcxH5eKB9ZOlPFF03iMKQ6jExEFhMKWqdUfCttwf5HBq4oYsdju1RhwpDr9sU
+         w5OmvbDF8I1ztiHAO8TVMDMG972cX3ODjAGaL9Xo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 718738B895;
+        Fri, 23 Aug 2019 16:56:31 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id gUa6zUBgeseQ; Fri, 23 Aug 2019 16:56:31 +0200 (CEST)
+Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3A65D8B882;
+        Fri, 23 Aug 2019 16:56:31 +0200 (CEST)
+Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
+ handler
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <201908200943.601DD59DCE@keescook>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <ef7097d4-d924-4053-fd50-77128f198ae7@c-s.fr>
+Date:   Fri, 23 Aug 2019 16:56:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="c4vbgluuko4stj5s"
-Content-Disposition: inline
-In-Reply-To: <f3e3420e-450a-7d41-edf8-776c0cd5a320@sholland.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <201908200943.601DD59DCE@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In-Reply-To: 20190819234111.9019-8-keescook@chromium.org
 
---c4vbgluuko4stj5s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Le 20/08/2019 à 18:47, Kees Cook a écrit :
+> The original clean up of "cut here" missed the WARN_ON() case (that
+> does not have a printk message), which was fixed recently by adding
+> an explicit printk of "cut here". This had the downside of adding a
+> printk() to every WARN_ON() caller, which reduces the utility of using
+> an instruction exception to streamline the resulting code. By making
+> this a new BUGFLAG, all of these can be removed and "cut here" can be
+> handled by the exception handler.
+> 
+> This was very pronounced on PowerPC, but the effect can be seen on
+> x86 as well. The resulting text size of a defconfig build shows some
+> small savings from this patch:
+> 
+>     text    data     bss     dec     hex filename
+> 19691167        5134320 1646664 26472151        193eed7 vmlinux.before
+> 19676362        5134260 1663048 26473670        193f4c6 vmlinux.after
+> 
+> This change also opens the door for creating something like BUG_MSG(),
+> where a custom printk() before issuing BUG(), without confusing the "cut
+> here" line.
+> 
+> Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Hi,
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-On Tue, Aug 20, 2019 at 08:17:49AM -0500, Samuel Holland wrote:
-> On 8/20/19 3:15 AM, Maxime Ripard wrote:
-> > On Mon, Aug 19, 2019 at 10:23:06PM -0500, Samuel Holland wrote:
-> >> The A80 SoC contains a message box that can be used to send messages and
-> >> interrupts back and forth between the ARM application CPUs and the ARISC
-> >> coprocessor. Add a device tree node for it.
-> >>
-> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> >
-> > I think you mentionned that crust has been tested only on the A64 and
-> > the H3/H5, did you test the mailbox on those other SoCs as well?
->
-> No, I only have A64/H3/H5, and recently H6, hardware to test. I've looked
-> through the manuals to verify that the registers are all the same, but I haven't
-> run the driver on earlier SoCs.
-
-I'd rather not merge them until they've been properly tested. We've
-had some surprises with the documentation in the past :/
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---c4vbgluuko4stj5s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV/+lQAKCRDj7w1vZxhR
-xXWQAPwKyvkn2KiTnIGYIVua45lADkdWOtD9xl/wV7233OeEOQEAr2kwv01eXmx9
-SIGag0d/CuVhDIijFXIJeE/tUUHnJQ8=
-=7n7e
------END PGP SIGNATURE-----
-
---c4vbgluuko4stj5s--
+> ---
+> v2:
+>   - rename BUGFLAG_PRINTK to BUGFLAG_NO_CUT_HERE (peterz, christophe)
+> ---
+>   include/asm-generic/bug.h |  8 +++-----
+>   lib/bug.c                 | 11 +++++++++--
+>   2 files changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+> index 588dd59a5b72..a21e83f8a274 100644
+> --- a/include/asm-generic/bug.h
+> +++ b/include/asm-generic/bug.h
+> @@ -10,6 +10,7 @@
+>   #define BUGFLAG_WARNING		(1 << 0)
+>   #define BUGFLAG_ONCE		(1 << 1)
+>   #define BUGFLAG_DONE		(1 << 2)
+> +#define BUGFLAG_NO_CUT_HERE	(1 << 3)	/* CUT_HERE already sent */
+>   #define BUGFLAG_TAINT(taint)	((taint) << 8)
+>   #define BUG_GET_TAINT(bug)	((bug)->flags >> 8)
+>   #endif
+> @@ -86,13 +87,10 @@ void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
+>   	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
+>   #else
+>   extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+> -#define __WARN() do {							\
+> -		printk(KERN_WARNING CUT_HERE);				\
+> -		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN));		\
+> -	} while (0)
+> +#define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
+>   #define __WARN_printf(taint, arg...) do {				\
+>   		__warn_printk(arg);					\
+> -		__WARN_FLAGS(BUGFLAG_TAINT(taint));			\
+> +		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+>   	} while (0)
+>   #define WARN_ON_ONCE(condition) ({				\
+>   	int __ret_warn_on = !!(condition);			\
+> diff --git a/lib/bug.c b/lib/bug.c
+> index 1077366f496b..8c98af0bf585 100644
+> --- a/lib/bug.c
+> +++ b/lib/bug.c
+> @@ -181,6 +181,15 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+>   		}
+>   	}
+>   
+> +	/*
+> +	 * BUG() and WARN_ON() families don't print a custom debug message
+> +	 * before triggering the exception handler, so we must add the
+> +	 * "cut here" line now. WARN() issues its own "cut here" before the
+> +	 * extra debugging message it writes before triggering the handler.
+> +	 */
+> +	if ((bug->flags & BUGFLAG_NO_CUT_HERE) == 0)
+> +		printk(KERN_DEFAULT CUT_HERE);
+> +
+>   	if (warning) {
+>   		/* this is a WARN_ON rather than BUG/BUG_ON */
+>   		__warn(file, line, (void *)bugaddr, BUG_GET_TAINT(bug), regs,
+> @@ -188,8 +197,6 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+>   		return BUG_TRAP_TYPE_WARN;
+>   	}
+>   
+> -	printk(KERN_DEFAULT CUT_HERE);
+> -
+>   	if (file)
+>   		pr_crit("kernel BUG at %s:%u!\n", file, line);
+>   	else
+> 
