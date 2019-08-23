@@ -6,89 +6,117 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C013C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A4D22CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C688206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392530AbfHWIPO (ORCPT
+        id S2388461AbfHWISH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:15:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5205 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387613AbfHWIPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:15:14 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9B9376584E140FA06078;
-        Fri, 23 Aug 2019 16:15:12 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.186) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
- 16:15:02 +0800
-Subject: Re: [PATCH v2 0/2] iommu/iova: enhance the rcache optimization
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Jean-Philippe Brucker" <jean-philippe@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        "Robin Murphy" <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        Omer Peleg <omer@cs.technion.ac.il>,
-        Adam Morrison <mad@cs.technion.ac.il>,
-        Shaohua Li <shli@fb.com>, Ben Serebrin <serebrin@google.com>,
-        David Woodhouse <David.Woodhouse@intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190815121104.29140-1-thunder.leizhen@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <297e3718-eb31-d92a-1eb9-d4999fcd20c5@huawei.com>
-Date:   Fri, 23 Aug 2019 16:15:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 23 Aug 2019 04:18:07 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:55645 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733079AbfHWISG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 04:18:06 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7N8Hkr4060905;
+        Fri, 23 Aug 2019 17:17:46 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
+ Fri, 23 Aug 2019 17:17:46 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7N8HkJw060899
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 23 Aug 2019 17:17:46 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>
+References: <20190820222403.GB8120@kroah.com>
+ <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+ <20190822133538.GA16793@kroah.com>
+ <e8d3ce30-8c61-048e-2606-f8a4e8f08d87@i-love.sakura.ne.jp>
+ <20190822164249.GA12551@kroah.com>
+ <CACT4Y+Z0yCAwie83Oqd7XBNgQjWtEkuEg5WJCd6rW-ZMWqosxg@mail.gmail.com>
+ <433f12f7-cc17-c88b-4f26-7f45eee42884@i-love.sakura.ne.jp>
+ <CACT4Y+YCNR5_M29juV9-2UDj55BJVuYbj7bzbjtMDM_odut1Pg@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <f89b6329-37f5-e0ac-03aa-a58edc4267e4@i-love.sakura.ne.jp>
+Date:   Fri, 23 Aug 2019 17:17:42 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190815121104.29140-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CACT4Y+YCNR5_M29juV9-2UDj55BJVuYbj7bzbjtMDM_odut1Pg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.186]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-  Can anyone help review it?
+On 2019/08/23 8:59, Dmitry Vyukov wrote:
+>> Can't we introduce a kernel config which selectively blocks specific actions?
+>> If we don't need to worry about bypassing blacklist checks, we will be able to
+>> enable syz_execute_func() again.
+> 
+> 
+> We can consider this, but we need some set of good use cases first.
+> For /dev/{mem,kmem} we disable them with config, right?
 
+/dev/{mem,kmem} can be disabled by kernel config options. But
 
-On 2019/8/15 20:11, Zhen Lei wrote:
-> v1 --> v2
-> 1. I did not chagne the patches but added this cover-letter.
-> 2. Add a batch of reviewers base on
->    9257b4a206fc ("iommu/iova: introduce per-cpu caching to iova allocation")
-> 3. I described the problem I met in patch 2, but I hope below brief description
->    can help people to quickly understand.
->    Suppose there are six rcache sizes, each size can maximum hold 10000 IOVAs.
->    --------------------------------------------
->    |  4K   |  8K  | 16K  |  32K | 64K  | 128K |
->    --------------------------------------------
->    | 10000 | 9000 | 8500 | 8600 | 9200 | 7000 |
->    --------------------------------------------
->    As the above map displayed, the whole rcache buffered too many IOVAs. Now, the
->    worst case can be coming, suppose we need 20000 4K IOVAs at one time. That means
->    10000 IOVAs can be allocated from rcache, but another 10000 IOVAs should be 
->    allocated from RB tree base on alloc_iova() function. But the RB tree currently
->    have at least (9000 + 8500 + 8600 + 9200 + 7000) = 42300 nodes. The average speed
->    of RB tree traverse will be very slow. For my test scenario, the 4K size IOVAs are
->    frequently used, but others are not. So similarly, when the 20000 4K IOVAs are
->    continuous freed, the first 10000 IOVAs can be quickly buffered, but the other
->    10000 IOVAs can not.
-> 
-> Zhen Lei (2):
->   iommu/iova: introduce iova_magazine_compact_pfns()
->   iommu/iova: enhance the rcache optimization
-> 
->  drivers/iommu/iova.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++----
->  include/linux/iova.h |   1 +
->  2 files changed, 95 insertions(+), 6 deletions(-)
-> 
+>                                                         That looks
+> like the right thing to do because we don't want fuzzer to do anything
+> with these files anyway.
+
+I don't think so. To examine as corner as possible (e.g. lock dependency),
+I consider that even doing
+
+----------
++#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
++static char dummybuf[PAGE_SIZE];
++#endif
+----------
+
+----------
+                        ptr = xlate_dev_mem_ptr(p);
+                        if (!ptr) {
+                                if (written)
+                                        break;
+                                return -EFAULT;
+                        }
++#ifndef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+                        copied = copy_from_user(ptr, buf, sz);
++#else
++                       copied = copy_from_user(dummybuf, buf, min(sizeof(dummybuf), sz));
++#endif
+                        unxlate_dev_mem_ptr(p, ptr);
+----------
+
+makes sense, for copy_from_user() might find new lock dependency
+which would otherwise be unnoticed.
+
+>                          So this won't be a good use case for
+> CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING.
+> Fuzzer can also reliably filter out based on syscall numbers of
+> top-level argument values. The potential problem is with (1)
+> pointers/indirect memory and (2) where blacklisting some top-level
+> argument values would backlist too much (e.g. prohibiting 3rd ioctl
+> argument 0 entirely).
+
+I consider that functions that freezes processes/filesystems, 
+reboots/shutdowns a system, changes console loglevels can be blocked
+as well. Trying to examine up to last-second conditional branches will
+catch more bugs (e.g. bugs in error recovery paths).
 
