@@ -2,116 +2,131 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D03C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96B2C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF3223404
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC6F233FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RQMolOsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390061AbfHWCQp (ORCPT
+        id S2389915AbfHWCWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:16:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33754 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730796AbfHWCQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:16:45 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0z7t-00014z-2y; Fri, 23 Aug 2019 04:16:29 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8779D1C07E4;
-        Fri, 23 Aug 2019 04:16:28 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:16:25 -0000
-From:   tip-bot2 for Jiri Olsa <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Fix arch include paths
-Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <20190820124624.GG24105@krava>
-References: <20190820124624.GG24105@krava>
+        Thu, 22 Aug 2019 22:22:31 -0400
+Received: from ozlabs.org ([203.11.71.1]:58275 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfHWCWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:22:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46F4tC4j01z9s7T;
+        Fri, 23 Aug 2019 12:22:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566526947;
+        bh=W0VP6tV8Iass4aIClCri+2HgjFifGQ6TTSCwH41iw8I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RQMolOsb6S8xsc10z3kxBTtuhc5W7FpF9c0yE9Xh0MYgGVleR7yhGGxAIS4Xgymih
+         Wt4p9UxYSPVJ+EofPgPKDdV6+3QE4dyT7borqp6XGZK/u78qgEOKv6y2Nh2toCPs5S
+         zFCJDbZTEy9kEQrG5O4IqvfpJffi7ao2sCiR57PpZKTPkeb3bAeEdIki1S0f7IV28N
+         D7H++R32KEjh/FWUbkYh7JhuJ6Had2j+1qX+ie7BcDCnugOZTSfquD4yj8Pj04pn0u
+         bR9jfjnPbYeCCX0f8WFpyGX1Sv30nXRCE2T5z2LgiTSGDZvLhMHz/KLdaeZs/OVKCg
+         awxOKfQ1v4DFw==
+Date:   Fri, 23 Aug 2019 12:22:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Moni Shoua <monis@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: linux-next: manual merge of the rdma tree with the rdma-fixes tree
+Message-ID: <20190823122227.4c2b9790@canb.auug.org.au>
 MIME-Version: 1.0
-Message-ID: <156652658595.12449.3232580818277514733.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
- these emails
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/mKDxMMYXrXXjP_s54QUOcKE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+--Sig_/mKDxMMYXrXXjP_s54QUOcKE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     b81d39c7a1efb83caa3f4419939a46e96191abb6
-Gitweb:        https://git.kernel.org/tip/b81d39c7a1efb83caa3f4419939a46e96191abb6
-Author:        Jiri Olsa <jolsa@redhat.com>
-AuthorDate:    Tue, 20 Aug 2019 14:46:24 +02:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 20 Aug 2019 12:29:36 -03:00
+Hi all,
 
-libperf: Fix arch include paths
+Today's linux-next merge of the rdma tree got a conflict in:
 
-Guenter Roeck reported problem with compilation when the ARCH is
-specified:
+  drivers/infiniband/hw/mlx5/mlx5_ib.h
 
-  $ make ARCH=x86_64
-  In file included from tools/include/asm/atomic.h:6:0,
-                   from include/linux/atomic.h:5,
-                   from tools/include/linux/refcount.h:41,
-                   from cpumap.c:4: tools/include/asm/../../arch/x86/include/asm/atomic.h:11:10:
-  fatal error: asm/cmpxchg.h: No such file or directory
+between commit:
 
-The problem is that we don't use SRCARCH (the sanitized ARCH version)
-and we don't get the proper include path.
+  0e6613b41edd ("IB/mlx5: Consolidate use_umr checks into single function")
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 314350491810 ("libperf: Make libperf.a part of the perf build")
-Link: http://lkml.kernel.org/r/20190820124624.GG24105@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/lib/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+from the rdma-fixes tree and commit:
 
-diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
-index 8a9ae50..a67efb8 100644
---- a/tools/perf/lib/Makefile
-+++ b/tools/perf/lib/Makefile
-@@ -59,7 +59,7 @@ else
-   CFLAGS := -g -Wall
- endif
- 
--INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/ -I$(srctree)/tools/arch/$(ARCH)/include/uapi -I$(srctree)/tools/include/uapi
-+INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/ -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
- 
- # Append required CFLAGS
- override CFLAGS += $(EXTRA_WARNINGS)
+  3e1f000ff746 ("IB/mlx5: Support per device q counters in switchdev mode")
+
+from the rdma tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/infiniband/hw/mlx5/mlx5_ib.h
+index 9ae587b74b12,cb41a7e6255a..000000000000
+--- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
++++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+@@@ -1475,18 -1475,5 +1475,19 @@@ int bfregn_to_uar_index(struct mlx5_ib_
+  			bool dyn_bfreg);
+ =20
+  int mlx5_ib_qp_set_counter(struct ib_qp *qp, struct rdma_counter *counter=
+);
++ u16 mlx5_ib_get_counters_id(struct mlx5_ib_dev *dev, u8 port_num);
+ +
+ +static inline bool mlx5_ib_can_use_umr(struct mlx5_ib_dev *dev,
+ +				       bool do_modify_atomic)
+ +{
+ +	if (MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled))
+ +		return false;
+ +
+ +	if (do_modify_atomic &&
+ +	    MLX5_CAP_GEN(dev->mdev, atomic) &&
+ +	    MLX5_CAP_GEN(dev->mdev, umr_modify_atomic_disabled))
+ +		return false;
+ +
+ +	return true;
+ +}
+  #endif /* MLX5_IB_H */
+
+--Sig_/mKDxMMYXrXXjP_s54QUOcKE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fTeMACgkQAVBC80lX
+0GyXDgf9FrwdVx6aO+wP4xotZb2GuGRLQQmv7QUKSls1w6kHrCSLXGnkg4belRqx
+H1sbyvYwoIi7hGY8dVErjBmYAQoIBlYHE9xiwPA3LFhifxTpJS63aqc71AHj6hrY
+PoXQRXof1/bvGiSBxP3E4VMk/7CY0XJL/62Ng7YeONa45qlZHqmFhfcC59Kp+HIA
+4D6RamzkEyC8UGzhpeSujmK8d2dMFvrA9UFZvtAWMMGzE4MUqVLIATcR99keCf+q
+Q86y3wicMd3onStdX8VY6HjRSCuXhbaKt8dmCVSu93lsEIVwfadhKsqQdeNYOl3q
+TDSV/GSrPvzKIRR25kk393nf+Locbg==
+=nIW5
+-----END PGP SIGNATURE-----
+
+--Sig_/mKDxMMYXrXXjP_s54QUOcKE--
