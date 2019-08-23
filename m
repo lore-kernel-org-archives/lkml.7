@@ -2,169 +2,102 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA86DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FE2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB4A206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B66206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393207AbfHWVxH (ORCPT
+        id S2393346AbfHWVzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 17:53:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60466 "EHLO mx1.redhat.com"
+        Fri, 23 Aug 2019 17:55:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:43389 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392654AbfHWVxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 17:53:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 196E485536;
-        Fri, 23 Aug 2019 21:53:06 +0000 (UTC)
-Received: from dhcp-44-196.space.revspace.nl (unknown [10.36.112.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A798600C1;
-        Fri, 23 Aug 2019 21:53:00 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Ian W MORRISON <ianwmorrison@gmail.com>
-Subject: [PATCH] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist
-Date:   Fri, 23 Aug 2019 23:52:55 +0200
-Message-Id: <20190823215255.7631-1-hdegoede@redhat.com>
+        id S2388000AbfHWVzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 17:55:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 14:55:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
+   d="scan'208";a="263305949"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga001.jf.intel.com with ESMTP; 23 Aug 2019 14:55:21 -0700
+Date:   Fri, 23 Aug 2019 14:55:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH 04/13] KVM: x86: Drop EMULTYPE_NO_UD_ON_FAIL as a
+ standalone type
+Message-ID: <20190823215521.GD24772@linux.intel.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
+ <20190823010709.24879-5-sean.j.christopherson@intel.com>
+ <4993FDBF-6641-43E9-BCEE-7F5FE58561E9@oracle.com>
+ <CB2B4523-AA0C-4931-BD1E-9F63FA114EF0@oracle.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 23 Aug 2019 21:53:06 +0000 (UTC)
+In-Reply-To: <CB2B4523-AA0C-4931-BD1E-9F63FA114EF0@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Another day; another DSDT bug we need to workaround...
+On Fri, Aug 23, 2019 at 04:32:05PM +0300, Liran Alon wrote:
+> 
+> > On 23 Aug 2019, at 16:21, Liran Alon <liran.alon@oracle.com> wrote:
+> > 
+> >> On 23 Aug 2019, at 4:07, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> >> 
+> >> The "no #UD on fail" is used only in the VMWare case, and for the VMWare
+> >> scenario it really means "#GP instead of #UD on fail".  Remove the flag
+> >> in preparation for moving all fault injection into the emulation flow
+> >> itself, which in turn will allow eliminating EMULATE_DONE and company.
+> >> 
+> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > When I created the commit which introduced this e23661712005 ("KVM: x86:
+> > Add emulation_type to not raise #UD on emulation failure") I intentionally
+> > introduced a new flag to emulation_type instead of using EMULTYPE_VMWARE as
+> > I thought it’s weird to couple this behaviour specifically with VMware
+> > emulation.  As it made sense to me that there could be more scenarios in
+> > which some VMExit handler would like to use the x86 emulator but in case of
+> > failure want to decide what would be the failure handling from the outside.
+> > I also didn’t want the x86 emulator to be aware of VMware interception
+> > internals.
+> > 
+> > Having said that, one could argue that the x86 emulator already knows about
+> > the VMware interception internals because of how x86_emulate_instruction()
+> > use is_vmware_backdoor_opcode() and from the mere existence of
+> > EMULTYPE_VMWARE. So I think it’s legit to decide that we will just move all
+> > the VMware interception logic into the x86 emulator. Including handling
+> > emulation failures. But then, I would make this patch of yours to also
+> > modify handle_emulation_failure() to queue #GP to guest directly instead of
+> > #GP intercept in VMX/SVM to do so.  I see you do it in a later patch "KVM:
+> > x86: Move #GP injection for VMware into x86_emulate_instruction()" but I
+> > think this should just be squashed with this patch to make sense.
+> > 
+> > To sum-up, I agree with your approach but I recommend you squash this patch
+> > and patch 6 of the series to one and change commit message to explain that
+> > you just move entire handling of VMware interception into the x86 emulator.
+> > Instead of providing explanations such as VMware emulation is the only one
+> > that use “no #UD on fail”.
+> 
+> After reading patch 5 as-well, I would recommend to first apply patch 5
+> (filter out #GP with error-code != 0) and only then apply 4+6.
 
-Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
-at least once on boot") we call _AEI edge handlers at boot.
-
-In some rare cases this causes problems. One example of this is the Minix
-Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
-and pasted code for dealing with Micro USB-B connector host/device role
-switching, while the mini PC does not even have a micro-USB connector.
-This code, which should not be there, messes with the DDC data pin from
-the HDMI connector (switching it to GPIO mode) breaking HDMI support.
-
-To avoid problems like this, this commit adds a new
-gpiolib_acpi_run_edge_events_on_boot kernel commandline option which
-can be "on", "off", or "auto" (default).
-
-In auto mode the default is on and a DMI based blacklist is used,
-the initial version of this blacklist contains the Minix Neo Z83-4
-fixing the HDMI being broken on this device.
-
-Cc: stable@vger.kernel.org
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Ian W MORRISON <ianwmorrison@gmail.com>
-Reported-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Suggested-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Fixes: ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpio/gpiolib-acpi.c | 52 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 39f2f9035c11..546dc2c1f3f1 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -7,6 +7,7 @@
-  *          Mika Westerberg <mika.westerberg@linux.intel.com>
-  */
- 
-+#include <linux/dmi.h>
- #include <linux/errno.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
-@@ -19,6 +20,23 @@
- 
- #include "gpiolib.h"
- 
-+static int gpiolib_acpi_run_edge_events_on_boot = -1;
-+
-+static int __init gpiolib_acpi_run_edge_events_on_boot_setup(char *arg)
-+{
-+	if (!strcmp(arg, "on"))
-+		gpiolib_acpi_run_edge_events_on_boot = 1;
-+	else if (!strcmp(arg, "off"))
-+		gpiolib_acpi_run_edge_events_on_boot = 0;
-+	else if (!strcmp(arg, "auto"))
-+		gpiolib_acpi_run_edge_events_on_boot = -1;
-+
-+	return 1;
-+}
-+
-+__setup("gpiolib_acpi_run_edge_events_on_boot=",
-+        gpiolib_acpi_run_edge_events_on_boot_setup);
-+
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -150,6 +168,29 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- }
- EXPORT_SYMBOL_GPL(acpi_gpio_get_irq_resource);
- 
-+static const struct dmi_system_id run_edge_events_on_boot_blacklist[] =
-+{
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
-+		}
-+	},
-+	{} /* Terminating entry */
-+};
-+
-+static bool acpi_gpiochip_run_edge_events_on_boot(void)
-+{
-+	if (gpiolib_acpi_run_edge_events_on_boot == -1) {
-+		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-+			gpiolib_acpi_run_edge_events_on_boot = 0;
-+		else
-+			gpiolib_acpi_run_edge_events_on_boot = 1;
-+	}
-+
-+	return gpiolib_acpi_run_edge_events_on_boot;
-+}
-+
- static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
- 				      struct acpi_gpio_event *event)
- {
-@@ -170,10 +211,13 @@ static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
- 	event->irq_requested = true;
- 
- 	/* Make sure we trigger the initial state of edge-triggered IRQs */
--	value = gpiod_get_raw_value_cansleep(event->desc);
--	if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
--	    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
--		event->handler(event->irq, event);
-+	if (acpi_gpiochip_run_edge_events_on_boot() &&
-+	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
-+		value = gpiod_get_raw_value_cansleep(event->desc);
-+		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-+		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-+			event->handler(event->irq, event);
-+	}
- }
- 
- static void acpi_gpiochip_request_irqs(struct acpi_gpio_chip *acpi_gpio)
--- 
-2.22.0
-
+Works for me.
