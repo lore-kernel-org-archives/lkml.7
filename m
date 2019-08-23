@@ -2,117 +2,130 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898A1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68950C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6423921848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4779E22CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388724AbfHWNL4 (ORCPT
+        id S2392116AbfHWNNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:11:56 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731783AbfHWNLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:11:55 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 318783CD6D96C5C7B307;
-        Fri, 23 Aug 2019 21:11:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
- 21:11:37 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <yuehaibing@huawei.com>, <daniel.baluta@nxp.com>,
-        <pierre-louis.bossart@linux.intel.com>
-CC:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] ASoC: SOF: imx8: Make some functions static
-Date:   Fri, 23 Aug 2019 20:59:39 +0800
-Message-ID: <20190823125939.30012-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Fri, 23 Aug 2019 09:13:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35005 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731783AbfHWNNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 09:13:44 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i19Np-0000Gv-Lb; Fri, 23 Aug 2019 15:13:37 +0200
+Message-ID: <1566566016.3023.21.camel@pengutronix.de>
+Subject: Re: [PATCH v3 5/7] media: v4l2-core: Add new helper for area
+ controls
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Date:   Fri, 23 Aug 2019 15:13:36 +0200
+In-Reply-To: <CAPybu_0iodVnn1Fa5BFi7zc7ugwpN926wCJaoKU548zqrNJ5iw@mail.gmail.com>
+References: <20190823123737.7774-1-ribalda@kernel.org>
+         <20190823123737.7774-5-ribalda@kernel.org>
+         <1566564998.3023.13.camel@pengutronix.de>
+         <CAPybu_0iodVnn1Fa5BFi7zc7ugwpN926wCJaoKU548zqrNJ5iw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+On Fri, 2019-08-23 at 15:05 +0200, Ricardo Ribalda Delgado wrote:
+> On Fri, Aug 23, 2019 at 2:56 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > 
+> > On Fri, 2019-08-23 at 14:37 +0200, Ricardo Ribalda Delgado wrote:
+> > > Adding a V4L2_CID_UNIT_CELL_SIZE control requires a lot of boilerplate,
+> > > try to minimize it by adding a new helper.
+> > > 
+> > > Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > > ---
+> > >  drivers/media/v4l2-core/v4l2-ctrls.c | 25 ++++++++++++++++++++++++-
+> > >  include/media/v4l2-ctrls.h           | 16 ++++++++++++++++
+> > >  2 files changed, 40 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > index b3bf458df7f7..33e48f0aec1a 100644
+> > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > @@ -2660,7 +2660,6 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
+> > >  }
+> > >  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
+> > > 
+> > > -/* Helper function for standard integer menu controls */
+> > 
+> > Why move this ...
+> > 
+> > >  struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+> > >                       const struct v4l2_ctrl_ops *ops,
+> > >                       u32 id, u8 _max, u8 _def, const s64 *qmenu_int)
+> > > @@ -2684,6 +2683,30 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+> > >  }
+> > >  EXPORT_SYMBOL(v4l2_ctrl_new_int_menu);
+> > > 
+> > > +static void area_init(const struct v4l2_ctrl *ctrl, u32 idx,
+> > > +             union v4l2_ctrl_ptr ptr)
+> > > +{
+> > > +     memcpy(ptr.p_area, ctrl->priv, sizeof(*ptr.p_area));
+> > > +}
+> > > +
+> > > +static const struct v4l2_ctrl_type_ops area_ops = {
+> > > +     .init = area_init,
+> > > +};
+> > > +
+> > > +struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
+> > > +                                  const struct v4l2_ctrl_ops *ops,
+> > > +                                  u32 id, const struct v4l2_area *area)
+> > > +{
+> > > +     static struct v4l2_ctrl_config ctrl = {
+> > > +             .id = V4L2_CID_UNIT_CELL_SIZE,
+> > > +             .type_ops = &area_ops,
+> > > +     };
+> > > +
+> > > +     return v4l2_ctrl_new_custom(hdl, &ctrl, (void *)area);
+> > > +}
+> > > +EXPORT_SYMBOL(v4l2_ctrl_new_area);
+> > > +
+> > > +/* Helper function for standard integer menu controls */
+> > 
+> > ... here?
+> 
+> Because I screwed up :). Let me fix that sorry.
+> 
+> I will push all your changes to:
+> 
+> https://github.com/ribalda/linux/tree/unit-size-v4
+> 
+> plus any other comment and then I will wait 2-3 days for resend
 
-sound/soc/sof/imx/imx8.c:104:6: warning: symbol 'imx8_dsp_handle_reply' was not declared. Should it be static?
-sound/soc/sof/imx/imx8.c:115:6: warning: symbol 'imx8_dsp_handle_request' was not declared. Should it be static?
-sound/soc/sof/imx/imx8.c:336:5: warning: symbol 'imx8_get_bar_index' was not declared. Should it be static?
-sound/soc/sof/imx/imx8.c:341:6: warning: symbol 'imx8_ipc_msg_data' was not declared. Should it be static?
-sound/soc/sof/imx/imx8.c:348:5: warning: symbol 'imx8_ipc_pcm_params' was not declared. Should it be static?
+Awesome, thanks! Feel free to add
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/sof/imx/imx8.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-index e502f58..6404724 100644
---- a/sound/soc/sof/imx/imx8.c
-+++ b/sound/soc/sof/imx/imx8.c
-@@ -101,7 +101,7 @@ static int imx8_get_window_offset(struct snd_sof_dev *sdev, u32 id)
- 	return MBOX_OFFSET;
- }
- 
--void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
-+static void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
- {
- 	struct imx8_priv *priv = imx_dsp_get_data(ipc);
- 	unsigned long flags;
-@@ -112,7 +112,7 @@ void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
- 	spin_unlock_irqrestore(&priv->sdev->ipc_lock, flags);
- }
- 
--void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
-+static void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
- {
- 	struct imx8_priv *priv = imx_dsp_get_data(ipc);
- 
-@@ -333,21 +333,21 @@ static int imx8_remove(struct snd_sof_dev *sdev)
- }
- 
- /* on i.MX8 there is 1 to 1 match between type and BAR idx */
--int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
-+static int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
- {
- 	return type;
- }
- 
--void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
--		       struct snd_pcm_substream *substream,
--		       void *p, size_t sz)
-+static void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
-+			      struct snd_pcm_substream *substream,
-+			      void *p, size_t sz)
- {
- 	sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
- }
- 
--int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
--			struct snd_pcm_substream *substream,
--			const struct sof_ipc_pcm_params_reply *reply)
-+static int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
-+			       struct snd_pcm_substream *substream,
-+			       const struct sof_ipc_pcm_params_reply *reply)
- {
- 	return 0;
- }
--- 
-2.7.4
-
-
+regards
+Philipp
