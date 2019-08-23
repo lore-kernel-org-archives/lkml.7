@@ -2,161 +2,98 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1058CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12118C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10FC2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLHtmtxk"
+	by mail.kernel.org (Postfix) with ESMTP id D5EFA21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566581908;
+	bh=BvlcKb2iuEFeIVz2EmKDKkglvLx+LDxESaVfhrFRT9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l5IoH4sYMzg9/1iB7wh/g5D8342d6cSnVKmN7SlgdrF0AeExRD9rykQtnF56XNgUI
+	 1Znb00clmnTbR0rt+uVvmkQHbd2Eki+vJO7w3435LeUdeIcKGedcYZY2nSHDfLUY7k
+	 zJjm8u+VWKtQvIbTcvS2yIeV1sgnsAIblFEL9wRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404188AbfHWRgi (ORCPT
+        id S2404254AbfHWRi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:36:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42260 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404120AbfHWRgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:36:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id e20so21808994iob.9;
-        Fri, 23 Aug 2019 10:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sG7Oz4tvlMM9D073f9jigVody4k5I2Lxm5iPrqf1t3c=;
-        b=VLHtmtxk+kIuuTecA1rRwr2eiqLViPkFFbL1AhBsBkoC/sY5DGnPavOBKPzDloXNXz
-         4pjNGcTejGbcDiOT/0xvOPV6sA3giWUAzDpAmbkuK7qkuFdtH0Dw1bCTrE70r6gf3ZvG
-         ZAML6M1a2hXQ4MT24lRkKGnpYFDNSy0rsSQ4GwWIOg8ptQN6hkjFiBiFy1VfP8NSZ0A9
-         km5P1g1g86OAs1YHbRXOtoEVTUGNTk2ezba6PmeyAVdPjcL4/rj/jOTcOMzAn6H/e2nj
-         h32oFnFWWFj8MiuA9TNQEn911C0IfbDwh7qTN3YQWMuCr5Z6c98gFiaw83IWMlxT3XoS
-         UQ3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sG7Oz4tvlMM9D073f9jigVody4k5I2Lxm5iPrqf1t3c=;
-        b=IvqTI3/3UKDdGa+zjYjtM504+O+zsLBEcx7B34MB46i504aBwYoDWyt23MPAqZCZRH
-         gXmuWe/7snFRQxOUG/vCpMHRB0Q9jSWMA9zpUgBXQUQ+yn+cLhpW3hr8E6uHC9pdCZtf
-         wteKNPtj2+J6F303dTWCtmXDqS+ktCTpQmMrtSw3cHoir2/LO3KaRvatA8fw1t90lhPt
-         ou6llh0mTwlBdfesHIIkSB3GFB3AOdqVtMKnBuq9nbknf6Uq1zLO1UEIK3hiy5TpfyJd
-         8zRHlRe1QG8LGr/u85X7n8UEVS3tEjR7GtkB+eUSoXPjSbozHb7EfbzqGBZ8mT1+CI39
-         iVHg==
-X-Gm-Message-State: APjAAAWWbbReqVo7c0yCX5Bxgj+f+39KjZZIeLfwjKSBNhkfHg6NNMKA
-        4yo9vm0V9spFMXUqYIrQKw==
-X-Google-Smtp-Source: APXvYqw7tNl24KnjTijUUlCAayNH+6INZQwey5kTzsCzyNQ6z754f4S45VQpIQU6ki7yyFC/WsWFBg==
-X-Received: by 2002:a05:6638:213:: with SMTP id e19mr5734428jaq.119.1566581796175;
-        Fri, 23 Aug 2019 10:36:36 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id y25sm5539253iol.59.2019.08.23.10.36.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 23 Aug 2019 10:36:35 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 13:36:33 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers: hv: vmbus: Introduce latency testing
-Message-ID: <20190823173633.GA43233@Test-Virtual-Machine>
-References: <cover.1566266609.git.brandonbonaby94@gmail.com>
- <ebca54bf70d2af53de419c1b7ac8db5b77b888cb.1566266609.git.brandonbonaby94@gmail.com>
- <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
- <20190823033850.GA41496@Test-Virtual-Machine>
- <DM5PR21MB01379300AF2B441D0B53692DD7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Fri, 23 Aug 2019 13:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbfHWRi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:38:26 -0400
+Received: from localhost (unknown [104.129.198.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61333206B7;
+        Fri, 23 Aug 2019 17:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566581905;
+        bh=BvlcKb2iuEFeIVz2EmKDKkglvLx+LDxESaVfhrFRT9g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IppX7fEUCIsfvhhXizMkUUWtCQgSbnqWOi6B7LLsE9o7EG55OCtA6j7UEmQ6SZtJW
+         laeEXHpHX5USi9maoTzMLy2TC+yGWqUIEOhtblzwOzsktfPb5D+SxOfGwhIvsoDc3B
+         rfpGLIvdh5Cx5Rl4KxxVntGAINnGUQJou1/CuZ5M=
+Date:   Fri, 23 Aug 2019 10:38:24 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.4 00/78] 4.4.190-stable review
+Message-ID: <20190823173824.GB1040@kroah.com>
+References: <20190822171832.012773482@linuxfoundation.org>
+ <ea35d533-4ffb-8fe0-8639-6fc5a780748e@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM5PR21MB01379300AF2B441D0B53692DD7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ea35d533-4ffb-8fe0-8639-6fc5a780748e@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 04:44:09PM +0000, Michael Kelley wrote:
-> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Thursday, August 22, 2019 8:39 PM
-> > > > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > > > index 09829e15d4a0..c9c63a4033cd 100644
-> > > > --- a/drivers/hv/connection.c
-> > > > +++ b/drivers/hv/connection.c
-> > > > @@ -357,6 +357,9 @@ void vmbus_on_event(unsigned long data)
-> > > >
-> > > >  	trace_vmbus_on_event(channel);
-> > > >
-> > > > +#ifdef CONFIG_HYPERV_TESTING
-> > > > +	hv_debug_delay_test(channel, INTERRUPT_DELAY);
-> > > > +#endif /* CONFIG_HYPERV_TESTING */
-> > >
-> > > You are following Vitaly's suggestion to use #ifdef's so no code is
-> > > generated when HYPERV_TESTING is not enabled.  However, this
-> > > direct approach to using #ifdef's really clutters the code and makes
-> > > it harder to read and follow.  The better approach is to use the
-> > > #ifdef in the include file where the functions are defined.  If
-> > > HYPERV_TESTING is not enabled, provide a #else that defines
-> > > the function with an empty implementation for which the compiler
-> > > will generate no code.   An as example, see the function definition
-> > > for hyperv_init() in arch/x86/include/asm/mshyperv.h.  There are
-> > > several functions treated similarly in that include file.
-> > >
+On Fri, Aug 23, 2019 at 03:05:38AM +0100, Jon Hunter wrote:
+> 
+> On 22/08/2019 18:18, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.190 release.
+> > There are 78 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > I checked out the code in arch/x86/include/asm/mshyperv.h, after
-> > thinking about it, I'm wondering if it would be better just to have
-> > two files one called hv_debugfs.c and the other hyperv_debugfs.h.
-> > I could put the code definitions in hv_debugfs.c and at the top
-> > include the hyperv_debugfs.h file which would house the declarations
-> > of these functions under the ifdef. Then like you alluded too use
-> > an #else statement that would have the null implementations of the
-> > above functions. Then put an #include "hyperv_debugfs.h" in the
-> > hyperv_vmbus.h file. I figured instead of putting the code directly
-> > into the vmbus_drv.c file it might be best to put them in a seperate
-> > file like hv_debugfs.c. This way when we start adding more tests we
-> > don't bloat the vmbus_drv.c file unnecessarily. The hv_debugfs.c
-> > file would have the #ifdef CONFIG_HYPERV_TESTING at the top so if
-> > its not enabled  those null implementations in "hyperv_debugfs.h"
-> > woud kick in anywhere that included the hyperv_vmbus.h file which
-> > is what we want.
+> > Responses should be made by Sat 24 Aug 2019 05:18:13 PM UTC.
+> > Anything received after that time might be too late.
 > > 
-> > what do you think?
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.190-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > and the diffstat can be found below.
 > > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> I'll preface my comments by saying that how code gets structured
-> into files is always a bit of a judgment call.  The goal is to group code
-> into sensible chunks to make it easy to understand and to make it
-> easy to modify and extend later.  The latter is a prediction about the
-> future, which may or may not be accurate.   For the former, what's
-> "easy to understand," is often in the eye of the beholder.  So you may
-> get different opinions from different reviewers.
+> All tests for Tegra are passing ...
 > 
-> That said, I like the idea of a separate hv_debugfs.c file to contain
-> the implementation of the various functions you have added to
-> provide the fuzzing capability.   I'm less convinced about the value
-> of a separate hyperv_debugfs.h file.   I think you have one big
-> #ifdef CONFIG_HYPERV_TESTING followed by the declarations of
-> the functions in hv_debugfs.c, followed by #else and null
-> implementations of those functions.  This is 20 lines of code or so,
-> and could easily go in hyperv_vmbus.h.
+> Test results for stable-v4.4:
+>     6 builds:	6 pass, 0 fail
+>     12 boots:	12 pass, 0 fail
+>     19 tests:	19 pass, 0 fail
 > 
-> For the new hv_debugfs.c, you can avoid the need for
-> #ifdef CONFIG_HYPERV_TESTING by modifying the Makefile in
-> drivers/hv so that hv_debugfs.o is built only if CONFIG_HYPERV_TESTING
-> is defined.  Look at the current Makefile to see how this is done
-> with CONFIG_HYPERV_UTILS and CONFIG_HYPERV_BALLOON.
+> Linux version:	4.4.190-rc1-gf607b8c5ce70
+> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+>                 tegra30-cardhu-a04
 > 
-> Michael
->
 
-I see, that does make sense, I'll go ahead and add these changes.
+Thanks for testing all of these and letting me know.
 
-thanks
-
-branden bonaby
+greg k-h
