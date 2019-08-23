@@ -2,320 +2,125 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1987BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB25C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06522166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404F622CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 05:29:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gb6J0mlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392123AbfHWF3F (ORCPT
+        id S2392157AbfHWF3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 01:29:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55440 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392067AbfHWF3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 01:29:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 22:29:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
-   d="scan'208";a="179074063"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Aug 2019 22:28:58 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     robh@kernel.org, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
-Date:   Fri, 23 Aug 2019 13:28:35 +0800
-Message-Id: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
-In-Reply-To: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+        Fri, 23 Aug 2019 01:29:53 -0400
+Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:29377
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387557AbfHWF3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 01:29:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RBE5p1zcaoMfqOpytfPTvF5LbUXbNLxY8xARTLyqMV7WKYLNMw/AJwKpkwo9Ib0ycZHHZjfDQmcPKfz93oL3E7v7ijp/U6HW2Nkd9m2e5xuW5wdKGj1RFtjshJplqGwWZ55HONsWDyv12m7XTn5EJEEkpHS/D2/7DeadKkSrkrKIvNI11NLLYxGa9k/iFrJYema3oKDbLEzeU+hqes5yJH9rMhaiTLBIX8n+cl2A2XCnxpdvWRggXILNwfAZA6JwqAYxa/LM7TcgCuJkpWckwkcJ0QuyS/qxKC0aaMSZ98bjIBDVk/6PPlN75H8yMxZL4wy2dTJseWKM/4oesbN6rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L+WEjn2svcEvToFpi9uCRGeqlOIG+8XQwktFO0mlFgc=;
+ b=k1L1eU8BaDU06oEk7YnOZ0UAytCUDYWPyrcYMEXasOjUXRwCkVzH77/xZYSmOryU7MpwDWu7e2w2OdybG5j3KcC+4fT8Ul9YY5J+O8TzW46EtQa638whMiCvC9J24qXFCWLKvazmTCOqzV2Ex26y8pgFsjw8Ak9IEp8ETtj68pxoIJVMkY8BcpcsDL8GSpdurdyzSIp+nnfCZGSdqqCc6kAShlpEKjyiGAyjkpm2qIpVJQT6n/otc2sRdP4V1WvdMubaMCz3uBYlfDpCWVzTDUTUVNltzeRVxKOAIsfQzcIAjAOO6+SF4W/GFw0FCZRrRmBD6W7qCO/cpVvxxd+DMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L+WEjn2svcEvToFpi9uCRGeqlOIG+8XQwktFO0mlFgc=;
+ b=gb6J0mlRexthQ+xp7kW1tx4K9KoMr/LQLq3HbA84IVkG1vb7u1m76/QO6HLBuh4+FWuCgPLcY7uo0/fiHAUWF6DCHwgIq1+wNJ+Pm15+SxhbM7RQ4SE9BYc8+Oitn1VDmDS5DM9Y265GyT+I8NNavxojucTLZJVw7xegko+tdl0=
+Received: from AM4PR0501MB2756.eurprd05.prod.outlook.com (10.172.216.138) by
+ AM4PR0501MB2739.eurprd05.prod.outlook.com (10.172.222.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Fri, 23 Aug 2019 05:29:48 +0000
+Received: from AM4PR0501MB2756.eurprd05.prod.outlook.com
+ ([fe80::e414:3306:9996:bb7a]) by AM4PR0501MB2756.eurprd05.prod.outlook.com
+ ([fe80::e414:3306:9996:bb7a%4]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
+ 05:29:48 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        haiyangz <haiyangz@microsoft.com>
+CC:     kys <kys@microsoft.com>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH net-next,v5, 0/6] Add software backchannel and mlx5e HV
+ VHCA stats
+Thread-Topic: [PATCH net-next,v5, 0/6] Add software backchannel and mlx5e HV
+ VHCA stats
+Thread-Index: AQHVWTieJNg4lNlPokigzqQxpEz7DacHwLuAgAAAK6CAAAF/AIAAcrYA
+Date:   Fri, 23 Aug 2019 05:29:48 +0000
+Message-ID: <f7a0ce8822e197ace496a348a14ac6939313d8f6.camel@mellanox.com>
+References: <1566512708-13785-1-git-send-email-haiyangz@microsoft.com>
+         <20190822.153315.1245817410062415025.davem@davemloft.net>
+         <DM6PR21MB133743FB2006A28AE10A170CCAA50@DM6PR21MB1337.namprd21.prod.outlook.com>
+         <20190822.153912.2269276523787180347.davem@davemloft.net>
+In-Reply-To: <20190822.153912.2269276523787180347.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ae7633af-695e-4195-516c-08d7278aea53
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR0501MB2739;
+x-ms-traffictypediagnostic: AM4PR0501MB2739:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM4PR0501MB27398D27ACEC59B020FB535ABEA40@AM4PR0501MB2739.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(39850400004)(396003)(199004)(189003)(256004)(81156014)(305945005)(4326008)(14444005)(25786009)(7416002)(6246003)(7736002)(53936002)(478600001)(14454004)(36756003)(6486002)(229853002)(76116006)(66556008)(91956017)(486006)(66476007)(64756008)(66446008)(66946007)(6512007)(6436002)(86362001)(5660300002)(476003)(2616005)(11346002)(76176011)(2501003)(1511001)(4744005)(446003)(66066001)(3846002)(6116002)(26005)(186003)(58126008)(8936002)(102836004)(71200400001)(71190400001)(316002)(6506007)(118296001)(54906003)(110136005)(81166006)(99286004)(8676002)(2906002)(42413003)(142933001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0501MB2739;H:AM4PR0501MB2756.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CBscFu4hTD+sjgHAkb5WHD5WRX4kaYwITGFqMj7FiXM5kreqqJ6MvqsAClvqJP9P021DQNPL1AGO2fJWSq23zX5U/bh6laObeOezZWlOJ1ZBoHniinNFk7mbCktwfbHNweM9yloQVm5xPAgC9FgyQ9kD4I7S9mFsd1sg/rMT7N1wSbdR48BxJ8N8p1bgCTu9spsWWQWp334m62tJG9xN7bK0rpbxmu2vX8PqC7LEsjMbHYIXrSkvwM8fjHtJhQuLrEkaQVz95LVadDCsuNv6TUtw/UWglIlX/0e1nEOcUd1PBmxVTZfAGbI+pGJSGFeChvRVyqWqtshZjwTalXN5x+IdzwKuzqw41B11//UbzR12/SeIB7+z5p45d8OzTrsGMk+mSU0Cp/5+rZGk4lcVRffzGECbQd78sTOV/UpFylM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5A38AD13F917E245912CB4DF7CC053CB@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae7633af-695e-4195-516c-08d7278aea53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 05:29:48.5224
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: T6oRx5+8UZwQ1sKHaFKUhjXHgWirgAu82wAAKo/2yY07Lx8Tqdjv9raqR2coAxrO4mNWFLcECcmLqNy7lTtymg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2739
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add driver for the reset controller present on Intel
-Lightening Mountain (LGM) SoC for performing reset
-management of the devices present on the SoC. Driver also
-registers a reset handler to peform the entire device reset.
-
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
-Changes on v2:
-	No changes
-
- drivers/reset/Kconfig              |  10 ++
- drivers/reset/Makefile             |   1 +
- drivers/reset/reset-intel-syscon.c | 215 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 226 insertions(+)
- create mode 100644 drivers/reset/reset-intel-syscon.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 6d5d76db55b0..e0fd14cb4cf5 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -64,6 +64,16 @@ config RESET_IMX7
- 	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
- 
-+config RESET_INTEL_SYSCON
-+	bool "Intel SYSCON Reset Driver"
-+	depends on HAS_IOMEM
-+	select MFD_SYSCON
-+	help
-+	  This enables the reset driver support for Intel SoC devices with
-+	  memory-mapped reset registers as part of a syscon device node. If
-+	  you wish to use the reset framework for such memory-mapped devices,
-+	  say Y here. Otherwise, say N.
-+
- config RESET_LANTIQ
- 	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
- 	default SOC_TYPE_XWAY
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 61456b8f659c..6d68c50c7e89 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-+obj-$(CONFIG_RESET_INTEL_SYSCON) += reset-intel-syscon.o
- obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
- obj-$(CONFIG_RESET_MESON) += reset-meson.o
-diff --git a/drivers/reset/reset-intel-syscon.c b/drivers/reset/reset-intel-syscon.c
-new file mode 100644
-index 000000000000..6377a0cac1e7
---- /dev/null
-+++ b/drivers/reset/reset-intel-syscon.c
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+
-+struct intel_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct notifier_block restart_nb;
-+	struct device *dev;
-+	struct regmap *regmap;
-+	u32 reboot_id;
-+};
-+
-+/* reset platform data */
-+#define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
-+
-+/*
-+ * Reset status register offset relative to
-+ * the reset control register(X) is X + 4
-+ */
-+static inline u32 id_to_reg_bit_and_offset(unsigned long id,
-+					   u32 *regbit, u32 *regoff)
-+{
-+	*regoff = id >> 8;
-+	*regbit = id & 0x1f;
-+	return *regoff + 0x4;
-+}
-+
-+static int intel_set_clr_bits(struct intel_reset_data *data,
-+			      unsigned long id, bool set, u64 timeout)
-+{
-+	u32 regoff, regbit;
-+	u32 stat_off;
-+	u32 val;
-+	int ret;
-+
-+	stat_off = id_to_reg_bit_and_offset(id, &regbit, &regoff);
-+
-+	val = set ? BIT(regbit) : 0;
-+	ret = regmap_update_bits(data->regmap, regoff,  BIT(regbit), val);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_read_poll_timeout(data->regmap, stat_off, val,
-+					set == !!(val & BIT(regbit)),
-+					20, timeout);
-+}
-+
-+static int intel_assert_device(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, 1, 200);
-+	if (ret)
-+		dev_err(data->dev, "Failed to set reset assert bit %d\n", ret);
-+	return ret;
-+}
-+
-+static int intel_deassert_device(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, 0, 200);
-+	if (ret)
-+		dev_err(data->dev,
-+			"Failed to set reset deassert bit %d\n", ret);
-+	return ret;
-+}
-+
-+static int intel_reset_device(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, 1, 20000);
-+	if (ret)
-+		dev_err(data->dev, "Failed to reset device %d\n", ret);
-+	return ret;
-+}
-+
-+static int intel_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	u32 regoff, regbit;
-+	u32 stat_off;
-+	u32 val;
-+	int ret;
-+
-+	stat_off = id_to_reg_bit_and_offset(id, &regbit, &regoff);
-+	ret = regmap_read(data->regmap, stat_off, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(regbit));
-+}
-+
-+static const struct reset_control_ops intel_reset_ops = {
-+	.reset		= intel_reset_device,
-+	.assert		= intel_assert_device,
-+	.deassert	= intel_deassert_device,
-+	.status		= intel_reset_status,
-+};
-+
-+static int intel_reset_xlate(struct reset_controller_dev *rcdev,
-+			     const struct of_phandle_args *spec)
-+{
-+	u32 offset, bit;
-+
-+	offset = spec->args[0];
-+	bit = spec->args[1];
-+
-+	return (offset << 8) | (bit & 0x1f);
-+}
-+
-+static int intel_reset_restart_handler(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct intel_reset_data *reset_data =
-+		container_of(nb, struct intel_reset_data, restart_nb);
-+
-+	intel_assert_device(&reset_data->rcdev, reset_data->reboot_id);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int intel_reset_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct intel_reset_data *data;
-+	struct regmap *regmap;
-+	u32 rb_id[2];
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to get reset controller regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	ret = device_property_read_u32_array(dev, "intel,global-reset",
-+					     rb_id, ARRAY_SIZE(rb_id));
-+	if (ret) {
-+		dev_err(dev, "Failed to get global reset offset!\n");
-+		return ret;
-+	}
-+
-+	data->dev		= dev;
-+	data->reboot_id		= (rb_id[0] << 8) | rb_id[1];
-+	data->regmap		= regmap;
-+	data->rcdev.of_node	= np;
-+	data->rcdev.owner	= dev->driver->owner;
-+	data->rcdev.ops		= &intel_reset_ops;
-+	data->rcdev.of_xlate	= intel_reset_xlate;
-+	data->rcdev.of_reset_n_cells = 2;
-+
-+	ret = devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+	if (ret)
-+		return ret;
-+
-+	data->restart_nb.notifier_call	= intel_reset_restart_handler;
-+	data->restart_nb.priority	= 128;
-+
-+	register_restart_handler(&data->restart_nb);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id intel_reset_match[] = {
-+	{ .compatible = "intel,rcu-lgm" },
-+	{}
-+};
-+
-+static struct platform_driver intel_reset_driver = {
-+	.probe = intel_reset_probe,
-+	.driver = {
-+		.name = "intel-reset-syscon",
-+		.of_match_table = intel_reset_match,
-+	},
-+};
-+
-+static int __init intel_reset_init(void)
-+{
-+	return platform_driver_register(&intel_reset_driver);
-+}
-+
-+/*
-+ * RCU is system core entity which is in Always On Domain whose clocks
-+ * or resource initialization happens in system core initialization.
-+ * Also, it is required for most of the platform or architecture
-+ * specific devices to perform reset operation as part of initialization.
-+ * So perform RCU as post core initialization.
-+ */
-+postcore_initcall(intel_reset_init);
--- 
-2.11.0
-
+T24gVGh1LCAyMDE5LTA4LTIyIGF0IDE1OjM5IC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
+IEZyb206IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+DQo+IERhdGU6IFRo
+dSwgMjIgQXVnIDIwMTkgMjI6Mzc6MTMgKzAwMDANCj4gDQo+ID4gVGhlIHY1IGlzIHByZXR0eSBt
+dWNoIHRoZSBzYW1lIGFzIHY0LCBleGNlcHQgRXJhbiBoYWQgYSBmaXggdG8NCj4gcGF0Y2ggIzMg
+aW4gcmVzcG9uc2UgdG8NCj4gPiBMZW9uIFJvbWFub3Zza3kgPGxlb25Aa2VybmVsLm9yZz4uDQo+
+IA0KPiBXZWxsIHlvdSBub3cgaGF2ZSB0byBzZW5kIG1lIGEgcGF0Y2ggcmVsYXRpdmUgdG8gdjQg
+aW4gb3JkZXIgdG8gZml4DQo+IHRoYXQuDQo+IA0KPiBXaGVuIEkgc2F5ICJhcHBsaWVkIiwgdGhl
+IHNlcmllcyBpcyBpbiBteSB0cmVlIGFuZCBpcyB0aGVyZWZvcmUNCj4gcGVybWFuZW50Lg0KPiBJ
+dCBpcyB0aGVyZWZvcmUgbmV2ZXIgYXBwcm9wcmlhdGUgdG8gdGhlbiBwb3N0IGEgbmV3IHZlcnNp
+b24gb2YgdGhlDQo+IHNlcmllcy4NCg0KRGF2ZSwgSSB0aGluayB5b3UgZGlkbid0IHJlcGx5IGJh
+Y2sgdG8gdjQgdGhhdCB0aGUgc2VyaWVzIHdhcyBhcHBsaWVkLg0KU28gdGhhdCBtaWdodCBoYXZl
+IGNyZWF0ZWQgc29tZSBjb25mdXNpb24gZm9yIEhhaXlhbmcuDQoNCg0K
