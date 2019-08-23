@@ -2,631 +2,130 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D511C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16BEC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598A422CF7
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E5321019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392810AbfHWHLx (ORCPT
+        id S2389635AbfHWHNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:11:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49772 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387958AbfHWHLt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:11:49 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7N77IqR126049
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:11:47 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uj77f0hub-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:11:47 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Fri, 23 Aug 2019 08:11:44 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 23 Aug 2019 08:11:41 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7N7BJ2s19726690
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 07:11:19 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64B1D52052;
-        Fri, 23 Aug 2019 07:11:40 +0000 (GMT)
-Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A3D7A5204E;
-        Fri, 23 Aug 2019 07:11:38 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        devicetree@vger.kernel.org, paulus@samba.org
-Cc:     npiggin@gmail.com, mpe@ellerman.id.au, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, mikey@neuling.org, rjw@rjwysocki.net,
-        daniel.lezcano@linaro.org,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [RFC 2/3] cpuidle/powernv: Add support for versioned stop states
-Date:   Fri, 23 Aug 2019 02:09:39 -0500
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
-References: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19082307-0008-0000-0000-0000030C6655
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082307-0009-0000-0000-00004A2A9773
-Message-Id: <20190823070940.43220-3-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-23_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908230072
+        Fri, 23 Aug 2019 03:13:44 -0400
+Received: from shell.v3.sk ([90.176.6.54]:40112 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731093AbfHWHNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:13:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id F065CD7697;
+        Fri, 23 Aug 2019 09:13:39 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id yGh66jtHXRfw; Fri, 23 Aug 2019 09:13:36 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 46C8AD7698;
+        Fri, 23 Aug 2019 09:13:36 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 9QtK_aypLOFJ; Fri, 23 Aug 2019 09:13:35 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id D11F1D7697;
+        Fri, 23 Aug 2019 09:13:34 +0200 (CEST)
+Message-ID: <0897fa54f487f481bf8770ed516578b6f4f53380.camel@v3.sk>
+Subject: Re: [PATCH v2 16/20] ARM: mmp: add SMP support
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Olof Johansson <olof@lixom.net>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Stephen Boyd <sboyd@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 23 Aug 2019 09:13:33 +0200
+In-Reply-To: <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
+References: <20190822092643.593488-1-lkundrak@v3.sk>
+         <20190822092643.593488-17-lkundrak@v3.sk>
+         <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New device tree format adds a compatible flag which has version
-corresponding to every state, so that only kernel which has the capability
-to handle the version of stop state will enable it. Drawback of the array
-based dt node is that versioning of idle states is not possible.
+On Thu, 2019-08-22 at 09:36 -0700, Florian Fainelli wrote:
+> On 8/22/19 2:26 AM, Lubomir Rintel wrote:
+> > Used to bring up the second core on MMP3.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > 
+> > ---
+> > Changes since v1:
+> > - Wrap SW_BRANCH_VIRT_ADDR with __pa_symbol()
+> > 
+> >  arch/arm/mach-mmp/Makefile  |  3 +++
+> >  arch/arm/mach-mmp/platsmp.c | 33 +++++++++++++++++++++++++++++++++
+> >  2 files changed, 36 insertions(+)
+> >  create mode 100644 arch/arm/mach-mmp/platsmp.c
+> > 
+> > diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
+> > index 322c1c97dc900..7b3a7f979eece 100644
+> > --- a/arch/arm/mach-mmp/Makefile
+> > +++ b/arch/arm/mach-mmp/Makefile
+> > @@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
+> >  obj-$(CONFIG_CPU_PXA910)	+= pm-pxa910.o
+> >  obj-$(CONFIG_CPU_MMP2)		+= pm-mmp2.o
+> >  endif
+> > +ifeq ($(CONFIG_SMP),y)
+> > +obj-$(CONFIG_MACH_MMP3_DT)	+= platsmp.o
+> > +endif
+> >  
+> >  # board support
+> >  obj-$(CONFIG_MACH_ASPENITE)	+= aspenite.o
+> > diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
+> > new file mode 100644
+> > index 0000000000000..98d5ef23623cb
+> > --- /dev/null
+> > +++ b/arch/arm/mach-mmp/platsmp.c
+> > @@ -0,0 +1,33 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
+> > + */
+> > +#include <linux/io.h>
+> > +#include <asm/smp_scu.h>
+> > +#include <asm/smp.h>
+> > +#include "addr-map.h"
+> > +
+> > +#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
+> > +
+> > +static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> > +{
+> > +	/*
+> > +	 * Apparently, the boot ROM on the second core spins on this
+> > +	 * register becoming non-zero and then jumps to the address written
+> > +	 * there. No IPIs involved.
+> > +	 */
+> > +	__raw_writel(virt_to_phys(secondary_startup),
+> > +			__pa_symbol(SW_BRANCH_VIRT_ADDR));
+> 
+> That looks wrong, the __pa_symbol() is applicable to secondary_startup,
+> while SW_BRANCH_VIRT_ADDR does not need that.
 
-Older kernel will still see stop0 and stop0_lite in older format and we
-will deprecate it after some time.
+Whoops, sorry for that. Will fix in the next patch version in a few
+days.
 
-Consider a case that stop4 has a bug. We take the following steps to
-mitigate the problem.
-
-1) Change compatible string for stop4 in OPAL to "stop4,v2" from
-"stop4,v1", i.e. basicallly bump up the previous version and ship the
-new firmware.
-2) The kernel will ignore stop4 as it won't be able to recognize this
-new version. Kernel will also ignore all the deeper states because its
-possible that a cpu have requested for a deeper state but was never able
-to enter into it. But we will still have shallower states that are there
-before stop 4. This, thus prevents from completely disabling stop states.
-
-Linux kernel can now look at the version string and decide if it has the
-ability to handle that idle state. Henceforth, if kernel does not know
-about a version, it will skip that state and all the deeper state.
-
-Once when the workaround are implemented into the kernel, we can bump up
-the known version in kernel for that state, so that support can be
-enabled once again in kernel.
-
-New Device-tree :
-
-Final output
-       power-mgt {
-            ...
-         ibm,enabled-stop-levels = <0xec000000>;
-         ibm,cpu-idle-state-psscr-mask = <0x0 0x3003ff 0x0 0x3003ff>;
-         ibm,cpu-idle-state-latencies-ns = <0x3e8 0x7d0>;
-         ibm,cpu-idle-state-psscr = <0x0 0x330 0x0 0x300330>;
-         ibm,cpu-idle-state-flags = <0x100000 0x101000>;
-         ibm,cpu-idle-state-residency-ns = <0x2710 0x4e20>;
-         ibm,idle-states {
-                     stop4 {
-                         flags = <0x207000>;
-                         compatible = "stop4,v1",
-                         psscr-mask = <0x0 0x3003ff>;
-                         latency-ns = <0x186a0>;
-                         residency-ns = <0x989680>;
-                         psscr = <0x0 0x300374>;
-			 ...
-                  };
-                    ...
-                    stop11 {
-                         ...
-                         compatible = "stop11,v1",
-                         ...
-                  };
-             };
-
-Since state pointer is being passed to stop loop, I have separated idle
-fast path for lite, shallow and deep states. This improves the
-readability of the code and also future maintainability of the code.
-Stop handle corresponding to each state can be called directly since
-state pointer is being passed now.
-
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/cpuidle.h    |   8 +-
- arch/powerpc/platforms/powernv/idle.c | 331 +++++++++++++++++++++++---
- 2 files changed, 299 insertions(+), 40 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/cpuidle.h b/arch/powerpc/include/asm/cpuidle.h
-index 9844b3ded187..5eb9a98fcb86 100644
---- a/arch/powerpc/include/asm/cpuidle.h
-+++ b/arch/powerpc/include/asm/cpuidle.h
-@@ -70,15 +70,19 @@
- 
- #ifndef __ASSEMBLY__
- 
--#define PNV_IDLE_NAME_LEN    16
-+#define PNV_VERSION_LEN		25
-+#define PNV_IDLE_NAME_LEN	16
- struct pnv_idle_states_t {
- 	char name[PNV_IDLE_NAME_LEN];
-+	char compat_version[PNV_VERSION_LEN];
- 	u32 latency_ns;
- 	u32 residency_ns;
- 	u64 psscr_val;
- 	u64 psscr_mask;
--	u32 flags;
-+	u64 flags;
- 	bool valid;
-+	unsigned long (*stop_handle)(struct pnv_idle_states_t *state,
-+				     bool mmu_on);
- };
- 
- extern struct pnv_idle_states_t *pnv_idle_states;
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index db810c0a16e1..7398a66e1ddb 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -49,6 +49,12 @@ static bool default_stop_found;
- static u64 pnv_first_tb_loss_level = MAX_STOP_STATE + 1;
- static u64 pnv_first_spr_loss_level = MAX_STOP_STATE + 1;
- 
-+struct stop_version_t {
-+	const char compat_version[PNV_VERSION_LEN];
-+	unsigned long (*stop_handle)(struct pnv_idle_states_t *state,
-+				     bool mmu_on);
-+};
-+
- /*
-  * psscr value and mask of the deepest stop idle state.
-  * Used when a cpu is offlined.
-@@ -599,40 +605,152 @@ struct p9_sprs {
- 	u64 uamor;
- };
- 
--static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
-+/* Splitting the previous power9_idle_stop into three functions
-+ * to separately handle lite, shallow and deep states.
-+ */
-+
-+static unsigned long power9_stop_lite(struct pnv_idle_states_t *state,
-+				      bool mmu_on)
- {
--	int cpu = raw_smp_processor_id();
--	int first = cpu_first_thread_sibling(cpu);
--	unsigned long *state = &paca_ptrs[first]->idle_state;
--	unsigned long core_thread_mask = (1UL << threads_per_core) - 1;
- 	unsigned long srr1;
--	unsigned long pls;
-+	unsigned long psscr;
-+
-+	psscr = mfspr(SPRN_PSSCR);
-+	psscr = (psscr & ~state->psscr_mask) | state->psscr_val;
-+
-+	/* EC=ESL=0 case */
-+	BUG_ON(!mmu_on);
-+
-+	/*
-+	 * Wake synchronously. SRESET via xscom may still cause
-+	 * a 0x100 powersave wakeup with SRR1 reason!
-+	 */
-+	srr1 = isa300_idle_stop_noloss(psscr);		/* go idle */
-+	if (likely(!srr1))
-+		return 0;
-+
-+	/*
-+	 * Registers not saved, can't recover!
-+	 * This would be a hardware bug
-+	 */
-+	BUG_ON((srr1 & SRR1_WAKESTATE) != SRR1_WS_NOLOSS);
-+
-+	if (mmu_on)
-+		mtmsr(MSR_KERNEL);
-+
-+	return srr1;
-+}
-+
-+static unsigned long power9_stop_shallow(struct pnv_idle_states_t *state,
-+					 bool mmu_on)
-+{
-+	unsigned long srr1;
-+	unsigned long psscr;
- 	unsigned long mmcr0 = 0;
- 	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
--	bool sprs_saved = false;
- 
--	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
--		/* EC=ESL=0 case */
-+	psscr = mfspr(SPRN_PSSCR);
-+	psscr = (psscr & ~state->psscr_mask) | state->psscr_val;
- 
--		BUG_ON(!mmu_on);
-+	/* EC=ESL=1 case */
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+	if (cpu_has_feature(CPU_FTR_P9_TM_XER_SO_BUG)) {
-+		local_paca->requested_psscr = psscr;
-+		/* order setting requested_psscr vs testing dont_stop */
-+		smp_mb();
-+		if (atomic_read(&local_paca->dont_stop)) {
-+			local_paca->requested_psscr = 0;
-+			return 0;
-+		}
-+	}
-+#endif
- 
-+	if (!cpu_has_feature(CPU_FTR_POWER9_DD2_1)) {
- 		/*
--		 * Wake synchronously. SRESET via xscom may still cause
--		 * a 0x100 powersave wakeup with SRR1 reason!
-+		 * POWER9 DD2 can incorrectly set PMAO when waking up
-+		 * after a state-loss idle. Saving and restoring MMCR0
-+		 * over idle is a workaround.
- 		 */
--		srr1 = isa300_idle_stop_noloss(psscr);		/* go idle */
--		if (likely(!srr1))
--			return 0;
-+		mmcr0		= mfspr(SPRN_MMCR0);
-+	}
-+
-+	sprs.amr	= mfspr(SPRN_AMR);
-+	sprs.iamr	= mfspr(SPRN_IAMR);
-+	sprs.amor	= mfspr(SPRN_AMOR);
-+	sprs.uamor	= mfspr(SPRN_UAMOR);
-+
-+	srr1 = isa300_idle_stop_mayloss(psscr);		/* go idle */
-+	if (unlikely(!srr1))
-+		return 0;
-+
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+	local_paca->requested_psscr = 0;
-+#endif
-+
-+	psscr = mfspr(SPRN_PSSCR);
-+
-+	WARN_ON_ONCE(!srr1);
-+	WARN_ON_ONCE(mfmsr() & (MSR_IR|MSR_DR));
-+
-+	if ((srr1 & SRR1_WAKESTATE) != SRR1_WS_NOLOSS) {
-+		unsigned long mmcra;
- 
- 		/*
--		 * Registers not saved, can't recover!
--		 * This would be a hardware bug
-+		 * We don't need an isync after the mtsprs here because the
-+		 * upcoming mtmsrd is execution synchronizing.
- 		 */
--		BUG_ON((srr1 & SRR1_WAKESTATE) != SRR1_WS_NOLOSS);
-+		mtspr(SPRN_AMR,		sprs.amr);
-+		mtspr(SPRN_IAMR,	sprs.iamr);
-+		mtspr(SPRN_AMOR,	sprs.amor);
-+		mtspr(SPRN_UAMOR,	sprs.uamor);
- 
--		goto out;
-+		/*
-+		 * Workaround for POWER9 DD2.0, if we lost resources, the ERAT
-+		 * might have been corrupted and needs flushing. We also need
-+		 * to reload MMCR0 (see mmcr0 comment above).
-+		 */
-+		if (!cpu_has_feature(CPU_FTR_POWER9_DD2_1)) {
-+			asm volatile(PPC_ISA_3_0_INVALIDATE_ERAT);
-+			mtspr(SPRN_MMCR0, mmcr0);
-+		}
-+
-+		/*
-+		 * DD2.2 and earlier need to set then clear bit 60 in MMCRA
-+		 * to ensure the PMU starts running.
-+		 */
-+		mmcra = mfspr(SPRN_MMCRA);
-+		mmcra |= PPC_BIT(60);
-+		mtspr(SPRN_MMCRA, mmcra);
-+		mmcra &= ~PPC_BIT(60);
-+		mtspr(SPRN_MMCRA, mmcra);
- 	}
- 
-+	if (unlikely((srr1 & SRR1_WAKEMASK_P8) == SRR1_WAKEHMI))
-+		hmi_exception_realmode(NULL);
-+
-+	if (mmu_on)
-+		mtmsr(MSR_KERNEL);
-+
-+	return srr1;
-+}
-+
-+static unsigned long power9_stop_deep(struct pnv_idle_states_t *state,
-+				      bool mmu_on)
-+{
-+	int cpu = raw_smp_processor_id();
-+	int first = cpu_first_thread_sibling(cpu);
-+	unsigned long *first_state = &paca_ptrs[first]->idle_state;
-+	unsigned long core_thread_mask = (1UL << threads_per_core) - 1;
-+	unsigned long srr1;
-+	unsigned long pls;
-+	unsigned long psscr;
-+	unsigned long mmcr0 = 0;
-+	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
-+	bool sprs_saved = false;
-+
-+	psscr = mfspr(SPRN_PSSCR);
-+	psscr = (psscr & ~state->psscr_mask) | state->psscr_val;
-+
- 	/* EC=ESL=1 case */
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
- 	if (cpu_has_feature(CPU_FTR_P9_TM_XER_SO_BUG)) {
-@@ -654,7 +772,7 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 		  */
- 		mmcr0		= mfspr(SPRN_MMCR0);
- 	}
--	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
-+
- 		sprs.lpcr	= mfspr(SPRN_LPCR);
- 		sprs.hfscr	= mfspr(SPRN_HFSCR);
- 		sprs.fscr	= mfspr(SPRN_FSCR);
-@@ -677,14 +795,15 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 		sprs_saved = true;
- 
- 		atomic_start_thread_idle();
--	}
- 
- 	sprs.amr	= mfspr(SPRN_AMR);
- 	sprs.iamr	= mfspr(SPRN_IAMR);
- 	sprs.amor	= mfspr(SPRN_AMOR);
- 	sprs.uamor	= mfspr(SPRN_UAMOR);
- 
--	srr1 = isa300_idle_stop_mayloss(psscr);		/* go idle */
-+	srr1 = isa300_idle_stop_mayloss(psscr);         /* go idle */
-+	if (unlikely(!srr1))
-+		return 0;
- 
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
- 	local_paca->requested_psscr = 0;
-@@ -748,7 +867,7 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 
- 	atomic_lock_thread_idle();
- 
--	if ((*state & core_thread_mask) != 0)
-+	if ((*first_state & core_thread_mask) != 0)
- 		goto core_woken;
- 
- 	/* Per-core SPRs */
-@@ -804,14 +923,10 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- static unsigned long power9_offline_stop(struct pnv_idle_states_t *state)
- {
- 	unsigned long srr1;
--	unsigned long psscr;
--
--	psscr = mfspr(SPRN_PSSCR);
--	psscr = (psscr & ~state->psscr_mask) | state->psscr_val;
- 
- #ifndef CONFIG_KVM_BOOK3S_HV_POSSIBLE
- 	__ppc64_runlatch_off();
--	srr1 = power9_idle_stop(psscr, true);
-+	srr1 = state->stop_handle(state, true);
- 	__ppc64_runlatch_on();
- #else
- 	/*
-@@ -827,7 +942,7 @@ static unsigned long power9_offline_stop(struct pnv_idle_states_t *state)
- 	local_paca->kvm_hstate.hwthread_state = KVM_HWTHREAD_IN_IDLE;
- 
- 	__ppc64_runlatch_off();
--	srr1 = power9_idle_stop(psscr, false);
-+	srr1 = state->stop_handle(state, false);
- 	__ppc64_runlatch_on();
- 
- 	local_paca->kvm_hstate.hwthread_state = KVM_HWTHREAD_IN_KERNEL;
-@@ -844,17 +959,16 @@ static unsigned long power9_offline_stop(struct pnv_idle_states_t *state)
- 
- void power9_idle_type(struct pnv_idle_states_t *state)
- {
--	unsigned long psscr;
- 	unsigned long srr1;
- 
- 	if (!prep_irq_for_idle_irqsoff())
- 		return;
- 
--	psscr = mfspr(SPRN_PSSCR);
--	psscr = (psscr & ~state->psscr_mask) | state->psscr_val;
--
- 	__ppc64_runlatch_off();
--	srr1 = power9_idle_stop(psscr, true);
-+	/* We will directly call the stop handle of the state
-+	 * as we have the state being passed to the idle loop
-+	 */
-+	srr1 = state->stop_handle(state, true);
- 	__ppc64_runlatch_on();
- 
- 	fini_irq_for_idle_irqsoff();
-@@ -989,6 +1103,45 @@ unsigned long pnv_cpu_offline(unsigned int cpu)
- }
- #endif
- 
-+/* Define all the known versions that are compatible for the kernel */
-+struct stop_version_t known_versions[] = {
-+		{
-+			.compat_version = "stop0_lite,v1",
-+			.stop_handle	= power9_stop_lite
-+		},
-+		{
-+			.compat_version = "stop0,v1",
-+			.stop_handle	= power9_stop_shallow
-+		},
-+		{
-+			.compat_version = "stop1,v1",
-+			.stop_handle	= power9_stop_shallow
-+		},
-+		{
-+			.compat_version = "stop2,v1",
-+			.stop_handle	= power9_stop_shallow
-+		},
-+		{
-+			.compat_version = "stop4,v1",
-+			.stop_handle	= power9_stop_deep
-+		},
-+		{
-+			.compat_version = "stop5,v1",
-+			.stop_handle	= power9_stop_deep
-+		},
-+		{
-+			.compat_version = "stop8,v1",
-+			.stop_handle	= power9_stop_deep
-+		},
-+		{
-+			.compat_version = "stop11,v1",
-+			.stop_handle	= power9_stop_deep
-+		},
-+		{
-+			.stop_handle	= NULL
-+		}
-+};
-+
- /*
-  * Power ISA 3.0 idle initialization.
-  *
-@@ -1202,6 +1355,70 @@ static void __init pnv_probe_idle_states(void)
- 		supported_cpuidle_states |= pnv_idle_states[i].flags;
- }
- 
-+/* Parsing the new format of idle device tree */
-+static int parse_stop_state(struct device_node *dt_node, int idx)
-+{
-+	const char *temp_str;
-+	int rc;
-+
-+	if (!dt_node) {
-+		pr_err("Invalid device_node\n");
-+		return -EINVAL;
-+	}
-+
-+	rc = of_property_read_string(dt_node, "name", &temp_str);
-+	if (rc) {
-+		pr_err("error reading names rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+	strncpy(pnv_idle_states[idx].name, temp_str, PNV_IDLE_NAME_LEN);
-+
-+	rc = of_property_read_string(dt_node, "compatible", &temp_str);
-+	if (rc) {
-+		pr_err("error reading compatible version rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+	strncpy(pnv_idle_states[idx].compat_version, temp_str,
-+		PNV_VERSION_LEN);
-+
-+	rc = of_property_read_u32(dt_node, "residency-ns",
-+				  &pnv_idle_states[idx].residency_ns);
-+	if (rc) {
-+		pr_err("error reading residency rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	rc = of_property_read_u32(dt_node, "latency-ns",
-+				  &pnv_idle_states[idx].latency_ns);
-+	if (rc) {
-+		pr_err("error reading latency rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	rc = of_property_read_u64(dt_node, "flags",
-+				  &pnv_idle_states[idx].flags);
-+	if (rc) {
-+		pr_err("error reading flags rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	rc = of_property_read_u64(dt_node, "psscr-mask",
-+				  &pnv_idle_states[idx].psscr_mask);
-+	if (rc) {
-+		pr_err("error reading psscr-mask rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	rc = of_property_read_u64(dt_node, "psscr",
-+				  &pnv_idle_states[idx].psscr_val);
-+	if (rc) {
-+		pr_err("error reading psscr rc = %d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+
-+}
- /*
-  * This function parses device-tree and populates all the information
-  * into pnv_idle_states structure. It also sets up nr_pnv_idle_states
-@@ -1210,8 +1427,9 @@ static void __init pnv_probe_idle_states(void)
- 
- static int pnv_parse_cpuidle_dt(void)
- {
--	struct device_node *np;
-+	struct device_node *np, *np1, *dt_node;
- 	int nr_idle_states, i;
-+	int additional_states = 0;
- 	int rc = 0;
- 	u32 *temp_u32;
- 	u64 *temp_u64;
-@@ -1225,8 +1443,14 @@ static int pnv_parse_cpuidle_dt(void)
- 	nr_idle_states = of_property_count_u32_elems(np,
- 						"ibm,cpu-idle-state-flags");
- 
--	pnv_idle_states = kcalloc(nr_idle_states, sizeof(*pnv_idle_states),
--				  GFP_KERNEL);
-+	np1 = of_find_node_by_path("/ibm,opal/power-mgt/ibm,idle-states");
-+	if (np1) {
-+		for_each_child_of_node(np1, dt_node)
-+			additional_states++;
-+	}
-+	pr_info("states in new format : %d\n", additional_states);
-+	pnv_idle_states = kcalloc(nr_idle_states + additional_states,
-+				  sizeof(*pnv_idle_states), GFP_KERNEL);
- 	temp_u32 = kcalloc(nr_idle_states, sizeof(u32),  GFP_KERNEL);
- 	temp_u64 = kcalloc(nr_idle_states, sizeof(u64),  GFP_KERNEL);
- 	temp_string = kcalloc(nr_idle_states, sizeof(char *),  GFP_KERNEL);
-@@ -1305,8 +1529,39 @@ static int pnv_parse_cpuidle_dt(void)
- 	for (i = 0; i < nr_idle_states; i++)
- 		strlcpy(pnv_idle_states[i].name, temp_string[i],
- 			PNV_IDLE_NAME_LEN);
-+
- 	nr_pnv_idle_states = nr_idle_states;
--	rc = 0;
-+	/* Parsing node-based idle states device-tree format */
-+	if (!np1) {
-+		pr_info("dt does not contain ibm,idle_states");
-+		goto out;
-+	}
-+	/* Parse each child node with appropriate parser_fn */
-+	for_each_child_of_node(np1, dt_node) {
-+		bool found_known_version = false;
-+
-+		for (i = 0; known_versions[i].stop_handle != NULL; i++) {
-+			if (of_device_is_compatible(dt_node,
-+					known_versions[i].compat_version)) {
-+				rc = parse_stop_state(dt_node,
-+						      nr_pnv_idle_states);
-+				if (rc) {
-+					pr_err("%s could not parse\n",
-+					known_versions[i].compat_version);
-+					continue;
-+				}
-+				found_known_version = true;
-+				break;
-+			}
-+		}
-+		if (!found_known_version) {
-+			pr_info("Unsupported state, skipping all further state\n");
-+			goto out;
-+		}
-+		pnv_idle_states[nr_pnv_idle_states].stop_handle =
-+						known_versions[i].stop_handle;
-+		nr_pnv_idle_states++;
-+	}
- out:
- 	kfree(temp_u32);
- 	kfree(temp_u64);
--- 
-2.17.1
+Thanks
+Lubo
 
