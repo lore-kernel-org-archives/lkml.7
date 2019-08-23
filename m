@@ -2,114 +2,95 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B4AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87193C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8835C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7D021897
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPSKEtJO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Sf8X+LUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405196AbfHWLHy (ORCPT
+        id S1728167AbfHWLRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:07:54 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46204 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfHWLHx (ORCPT
+        Fri, 23 Aug 2019 07:17:24 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58722 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbfHWLRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:07:53 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n19so6817382lfe.13
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 04:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZHcoLOCEDvNdiKJSIaGU9TMbH+mXTX9zteaN4YnDK00=;
-        b=cPSKEtJOjYq9WsIijVXnZyKIbicP5PMiaPAcAAyh8mxF2fDAkuuFN3FcjHGy6xOiA8
-         dg3q+8r842lRJFe52waZ1pWOP1wKwsDLDgKLqIpRczfz3K1GCezlxU2eAw9eIZbMKxrf
-         mrn4ekEkBMNN05Alm52osCbJSaG9T3p08S1uk/Etvu7P/iU5q1BQZIwSb0LvUTNiRtvb
-         cYFDDf3S1vHAgguA6kMPY4lnFgRTA7hrkOSRgVLfAkUQYbXFTy9PUohmSf4W+STJYWLK
-         3ZPZzlh8ATubZ3jKVG+Q0Xc8NiATpTsN2VCfjDHzuS4R6vwvK+BZ87tC4ou5Z6faQS3u
-         BXhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZHcoLOCEDvNdiKJSIaGU9TMbH+mXTX9zteaN4YnDK00=;
-        b=ls+ExS5UIfpCYrDIrEu4B7h8Qwh81v6kwe8jss2/nJJ9Vq+z1lHcNs2uQaS8LfEErz
-         nSfLDaaxEZgPO5HXgvnj+3EQ6hu413FpIpoSXGcj+RMVLipPMn8ZvQ6IkhLEaaAbKdNi
-         q16uSY0q4rmIj6Li/ycuuNJYbIqAPIKkbOn7wQzXazFeLQgzeTs7RVmbgvOudWWLmZpM
-         CaIEoZCEC2HFS80p7rXtpf9KEV0aMC1Q8qB9WmTBj5MpY1nCkvIywxg1sJm84tBL3AZF
-         RvSZwRyRjQ30nPJJVim/8CMYL3C4/SLxnZ7WpR2GSt9AbLNC/Qu99F4ts1SLcsTI7IyM
-         IkHA==
-X-Gm-Message-State: APjAAAWcKB7cj//+jeoEqa8ebdPDdZlXH0/x/h/45DmIe0QAA2wUseSW
-        1qxMSvxjma/4ITpE36eXKcPdig==
-X-Google-Smtp-Source: APXvYqzi3fwiyJBZWIDhJNnGDLtbqn6NPY5vwE/i10iohempQV8GMBpKT39wg3/8zN79Mnf6fd6bZA==
-X-Received: by 2002:a19:2314:: with SMTP id j20mr1185222lfj.22.1566558471447;
-        Fri, 23 Aug 2019 04:07:51 -0700 (PDT)
-Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id r23sm596312ljm.59.2019.08.23.04.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 04:07:50 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        daniel@ffwll.ch, matthias.bgg@gmail.com
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] drm/mediatek: fix implicit function declaration
-Date:   Fri, 23 Aug 2019 13:07:36 +0200
-Message-Id: <20190823110736.26117-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 23 Aug 2019 07:17:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OSDjpRTuHovlIRScundJCWb6Oc+rd5ATE/Sxj9nPY/A=; b=Sf8X+LUWARix65xSRp4AVeykq
+        hNuDbygxF+vUXOq+jc9C4kGTTsFToNveFnUx/iTHPshoyOGuOu/XH5gbL1HdzHRS5khqixXf/Spef
+        uteSv3g2Qgn+FBCFrciYZByOrHH0WVtb4zV8rurR4n11NHvWff/+DgHKNIWhvQRifwQOhNesdVC+y
+        CMeljOOhn7gTUttTboOcKrexXwlSaXLvj12LlNAldwDsURJHPQ6UZUzURGYai49Utjykgeu8PvlGk
+        4u17ecHuZQfZhRlmwuWbWNNpx8pbAInQZLfoiLTGpEJKA88t6t5h1XnvteZPPup2+ldFchVQk5J0T
+        STfvOBUFA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60066)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i17ZF-0004Jh-0B; Fri, 23 Aug 2019 12:17:17 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i17ZB-0000CY-33; Fri, 23 Aug 2019 12:17:13 +0100
+Date:   Fri, 23 Aug 2019 12:17:13 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Will Deacon <will@kernel.org>, tglx@linutronix.de
+Cc:     Chris Clayton <chris2553@googlemail.com>,
+        linux-arch@vger.kernel.org, vincenzo.frascino@arm.com,
+        linux-mips@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        arnd@arndb.de, huw@codeweavers.com, andre.przywara@arm.com,
+        daniel.lezcano@linaro.org, will.deacon@arm.com,
+        LKML <linux-kernel@vger.kernel.org>, ralf@linux-mips.org,
+        salyzyn@android.com, paul.burton@mips.com,
+        linux@rasmusvillemoes.dk, 0x7f454c46@gmail.com,
+        catalin.marinas@arm.com, pcc@google.com, sthotton@marvell.com,
+        shuah@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: Regression in 5.3-rc1 and later
+Message-ID: <20190823111712.GB13294@shell.armlinux.org.uk>
+References: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
+ <20190823103654.GX13294@shell.armlinux.org.uk>
+ <20190823104050.o6golaa4fmdd7np5@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823104050.o6golaa4fmdd7np5@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building mtk_drm_drv.o the following build error is seen:
+On Fri, Aug 23, 2019 at 11:40:50AM +0100, Will Deacon wrote:
+> On Fri, Aug 23, 2019 at 11:36:54AM +0100, Russell King - ARM Linux admin wrote:
+> > To everyone on the long Cc list...
+> > 
+> > What's happening with this?  I was about to merge the patches for 32-bit
+> > ARM, which I don't want to do if doing so will cause this regression on
+> > 32-bit ARM as well.
+> 
+> tglx fixed it:
+> 
+> https://lkml.kernel.org/r/alpine.DEB.2.21.1908221257580.1983@nanos.tec.linutronix.de
+> 
+> which I assume is getting routed as a fix via -tip.
 
-../drivers/gpu/drm/mediatek/mtk_drm_drv.c: In function ‘mtk_drm_kms_init’:
-../drivers/gpu/drm/mediatek/mtk_drm_drv.c:291:8: error: implicit declaration of
- function ‘dma_set_max_seg_size’; did you mean ‘drm_rect_adjust_size’? [-Werror=implicit-function-declaration]
-  ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
-        ^~~~~~~~~~~~~~~~~~~~
-        drm_rect_adjust_size
-../drivers/gpu/drm/mediatek/mtk_drm_drv.c:291:52: error: implicit declaration of
- function ‘DMA_BIT_MASK’; did you mean ‘BIT_MASK’? [-Werror=implicit-function-declaration]
-  ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
-                                                    ^~~~~~~~~~~~
-                                                    BIT_MASK
+Right, so Chris reported the issue to everyone involved.  Tglx's
+reply severely trimmed the Cc list so folk like me had no idea what
+was going on, removing even the mailing lists.  On the face of it,
+it looks like an intentional attempt to cut people out of the loop
+who really should've been kept in the loop.  Yea, that's just great.
 
-Rework to add a missing include file 'linux/dma-mapping.h', because that
-is the (only) header file containing that declaration.
-
-Fixes: 070955558e82 ("drm/mediatek: set DMA max segment size")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 54536176bcbb..352b81a7a670 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -10,6 +10,7 @@
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/pm_runtime.h>
-+#include <linux/dma-mapping.h>
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
 -- 
-2.20.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
