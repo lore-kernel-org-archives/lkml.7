@@ -2,144 +2,104 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8652CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760D7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5D521874
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566588565;
-	bh=uIK4gKr6LBqWcnb2353Sxa3YV4CobVhslIIjwr3IInY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ObGkbcNh72Jam9Ik7yDa2O9JhxdDWY7O3p+moAjAAylaDNqGwmypqwITNYibevnmZ
-	 wmKT3Hq+lbUMcZM15xokcIrM4EWJ1t4iIwPGzdXOVeQIagNJK53ICLk55mNv/Tiolb
-	 aw8EqSOE+z2zIx+pYyEwnGuIIfROaLFL8Kt3WOCY=
+	by mail.kernel.org (Postfix) with ESMTP id 484CA21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:35:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xgabrn6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391646AbfHWT3Y (ORCPT
+        id S2436712AbfHWTfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391604AbfHWT3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:29:23 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C880F21874;
-        Fri, 23 Aug 2019 19:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566588562;
-        bh=uIK4gKr6LBqWcnb2353Sxa3YV4CobVhslIIjwr3IInY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X599OQxOO+nrYPeYotid93GGbP3k2bq7c7WrUd2ZmIe5Vg4vdw7aZUxBr+vMLehmw
-         JJk9MQUwo2BckT04EGL40gX/Pfd67dhXfy46H34ENlXtsZls4eu3nVnLu1N8mBYQWC
-         NOMfO7t3dKM+CHmhGzxF40Nx2QbGnoQU0BdHYZuE=
-Date:   Fri, 23 Aug 2019 14:29:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH 1/3] PCI: Add PCI_ERROR_RESPONSE definition
-Message-ID: <20190823192920.GA127465@google.com>
-References: <20190822200551.129039-1-helgaas@kernel.org>
- <20190822200551.129039-2-helgaas@kernel.org>
- <20190823104415.GC14582@e119886-lin.cambridge.arm.com>
+        Fri, 23 Aug 2019 15:35:22 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43807 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391410AbfHWTfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 15:35:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h15so9847389ljg.10;
+        Fri, 23 Aug 2019 12:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Aw3zWTPY1Pke/iOZ2U1o3XSdWURhVQgfZ0MVHQIKkKg=;
+        b=Xgabrn6LL5ii377noxysSOEasJ+Oe11TxeuTDk0407tRi7YMTDMJghg8lTrVJ2n7bJ
+         aqUR4dgUl/gLarJl4EzDHgrxD0P13c4hrfS2hEWNCFczJHvLT7jS0hgX817VVls2tzVi
+         Lsg0ZbZ/KhegObqfEum4hA+BOcnNPWcc1ZME91JMlcqKpNj1yQtoEXRkH1hg6d2fgsHy
+         Sr6J5Axhu/vTtx6Fe+SrnXZLjHYpWbBuQVw9y+hHhRpAf7Wq+/YdBtjoy0H2/I6y2WDL
+         MFvT+zCOZhpkSXGuzJZfTaksExIivK2kEH34JUmTAyJjMxVp7hnsbeqlNcVLO3boeKMD
+         ipLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Aw3zWTPY1Pke/iOZ2U1o3XSdWURhVQgfZ0MVHQIKkKg=;
+        b=lm6pdfN/G/MVX4MqWSSJZEVMZsxmgWLQMGd8BUGJsHEFDJ5DG3zAPXbgZmES+ILAUw
+         WvaP5n9Ka4UXFHeeg+fcrQUjyVjD3Fe/aNhqABZ+yha4et6hPYDK4VRCd7nr1xrNPyEf
+         u4DODQCSGAT3O83CkDtj8mEHMq1nV8MuNp73jQoQSmAU49snOtvxcIeexTOnKCI3ENKX
+         3eOP4TF1W9PztYlc74tS+nCavBd5UPgtPJc4bVg8LkvrAi8orCPYuNjur+0hD8X+de9b
+         8OrBOJ/3SpRkh3u8n4Esp7DbyPwxNULfdjcsIiybQBbsz9DOkmCTUGt0MPlfB0bZIV+i
+         OLeA==
+X-Gm-Message-State: APjAAAVk14LfxxdgHI/pXvFJ6yIWCFFvWAi1dDPn9Hb0BktJuA0rKx1J
+        sq95pmFM19c55A43ERo7H2z5NUGg17jh38VD0zY=
+X-Google-Smtp-Source: APXvYqyu5XocSpMCv9Ma3zoKfOodjMtuyXKtqzOvcYasJ6a10KwB5/pdgE+yCvCBAmtozRI4n93M0cplMxbj/gV57fs=
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr3917894ljg.93.1566588919507;
+ Fri, 23 Aug 2019 12:35:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823104415.GC14582@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+ <20190812215052.71840-12-ndesaulniers@google.com> <20190813082744.xmzmm4j675rqiz47@willie-the-truck>
+ <CANiq72mAfJ23PyWzZAELgbKQDCX2nvY0z+dmOMe14qz=wa6eFg@mail.gmail.com>
+ <20190813170829.c3lryb6va3eopxd7@willie-the-truck> <CAKwvOdk4hca8WzWzhcPEvxXnJVLbXGnhBdDZbeL_W_H91Ttjqw@mail.gmail.com>
+ <CANiq72mGoGpx7EAVUPcGuhVkLit8sB3bR-k1XBDyeM8HBUaDZw@mail.gmail.com> <CANiq72nUyT-q3A9mTrYzPZ+J9Ya7Lns5MyTK7W7-7yXgFWc2xA@mail.gmail.com>
+In-Reply-To: <CANiq72nUyT-q3A9mTrYzPZ+J9Ya7Lns5MyTK7W7-7yXgFWc2xA@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 23 Aug 2019 21:35:08 +0200
+Message-ID: <CANiq72nfn4zxAO63GEEoUjumC6Jwi5_jdcD_5Xzt1vZRgh52fg@mail.gmail.com>
+Subject: Re: [PATCH 12/16] arm64: prefer __section from compiler_attributes.h
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Yonghong Song <yhs@fb.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:44:15AM +0100, Andrew Murray wrote:
-> On Thu, Aug 22, 2019 at 03:05:49PM -0500, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > An MMIO read from a PCI device that doesn't exist or doesn't respond causes
-> > a PCI error.  There's no real data to return to satisfy the CPU read, so
-> > most hardware fabricates ~0 data.
-> > 
-> > Add a PCI_ERROR_RESPONSE definition for that and use it where appropriate
-> > to make these checks consistent and easier to find.
-> > 
-> > Note that successful reads *also* may return ~0 data, so additional
-> > information (e.g., knowledge that ~0 is not a valid register value) is
-> > needed to reliably identify errors.
+On Thu, Aug 15, 2019 at 11:12 AM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> Btw, I guess that is the Oops you were mentioning in the cover letter?
 
-> > -	 * generally synthesize ~0 data to complete the read (except when
-> > -	 * CRS SV is enabled and the read was for the Vendor ID; in that
-> > -	 * case it synthesizes 0x0001 data).
-> > +	 * generally synthesize ~0 data (PCI_ERROR_RESPONSE) to complete
-> > +	 * the read (except when CRS SV is enabled and the read was for the
-> > +	 * Vendor ID; in that case it synthesizes 0x0001 data).
-> 
-> There are some other areas in drivers/pci where comments also refer to ~0
-> and similar:
-> 
-> $ git grep -i ffffffff drivers/pci/ | grep \*
-> drivers/pci/access.c:            * have been written as 0xFFFFFFFF if hardware error happens
-> drivers/pci/controller/dwc/pci-keystone.c: * bus error instead of returning 0xffffffff. This handler always returns 0
-> drivers/pci/controller/pci-xgene.c:      * ready") instead of 0xFFFFFFFF ("device does not exist").  This
-> drivers/pci/controller/pcie-iproc.c:     * eventually return the wrong data (0xffffffff).
-> drivers/pci/pci.c: * FFFFFFFFs on the command line.)
-> 
-> I've removed anything in the above list that doesn't look like a good candidate
-> for PCI_ERROR_RESPONSE.
-> 
-> Perhaps there is some value for replacing "~0" with "~0 (PCI_ERROR_RESPONSE)"
-> in the comments too?
+Pinging about this...
 
-Good idea, I'll take a look at those.
-
-> >  		pdev->cfg_size = PCI_CFG_SPACE_EXP_SIZE;
-> >  		if (pci_read_config_dword(pdev, PCI_CFG_SPACE_SIZE, &status) !=
-> > -		    PCIBIOS_SUCCESSFUL || (status == 0xffffffff))
-> > +		    PCIBIOS_SUCCESSFUL || (status == (u32) PCI_ERROR_RESPONSE))
-> 
-> The casts are necessary but slightly annoying. Have you considered something
-> like:
-> 
-> #define SET_PCI_ERROR_RESPONSE(val)	(val = ((typeof(val))(~0ULL)))
-> #define RESPONSE_IS_PCI_ERROR(val)	(val == ((typeof(val))(~0ULL)))
-
-I hadn't thought of that, but I really like the idea.  Thanks, I think
-I'll try that out!
-
-> >  			pdev->cfg_size = PCI_CFG_SPACE_SIZE;
-> >  
-> >  		if (pci_find_saved_cap(pdev, PCI_CAP_ID_EXP))
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 9e700d9f9f28..d64fd3788061 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -123,6 +123,13 @@ enum pci_interrupt_pin {
-> >  /* The number of legacy PCI INTx interrupts */
-> >  #define PCI_NUM_INTX	4
-> >  
-> > +/*
-> > + * Reading from a device that doesn't respond typically returns ~0.  A
-> > + * successful read from a device may also return ~0, so you need additional
-> > + * information to reliably identify errors.
-> > + */
-> > +#define PCI_ERROR_RESPONSE		(~0ULL)
-> > +
-> >  /*
-> >   * pci_power_t values must match the bits in the Capabilities PME_Support
-> >   * and Control/Status PowerState fields in the Power Management capability.
-> > -- 
-> > 2.23.0.187.g17f5b7556c-goog
-> > 
+Cheers,
+Miguel
