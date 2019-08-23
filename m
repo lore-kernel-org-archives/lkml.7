@@ -2,243 +2,109 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1112C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16452C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCC120850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C0E22CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XGwUavC9"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CbEHObgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392369AbfHWT4t (ORCPT
+        id S2392452AbfHWT4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:56:49 -0400
-Received: from mail-eopbgr760090.outbound.protection.outlook.com ([40.107.76.90]:39077
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731765AbfHWT4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:56:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZSbytpF2trlVzEdprP6s6uJqzrW0h5BB99nKGhd8/Ap2qrN5sjsWkwt5qdrv4PdNd7vWM6m/6qi4ITX5bDR8OCLCscjbRt4MGF/FW3JcKojncWOyH4eEuZIVX4stqfVnfmkvgGdlvYM0MqOctojPxPaKnAbX8wD1JRpwanYMaZd8G55JpMapk16BqA5w3bxd+6eiZQfqpdl+C8iV48ZxXYnWc2bKC/dHC50Dn1SE7T7QzSnduZrlIltIDmqHANYEsJBm23G9HdQaNy0XFlwr/VS4lQY/iSU7F+Otm96w4nHb0gOMdOUch301a01wEkKXilzlcDiDwoUXBi8bk9pMIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VOeVxe9UYuUQLXlJtivshFK7VdMbkjvNgRTzg4gkbMA=;
- b=dTQCa45X2DH+f04vznUkcz7UgySBD83dQu+FgQJY/efY/GV3AcyOb60cTIILQWlmZAMK6D18QCvO5oivngNl/nL1ouB8rKmA+K2WTBXyj97ZESodvJp9KyiMr7QjKyHK0yZeLrhh6BJap1tuu0z2pdSChXaqDsY7sBS0lZglchOTO605Y+Lmdzf7IOCqVe+2Op6OIw4cpFLxfjqmo0FF6mv3FcbgXsEIvxNFnD5cWooLQ05QAMt0Vm6gbv6NKOmsh/zuGvv/ktVDfAGQqAITm2L/GDQXlClVuQoZEl4uPhsAU3u0kOeU3w/Rf+sGbfvaCOfaeGDCBG+wdp+frKqtQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VOeVxe9UYuUQLXlJtivshFK7VdMbkjvNgRTzg4gkbMA=;
- b=XGwUavC9vlegg25Bb4IlvsxNUCrBjL3OblKYt8cXVyv1wQ/OqBrxR2NP+0Sxm0zAdJY2WVVzzpaZbSiuP8xBlpkpqJ9flV6yoscT0mypzWTS3eDdk83ud++sXUlPI8hn56jDjc5nVAUy9+cr22CufTSOahqdT84ewmnJZpOtPMM=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0140.namprd21.prod.outlook.com (10.173.173.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.4; Fri, 23 Aug 2019 19:56:45 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Fri, 23 Aug 2019
- 19:56:45 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 08/12] Drivers: hv: vmbus: Ignore the offers when
- resuming from hibernation
-Thread-Topic: [PATCH v3 08/12] Drivers: hv: vmbus: Ignore the offers when
- resuming from hibernation
-Thread-Index: AQHVVvnez8f5+ZNs+0+5s8sO4QKl7KcJKo+w
-Date:   Fri, 23 Aug 2019 19:56:45 +0000
-Message-ID: <DM5PR21MB01375F5A46E46079DA611622D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-9-git-send-email-decui@microsoft.com>
-In-Reply-To: <1566265863-21252-9-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T19:56:42.9471406Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e21d423b-8579-4709-963a-79ab2ea4258c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d100aea6-4caf-4ea9-2ed3-08d7280406a5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0140;
-x-ms-traffictypediagnostic: DM5PR21MB0140:|DM5PR21MB0140:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB01405E8D2153778EE2A43F5AD7A40@DM5PR21MB0140.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(199004)(189003)(305945005)(446003)(26005)(11346002)(81156014)(8676002)(102836004)(6506007)(256004)(14444005)(81166006)(186003)(476003)(486006)(7696005)(7736002)(76176011)(22452003)(4326008)(74316002)(6246003)(3846002)(6116002)(9686003)(10090500001)(55016002)(1511001)(8990500004)(2906002)(66066001)(6436002)(53936002)(5660300002)(14454004)(110136005)(316002)(86362001)(478600001)(2201001)(66476007)(71200400001)(71190400001)(76116006)(66556008)(66946007)(10290500003)(99286004)(25786009)(33656002)(64756008)(66446008)(2501003)(8936002)(229853002)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0140;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: e79OlCSOMt0MC27KNbYV1GvgubrRQNBfgy6ymV9MFFQxu9qMAK53RzHtLEAiWa0lSySrMNcJ/QNwYgJJ+wOB63zHw5uIZMR34/3uTMhovSE+9WZ9HAUiWqxN6GeaqiluQCago3bpkTGk98Vizz50YFhlBQ6cS0fygqjWIsVai1n72wPrHqqMDnTdTbBkNn5RfUERR45/LnfZT0aeiYWLhwSszL3QAbB3Ub4iR/RMEgZxOr4gRDk9eKrn54Hcv6P894oTcOfLcL8bQBc+tceyn9ruU0eGmWfrm2tP63bQsBhiOd+dNZgiMHSEC5kslqxRNHJlgnD6FrFGJBbyu72AB7wSV8Rkt9RZKKS/IALDVpAWgHmCL7UziohaTM+rwTPYf8ywGVLVrjJNku45vrWdrz04s/+jxIJ8oSvfKcmjmrI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 23 Aug 2019 15:56:52 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40796 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731765AbfHWT4v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 15:56:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w16so7127356pfn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 12:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=FYTRVOUyodl3Y4MOOfrDquojBPwPvHQa3bd0t+obIek=;
+        b=CbEHObgKjJpbHN1oZh4pOMIH5mUHa33/hNLK99CTRxdBPdONQ5KKkUkFmqlasemH6L
+         merAVOVyx5DcQxPPbVJLQJtiW9RTbxz4nazl+knP4n9o34EmvQx+v9w3d8CEbby18rw4
+         PZtRY4Uw0e+jQ6wSGHrmGIvnzAKOOBlxvrqPM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=FYTRVOUyodl3Y4MOOfrDquojBPwPvHQa3bd0t+obIek=;
+        b=Wf8HgEmFCTV+bimni1JU+F6LnVpGLKhi2w3D5b/O5evxbUBJp2Hfviu8g8HaGqqXgQ
+         XE+QYShjq2xc5nB4PAo/F1qfPrmOCcU6AfJ+srNNtWqtCKXuNNnIvs1adZhF03EdaVwS
+         FzGdDpDTaHETxCp58LUxbdA2PWqy7lbpKtcL0M/7gooayPniR/sRtySMTEmmu/HGdE9Z
+         uEhoAgigl6PtprPp1xAnP9lKzzYuoa2kSuR4HCWjP88j6csLKINKsEWuZMqey4/coHIB
+         Sv8/xZY+Bdfr4XdcZzyxmNI91QF4U/+7ThaEvcROrG2nDw7j3zimX9qFMut83btUoFwU
+         754A==
+X-Gm-Message-State: APjAAAXC76CvX7S2Lb438AiCovYm1k+ys86qlcU2/Lb0XOxgJPNvcxy+
+        Kkp82oFw8YNB7SrXhGkPQUFFtg==
+X-Google-Smtp-Source: APXvYqxVqZT3jcFr4ernORkUXpLdFWPDt3yD9zn4XXs7FBtd+nkfpKKeLaqlQLza0A30/JAeL9DTSg==
+X-Received: by 2002:a17:90a:ad94:: with SMTP id s20mr7155476pjq.42.1566590209928;
+        Fri, 23 Aug 2019 12:56:49 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id z19sm2593052pgv.35.2019.08.23.12.56.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 12:56:49 -0700 (PDT)
+Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
+ condition
+To:     Luis Chamberlain <mcgrof@kernel.org>, Takashi Iwai <tiwai@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kselftest@vger.kernel.org
+References: <20190816000945.29810-1-scott.branden@broadcom.com>
+ <20190816000945.29810-4-scott.branden@broadcom.com>
+ <20190819053937.GR16384@42.do-not-panic.com>
+ <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
+ <20190820012655.GU16384@42.do-not-panic.com> <s5hd0gwrx4j.wl-tiwai@suse.de>
+ <20190823154301.GT16384@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <95736fe7-31e1-ab6e-11f6-e209951402a9@broadcom.com>
+Date:   Fri, 23 Aug 2019 12:56:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d100aea6-4caf-4ea9-2ed3-08d7280406a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 19:56:45.1344
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nti3m18BUriPFIKf0mTFyQBMbLKakpywH69fCSX7OTZFKPd2CHAkU7O0Ih8g1tJS5RuuK2nnTDEmgoMjF5V0m1fG3ifODEmjF8+3C7r09Sc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0140
+In-Reply-To: <20190823154301.GT16384@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>  Sent: Monday, August 19, 2019 6:52 =
-PM
->=20
-> When the VM resumes, the host re-sends the offers. We should not add the
-> offers to the global vmbus_connection.chn_list again.
->=20
-> This patch assumes the RELIDs of the channels don't change across
-> hibernation. Actually this is not always true, especially in the case of
-> NIC SR-IOV the VF vmbus device's RELID sometimes can change. A later patc=
-h
-> will address this issue by mapping the new offers to the old channels and
-> fixing up the old channels, if necessary.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/hv/channel_mgmt.c | 29 ++++++++++++++++++++++++++++-
->  drivers/hv/connection.c   | 27 +++++++++++++++++++++++++++
->  drivers/hv/hyperv_vmbus.h |  3 +++
->  3 files changed, 58 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index addcef5..f7a1184 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -854,12 +854,39 @@ void vmbus_initiate_unload(bool crash)
->  static void vmbus_onoffer(struct vmbus_channel_message_header *hdr)
->  {
->  	struct vmbus_channel_offer_channel *offer;
-> -	struct vmbus_channel *newchannel;
-> +	struct vmbus_channel *oldchannel, *newchannel;
-> +	size_t offer_sz;
->=20
->  	offer =3D (struct vmbus_channel_offer_channel *)hdr;
->=20
->  	trace_vmbus_onoffer(offer);
->=20
-> +	mutex_lock(&vmbus_connection.channel_mutex);
-> +	oldchannel =3D find_primary_channel_by_offer(offer);
-> +	mutex_unlock(&vmbus_connection.channel_mutex);
-> +
-> +	if (oldchannel !=3D NULL) {
-> +		atomic_dec(&vmbus_connection.offer_in_progress);
-> +
-> +		/*
-> +		 * We're resuming from hibernation: we expect the host to send
-> +		 * exactly the same offers that we had before the hibernation.
-> +		 */
-> +		offer_sz =3D sizeof(*offer);
-> +		if (memcmp(offer, &oldchannel->offermsg, offer_sz) =3D=3D 0)
-> +			return;
-> +
-> +		pr_debug("Mismatched offer from the host (relid=3D%d)\n",
-> +			 offer->child_relid);
-> +
-> +		print_hex_dump_debug("Old vmbus offer: ", DUMP_PREFIX_OFFSET,
-> +				     16, 4, &oldchannel->offermsg, offer_sz,
-> +				     false);
-> +		print_hex_dump_debug("New vmbus offer: ", DUMP_PREFIX_OFFSET,
-> +				     16, 4, offer, offer_sz, false);
-> +		return;
-> +	}
-> +
->  	/* Allocate the channel object and save this offer. */
->  	newchannel =3D alloc_channel();
->  	if (!newchannel) {
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 09829e1..6c7a983 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -337,6 +337,33 @@ struct vmbus_channel *relid2channel(u32 relid)
->  }
->=20
->  /*
-> + * find_primary_channel_by_offer - Get the channel object given the new =
-offer.
-> + * This is only used in the resume path of hibernation.
-> + */
-> +struct vmbus_channel *
-> +find_primary_channel_by_offer(const struct vmbus_channel_offer_channel *=
-offer)
-> +{
-> +	struct vmbus_channel *channel;
-> +	const guid_t *inst1, *inst2;
-> +
-> +	WARN_ON(!mutex_is_locked(&vmbus_connection.channel_mutex));
-> +
-> +	/* Ignore sub-channel offers. */
-> +	if (offer->offer.sub_channel_index !=3D 0)
-> +		return NULL;
-> +
-> +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> +		inst1 =3D &channel->offermsg.offer.if_instance;
-> +		inst2 =3D &offer->offer.if_instance;
-> +
-> +		if (guid_equal(inst1, inst2))
-> +			return channel;
-> +	}
-> +
-> +	return NULL;
-> +}
 
-Any particular reason this new function is in connection.c instead of
-putting it in channel_mgmt.c where it is called?
-
-> +
-> +/*
->   * vmbus_on_event - Process a channel event notification
->   *
->   * For batched channels (default) optimize host to guest signaling
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 9f7fb6d..c42b46d 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -310,6 +310,9 @@ int vmbus_add_channel_kobj(struct hv_device *device_o=
-bj,
->=20
->  struct vmbus_channel *relid2channel(u32 relid);
->=20
-> +struct vmbus_channel *
-> +find_primary_channel_by_offer(const struct vmbus_channel_offer_channel *=
-offer);
-> +
->  void vmbus_free_channels(void);
->=20
->  /* Connection interface */
-> --
-> 1.8.3.1
-
+On 2019-08-23 8:43 a.m., Luis Chamberlain wrote:
+> On Fri, Aug 23, 2019 at 12:31:40PM +0200, Takashi Iwai wrote:
+>> So, if any, we'd need put a mutex around the fallback loader code.
+>> And, the mutex should be rather per device, not a global one.
+>>
+>> Or we may trick it by appending the second parallel caller into the
+>> same wait queue, but the code will be more complex, so I don't think
+>> worth for it.
+> For now I'm thinking of a new API with a devname prefix to the driver.
+> I'll have to test if that works, but not sure if I'll get to it today
+> before my vacation starts (today).
+Have a good vacation.
+>
+>    Luis
