@@ -2,93 +2,98 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0514AC41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC27C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C9523402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G4FkLh8q"
+	by mail.kernel.org (Postfix) with ESMTP id E5CCD23407
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404132AbfHWDOo (ORCPT
+        id S2404188AbfHWDSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:14:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51215 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfHWDOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:14:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46F62V4Rc9z9s7T;
-        Fri, 23 Aug 2019 13:14:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566530082;
-        bh=93bLYnpZyMz5ZmWW64meRlCsaIjlWV1lvPWKGI7p/44=;
-        h=Date:From:To:Cc:Subject:From;
-        b=G4FkLh8qL60Kw4JYoUZ/tZrkDiW6bNv/knJmIvtWSNrMYLRbz1xxP+pQVOL9kOfLS
-         LQte59vbTOBaKygSq69fP8LZQfQNaqDivBWJR7tk5eVaH7ChpoReLpPCRchkOGjrwg
-         XvI5/igQ4+4uqmtrIwMZTDQpUvwNvKs7UgamzffAcuSe0SYBo9cx/ZrOHpt/3UtNVH
-         y22/DQiHmCrTRqdsfyfmAMcPaVYOMvvOidKjkf/UYcRiK7h9zC1Ix2NKypy7Mveuf8
-         iR0nqNWJCE0MkiXmXaBrkW8tOaLPRVH/ddT5/Lt9NyTXU+pDUs0HnCkEcf6Ng+Lqh8
-         TXZEfmnI9QZCw==
-Date:   Fri, 23 Aug 2019 13:14:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: linux-next: build warning after merge of the crypto tree
-Message-ID: <20190823131442.5a84a475@canb.auug.org.au>
+        Thu, 22 Aug 2019 23:18:12 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36606 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404154AbfHWDSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 23:18:11 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7N3I2Hw005113
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 23:18:03 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 0DDCB42049E; Thu, 22 Aug 2019 23:18:02 -0400 (EDT)
+Date:   Thu, 22 Aug 2019 23:18:02 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Ayush Ranjan <ayushr2@illinois.edu>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Ext4 documentation fixes.
+Message-ID: <20190823031801.GD8130@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ayush Ranjan <ayushr2@illinois.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CA+UE=SPyMXZUhHFm0KgvihPdaE=yH5ra6n1C4XhKgM6aGheo=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5ka7wD7hXFjk=rXgpMfsMku";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+UE=SPyMXZUhHFm0KgvihPdaE=yH5ra6n1C4XhKgM6aGheo=A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5ka7wD7hXFjk=rXgpMfsMku
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 15, 2019 at 09:11:51AM -0700, Ayush Ranjan wrote:
+> This commit aims to fix the following issues in ext4 documentation:
+> - Flexible block group docs said that the aim was to group block
+>   metadata together instead of block group metadata.
+> - The documentation consistly uses "location" instead of "block number".
+>   It is easy to confuse location to be an absolute offset on disk. Added
+>   a line to clarify all location values are in terms of block numbers.
+> - Dirent2 docs said that the rec_len field is shortened instead of the
+>   name_len field.
+> - Typo in bg_checksum description.
+> - Inode size is 160 bytes now, and hence i_extra_isize is now 32.
+> - Cluster size formula was incorrect, it did not include the +10 to
+>   s_log_cluster_size value.
+> - Typo: there were two s_wtime_hi in the superblock struct.
+> - Superblock struct was outdated, added the new fields which were part
+>   of s_reserved earlier.
+> - Multiple mount protection seems to be implemented in fs/ext4/mmp.c.
+> 
+> Signed-off-by: Ayush Ranjan <ayushr2@illinois.edu>
 
-Hi all,
+Fixed with one minor typo fix:
 
-After merging the crypto tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+> diff --git a/Documentation/filesystems/ext4/group_descr.rst
+> b/Documentation/filesystems/ext4/group_descr.rst
+> index 0f783ed88..feb5c613d 100644
+> --- a/Documentation/filesystems/ext4/group_descr.rst
+> +++ b/Documentation/filesystems/ext4/group_descr.rst
+> @@ -100,7 +100,7 @@ The block group descriptor is laid out in ``struct
+> ext4_group_desc``.
+>       - \_\_le16
+>       - bg\_checksum
+>       - Group descriptor checksum; crc16(sb\_uuid+group+desc) if the
+> -       RO\_COMPAT\_GDT\_CSUM feature is set, or crc32c(sb\_uuid+group\_desc) &
+> +       RO\_COMPAT\_GDT\_CSUM feature is set, or crc32c(sb\_uuid+group+desc) &
+>         0xFFFF if the RO\_COMPAT\_METADATA\_CSUM feature is set.
 
-WARNING: modpost: missing MODULE_LICENSE() in lib/crypto/libsha256.o
-see include/linux/module.h for more information
+The correct checksum should be "crc16(sb\_uuid+group\_desc)" or
+"crc32c(sb\_uuid+group\_desc)".  That is, it's previous line which
+needed modification.
 
-Presumably introduced by commit
-
-  01d3aee86625 ("crypto: sha256 - Make lib/crypto/sha256.c suitable for gen=
-eric use")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/5ka7wD7hXFjk=rXgpMfsMku
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fWiIACgkQAVBC80lX
-0Gz9IQf/eT4VElDbE8oPsaW/auaD7FEJLiEgDaogwaPctm708jwxkfYqvICbz5XB
-Ui8kF8BTwMU0PBxFHccMby4u9YFz4X5vXh9i+0wB8OUZzLVi8sYoeRw7lZ4BcH/b
-faW2EYcnxxQEa63HxCCUH84V1NK056i1LcazGln+OrlPi/naCvpCgyYKe2LJMhcx
-v7HolyrlX9wuQKJAEONiu05fzEip6GeOOuQjCTD5A5cM/H1+edDIo0k2Wv0DRF2r
-/qtzTgomYVeLTV5+L6/AbyNxycrfIYq2t3nowAthFKpIF2wEPn08uH23MRbQa+kj
-sE2IkLkBQD5X+JjMo6TklC4ld6uGhg==
-=zntQ
------END PGP SIGNATURE-----
-
---Sig_/5ka7wD7hXFjk=rXgpMfsMku--
+					- Ted
