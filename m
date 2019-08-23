@@ -2,148 +2,121 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981F5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEFAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63436233FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iXWjbHRa"
+	by mail.kernel.org (Postfix) with ESMTP id A574A233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388264AbfHWBuN (ORCPT
+        id S2388289AbfHWBwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 21:50:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45310 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730401AbfHWBuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 21:50:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w26so5258718pfq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 18:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nVpIaULoP5xHhVhqVwCnL2/nr72RjF/GeMw6NFKePik=;
-        b=iXWjbHRav/jxO8IDVueGiQsPLqyZ2UBzkvdzUstOgkEklotIMp8PhS8shzzN9Zuwkb
-         J/oC2mR2wQoaRxCqzPMdMqWdrZL7QQhbmcpkgNsVVqZcEuBx3ri3ZZ4GQfYVXpZq+Qha
-         OhoJWf9g/svDxyaIdNDLhULNDPAdA+aoctMlc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nVpIaULoP5xHhVhqVwCnL2/nr72RjF/GeMw6NFKePik=;
-        b=XbnTrbqEZEldC/GvbLQcxJBmWPeJUBcGk7n9eK7oX09FLZ0E89NnQqjtOeFo8uc+up
-         Eub+NcLbgRvTAbDl7z/SdEscQsvEYEKg/aKUCl6c490cuc5latJcvMe9L0CelUPRLlYG
-         82YxyVUTfoIxhjgskO39xlVBEeTH17xVCmjJGFyGy5NoM44IDhSIERMXYmyQSWE0I56s
-         VbOamSG0b82nYLpbistcKR9B1p+3ySfE8TrDgJA4LTWZ8PeO/7ymW5IETQkwWgXTgdHO
-         jgohGdUwO/0hyes1frXELQB3KwnwRjM0c7p86y8aIaOBUqAgHP14GdfGB6rVa0GwSzIr
-         IOTQ==
-X-Gm-Message-State: APjAAAUS/XXitHUh1EKHWbgVK/WQs8eoUUdm0HD5ALG0pqdEM2xkfQD8
-        CNwVTOdCYtA0h0GPhPO1R0xSCQ==
-X-Google-Smtp-Source: APXvYqyxkGDu+sSVhIUbPpsJ6PM9e2ZRLfP6B6V0M/cpGZQgPLq13M4w+mRe0UsSMquMVVCLJAOdpg==
-X-Received: by 2002:aa7:8f29:: with SMTP id y9mr2491838pfr.27.1566525011711;
-        Thu, 22 Aug 2019 18:50:11 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a3sm688640pfc.70.2019.08.22.18.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 18:50:10 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 21:50:09 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
-Message-ID: <20190823015009.GA152050@google.com>
-References: <20190821231906.4224-1-swood@redhat.com>
- <20190821231906.4224-2-swood@redhat.com>
- <20190821233358.GU28441@linux.ibm.com>
- <20190822133955.GA29841@google.com>
- <20190822152706.GB28441@linux.ibm.com>
+        Thu, 22 Aug 2019 21:52:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:25107 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733139AbfHWBwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 21:52:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 18:52:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,419,1559545200"; 
+   d="scan'208";a="173330337"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga008.jf.intel.com with ESMTP; 22 Aug 2019 18:52:21 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Micha=c5=82_Wajdeczko?= <michal.wajdeczko@intel.com>
+Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device
+ hot re-plug
+To:     Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <00f1a3a7-7ff6-e9a0-d9de-a177af6fd64b@linux.intel.com>
+Date:   Fri, 23 Aug 2019 09:51:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822152706.GB28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 08:27:06AM -0700, Paul E. McKenney wrote:
-> On Thu, Aug 22, 2019 at 09:39:55AM -0400, Joel Fernandes wrote:
-> > On Wed, Aug 21, 2019 at 04:33:58PM -0700, Paul E. McKenney wrote:
-> > > On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
-> > > > A plain local_bh_disable() is documented as creating an RCU critical
-> > > > section, and (at least) rcutorture expects this to be the case.  However,
-> > > > in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
-> > > > preempt_count() directly.  Even if RCU were changed to check
-> > > > in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
-> > > > 
-> > > > Fix this by calling rcu_read_lock() from local_bh_disable(), and update
-> > > > rcu_read_lock_bh_held() accordingly.
-> > > 
-> > > Cool!  Some questions and comments below.
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > > Signed-off-by: Scott Wood <swood@redhat.com>
-> > > > ---
-> > > > Another question is whether non-raw spinlocks are intended to create an
-> > > > RCU read-side critical section due to implicit preempt disable.
-> > > 
-> > > Hmmm...  Did non-raw spinlocks act like rcu_read_lock_sched()
-> > > and rcu_read_unlock_sched() pairs in -rt prior to the RCU flavor
-> > > consolidation?  If not, I don't see why they should do so after that
-> > > consolidation in -rt.
-> > 
-> > May be I am missing something, but I didn't see the connection between
-> > consolidation and this patch. AFAICS, this patch is so that
-> > rcu_read_lock_bh_held() works at all on -rt. Did I badly miss something?
+Hi,
+
+On 8/22/19 10:29 PM, Janusz Krzysztofik wrote:
+> When a perfectly working i915 device is hot unplugged (via sysfs) and
+> hot re-plugged again, its dev->archdata.iommu field is not populated
+> again with an IOMMU pointer.  As a result, the device probe fails on
+> DMA mapping error during scratch page setup.
 > 
-> I was interpreting Scott's question (which would be excluded from the
-> git commit log) as relating to a possible follow-on patch.
+> It looks like that happens because devices are not detached from their
+> MMUIO bus before they are removed on device unplug.  Then, when an
+> already registered device/IOMMU association is identified by the
+> reinstantiated device's bus and function IDs on IOMMU bus re-attach
+> attempt, the device's archdata is not populated with IOMMU information
+> and the bad happens.
 > 
-> The question is "how special can non-raw spinlocks be in -rt?".  From what
-> I can see, they have been treated as sleeplocks from an RCU viewpoint,
-> so maybe that should continue to be the case.  It does deserve some
-> thought because in mainline a non-raw spinlock really would block a
-> post-consolidation RCU grace period, even in PREEMPT kernels.
+> I'm not sure if this is a proper fix but it works for me so at least it
+> confirms correctness of my analysis results, I believe.  So far I
+> haven't been able to identify a good place where the possibly missing
+> IOMMU bus detach on device unplug operation could be added.
+
+Which kernel version are you testing with? Does it contain below commit?
+
+commit 458b7c8e0dde12d140e3472b80919cbb9ae793f4
+Author: Lu Baolu <baolu.lu@linux.intel.com>
+Date:   Thu Aug 1 11:14:58 2019 +0800
+
+     iommu/vt-d: Detach domain when move device out of group
+
+     When removing a device from an iommu group, the domain should
+     be detached from the device. Otherwise, the stale domain info
+     will still be cached by the driver and the driver will refuse
+     to attach any domain to the device again.
+
+     Cc: Ashok Raj <ashok.raj@intel.com>
+     Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+     Cc: Kevin Tian <kevin.tian@intel.com>
+     Fixes: b7297783c2bb6 ("iommu/vt-d: Remove duplicated code for 
+device hotplug")
+     Reported-and-tested-by: Vlad Buslov <vladbu@mellanox.com>
+     Suggested-by: Robin Murphy <robin.murphy@arm.com>
+     Link: https://lkml.org/lkml/2019/7/26/1133
+     Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+     Signed-off-by: Joerg Roedel <jroedel@suse.de>
+
+Best regards,
+Lu Baolu
+
 > 
-> But then again, you cannot preempt a non-raw spinlock in mainline but
-> you can in -rt, so extending that exception to RCU is not unreasonable.
+> Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+> ---
+>   drivers/iommu/intel-iommu.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> Either way, we do need to make a definite decision and document it.
-> If I were forced to make a decision right now, I would follow the old
-> behavior, so that only raw spinlocks were guaranteed to block RCU grace
-> periods.  But I am not being forced, so let's actually discuss and make
-> a conscious decision.  ;-)
-
-I think non-raw spinlocks on -rt should at least do rcu_read_lock() so that
-any driver or kernel code that depends on this behavior and works on non-rt
-also works on -rt. It also removes the chance a kernel developer may miss
-documentation and accidentally forget that their code may break on -rt. I am
-curious to see how much this design pattern appears in the kernel
-(spin_lock'ed section "intended" as an RCU-reader by code sequences).
-
-Logically speaking, to me anything that disables preemption on non-RT should
-do rcu_read_lock() on -rt so that from RCU's perspective, things are working.
-But I wonder where we would draw the line and if the bar is to need actual
-examples of usage patterns to make a decision..
-
-Any thoughts?
-
-thanks,
-
- - Joel
-
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 12d094d08c0a..7cdcd0595408 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -2477,6 +2477,9 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>   		if (info2) {
+>   			found      = info2->domain;
+>   			info2->dev = dev;
+> +
+> +			if (dev && !dev->archdata.iommu)
+> +				dev->archdata.iommu = info2;
+>   		}
+>   	}
+>   
+> 
