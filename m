@@ -2,111 +2,117 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B854C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898A1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFC822CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:09:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqHtalEM"
+	by mail.kernel.org (Postfix) with ESMTP id 6423921848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404775AbfHWNJq (ORCPT
+        id S2388724AbfHWNL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:09:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38796 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394994AbfHWNJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:09:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so8605672wrr.5;
-        Fri, 23 Aug 2019 06:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MRgcnuzG2I8lDuGL1jMNsqN/KgyJ2300oOMbrHcQPAk=;
-        b=UqHtalEMPEp3cSm+E2tTMndX4iPSkrW7CknIbiyhI7JRQv9rH2Rk6ZpoWDasM7bS2g
-         fbDOBgLxD04GDfGsaEYGYZlE/IZ8DYSS6DBuV1m2s2LXImC2UdQsCWbLJIaTrvGjaLoe
-         uobQ55c5l9XrUmvtrySAQlGTinrOQkwxVfrwn+4XNsgGfs3zGmgpNUzF9jACZP7jgiWV
-         HC/GR8yzSH5Vg8rIiGgiPeYjFhkrMgMvKn4I7US4uWTmDsYJ7qJytWAInzN7TQhwiFDx
-         wdklaIoI8CPt0zCZ/dt5yxrRe/WnsDcBxZe1HRcb/KqxaE4EoAZtJpO3FC1igcKlM9ul
-         mnKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MRgcnuzG2I8lDuGL1jMNsqN/KgyJ2300oOMbrHcQPAk=;
-        b=Hic16hcA5EKGAB5L7V4fz9wMQ5Tz9dUSjsw5YwNw4YxVAuw2QkOo/fSnC3cRtUx/EI
-         pcfrDo5SrLSsxmlnzvqfugnRaGjO+CvEI8NecO5QUNHM9Ryt5haG3/lx3gFgyd5l/Bzf
-         zArMw2OqIo//D+kfcg9GRVbdayqRyUdLIX3cUQIgDAQeLT3Jka4HM3ATWnyKJ/A6z9rN
-         UaigTqVmmbO4ZJplzgM1+7DeUX0lQLhVc4pHhw0S0+COZeF0QzzUM7+xjPA2RTJxuqoJ
-         bYg5JdBqHz9AgLWG4Nix0znLCncQhmuxYGpgmBwVXC7vv0ukEiVwlvUrFRnQ53wmCeiU
-         WIow==
-X-Gm-Message-State: APjAAAXSDH5Deb/858uKR+tGm3E3TL2ve/OiUe56yT1OfUXXFXUYLhzN
-        f7bTC/9J+WQXDIKL3oYqc7Y=
-X-Google-Smtp-Source: APXvYqxcQ+4cLIrzVciiwjDYzpbA9TaWEp26IDcmHpMs2V3goBt61z+hwndHALj9mnOCwTB+n0vPPw==
-X-Received: by 2002:adf:a55d:: with SMTP id j29mr4849842wrb.275.1566565774269;
-        Fri, 23 Aug 2019 06:09:34 -0700 (PDT)
-Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id m7sm4359854wmi.18.2019.08.23.06.09.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 23 Aug 2019 06:09:33 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>,
-        Oleg Ivanov <balbes-150@yandex.ru>
-Subject: [PATCH 2/3] dt-bindings: arm: amlogic: Add support for the Ugoos AM6
-Date:   Fri, 23 Aug 2019 17:08:36 +0400
-Message-Id: <1566565717-5182-3-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566565717-5182-1-git-send-email-christianshewitt@gmail.com>
-References: <1566565717-5182-1-git-send-email-christianshewitt@gmail.com>
+        Fri, 23 Aug 2019 09:11:56 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5644 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731783AbfHWNLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 09:11:55 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 318783CD6D96C5C7B307;
+        Fri, 23 Aug 2019 21:11:48 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
+ 21:11:37 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
+        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <yuehaibing@huawei.com>, <daniel.baluta@nxp.com>,
+        <pierre-louis.bossart@linux.intel.com>
+CC:     <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] ASoC: SOF: imx8: Make some functions static
+Date:   Fri, 23 Aug 2019 20:59:39 +0800
+Message-ID: <20190823125939.30012-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Ugoos AM6 is based on the Amlogic W400 reference design using the S922X
-chipset. Hardware specifications:
+Fix sparse warnings:
 
-- 2GB LPDDR4 RAM
-- 16GB eMMC storage
-- 10/100/1000 Base-T Ethernet using External RGMII PHY
-- 802.11 a/b/g/b/ac + BT 5.0 sdio wireless (Ampak 6398S)
-- HDMI 2.0 (4k@60p) video
-- Composite video + 2-channel audio output on 3.5mm jack
-- S/PDIF audio output
-- Aux input
-- 1x USB 3.0
-- 3x USB 2.0
-- 1x micro SD card slot
+sound/soc/sof/imx/imx8.c:104:6: warning: symbol 'imx8_dsp_handle_reply' was not declared. Should it be static?
+sound/soc/sof/imx/imx8.c:115:6: warning: symbol 'imx8_dsp_handle_request' was not declared. Should it be static?
+sound/soc/sof/imx/imx8.c:336:5: warning: symbol 'imx8_get_bar_index' was not declared. Should it be static?
+sound/soc/sof/imx/imx8.c:341:6: warning: symbol 'imx8_ipc_msg_data' was not declared. Should it be static?
+sound/soc/sof/imx/imx8.c:348:5: warning: symbol 'imx8_ipc_pcm_params' was not declared. Should it be static?
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/sof/imx/imx8.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 325c6fd..2ded61d 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -139,6 +139,7 @@ properties:
-         items:
-           - enum:
-               - hardkernel,odroid-n2
-+              - ugoos,am6
-           - const: amlogic,g12b
+diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+index e502f58..6404724 100644
+--- a/sound/soc/sof/imx/imx8.c
++++ b/sound/soc/sof/imx/imx8.c
+@@ -101,7 +101,7 @@ static int imx8_get_window_offset(struct snd_sof_dev *sdev, u32 id)
+ 	return MBOX_OFFSET;
+ }
  
- ...
+-void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
++static void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
+ {
+ 	struct imx8_priv *priv = imx_dsp_get_data(ipc);
+ 	unsigned long flags;
+@@ -112,7 +112,7 @@ void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
+ 	spin_unlock_irqrestore(&priv->sdev->ipc_lock, flags);
+ }
+ 
+-void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
++static void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
+ {
+ 	struct imx8_priv *priv = imx_dsp_get_data(ipc);
+ 
+@@ -333,21 +333,21 @@ static int imx8_remove(struct snd_sof_dev *sdev)
+ }
+ 
+ /* on i.MX8 there is 1 to 1 match between type and BAR idx */
+-int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
++static int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
+ {
+ 	return type;
+ }
+ 
+-void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
+-		       struct snd_pcm_substream *substream,
+-		       void *p, size_t sz)
++static void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
++			      struct snd_pcm_substream *substream,
++			      void *p, size_t sz)
+ {
+ 	sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
+ }
+ 
+-int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
+-			struct snd_pcm_substream *substream,
+-			const struct sof_ipc_pcm_params_reply *reply)
++static int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
++			       struct snd_pcm_substream *substream,
++			       const struct sof_ipc_pcm_params_reply *reply)
+ {
+ 	return 0;
+ }
 -- 
 2.7.4
+
 
