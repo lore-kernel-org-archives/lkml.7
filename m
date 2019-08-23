@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E54C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75678C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5154233A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB6C233A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566572077;
-	bh=jTAvGbrIK7woCiAoMenaLUv5khtvsQODuJCy3dMwJ9w=;
+	s=default; t=1566572082;
+	bh=nkFSF4OdOPKE92SyyY1opddYzqI9ZCG7QHMbp2W9PuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPiIlvFf9UGXGkD/d6yEtLJeEWL/L+uais4pRH5D2ekgJUIo2pXeKV7mEt0O0LJP9
-	 ISf/mhPjq9X29GTGEobC9AnNogTKdOPYDhAZsmSF0xBxV8m3yK3s8f0Z2VEbJ3JlUZ
-	 PHcyTDTXJXK7PjaUZzMOQPbgj6g7ocvRVBmv2CaM=
+	b=QnOSlIAMerBuc28PPNTj9VCJsuRqrmDaUUc2ELBlfOWhgC1k/jhhoRZnaHfp7rVpW
+	 X+V8arcMAERe8L3ysCe+QQ7+0iMpJGplcPPy4eNA+rlUytqGiszBeYiNJ7wHn3vuC/
+	 SqhuGBklApWzI/Q9rezVQoIkB6Xpv9c0JUhqXNPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395483AbfHWOyf (ORCPT
+        id S2395496AbfHWOyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35432 "EHLO mail.kernel.org"
+        Fri, 23 Aug 2019 10:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731256AbfHWOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:54:31 -0400
+        id S1731256AbfHWOyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:54:36 -0400
 Received: from localhost.localdomain (unknown [194.230.147.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1037E22CEC;
-        Fri, 23 Aug 2019 14:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD6C02339D;
+        Fri, 23 Aug 2019 14:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566572070;
-        bh=jTAvGbrIK7woCiAoMenaLUv5khtvsQODuJCy3dMwJ9w=;
+        s=default; t=1566572075;
+        bh=nkFSF4OdOPKE92SyyY1opddYzqI9ZCG7QHMbp2W9PuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iRf881yAjVE0zeNA2qSnKLZgBcDtbdT4tEenaTy2u/MXhAAOs86cHIlma5ZdPkfAU
-         SAPZeWeIhZCQ99TWrCqfg8h3bjmt1ac2NxZ9bJ4U2raY9g996sFA0zVc9PCSiJMRLg
-         moxpGG/hU/a9YYx6mYd+WlYfV/D/tqrc1Ynr+qQA=
+        b=AnoRE8VnwWjru6srM3QiLQcSfz+FzGuu+q6QqI1T8dGTLA8Dy353T1Tx/mip+dWb6
+         JDVD0z7NHFRVIQGfI6O3I+L17VOQ026wU8kLa5xUdfADyEZwoHMf0F7hjYHsu+nj6I
+         ZJshruDGEcDdKTBiDO15su6xCHEvSQT/80GiwStM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -57,9 +57,9 @@ Cc:     notify@kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Olof Johansson <olof@lixom.net>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [RFC 2/9] dt-bindings: arm: samsung: Document missing S5Pv210 boards bindings
-Date:   Fri, 23 Aug 2019 16:53:49 +0200
-Message-Id: <20190823145356.6341-2-krzk@kernel.org>
+Subject: [RFC 3/9] dt-bindings: arm: samsung: Document missing Exynos7 boards bindings
+Date:   Fri, 23 Aug 2019 16:53:50 +0200
+Message-Id: <20190823145356.6341-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190823145356.6341-1-krzk@kernel.org>
 References: <20190823145356.6341-1-krzk@kernel.org>
@@ -68,34 +68,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing documentation of Samsung S5Pv210 SoC based boards bindings.
+Add missing documentation of ARMv8 Samsung Exynos7 SoC based boards
+bindings.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../bindings/arm/samsung/samsung-boards.yaml           | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-index e963fd70c436..f8da3b5fb374 100644
+index f8da3b5fb374..c640191c5d73 100644
 --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
 +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-@@ -14,6 +14,16 @@ properties:
-     const: '/'
-   compatible:
-     oneOf:
-+      - description: S5PV210 based boards
+@@ -174,6 +174,12 @@ properties:
+               - samsung,tm2e                    # Samsung TM2E
+           - const: samsung,exynos5433
+ 
++      - description: Exynos7 based boards
 +        items:
 +          - enum:
-+              - aesop,torbreck                  # aESOP Torbreck based on S5PV210
-+              - samsung,aquila                  # Samsung Aquila based on S5PC110
-+              - samsung,goni                    # Samsung Goni based on S5PC110
-+              - yic,smdkc110                    # YIC System SMDKC110 based on S5PC110
-+              - yic,smdkv210                    # YIC System SMDKV210 based on S5PV210
-+          - const: samsung,s5pv210
++              - samsung,exynos7-espresso        # Samsung Exynos7 Espresso
++          - const: samsung,exynos7
 +
-       - description: S5PV210 based Aries boards
-         items:
-           - enum:
+   firmware:
+     type: object
+     description:
 -- 
 2.17.1
 
