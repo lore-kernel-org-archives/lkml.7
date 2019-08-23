@@ -2,200 +2,266 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACE4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4FDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EC621874
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4441E23401
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 18:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aLqCki7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390805AbfHWSnx (ORCPT
+        id S2390883AbfHWS4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 14:43:53 -0400
-Received: from barracuda.ghs.com ([209.234.187.110]:47354 "EHLO fang.ghs.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390543AbfHWSnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 14:43:50 -0400
-X-ASG-Debug-ID: 1566584920-05da2076ed0d380001-xx1T2L
-Received: from allegro.ghs.com (allegro.ghs.com [192.168.64.231]) by fang.ghs.com with ESMTP id ORpSPgiibEgFAqfT; Fri, 23 Aug 2019 11:28:40 -0700 (PDT)
-X-Barracuda-Envelope-From: tmontague@ghs.com
-X-Barracuda-RBL-Trusted-Forwarder: 192.168.64.231
-Received: from exchange.ghs.com (exsvr1.ghs.com [192.168.64.21])
-        by allegro.ghs.com (Postfix) with ESMTP id 79EDE70A196;
-        Fri, 23 Aug 2019 11:28:40 -0700 (PDT)
-Received: from exsvr1.ghs.com (192.168.64.21) by exsvr1.ghs.com
- (192.168.64.21) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 23 Aug
- 2019 11:28:40 -0700
-X-Barracuda-RBL-IP: 192.168.64.21
-Received: from exsvr1.ghs.com ([fe80::2884:25b7:cffb:9557]) by exsvr1.ghs.com
- ([fe80::2884:25b7:cffb:9557%12]) with mapi id 15.00.1497.000; Fri, 23 Aug
- 2019 11:28:40 -0700
-From:   Tim Montague <tmontague@ghs.com>
-To:     Stefano Stabellini <stefano.stabellini@eu.citrix.com>,
-        Mike Galbraith <efault@gmx.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: VIRT-6865: Merge PARAVIRT_TIME_ACCOUNTING support
-Thread-Topic: VIRT-6865: Merge PARAVIRT_TIME_ACCOUNTING support
-X-ASG-Orig-Subj: RE: VIRT-6865: Merge PARAVIRT_TIME_ACCOUNTING support
-Thread-Index: AQHVWeBbwI4wJU2Qs0mrNElDFwKEqKcJDUlg
-Date:   Fri, 23 Aug 2019 18:28:39 +0000
-Message-ID: <c250f8977ca2465a8816ba656666c3a8@exsvr1.ghs.com>
-References: <20190823182702.24518-1-tmontague@ghs.com>
-In-Reply-To: <20190823182702.24518-1-tmontague@ghs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.64.30]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 23 Aug 2019 14:56:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43963 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732467AbfHWS4Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 14:56:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v12so7021561pfn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 11:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s/+aPLXaaGZm0z/f+opsuLonUw7MdHLn7J6CRhMZwFI=;
+        b=aLqCki7OFRYb/zbxlgpGpa4MLZg24uOYeXo+bf759ur8hv1j2TRWPaLstl3a5bk10n
+         k9gZHsbj7RxEFvNm/UBw4x6AHMOqoIf/ZGCxlxIps6H1nGB4dHIYzRm+iwSZsHo9cyep
+         NQSVwGP5NR+YSOXJmM805vzb7tKcZoohUkGLv2BSmjPrKeneCaMQK2eneKbObMLvTYkP
+         lUd9iMs9dZblf94k6Ei365fYzU3AUwiPyeM1OqmPPs95PxMEymqhlGu1BcqjfCV5P0OP
+         qkLQ4DDcSRoXYkgDNbUMDsSyuoKrdlN3EVmPRXJtcw1zjcwJLDnJgdEsctFaR5HmJxC5
+         nJLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s/+aPLXaaGZm0z/f+opsuLonUw7MdHLn7J6CRhMZwFI=;
+        b=NpnS6ebp7B5nPGM0QinGG4C8V2zpMiITKlNGtfa4rTVzwWQqch20b8YaSsGabHhG2V
+         ze0qofEJXZBB8j7sa2A9EorBIl6lxwcXRcRixCh22Bu1tJvmnJI/MybSJdtP2ARqUtcG
+         PTvnMpO3bfKjkF5Eca3/4jATFOw72wNP8UG4OMt0rWB05+VupzCLQTihmcb0W/1qH6dU
+         +Ibqk8+3s/ofXFPuPx7ak1rdg5F65wUvasabNzRAjDIbvU1IahSbqHbMT/cERwyIXIgw
+         bjNIyVXA7I7/ebeNgAWKZ24+SsmKsHHRnt6c0ueE442rSQZ6j+lUVDEMsk637uNSO132
+         fo6g==
+X-Gm-Message-State: APjAAAWSLcJAVwwouw3DmiVyBqf15dtz30L76+nDhMSGOtjExbfaFDDO
+        v0YDr2O9VfHUdPVyzl997JV8g206MmStvKZHJsb+gw==
+X-Google-Smtp-Source: APXvYqwVWo6KNiW0mQ1ETfauvPQKOgX6Abfum/nAPgc5t6Yzc0edHSPUqib3OQFJdFu2HNr4tJqGaSMlXFS9ixOmggs=
+X-Received: by 2002:a17:90a:25ea:: with SMTP id k97mr6804556pje.131.1566586575337;
+ Fri, 23 Aug 2019 11:56:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Barracuda-Connect: allegro.ghs.com[192.168.64.231]
-X-Barracuda-Start-Time: 1566584920
-X-Barracuda-URL: https://192.168.64.230:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at ghs.com
-X-Barracuda-Scan-Msg-Size: 7125
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 0.50
-X-Barracuda-Spam-Status: No, SCORE=0.50 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_RULE7568M
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.75649
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-        0.50 BSF_RULE7568M          Custom Rule 7568M
+References: <20190820232046.50175-1-brendanhiggins@google.com>
+ <20190820232046.50175-2-brendanhiggins@google.com> <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+ <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
+ <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org> <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
+ <42c6235c-c586-8de1-1913-7cf1962c6066@kernel.org> <CAFd5g44hLgeqPtNw1zQ5k_+apBm=ri_6=wAgHk=oPOvQs6xgNg@mail.gmail.com>
+ <54f3c011-d666-e828-5e77-359b7a7374e7@kernel.org>
+In-Reply-To: <54f3c011-d666-e828-5e77-359b7a7374e7@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 23 Aug 2019 11:56:03 -0700
+Message-ID: <CAFd5g44NAs6KK0_sG9itgT5qxujpyx36XV6tT8=zMynG-ZyVhQ@mail.gmail.com>
+Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
+To:     shuah <shuah@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGxlYXNlIGlnbm9yZSENCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBU
-aW0gTW9udGFndWUgW21haWx0bzp0bW9udGFndWVAZ2hzLmNvbV0NCj4gU2VudDogRnJpZGF5LCBB
-dWd1c3QgMjMsIDIwMTkgMTE6MjcgQU0NCj4gVG86IENoYWQgUGFnZSA8Y2hhZC5wYWdlQGdocy5j
-b20+DQo+IENjOiBydG9zLWNvZGUtcmV2aWV3QGdocy5jb207IFN0ZWZhbm8gU3RhYmVsbGluaQ0K
-PiA8c3RlZmFuby5zdGFiZWxsaW5pQGV1LmNpdHJpeC5jb20+OyBNaWtlIEdhbGJyYWl0aCA8ZWZh
-dWx0QGdteC5kZT47IFBldGVyDQo+IFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz47IFRo
-b21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsNCj4gbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgVGltIE1vbnRhZ3VlIDx0bW9udGFndWVAZ2hzLmNvbT4NCj4gU3ViamVjdDog
-VklSVC02ODY1OiBNZXJnZSBQQVJBVklSVF9USU1FX0FDQ09VTlRJTkcgc3VwcG9ydA0KPiANCj4g
-RnJvbTogU3RlZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vLnN0YWJlbGxpbmlAZXUuY2l0cml4LmNv
-bT4NCj4gDQo+IFRoaXMgaXMgZm9yIHRoZSBxdWFsY29tbS1ic3AtZ2hzXzh4OTZhdXRvZ3ZtcXVp
-bjQ0X2Q3IGJyYW5jaC4NCj4gDQo+IE15IGNoZWNrb3V0IHdpdGggdGhpcyBjaGFuZ2UgaXMgaGVy
-ZToNCj4gL2hvbWUvY2F0L3Rtb250YWd1ZS9saW51eC1rZXJuZWxzL3F1YWxjb21tLWJzcC1naHMN
-Cj4gRmVlbCBmcmVlIHRvIHBva2UgYXJvdW5kLg0KPiANCj4gDQo+IENvbW1pdCBtZXNzYWdlOg0K
-PiANCj4gVGhpcyBpcyBhIGNvbWJpbmF0aW9uIG9mIDIgY29tbWl0czoNCj4gDQo+IGNvbW1pdCAz
-ZjhmM2ZjZDkyZDRjOWZkY2JmMjdlYWIzOTMyOWMwNjc1MjFjZjZhDQo+ICBBdXRob3I6IFN0ZWZh
-bm8gU3RhYmVsbGluaSA8c3RlZmFuby5zdGFiZWxsaW5pQGV1LmNpdHJpeC5jb20+DQo+ICBEYXRl
-OiAgIE1vbiBOb3YgMjMgMTA6MzM6NDkgMjAxNSArMDAwMA0KPiAtLS0NCj4gYXJtNjQ6IGludHJv
-ZHVjZSBDT05GSUdfUEFSQVZJUlQsIFBBUkFWSVJUX1RJTUVfQUNDT1VOVElORyBhbmQNCj4gcHZf
-dGltZV9vcHMNCj4gDQo+IEludHJvZHVjZSBDT05GSUdfUEFSQVZJUlQgYW5kIFBBUkFWSVJUX1RJ
-TUVfQUNDT1VOVElORyBvbiBBUk02NC4NCj4gTmVjZXNzYXJ5IGR1cGxpY2F0aW9uIG9mIHBhcmF2
-aXJ0LmggYW5kIHBhcmF2aXJ0LmMgd2l0aCBBUk0uDQo+IA0KPiBUaGUgb25seSBwYXJhdmlydCBp
-bnRlcmZhY2Ugc3VwcG9ydGVkIGlzIHB2X3RpbWVfb3BzLnN0ZWFsX2Nsb2NrLCBzbyBubw0KPiBy
-dW50aW1lIHB2b3BzIHBhdGNoaW5nIG5lZWRlZC4NCj4gDQo+IFRoaXMgYWxsb3dzIHVzIHRvIG1h
-a2UgdXNlIG9mIHN0ZWFsX2FjY291bnRfcHJvY2Vzc190aWNrIGZvciBzdG9sZW4NCj4gdGlja3Mg
-YWNjb3VudGluZy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3Rl
-ZmFuby5zdGFiZWxsaW5pQGV1LmNpdHJpeC5jb20+DQo+IEFja2VkLWJ5OiBNYXJjIFp5bmdpZXIg
-PG1hcmMuenluZ2llckBhcm0uY29tPg0KPiAtLS0NCj4gDQo+IGNvbW1pdCA2OTJhZmI3ZmU2YzMx
-MmJjZmIzZTc3OTEzZDFlZmEwY2RlZGVjNWJlDQo+ICBBdXRob3I6IEluZ28gTW9sbmFyIDxtaW5n
-b0BrZXJuZWwub3JnPg0KPiAgRGF0ZTogICBUaHUgRmViIDIgMTQ6NDc6MjcgMjAxNyArMDEwMA0K
-PiAtLS0NCj4gc2NoZWQvaGVhZGVyczogUHJlcGFyZSBoZWFkZXIgZGVwZW5kZW5jeSBjaGFuZ2Vz
-LCBtb3ZlIHRoZQ0KPiA8YXNtL3BhcmF2aXJ0Lmg+IGluY2x1ZGUgdG8ga2VybmVsL3NjaGVkL3Nj
-aGVkLmgNCj4gDQo+IFJlY2VudCBoZWFkZXIgcmVvcmdhbml6YXRpb25zIHVuZWFydGhlZCB0aGlz
-IGhpZGRlbiBkZXBlbmRlbmN5Og0KPiANCj4gICBrZXJuZWwvc2NoZWQvY29yZS5jOjE5OToyNTog
-ZXJyb3I6ICdwYXJhdmlydF9zdGVhbF9ycV9lbmFibGVkJyB1bmRlY2xhcmVkDQo+IChmaXJzdCB1
-c2UgaW4gdGhpcyBmdW5jdGlvbikNCj4gICBrZXJuZWwvc2NoZWQvY29yZS5jOjIwMDoxMTogZXJy
-b3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uDQo+ICdwYXJhdmlydF9zdGVhbF9j
-bG9jaycgWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dDQo+IA0KPiBTbyBt
-b3ZlIHRoZSBhc20vcGFyYXZpcnQuaCBpbmNsdWRlIGZyb20ga2VybmVsL3NjaGVkL2NwdWNsb2Nr
-LmMgdG8NCj4ga2VybmVsL3NjaGVkL3NjaGVkLmguDQo+IA0KPiAoIE5PVEU6IFdlIGRvIHRoaXMg
-Y2hhbmdlIGJlZm9yZSBkb2luZyB0aGUgY2hhbmdlcyB0aGF0IGludHJvZHVjZSB0aGUgYnVpbGQN
-Cj4gZmFpbHVyZSwNCj4gICAgICAgICBzbyB0aGUgc2VyaWVzIHJlbWFpbnMgZnVsbHkgYmlzZWN0
-YWJsZS4gKQ0KPiANCj4gUmVwb3J0ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxmZW5nZ3Vhbmcu
-d3VAaW50ZWwuY29tPg0KPiBBY2tlZC1ieTogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4
-LWZvdW5kYXRpb24ub3JnPg0KPiBDYzogTWlrZSBHYWxicmFpdGggPGVmYXVsdEBnbXguZGU+DQo+
-IENjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+IENjOiBUaG9tYXMg
-R2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogSW5nbyBNb2xuYXIgPG1pbmdvQGtlcm5lbC5vcmc+
-DQo+IC0tLQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogVGltIE1vbnRhZ3VlIDx0bW9udGFndWVAZ2hz
-LmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FybTY0L0tjb25maWcgICAgICAgICAgICAgICAgfCAyMCAr
-KysrKysrKysrKysrKysrKysrKw0KPiAgYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9wYXJhdmlydC5o
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysNCj4gIGFyY2gvYXJtNjQva2VybmVsL3BhcmF2aXJ0
-LmMgICAgICB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIGtlcm5lbC9zY2hlZC9j
-cHV0aW1lLmMgICAgICAgICAgICB8ICAxIC0NCj4gIGtlcm5lbC9zY2hlZC9zY2hlZC5oICAgICAg
-ICAgICAgICB8ICA0ICsrKysNCj4gIDUgZmlsZXMgY2hhbmdlZCwgNjkgaW5zZXJ0aW9ucygrKSwg
-MSBkZWxldGlvbigtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvaW5jbHVkZS9h
-c20vcGFyYXZpcnQuaA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQva2VybmVsL3Bh
-cmF2aXJ0LmMNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L0tjb25maWcgYi9hcmNoL2Fy
-bTY0L0tjb25maWcNCj4gaW5kZXggMDU2N2UyMTIxYmM5Li4zOTg0ZmJiMTBiOWIgMTAwNjQ0DQo+
-IC0tLSBhL2FyY2gvYXJtNjQvS2NvbmZpZw0KPiArKysgYi9hcmNoL2FybTY0L0tjb25maWcNCj4g
-QEAgLTc3NCw2ICs3NzQsMjUgQEAgY29uZmlnIFNFQ0NPTVANCj4gIAkgIGFuZCB0aGUgdGFzayBp
-cyBvbmx5IGFsbG93ZWQgdG8gZXhlY3V0ZSBhIGZldyBzYWZlIHN5c2NhbGxzDQo+ICAJICBkZWZp
-bmVkIGJ5IGVhY2ggc2VjY29tcCBtb2RlLg0KPiANCj4gK2NvbmZpZyBQQVJBVklSVA0KPiArCWJv
-b2wgIkVuYWJsZSBwYXJhdmlydHVhbGl6YXRpb24gY29kZSINCj4gKwloZWxwDQo+ICsJICBUaGlz
-IGNoYW5nZXMgdGhlIGtlcm5lbCBzbyBpdCBjYW4gbW9kaWZ5IGl0c2VsZiB3aGVuIGl0IGlzIHJ1
-bg0KPiArCSAgdW5kZXIgYSBoeXBlcnZpc29yLCBwb3RlbnRpYWxseSBpbXByb3ZpbmcgcGVyZm9y
-bWFuY2Ugc2lnbmlmaWNhbnRseQ0KPiArCSAgb3ZlciBmdWxsIHZpcnR1YWxpemF0aW9uLg0KPiAr
-DQo+ICtjb25maWcgUEFSQVZJUlRfVElNRV9BQ0NPVU5USU5HDQo+ICsJYm9vbCAiUGFyYXZpcnR1
-YWwgc3RlYWwgdGltZSBhY2NvdW50aW5nIg0KPiArCXNlbGVjdCBQQVJBVklSVA0KPiArCWRlZmF1
-bHQgbg0KPiArCWhlbHANCj4gKwkgIFNlbGVjdCB0aGlzIG9wdGlvbiB0byBlbmFibGUgZmluZSBn
-cmFudWxhcml0eSB0YXNrIHN0ZWFsIHRpbWUNCj4gKwkgIGFjY291bnRpbmcuIFRpbWUgc3BlbnQg
-ZXhlY3V0aW5nIG90aGVyIHRhc2tzIGluIHBhcmFsbGVsIHdpdGgNCj4gKwkgIHRoZSBjdXJyZW50
-IHZDUFUgaXMgZGlzY291bnRlZCBmcm9tIHRoZSB2Q1BVIHBvd2VyLiBUbyBhY2NvdW50IGZvcg0K
-PiArCSAgdGhhdCwgdGhlcmUgY2FuIGJlIGEgc21hbGwgcGVyZm9ybWFuY2UgaW1wYWN0Lg0KPiAr
-DQo+ICsJICBJZiBpbiBkb3VidCwgc2F5IE4gaGVyZS4NCj4gKw0KPiAgY29uZmlnIFhFTl9ET00w
-DQo+ICAJZGVmX2Jvb2wgeQ0KPiAgCWRlcGVuZHMgb24gWEVODQo+IEBAIC03ODIsNiArODAxLDcg
-QEAgY29uZmlnIFhFTg0KPiAgCWJvb2wgIlhlbiBndWVzdCBzdXBwb3J0IG9uIEFSTTY0Ig0KPiAg
-CWRlcGVuZHMgb24gQVJNNjQgJiYgT0YNCj4gIAlzZWxlY3QgU1dJT1RMQl9YRU4NCj4gKwlzZWxl
-Y3QgUEFSQVZJUlQNCj4gIAloZWxwDQo+ICAJICBTYXkgWSBpZiB5b3Ugd2FudCB0byBydW4gTGlu
-dXggaW4gYSBWaXJ0dWFsIE1hY2hpbmUgb24gWGVuIG9uDQo+IEFSTTY0Lg0KPiANCj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvaW5jbHVkZS9hc20vcGFyYXZpcnQuaA0KPiBiL2FyY2gvYXJtNjQv
-aW5jbHVkZS9hc20vcGFyYXZpcnQuaA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAw
-MDAwMDAwMDAwMDAuLmZkNWY0Mjg4NjI1MQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2FyY2gv
-YXJtNjQvaW5jbHVkZS9hc20vcGFyYXZpcnQuaA0KPiBAQCAtMCwwICsxLDIwIEBADQo+ICsjaWZu
-ZGVmIF9BU01fQVJNNjRfUEFSQVZJUlRfSA0KPiArI2RlZmluZSBfQVNNX0FSTTY0X1BBUkFWSVJU
-X0gNCj4gKw0KPiArI2lmZGVmIENPTkZJR19QQVJBVklSVA0KPiArc3RydWN0IHN0YXRpY19rZXk7
-DQo+ICtleHRlcm4gc3RydWN0IHN0YXRpY19rZXkgcGFyYXZpcnRfc3RlYWxfZW5hYmxlZDsNCj4g
-K2V4dGVybiBzdHJ1Y3Qgc3RhdGljX2tleSBwYXJhdmlydF9zdGVhbF9ycV9lbmFibGVkOw0KPiAr
-DQo+ICtzdHJ1Y3QgcHZfdGltZV9vcHMgew0KPiArCXVuc2lnbmVkIGxvbmcgbG9uZyAoKnN0ZWFs
-X2Nsb2NrKShpbnQgY3B1KTsNCj4gK307DQo+ICtleHRlcm4gc3RydWN0IHB2X3RpbWVfb3BzIHB2
-X3RpbWVfb3BzOw0KPiArDQo+ICtzdGF0aWMgaW5saW5lIHU2NCBwYXJhdmlydF9zdGVhbF9jbG9j
-ayhpbnQgY3B1KQ0KPiArew0KPiArCXJldHVybiBwdl90aW1lX29wcy5zdGVhbF9jbG9jayhjcHUp
-Ow0KPiArfQ0KPiArI2VuZGlmDQo+ICsNCj4gKyNlbmRpZg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm02NC9rZXJuZWwvcGFyYXZpcnQuYyBiL2FyY2gvYXJtNjQva2VybmVsL3BhcmF2aXJ0LmMNCj4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi41M2YzNzFlZDQ1NjgN
-Cj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9hcmNoL2FybTY0L2tlcm5lbC9wYXJhdmlydC5jDQo+
-IEBAIC0wLDAgKzEsMjUgQEANCj4gKy8qDQo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0
-d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQ0KPiArICogaXQgdW5k
-ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIg
-YXMNCj4gKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiAr
-ICoNCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0
-IHdpbGwgYmUgdXNlZnVsLA0KPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0
-IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YNCj4gKyAqIE1FUkNIQU5UQUJJTElUWSBvciBG
-SVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUNCj4gKyAqIEdOVSBHZW5l
-cmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQo+ICsgKg0KPiArICogQ29weXJp
-Z2h0IChDKSAyMDEzIENpdHJpeCBTeXN0ZW1zDQo+ICsgKg0KPiArICogQXV0aG9yOiBTdGVmYW5v
-IFN0YWJlbGxpbmkgPHN0ZWZhbm8uc3RhYmVsbGluaUBldS5jaXRyaXguY29tPg0KPiArICovDQo+
-ICsNCj4gKyNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9qdW1w
-X2xhYmVsLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvdHlwZXMuaD4NCj4gKyNpbmNsdWRlIDxhc20v
-cGFyYXZpcnQuaD4NCj4gKw0KPiArc3RydWN0IHN0YXRpY19rZXkgcGFyYXZpcnRfc3RlYWxfZW5h
-YmxlZDsNCj4gK3N0cnVjdCBzdGF0aWNfa2V5IHBhcmF2aXJ0X3N0ZWFsX3JxX2VuYWJsZWQ7DQo+
-ICsNCj4gK3N0cnVjdCBwdl90aW1lX29wcyBwdl90aW1lX29wczsNCj4gK0VYUE9SVF9TWU1CT0xf
-R1BMKHB2X3RpbWVfb3BzKTsNCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9zY2hlZC9jcHV0aW1lLmMg
-Yi9rZXJuZWwvc2NoZWQvY3B1dGltZS5jDQo+IGluZGV4IGJkNGVmMmJiNTUxZS4uMDFjMmYyMjVk
-MGIwIDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvc2NoZWQvY3B1dGltZS5jDQo+ICsrKyBiL2tlcm5l
-bC9zY2hlZC9jcHV0aW1lLmMNCj4gQEAgLTcsNyArNyw2IEBADQo+ICAjaW5jbHVkZSA8bGludXgv
-Y3B1ZnJlcV90aW1lcy5oPg0KPiAgI2luY2x1ZGUgInNjaGVkLmgiDQo+IA0KPiAtDQo+ICAjaWZk
-ZWYgQ09ORklHX0lSUV9USU1FX0FDQ09VTlRJTkcNCj4gDQo+ICAvKg0KPiBkaWZmIC0tZ2l0IGEv
-a2VybmVsL3NjaGVkL3NjaGVkLmggYi9rZXJuZWwvc2NoZWQvc2NoZWQuaA0KPiBpbmRleCBiNmNk
-MTI5OThmMTYuLmIyODQzZjU4NDAyOSAxMDA2NDQNCj4gLS0tIGEva2VybmVsL3NjaGVkL3NjaGVk
-LmgNCj4gKysrIGIva2VybmVsL3NjaGVkL3NjaGVkLmgNCj4gQEAgLTEwLDYgKzEwLDEwIEBADQo+
-ICAjaW5jbHVkZSA8bGludXgvdGljay5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4g
-DQo+ICsjaWZkZWYgQ09ORklHX1BBUkFWSVJUDQo+ICsjaW5jbHVkZSA8YXNtL3BhcmF2aXJ0Lmg+
-DQo+ICsjZW5kaWYNCj4gKw0KPiAgI2luY2x1ZGUgImNwdXByaS5oIg0KPiAgI2luY2x1ZGUgImNw
-dWRlYWRsaW5lLmgiDQo+ICAjaW5jbHVkZSAiY3B1YWNjdC5oIg0KPiAtLQ0KPiAyLjE3LjENCg0K
+On Fri, Aug 23, 2019 at 11:32 AM shuah <shuah@kernel.org> wrote:
+>
+> On 8/23/19 11:54 AM, Brendan Higgins wrote:
+> > On Fri, Aug 23, 2019 at 10:34 AM shuah <shuah@kernel.org> wrote:
+> >>
+> >> On 8/23/19 11:27 AM, Brendan Higgins wrote:
+> >>> On Fri, Aug 23, 2019 at 10:05 AM shuah <shuah@kernel.org> wrote:
+> >>>>
+> >>>> On 8/23/19 10:48 AM, Brendan Higgins wrote:
+> >>>>> On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
+> >>>>>>
+> >>>>>> Hi Brendan,
+> >>>>>>
+> >>>>>> On 8/20/19 5:20 PM, Brendan Higgins wrote:
+> >>>>>>> Add core facilities for defining unit tests; this provides a common way
+> >>>>>>> to define test cases, functions that execute code which is under test
+> >>>>>>> and determine whether the code under test behaves as expected; this also
+> >>>>>>> provides a way to group together related test cases in test suites (here
+> >>>>>>> we call them test_modules).
+> >>>>>>>
+> >>>>>>> Just define test cases and how to execute them for now; setting
+> >>>>>>> expectations on code will be defined later.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> >>>>>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>>>>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> >>>>>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> >>>>>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> >>>>>>> ---
+> >>>>>>>      include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
+> >>>>>>>      kunit/Kconfig        |  17 ++++
+> >>>>>>>      kunit/Makefile       |   1 +
+> >>>>>>>      kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
+> >>>>>>>      4 files changed, 388 insertions(+)
+> >>>>>>>      create mode 100644 include/kunit/test.h
+> >>>>>>>      create mode 100644 kunit/Kconfig
+> >>>>>>>      create mode 100644 kunit/Makefile
+> >>>>>>>      create mode 100644 kunit/test.c
+> >>>>>>>
+> >>>>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> >>>>>>> new file mode 100644
+> >>>>>>> index 0000000000000..e0b34acb9ee4e
+> >>>>>>> --- /dev/null
+> >>>>>>> +++ b/include/kunit/test.h
+> >>>>>>> @@ -0,0 +1,179 @@
+> >>>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>>>>>> +/*
+> >>>>>>> + * Base unit test (KUnit) API.
+> >>>>>>> + *
+> >>>>>>> + * Copyright (C) 2019, Google LLC.
+> >>>>>>> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> >>>>>>> + */
+> >>>>>>> +
+> >>>>>>> +#ifndef _KUNIT_TEST_H
+> >>>>>>> +#define _KUNIT_TEST_H
+> >>>>>>> +
+> >>>>>>> +#include <linux/types.h>
+> >>>>>>> +
+> >>>>>>> +struct kunit;
+> >>>>>>> +
+> >>>>>>> +/**
+> >>>>>>> + * struct kunit_case - represents an individual test case.
+> >>>>>>> + * @run_case: the function representing the actual test case.
+> >>>>>>> + * @name: the name of the test case.
+> >>>>>>> + *
+> >>>>>>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
+> >>>>>>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
+> >>>>>>> + * test case is associated with a &struct kunit_suite and will be run after the
+> >>>>>>> + * suite's init function and followed by the suite's exit function.
+> >>>>>>> + *
+> >>>>>>> + * A test case should be static and should only be created with the KUNIT_CASE()
+> >>>>>>> + * macro; additionally, every array of test cases should be terminated with an
+> >>>>>>> + * empty test case.
+> >>>>>>> + *
+> >>>>>>> + * Example:
+> >>>>>>
+> >>>>>> Can you fix these line continuations. It makes it very hard to read.
+> >>>>>> Sorry for this late comment. These comments lines are longer than 80
+> >>>>>> and wrap.
+> >>>>>
+> >>>>> None of the lines in this commit are over 80 characters in column
+> >>>>> width. Some are exactly 80 characters (like above).
+> >>>>>
+> >>>>> My guess is that you are seeing the diff added text (+ ), which when
+> >>>>> you add that to a line which is exactly 80 char in length ends up
+> >>>>> being over 80 char in email. If you apply the patch you will see that
+> >>>>> they are only 80 chars.
+> >>>>>
+> >>>>>>
+> >>>>>> There are several comment lines in the file that are way too long.
+> >>>>>
+> >>>>> Note that checkpatch also does not complain about any over 80 char
+> >>>>> lines in this file.
+> >>>>>
+> >>>>> Sorry if I am misunderstanding what you are trying to tell me. Please
+> >>>>> confirm either way.
+> >>>>>
+> >>>>
+> >>>> WARNING: Avoid unnecessary line continuations
+> >>>> #258: FILE: include/kunit/test.h:137:
+> >>>> +                */                                                            \
+> >>>>
+> >>>> total: 0 errors, 2 warnings, 388 lines checked
+> >>>
+> >>> Ah, okay so you don't like the warning about the line continuation.
+> >>> That's not because it is over 80 char, but because there is a line
+> >>> continuation after a comment. I don't really see a way to get rid of
+> >>> it without removing the comment from inside the macro.
+> >>>
+> >>> I put this TODO there in the first place a Luis' request, and I put it
+> >>> in the body of the macro because this macro already had a kernel-doc
+> >>> comment and I didn't think that an implementation detail TODO belonged
+> >>> in the user documentation.
+> >>>
+> >>>> Go ahead fix these. It appears there are few lines that either longer
+> >>>> than 80. In general, I keep them around 75, so it is easier read.
+> >>>
+> >>> Sorry, the above is the only checkpatch warning other than the
+> >>> reminder to update the MAINTAINERS file.
+> >>>
+> >>> Are you saying you want me to go through and make all the lines fit in
+> >>> 75 char column width? I hope not because that is going to be a pretty
+> >>> substantial change to make.
+> >>>
+> >>
+> >> There are two things with these comment lines. One is checkpatch
+> >> complaining and the other is general readability.
+> >
+> > So for the checkpatch warning, do you want me to move the comment out
+> > of the macro body into the kernel-doc comment? I don't really think it
+> > is the right place for a comment of this nature, but I think it is
+> > probably better than dropping it entirely (I don't see how else to do
+> > it without just removing the comment entirely).
+> >
+>
+> Don't drop the comments. It makes perfect sense to turn this into a
+> kernel-doc comment.
+
+I am fine with that. I will do that in a subsequent revision once we
+figure out the column limit issue.
+
+> We are going back forth on this a lot. I see several lines 81+ in
+> this file. I am at 5.3-rc5 and my commit hooks aren't happy. I am
+> fine with it if you want to convert these to kernel-doc comments.
+> I think it makes perfect sense.
+
+Okay, so this is interesting. When I look at the applied patches in my
+local repo, I don't see any 81+ lines. So it seems that something
+interesting is going on here.
+
+To be clear (sorry for the stupid question) you are seeing the issue
+after you applied the patch, and not in the patch file itself?
+
+Since we are still at OSS, would you mind if we meet up this afternoon
+so I can see this issue you are seeing? I imagine we should get this
+figured out pretty quickly.
+
+Cheers
