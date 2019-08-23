@@ -2,95 +2,253 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352F7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405A1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CC12089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10AD52089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436921AbfHWVap (ORCPT
+        id S2436935AbfHWVbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 17:30:45 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38124 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389419AbfHWVao (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 17:30:44 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EFD181543B28D;
-        Fri, 23 Aug 2019 14:30:43 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 14:30:43 -0700 (PDT)
-Message-Id: <20190823.143043.2108633405675062512.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     dan.carpenter@oracle.com, inaky.perez-gonzalez@intel.com,
-        linux-wimax@intel.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wimax/i2400m: fix calculation of index, remove sizeof
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <300939a6-33b6-a941-1875-0f7fe610d441@canonical.com>
-References: <20190823085230.6225-1-colin.king@canonical.com>
-        <20190823112337.GB23408@kadam>
-        <300939a6-33b6-a941-1875-0f7fe610d441@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 23 Aug 2019 14:30:44 -0700 (PDT)
+        Fri, 23 Aug 2019 17:31:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57174 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436922AbfHWVbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 17:31:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 14:31:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
+   d="scan'208";a="263302315"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga001.jf.intel.com with ESMTP; 23 Aug 2019 14:31:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: VMX: Handle single-step #DB for EMULTYPE_SKIP on EPT misconfig
+Date:   Fri, 23 Aug 2019 14:31:15 -0700
+Message-Id: <20190823213115.31908-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
-Date: Fri, 23 Aug 2019 12:27:00 +0100
+VMX's EPT misconfig flow to handle fast-MMIO path falls back to decoding
+the instruction to determine the instruction length when running as a
+guest (Hyper-V doesn't fill VMCS.VM_EXIT_INSTRUCTION_LEN because it's
+technically not defined for EPT misconfigs).  Rather than implement the
+slow skip in VMX's generic skip_emulated_instruction(),
+handle_ept_misconfig() directly calls kvm_emulate_instruction() with
+EMULTYPE_SKIP, which intentionally doesn't do single-step detection, and
+so handle_ept_misconfig() misses a single-step #DB.
 
-> On 23/08/2019 12:23, Dan Carpenter wrote:
->> On Fri, Aug 23, 2019 at 09:52:30AM +0100, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> The subtraction of the two pointers is automatically scaled by the
->>> size of the size of the object the pointers point to, so the division
->>> by sizeof(*i2400m->barker) is incorrect.  Fix this by removing the
->>> division.  Also make index an unsigned int to clean up a checkpatch
->>> warning.
->>>
->>> Addresses-Coverity: ("Extra sizeof expression")
->>> Fixes: aba3792ac2d7 ("wimax/i2400m: rework bootrom initialization to be more flexible")
->>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>> ---
->>>  drivers/net/wimax/i2400m/fw.c | 3 +--
->>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/net/wimax/i2400m/fw.c b/drivers/net/wimax/i2400m/fw.c
->>> index 489cba9b284d..599a703af6eb 100644
->>> --- a/drivers/net/wimax/i2400m/fw.c
->>> +++ b/drivers/net/wimax/i2400m/fw.c
->>> @@ -399,8 +399,7 @@ int i2400m_is_boot_barker(struct i2400m *i2400m,
->>>  	 * associated with the device. */
->>>  	if (i2400m->barker
->>>  	    && !memcmp(buf, i2400m->barker, sizeof(i2400m->barker->data))) {
->>> -		unsigned index = (i2400m->barker - i2400m_barker_db)
->>> -			/ sizeof(*i2400m->barker);
->>> +		unsigned int index = i2400m->barker - i2400m_barker_db;
->>>  		d_printf(2, dev, "boot barker cache-confirmed #%u/%08x\n",
->>>  			 index, le32_to_cpu(i2400m->barker->data[0]));
->> 
->> It's only used for this debug output.  You may as well just delete it.
->> 
->>>  		return 0;
-> 
-> Deleting wrong debug code vs fixing debug code? I'd rather go for the
-> latter.
+Rework the EPT misconfig fallback case to route it through
+kvm_skip_emulated_instruction() so that single-step #DBs and interrupt
+shadow updates are handled automatically.  I.e. make VMX's slow skip
+logic match SVM's and have the SVM flow not intentionally avoid the
+shadow update.
 
-It's been wrong since day one, so it's been useful for absolutely nobody.
+Alternatively, the handle_ept_misconfig() could manually handle single-
+step detection, but that results in EMULTYPE_SKIP having split logic for
+the interrupt shadow vs. single-step #DBs, and split emulator logic is
+largely what led to this mess in the first place.
 
-This is also an ancient driver for hardware no longer in production.
+Modifying SVM to mirror VMX flow isn't really an option as SVM's case
+isn't limited to a specific exit reason, i.e. handling the slow skip in
+skip_emulated_instruction() is mandatory for all intents and purposes.
 
-Dan is right, just remove this stuff, thanks.
+Drop VMX's skip_emulated_instruction() wrapper since it can now fail,
+and instead WARN if it fails unexpectedly, e.g. if exit_reason somehow
+becomes corrupted.
+
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Fixes: d391f12070672 ("x86/kvm/vmx: do not use vm-exit instruction length for fast MMIO when running nested")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+
+*** LOOK HERE ***
+
+This patch applies on top my recent emulation cleanup[1][2] as it has
+non-trivial conflicts, dealing with those seemed like a waste of time,
+and this doesn't seem like a candidate for stable.  Let me know if you'd
+prefer it to be respun without the dependency.
+
+Sadly/ironically, this unwinds some of the logic that was recently
+added by Vitaly at my suggestion.  Hindsight is 20/20 and all that...
+
+[1] https://lkml.kernel.org/r/20190823010709.24879-1-sean.j.christopherson@intel.com
+[2] https://patchwork.kernel.org/cover/11110331/
+
+ arch/x86/kvm/svm.c     | 17 +++++++-------
+ arch/x86/kvm/vmx/vmx.c | 52 ++++++++++++++++++------------------------
+ arch/x86/kvm/x86.c     |  6 ++++-
+ 3 files changed, 36 insertions(+), 39 deletions(-)
+
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index f374f11358b7..93137d5f71f8 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -777,14 +777,15 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ 		svm->next_rip = svm->vmcb->control.next_rip;
+ 	}
+ 
+-	if (!svm->next_rip)
+-		return kvm_emulate_instruction(vcpu, EMULTYPE_SKIP);
+-
+-	if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
+-		printk(KERN_ERR "%s: ip 0x%lx next 0x%llx\n",
+-		       __func__, kvm_rip_read(vcpu), svm->next_rip);
+-
+-	kvm_rip_write(vcpu, svm->next_rip);
++	if (!svm->next_rip) {
++		if (!kvm_emulate_instruction(vcpu, EMULTYPE_SKIP))
++			return 0;
++	} else {
++		if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
++			pr_err("%s: ip 0x%lx next 0x%llx\n",
++			       __func__, kvm_rip_read(vcpu), svm->next_rip);
++		kvm_rip_write(vcpu, svm->next_rip);
++	}
+ 	svm_set_interrupt_shadow(vcpu, 0);
+ 
+ 	return 1;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 44d868c49301..4ee1572e1a7e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1472,17 +1472,27 @@ static int vmx_rtit_ctl_check(struct kvm_vcpu *vcpu, u64 data)
+ 	return 0;
+ }
+ 
+-/*
+- * Returns an int to be compatible with SVM implementation (which can fail).
+- * Do not use directly, use skip_emulated_instruction() instead.
+- */
+-static int __skip_emulated_instruction(struct kvm_vcpu *vcpu)
++static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long rip;
+ 
+-	rip = kvm_rip_read(vcpu);
+-	rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+-	kvm_rip_write(vcpu, rip);
++	/*
++	 * Using VMCS.VM_EXIT_INSTRUCTION_LEN on EPT misconfig depends on
++	 * undefined behavior: Intel's SDM doesn't mandate the VMCS field be
++	 * set when EPT misconfig occurs.  In practice, real hardware updates
++	 * VM_EXIT_INSTRUCTION_LEN on EPT misconfig, but other hypervisors
++	 * (namely Hyper-V) don't set it due to it being undefined behavior,
++	 * i.e. we end up advancing IP with some random value.
++	 */
++	if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
++	    to_vmx(vcpu)->exit_reason != EXIT_REASON_EPT_MISCONFIG) {
++		rip = kvm_rip_read(vcpu);
++		rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
++		kvm_rip_write(vcpu, rip);
++	} else {
++		if (!kvm_emulate_instruction(vcpu, EMULTYPE_SKIP))
++			return 0;
++	}
+ 
+ 	/* skipping an emulated instruction also counts */
+ 	vmx_set_interrupt_shadow(vcpu, 0);
+@@ -1490,11 +1500,6 @@ static int __skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ 	return 1;
+ }
+ 
+-static inline void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+-{
+-	(void)__skip_emulated_instruction(vcpu);
+-}
+-
+ static void vmx_clear_hlt(struct kvm_vcpu *vcpu)
+ {
+ 	/*
+@@ -4552,7 +4557,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+ 			vcpu->arch.dr6 &= ~DR_TRAP_BITS;
+ 			vcpu->arch.dr6 |= dr6 | DR6_RTM;
+ 			if (is_icebp(intr_info))
+-				skip_emulated_instruction(vcpu);
++				WARN_ON(!skip_emulated_instruction(vcpu));
+ 
+ 			kvm_queue_exception(vcpu, DB_VECTOR);
+ 			return 1;
+@@ -5062,7 +5067,7 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
+ 	if (!idt_v || (type != INTR_TYPE_HARD_EXCEPTION &&
+ 		       type != INTR_TYPE_EXT_INTR &&
+ 		       type != INTR_TYPE_NMI_INTR))
+-		skip_emulated_instruction(vcpu);
++		WARN_ON(!skip_emulated_instruction(vcpu));
+ 
+ 	/*
+ 	 * TODO: What about debug traps on tss switch?
+@@ -5129,20 +5134,7 @@ static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
+ 	if (!is_guest_mode(vcpu) &&
+ 	    !kvm_io_bus_write(vcpu, KVM_FAST_MMIO_BUS, gpa, 0, NULL)) {
+ 		trace_kvm_fast_mmio(gpa);
+-		/*
+-		 * Doing kvm_skip_emulated_instruction() depends on undefined
+-		 * behavior: Intel's manual doesn't mandate
+-		 * VM_EXIT_INSTRUCTION_LEN to be set in VMCS when EPT MISCONFIG
+-		 * occurs and while on real hardware it was observed to be set,
+-		 * other hypervisors (namely Hyper-V) don't set it, we end up
+-		 * advancing IP with some random value. Disable fast mmio when
+-		 * running nested and keep it for real hardware in hope that
+-		 * VM_EXIT_INSTRUCTION_LEN will always be set correctly.
+-		 */
+-		if (!static_cpu_has(X86_FEATURE_HYPERVISOR))
+-			return kvm_skip_emulated_instruction(vcpu);
+-		else
+-			return kvm_emulate_instruction(vcpu, EMULTYPE_SKIP);
++		return kvm_skip_emulated_instruction(vcpu);
+ 	}
+ 
+ 	return kvm_mmu_page_fault(vcpu, gpa, PFERR_RSVD_MASK, NULL, 0);
+@@ -7696,7 +7688,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 
+ 	.run = vmx_vcpu_run,
+ 	.handle_exit = vmx_handle_exit,
+-	.skip_emulated_instruction = __skip_emulated_instruction,
++	.skip_emulated_instruction = skip_emulated_instruction,
+ 	.set_interrupt_shadow = vmx_set_interrupt_shadow,
+ 	.get_interrupt_shadow = vmx_get_interrupt_shadow,
+ 	.patch_hypercall = vmx_patch_hypercall,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 53a16eb2aba8..9d5a2b77473b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6552,11 +6552,15 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+ 		return 1;
+ 	}
+ 
++	/*
++	 * Note, EMULTYPE_SKIP is intended for use *only* by vendor callbacks
++	 * for kvm_skip_emulated_instruction().  The caller is responsible for
++	 * updating interruptibility state and injecting single-step #DBs.
++	 */
+ 	if (emulation_type & EMULTYPE_SKIP) {
+ 		kvm_rip_write(vcpu, ctxt->_eip);
+ 		if (ctxt->eflags & X86_EFLAGS_RF)
+ 			kvm_set_rflags(vcpu, ctxt->eflags & ~X86_EFLAGS_RF);
+-		kvm_x86_ops->set_interrupt_shadow(vcpu, 0);
+ 		return 1;
+ 	}
+ 
+-- 
+2.22.0
+
