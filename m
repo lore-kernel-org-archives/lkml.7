@@ -2,117 +2,115 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A1EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8B3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6EA21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1NACfxl"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC0C22CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394655AbfHWMYo (ORCPT
+        id S2394664AbfHWMYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:24:44 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:41767 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfHWMYn (ORCPT
+        Fri, 23 Aug 2019 08:24:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35270 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389024AbfHWMYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:24:43 -0400
-Received: by mail-wr1-f47.google.com with SMTP id j16so8449077wrr.8;
-        Fri, 23 Aug 2019 05:24:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wiaJeoINtiSICNo40sR0gJx/Ynv/1TJk6w2DUAYNCpU=;
-        b=a1NACfxlQgrNVmC62tfL0Et+m4j7biyPT8R5CU/uFo5ieZbNzthwLDf5Vxu//V45ZS
-         RUiyPLr+lRM3VdTt4uPVVugMT9aRDC2VJmONOV7QhVy/2crJviKh5GtJHy71Bm7zMpeA
-         jBgu9sPHV64Pi2enAD4HBjuT0JMr7g9tVfiytv6MrMrNlyDvNpN+zz5NQhnEColnSCMd
-         E5DxWyuVPShysSplhnPohSeKrImNAycMalN/n6P84oOWpTxQcVHQrzkorDbqSArvEu2c
-         +JO2GYbiH5mmI3H7Ifh7BxOU2kY/zTBKaVHeIEnxIDlaN+0QRnD/qK9chMn99WC59TOm
-         AAaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wiaJeoINtiSICNo40sR0gJx/Ynv/1TJk6w2DUAYNCpU=;
-        b=di3JOtthUUD/pc3DkqDRckQdpR5HxdFPNkeh7DnAh1GpW3h2klWhiojlGFtmkAQZ4D
-         aWMd10g3043jgYntZIEAGfDn9GNFn36MM5Lcno1qfzBi3TqLpQQPZQ7hRKO94T72JpiG
-         mzVwTm2igGLiaU8Zr+4OY74lLMqU6824CP1FFyJ0SwMP9lWYtU9NKsG+oXYrRMdzA+Yd
-         5EkBLkOZjA4vStfGhIEYLIsVDFmEBlypq8DgYnN7WlMwDHOJJV4Mo//Mgo37X1S1PpVY
-         4vTuXGqBlT3aq2/cE4tkKR8MAj22pvHl6AT4TbOEo6kUZvV3UN2CT3Pt+FqzK1bpOhjf
-         hocQ==
-X-Gm-Message-State: APjAAAXTymhBMOA54OoAXIeTgnGOVFr9BOw6On/cdyr0/qXpuupJye+y
-        inLqHs8adGsEHaYbxUzyhXGdd1Pi
-X-Google-Smtp-Source: APXvYqwV3zXMN/kB/O/gm41ckO0LFZH2k93XMfy/JiFxnwXM6vOgM+oWQTxHyjLWCTnFqH8pn04nEg==
-X-Received: by 2002:a5d:4a0e:: with SMTP id m14mr1216257wrq.72.1566563080830;
-        Fri, 23 Aug 2019 05:24:40 -0700 (PDT)
-Received: from kwango.redhat.com (ip-94-112-128-92.net.upcbroadband.cz. [94.112.128.92])
-        by smtp.gmail.com with ESMTPSA id o9sm3537278wrm.88.2019.08.23.05.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 05:24:39 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 5.3-rc6
-Date:   Fri, 23 Aug 2019 14:27:26 +0200
-Message-Id: <20190823122726.15050-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Fri, 23 Aug 2019 08:24:15 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i18by-0001rQ-Px; Fri, 23 Aug 2019 14:24:10 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 732941C04F3;
+        Fri, 23 Aug 2019 14:24:10 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 12:24:10 -0000
+From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf evsel: Remove needless counts.h header from util/evsel.h
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <tip-oqvgf04w4ku8xasrz79zquim@git.kernel.org>
+References: <tip-oqvgf04w4ku8xasrz79zquim@git.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <156656305038.32123.7970501417049679154.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
+ these emails
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The following commit has been merged into the perf/core branch of tip:
 
-The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
+Commit-ID:     ddee688a83073a9beebc5c86b67c712de5861411
+Gitweb:        https://git.kernel.org/tip/ddee688a83073a9beebc5c86b67c712de5861411
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 21 Aug 2019 14:20:54 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Thu, 22 Aug 2019 17:16:57 -03:00
 
-  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
+perf evsel: Remove needless counts.h header from util/evsel.h
 
-are available in the Git repository at:
+We need only a struct forward declaration, so prune the header
+dependency tree a bit more.
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.3-rc6
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-oqvgf04w4ku8xasrz79zquim@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evsel.c | 1 +
+ tools/perf/util/evsel.h | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-for you to fetch changes up to a561372405cf6bc6f14239b3a9e57bb39f2788b0:
-
-  libceph: fix PG split vs OSD (re)connect race (2019-08-22 10:47:41 +0200)
-
-----------------------------------------------------------------
-Three important fixes tagged for stable (an indefinite hang, a crash on
-an assert and a NULL pointer dereference) plus a small series from Luis
-fixing instances of vfree() under spinlock.
-
-----------------------------------------------------------------
-Erqi Chen (1):
-      ceph: clear page dirty before invalidate page
-
-Ilya Dryomov (1):
-      libceph: fix PG split vs OSD (re)connect race
-
-Jeff Layton (1):
-      ceph: don't try fill file_lock on unsuccessful GETFILELOCK reply
-
-Luis Henriques (4):
-      libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
-      ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-      ceph: fix buffer free while holding i_ceph_lock in __ceph_build_xattrs_blob()
-      ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-
- fs/ceph/addr.c              |  5 +++--
- fs/ceph/caps.c              |  5 ++++-
- fs/ceph/inode.c             |  7 ++++---
- fs/ceph/locks.c             |  3 +--
- fs/ceph/snap.c              |  4 +++-
- fs/ceph/super.h             |  2 +-
- fs/ceph/xattr.c             | 19 ++++++++++++++-----
- include/linux/ceph/buffer.h |  3 ++-
- net/ceph/osd_client.c       |  9 ++++-----
- 9 files changed, 36 insertions(+), 21 deletions(-)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 477c47c..7b43506 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -26,6 +26,7 @@
+ #include "asm/bug.h"
+ #include "callchain.h"
+ #include "cgroup.h"
++#include "counts.h"
+ #include "event.h"
+ #include "evsel.h"
+ #include "evlist.h"
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index da91d6f..2963905 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -11,7 +11,6 @@
+ #include <perf/evsel.h>
+ #include "symbol_conf.h"
+ #include "cpumap.h"
+-#include "counts.h"
+ 
+ struct evsel;
+ 
+@@ -93,6 +92,7 @@ enum perf_tool_event {
+ };
+ 
+ struct bpf_object;
++struct perf_counts;
+ struct xyarray;
+ 
+ /** struct evsel - event selector
