@@ -2,91 +2,111 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275E5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56694C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14A1233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F4922CF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GQYgNsrD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NQR8OpyX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MVIXR6k8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392451AbfHWGve (ORCPT
+        id S2404604AbfHWGwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 02:51:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48900 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732321AbfHWGvd (ORCPT
+        Fri, 23 Aug 2019 02:52:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38238 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732321AbfHWGwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 02:51:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5ABF960E57; Fri, 23 Aug 2019 06:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566543093;
-        bh=kv6YyZbAfmhHH6lQEwMxYC8DafkWAPVqggKZIIaBG4g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GQYgNsrDoRfA3PN/q1STftgH5y8ba6EdQ59XbiSSsb5/eX0mUbgnX6fGs2eiGfX9n
-         2PFg7M12Og+FM/Cgj1bESUfI74FARFqqf+sTlY5SZvJecf1nUoOXZ0bMXNDiJQfAwL
-         rM6ZpkcWlG0rC+kVhVGTmjnub2GDjdTijaSL/cLw=
-Received: from [10.242.6.109] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 877C0605A5;
-        Fri, 23 Aug 2019 06:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566543092;
-        bh=kv6YyZbAfmhHH6lQEwMxYC8DafkWAPVqggKZIIaBG4g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NQR8OpyX+5dTGRSWj9jGppAWqlKEMya+KKsr5IypewBq8DCQ2cS0eCbMA8Qu7CsKe
-         /tcFDNwkqdg1rrt0xEP7yfrioU40YSNL9dqlG1lTOB5JXJOnMRN/i/b5uXksTwPPQI
-         jDHvuQe19pJqy9oBOr/TSip2+MR6ryV3+bdny4AY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 877C0605A5
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH 0/4] Add RSC power domain support
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, ulf.hansson@linaro.org
-References: <20190813082442.25796-1-mkshah@codeaurora.org>
- <5d5450b2.1c69fb81.ec1c1.1cb2@mx.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <def5e325-c797-b13e-1ea3-3664394a5896@codeaurora.org>
-Date:   Fri, 23 Aug 2019 12:21:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 02:52:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x3so7852640lji.5
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 23:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G5vut+/7GfWn6npImvF9Rc3EcWl6Bwqxpc3Tm/7byaQ=;
+        b=MVIXR6k8i6ZWuPASEFHHR9F0nPCzK0eVjc8PYz7FptLy2OJujuacqW6lgWGhwQySFz
+         3QAySOWoE9nAwQwl1xLEODlrOsAyBMu2u04vibbBBVpvxgU2d/d9lFgSf123gf2E114D
+         /jPW1MjyPfCGwgmewUy7qWtuRuFl0ZdoBgJUXWuNSSUvkanykJHAMib9ZE1FHuoQnZgx
+         XzaapAMFiJGaBP/N7hmC43ow43jjVG9Li0erAVdh6tyQNjy9HmQDLOQfs/eqEiCTGeze
+         cBBi02p/e6U/e0HvajIHRSQG3k6yQHhDjihSPwrKZVq8gfHYtJswFQUJzcr833qCT5/D
+         N/8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G5vut+/7GfWn6npImvF9Rc3EcWl6Bwqxpc3Tm/7byaQ=;
+        b=LWIErfarRSOpmgJrN1KVx/FZjuZHWI3LzWqAqX+rCIkvrCeiG8UvLWEJF+C/pk5Bns
+         GVEcSlAp4ZCzpIAar1gQI3/yHNtjpV0q2A8CTQJPZ+BAYi6yKwhRX5yNNDUYZOjMj/sb
+         F/9Z/i8c/UKWHBuDXkDRA9YozR8t2f3sG0amHJMDnpznKqbxjMtzquicvGSQ6oH5SyGA
+         pkpoQrlM/Iioh3WLxJuM8J992hXxFOxp/5Lp2MVTyZLj70/u/bphJSy9cKTHaVM2Ao01
+         psh0awH/A6w8LAYwil344ihXtlCXYReZrv1hSftQKvYXWe9T4v/ybhQfk8khfFZK4tRk
+         FWzQ==
+X-Gm-Message-State: APjAAAWuv9h8StnYWNEGYjFjpoPABzuA1GfybyWQxjQ4UpRQXlHPwzOa
+        8eXntRhWkB4g/ZJL/9/osSc2/H2xrsNKj+l4sKDfHg==
+X-Google-Smtp-Source: APXvYqyEKzwPdx0ZjJjocJJunKwmjsRZdIowtZKK6Batd8JU0Y56aba6StNeDVmOZui0Y27K+B6WJCN6um5Z3JBIC5I=
+X-Received: by 2002:a2e:80da:: with SMTP id r26mr1814316ljg.62.1566543135677;
+ Thu, 22 Aug 2019 23:52:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5d5450b2.1c69fb81.ec1c1.1cb2@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <1565707585-5359-1-git-send-email-jcrouse@codeaurora.org> <1565707585-5359-2-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1565707585-5359-2-git-send-email-jcrouse@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Aug 2019 08:52:04 +0200
+Message-ID: <CACRpkdbtPo9dr7E2hZ4=fEWTXappWTaypKJyd9M2jz0tYu7HXw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm: Add DRM_MSM to defconfigs with ARCH_QCOM
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Olof Johansson <olof@lixom.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        =?UTF-8?Q?Yannick_Fertr=C3=A9?= <yannick.fertre@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Anson Huang <Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 4:46 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 
-On 8/14/2019 11:49 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2019-08-13 01:24:38)
->> Resource State Coordinator (RSC) is responsible for powering off/lowering
->> the requirements from CPU subsystem for the associated hardware like buses,
->> clocks, and regulators when all CPUs and cluster is powered down.
->>
->> RSC power domain uses last-man activities provided by genpd framework based on
->> Ulf Hansoon's patch series[1], when the cluster of CPUs enter deepest idle
->> states. As a part of domain poweroff, RSC can lower resource state requirements
->> by flushing the cached sleep and wake state votes for resources.
-> This series looks like half the solution. Is there a full set of patches
-> that connects the RPMh power domain to cpuidle and genpds?
-Yes, i will include in next version.
+> Now that CONFIG_DRM_MSM is no longer default 'y' add it as a module to all
+> ARCH_QCOM enabled defconfigs to restore the previous expected build
+> behavior.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+I suppose Andy will pick this up?
+
+Yours,
+Linus Walleij
