@@ -2,232 +2,267 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C1BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBD72173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D8521874
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SUjo8NWb"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KdZC4mJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392499AbfHWUCR (ORCPT
+        id S2406157AbfHWUQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 16:02:17 -0400
-Received: from mail-eopbgr780135.outbound.protection.outlook.com ([40.107.78.135]:20101
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731433AbfHWUCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:02:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X5JtAxjZZvqXqsW8KDxxQ57OoKtN+v/cQJFRGlm8Cpex5J2/+sM3Z8kxzSXOli7fBklPDxTZon7UvNbZIt/r9mlu6c2/maxQ2F8cCBVUxhZovFNNyu4KckwkZd7QWYU6WiHVdhw43KisguFISyJsrba7CUKqzFUwAPI+PHwMbCb/GCbr3Is17JTkx7m1EPY2w96CPccdOM4PdyiIyljCtfDFd4x/H77J12xuNfF61b+35HR6isKedKtfG7sejDIXKYwOyT/4UCmKnmBGfnYUrUKPAJvelUjTB2rb1NDsIrKVbLjapligilQ6Mn1xRhGNSIm1YsCgyhJaLweoWqjGRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PfBjRekI2JdXph6+vahyKvdntD8Lv/3yFdk/y+H9h7s=;
- b=dSbY1RGkFOmyFN3W7YzZtKx2EzPRyKTcExvgSR/DuHMe4H2VF9gA4OkRk5UjgDsG85eQZ4rxmnKKqryG0GUKAWt9rfnqAumbi49H7N4wCxXcip2+fh3XG/YMwbFfIw5h++c2OSfTp19aeb80Hk53kYbU83TG+hiPS8s1jNUJoJfBDN/dTfuZ5QUqydRqBMauQiiRVAhGviGLFE08WS6OOpR6/eGJTNB73N9g0aIe6H7GB2fzUiw/JY0lr4mXvR3IzC58Ac05lEuuWxvZS+h5Vp35BKkN2JbeFegz7hBaw06F22E7WrB0vXr3XMMAi8H3nv9tGeqToZqKg14W/Qt5bA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PfBjRekI2JdXph6+vahyKvdntD8Lv/3yFdk/y+H9h7s=;
- b=SUjo8NWbK58plLekubemO2HZQae1VKYDrSi2V9IkmCYFi2YfzXxJpBBItKQpO0BYsC1vAyjqinNFC+F41A/kl2uOhwzOZ4dzarYOVC2os3DEUl7jtuj2h1mw1QY2HaULE8WIpO4Tb2qAw23YqE830z2la1krgvxIurJrQt3W+2k=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0281.namprd21.prod.outlook.com (10.173.174.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.3; Fri, 23 Aug 2019 20:02:12 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Fri, 23 Aug 2019
- 20:02:12 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels by
- force upon suspend
-Thread-Topic: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels
- by force upon suspend
-Thread-Index: AQHVVvngIm13qifSzE6BddexMOZgK6cJK+3g
-Date:   Fri, 23 Aug 2019 20:02:12 +0000
-Message-ID: <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-11-git-send-email-decui@microsoft.com>
-In-Reply-To: <1566265863-21252-11-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:02:10.5815340Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9569c2bc-1aff-407a-a5da-655ff005400a;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ee8d121-e0b6-4154-9bb5-08d72804c9d1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0281;
-x-ms-traffictypediagnostic: DM5PR21MB0281:|DM5PR21MB0281:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB0281EE7554F38CF0D9E35B22D7A40@DM5PR21MB0281.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(189003)(199004)(1511001)(186003)(2201001)(8990500004)(26005)(10090500001)(8936002)(8676002)(9686003)(6506007)(102836004)(86362001)(14454004)(81166006)(2501003)(52536014)(81156014)(74316002)(3846002)(305945005)(71190400001)(15650500001)(14444005)(256004)(4326008)(76176011)(33656002)(7696005)(66946007)(6116002)(5660300002)(2906002)(71200400001)(53936002)(7736002)(316002)(22452003)(66446008)(11346002)(446003)(76116006)(476003)(486006)(6436002)(229853002)(110136005)(66556008)(66476007)(25786009)(478600001)(64756008)(10290500003)(99286004)(6246003)(55016002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0281;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: W/1SFnfBP+3cQb4Di8kNUa9A9WEAHYBB0XjkBbrolUe034l/izBcKdUgjrG2QJzC1NY4Z+hA8823sLalzlNFR+vHWr6x3cznfGLdjkQLAJ6Nf+V3Z4cdN8a3P95Ssn6RttKMHuvfMltOunJNuwDqW2eNDFk4EhS0EEFSWdCQLocP06L+f4xBiQBVXu3mPJt6+fOwW2ZGvSpfGaUnLMUb1vkRTzsxaxkrp/p8nZHWuGBBKtG9X4eeWlAJ05tlKbH/zJubTtZh7eaX1ok+U8jyGLgNk3wWf1na7+yogFfSGtxG3B2QuXfCt33L4nVobiwHqwin65z5msEBhGGg5EfkYvav98DQ3g26P346LO3C5aAS6ENLaJbQgpIJwhTSFDy0BC0hHhihxvCQktgaRoj3QJ5iKUfZ3VWeQHIU3DgX0Lk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 23 Aug 2019 16:16:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38510 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730896AbfHWUQg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 16:16:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id o70so7172424pfg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 13:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=xmWOYmfNGYI3Y1y41HZf19hpjDC3mz85j0cRHycsQJY=;
+        b=KdZC4mJ5+cGdoGruFg9hqsRn59QcD2SeuJ+1lIXAwWs69lgjW6ADqySlbr7ShGc/Nt
+         dtZRGXa77ikJKSrz10p0MRcD1pVdMjdbTEywHVTp4owLAEpq5gmEhxcIK7QL+V7vYSuv
+         5ozvqvwv0gPSyz+voLomLhz8cSV1Y6eSLt2fo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=xmWOYmfNGYI3Y1y41HZf19hpjDC3mz85j0cRHycsQJY=;
+        b=DsTgeGKOb6jcBznm49XRLDZYf+HWJ5YyoHZnAVWNby7ngFjPo0LXJeru0slRWxkg3/
+         n8inupkdTKjLCiiyRVp651IAANtXRmr+zRM2IH6UIWrOCbrdiInXD1tp8hrDgc9Q64QU
+         CaJBv02NB6jjXK2ZotdrP0DETOCBx8/Y10sA75ebN0v5b5C5sCp0xiXeVOCQfyBcU1im
+         dK7rudFz4RDbjmdqfO1Fhlkjqxp91Xm4Lj8qcXA6KZ2SigyN0WTWwK8asc6/XHrZ+AL/
+         iVN1FoVMS8qlY7lf+PleLiV377HuipVDSUvCZjoh1WeTGdIZDmZZHGPFmuokmESwaSYV
+         SMHQ==
+X-Gm-Message-State: APjAAAWvKMUWCxu0mhCFjXab6Za4KcTN8f6b3mhYCVd5Tc6/ZXNS2Byq
+        agECMuwalc+SYXDuhuTP2SwS/g==
+X-Google-Smtp-Source: APXvYqwri9AQsAvZYFl15cTKqo0LzTCKgYiJV2w4DIRUnb1xQL31Z3EKC0Q8EroeKhuTNqGmY5fliw==
+X-Received: by 2002:a17:90a:234e:: with SMTP id f72mr7096380pje.121.1566591395745;
+        Fri, 23 Aug 2019 13:16:35 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id f63sm4091921pfa.144.2019.08.23.13.16.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 13:16:35 -0700 (PDT)
+Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+ <20190822192451.5983-3-scott.branden@broadcom.com>
+ <20190822194712.GG16384@42.do-not-panic.com>
+ <7ee02971-e177-af05-28e0-90575ebe12e0@broadcom.com>
+ <20190822211220.GR16384@42.do-not-panic.com>
+ <009295ce-bdc5-61d8-b450-5fcdae041922@broadcom.com>
+ <20190823154721.GV16384@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <335278f4-bbaf-1f01-53e6-c01720b4c84f@broadcom.com>
+Date:   Fri, 23 Aug 2019 13:16:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ee8d121-e0b6-4154-9bb5-08d72804c9d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 20:02:12.6282
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FzXq0WsoMB1/S3zFyiLu7qEfi6yX1DxdRe80zZGDpM26Uy30CEX1RFsupzoveD7sLPZmi/w5SzRMxMaYb3K7xFre7UpriFahSCUTG/QrLSI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0281
+In-Reply-To: <20190823154721.GV16384@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Monday, August 19, 2019 6:52 P=
-M
->=20
-> Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force for
-> hibernation. There is no better method to clean up the channels since
-> some of the channels may still be referenced by the userspace apps when
-> hiberantin is triggered: in this case, the "rescind" fields of the
+Hi Luis,
 
-s/hiberantin/hibernation/
+Thanks for helping on this.
 
-> channels are set, and the apps will thoroughly destroy the channels
-> after hibernation.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 55
-> ++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index ce9974b..2bea669 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -24,6 +24,7 @@
->  #include <linux/sched/task_stack.h>
->=20
->  #include <asm/mshyperv.h>
-> +#include <linux/delay.h>
->  #include <linux/notifier.h>
->  #include <linux/ptrace.h>
->  #include <linux/screen_info.h>
-> @@ -1069,6 +1070,41 @@ void vmbus_on_msg_dpc(unsigned long data)
->  	vmbus_signal_eom(msg, message_type);
->  }
->=20
-> +/*
-> + * Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force f=
-or
-> + * hibernation, because hv_sock connections can not persist across hiber=
-nation.
-> + */
-> +static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
-> +{
-> +	struct onmessage_work_context *ctx;
-> +	struct vmbus_channel_rescind_offer *rescind;
-> +
-> +	WARN_ON(!is_hvsock_channel(channel));
-> +
-> +	/*
-> +	 * sizeof(*ctx) is small and the allocation should really not fail,
-> +	 * otherwise the state of the hv_sock connections ends up in limbo.
-> +	 */
-> +	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL | __GFP_NOFAIL);
-> +
-> +	/*
-> +	 * So far, these are not really used by Linux. Just set them to the
-> +	 * reasonable values conforming to the definitions of the fields.
-> +	 */
-> +	ctx->msg.header.message_type =3D 1;
-> +	ctx->msg.header.payload_size =3D sizeof(*rescind);
-> +
-> +	/* These values are actually used by Linux. */
-> +	rescind =3D (struct vmbus_channel_rescind_offer *)ctx->msg.u.payload;
-> +	rescind->header.msgtype =3D CHANNELMSG_RESCIND_CHANNELOFFER;
-> +	rescind->child_relid =3D channel->offermsg.child_relid;
-> +
-> +	INIT_WORK(&ctx->work, vmbus_onmessage_work);
-> +
-> +	queue_work_on(vmbus_connection.connect_cpu,
-> +		      vmbus_connection.work_queue,
-> +		      &ctx->work);
-> +}
->=20
->  /*
->   * Direct callback for channels using other deferred processing
-> @@ -2091,6 +2127,25 @@ static int vmbus_acpi_add(struct acpi_device *devi=
-ce)
->=20
->  static int vmbus_bus_suspend(struct device *dev)
->  {
-> +	struct vmbus_channel *channel;
-> +
-> +	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
-> +		/*
-> +		 * We wait here until any channel offer is currently
-> +		 * being processed.
-> +		 */
+Enjoy your time off an we can work on it when you're back.
 
-The wording of the comment is a bit off.  Maybe
+comments below.
 
-		/*
-		 * We wait here until the completion of any channel
-		 * offers that are currently in progress.
-		 */
 
-> +		msleep(1);
-> +	}
-> +
-> +	mutex_lock(&vmbus_connection.channel_mutex);
-> +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> +		if (!is_hvsock_channel(channel))
-> +			continue;
-> +
-> +		vmbus_force_channel_rescinded(channel);
-> +	}
-> +	mutex_unlock(&vmbus_connection.channel_mutex);
-> +
->  	vmbus_initiate_unload(false);
->=20
->  	vmbus_connection.conn_state =3D DISCONNECTED;
-> --
-> 1.8.3.1
+On 2019-08-23 8:47 a.m., Luis Chamberlain wrote:
+> On Thu, Aug 22, 2019 at 04:30:37PM -0700, Scott Branden wrote:
+>> On 2019-08-22 2:12 p.m., Luis Chamberlain wrote:
+>>> On Thu, Aug 22, 2019 at 01:07:41PM -0700, Scott Branden wrote:
+>>>> On 2019-08-22 12:47 p.m., Luis Chamberlain wrote:
+>>>>> This implies you having to change the other callers, and while currently
+>>>>> our list of drivers is small,
+>>>> Yes, the list is small, very small.
+>>>>
+>>>> There is a single driver making a call to the existing API.
+>>>>
+>>>> And, the maintainer of that driver wanted
+>>>> to start utilizing my enhanced API instead of the current API.
+>>> You mean in the near term future? Your change makes it use the full file.
+>>> Just checking.
+>> The change in the patch keeps the existing functionality in the
+>>
+> BTW for some reason your mailer keeps adding new lines per each line. I
+> trim them below. Also for future emails please Cc:
+>
+>    Mimi Zohar <zohar@linux.ibm.com>
+>
+> As she'll be interested in some of this from the IMA security perspective.
+>
+>> qcom mdt_loader by reading the full file using the enhanced api.
+>> I don't know when Bjorn will switch to use the partial firmware load:
+>>
+>> https://lkml.org/lkml/2019/5/27/9
+> OK I see he did he liked the approach. OK thanks! This will make
+> evolutions much easier.
+>
+>>>> As such I think it is very reasonable to update the API right now.
+>>> I'd prefer to see it separate, and we fix the race *before* we introduce
+>>> the new functionality. I'll be poking at that shortly but I should note
+>>> that I leave on vacation this weekend and won't be back for a good while.
+>>> I already have an idea of how to approach this.
+>>>
+>>> When the current user want to use the new API it can do so, and then we
+>>> just kill the older caller.
+>> We can kill the older api right now as my patch in qcom mdt_loader
+>> calls the new API which allows reading of full or partial files?
+> Yes its possible, but more on this below.
+>
+>>>>> following the history of the firmware API
+>>>>> and the long history of debate of *how* we should evolve its API, its
+>>>>> preferred we add yet another new caller for this functionality. So
+>>>>> please add a new caller, and use EXPORT_SYMBOL_GPL().
+>>>>>
+>>>>> And while at it, pleaase use firmware_request_*() as the prefix, as we
+>>>>> have want to use that as the instilled prefix. We have yet to complete
+>>>>> the rename of the others older callers but its just a matter of time.
+>>>>>
+>>>>> So something like: firmware_request_into_buf_offset()
+>>>> I would prefer to rename the API at this time given there is only a single
+>>>> user.
+>>>>
+>>>> Otherwise I would need to duplicate quite a bit in the test code to support
+>>>> testing the single user of the old api and then enhanced API.
+>>>> Or, I can leave existing API in place and change the test case to
+>>>> just test the enhanced API to keep things simpler in the test code?
+>>> If the new user is going to move to the API once available I will be
+>>> happy to then leave out testing for the older API. That would make
+>>> sense.
+>> I have switched the single user of the existing api to the new
+>> API in the patch already?
+> Right, but in the new approach you'd use a newer function name with
+> the new feature.
 
-Modulo the nits:
+Yes, I will send a new version with a new function name.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+firmware_request_into_buf() is more appropriate than 
+firmware_request_into_buf_offset() though.
 
+The function accepts both partial or full file requests with or without 
+an offset into the file.
+
+>
+>> And both full and partial reads using the new API are tested with this
+>> patch series.  If you really insist on keeping the old API for a
+>> single user I can drop that change from the patch series and have the
+>> old request_firmware_api call simply be a wrapper calling the new API.
+> Yes please.
+Sure, if you want me to remove the change to the existing qcom driver to 
+keep using the old api as well I'll do so.
+>
+>>> But if you do want to keep testing for the old API, and allow an easy
+>>> removal for it on the test driver, wouldn't a function pointer suffice
+>>> for which API call to use based on a boolean?
+>>>
+>>> But yeah if we're going to abandon the old mechanism I'm happy to skip
+>>> its testing.
+>> We can skip right now then.  As enhanced API is a superset of old API.
+>> If you want the old API left in place I can just add the wrapper
+>> described and only test the newly named function and thus indirectly
+>> test the old request_firmware_into_buf.
+> Yes this makes sense. But I want to take a bit step back right now and
+> think about this a bit more. I'm starting to wonder if this whole sysfs
+> stuff should be replaced with a better scalable scheme. Consider all the
+> fancy things you can do in userspace with a block device. Offsets are
+> already supported, and so much more.
+
+Yes, if normal file operations worked in kernel space all would be good.
+
+> So I'm starting to think that the
+> firmware fallback upload sysfs interface is much better suited as a
+> really simple block device long term.
+> I understand you want your solutions addressed upstream yesterday, but
+> this is the *sort of review* on architecture that should have been
+> done for the request_firmware_into_buf() long ago. But since you
+> probably don't want to wait for a revamp of the interface, a middle
+> ground might be in order for now, with the roadmap put in place to
+> evaluate scalable alternatives.
+
+Sounds very reasonable.
+
+All I wish to do is request part of file into a pre-allocated memory 
+location.
+
+> Either way, we should consider the current bug you ran into for the
+> solutions put forward, with the new functionality you are proposing.
+>
+> The core of the issue you ran into was the duplicate named kobjects,
+> which are reflected also on the sysfs hierarchy. The directory name
+> created for each firmware request, when duplicate entries exist for
+> one device collide. Upon a secondary request for firmware using the
+> fallback interface, the kobject/directory already exists.
+>
+> Its easier to understand this from a directory hierarchy perspective.
+> For instance the test driver uses:
+>
+> /sys/devices/virtual/misc/test_firmware/
+>
+> The test script for the test_firmware driver uses:
+>
+> DIR=/sys/devices/virtual/misc/test_firmware/
+>
+> To load firmware we use a directory underneath this firmware name for
+> the file name of the firmware requested, so to load firmware called
+> $name on the test script we use:
+>
+> echo 1 >"$DIR"/"$name"/loading
+> cat "$file" >"$DIR"/"$name"/data
+> echo 0 >"$DIR"/"$name"/loading
+>
+> An issue no one has cared for, and also we have not hit yet is that,
+> this implies no firmware names can be used which match other sysfs
+> attributes exported by a driver. I'm not too concerned for this right
+> now, but it is a worthy thing to consider long term under a new
+> solution.
+>
+> So the issue is that the firmware loader will try to create two equally
+> named entries underneath the firmware loader directory. Yes we can
+> sledge hammer the API to act serially, but this is will just
+> just move one problem to another, your secondary call would have to
+> wait until the first one not only completes the call, but also
+> release_firmware() is called.
+>
+> I'm looking at using a device name prefix if we do add a new API
+> or functionality. This way userspace can expend and knows what
+> extra tag to use other than the driver name.
+>
+>    Luis
