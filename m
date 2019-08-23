@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845B7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D250EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0484821897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF09521897
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391363AbfHWCo3 (ORCPT
+        id S2391387AbfHWCoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:44:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33861 "EHLO
+        Thu, 22 Aug 2019 22:44:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33858 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391271AbfHWCoX (ORCPT
+        with ESMTP id S2391269AbfHWCoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:44:23 -0400
+        Thu, 22 Aug 2019 22:44:22 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0zYo-0001NW-5P; Fri, 23 Aug 2019 04:44:18 +0200
+        id 1i0zYn-0001Mj-5z; Fri, 23 Aug 2019 04:44:17 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9BEE41C07E4;
-        Fri, 23 Aug 2019 04:44:17 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:44:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A2ECF1C07E4;
+        Fri, 23 Aug 2019 04:44:16 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:44:16 -0000
 From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] tools arch x86: Sync asm/cpufeatures.h with the with
- the kernel
+Subject: [tip: perf/core] tools headers: Grab copy of linux/const.h,
+ needed by linux/bits.h
 Cc:     linux-kernel@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Namhyung Kim <namhyung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <tip-860dq1qie2cpnfghlpcnxrzr@git.kernel.org>
-References: <tip-860dq1qie2cpnfghlpcnxrzr@git.kernel.org>
+In-Reply-To: <tip-c2qfcbl58hxyfb5u5xivp7is@git.kernel.org>
+References: <tip-c2qfcbl58hxyfb5u5xivp7is@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156652825757.13159.13503870368118594852.tip-bot2@tip-bot2>
+Message-ID: <156652825655.13152.2129104996239365756.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -62,55 +60,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0ac10d87a571ae7d68c7f70f1c2229388f1dce9e
-Gitweb:        https://git.kernel.org/tip/0ac10d87a571ae7d68c7f70f1c2229388f1dce9e
+Commit-ID:     aaa6ef8aa85f33c6dd593e139b7f7d901bbde0e2
+Gitweb:        https://git.kernel.org/tip/aaa6ef8aa85f33c6dd593e139b7f7d901bbde0e2
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 19 Aug 2019 10:53:20 -03:00
+AuthorDate:    Mon, 19 Aug 2019 11:00:54 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 20 Aug 2019 12:17:09 -03:00
+CommitterDate: Tue, 20 Aug 2019 12:08:23 -03:00
 
-tools arch x86: Sync asm/cpufeatures.h with the with the kernel
+tools headers: Grab copy of linux/const.h, needed by linux/bits.h
 
-To pick up the changes in:
-
-  f36cf386e3fe ("x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS")
-  18ec54fdd6d1 ("x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations")
-
-That don't affect anything in tools/.
-
-This silences this perf build warning:
-
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+So that can update the copy of linux/bits.h that now uses macros defined
+in const.h and that are not available in older systems.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/n/tip-860dq1qie2cpnfghlpcnxrzr@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-c2qfcbl58hxyfb5u5xivp7is@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/linux/const.h      |  9 +++++++++-
+ tools/include/uapi/linux/const.h | 31 +++++++++++++++++++++++++++++++-
+ tools/perf/check-headers.sh      |  2 ++-
+ 3 files changed, 42 insertions(+)
+ create mode 100644 tools/include/linux/const.h
+ create mode 100644 tools/include/uapi/linux/const.h
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 998c2cc..e880f24 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -281,6 +281,8 @@
- #define X86_FEATURE_CQM_OCCUP_LLC	(11*32+ 1) /* LLC occupancy monitoring */
- #define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
- #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
-+#define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
-+#define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
+diff --git a/tools/include/linux/const.h b/tools/include/linux/const.h
+new file mode 100644
+index 0000000..7b55a55
+--- /dev/null
++++ b/tools/include/linux/const.h
+@@ -0,0 +1,9 @@
++#ifndef _LINUX_CONST_H
++#define _LINUX_CONST_H
++
++#include <uapi/linux/const.h>
++
++#define UL(x)		(_UL(x))
++#define ULL(x)		(_ULL(x))
++
++#endif /* _LINUX_CONST_H */
+diff --git a/tools/include/uapi/linux/const.h b/tools/include/uapi/linux/const.h
+new file mode 100644
+index 0000000..5ed721a
+--- /dev/null
++++ b/tools/include/uapi/linux/const.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* const.h: Macros for dealing with constants.  */
++
++#ifndef _UAPI_LINUX_CONST_H
++#define _UAPI_LINUX_CONST_H
++
++/* Some constant macros are used in both assembler and
++ * C code.  Therefore we cannot annotate them always with
++ * 'UL' and other type specifiers unilaterally.  We
++ * use the following macros to deal with this.
++ *
++ * Similarly, _AT() will cast an expression with a type in C, but
++ * leave it unchanged in asm.
++ */
++
++#ifdef __ASSEMBLY__
++#define _AC(X,Y)	X
++#define _AT(T,X)	X
++#else
++#define __AC(X,Y)	(X##Y)
++#define _AC(X,Y)	__AC(X,Y)
++#define _AT(T,X)	((T)(X))
++#endif
++
++#define _UL(x)		(_AC(x, UL))
++#define _ULL(x)		(_AC(x, ULL))
++
++#define _BITUL(x)	(_UL(1) << (x))
++#define _BITULL(x)	(_ULL(1) << (x))
++
++#endif /* _UAPI_LINUX_CONST_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index f211c01..5308b38 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -2,6 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
  
- /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
- #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
-@@ -394,5 +396,6 @@
- #define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
- #define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
- #define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
-+#define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
+ HEADERS='
++include/uapi/linux/const.h
+ include/uapi/drm/drm.h
+ include/uapi/drm/i915_drm.h
+ include/uapi/linux/fadvise.h
+@@ -19,6 +20,7 @@ include/uapi/linux/usbdevice_fs.h
+ include/uapi/linux/vhost.h
+ include/uapi/sound/asound.h
+ include/linux/bits.h
++include/linux/const.h
+ include/linux/hash.h
+ include/uapi/linux/hw_breakpoint.h
+ arch/x86/include/asm/disabled-features.h
