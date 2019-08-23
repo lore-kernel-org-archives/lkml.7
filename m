@@ -2,93 +2,72 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51008C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0061C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2679121726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QYnL2t5M"
+	by mail.kernel.org (Postfix) with ESMTP id 9A0BE21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733243AbfHWJhE (ORCPT
+        id S2387519AbfHWJhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 23 Aug 2019 05:37:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:58534 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733010AbfHWJhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 23 Aug 2019 05:37:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36708 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfHWJhD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:37:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=npY3kxMBkpg6StNbFZw2v3WvWnwH4EGOxrS2hJvkUAQ=; b=QYnL2t5MsjdvI+dwV/uz9x/ny
-        w4l7H3zbjU9ULp8rqmNsdkMzJefwulHzT674UaVXVW2ZOxGNk2IPoyDOVYwxdlw2/cUrKB2IuCmzk
-        UFf3j6w6pZBxPDIBCztDYsTGYBwpd2G/WFNNpuW/cqSeOLJdLz2CvmEqnVpO7gFMO3i7gP79I0hrQ
-        PnrgbnRKx5QW5wmGNN0cHJoBXpzj4VZ/EfwacdpQ1zfnNaHhHt6Bv/aWXHXIiY6jseD6krryICT92
-        bfZ6I3NLzuSNC85WpvHObD0w9bp2jOXxOTUBKMCaXC47F2BAJ83x4nEeaGSMW+OLfKDn7VfnST5Xb
-        njK0EEvPQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i15zt-0007yJ-1Y; Fri, 23 Aug 2019 09:36:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A175E307603;
-        Fri, 23 Aug 2019 11:36:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DEFD920BF0F18; Fri, 23 Aug 2019 11:36:37 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 11:36:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kernel-team@fb.com, stable@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
- set_kernel_text_rw()
-Message-ID: <20190823093637.GH2369@hirez.programming.kicks-ass.net>
-References: <20190823052335.572133-1-songliubraving@fb.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C295337;
+        Fri, 23 Aug 2019 02:37:03 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 886B83F246;
+        Fri, 23 Aug 2019 02:37:02 -0700 (PDT)
+Subject: Re: [PATCH] drm/panfrost: Add missing check for pfdev->regulator
+To:     Rob Herring <robh@kernel.org>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <20190822091512.GA32661@mwanda>
+ <20190822093218.26014-1-steven.price@arm.com>
+ <CAL_Jsq+1-qUxF3FSocVis6h4HV-=qnzWfK13hDq+Ns9kNEZuUg@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <f6800b5c-0b43-e326-b435-5d626c99cc4b@arm.com>
+Date:   Fri, 23 Aug 2019 10:37:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823052335.572133-1-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_Jsq+1-qUxF3FSocVis6h4HV-=qnzWfK13hDq+Ns9kNEZuUg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:23:35PM -0700, Song Liu wrote:
-> As 4k pages check was removed from cpa [1], set_kernel_text_rw() leads to
-> split_large_page() for all kernel text pages. This means a single kprobe
-> will put all kernel text in 4k pages:
+On 23/08/2019 02:52, Rob Herring wrote:
+> On Thu, Aug 22, 2019 at 4:32 AM Steven Price <steven.price@arm.com> wrote:
+>>
+>> When modifying panfrost_devfreq_target() to support a device without a
+>> regulator defined I missed the check on the error path. Let's add it.
+>>
+>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> Fixes: e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
->   root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
->   0xffffffff81000000-0xffffffff82400000     20M  ro    PSE      x  pmd
-> 
->   root@ ~# echo ONE_KPROBE >> /sys/kernel/debug/tracing/kprobe_events
->   root@ ~# echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
-> 
->   root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
->   0xffffffff81000000-0xffffffff82400000     20M  ro             x  pte
-> 
-> To fix this issue, introduce CPA_FLIP_TEXT_RW to bypass "Text RO" check
-> in static_protections().
-> 
-> Two helper functions set_text_rw() and set_text_ro() are added to flip
-> _PAGE_RW bit for kernel text.
-> 
-> [1] commit 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
+> Looks fine to me, but seems to be delayed getting to the list and
+> patchwork. I'm guessing you're not subscribed to dri-devel because all
+> your patches seem to get delayed.
 
-ARGH; so this is because ftrace flips the whole kernel range to RW and
-back for giggles? I'm thinking _that_ is a bug, it's a clear W^X
-violation.
+Ah, yes I'm subscribed with a different email address - hopefully now
+also subscribed with my @arm.com one.
+
+Steve
