@@ -2,92 +2,224 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1E3C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE3EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847E82173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QX5EAISR"
+	by mail.kernel.org (Postfix) with ESMTP id 8E35A2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395266AbfHWO17 (ORCPT
+        id S2405781AbfHWO2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:27:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35569 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfHWO17 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:27:59 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn20so5681719plb.2;
+        Fri, 23 Aug 2019 10:28:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:35370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733026AbfHWO2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:28:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 631C628;
         Fri, 23 Aug 2019 07:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kYqot4J9hv4nMkYhpIWP0f5rcI2BLD7md1BdFFFYy2U=;
-        b=QX5EAISRAOU3tz71qMZG7IayKaSPjOd1e4ut+3lQxlZ2AYXrPziF/nZBGfzwKnWbz8
-         IuyN5YYeuSP76JOnU4JZvAXRdOXo+qP7nRkGHaAwynoNszY9mAKpgfaW/QQ00DjMxclG
-         3N8p+/YGTFTCXHTbVHe4hhaFXw8y604znoGGTFi0RRW9F/SnfUE58Q5VaKwD7wW7GMOJ
-         dnDq14CS7OAnmwaU1lmzDr7fFyH3fbx3jjMueZxaJdmx8J7W+kpfbwCDt/v8eUyHY063
-         TBsMNZx3+deyOhqVsIizRCa+JLhnZ89eZnXwgKPA87OPWe2RFLy+sXBIMXVxYjjrvkyk
-         g1zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kYqot4J9hv4nMkYhpIWP0f5rcI2BLD7md1BdFFFYy2U=;
-        b=poiticZ1+rCsKmIXykAHYxzMSrJfl1o2gRbp/EaykF/u5WHaZ8Uqu7vEmaWqMVTzD0
-         vL/+jFwAz4aAyDjwdZqUDGVSXeWwk1Ausubwr/5nHTSVCWifDARQ6azEdjYuLiW8eVQ4
-         CpnEMOE0puRiO3kcbIdveBts74Ng05Rw+yuT8SjDcpZaG95oFuhoyVxnUhDcwF3XFWG9
-         oMDojKxdGXjxMuBYQI0US8y7N64GBrwJPyfns6AX+MGkNd/Pdb+TjX6uyao6zdMJkqH0
-         yX0bs+13zeeL05aRuxKYyx30zTTprS+l6dYKURhjzypras/pYE5TWbptld33rjQdsc5e
-         vHKA==
-X-Gm-Message-State: APjAAAWoB6iFNZERXvb11PWPk03Dtk33YLKc2LBnk9z6hLerjefer6Or
-        yIMWrqXseydohhwam5F3VY8=
-X-Google-Smtp-Source: APXvYqxToXGW7dqVgq79yhxgqLv2D1cS//DWi6rNrWffif/CJfIqh8M+aUZmo7HQ37s6kkGWMM+uPQ==
-X-Received: by 2002:a17:902:d207:: with SMTP id t7mr2682057ply.305.1566570478936;
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF57E3F718;
         Fri, 23 Aug 2019 07:27:58 -0700 (PDT)
-Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id t6sm3032017pjy.18.2019.08.23.07.27.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 07:27:58 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 07:27:57 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 000/103] 4.9.190-stable review
-Message-ID: <20190823142757.GA18323@roeck-us.net>
-References: <20190822171728.445189830@linuxfoundation.org>
+Date:   Fri, 23 Aug 2019 15:27:57 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.co, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190822112242.16309-8-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:17:48AM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.190 release.
-> There are 103 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+> Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> difference between LS1 and LS2 platform, so refactor the code of
+> the EP driver.
 > 
-> Responses should be made by Sat 24 Aug 2019 05:15:44 PM UTC.
-> Anything received after that time might be too late.
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - New mechanism for layerscape EP driver.
+
+Was there a v1 of this patch?
+
 > 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 76 ++++++++++++++++++++------
+>  1 file changed, 58 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 7ca5fe8..2a66f07 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -20,27 +20,29 @@
+>  
+>  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+>  
+> -struct ls_pcie_ep {
+> -	struct dw_pcie		*pci;
+> -	struct pci_epc_features	*ls_epc;
+> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +
+> +struct ls_pcie_ep_drvdata {
+> +	u32				func_offset;
+> +	const struct dw_pcie_ep_ops	*ops;
+> +	const struct dw_pcie_ops	*dw_pcie_ops;
+>  };
+>  
+> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +struct ls_pcie_ep {
+> +	struct dw_pcie			*pci;
+> +	struct pci_epc_features		*ls_epc;
+> +	const struct ls_pcie_ep_drvdata *drvdata;
+> +};
+>  
+>  static int ls_pcie_establish_link(struct dw_pcie *pci)
+>  {
+>  	return 0;
+>  }
+>  
+> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+>  	.start_link = ls_pcie_establish_link,
+>  };
+>  
+> -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> -	{ .compatible = "fsl,ls-pcie-ep",},
+> -	{ },
+> -};
+> -
+>  static const struct pci_epc_features*
+>  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+>  {
+> @@ -82,10 +84,44 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  }
+>  
+> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> +						u8 func_no)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> +	u8 header_type;
+> +
+> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> +
+> +	if (header_type & (1 << 7))
+> +		return pcie->drvdata->func_offset * func_no;
+> +	else
+> +		return 0;
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 356 pass: 356 fail: 0
+It looks like there isn't a PCI define for multi function, the nearest I
+could find was PCI_HEADER_TYPE_MULTIDEVICE in hotplug/ibmphp.h. A comment
+above the test might be helpful to explain the test.
 
-Guenter
+As the ls_pcie_ep_drvdata structures are static, the unset .func_offset
+will be initialised to 0, so you could just drop the test above.
+
+However something to the effect of the following may help spot
+misconfiguration:
+
+WARN_ON(func_no && !pcie->drvdata->func_offset);
+return pcie->drvdata->func_offset * func_no;
+
+The WARN is probably quite useful as if you are attempting to use
+non-zero functions and func_offset isn't set - then things may appear to work
+normally but actually will break horribly.
+
+Thanks,
+
+Andrew Murray
+
+> +}
+> +
+> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+>  	.ep_init = ls_pcie_ep_init,
+>  	.raise_irq = ls_pcie_ep_raise_irq,
+>  	.get_features = ls_pcie_ep_get_features,
+> +	.func_conf_select = ls_pcie_ep_func_conf_select,
+> +};
+> +
+> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> +	.ops = &ls_pcie_ep_ops,
+> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> +};
+> +
+> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> +	.func_offset = 0x20000,
+> +	.ops = &ls_pcie_ep_ops,
+> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> +};
+> +
+> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> +	{ },
+>  };
+>  
+>  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> @@ -98,7 +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+>  	int ret;
+>  
+>  	ep = &pci->ep;
+> -	ep->ops = &pcie_ep_ops;
+> +	ep->ops = pcie->drvdata->ops;
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>  	if (!res)
+> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	if (!ls_epc)
+>  		return -ENOMEM;
+>  
+> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> -	if (IS_ERR(pci->dbi_base))
+> -		return PTR_ERR(pci->dbi_base);
+> +	pcie->drvdata = of_device_get_match_data(dev);
+>  
+> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+>  	pci->dev = dev;
+> -	pci->ops = &ls_pcie_ep_ops;
+> +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> +
+>  	pcie->pci = pci;
+>  
+>  	ls_epc->linkup_notifier = false,
+> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  
+>  	pcie->ls_epc = ls_epc;
+>  
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> +
+>  	platform_set_drvdata(pdev, pcie);
+>  
+>  	ret = ls_add_pcie_ep(pcie, pdev);
+> -- 
+> 2.9.5
+> 
