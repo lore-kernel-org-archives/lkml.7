@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38291C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF26FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F387F2341D
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9521523426
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391034AbfHWC2l (ORCPT
+        id S2391146AbfHWC2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:28:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33810 "EHLO
+        Thu, 22 Aug 2019 22:28:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33812 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389611AbfHWC2S (ORCPT
+        with ESMTP id S2390337AbfHWC2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 22:28:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0zJB-00019p-Fu; Fri, 23 Aug 2019 04:28:09 +0200
+        id 1i0zJC-00019x-1G; Fri, 23 Aug 2019 04:28:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F2C461C0890;
-        Fri, 23 Aug 2019 04:28:08 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:28:08 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 83D9C1C07E4;
+        Fri, 23 Aug 2019 04:28:09 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:28:09 -0000
 From:   tip-bot2 for Alexey Budankov <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report: Prefer DWARF callstacks to LBR ones
- when captured both
+Subject: [tip: perf/core] perf report: Dump LBR callstack data by -D jointly
+ with thread stack
 Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -45,10 +45,10 @@ Cc:     linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>
-In-Reply-To: <ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com>
-References: <ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com>
+In-Reply-To: <aa82e5dd-def2-0ca8-a064-db9e2e8ad076@linux.intel.com>
+References: <aa82e5dd-def2-0ca8-a064-db9e2e8ad076@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <156652728884.12704.14948438831949421867.tip-bot2@tip-bot2>
+Message-ID: <156652728940.12707.17186855532932836374.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -65,169 +65,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     10ccbc1cc0b8a05a5c8491630d36d1e2672036c1
-Gitweb:        https://git.kernel.org/tip/10ccbc1cc0b8a05a5c8491630d36d1e2672036c1
+Commit-ID:     d2720c3dad58def723f9617f7cf2a48c752ef50a
+Gitweb:        https://git.kernel.org/tip/d2720c3dad58def723f9617f7cf2a48c752ef50a
 Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Fri, 09 Aug 2019 18:31:28 +03:00
+AuthorDate:    Fri, 09 Aug 2019 18:26:30 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 20 Aug 2019 12:20:16 -03:00
+CommitterDate: Tue, 20 Aug 2019 12:19:44 -03:00
 
-perf report: Prefer DWARF callstacks to LBR ones when captured both
+perf report: Dump LBR callstack data by -D jointly with thread stack
 
-Display DWARF based callchains when the perf.data file contains raw thread
-stack data as LBR callstack data.
+Make perf report -D command print captured LBR callstack chain when it is
+collected together with raw thread stack data:
 
-Commiter testing:
+  2752673087247083 0x5d10 [0x548]: PERF_RECORD_SAMPLE(IP, 0x4002): 5841/5841: 0x40121f period: 1543862 addr: 0
+  ... FP chain: nr:0
+  ... branch callstack: nr:3
+  .....  0: 00000000004011d0
+  .....  1: 00007f393c388411
+  .....  2: 0000000000401098
+  ... user regs: mask 0xff0fff ABI 64-bit
+  .... AX    0x34e7
+  .... BX    0x7fff5f6dd3c0
+  .... CX    0xffffffff
+  .... DX    0x34e6
+  .... SI    0x7f393c5268d0
+  .... DI    0x0
+  .... BP    0x401260
+  .... SP    0x7fff5f6dd3c0
+  .... IP    0x40121f
+  .... FLAGS 0x29f
+  .... CS    0x33
+  .... SS    0x2b
+  .... R8    0x7f393c526800
+  .... R9    0x7f393c525da0
+  .... R10   0xfffffffffffff70a
+  .... R11   0x246
+  .... R12   0x401070
+  .... R13   0x7fff5f6ddcb0
+  .... R14   0x0
+  .... R15   0x0
+  ... ustack: size 1024, offset 0x130
+   . data_src: 0x5080021
+   ... thread: stack_test:5841
+   ...... dso: /root/abudanko/stacks/stack_test
 
-This changes the output from the branch stack based one, i.e. without
-this patch, for the same file as in the previous csets:
+Committer testing:
 
-  # perf report --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 13  of event 'cycles'
-  # Event count (approx.): 13
-  #
-  # Overhead  Command  Source Shared Object  Source Symbol                Target Symbol                              Basic Block Cycles
-  # ........  .......  ....................  ...........................  .........................................  ..................
-  #
-       7.69%  ls       libpthread-2.29.so    [.] _init                    [.] __pthread_initialize_minimal_internal  6827
-       7.69%  ls       ld-2.29.so            [k] _start                   [k] _dl_start                              -
-       7.69%  ls       ld-2.29.so            [.] _dl_start_user           [.] _dl_init                               -24790
-       7.69%  ls       ld-2.29.so            [k] _dl_start                [k] _dl_sysdep_start                       278
-       7.69%  ls       ld-2.29.so            [k] dl_main                  [k] _dl_map_object_deps                    15581
-       7.69%  ls       ld-2.29.so            [k] open_verify.constprop.0  [k] lseek64                                4228
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object           [k] open_verify.constprop.0                55
-       7.69%  ls       ld-2.29.so            [k] openaux                  [k] _dl_map_object                         67
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object_deps      [k] 0x00007f441b57c090                     112
-       7.69%  ls       ld-2.29.so            [.] call_init.part.0         [.] _init                                  334
-       7.69%  ls       ld-2.29.so            [.] _dl_init                 [.] call_init.part.0                       383
-       7.69%  ls       ld-2.29.so            [k] _dl_sysdep_start         [k] dl_main                                45
-       7.69%  ls       ld-2.29.so            [k] _dl_catch_exception      [k] openaux                                116
-
-  #
-  # (Tip: For memory address profiling, try: perf mem record / perf mem report)
-  #
-
-To the one that shows call chains:
-
-  # perf report --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 10  of event 'cycles'
-  # Event count (approx.): 3204047
-  #
-  # Children      Self  Command  Shared Object       Symbol
-  # ........  ........  .......  ..................  .........................................
-  #
-      55.01%     0.00%  ls       [kernel.vmlinux]    [k] entry_SYSCALL_64_after_hwframe
-              |
-              ---entry_SYSCALL_64_after_hwframe
-                 do_syscall_64
-                 |
-                  --16.01%--__x64_sys_execve
-                            __do_execve_file.isra.0
-                            search_binary_handler
-                            load_elf_binary
-                            elf_map
-                            vm_mmap_pgoff
-                            do_mmap
-                            mmap_region
-                            perf_event_mmap
-                            perf_iterate_sb
-                            perf_iterate_ctx
-                            perf_event_mmap_output
-                            perf_output_copy
-                            memcpy_erms
-
-      55.01%    39.00%  ls       [kernel.vmlinux]    [k] do_syscall_64
-              |
-              |--39.00%--0xffffffffffffffff
-              |          _dl_map_object
-              |          open_verify.constprop.0
-              |          __lseek64 (inlined)
-              |          entry_SYSCALL_64_after_hwframe
-              |          do_syscall_64
-              |
-               --16.01%--do_syscall_64
-                         __x64_sys_execve
-                         __do_execve_file.isra.0
-                         search_binary_handler
-                         load_elf_binary
-                         elf_map
-                         vm_mmap_pgoff
-                         do_mmap
-                         mmap_region
-                         perf_event_mmap
-                         perf_iterate_sb
-                         perf_iterate_ctx
-                         perf_event_mmap_output
-                         perf_output_copy
-                         memcpy_erms
-
-      42.95%    42.95%  ls       libpthread-2.29.so  [.] __pthread_initialize_minimal_internal
-              |
-              ---_init
-                 __pthread_initialize_minimal_internal
-
-      42.95%     0.00%  ls       libpthread-2.29.so  [.] _init
-              |
-              ---_init
-                 __pthread_initialize_minimal_internal
-
-  <SNIP>
-
-  #
-  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
-  #
+  # perf record -g --call-graph dwarf,1024 -j stack,u ls > /dev/null
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.042 MB perf.data (10 samples) ]
   #
 
-The branch stack view be explicitely selected using:
+Before:
 
-  # perf report -h branch-stack
+  # perf report -D |& grep PERF_RECORD_SAMPLE -A28 | tail -29
+  67538909824483 0xa7a0 [0x560]: PERF_RECORD_SAMPLE(IP, 0x4002): 9721/9721: 0x7f441b2b1e20 period: 1376095 addr: 0
+  ... FP chain: nr:0
+  ... user regs: mask 0xff0fff ABI 64-bit
+  .... AX    0x7f441b2b1000
+  .... BX    0x7f441b55b970
+  .... CX    0x7fff6e2db218
+  .... DX    0x7fff6e2db218
+  .... SI    0x7fff6e2db208
+  .... DI    0x1
+  .... BP    0x1
+  .... SP    0x7fff6e2db178
+  .... IP    0x7f441b2b1e20
+  .... FLAGS 0x20a
+  .... CS    0x33
+  .... SS    0x2b
+  .... R8    0x1
+  .... R9    0x7f441b371c18
+  .... R10   0x7f441b5a5f10
+  .... R11   0x202
+  .... R12   0x7fff6e2db208
+  .... R13   0x7fff6e2db218
+  .... R14   0x7f441b5a7150
+  .... R15   0x0
+  ... ustack: size 1024, offset 0x148
+   . data_src: 0x5080021
+   ... thread: ls:9721
+   ...... dso: /usr/lib64/libpthread-2.29.so
 
-   Usage: perf report [<options>]
-
-      -b, --branch-stack    use branch records for per branch histogram filling
-
+  0xad00 [0x60]: event: 10
   #
 
-I.e. after this patch:
+After:
 
-  # perf report -b --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 13  of event 'cycles'
-  # Event count (approx.): 13
-  #
-  # Overhead  Command  Source Shared Object  Source Symbol                Target Symbol                              Basic Block Cycles
-  # ........  .......  ....................  ...........................  .........................................  ..................
-  #
-       7.69%  ls       libpthread-2.29.so    [.] _init                    [.] __pthread_initialize_minimal_internal  6827
-       7.69%  ls       ld-2.29.so            [k] _start                   [k] _dl_start                              -
-       7.69%  ls       ld-2.29.so            [.] _dl_start_user           [.] _dl_init                               -24790
-       7.69%  ls       ld-2.29.so            [k] _dl_start                [k] _dl_sysdep_start                       278
-       7.69%  ls       ld-2.29.so            [k] dl_main                  [k] _dl_map_object_deps                    15581
-       7.69%  ls       ld-2.29.so            [k] open_verify.constprop.0  [k] lseek64                                4228
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object           [k] open_verify.constprop.0                55
-       7.69%  ls       ld-2.29.so            [k] openaux                  [k] _dl_map_object                         67
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object_deps      [k] 0x00007f441b57c090                     112
-       7.69%  ls       ld-2.29.so            [.] call_init.part.0         [.] _init                                  334
-       7.69%  ls       ld-2.29.so            [.] _dl_init                 [.] call_init.part.0                       383
-       7.69%  ls       ld-2.29.so            [k] _dl_sysdep_start         [k] dl_main                                45
-       7.69%  ls       ld-2.29.so            [k] _dl_catch_exception      [k] openaux                                116
-
-  #
-  # (Tip: Show current config key-value pairs: perf config --list)
-  #
+  # perf report -D |& grep PERF_RECORD_SAMPLE -A31 | tail -32
+  67538909824483 0xa7a0 [0x560]: PERF_RECORD_SAMPLE(IP, 0x4002): 9721/9721: 0x7f441b2b1e20 period: 1376095 addr: 0
+  ... FP chain: nr:0
+  ... branch callstack: nr:4
+  .....  0: 00007f441b2b1e20
+  .....  1: 00007f441b58af1a
+  .....  2: 00007f441b58b0e1
+  .....  3: 00007f441b57c145
+  ... user regs: mask 0xff0fff ABI 64-bit
+  .... AX    0x7f441b2b1000
+  .... BX    0x7f441b55b970
+  .... CX    0x7fff6e2db218
+  .... DX    0x7fff6e2db218
+  .... SI    0x7fff6e2db208
+  .... DI    0x1
+  .... BP    0x1
+  .... SP    0x7fff6e2db178
+  .... IP    0x7f441b2b1e20
+  .... FLAGS 0x20a
+  .... CS    0x33
+  .... SS    0x2b
+  .... R8    0x1
+  .... R9    0x7f441b371c18
+  .... R10   0x7f441b5a5f10
+  .... R11   0x202
+  .... R12   0x7fff6e2db208
+  .... R13   0x7fff6e2db218
+  .... R14   0x7f441b5a7150
+  .... R15   0x0
+  ... ustack: size 1024, offset 0x148
+   . data_src: 0x5080021
+   ... thread: ls:9721
+   ...... dso: /usr/lib64/libpthread-2.29.so
   #
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
@@ -239,22 +196,65 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com
+Link: http://lkml.kernel.org/r/aa82e5dd-def2-0ca8-a064-db9e2e8ad076@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/session.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 5e003d0..79dfb11 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1281,6 +1281,8 @@ int cmd_report(int argc, const char **argv)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b9fe71d..82e0438 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1051,23 +1051,30 @@ static void callchain__printf(struct evsel *evsel,
+ 		       i, callchain->ips[i]);
+ }
  
- 	has_br_stack = perf_header__has_feat(&session->header,
- 					     HEADER_BRANCH_STACK);
-+	if (perf_evlist__combined_sample_type(session->evlist) & PERF_SAMPLE_STACK_USER)
-+		has_br_stack = false;
+-static void branch_stack__printf(struct perf_sample *sample)
++static void branch_stack__printf(struct perf_sample *sample, bool callstack)
+ {
+ 	uint64_t i;
  
- 	setup_forced_leader(&report, session->evlist);
+-	printf("... branch stack: nr:%" PRIu64 "\n", sample->branch_stack->nr);
++	printf("%s: nr:%" PRIu64 "\n",
++		!callstack ? "... branch stack" : "... branch callstack",
++		sample->branch_stack->nr);
  
+ 	for (i = 0; i < sample->branch_stack->nr; i++) {
+ 		struct branch_entry *e = &sample->branch_stack->entries[i];
+ 
+-		printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
+-			i, e->from, e->to,
+-			(unsigned short)e->flags.cycles,
+-			e->flags.mispred ? "M" : " ",
+-			e->flags.predicted ? "P" : " ",
+-			e->flags.abort ? "A" : " ",
+-			e->flags.in_tx ? "T" : " ",
+-			(unsigned)e->flags.reserved);
++		if (!callstack) {
++			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
++				i, e->from, e->to,
++				(unsigned short)e->flags.cycles,
++				e->flags.mispred ? "M" : " ",
++				e->flags.predicted ? "P" : " ",
++				e->flags.abort ? "A" : " ",
++				e->flags.in_tx ? "T" : " ",
++				(unsigned)e->flags.reserved);
++		} else {
++			printf("..... %2"PRIu64": %016" PRIx64 "\n",
++				i, i > 0 ? e->from : e->to);
++		}
+ 	}
+ }
+ 
+@@ -1217,8 +1224,8 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
+ 	if (evsel__has_callchain(evsel))
+ 		callchain__printf(evsel, sample);
+ 
+-	if ((sample_type & PERF_SAMPLE_BRANCH_STACK) && !perf_evsel__has_branch_callstack(evsel))
+-		branch_stack__printf(sample);
++	if (sample_type & PERF_SAMPLE_BRANCH_STACK)
++		branch_stack__printf(sample, perf_evsel__has_branch_callstack(evsel));
+ 
+ 	if (sample_type & PERF_SAMPLE_REGS_USER)
+ 		regs_user__printf(sample);
