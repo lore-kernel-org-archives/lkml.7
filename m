@@ -2,171 +2,155 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EB6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E65C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCF922CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F64233A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9y4iYiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392593AbfHWJCP convert rfc822-to-8bit (ORCPT
+        id S2392529AbfHWJEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:02:15 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33189 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725797AbfHWJCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:02:15 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 6F78A2E4A07633C5F2BB;
-        Fri, 23 Aug 2019 10:02:13 +0100 (IST)
-Received: from LHREML524-MBS.china.huawei.com ([169.254.2.92]) by
- LHREML712-CAH.china.huawei.com ([10.201.108.35]) with mapi id 14.03.0415.000;
- Fri, 23 Aug 2019 10:02:04 +0100
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>
-Subject: RE: [PATCH v8 0/6] vfio/type1: Add support for valid iova list
- management
-Thread-Topic: [PATCH v8 0/6] vfio/type1: Add support for valid iova list
- management
-Thread-Index: AQHVQXDhdShLmk/XY0uPF9nH4SmJKKcIn6ow
-Date:   Fri, 23 Aug 2019 09:02:04 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F396F22@lhreml524-mbs.china.huawei.com>
-References: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
-In-Reply-To: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.227.237]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 23 Aug 2019 05:04:06 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41936 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfHWJEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:04:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j16so7912703wrr.8;
+        Fri, 23 Aug 2019 02:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ajwUkKcw+iTIl6aLsM85NOMdJeASecdPjAOj2v577vU=;
+        b=k9y4iYiYaj049QTESrEgDtUaU0+n4TFaihtpHIN9xDqAIP0thj98iv0w/m6cwndn1q
+         BIDXJm+pJbflImJ9LwGRNxmH0V/xW3CnLV99KmoGMCG3691EoD82Dehoc9Yvma2QSHby
+         H8S/XPVhYirLw7LAjvVWQ176CnEv/aaMB/IN+UFCuC/iNwwhPvjy5kSRDB5zC/hn3QUf
+         5YJjIMeTDMV1K8dgohZn5Ib1zW2T5JTiX4lxidLYHHHqLnsEjMJYlRDf3nahyZuTju+U
+         AAAG3obTy+vo9fi0Iv1px2CO3HKYLhfrfrNWr0SUmtaz3H1uJE0fHBR5MVWCzOWkNNb4
+         Tbog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ajwUkKcw+iTIl6aLsM85NOMdJeASecdPjAOj2v577vU=;
+        b=e+/ha3V8HrVIxBfIA42O/SGuwjK0yj8u6+7H/wAkwxKD0jbksCHjbr9Z0noxa6Rc2x
+         48dUYk8wiX7Y5FSBmv5PuIy4sVmGdFNWSxmwQ2YdPBwJJG+vf6YBSS70clci4tUxqWoV
+         u0dmbLlivGXU0G55A0+Ayr0mTLVZyXyUBT83i+9Bfr8/5C7PLuWYnDWwmYCX5FGQj3DG
+         K++7g/aa04zOp2f68RvQHslM+SvrVsO/qHgym86/mhCagZ4dZKnnA8ZZKEMn4QcQx3VO
+         rsKH0FHD8pdyXn0Hp6V9+5GMruOqa4F6tb/UMa+POOE8f6CIobN6U9Imx7uZCsQ5X2e0
+         QjEw==
+X-Gm-Message-State: APjAAAVhmiYFyjhNSpf74TQhVZzEkOwaKuw0RSOBiMpdlfYFRYS5McHq
+        NWvt8Dx8nIvuf7ThshU8tdXm9IlE
+X-Google-Smtp-Source: APXvYqyqCfTFx4kZwn44WaV1+u3204PiYLlofSPkA2nm3USXUk7H/wIep7R3+UZYvzc18Iuwd/QktA==
+X-Received: by 2002:adf:f3c1:: with SMTP id g1mr3810252wrp.203.1566551043866;
+        Fri, 23 Aug 2019 02:04:03 -0700 (PDT)
+Received: from 5WDYG62 (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
+        by smtp.gmail.com with ESMTPSA id n9sm2408689wrx.76.2019.08.23.02.04.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 23 Aug 2019 02:04:03 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 11:03:54 +0200
+From:   Romain Izard <romain.izard.pro@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: register HWMON devices with valid names
+Message-ID: <20190823090216.GA11377@5WDYG62>
+References: <20190822150919.18290-1-romain.izard.pro@gmail.com>
+ <20190822161207.GB6992@roeck-us.net>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822161207.GB6992@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Thu, Aug 22, 2019 at 09:12:07AM -0700, Guenter Roeck wrote:
+> On Thu, Aug 22, 2019 at 05:09:19PM +0200, Romain Izard wrote:
+> > With the introduction of the HWMON compatibility layer to the power
+> > supply framework in Linux 5.3, all power supply devices' names can be
+> > used directly to create HWMON devices with the same names.
+> > 
+> > But HWMON has rules on allowable names that are different from the power
+> > supply framework. The dash character is forbidden, as it is used by the
+> > libsensors library in userspace as a separator, whereas this character
+> > is used in the device names in more than half of the existing power
+> > supply drivers. This last case is consistent with the typical naming
+> > usage with MFD and Device Tree.
+> > 
+> > This leads to warnings in the kernel log, with the format:
+> > 
+> > power_supply gpio-charger: hwmon: \
+> > 	'gpio-charger' is not a valid name attribute, please fix
+> > 
+> > Add a protection to power_supply_add_hwmon_sysfs() that replaces any
+> > dash in the device name with an underscore when registering with the
+> > HWMON framework. Other forbidden characters (star, slash, space, tab,
+> > newline) are not replaced, as they are not in common use.
+> > 
+> > Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
+> > Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+> > ---
+> >  drivers/power/supply/power_supply_hwmon.c | 15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+> > index 51fe60440d12..ebe964bd512c 100644
+> > --- a/drivers/power/supply/power_supply_hwmon.c
+> > +++ b/drivers/power/supply/power_supply_hwmon.c
+> > @@ -284,6 +284,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+> >  	struct device *dev = &psy->dev;
+> >  	struct device *hwmon;
+> >  	int ret, i;
+> > +	const char *name;
+> >  
+> >  	if (!devres_open_group(dev, power_supply_add_hwmon_sysfs,
+> >  			       GFP_KERNEL))
+> > @@ -334,7 +335,19 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+> >  		}
+> >  	}
+> >  
+> > -	hwmon = devm_hwmon_device_register_with_info(dev, psy->desc->name,
+> > +	name = psy->desc->name;
+> > +	if (strchr(name, '-')) {
+> > +		char *new_name;
+> > +
+> > +		new_name = devm_kstrdup(dev, name, GFP_KERNEL);
+> > +		if (!new_name) {
+> > +			ret = -ENOMEM;
+> > +			goto error;
+> > +		}
+> > +		strreplace(new_name, '-', '_');
+> > +		name = (const char *) new_name;
+> 
+> Is that typecast necessary ?
 
-A gentle ping on this. Please let me know.
+Indeed, it is not. I'll remove it if a V2 is necessary.
+> 
+> Other than that,
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> > +	}
+> > +	hwmon = devm_hwmon_device_register_with_info(dev, name,
+> >  						psyhw,
+> >  						&power_supply_hwmon_chip_info,
+> >  						NULL);
 
-Thanks,
-Shameer
+Thanks for your review.
 
-> -----Original Message-----
-> From: Shameerali Kolothum Thodi
-> Sent: 23 July 2019 17:07
-> To: alex.williamson@redhat.com; eric.auger@redhat.com
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
-> Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
-> kevin.tian@intel.com; Shameerali Kolothum Thodi
-> <shameerali.kolothum.thodi@huawei.com>
-> Subject: [PATCH v8 0/6] vfio/type1: Add support for valid iova list management
-> 
-> This is to revive this series which almost made to 4.18 but got dropped
-> as Alex found an issue[1] with IGD and USB devices RMRR region being
-> reported as reserved regions.
-> 
-> Thanks to Eric for his work here[2]. It provides a way to exclude
-> these regions while reporting the valid iova regions and this respin
-> make use of that.
-> 
-> Please note that I don't have a platform to verify the reported RMRR
-> issue and appreciate testing on those platforms.
-> 
-> Thanks,
-> Shameer
-> 
-> [1] https://lkml.org/lkml/2018/6/5/760
-> [2] https://lore.kernel.org/patchwork/cover/1083072/
-> 
-> v7-->v8
->   -Rebased to 5.3-rc1
->   -Addressed comments from Alex and Eric. Please see
->    individual patch history.
->   -Added Eric's R-by to patches 4/5/6
-> 
-> v6-->v7
->  -Rebased to 5.2-rc6 + Eric's patches
->  -Added logic to exclude IOMMU_RESV_DIRECT_RELAXABLE reserved memory
->   region type(patch #2).
->  -Dropped patch #4 of v6 as it is already part of mainline.
->  -Addressed "container with only an mdev device will have an empty list"
->   case(patches 4/6 & 5/6 - Suggested by Alex)
-> 
-> Old
-> ----
-> This series introduces an iova list associated with a vfio
-> iommu. The list is kept updated taking care of iommu apertures,
-> and reserved regions. Also this series adds checks for any conflict
-> with existing dma mappings whenever a new device group is attached to
-> the domain.
-> 
-> User-space can retrieve valid iova ranges using VFIO_IOMMU_GET_INFO
-> ioctl capability chains. Any dma map request outside the valid iova
-> range will be rejected.
-> 
-> v5 --> v6
-> 
->  -Rebased to 4.17-rc1
->  -Changed the ordering such that previous patch#7 "iommu/dma: Move
->   PCI window region reservation back...")  is now patch #4. This
->   will avoid any bisection issues pointed out by Alex.
->  -Added Robins's Reviewed-by tag for patch#4
-> 
-> v4 --> v5
-> Rebased to next-20180315.
-> 
->  -Incorporated the corner case bug fix suggested by Alex to patch #5.
->  -Based on suggestions by Alex and Robin, added patch#7. This
->   moves the PCI window  reservation back in to DMA specific path.
->   This is to fix the issue reported by Eric[1].
-> 
-> v3 --> v4
->  Addressed comments received for v3.
->  -dma_addr_t instead of phys_addr_t
->  -LIST_HEAD() usage.
->  -Free up iova_copy list in case of error.
->  -updated logic in filling the iova caps info(patch #5)
-> 
-> RFCv2 --> v3
->  Removed RFC tag.
->  Addressed comments from Alex and Eric:
->  - Added comments to make iova list management logic more clear.
->  - Use of iova list copy so that original is not altered in
->    case of failure.
-> 
-> RFCv1 --> RFCv2
->  Addressed comments from Alex:
-> -Introduced IOVA list management and added checks for conflicts with
->  existing dma map entries during attach/detach.
-> 
-> Shameer Kolothum (6):
->   vfio/type1: Introduce iova list and add iommu aperture validity check
->   vfio/type1: Check reserved region conflict and update iova list
->   vfio/type1: Update iova list on detach
->   vfio/type1: check dma map request is within a valid iova range
->   vfio/type1: Add IOVA range capability support
->   vfio/type1: remove duplicate retrieval of reserved regions
-> 
->  drivers/vfio/vfio_iommu_type1.c | 518 +++++++++++++++++++++++++++++++-
->  include/uapi/linux/vfio.h       |  26 +-
->  2 files changed, 531 insertions(+), 13 deletions(-)
-> 
-> --
-> 2.17.1
-> 
-
+Best regards,
+-- 
+Romain Izard
