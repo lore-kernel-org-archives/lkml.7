@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0E4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE37C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F6521848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807A321848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394601AbfHWMYU (ORCPT
+        id S2394611AbfHWMYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:24:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35251 "EHLO
+        Fri, 23 Aug 2019 08:24:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35267 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732669AbfHWMYN (ORCPT
+        with ESMTP id S1731856AbfHWMYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:24:13 -0400
+        Fri, 23 Aug 2019 08:24:15 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i18bw-0001pf-Gv; Fri, 23 Aug 2019 14:24:08 +0200
+        id 1i18by-0001r6-Cx; Fri, 23 Aug 2019 14:24:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2B2391C089A;
-        Fri, 23 Aug 2019 14:24:08 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 12:24:07 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 089A01C089A;
+        Fri, 23 Aug 2019 14:24:10 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 12:24:09 -0000
 From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf script: Add missing counts.h
+Subject: [tip: perf/core] perf evsel: Add missing perf/evsel.h header in util/evsel.h
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <tip-q4shpvlxyjqz7val1hyrdak9@git.kernel.org>
-References: <tip-q4shpvlxyjqz7val1hyrdak9@git.kernel.org>
+In-Reply-To: <tip-nfb9e0t4jm9zhvr0q86hc29d@git.kernel.org>
+References: <tip-nfb9e0t4jm9zhvr0q86hc29d@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <156656304788.32107.3827521293276224992.tip-bot2@tip-bot2>
+Message-ID: <156656304997.32120.3841712694711958136.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -60,37 +60,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0f31c0195c14cc37b2f2a08e3f4219d69faa1b34
-Gitweb:        https://git.kernel.org/tip/0f31c0195c14cc37b2f2a08e3f4219d69faa1b34
+Commit-ID:     69714a4e3959eb051e685c6dce06c6d5a8f27c3c
+Gitweb:        https://git.kernel.org/tip/69714a4e3959eb051e685c6dce06c6d5a8f27c3c
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 21 Aug 2019 14:00:17 -03:00
+AuthorDate:    Wed, 21 Aug 2019 14:09:54 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 22 Aug 2019 17:16:56 -03:00
+CommitterDate: Thu, 22 Aug 2019 17:16:57 -03:00
 
-perf script: Add missing counts.h
+perf evsel: Add missing perf/evsel.h header in util/evsel.h
 
-It is getting this via evsel.h, that don't strictly need counts.h, just
-forward declarations for some structs, so add it here before we remove
-it from there.
+Since util/evsel.h uses perf_evsel__cpus() that has its prototype in
+libperf's perf/evsel.h file, we need it explicitely included.
+
+This was working by luck as util/evsel.h includes counts.h, but that is
+not necessary, just some forward declarations, so, before we remove
+counts.h from util/evsel.h, add what is realli needed.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-q4shpvlxyjqz7val1hyrdak9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-nfb9e0t4jm9zhvr0q86hc29d@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 1 +
+ tools/perf/util/evsel.h | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1764efd..e957b87 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3,6 +3,7 @@
- 
- #include "perf.h"
- #include "util/cache.h"
-+#include "util/counts.h"
- #include "util/debug.h"
- #include <subcmd/exec-cmd.h>
- #include "util/header.h"
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 2928eee..da91d6f 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -8,6 +8,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
+ #include <internal/evsel.h>
++#include <perf/evsel.h>
+ #include "symbol_conf.h"
+ #include "cpumap.h"
+ #include "counts.h"
