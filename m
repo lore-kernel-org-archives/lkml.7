@@ -2,143 +2,188 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD20C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACAAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0784D2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6850F2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:19:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MX6bUf+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392736AbfHWOQz (ORCPT
+        id S2393239AbfHWOTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:16:55 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:40603 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388188AbfHWOQy (ORCPT
+        Fri, 23 Aug 2019 10:19:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47050 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390234AbfHWOTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:16:54 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7NEGjPq023423
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 23 Aug 2019 10:16:46 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 0C42042049E; Fri, 23 Aug 2019 10:16:45 -0400 (EDT)
-Date:   Fri, 23 Aug 2019 10:16:45 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Ayush Ranjan <ayushr2@illinois.edu>
-Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Ext4 documentation fixes.
-Message-ID: <20190823141644.GG8130@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ayush Ranjan <ayushr2@illinois.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CA+UE=SPyMXZUhHFm0KgvihPdaE=yH5ra6n1C4XhKgM6aGheo=A@mail.gmail.com>
- <20190823031801.GD8130@mit.edu>
- <71dfe444-3efb-5f1c-d8a1-bb0e98002fd1@mixmax.com>
+        Fri, 23 Aug 2019 10:19:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q139so6537451pfc.13;
+        Fri, 23 Aug 2019 07:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ATCgi1Sogh8xX//ITzLr0C3oCB9rJq6klExJFgC99wk=;
+        b=MX6bUf+/9Pr+Mih2RzamjzGFDvamjBBVObGGRSU2DW4pK8Lh6MpQt0E6uHZsSAVS7f
+         YenWpoaVjJG+XxFvAeS9QB7xfnXUcyjXMpkuyjfbx5dkYHOTZegtXuGZ8P0BOEklfQn+
+         yQdsCWD9bOYS/WF06y738602EXzJkdiDKxhYV6E5v73tFv+S9FdaTBY+0ZKyhbXjIvZG
+         utPTLaJSBlIOs/B+tCpcXqzenocmxxqNEdgvJvwt3DZ4/p01AhF/ER/AeZu9kzMM9e9O
+         QT3aaYnKAmUP8Q62w7oDoThj3aixcTac36nJA47OoZMsTT6yGuvatR+asjCuzQh8A07O
+         k2Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ATCgi1Sogh8xX//ITzLr0C3oCB9rJq6klExJFgC99wk=;
+        b=fS+G2Gi3Fkfo3XvyaXrTZgXjPg1hIZnHkJKzrb1kHOO3uCtiSoiOfoe7k+HbxVl2tP
+         0Q9JCdsLoCSUh87QrIygYJ5HubGM7MBGOqH0tvm2Cr0LWjTGwwx6tX6dXNWOXCKR6LWZ
+         gjofYGyAJYdmFcMOzpUqkReQZVuupeiammMULuZK2hiX/sLOrATd/TX5ab/sdBDqDD14
+         E33FCbDdep68LiD4OijNpw8JJpQKio3o62U06Enp9P/SRa5pDLxUZDI0VLBBTB0tWnLB
+         xKfNyNDx5GXi690FDciLg3o5MvkzHDbqGzN0JtWPHcaG5RnGTzX2b3GEUHJEX4puot1a
+         HP2A==
+X-Gm-Message-State: APjAAAUo5bss8s9CM3YXfU/49EKYuhVGLu6+o0Q+4v0C67Fy9upakSZT
+        2CWduoxfbzspjjhX1X11jdZmVKyo
+X-Google-Smtp-Source: APXvYqxULzxl6gBv9C/yDCUlvYScoI2YH9z2w7u10ezY3qZ82ieomNLXNu8OJeZ7a3FW6rb7HwkbZQ==
+X-Received: by 2002:a65:4c4d:: with SMTP id l13mr4137814pgr.156.1566569973137;
+        Fri, 23 Aug 2019 07:19:33 -0700 (PDT)
+Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id x24sm2099614pgl.84.2019.08.23.07.19.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 07:19:31 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 07:19:30 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexander Amelkin <a.amelkin@yadro.com>,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v1 3/3] watchdog/aspeed: add support for dual boot
+Message-ID: <20190823141930.GA11610@roeck-us.net>
+References: <fafd757238e204b2566f216f1d6a4bef4b4906c5.camel@yadro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <71dfe444-3efb-5f1c-d8a1-bb0e98002fd1@mixmax.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fafd757238e204b2566f216f1d6a4bef4b4906c5.camel@yadro.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 04:56:42AM +0000, Ayush Ranjan wrote:
-> Hey Ted!
-> Thanks for reviewing! The comment in fs/ext4/ext4.h:ext4_group_desc:bg_checksum
-> says that the crc16 checksum formula should be crc16(sb_uuid+group+desc). I
-> think group over here denotes group number.
+On Fri, Aug 23, 2019 at 12:35:28PM +0300, Ivan Mikhaylov wrote:
+> Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
+> to clear out boot code source and re-enable access to the primary SPI flash
+> chip while booted via wdt2 from the alternate chip.
 > 
-> Briefly looking through fs/ext4/super.c:ext4_group_desc_csum() suggests that:
-> - For the new metadata_csum algorithm, only the group number and the block
-> descriptor are included in the checksum. So the formula should be
-> crc32c(group+desc) & 0xFFF (this looks like a bug as this should also include sb
-> UUID?)
-> - For the old crc16 algorithm, the sb UUID, group number and the block
-> descriptor are included in the checksum. So the formula should be
-> crc16(sb\_uuid+group+desc). (should remain unchanged)
-
-Thanks for the research and explanation.  I think I'm going to change
-that to be:
-
-crc{16,32c}(sb_uuid + group_num + bg_desc)
-
-That should make it clearer what is meant.
-
-     	    	    	    	 - Ted
-
-
-
-
-
-
-
-
+> AST2400 datasheet says:
+> "In the 2nd flash booting mode, all the address mapping to CS0# would be
+> re-directed to CS1#. And CS0# is not accessable under this mode. To access
+> CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
+> register WDT30.bit[1]."
 > 
-> Ayush Ranjan
-> University of Illinois - Urbana Champaign | May 2020
-> Bachelors of Science in Computer Science and Mathematics
-> Business Minor | Gies College of Business
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> ---
+>  drivers/watchdog/aspeed_wdt.c | 44 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+> index cc71861e033a..62bf95cb741f 100644
+> --- a/drivers/watchdog/aspeed_wdt.c
+> +++ b/drivers/watchdog/aspeed_wdt.c
+> @@ -53,6 +53,8 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+>  #define   WDT_CTRL_ENABLE		BIT(0)
+>  #define WDT_TIMEOUT_STATUS	0x10
+>  #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
+> +#define WDT_CLEAR_TIMEOUT_STATUS	0x14
+> +#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
+>  
+>  /*
+>   * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
+> @@ -165,6 +167,42 @@ static int aspeed_wdt_restart(struct watchdog_device *wdd,
+>  	return 0;
+>  }
+>  
+> +/* access_cs0 shows if cs0 is accessible, hence the reverted bit */
+> +static ssize_t access_cs0_show(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
+> +
+
+Unnecessary empty line.
+
+> +	uint32_t status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+> +
+> +	return sprintf(buf, "%u\n",
+> +			!(status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY));
+> +}
+> +
+> +static ssize_t access_cs0_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t size)
+> +{
+> +	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
+> +	unsigned long val = 0;
+
+Unnecessary initialization.
+
+> +
+> +	if (kstrtoul(buf, 10, &val))
+> +		return -EINVAL;
+> +
+> +	if (val)
+> +		writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
+> +			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
+> +
+> +	return size;
+> +}
+> +static DEVICE_ATTR_RW(access_cs0);
+> +
+> +static struct attribute *bswitch_attrs[] = {
+> +	&dev_attr_access_cs0.attr,
+
+The attribute needs to be documented.
+
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(bswitch);
+> +
+>  static const struct watchdog_ops aspeed_wdt_ops = {
+>  	.start		= aspeed_wdt_start,
+>  	.stop		= aspeed_wdt_stop,
+> @@ -306,8 +344,12 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
+> +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
+>  		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+> +		wdt->wdd.groups = bswitch_groups;
+> +	}
+
+So the attribute would only exist if the boot was from the secondary
+flash, and it would exist even if it wasn't needed (ie on ast2500 /
+ast2600) ? Well, if that is what you want, who am I to argue, but
+you'll have to document it accordingly. When you do so, please also
+document what happens on ast2500 / ast2600 when the attribute exists
+and is written.
+
+> +
+> +	dev_set_drvdata(dev, wdt);
+>  
+>  	return devm_watchdog_register_device(dev, &wdt->wdd);
+>  }
+> -- 
+> 2.20.1
 > 
 > 
-> On Fri, Aug 23, 2019 at 8:48 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >
-> > On Thu, Aug 15, 2019 at 09:11:51AM -0700, Ayush Ranjan wrote:
-> > > This commit aims to fix the following issues in ext4 documentation:
-> > > - Flexible block group docs said that the aim was to group block
-> > >   metadata together instead of block group metadata.
-> > > - The documentation consistly uses "location" instead of "block number".
-> > >   It is easy to confuse location to be an absolute offset on disk. Added
-> > >   a line to clarify all location values are in terms of block numbers.
-> > > - Dirent2 docs said that the rec_len field is shortened instead of the
-> > >   name_len field.
-> > > - Typo in bg_checksum description.
-> > > - Inode size is 160 bytes now, and hence i_extra_isize is now 32.
-> > > - Cluster size formula was incorrect, it did not include the +10 to
-> > >   s_log_cluster_size value.
-> > > - Typo: there were two s_wtime_hi in the superblock struct.
-> > > - Superblock struct was outdated, added the new fields which were part
-> > >   of s_reserved earlier.
-> > > - Multiple mount protection seems to be implemented in fs/ext4/mmp.c.
-> > >
-> > > Signed-off-by: Ayush Ranjan <ayushr2@illinois.edu>
-> >
-> > Fixed with one minor typo fix:
-> >
-> > > diff --git a/Documentation/filesystems/ext4/group_descr.rst
-> > > b/Documentation/filesystems/ext4/group_descr.rst
-> > > index 0f783ed88..feb5c613d 100644
-> > > --- a/Documentation/filesystems/ext4/group_descr.rst
-> > > +++ b/Documentation/filesystems/ext4/group_descr.rst
-> > > @@ -100,7 +100,7 @@ The block group descriptor is laid out in ``struct
-> > > ext4_group_desc``.
-> > >       - \_\_le16
-> > >       - bg\_checksum
-> > >       - Group descriptor checksum; crc16(sb\_uuid+group+desc) if the
-> > > -       RO\_COMPAT\_GDT\_CSUM feature is set, or
-> crc32c(sb\_uuid+group\_desc) &
-> > > +       RO\_COMPAT\_GDT\_CSUM feature is set, or crc32c(sb\_uuid+group+desc)
-> &
-> > >         0xFFFF if the RO\_COMPAT\_METADATA\_CSUM feature is set.
-> >
-> > The correct checksum should be "crc16(sb\_uuid+group\_desc)" or
-> > "crc32c(sb\_uuid+group\_desc)".  That is, it's previous line which
-> > needed modification.
-> >
-> >                                         - Ted
