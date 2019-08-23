@@ -2,129 +2,111 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5859C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168F0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A208721848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:55:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Z8fHU3xa"
+	by mail.kernel.org (Postfix) with ESMTP id E6F3921848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 20:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392935AbfHWUzY (ORCPT
+        id S2393053AbfHWUzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 16:55:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39277 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392871AbfHWUzY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:55:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so6398279pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 13:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=DOMSbUFejjbvhh3syNx2mPd1ccD1hkCqGREmnUI4Bh4=;
-        b=Z8fHU3xaHyWUdk8aM+/Zr1k32eHFHXEUQIEGhm0QTklwjF6o2yeRak8xLVTnReEHws
-         mnfMwuQHrRUYoES3KexwZ32OsGrcnrb1s9qJzgF9ziCfP9tYYhWZXUSlT/TmnyHCQoSD
-         EH2wLU7ldNI647pM/cNY8j+L2MWrI3yOfrObg6w/dFr02If3S0v5jO00vVaybZ04gUw6
-         SZaeYbscZ35Rk1qZJNQq70E3JvuhKldBFpRGdwFURY39FdTznEdVQq7XzppcqHi7VNkr
-         hf3Uysejz+aJrF8U3J3YFeAoa5fEXvw8IQqJjVHzxN+LCfK73FdybzahiiwbNaM6mbwE
-         JLmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=DOMSbUFejjbvhh3syNx2mPd1ccD1hkCqGREmnUI4Bh4=;
-        b=kOgIl8vYekaLw5kQC6JzE8nJ6YSLREpwBBz23a3UovH7ksaInvxn3scGm+y9gtsvrR
-         TpiguDgPM+4UEOPfDBypUv3Q3p34axl8MbDnlFUiPvMBpoic5ZV3uBv9mNEBao2YiYoq
-         /KJZt4eHJV/drk6OQUEwM9ofmGWnKJqMWHkyP69ziF6twQew6lM5DEmEa6rJJ3I+Tyh9
-         U+JR4v614U+IcKyc7Xb5okqWwc5waCRpFINJ2+WXYKwqRREof5Oas/tFg4VxsJww8SlH
-         rZWoRRtxcaK4ycpcBknXy6F0yJCh8BCLKm8q4a00mFSz9j8A1VaFBXUN8C41Uraa43M1
-         7AWw==
-X-Gm-Message-State: APjAAAUV0wUm98joHVwdKJE3Ruwu1VN4pf54XCYGterzu21gpdr+urRD
-        uqEHUwb1rD791lv8HbMctMSnNHpNEEU=
-X-Google-Smtp-Source: APXvYqwWqXwZanA/RIBsBivTmQ7OMMhM9wxbpGObupZqpUyHXrFJ3OB2nqQJqczKD3p98hiZv47Gzg==
-X-Received: by 2002:a17:90a:f995:: with SMTP id cq21mr5481913pjb.27.1566593723715;
-        Fri, 23 Aug 2019 13:55:23 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:89d4:68d1:fc04:721])
-        by smtp.gmail.com with ESMTPSA id w10sm3132874pjv.23.2019.08.23.13.55.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 23 Aug 2019 13:55:23 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>,
-        Oleg Ivanov <balbes-150@yandex.ru>
-Subject: Re: [PATCH 3/3] arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
-In-Reply-To: <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
-References: <1566565717-5182-1-git-send-email-christianshewitt@gmail.com> <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
-Date:   Fri, 23 Aug 2019 13:55:22 -0700
-Message-ID: <7hv9uny539.fsf@baylibre.com>
+        Fri, 23 Aug 2019 16:55:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48804 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392742AbfHWUzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 16:55:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 13:55:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
+   d="scan'208";a="330833026"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 23 Aug 2019 13:55:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] KVM: x86: Don't update RIP or do single-step on faulting emulation
+Date:   Fri, 23 Aug 2019 13:55:44 -0700
+Message-Id: <20190823205544.24052-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Hewitt <christianshewitt@gmail.com> writes:
+Don't advance RIP or inject a single-step #DB if emulation signals a
+fault.  This logic applies to all state updates that are conditional on
+clean retirement of the emulation instruction, e.g. updating RFLAGS was
+previously handled by commit 38827dbd3fb85 ("KVM: x86: Do not update
+EFLAGS on faulting emulation").
 
-> Tested-by: Oleg Ivanov <balbes-150@yandex.ru>
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Not advancing RIP is likely a nop, i.e. ctxt->eip isn't updated with
+ctxt->_eip until emulation "retires" anyways.  Skipping #DB injection
+fixes a bug reported by Andy Lutomirski where a #UD on SYSCALL due to
+invalid state with RFLAGS.RF=1 would loop indefinitely due to emulation
+overwriting the #UD with #DB and thus restarting the bad SYSCALL over
+and over.
 
-nit: empty changelog.  I'd rather see the changelog from patch2 here.
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Cc: stable@vger.kernel.org
+Reported-by: Andy Lutomirski <luto@kernel.org>
+Fixes: 663f4c61b803 ("KVM: x86: handle singlestep during emulation")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
->  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 567 +++++++++++++++++++++
->  2 files changed, 568 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 07b861f..21e2810 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-> new file mode 100644
-> index 0000000..27d1d62
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-> @@ -0,0 +1,567 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+Note, this has minor conflict with my recent series to cleanup the
+emulator return flows[*].  The end result should look something like:
 
-This is a bit confusing.
+                if (!ctxt->have_exception ||
+                    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
+                        kvm_rip_write(vcpu, ctxt->eip);
+                        if (r && ctxt->tf)
+                                r = kvm_vcpu_do_singlestep(vcpu);
+                        __kvm_set_rflags(vcpu, ctxt->eflags);
+                }
 
-I'm assuming you kept Neil's authorship because you copied from another
-g12b board.  If so, it would be helpful in the changelog to describe the
-origins of this file.  I'm assuming it was copied from odroid-n2 and
-then tweaked.  That's fine, just note that as "originally based on
-meson-g12b-odroid-c2".
+[*] https://lkml.kernel.org/r/20190823010709.24879-1-sean.j.christopherson@intel.com
 
-Other than that, thanks a lot for your work on adding these new boards!
+ arch/x86/kvm/x86.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Neil, I'm starting to see a lot of duplication in the g12b .dtb files.
-Should we start thinking about factoring out some of the common stuff
-that's standard across all these boards?
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b4cfd786d0b6..d2962671c3d3 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6611,12 +6611,13 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+ 		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
+ 		toggle_interruptibility(vcpu, ctxt->interruptibility);
+ 		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+-		kvm_rip_write(vcpu, ctxt->eip);
+-		if (r == EMULATE_DONE && ctxt->tf)
+-			kvm_vcpu_do_singlestep(vcpu, &r);
+ 		if (!ctxt->have_exception ||
+-		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
++		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
++			kvm_rip_write(vcpu, ctxt->eip);
++			if (r == EMULATE_DONE && ctxt->tf)
++				kvm_vcpu_do_singlestep(vcpu, &r);
+ 			__kvm_set_rflags(vcpu, ctxt->eflags);
++		}
+ 
+ 		/*
+ 		 * For STI, interrupts are shadowed; so KVM_REQ_EVENT will
+-- 
+2.22.0
 
-Kevin
