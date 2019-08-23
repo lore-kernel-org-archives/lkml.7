@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE51C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A923CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D75233A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737F22133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566558151;
-	bh=xpig/x3zeMZIh3XDN+X/FsnsmC/FSU6ObtqKyxjwogU=;
+	s=default; t=1566558156;
+	bh=O4ByAZX7/bT+r3G0aGa1qeuFhA6ZNgiMoUY+1g2yCUM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Ep73pLH05HfnEC5j8TKLrMWdg+tlBg3AoQbq+4zmiKlPJSRWNYcaN+u9g6SnJYphC
-	 txdA+ENWiec8vtHI+m+SXUjYWyxY8ii1Wmwpn4oFA5lGKzYI42MQXvmQS4z+HTDAS3
-	 HG5Jh2o0zu9+DW7R65so+Crgl/CC6qw/OXlsLJzU=
+	b=PODnoO3fL+D0nlMd4SqpGZ2R7irzVDBrQiWFPbuRqU34t/KWUHHr7KvIknStuOX1+
+	 8FgAzwq4d9Q8NBBzbKb7WixRqYOmZ+UPsqBVxNBO/jNSW4DOeFv48k4imxOgvtWJo2
+	 xgRF1i9uZHCp90hhbuXZdKhIdsIkrYdSGqAK8VdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404014AbfHWLCa (ORCPT
+        id S2404332AbfHWLCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:02:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56460 "EHLO
+        Fri, 23 Aug 2019 07:02:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56456 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403804AbfHWLC3 (ORCPT
+        with ESMTP id S2403818AbfHWLCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:02:29 -0400
+        Fri, 23 Aug 2019 07:02:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=mqrlg5qdclgMswZNo7YeuT7GTzz+9HMIwbV1tzQa7/o=; b=tAWhLvebAUeF
-        ZMhTF7cMrpBzfMIEw1+Y2pV0shpl62di12XuNmwGgexF6Vw+voB1Fk/oNg/HvkM9ZbNSMT5SHrn/4
-        Zk2dIjgpis3k0+iVajNeNzMI775zeP1XzcaY/kb12JWwsREdaSdroEg8Qf7oVgt1nFCd0FwFmchOu
-        Szjzs=;
+        List-Archive; bh=3H3IW/nXtQy8P+YjU4fyoEtI4tO3NH4yQaqiwbMbgkI=; b=gnb6d6yODXrg
+        xs3WeQv2s8661QYiwFZkYTF79cxgQGDmAWr1m2U9jU1zxvygphL+19LKCBWhFAkQdlft9NWuc62EG
+        qhFpzN8IIirn7Fp6i3nmh/Om1aABO5buhwtUrzx1h3MBZ/bGmjJqpahpKH+mDu2QpQ0RUhUfls3Wh
+        Deydw=;
 Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i17Kt-0002wG-Ft; Fri, 23 Aug 2019 11:02:27 +0000
+        id 1i17Kt-0002wE-Bl; Fri, 23 Aug 2019 11:02:27 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 36BDAD02CD1; Fri, 23 Aug 2019 12:02:27 +0100 (BST)
+        id 12F58D02CB0; Fri, 23 Aug 2019 12:02:27 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Vladimir Oltean <olteanv@gmail.com>
 Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org
-Subject: Applied "spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours" to the spi tree
-In-Reply-To: <20190822211514.19288-3-olteanv@gmail.com>
+Subject: Applied "spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is missing" to the spi tree
+In-Reply-To: <20190822211514.19288-5-olteanv@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190823110227.36BDAD02CD1@fitzroy.sirena.org.uk>
+Message-Id: <20190823110227.12F58D02CB0@fitzroy.sirena.org.uk>
 Date:   Fri, 23 Aug 2019 12:02:27 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
+   spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is missing
 
 has been applied to the spi tree at
 
@@ -87,38 +87,175 @@ to this mail.
 Thanks,
 Mark
 
-From 37b4100180641968056cb4e034cebc38338e8652 Mon Sep 17 00:00:00 2001
+From c55be305915974db160ce6472722ff74f45b8d4e Mon Sep 17 00:00:00 2001
 From: Vladimir Oltean <olteanv@gmail.com>
-Date: Fri, 23 Aug 2019 00:15:11 +0300
-Subject: [PATCH] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not
- ours
+Date: Fri, 23 Aug 2019 00:15:13 +0300
+Subject: [PATCH] spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is
+ missing
 
-The DSPI interrupt can be shared between two controllers at least on the
-LX2160A. In that case, the driver for one controller might misbehave and
-consume the other's interrupt. Fix this by actually checking if any of
-the bits in the status register have been asserted.
+On platforms like LS1021A which use TCFQ mode, an interrupt needs to be
+processed after each byte is TXed/RXed. I tried to make the DSPI
+implementation on this SoC operate in other, more efficient modes (EOQ,
+DMA) but it looks like it simply isn't possible.
 
-Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
+Therefore allow the driver to operate in poll mode, to ease a bit of
+this absurd amount of IRQ load generated in TCFQ mode. Doing so reduces
+both the net time it takes to transmit a SPI message, as well as the
+inter-frame jitter that occurs while doing so.
+
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Link: https://lore.kernel.org/r/20190822211514.19288-3-olteanv@gmail.com
+Link: https://lore.kernel.org/r/20190822211514.19288-5-olteanv@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c | 87 ++++++++++++++++++++++++++++----------
+ 1 file changed, 64 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index c90db7db4121..6ef2279a3699 100644
+index 6d2c7984ab0e..77db43f1290f 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -659,7 +659,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
+@@ -647,19 +647,12 @@ static void dspi_eoq_read(struct fsl_dspi *dspi)
+ 		dspi_push_rx(dspi, fifo_read(dspi));
+ }
  
- 	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
--		return IRQ_HANDLED;
-+		return IRQ_NONE;
+-static irqreturn_t dspi_interrupt(int irq, void *dev_id)
++static int dspi_rxtx(struct fsl_dspi *dspi)
+ {
+-	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
+ 	struct spi_message *msg = dspi->cur_msg;
+ 	enum dspi_trans_mode trans_mode;
+-	u32 spi_sr, spi_tcr;
+ 	u16 spi_tcnt;
+-
+-	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+-	regmap_write(dspi->regmap, SPI_SR, spi_sr);
+-
+-	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
+-		return IRQ_NONE;
++	u32 spi_tcr;
  
  	/* Get transfer counter (in number of SPI transfers). It was
  	 * reset to 0 when transfer(s) were started.
+@@ -675,17 +668,55 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	else if (trans_mode == DSPI_TCFQ_MODE)
+ 		dspi_tcfq_read(dspi);
+ 
+-	if (!dspi->len) {
+-		dspi->waitflags = 1;
+-		wake_up_interruptible(&dspi->waitq);
+-		return IRQ_HANDLED;
+-	}
++	if (!dspi->len)
++		/* Success! */
++		return 0;
+ 
+ 	if (trans_mode == DSPI_EOQ_MODE)
+ 		dspi_eoq_write(dspi);
+ 	else if (trans_mode == DSPI_TCFQ_MODE)
+ 		dspi_tcfq_write(dspi);
+ 
++	return -EINPROGRESS;
++}
++
++static int dspi_poll(struct fsl_dspi *dspi)
++{
++	int tries = 1000;
++	u32 spi_sr;
++
++	do {
++		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
++		regmap_write(dspi->regmap, SPI_SR, spi_sr);
++
++		if (spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF))
++			break;
++	} while (--tries);
++
++	if (!tries)
++		return -ETIMEDOUT;
++
++	return dspi_rxtx(dspi);
++}
++
++static irqreturn_t dspi_interrupt(int irq, void *dev_id)
++{
++	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
++	u32 spi_sr;
++
++	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
++	regmap_write(dspi->regmap, SPI_SR, spi_sr);
++
++	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
++		return IRQ_NONE;
++
++	dspi_rxtx(dspi);
++
++	if (!dspi->len) {
++		dspi->waitflags = 1;
++		wake_up_interruptible(&dspi->waitq);
++	}
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -773,13 +804,18 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 			goto out;
+ 		}
+ 
+-		if (trans_mode != DSPI_DMA_MODE) {
+-			if (wait_event_interruptible(dspi->waitq,
+-						     dspi->waitflags))
+-				dev_err(&dspi->pdev->dev,
+-					"wait transfer complete fail!\n");
++		if (!dspi->irq) {
++			do {
++				status = dspi_poll(dspi);
++			} while (status == -EINPROGRESS);
++		} else if (trans_mode != DSPI_DMA_MODE) {
++			status = wait_event_interruptible(dspi->waitq,
++							  dspi->waitflags);
+ 			dspi->waitflags = 0;
+ 		}
++		if (status)
++			dev_err(&dspi->pdev->dev,
++				"Waiting for transfer to complete failed!\n");
+ 
+ 		if (transfer->delay_usecs)
+ 			udelay(transfer->delay_usecs);
+@@ -1079,10 +1115,13 @@ static int dspi_probe(struct platform_device *pdev)
+ 		goto out_ctlr_put;
+ 
+ 	dspi_init(dspi);
++
+ 	dspi->irq = platform_get_irq(pdev, 0);
+-	if (dspi->irq < 0) {
+-		ret = dspi->irq;
+-		goto out_clk_put;
++	if (dspi->irq <= 0) {
++		dev_info(&pdev->dev,
++			 "can't get platform irq, using poll mode\n");
++		dspi->irq = 0;
++		goto poll_mode;
+ 	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
+@@ -1092,6 +1131,9 @@ static int dspi_probe(struct platform_device *pdev)
+ 		goto out_clk_put;
+ 	}
+ 
++	init_waitqueue_head(&dspi->waitq);
++
++poll_mode:
+ 	if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
+ 		ret = dspi_request_dma(dspi, res->start);
+ 		if (ret < 0) {
+@@ -1103,7 +1145,6 @@ static int dspi_probe(struct platform_device *pdev)
+ 	ctlr->max_speed_hz =
+ 		clk_get_rate(dspi->clk) / dspi->devtype_data->max_clock_factor;
+ 
+-	init_waitqueue_head(&dspi->waitq);
+ 	platform_set_drvdata(pdev, ctlr);
+ 
+ 	ret = spi_register_controller(ctlr);
 -- 
 2.20.1
 
