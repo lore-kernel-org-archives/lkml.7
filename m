@@ -2,356 +2,117 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FEEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F385EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59B621897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nk5thbuy"
+	by mail.kernel.org (Postfix) with ESMTP id D16FE21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394459AbfHWMUE (ORCPT
+        id S2394480AbfHWMVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:20:04 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:39042 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388497AbfHWMUD (ORCPT
+        Fri, 23 Aug 2019 08:21:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35190 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732316AbfHWMVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:20:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566562800; x=1598098800;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=oQ3SLOXnyDIrdnDqQtKX12htazF7VCNxY5rdgk07Gms=;
-  b=nk5thbuysXjQt9JdNiSGXErva4UTKF84THXD+iQ3JkxPoOwvBEmgskAu
-   x8iUVni1PSNxocVy/82cCSV6BHBnl/cpK//2uhk5pKpajU3+0coh2g0Xb
-   JDP64xOhZP4ECLgAz85gFuN4DgAAjqBvHK8KG8GmX+ANVyG9fSBvm/1Oz
-   I=;
-X-IronPort-AV: E=Sophos;i="5.64,421,1559520000"; 
-   d="scan'208";a="781000484"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 23 Aug 2019 12:19:59 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 597AAA2C68;
-        Fri, 23 Aug 2019 12:19:55 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 12:19:54 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.214) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 12:19:50 +0000
-Subject: Re: [PATCH v5 18/20] RISC-V: KVM: Add SBI v0.1 support
-To:     Anup Patel <anup@brainfault.org>
-CC:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Atish Patra" <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
- <20190822084131.114764-19-anup.patel@wdc.com>
- <40911e08-e0ce-a2b8-24d4-9cf357432850@amazon.com>
- <CAAhSdy3CvvYh59c=OomLZgweWREBhJj_eeH80OkU=7MMCwyiCQ@mail.gmail.com>
- <B29D1609-18FC-4327-8B34-33CB914042E7@amazon.com>
- <CAAhSdy2eVDqCDnFT9WrboQn+ERhwDFU6UtBaCQp_C7HshLZ+Yw@mail.gmail.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <aa686ffb-d70e-2838-6dd9-6a1193470a11@amazon.com>
-Date:   Fri, 23 Aug 2019 14:19:48 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Fri, 23 Aug 2019 08:21:48 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i18Za-0001i7-Tw; Fri, 23 Aug 2019 14:21:43 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8CD571C089A;
+        Fri, 23 Aug 2019 14:21:42 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 12:21:42 -0000
+From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf evsel: Move xyarray.h from evsel.c to evsel.h to reduce
+ include dep tree
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <tip-wwqce6ixwcyq6yzx3ljrdm80@git.kernel.org>
+References: <tip-wwqce6ixwcyq6yzx3ljrdm80@git.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy2eVDqCDnFT9WrboQn+ERhwDFU6UtBaCQp_C7HshLZ+Yw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Message-ID: <156656290247.31560.11450295013203969135.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
+ these emails
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.214]
-X-ClientProxiedBy: EX13D13UWB001.ant.amazon.com (10.43.161.156) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the perf/core branch of tip:
 
+Commit-ID:     7646602401e6f45e4013ddb7c41f6bc211032d02
+Gitweb:        https://git.kernel.org/tip/7646602401e6f45e4013ddb7c41f6bc211032d02
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 21 Aug 2019 11:30:29 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Thu, 22 Aug 2019 17:16:56 -03:00
 
-On 23.08.19 14:00, Anup Patel wrote:
-> On Fri, Aug 23, 2019 at 5:09 PM Graf (AWS), Alexander <graf@amazon.com> wrote:
->>
->>
->>
->>> Am 23.08.2019 um 13:18 schrieb Anup Patel <anup@brainfault.org>:
->>>
->>>> On Fri, Aug 23, 2019 at 1:34 PM Alexander Graf <graf@amazon.com> wrote:
->>>>
->>>>> On 22.08.19 10:46, Anup Patel wrote:
->>>>> From: Atish Patra <atish.patra@wdc.com>
->>>>>
->>>>> The KVM host kernel running in HS-mode needs to handle SBI calls coming
->>>>> from guest kernel running in VS-mode.
->>>>>
->>>>> This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
->>>>> implemented correctly except remote tlb flushes. For remote TLB flushes,
->>>>> we are doing full TLB flush and this will be optimized in future.
->>>>>
->>>>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->>>>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
->>>>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
->>>>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
->>>>> ---
->>>>>   arch/riscv/include/asm/kvm_host.h |   2 +
->>>>>   arch/riscv/kvm/Makefile           |   2 +-
->>>>>   arch/riscv/kvm/vcpu_exit.c        |   3 +
->>>>>   arch/riscv/kvm/vcpu_sbi.c         | 119 ++++++++++++++++++++++++++++++
->>>>>   4 files changed, 125 insertions(+), 1 deletion(-)
->>>>>   create mode 100644 arch/riscv/kvm/vcpu_sbi.c
->>>>>
->>>>> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
->>>>> index 2af3a179c08e..0b1eceaef59f 100644
->>>>> --- a/arch/riscv/include/asm/kvm_host.h
->>>>> +++ b/arch/riscv/include/asm/kvm_host.h
->>>>> @@ -241,4 +241,6 @@ bool kvm_riscv_vcpu_has_interrupt(struct kvm_vcpu *vcpu);
->>>>>   void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
->>>>>   void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
->>>>>
->>>>> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu);
->>>>> +
->>>>>   #endif /* __RISCV_KVM_HOST_H__ */
->>>>> diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
->>>>> index 3e0c7558320d..b56dc1650d2c 100644
->>>>> --- a/arch/riscv/kvm/Makefile
->>>>> +++ b/arch/riscv/kvm/Makefile
->>>>> @@ -9,6 +9,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
->>>>>   kvm-objs := $(common-objs-y)
->>>>>
->>>>>   kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
->>>>> -kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
->>>>> +kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
->>>>>
->>>>>   obj-$(CONFIG_KVM)   += kvm.o
->>>>> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
->>>>> index fbc04fe335ad..87b83fcf9a14 100644
->>>>> --- a/arch/riscv/kvm/vcpu_exit.c
->>>>> +++ b/arch/riscv/kvm/vcpu_exit.c
->>>>> @@ -534,6 +534,9 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
->>>>>                   (vcpu->arch.guest_context.hstatus & HSTATUS_STL))
->>>>>                       ret = stage2_page_fault(vcpu, run, scause, stval);
->>>>>               break;
->>>>> +     case EXC_SUPERVISOR_SYSCALL:
->>>>> +             if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
->>>>> +                     ret = kvm_riscv_vcpu_sbi_ecall(vcpu);
->>>>>       default:
->>>>>               break;
->>>>>       };
->>>>> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
->>>>> new file mode 100644
->>>>> index 000000000000..5793202eb514
->>>>> --- /dev/null
->>>>> +++ b/arch/riscv/kvm/vcpu_sbi.c
->>>>> @@ -0,0 +1,119 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>> +/**
->>>>> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
->>>>> + *
->>>>> + * Authors:
->>>>> + *     Atish Patra <atish.patra@wdc.com>
->>>>> + */
->>>>> +
->>>>> +#include <linux/errno.h>
->>>>> +#include <linux/err.h>
->>>>> +#include <linux/kvm_host.h>
->>>>> +#include <asm/csr.h>
->>>>> +#include <asm/kvm_vcpu_timer.h>
->>>>> +
->>>>> +#define SBI_VERSION_MAJOR                    0
->>>>> +#define SBI_VERSION_MINOR                    1
->>>>> +
->>>>> +/* TODO: Handle traps due to unpriv load and redirect it back to VS-mode */
->>>>
->>>> Ugh, another one of those? Can't you just figure out a way to recover
->>>> from the page fault? Also, you want to combine this with the instruction
->>>> load logic, so that we have a single place that guest address space
->>>> reads go through.
->>>
->>> Walking Guest page table would be more expensive compared to implementing
->>> a trap handling mechanism.
->>>
->>> We will be adding trap handling mechanism for reading instruction and reading
->>> load.
->>>
->>> Both these operations are different in following ways:
->>> 1. RISC-V instructions are variable length. We get to know exact instruction
->>>     length only after reading first 16bits
->>> 2. We need to set VSSTATUS.MXR bit when reading instruction for
->>>     execute-only Guest pages.
->>
->> Yup, sounds like you could solve that with a trivial if() based on "read instruction" or not, no? If you want to, feel free to provide short versions that do only read ins/data, but I would really like to see the whole "data reads become guest reads" magic to be funneled through a single function (in C, can be inline unrolled in asm of course)
->>
->>>
->>>>
->>>>> +static unsigned long kvm_sbi_unpriv_load(const unsigned long *addr,
->>>>> +                                      struct kvm_vcpu *vcpu)
->>>>> +{
->>>>> +     unsigned long flags, val;
->>>>> +     unsigned long __hstatus, __sstatus;
->>>>> +
->>>>> +     local_irq_save(flags);
->>>>> +     __hstatus = csr_read(CSR_HSTATUS);
->>>>> +     __sstatus = csr_read(CSR_SSTATUS);
->>>>> +     csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
->>>>> +     csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus);
->>>>> +     val = *addr;
->>>>> +     csr_write(CSR_HSTATUS, __hstatus);
->>>>> +     csr_write(CSR_SSTATUS, __sstatus);
->>>>> +     local_irq_restore(flags);
->>>>> +
->>>>> +     return val;
->>>>> +}
->>>>> +
->>>>> +static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu, u32 type)
->>>>> +{
->>>>> +     int i;
->>>>> +     struct kvm_vcpu *tmp;
->>>>> +
->>>>> +     kvm_for_each_vcpu(i, tmp, vcpu->kvm)
->>>>> +             tmp->arch.power_off = true;
->>>>> +     kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
->>>>> +
->>>>> +     memset(&vcpu->run->system_event, 0, sizeof(vcpu->run->system_event));
->>>>> +     vcpu->run->system_event.type = type;
->>>>> +     vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
->>>>> +}
->>>>> +
->>>>> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu)
->>>>> +{
->>>>> +     int ret = 1;
->>>>> +     u64 next_cycle;
->>>>> +     int vcpuid;
->>>>> +     struct kvm_vcpu *remote_vcpu;
->>>>> +     ulong dhart_mask;
->>>>> +     struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
->>>>> +
->>>>> +     if (!cp)
->>>>> +             return -EINVAL;
->>>>> +     switch (cp->a7) {
->>>>> +     case SBI_SET_TIMER:
->>>>> +#if __riscv_xlen == 32
->>>>> +             next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
->>>>> +#else
->>>>> +             next_cycle = (u64)cp->a0;
->>>>> +#endif
->>>>> +             kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
->>>>
->>>> Ah, this is where the timer set happens. I still don't understand how
->>>> this takes the frequency bit into account?
->>>
->>> Explained it in PATCH17 comments.
->>>
->>>>
->>>>> +             break;
->>>>> +     case SBI_CONSOLE_PUTCHAR:
->>>>> +             /* Not implemented */
->>>>> +             cp->a0 = -ENOTSUPP;
->>>>> +             break;
->>>>> +     case SBI_CONSOLE_GETCHAR:
->>>>> +             /* Not implemented */
->>>>> +             cp->a0 = -ENOTSUPP;
->>>>> +             break;
->>>>
->>>> These two should be covered by the default case.
->>>
->>> Sure, I will update.
->>>
->>>>
->>>>> +     case SBI_CLEAR_IPI:
->>>>> +             kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_SOFT);
->>>>> +             break;
->>>>> +     case SBI_SEND_IPI:
->>>>> +             dhart_mask = kvm_sbi_unpriv_load((unsigned long *)cp->a0, vcpu);
->>>>> +             for_each_set_bit(vcpuid, &dhart_mask, BITS_PER_LONG) {
->>>>> +                     remote_vcpu = kvm_get_vcpu_by_id(vcpu->kvm, vcpuid);
->>>>> +                     kvm_riscv_vcpu_set_interrupt(remote_vcpu, IRQ_S_SOFT);
->>>>> +             }
->>>>> +             break;
->>>>> +     case SBI_SHUTDOWN:
->>>>> +             kvm_sbi_system_shutdown(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN);
->>>>> +             ret = 0;
->>>>> +             break;
->>>>> +     case SBI_REMOTE_FENCE_I:
->>>>> +             sbi_remote_fence_i(NULL);
->>>>> +             break;
->>>>> +     /*
->>>>> +      * TODO: There should be a way to call remote hfence.bvma.
->>>>> +      * Preferred method is now a SBI call. Until then, just flush
->>>>> +      * all tlbs.
->>>>> +      */
->>>>> +     case SBI_REMOTE_SFENCE_VMA:
->>>>> +             /*TODO: Parse vma range.*/
->>>>> +             sbi_remote_sfence_vma(NULL, 0, 0);
->>>>> +             break;
->>>>> +     case SBI_REMOTE_SFENCE_VMA_ASID:
->>>>> +             /*TODO: Parse vma range for given ASID */
->>>>> +             sbi_remote_sfence_vma(NULL, 0, 0);
->>>>> +             break;
->>>>> +     default:
->>>>> +             cp->a0 = ENOTSUPP;
->>>>> +             break;
->>>>
->>>> Please just send unsupported SBI events into user space.
->>>
->>> For unsupported SBI calls, we should be returning error to the
->>> Guest Linux so that do something about it. This is in accordance
->>> with the SBI spec.
->>
->> That's up to user space (QEMU / kvmtool) to decide. If user space wants to implement the  console functions (like we do on s390), it should have the chance to do so.
-> 
-> The SBI_CONSOLE_PUTCHAR and SBI_CONSOLE_GETCHAR are
-> for debugging only. These calls are deprecated in SBI v0.2 onwards
-> because we now have earlycon for early prints in Linux RISC-V.
-> 
-> The RISC-V Guest will generally have it's own MMIO based UART
-> which will be the default console.
-> 
-> Due to these reasons, we have not implemented these SBI calls.
+perf evsel: Move xyarray.h from evsel.c to evsel.h to reduce include dep tree
 
-I'm not saying we should implement them. I'm saying we should leave a 
-policy decision like that up to user space. By terminating the SBI in 
-kernel space, you can not quickly debug something going wrong.
+All we need in util/evsel.h is the foward declaration of 'struct
+xyarray', not the internal/xyarray.h, that can be moved to util/evsel.c
+and then we reduce the header dependency tree.
 
-> If we still want user-space to implement this then we will require
-> separate exit reasons and we are trying to avoid adding RISC-V
-> specific exit reasons/ioctls in KVM user-space ABI.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-wwqce6ixwcyq6yzx3ljrdm80@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evsel.c | 1 +
+ tools/perf/util/evsel.h | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Why?
-
-I had so many occasions where I would have loved to have user space 
-exits for MSR access, SPR access, hypercalls, etc etc. It really makes 
-life so much easier when you can quickly hack something up in user space 
-rather than modify the kernel.
-
-> The absence of SBI_CONSOLE_PUTCHAR/GETCHAR certainly
-> does not block anyone in debugging Guest Linux because we have
-> earlycon support in Linux RISC-V.
-
-I'm not hung on on the console. What I'm trying to express is a general 
-sentiment that terminating extensible hypervisor <-> guest interfaces in 
-kvm is not a great idea. Some times we can't get around it (like on page 
-tables), but some times we do. And this is a case where we could.
-
-At the end of the day this is your call though :).
-
-
-Alex
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 0a33f73..477c47c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -39,6 +39,7 @@
+ #include "string2.h"
+ #include "memswap.h"
+ #include "util/parse-branch-options.h"
++#include <internal/xyarray.h>
+ 
+ #include <linux/ctype.h>
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index efe0806..2928eee 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -8,7 +8,6 @@
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
+ #include <internal/evsel.h>
+-#include <internal/xyarray.h>
+ #include "symbol_conf.h"
+ #include "cpumap.h"
+ #include "counts.h"
+@@ -93,6 +92,7 @@ enum perf_tool_event {
+ };
+ 
+ struct bpf_object;
++struct xyarray;
+ 
+ /** struct evsel - event selector
+  *
