@@ -2,107 +2,93 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99035C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37320C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF7D233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pTCIk/NQ"
+	by mail.kernel.org (Postfix) with ESMTP id 48739233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391270AbfHWClY (ORCPT
+        id S2391301AbfHWCoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:41:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57654 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389719AbfHWClY (ORCPT
+        Thu, 22 Aug 2019 22:44:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33852 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389842AbfHWCoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:41:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7N2fHnn040351;
-        Thu, 22 Aug 2019 21:41:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566528077;
-        bh=pG93l+RMglvDxl8bb0IbXg5xaVYgCMI7e0/JyG61YKY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pTCIk/NQVNBCsLX4tPCJ9C5QZvRxRtoQVQ+Z4Jq1c049w3QRhK+bo34Z/Rzikz9tT
-         1KA2dlPAJVQ4E7mSA1wOfNhZCzju70n9ztDlEUO3BkqYzXgbyUsqeYaWRLWSCntK8N
-         nCF4xJD1zd85qZKHgP7CsNhhgvPrYF1G967mwOy0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7N2fGVu096937
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 22 Aug 2019 21:41:16 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
- Aug 2019 21:41:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 22 Aug 2019 21:41:16 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7N2fDl8119839;
-        Thu, 22 Aug 2019 21:41:14 -0500
-Subject: Re: [PATCH 10/12] phy: amlogic: G12A: Fix misuse of GENMASK macro
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <cover.1562734889.git.joe@perches.com>
- <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
- <c6cabf9c-7edd-eea8-3388-df781163cddd@baylibre.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <6d7abb4d-fe68-8d02-d985-7214118be126@ti.com>
-Date:   Fri, 23 Aug 2019 08:11:12 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 22:44:21 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i0zYm-0001Md-6a; Fri, 23 Aug 2019 04:44:16 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 968171C07E4;
+        Fri, 23 Aug 2019 04:44:15 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:44:15 -0000
+From:   tip-bot2 for Arnaldo Carvalho de Melo <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] tools headers: Add limits.h to access __WORDSIZE
+Cc:     linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+In-Reply-To: <tip-5yfoed4rnsck2n3cwhm9mvth@git.kernel.org>
+References: <tip-5yfoed4rnsck2n3cwhm9mvth@git.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c6cabf9c-7edd-eea8-3388-df781163cddd@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <156652825547.13140.595664236026125012.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
+ these emails
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the perf/core branch of tip:
 
+Commit-ID:     6e98bc349ea4219e21785d85809b10bd49e722df
+Gitweb:        https://git.kernel.org/tip/6e98bc349ea4219e21785d85809b10bd49e722df
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Tue, 20 Aug 2019 12:01:38 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Tue, 20 Aug 2019 12:03:05 -03:00
 
-On 22/07/19 12:53 PM, Neil Armstrong wrote:
-> On 10/07/2019 07:04, Joe Perches wrote:
->> Arguments are supposed to be ordered high then low.
->>
->> Signed-off-by: Joe Perches <joe@perches.com>
->> ---
->>  drivers/phy/amlogic/phy-meson-g12a-usb2.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
->> index 9065ffc85eb4..cd7eccab2649 100644
->> --- a/drivers/phy/amlogic/phy-meson-g12a-usb2.c
->> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
->> @@ -66,7 +66,7 @@
->>  #define PHY_CTRL_R14						0x38
->>  	#define PHY_CTRL_R14_I_RDP_EN				BIT(0)
->>  	#define PHY_CTRL_R14_I_RPU_SW1_EN			BIT(1)
->> -	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(2, 3)
->> +	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(3, 2)
->>  	#define PHY_CTRL_R14_PG_RSTN				BIT(4)
->>  	#define PHY_CTRL_R14_I_C2L_DATA_16_8			BIT(5)
->>  	#define PHY_CTRL_R14_I_C2L_ASSERT_SINGLE_EN_ZERO	BIT(6)
->>
-> 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+tools headers: Add limits.h to access __WORDSIZE
 
-Shouldn't this go to stable trees as well?
+We need to make sure limits.h is included before checking if we can use
+__WORDSIZE, do it.
 
--Kishon
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-5yfoed4rnsck2n3cwhm9mvth@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/linux/bitops.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
+index 0b0ef3a..140c836 100644
+--- a/tools/include/linux/bitops.h
++++ b/tools/include/linux/bitops.h
+@@ -3,6 +3,7 @@
+ #define _TOOLS_LINUX_BITOPS_H_
+ 
+ #include <asm/types.h>
++#include <limits.h>
+ #ifndef __WORDSIZE
+ #define __WORDSIZE (__SIZEOF_LONG__ * 8)
+ #endif
