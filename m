@@ -2,84 +2,201 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD37EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC856C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8874D22CF7
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OlEn9Rfh"
+	by mail.kernel.org (Postfix) with ESMTP id 7F54022CF7
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391410AbfHWHzC (ORCPT
+        id S2391562AbfHWH5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:55:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36932 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732838AbfHWHzC (ORCPT
+        Fri, 23 Aug 2019 03:57:39 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:35326 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391272AbfHWH5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:55:02 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t14so8022906lji.4
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L23L8mkAuzJKbYYfAd7CE0VQjkVVjnJ6WWkwaXOISg4=;
-        b=OlEn9Rfhmm7ec36B+M3dKYBn+HokEEtWF/cQ1xyjfzwf1AVFvx1RM5uDes+6nCR1SH
-         eGGozHJy4nvCserw5X5CCa6F32/RI6f7g+AYMJFHD7luk2ikDn5Yg6pgBQm2iRTyclFx
-         07d+2F3IKdjgD7LIfK5OQIaDkwHVhotLZMj8pSfJkXyuE5FO3Ot/D4sr5EoMEPREuDHY
-         G11+MA3Rj6yk1xNcCp/r9gnwNvwTm6LNbU6S6RZgdoJfW8tjqoM+D6GoWeYEW6u458tY
-         7grKu4FSZfSguz72cWR1IF5O5J2sYRWWq977cQQ9vqRij7w0HBldIFdQg3brHMkTC1X4
-         T1IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L23L8mkAuzJKbYYfAd7CE0VQjkVVjnJ6WWkwaXOISg4=;
-        b=PO+uqSyglt10SqaRUQ1igU/MlL0zujKchd5AhIXDlpMg/FKsLyuiL1vJLjH9boJ0c7
-         h+NFwJRezD8ct7TPqlglcscRS5mO/yaEjI97RVN4xZehFYvMoCfClw2TixewaAz9En8G
-         PWWw65qbAggerJfJSDKUIemdwuHQRuA1tQqIe5mYDyQTd3ayZag2lmJMgJBctgmK8akx
-         JDXJ0EIFhJHxAap9jZ133k9hxGzdbuFbiJYc07J7Ilr+qb4T1Ob0UsX+Bxc+QmlmJtOD
-         mRcFUKxsGxxU/Lrjegk4pD8iH4BpRJzgNHNLC/AnO7lgQukoDOgE5luWUFdJcmYx/YF0
-         xuQw==
-X-Gm-Message-State: APjAAAU12eCbiOKXYP02YGxS0khnq1jFNzW/2Ie5WZkGTiq85Ur2RGsz
-        m4s3HO4H/7fPtQAW4LaySTK/qYJ3nnzpHkvZB68mOq1PiAY=
-X-Google-Smtp-Source: APXvYqw4jcDtSrQVItY/ZI/ussc812HqTpeUB5hUIzPipT/Ilr23+VdMy+LYWL8YNmKWwRKDpuQ1ju57rC6I4pZbaSQ=
-X-Received: by 2002:a2e:781a:: with SMTP id t26mr2076354ljc.28.1566546899996;
- Fri, 23 Aug 2019 00:54:59 -0700 (PDT)
+        Fri, 23 Aug 2019 03:57:39 -0400
+X-UUID: 1fb72e0bda014223a024b2dcfac9732f-20190823
+X-UUID: 1fb72e0bda014223a024b2dcfac9732f-20190823
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1909703833; Fri, 23 Aug 2019 15:57:22 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 23 Aug 2019 15:57:20 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 23 Aug 2019 15:57:18 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das@bp.renesas.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [PATCH next v10 00/11] add USB GPIO based connection detection driver
+Date:   Fri, 23 Aug 2019 15:57:10 +0800
+Message-ID: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813061547.17847-1-efremov@linux.com> <CACRpkdaAE6RA1iQ-iqK3GGHOovTkuDDqi8vcoFnmG8UBwuim8w@mail.gmail.com>
- <e52ce7fa-c4fc-04b4-36fb-a89222024d2e@linux.com>
-In-Reply-To: <e52ce7fa-c4fc-04b4-36fb-a89222024d2e@linux.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 09:54:47 +0200
-Message-ID: <CACRpkdaWdchHoQpWqFD5crqhGw=yJhUtjL3GmojWdhpX676T5Q@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove FMC subsystem
-To:     Denis Efremov <efremov@linux.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Federico Vaga <federico.vaga@cern.ch>,
-        Pat Riehecky <riehecky@fnal.gov>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 6F8C1AD31E915CAE7EA5B8674E9CC58B9FDD742755ABCFF30FD3A977DD81C8AF2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:20 PM Denis Efremov <efremov@linux.com> wrote:
-> On 13.08.2019 11:54, Linus Walleij wrote:
+Because the USB Connector is introduced and the requirement of
+usb-connector.txt binding, the old way using extcon to support
+USB Dual-Role switch is now deprecated, meanwhile there is no
+available common driver when use Type-B connector, typically
+using an input GPIO to detect USB ID pin.
+This patch series introduce a USB GPIO based connection detection
+driver and try to replace the function provided by extcon-usb-gpio
+driver.
 
-> > Do you need help to merge the patch? I can take it in the
-> > GPIO tree since the subsystem was removed there.
->
-> Yes, please. I kindly ask you to take this patch in your tree.
+v10 changes:
+  1. revert commit log changes of [06/11] and [07/11]
 
-OK patch merged into the GPIO tree.
+v9 changes:
+  1. replace signed-off-by by suggested-by Heikki
+  2. add reviewed-by Linus
+  3. use class_find_device_by_fwnode() introduced by series [1]
 
-Yours,
-Linus Walleij
+[1]:
+ https://lore.kernel.org/patchwork/patch/1103630/
+ [v3,1/7] drivers: Introduce device lookup variants by name
+
+ they are already in:
+ https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/log/drivers/base/core.c?h=driver-core-next
+
+v8 changes:
+  1. rename the driver's name suggested by Heikki
+  2. move the driver from usb/roles/ into usb/common/ suggested by Heikki
+  3. introduce Kconfig for usb common core to add the new driver
+  4. modify binding of the driver 
+  5. rename the subject title
+
+v7 changes:
+  1. [5/10]: add signed-off-by Chunfeng
+  2. [6/10]: add signed-off-by Chunfeng
+  3. [6/10]: depends on linux-next of Rafael's tree [1]
+  4. [7/10]: add signed-off-by Chunfeng and tested-by Biju
+  5. [9/10]: add tested-by Nagarjuna, and remove DEV_PMS_OPS suggested by Andy
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
+
+v6 changes:
+  1. merge [1] and [2] into this series
+  2. don't use graph anymore to find usb-role-switch
+  3. abandon [3] and introduce three patches (6, 7, 8 in this series)
+     to rebuild APIs getting usb-role-switch
+
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
+
+  [3]: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+
+v5 changes:
+  1. remove linux/of.h and put usb_role_switch when error happens,
+     suggested by Biju
+  2. treat Type-B connector as USB controller's child, but not as
+     a virtual device, suggested by Rob
+  3. provide and use generic property "usb-role-switch", see [1],
+     suggested by Rob
+
+  Note: this series still depends on [2]
+
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
+
+v4 changes:
+  1. use switch_fwnode_match() to find fwnode suggested by Heikki
+  2. assign fwnode member of usb_role_switch struct suggested by Heikki
+  3. make [4/6] depend on [2]
+  3. remove linux/gpio.h suggested by Linus
+  4. put node when error happens
+
+  [4/6] usb: roles: add API to get usb_role_switch by node
+  [2] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+    https://patchwork.kernel.org/patch/10909971/
+
+v3 changes:
+  1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+  2. rebuild fwnode_usb_role_switch_get() suggested by Andy and Heikki
+  3. treat the type-B connector as a virtual device;
+  4. change file name of driver again
+  5. select USB_ROLE_SWITCH in mtu3/Kconfig suggested by Heikki
+  6. rename ssusb_mode_manual_switch() to ssusb_mode_switch()
+
+v2 changes:
+ 1. make binding clear, and add a extra compatible suggested by Hans
+
+Chunfeng Yun (8):
+  dt-binding: usb: add usb-role-switch property
+  dt-bindings: connector: add optional properties for Type-B
+  dt-bindings: usb: add binding for USB GPIO based connection detection
+    driver
+  dt-bindings: usb: mtu3: add properties about USB Role Switch
+  usb: roles: get usb-role-switch from parent
+  usb: common: create Kconfig file
+  usb: common: add USB GPIO based connection detection driver
+  usb: mtu3: register a USB Role Switch for dual role mode
+
+Heikki Krogerus (2):
+  device connection: Add fwnode_connection_find_match()
+  usb: roles: Add fwnode_usb_role_switch_get() function
+
+Yu Chen (1):
+  usb: roles: Introduce stubs for the exiting functions in role.h
+
+ .../bindings/connector/usb-connector.txt      |  14 +
+ .../devicetree/bindings/usb/generic.txt       |   4 +
+ .../devicetree/bindings/usb/mediatek,mtu3.txt |  10 +
+ .../devicetree/bindings/usb/usb-conn-gpio.txt |  31 ++
+ drivers/base/devcon.c                         |  43 ++-
+ drivers/usb/Kconfig                           |  35 +--
+ drivers/usb/common/Kconfig                    |  51 ++++
+ drivers/usb/common/Makefile                   |   1 +
+ drivers/usb/common/usb-conn-gpio.c            | 284 ++++++++++++++++++
+ drivers/usb/mtu3/Kconfig                      |   1 +
+ drivers/usb/mtu3/mtu3.h                       |   5 +
+ drivers/usb/mtu3/mtu3_debugfs.c               |   4 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |  48 ++-
+ drivers/usb/mtu3/mtu3_dr.h                    |   6 +-
+ drivers/usb/mtu3/mtu3_plat.c                  |   3 +-
+ drivers/usb/roles/class.c                     |  41 ++-
+ include/linux/device.h                        |  10 +-
+ include/linux/usb/role.h                      |  37 +++
+ 18 files changed, 570 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+ create mode 100644 drivers/usb/common/Kconfig
+ create mode 100644 drivers/usb/common/usb-conn-gpio.c
+
+-- 
+2.23.0
+
