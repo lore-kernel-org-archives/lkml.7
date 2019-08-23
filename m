@@ -2,96 +2,169 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9805C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD29C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B989721019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F0621019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390645AbfHWHKn (ORCPT
+        id S2392763AbfHWHLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:10:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6425 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728332AbfHWHKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:10:43 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 00:10:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
-   d="scan'208";a="196419917"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 23 Aug 2019 00:10:38 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 23 Aug 2019 10:10:37 +0300
-Date:   Fri, 23 Aug 2019 10:10:37 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Matthias Andree <matthias.andree@gmx.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add missing link delays required by the PCIe spec
-Message-ID: <20190823071037.GP19908@lahna.fi.intel.com>
-References: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
- <9f741e3a-0878-b914-39d8-a64a02484cb5@gmx.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f741e3a-0878-b914-39d8-a64a02484cb5@gmx.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 23 Aug 2019 03:11:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389927AbfHWHLd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:11:33 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7N773xo036086
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:11:32 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ujap99wn9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 03:11:32 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Fri, 23 Aug 2019 08:11:30 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 23 Aug 2019 08:11:26 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7N7BPnO51773542
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Aug 2019 07:11:25 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02F155204E;
+        Fri, 23 Aug 2019 07:11:25 +0000 (GMT)
+Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 408F45204F;
+        Fri, 23 Aug 2019 07:11:23 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, paulus@samba.org
+Cc:     npiggin@gmail.com, mpe@ellerman.id.au, ego@linux.vnet.ibm.com,
+        svaidy@linux.ibm.com, mikey@neuling.org, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org,
+        Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC 0/3] New idle device-tree format and support for versioned stop state
+Date:   Fri, 23 Aug 2019 02:09:37 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19082307-4275-0000-0000-0000035C72A3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082307-4276-0000-0000-0000386E9AD6
+Message-Id: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-23_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908230072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 08:29:09PM +0200, Matthias Andree wrote:
-> Am 21.08.19 um 14:45 schrieb Mika Westerberg:
-> > Hi all,
-> >
-> > As the changelog says this is reworked version that tries to avoid reported
-> > issues while at the same time fix the missing delays so we can get ICL
-> > systems and at least the one system with Titan Ridge controller working
-> > properly.
-> >
-> > @Matthias, @Paul and @Nicholas: it would be great if you could try the
-> > patch on top of v5.4-rc5+ and verify that it does not cause any issues on
-> > your systems.
-> >
-> >  drivers/pci/pci-driver.c |  19 ++++++
-> >  drivers/pci/pci.c        | 127 ++++++++++++++++++++++++++++++++++++---
-> >  drivers/pci/pci.h        |   1 +
-> >  3 files changed, 137 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index a8124e47bf6e..9aec78ed8907 100644
-> 
-> ...
-> 
-> Mika, Bjorn, Rafael,
-> 
-> quick smoke test, this test applied with git-am on top
-> v5.3-rc5-149-gbb7ba8069de9, reboot, suspend, wake, suspend, wake,
-> hibernate, wake, looks good to me. The top of git log --pretty-short is
-> shown below.
+Background
+------------------
 
-Thanks for testing!
+Previously if a older kernel runs on a newer firmware, it may enable
+all available states irrespective of its capability of handling it.
+Consider a case that some stop state has a bug, we end up disabling all
+the stop states. This patch introduces selective control to solve this
+problem.
 
-> Couldn't test on v5.4-rc5 though as I've handed off my time machine for
-> repairs,
-> I seem to recall they said something about the flux compensator.
+Previous version of these patches can be found at:
+https://lkml.org/lkml/2018/10/11/544
+These patch however also had patches for support of opal save-restore
+which now I am decoupling and will take them seperately.
+I have posted the corresponding skiboot patches for this kernel patchset
+here : https://patchwork.ozlabs.org/cover/1144587/
 
-:)
+What's new?
+--------------------
+
+Add stop states under ibm,idle-states in addition to the current array
+based device tree properties.
+
+New device tree format adds a compatible flag which has version
+corresponding to every state, so that only kernel which has the capability
+to handle the version of stop state will enable it. Drawback of the array
+based dt node is that versioning of idle states is not possible.
+
+Older kernel will still see stop0 and stop0_lite in older format and we
+will deprecate it after some time.
+
+Consider a case that stop4 has a bug. We take the following steps to
+mitigate the problem.
+
+1) Change compatible string for stop4 in OPAL to "stop4,v2" from
+"stop4,v1", i.e. basicallly bump up the previous version and ship the
+new firmware.
+
+2) The kernel will ignore stop4 as it won't be able to recognize this
+new version. Kernel will also ignore all the deeper states because its
+possible that a cpu have requested for a deeper state but was never able
+to enter into it. But we will still have shallower states that are there
+before stop 4. This, thus prevents from completely disabling stop states.
+
+Linux kernel can now look at the version string and decide if it has the
+ability to handle that idle state. Henceforth, if kernel does not know
+about a version, it will skip that state and all the deeper state.
+
+Once when the workaround are implemented into the kernel, we can bump up
+the known version in kernel for that state, so that support can be
+enabled once again in kernel.
+
+New Device-tree :
+
+Final output
+       power-mgt {
+            ...
+         ibm,enabled-stop-levels = <0xec000000>;
+         ibm,cpu-idle-state-psscr-mask = <0x0 0x3003ff 0x0 0x3003ff>;
+         ibm,cpu-idle-state-latencies-ns = <0x3e8 0x7d0>;
+         ibm,cpu-idle-state-psscr = <0x0 0x330 0x0 0x300330>;
+         ibm,cpu-idle-state-flags = <0x100000 0x101000>;
+         ibm,cpu-idle-state-residency-ns = <0x2710 0x4e20>;
+         ibm,idle-states {
+                     stop4 {
+                         flags = <0x207000>;
+                         compatible = "stop4,v1",
+                         psscr-mask = <0x0 0x3003ff>;
+                         latency-ns = <0x186a0>;
+                         residency-ns = <0x989680>;
+                         psscr = <0x0 0x300374>;
+			 ...
+                  };
+                    ...
+                    stop11 {
+                         ...
+                         compatible = "stop11,v1",
+                         ...
+                  };
+             };
+
+
+Abhishek Goel (3):
+  cpuidle/powernv : Pass state pointer instead of values to stop loop
+  cpuidle/powernv: Add support for versioned stop states
+  cpuidle/powernv : Add flags to identify stop state type
+
+ arch/powerpc/include/asm/cpuidle.h    |   8 +-
+ arch/powerpc/include/asm/opal-api.h   |   7 +
+ arch/powerpc/include/asm/processor.h  |   5 +-
+ arch/powerpc/platforms/powernv/idle.c | 371 +++++++++++++++++++++-----
+ drivers/cpuidle/cpuidle-powernv.c     |  81 +++---
+ 5 files changed, 363 insertions(+), 109 deletions(-)
+
+-- 
+2.17.1
+
