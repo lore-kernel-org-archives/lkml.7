@@ -2,211 +2,191 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE39C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B09C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06CB204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BFC2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Tbb+Qdzz"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WZpV/Wqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436882AbfHWTsf (ORCPT
+        id S2391772AbfHWTuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:48:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42177 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391525AbfHWTse (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:48:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p3so6298583pgb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 12:48:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=mmvH/MiPBr+v/9h/NqmKdTN+9qaz3FZdG5BKqSNbGjY=;
-        b=Tbb+QdzzrmYFKAD3GK9vLZkK/NM8omZ6WAKaHjyjKlIXmpyaUZNzp3xGyJygmI+m+P
-         EbRS/GTRurPgwAA93u1mgXPaA95I7A50nyQ9mVEYWX1ICugwFitTt2NFpRb9jbXrsYEV
-         SqQZ5gOgGEGKfbmjWSF9Ci8mtCOyazf4LFrp8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=mmvH/MiPBr+v/9h/NqmKdTN+9qaz3FZdG5BKqSNbGjY=;
-        b=hWGMu0f6sXBLDNa3gTi2sIhsB7CYzuP2nY9ytNhY0Z8ZCTCW1YkAzXII2qP98k32Qc
-         boi9dt+hNlqWdkJ7RhomG13b/kD/JzdERlHjR43jOaov9clF7IHmn6s8boFmbW9UcrnX
-         Iqr3Vpux7YrPfYIgnZYadOAuitcEAjnxIy82U/hjTz+uYiaWn9uIlX95AW9oxczeq2kb
-         Acq/3Sr9/7Ci884gcGSJqF/6C09PkERpZT5tpWPXWwaQsoiZm1VMGjA9cWm2EB/5QIa8
-         vuhVqfqdSjeLLpucaVZ1ALTx5gG0/qQnt3lmpl2WewMKINFKyWnNM8cS5mYsrPfu4ZjD
-         aWRg==
-X-Gm-Message-State: APjAAAXUmwbAblNOxm6BPvP8kQ+r6aM5Hk+JU3DjWN4HjE+j7zvWvZtj
-        aOT9HdF3hngzmwFdt26ybSDFRw==
-X-Google-Smtp-Source: APXvYqy4Vu/BUixQkOsIGmHqPmpJ6AQ7tioo+6e6JH0ZmrWQBVeswubKUAMb+I6GuTOM8zvTUHfooA==
-X-Received: by 2002:a63:524f:: with SMTP id s15mr5160553pgl.2.1566589713570;
-        Fri, 23 Aug 2019 12:48:33 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e6sm3256802pfn.71.2019.08.23.12.48.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 12:48:32 -0700 (PDT)
-Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
- condition
-To:     Takashi Iwai <tiwai@suse.de>, Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org
-References: <20190816000945.29810-1-scott.branden@broadcom.com>
- <20190816000945.29810-4-scott.branden@broadcom.com>
- <20190819053937.GR16384@42.do-not-panic.com>
- <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
- <20190820012655.GU16384@42.do-not-panic.com> <s5hd0gwrx4j.wl-tiwai@suse.de>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <54ccd717-7749-3c45-320f-1c285e027d36@broadcom.com>
-Date:   Fri, 23 Aug 2019 12:48:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <s5hd0gwrx4j.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 23 Aug 2019 15:50:25 -0400
+Received: from mail-eopbgr690109.outbound.protection.outlook.com ([40.107.69.109]:2269
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387948AbfHWTuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 15:50:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JRKsbxKd2mXAOJEMnJAoZTKXZmYO16BMFwbX9Mz9L81GWZzXh27bAL1mf07iCP1fMhScwb5CwrZqDq7F0T1DlC576d+QDXYOklRT1iASEwCK8/SSjRNt0D2CzwiGWAeD7g17VJtOtqP3+D9HncqbD+W+iPiPnM+dwXxRmeEkHLFJhet9BRisd49aQ0oRJUGwlSpmtTIXc3UzJ2jvAQegqMNlBgDMbsyh0qmMsbGGAmR/Gm2YuwHpNRbJP9kou1tgxL71i+ilKCxvn9fRawElcd0EkastDJFDLQBTWVfSnaBcGm59j9mEZ9sJjv7XK2ll1tBkvNUFqJ/48v/X7S6z+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+xtxnarhEnxyeKtPdSwRTSwL0jQtL0+NIsdnBJftkOg=;
+ b=kzMDwgrTSyCAI45X/NBIJpzDOQChK4f3nIuy/pupELYP51WZbqvVvEEcnkzBhlbddocgS7KTWVlgJLsRO30GUgABIgXea7Chs1UGf2i12r1v2lUDT9g+XEdQ72kexfwjpQ3O7RgQKlJVpQ/1LWORnDrKTS61x3KRgej6tipqnhHYC2wCeC6H5Pby7pZoTvFGosEdKLOdP1hxzOddMbLH51mc+eBCmKccZZ9hJiTWO/Fu1TBGVUVYCwjDCVRDu+KA+hSxo355+2h6IBLnWeOd4M9GeikFcM6Uh0fLLooSo4rsPNkgsejLu6FI7WCAv6ek806b/ZtPdS53wuSkZroZTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+xtxnarhEnxyeKtPdSwRTSwL0jQtL0+NIsdnBJftkOg=;
+ b=WZpV/Wqz92H1X32IzJG3WUmGFfKJ6PG29pCY2e4uDvJX4N3OIirjn/MwNmzj/LWLJIwC3yei2msA2qwNnRqcg5jTOdauNLWpCCsqKvXChVJbF79r23J3m+X7ZrIL93jgXG7IyrL36kcbnzCW3m/Jq6hJ0dC1GmLQ9Vr6vUIt7gk=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0857.namprd21.prod.outlook.com (10.173.172.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.4; Fri, 23 Aug 2019 19:50:21 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Fri, 23 Aug 2019
+ 19:50:21 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 02/12] x86/hyper-v: Implement
+ hv_is_hibernation_supported()
+Thread-Topic: [PATCH v3 02/12] x86/hyper-v: Implement
+ hv_is_hibernation_supported()
+Thread-Index: AQHVVvnbeUNjfG6a0EKsx3hMtEEAZKcJJ23g
+Date:   Fri, 23 Aug 2019 19:50:21 +0000
+Message-ID: <DM5PR21MB0137A7EC5E51EAF8A0667359D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
+ <1566265863-21252-3-git-send-email-decui@microsoft.com>
+In-Reply-To: <1566265863-21252-3-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T19:50:19.4147320Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d9b27438-246a-4a4e-b2fe-93c271246a48;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: be048c08-b94f-4034-2793-08d7280321ee
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0857;
+x-ms-traffictypediagnostic: DM5PR21MB0857:|DM5PR21MB0857:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB0857C97CA7B5B69571B2E4ABD7A40@DM5PR21MB0857.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(199004)(189003)(6436002)(33656002)(6506007)(14444005)(8936002)(256004)(102836004)(8990500004)(81166006)(81156014)(14454004)(71190400001)(229853002)(11346002)(476003)(446003)(486006)(66476007)(71200400001)(53936002)(64756008)(66446008)(9686003)(66556008)(26005)(55016002)(186003)(74316002)(86362001)(305945005)(7736002)(2201001)(478600001)(2906002)(316002)(66946007)(1511001)(66066001)(4326008)(76176011)(76116006)(99286004)(10290500003)(52536014)(6246003)(5660300002)(25786009)(7696005)(2501003)(3846002)(22452003)(10090500001)(6116002)(8676002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0857;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kEtWy09gkbO4U7Z+VEUhzE0r4t1NuBc52WVVlcvWTjrmh/4JwH5xPhxL9dyW8FwGyQi+Wj7tjQdJuxzz4Bg26mmSJKKb7XFfh3e8CEtAeRVPE1caEO9pIGahnw5IIbNAH/Sa04H6aCBeAZqhXjoQF8vDvIfBaT5cXPQQ48NFgYtxCCMkFlfs0c+NmS5WRhDC0N44E5ohn0XLZaliBG7sZiSx3kGWJZAvWKqkrUAZej4c6+N9uHn/lC62WBHiNCoet7lSr1ihF6VSCSXm5onafSrWu4y/v2wgNHZxF/qgq71E8a8yVfHfLQhqgiOf+47y/YRaxgnyX9hfSFt32e2svlVrV3WTHFqnHYrxD06fYaVIgpcXpgh7krVkp+r9gV5OHa9H1AucStiQDzBhLsNUdFNoHRzRL7liBFtm4RwkdG4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be048c08-b94f-4034-2793-08d7280321ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 19:50:21.4253
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KkUml4KTrGFW3ly3pxmos5d48qF4jzy9v4gLgze5tewOZatBNXAoAl7BI+YYYF4ePu55vhRvOG+b6ZJYIlAwJMtxPgnRll5yS9JydoYwIyg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0857
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dexuan Cui <decui@microsoft.com> Sent: Monday, August 19, 2019 6:52 P=
+M
+>=20
+> When a Linux VM runs on Hyper-V and hibernates, it must disable the
+> memory hot-add/remove and balloon up/down capabilities in the hv_balloon
+> driver.
 
-On 2019-08-23 3:31 a.m., Takashi Iwai wrote:
-> On Tue, 20 Aug 2019 03:26:55 +0200,
-> Luis Chamberlain wrote:
->> On Mon, Aug 19, 2019 at 09:19:51AM -0700, Scott Branden wrote:
->>> To be honest, I find the entire firmware code sloppy.
->> And that is after years of cleanup on my part. Try going back to v4.1
->> for instance, check the code out then for an incredible horrific sight :)
->>
->>> I don't think the cache/no-cache feature is
->>> implemented or tested properly nor fallback to begin with.
->> I'm in total agreement! I *know* there must be holes in that code, and I
->> acknowledge a few possible gotchas on the commit logs. For instance, I
->> acknowledged that the firmware cache had a secondary purpose which was
->> not well documented or understood through commit e44565f62a720
->> ("firmware: fix batched requests - wake all waiters"). The firmware
->> cache allows for batching requests and sharing the same original request
->> for multiple consecutive requests which *race against each other*.
->> That's when I started having my doubts about the architecture of the
->> firmware cache mechanism, it seemed too complex and perhaps overkill
->> and considered killing it.
->>
->> As I noted in that commit, the firmware cache is used for:
->>      
->> 1) Addressing races with file lookups during the suspend/resume cycle by
->> keeping firmware in memory during the suspend/resume cycle
-> Right, this one is the significant need.  And currently the fw loader
-> core takes a complicated approach as:
->
-> - Store firmware name string in devres for each firmware
-> - Upon suspend, loop over all devices and associated firmware names,
->    create a list, then loop over the list for loading the firmware
->    files before sleeping.
-> - Upon resume, release the firmware files that have been loaded at
->    suspend in a delayed manner.
->
-> So we have different level of lists there, which make the code quite
-> hard to understand.
->
-> The reason of the above approach is because we didn't know which
-> device driver would need the firmware at resume, so basically we do
-> cache for all devices.  Maybe it'd better to look for the exact
-> drivers that require the firmware at resume, and handle only such
-> ones instead of catch-all approach.
+I'm unclear on the above statement.  I think the requirement is that
+ballooning must not be active when hibernation is initiated.  Is hibernatio=
+n
+blocked in that case?  If not, what happens?
 
-Yes, that would be better.  Or remove this cache mechanism entirely
+>=20
+> By default, Hyper-V does not enable the virtual ACPI S4 state for a VM;
+> on recent Hyper-V hosts, the administrator is able to enable the virtual
+> ACPI S4 state for a VM, so we hope to use the presence of the virtual ACP=
+I
 
-and provide some helper functions of some sort to the limited
+"we hope" sounds very indefinite. :-(    Does ACPI S4 have to be enabled fo=
+r
+hibernation to be initiated?  Goes back to my first question ....
 
-drivers that actually require such mechanism.
+> S4 state as a hint for hv_balloon to disable the aforementioned
+> capabilities.
+>=20
+> The new API will be used by hv_balloon.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c      | 7 +++++++
+>  include/asm-generic/mshyperv.h | 2 ++
+>  2 files changed, 9 insertions(+)
+>=20
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 78e53d9..6735e45 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -7,6 +7,7 @@
+>   * Author : K. Y. Srinivasan <kys@microsoft.com>
+>   */
+>=20
+> +#include <linux/acpi.h>
+>  #include <linux/efi.h>
+>  #include <linux/types.h>
+>  #include <asm/apic.h>
+> @@ -453,3 +454,9 @@ bool hv_is_hyperv_initialized(void)
+>  	return hypercall_msr.enable;
+>  }
+>  EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
+> +
+> +bool hv_is_hibernation_supported(void)
+> +{
+> +	return acpi_sleep_state_supported(ACPI_STATE_S4);
+> +}
+> +EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
+v.h
+> index 0becb7d..1cb4001 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -166,9 +166,11 @@ static inline int cpumask_to_vpset(struct hv_vpset *=
+vpset,
+>  void hyperv_report_panic(struct pt_regs *regs, long err);
+>  void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
+>  bool hv_is_hyperv_initialized(void);
+> +bool hv_is_hibernation_supported(void);
+>  void hyperv_cleanup(void);
+>  #else /* CONFIG_HYPERV */
+>  static inline bool hv_is_hyperv_initialized(void) { return false; }
+> +static inline bool hv_is_hibernation_supported(void) { return false; }
+>  static inline void hyperv_cleanup(void) {}
+>  #endif /* CONFIG_HYPERV */
+>=20
+> --
+> 1.8.3.1
 
->
-> OTOH, I find it's not bad to keep the loaded firmware file names per
-> device and expose e.g. via sysfs.  Currently we have no way to look at
-> which firmware files have been loaded afterwards; the only way to see
-> it is enabling some debug option and read through kernel messages.
-> (FWIW, I stumbled on this problem since I wanted to provide the split
->   kernel-firmware package on SUSE distro, and let the installer decide
->   which package to pick up.)
->
->> 2) Batched requests for the same file rely only on work from the first
->> file lookup, which keeps the firmware in memory until the last
->> release_firmware() is called
-> IMO, this feature can be omitted if it makes things too complicated.
-> I guess it were added because we handle the fw caching in anyway.
-> There isn't a big need for this due to performance.  If the
-> performance matters, such driver should re-use its own firmware by
-> itself.
-
-Any simplifications would be appreciated.
-
-I sure don't understand what the code is trying to do.
-
->
-> (snip)
->>> 3) I have a driver that uses request_firmware_into_buf and have multiple
->>> instances of the driver
->> Cool, is the driver upstream?
->>
->>> loading the same firmware in parallel.  Some of the data is not read
->>> correctly in each instance.
->> Makes perfect sense considering the lack of testing I noted.
->>
->>> I haven't yet to reproduce this issue with the firmware test
->> That's because of batched firmware request mechanism.
->>
->>> but currently
->>> have a mutex around the entire
->>> call to request_firmware_into_buf in our driver.
->> I will take a look at this now.
->>
->>> Perhaps it is better at this point to add a mutex in
->>> request_firmware_into_buf to make is entirely safe?
->> No, that is not sufficient, although it would also solve the
->> issue.
-> The mutex for request_firmware_into_buf() doesn't sound like a good
-> approach.  Basically the direct fw loading should work in parallel
-> for the same firmware file.  We might have some bug wrt cache stuff,
-> but it can be fixed properly.
->
-> However, the fw loading in fallback mode can't run in parallel for
-> the same file, per design -- no matter whether cached or not.
-> So, if any, we'd need put a mutex around the fallback loader code.
-> And, the mutex should be rather per device, not a global one.
-
-Sure, whatever solves the issue.  All I wish to do is read
-
-part of file into a buffer specified.
-
->
-> Or we may trick it by appending the second parallel caller into the
-> same wait queue, but the code will be more complex, so I don't think
-> worth for it.
->
->
-> thanks,
->
-> Takashi
