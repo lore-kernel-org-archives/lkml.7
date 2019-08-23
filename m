@@ -2,93 +2,113 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6A7C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA22C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3124022CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 13:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C7821848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZjSOzcnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390652AbfHWN6U (ORCPT
+        id S2391451AbfHWOCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 09:58:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:34990 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbfHWN6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 09:58:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0B5128;
-        Fri, 23 Aug 2019 06:58:18 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 490FE3F718;
-        Fri, 23 Aug 2019 06:58:18 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 14:58:16 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.co, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
- doorbell way
-Message-ID: <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
+        Fri, 23 Aug 2019 10:02:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37764 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389723AbfHWOCx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 10:02:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TlgSQbGZQbJS6HSDwi/9wyBYZmrJdjzuU/XfSgcoVhk=; b=ZjSOzcnGcfW/LTdzeR/cMRrGu
+        hM5Ku9PVLtYuui8pFAfhIb6v0R6YOO5qjsMuw7dvWVbFpD+i5Z5PqZ9ahOHejsSTlE9wrd+apSRUZ
+        1r1B6ol8fjseEyO1nHBCb4O2rZ9vMWpl2zedqIxRFO1cadKFaGAE9Y1lH/npc5yz38/ld/lub0fE/
+        DC9LG7mINAvxT7HwTNVePM1CgJxvR+bPTXgQgq9bjLe4pZylvKfJQBGc0hX4lCccOU3PI2F1F0e6d
+        OWGqm8f1dndYs52YG854QIFZs9ZzNF/Prwi1z8CqHiUww9N5xeH+mB6o5TaLm7HcIvoIVnvkAMFJ0
+        c1zcqv41Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i1A9E-0006Qi-4s; Fri, 23 Aug 2019 14:02:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 415B1305F65;
+        Fri, 23 Aug 2019 16:02:01 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A4044202245EA; Fri, 23 Aug 2019 16:02:33 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 16:02:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v8 11/27] x86/mm: Introduce _PAGE_DIRTY_SW
+Message-ID: <20190823140233.GC2332@hirez.programming.kicks-ass.net>
+References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
+ <20190813205225.12032-12-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822112242.16309-7-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190813205225.12032-12-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
-> The layerscape platform use the doorbell way to trigger MSIX
-> interrupt in EP mode.
-> 
+On Tue, Aug 13, 2019 at 01:52:09PM -0700, Yu-cheng Yu wrote:
 
-I have no problems with this patch, however...
+> +static inline pte_t pte_move_flags(pte_t pte, pteval_t from, pteval_t to)
+> +{
+> +	if (pte_flags(pte) & from)
+> +		pte = pte_set_flags(pte_clear_flags(pte, from), to);
+> +	return pte;
+> +}
 
-Are you able to add to this message a reason for why you are making this
-change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
-it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
+Aside of the whole conditional thing (I agree it would be better to have
+this unconditionally); the function doesn't really do as advertised.
 
-Thanks,
+That is, if @from is clear, it doesn't endeavour to make sure @to is
+also clear.
 
-Andrew Murray
+Now it might be sufficient, but in that case it really needs a comment
+and or different name.
 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index 8461f62..7ca5fe8 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -74,7 +74,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	case PCI_EPC_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->  	case PCI_EPC_IRQ_MSIX:
-> -		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-> +		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
-> +							  interrupt_num);
->  	default:
->  		dev_err(pci->dev, "UNKNOWN IRQ type\n");
->  		return -EINVAL;
-> -- 
-> 2.9.5
-> 
+An implementation that actually moves the bit is something like:
+
+	pteval_t a,b;
+
+	a = native_pte_value(pte);
+	b = (a >> from_bit) & 1;
+	a &= ~((1ULL << from_bit) | (1ULL << to_bit));
+	a |= b << to_bit;
+	return make_native_pte(a);
+
