@@ -2,156 +2,238 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F498C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64147C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4213A21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334F221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 17:16:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W8GIVaB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733287AbfHWRPK (ORCPT
+        id S2387568AbfHWRQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 13:15:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:6009 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbfHWRPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 13:15:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 10:15:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
-   d="scan'208";a="180736561"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Aug 2019 10:15:07 -0700
-Date:   Fri, 23 Aug 2019 10:15:04 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190823171504.GA1092@iweiny-DESK2.sc.intel.com>
-References: <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <20190819123841.GC5058@ziepe.ca>
- <20190820011210.GP7777@dread.disaster.area>
- <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190823005914.GF1119@dread.disaster.area>
+        Fri, 23 Aug 2019 13:16:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33628 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731264AbfHWRQQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 13:16:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so6870385pfq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 10:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9DzZ5tBJ/5ijRD9+7u3gl0wIvugmOxHsruYTm4QtT68=;
+        b=W8GIVaB8rGd7EMVaNvOWNGQGtO9OcfY9IZT6A8PjRQ91C89zSJg3XjiR1yVXhwRPbb
+         u4Pb2XSQRoKBkkwhobhc797pbff4PCdeI/YFbVjytv9OOacmvwEiHOWTQW4Vg9R3e6kK
+         UzN2P3fA95DeRAJgAtcuKBAoHWxW/jtMFR/F3BFQzh/j2mKrrodtqPq9FaZ9oIaf9N39
+         Wu0zMWAJk10iKxakmUkvFm7omvf3hiXYq/OtK89i5NiI1u7iEUzWT78HrjLOJv5zTEIS
+         MVRd7Efjon5tGQoDDmkzS4/gUIlBtaScz28mn5RTtmbFU1Bj59SKxsvYkpV5UDJQH/9p
+         fvEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9DzZ5tBJ/5ijRD9+7u3gl0wIvugmOxHsruYTm4QtT68=;
+        b=ZaJ6bz+ZLsY2w6ylI0Ipqt0zyEjaXQFMvlx3pwbNJEg5VNHKb7Nz7rFRNr2I3/iVy4
+         O7kXdFvqJfQ9cWwQUbH2RX4xUfu5g1loh5q/Qk8sKlwCuPcALVrhxw85NLcw81aDnbKH
+         hgKAErii9vk8NNue1flSqfr30cIGJfzDN2BfVf2JEdA4mev8EmqtDMI6/Y7ME4IgVOsU
+         omfPzF2asx3ygav1A5zywQD6S2UI5znPEQv+7rQlz/PrYdjXORTV0a4id8gIqDzrzNZr
+         Khqxd8kPVyc6xwgtpxbDpqszylgZoKut5bUdXUAtNAsEzsR1tPXXlaboJwB9LOCO3pt4
+         4eeQ==
+X-Gm-Message-State: APjAAAUz8seKAOcKDxozjjFvrbWCdHuTh33/+okqHlHvAM4P66XS++kc
+        rKBZRX1cmjOLqUa+jnGmGX/ttylBqi9ec5S7GTvQHw==
+X-Google-Smtp-Source: APXvYqw0fR/sRLo6BnRDukhLtAs2eJY/rIk8qs41s14k4IrSkE1bJcwERqNuLHJycTJLHJ/oxhk3lu2nSZCIfJ55mSg=
+X-Received: by 2002:a17:90a:ac02:: with SMTP id o2mr6420803pjq.134.1566580575131;
+ Fri, 23 Aug 2019 10:16:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823005914.GF1119@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20190729211014.39333-1-ndesaulniers@google.com>
+ <alpine.LFD.2.21.1907292302451.16059@eddie.linux-mips.org>
+ <CAKwvOd==SCBrj=cZ7Ax5F87+-bPMS9AtGSxp+NWp_+yDCg4R-A@mail.gmail.com> <CAKwvOdkXLhEuLiQ_ukE75zEg=Sw5-4BLHHCFqcZ0oyTEX3pWTQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdkXLhEuLiQ_ukE75zEg=Sw5-4BLHHCFqcZ0oyTEX3pWTQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 23 Aug 2019 10:16:04 -0700
+Message-ID: <CAKwvOdmGax-WgXeKEnTq8+Xe0+Z5d2k4_Ad1vw0uOiO2NJ0bkg@mail.gmail.com>
+Subject: Re: [PATCH] mips: avoid explicit UB in assignment of mips_io_port_base
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Stephen Kitt <steve@sk2.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        regehr@cs.utah.edu, Philip Reames <listmail@philipreames.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alistair Delva <adelva@google.com>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:59:14AM +1000, Dave Chinner wrote:
-> On Wed, Aug 21, 2019 at 11:02:00AM -0700, Ira Weiny wrote:
-> > On Tue, Aug 20, 2019 at 08:55:15AM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Aug 20, 2019 at 11:12:10AM +1000, Dave Chinner wrote:
-> > > > On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
-> > > > > On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
-> > > > > 
-> > > > > > So that leaves just the normal close() syscall exit case, where the
-> > > > > > application has full control of the order in which resources are
-> > > > > > released. We've already established that we can block in this
-> > > > > > context.  Blocking in an interruptible state will allow fatal signal
-> > > > > > delivery to wake us, and then we fall into the
-> > > > > > fatal_signal_pending() case if we get a SIGKILL while blocking.
-> > > > > 
-> > > > > The major problem with RDMA is that it doesn't always wait on close() for the
-> > > > > MR holding the page pins to be destoyed. This is done to avoid a
-> > > > > deadlock of the form:
-> > > > > 
-> > > > >    uverbs_destroy_ufile_hw()
-> > > > >       mutex_lock()
-> > > > >        [..]
-> > > > >         mmput()
-> > > > >          exit_mmap()
-> > > > >           remove_vma()
-> > > > >            fput();
-> > > > >             file_operations->release()
-> > > > 
-> > > > I think this is wrong, and I'm pretty sure it's an example of why
-> > > > the final __fput() call is moved out of line.
-> > > 
-> > > Yes, I think so too, all I can say is this *used* to happen, as we
-> > > have special code avoiding it, which is the code that is messing up
-> > > Ira's lifetime model.
-> > > 
-> > > Ira, you could try unraveling the special locking, that solves your
-> > > lifetime issues?
-> > 
-> > Yes I will try to prove this out...  But I'm still not sure this fully solves
-> > the problem.
-> > 
-> > This only ensures that the process which has the RDMA context (RDMA FD) is safe
-> > with regard to hanging the close for the "data file FD" (the file which has
-> > pinned pages) in that _same_ process.  But what about the scenario.
-> > 
-> > Process A has the RDMA context FD and data file FD (with lease) open.
-> > 
-> > Process A uses SCM_RIGHTS to pass the RDMA context FD to Process B.
-> 
-> Passing the RDMA context dependent on a file layout lease to another
-> process that doesn't have a file layout lease or a reference to the
-> original lease should be considered a violation of the layout lease.
-> Process B does not have an active layout lease, and so by the rules
-> of layout leases, it is not allowed to pin the layout of the file.
-> 
+On Tue, Aug 20, 2019 at 10:15 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Hi Paul,
+> Bumping this thread; we'd really like to be able to boot test another
+> ISA in our CI.  This lone patch is affecting our ability to boot.  Can
+> you please pick it up?
+> https://lore.kernel.org/lkml/20190729211014.39333-1-ndesaulniers@google.com/
 
-I don't disagree with the semantics of this.  I just don't know how to enforce
-it.
+Hi Paul,
+Following up with this link that explains the undefined behavior issue more:
+https://wiki.sei.cmu.edu/confluence/display/c/EXP05-C.+Do+not+cast+away+a+const+qualification
+Please reconsider accepting this patch.
 
-> > Process A attempts to exit (hangs because data file FD is pinned).
-> > 
-> > Admin kills process A.  kill works because we have allowed for it...
-> > 
-> > Process B _still_ has the RDMA context FD open _and_ therefore still holds the
-> > file pins.
-> > 
-> > Truncation still fails.
-> > 
-> > Admin does not know which process is holding the pin.
-> > 
-> > What am I missing?
-> 
-> Application does not hold the correct file layout lease references.
-> Passing the fd via SCM_RIGHTS to a process without a layout lease
-> is equivalent to not using layout leases in the first place.
+>
+> On Wed, Aug 7, 2019 at 2:12 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > Sorry for the delayed response, literally sent the patch then went on vacation.
+> >
+> > On Mon, Jul 29, 2019 at 3:16 PM Maciej W. Rozycki <macro@linux-mips.org> wrote:
+> > >
+> > > On Mon, 29 Jul 2019, Nick Desaulniers wrote:
+> > >
+> > > > The code in question is modifying a variable declared const through
+> > > > pointer manipulation.  Such code is explicitly undefined behavior, and
+> > > > is the lone issue preventing malta_defconfig from booting when built
+> > > > with Clang:
+> > > >
+> > > > If an attempt is made to modify an object defined with a const-qualified
+> > > > type through use of an lvalue with non-const-qualified type, the
+> > > > behavior is undefined.
+> > > >
+> > > > LLVM is removing such assignments. A simple fix is to not declare
+> > > > variables const that you plan on modifying.  Limiting the scope would be
+> > > > a better method of preventing unwanted writes to such a variable.
+> >
+> > This is now documented in the LLVM release notes for Clang-9:
+> > https://github.com/llvm/llvm-project/commit/e39e79358fcdd5d8ad809defaa821f0bbfa809a5
+> >
+> > > >
+> > > > Further, the code in question mentions "compiler bugs" without any links
+> > > > to bug reports, so it is difficult to know if the issue is resolved in
+> > > > GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
+> > > > 4.1.1. The minimal supported version of GCC in the Linux kernel is
+> > > > currently 4.6.
+> > >
+> > >  It's somewhat older than that.  My investigation points to:
+> > >
+> > > commit c94e57dcd61d661749d53ee876ab265883b0a103
+> > > Author: Ralf Baechle <ralf@linux-mips.org>
+> > > Date:   Sun Nov 25 09:25:53 2001 +0000
+> > >
+> > >     Cleanup of include/asm-mips/io.h.  Now looks neat and harmless.
+> >
+> > Oh indeed, great find!
+> >
+> > So it looks to me like the order of events is:
+> > 1. https://github.com/jaaron/linux-mips-ip30/commit/c94e57dcd61d661749d53ee876ab265883b0a103
+> > in 2001 first introduces the UB.  mips_io_port_base is defined
+> > non-const in arch/mips/kernel/setup.c, but then declared extern const
+> > (and modified via UB) in include/asm-mips/io.h.  A setter is created,
+> > but not a getter (I'll revisit this below).  This appears to work (due
+> > to luck) for a few years until:
+> > 2. https://github.com/mpe/linux-fullhistory/commit/966f4406d903a4214fdc74bec54710c6232a95b8
+> > in 2006 adds a compiler barrier (reload all variables) and this
+> > appears to work.  The commit message mentions that reads after
+> > modification of the const variable were buggy (likely GCC started
+> > taking advantage of the explicit UB around this time as well).  This
+> > isn't a fix for UB (more thoughts below), but appears to work.
+> > 3. https://github.com/llvm/llvm-project/commit/b45631090220b732e614b5530bbd1d230eb9d38e
+> > in 2019 removes writes to const variables in LLVM as that's explicit
+> > UB.  We observe the boot failure in mips and narrow it down to this
+> > instance.
+> >
+> > I can see how throwing a compiler barrier in there made subsequent
+> > reads after UB writes appear to work, but that was more due to luck
+> > and implementation details of GCC than the heart of the issue (ie. not
+> > writing code that is explicitly undefined behavior)(and could change
+> > in future versions of GCC).  Stated another way, the fix for explicit
+> > UB is not hacks, but avoiding the UB by rewriting the problematic
+> > code.
+> >
+> > > However the purpose of the arrangement does not appear to me to be
+> > > particularly specific to a compiler version.
+> > >
+> > > > For what its worth, there was UB before the commit in question, it just
+> > > > added a barrier and got lucky IRT codegen. I don't think there's any
+> > > > actual compiler bugs related, just runtime bugs due to UB.
+> > >
+> > >  Does your solution preserves the original purpose of the hack though as
+> > > documented in the comment you propose to be removed?
+> >
+> > The function modified simply writes to a global variable.  It's not
+> > clear to my why the value about to be modified would EVER be loaded
+> > before modification.
+> >
+> > >  Clearly it was defined enough to work for almost 18 years, so it would be
+> > > good to keep the optimisation functionally by using different means that
+> > > do not rely on UB.
+> >
+> > "Defined enough" ???
+> > https://youtu.be/Aq_1l316ow8?t=17
+> >
+> > > This variable is assigned at most once throughout the
+> > > life of the kernel and then early on, so considering it r/w with all the
+> > > consequences for all accesses does not appear to me to be a good use of
+> > > it.
+> >
+> > Note: it's not possible to express the semantics of a "write once
+> > variable" in C short of static initialization (AFAIK, without explicit
+> > violation of UB, but Cunningham's Law may apply).
+> >
+> > (set_io_port_base is called in ~20 places)
+> >
+> > Thinking more about this while I was away, I think what this code has
+> > needed since 2001 is proper encapsulation.  If you want a variable
+> > that is written from one place only, but readable throughout, then the
+> > pattern I'd use is:
+> >
+> > 1. declare a getter in a .h file.
+> > 2. define/qualify `mips_io_port_base` as `static` and non-const in a
+> > .c file where it's modified.
+> > 3. define the getter and setter in the above .c file.
+> >
+> > That would rely on linkage to limit the visibility of the symbol for
+> > modification.  But, we'd then need to export the getter, vs the symbol
+> > itself.  There's also on the order of ~20 call sites that would need
+> > to be changed to invoke the getter rather than read the raw variable.
+> > Also, it's unlikely the getter gets inlined across translation units
+> > (short of LTO, which the mainline kernel doesn't support today).
+> >
+> > I think my patch here (https://lkml.org/lkml/2019/7/29/1636) is
+> > minimally and much less invasive.
+> >
+> > >  Maybe a piece of inline asm to hide the initialisation or suchlike then?
+> >
+> > I think that would still be UB as the definition would not be changed;
+> > you'd still be modifying a variable declared const.
+> > --
+> > Thanks,
+> > ~Nick Desaulniers
+>
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
 
-Ok, So If I understand you correctly you would support a failure of SCM_RIGHTS
-in this case?  I'm ok with that but not sure how to implement it right now.
 
-To that end, I would like to simplify this slightly because I'm not convinced
-that SCM_RIGHTS is a problem we need to solve right now.  ie I don't know of a
-user who wants to do this.
 
-Right now duplication via SCM_RIGHTS could fail if _any_ file pins (and by
-definition leases) exist underneath the "RDMA FD" (or other direct access FD,
-like XDP etc) being duplicated.  Later, if this becomes a use case we will need
-to code up the proper checks, potentially within each of the subsystems.  This
-is because, with RDMA at least, there are potentially large numbers of MR's and
-file leases which may have to be checked.
-
-Ira
-
+-- 
+Thanks,
+~Nick Desaulniers
