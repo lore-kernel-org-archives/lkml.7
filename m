@@ -2,191 +2,155 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18654C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D12EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFED8233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E35A22CEC
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="NXDxQjWG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P6eKagAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393041AbfHWIrw (ORCPT
+        id S2393053AbfHWIsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:47:52 -0400
-Received: from mail-eopbgr80103.outbound.protection.outlook.com ([40.107.8.103]:56545
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732418AbfHWIrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:47:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b+UrdJs2RBL7ysUeQBTYAmfh31bAtT31zoyNyO+/XTrlRVIeugLgjkEreHsA6yFqCgnMjydfMa5LjjB+FeUPVaso7EtnUMvPzIQM1MIl8bHIjCVBxxyo7MR/1NUIu0i6sqvewVqMjm94SYMqBNE5FHdNPeFJ6DOSTpYR4YSPYXK6qjPbMkqODCEZMMJeFXfb7onVtQX7tkaIJMRI0yttz5X24LvpIvrpzgpmgJ2OhohnYyXzg0rAqRPoc8s83kyoUgoj/vKmQ6f/aq25EGiumdU6NQp+34KmaYUD7P/BS5qHEo9FAgeA9i5XXUffQvBjTHdoCNPHWv8pDANmaPJaqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VHh5pz6CDFYyQgu2xiYoU4VNbYl3Y4bYqHD8MPU44Ys=;
- b=NvvzTpTa8bOCD8GdV0cw+rw7NOVPHomyACCfTSmlUIwpexvV6UvlX2/E2AkIs7jjpbcSIS/p5DVQhEwGw/wxzazxBhVBiZQxRd+1ufzqC+d5Ml49gYJxRgzrQR94FAA8zYFNR3ka9OQpXNWqhu0Ko0F5od3qYDGRwaYF9MouPEYoukodP83J5VNtFokHTNT9mewPErb5lcdJrom5APoyanrrIyq9BAvqcLmEb5jYBraG9/SpjyVU3VLRN2q3r0ailqblRnNiHDdKLqGpOtG1HbSfu38vpGWTFqRoDcvgz7MbF2uzFE1SDtJfUZEfdKgRyvTAfajanmisVm1I3Gq46g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VHh5pz6CDFYyQgu2xiYoU4VNbYl3Y4bYqHD8MPU44Ys=;
- b=NXDxQjWGXpKpJw5VZNzfeuzUuNUFBSe68UmsM3vq5bKCbPJxxoBMDje5zhieSnij7l1Vm5jlUuCRXrYc7E8qABW57f91VwTFUSS3aTGNl1wlcieAAZhkSzQ+nxE2/sQ6N/ygnV0n6cQMpTVJyVxs2x33cv/k9cfC11RWwN0jg38=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3322.eurprd02.prod.outlook.com (52.134.66.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Fri, 23 Aug 2019 08:47:47 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::a0df:d7d9:f95e:f3ea]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::a0df:d7d9:f95e:f3ea%3]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
- 08:47:47 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Peter Rosin <peda@axentia.se>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: [PATCH 2/2] fbdev: fbmem: allow overriding the number of bootup logos
-Thread-Topic: [PATCH 2/2] fbdev: fbmem: allow overriding the number of bootup
- logos
-Thread-Index: AQHVWY9wDEebDlWGKU6SxCgqM+Aamg==
-Date:   Fri, 23 Aug 2019 08:47:47 +0000
-Message-ID: <20190823084725.4271-3-peda@axentia.se>
-References: <20190823084725.4271-1-peda@axentia.se>
-In-Reply-To: <20190823084725.4271-1-peda@axentia.se>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.11.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0401CA0084.eurprd04.prod.outlook.com
- (2603:10a6:3:19::52) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81ce9c27-eab8-41e9-77f5-08d727a69292
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7193020);SRVR:DB3PR0202MB3322;
-x-ms-traffictypediagnostic: DB3PR0202MB3322:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0202MB3322286FA48DD9A55BB6D204BCA40@DB3PR0202MB3322.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(376002)(396003)(39830400003)(189003)(199004)(2501003)(2351001)(86362001)(66066001)(36756003)(71190400001)(6512007)(71200400001)(2906002)(3846002)(4326008)(14444005)(5024004)(53936002)(256004)(25786009)(7736002)(26005)(305945005)(6486002)(6916009)(186003)(1076003)(102836004)(6506007)(386003)(6436002)(99286004)(52116002)(76176011)(8936002)(6116002)(11346002)(446003)(476003)(2616005)(50226002)(486006)(81156014)(81166006)(508600001)(8676002)(14454004)(5660300002)(66446008)(66946007)(5640700003)(54906003)(64756008)(316002)(66476007)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3322;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GyDYt5qs7zZtv0oluN+lgqNqjZR+tsbUxYPcjACL0Dc4g7Z449phE7gbkGWh3FSLO1PxWqUC7iAGbFzB0hgWp4FAuhjvzyuPo7vudCn3h5oDlTo/XCuBoXA1XxtADA/0R7uApop/UsoUJm+SgBGyJHyR0CMpOnOP7MiSeeLZqyQGciaVHRPnINkXrLdlvBb6oO6Lcdj5APtGtIiklxq/VR4pfsBhjGvn9fSBi+C0Z5Z1AGxJ/YD4SvPkVnZq50TMCl0wgwgIpN1aEzKm9Sp8BDdPIBnJ999+TTdGkMLF4R+/Z4e2oibTeRuP5PzmHumpGRr6CqReEObaPZ27M1z7wFuPy5u46/IZF5C8vKFyRBdFEllVxo60/+pwKRydp6lknSaeQeX9E6dDWaNAMq9rEs/N+j3Lenfm4w+rMLj6P7Q=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 23 Aug 2019 04:48:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55256 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732418AbfHWIsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 04:48:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7s9/nci+zKyvrE92H9Lp/Liq0lrM5HNKhcwL7sRJw+4=; b=P6eKagALn8nMspRlT5ktoTdyRi
+        EJMa61U6Y0iSY8RaLjdPRr77ly3h6vUScMsTZrWkUBrBqE3vXFEvaoagy2NMYcOpOJHcslrk5VKn2
+        2nroaMZss/Rv2u5Qaqh9AWTDRg0zOg4sqb3QW4/JUaO1luNcGy8Yt345WcvQIpkHW5/NBWKLbpfwW
+        nsdaqhbiKoEyLRU4OzJeYFwB8Udi0RSzefldCm1Fhc/tVL9iYpB2NCqtJjhHL3Pi939WHS/qV1XN9
+        2lCLbOBIjA9+feGg4R8SM6OQa6s8WpBgzTEydowrpjEApaqiiLp6b/5ELAhy9r3SIMP+RjfnF9XaV
+        UbGf8VRQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i15Et-0002rs-2t; Fri, 23 Aug 2019 08:48:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B3CE3307764;
+        Fri, 23 Aug 2019 10:47:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DD53F20A21FCF; Fri, 23 Aug 2019 10:48:03 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 10:48:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 3/4] kernel.h: Add non_block_start/end()
+Message-ID: <20190823084803.GD2369@hirez.programming.kicks-ass.net>
+References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
+ <20190820081902.24815-4-daniel.vetter@ffwll.ch>
+ <20190820202440.GH11147@phenom.ffwll.local>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81ce9c27-eab8-41e9-77f5-08d727a69292
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 08:47:47.5200
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xq39EpXg9qMmY/xvrGnMgD5fhd+EOVctJHSlxfVMc9RbnI6HRxovsEg3kN9zjbmB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3322
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820202440.GH11147@phenom.ffwll.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Probably most useful if you only want one logo regardless of how many
-CPU cores you have.
+On Tue, Aug 20, 2019 at 10:24:40PM +0200, Daniel Vetter wrote:
+> On Tue, Aug 20, 2019 at 10:19:01AM +0200, Daniel Vetter wrote:
+> > In some special cases we must not block, but there's not a
+> > spinlock, preempt-off, irqs-off or similar critical section already
+> > that arms the might_sleep() debug checks. Add a non_block_start/end()
+> > pair to annotate these.
+> > 
+> > This will be used in the oom paths of mmu-notifiers, where blocking is
+> > not allowed to make sure there's forward progress. Quoting Michal:
+> > 
+> > "The notifier is called from quite a restricted context - oom_reaper -
+> > which shouldn't depend on any locks or sleepable conditionals. The code
+> > should be swift as well but we mostly do care about it to make a forward
+> > progress. Checking for sleepable context is the best thing we could come
+> > up with that would describe these demands at least partially."
+> > 
+> > Peter also asked whether we want to catch spinlocks on top, but Michal
+> > said those are less of a problem because spinlocks can't have an
+> > indirect dependency upon the page allocator and hence close the loop
+> > with the oom reaper.
+> > 
+> > Suggested by Michal Hocko.
+> > 
+> > v2:
+> > - Improve commit message (Michal)
+> > - Also check in schedule, not just might_sleep (Peter)
+> > 
+> > v3: It works better when I actually squash in the fixup I had lying
+> > around :-/
+> > 
+> > v4: Pick the suggestion from Andrew Morton to give non_block_start/end
+> > some good kerneldoc comments. I added that other blocking calls like
+> > wait_event pose similar issues, since that's the other example we
+> > discussed.
+> > 
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: "Christian König" <christian.koenig@amd.com>
+> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Wei Wang <wvw@google.com>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jann Horn <jannh@google.com>
+> > Cc: Feng Tang <feng.tang@intel.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Acked-by: Christian König <christian.koenig@amd.com> (v1)
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> 
+> Hi Peter,
+> 
+> Iirc you've been involved at least somewhat in discussing this. -mm folks
+> are a bit undecided whether these new non_block semantics are a good idea.
+> Michal Hocko still is in support, but Andrew Morton and Jason Gunthorpe
+> are less enthusiastic. Jason said he's ok with merging the hmm side of
+> this if scheduler folks ack. If not, then I'll respin with the
+> preempt_disable/enable instead like in v1.
+> 
+> So ack/nack for this from the scheduler side?
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- Documentation/fb/fbcon.rst       | 5 +++++
- drivers/video/fbdev/core/fbcon.c | 7 +++++++
- drivers/video/fbdev/core/fbmem.c | 5 ++++-
- include/linux/fb.h               | 1 +
- 4 files changed, 17 insertions(+), 1 deletion(-)
+Right, I had memories of seeing this before, and I just found a fairly
+long discussion on this elsewhere in the vacation inbox (*groan*).
 
-diff --git a/Documentation/fb/fbcon.rst b/Documentation/fb/fbcon.rst
-index 65ba40255137..9f0b399d8d4e 100644
---- a/Documentation/fb/fbcon.rst
-+++ b/Documentation/fb/fbcon.rst
-@@ -174,6 +174,11 @@ C. Boot options
- 	displayed due to multiple CPUs, the collected line of logos is moved
- 	as a whole.
-=20
-+9. fbcon=3Dlogo-count:<n>
-+
-+	The value 'n' overrides the number of bootup logos. Zero gives the
-+	default, which is the number of online cpus.
-+
- C. Attaching, Detaching and Unloading
-=20
- Before going on to how to attach, detach and unload the framebuffer consol=
-e, an
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fb=
-con.c
-index c9235a2f42f8..be4bc5540aad 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -536,6 +536,13 @@ static int __init fb_console_setup(char *this_opt)
- 				fb_center_logo =3D true;
- 			continue;
- 		}
-+
-+		if (!strncmp(options, "logo-count:", 11)) {
-+			options +=3D 11;
-+			if (*options)
-+				fb_logo_count =3D simple_strtoul(options, &options, 0);
-+			continue;
-+		}
- 	}
- 	return 1;
- }
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fb=
-mem.c
-index 64dd732021d8..4c57d522b72e 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -56,6 +56,9 @@ EXPORT_SYMBOL(num_registered_fb);
- bool fb_center_logo __read_mostly;
- EXPORT_SYMBOL(fb_center_logo);
-=20
-+unsigned int fb_logo_count __read_mostly;
-+EXPORT_SYMBOL(fb_logo_count);
-+
- static struct fb_info *get_fb_info(unsigned int idx)
- {
- 	struct fb_info *fb_info;
-@@ -689,7 +692,7 @@ int fb_show_logo(struct fb_info *info, int rotate)
- 	int y;
-=20
- 	y =3D fb_show_logo_line(info, rotate, fb_logo.logo, 0,
--			      num_online_cpus());
-+			      fb_logo_count ?: num_online_cpus());
- 	y =3D fb_show_extra_logos(info, y, rotate);
-=20
- 	return y;
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 303771264644..5f2b05406262 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -630,6 +630,7 @@ extern int fb_new_modelist(struct fb_info *info);
- extern struct fb_info *registered_fb[FB_MAX];
- extern int num_registered_fb;
- extern bool fb_center_logo;
-+extern unsigned int fb_logo_count;
- extern struct class *fb_class;
-=20
- #define for_each_registered_fb(i)		\
---=20
-2.11.0
+Yeah, this is something I can live with,
 
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
