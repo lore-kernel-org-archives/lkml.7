@@ -2,138 +2,191 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28545C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175E2C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F260B2341B
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89DF2341B
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n78gSZca"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QT45a0hF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391227AbfHWCgz (ORCPT
+        id S2391250AbfHWCjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:36:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56412 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389643AbfHWCgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:36:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7N2aJ1u068638;
-        Thu, 22 Aug 2019 21:36:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566527779;
-        bh=nkExP0eRbsPB/OWk2fAwZsppRHsUY3F2k8vm2ySuYXE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=n78gSZca5zRUaYh6aN1w/zueFQG3RgizaqRouQ+tXSV380/ZMho4iz27VBE4XBGXe
-         BaeEw45AKwRpJWWodv4To3aNKs8fLmy+7/9fbjNWs+761/erIceZIfOKoJtspcscqn
-         HvdJm3durOh7tJF14fmnvYItUCmQSnOUAdEvY4Uw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7N2aIBV090688
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 22 Aug 2019 21:36:19 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
- Aug 2019 21:36:18 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 22 Aug 2019 21:36:18 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7N2aEJw039712;
-        Thu, 22 Aug 2019 21:36:15 -0500
-Subject: Re: [PATCH v3 0/4] Lantiq VRX200/ARX300 PCIe PHY driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <john@phrozen.org>, <paul.burton@mips.com>, <ralf@linux-mips.org>
-CC:     <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hauke@hauke-m.de>, <mark.rutland@arm.com>, <ms@dev.tdt.de>
-References: <20190727120415.15859-1-martin.blumenstingl@googlemail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <1d5212e1-aeb4-1f05-d5d4-6b944cf328cc@ti.com>
-Date:   Fri, 23 Aug 2019 08:06:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190727120415.15859-1-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 22 Aug 2019 22:39:20 -0400
+Received: from mail-eopbgr140089.outbound.protection.outlook.com ([40.107.14.89]:47686
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388226AbfHWCjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:39:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kh8ZDYFFRfz02LN3xMWRhd6lczbO+2M5HYyb38RVxUIBqEzFufUBuDx9DKY/nb74P3mpJwwoBQctpgI3RyjegOPrubf3HfYMZda031iwjrBfc19jPFVznXow6YnL1xMYzhjYrDzQ/SagqvVlemkWwZp2tP0fqIHtv3TnjmaZLmqqEZD7ZjxQxHrgPdjk1cYldYAcvzwAqZsB0xN7t5lFeXq0isExOIZHhFAIR3aVIhdc9Xy4eCinopz4EW3IC8qrgPQnsX1IJeegXgJG9sWh02NCupBNNc8LPVViizmNMR9IuD3C5TIGeHX/rhwsuC52tScLhGKOh1vbfn8/nIZG6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bvWnzTz4ltjUhvxsA06VhloRwSvn6wK4KNFkmFBFMwE=;
+ b=VvHeA+wmrx9BQE22k7jk5RvxJ+kTNyUnILyZ3QnpfhFzkaEeMxOxOF+DPwCviI8mru53hFU3eTbBlqwvQG6yGCeseb+BxzQ2iJy7fK05W75YID2oQA4Cll2Zy6CuJXFx5CAyZ9rYYCTxgyQ1FqHkjez5ggV7nSoPLXu9UgocON9J31VRXNuVtgzfTOzbkKkR4c8lSOEBz4zuMkZv20JcrZcA38bmJUe6FfoiEJRbCTfjkVmmr1bhHPS9x2iZxpmhweXaHMYE0wAIhVD1SyZ+xaDMS5HX0ZZe7V9e7YjF2ac4TfNex5GXMUS2XBIJn2wdJFrPbkfgaaRyqkK1pgu1hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bvWnzTz4ltjUhvxsA06VhloRwSvn6wK4KNFkmFBFMwE=;
+ b=QT45a0hFwL0Hp6luVSo1Tg+hBUMckiIOZ3DdPhp1SNooEk7+PaacEO+EhEELXIGJsJsBUs4j3miMRJHpSEsYHRGhmAS0XJXuJj1g8WR+QSqHNzmSADqqWvewemYsQKfp1n6Kv3qH1q4nB5h+l8H8Ls4QGqWEEGc55KRyA4BPysc=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB2979.eurprd04.prod.outlook.com (10.167.171.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Fri, 23 Aug 2019 02:39:13 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::1ce8:464b:3edf:4043]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::1ce8:464b:3edf:4043%7]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
+ 02:39:13 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>
+Subject: RE: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Thread-Topic: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Thread-Index: AQHVWN1bxZWGihL6TkupN1zdrsSAQ6cHDAGAgAD5DQA=
+Date:   Fri, 23 Aug 2019 02:39:13 +0000
+Message-ID: <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-6-xiaowei.bao@nxp.com>
+ <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+In-Reply-To: <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 406c534b-a340-4f5d-a0c6-08d7277315f8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB2979;
+x-ms-traffictypediagnostic: AM5PR04MB2979:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB2979AECF6775B98EDD81CA82F5A40@AM5PR04MB2979.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(51444003)(199004)(189003)(13464003)(33656002)(66446008)(76116006)(64756008)(66476007)(76176011)(66556008)(66946007)(6246003)(316002)(81166006)(81156014)(8676002)(2906002)(110136005)(44832011)(26005)(99286004)(5660300002)(53936002)(6436002)(102836004)(6506007)(8936002)(53546011)(2501003)(11346002)(256004)(186003)(6116002)(446003)(7696005)(486006)(3846002)(476003)(2201001)(86362001)(71190400001)(71200400001)(14454004)(52536014)(7416002)(478600001)(55016002)(229853002)(66066001)(25786009)(7736002)(9686003)(74316002)(305945005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB2979;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JmlpIpZxycwqxcGOoXgQqeOBqnYGTX8fZoPqYW6Ii0pQ3TQGyAnkfSQ1qhDyTQKPAm6iTakio6Hmla4IhXt39qVnbvkTpcw3BcDtvIPED7staVpx+48k7aSBNTwjUKVNe7Cy9jVVOMoLSLMGaoK0sCwOWWVK7L3PDtipavZYLnzbK6BZBZ6p0YQQkE+lWl2BmhacFemHd2VEHPl7rMzabeyBs/81/ppoTnNdI5QhhkXdJtWdAzn/s/LhN5aMaIZPhR32+qURVCixy8swLKHTezWlzLQQDlcAIjQvcJoxevQ8t3mpSG2j4JOjuD+wErcsMrXNmh5KsPpcSSCQThwo78nOy3gcbQUiut2LjGx4ybAL23osUica6O8sp7Zzfce9mJhNBgAcFpAe1UMgBHVY/j5rBcNUuLe1rwdvpaeHDyg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 406c534b-a340-4f5d-a0c6-08d7277315f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 02:39:13.8053
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: x+/8ERMjRwD7RKyrE6g6hNJeSR17tEDEzqsfWPgLBdRUrcWsSBrYB69UUHyypQKpHNxKhfN92qDXG/Zjns/bRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB2979
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 27/07/19 5:34 PM, Martin Blumenstingl wrote:
-> Various Lantiq (now Intel) SoCs contain one or more PCIe controllers
-> and PHYs.
-> This adds a driver for the PCIe PHYs found on the Lantiq VRX200 and
-> ARX300 SoCs. GRX390 should also be supported as far as I can tell,
-> but I don't have any of these devices to further verify that.
-> 
-> I have tested this PCIe PHY driver with the out-of-tree PCIe controller
-> driver in OpenWrt: [0]
-> 
-> dependencies for this series:
-> none
-> 
-> patches 1-3 should go through the PHY tree
-
-merged the phy patches.
-
-Thanks
-Kishon
-> patch 4 should go through the mips tree
-> 
-> I am aware that this series is too late for the v5.3 development cycle.
-> Getting review comments is still appreciated so this can be queued early
-> in the v5.4 development cycle.
-> 
-> 
-> Changes since v2 at [2]:
-> - added Rob's Reviewed-by to the dt-bindings patch (thank you!)
-> 
-> Changes since v1 at [1]:
-> - many thanks to Rob for giving me many hints regarding the .yaml bindings!
-> - update the .yaml binding license to (GPL-2.0-only OR BSD-2-Clause)
-> - changed the property lantiq,rcu to type phandle
-> - add the optional big-endian and little-endian boolean properties
-> - use numeric values for the clock phandles in the example to make the
->   dt_binding_check build happy
-> - replaced two mdelay(1); with usleep_range(1000, 2000); in patch #2
->   (spotted and reported by Hauke off-list)
-> 
-> 
-> [0] https://github.com/xdarklight/openwrt/commits/lantiq-mainline-pcie-phy-20190702
-> [1] https://patchwork.kernel.org/cover/11028797/
-> [2] https://patchwork.kernel.org/cover/11031421/
-> 
-> 
-> Martin Blumenstingl (4):
->   dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe
->     PHYs
->   phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY
->   phy: enable compile-testing for the Lantiq PHY drivers
->   MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
-> 
->  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  |  95 ++++
->  arch/mips/lantiq/xway/sysctrl.c               |  16 +-
->  drivers/phy/Makefile                          |   2 +-
->  drivers/phy/lantiq/Kconfig                    |  11 +
->  drivers/phy/lantiq/Makefile                   |   1 +
->  drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c   | 494 ++++++++++++++++++
->  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  |  11 +
->  7 files changed, 621 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
->  create mode 100644 drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
->  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgyMuaXpSAxOTo0NA0K
+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUu
+Y29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1
+b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGll
+cmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc7IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaQ0KPiBIdSA8bWlu
+Z2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+Ow0KPiBqaW5nb29o
+YW4xQGdtYWlsLmNvbTsgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207DQo+IGxpbnV4LXBj
+aUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBhbmRyZXcubXVycmF5QGFybS5j
+b20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNi8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2Rp
+ZnkgdGhlIHdheSBvZiBnZXR0aW5nDQo+IGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJlbnQgUEVYDQo+
+IA0KPiBIaSwNCj4gDQo+IE9uIDIyLzA4LzE5IDQ6NTIgUE0sIFhpYW93ZWkgQmFvIHdyb3RlOg0K
+PiA+IFRoZSBkaWZmZXJlbnQgUENJZSBjb250cm9sbGVyIGluIG9uZSBib2FyZCBtYXkgYmUgaGF2
+ZSBkaWZmZXJlbnQNCj4gPiBjYXBhYmlsaXR5IG9mIE1TSSBvciBNU0lYLCBzbyBjaGFuZ2UgdGhl
+IHdheSBvZiBnZXR0aW5nIHRoZSBNU0kNCj4gPiBjYXBhYmlsaXR5LCBtYWtlIGl0IG1vcmUgZmxl
+eGlibGUuDQo+IA0KPiBwbGVhc2UgdXNlIGRpZmZlcmVudCBwY2lfZXBjX2ZlYXR1cmVzIHRhYmxl
+IGZvciBkaWZmZXJlbnQgYm9hcmRzLg0KVGhhbmtzLCBJIHRoaW5rIHRoYXQgaXQgd2lsbCBiZSBt
+b3JlIGZsZXhpYmxlIHRvIGR5bmFtaWNhbGx5IGdldCBNU0kgb3IgTVNJWCBjYXBhYmlsaXR5LA0K
+VGh1cywgd2Ugd2lsbCBub3QgbmVlZCB0byBkZWZpbmUgdGhlIHBjaV9lcGNfZmVhdHVyZSBmb3Ig
+ZGlmZmVyZW50IGJvYXJkcy4NCj4gDQo+IFRoYW5rcw0KPiBLaXNob24NCj4gPg0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+
+IHYyOg0KPiA+ICAtIFJlbW92ZSB0aGUgcmVwZWF0ZWQgYXNzaWdubWVudCBjb2RlLg0KPiA+DQo+
+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAyNg0K
+PiA+ICsrKysrKysrKysrKysrKysrKystLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxOSBp
+bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBiL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBpbmRleCA0ZTkyYTk1
+Li44NDYxZjYyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
+aS1sYXllcnNjYXBlLWVwLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
+Y2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gQEAgLTIyLDYgKzIyLDcgQEANCj4gPg0KPiA+ICBzdHJ1
+Y3QgbHNfcGNpZV9lcCB7DQo+ID4gIAlzdHJ1Y3QgZHdfcGNpZQkJKnBjaTsNCj4gPiArCXN0cnVj
+dCBwY2lfZXBjX2ZlYXR1cmVzCSpsc19lcGM7DQo+ID4gIH07DQo+ID4NCj4gPiAgI2RlZmluZSB0
+b19sc19wY2llX2VwKHgpCWRldl9nZXRfZHJ2ZGF0YSgoeCktPmRldikNCj4gPiBAQCAtNDAsMjUg
+KzQxLDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkDQo+IGxzX3BjaWVfZXBf
+b2ZfbWF0Y2hbXSA9IHsNCj4gPiAgCXsgfSwNCj4gPiAgfTsNCj4gPg0KPiA+IC1zdGF0aWMgY29u
+c3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgbHNfcGNpZV9lcGNfZmVhdHVyZXMgPSB7DQo+ID4g
+LQkubGlua3VwX25vdGlmaWVyID0gZmFsc2UsDQo+ID4gLQkubXNpX2NhcGFibGUgPSB0cnVlLA0K
+PiA+IC0JLm1zaXhfY2FwYWJsZSA9IGZhbHNlLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKiAgbHNfcGNpZV9lcF9nZXRfZmVhdHVyZXMo
+c3RydWN0DQo+ID4gZHdfcGNpZV9lcCAqZXApICB7DQo+ID4gLQlyZXR1cm4gJmxzX3BjaWVfZXBj
+X2ZlYXR1cmVzOw0KPiA+ICsJc3RydWN0IGR3X3BjaWUgKnBjaSA9IHRvX2R3X3BjaWVfZnJvbV9l
+cChlcCk7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNp
+KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gcGNpZS0+bHNfZXBjOw0KPiA+ICB9DQo+ID4NCj4gPiAg
+c3RhdGljIHZvaWQgbHNfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkgIHsNCj4g
+PiAgCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsJ
+c3RydWN0IGxzX3BjaWVfZXAgKnBjaWUgPSB0b19sc19wY2llX2VwKHBjaSk7DQo+ID4gIAllbnVt
+IHBjaV9iYXJubyBiYXI7DQo+ID4NCj4gPiAgCWZvciAoYmFyID0gQkFSXzA7IGJhciA8PSBCQVJf
+NTsgYmFyKyspDQo+ID4gIAkJZHdfcGNpZV9lcF9yZXNldF9iYXIocGNpLCBiYXIpOw0KPiA+ICsN
+Cj4gPiArCXBjaWUtPmxzX2VwYy0+bXNpX2NhcGFibGUgPSBlcC0+bXNpX2NhcCA/IHRydWUgOiBm
+YWxzZTsNCj4gPiArCXBjaWUtPmxzX2VwYy0+bXNpeF9jYXBhYmxlID0gZXAtPm1zaXhfY2FwID8g
+dHJ1ZSA6IGZhbHNlOw0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGludCBsc19wY2llX2VwX3Jh
+aXNlX2lycShzdHJ1Y3QgZHdfcGNpZV9lcCAqZXAsIHU4IGZ1bmNfbm8sIEBADQo+ID4gLTExOCw2
+ICsxMjAsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+
+ZGV2Ow0KPiA+ICAJc3RydWN0IGR3X3BjaWUgKnBjaTsNCj4gPiAgCXN0cnVjdCBsc19wY2llX2Vw
+ICpwY2llOw0KPiA+ICsJc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgKmxzX2VwYzsNCj4gPiAgCXN0
+cnVjdCByZXNvdXJjZSAqZGJpX2Jhc2U7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4gQEAgLTEy
+OSw2ICsxMzIsMTAgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QN
+Cj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJaWYgKCFwY2kpDQo+ID4gIAkJcmV0dXJu
+IC1FTk9NRU07DQo+ID4NCj4gPiArCWxzX2VwYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
+bHNfZXBjKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIWxzX2VwYykNCj4gPiArCQlyZXR1cm4g
+LUVOT01FTTsNCj4gPiArDQo+ID4gIAlkYmlfYmFzZSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9i
+eW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sDQo+ICJyZWdzIik7DQo+ID4gIAlwY2ktPmRiaV9i
+YXNlID0gZGV2bV9wY2lfcmVtYXBfY2ZnX3Jlc291cmNlKGRldiwgZGJpX2Jhc2UpOw0KPiA+ICAJ
+aWYgKElTX0VSUihwY2ktPmRiaV9iYXNlKSkNCj4gPiBAQCAtMTM5LDYgKzE0NiwxMSBAQCBzdGF0
+aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYpDQo+ID4gIAlwY2ktPm9wcyA9ICZsc19wY2llX2VwX29wczsNCj4gPiAgCXBjaWUtPnBj
+aSA9IHBjaTsNCj4gPg0KPiA+ICsJbHNfZXBjLT5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4g
+PiArCWxzX2VwYy0+YmFyX2ZpeGVkXzY0Yml0ID0gKDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQp
+LA0KPiA+ICsNCj4gPiArCXBjaWUtPmxzX2VwYyA9IGxzX2VwYzsNCj4gPiArDQo+ID4gIAlwbGF0
+Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBwY2llKTsNCj4gPg0KPiA+ICAJcmV0ID0gbHNfYWRkX3Bj
+aWVfZXAocGNpZSwgcGRldik7DQo+ID4NCg==
