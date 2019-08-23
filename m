@@ -2,93 +2,232 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA735C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670D8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70C4233A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D20A22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wnqmvTiQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuh/+hjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391575AbfHWI01 (ORCPT
+        id S2392594AbfHWI0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:26:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42499 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730759AbfHWI01 (ORCPT
+        Fri, 23 Aug 2019 04:26:36 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44219 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390021AbfHWI0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:26:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l14so8065629ljj.9
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:26:25 -0700 (PDT)
+        Fri, 23 Aug 2019 04:26:36 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e24so8060098ljg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:26:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jAjMP4xmuyulOMV5YHvxWXlnTiDG+r9Si9f0jb+2WDc=;
-        b=wnqmvTiQ4ZhkeUMMGa8l+1/vKLWR57cpy51RNA8D86BswIXgpaC66WZNEnz+gaAtEd
-         yaF5lSTARq14IcDa5Pb7Im1swP5IFnrdkL+zBM8oXP3mSJ0sjyWSOc5tP5EUjnjIUqvE
-         yXIIsrDNXL/poNk6ChLnNmVn3TZxuhlh/UgCm/+Z0A5ASVSF9fyBygW85hnKhlRIOy7L
-         yDSegJk+yU5y+DmcU3onPXtkgt0fieVYFJMNJyBTNSKmhjVeghLmDd1/CPqCOWIlbXnI
-         VYie58F4+bV8/Alw7sqLSe/Bhl2Zrg08cX9CK0YNfr1hMdI6fYIJWa3/6HSN4vqfu6He
-         pkZQ==
+         :cc:content-transfer-encoding;
+        bh=Ei2fflkWmYx29L2DvfP6gO0YcKa8w1PsJQRnQ3bwOOw=;
+        b=cuh/+hjrQKfDst0VBgf43KbUa7s/BrRVbEjQT1+J8T65JN4Wc5H7RFWOkmWwB/aLB2
+         SoTc0msWBlb54IdeTFq0YwTCGUWKWksRacojaOKMjbqT7A9WIjQ9J/IuV6FeA3qNYNZL
+         RAcBfY34UiFcbyBiRpELJrR0/3wHd6VMAx0p4EIatyuWohEtU4xhyGMfEDuVwUhZRO6R
+         95WOgrTQ1uGmeZ4blE3hHT/T4QnMCZ4P/c4dWcGQ1bsnhTatnNGJkWW8u0o7+aVe1ccF
+         yRWJPq0Mdf0XlqgHx+LUXLg1wjmulqFFTlXzjuLgYAWQi3N3CtymS528FiT+DGsUHGXD
+         CFGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jAjMP4xmuyulOMV5YHvxWXlnTiDG+r9Si9f0jb+2WDc=;
-        b=ejo2f0gF8C9E/rynkGdU2WL/u3g2+Rdbdw07ywFIw5+yokQJ+mb2P66Oe6Bhdig/j8
-         a8b+szee8Xo2G828WK+F11aGsfYy3OCiLn3jmmsB6lUkbU7yOIscg40NY04QFg3+F98r
-         A2d16QdOvdQYy+/kDkVXbd85gexIjhEoixe8vTLW0JDzjGpTzFeEf5UolMvFzOF/sa66
-         0J7GEFYFxIpiJtPZCr15cCw9ROZrJVBPQapJi5ayBSgwyJ75K7RTN3GFhiAcpGqj+K0P
-         VU2hjQAVfym5UhEqvtzkU4gHZFzSsvbw9HM8PUEuGs1u7hfiAggz9f0yRLrM+S2/dpR0
-         a9cQ==
-X-Gm-Message-State: APjAAAWSbG47N597Kz1NzLIrINCChaYPmg98WYDuIIZ8CR6rZCmMsOy0
-        I/1+KRddnNmlWwg+/bXKQhN7JFKSaexjpBoLPWWBhA==
-X-Google-Smtp-Source: APXvYqyhTMDzE6GdzWuXk5RzTjGHl0wxLPmcdtUjxeFGV4fqNcsMAPshNok8qNzvW4m2O1CDv3ny2IJQx10PdbaavvE=
-X-Received: by 2002:a2e:b174:: with SMTP id a20mr2217761ljm.108.1566548785065;
- Fri, 23 Aug 2019 01:26:25 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ei2fflkWmYx29L2DvfP6gO0YcKa8w1PsJQRnQ3bwOOw=;
+        b=EnjqzOhuLMf2hcPOVWAZHLlzKUkXl/lzh/I76SLFxYgyJ56fQN5lSovgi3ynrSDDcN
+         iBrC46B9SvqDAHsVz1Z1M3ihXFz8mW8kYO92wED5ft/WPsiCazbmFEYbmtXE6ewb2WGg
+         flHlp5Csn+yRPtO16OXzx4WKJbVgLRsuE0cBh28pmwbZz8Az35agkcuK2PMS91X+st6R
+         wOCU2p3UR5pnKHitb9MAkdHj0n22W6eWc1Q7rWV9ht5qHxkjHhcyUosVFG2bzpZSxAH8
+         mGYu/v6QZ6fmdkZTX7b2ioOYbDWZ586CtNVfOTveuyUbT25Jyk6YN9MYHeG7QmxLh9MO
+         UsEg==
+X-Gm-Message-State: APjAAAXIsbWqt7asoUGqlvjqXwX7pg2gNakmiqKGskJUrRxkTWXG9XYe
+        un8U55eI2hhKhuWKzz5wucQ1Jj3XFsus2RF50T9c1g==
+X-Google-Smtp-Source: APXvYqy3KR8PkNemNTvSsvAPKbwWz5AYA4idh215gAMbHm3HrR6/fvRPnTIsNZj57xRG2aedNB37kQBnWN7B7ReL8jE=
+X-Received: by 2002:a2e:8559:: with SMTP id u25mr2128013ljj.224.1566548793811;
+ Fri, 23 Aug 2019 01:26:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190819080028.13091-1-geert@linux-m68k.org>
-In-Reply-To: <20190819080028.13091-1-geert@linux-m68k.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 10:26:13 +0200
-Message-ID: <CACRpkdb66GWnW6j=G==vAP_79ePyVCL=dHwcM2ui-GRC58eCjg@mail.gmail.com>
-Subject: Re: [PATCH] soc: ixp4xx: Protect IXP4xx SoC drivers by ARCH_IXP4XX || COMPILE_TEST
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190822171832.012773482@linuxfoundation.org>
+In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 23 Aug 2019 13:56:22 +0530
+Message-ID: <CA+G9fYv90rOtmxHpvvs2_TssLj9Ngp_vJh5sjoz0nj8y+mhNzQ@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/78] 4.4.190-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:46 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-
-> The move of the IXP4xx SoC drivers exposed their config options on all
-> platforms.
+On Thu, 22 Aug 2019 at 22:53, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Fix this by wrapping them inside an ARCH_IXP4XX or COMPILE_TEST block.
+> This is the start of the stable review cycle for the 4.4.190 release.
+> There are 78 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Fixes: fcf2d8978cd538a5 ("ARM: ixp4xx: Move NPE and QMGR to drivers/soc")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-> v2:
->   - Rebased on top of commit ec8f24b7faaf3d47 ("treewide: Add SPDX
->     license identifier - Makefile/Kconfig").
+> Responses should be made by Sat 24 Aug 2019 05:18:13 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.190-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Do you want me to also take care of sending this into the ARM SoC tree?
+Summary
+------------------------------------------------------------------------
 
-Yours,
-Linus Walleij
+kernel: 4.4.190-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: f607b8c5ce70dfa9966f5f1f560bc7888aacbb63
+git describe: v4.4.189-79-gf607b8c5ce70
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.189-79-gf607b8c5ce70
+
+
+No regressions (compared to build v4.4.189)
+
+
+No fixes (compared to build v4.4.189)
+
+Ran 20031 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* prep-tmp-disk
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* v4l2-compliance
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.190-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.190-rc1-hikey-20190822-542
+git commit: 1ba22f5aa4da73b8aba0abbbbb0d9c225dd0c34f
+git describe: 4.4.190-rc1-hikey-20190822-542
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.190-rc1-hikey-20190822-542
+
+
+No regressions (compared to build 4.4.190-rc1-hikey-20190822-541)
+
+
+No fixes (compared to build 4.4.190-rc1-hikey-20190822-541)
+
+Ran 1550 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
