@@ -2,313 +2,163 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6A2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C331C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC8F23427
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D50A23427
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566545723;
+	bh=bbLkXAsHEX8Wn+grOk4i/1hsz2fjmgUr2Kj6i2J/rPM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vwamXLzaXs++hF5HgcDyyvvhtF5dUV9C2CpWyLBLy/aLe15OrOeN7QHfYlu/69sC+
+	 AEOc2JgMgRJ+dbjRnglCDeo7fyQj/RlbRKS0XV4E+Nqt2wgjCKxFFcUFbr6KVPGcLg
+	 cSLCu+g2+++FVXQg1oFADuGWFyaaM0YSvzD7qwog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbfHWHeR (ORCPT
+        id S2390596AbfHWHfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:34:17 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:33745 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387651AbfHWHeP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:34:15 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7N7YCJF025726, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7N7YCJF025726
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 23 Aug 2019 15:34:13 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Fri, 23 Aug 2019
- 15:34:11 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next v4 2/2] r8152: add a helper function about setting EEE
-Date:   Fri, 23 Aug 2019 15:33:41 +0800
-Message-ID: <1394712342-15778-313-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-311-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-304-Taiwan-albertk@realtek.com>
- <1394712342-15778-311-Taiwan-albertk@realtek.com>
+        Fri, 23 Aug 2019 03:35:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732641AbfHWHfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:35:21 -0400
+Received: from localhost (unknown [106.200.210.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D3D92341F;
+        Fri, 23 Aug 2019 07:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566545720;
+        bh=bbLkXAsHEX8Wn+grOk4i/1hsz2fjmgUr2Kj6i2J/rPM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fjW9/aM3xPahmihoNOYFcTCads+Zl94leJ6QpWXcOUVLFa10S1tQGTkED3P7dIkqj
+         rQhddxY2T9+i6BH9sLI8PEn2wzdOEaie39zoZv3vluGoa6T+360J40QRavFv/Ev9c9
+         AxvI7Vu9rG+fQYl3xADrlgvqGBx+bQX3GhKzqmrs=
+Date:   Fri, 23 Aug 2019 13:04:07 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>, tiwai@suse.de,
+        gregkh@linuxfoundation.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 31/40] soundwire: intel: move shutdown()
+ callback and don't export symbol
+Message-ID: <20190823073407.GF2672@vkoul-mobl>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-32-pierre-louis.bossart@linux.intel.com>
+ <39318aab-b1b4-2cce-c408-792a5cc343dd@intel.com>
+ <ee87d4bb-3f35-eb27-0112-e6e64a09a279@linux.intel.com>
+ <20190802172843.GC12733@vkoul-mobl.Dlink>
+ <7abdb0e8-b9c4-28c7-d9ed-a7db1574e0b2@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7abdb0e8-b9c4-28c7-d9ed-a7db1574e0b2@linux.intel.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper function "rtl_eee_enable" for setting EEE. Besides, I
-move r8153_eee_en() and r8153b_eee_en(). And, I remove r8152b_enable_eee(),
-r8153_set_eee(), and r8153b_set_eee().
+On 14-08-19, 14:31, Pierre-Louis Bossart wrote:
+> 
+> 
+> > > > > +void intel_shutdown(struct snd_pcm_substream *substream,
+> > > > > +            struct snd_soc_dai *dai)
+> > > > > +{
+> > > > > +    struct sdw_cdns_dma_data *dma;
+> > > > > +
+> > > > > +    dma = snd_soc_dai_get_dma_data(dai, substream);
+> > > > > +    if (!dma)
+> > > > > +        return;
+> > > > > +
+> > > > > +    snd_soc_dai_set_dma_data(dai, substream, NULL);
+> > > > > +    kfree(dma);
+> > > > > +}
+> > > > 
+> > > > Correct me if I'm wrong, but do we really need to _get_dma_ here?
+> > > > _set_dma_ seems bulletproof, same for kfree.
+> > > 
+> > > I must admit I have no idea why we have a reference to DMAs here, this looks
+> > > like an abuse to store a dai-specific context, and the initial test looks
+> > > like copy-paste to detect invalid configs, as done in other callbacks. Vinod
+> > > and Sanyog might have more history than me here.
+> > 
+> > I dont see snd_soc_dai_set_dma_data() call for
+> > sdw_cdns_dma_data so somthing is missing (at least in upstream code)
+> > 
+> > IIRC we should have a snd_soc_dai_set_dma_data() in alloc or some
+> > initialization routine and we free it here.. Sanyog?
+> 
+> Vinod, I double-checked that we do not indeed have a call to
+> snd_soc_dai_dma_data(), but there is code in cdns_set_stream() that sets the
+> relevant dai->playback/capture_dma_data, see below
+> 
+> I am not a big fan of this code, touching the ASoC core internal fields
+> isn't a good idea in general.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 168 ++++++++++++++++++----------------------
- 1 file changed, 77 insertions(+), 91 deletions(-)
+IIRC as long as you stick to single link I do not see this required. The
+question comes into picture when we have multi links as you would need
+to allocate a soundwire stream and set that for all the sdw DAIs
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index a7aa48bee732..17f0e9e98697 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -3202,14 +3202,75 @@ static void r8152_eee_en(struct r8152 *tp, bool enable)
- 	ocp_reg_write(tp, OCP_EEE_CONFIG3, config3);
- }
- 
--static void r8152b_enable_eee(struct r8152 *tp)
-+static void r8153_eee_en(struct r8152 *tp, bool enable)
- {
--	if (tp->eee_en) {
--		r8152_eee_en(tp, true);
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, tp->eee_adv);
-+	u32 ocp_data;
-+	u16 config;
-+
-+	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EEE_CR);
-+	config = ocp_reg_read(tp, OCP_EEE_CFG);
-+
-+	if (enable) {
-+		ocp_data |= EEE_RX_EN | EEE_TX_EN;
-+		config |= EEE10_EN;
- 	} else {
--		r8152_eee_en(tp, false);
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
-+		ocp_data &= ~(EEE_RX_EN | EEE_TX_EN);
-+		config &= ~EEE10_EN;
-+	}
-+
-+	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EEE_CR, ocp_data);
-+	ocp_reg_write(tp, OCP_EEE_CFG, config);
-+}
-+
-+static void r8153b_eee_en(struct r8152 *tp, bool enable)
-+{
-+	r8153_eee_en(tp, enable);
-+
-+	if (enable)
-+		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_EEE, 0);
-+	else
-+		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_EEE);
-+}
-+
-+static void rtl_eee_enable(struct r8152 *tp, bool enable)
-+{
-+	switch (tp->version) {
-+	case RTL_VER_01:
-+	case RTL_VER_02:
-+	case RTL_VER_07:
-+		if (enable) {
-+			r8152_eee_en(tp, true);
-+			r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV,
-+					tp->eee_adv);
-+		} else {
-+			r8152_eee_en(tp, false);
-+			r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
-+		}
-+		break;
-+	case RTL_VER_03:
-+	case RTL_VER_04:
-+	case RTL_VER_05:
-+	case RTL_VER_06:
-+		if (enable) {
-+			r8153_eee_en(tp, true);
-+			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
-+		} else {
-+			r8153_eee_en(tp, false);
-+			ocp_reg_write(tp, OCP_EEE_ADV, 0);
-+		}
-+		break;
-+	case RTL_VER_08:
-+	case RTL_VER_09:
-+		if (enable) {
-+			r8153b_eee_en(tp, true);
-+			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
-+		} else {
-+			r8153b_eee_en(tp, false);
-+			ocp_reg_write(tp, OCP_EEE_ADV, 0);
-+		}
-+		break;
-+	default:
-+		break;
- 	}
- }
- 
-@@ -3231,7 +3292,7 @@ static void rtl8152_disable(struct r8152 *tp)
- 
- static void r8152b_hw_phy_cfg(struct r8152 *tp)
- {
--	r8152b_enable_eee(tp);
-+	rtl_eee_enable(tp, tp->eee_en);
- 	r8152_aldps_en(tp, true);
- 	r8152b_enable_fc(tp);
- 
-@@ -3425,36 +3486,6 @@ static void r8153b_aldps_en(struct r8152 *tp, bool enable)
- 		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_ALDPS);
- }
- 
--static void r8153_eee_en(struct r8152 *tp, bool enable)
--{
--	u32 ocp_data;
--	u16 config;
--
--	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EEE_CR);
--	config = ocp_reg_read(tp, OCP_EEE_CFG);
--
--	if (enable) {
--		ocp_data |= EEE_RX_EN | EEE_TX_EN;
--		config |= EEE10_EN;
--	} else {
--		ocp_data &= ~(EEE_RX_EN | EEE_TX_EN);
--		config &= ~EEE10_EN;
--	}
--
--	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EEE_CR, ocp_data);
--	ocp_reg_write(tp, OCP_EEE_CFG, config);
--}
--
--static void r8153b_eee_en(struct r8152 *tp, bool enable)
--{
--	r8153_eee_en(tp, enable);
--
--	if (enable)
--		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_EEE, 0);
--	else
--		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_EEE);
--}
--
- static void r8153b_enable_fc(struct r8152 *tp)
- {
- 	r8152b_enable_fc(tp);
-@@ -3470,8 +3501,7 @@ static void r8153_hw_phy_cfg(struct r8152 *tp)
- 	r8153_aldps_en(tp, false);
- 
- 	/* disable EEE before updating the PHY parameters */
--	r8153_eee_en(tp, false);
--	ocp_reg_write(tp, OCP_EEE_ADV, 0);
-+	rtl_eee_enable(tp, false);
- 
- 	if (tp->version == RTL_VER_03) {
- 		data = ocp_reg_read(tp, OCP_EEE_CFG);
-@@ -3502,10 +3532,8 @@ static void r8153_hw_phy_cfg(struct r8152 *tp)
- 	sram_write(tp, SRAM_10M_AMP1, 0x00af);
- 	sram_write(tp, SRAM_10M_AMP2, 0x0208);
- 
--	if (tp->eee_en) {
--		r8153_eee_en(tp, true);
--		ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
--	}
-+	if (tp->eee_en)
-+		rtl_eee_enable(tp, true);
- 
- 	r8153_aldps_en(tp, true);
- 	r8152b_enable_fc(tp);
-@@ -3545,8 +3573,7 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
- 	r8153b_aldps_en(tp, false);
- 
- 	/* disable EEE before updating the PHY parameters */
--	r8153b_eee_en(tp, false);
--	ocp_reg_write(tp, OCP_EEE_ADV, 0);
-+	rtl_eee_enable(tp, false);
- 
- 	r8153b_green_en(tp, test_bit(GREEN_ETHERNET, &tp->flags));
- 
-@@ -3608,10 +3635,8 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
- 
- 	r8153b_ups_flags_w1w0(tp, ups_flags, 0);
- 
--	if (tp->eee_en) {
--		r8153b_eee_en(tp, true);
--		ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
--	}
-+	if (tp->eee_en)
-+		rtl_eee_enable(tp, true);
- 
- 	r8153b_aldps_en(tp, true);
- 	r8153b_enable_fc(tp);
-@@ -4930,12 +4955,7 @@ static int r8152_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
- 	tp->eee_en = eee->eee_enabled;
- 	tp->eee_adv = val;
- 
--	r8152_eee_en(tp, eee->eee_enabled);
--
--	if (eee->eee_enabled)
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, val);
--	else
--		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
-+	rtl_eee_enable(tp, tp->eee_en);
- 
- 	return 0;
- }
-@@ -4963,40 +4983,6 @@ static int r8153_get_eee(struct r8152 *tp, struct ethtool_eee *eee)
- 	return 0;
- }
- 
--static int r8153_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
--{
--	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
--
--	tp->eee_en = eee->eee_enabled;
--	tp->eee_adv = val;
--
--	r8153_eee_en(tp, eee->eee_enabled);
--
--	if (eee->eee_enabled)
--		ocp_reg_write(tp, OCP_EEE_ADV, val);
--	else
--		ocp_reg_write(tp, OCP_EEE_ADV, 0);
--
--	return 0;
--}
--
--static int r8153b_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
--{
--	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
--
--	tp->eee_en = eee->eee_enabled;
--	tp->eee_adv = val;
--
--	r8153b_eee_en(tp, eee->eee_enabled);
--
--	if (eee->eee_enabled)
--		ocp_reg_write(tp, OCP_EEE_ADV, val);
--	else
--		ocp_reg_write(tp, OCP_EEE_ADV, 0);
--
--	return 0;
--}
--
- static int
- rtl_ethtool_get_eee(struct net_device *net, struct ethtool_eee *edata)
- {
-@@ -5382,7 +5368,7 @@ static int rtl_ops_init(struct r8152 *tp)
- 		ops->down		= rtl8153_down;
- 		ops->unload		= rtl8153_unload;
- 		ops->eee_get		= r8153_get_eee;
--		ops->eee_set		= r8153_set_eee;
-+		ops->eee_set		= r8152_set_eee;
- 		ops->in_nway		= rtl8153_in_nway;
- 		ops->hw_phy_cfg		= r8153_hw_phy_cfg;
- 		ops->autosuspend_en	= rtl8153_runtime_enable;
-@@ -5400,7 +5386,7 @@ static int rtl_ops_init(struct r8152 *tp)
- 		ops->down		= rtl8153b_down;
- 		ops->unload		= rtl8153b_unload;
- 		ops->eee_get		= r8153_get_eee;
--		ops->eee_set		= r8153b_set_eee;
-+		ops->eee_set		= r8152_set_eee;
- 		ops->in_nway		= rtl8153_in_nway;
- 		ops->hw_phy_cfg		= r8153b_hw_phy_cfg;
- 		ops->autosuspend_en	= rtl8153b_runtime_enable;
+So, what is the current model of soundwire stream, which entity allocates
+that and do you still care about multi-link? is there any machine driver
+with soundwire upstream yet?
+
+> Also not sure why for a DAI we need both _drvdata and _dma_data (especially
+
+_drvdata is global for driver whereas _dma_data is typically used per
+DAI
+
+> for this case where the information stored has absolutely nothing to do with
+> DMAs).
+> 
+> If the idea was to keep a context that is direction-dependent, that's likely
+> unnecessary. For the Intel/Cadence case the interfaces can be configured as
+> playback OR capture, not both concurrently, so the "dma" information could
+> have been stored in the generic DAI _drvdata.
+> 
+> I have other things to look into for now but this code will likely need to
+> be cleaned-up at some point to remove unnecessary parts.
+
+Sure please go ahead and do the cleanup.
+> 
+> int cdns_set_sdw_stream(struct snd_soc_dai *dai,
+> 			void *stream, bool pcm, int direction)
+> {
+> 	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
+> 	struct sdw_cdns_dma_data *dma;
+> 
+> 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+> 	if (!dma)
+> 		return -ENOMEM;
+> 
+> 	if (pcm)
+> 		dma->stream_type = SDW_STREAM_PCM;
+> 	else
+> 		dma->stream_type = SDW_STREAM_PDM;
+> 
+> 	dma->bus = &cdns->bus;
+> 	dma->link_id = cdns->instance;
+> 
+> 	dma->stream = stream;
+> 
+> >>> this is equivalent to snd_soc_dai_dma_data()
+> 
+> 	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
+> 		dai->playback_dma_data = dma;
+> 	else
+> 		dai->capture_dma_data = dma;
+> <<<<
+> 	return 0;
+> }
+> EXPORT_SYMBOL(cdns_set_sdw_stream);
+
 -- 
-2.21.0
-
+~Vinod
