@@ -2,178 +2,201 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F336C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC62BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351F4206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566625719;
-	bh=Ku/ZGxAxZgfVc9qbvtH/+bzlQXa747FxwHGJiRX6qc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mAKNa/3yk2uzf+GT4q6UQlxl0TTntr5Uqo4ZotNzcDFgiK9aL3NHgxaMqX/s+qXlc
-	 NC2xDCBPHpTkj1G1SyfeQkQKvqQDUUXnxJypLZtp6Ca3nBM+Y034LZ3DDk1NKs9vjD
-	 v5IM7Xw3vN9dotWSgLShFmK3yEQQ6124jv5QwNys=
+	by mail.kernel.org (Postfix) with ESMTP id 93F352133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 06:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfHXFsi (ORCPT
+        id S1726077AbfHXGCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 01:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfHXFsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 01:48:38 -0400
-Received: from localhost (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E33206DD;
-        Sat, 24 Aug 2019 05:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566625716;
-        bh=Ku/ZGxAxZgfVc9qbvtH/+bzlQXa747FxwHGJiRX6qc8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YpDQZ2gxhH8yi3a7YDPUcQzEsBVe3Zs/tsnARmzIMypWu6hFRR+uIp5T/P64TDkQY
-         Jbd8lUpHVY1Ce2Jt6OJympFZ8JQYK6awpq8swndC1HsZA17QZdK2AoIQEBorrgvziA
-         3q4qjKYENwahHu9Imra9/3xWt6uv3zDvi+KnNcSU=
-Date:   Sat, 24 Aug 2019 01:48:35 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Stefan Lippers-Hollmann <s.l-h@gmx.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
-Message-ID: <20190824054835.GI1581@sasha-vm>
-References: <20190822170811.13303-1-sashal@kernel.org>
- <20190822172619.GA22458@kroah.com>
- <20190823000527.0ea91c6b@mir>
- <20190822233847.GB24034@kroah.com>
- <20190823024248.11e2dac3@mir>
- <20190823062853.GC1581@sasha-vm>
- <20190823173627.GA1040@kroah.com>
- <20190824011805.GH1581@sasha-vm>
- <20190824023258.GA9862@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190824023258.GA9862@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 24 Aug 2019 02:02:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36284 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfHXGCl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 02:02:41 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so6876971plr.3;
+        Fri, 23 Aug 2019 23:02:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PBhfWEbouVzAKjWN+Pc+TxdOjUmjwfquupK+iz/fQ4A=;
+        b=EnTwEhE4eOYxQ1U6tV59etlY0TArtp3YiUp6pDGsDdUusgJf9v5EvhiMZzZlcTj9of
+         cTsyLFhQYDBlRAPOIT2A6EE3zdK2JujbOn6pQ5p9RPDSnm2Z0YjYn+h7XT0yZOQmpaOx
+         StZJHvdGDp8p2joX0lLtZJHJNMIcE/R8C53EpASNOGYRF8h9HY9wRjltsv3J+VFxzww5
+         E2bM9YrVyzdVCEIAOv5Rr5xlLzqbkxxHh0OMRM1vnqbNDrgcDJl6erZEk6asYRkXm/cB
+         xPcThFZ/T0fugr0p8czJ4Dc/L1T7ymj7CjjhBspxcMxrjM0i8UWonX1XFR6mgvH8+NaJ
+         fjAA==
+X-Gm-Message-State: APjAAAW79wxZPOV/iKloAOIOdQTbMsazbkXCmT1mdAvR5KGQjEluTdwR
+        bho1LciBlzftAW/rOAAOACY29fgear4b5g==
+X-Google-Smtp-Source: APXvYqxyv6SnHafwAq2wDS1W1xROCWpkM31he4PdrXfsHzhw8ccWshBnDB7Isij98lfCJIj1o8scog==
+X-Received: by 2002:a17:902:248:: with SMTP id 66mr8776408plc.19.1566626560378;
+        Fri, 23 Aug 2019 23:02:40 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id i11sm6505645pfk.34.2019.08.23.23.02.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 23:02:39 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v4 0/9] x86/tlb: Concurrent TLB flushes
+Date:   Fri, 23 Aug 2019 15:41:44 -0700
+Message-Id: <20190823224153.15223-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 07:32:58PM -0700, Greg KH wrote:
->On Fri, Aug 23, 2019 at 09:18:05PM -0400, Sasha Levin wrote:
->> On Fri, Aug 23, 2019 at 10:36:27AM -0700, Greg KH wrote:
->> > On Fri, Aug 23, 2019 at 02:28:53AM -0400, Sasha Levin wrote:
->> > > On Fri, Aug 23, 2019 at 02:42:48AM +0200, Stefan Lippers-Hollmann wrote:
->> > > > Hi
->> > > >
->> > > > On 2019-08-22, Greg KH wrote:
->> > > > > On Fri, Aug 23, 2019 at 12:05:27AM +0200, Stefan Lippers-Hollmann wrote:
->> > > > > > On 2019-08-22, Greg KH wrote:
->> > > > > > > On Thu, Aug 22, 2019 at 01:05:56PM -0400, Sasha Levin wrote:
->> > > > [...]
->> > > > > > It might be down to kernel.org mirroring, but the patch file doesn't
->> > > > > > seem to be available yet (404), both in the wrong location listed
->> > > > > > above - and the expected one under
->> > > > > >
->> > > > > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
->> > > > [...]
->> > > > > Ah, no, it's not a mirroring problem, Sasha and I didn't know if anyone
->> > > > > was actually using the patch files anymore, so it was simpler to do a
->> > > > > release without them to see what happens. :)
->> > > > >
->> > > > > Do you rely on these, or can you use the -rc git tree or the quilt
->> > > > > series?  If you do rely on them, we will work to fix this, it just
->> > > > > involves some scripting that we didn't get done this morning.
->> > > >
->> > > > "Rely" is a strong word, I can adapt if they're going away, but
->> > > > I've been using them so far, as in (slightly simplified):
->> > > >
->> > > > $ cd patches/upstream/
->> > > > $ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-5.2.9.xz
->> > > > $ xz -d patch-5.2.9.xz
->> > > > $ wget https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
->> > > > $ gunzip patch-5.2.10-rc1.gz
->> > > > $ vim ../series
->> > > > $ quilt ...
->> > > >
->> > > > I can switch to importing the quilt queue with some sed magic (and I
->> > > > already do that, if interesting or just a larger amounts of patches are
->> > > > queuing up for more than a day or two), but using the -rc patches has
->> > > > been convenient in that semi-manual workflow, also to make sure to really
->> > > > get and test the formal -rc patch, rather than something inbetween.
->> > >
->> > > An easy way to generate a patch is to just use the git.kernel.org web
->> > > interface. A patch for 5.2.10-rc1 would be:
->> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.2.y&id2=v5.2.9
->> > >
->> > > Personally this patch upload story sounded to me like a pre-git era
->> > > artifact...
->> >
->> > Given that we no longer do patches for Linus's -rc releases for the past
->> > few years, maybe it is time to move to do the same for the stable
->> > releases to be consistent.
->>
->> Or tarballs? Why do we generate tarballs (and go through kup)?
->> git.kernel.org already does it for us.
->
->As I mentioned yesterday, but writing it down here for posterity,
->there's a number of reasons.
->
->First off, the release process doesn't require kup for when a "real"
->release happens, that's all now donw on git.kernel.org with a process
->involving a signed note and some other fun backend stuff.  We are
->working on expanding that in the future with some other signature
->validation as well, to make it easier to verify tarballs are "correct"
->as what we do today is a bit different than other projects.
+[ Similar cover-letter to v3 with updated performance numbers on skylake.
+  Sorry for the time it since the last version. ]
 
-I think that I made it read like I want to remove tarballs altogether.
-That's not the case: I just want to get rid of the magical signed note
-process.
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each PTE flushing can take 100s
+of cycles. This patch-set allows TLB flushes to be run concurrently:
+first request the remote CPUs to initiate the flush, then run it
+locally, and finally wait for the remote CPUs to finish their work.
 
-The way I understand it, we generate tarballs twice: once during the
-magical signed note process, and once by the git interface. I'm just
-suggesting we reduce that down to happen once.
+In addition, there are various small optimizations to avoid, for
+example, unwarranted false-sharing.
 
-Right now you can fetch tarballs from two different links on kernel.org.
-For example, a 5.2.9 tarball is available at:
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on this
+behavior of on_each_cpu() that invoked functions first remotely and only
+then locally [Peter says he remembers someone might do so, but without
+further information it is hard to know how to address it].
 
- - https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.2.9.tar.xz
- - https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/snapshot/linux-5.2.9.tar.gz
+Running sysbench on dax/ext4 w/emulated-pmem, write-cache disabled on
+2-socket, 56-logical-cores (28+SMT) Skylake, 5 repetitions:
 
-Can't we symlink one to the other?
+sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+ --file-io-mode=mmap --threads=X --file-fsync-mode=fdatasync run
 
->As for the tarball itself, it's still needed for the same reasons we do
->so on Linus's releases:
->	- distros use these.  Don't want all Gentoo users hammering on
->	  git.kernel.org for their updated builds, that's a huge waste.
+ Th.   tip-aug22 avg (stdev)   +patch-set avg (stdev)  change
+ ---   ---------------------   ----------------------  ------
+ 1	1152920 (7453)		1169469 (9059)		+1.4%
+ 2	1545832 (12555)		1584172 (10484) 	+2.4%
+ 4	2480703 (12039)		2518641 (12875)		+1.5%
+ 8	3684486 (26007)		3840343 (44144)		+4.2%
+ 16	4981567 (23565)		5125756 (15458)		+2.8%
+ 32	5679542 (10116)		5887826 (6121)		+3.6%
+ 56	5630944 (17937)		5812514 (26264)		+3.2%
 
-We can just place git.kernel.org generated tarballs (for some repos) on
-the CDN, no?
+(Note that on configurations with up to 28 threads numactl was used to
+set all threads on socket 1, which explains the drop in performance when
+going to 32 threads).
 
->	- mirroring works _so_ much better around the world for tarballs
+Running the same benchmark with security mitigations disabled (PTI,
+Spectre, MDS):
 
-Doing the above should solve this.
+ Th.   tip-aug22 avg (stdev)   +patch-set avg (stdev)  change
+ ---   ---------------------   ----------------------  ------
+ 1	1444119 (8524)		1469606 (10527)		+1.7%
+ 2	1921540 (24169)		1961899 (14450)		+2.1%
+ 4	3073716 (21786)		3199880 (16774)		+4.1%
+ 8	4700698 (49534)		4802312 (11043)		+2.1%
+ 16	6005180 (6366)		6006656 (31624)		   0%
+ 32	6826466 (10496)		6886622 (19110)		+0.8%
+ 56	6832344 (13468)		6885586 (20646)		+0.8%
 
->	- legal reasons.  git is not yet "recognized" as being something
->	  that properly is reflective of a specific point in time while
->	  as online tarballs that are mirrored and stored around the
->	  world are finally almost properly recognized for this.
+The results are somewhat different than the results that have been obtained on
+Haswell-X, which were sent before and the maximum performance improvement is
+smaller. However, the performance improvement is significant.
 
-We still keep the tarballs.
+v3 -> v4:
+  * Merge flush_tlb_func_local and flush_tlb_func_remote() [Peter]
+  * Prevent preemption on_each_cpu(). It is not needed, but it prevents
+    concerns. [Peter/tglx]
+  * Adding acked-, review-by tags
 
->	- historical, people are used to using them, and workflows are
->	  built up around them.  People don't like rewriting scripts, as
->	  can be seen in my monstrosity of a mess that I use for
->	  releases :)
+v2 -> v3:
+* Open-code the remote/local-flush decision code [Andy]
+* Fix hyper-v, Xen implementations [Andrew]
+* Fix redundant TLB flushes.
 
-Right, this shouldn't require changing any scripts.
+v1 -> v2:
+* Removing the patches that Thomas took [tglx]
+* Adding hyper-v, Xen compile-tested implementations [Dave]
+* Removing UV [Andy]
+* Adding lazy optimization, removing inline keyword [Dave]
+* Restructuring patch-set
 
---
-Thanks,
-Sasha
+RFCv2 -> v1:
+* Fix comment on flush_tlb_multi [Juergen]
+* Removing async invalidation optimizations [Andy]
+* Adding KVM support [Paolo]
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: x86@kernel.org
+Cc: xen-devel@lists.xenproject.org
+
+Nadav Amit (9):
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Unify flush_tlb_func_local() and flush_tlb_func_remote()
+  x86/mm/tlb: Open-code on_each_cpu_cond_mask() for tlb_is_not_lazy()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Privatize cpu_tlbstate
+  x86/mm/tlb: Do not make is_lazy dirty for no reason
+  cpumask: Mark functions as pure
+  x86/mm/tlb: Remove UV special case
+  x86/mm/tlb: Remove unnecessary uses of the inline keyword
+
+ arch/x86/hyperv/mmu.c                 |  10 +-
+ arch/x86/include/asm/paravirt.h       |   6 +-
+ arch/x86/include/asm/paravirt_types.h |   4 +-
+ arch/x86/include/asm/tlbflush.h       |  52 +++----
+ arch/x86/include/asm/trace/hyperv.h   |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 +-
+ arch/x86/kernel/paravirt.c            |   2 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 195 ++++++++++++++------------
+ arch/x86/xen/mmu_pv.c                 |  11 +-
+ include/linux/cpumask.h               |   6 +-
+ include/linux/smp.h                   |  34 ++++-
+ include/trace/events/xen.h            |   2 +-
+ kernel/smp.c                          | 138 +++++++++---------
+ 14 files changed, 254 insertions(+), 221 deletions(-)
+
+-- 
+2.17.1
+
