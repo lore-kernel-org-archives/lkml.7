@@ -2,99 +2,66 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BC5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47790C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA28C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tjNEkBlg"
+	by mail.kernel.org (Postfix) with ESMTP id 248A62166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392568AbfHWKvb (ORCPT
+        id S2392670AbfHWKvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:51:31 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58378 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730991AbfHWKvb (ORCPT
+        Fri, 23 Aug 2019 06:51:42 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:57794 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730991AbfHWKvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:51:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rV5X87m2aVqvDyTVi9a6HowY/GyHB5VKLCi2GkCc/3U=; b=tjNEkBlgX2N/B2l3X1g+NoyZu
-        hkDt1Rsb7Keu46ouFXQi0jsTqHid4G7fyRp9JKvYVfF+aju3zu8YQaanWmYCiJhvsOfxd3sH7cC+h
-        CvA5LXEj48rUIGz4//lebn/Vo+t+VkDgABlo8k3RhsQWMoLDOONu70LBIVdvfs1dYndKU/HAgUL2h
-        gyiw8vJrzM379DK9x5bn4LBm4s8yLXVwN9UEiXnsJpnkW5IbXFsiURr1yLpIUUq3BsRMO+5zhce8z
-        NLB8G1celxCrEH7vlQvrlpIL+11RcifC6WexTVKhYn9AzduRMeAAmYU/KcF2IlMVgdVTlAzUkT4Uz
-        a1kQkmc3g==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:48402)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i17AD-0004Be-I5; Fri, 23 Aug 2019 11:51:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i17A9-0000BF-9q; Fri, 23 Aug 2019 11:51:21 +0100
-Date:   Fri, 23 Aug 2019 11:51:21 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Chris Clayton <chris2553@googlemail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org,
-        shuah@kernel.org, sthotton@marvell.com, andre.przywara@arm.com,
-        arnd@arndb.de, salyzyn@android.com, huw@codeweavers.com,
-        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
-        will.deacon@arm.com, linux-mips@vger.kernel.org,
-        ralf@linux-mips.org, 0x7f454c46@gmail.com, paul.burton@mips.com,
-        linux-kselftest@vger.kernel.org, linux@rasmusvillemoes.dk,
-        tglx@linutronix.de, pcc@google.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: Regression in 5.3-rc1 and later
-Message-ID: <20190823105121.GA13294@shell.armlinux.org.uk>
-References: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
- <20190823103654.GX13294@shell.armlinux.org.uk>
- <8ab59d01-348e-9ac1-2944-5e98acd9b1f8@arm.com>
+        Fri, 23 Aug 2019 06:51:41 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46FJ9l2qlDz1rGRc;
+        Fri, 23 Aug 2019 12:51:39 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46FJ9l2TjCz1qqkV;
+        Fri, 23 Aug 2019 12:51:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id funYEpq1XLjl; Fri, 23 Aug 2019 12:51:38 +0200 (CEST)
+X-Auth-Info: STQJys8Qs0uQp8jPsYNHRNPU6hiQQiJ6TDsRYhTz6+w=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 23 Aug 2019 12:51:38 +0200 (CEST)
+Subject: Re: [PATCH] Input: ili210x - switch to using threaded IRQ
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20190811161104.GA43556@dtor-ws>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <1bee0866-d022-2adf-3734-aeb2689d28f1@denx.de>
+Date:   Fri, 23 Aug 2019 12:34:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ab59d01-348e-9ac1-2944-5e98acd9b1f8@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190811161104.GA43556@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:43:32AM +0100, Vincenzo Frascino wrote:
-> Hi Russell,
+On 8/11/19 6:11 PM, Dmitry Torokhov wrote:
+> Let's switch the driver to using threaded IRQ so that we do not need to
+> manage the interrupt and work separately, and we do not acknowledge
+> interrupt until we finished handling it completely.
 > 
-> On 8/23/19 11:36 AM, Russell King - ARM Linux admin wrote:
-> > Hi,
-> > 
-> > To everyone on the long Cc list...
-> > 
-> > What's happening with this?  I was about to merge the patches for 32-bit
-> > ARM, which I don't want to do if doing so will cause this regression on
-> > 32-bit ARM as well.
-> > 
-> 
-> The regression is sorted as of yesterday, a new patch is going through tip:
-> timers/urgent and will be part of the next -rc.
-> 
-> If you want to merge them there should be nothing blocking.
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-I don't have access to the tip tree.
-
-I'll wait a kernel release cycle instead.
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+On ILI2117
+Tested-by: Marek Vasut <marex@denx.de>
