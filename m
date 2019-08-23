@@ -2,154 +2,129 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5280BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C4DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3AC21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28914233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566574931;
+	bh=BDjfteW/QU9KMSbRapMH7R8D4vRCcjKAbhun5quyEHk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VXCYdzTiooODHdiTBMjSxyslSplSgHRZOfo8CsH4gTPyHeSvAIHlkoM+7mKq11WIe
+	 UP8gBAvsj4JX0rz+0AoUwE827t8HpGHtAlJQPeFStlfjt8XNVw1ZNITI03IdnaQeKH
+	 y7nOGmZfbwtavJDJPLk5A6nfWcjvoZnHG9dMoLZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405882AbfHWPlh (ORCPT
+        id S2405895AbfHWPmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:41:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:29575 "EHLO mga18.intel.com"
+        Fri, 23 Aug 2019 11:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfHWPlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:41:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 08:41:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
-   d="scan'208";a="330762256"
-Received: from sdkulkar-mobl.amr.corp.intel.com (HELO [10.254.94.219]) ([10.254.94.219])
-  by orsmga004.jf.intel.com with ESMTP; 23 Aug 2019 08:41:34 -0700
-Subject: Re: [alsa-devel] [RESEND PATCH v4 1/4] dt-bindings: soundwire: add
- slave bindings
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, spapothi@codeaurora.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
- <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <7da8aa89-2119-21d1-0e29-8894a8d40bf0@linux.intel.com>
-Date:   Fri, 23 Aug 2019 10:41:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726824AbfHWPmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:42:09 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A1B621019;
+        Fri, 23 Aug 2019 15:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566574928;
+        bh=BDjfteW/QU9KMSbRapMH7R8D4vRCcjKAbhun5quyEHk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xKcFN0VRwM4eDlY9+q1YP1NyK92TfhpVYPLSA7KszQyoFiO3TUUaA5e73plzmSMGr
+         1z1h+vmeQsi4l3fFTdxEG/DAdboXAfPBqj6JkL2fUd5obOBiA6P+d/xQhEs4ZLt1sk
+         9olUyYc+Ulu+ot1ZnxtocySEJH/F8mJAUV4XgxPo=
+Date:   Fri, 23 Aug 2019 16:41:59 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>, tytso@mit.edu
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wei Li <liwei391@huawei.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Waiman Long <longman@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Len Brown <len.brown@intel.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Yury Norov <ynorov@marvell.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 2/3] fdt: add support for rng-seed
+Message-ID: <20190823154158.wgcnxfzpcttpnhga@willie-the-truck>
+References: <20190823062452.127528-1-hsinyi@chromium.org>
+ <20190823062452.127528-3-hsinyi@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823062452.127528-3-hsinyi@chromium.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/22/19 6:37 PM, Srinivas Kandagatla wrote:
-> This patch adds bindings for Soundwire Slave devices that includes how
-> SoundWire enumeration address and Link ID are used to represented in
-> SoundWire slave device tree nodes.
+On Fri, Aug 23, 2019 at 02:24:51PM +0800, Hsin-Yi Wang wrote:
+> Introducing a chosen node, rng-seed, which is an entropy that can be
+> passed to kernel called very early to increase initial device
+> randomness. Bootloader should provide this entropy and the value is
+> read from /chosen/rng-seed in DT.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Obtain of_fdt_crc32 for CRC check after early_init_dt_scan_nodes(),
+> since early_init_dt_scan_chosen() would modify fdt to erase rng-seed.
+> 
+> Add a new interface add_bootloader_randomness() for rng-seed use case.
+> Depends on whether the seed is trustworthy, rng seed would be passed to
+> add_hwgenerator_randomness(). Otherwise it would be passed to
+> add_device_randomness(). Decision is controlled by kernel config
+> RANDOM_TRUST_BOOTLOADER.
+> 
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->   .../soundwire/soundwire-controller.yaml       | 75 +++++++++++++++++++
->   1 file changed, 75 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> new file mode 100644
-> index 000000000000..91aa6c6d6266
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SoundWire Controller Generic Binding
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  SoundWire busses can be described with a node for the SoundWire controller
-> +  device and a set of child nodes for each SoundWire slave on the bus.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
+> Change from v9:
+> * reword kconfig
+> * use IS_ENABLED for config
 
-So is this a 64-bit value, as in the MIPI spec, or is this part of the 
-_ADR description?
-I also don't get why the first item in in base10?
+Given that these aren't functional changes, I've kept Ted's ack from v9
+and I'll queue these via arm64 assuming they pass testing.
 
+Ted -- please shout if you're not happy about that, and I'll drop the
+series.
 
-> +      description:
-> +	  Is the textual representation of SoundWire Enumeration
-> +	  address. compatible string should contain SoundWire Version ID,
-> +	  Manufacturer ID, Part ID and Class ID in order and shall be in
-> +	  lower-case hexadecimal with leading zeroes.
-> +	  Valid sizes of these fields are
-> +	  Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
-> +	  and '0x2' represents SoundWire 1.1 and so on.
-> +	  MFD is 4 nibbles
-> +	  PID is 4 nibbles
-> +	  CID is 2 nibbles
-> +	  More Information on detail of encoding of these fields can be
-> +	  found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
-> +
-> +      reg:
-> +        maxItems: 1
-> +        description:
-> +          Instance ID and Link ID of SoundWire Device Address.
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    soundwire@c2d0000 {
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +        compatible = "qcom,soundwire-v1.5.0";
-> +        reg = <0x0c2d0000 0x2000>;
-> +
-> +        speaker@1 {
-> +            compatible = "sdw10217201000";
-> +            reg = <1 0>;
-> +        };
-> +
-> +        speaker@2 {
-> +            compatible = "sdw10217201000";
-> +            reg = <2 0>;
-> +        };
-> +    };
-> +
-> +...
-> 
+Thanks,
+
+Will
