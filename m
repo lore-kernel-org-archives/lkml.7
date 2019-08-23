@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F2CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4B5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA3F22CF7
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75A123401
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392934AbfHWH5y (ORCPT
+        id S2392899AbfHWH5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:57:54 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2378 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392239AbfHWH5w (ORCPT
+        Fri, 23 Aug 2019 03:57:53 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:19793 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2392011AbfHWH5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:57:52 -0400
-X-UUID: dc7c541aa71843a2a4a586e61045836f-20190823
-X-UUID: dc7c541aa71843a2a4a586e61045836f-20190823
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Fri, 23 Aug 2019 03:57:48 -0400
+X-UUID: 1003a4f6841847c1a4e3f84fd6971cb7-20190823
+X-UUID: 1003a4f6841847c1a4e3f84fd6971cb7-20190823
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2064025835; Fri, 23 Aug 2019 15:57:42 +0800
+        with ESMTP id 353560300; Fri, 23 Aug 2019 15:57:34 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 23 Aug 2019 15:57:40 +0800
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 23 Aug 2019 15:57:33 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 23 Aug 2019 15:57:33 +0800
+ Transport; Fri, 23 Aug 2019 15:57:31 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,132 +52,95 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-mediatek@lists.infradead.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH next v10 09/11] usb: common: create Kconfig file
-Date:   Fri, 23 Aug 2019 15:57:19 +0800
-Message-ID: <1566547041-20804-10-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v10 08/11] usb: roles: get usb-role-switch from parent
+Date:   Fri, 23 Aug 2019 15:57:18 +0800
+Message-ID: <1566547041-20804-9-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: A11A0C8B56F7293B72F5DE2933BD9567EC86025288023371D9F1698DF7036BBE2000:8
+X-TM-SNTS-SMTP: 395BF2D3AD6381F576F6D4901349D03CAAF86C22BF217EA549420F4C1D7291B12000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create Kconfig file for USB common core, and move USB_LED_TRIG
-and USB_ULPI_BUS configs into the new file from the parent Kconfig,
-it will help to add new configs later.
+when the USB host controller is the parent of the connector,
+usually type-B, sometimes don't need the graph, so we should
+check whether it's parent registers usb-role-switch or not
+firstly, and get it if exists.
 
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v9~v10: no changes
+v10: no changes
 
-v8:
+v9:
+  1. replace signed-off-by by suggested-by Heikki
+  2. use class_find_device_by_fwnode()
+
+v8: no changes
+v7:
+  add signed-off-by Chunfeng
+
+v6:
   new patch
 ---
- drivers/usb/Kconfig        | 35 +----------------------------------
- drivers/usb/common/Kconfig | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 34 deletions(-)
- create mode 100644 drivers/usb/common/Kconfig
+ drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-index 6e59d370ef81..7bf94e65ed2f 100644
---- a/drivers/usb/Kconfig
-+++ b/drivers/usb/Kconfig
-@@ -36,8 +36,7 @@ menuconfig USB_SUPPORT
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 2abb6fe384ca..94b4e7db2b94 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -102,6 +102,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+ }
  
- if USB_SUPPORT
++static struct usb_role_switch *
++usb_role_switch_is_parent(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
++	struct device *dev;
++
++	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
++		return NULL;
++
++	dev = class_find_device_by_fwnode(role_class, parent);
++	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
++}
++
+ /**
+  * usb_role_switch_get - Find USB role switch linked with the caller
+  * @dev: The caller device
+@@ -113,8 +126,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ {
+ 	struct usb_role_switch *sw;
  
--config USB_COMMON
--	tristate
-+source "drivers/usb/common/Kconfig"
+-	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(dev_fwnode(dev));
++	if (!sw)
++		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
++						  usb_role_switch_match);
  
- config USB_ARCH_HAS_HCD
- 	def_bool y
-@@ -175,36 +174,4 @@ source "drivers/usb/typec/Kconfig"
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+@@ -134,8 +149,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+ {
+ 	struct usb_role_switch *sw;
  
- source "drivers/usb/roles/Kconfig"
+-	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(fwnode);
++	if (!sw)
++		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
++						  NULL, usb_role_switch_match);
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
  
--config USB_LED_TRIG
--	bool "USB LED Triggers"
--	depends on LEDS_CLASS && LEDS_TRIGGERS
--	select USB_COMMON
--	help
--	  This option adds LED triggers for USB host and/or gadget activity.
--
--	  Say Y here if you are working on a system with led-class supported
--	  LEDs and you want to use them as activity indicators for USB host or
--	  gadget.
--
--config USB_ULPI_BUS
--	tristate "USB ULPI PHY interface support"
--	select USB_COMMON
--	help
--	  UTMI+ Low Pin Interface (ULPI) is specification for a commonly used
--	  USB 2.0 PHY interface. The ULPI specification defines a standard set
--	  of registers that can be used to detect the vendor and product which
--	  allows ULPI to be handled as a bus. This module is the driver for that
--	  bus.
--
--	  The ULPI interfaces (the buses) are registered by the drivers for USB
--	  controllers which support ULPI register access and have ULPI PHY
--	  attached to them. The ULPI PHY drivers themselves are normal PHY
--	  drivers.
--
--	  ULPI PHYs provide often functions such as ADP sensing/probing (OTG
--	  protocol) and USB charger detection.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called ulpi.
--
- endif # USB_SUPPORT
-diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
-new file mode 100644
-index 000000000000..848545b099cf
---- /dev/null
-+++ b/drivers/usb/common/Kconfig
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+config USB_COMMON
-+	tristate
-+
-+
-+config USB_LED_TRIG
-+	bool "USB LED Triggers"
-+	depends on LEDS_CLASS && LEDS_TRIGGERS
-+	select USB_COMMON
-+	help
-+	  This option adds LED triggers for USB host and/or gadget activity.
-+
-+	  Say Y here if you are working on a system with led-class supported
-+	  LEDs and you want to use them as activity indicators for USB host or
-+	  gadget.
-+
-+config USB_ULPI_BUS
-+	tristate "USB ULPI PHY interface support"
-+	select USB_COMMON
-+	help
-+	  UTMI+ Low Pin Interface (ULPI) is specification for a commonly used
-+	  USB 2.0 PHY interface. The ULPI specification defines a standard set
-+	  of registers that can be used to detect the vendor and product which
-+	  allows ULPI to be handled as a bus. This module is the driver for that
-+	  bus.
-+
-+	  The ULPI interfaces (the buses) are registered by the drivers for USB
-+	  controllers which support ULPI register access and have ULPI PHY
-+	  attached to them. The ULPI PHY drivers themselves are normal PHY
-+	  drivers.
-+
-+	  ULPI PHYs provide often functions such as ADP sensing/probing (OTG
-+	  protocol) and USB charger detection.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called ulpi.
-+
 -- 
 2.23.0
 
