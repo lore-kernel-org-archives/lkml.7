@@ -2,134 +2,117 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05604C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8937221897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:14:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FBQpYh+k"
+	by mail.kernel.org (Postfix) with ESMTP id DB18D22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393167AbfHWMOu (ORCPT
+        id S2393232AbfHWMQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:14:50 -0400
-Received: from mout.gmx.net ([212.227.17.20]:47293 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391421AbfHWMOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:14:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566562433;
-        bh=ZZeV6qRtSW/Hn8aQJ6GSyIcFFJLdxp8khErjnJb6tDY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=FBQpYh+kIJbWDHnjvns4r0qIa5UOO4cbX3d0pJfuKJQ5y42tn0Tk1LWViStDHVUJ0
-         l8u0uHxjhi1p4zou1hzwKGXjSAzdCGQY2wrJ5xNMe8gJqqMi9fLM1Hi8HCbLuWtPgM
-         VE1fJPnOd5+1wXqEm283z06cO2yt5UAm9k/d7yAk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.154.8] ([217.61.154.8]) by web-mail.gmx.net
- (3c-app-gmx-bs11.server.lan [172.19.170.62]) (via HTTP); Fri, 23 Aug 2019
- 14:13:53 +0200
+        Fri, 23 Aug 2019 08:16:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45608 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389773AbfHWMQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:16:18 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 78ABB5F6FD15DD49C872;
+        Fri, 23 Aug 2019 20:16:08 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
+ 20:15:58 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <sfrench@samba.org>
+CC:     <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] cifs: remove set but not used variables
+Date:   Fri, 23 Aug 2019 20:15:35 +0800
+Message-ID: <20190823121535.76296-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Message-ID: <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>
-Cc:     "Lee Jones" <lee.jones@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        "Richard Fontana" <rfontana@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Eddie Huang" <eddie.huang@mediatek.com>,
-        "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>,
-        linux-rtc@vger.kernel.org,
-        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>
-Subject: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from
- core driver
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 23 Aug 2019 14:13:53 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:nr4dyiSrd5gDD/bbRxF4ZEMIgz3xepFd/XlrekfNAvjvFi0Rx9xJ40d++NeKsHyt0x2if
- Vsxhi9F2hKxfL2TtgZhz8QB3wGKc7O4PkkNfmHp2rkd+cyNHuOeuvgv4tTWEc5vz/AKmz43rcKVO
- w2jtE9MncIXl4dzU+xzojsi78V+giOD8SsFFuIaVLPsJYTcyUSiy3wte1lI3MMA1l7eViGEXQQXU
- yCKnXLU87YTlbIylJbH+NPl9SoVc0aFsk0n3Hp4z+x5ZYnWHl7jBQ13pt2nLpkqQaYEj6njm7x2i
- +Y=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FnVj54k4t1g=:xdot20YBEqJE3Af3zCaBWN
- Bhkf7wY8DCiRL/dAZBYCJ+tX4aoZA6MWAIBeFyPLOS1gVGIbxCzXRz+7jJbzi3VdLA9lLq9VX
- khKYQ3M03zz3DK/k4cSUE8BNkY5STJDWdOarnUPjWEFbYi1sAIMrxEhc55jbnAKL59/Ek4dl9
- WROreyN+6//0XzUk7kMUjeMmqPwOVKQXW4+xCzS3i8Yh3b2Jv033NVjhDfxHG5BLsJoW6BOcO
- nO+aobMhP5FqUb2aBCnQ9sPjA0Xo9pLiC71DAGgfe6kPNVpeP7Qss6j604hQqk5rTv0UIi6WK
- mR+UddvyW9pHXMhIWZdVnEZ1fAQxXsZdoRKQThlZ1Oz9o8iUca4ES+4R0x89lOMQ4Q4kM9/8H
- Cp1J3hL8C5iVpG5JsNsxqV3BVXZBCYZkpCdB+a6lCjEbkMPoB78sINVR3smTfETnHbq9WkbL0
- EV/uXYkwijeRyfx/7dh++1bj1hKeIaLfrew2OuZWysvrQdgBQxTrlfmWvq1olPIdBqiNB57rj
- oRsUMxl9y9Ol/SJtBbnbnADmPVLNlN+7wgl6WaWyNaBVg/6Gnk2lOf9G5P4zD1MDH6lRJ3vU2
- Un1VhrxjKj6kjzX/bMOI1VupE+fMVk+urJQ3DefrmrYUi88bbyplr1v4M8QpGaZZQM6zEtPhD
- +pVMmTPI6cM2yQC9gSvpZ6ikWI161WUqjQKjzXdXKLxy0Qg==
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-this commit breaks mt6323 pmic on BananaPi-R2
+fs/cifs/file.c: In function cifs_lock:
+fs/cifs/file.c:1696:24: warning: variable cinode set but not used [-Wunused-but-set-variable]
+fs/cifs/file.c: In function cifs_write:
+fs/cifs/file.c:1765:23: warning: variable cifs_sb set but not used [-Wunused-but-set-variable]
+fs/cifs/file.c: In function collect_uncached_read_data:
+fs/cifs/file.c:3578:20: warning: variable tcon set but not used [-Wunused-but-set-variable]
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
-/?id=3Da4872e80ce7d2a1844328176dbf279d0a2b89bdb
+'cinode' is never used since introduced by
+commit 03776f4516bc ("CIFS: Simplify byte range locking code")
+'cifs_sb' is not used since commit cb7e9eabb2b5 ("CIFS: Use
+multicredits for SMB 2.1/3 writes").
+'tcon' is not used since commit d26e2903fc10 ("smb3: fix bytes_read statistics")
 
-resulting in this message in dmesg:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/cifs/file.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
-and multiple
-mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index ab07ae8..f16f6d2 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1693,7 +1693,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+ 	bool posix_lck = false;
+ 	struct cifs_sb_info *cifs_sb;
+ 	struct cifs_tcon *tcon;
+-	struct cifsInodeInfo *cinode;
+ 	struct cifsFileInfo *cfile;
+ 	__u32 type;
+ 
+@@ -1710,7 +1709,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+ 	cifs_read_flock(flock, &type, &lock, &unlock, &wait_flag,
+ 			tcon->ses->server);
+ 	cifs_sb = CIFS_FILE_SB(file);
+-	cinode = CIFS_I(file_inode(file));
+ 
+ 	if (cap_unix(tcon->ses) &&
+ 	    (CIFS_UNIX_FCNTL_CAP & le64_to_cpu(tcon->fsUnixInfo.Capability)) &&
+@@ -1762,7 +1760,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
+ 	int rc = 0;
+ 	unsigned int bytes_written = 0;
+ 	unsigned int total_written;
+-	struct cifs_sb_info *cifs_sb;
+ 	struct cifs_tcon *tcon;
+ 	struct TCP_Server_Info *server;
+ 	unsigned int xid;
+@@ -1770,8 +1767,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
+ 	struct cifsInodeInfo *cifsi = CIFS_I(d_inode(dentry));
+ 	struct cifs_io_parms io_parms;
+ 
+-	cifs_sb = CIFS_SB(dentry->d_sb);
+-
+ 	cifs_dbg(FYI, "write %zd bytes to offset %lld of %pd\n",
+ 		 write_size, *offset, dentry);
+ 
+@@ -3575,10 +3570,8 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx)
+ 	struct cifs_readdata *rdata, *tmp;
+ 	struct iov_iter *to = &ctx->iter;
+ 	struct cifs_sb_info *cifs_sb;
+-	struct cifs_tcon *tcon;
+ 	int rc;
+ 
+-	tcon = tlink_tcon(ctx->cfile->tlink);
+ 	cifs_sb = CIFS_SB(ctx->cfile->dentry->d_sb);
+ 
+ 	mutex_lock(&ctx->aio_mutex);
+-- 
+2.7.4
 
-see discussion here:
-http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022505.htm=
-l
-
-after reverting this one the errors are gone, please provide a fix
-
-regards Frank
-
-
-> Gesendet: Freitag, 23. August 2019 um 05:45 Uhr
-> Von: "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>
-> Betreff: [PATCH v5 02/10] mfd: mt6397: extract irq related code from cor=
-e driver
->
-> In order to support different types of irq design, we decide to add
-> separate irq drivers for different design and keep mt6397 mfd core
-> simple and reusable to all generations of PMICs so far.
->
-> Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/Makefile            |   3 +-
->  drivers/mfd/mt6397-core.c       | 146 --------------------------------
->  drivers/mfd/mt6397-irq.c        | 181 +++++++++++++++++++++++++++++++++=
-+++++++
->  include/linux/mfd/mt6397/core.h |   9 ++
->  4 files changed, 192 insertions(+), 147 deletions(-)
->  create mode 100644 drivers/mfd/mt6397-irq.c
 
