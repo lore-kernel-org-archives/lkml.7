@@ -2,68 +2,76 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D8BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E59DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239D92089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491FE2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 21:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436947AbfHWVbi (ORCPT
+        id S2436958AbfHWVdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 17:31:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38136 "EHLO
+        Fri, 23 Aug 2019 17:33:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38164 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387547AbfHWVbi (ORCPT
+        with ESMTP id S1732682AbfHWVdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 17:31:38 -0400
+        Fri, 23 Aug 2019 17:33:51 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A7B981543B28F;
-        Fri, 23 Aug 2019 14:31:37 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 14:31:37 -0700 (PDT)
-Message-Id: <20190823.143137.1666289020578814960.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2D74B1543B2AA;
+        Fri, 23 Aug 2019 14:33:51 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 14:33:50 -0700 (PDT)
+Message-Id: <20190823.143350.122492125918705806.davem@davemloft.net>
 To:     hayeswang@realtek.com
 Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 0/2] r8152: save EEE
+        linux-kernel@vger.kernel.org, jslaby@suse.cz
+Subject: Re: [PATCH net 2/2] r8152: avoid using napi_disable after
+ netif_napi_del.
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1394712342-15778-311-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-304-Taiwan-albertk@realtek.com>
-        <1394712342-15778-311-Taiwan-albertk@realtek.com>
+In-Reply-To: <1394712342-15778-316-Taiwan-albertk@realtek.com>
+References: <1394712342-15778-314-Taiwan-albertk@realtek.com>
+        <1394712342-15778-316-Taiwan-albertk@realtek.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 23 Aug 2019 14:31:37 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 23 Aug 2019 14:33:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hayes Wang <hayeswang@realtek.com>
-Date: Fri, 23 Aug 2019 15:33:39 +0800
+Date: Fri, 23 Aug 2019 16:53:02 +0800
 
-> v4:
-> For patch #2, remove redundant calling of "ocp_reg_write(tp, OCP_EEE_ADV, 0)".
+> Exchange netif_napi_del() and unregister_netdev() in rtl8152_disconnect()
+> to avoid using napi_disable() after netif_napi_del().
 > 
-> v3:
-> For patch #2, fix the mistake caused by copying and pasting.
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+> ---
+>  drivers/net/usb/r8152.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> v2:
-> Adjust patch #1. The EEE has been disabled in the beginning of
-> r8153_hw_phy_cfg() and r8153b_hw_phy_cfg(), so only check if
-> it is necessary to enable EEE.
-> 
-> Add the patch #2 for the helper function.
-> 
-> v1:
-> Saving the settings of EEE to avoid they become the default settings
-> after reset_resume().
+> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> index 690a24d1ef82..29390eda5251 100644
+> --- a/drivers/net/usb/r8152.c
+> +++ b/drivers/net/usb/r8152.c
+> @@ -5364,8 +5364,8 @@ static void rtl8152_disconnect(struct usb_interface *intf)
+>  	if (tp) {
+>  		rtl_set_unplug(tp);
+>  
+> -		netif_napi_del(&tp->napi);
+>  		unregister_netdev(tp->netdev);
+> +		netif_napi_del(&tp->napi);
+>  		cancel_delayed_work_sync(&tp->hw_phy_work);
+>  		tp->rtl_ops.unload(tp);
+>  		free_netdev(tp->netdev);
 
-Series applied.
+This is completely redundant because free_netdev() will perform all of
+the necessary netif_napi_del() calls.
