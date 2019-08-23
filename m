@@ -7,39 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8EDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D09C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB8523402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59F423404
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389806AbfHWCMk (ORCPT
+        id S2389876AbfHWCMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:12:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33734 "EHLO
+        Thu, 22 Aug 2019 22:12:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33723 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389411AbfHWCMe (ORCPT
+        with ESMTP id S2389324AbfHWCMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:12:34 -0400
+        Thu, 22 Aug 2019 22:12:19 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0z43-0000z0-Qp; Fri, 23 Aug 2019 04:12:31 +0200
+        id 1i0z3o-0000xJ-TF; Fri, 23 Aug 2019 04:12:17 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7072B1C07E4;
-        Fri, 23 Aug 2019 04:12:31 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:12:30 -0000
-From:   tip-bot2 for Cao jin <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8F44A1C0883;
+        Fri, 23 Aug 2019 04:12:16 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:12:16 -0000
+From:   tip-bot2 for Thomas Gleixner <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/fixmap: Cleanup outdated comments
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>
-In-Reply-To: <20190809114612.2569-1-caoj.fnst@cn.fujitsu.com>
-References: <20190809114612.2569-1-caoj.fnst@cn.fujitsu.com>
+Subject: [tip: timers/core] alarmtimers: Avoid rtc.h include
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <20190819143801.565389536@linutronix.de>
+References: <20190819143801.565389536@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156652635085.11767.14762210847598346368.tip-bot2@tip-bot2>
+Message-ID: <156652633652.11658.4484460911673616880.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -54,48 +55,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
+The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     c84b82dd3e593db217f23c60f7edae02c76a3c4c
-Gitweb:        https://git.kernel.org/tip/c84b82dd3e593db217f23c60f7edae02c76a3c4c
-Author:        Cao jin <caoj.fnst@cn.fujitsu.com>
-AuthorDate:    Fri, 09 Aug 2019 19:46:12 +08:00
+Commit-ID:     3758b0f86ef502e2f342055caef6d2232c2558b7
+Gitweb:        https://git.kernel.org/tip/3758b0f86ef502e2f342055caef6d2232c2558b7
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 19 Aug 2019 16:31:43 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 19 Aug 2019 21:50:19 +02:00
+CommitterDate: Tue, 20 Aug 2019 22:09:52 +02:00
 
-x86/fixmap: Cleanup outdated comments
+alarmtimers: Avoid rtc.h include
 
-Remove stale comments and fix the not longer valid pagetable entry
-reference.
+rtc.h is not needed in alarmtimers when a forward declaration of struct
+rtc_device is provided. That allows to include posix-timers.h without
+adding more includes to alarmtimer.h or creating circular include
+dependencies.
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190809114612.2569-1-caoj.fnst@cn.fujitsu.com
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lkml.kernel.org/r/20190819143801.565389536@linutronix.de
 
 ---
- arch/x86/include/asm/fixmap.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ include/linux/alarmtimer.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 9da8ccc..0c47aa8 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -42,8 +42,7 @@
-  * Because of this, FIXADDR_TOP x86 integration was left as later work.
-  */
- #ifdef CONFIG_X86_32
--/* used by vmalloc.c, vsyscall.lds.S.
-- *
-+/*
-  * Leave one empty page between vmalloc'ed areas and
-  * the start of the fixmap.
-  */
-@@ -120,7 +119,7 @@ enum fixed_addresses {
- 	 * before ioremap() is functional.
- 	 *
- 	 * If necessary we round it up to the next 512 pages boundary so
--	 * that we can have a single pgd entry and a single pte table:
-+	 * that we can have a single pmd entry and a single pte table:
- 	 */
- #define NR_FIX_BTMAPS		64
- #define FIX_BTMAPS_SLOTS	8
+diff --git a/include/linux/alarmtimer.h b/include/linux/alarmtimer.h
+index 0760ca1..74748e3 100644
+--- a/include/linux/alarmtimer.h
++++ b/include/linux/alarmtimer.h
+@@ -5,7 +5,8 @@
+ #include <linux/time.h>
+ #include <linux/hrtimer.h>
+ #include <linux/timerqueue.h>
+-#include <linux/rtc.h>
++
++struct rtc_device;
+ 
+ enum alarmtimer_type {
+ 	ALARM_REALTIME,
