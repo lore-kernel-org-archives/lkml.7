@@ -2,105 +2,150 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFAEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8D7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAAB21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2142339D
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566574420;
+	bh=yCT4ObOgsNt0bYY8blJS3y9Aifbq9ZOtPmFappz9gKg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=UoZK4Moc/PrzLbe8NWtgYsbp2ddM+4/Dxea7zYNtqqstuWyuXze/ee4sYLJQNrtg4
+	 /e4syKSHCcY/oOtfTW1YqSsyWKKJVpDv090odHR6j88d2jcuaoyWhMOprPKJUePXFu
+	 evKPf+lJBnY80N1JEhsJuTcg5RzA4FxOdJ0P3L+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405589AbfHWPdT (ORCPT
+        id S2405790AbfHWPdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:33:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35969 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405326AbfHWPdP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:33:15 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i1BYu-0005As-Og; Fri, 23 Aug 2019 17:33:12 +0200
-Date:   Fri, 23 Aug 2019 17:33:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 01/38] posix-cpu-timers: Provide task validation
- functions
-In-Reply-To: <20190821230319.GD22020@lenoir>
-Message-ID: <alpine.DEB.2.21.1908231732030.1896@nanos.tec.linutronix.de>
-References: <20190821190847.665673890@linutronix.de> <20190821192919.326097175@linutronix.de> <20190821223356.GC22020@lenoir> <20190821230319.GD22020@lenoir>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 23 Aug 2019 11:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388022AbfHWPdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:33:38 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F8AD2133F;
+        Fri, 23 Aug 2019 15:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566574416;
+        bh=yCT4ObOgsNt0bYY8blJS3y9Aifbq9ZOtPmFappz9gKg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=o79+bNgvN/+G52KjHl2k7P+/9FYtVoFa6klyl9gzDLuUZmv2FLD2H6/h6kgCvvnGO
+         RFvuceeQSSSVqLj+co0KPaqw2Cjpu4rkBzl2xsJBk8SmTfznnZR1skMABiBGgQCWnW
+         h17J/lCDhV60JedIGFyevZgryI2eRxj+0jNWq+Gg=
+Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        shuah <shuah@kernel.org>, pmladek@suse.com,
+        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190820232046.50175-1-brendanhiggins@google.com>
+ <20190820232046.50175-2-brendanhiggins@google.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+Date:   Fri, 23 Aug 2019 09:33:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190820232046.50175-2-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019, Frederic Weisbecker wrote:
-> On Thu, Aug 22, 2019 at 12:33:56AM +0200, Frederic Weisbecker wrote:
-> > On Wed, Aug 21, 2019 at 09:08:48PM +0200, Thomas Gleixner wrote:
-> > > The code contains three slightly different copies of validating whether a
-> > > given clock resolves to a valid task and whether the current caller has
-> > > permissions to access it.
-> > > 
-> > > Create central functions. Replace check_clock() as a first step and rename
-> > > it to something sensible.
-> > > 
-> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > > ---
-> > >  kernel/time/posix-cpu-timers.c |   65 +++++++++++++++++++++++++++--------------
-> > >  1 file changed, 44 insertions(+), 21 deletions(-)
-> > > 
-> > > --- a/kernel/time/posix-cpu-timers.c
-> > > +++ b/kernel/time/posix-cpu-timers.c
-> > > @@ -35,27 +35,52 @@ void update_rlimit_cpu(struct task_struc
-> > >  	spin_unlock_irq(&task->sighand->siglock);
-> > >  }
-> > >  
-> > > -static int check_clock(const clockid_t which_clock)
-> > > +/*
-> > > + * Functions for validating access to tasks.
-> > > + */
-> > > +static struct task_struct *lookup_task(const pid_t pid, bool thread)
-> > >  {
-> > > -	int error = 0;
-> > >  	struct task_struct *p;
-> > > -	const pid_t pid = CPUCLOCK_PID(which_clock);
-> > >  
-> > > -	if (CPUCLOCK_WHICH(which_clock) >= CPUCLOCK_MAX)
-> > > -		return -EINVAL;
-> > > +	if (!pid)
-> > > +		return thread ? current : current->group_leader;
-> > >  
-> > > -	if (pid == 0)
-> > > -		return 0;
-> > > +	p = find_task_by_vpid(pid);
-> > > +	if (!p || p == current)
-> > > +		return p;
-> > 
-> > What if (p == current && !thread && !has_group_leader_pid(p)) ?
+Hi Brendan,
+
+On 8/20/19 5:20 PM, Brendan Higgins wrote:
+> Add core facilities for defining unit tests; this provides a common way
+> to define test cases, functions that execute code which is under test
+> and determine whether the code under test behaves as expected; this also
+> provides a way to group together related test cases in test suites (here
+> we call them test_modules).
 > 
-> Ah looking at the next patch, posix_cpu_clock_get_task() and posix_cpu_clock_getres()
-> had different ad-hoc checks for this specific case.
+> Just define test cases and how to execute them for now; setting
+> expectations on code will be defined later.
 > 
-> clock_getres() used to return -EINVAL while clock_get() doesn't
-> care. They certainly should agree in their behaviour. I'm not sure which
-> one is correct. It probably doesn't matter much.
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>   include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
+>   kunit/Kconfig        |  17 ++++
+>   kunit/Makefile       |   1 +
+>   kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 388 insertions(+)
+>   create mode 100644 include/kunit/test.h
+>   create mode 100644 kunit/Kconfig
+>   create mode 100644 kunit/Makefile
+>   create mode 100644 kunit/test.c
+> 
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> new file mode 100644
+> index 0000000000000..e0b34acb9ee4e
+> --- /dev/null
+> +++ b/include/kunit/test.h
+> @@ -0,0 +1,179 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Base unit test (KUnit) API.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#ifndef _KUNIT_TEST_H
+> +#define _KUNIT_TEST_H
+> +
+> +#include <linux/types.h>
+> +
+> +struct kunit;
+> +
+> +/**
+> + * struct kunit_case - represents an individual test case.
+> + * @run_case: the function representing the actual test case.
+> + * @name: the name of the test case.
+> + *
+> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
+> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
+> + * test case is associated with a &struct kunit_suite and will be run after the
+> + * suite's init function and followed by the suite's exit function.
+> + *
+> + * A test case should be static and should only be created with the KUNIT_CASE()
+> + * macro; additionally, every array of test cases should be terminated with an
+> + * empty test case.
+> + *
+> + * Example:
 
-Let me stare on the different variants again
+Can you fix these line continuations. It makes it very hard to read.
+Sorry for this late comment. These comments lines are longer than 80
+and wrap.
 
-Thanks,
+There are several comment lines in the file that are way too long.
 
-	tglx
+thanks,
+-- Shuah
+
