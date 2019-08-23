@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47E9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCEDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DE523404
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B2A23404
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389429AbfHWCMT (ORCPT
+        id S2389842AbfHWCMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:12:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33708 "EHLO
+        Thu, 22 Aug 2019 22:12:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33725 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730401AbfHWCMR (ORCPT
+        with ESMTP id S2389328AbfHWCMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:12:17 -0400
+        Thu, 22 Aug 2019 22:12:20 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0z3m-0000w9-QA; Fri, 23 Aug 2019 04:12:14 +0200
+        id 1i0z3p-0000xf-BB; Fri, 23 Aug 2019 04:12:17 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 648201C07E4;
-        Fri, 23 Aug 2019 04:12:14 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 02:12:14 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0CF751C07E4;
+        Fri, 23 Aug 2019 04:12:17 +0200 (CEST)
+Date:   Fri, 23 Aug 2019 02:12:16 -0000
 From:   tip-bot2 for Thomas Gleixner <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Remove tsk argument from
- run_posix_cpu_timers()
+Subject: [tip: timers/core] posix-timers: Cleanup forward declarations and
+ includes
 Cc:     linux-kernel@vger.kernel.org,
         Frederic Weisbecker <frederic@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
-In-Reply-To: <20190819143801.945469967@linutronix.de>
-References: <20190819143801.945469967@linutronix.de>
+In-Reply-To: <20190819143801.472005793@linutronix.de>
+References: <20190819143801.472005793@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <156652633417.11637.2192098489035972415.tip-bot2@tip-bot2>
+Message-ID: <156652633698.11661.15470255584101715791.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
@@ -58,69 +58,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     dce3e8fd039cc1b62760b3ad6822cf04c262cd0e
-Gitweb:        https://git.kernel.org/tip/dce3e8fd039cc1b62760b3ad6822cf04c262cd0e
+Commit-ID:     ce03f613461642669d6150c405dd28f4bfd54bbb
+Gitweb:        https://git.kernel.org/tip/ce03f613461642669d6150c405dd28f4bfd54bbb
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 19 Aug 2019 16:31:47 +02:00
+AuthorDate:    Mon, 19 Aug 2019 16:31:42 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 21 Aug 2019 20:27:16 +02:00
+CommitterDate: Tue, 20 Aug 2019 22:09:52 +02:00
 
-posix-cpu-timers: Remove tsk argument from run_posix_cpu_timers()
+posix-timers: Cleanup forward declarations and includes
 
-It's always current. Don't give people wrong ideas.
+ - Rename struct siginfo to kernel_siginfo as that is used and required
+ - Add a forward declaration for task_struct and remove sched.h include
+ - Remove timex.h include as it is not needed
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190819143801.945469967@linutronix.de
+Link: https://lkml.kernel.org/r/20190819143801.472005793@linutronix.de
 
 ---
- include/linux/posix-timers.h   | 2 +-
- kernel/time/posix-cpu-timers.c | 5 +++--
- kernel/time/timer.c            | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ include/linux/posix-timers.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index 26c636d..033374b 100644
+index 604cec0..26c636d 100644
 --- a/include/linux/posix-timers.h
 +++ b/include/linux/posix-timers.h
-@@ -118,7 +118,7 @@ struct k_itimer {
- 	struct rcu_head		rcu;
- };
+@@ -4,11 +4,10 @@
  
--void run_posix_cpu_timers(struct task_struct *task);
-+void run_posix_cpu_timers(void);
- void posix_cpu_timers_exit(struct task_struct *task);
- void posix_cpu_timers_exit_group(struct task_struct *task);
- void set_process_cpu_timer(struct task_struct *task, unsigned int clock_idx,
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index 98223d2..387e0e8 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -1137,11 +1137,12 @@ static inline int fastpath_timer_check(struct task_struct *tsk)
-  * already updated our counts.  We need to check if any timers fire now.
-  * Interrupts are disabled.
-  */
--void run_posix_cpu_timers(struct task_struct *tsk)
-+void run_posix_cpu_timers(void)
- {
--	LIST_HEAD(firing);
-+	struct task_struct *tsk = current;
- 	struct k_itimer *timer, *next;
- 	unsigned long flags;
-+	LIST_HEAD(firing);
+ #include <linux/spinlock.h>
+ #include <linux/list.h>
+-#include <linux/sched.h>
+-#include <linux/timex.h>
+ #include <linux/alarmtimer.h>
  
- 	lockdep_assert_irqs_disabled();
+-struct siginfo;
++struct kernel_siginfo;
++struct task_struct;
  
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 673c6a0..0e315a2 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1728,7 +1728,7 @@ void update_process_times(int user_tick)
- #endif
- 	scheduler_tick();
- 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
--		run_posix_cpu_timers(p);
-+		run_posix_cpu_timers();
- }
- 
- /**
+ struct cpu_timer_list {
+ 	struct list_head entry;
