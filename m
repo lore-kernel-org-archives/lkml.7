@@ -2,161 +2,83 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DF5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A755CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EB321726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="HEKmcsxF"
+	by mail.kernel.org (Postfix) with ESMTP id 8289722CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732812AbfHWJfc (ORCPT
+        id S1733003AbfHWJgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:35:32 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:52788 "EHLO mta-01.yadro.com"
+        Fri, 23 Aug 2019 05:36:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5207 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730861AbfHWJfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:35:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 51C2A42ECC;
-        Fri, 23 Aug 2019 09:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:date:date:from:from:subject:subject
-        :message-id:received:received:received; s=mta-01; t=1566552929;
-         x=1568367330; bh=jKgtvGJmWgHFw9xTDALlI5FqM+Ek3B7dGReC44Js//M=; b=
-        HEKmcsxFbGqsJTfERJLdbiKd+j709hWz/pTxYtYPH2TfmOg/JvFHgdIub9O20EtX
-        9whE9XgUo0PN1XNGWO25rFCXIUsBSZ/Vf/K9WGVizipBvp0QFHtN/MJo9IBdlSVL
-        vx1m/SNdoj9t7VViQ1wmxoh16E3W6W0g5qe15QqV5FA=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7h2lt6dcs_4a; Fri, 23 Aug 2019 12:35:29 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 1A51B411F9;
-        Fri, 23 Aug 2019 12:35:29 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 23 Aug 2019 12:35:28 +0300
-Message-ID: <fafd757238e204b2566f216f1d6a4bef4b4906c5.camel@yadro.com>
-Subject: [PATCH v1 3/3] watchdog/aspeed: add support for dual boot
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        "Alexander Amelkin" <a.amelkin@yadro.com>,
-        <openbmc@lists.ozlabs.org>
-Date:   Fri, 23 Aug 2019 12:35:28 +0300
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1725797AbfHWJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:36:16 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E5679F0705B31F686C4B;
+        Fri, 23 Aug 2019 17:36:12 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 23 Aug 2019
+ 17:36:04 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <reiserfs-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <zhengbin13@huawei.com>, <yukuai3@yukuai.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH] reiserfs: fix set but not used variable 'blkh'
+Date:   Fri, 23 Aug 2019 17:42:36 +0800
+Message-ID: <1566553356-8345-1-git-send-email-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
-to clear out boot code source and re-enable access to the primary SPI flash
-chip while booted via wdt2 from the alternate chip.
+Gcc '-Wunused-but-set-variable' warning: 
+fs/reiserfs/prints.c:749:21: warning: variable blkh set but not used
 
-AST2400 datasheet says:
-"In the 2nd flash booting mode, all the address mapping to CS0# would be
-re-directed to CS1#. And CS0# is not accessable under this mode. To access
-CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
-register WDT30.bit[1]."
+Fix it by using blkh instead of regenerating it by B_BLK_HEAD(bh)
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
- drivers/watchdog/aspeed_wdt.c | 44 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+ fs/reiserfs/prints.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index cc71861e033a..62bf95cb741f 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -53,6 +53,8 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
- #define   WDT_CTRL_ENABLE		BIT(0)
- #define WDT_TIMEOUT_STATUS	0x10
- #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
-+#define WDT_CLEAR_TIMEOUT_STATUS	0x14
-+#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
+diff --git a/fs/reiserfs/prints.c b/fs/reiserfs/prints.c
+index 9fed1c0..590d42b 100644
+--- a/fs/reiserfs/prints.c
++++ b/fs/reiserfs/prints.c
+@@ -749,15 +749,16 @@ static void check_internal_block_head(struct buffer_head *bh)
+ 	struct block_head *blkh;
  
- /*
-  * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-@@ -165,6 +167,42 @@ static int aspeed_wdt_restart(struct watchdog_device *wdd,
- 	return 0;
- }
+ 	blkh = B_BLK_HEAD(bh);
+-	if (!(B_LEVEL(bh) > DISK_LEAF_NODE_LEVEL && B_LEVEL(bh) <= MAX_HEIGHT))
++	if (!(blkh_level(blkh) > DISK_LEAF_NODE_LEVEL &&
++		blkh_level(blkh) <= MAX_HEIGHT))
+ 		reiserfs_panic(NULL, "vs-6025", "invalid level %z", bh);
  
-+/* access_cs0 shows if cs0 is accessible, hence the reverted bit */
-+static ssize_t access_cs0_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-+
-+	uint32_t status = readl(wdt->base + WDT_TIMEOUT_STATUS);
-+
-+	return sprintf(buf, "%u\n",
-+			!(status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY));
-+}
-+
-+static ssize_t access_cs0_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t size)
-+{
-+	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-+	unsigned long val = 0;
-+
-+	if (kstrtoul(buf, 10, &val))
-+		return -EINVAL;
-+
-+	if (val)
-+		writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
-+			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
-+
-+	return size;
-+}
-+static DEVICE_ATTR_RW(access_cs0);
-+
-+static struct attribute *bswitch_attrs[] = {
-+	&dev_attr_access_cs0.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(bswitch);
-+
- static const struct watchdog_ops aspeed_wdt_ops = {
- 	.start		= aspeed_wdt_start,
- 	.stop		= aspeed_wdt_stop,
-@@ -306,8 +344,12 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	}
+-	if (B_NR_ITEMS(bh) > (bh->b_size - BLKH_SIZE) / IH_SIZE)
++	if (blkh_nr_item(blkh) > (bh->b_size - BLKH_SIZE) / IH_SIZE)
+ 		reiserfs_panic(NULL, "vs-6030", "invalid item number %z", bh);
  
- 	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
--	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
-+	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
- 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-+		wdt->wdd.groups = bswitch_groups;
-+	}
-+
-+	dev_set_drvdata(dev, wdt);
+-	if (B_FREE_SPACE(bh) !=
+-	    bh->b_size - BLKH_SIZE - KEY_SIZE * B_NR_ITEMS(bh) -
+-	    DC_SIZE * (B_NR_ITEMS(bh) + 1))
++	if (blkh_free_space(p_blkh) !=
++	    bh->b_size - BLKH_SIZE - KEY_SIZE * blkh_nr_item(blkh) -
++	    DC_SIZE * (blkh_nr_item(blkh) + 1))
+ 		reiserfs_panic(NULL, "vs-6040", "invalid free space %z", bh);
  
- 	return devm_watchdog_register_device(dev, &wdt->wdd);
  }
 -- 
-2.20.1
-
+2.7.4
 
