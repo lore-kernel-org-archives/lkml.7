@@ -2,177 +2,135 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC37C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D889C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EA220870
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2340320870
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="dp6reOmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbfHWPCa (ORCPT
+        id S1733289AbfHWPCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:02:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20886 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfHWPC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:02:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 08:02:28 -0700
-X-IronPort-AV: E=Sophos;i="5.64,421,1559545200"; 
-   d="scan'208";a="263214565"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 08:02:28 -0700
-Message-ID: <5518aac16a38577cd868526b2e2d79036612832d.camel@linux.intel.com>
-Subject: Re: [PATCH v6 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
-        kvm@vger.kernel.org, mst@redhat.com, david@redhat.com,
-        dave hansen <dave.hansen@intel.com>,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, osalvador@suse.de,
-        yang zhang wz <yang.zhang.wz@gmail.com>, riel@surriel.com,
-        konrad wilk <konrad.wilk@oracle.com>, lcapitulino@redhat.com,
-        wei w wang <wei.w.wang@intel.com>, aarcange@redhat.com,
-        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>
-Date:   Fri, 23 Aug 2019 08:02:28 -0700
-In-Reply-To: <860165703.10076075.1566537394212.JavaMail.zimbra@redhat.com>
-References: <20190821145806.20926.22448.stgit@localhost.localdomain>
-         <1297409377.9866813.1566470593223.JavaMail.zimbra@redhat.com>
-         <31b75078d004a1ccf77b710b35b8f847f404de9a.camel@linux.intel.com>
-         <860165703.10076075.1566537394212.JavaMail.zimbra@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 23 Aug 2019 11:02:47 -0400
+Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:54855
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbfHWPCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:02:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V9XUmTOPR3EaTzwOLKAtvOiWbF/SJL8qWxJx7ETLVWyQywVcUzDrRvujK3NQAXD19g6M53oH4agUK9IjzoLeWcOXNq77wzOVz0ARFcs0Afs0wupKFHtFyQwQ5NIl8z/LVcawqd1AFp02wlc1x33A1Y8YXnz3lT+r5NSQvcmxew4E8PhoLRmhfULNd888vCTG3Ktcp2APFxJBNosxlpNOOALepaGk1PAeAxgwB/S9FB/dQQHi8W/6dGPyfl486kg0pQP0f/ag/ixhVZnTqTAeaeczhGD5Vh1DSW0j4VKsCF7jssszJ46kOdZpFVB0syx957kbyqvz8eq49rBWvOtF9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p8uNQ6bb2P723hLVX8awGjeMi2LDnpkg+d9Wm+q/xgE=;
+ b=YgufbavgCQRPoT6lJ23XstkdpuWXbW7NmhyxWYJ1S28V883OUhNVLXxvwCjJRf6B0kuIr7iWZqXeoiUxqwjlIg0dCeng3MS/oyjrIUGmvnAGslpB1D5yAPUUNSXZdAP3SoJL3NZhXkrYcG5ZSSZuVbF37/wwaopcaXVR84chQDA1STSbAakBASTjSVBdklMx/aOhdsiq84mA5XatOeB106q96/jOT9n0Ch4eDxrct7wjgpKrAwwoN0yTrfC87kfxbC3PdFPf569UrEygzzqyp5xvByWBX95LNqjnAwv83WmbTPtaR15wUZBUw4ny7q05aQl3PFMbXetygVRejr11ZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p8uNQ6bb2P723hLVX8awGjeMi2LDnpkg+d9Wm+q/xgE=;
+ b=dp6reOmtVsT0HU1L/I66jiaV1RBO7MVuOX4whHGZkPoZletBc7zdOlFc77Eo6cc3vaehhby5ppXD0aKsfXJzrBcDxvXBXS8X/jJ5Jf4fW4ndWAG7VIXU85iUQzZd4FqiZBtugyw4CU3wku97IaE/dvJ04gFj9MN2sH/bedwVlV8=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5984.eurprd05.prod.outlook.com (20.178.127.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Fri, 23 Aug 2019 15:02:43 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
+ 15:02:43 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Moni Shoua <monis@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: Re: linux-next: manual merge of the rdma tree with the rdma-fixes
+ tree
+Thread-Topic: linux-next: manual merge of the rdma tree with the rdma-fixes
+ tree
+Thread-Index: AQHVWVmgru+wGtDU/UuiDjFq8Gwzr6cI1OaA
+Date:   Fri, 23 Aug 2019 15:02:42 +0000
+Message-ID: <20190823150237.GL12847@mellanox.com>
+References: <20190823122227.4c2b9790@canb.auug.org.au>
+In-Reply-To: <20190823122227.4c2b9790@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR0101CA0015.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:15::28) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: acede8a8-3afb-4569-b231-08d727daf2e7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5984;
+x-ms-traffictypediagnostic: VI1PR05MB5984:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB59847CB489361AF849DC4438CFA40@VI1PR05MB5984.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(189003)(199004)(53754006)(102836004)(25786009)(2616005)(476003)(6246003)(81166006)(81156014)(8676002)(229853002)(8936002)(66066001)(6512007)(4326008)(66946007)(107886003)(86362001)(6436002)(66446008)(64756008)(66556008)(66476007)(305945005)(7736002)(6506007)(1076003)(5660300002)(36756003)(2906002)(53936002)(6116002)(3846002)(6486002)(14454004)(26005)(71200400001)(186003)(71190400001)(6916009)(478600001)(99286004)(52116002)(33656002)(76176011)(11346002)(54906003)(4744005)(446003)(256004)(486006)(386003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5984;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RSNeFWg+JttRvXwlF2S1TPW6bsTJoqZIc+hkOoYRmqTS612g7oel7+kKvYJntNiTZb8EDQGe1xOdmIb0fE+godAgbWLkjGpwIczZs2n/RScdhbFla6/ad/iH5oJVTRXl+DAwL3Vooev7xULfHeIawk+St9DPvTIsA/UpN9XFVPhpoIFLDDwlDTpVD3Ee0u0wPdkHkF94ivRo2HJrMMhqq5nkWdP/sv18JwfXmvks7cvRos+Sc9OBOtYFC1VJVmeVZSOkzOu1ezLG6qEB0VQi8UDN/x3k4sIHj/BINSgw6LS5mmy2F6+Zq34NaldTqyefrKM6GDBCzfARn6y9uE6ugz9bxODqNMBrGkCdREOb88yO3zhmH1PICDV/soj33uNfte482vWLqtB5NFaxFRUh/46PNHzynFy8sDcFayN9+5Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6134B4F54FCEA84DBEE94B7AAE3B4EF0@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acede8a8-3afb-4569-b231-08d727daf2e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 15:02:42.9078
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LhiHGAL1KBTMbeXDhIh3rYXPTvuP+YTTfjzSaeSsF/sznaMd1UppKL1MbHCTgK1+TqQGsajJpfI6qqKZo2/Vew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5984
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-23 at 01:16 -0400, Pankaj Gupta wrote:
-> > On Thu, 2019-08-22 at 06:43 -0400, Pankaj Gupta wrote:
-> > > > This series provides an asynchronous means of reporting to a hypervisor
-> > > > that a guest page is no longer in use and can have the data associated
-> > > > with it dropped. To do this I have implemented functionality that allows
-> > > > for what I am referring to as unused page reporting
-> > > > 
-> > > > The functionality for this is fairly simple. When enabled it will
-> > > > allocate
-> > > > statistics to track the number of reported pages in a given free area.
-> > > > When the number of free pages exceeds this value plus a high water value,
-> > > > currently 32, it will begin performing page reporting which consists of
-> > > > pulling pages off of free list and placing them into a scatter list. The
-> > > > scatterlist is then given to the page reporting device and it will
-> > > > perform
-> > > > the required action to make the pages "reported", in the case of
-> > > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > > > and as such they are forced out of the guest. After this they are placed
-> > > > back on the free list, and an additional bit is added if they are not
-> > > > merged indicating that they are a reported buddy page instead of a
-> > > > standard buddy page. The cycle then repeats with additional non-reported
-> > > > pages being pulled until the free areas all consist of reported pages.
-> > > > 
-> > > > I am leaving a number of things hard-coded such as limiting the lowest
-> > > > order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-> > > > determine what the limit is on how many pages it wants to allocate to
-> > > > process the hints. The upper limit for this is based on the size of the
-> > > > queue used to store the scattergather list.
-> > > > 
-> > > > My primary testing has just been to verify the memory is being freed
-> > > > after
-> > > > allocation by running memhog 40g on a 40g guest and watching the total
-> > > > free memory via /proc/meminfo on the host. With this I have verified most
-> > > > of the memory is freed after each iteration.
-> > > 
-> > > I tried to go through the entire patch series. I can see you reported a
-> > > -3.27 drop from the baseline. If its because of re-faulting the page after
-> > > host has freed them? Can we avoid freeing all the pages from the guest
-> > > free_area
-> > > and keep some pages(maybe some mixed order), so that next allocation is
-> > > done from
-> > > the guest itself than faulting to host. This will work with real workload
-> > > where
-> > > allocation and deallocation happen at regular intervals.
-> > > 
-> > > This can be further optimized based on other factors like host memory
-> > > pressure etc.
-> > > 
-> > > Thanks,
-> > > Pankaj
-> > 
-> > When I originally started implementing and testing this code I was seeing
-> > less than a 1% regression. I didn't feel like that was really an accurate
-> > result since it wasn't putting much stress on the changed code so I have
-> > modified my tests and kernel so that I have memory shuffting and THP
-> > enabled. In addition I have gone out of my way to lock things down to a
-> > single NUMA node on my host system as the code I had would sometimes
-> > perform better than baseline when running the test due to the fact that
-> > memory was being freed back to the hose and then reallocated which
-> > actually allowed for better NUMA locality.
-> > 
-> > The general idea was I wanted to know what the worst case penalty would be
-> > for running this code, and it turns out most of that is just the cost of
-> > faulting back in the pages. By enabling memory shuffling I am forcing the
-> > memory to churn as pages are added to both the head and tail of the
-> > free_list. The test itself was modified so that it didn't allocate order 0
-> > pages and instead was allocating transparent huge pages so the effects
-> > were as visible as possible. Without that the page faulting overhead would
-> > mostly fall into the noise of having to allocate the memory as order 0
-> > pages, that is what I had essentially seen earlier when I was running the
-> > stock page_fault1 test.
-> 
-> Right. I think the reason is this test is allocating THP's in guest, host side
-> you are still using order 0 pages, I assume?
+On Fri, Aug 23, 2019 at 12:22:27PM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Today's linux-next merge of the rdma tree got a conflict in:
+>=20
+>   drivers/infiniband/hw/mlx5/mlx5_ib.h
+>=20
+> between commit:
+>=20
+>   0e6613b41edd ("IB/mlx5: Consolidate use_umr checks into single function=
+")
+>=20
+> from the rdma-fixes tree and commit:
+>=20
+>   3e1f000ff746 ("IB/mlx5: Support per device q counters in switchdev mode=
+")
+>=20
+> from the rdma tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-No, on host side they should be huge pages as well. Most of the cost for
-the fault is the page zeroing I believe since we are having to zero a 2MB
-page twice, once in the host and once in the guest.
+Looks OK to me, thanks
 
-Basically if I disable THP in the guest the results are roughly half what
-they are with THP enabled, and the difference between the patchset and
-baseline drops to less than 1%.
-
-> > This code does no hinting on anything smaller than either MAX_ORDER - 1 or
-> > HUGETLB_PAGE_ORDER pages, and it only starts when there are at least 32 of
-> > them available to hint on. This results in us not starting to perform the
-> > hinting until there is 64MB to 128MB of memory sitting in the higher order
-> > regions of the zone.
-> 
-> o.k
-> 
-> > The hinting itself stops as soon as we run out of unhinted pages to pull
-> > from. When this occurs we let any pages that are freed after that
-> > accumulate until we get back to 32 pages being free in a given order.
-> > During this time we should build up the cache of warm pages that you
-> > mentioned, assuming that shuffling is not enabled.
-> 
-> I was thinking about something like retaining pages to a lower watermark here.
-> Looks like we still might have few lower order pages in free list if they are
-> not merged to orders which are hinted. 
-
-Right. We should have everything below the reporting order untouched and
-as such it will not be faulted. It is only if the page gets merged back up
-to reporting order that we will reported it, and only if we have at least
-32 of them available.
-
-> > As far as further optimizations I don't think there is anything here that
-> > prevents us from doing that. For now I am focused on just getting the
-> > basics in place so we have a foundation to start from.
-> 
-> Agree. Thanks for explaining.
-> 
-> Best rgards,
-> Pankaj
-
-Thanks.
-
-- Alex
-
+Jason
