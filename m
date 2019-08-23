@@ -2,150 +2,303 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DA7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0810C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFD623402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eZyNYRwp"
+	by mail.kernel.org (Postfix) with ESMTP id AA722233A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391557AbfHWJ4a (ORCPT
+        id S1732929AbfHWJ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:56:30 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:18160 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727802AbfHWJ4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:56:25 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46FGxy0Vp8zB09ZS;
-        Fri, 23 Aug 2019 11:56:22 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=eZyNYRwp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YUt6v_gbV4Wj; Fri, 23 Aug 2019 11:56:22 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46FGxx6Zp7zB09ZC;
-        Fri, 23 Aug 2019 11:56:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566554181; bh=B0WBywasRW5laCP5+OtduhELcOJZgjbVfcLeOQEIejI=;
-        h=From:Subject:To:Cc:Date:From;
-        b=eZyNYRwpZnyeVpktNH4cOFC8KNu/rWb3CEp2Li0YANIRcMiWUGaAsLZ+J3ZA7htfH
-         YZwg9dV16d6iF548HMLorc6v4XvsedBtu/fc5bNJ+2dFud5NluU9hAZqwN4J9PML4f
-         Z8OkcVunUR4NjxJQ2IM5avNDxKWZ083SIiOgfY6Q=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 219ED8B874;
-        Fri, 23 Aug 2019 11:56:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id vWghA6AXK_RC; Fri, 23 Aug 2019 11:56:23 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 07A138B866;
-        Fri, 23 Aug 2019 11:56:23 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id F18C56B735; Fri, 23 Aug 2019 09:56:22 +0000 (UTC)
-Message-Id: <ad9d45119a48a92bf122781d0c79c9407baa12d7.1566554026.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/8xx: Fix permanently mapped IMMR region.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 23 Aug 2019 09:56:22 +0000 (UTC)
+        Fri, 23 Aug 2019 05:58:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57212 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726620AbfHWJ6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:58:48 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ADB76A3E56D603C648FA;
+        Fri, 23 Aug 2019 17:58:46 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 23 Aug 2019 17:58:39 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 3/3] f2fs: enhance f2fs_is_checkpoint_ready()'s readability
+Date:   Fri, 23 Aug 2019 17:58:36 +0800
+Message-ID: <20190823095836.28569-3-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190823095836.28569-1-yuchao0@huawei.com>
+References: <20190823095836.28569-1-yuchao0@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When not using large TLBs, the IMMR region is still
-mapped as a whole block in the FIXMAP area.
+This patch changes sematics of f2fs_is_checkpoint_ready()'s return
+value as: return true when checkpoint is ready, other return false,
+it can improve readability of below conditions.
 
-Do not remove pages mapped in the FIXMAP region when
-initialising paging.
+f2fs_submit_page_write()
+...
+	if (is_sbi_flag_set(sbi, SBI_IS_SHUTDOWN) ||
+				!f2fs_is_checkpoint_ready(sbi))
+		__submit_merged_bio(io);
 
-Properly report that the IMMR region is block-mapped even
-when not using large TLBs.
+f2fs_balance_fs()
+...
+	if (!f2fs_is_checkpoint_ready(sbi))
+		return;
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- arch/powerpc/mm/mem.c        |  8 --------
- arch/powerpc/mm/nohash/8xx.c | 13 +++++++------
- 2 files changed, 7 insertions(+), 14 deletions(-)
+ fs/f2fs/data.c    |  7 ++++---
+ fs/f2fs/file.c    | 18 ++++++++----------
+ fs/f2fs/inode.c   |  2 +-
+ fs/f2fs/namei.c   | 36 ++++++++++++++----------------------
+ fs/f2fs/segment.c |  2 +-
+ fs/f2fs/segment.h |  8 ++++----
+ fs/f2fs/xattr.c   |  5 ++---
+ 7 files changed, 34 insertions(+), 44 deletions(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 69f99128a8d6..8e221d8744ba 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -216,14 +216,6 @@ void __init paging_init(void)
- 	unsigned long long total_ram = memblock_phys_mem_size();
- 	phys_addr_t top_of_ram = memblock_end_of_DRAM();
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 769c548e955a..bf648c8c50ad 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -634,7 +634,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 		goto next;
+ out:
+ 	if (is_sbi_flag_set(sbi, SBI_IS_SHUTDOWN) ||
+-				f2fs_is_checkpoint_ready(sbi))
++				!f2fs_is_checkpoint_ready(sbi))
+ 		__submit_merged_bio(io);
+ 	up_write(&io->io_rwsem);
+ }
+@@ -2571,9 +2571,10 @@ static int f2fs_write_begin(struct file *file, struct address_space *mapping,
  
--#ifdef CONFIG_PPC32
--	unsigned long v = __fix_to_virt(__end_of_fixed_addresses - 1);
--	unsigned long end = __fix_to_virt(FIX_HOLE);
--
--	for (; v < end; v += PAGE_SIZE)
--		map_kernel_page(v, 0, __pgprot(0)); /* XXX gross */
--#endif
--
- #ifdef CONFIG_HIGHMEM
- 	map_kernel_page(PKMAP_BASE, 0, __pgprot(0));	/* XXX gross */
- 	pkmap_page_table = virt_to_kpte(PKMAP_BASE);
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 4a06cb342da2..e6918235fe04 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -21,33 +21,34 @@ extern int __map_without_ltlbs;
- static unsigned long block_mapped_ram;
+ 	trace_f2fs_write_begin(inode, pos, len, flags);
  
- /*
-- * Return PA for this VA if it is in an area mapped with LTLBs.
-+ * Return PA for this VA if it is in an area mapped with LTLBs or fixmap.
-  * Otherwise, returns 0
-  */
- phys_addr_t v_block_mapped(unsigned long va)
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
++	if (!f2fs_is_checkpoint_ready(sbi)) {
++		err = -ENOSPC;
+ 		goto fail;
++	}
+ 
+ 	if ((f2fs_is_atomic_file(inode) &&
+ 			!f2fs_available_free_memory(sbi, INMEM_PAGES)) ||
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 05d60082da3a..97038a9a91e3 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -57,9 +57,11 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+ 		err = -EIO;
+ 		goto err;
+ 	}
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
++
++	if (!f2fs_is_checkpoint_ready(sbi)) {
++		err = -ENOSPC;
+ 		goto err;
++	}
+ 
+ 	sb_start_pagefault(inode->i_sb);
+ 
+@@ -1575,9 +1577,8 @@ static long f2fs_fallocate(struct file *file, int mode,
+ 
+ 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+ 		return -EIO;
+-	ret = f2fs_is_checkpoint_ready(F2FS_I_SB(inode));
+-	if (ret)
+-		return ret;
++	if (!f2fs_is_checkpoint_ready(F2FS_I_SB(inode)))
++		return -ENOSPC;
+ 
+ 	/* f2fs only support ->fallocate for regular file */
+ 	if (!S_ISREG(inode->i_mode))
+@@ -3162,13 +3163,10 @@ static int f2fs_set_volume_name(struct file *filp, unsigned long arg)
+ 
+ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
  {
- 	unsigned long p = PHYS_IMMR_BASE;
+-	int ret;
+-
+ 	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+ 		return -EIO;
+-	ret = f2fs_is_checkpoint_ready(F2FS_I_SB(file_inode(filp)));
+-	if (ret)
+-		return ret;
++	if (!f2fs_is_checkpoint_ready(F2FS_I_SB(file_inode(filp))))
++		return -ENOSPC;
  
--	if (__map_without_ltlbs)
--		return 0;
- 	if (va >= VIRT_IMMR_BASE && va < VIRT_IMMR_BASE + IMMR_SIZE)
- 		return p + va - VIRT_IMMR_BASE;
-+	if (__map_without_ltlbs)
-+		return 0;
- 	if (va >= PAGE_OFFSET && va < PAGE_OFFSET + block_mapped_ram)
- 		return __pa(va);
- 	return 0;
+ 	switch (cmd) {
+ 	case F2FS_IOC_GETFLAGS:
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 88af85e0db62..87214414936b 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -616,7 +616,7 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
+ 	if (!is_inode_flag_set(inode, FI_DIRTY_INODE))
+ 		return 0;
+ 
+-	if (f2fs_is_checkpoint_ready(sbi))
++	if (!f2fs_is_checkpoint_ready(sbi))
+ 		return -ENOSPC;
+ 
+ 	/*
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index 7a2d43a9f1a6..8b02c69df199 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -272,9 +272,8 @@ static int f2fs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	err = dquot_initialize(dir);
+ 	if (err)
+@@ -321,9 +320,8 @@ static int f2fs_link(struct dentry *old_dentry, struct inode *dir,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	err = fscrypt_prepare_link(old_dentry, dir, dentry);
+ 	if (err)
+@@ -592,9 +590,8 @@ static int f2fs_symlink(struct inode *dir, struct dentry *dentry,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	err = fscrypt_prepare_symlink(dir, symname, len, dir->i_sb->s_blocksize,
+ 				      &disk_link);
+@@ -724,9 +721,8 @@ static int f2fs_mknod(struct inode *dir, struct dentry *dentry,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	err = dquot_initialize(dir);
+ 	if (err)
+@@ -822,13 +818,11 @@ static int __f2fs_tmpfile(struct inode *dir, struct dentry *dentry,
+ static int f2fs_tmpfile(struct inode *dir, struct dentry *dentry, umode_t mode)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
+-	int ret;
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	ret = f2fs_is_checkpoint_ready(sbi);
+-	if (ret)
+-		return ret;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	if (IS_ENCRYPTED(dir) || DUMMY_ENCRYPTION_ENABLED(sbi)) {
+ 		int err = fscrypt_get_encryption_info(dir);
+@@ -865,9 +859,8 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	if (is_inode_flag_set(new_dir, FI_PROJ_INHERIT) &&
+ 			(!projid_eq(F2FS_I(new_dir)->i_projid,
+@@ -1060,9 +1053,8 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	if ((is_inode_flag_set(new_dir, FI_PROJ_INHERIT) &&
+ 			!projid_eq(F2FS_I(new_dir)->i_projid,
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index b6f838c055d7..ccee5fb69479 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -501,7 +501,7 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+ 	if (need && excess_cached_nats(sbi))
+ 		f2fs_balance_fs_bg(sbi);
+ 
+-	if (f2fs_is_checkpoint_ready(sbi))
++	if (!f2fs_is_checkpoint_ready(sbi))
+ 		return;
+ 
+ 	/*
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 38ae95301169..bdcce35be077 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -593,13 +593,13 @@ static inline bool has_not_enough_free_secs(struct f2fs_sb_info *sbi,
+ 		reserved_sections(sbi) + needed);
  }
  
- /*
-- * Return VA for a given PA mapped with LTLBs or 0 if not mapped
-+ * Return VA for a given PA mapped with LTLBs or fixmap
-+ * Return 0 if not mapped
-  */
- unsigned long p_block_mapped(phys_addr_t pa)
+-static inline int f2fs_is_checkpoint_ready(struct f2fs_sb_info *sbi)
++static inline bool f2fs_is_checkpoint_ready(struct f2fs_sb_info *sbi)
  {
- 	unsigned long p = PHYS_IMMR_BASE;
- 
--	if (__map_without_ltlbs)
+ 	if (likely(!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
 -		return 0;
- 	if (pa >= p && pa < p + IMMR_SIZE)
- 		return VIRT_IMMR_BASE + pa - p;
-+	if (__map_without_ltlbs)
-+		return 0;
- 	if (pa < block_mapped_ram)
- 		return (unsigned long)__va(pa);
- 	return 0;
++		return true;
+ 	if (likely(!has_not_enough_free_secs(sbi, 0, 0)))
+-		return 0;
+-	return -ENOSPC;
++		return true;
++	return false;
+ }
+ 
+ static inline bool excess_prefree_segs(struct f2fs_sb_info *sbi)
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index f85c810e33ca..181900af2576 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -732,9 +732,8 @@ int f2fs_setxattr(struct inode *inode, int index, const char *name,
+ 
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+-	err = f2fs_is_checkpoint_ready(sbi);
+-	if (err)
+-		return err;
++	if (!f2fs_is_checkpoint_ready(sbi))
++		return -ENOSPC;
+ 
+ 	err = dquot_initialize(inode);
+ 	if (err)
 -- 
-2.13.3
+2.18.0.rc1
 
