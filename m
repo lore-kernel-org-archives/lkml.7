@@ -2,75 +2,104 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3106DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE31FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8AE23406
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566542121;
-	bh=DMmitDDTGgD/UdGy70jg4T3rwEFmQLlt0KobTblM/+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GsiJap0BqUfpSeJg6Z947FrIdGTO47/LdZKt8UNveWvyyeKiHXIyYOcRVdIBvVFWY
-	 uBJ4AaABvUUGu42ba7CpIe7hoqrYnqIzgZsVpBdwXooDMiisCVX8hT+OEm39LAN/Zx
-	 np+UMjAb8ONJR4/2X3+oJnIAmIUH/qBaGwzLCJRk=
+	by mail.kernel.org (Postfix) with ESMTP id 8F3FA21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 06:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404576AbfHWGfT (ORCPT
+        id S2404605AbfHWGfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 02:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404002AbfHWGfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 02:35:19 -0400
-Received: from localhost (unknown [106.200.210.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFB7D21019;
-        Fri, 23 Aug 2019 06:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566542118;
-        bh=DMmitDDTGgD/UdGy70jg4T3rwEFmQLlt0KobTblM/+s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Khah2hsXR0jt4/Jcrb81KKVo0BMkwzc8dFki5XrR/QymWy8i0EmX0GkQvAEdb8NPB
-         MDweCmOsDK4n8GVheQcfah0YFkQ9V8lNOG0hgbdrnu9usApbnhB01xOfDF5URjGCYJ
-         1E1WyEuWbOGfrpRqVk8WnWykbRFJOKcuHaAMbHKw=
-Date:   Fri, 23 Aug 2019 12:04:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Subject: Re: [PATCH v3 0/4] soundwire: debugfs support for 5.4
-Message-ID: <20190823063404.GB2672@vkoul-mobl>
-References: <20190821185821.12690-1-pierre-louis.bossart@linux.intel.com>
+        Fri, 23 Aug 2019 02:35:43 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:36095 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404002AbfHWGfn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 02:35:43 -0400
+X-UUID: 7ab191db2f1c49c793ecc1f23032c2d2-20190823
+X-UUID: 7ab191db2f1c49c793ecc1f23032c2d2-20190823
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1157516820; Fri, 23 Aug 2019 14:35:34 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n1.mediatek.inc
+ (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 23 Aug
+ 2019 14:35:32 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 23 Aug 2019 14:35:26 +0800
+Message-ID: <1566542131.12318.52.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 1/4] bindings: rtc: add bindings for MT2712 RTC
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        "Flora Fu" <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Date:   Fri, 23 Aug 2019 14:35:31 +0800
+In-Reply-To: <84bd8752-f437-781f-9f08-cedfca6cc06a@gmail.com>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+         <20190801110122.26834-2-ran.bi@mediatek.com>
+         <84bd8752-f437-781f-9f08-cedfca6cc06a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821185821.12690-1-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-08-19, 13:58, Pierre-Louis Bossart wrote:
-> This patchset enables debugfs support and corrects all the feedback
-> provided on an earlier RFC ('soundwire: updates for 5.4')
+
+Hi,
+
+> > +Required properties:
+> > +- compatible	    : Should be "mediatek,mt2712-rtc" : for MT2712 SoC
+> > +- reg 		    : Specifies base physical address and size of the registers;
+> > +- interrupts	    : Should contain the interrupt for RTC alarm;
 > 
-> There is one remaining hard-coded value in intel.c that will need to
-> be fixed in a follow-up patchset not specific to debugfs: we need to
-> remove hard-coded Intel-specific configurations from cadence_master.c
-> (PDI offsets, etc).
+> No clocks for the RTC? What about CLK_TOP_RTC_SEL from the clk driver?
+> 
+> Regards,
+> Matthias
+> 
 
-Applied all (i did hand edit of patch 4 to resolve dependency), thanks
+I suppose that we don't need clock control for mt2712 RTC. RTC clock is directly
+come from 32K crystal and there is no control register to switch the clock. In mt2712,
+CLK_TOP_RTC_SEL is prepared for other module even it called CLK_TOP_RTC_SEL.
 
--- 
-~Vinod
+Regards,
+Ran
+
+> > +
+> > +Example:
+> > +
+> > +rtc: rtc@10011000 {
+> > +	compatible = "mediatek,mt2712-rtc";
+> > +	reg = <0 0x10011000 0 0x1000>;
+> > +	interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
+> > +};
+> > 
+
+
+
