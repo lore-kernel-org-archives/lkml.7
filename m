@@ -2,139 +2,155 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720C0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D02C41514
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48849233FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE299233FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 00:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="W4g6wta9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qjJP3CPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbfHWAmy (ORCPT
+        id S1732066AbfHWAuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 20:42:54 -0400
-Received: from mout.gmx.net ([212.227.17.22]:59639 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731209AbfHWAmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 20:42:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566520970;
-        bh=VJWwbkuUeadllybh69tcaC2r8rjGFadHpNq2wx3bMnw=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=W4g6wta9zh19HxFFnSHVKBkUf3MwP9Fs1OJjp2yTsdHMYZfDy0lJiOmog7abcZuTV
-         i05PSVjTYev3dArnaHpKekkLA6U8tK0mGqa9BYEpyn5T5uU13K0tQy830qI8Vp4p/p
-         ktQPWGLm5AjpUq3c2RV+apwJm7mEwG57Vk9zD3hU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from mir ([217.249.121.199]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MAfUe-1i7XFJ48bo-00B0PY; Fri, 23
- Aug 2019 02:42:50 +0200
-Date:   Fri, 23 Aug 2019 02:42:48 +0200
-From:   Stefan Lippers-Hollmann <s.l-h@gmx.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
-Message-ID: <20190823024248.11e2dac3@mir>
-In-Reply-To: <20190822233847.GB24034@kroah.com>
-References: <20190822170811.13303-1-sashal@kernel.org>
-        <20190822172619.GA22458@kroah.com>
-        <20190823000527.0ea91c6b@mir>
-        <20190822233847.GB24034@kroah.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 22 Aug 2019 20:50:50 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:38833 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730401AbfHWAut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 20:50:49 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190823005045epoutp03566116bf7cd4e6f52ef204059bb8bcdb~9ZvRlOrAj2230622306epoutp03b
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:50:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190823005045epoutp03566116bf7cd4e6f52ef204059bb8bcdb~9ZvRlOrAj2230622306epoutp03b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566521445;
+        bh=f2ThUHwqU6SxyDkaBykTiPQlcm0wcRMy3IpQiQiChcs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=qjJP3CPDZUoPqC+TllhSHlEzayDCNEEA/ZeZhRffZlSa6IWzZNyyy/WghomGNCSH3
+         Ll12acSDQNebr7Gm85XsT73lLM+iAcMPvCd+fTuz8IXicflKfBccxTrV2stA77r50K
+         SbznIaYWExt+HtvjAggHXAnol3/leqScWyxLjaic=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20190823005044epcas2p4d26d2085b61ee54bd5954b1c574ebbe6~9ZvRA3S2Y1951719517epcas2p4w;
+        Fri, 23 Aug 2019 00:50:44 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.184]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 46F2rL3vD7zMqYkk; Fri, 23 Aug
+        2019 00:50:42 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.38.04149.2683F5D5; Fri, 23 Aug 2019 09:50:42 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6~9ZvObUZVL1059310593epcas2p3U;
+        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190823005041epsmtrp1e67b842e0eeb29d74f2dcb22b227f249~9ZvOaIzfb2194621946epsmtrp1o;
+        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
+X-AuditID: b6c32a46-fd5ff70000001035-b2-5d5f38625f08
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F7.1A.03706.1683F5D5; Fri, 23 Aug 2019 09:50:41 +0900 (KST)
+Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190823005041epsmtip2748af0669304060f493849067826a76f~9ZvOI_Fjj0682606826epsmtip2h;
+        Fri, 23 Aug 2019 00:50:41 +0000 (GMT)
+From:   "boojin.kim" <boojin.kim@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
+        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 1/9] crypt: Add diskcipher
+Date:   Fri, 23 Aug 2019 09:50:41 +0900
+Message-ID: <00da01d5594c$c9d87390$5d895ab0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NgYm4zfQZN/NFd5JKzKX90KTfKNIfrU+VyPQd5vZvm3N9SUn6ei
- Zqmfddu22QNfcW134UXPhckvxrsHv04HAXGEMlux0cHx+FsfKiBP91XbIh7CcO/LZq6Ywwd
- l0YK89wNgPvdHpdfuXHP3UGg5X7bUj0QDprvIuG7PXEROaHKtTKkCQCW9aL4Rk3ICsYu/0F
- 0G2TuPVH3BvGWAkW+tc2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:imq1p7lE/E8=:TrimsCHEcSXheZOow+zUEw
- ddfFP2PEZI5PJWvh18aJ8M38jC/xU+HSia2escjDHDYFppcHxaQ76vEKlT1r3hksH+NeTbCPi
- noDYlOXUxVFzu3x8G5yeZswKRMwKmBAXx4ebiJdCjRJOXF/2q3bRZpm5QTEd6QLE+3ef43Yj/
- oS5YAcTx3FjRivGVdV5T6brYMAcSyvY7P8JblcC7NrzjzdJqHPXqkCWmisUtBe5/LzONNj+F0
- 6z/6l1bveFR7NgnQg8JkpnA0NhUCq+9+UuUzqK4Y2Lc3MqcfXmE9vuhcxsfoWl221CoLxN5cD
- ouutKrisL0gO1mxVcPiTtyhJaOndZgCdnSAntJFlBqXnuIy9eC219BKZLl9ii6HfbepnXM+du
- +Jfx1iFxzncev5+yw9WUi0Ep+PH/wZHYzt/6gUMks4qd3k9vISzmQKkiNC9XSZ7c7eQWBiR8O
- 5ZVynky3GwNxYGSMMSO3ayNpdwrhD2gnkHOxsFH6LYKTrj34ejHOXrf+ru+nDVJ2Fo7pnMypI
- 82pluWvaBo8hGlI4bAa6muAK1vHfc0ZQyZPHbtLYurHa9tJ6O3FuAitKHr9Q3RLGUXDaoI9wg
- hKlezUFvF5FId8RhrMsdJdpm4v7rQEOXH0G35/xJnABh8Dvnls1q365TLQYUtYfMiwmnFsCig
- osDeGijGe629RbHXP3pqL7yYgnaAO3uUGFY4h9TkEBA7iE6cJ3W01ZxeR2gWtuoUMwwoDcoki
- 7RcjiAh20anXjgUM5LOegy+Cat5ByOQ7yUspZ7sM0A8TlJ0Wm6Dx+wiE5H7TV8uyUVOqrRbA8
- 0+f+wYuwFp6y634WXpEe3oP0FsZ0ArYOu8HWzM/TBVC3BedZclhAhBiE9lbgBjSG+E/3m2krY
- C89AbLSqwxPC3fmpHHLtXodKvyBXtbZFZQLVChaibmuO2LO3zZjuU0CgtDIcSyCXaJJ09zY+S
- t+ZiM69JagFMWrAx2EJh0r+OciTuAVJarNH20TZGfaHvvw3S130J3s0YPaorAzYPxkITGuQEm
- hntY5xFd+h76LIBIYK43+4+khXznVj1I9DWuU8DPFPIuPcDk91jkFL33EzfxUACLEvG6RYkGM
- 7hS0ys+tWKPviMNP4q7v/kO59pNJ439xSnqPzfiO8OwqQ/sw+9HiHOGpjbtmh3cQCT9DYEA8f
- Hq9jo=
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdVZTE1TDvDE+uWuReO+5O58h7ifGg==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLsWRmVeSWpSXmKPExsWy7bCmhW6SRXysweKVkhZfv3SwWKw/dYzZ
+        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
+        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
+        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
+        mT3e77vK5tG3ZRWjx+dNcgE8UTk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koK
+        eYm5qbZKLj4Bum6ZOUC/KymUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKDA0L9IoT
+        c4tL89L1kvNzrQwNDIxMgSoTcjI6Ly5kKvjFXLFyz1PWBsaJzF2MnBwSAiYSL6bdBLK5OIQE
+        djBKHLn/Csr5xCix9PRDFgjnG6PEowUX2GFafl3vYoNI7GWUuPn/HVTLS0aJna+nsoBUsQlo
+        S2w+vooRxBYR0JXYfGM5O0gRs8A/doknnw6BFQkL6EnMeLCYCcRmEVCV2PysF2gsBwevgKXE
+        q49qIGFeAUGJkzOfgJUzC8hLbH87B+pwBYkdZ19DzdeTeN4xnR2iRkRidmcb2EESAj/ZJSb9
+        ameBaHCR6JtwBcoWlnh1fAvUO1ISL/vboOx6iavLFrNDNPcwSpz5BZMwlpj1rJ0R5DhmAU2J
+        9bv0QUwJAWWJI7egbuOT6Dj8lx0izCvR0SYE0agiMffTZSaIsJTEh546iLCHRPPBDrYJjIqz
+        kDw5C8mTs5A8Mwth7QJGllWMYqkFxbnpqcVGBUbIkb2JEZwvtNx2MC4553OIUYCDUYmHt6Aj
+        LlaINbGsuDL3EKMEB7OSCG/ZRKAQb0piZVVqUX58UWlOavEhRlNgFExklhJNzgfmsrySeENT
+        IzMzA0tTC1MzIwslcd5N3DdjhATSE0tSs1NTC1KLYPqYODilGhhb2VZ9bj/4j9m9Iuf7vUUs
+        J3MWHf0j1lTS2eO4QTdzw8b5G6K8pjDqvjtzN9nhxX13G1vnkq0G1TZrtL/4bHvHupRDP5rx
+        VqSo+KHqV+sObK02DLrOElD9o+/Xi+W1bfOcdJRutyZXXz9cM4dTcjbnAX/x5gzHh1uvntDf
+        efu79KO5c470TF6hxFKckWioxVxUnAgA7+Q96S0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsWy7bCSvG6iRXyswZrzuhZfv3SwWKw/dYzZ
+        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
+        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
+        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
+        mT3e77vK5tG3ZRWjx+dNcgE8UVw2Kak5mWWpRfp2CVwZnRcXMhX8Yq5YuecpawPjROYuRk4O
+        CQETiV/Xu9i6GLk4hAR2M0qc+72aHSIhJbG1fQ9UkbDE/ZYjrBBFzxklDhw4BVbEJqAtsfn4
+        KkYQW0RAV2LzjeVgcWaBaRwSuz6Ig9jCAnoSMx4sZgKxWQRUJTY/6wXaxsHBK2Ap8eqjGkiY
+        V0BQ4uTMJywgYWag8raNjBBT5CW2v50DdYKCxI6zr6E26Uk875gOtUlEYnZnG/MERsFZSCbN
+        Qpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECE4BWpo7GC8viT/E
+        KMDBqMTDW9ARFyvEmlhWXJl7iFGCg1lJhLdsIlCINyWxsiq1KD++qDQntfgQozQHi5I479O8
+        Y5FCAumJJanZqakFqUUwWSYOTqkGxpkCz5+oMws9PX3b/Iwkf+SF3W8rQ53jHge67jXfcttX
+        XfWf/YkDt2PWHm6XO/JJRet0fPHMFRtncfxadl8yhy+f9dwq5ZWcKeFMbiHrX7L3Sj37OZvd
+        4obsuk/CfvZi882OzLqbKXEtsXAff8/CwM0+Hnof3BSz71z2LO/ouybA31ka2n+AWYmlOCPR
+        UIu5qDgRAIuCqND9AgAA
+X-CMS-MailID: 20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6
+References: <CGME20190823005041epcas2p3c8550c3fabbd6a6db6429cb06dbbf3a6@epcas2p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-
-On 2019-08-22, Greg KH wrote:
-> On Fri, Aug 23, 2019 at 12:05:27AM +0200, Stefan Lippers-Hollmann wrote:
-> > On 2019-08-22, Greg KH wrote:
-> > > On Thu, Aug 22, 2019 at 01:05:56PM -0400, Sasha Levin wrote:
-[...]
-> > It might be down to kernel.org mirroring, but the patch file doesn't
-> > seem to be available yet (404), both in the wrong location listed
-> > above - and the expected one under
-> >
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.=
-10-rc1.gz
-[...]
-> Ah, no, it's not a mirroring problem, Sasha and I didn't know if anyone
-> was actually using the patch files anymore, so it was simpler to do a
-> release without them to see what happens. :)
+On Wed, 22 Aug 2019 at 17:37, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> Do you rely on these, or can you use the -rc git tree or the quilt
-> series?  If you do rely on them, we will work to fix this, it just
-> involves some scripting that we didn't get done this morning.
+> Your patch looks corrupted - wrapped by mailer. The easiest way
+> usually is to use git format-patch and git send-email - then you do
+> not have to worry about formatting etc.
+>
+> Best regards,
+> Krzysztof
 
-"Rely" is a strong word, I can adapt if they're going away, but
-I've been using them so far, as in (slightly simplified):
+I'm using outlook instead of 'git send-email' because of workplace policy.
+It's probably broken when I copied the code.
+Thanks for your notice. I will be more careful.
 
-$ cd patches/upstream/
-$ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-5.2.9.xz
-$ xz -d patch-5.2.9.xz
-$ wget https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.=
-2.10-rc1.gz
-$ gunzip patch-5.2.10-rc1.gz
-$ vim ../series
-$ quilt ...
+Thanks for your reply
+Boojin Kim.
 
-I can switch to importing the quilt queue with some sed magic (and I
-already do that, if interesting or just a larger amounts of patches are
-queuing up for more than a day or two), but using the -rc patches has
-been convenient in that semi-manual workflow, also to make sure to really
-get and test the formal -rc patch, rather than something inbetween.
-
-( When testing -rc patches under e.g. OpenWrt (ipq806x (ARMv7), ath79
-  (mips 74Kc), lantiq (mips 24Kc)), importing larger numbers of patches
-  (which will go away two or three days later anyways) also easily gets
-  a little unwieldy (adding sequence numbers, as the quilt series only
-  gets assembled later, on the fly in alphabetical order), so I'd
-  probably have to squash them together for those purposes myself - not
-  a problem, just less convenient for quick ad-hoc testing. )
-
-But again, none of these procedures are set in stone and I can adapt as
-needed - there've been bigger changes in the past and this is mostly
-about retraining muscle memory (and writing some simple new scripts to
-partially automate things).
-
-Thanks a lot for your efforts, the whole -stable maintenance has really
-improved kernel quality compared to the status quo ante. I'm testing
-basically each -rc kernel for the current -stable release (so only v5.2
-at the moment) on x86_64 and x86, a bit less regularly on ipq8064/ ath79/
-lantiq (v4.19 at the moment), but only reply if I actually notice an
-issue.
-
-Regards
-	Stefan Lippers-Hollmann
