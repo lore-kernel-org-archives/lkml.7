@@ -2,102 +2,112 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34857C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26D5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056EC22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947CB22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nOu1hJ2w"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GTfvztIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405154AbfHWHDr (ORCPT
+        id S2392637AbfHWHEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:03:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40164 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387550AbfHWHC6 (ORCPT
+        Fri, 23 Aug 2019 03:04:09 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18464 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731378AbfHWHEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:02:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c3so7598795wrd.7
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 00:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z/b1mhikbg+EPmNH/s2Xt1LyR+vNVX1tk6yq7Qa4/MI=;
-        b=nOu1hJ2wwRA59HSMRqpTfcIiHiskYmD68/3tC7t8v4OpPhcAvKvuh3bNdLHQK0POnp
-         FhtFeuTMXCkb6SSnCYDrKkGQWN31zpRQAsntyWJmIRqsansJmJB8bL0MtDAVYFsYc7o1
-         dvHMX9GWDaWycAn4GP5zXKfxylz7pfrp1pGOyGK8fEQaNUufNuiDe0nFGiKTV6dfIR/J
-         hrJB3C4I5O8R5vc88faq+kMormgsNPzuYggeAGBmwqnFIADMqfAG0whVOW8P9WUP1FKO
-         WhA/+NDagtIQ8/3s0OLrXUZLfMOR13KWND700Lgyev7nWSNwhB+v0ziUWpu1IkiqjYN/
-         MWzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z/b1mhikbg+EPmNH/s2Xt1LyR+vNVX1tk6yq7Qa4/MI=;
-        b=ErNycP/6Fdpi2MRv2xBuCwlsbFdhU5tlzLxDEKp/etA7U3dBnieqEArA9G7DNqHx3c
-         H3NJnvleYm9hSS95gC8sZMC3bSSFSWyAFCdTZkel3+Xra1ntFSTv7NHeb1rCi7c9MacU
-         xp6sKZHBo+TkId3Wba+t3kgAxmMd0eQ/6hEirqWWJqhW39SbEMrZuzoktW5Pm7wFPCdl
-         1mik5DPEE2zqgExKrUNyPlp4UtbpgWLqolLyFRjNbFt/lETyUtrOSEOMhjlQEPoYgnNB
-         mDH5GFXXRosiFzs5ws91011g/Hwcm7HDCylb0vzHCkrhLxrRuP4qcVAPeum5JMJwpsTe
-         hAlQ==
-X-Gm-Message-State: APjAAAUs8lyIyzwFK+thUYFaqFDek4l0RyZO45PBtPyH+q70bGe9jj0W
-        8ckEPlu0SF0Z4uzxoK42jYTImA==
-X-Google-Smtp-Source: APXvYqyuqMJL2L5NeOppIMame3Tj3HMfeW5/PBCBwC0GPH9k/60jj7yNgLoziG/B+Lt97Ilb64QaUg==
-X-Received: by 2002:adf:d4c6:: with SMTP id w6mr3262263wrk.98.1566543776738;
-        Fri, 23 Aug 2019 00:02:56 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a26sm1741833wmg.45.2019.08.23.00.02.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 00:02:56 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RESEND PATCH v2 03/14] arm64: dts: meson-gx: fix reset controller compatible
-Date:   Fri, 23 Aug 2019 09:02:37 +0200
-Message-Id: <20190823070248.25832-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
-References: <20190823070248.25832-1-narmstrong@baylibre.com>
+        Fri, 23 Aug 2019 03:04:09 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5f8fe90000>; Fri, 23 Aug 2019 00:04:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 23 Aug 2019 00:04:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 23 Aug 2019 00:04:08 -0700
+Received: from [10.24.47.72] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 23 Aug
+ 2019 07:04:06 +0000
+Subject: Re: [PATCH -next] phy: tegra: Use PTR_ERR_OR_ZERO in
+ tegra_p2u_probe()
+To:     YueHaibing <yuehaibing@huawei.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20190822063407.71148-1-yuehaibing@huawei.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7c060719-1df3-c0b8-2e61-5dbfdf1e4798@nvidia.com>
+Date:   Fri, 23 Aug 2019 12:34:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190822063407.71148-1-yuehaibing@huawei.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566543849; bh=EwmZCObquR6UQVPL4m9hVlMsgpb0RyyhCOhP8j1ndas=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GTfvztIz1tlRe4YWr0na/DfdCCrcCopD2lC9zAyI176cMtkg83rhKwgujX4e5B4Nm
+         3nIC6+7YmRj0daJYPBPy69tj2oPfT5U3+xH4v+XOaZchieDjcsQPmKq71VeIPi7A1Q
+         frlaxHgboHFTgj0KyM/Tizcv0dRcjutmaCg0jvG0sMtmxQjfNVpcUrx6gIRoCiue4t
+         pqthrIV5v90gJerkb+JyVcEAFtnVFG5CoHPDfjv2BwoPc5eT9Hf82RTyMGovVQ5JoM
+         yTlgiQoX939P/hpbLNnySoJe+QFY//JjKtI+XjY7hyucqFOpQn39q4jYcXEEwghtz7
+         ywLSjCC5dg59w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-gxbb-nanopi-k2.dt.yaml: reset-controller@4404: compatible:0: 'amlogic,meson-gx-reset' is not one of ['amlogic,meson8b-reset', 'amlogic,meson-gxbb-reset', 'amlogic,meson-axg-reset']
+On 8/22/2019 12:04 PM, YueHaibing wrote:
+> Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/phy/tegra/phy-tegra194-p2u.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
+> index 7042bed9feaa..42394d27f4cb 100644
+> --- a/drivers/phy/tegra/phy-tegra194-p2u.c
+> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+> @@ -92,10 +92,7 @@ static int tegra_p2u_probe(struct platform_device *pdev)
+>   	phy_set_drvdata(generic_phy, phy);
+>   
+>   	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> -	if (IS_ERR(phy_provider))
+> -		return PTR_ERR(phy_provider);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+>   }
+Since PTR_ERR_OR_ZERO macro returns zero if input is valid, if some more code gets added in
+future after this, then, they might have to change this back to what it is now.
+So I ended up continuing with if(IS_ERR(...)) + PTR_ERR towards the end also.
+Having said that, I'm fine with this change as well.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 239ec08b3023..08c01e11ba1b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -220,7 +220,7 @@
- 			};
- 
- 			reset: reset-controller@4404 {
--				compatible = "amlogic,meson-gx-reset", "amlogic,meson-gxbb-reset";
-+				compatible = "amlogic,meson-gxbb-reset";
- 				reg = <0x0 0x04404 0x0 0x9c>;
- 				#reset-cells = <1>;
- 			};
--- 
-2.22.0
+>   
+>   static const struct of_device_id tegra_p2u_id_table[] = {
+> 
+> 
+> 
+> 
+> 
 
