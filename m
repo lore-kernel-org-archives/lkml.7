@@ -2,122 +2,267 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C77C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77B5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB2321848
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:28:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tYPOT4id"
+	by mail.kernel.org (Postfix) with ESMTP id 7B62721848
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 12:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394713AbfHWM2V (ORCPT
+        id S2394718AbfHWM3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 08:28:21 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:63478 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389266AbfHWM2U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 08:28:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566563299; x=1598099299;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gZe9dv7UhZ0T/4gNWDLLPmXvjNu2lShnoO5YUyoC53g=;
-  b=tYPOT4idYO91bzSUhGJziZeEGw74A4TGah3/DkOZjsLamQXVkCBuTgh7
-   d0PG4kAVzoMdjCw9BT2HIO3tkfnY2OsY5Cy1yXq4PeSmwj3SaAJVyoyxA
-   agUKLrEE+Vok16phS+C+POSEXt96KA/1tNZt7G5UEZJlXFXOLdxc94FyQ
-   k=;
-X-IronPort-AV: E=Sophos;i="5.64,421,1559520000"; 
-   d="scan'208";a="411336772"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 23 Aug 2019 12:28:18 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id 523ABA2782;
-        Fri, 23 Aug 2019 12:28:13 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 12:28:13 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.67) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 23 Aug 2019 12:28:09 +0000
-Subject: Re: [PATCH v5 00/20] KVM RISC-V Support
-To:     Anup Patel <anup@brainfault.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-CC:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
- <8a2a9ea6-5636-e79a-b041-580159e703b2@amazon.com>
- <CAAhSdy2RC6Gw708wZs+FM56UkkyURgbupwdeTak7VcyarY9irg@mail.gmail.com>
- <757C929B-D26C-46D9-98E8-1191E3B86F3C@amazon.com>
- <fda67a5d-6984-c3ef-8125-7805d927f15b@redhat.com>
- <CAAhSdy1k96m8GinxAhcfRL_gOxCzK+ODfyjDxCmr-AF2ycntwA@mail.gmail.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <5a9ccf5f-ee75-9289-814e-0c8b9b3c3f00@amazon.com>
-Date:   Fri, 23 Aug 2019 14:28:07 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Fri, 23 Aug 2019 08:29:02 -0400
+Received: from protonic.xs4all.nl ([83.163.252.89]:57217 "EHLO protonic.nl"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732402AbfHWM3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 08:29:02 -0400
+Received: from erd987.prtnl (erd987.prtnl [192.168.237.3])
+        by sparta (Postfix) with ESMTP id 7B3D244A009E;
+        Fri, 23 Aug 2019 14:30:56 +0200 (CEST)
+From:   Robin van der Gracht <robin@protonic.nl>
+To:     Robin van der Gracht <robin@protonic.nl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Robin Gong <yibin.gong@nxp.com>, Adam Ford <aford173@gmail.com>
+Subject: [PATCH] input: keyboard: snvs_pwrkey: Send press and release event for i.MX6 S,DL and Q
+Date:   Fri, 23 Aug 2019 14:30:02 +0200
+Message-Id: <20190823123002.10448-1-robin@protonic.nl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy1k96m8GinxAhcfRL_gOxCzK+ODfyjDxCmr-AF2ycntwA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.67]
-X-ClientProxiedBy: EX13D03UWC001.ant.amazon.com (10.43.162.136) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The older generation i.MX6 processors send a powerdown request interrupt if
+the powerkey is released before a hard shutdown (5 second press). This should
+allow software to bring down the SoC safely.
 
+For this driver to work as a regular powerkey with the older SoCs, we need to
+send a keypress AND release when we get the powerdown request interrupt.
 
-On 23.08.19 14:19, Anup Patel wrote:
-> On Fri, Aug 23, 2019 at 5:40 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 23/08/19 13:44, Graf (AWS), Alexander wrote:
->>>> Overall, I'm quite happy with the code. It's a very clean implementation
->>>> of a KVM target.
->>
->> Yup, I said the same even for v1 (I prefer recursive implementation of
->> page table walking but that's all I can say).
->>
->>>> I will send v6 next week. I will try my best to implement unpriv
->>>> trap handling in v6 itself.
->>> Are you sure unpriv is the only exception that can hit there? What
->>> about NMIs? Do you have #MCs yet (ECC errors)? Do you have something
->>> like ARM's #SError which can asynchronously hit at any time because
->>> of external bus (PCI) errors?
->>
->> As far as I know, all interrupts on RISC-V are disabled by
->> local_irq_disable()/local_irq_enable().
-> 
-> Yes, we don't have per-CPU interrupts for async bus errors or
-> non-maskable interrupts. The local_irq_disable() and local_irq_enable()
-> affect all interrupts (excepts traps).
+Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi       |  2 +-
+ arch/arm/boot/dts/imx6sll.dtsi       |  2 +-
+ arch/arm/boot/dts/imx6sx.dtsi        |  2 +-
+ arch/arm/boot/dts/imx6ul.dtsi        |  2 +-
+ arch/arm/boot/dts/imx7s.dtsi         |  2 +-
+ drivers/input/keyboard/Kconfig       |  2 +-
+ drivers/input/keyboard/snvs_pwrkey.c | 59 +++++++++++++++++++++++-----
+ 7 files changed, 56 insertions(+), 15 deletions(-)
 
-Awesome, so that means you really only need to worry about traps. Even 
-easier then! :)
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index b3a77bcf00d51..c10d12658743c 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -836,7 +836,7 @@
+ 				};
+ 
+ 				snvs_pwrkey: snvs-powerkey {
+-					compatible = "fsl,sec-v4.0-pwrkey";
++					compatible = "fsl,imx6qdl-sec-v4.0-pwrkey";
+ 					regmap = <&snvs>;
+ 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 					linux,keycode = <KEY_POWER>;
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 1b4899f0fcded..91c7d5bdcc359 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -571,7 +571,7 @@
+ 				};
+ 
+ 				snvs_pwrkey: snvs-powerkey {
+-					compatible = "fsl,sec-v4.0-pwrkey";
++					compatible = "fsl,imx6sx-sec-v4.0-pwrkey";
+ 					regmap = <&snvs>;
+ 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 					linux,keycode = <KEY_POWER>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index b16a123990a26..b6736db65350f 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -733,7 +733,7 @@
+ 				};
+ 
+ 				snvs_pwrkey: snvs-powerkey {
+-					compatible = "fsl,sec-v4.0-pwrkey";
++					compatible = "fsl,imx6sx-sec-v4.0-pwrkey";
+ 					regmap = <&snvs>;
+ 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 					linux,keycode = <KEY_POWER>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index a7f6d1d58e20d..d4678c52b55db 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -644,7 +644,7 @@
+ 				};
+ 
+ 				snvs_pwrkey: snvs-powerkey {
+-					compatible = "fsl,sec-v4.0-pwrkey";
++					compatible = "fsl,imx6sx-sec-v4.0-pwrkey";
+ 					regmap = <&snvs>;
+ 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 					linux,keycode = <KEY_POWER>;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 106711d2c01b0..bb68c23beb199 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -604,7 +604,7 @@
+ 				};
+ 
+ 				snvs_pwrkey: snvs-powerkey {
+-					compatible = "fsl,sec-v4.0-pwrkey";
++					compatible = "fsl,imx6sx-sec-v4.0-pwrkey";
+ 					regmap = <&snvs>;
+ 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 					linux,keycode = <KEY_POWER>;
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index 7c4f19dab34fd..937e58da5ce17 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
+ 	depends on OF
+ 	help
+ 	  This is the snvs powerkey driver for the Freescale i.MX application
+-	  processors that are newer than i.MX6 SX.
++	  processors.
+ 
+ 	  To compile this driver as a module, choose M here; the
+ 	  module will be called snvs_pwrkey.
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+index 5342d8d45f811..c321e5f2d1087 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -29,6 +29,11 @@
+ #define DEBOUNCE_TIME 30
+ #define REPEAT_INTERVAL 60
+ 
++enum imx_snvs_hwtype {
++	IMX6SX_SNVS,	/* i.MX6 SoloX and newer */
++	IMX6QDL_SNVS,	/* i.MX6 Solo, DualLite adn Quad */
++};
++
+ struct pwrkey_drv_data {
+ 	struct regmap *snvs;
+ 	int irq;
+@@ -37,6 +42,19 @@ struct pwrkey_drv_data {
+ 	int wakeup;
+ 	struct timer_list check_timer;
+ 	struct input_dev *input;
++	enum imx_snvs_hwtype hwtype;
++};
++
++static const struct platform_device_id imx_snvs_devtype[] = {
++	{
++		.name = "imx6sx-snvs-pwrkey",
++		.driver_data = IMX6SX_SNVS,
++	}, {
++		.name = "imx6qdl-snvs-pwrkey",
++		.driver_data = IMX6QDL_SNVS,
++	}, {
++		/* sentinel */
++	}
+ };
+ 
+ static void imx_imx_snvs_check_for_events(struct timer_list *t)
+@@ -67,13 +85,23 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ {
+ 	struct platform_device *pdev = dev_id;
+ 	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
++	struct input_dev *input = pdata->input;
+ 	u32 lp_status;
+ 
+-	pm_wakeup_event(pdata->input->dev.parent, 0);
++	pm_wakeup_event(input->dev.parent, 0);
+ 
+ 	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+-	if (lp_status & SNVS_LPSR_SPO)
+-		mod_timer(&pdata->check_timer, jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
++	if (lp_status & SNVS_LPSR_SPO) {
++		if (pdata->hwtype == IMX6QDL_SNVS) {
++			input_report_key(input, pdata->keycode, 1);
++			input_report_key(input, pdata->keycode, 0);
++			input_sync(input);
++			pm_relax(input->dev.parent);
++		} else {
++			mod_timer(&pdata->check_timer,
++				jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
++		}
++	}
+ 
+ 	/* clear SPO status */
+ 	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+@@ -88,11 +116,24 @@ static void imx_snvs_pwrkey_act(void *pdata)
+ 	del_timer_sync(&pd->check_timer);
+ }
+ 
++static const struct of_device_id imx_snvs_pwrkey_ids[] = {
++	{
++		.compatible = "fsl,imx6sx-sec-v4.0-pwrkey",
++		.data = &imx_snvs_devtype[IMX6SX_SNVS],
++	}, {
++		.compatible = "fsl,imx6qdl-sec-v4.0-pwrkey",
++		.data = &imx_snvs_devtype[IMX6QDL_SNVS],
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
++
+ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ {
+ 	struct pwrkey_drv_data *pdata = NULL;
+ 	struct input_dev *input = NULL;
+ 	struct device_node *np;
++	const struct of_device_id *of_id;
+ 	int error;
+ 
+ 	/* Get SNVS register Page */
+@@ -100,6 +141,11 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 	if (!np)
+ 		return -ENODEV;
+ 
++	of_id = of_match_node(imx_snvs_pwrkey_ids, np);
++	if (!of_id)
++		return -ENODEV;
++	pdev->id_entry = of_id->data;
++
+ 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+ 		return -ENOMEM;
+@@ -116,6 +162,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	pdata->wakeup = of_property_read_bool(np, "wakeup-source");
++	pdata->hwtype = pdev->id_entry->driver_data;
+ 
+ 	pdata->irq = platform_get_irq(pdev, 0);
+ 	if (pdata->irq < 0) {
+@@ -175,12 +222,6 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id imx_snvs_pwrkey_ids[] = {
+-	{ .compatible = "fsl,sec-v4.0-pwrkey" },
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
+-
+ static struct platform_driver imx_snvs_pwrkey_driver = {
+ 	.driver = {
+ 		.name = "snvs_pwrkey",
+-- 
+2.20.1
 
-Also, you want to look out for a future extension that adds any of the 
-above (NMI, MCE, SError on local bus), as that would then break the 
-function ;)
-
-
-Alex
