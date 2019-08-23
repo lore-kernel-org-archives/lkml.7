@@ -2,102 +2,69 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07852C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932C6233A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:05:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZL3mNv5v"
+	by mail.kernel.org (Postfix) with ESMTP id D97C7233A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388641AbfHWCFO (ORCPT
+        id S2388699AbfHWCFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:05:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:45173 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733086AbfHWCFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:05:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46F4VF3sDsz9sND;
-        Fri, 23 Aug 2019 12:05:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566525910;
-        bh=DHac/wq3kp4kkEfMoK/YQLQeuEFn6Dp9Fyco01b1RC0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZL3mNv5vfU3Zm1L+Op7Dsv8dA0LB+az0HlyqXpeOPBCSDrLLe/9cJpgigEk7Oo/Fv
-         JfMPu53afzHshdXcrCOgnD5mHp+OgUJKgCuhwBms24LUSL2oj5hJOHLsAZlnkmG6Hc
-         r9dfBnvNxp1Hic1drhkLNzlu9oO762tJ7/eO9dsTpR+dmhfRDSELSf0url1gUdsBOP
-         ZoXB+DfXmLBLJbjtT6JsC+acu0+K0l56Ce1ykD3IS7qLb2MaL30I9LkhLl0LWk+FgU
-         9MRG2VGVNbEkwkuc/yT7c4QfOAeAv7WHPNjSwFEOLp/JwFyMiMehYV3a/VLt2Ov8W8
-         RCm+xR+t5ZQVA==
-Date:   Fri, 23 Aug 2019 12:04:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Zhang Rui <rui.zhang@intel.com>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: linux-next: manual merge of the thermal tree with the jc_docs tree
-Message-ID: <20190823120454.654577c5@canb.auug.org.au>
+        Thu, 22 Aug 2019 22:05:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33669 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733086AbfHWCFW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:05:22 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0ywy-0000pN-VG; Fri, 23 Aug 2019 04:05:13 +0200
+Date:   Fri, 23 Aug 2019 04:05:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andi Kleen <ak@linux.intel.com>
+cc:     kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
+Subject: Re: [PATCH V2] perf/x86: Consider pinned events for group
+ validation
+In-Reply-To: <20190822185522.GE5447@tassilo.jf.intel.com>
+Message-ID: <alpine.DEB.2.21.1908230404190.31055@nanos.tec.linutronix.de>
+References: <1566488866-5975-1-git-send-email-kan.liang@linux.intel.com> <20190822182227.GD5447@tassilo.jf.intel.com> <alpine.DEB.2.21.1908222029210.1983@nanos.tec.linutronix.de> <20190822185522.GE5447@tassilo.jf.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hthhm1XizwI05UVf2WSfvy.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hthhm1XizwI05UVf2WSfvy.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 22 Aug 2019, Andi Kleen wrote:
+> On Thu, Aug 22, 2019 at 08:29:46PM +0200, Thomas Gleixner wrote:
+> > On Thu, 22 Aug 2019, Andi Kleen wrote:
+> > 
+> > > > +	/*
+> > > > +	 * Disable interrupts to prevent the events in this CPU's cpuc
+> > > > +	 * going away and getting freed.
+> > > > +	 */
+> > > > +	local_irq_save(flags);
+> > > 
+> > > I believe it's also needed to disable preemption. Probably should
+> > > add a comment, or better an explicit preempt_disable() too.
+> > 
+> > Preemption is implicit disabled by disabling interrupts.
+> 
+> Yes it is, this is more for documentation.
 
-Hi all,
+Comment, yes. An explicit preempt_disable() surely not.
 
-Today's linux-next merge of the thermal tree got a conflict in:
+Thanks,
 
-  Documentation/driver-api/thermal/index.rst
-
-between commit:
-
-  eaf7b46083a7 ("docs: thermal: add it to the driver API")
-
-from the jc_docs tree and commit:
-
-  af3e0fe9c663 ("docs: thermal: add it to the driver API")
-
-from the thermal tree.
-
-I fixed it up (the former just has an SPDX tag at the top) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hthhm1XizwI05UVf2WSfvy.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fScYACgkQAVBC80lX
-0GzTOgf/cCYM3dCA2A4lsP5ihmo13aXj7Ljm9bHs0E3OWlhjexcOP/dU6MWJlOQ/
-VYTDEPewAtguaR1V0EsCnnUOqIi5iPqW8uCmryeifKlribMpu6Y/N+jxqzBX4fnG
-eV9YRaXOPnMjddffPgRaP7OJeJSZFnMYeFE2xWUn48aFEEFkBuXYOftPH1z/jSL1
-o3/WgLrZ157FIywY48oWf0OJbY9QhYr/1TTT2EC0YuYEQB8m71x1THfvrRQPHaZ8
-C5QkVLDX6dhZeeaW6Vz0ESSR7SFL8RwpSVLl0HoRWXAcC2iVer2ISRRosOLFyR+8
-xr+U1PeHx05dxXudbd/htACLNPln/g==
-=JDDv
------END PGP SIGNATURE-----
-
---Sig_/hthhm1XizwI05UVf2WSfvy.--
+	tglx
