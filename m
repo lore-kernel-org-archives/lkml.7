@@ -2,126 +2,122 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA374C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64A1C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9041B2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566557181;
-	bh=WfWCsDuYzwccH0zZEi5SHsqiIFse6l3+Nqxq5gJtjDA=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=zNJOQi8USPWSjDA9h3oJeoUX+4YVxipDTk4cQ6CGItoWRGO4lUgzOODt1tbwyjxp4
-	 U5nwyo18DfGayyuTeHUNRcs6kTZynyY6PjVDyr8Cea9yFW7s0v3tNnFRrp1Y4Zf2bP
-	 c4yQ0xY9JVic7in9WLQ1LiY4w3CjL0N7GXJB1bVA=
+	by mail.kernel.org (Postfix) with ESMTP id BC70923401
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 10:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hs3EkrXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390756AbfHWKqV (ORCPT
+        id S2391349AbfHWKqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 06:46:21 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57510 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389133AbfHWKqU (ORCPT
+        Fri, 23 Aug 2019 06:46:44 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58274 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732838AbfHWKqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 06:46:20 -0400
+        Fri, 23 Aug 2019 06:46:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=vMxwaeECDuLY4X7b/ub+NP1qFx7pA5yp8GiXy0T0uKE=; b=pyr0jeXHPBHS
-        Is2HNReV0ZhM/m3KveCZTy/vHXVUggZ4DENVrRUgFNiRwSwWPhhzAoXB4sR5ey6aNrb82WCMmnFje
-        dN/ZsGoHiO4m4BKqYXwTnw1R6xKW0aApo+0+etKO4fYIfwGiULcU6xZT3rx0jKWOoa/Q6TuKL3IP5
-        ANY6s=;
-Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i175G-0002tX-L5; Fri, 23 Aug 2019 10:46:18 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 5C92FD02CD0; Fri, 23 Aug 2019 11:46:18 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours" to the spi tree
-In-Reply-To: <20190822212450.21420-2-olteanv@gmail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190823104618.5C92FD02CD0@fitzroy.sirena.org.uk>
-Date:   Fri, 23 Aug 2019 11:46:18 +0100 (BST)
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fTnjvJjKhCTch2+e+s4C+1ah7tCrVFGr9EdjhwXZqls=; b=hs3EkrXPt9WeCNkIRiOmuAtXu
+        LCi1Y4DcuIPxchYsgg3mvuf6dXptSKJUr4sakinSQbarSbn/04029HH+7nvn251FaAOntApDC8qU6
+        qw5qa+6NrknJSm20CTx9tvf28KsCtuifmhepWFX3nbLpf9V4LHr71oiF0dI4544EAEeLTTNYJ6DVl
+        zeedSXn8wGRq457v+wB+WsMuWgC8J7lSuHEMXsBiQHYv4vfCfX5sNi3bu2vE/0vPb8yGpSWlrsZJJ
+        czL/A+phe5KOIRMxIRNZ5s095a66iRR8WYJdHfZgvIpdETGb0SqIudAakDUFI7JUGDuJQmR3s2w/G
+        0b++5iJ+g==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:48398)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i175S-00049Z-LJ; Fri, 23 Aug 2019 11:46:30 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i175J-0000Ay-5M; Fri, 23 Aug 2019 11:46:21 +0100
+Date:   Fri, 23 Aug 2019 11:46:21 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        patches@armlinux.org.uk, mchehab@kernel.org, james.morse@arm.com,
+        jlu@pengutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+Message-ID: <20190823104621.GY13294@shell.armlinux.org.uk>
+References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
+ <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Jul 12, 2019 at 03:48:57PM +1200, Chris Packham wrote:
+> From: Jan Luebbe <jlu@pengutronix.de>
+> 
+> The macro name is too generic, so add a AURORA_ prefix.
+> 
+> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  arch/arm/include/asm/hardware/cache-aurora-l2.h | 2 +-
 
-   spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
+I can't apply this series - this file does not exist in my tree, and
+from what git tells me, it never has existed.  Maybe it's in someone
+elses tree?
 
-has been applied to the spi tree at
+>  arch/arm/mm/cache-l2x0.c                        | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/include/asm/hardware/cache-aurora-l2.h
+> index c86124769831..dc5c479ec4c3 100644
+> --- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
+> +++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
+> @@ -41,7 +41,7 @@
+>  #define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
+>  	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
+>  
+> -#define MAX_RANGE_SIZE		1024
+> +#define AURORA_MAX_RANGE_SIZE	1024
+>  
+>  #define AURORA_WAY_SIZE_SHIFT	2
+>  
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index 428d08718107..83b733a1f1e6 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1352,8 +1352,8 @@ static unsigned long aurora_range_end(unsigned long start, unsigned long end)
+>  	 * since cache range operations stall the CPU pipeline
+>  	 * until completion.
+>  	 */
+> -	if (end > start + MAX_RANGE_SIZE)
+> -		end = start + MAX_RANGE_SIZE;
+> +	if (end > start + AURORA_MAX_RANGE_SIZE)
+> +		end = start + AURORA_MAX_RANGE_SIZE;
+>  
+>  	/*
+>  	 * Cache range operations can't straddle a page boundary.
+> -- 
+> 2.22.0
+> 
+> 
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 421f4579df345166ec61020eb453f65d6107bfec Mon Sep 17 00:00:00 2001
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Fri, 23 Aug 2019 00:24:50 +0300
-Subject: [PATCH] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not
- ours
-
-The DSPI interrupt can be shared between two controllers at least on the
-LX2160A. In that case, the driver for one controller might misbehave and
-consume the other's interrupt. Fix this by actually checking if any of
-the bits in the status register have been asserted.
-
-Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Link: https://lore.kernel.org/r/20190822212450.21420-2-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-fsl-dspi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 53335ccc98f6..545fc8189fb0 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -886,9 +886,11 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 					trans_mode);
- 			}
- 		}
-+
-+		return IRQ_HANDLED;
- 	}
- 
--	return IRQ_HANDLED;
-+	return IRQ_NONE;
- }
- 
- static const struct of_device_id fsl_dspi_dt_ids[] = {
 -- 
-2.20.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
