@@ -2,79 +2,89 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5269C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 04:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E067DC3A589
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 04:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6B82341E
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 04:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A04233FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 04:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391742AbfHWE3D (ORCPT
+        id S2391792AbfHWE7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 00:29:03 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58676 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfHWE3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 00:29:02 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1i11At-0006rg-Aj; Fri, 23 Aug 2019 14:27:43 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1i11AE-0004RC-MF; Fri, 23 Aug 2019 14:27:02 +1000
-Date:   Fri, 23 Aug 2019 14:27:02 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "boojin.kim" <boojin.kim@samsung.com>
-Cc:     "'David S. Miller'" <davem@davemloft.net>,
-        'Eric Biggers' <ebiggers@kernel.org>,
-        "'Theodore Y. Ts'o'" <tytso@mit.edu>, 'Chao Yu' <chao@kernel.org>,
-        'Jaegeuk Kim' <jaegeuk@kernel.org>,
-        'Andreas Dilger' <adilger.kernel@dilger.ca>,
-        dm-devel@redhat.com, 'Mike Snitzer' <snitzer@redhat.com>,
-        'Alasdair Kergon' <agk@redhat.com>,
-        'Jens Axboe' <axboe@kernel.dk>,
-        'Krzysztof Kozlowski' <krzk@kernel.org>,
-        'Kukjin Kim' <kgene@kernel.org>,
-        'Jaehoon Chung' <jh80.chung@samsung.com>,
-        'Ulf Hansson' <ulf.hansson@linaro.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 6/9] dm crypt: support diskcipher
-Message-ID: <20190823042702.GA17034@gondor.apana.org.au>
-References: <CGME20190823042038epcas2p2000738f3ca7f5f3d92ea1c32de2bcf99@epcas2p2.samsung.com>
- <017901d5596a$1df3a590$59daf0b0$@samsung.com>
+        Fri, 23 Aug 2019 00:59:55 -0400
+Received: from smtprelay0254.hostedemail.com ([216.40.44.254]:49885 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391664AbfHWE7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 00:59:55 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 73D998368F05;
+        Fri, 23 Aug 2019 04:59:53 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: farm80_39106449b3b1d
+X-Filterd-Recvd-Size: 2482
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 23 Aug 2019 04:59:52 +0000 (UTC)
+Message-ID: <59c7ff8f2306069095503b72824714e369a378f8.camel@perches.com>
+Subject: Re: [PATCH 10/12] phy: amlogic: G12A: Fix misuse of GENMASK macro
+From:   Joe Perches <joe@perches.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Thu, 22 Aug 2019 21:59:49 -0700
+In-Reply-To: <6d7abb4d-fe68-8d02-d985-7214118be126@ti.com>
+References: <cover.1562734889.git.joe@perches.com>
+         <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
+         <c6cabf9c-7edd-eea8-3388-df781163cddd@baylibre.com>
+         <6d7abb4d-fe68-8d02-d985-7214118be126@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <017901d5596a$1df3a590$59daf0b0$@samsung.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 01:20:37PM +0900, boojin.kim wrote:
->
-> If yes, I think the following API needs to be added to skcipher:  
-> - _set(): BIO submitter (dm-crypt, f2fs, ext4) sets cipher to BIO.
-> - _mergeable(): Block layer checks if two BIOs have the same cipher.
-> - _get(): Storage driver gets cipher from BIO.
-> - _set_crypt(): Storage driver gets crypto information from cipher and 
-> writes it on the descriptor of Storage controller.
-> Is it acceptable to skcipher ?
+On Fri, 2019-08-23 at 08:11 +0530, Kishon Vijay Abraham I wrote:
+> 
+> On 22/07/19 12:53 PM, Neil Armstrong wrote:
+> > On 10/07/2019 07:04, Joe Perches wrote:
+> > > Arguments are supposed to be ordered high then low.
+> > > 
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > ---
+> > >  drivers/phy/amlogic/phy-meson-g12a-usb2.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
+> > > index 9065ffc85eb4..cd7eccab2649 100644
+> > > --- a/drivers/phy/amlogic/phy-meson-g12a-usb2.c
+> > > +++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
+> > > @@ -66,7 +66,7 @@
+> > >  #define PHY_CTRL_R14						0x38
+> > >  	#define PHY_CTRL_R14_I_RDP_EN				BIT(0)
+> > >  	#define PHY_CTRL_R14_I_RPU_SW1_EN			BIT(1)
+> > > -	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(2, 3)
+> > > +	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(3, 2)
+> > >  	#define PHY_CTRL_R14_PG_RSTN				BIT(4)
+> > >  	#define PHY_CTRL_R14_I_C2L_DATA_16_8			BIT(5)
+> > >  	#define PHY_CTRL_R14_I_C2L_ASSERT_SINGLE_EN_ZERO	BIT(6)
+> > > 
+> > 
+> > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> Shouldn't this go to stable trees as well?
 
-No.  If you're after total offload then the crypto API is not for
-you.  What we can support is the offloading of encryption/decryption
-over many sectors.
+The macro define is unused so it doesn't have to go into stable.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> -Kishon
+
