@@ -2,322 +2,144 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B301C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35433C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FB82070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0184122CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGM9hG+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393340AbfHWIyv (ORCPT
+        id S2393247AbfHWI4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:54:51 -0400
-Received: from smtp2.goneo.de ([85.220.129.33]:59472 "EHLO smtp2.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731252AbfHWIyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:54:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id EAB3C241BE7;
-        Fri, 23 Aug 2019 10:54:45 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MKvIqI_GvAAK; Fri, 23 Aug 2019 10:54:39 +0200 (CEST)
-Received: from lem-wkst-02.lemonage (hq.lemonage.de [87.138.178.34])
-        by smtp2.goneo.de (Postfix) with ESMTPSA id 137E1241D08;
-        Fri, 23 Aug 2019 10:54:38 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 11:07:40 +0200
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Claudiu.Beznea@microchip.com
-Cc:     gregkh@linuxfoundation.org, allison@lohutok.net,
-        swinslow@gmail.com, tglx@linutronix.de,
-        kstewart@linuxfoundation.org, gustavo@embeddedor.com,
-        keescook@chromium.org, opensource@jilayne.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        johan@kernel.org
-Subject: Re: [PATCH v6 4/7] nfc: pn533: Split pn533 init & nfc_register
-Message-ID: <20190823090740.GA14401@lem-wkst-02.lemonage>
-References: <20190820120345.22593-1-poeschel@lemonage.de>
- <20190820120345.22593-4-poeschel@lemonage.de>
- <67dbe5a1-35e7-0ac9-efbc-6425b3628b18@microchip.com>
+        Fri, 23 Aug 2019 04:56:42 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44225 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731191AbfHWI4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 04:56:41 -0400
+Received: by mail-qt1-f193.google.com with SMTP id 44so10468890qtg.11;
+        Fri, 23 Aug 2019 01:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BTnwn95++Op3SfWaQCpErhny3AGKGOkNMopDRr3KEu0=;
+        b=XGM9hG+O9FrtwGIUWPwCuNTLzgN5bUJNVOdp91Dv6P29Tf98HvbRWmcKJgXEV2Sltk
+         a/FGMeI+jQm6Cnbljsb4PP7+Rps+vijt9Tl+Ok3H7Nx9hPDNqdeBNSNT9uGApXuKB77p
+         znW6hCrBJaBUzMIyr7X5xCXO8zJPz7mf9NAsllLvQQJyWI8SLKyx8qo2EOi4S2KjifRA
+         YNijyfUgRbsPX6iKiJtYYHGxQJ2WSTJgruCSddFw2ven0W06L34HaA6/YHUKDbjT3elK
+         rtdipgAhPX6uK1bSEXs0Y8/KAFRGawESHEzu8GmwFTS39BbHuwHJ1xRa5G1CdI2CxYji
+         vytA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BTnwn95++Op3SfWaQCpErhny3AGKGOkNMopDRr3KEu0=;
+        b=BbZnykNjILalLM/ZoBKG9r+duO/lRSZ1kT1UXahAT8rHYBj+jFjymyYY5FqpWmJ9Mt
+         BPNerFHPmlss5gOprNg8KbN+acAtTyZt2fUnCEpkwHBtRPYSxlZKY5LzSOoFQ8cSKEpo
+         w4F0SkEz9OH7v4rJzsDH+UP6vQQiWlon2AvU57XwjLeV6Dul4dKg56mi0FcNzc2CbUMm
+         uiw4z2jBO5wTge9+w/+PGWsA9IbDFNURIxd1M3Gh6VyMj3W5NemcUX8Wk6bqRUVjdl3A
+         1/X/zQcj0Zz/DiEoiTEaE5bUZl69VSTVpSMikdcmNvPY28lWviMjxaDDKU2ZyEYUJkAo
+         11iA==
+X-Gm-Message-State: APjAAAWgjnMH2jrxJO2ebolVZwd0Ol4czvp3++qgkGH+jcScl0zm9I+x
+        iY29h5OoO05L9D0kOIOQEIYtiB+DL1GEmpdQlGQ=
+X-Google-Smtp-Source: APXvYqyL3NooS+2ggd9zdNLJemCTsHJDuV1xwpwNqzfrpaDL4nGuZMIk0c7+MO0U4L91B22FYl5jAdI4ch3Cf5er3Uk=
+X-Received: by 2002:ac8:2d2c:: with SMTP id n41mr3667775qta.28.1566550600739;
+ Fri, 23 Aug 2019 01:56:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67dbe5a1-35e7-0ac9-efbc-6425b3628b18@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1566540652.git.han_mao@c-sky.com> <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
+In-Reply-To: <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Fri, 23 Aug 2019 16:56:04 +0800
+Message-ID: <CAEbi=3fbe9zbsLyfA=s9gHtAFJrp5Ox0jWoAqcZudQ_xODicgA@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] riscv: Add perf callchain support
+To:     Mao Han <han_mao@c-sky.com>
+Cc:     linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:08:40AM +0000, Claudiu.Beznea@microchip.com wrote:
-> 
-> 
-> On 20.08.2019 15:03, Lars Poeschel wrote:
-> > There is a problem in the initialisation and setup of the pn533: It
-> > registers with nfc too early. It could happen, that it finished
-> > registering with nfc and someone starts using it. But setup of the pn533
-> > is not yet finished. Bad or at least unintended things could happen.
-> > So I split out nfc registering (and unregistering) to seperate functions
-> > that have to be called late in probe then.
-> > 
-> > Cc: Johan Hovold <johan@kernel.org>
-> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> > ---
-> > Changes in v6:
-> > - Rebased the patch series on v5.3-rc5
-> > 
-> > Changes in v5:
-> > - This patch is new in v5
-> > 
-> >  drivers/nfc/pn533/i2c.c   | 17 +++++-----
-> >  drivers/nfc/pn533/pn533.c | 66 ++++++++++++++++++++-------------------
-> >  drivers/nfc/pn533/pn533.h | 11 ++++---
-> >  drivers/nfc/pn533/usb.c   | 12 +++++--
-> >  4 files changed, 59 insertions(+), 47 deletions(-)
-> > 
-> > diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-> > index 1abd40398a5a..e9e5a1ec8857 100644
-> > --- a/drivers/nfc/pn533/i2c.c
-> > +++ b/drivers/nfc/pn533/i2c.c
-> > @@ -193,12 +193,10 @@ static int pn533_i2c_probe(struct i2c_client *client,
-> >  	phy->i2c_dev = client;
-> >  	i2c_set_clientdata(client, phy);
-> >  
-> > -	priv = pn533_register_device(PN533_DEVICE_PN532,
-> > -				     PN533_NO_TYPE_B_PROTOCOLS,
-> > +	priv = pn53x_common_init(PN533_DEVICE_PN532,
-> >  				     PN533_PROTO_REQ_ACK_RESP,
-> >  				     phy, &i2c_phy_ops, NULL,
-> > -				     &phy->i2c_dev->dev,
-> > -				     &client->dev);
-> > +				     &phy->i2c_dev->dev);
-> >  
-> >  	if (IS_ERR(priv)) {
-> >  		r = PTR_ERR(priv);
-> > @@ -220,13 +218,17 @@ static int pn533_i2c_probe(struct i2c_client *client,
-> >  	if (r)
-> >  		goto fn_setup_err;
-> >  
-> > -	return 0;
-> > +	r = pn53x_register_nfc(priv, PN533_NO_TYPE_B_PROTOCOLS, &client->dev);
-> > +	if (r)
-> > +		goto fn_setup_err;
-> > +
-> > +	return r;
-> >  
-> >  fn_setup_err:
-> >  	free_irq(client->irq, phy);
-> >  
-> >  irq_rqst_err:
-> > -	pn533_unregister_device(phy->priv);
-> > +	pn53x_common_clean(phy->priv);
-> >  
-> >  	return r;
-> >  }
-> > @@ -239,7 +241,8 @@ static int pn533_i2c_remove(struct i2c_client *client)
-> >  
-> >  	free_irq(client->irq, phy);
-> >  
-> > -	pn533_unregister_device(phy->priv);
-> > +	pn53x_unregister_nfc(phy->priv);
-> > +	pn53x_common_clean(phy->priv);
-> >  
-> >  	return 0;
-> >  }
-> > diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
-> > index 64836c727aee..a8c756caa678 100644
-> > --- a/drivers/nfc/pn533/pn533.c
-> > +++ b/drivers/nfc/pn533/pn533.c
-> > @@ -2590,14 +2590,12 @@ int pn533_finalize_setup(struct pn533 *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(pn533_finalize_setup);
-> >  
-> > -struct pn533 *pn533_register_device(u32 device_type,
-> > -				u32 protocols,
-> > +struct pn533 *pn53x_common_init(u32 device_type,
-> >  				enum pn533_protocol_type protocol_type,
-> >  				void *phy,
-> >  				struct pn533_phy_ops *phy_ops,
-> >  				struct pn533_frame_ops *fops,
-> > -				struct device *dev,
-> > -				struct device *parent)
-> > +				struct device *dev)
-> >  {
-> >  	struct pn533 *priv;
-> >  	int rc = -ENOMEM;
-> > @@ -2638,43 +2636,18 @@ struct pn533 *pn533_register_device(u32 device_type,
-> >  	skb_queue_head_init(&priv->fragment_skb);
-> >  
-> >  	INIT_LIST_HEAD(&priv->cmd_queue);
-> > -
-> > -	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
-> > -					   priv->ops->tx_header_len +
-> > -					   PN533_CMD_DATAEXCH_HEAD_LEN,
-> > -					   priv->ops->tx_tail_len);
-> > -	if (!priv->nfc_dev) {
-> > -		rc = -ENOMEM;
-> > -		goto destroy_wq;
-> > -	}
-> > -
-> > -	nfc_set_parent_dev(priv->nfc_dev, parent);
-> > -	nfc_set_drvdata(priv->nfc_dev, priv);
-> > -
-> > -	rc = nfc_register_device(priv->nfc_dev);
-> > -	if (rc)
-> > -		goto free_nfc_dev;
-> > -
-> >  	return priv;
-> >  
-> > -free_nfc_dev:
-> > -	nfc_free_device(priv->nfc_dev);
-> > -
-> > -destroy_wq:
-> > -	destroy_workqueue(priv->wq);
-> >  error:
-> >  	kfree(priv);
-> >  	return ERR_PTR(rc);
-> >  }
-> > -EXPORT_SYMBOL_GPL(pn533_register_device);
-> > +EXPORT_SYMBOL_GPL(pn53x_common_init);
-> >  
-> > -void pn533_unregister_device(struct pn533 *priv)
-> > +void pn53x_common_clean(struct pn533 *priv)
-> >  {
-> >  	struct pn533_cmd *cmd, *n;
-> >  
-> > -	nfc_unregister_device(priv->nfc_dev);
-> > -	nfc_free_device(priv->nfc_dev);
-> > -
-> >  	flush_delayed_work(&priv->poll_work);
-> >  	destroy_workqueue(priv->wq);
-> >  
-> > @@ -2689,8 +2662,37 @@ void pn533_unregister_device(struct pn533 *priv)
-> >  
-> >  	kfree(priv);
-> >  }
-> > -EXPORT_SYMBOL_GPL(pn533_unregister_device);
-> > +EXPORT_SYMBOL_GPL(pn53x_common_clean);
-> > +
-> > +int pn53x_register_nfc(struct pn533 *priv, u32 protocols,
-> > +			struct device *parent)
-> > +{
-> > +	int rc = -ENOMEM;
-> 
-> No need to initialize rc here... or just return rc below.
+Hi Mao,
 
-I will remove the initialization. Looks better to me.
+Mao Han <han_mao@c-sky.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8823=E6=97=A5 =
+=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:16=E5=AF=AB=E9=81=93=EF=BC=9A
 
-> > +
-> > +	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
-> > +					   priv->ops->tx_header_len +
-> > +					   PN533_CMD_DATAEXCH_HEAD_LEN,
-> > +					   priv->ops->tx_tail_len);
-> > +	if (!priv->nfc_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	nfc_set_parent_dev(priv->nfc_dev, parent);
-> > +	nfc_set_drvdata(priv->nfc_dev, priv);
-> > +
-> > +	rc = nfc_register_device(priv->nfc_dev);
-> > +	if (rc)
-> > +		nfc_free_device(priv->nfc_dev);
-> > +
-> > +	return rc;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pn53x_register_nfc);
-> >  
-> > +void pn53x_unregister_nfc(struct pn533 *priv)
-> > +{
-> > +	nfc_unregister_device(priv->nfc_dev);
-> > +	nfc_free_device(priv->nfc_dev);
-> > +}
-> > +EXPORT_SYMBOL_GPL(pn53x_unregister_nfc);
-> >  
-> >  MODULE_AUTHOR("Lauro Ramos Venancio <lauro.venancio@openbossa.org>");
-> >  MODULE_AUTHOR("Aloisio Almeida Jr <aloisio.almeida@openbossa.org>");
-> > diff --git a/drivers/nfc/pn533/pn533.h b/drivers/nfc/pn533/pn533.h
-> > index 570ee0a3e832..510ddebbd896 100644
-> > --- a/drivers/nfc/pn533/pn533.h
-> > +++ b/drivers/nfc/pn533/pn533.h
-> > @@ -219,18 +219,19 @@ struct pn533_phy_ops {
-> >  };
-> >  
-> >  
-> > -struct pn533 *pn533_register_device(u32 device_type,
-> > -				u32 protocols,
-> > +struct pn533 *pn53x_common_init(u32 device_type,
-> >  				enum pn533_protocol_type protocol_type,
-> >  				void *phy,
-> >  				struct pn533_phy_ops *phy_ops,
-> >  				struct pn533_frame_ops *fops,
-> > -				struct device *dev,
-> > -				struct device *parent);
-> > +				struct device *dev);
-> >  
-> >  int pn533_finalize_setup(struct pn533 *dev);
-> > -void pn533_unregister_device(struct pn533 *priv);
-> > +void pn53x_common_clean(struct pn533 *priv);
-> >  void pn533_recv_frame(struct pn533 *dev, struct sk_buff *skb, int status);
-> > +int pn53x_register_nfc(struct pn533 *priv, u32 protocols,
-> > +			struct device *parent);
-> > +void pn53x_unregister_nfc(struct pn533 *priv);
-> >  
-> >  bool pn533_rx_frame_is_cmd_response(struct pn533 *dev, void *frame);
-> >  bool pn533_rx_frame_is_ack(void *_frame);
-> > diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-> > index c5289eaf17ee..a1c6a41944c6 100644
-> > --- a/drivers/nfc/pn533/usb.c
-> > +++ b/drivers/nfc/pn533/usb.c
-> > @@ -534,9 +534,9 @@ static int pn533_usb_probe(struct usb_interface *interface,
-> >  		goto error;
-> >  	}
-> >  
-> > -	priv = pn533_register_device(id->driver_info, protocols, protocol_type,
-> > +	priv = pn53x_common_init(id->driver_info, protocol_type,
-> >  					phy, &usb_phy_ops, fops,
-> > -					&phy->udev->dev, &interface->dev);
-> > +					&phy->udev->dev);
-> >  
-> >  	if (IS_ERR(priv)) {
-> >  		rc = PTR_ERR(priv);
-> > @@ -550,9 +550,14 @@ static int pn533_usb_probe(struct usb_interface *interface,
-> >  		goto error;
-> >  
-> >  	usb_set_intfdata(interface, phy);
-> 
-> Above this instruction there is this code:
-> 
-> 	rc = pn533_finalize_setup(priv);
-> 	if (rc)
-> 		goto error;
-> 
-> Instead of "goto error;" you should have "goto err_clean;"
+>
+> This patch add support for perf callchain sampling on riscv platform.
+> The return address of leaf function is retrieved from pt_regs as
+> it is not saved in the outmost frame.
+>
+> Signed-off-by: Mao Han <han_mao@c-sky.com>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Greentime Hu <green.hu@gmail.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: linux-riscv <linux-riscv@lists.infradead.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Guo Ren <guoren@kernel.org>
+> ---
+>  arch/riscv/Makefile                |   3 +
+>  arch/riscv/kernel/Makefile         |   3 +-
+>  arch/riscv/kernel/perf_callchain.c | 115 +++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 120 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/riscv/kernel/perf_callchain.c
 
-Thank you for catching this one. I will change it.
+I just tested "./perf record -e cpu-clock --call-graph fp ls" on
+Unleashed board and I got this failure.
+I take a look at it. It seem failed in here. Do you have any idea?
+It seems fine in Qemu.
 
-> > +	rc = pn53x_register_nfc(priv, protocols, &interface->dev);
-> > +	if (rc)
-> > +		goto err_clean;
-> >  
-> >  	return 0;
-> >  
-> > +err_clean:
-> > +	pn53x_common_clean(priv);
-> >  error:
-> >  	usb_free_urb(phy->in_urb);
-> >  	usb_free_urb(phy->out_urb);
-> > @@ -570,7 +575,8 @@ static void pn533_usb_disconnect(struct usb_interface *interface)
-> >  	if (!phy)
-> >  		return;
-> >  
-> > -	pn533_unregister_device(phy->priv);
-> > +	pn53x_unregister_nfc(phy->priv);
-> > +	pn53x_common_clean(phy->priv);
-> >  
-> >  	usb_set_intfdata(interface, NULL);
-> >  
-> > 
+1 *frame =3D *((struct stackframe *)frame->fp - 1);
+ffffffe0001a198c: 00863a83 ld s5,8(a2)
+ffffffe0001a1990: ff093903 ld s2,-16(s2)
+
+./perf record -e cpu-clock --call-graph fp ls
+[ 9619.423884] hrtimer: interrupt took 733000 ns
+[ 9619.977017] Unable to handle kernel paging request at virtual
+address ffffffffffffff94
+[ 9620.214736] Oops [#1]
+[ 9620.289893] Modules linked in:
+[ 9620.391378] CPU: 0 PID: 264 Comm: ls Not tainted
+5.3.0-rc5-00003-gb008f6bcd67c #4
+[ 9620.640176] sepc: ffffffe0001a198c ra : ffffffe0001a199a sp :
+ffffffe000093720
+[ 9620.880366] gp : ffffffe00097dad8 tp : ffffffe000082e40 t0 : 00000000000=
+46000
+[ 9621.120564] t1 : 0000000000000002 t2 : 0000000000000007 s0 : ffffffe0000=
+93760
+[ 9621.360768] s1 : ffffffe000093788 a0 : 0000000000000003 a1 : 00000000000=
+00000
+[ 9621.600991] a2 : ffffffffffffff8c a3 : 0000000000001fa0 a4 : 00000000000=
+00010
+[ 9621.841181] a5 : 0000000000000002 a6 : 0000000000000001 a7 : ffffffe079b=
+34e10
+[ 9622.081400] s2 : ffffffffffffff9c s3 : ffffffe000000000 s4 : 00000000000=
+01ff8
+[ 9622.321618] s5 : ffffffe000093da0 s6 : ffffffe00097d540 s7 : ffffffe07a1=
+517a0
+[ 9622.561811] s8 : 000008bf01c7ff60 s9 : ffffffe000235b2a s10: 00000002000=
+00120
+[ 9622.802015] s11: 0000000000000001 t3 : ffffffe079b34e00 t4 : 00000000000=
+00001
+[ 9623.042194] t5 : 0000000000000008 t6 : ffffffe0009208d0
+[ 9623.218785] sstatus: 0000000200000100 sbadaddr: ffffffffffffff94
+scause: 000000000000000d
+[ 9623.490850] ---[ end trace 49043f28e856d84d ]---
+[ 9623.644217] Kernel panic - not syncing: Fatal exception in interrupt
+[ 9623.855470] SMP: stopping secondary CPUs
+[ 9623.985955] ---[ end Kernel panic - not syncing: Fatal exception in
+interrupt ]---
