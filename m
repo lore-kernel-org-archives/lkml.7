@@ -2,37 +2,37 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEADC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879E5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D492341A
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689C023407
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390619AbfHWDpw (ORCPT
+        id S2391387AbfHWDpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:45:52 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47706 "EHLO
+        Thu, 22 Aug 2019 23:45:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:1839 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388786AbfHWDps (ORCPT
+        with ESMTP id S1732546AbfHWDps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 23:45:48 -0400
-X-UUID: af89ad669fb74b3386f7f00f4f49b420-20190823
-X-UUID: af89ad669fb74b3386f7f00f4f49b420-20190823
+X-UUID: a7052b743f4347bc9df8a596edc75cea-20190823
+X-UUID: a7052b743f4347bc9df8a596edc75cea-20190823
 Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
         (envelope-from <hsin-hsiung.wang@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1274316023; Fri, 23 Aug 2019 11:45:41 +0800
+        with ESMTP id 1160401518; Fri, 23 Aug 2019 11:45:41 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 23 Aug 2019 11:45:35 +0800
+ 15.0.1395.4; Fri, 23 Aug 2019 11:45:34 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 23 Aug 2019 11:45:35 +0800
+ Transport; Fri, 23 Aug 2019 11:45:34 +0800
 From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Brown <broonie@kernel.org>,
@@ -53,9 +53,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
         <srv_heupstream@mediatek.com>
-Subject: [PATCH v5 04/10] dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
-Date:   Fri, 23 Aug 2019 11:45:25 +0800
-Message-ID: <1566531931-9772-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v5 01/10] mfd: mt6397: clean up code
+Date:   Fri, 23 Aug 2019 11:45:22 +0800
+Message-ID: <1566531931-9772-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
@@ -67,50 +67,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds compatible for the MediaTek MT6358 PMIC.
+refine some variable name for more readable
 
 Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/mfd/mt6397-core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-index 0ebd08a..62f1c17 100644
---- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
- This document describes the binding for MFD device and its sub module.
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 337bccc..c070862 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -10,17 +10,17 @@
+ #include <linux/of_irq.h>
+ #include <linux/regmap.h>
+ #include <linux/mfd/core.h>
+-#include <linux/mfd/mt6397/core.h>
+ #include <linux/mfd/mt6323/core.h>
+-#include <linux/mfd/mt6397/registers.h>
++#include <linux/mfd/mt6397/core.h>
+ #include <linux/mfd/mt6323/registers.h>
++#include <linux/mfd/mt6397/registers.h>
  
- Required properties:
--compatible: "mediatek,mt6397" or "mediatek,mt6323"
-+compatible:
-+	"mediatek,mt6323" for PMIC MT6323
-+	"mediatek,mt6358" for PMIC MT6358
-+	"mediatek,mt6397" for PMIC MT6397
+ #define MT6397_RTC_BASE		0xe000
+ #define MT6397_RTC_SIZE		0x3e
  
- Optional subnodes:
+-#define MT6323_CID_CODE		0x23
+-#define MT6391_CID_CODE		0x91
+-#define MT6397_CID_CODE		0x97
++#define MT6323_CHIP_ID		0x23
++#define MT6391_CHIP_ID		0x91
++#define MT6397_CHIP_ID		0x97
  
- - rtc
- 	Required properties:
--		- compatible: "mediatek,mt6397-rtc"
-+		- compatible: "mediatek,mt6397-rtc" or "mediatek,mt6358-rtc"
- - regulators
- 	Required properties:
- 		- compatible: "mediatek,mt6397-regulator"
- 	see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
-+		- compatible: "mediatek,mt6358-regulator"
-+	see Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
- 		- compatible: "mediatek,mt6323-regulator"
- 	see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
- - codec
- 	Required properties:
--		- compatible: "mediatek,mt6397-codec"
-+		- compatible: "mediatek,mt6397-codec" or "mediatek,mt6358-sound"
- - clk
- 	Required properties:
- 		- compatible: "mediatek,mt6397-clk"
+ static const struct resource mt6397_rtc_resources[] = {
+ 	{
+@@ -290,7 +290,7 @@ static int mt6397_probe(struct platform_device *pdev)
+ 		return pmic->irq;
+ 
+ 	switch (id & 0xff) {
+-	case MT6323_CID_CODE:
++	case MT6323_CHIP_ID:
+ 		pmic->int_con[0] = MT6323_INT_CON0;
+ 		pmic->int_con[1] = MT6323_INT_CON1;
+ 		pmic->int_status[0] = MT6323_INT_STATUS0;
+@@ -304,8 +304,8 @@ static int mt6397_probe(struct platform_device *pdev)
+ 					   0, pmic->irq_domain);
+ 		break;
+ 
+-	case MT6397_CID_CODE:
+-	case MT6391_CID_CODE:
++	case MT6391_CHIP_ID:
++	case MT6397_CHIP_ID:
+ 		pmic->int_con[0] = MT6397_INT_CON0;
+ 		pmic->int_con[1] = MT6397_INT_CON1;
+ 		pmic->int_status[0] = MT6397_INT_STATUS0;
 -- 
 1.9.1
 
