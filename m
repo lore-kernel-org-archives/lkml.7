@@ -2,97 +2,82 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7194C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74463C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F6D22CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4652022CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 07:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390883AbfHWHr7 (ORCPT
+        id S2391017AbfHWHtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 03:47:59 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:40469 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728519AbfHWHr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 03:47:58 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 42D4210000C;
-        Fri, 23 Aug 2019 07:47:55 +0000 (UTC)
-Date:   Fri, 23 Aug 2019 09:47:54 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v8 0/5] media: Allwinner A10 CSI support
-Message-ID: <20190823074754.z23rx62o5do4pu3z@flea>
-References: <cover.85d78dd1a3b44fe4cde1b65a9b1eb3b95daea7cc.1566462064.git-series.maxime.ripard@bootlin.com>
+        Fri, 23 Aug 2019 03:49:51 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:52824 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390903AbfHWHtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 03:49:51 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7N7lHxn011155
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Fri, 23 Aug 2019 00:47:53 -0700
+Received: from pek-xsun-d1.wrs.com (128.224.162.163) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+ 14.3.468.0; Fri, 23 Aug 2019 00:47:13 -0700
+From:   Xulin Sun <xulin.sun@windriver.com>
+To:     <kvalo@codeaurora.org>
+CC:     <stefan.wahren@i2se.com>, <xulin.sun@windriver.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <brcm80211-dev-list@cypress.com>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <linux-wireless@vger.kernel.org>, <arend.vanspriel@broadcom.com>,
+        <franky.lin@broadcom.com>, <hante.meuleman@broadcom.com>,
+        <chi-hsien.lin@cypress.com>, <wright.feng@cypress.com>,
+        <davem@davemloft.net>, <stanley.hsu@cypress.com>
+Subject: [PATCH] brcmfmac: replace strncpy() by strscpy()
+Date:   Fri, 23 Aug 2019 15:47:08 +0800
+Message-ID: <20190823074708.20081-1-xulin.sun@windriver.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p5b5zggpj4lv77ke"
-Content-Disposition: inline
-In-Reply-To: <cover.85d78dd1a3b44fe4cde1b65a9b1eb3b95daea7cc.1566462064.git-series.maxime.ripard@bootlin.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The strncpy() may truncate the copied string,
+replace it by the safer strscpy().
 
---p5b5zggpj4lv77ke
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+To avoid below compile warning with gcc 8.2:
 
-On Thu, Aug 22, 2019 at 10:21:11AM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> Hi,
->
-> Here is a series introducing the support for the A10 (and SoCs of the same
-> generation) CMOS Sensor Interface (called CSI, not to be confused with
-> MIPI-CSI, which isn't support by that IP).
->
-> That interface is pretty straightforward, but the driver has a few issues
-> that I wanted to bring up:
->
->   * The only board I've been testing this with has an ov5640 sensor
->     attached, which doesn't work with the upstream driver. Copying the
->     Allwinner init sequence works though, and this is how it has been
->     tested. Testing with a second sensor would allow to see if it's an
->     issue on the CSI side or the sensor side.
->   * We don't have support for the ISP at the moment, but this can be added
->     eventually.
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:In function 'brcmf_vndr_ie':
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:4227:2:
+warning: 'strncpy' output truncated before terminating nul copying 3 bytes from a string of the same length [-Wstringop-truncation]
+  strncpy(iebuf, add_del_cmd, VNDR_IE_CMD_LEN - 1);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Applied patch 4.
+Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Maxime
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index b6d0df354b36..7ad60374fa96 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -4226,9 +4226,7 @@ brcmf_parse_vndr_ies(const u8 *vndr_ie_buf, u32 vndr_ie_len,
+ static u32
+ brcmf_vndr_ie(u8 *iebuf, s32 pktflag, u8 *ie_ptr, u32 ie_len, s8 *add_del_cmd)
+ {
+-
+-	strncpy(iebuf, add_del_cmd, VNDR_IE_CMD_LEN - 1);
+-	iebuf[VNDR_IE_CMD_LEN - 1] = '\0';
++	strscpy(iebuf, add_del_cmd, VNDR_IE_CMD_LEN);
+ 
+ 	put_unaligned_le32(1, &iebuf[VNDR_IE_COUNT_OFFSET]);
+ 
+-- 
+2.17.1
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---p5b5zggpj4lv77ke
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV+aKgAKCRDj7w1vZxhR
-xRMwAP0fMmxNQd3iwRCBEhylWiBgjth2nBRFWwaoecI6PiXhjQD8Cr8Op739M9P5
-ELbAfEs0KtHW7ro3qTMi5KruzloAGgU=
-=+ikl
------END PGP SIGNATURE-----
-
---p5b5zggpj4lv77ke--
