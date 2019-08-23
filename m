@@ -2,95 +2,131 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C2CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AE021726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="NFe3NNls"
+	by mail.kernel.org (Postfix) with ESMTP id 870E921726
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbfHWJcQ (ORCPT
+        id S1732512AbfHWJcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:32:16 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:52540 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726956AbfHWJcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:32:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id EA22042004;
-        Fri, 23 Aug 2019 09:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:date:date:from:from:subject:subject
-        :message-id:received:received:received; s=mta-01; t=1566552734;
-         x=1568367135; bh=mEhEh6gAJzPJESzZ96RxoI02+oLNMejWhrwLDGL5SN0=; b=
-        NFe3NNlsz6GbLgc6sqhe1gGbfN2wXfEp2JXm+L+8b203mNH69M/oQsHdmK3TJyKt
-        HHqfVA6QVZZ8WLMybaKdlADiC+jykNCugN+DgrY8VLwviCDjjFp4wCfr30FgEr8j
-        bx854Nbn+VRIAx2OLO31Hb4lDZiuUA1MzjPD80SUAOA=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SqQBAZp0LN-d; Fri, 23 Aug 2019 12:32:14 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 23 Aug 2019 05:32:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49468 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731592AbfHWJck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 05:32:40 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id E3BD3411F9;
-        Fri, 23 Aug 2019 12:32:13 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 23 Aug 2019 12:32:12 +0300
-Message-ID: <2453eedbc9746978c0a4b5b17f876d4b48a590dc.camel@yadro.com>
-Subject: [PATCH v1 1/3] vesnin: add wdt2 section with alt-boot option
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        "Alexander Amelkin" <a.amelkin@yadro.com>,
-        <openbmc@lists.ozlabs.org>
-Date:   Fri, 23 Aug 2019 12:32:09 +0300
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mx1.redhat.com (Postfix) with ESMTPS id 6552711A12
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 09:32:40 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id m7so4541659wrw.22
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:32:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4hIvhiErI/PBhr2czomH4NGnSK+5wiyAYFcemIBDRQY=;
+        b=WSenrebHBZD6iZwpkoMGDCX1klrqPx4o3UBMjvwrR8VdVgTiXxC36Eg2XZhLIGTS5X
+         qB+3/B4B3DQEtPlRJTEXM+26yoGbLfcrlaA3j8Azf1M3lbzefof5LxsxkxwfB6jEKFJU
+         W2kPAvltmJ/8pFeUXGHVj6O5fJwqA68Sead9uHfV5EP4wvpIQPcJ0ZNFUoRroud0OX0P
+         2kWRw+nv+eVUlibeYFLaXW5RrY8KZRQ4l8U0Eu1uB4XCNpgIHpyntvFySiQUQqEfxTxT
+         yfxqIOmpHgdKgWBLaMrKj7Uuci9N04p3+lv1H0cUwLf3q+1MREBObWzemU2m1/7pk3Eo
+         /aHg==
+X-Gm-Message-State: APjAAAVVDd+EKl64mMwTINLUP5dTFDIWqzvpdp7FmvwUjRYhXUOI1Hea
+        nMBv9uf8Il/DdFsjiSPkUpEUJZwuWOGjDkJwxio2ZY34neWyxmx/b7kTWlOKkocu7A2FXgF7TD8
+        5zgOcThm1NVNmt2lLs46MkmQD
+X-Received: by 2002:a5d:4b05:: with SMTP id v5mr3974285wrq.208.1566552758933;
+        Fri, 23 Aug 2019 02:32:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzI0cggr5dizpontsicJgMUuB+7sraGqAJ4myMllcNT75XrYBz/buafUoaEFCRsYeGnIuTzBw==
+X-Received: by 2002:a5d:4b05:: with SMTP id v5mr3974248wrq.208.1566552758650;
+        Fri, 23 Aug 2019 02:32:38 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id v124sm4374779wmf.23.2019.08.23.02.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 02:32:38 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [RESEND PATCH 03/13] KVM: x86: Refactor kvm_vcpu_do_singlestep() to remove out param
+In-Reply-To: <20190823010709.24879-4-sean.j.christopherson@intel.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com> <20190823010709.24879-4-sean.j.christopherson@intel.com>
+Date:   Fri, 23 Aug 2019 11:32:37 +0200
+Message-ID: <877e74p6q2.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds wdt2 section with 'alt-boot' option into dts for vesnin.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+> Return the single-step emulation result directly instead of via an out
+> param.  Presumably at some point in the past kvm_vcpu_do_singlestep()
+> could be called with *r==EMULATE_USER_EXIT, but that is no longer the
+> case, i.e. all callers are happy to overwrite their own return variable.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6de5bc4fa5e..fe847f8eb947 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6377,7 +6377,7 @@ static int kvm_vcpu_check_hw_bp(unsigned long addr, u32 type, u32 dr7,
+>  	return dr6;
+>  }
+>  
+> -static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+> +static int kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_run *kvm_run = vcpu->run;
+>  
+> @@ -6386,10 +6386,10 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+>  		kvm_run->debug.arch.pc = vcpu->arch.singlestep_rip;
+>  		kvm_run->debug.arch.exception = DB_VECTOR;
+>  		kvm_run->exit_reason = KVM_EXIT_DEBUG;
+> -		*r = EMULATE_USER_EXIT;
+> -	} else {
+> -		kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
+> +		return EMULATE_USER_EXIT;
+>  	}
+> +	kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
+> +	return EMULATE_DONE;
+>  }
+>  
+>  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> @@ -6410,7 +6410,7 @@ int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  	 * that sets the TF flag".
+>  	 */
+>  	if (unlikely(rflags & X86_EFLAGS_TF))
+> -		kvm_vcpu_do_singlestep(vcpu, &r);
+> +		r = kvm_vcpu_do_singlestep(vcpu);
+>  	return r == EMULATE_DONE;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_skip_emulated_instruction);
+> @@ -6613,7 +6613,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+>  		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+>  		kvm_rip_write(vcpu, ctxt->eip);
+>  		if (r == EMULATE_DONE && ctxt->tf)
+> -			kvm_vcpu_do_singlestep(vcpu, &r);
+> +			r = kvm_vcpu_do_singlestep(vcpu);
+>  		if (!ctxt->have_exception ||
+>  		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
+>  			__kvm_set_rflags(vcpu, ctxt->eflags);
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-index 0b9e29c3212e..2ee26c86a32e 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -222,3 +222,7 @@
- &vuart {
- 	status = "okay";
- };
-+
-+&wdt2 {
-+	aspeed,alt-boot;
-+};
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.20.1
-
-
+Vitaly
