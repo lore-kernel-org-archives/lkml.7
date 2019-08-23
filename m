@@ -2,431 +2,273 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7434FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BF3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C7121897
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06E62339D
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 11:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="luGn/MUv"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="CvVwFPC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732052AbfHWLSj (ORCPT
+        id S1732234AbfHWLUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 07:18:39 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:35388 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730512AbfHWLSj (ORCPT
+        Fri, 23 Aug 2019 07:20:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50633 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731626AbfHWLUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 07:18:39 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190823111836euoutp0151ec82a6ae05f93467ec1008c80bcfe3~9iTd9VuuH1600416004euoutp01_
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 11:18:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190823111836euoutp0151ec82a6ae05f93467ec1008c80bcfe3~9iTd9VuuH1600416004euoutp01_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566559116;
-        bh=MksplQx4DCRVuN3jc2njcBm+CvP/mn5+Cn1+XcN4OOs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=luGn/MUvQgjJJCD6Cm+GDxDiUxYN1cG9pKPJyxMVZBYwHpwogDDIOoEZOmKALhAZr
-         0+9sZ04gdtxpcxjAhoFgxi1Ee7P9v7MADoPNfeFX0O6IHGzZBNNSnexBmJQ2KepE+7
-         Na3xuHKz5dv8mjR9W1ALhO+eBM0/r00c4OFCxR7w=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190823111836eucas1p184fe094a5546f7cb293511bc4e2e6869~9iTdR9dD81169511695eucas1p14;
-        Fri, 23 Aug 2019 11:18:36 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6D.D5.04374.B8BCF5D5; Fri, 23
-        Aug 2019 12:18:35 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190823111835eucas1p14df9d8867cdc9e8776e4653a061cb5b1~9iTcZa8GY1563615636eucas1p1n;
-        Fri, 23 Aug 2019 11:18:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190823111834eusmtrp2f00fdb2acc7e587fde4c5d9706c434c8~9iTcJz0bS2045020450eusmtrp2B;
-        Fri, 23 Aug 2019 11:18:34 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-de-5d5fcb8bfd11
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id B6.B3.04117.A8BCF5D5; Fri, 23
-        Aug 2019 12:18:34 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190823111834eusmtip27adb0f22be8374bfbc1e27eae5c12b6b~9iTbsa_0S2635026350eusmtip2M;
-        Fri, 23 Aug 2019 11:18:34 +0000 (GMT)
-Subject: Re: [PATCH v7] ata/pata_buddha: Probe via modalias instead of
- initcall
-To:     Max Staudt <max@enpas.org>
-Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
-        linux-m68k@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glaubitz@physik.fu-berlin.de, schmitzmic@gmail.com,
-        geert@linux-m68k.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <a7f20fbb-bb28-d65f-76d1-fd0543902cd8@samsung.com>
-Date:   Fri, 23 Aug 2019 13:18:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 23 Aug 2019 07:20:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so8567635wml.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 04:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gt/naIOsY8gmLD5TiOQ5MS/GAPTKfYYmo7pVy0WBBDI=;
+        b=CvVwFPC8yH2+//gj5H6htQvO8jMX80EB4Ob0udMTsg5dVmSnwqvlfPBOn19MQmvh1t
+         0+gTiPSXjcG6Kq7/ct99UONMkj7NH3HDnDhV70oGwB3YObB2Wkn89ChzmeH2GYV/LGM5
+         P6EvoeR/oU5Fc5/a5pulhzXDcOzCWzaGpJOKbZok51UiTho9IqFUuKEN11eoQTBDg0Uw
+         V46Y+nraqGqQUaLGhg/Xc2ybEyjhptriU80XPJBFxgMKlpgEU4t7UM7sojfleE3auC8i
+         y0A+2B7Wb2JAsFR57V2kYf09vQZL8o9htoNz6Xofi0YAQU0tVIAM3JtYzLcl0/ja2PMp
+         OL8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gt/naIOsY8gmLD5TiOQ5MS/GAPTKfYYmo7pVy0WBBDI=;
+        b=iCUVVnKC9DwTKeeG+KUmBGLJKQysyLqc8YpLaNavojLwBDEfc0qGxQWgeF0CucQhtM
+         t9Qr0ez1Cjo8/yECIHiFi+MDZvnx9BhfUQTtkzm5GRNkbp8MikyRLStcSixpiVLLt/6c
+         E0zt0EZBDsbraa/1oztGBEhy5x2Hnb4FtPskKOka2war4wMKUhkvrAll8ab85di8izrK
+         t1Mfa/xldgR8oVJ37vru2dcMfQ9SjvynUSbXqYTmsdkwhhWmCy/aS7xGWCqAMorTEtcb
+         CcqIP+9H81roAyK/JPOF/ysijdk1tB2d/XFGoz6n3bj4ASlm0SMgOXS3j75Ppb47ATsJ
+         6vBA==
+X-Gm-Message-State: APjAAAVGn9NsW50UQZEBNq4xFPaw2yvHbOWKt2l0qGcucDNBJad/kMnT
+        6YAtfdOzZxse1pRq3umWb6uQGQwDnyfo0S0jRw8nfg==
+X-Google-Smtp-Source: APXvYqxutjgh00+PyGeA3aINGZRH4UJOayx2wxrA1dv+Wwr2q4vnqnklJFh+sUqeMXjcAb5uef7DhVDhZU3kGeuwGDQ=
+X-Received: by 2002:a7b:c933:: with SMTP id h19mr4389590wml.177.1566559212602;
+ Fri, 23 Aug 2019 04:20:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190823104911.6840-1-max@enpas.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjtvXe7u0qT1/n1oKIwSdBI0yQulaLQj0FEBv6QlenSi0puyq6z
-        tH5M0ZpKH9Mf5jTUH7WyqGG6TTMxPzbFEkUimYgfmYk2/CbK0pxXyX/nOc857zkPvDQpaRX6
-        09mqfFatUuRIKXeB2fZr+ETlUGrKSUtfJPNy8iHFzDveE0zdcghjs84SzFhHPcW8W55CzEzJ
-        CsE8KasRxdOy3s23lKzdMCmSjX3SyHp6dUj2YXgYydZbghIpufu5DDYnu4BVR8aluWdNtJVQ
-        eaZLt5p060It6j5XgdxowDFQNVpMVCB3WoKfI6j+UYf4YQPBwHKpkB/WEXw1G4gDS+UX3b7K
-        iGCrXE/xgxPBt5bveyovfBl+OiYELuyNg2C17POeg8RmBP1DiyLXgsJnQH+vGbmwGMfBeJt5
-        10zTAnwMirtjXbQPToYpm0nISzxhsHZu7003HA2d2ibShUnsB465BoLHwWBx1pOuLMBdIhhp
-        3hbwtc/DRn854rEXLNpbRTwOhJ32BoI3vEbwV7ew77YgMFZvU7zqLPTaR4WudiQOgzcdkTyd
-        AHWPS/dowB4w7vTkS3hAlbmG5Gkx6O5KeHUomJ6ZqIPYivYX5CMkNRw6zXDoHMOhcwz/cxuR
-        oBn5sRpOmclyp1TszQhOoeQ0qsyI9FxlC9r9S0Pb9k0r6vpzvQdhGkmPigcqrqVIhIoCrlDZ
-        g4Ampd7iAv0uJc5QFBax6txUtSaH5XpQAC2Q+olvH5m+IsGZinz2BsvmseqDLUG7+WtR1Eg4
-        WaQ/bu/0XQtZnjfF3nlQe3rBOi0aTE4y+pifxmmDI3yqGatFl6BdWcp55bYWrYlyeiXG1i5d
-        zAtrVG2EznDiHVO7b2sNZ/PwnG3bUq+myz96BA6l/V6vFhX2hVyYc2A9Wx9fFHNVbiDuG5Xd
-        +gVHTKwpoCuJXJmVSwVcliIqnFRzin8lRjrbRwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsVy+t/xe7pdp+NjDeZf0LdYfbefzeLZrb1M
-        FrPfK1sc2/GIyeLyrjlsFrvf32e0eNj0gclibut0dgcOj8NfN7N57Jx1l93j8tlSj0OHOxg9
-        Dp47x+jxeZNcAFuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5m
-        WWqRvl2CXsbtrU1sBRv8KxZ2fGZtYDxg08XIySEhYCLRfb2DsYuRi0NIYCmjxKEFP5i7GDmA
-        EjISx9eXQdQIS/y51sUGUfOaUaJ98no2kISwQKDE91u3WUBsEQE5iY+tV8EGMQtsY5T4em06
-        1NRWRomTXVcYQarYBKwkJravArN5BewkbmzdxgSyjUVAVaLxgC1IWFQgQuLM+xUsECWCEidn
-        PgGzOQWMJPY0LGQGsZkF1CX+zLsEZYtL3HoynwnClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYF
-        jCyrGEVSS4tz03OLjfSKE3OLS/PS9ZLzczcxAqNw27GfW3Ywdr0LPsQowMGoxMN7oisuVog1
-        say4MvcQowQHs5IIb9lEoBBvSmJlVWpRfnxRaU5q8SFGU6DfJjJLiSbnAxNEXkm8oamhuYWl
-        obmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxrggizl6AuzdG8KeJO1/aX4+Jpz3
-        353jQb/Od3Xe/z/zc5XjyqxUkeNLy1SmOduHato/mR10+/+i6snT/0y0WdRpaqBVzRIuFf9B
-        iUP/61bZgP0zzLp7Nft2dS3LuxbAKLRpg9k+5kn3zooXPFrxxlXqgMG8lXc6qk0T3F4pP1gh
-        oOAmzWiZpMRSnJFoqMVcVJwIAOAdw8LYAgAA
-X-CMS-MailID: 20190823111835eucas1p14df9d8867cdc9e8776e4653a061cb5b1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190823104917epcas2p235985fff8eaa4b0822f1c056068ff2b7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190823104917epcas2p235985fff8eaa4b0822f1c056068ff2b7
-References: <CGME20190823104917epcas2p235985fff8eaa4b0822f1c056068ff2b7@epcas2p2.samsung.com>
-        <20190823104911.6840-1-max@enpas.org>
+References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-9-anup.patel@wdc.com>
+ <d306ffaf-c9ac-4a9f-4382-95001487364d@amazon.com> <CAAhSdy0t7P1a_eYmLo9sSYTCbumCqqWcvuv4yJXGCBQOXvw5TQ@mail.gmail.com>
+ <2871ee6a-ae7c-6937-e8ef-38a8c318638a@amazon.com>
+In-Reply-To: <2871ee6a-ae7c-6937-e8ef-38a8c318638a@amazon.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 23 Aug 2019 16:50:01 +0530
+Message-ID: <CAAhSdy05EWBP5Y5oTpW_J6AT=fe=E1UNGXVncsBRWTrr_sgjWw@mail.gmail.com>
+Subject: Re: [PATCH v5 08/20] RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG
+ ioctls
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 22, 2019 at 7:42 PM Alexander Graf <graf@amazon.com> wrote:
+>
+>
+>
+> On 22.08.19 16:00, Anup Patel wrote:
+> > On Thu, Aug 22, 2019 at 5:31 PM Alexander Graf <graf@amazon.com> wrote:
+> >>
+> >> On 22.08.19 10:44, Anup Patel wrote:
+> >>> For KVM RISC-V, we use KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls to access
+> >>> VCPU config and registers from user-space.
+> >>>
+> >>> We have three types of VCPU registers:
+> >>> 1. CONFIG - these are VCPU config and capabilities
+> >>> 2. CORE   - these are VCPU general purpose registers
+> >>> 3. CSR    - these are VCPU control and status registers
+> >>>
+> >>> The CONFIG registers available to user-space are ISA and TIMEBASE. Out
+> >>> of these, TIMEBASE is a read-only register which inform user-space about
+> >>> VCPU timer base frequency. The ISA register is a read and write register
+> >>> where user-space can only write the desired VCPU ISA capabilities before
+> >>> running the VCPU.
+> >>>
+> >>> The CORE registers available to user-space are PC, RA, SP, GP, TP, A0-A7,
+> >>> T0-T6, S0-S11 and MODE. Most of these are RISC-V general registers except
+> >>> PC and MODE. The PC register represents program counter whereas the MODE
+> >>> register represent VCPU privilege mode (i.e. S/U-mode).
+> >>>
+> >>> The CSRs available to user-space are SSTATUS, SIE, STVEC, SSCRATCH, SEPC,
+> >>> SCAUSE, STVAL, SIP, and SATP. All of these are read/write registers.
+> >>>
+> >>> In future, more VCPU register types will be added (such as FP) for the
+> >>> KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls.
+> >>>
+> >>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> >>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> >>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> >>> ---
+> >>>    arch/riscv/include/uapi/asm/kvm.h |  40 ++++-
+> >>>    arch/riscv/kvm/vcpu.c             | 235 +++++++++++++++++++++++++++++-
+> >>>    2 files changed, 272 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+> >>> index 6dbc056d58ba..024f220eb17e 100644
+> >>> --- a/arch/riscv/include/uapi/asm/kvm.h
+> >>> +++ b/arch/riscv/include/uapi/asm/kvm.h
+> >>> @@ -23,8 +23,15 @@
+> >>>
+> >>>    /* for KVM_GET_REGS and KVM_SET_REGS */
+> >>>    struct kvm_regs {
+> >>> +     /* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
+> >>> +     struct user_regs_struct regs;
+> >>> +     unsigned long mode;
+> >>
+> >> Is there any particular reason you're reusing kvm_regs and don't invent
+> >> your own struct? kvm_regs is explicitly meant for the get_regs and
+> >> set_regs ioctls.
+> >
+> > We are implementing only ONE_REG interface so most of these
+> > structs are unused hence we tried to reuse these struct instead
+> > of introducing new structs. (Similar to KVM ARM64)
+> >
+> >>
+> >>>    };
+> >>>
+> >>> +/* Possible privilege modes for kvm_regs */
+> >>> +#define KVM_RISCV_MODE_S     1
+> >>> +#define KVM_RISCV_MODE_U     0
+> >>> +
+> >>>    /* for KVM_GET_FPU and KVM_SET_FPU */
+> >>>    struct kvm_fpu {
+> >>>    };
+> >>> @@ -41,10 +48,41 @@ struct kvm_guest_debug_arch {
+> >>>    struct kvm_sync_regs {
+> >>>    };
+> >>>
+> >>> -/* dummy definition */
+> >>> +/* for KVM_GET_SREGS and KVM_SET_SREGS */
+> >>>    struct kvm_sregs {
+> >>> +     unsigned long sstatus;
+> >>> +     unsigned long sie;
+> >>> +     unsigned long stvec;
+> >>> +     unsigned long sscratch;
+> >>> +     unsigned long sepc;
+> >>> +     unsigned long scause;
+> >>> +     unsigned long stval;
+> >>> +     unsigned long sip;
+> >>> +     unsigned long satp;
+> >>
+> >> Same comment here.
+> >
+> > Same as above, we are trying to use unused struct.
+> >
+> >>
+> >>>    };
+> >>>
+> >>> +#define KVM_REG_SIZE(id)             \
+> >>> +     (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
+> >>> +
+> >>> +/* If you need to interpret the index values, here is the key: */
+> >>> +#define KVM_REG_RISCV_TYPE_MASK              0x00000000FF000000
+> >>> +#define KVM_REG_RISCV_TYPE_SHIFT     24
+> >>> +
+> >>> +/* Config registers are mapped as type 1 */
+> >>> +#define KVM_REG_RISCV_CONFIG         (0x01 << KVM_REG_RISCV_TYPE_SHIFT)
+> >>> +#define KVM_REG_RISCV_CONFIG_ISA     0x0
+> >>> +#define KVM_REG_RISCV_CONFIG_TIMEBASE        0x1
+> >>> +
+> >>> +/* Core registers are mapped as type 2 */
+> >>> +#define KVM_REG_RISCV_CORE           (0x02 << KVM_REG_RISCV_TYPE_SHIFT)
+> >>> +#define KVM_REG_RISCV_CORE_REG(name) \
+> >>> +             (offsetof(struct kvm_regs, name) / sizeof(unsigned long))
+> >>
+> >> I see, you're trying to implicitly use the struct offsets as index.
+> >>
+> >> I'm not a really big fan of it, but I can't pinpoint exactly why just
+> >> yet. It just seems too magical (read: potentially breaking down the
+> >> road) for me.
+> >>
+> >>> +
+> >>> +/* Control and status registers are mapped as type 3 */
+> >>> +#define KVM_REG_RISCV_CSR            (0x03 << KVM_REG_RISCV_TYPE_SHIFT)
+> >>> +#define KVM_REG_RISCV_CSR_REG(name)  \
+> >>> +             (offsetof(struct kvm_sregs, name) / sizeof(unsigned long))
+> >>> +
+> >>>    #endif
+> >>>
+> >>>    #endif /* __LINUX_KVM_RISCV_H */
+> >>> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> >>> index 7f59e85c6af8..9396a83c0611 100644
+> >>> --- a/arch/riscv/kvm/vcpu.c
+> >>> +++ b/arch/riscv/kvm/vcpu.c
+> >>> @@ -164,6 +164,215 @@ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+> >>>        return VM_FAULT_SIGBUS;
+> >>>    }
+> >>>
+> >>> +static int kvm_riscv_vcpu_get_reg_config(struct kvm_vcpu *vcpu,
+> >>> +                                      const struct kvm_one_reg *reg)
+> >>> +{
+> >>> +     unsigned long __user *uaddr =
+> >>> +                     (unsigned long __user *)(unsigned long)reg->addr;
+> >>> +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
+> >>> +                                         KVM_REG_SIZE_MASK |
+> >>> +                                         KVM_REG_RISCV_CONFIG);
+> >>> +     unsigned long reg_val;
+> >>> +
+> >>> +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
+> >>> +             return -EINVAL;
+> >>> +
+> >>> +     switch (reg_num) {
+> >>> +     case KVM_REG_RISCV_CONFIG_ISA:
+> >>> +             reg_val = vcpu->arch.isa;
+> >>> +             break;
+> >>> +     case KVM_REG_RISCV_CONFIG_TIMEBASE:
+> >>> +             reg_val = riscv_timebase;
+> >>
+> >> What does this reflect? The current guest time hopefully not? An offset?
+> >> Related to what?
+> >
+> > riscv_timebase is the frequency in HZ of the system timer.
+> >
+> > The name "timebase" is not appropriate but we have been
+> > carrying it since quite some time now.
+>
+> What do you mean by "some time"? So far I only see a kernel internal
+> variable named after it. That's dramatically different from something
+> exposed via uapi.
+>
+> Just name it tbfreq.
 
-On 8/23/19 12:49 PM, Max Staudt wrote:
-> Up until now, the pata_buddha driver would only check for cards on
-> initcall time. Now, the kernel will call its probe function as soon
-> as a compatible card is detected.
-> 
-> v7: Removed suppress_bind_attrs that slipped in
-> 
-> v6: Only do the drvdata workaround for X-Surf (remove breaks otherwise)
->     Style
-> 
-> v5: Remove module_exit(): There's no good way to handle the X-Surf hack.
->     Also include a workaround to save X-Surf's drvdata in case zorro8390
->     is active.
-> 
-> v4: Clean up pata_buddha_probe() by using ent->driver_data.
->     Support X-Surf via late_initcall()
-> 
-> v3: Clean up devm_*, implement device removal.
-> 
-> v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
->     git diff --ignore-space-change
-> 
-> Signed-off-by: Max Staudt <max@enpas.org>
+Sure, I will use TBFREQ name.
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>
+> So if this is the frequency, where is the offset? You will need it on
+> save/restore. If you're saying that's out of scope for now, that's fine
+> with me too :).
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+tbfreq is read-only and fixed.
 
-> ---
->  drivers/ata/pata_buddha.c | 228 +++++++++++++++++++++++++++-------------------
->  1 file changed, 135 insertions(+), 93 deletions(-)
-> 
-> diff --git a/drivers/ata/pata_buddha.c b/drivers/ata/pata_buddha.c
-> index 11a8044ff..27d4c417f 100644
-> --- a/drivers/ata/pata_buddha.c
-> +++ b/drivers/ata/pata_buddha.c
-> @@ -18,7 +18,9 @@
->  #include <linux/kernel.h>
->  #include <linux/libata.h>
->  #include <linux/mm.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> +#include <linux/types.h>
->  #include <linux/zorro.h>
->  #include <scsi/scsi_cmnd.h>
->  #include <scsi/scsi_host.h>
-> @@ -29,7 +31,7 @@
->  #include <asm/setup.h>
->  
->  #define DRV_NAME "pata_buddha"
-> -#define DRV_VERSION "0.1.0"
-> +#define DRV_VERSION "0.1.1"
->  
->  #define BUDDHA_BASE1	0x800
->  #define BUDDHA_BASE2	0xa00
-> @@ -47,11 +49,11 @@ enum {
->  	BOARD_XSURF
->  };
->  
-> -static unsigned int buddha_bases[3] __initdata = {
-> +static unsigned int buddha_bases[3] = {
->  	BUDDHA_BASE1, BUDDHA_BASE2, BUDDHA_BASE3
->  };
->  
-> -static unsigned int xsurf_bases[2] __initdata = {
-> +static unsigned int xsurf_bases[2] = {
->  	XSURF_BASE1, XSURF_BASE2
->  };
->  
-> @@ -145,111 +147,151 @@ static struct ata_port_operations pata_xsurf_ops = {
->  	.set_mode	= pata_buddha_set_mode,
->  };
->  
-> -static int __init pata_buddha_init_one(void)
-> +static int pata_buddha_probe(struct zorro_dev *z,
-> +			     const struct zorro_device_id *ent)
->  {
-> -	struct zorro_dev *z = NULL;
-> +	static const char * const board_name[] = {
-> +		"Buddha", "Catweasel", "X-Surf"
-> +	};
-> +	struct ata_host *host;
-> +	void __iomem *buddha_board;
-> +	unsigned long board;
-> +	unsigned int type = ent->driver_data;
-> +	unsigned int nr_ports = (type == BOARD_CATWEASEL) ? 3 : 2;
-> +	void *old_drvdata;
-> +	int i;
-> +
-> +	dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
-> +
-> +	board = z->resource.start;
-> +
-> +	if (type != BOARD_XSURF) {
-> +		if (!devm_request_mem_region(&z->dev,
-> +					     board + BUDDHA_BASE1,
-> +					     0x800, DRV_NAME))
-> +			return -ENXIO;
-> +	} else {
-> +		if (!devm_request_mem_region(&z->dev,
-> +					     board + XSURF_BASE1,
-> +					     0x1000, DRV_NAME))
-> +			return -ENXIO;
-> +		if (!devm_request_mem_region(&z->dev,
-> +					     board + XSURF_BASE2,
-> +					     0x1000, DRV_NAME)) {
-> +		}
-> +	}
-> +
-> +	/* Workaround for X-Surf: Save drvdata in case zorro8390 has set it */
-> +	if (type == BOARD_XSURF)
-> +		old_drvdata = dev_get_drvdata(&z->dev);
-> +
-> +	/* allocate host */
-> +	host = ata_host_alloc(&z->dev, nr_ports);
-> +	if (type == BOARD_XSURF)
-> +		dev_set_drvdata(&z->dev, old_drvdata);
-> +	if (!host)
-> +		return -ENXIO;
-> +
-> +	buddha_board = ZTWO_VADDR(board);
-> +
-> +	/* enable the board IRQ on Buddha/Catweasel */
-> +	if (type != BOARD_XSURF)
-> +		z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
->  
-> -	while ((z = zorro_find_device(ZORRO_WILDCARD, z))) {
-> -		static const char *board_name[]
-> -			= { "Buddha", "Catweasel", "X-Surf" };
-> -		struct ata_host *host;
-> -		void __iomem *buddha_board;
-> -		unsigned long board;
-> -		unsigned int type, nr_ports = 2;
-> -		int i;
-> -
-> -		if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA) {
-> -			type = BOARD_BUDDHA;
-> -		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL) {
-> -			type = BOARD_CATWEASEL;
-> -			nr_ports++;
-> -		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF) {
-> -			type = BOARD_XSURF;
-> -		} else
-> -			continue;
-> -
-> -		dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
-> -
-> -		board = z->resource.start;
-> +	for (i = 0; i < nr_ports; i++) {
-> +		struct ata_port *ap = host->ports[i];
-> +		void __iomem *base, *irqport;
-> +		unsigned long ctl = 0;
->  
->  		if (type != BOARD_XSURF) {
-> -			if (!devm_request_mem_region(&z->dev,
-> -						     board + BUDDHA_BASE1,
-> -						     0x800, DRV_NAME))
-> -				continue;
-> +			ap->ops = &pata_buddha_ops;
-> +			base = buddha_board + buddha_bases[i];
-> +			ctl = BUDDHA_CONTROL;
-> +			irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
->  		} else {
-> -			if (!devm_request_mem_region(&z->dev,
-> -						     board + XSURF_BASE1,
-> -						     0x1000, DRV_NAME))
-> -				continue;
-> -			if (!devm_request_mem_region(&z->dev,
-> -						     board + XSURF_BASE2,
-> -						     0x1000, DRV_NAME))
-> -				continue;
-> +			ap->ops = &pata_xsurf_ops;
-> +			base = buddha_board + xsurf_bases[i];
-> +			/* X-Surf has no CS1* (Control/AltStat) */
-> +			irqport = buddha_board + XSURF_IRQ;
->  		}
->  
-> -		/* allocate host */
-> -		host = ata_host_alloc(&z->dev, nr_ports);
-> -		if (!host)
-> -			continue;
-> -
-> -		buddha_board = ZTWO_VADDR(board);
-> -
-> -		/* enable the board IRQ on Buddha/Catweasel */
-> -		if (type != BOARD_XSURF)
-> -			z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
-> -
-> -		for (i = 0; i < nr_ports; i++) {
-> -			struct ata_port *ap = host->ports[i];
-> -			void __iomem *base, *irqport;
-> -			unsigned long ctl = 0;
-> -
-> -			if (type != BOARD_XSURF) {
-> -				ap->ops = &pata_buddha_ops;
-> -				base = buddha_board + buddha_bases[i];
-> -				ctl = BUDDHA_CONTROL;
-> -				irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
-> -			} else {
-> -				ap->ops = &pata_xsurf_ops;
-> -				base = buddha_board + xsurf_bases[i];
-> -				/* X-Surf has no CS1* (Control/AltStat) */
-> -				irqport = buddha_board + XSURF_IRQ;
-> -			}
-> -
-> -			ap->pio_mask = ATA_PIO4;
-> -			ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
-> -
-> -			ap->ioaddr.data_addr		= base;
-> -			ap->ioaddr.error_addr		= base + 2 + 1 * 4;
-> -			ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
-> -			ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
-> -			ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
-> -			ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
-> -			ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
-> -			ap->ioaddr.device_addr		= base + 2 + 6 * 4;
-> -			ap->ioaddr.status_addr		= base + 2 + 7 * 4;
-> -			ap->ioaddr.command_addr		= base + 2 + 7 * 4;
-> -
-> -			if (ctl) {
-> -				ap->ioaddr.altstatus_addr = base + ctl;
-> -				ap->ioaddr.ctl_addr	  = base + ctl;
-> -			}
-> -
-> -			ap->private_data = (void *)irqport;
-> -
-> -			ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
-> -				      ctl ? board + buddha_bases[i] + ctl : 0);
-> +		ap->pio_mask = ATA_PIO4;
-> +		ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
-> +
-> +		ap->ioaddr.data_addr		= base;
-> +		ap->ioaddr.error_addr		= base + 2 + 1 * 4;
-> +		ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
-> +		ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
-> +		ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
-> +		ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
-> +		ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
-> +		ap->ioaddr.device_addr		= base + 2 + 6 * 4;
-> +		ap->ioaddr.status_addr		= base + 2 + 7 * 4;
-> +		ap->ioaddr.command_addr		= base + 2 + 7 * 4;
-> +
-> +		if (ctl) {
-> +			ap->ioaddr.altstatus_addr = base + ctl;
-> +			ap->ioaddr.ctl_addr	  = base + ctl;
->  		}
->  
-> -		ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
-> -				  IRQF_SHARED, &pata_buddha_sht);
-> +		ap->private_data = (void *)irqport;
->  
-> +		ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
-> +			      ctl ? board + buddha_bases[i] + ctl : 0);
->  	}
->  
-> +	ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
-> +			  IRQF_SHARED, &pata_buddha_sht);
-> +
->  	return 0;
->  }
->  
-> -module_init(pata_buddha_init_one);
-> +static void pata_buddha_remove(struct zorro_dev *z)
-> +{
-> +	struct ata_host *host = dev_get_drvdata(&z->dev);
-> +
-> +	ata_host_detach(host);
-> +}
-> +
-> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
-> +	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, BOARD_BUDDHA},
-> +	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, BOARD_CATWEASEL},
-> +	{ 0 }
-> +};
-> +MODULE_DEVICE_TABLE(zorro, pata_buddha_zorro_tbl);
-> +
-> +static struct zorro_driver pata_buddha_driver = {
-> +	.name           = "pata_buddha",
-> +	.id_table       = pata_buddha_zorro_tbl,
-> +	.probe          = pata_buddha_probe,
-> +	.remove         = pata_buddha_remove,
-> +};
-> +
-> +/*
-> + * We cannot have a modalias for X-Surf boards, as it competes with the
-> + * zorro8390 network driver. As a stopgap measure until we have proper
-> + * MFD support for this board, we manually attach to it late after Zorro
-> + * has enumerated its boards.
-> + */
-> +static int __init pata_buddha_late_init(void)
-> +{
-> +	struct zorro_dev *z = NULL;
-> +
-> +	/* Auto-bind to regular boards */
-> +	zorro_register_driver(&pata_buddha_driver);
-> +
-> +	/* Manually bind to all X-Surf boards */
-> +	while ((z = zorro_find_device(ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, z))) {
-> +		static struct zorro_device_id xsurf_ent = {
-> +			ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, BOARD_XSURF
-> +		};
-> +
-> +		pata_buddha_probe(z, &xsurf_ent);
-> +	}
-> +
-> +	return 0;
-> +}
-> +late_initcall(pata_buddha_late_init);
->  
->  MODULE_AUTHOR("Bartlomiej Zolnierkiewicz");
->  MODULE_DESCRIPTION("low-level driver for Buddha/Catweasel/X-Surf PATA");
+The Guest tbfreq has to be same as Host tbfreq. This means we
+can only migrate Guest from Host A to Host B only if:
+1. They have matching ISA capabilities
+2. They have matching tbfreq
+
+Regards,
+Anup
+
+>
+>
+> Alex
