@@ -2,206 +2,198 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68ABC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F864C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5B422CEC
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CCE22CE3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 08:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="kTPM/Rua"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WA1nHmf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390274AbfHWIVE (ORCPT
+        id S2390219AbfHWIWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 04:21:04 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:18527 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbfHWIVE (ORCPT
+        Fri, 23 Aug 2019 04:22:32 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:40586 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729113AbfHWIWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 04:21:04 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 3sK6S+3IRry9tcQ3lca/Btv0R9pG6mjta9NoHXcJ4ENIDm8dBnswZyM1TAOP0pnhZKDzKE/0Sq
- ErL65KngtwM5GEX1peG83JjT+KqprXZJd1YBpYtZX1lrI0xqA+9Zjmc6rIZkmcArp3mIW+WJPu
- vnLiWPDwMC7VzfZ5jB8SPTBTSnucBfZRWvjoyZ9flMS82mza5udzCsuxCbIZAJP0djfuIJZEYp
- mcm6nuW93irhDsdQufBqhhSjvpxmC8etiISr6qvoo+/eJQFBYL41EQyy6IA1lcekxWve4JMPVH
- Qb4=
-X-IronPort-AV: E=Sophos;i="5.64,420,1559545200"; 
-   d="scan'208";a="45345275"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Aug 2019 01:21:02 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 23 Aug 2019 01:21:00 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 23 Aug 2019 01:21:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XwjwDUCQuBNUhb85AHx0FsgOoy6vTlBHshHv3lZXG7MNe679iFz0blBm3C+gHiCia+ZUuaS2o4CH7Tmdy1MJjmZplRc9tPXBTmRa0seqUQhyeirI6UFBTGbozxnAKibARvngSTQmE/LtEo/CXRUNi7J0RPFlBps18beCHRckQh2D79ll/BdXdCvJopBbwmjM8dDDLlwp+MsttHnHtWVOR7ysRCnbZRGr9uHSKL0ghEjhe+Vd175P3qTIQSa/bK8SNC1Aclk674hJmgFgG9ehFr4Pa8h4a7rrQ53xxfbhTXkcvZaBJR4ag9Kas8jyOsjPaWXjp8wAAmoTFbaSiztBhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sbiF4SjcGyP6qiSTGDPiAC5OyRzL7mGbK3uwwaSTPpo=;
- b=YDn1I6U25pOiluw3JK1zVEJzek0tnte8lNaAH/MPriYOJi5akvDwFIYIo8KhZEBHnFBm/YLp81Eb4EMgIrUE1dGiTs/4SHGR3UH6d7WlAmfOBwzyvGOckdz3SID1QC9RAUJiNjFywORQRczJFYyRdyvT8kG6fLRNdxSA4OLGpngFU9nALTr6D09S9ArU5ZSAVI7yRoA6asvDBqQk/SsdJi+2iVXrizhsQolPkJm+ZnBagBc6pTT2uVE5VJ7mGe+OVe8M+88McEX7YHsNzOjE9fjmxSdaJ2Z6nKjxya2xaAa4taVRo9GEIXEkUxhlKjutKxDaIBTWGaKw9wGgSP2WMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Fri, 23 Aug 2019 04:22:32 -0400
+Received: by mail-yw1-f65.google.com with SMTP id z64so3515271ywe.7
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 01:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sbiF4SjcGyP6qiSTGDPiAC5OyRzL7mGbK3uwwaSTPpo=;
- b=kTPM/RuaIXbp4QYDjScEmOM7ndysF+6HM8qnAdL9/DIEHu/M6n0jxUTHkJt2WET7uaD3WBWf1AFa8hr387v5dK6YDghrmxC9lq8UrUoooqWHWaGenHPyUGNczPzAJNhnrt60X0aTi0Kd2yh0JPQvCFYpXLqNVYtgQ6qKvjahFEk=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1424.namprd11.prod.outlook.com (10.169.235.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Fri, 23 Aug 2019 08:20:58 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::410a:9d4b:b1df:2134]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::410a:9d4b:b1df:2134%12]) with mapi id 15.20.2178.020; Fri, 23 Aug
- 2019 08:20:58 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <alexandre.belloni@bootlin.com>
-CC:     <efremov@linux.com>, <linux-kernel@vger.kernel.org>,
-        <joe@perches.com>, <linux-arm-kernel@lists.infradead.org>,
-        <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH] MAINTAINERS: Update path to tcb_clksrc.c
-Thread-Topic: [PATCH] MAINTAINERS: Update path to tcb_clksrc.c
-Thread-Index: AQHVUZ3nRcIHKUMCtUu8KXcGbJ0E8w==
-Date:   Fri, 23 Aug 2019 08:20:58 +0000
-Message-ID: <8aba2175-f61c-e624-aee0-e724e1ac04da@microchip.com>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813061046.15712-1-efremov@linux.com>
- <efb86032-7547-dbc1-19ac-11dc9aff1521@microchip.com>
- <20190814090858.GF3600@piout.net>
-In-Reply-To: <20190814090858.GF3600@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0016.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::29) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0883214-bd44-4986-10fc-08d727a2d39c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1424;
-x-ms-traffictypediagnostic: MWHPR11MB1424:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1424B692517EFF47951F1C84E0A40@MWHPR11MB1424.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(366004)(376002)(346002)(396003)(199004)(189003)(14444005)(107886003)(6246003)(86362001)(2616005)(6506007)(229853002)(476003)(6116002)(3846002)(256004)(15650500001)(6436002)(6512007)(4326008)(6486002)(66066001)(36756003)(25786009)(76176011)(316002)(54906003)(81156014)(8676002)(186003)(26005)(53546011)(102836004)(386003)(81166006)(52116002)(31696002)(99286004)(31686004)(7736002)(53936002)(8936002)(2906002)(305945005)(486006)(11346002)(66446008)(64756008)(66556008)(66476007)(71190400001)(71200400001)(478600001)(446003)(6916009)(14454004)(5660300002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1424;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TE9a5a4Bc/30TAAa6wtw2qBeOh2poGd5Yb+yMmHZo7JfFnS8NF9dd/cFwh+Ba7KE8JzYClXzMPU7pagwwGkmO236RFhXDDU9CUNlSEvVFRpxQN5TX3NRAZh3my4eNwqsdyREPcY7iBL9uCLDr6U3Zwok/UPjbZdvZZtJiU0u2+L33pTWUZAdMpwHoHUBm6Zj6bHMe8fg1wmF3/rNihWShOz/Fbdfxeeq0fxHN8ghRA6sFdMpZ0BzJ3CtQfL72K+6Wee+wRJ2i+fxavxukBdsV0AQg/7QlTdkiP/TW47prIhVCAeRttED78+9lLwG9+WK6FSxc0psaXyrOPSoANIizmw9epTyPoi0ujEYrMLBexCXVbPBgmYjD1hXOAHiCyl+oz3r+zEI85Yri7AXX3eRznRalJNeXzCynVkSLQjcnzY=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <3EB0B5EF076A5B429810D493C81A6541@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gqMJISdK1sCvYoXtpRx34/j2w5oB126SSByYfrdAv0A=;
+        b=WA1nHmf0HPn+DPmdLUPjZRzKgLBGLIIYwMtxCzN3RoUYJpZE7Jv7ZuPEECCwMvslsz
+         zE+c63vSSHU/W0CzZy8AC4VLrulnjBfjgACbqqopi3m53qj+YK0oSf+NqAlnk37HSXYs
+         Uyi+4Rh4CPeHS8oJCy6LasuAHWsL15kxJIrZ++ysLepjEx/WJTXyudh2M3XnS4XNcPf4
+         6uFgLMupMLHUrVD4dibamjFoaT0vA556V/yrOaPK10AZoiSWRO1o2yJf2VWP1Nwma69A
+         xae4VAM5Q/qAnAt/RhiPiHn3Hq+wQPX159xy1a2v+wOSfieuFg8dTwrJaa2j8cnN/Ipx
+         6ZHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gqMJISdK1sCvYoXtpRx34/j2w5oB126SSByYfrdAv0A=;
+        b=MXRdDU3aR7t90bXDMcbldjGjIe07T2rIDM/h+fCo7vspCC2IkhfP15/oFOpojm+Fvf
+         /cwR5s0EDNIWBYjB7F92iefP8xYqmASm3yO7hNz9lSxMfcXcaAxwKBmlXRWkXCRM5v81
+         wK/SZ5uA8vi2nC7GhdNeyNXnE4vMZ0nQPEdZ1zQIBX0YVSNDixdk3AlIsJqHnXxgTXPe
+         RWo2mPR66wEvWGawdsz1zl8meNep8vwDLSXY3gNnEO4Q46ImKcorzghkuVb/3IfWuGEt
+         2LVtQS8b5CcxsJQFxF9r/wSPtA9pf4GLSMIOa/aETRKIciitSD6zMb56bJvUTMG6FuQ4
+         0ppQ==
+X-Gm-Message-State: APjAAAX+/v/ZScHtYwFjKybhq7vDaTNuFLQPRQosHcjLaxfJ/iavfchO
+        RoAu2b7xOAX3QmETV6Uocwpr+Q==
+X-Google-Smtp-Source: APXvYqzgV7MAThnepSDDwUZxhGw/YEQ6uHjAIBxukar3eVfsDVAzorisNiTPS4i6N/QuF2n3hn+rWg==
+X-Received: by 2002:a0d:ddcd:: with SMTP id g196mr2330144ywe.460.1566548551310;
+        Fri, 23 Aug 2019 01:22:31 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1320-244.members.linode.com. [45.79.221.244])
+        by smtp.gmail.com with ESMTPSA id x67sm437667ywg.70.2019.08.23.01.22.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 23 Aug 2019 01:22:27 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 16:22:21 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     yabinc@google.com, suzuki.poulose@arm.com, mike.leach@arm.com,
+        alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] coresight: tmc-etr: Add barrier packet when moving
+ offset forward
+Message-ID: <20190823082221.GB18092@leoy-ThinkPad-X240s>
+References: <20190822220915.8876-1-mathieu.poirier@linaro.org>
+ <20190822220915.8876-3-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0883214-bd44-4986-10fc-08d727a2d39c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 08:20:58.6249
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uGB9FyXZoSPDM+GS312xEaNNaucf+nwPc487LBFuDvTQH58tObWv56jFmHK5DMPVU02GuAeICY+R/kq4gQniRy9rm2wnP+ZFIjO8Aawv0p8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1424
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822220915.8876-3-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2019 at 11:08, Alexandre Belloni wrote:
-> External E-Mail
->=20
->=20
-> On 13/08/2019 08:11:23+0000, Nicolas Ferre wrote:
->> On 13/08/2019 at 08:10, Denis Efremov wrote:
->>> Update MAINTAINERS record to reflect the filename change
->>> from tcb_clksrc.c to timer-atmel-tcb.c
->>>
->>> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
->>
->> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
->> But, while you're at it, I would add another line: see below...
->>
->>> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Fixes: a7aae768166e ("clocksource/drivers/tcb_clksrc: Rename the file f=
-or consistency")
->>> Signed-off-by: Denis Efremov <efremov@linux.com>
->>> ---
->>>    MAINTAINERS | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index c9ad38a9414f..3ec8154e4630 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -10637,7 +10637,7 @@ M:	Nicolas Ferre <nicolas.ferre@microchip.com>
->>
->> +M:      Alexandre Belloni <alexandre.belloni@bootlin.com>
->>
->> But Alexandre have to agree, of course.
->>
->>>    L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribe=
-rs)
->>>    S:	Supported
->>>    F:	drivers/misc/atmel_tclib.c
->>> -F:	drivers/clocksource/tcb_clksrc.c
->>> +F:	drivers/clocksource/timer-atmel-tcb.c
->>>   =20
->>>    MICROCHIP USBA UDC DRIVER
->>>    M:	Cristian Birsan <cristian.birsan@microchip.com>
->>
->> We could also remove this entry and mix it with:
->> "ARM/Microchip (AT91) SoC support"
->>
->> But I prefer to keep it separated like this for various reasons.
->>
->=20
-> I would simply remove this entry because all the files are already
-> matching the SoC entry (it has N: atmel) and atmel_tclib will go away (I
-> have a series to do that).
+Hi Mathieu,
 
-All right: let's remove it.
+On Thu, Aug 22, 2019 at 04:09:15PM -0600, Mathieu Poirier wrote:
+> This patch adds barrier packets in the trace stream when the offset in the
+> data buffer needs to be moved forward.  Otherwise the decoder isn't aware
+> of the break in the stream and can't synchronise itself with the trace
+> data.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  .../hwtracing/coresight/coresight-tmc-etr.c   | 43 ++++++++++++++-----
+>  1 file changed, 33 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index 4f000a03152e..0e4cd6ec5f28 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -946,10 +946,6 @@ static void tmc_sync_etr_buf(struct tmc_drvdata *drvdata)
+>  	WARN_ON(!etr_buf->ops || !etr_buf->ops->sync);
+>  
+>  	etr_buf->ops->sync(etr_buf, rrp, rwp);
+> -
+> -	/* Insert barrier packets at the beginning, if there was an overflow */
+> -	if (etr_buf->full)
+> -		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
+>  }
+>  
+>  static void __tmc_etr_enable_hw(struct tmc_drvdata *drvdata)
+> @@ -1415,10 +1411,11 @@ static void tmc_free_etr_buffer(void *config)
+>   * buffer to the perf ring buffer.
+>   */
+>  static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
+> +				     unsigned long src_offset,
+>  				     unsigned long to_copy)
+>  {
+>  	long bytes;
+> -	long pg_idx, pg_offset, src_offset;
+> +	long pg_idx, pg_offset;
+>  	unsigned long head = etr_perf->head;
+>  	char **dst_pages, *src_buf;
+>  	struct etr_buf *etr_buf = etr_perf->etr_buf;
+> @@ -1427,7 +1424,6 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
+>  	pg_idx = head >> PAGE_SHIFT;
+>  	pg_offset = head & (PAGE_SIZE - 1);
+>  	dst_pages = (char **)etr_perf->pages;
+> -	src_offset = etr_buf->offset + etr_buf->len - to_copy;
+>  
+>  	while (to_copy > 0) {
+>  		/*
+> @@ -1475,7 +1471,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>  		      void *config)
+>  {
+>  	bool lost = false;
+> -	unsigned long flags, size = 0;
+> +	unsigned long flags, offset, size = 0;
+>  	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+>  	struct etr_perf_buffer *etr_perf = config;
+>  	struct etr_buf *etr_buf = etr_perf->etr_buf;
+> @@ -1503,11 +1499,39 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>  	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+>  
+>  	size = etr_buf->len;
+> +	offset = etr_buf->offset;
+> +	lost |= etr_buf->full;
+> +
+> +	/*
+> +	 * The ETR buffer may be bigger than the space available in the
+> +	 * perf ring buffer (handle->size).  If so advance the offset so that we
+> +	 * get the latest trace data.  In snapshot mode none of that matters
+> +	 * since we are expected to clobber stale data in favour of the latest
+> +	 * traces.
+> +	 */
+>  	if (!etr_perf->snapshot && size > handle->size) {
+> -		size = handle->size;
+> +		u32 mask = tmc_get_memwidth_mask(drvdata);
+> +
+> +		/*
+> +		 * Make sure the new size is aligned in accordance with the
+> +		 * requirement explained in function tmc_get_memwidth_mask().
+> +		 */
+> +		size = handle->size & mask;
+> +		offset = etr_buf->offset + etr_buf->len - size;
+> +
+> +		if (offset >= etr_buf->size)
+> +			offset -= etr_buf->size;
+>  		lost = true;
+>  	}
+> -	tmc_etr_sync_perf_buffer(etr_perf, size);
+> +
+> +	/*
+> +	 * Insert barrier packets at the beginning, if there was an overflow
+> +	 * or if the offset had to be brought forward.
+> +	 */
+> +	if (lost)
+> +		tmc_etr_buf_insert_barrier_packet(etr_buf, offset);
+> +
+> +	tmc_etr_sync_perf_buffer(etr_perf, offset, size);
 
-Thanks Denis for the heads-up!
+With this new code, the inserting barrier packet has been moved out
+from function tmc_sync_etr_buf(); but this patch doesn't handle the
+path when user uses SysFS node to access trace data and the trace
+buffer is also likely full, thus the SysFS mode might miss to insert
+barrier packets?
 
-Best regards,
-   Nicolas
+Thanks,
+Leo Yan
 
-> If you want to keep a separate entry, maybe we should then add the
-> system timer and pit drivers.
->=20
->=20
-
-
---=20
-Nicolas Ferre
+>  	/*
+>  	 * In snapshot mode we simply increment the head by the number of byte
+> @@ -1518,7 +1542,6 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>  	if (etr_perf->snapshot)
+>  		handle->head += size;
+>  
+> -	lost |= etr_buf->full;
+>  out:
+>  	/*
+>  	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
+> -- 
+> 2.17.1
+> 
