@@ -2,257 +2,239 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6A8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E677C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974D023400
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497542166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 09:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FKh/vFDv"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E+zizfj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393378AbfHWJEL (ORCPT
+        id S2393512AbfHWJE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 05:04:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60292 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfHWJEK (ORCPT
+        Fri, 23 Aug 2019 05:04:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46753 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393380AbfHWJEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:04:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9cQsUvRbVJtataqOfN6iQbn2fBG30RoMEN/hL/9Pz5I=; b=FKh/vFDv6KEiQtT4OSQTgyRW0
-        kAIf1tRwE6OrnpSolQwPFFaRWHyoMj/AuW7RFZc64TbtAh6lfh8KLCQFDed5WLCTf6pQXHWUchgBU
-        nzhF+YI81jJ95qGJmNHXJfY726ODyiH3HPdAFCOF7mrAH2UzeDAnd1oz7Zqh1/yIaLMMPdGC9Q1BQ
-        O42yrSVBOl+oufgtlZCENUqUjlg2nAB8zaRAp1zNdIhPx+Zj7yswTrZJw6XfIDrrZzntDfLGygoqh
-        pb7UoJaWwwsIrt0R1w3+A2npwHd+SN5hep53p6Yte4B6paxhyQu7+bnsbVuicHG2sIydbWXu3LCCv
-        rTQR69SIA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i15U7-0000c5-0x; Fri, 23 Aug 2019 09:03:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F3DEA305F65;
-        Fri, 23 Aug 2019 11:03:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 62970202D580B; Fri, 23 Aug 2019 11:03:48 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 11:03:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "alan@linux.intel.com" <alan@linux.intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Tanwar, Rahul" <rahul.tanwar@intel.com>
-Subject: Re: [PATCH] x86/cpu: Add new Airmont variant to Intel family
-Message-ID: <20190823090348.GG2369@hirez.programming.kicks-ass.net>
-References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
- <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
- <20190820122233.GN2332@hirez.programming.kicks-ass.net>
- <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
- <20190820145735.GW2332@hirez.programming.kicks-ass.net>
- <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
- <20190822102955.GS2369@hirez.programming.kicks-ass.net>
- <20190822185347.GA8933@agluck-desk2.amr.corp.intel.com>
- <20190822203544.GA10229@agluck-desk2.amr.corp.intel.com>
+        Fri, 23 Aug 2019 05:04:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so7903146wru.13
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 02:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LvSehJyODRU+BRndfta8X08B5j8xEwZsfCZBCIijqkA=;
+        b=E+zizfj6/hflx1ZbXlN5dwuG/nBU4lF/fLOdwiBVlomxgRHm32lbrGRc1FKrVpEDEN
+         LvO8Y70tSWIjHy9d4t/3kTOws5W8riekeiM1p65Vd2zAgqFkgEnklJ4HsaZtLCdw3p8t
+         JVjJszDE+m/3wlvHFIKWqG07gjSFEtss6siXetJUxE93nhrBizLayCmrVvfoRDN+tTgw
+         E/FqG5Tq89P5qKL33BaC50Wkcrllu5X95lQiQet1zQOlHRiZEt0A2//Bk9NfGNAIx0/F
+         AwmCeFCHjYAzsB9kMLjBo1TFlKpuTnB250m13X0rIOKizYqZ+HKl4kpItlJ/hXaJQtIR
+         9oew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LvSehJyODRU+BRndfta8X08B5j8xEwZsfCZBCIijqkA=;
+        b=Und/eKDV4OUhb3DAXey0FlmNfP29JGfCcbwi55x9NmL33Q7gn8fBGxXN9+FBCdkQey
+         gjDs5uhLEmhCDKwtgiRGXEwijRn1hVwrGFBgDF3qtlVIpnMfNJK5gdz9Cy1UnOZfCA1Z
+         bJQ9Y4ZUZIOt45MlItZ2uEPgmyISJBwYU9vlbjbwyEMkEYygmwz8ZaOznpGjz5B5r+qo
+         FnuOjCxpZ/QjJ4giUeA6SaS9sdiVru6iDUHjYu9Q9tmdv47wXDLsRjQhYws/P/+GBq17
+         jUX5fPaTyY6alzO/U1toR6HAjPD81iXbF8TwsCIgVILomxo1Ir6zhqWNbY4u9RcDiP3P
+         yWmA==
+X-Gm-Message-State: APjAAAXPNdR+/R6T/xVQbPpHoUT3z/6FNr7yntXYO6u2EdQWC3l98fb5
+        oL3BBz6IJ717fnH8e5f3zOB39w==
+X-Google-Smtp-Source: APXvYqwDUPj4N7Dlk+UHgEF98F+a80ceB6IAZDgPKpiKwLjDdXUp2W+wP1PIvNCDjmQKl+tzKhHfoQ==
+X-Received: by 2002:a05:6000:1085:: with SMTP id y5mr3787664wrw.285.1566551061365;
+        Fri, 23 Aug 2019 02:04:21 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x26sm1625544wmj.42.2019.08.23.02.04.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 02:04:20 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com, ulf.hansson@linaro.org,
+        devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, linux-pm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/5] dt-bindings: power: add Amlogic Everything-Else power domains bindings
+Date:   Fri, 23 Aug 2019 11:04:14 +0200
+Message-Id: <20190823090418.17148-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190823090418.17148-1-narmstrong@baylibre.com>
+References: <20190823090418.17148-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822203544.GA10229@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 01:35:44PM -0700, Luck, Tony wrote:
+Add the bindings for the Amlogic Everything-Else power domains,
+controlling the Everything-Else peripherals power domains.
 
-> From: Tony Luck <tony.luck@intel.com>
-> 
-> One of the use cases for this processor is as a network
-> processor. So give it an "_NP" tag for now. Could be changed
-> later if it turns out to group with some other tag.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index 5c05b2d389c3..23ed388a3a56 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -95,6 +95,7 @@
->  
->  #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
->  #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
-> +#define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
->  
->  #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
->  #define INTEL_FAM6_ATOM_GOLDMONT_D	0x5F /* Denverton */
+The bindings targets the Amlogic G12A and SM1 compatible SoCs,
+support for earlier SoCs will be added later.
 
-Since it is 'just another airmont' with bits on, should we not then also
-add it to all ATOM_AIRMONT sites already present in the kernel?
-
-something like the below; except there were a few sites I skipped
-because 'no clue'.
-
-Also, while going over that, it looked like we missed AIRMONT_MID from a
-few sites.
-
-I'm thinking we want to add as many of these sites as possible and
-correct when adding a new define; esp. for older microarchs that are
-already well supported.
-
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml | 93 +++++++++++++++++++
+ include/dt-bindings/power/meson-g12a-power.h  | 13 +++
+ include/dt-bindings/power/meson-sm1-power.h   | 18 ++++
+ 3 files changed, 124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+ create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+ create mode 100644 include/dt-bindings/power/meson-sm1-power.h
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 648260b5f367..56e6875b6882 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4647,6 +4647,7 @@ __init int intel_pmu_init(void)
- 	case INTEL_FAM6_ATOM_SILVERMONT_MID:
- 	case INTEL_FAM6_ATOM_AIRMONT:
- 	case INTEL_FAM6_ATOM_AIRMONT_MID:
-+	case INTEL_FAM6_ATOM_AIRMONT_NP:
- 		memcpy(hw_cache_event_ids, slm_hw_cache_event_ids,
- 			sizeof(hw_cache_event_ids));
- 		memcpy(hw_cache_extra_regs, slm_hw_cache_extra_regs,
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 688592b34564..1e999092de22 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -602,6 +602,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT, slm_cstates),
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT_X, slm_cstates),
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_AIRMONT,     slm_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_AIRMONT_NP,  slm_cstates),
- 
- 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_CORE,   snb_cstates),
- 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_XEON_D, snb_cstates),
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 9431447541e9..fe2323f114c0 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -72,6 +72,7 @@ static bool test_intel(int idx, void *data)
- 	case INTEL_FAM6_ATOM_SILVERMONT:
- 	case INTEL_FAM6_ATOM_SILVERMONT_X:
- 	case INTEL_FAM6_ATOM_AIRMONT:
-+	case INTEL_FAM6_ATOM_AIRMONT_NP:
- 
- 	case INTEL_FAM6_ATOM_GOLDMONT:
- 	case INTEL_FAM6_ATOM_GOLDMONT_X:
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 5cc2d51cc25e..a3ccee6a16a5 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1053,6 +1053,7 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
- 	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT_NP,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 067858fe4db8..bde7a0c8fa8b 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -64,6 +64,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT,		freq_desc_byt),
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID,	freq_desc_tng),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT,		freq_desc_cht),
-+	INTEL_CPU_FAM6(ATOM_AIRMONT_NP,		freq_desc_cht),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT_MID,	freq_desc_ann),
- 	{}
- };
-diff --git a/arch/x86/platform/atom/punit_atom_debug.c b/arch/x86/platform/atom/punit_atom_debug.c
-index ee6b0780bea1..52990f68af70 100644
---- a/arch/x86/platform/atom/punit_atom_debug.c
-+++ b/arch/x86/platform/atom/punit_atom_debug.c
-@@ -125,6 +125,7 @@ static const struct x86_cpu_id intel_punit_cpu_ids[] = {
- 	ICPU(INTEL_FAM6_ATOM_SILVERMONT, punit_device_byt),
- 	ICPU(INTEL_FAM6_ATOM_SILVERMONT_MID,  punit_device_tng),
- 	ICPU(INTEL_FAM6_ATOM_AIRMONT,	  punit_device_cht),
-+	ICPU(INTEL_FAM6_ATOM_AIRMONT_NP,	  punit_device_cht),
- 	{}
- };
- 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index d696f165a50e..4da3aef37836 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -313,6 +313,7 @@ static const struct lpss_device_desc bsw_spi_dev_desc = {
- static const struct x86_cpu_id lpss_cpu_ids[] = {
- 	ICPU(INTEL_FAM6_ATOM_SILVERMONT),	/* Valleyview, Bay Trail */
- 	ICPU(INTEL_FAM6_ATOM_AIRMONT),	/* Braswell, Cherry Trail */
-+	ICPU(INTEL_FAM6_ATOM_AIRMONT_NP),	/* Braswell, Cherry Trail */
- 	{}
- };
- 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index cc27d4c59dca..878f5dcce41b 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1879,6 +1879,7 @@ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
- 	ICPU(INTEL_FAM6_HASWELL_GT3E,		core_funcs),
- 	ICPU(INTEL_FAM6_BROADWELL_GT3E,		core_funcs),
- 	ICPU(INTEL_FAM6_ATOM_AIRMONT,		airmont_funcs),
-+	ICPU(INTEL_FAM6_ATOM_AIRMONT_NP,	airmont_funcs),
- 	ICPU(INTEL_FAM6_SKYLAKE_MOBILE,		core_funcs),
- 	ICPU(INTEL_FAM6_BROADWELL_X,		core_funcs),
- 	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP,	core_funcs),
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index fa5ff77b8fe4..277757386ddc 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -1070,6 +1070,7 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT,		idle_cpu_byt),
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID,	idle_cpu_tangier),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT,		idle_cpu_cht),
-+	INTEL_CPU_FAM6(ATOM_AIRMONT_NP,		idle_cpu_cht),
- 	INTEL_CPU_FAM6(IVYBRIDGE,		idle_cpu_ivb),
- 	INTEL_CPU_FAM6(IVYBRIDGE_X,		idle_cpu_ivt),
- 	INTEL_CPU_FAM6(HASWELL_CORE,		idle_cpu_hsw),
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 6df481896b5f..3104ada7d046 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -981,6 +981,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
- 
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT, rapl_defaults_byt),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT, rapl_defaults_cht),
-+	INTEL_CPU_FAM6(ATOM_AIRMONT_NP, rapl_defaults_cht),
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID, rapl_defaults_tng),
- 	INTEL_CPU_FAM6(ATOM_AIRMONT_MID, rapl_defaults_ann),
- 	INTEL_CPU_FAM6(ATOM_GOLDMONT, rapl_defaults_core),
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 75fc4fb9901c..3ba4f2a77d3e 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -3228,6 +3228,7 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
- 		pkg_cstate_limits = slv_pkg_cstate_limits;
- 		break;
- 	case INTEL_FAM6_ATOM_AIRMONT:	/* AMT */
-+	case INTEL_FAM6_ATOM_AIRMONT_NP:	/* AMT */
- 		pkg_cstate_limits = amt_pkg_cstate_limits;
- 		no_MSR_MISC_PWR_MGMT = 1;
- 		break;
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+new file mode 100644
+index 000000000000..aab70e8b681e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/amlogic,meson-ee-pwrc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson Everything-Else Power Domains
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |+
++  The Everything-Else Power Domains node should be the child of a syscon
++  node with the required property:
++
++  - compatible: Should be the following:
++                "amlogic,meson-gx-hhi-sysctrl", "simple-mfd", "syscon"
++
++  Refer to the the bindings described in
++  Documentation/devicetree/bindings/mfd/syscon.txt
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson-g12a-pwrc
++      - amlogic,meson-sm1-pwrc
++
++  clocks:
++    minItems: 2
++
++  clock-names:
++    items:
++      - const: vpu
++      - const: vapb
++
++  resets:
++    minItems: 11
++
++  reset-names:
++    items:
++      - const: viu
++      - const: venc
++      - const: vcbus
++      - const: bt656
++      - const: rdma
++      - const: venci
++      - const: vencp
++      - const: vdac
++      - const: vdi6
++      - const: vencl
++      - const: vid_lock
++
++  "#power-domain-cells":
++    const: 1
++
++  amlogic,ao-sysctrl:
++    description: phandle to the AO sysctrl node
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - "#power-domain-cells"
++  - amlogic,ao-sysctrl
++
++examples:
++  - |
++    pwrc: power-controller {
++          compatible = "amlogic,meson-sm1-pwrc";
++          #power-domain-cells = <1>;
++          amlogic,ao-sysctrl = <&rti>;
++          resets = <&reset_viu>,
++                   <&reset_venc>,
++                   <&reset_vcbus>,
++                   <&reset_bt656>,
++                   <&reset_rdma>,
++                   <&reset_venci>,
++                   <&reset_vencp>,
++                   <&reset_vdac>,
++                   <&reset_vdi6>,
++                   <&reset_vencl>,
++                   <&reset_vid_lock>;
++          reset-names = "viu", "venc", "vcbus", "bt656",
++                        "rdma", "venci", "vencp", "vdac",
++                        "vdi6", "vencl", "vid_lock";
++          clocks = <&clk_vpu>, <&clk_vapb>;
++          clock-names = "vpu", "vapb";
++    };
+diff --git a/include/dt-bindings/power/meson-g12a-power.h b/include/dt-bindings/power/meson-g12a-power.h
+new file mode 100644
+index 000000000000..bb5e67a842de
+--- /dev/null
++++ b/include/dt-bindings/power/meson-g12a-power.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON_G12A_POWER_H
++#define _DT_BINDINGS_MESON_G12A_POWER_H
++
++#define PWRC_G12A_VPU_ID		0
++#define PWRC_G12A_ETH_ID		1
++
++#endif
+diff --git a/include/dt-bindings/power/meson-sm1-power.h b/include/dt-bindings/power/meson-sm1-power.h
+new file mode 100644
+index 000000000000..a020ab00c134
+--- /dev/null
++++ b/include/dt-bindings/power/meson-sm1-power.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON_SM1_POWER_H
++#define _DT_BINDINGS_MESON_SM1_POWER_H
++
++#define PWRC_SM1_VPU_ID		0
++#define PWRC_SM1_NNA_ID		1
++#define PWRC_SM1_USB_ID		2
++#define PWRC_SM1_PCIE_ID	3
++#define PWRC_SM1_GE2D_ID	4
++#define PWRC_SM1_AUDIO_ID	5
++#define PWRC_SM1_ETH_ID		6
++
++#endif
+-- 
+2.22.0
+
