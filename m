@@ -2,93 +2,122 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37A0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E32C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B56420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C2720850
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yj9GHaIN"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XmdnQ3XP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392286AbfHWTzj (ORCPT
+        id S2392319AbfHWT4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:55:39 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51446 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392200AbfHWTzf (ORCPT
+        Fri, 23 Aug 2019 15:56:45 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40857 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731765AbfHWT4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:55:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NJtRxr044090;
-        Fri, 23 Aug 2019 14:55:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566590127;
-        bh=s0XicrLXuGI/HXmhbkjUlUHssBuuijSTQe3NjyOcpYc=;
-        h=From:To:CC:Subject:Date;
-        b=Yj9GHaINlCrLeqpl554w/KOYgdyGojesoH0OC4jJaXLz1xIV/29ZxiqNurw1BKwk+
-         Bi15b+mYcRCSC18HK3TvzCX7kClgG+vCVvYPenvVu3hYbTQgnCbf3N/pdxzwvF3RdF
-         +jW4fAByG5Pfe9cLExhlaOpInKNEQwp4hXmLz/7A=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NJtRCG069056
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 23 Aug 2019 14:55:27 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 23
- Aug 2019 14:55:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 23 Aug 2019 14:55:27 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NJtRZL004700;
-        Fri, 23 Aug 2019 14:55:27 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
-Date:   Fri, 23 Aug 2019 14:55:23 -0500
-Message-ID: <20190823195523.20950-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 23 Aug 2019 15:56:44 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s145so9242300qke.7
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 12:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=vTaAshi9pluGjENrrfftMicTMpjOrhGopwZB6hzguXI=;
+        b=XmdnQ3XPOSwrLu3tByxh+ZVBCu+8gf4v3QrEQR7MLi6j6hCE30XvsnJlLL3xDZlsdg
+         V1QEtfzdpAf2+cNrL+4PWXQ1bkdi4NPtQUY21KiBJBxJjlLTYKtN1Ev401gmS8S9+QBa
+         rrse08tR0y5CdeiPpQM5Lr6s/vZBeJS0OcSoV0Zcn+GSOtvQmMs4JWZz2HzJ5oNt6S0e
+         SLjINAoTnzuj3cLyU+aKUhFN9ity7DDqvCICkoz9933SUyRY5JR1DTyKatCz8RQMw8Zr
+         8KoaRwTw14XZYst0RkajkIELjTnq6a7JkugjoJ37Y9ZCFdWmqih+POIn4bBq7NMGOT8Y
+         o7OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vTaAshi9pluGjENrrfftMicTMpjOrhGopwZB6hzguXI=;
+        b=Rkbzmu6QO1/z8J7HxVKctrKUxgnh+n4mX4wqhK2GjFPLScNHNpYsZxUKRdxzNiqxI/
+         e2wgWS7Zx8OBVeJ+jbPQ28BOKpDqYNE/LBzMVbiOI0DlisRoWC3Ze1gNrI0vn87iDfHM
+         CjELyystklQ/R5C/3sd/pahHpsMDJEoo0A3DRQDDVfbzepWXSpPGB4r1rIADhrtMp8db
+         8uR82vKMyeDVzcxDzXGlNeb55NTKz0PPmthQ3pYHNA06bT55SFqb4f3hQujPY7krq6Q1
+         BdO65oGqJJC5Xv98rcHTGuapIQkbFouKQrFIELU42tauG1DyuIh32alYLSQzT9gGwIgo
+         ErTw==
+X-Gm-Message-State: APjAAAX98xAa14Lhr5f7b/Ea4bJJXu27FCTqDX7Vo6SwGqbOpEULtrWx
+        t7AcIF0j0vXgSSzawl8HG/ZA0A==
+X-Google-Smtp-Source: APXvYqxgf5wgeiL6ufbZ334VqWwMQGezy5CWWm0nzrMhCFpi0O8GIzGoB/gmIFkF6u6wtWR6LRzjFQ==
+X-Received: by 2002:a37:9c88:: with SMTP id f130mr5826483qke.494.1566590203704;
+        Fri, 23 Aug 2019 12:56:43 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n21sm2159771qtc.70.2019.08.23.12.56.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2019 12:56:42 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     saeedm@mellanox.com
+Cc:     leon@kernel.org, davem@davemloft.net, moshe@mellanox.com,
+        ferasda@mellanox.com, eranbe@mellanox.com, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] net/mlx5: fix a -Wstringop-truncation warning
+Date:   Fri, 23 Aug 2019 15:56:23 -0400
+Message-Id: <1566590183-9898-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the coccinelle issues found in the TI LMU common code
+In file included from ./arch/powerpc/include/asm/paca.h:15,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./include/asm-generic/preempt.h:5,
+                 from ./arch/powerpc/include/generated/asm/preempt.h:1,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/wait.h:9,
+                 from ./include/linux/completion.h:12,
+                 from ./include/linux/mlx5/driver.h:37,
+                 from
+drivers/net/ethernet/mellanox/mlx5/core/lib/eq.h:6,
+                 from
+drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c:33:
+In function 'strncpy',
+    inlined from 'mlx5_fw_tracer_save_trace' at
+drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c:549:2,
+    inlined from 'mlx5_tracer_print_trace' at
+drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c:574:2:
+./include/linux/string.h:305:9: warning: '__builtin_strncpy' output may
+be truncated copying 256 bytes from a string of length 511
+[-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned expression compared with zero: ramp_down < 0
-drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned expression compared with zero: ramp_up < 0
+Fix it by using the new strscpy_pad() since the commit 458a3bf82df4
+("lib/string: Add strscpy_pad() function") which will always
+NUL-terminate the string, and avoid possibly leak data through the ring
+buffer where non-admin account might enable these events through perf.
 
-Fixes: f717460ba4d7 ("leds: TI LMU: Add common code for TI LMU devices")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Fixes: fd1483fe1f9f ("net/mlx5: Add support for FW reporter dump")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/leds/leds-ti-lmu-common.c | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
-index adc7293004f1..c9ab40d5a6ba 100644
---- a/drivers/leds/leds-ti-lmu-common.c
-+++ b/drivers/leds/leds-ti-lmu-common.c
-@@ -84,7 +84,7 @@ static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
- int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
- {
- 	struct regmap *regmap = lmu_bank->regmap;
--	u8 ramp, ramp_up, ramp_down;
-+	int ramp, ramp_up, ramp_down;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+index 8a4930c8bf62..2011eaf15cc5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+@@ -546,7 +546,7 @@ static void mlx5_fw_tracer_save_trace(struct mlx5_fw_tracer *tracer,
+ 	trace_data->timestamp = timestamp;
+ 	trace_data->lost = lost;
+ 	trace_data->event_id = event_id;
+-	strncpy(trace_data->msg, msg, TRACE_STR_MSG);
++	strscpy_pad(trace_data->msg, msg, TRACE_STR_MSG);
  
- 	if (lmu_bank->ramp_up_usec == 0 && lmu_bank->ramp_down_usec == 0) {
- 		ramp_up = 0;
+ 	tracer->st_arr.saved_traces_index =
+ 		(tracer->st_arr.saved_traces_index + 1) & (SAVED_TRACES_NUM - 1);
 -- 
-2.22.0.214.g8dca754b1e
+1.8.3.1
 
