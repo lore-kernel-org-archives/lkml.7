@@ -2,169 +2,219 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7104CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A18C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388FA2082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919912146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Flyns2To"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gO3x0A47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfHXM1R (ORCPT
+        id S1728152AbfHXMcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 08:27:17 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:2102 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbfHXM1Q (ORCPT
+        Sat, 24 Aug 2019 08:32:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37764 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727921AbfHXMci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 08:27:16 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 3YZ+XJvnhSFuhm7BxVcuzI91hBsIhUonADaAfeg9K/N8yGQqy5z3B0My34bSFGtLvSTr/dar15
- SuNKuoXQzdV69a3uQskEYqe9FpfPb7hFSTMiFcKj8dIDZ8Plzp8WdZtYocAoqNDoj75rlxgs0H
- kY0Ivb2N2O6T2bBjPE76WpBPOch0Zuqoxwe0i2qp00pP0KsbPbCSqeE5n0I0ZqKW8mSuFtYTRr
- 4iPuoZXTqDsnuniYm8bXa4AZ8/exw/RVKhZWAdwfEAHRdr1QyimgA095b7YiqaPtuh47u5gLn4
- hE8=
-X-IronPort-AV: E=Sophos;i="5.64,425,1559545200"; 
-   d="scan'208";a="44864844"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Aug 2019 05:27:16 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 24 Aug 2019 05:27:15 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Sat, 24 Aug 2019 05:27:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a/H0HpX5KLMH/fVbhReglk8llmGsY+qdWJHj3f5sXDUPx2JWtCUM0bjEGUaxRwATPMWi4vIaIOxNjsUgDgHSBdQ6RYnCmeFwxPoA082nXV98LlER/5Zw+hZoU0BMReFE1iyk/os93eESPD5No8Z1y0v1tBl85tvoqYJBuBI2eAZ4jEtJ7p303MlK0Av7PjAG1c0lSYm7IVAhxVUMlioxaepRnU5obhsPr0rMj/nnwf4U83aWeMf/8Lq12k20jWgjQ00fR8GybFlSpOQz7k3cEWZI1tPwN5+wuPQIaOdeshqnQ8+J6oVXMYaEe2+HWdrdfnK4orP4OfWNMTfdehVQHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gOql6G/DPy3QDBUoDff10gGbq5Pi95MgzCgxr37iJGM=;
- b=RJNfcAf4ROWBOHPg1HUyUnDYuS7fyNtihvApS7xvrHx2tFEReCPlpjvYSqid0tmPbORKeGoBjNyD4IUI0QVNMIQV951h5r1So71Y8Exm3H1MwhL3yazJ0tQF9k2VYfFuohSgJcTjNVMhYbBHkDbSgwjT2eq0b2R2cJOc4NldLIrDnFdetfa66Tq1GD2o+PT++9UVGmMA4LD4pTv/NVwpDtIDrnRWBNdj5D4e0xlw25WhxPf7STj2jFu+faJqP+iLSY0jDCc+HlBZ9ObNiJ9vNAKGMhk93T8EdCtCEYGoQ8GeUf371WLUTcHmPNeD96lqyE+EQiR5BrgZLFfoZ39Gxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Sat, 24 Aug 2019 08:32:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d16so11549784wme.2;
+        Sat, 24 Aug 2019 05:32:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gOql6G/DPy3QDBUoDff10gGbq5Pi95MgzCgxr37iJGM=;
- b=Flyns2Togb2oO+lw9hlfw9IWOkYZbKIGeb+oGI80IZyKlTAgNcxCA+ONQFRP+R7eWEoyOny7PjdY7we31IKLLDaQjDtX/LYakbCHP56JbaPhbIceSqgKJsG2U4N6GuIVQYBii1Sf0pXm2mWmmpvYcg8K14WgsomSxoFf0pfjuqs=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3854.namprd11.prod.outlook.com (20.178.252.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Sat, 24 Aug 2019 12:27:14 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2178.020; Sat, 24 Aug 2019
- 12:27:14 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <boris.brezillon@collabora.com>, <marek.vasut@gmail.com>,
-        <vigneshr@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC:     <Tudor.Ambarus@microchip.com>
-Subject: [PATCH v2 2/2] mtd: spi-nor: unlock global block protection on
- sst26vf064b
-Thread-Topic: [PATCH v2 2/2] mtd: spi-nor: unlock global block protection on
- sst26vf064b
-Thread-Index: AQHVWndCob70Y7dOBE2305x27zvpVw==
-Date:   Sat, 24 Aug 2019 12:27:14 +0000
-Message-ID: <20190824122700.23558-3-tudor.ambarus@microchip.com>
-References: <20190824122700.23558-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20190824122700.23558-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR04CA0129.eurprd04.prod.outlook.com
- (2603:10a6:803:f0::27) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.9.5
-x-originating-ip: [86.127.53.184]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1df6b0c-f573-458b-ed31-08d7288e64e8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR11MB3854;
-x-ms-traffictypediagnostic: MN2PR11MB3854:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB38545D97D2F2606C80B097EAF0A70@MN2PR11MB3854.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0139052FDB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(366004)(39860400002)(396003)(199004)(189003)(256004)(66946007)(81156014)(81166006)(186003)(2201001)(64756008)(66446008)(66556008)(26005)(478600001)(486006)(50226002)(2616005)(6512007)(386003)(102836004)(8676002)(86362001)(2501003)(6506007)(1076003)(14454004)(316002)(476003)(11346002)(6116002)(66476007)(99286004)(110136005)(6486002)(305945005)(6436002)(7736002)(71200400001)(76176011)(2906002)(8936002)(446003)(25786009)(53936002)(66066001)(107886003)(3846002)(71190400001)(4326008)(5660300002)(52116002)(36756003)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3854;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hcelZI6jrX8xmBHfAhEvrisYoubF2byDeZXQbfMNG9IL3vmkYHjR0hV+xBblMEAOK09lg0Uocyt9Cyh83mn+ffrgc+5f7iqIUjft4XEwhp3zGWTRwSpq3boXK+HMReFUhJbHgann3oVn98J1w53trrjIfNNgYRIpK8tllVIE6Lq9L0AvOKQvRl59Lt+pYOToAYTYAHo9Bfen+mFfiTxiZ89d0vEIl1ALBf/06pn65cYm2tTwUx6gHpXo/e9k8JzTCSx6nK6YxWBhRrpaJ0r3PoSqRa87upomwefVtxTqu1i7dgMGnlXdHR3azE6ywTfQak3v4GHFP4KJAuoBZVZtjIhgG5d3PIjhZNMzqPDOLg5oFTq7TivphXDe6LzbkIRWs1bykJpwxj+iyBNsdt+bLuIA2Y7mHIAtk0VsGBv4da0=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ktd3clal+9Q8WPdZn5LCmY9fuQdnPWX4A+ZgJMUiE8I=;
+        b=gO3x0A47cXmFssogdqmmAgitAslpSJ93envk5YYYOjtmRdJg9v7WyxRISnMS0I0wPn
+         Tn8IctoBtGQQoytrA4I0lqZvydxZMRIseViPZtq8SmAWqjxiYSQQ6/kMBbInyu/uk521
+         qKxb55JAUCF/dgxrSeqYGVwEW2BGy/9fM2lV1ETwzFVBy0nbytOnnCS6PeoTN9isAPJs
+         fd1fo/sbrmv4CRm5zTI5QocUjPZ7GKAp379so7OSXO+q1I1pPLBtJPIOG1RIr2ayd6ED
+         Dnhg4Ta4EvGc9yNMMVTAS1CmQauUYFSs3rayKVXgMOyWnnfoiAXZ1Qi4DlDl78ww3XwE
+         i4JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ktd3clal+9Q8WPdZn5LCmY9fuQdnPWX4A+ZgJMUiE8I=;
+        b=Df265qvAGbZeilaGwsoZ+Js1W9PyHEJgFKWBrZ2Z2VMmMoj+6LN4DCcQDT1ho9tF5u
+         KaZ9V80jeZF++PffKzX/lG+zvBpRgDIht3ls7kMv5rSbvWfiMZ0EJAiKwut6SKqkw5R/
+         EMS117nNrHejzwzXW4ehJNFtUw8SIy/vaGe4jWO71iNs6b0AXysmu7+9/Kq/mBaavI+r
+         /84ANDLJWxXyg4zEFJ3owXOgRnHr5vGDpZe1f2QmzeHX98DJNsQTFFpkQswGPnAiKot/
+         P/IPo5uQ3mESWNanf2CgH6CdLecaEU7xmcH6NqHx1CaKVlqATFTQClb++FgSyrakPKqj
+         ACkA==
+X-Gm-Message-State: APjAAAULAUdrdAU4dDZkokuL9hIpyLnnN6MuUfIJzZlvEW/Bhu9BA9k6
+        c1OmVHmy8YQYBgaOCG7HciI=
+X-Google-Smtp-Source: APXvYqxUMGmDffhilj07WIz41QP9O1qp6PIEePGrT5idlWi6fBJNl+Fmt7Dv7iNOePAomEQpGWejMg==
+X-Received: by 2002:a7b:c7c2:: with SMTP id z2mr10383019wmk.33.1566649955525;
+        Sat, 24 Aug 2019 05:32:35 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net. [86.58.59.25])
+        by smtp.gmail.com with ESMTPSA id a23sm11839565wma.24.2019.08.24.05.32.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Aug 2019 05:32:34 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com, megous@megous.com
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
+Date:   Sat, 24 Aug 2019 14:32:32 +0200
+Message-ID: <10586215.O0B29uHg7A@jernej-laptop>
+In-Reply-To: <20190820151934.3860-3-megous@megous.com>
+References: <20190820151934.3860-1-megous@megous.com> <20190820151934.3860-3-megous@megous.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1df6b0c-f573-458b-ed31-08d7288e64e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2019 12:27:14.2426
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qnManokmt0FscRChFWyMNNrslQPeRxXtWibrb5AND2VlK3SM2kTNSiCyBiJXtXWdwwSbztKTcNgCwwLFrb++6Qke0JQB5ygLGJkp+9lCPTQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3854
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Hi!
 
-To avoid inadvertent writes during power-up, sst26vf064b is
-write-protected by default after a power-on reset cycle.
-Unlock the serial flash memory by using the Global Block Protection
-Unlock command - it offers a single command cycle that unlocks
-the entire memory array.
+Dne torek, 20. avgust 2019 ob 17:19:33 CEST je megous@megous.com napisal(a):
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> RTC on H6 is mostly the same as on H5 and H3. It has slight differences
+> mostly in features that are not yet supported by this driver.
+> 
+> Some differences are already stated in the comments in existing code.
+> One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
+> EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
+> 
+> It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
+> external low speed oscillator is working correctly.
+> 
+> This patch adds support for enabling LOSC when necessary:
+> 
+> - during reparenting
+> - when probing the clock
+> 
+> H6 also has capacbility to automatically reparent RTC clock from
+> external crystal oscillator, to internal RC oscillator, if external
+> oscillator fails. This is enabled by default. Disable it during
+> probe.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index d50ee023b559..b0c3752bed3f 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -32,9 +32,11 @@
+>  /* Control register */
+>  #define SUN6I_LOSC_CTRL				0x0000
+>  #define SUN6I_LOSC_CTRL_KEY			(0x16aa << 16)
+> +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS		BIT(15)
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+User manual says that above field is bit 14.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index c0ba6fe62461..f92202fa094d 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2419,7 +2419,9 @@ static const struct flash_info spi_nor_ids[] =3D {
- 	{ "sst25wf080",  INFO(0xbf2505, 0, 64 * 1024, 16, SECT_4K | SST_WRITE) },
- 	{ "sst26wf016b", INFO(0xbf2651, 0, 64 * 1024, 32, SECT_4K |
- 			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
--	{ "sst26vf064b", INFO(0xbf2643, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_DUAL=
-_READ | SPI_NOR_QUAD_READ) },
-+	{ "sst26vf064b", INFO(0xbf2643, 0, 64 * 1024, 128,
-+			      SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			      UNLOCK_GLOBAL_BLOCK) },
-=20
- 	/* ST Microelectronics -- newer production may have feature updates */
- 	{ "m25p05",  INFO(0x202010,  0,  32 * 1024,   2, 0) },
---=20
-2.9.5
+Best regards,
+Jernej
+
+>  #define SUN6I_LOSC_CTRL_ALM_DHMS_ACC		BIT(9)
+>  #define SUN6I_LOSC_CTRL_RTC_HMS_ACC		BIT(8)
+>  #define SUN6I_LOSC_CTRL_RTC_YMD_ACC		BIT(7)
+> +#define SUN6I_LOSC_CTRL_EXT_LOSC_EN		BIT(4)
+>  #define SUN6I_LOSC_CTRL_EXT_OSC			BIT(0)
+>  #define SUN6I_LOSC_CTRL_ACC_MASK		GENMASK(9, 7)
+> 
+> @@ -128,6 +130,8 @@ struct sun6i_rtc_clk_data {
+>  	unsigned int has_prescaler : 1;
+>  	unsigned int has_out_clk : 1;
+>  	unsigned int export_iosc : 1;
+> +	unsigned int has_losc_en : 1;
+> +	unsigned int has_auto_swt : 1;
+>  };
+> 
+>  struct sun6i_rtc_dev {
+> @@ -190,6 +194,10 @@ static int sun6i_rtc_osc_set_parent(struct clk_hw *hw,
+> u8 index) val &= ~SUN6I_LOSC_CTRL_EXT_OSC;
+>  	val |= SUN6I_LOSC_CTRL_KEY;
+>  	val |= index ? SUN6I_LOSC_CTRL_EXT_OSC : 0;
+> +	if (rtc->data->has_losc_en) {
+> +		val &= ~SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> +		val |= index ? SUN6I_LOSC_CTRL_EXT_LOSC_EN : 0;
+> +	}
+>  	writel(val, rtc->base + SUN6I_LOSC_CTRL);
+>  	spin_unlock_irqrestore(&rtc->lock, flags);
+> 
+> @@ -215,6 +223,7 @@ static void __init sun6i_rtc_clk_init(struct device_node
+> *node, const char *iosc_name = "rtc-int-osc";
+>  	const char *clkout_name = "osc32k-out";
+>  	const char *parents[2];
+> +	u32 reg;
+> 
+>  	rtc = kzalloc(sizeof(*rtc), GFP_KERNEL);
+>  	if (!rtc)
+> @@ -235,9 +244,18 @@ static void __init sun6i_rtc_clk_init(struct
+> device_node *node, goto err;
+>  	}
+> 
+> +	reg = SUN6I_LOSC_CTRL_KEY;
+> +	if (rtc->data->has_auto_swt) {
+> +		/* Bypass auto-switch to int osc, on ext losc failure */
+> +		reg |= SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS;
+> +		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> +	}
+> +
+>  	/* Switch to the external, more precise, oscillator */
+> -	writel(SUN6I_LOSC_CTRL_KEY | SUN6I_LOSC_CTRL_EXT_OSC,
+> -	       rtc->base + SUN6I_LOSC_CTRL);
+> +	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> +	if (rtc->data->has_losc_en)
+> +		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> +	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> 
+>  	/* Yes, I know, this is ugly. */
+>  	sun6i_rtc = rtc;
+> @@ -345,6 +363,23 @@ CLK_OF_DECLARE_DRIVER(sun8i_h3_rtc_clk,
+> "allwinner,sun8i-h3-rtc", CLK_OF_DECLARE_DRIVER(sun50i_h5_rtc_clk,
+> "allwinner,sun50i-h5-rtc", sun8i_h3_rtc_clk_init);
+> 
+> +static const struct sun6i_rtc_clk_data sun50i_h6_rtc_data = {
+> +	.rc_osc_rate = 16000000,
+> +	.fixed_prescaler = 32,
+> +	.has_prescaler = 1,
+> +	.has_out_clk = 1,
+> +	.export_iosc = 1,
+> +	.has_losc_en = 1,
+> +	.has_auto_swt = 1,
+> +};
+> +
+> +static void __init sun50i_h6_rtc_clk_init(struct device_node *node)
+> +{
+> +	sun6i_rtc_clk_init(node, &sun50i_h6_rtc_data);
+> +}
+> +CLK_OF_DECLARE_DRIVER(sun50i_h6_rtc_clk, "allwinner,sun50i-h6-rtc",
+> +		      sun50i_h6_rtc_clk_init);
+> +
+>  static const struct sun6i_rtc_clk_data sun8i_v3_rtc_data = {
+>  	.rc_osc_rate = 32000,
+>  	.has_out_clk = 1,
+> @@ -675,6 +710,7 @@ static const struct of_device_id sun6i_rtc_dt_ids[] = {
+>  	{ .compatible = "allwinner,sun8i-r40-rtc" },
+>  	{ .compatible = "allwinner,sun8i-v3-rtc" },
+>  	{ .compatible = "allwinner,sun50i-h5-rtc" },
+> +	{ .compatible = "allwinner,sun50i-h6-rtc" },
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
+
+
+
 
