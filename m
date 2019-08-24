@@ -2,94 +2,179 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2378C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 10:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE857C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 10:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D6D20874
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 10:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49022082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 10:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMZRE8vY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfHXKBT (ORCPT
+        id S1727046AbfHXKKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 06:01:19 -0400
-Received: from mail.ispras.ru ([83.149.199.45]:51218 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfHXKBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 06:01:19 -0400
-Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru [188.32.48.208])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 2678854006A;
-        Sat, 24 Aug 2019 13:01:16 +0300 (MSK)
-From:   Denis Efremov <efremov@ispras.ru>
-To:     akpm@linux-foundation.org
-Cc:     Denis Efremov <efremov@ispras.ru>,
-        Akinobu Mita <akinobu.mita@gmail.com>, Jan Kara <jack@suse.cz>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <matthew@wil.cx>,
-        dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, Erdem Tumurov <erdemus@gmail.com>,
-        Vladimir Shelekhov <vshel@iis.nsk.su>
-Subject: [PATCH v2] lib/memweight.c: open codes bitmap_weight()
-Date:   Sat, 24 Aug 2019 13:01:02 +0300
-Message-Id: <20190824100102.1167-1-efremov@ispras.ru>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190821074200.2203-1-efremov@ispras.ru>
-References: <20190821074200.2203-1-efremov@ispras.ru>
+        Sat, 24 Aug 2019 06:10:10 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34645 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbfHXKKK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 06:10:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s18so10807491wrn.1;
+        Sat, 24 Aug 2019 03:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hT7cSmPZKRUdqD9D/lDoReXsSyJf6TsU+BhKTkGeFEo=;
+        b=bMZRE8vYyL3SNczbFposfdV0aBxbml5NLfdfxJgQBb5YS6FkrP5j/G1UkCdcxeatRb
+         oR0iR5JuXifHejiI9Wli+6ObydVTeDKnAo2d47NianT68dwIhbHz3w+Tp68l4+YgbrOz
+         p5Mmqi396inZaAIKsjoQKc946r2Tjr6p1Rb+w3wPxT44HnBYcKtPmqJQg4Bo7W9NLIic
+         b6xqA8VGL47ZkX/9wIxzcgjyouAvR+EPODwWL9upJoBRwtI0WvVevZKjxDIHXAGwkuDT
+         J/Ht7oNen+ZolS/ePR4h3k/71FQ9z0k117Cbn1eVtsT5u1Cc1xqeDw39ySdlYyz+PB9O
+         rXeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hT7cSmPZKRUdqD9D/lDoReXsSyJf6TsU+BhKTkGeFEo=;
+        b=Xllqte/8Q90GNQhB9BMoi27anDB/ytx4kidR3X8GeudIc57AJ4QIoDztPnrFIXlbFi
+         Zo9K43EFeRym4wqJdZi3yMrwr95LuXflDa30sZ2sULjNL77ri+THkF+XOaLWF73iyPWR
+         2bl9kL8dR+fccbhyB6gMnS4HvxupFR8Q24zwyJXqaYNCYhdTeuweLCPJN5nGK1t7r2d5
+         WFULe7XwGCcY9/wbA0OBzIHucDNYB2RrANw1TA9CU0gQ+10luda8qcSN08JAryD345N4
+         cGaC96bl3yVbIwr5aLapuD7YlmJh0wz58u7dAppHNif+uD8oi3+kuSGf0dyTn1fzh+YP
+         beOA==
+X-Gm-Message-State: APjAAAUDJjNddCX8fbtAUsFiMfFtuM4dy0JbTKCZZ59UXEHO261KzC73
+        RYaA5FS28kMOMXGdNRkb0eo=
+X-Google-Smtp-Source: APXvYqzIbYq2G3tydjot4/wtSszBOi+pq0zee1xlmWxpwklAZZ26lfUh8dqr8m1ZHignzi/Q9l9+Lw==
+X-Received: by 2002:adf:f844:: with SMTP id d4mr10593832wrq.128.1566641407824;
+        Sat, 24 Aug 2019 03:10:07 -0700 (PDT)
+Received: from [192.168.0.8] (57.166.117.91.dynamic.reverse-mundo-r.com. [91.117.166.57])
+        by smtp.gmail.com with ESMTPSA id 91sm17305681wrp.3.2019.08.24.03.10.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Aug 2019 03:10:06 -0700 (PDT)
+Subject: Re: [RESEND PATCH 1/1] rtc: sun6i: Allow using as wakeup source from
+ suspend
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        maxime.ripard@bootlin.com, wens@csie.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com
+References: <20190821210056.11995-1-alejandro.gonzalez.correo@gmail.com>
+From:   =?UTF-8?Q?Alejandro_Gonz=c3=a1lez?= 
+        <alejandro.gonzalez.correo@gmail.com>
+Message-ID: <86432b18-7a62-8412-33ad-b2e6e579a1ec@gmail.com>
+Date:   Sat, 24 Aug 2019 12:10:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190821210056.11995-1-alejandro.gonzalez.correo@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: es-ES
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch open codes the bitmap_weight() call. The direct
-invocation of hweight_long() allows to remove the BUG_ON and
-excessive "longs to bits, bits to longs" conversion.
 
-BUG_ON was required to check that bitmap_weight() will return
-a correct value, i.e. the computed weight will fit the int type
-of the return value. With this patch memweight() controls the
-computation directly with size_t type everywhere. Thus, the BUG_ON
-becomes unnecessary.
+Alejandro González wrote:
+> This patch allows userspace to set up wakeup alarms on any RTC handled by the
+> sun6i driver, and adds the necessary PM operations to allow resuming from
+> suspend when the configured wakeup alarm fires a IRQ. Of course, that the
+> device actually resumes depends on the suspend state and how a particular
+> hardware reacts to it, but that is out of scope for this patch.
+> 
+> I've tested these changes on a Pine H64 model B, which contains a
+> Allwinner H6 SoC, with the help of CONFIG_PM_TEST_SUSPEND kernel option.
+> These are the interesting outputs from the kernel and commands which
+> show that it works. As every RTC handled by this driver is largely the
+> same, I think that it shouldn't introduce any regression on other SoCs,
+> but I may be wrong.
+> 
+> [    1.092705] PM: test RTC wakeup from 'freeze' suspend
+> [    1.098230] PM: suspend entry (s2idle)
+> [    1.212907] PM: suspend devices took 0.080 seconds
+> (The SoC freezes for some seconds)
+> [    3.197604] PM: resume devices took 0.104 seconds
+> [    3.215937] PM: suspend exit
+> 
+> [    1.092812] PM: test RTC wakeup from 'mem' suspend
+> [    1.098089] PM: suspend entry (deep)
+> [    1.102033] PM: suspend exit
+> [    1.105205] PM: suspend test failed, error -22
+> 
+> In any case, the RTC alarm interrupt gets fired as exptected:
+> 
+> $ echo +5 > /sys/class/rtc/rtc0/wakealarm && sleep 5 && grep rtc /proc/interrupts
+>  29:          1          0          0          0     GICv2 133 Level     7000000.rtc
+> 
+> Signed-off-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
+> ---
+>  drivers/rtc/rtc-sun6i.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index c0e75c373605..b7611e5dea3f 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -598,6 +598,33 @@ static const struct rtc_class_ops sun6i_rtc_ops = {
+>  	.alarm_irq_enable	= sun6i_rtc_alarm_irq_enable
+>  };
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +/* Enable IRQ wake on suspend, to wake up from RTC. */
+> +static int sun6i_rtc_suspend(struct device *dev)
+> +{
+> +	struct sun6i_rtc_dev *chip = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		enable_irq_wake(chip->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Disable IRQ wake on resume. */
+> +static int sun6i_rtc_resume(struct device *dev)
+> +{
+> +	struct sun6i_rtc_dev *chip = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		disable_irq_wake(chip->irq);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(sun6i_rtc_pm_ops,
+> +	sun6i_rtc_suspend, sun6i_rtc_resume);
+> +
+>  static int sun6i_rtc_probe(struct platform_device *pdev)
+>  {
+>  	struct sun6i_rtc_dev *chip = sun6i_rtc;
+> @@ -650,6 +677,8 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
+>  
+>  	clk_prepare_enable(chip->losc);
+>  
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+>  	chip->rtc = devm_rtc_device_register(&pdev->dev, "rtc-sun6i",
+>  					     &sun6i_rtc_ops, THIS_MODULE);
+>  	if (IS_ERR(chip->rtc)) {
+> @@ -684,6 +713,7 @@ static struct platform_driver sun6i_rtc_driver = {
+>  	.driver		= {
+>  		.name		= "sun6i-rtc",
+>  		.of_match_table = sun6i_rtc_dt_ids,
+> +		.pm = &sun6i_rtc_pm_ops,
+>  	},
+>  };
+>  builtin_platform_driver(sun6i_rtc_driver);
+> 
+I'd be grateful if someone can test this patch on different boards to the Pine H64 model B. I'm afraid that board is the only one I have to test this.
 
-Total size reduced:
-./scripts/bloat-o-meter lib/memweight.o.old lib/memweight.o.new
-add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-10 (-10)
-Function                                     old     new   delta
-memweight                                    162     152     -10
-
-Co-developed-by: Erdem Tumurov <erdemus@gmail.com>
-Signed-off-by: Erdem Tumurov <erdemus@gmail.com>
-Co-developed-by: Vladimir Shelekhov <vshel@iis.nsk.su>
-Signed-off-by: Vladimir Shelekhov <vshel@iis.nsk.su>
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
----
- lib/memweight.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/lib/memweight.c b/lib/memweight.c
-index 94dd72ccaa7f..f050b2b4c5e2 100644
---- a/lib/memweight.c
-+++ b/lib/memweight.c
-@@ -20,11 +20,13 @@ size_t memweight(const void *ptr, size_t bytes)
- 
- 	longs = bytes / sizeof(long);
- 	if (longs) {
--		BUG_ON(longs >= INT_MAX / BITS_PER_LONG);
--		ret += bitmap_weight((unsigned long *)bitmap,
--				longs * BITS_PER_LONG);
-+		const unsigned long *bitmap_long =
-+			(const unsigned long *)bitmap;
-+
- 		bytes -= longs * sizeof(long);
--		bitmap += longs * sizeof(long);
-+		for (; longs > 0; longs--, bitmap_long++)
-+			ret += hweight_long(*bitmap_long);
-+		bitmap = (const unsigned char *)bitmap_long;
- 	}
- 	/*
- 	 * The reason that this last loop is distinct from the preceding
--- 
-2.21.0
-
+Regards.
