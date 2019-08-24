@@ -2,162 +2,309 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8262C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34DAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD57722CE3
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566664246;
-	bh=+JuKxCOgJyBntCQvY6U3JY+tJ2pkpRKpi7Kas9YX6aQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kDDzNSVOyH1H3mFKW+MifCajqjitGuFKAnQv4E9BNDrQiYsfaFsTSh9mO6XXJFQYd
-	 Kii85bAQFA9tOig7CrtQ9SBRyloawVwVJmCix/8p+wXWUe2YOk1fA8cYqzh9udiEDB
-	 W/do8ATkRO/RpKB9IddChd9xXY2k9RUg1Bqtfq8g=
+	by mail.kernel.org (Postfix) with ESMTP id 9E31C21897
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpWLBfbi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfHXQap (ORCPT
+        id S1727855AbfHXQdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 12:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfHXQap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 12:30:45 -0400
-Received: from localhost (unknown [8.46.76.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87272133F;
-        Sat, 24 Aug 2019 16:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566664243;
-        bh=+JuKxCOgJyBntCQvY6U3JY+tJ2pkpRKpi7Kas9YX6aQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2JCsvY6KrYzxYIpv+m8WMh+iSkH0tmAKK2RhzWqbs9T4ahODOuEjgejLGapr5RUd9
-         tffZ1z1dcUGfhiBbn+/plVU7AmJxYa08G3zby2VydzN3K4cMa8xutpmhkbQBEWLw7d
-         dmhrbql6MJj0ka0EGuC9P5zWcopoMB8TBOVm/uo0=
-Date:   Sat, 24 Aug 2019 09:50:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chen Yu <yu.c.chen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [tip: x86/urgent] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190824135028.GJ1581@sasha-vm>
-References: <7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com>
- <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 24 Aug 2019 12:33:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39237 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbfHXQdq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 12:33:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y200so1075567pfb.6;
+        Sat, 24 Aug 2019 09:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=a52LL9oOVeDhR4hSsY0aF1GKRUMgQp010/HR2Nt7Nf4=;
+        b=gpWLBfbiWuA2daHFK577ZK/G3XcKDVgGuZpd93XsBGl7fjev9r5/CUOEqOdkigt1tp
+         6/FV9TYzQDBxOVfRxgUJizQmtZgrMgr0dXVsPjo8V1Eyc36nQZgvQClfLluvoEGE/yLe
+         acprirszszQCoi9Z7Jc6t1ZXphLPTs1SzFMh8kyotZ3Xh9J0gZBz4fRfNImBsQ0gi0J4
+         eJWqlqsfwP60pUrdfgPmKnkR0pSxpk2dirPNCvM1Duq0MzSLeBdkjOjCeIXn25LQCFO0
+         Ssy8avSONmbR3Aoc5ZtBIoVOg24prKtG+YLO723uOrvQJm/w9Y3Opcz1MvCAor4LbirQ
+         b06w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=a52LL9oOVeDhR4hSsY0aF1GKRUMgQp010/HR2Nt7Nf4=;
+        b=JZJEAcddkNHIKHz0F3FMrz/S7KR8UTQfPYlPMmujr1WWujFKDr7+JuCF6yPFwUX+Ie
+         h5Mrb0sBBnXyA97+rW9VQiZTXqNO1EkEpIM/rFCVMk7cBpYa5zofqrEUGD3os5HNCl5m
+         OtxRrnb5ZXzWvigy46Vzz2FRgCgg5FK7Up09z1Tuj8BDhFDWBcASIEzgdpwRx++6fu2Y
+         ER9op9fL0sT9+IVjcJ7YY8ex+Y6acqr3nq9W3A7RYvMaWM2MONszGm0qs9cebLwuhTZx
+         zEVo+jSNtMxuvpew2+xmHkFQZxHctJ3fCgVjGfrprjGizstWtJo8mJEnrJKN19so7VId
+         WvnA==
+X-Gm-Message-State: APjAAAXuS2lzmkVbGwakQmvyqAfaOjllRk7dbKaqxOQtgfYo9u6j4Mjg
+        U449rXATvJvEWEQSIj1krEaYHZGD
+X-Google-Smtp-Source: APXvYqzkQNNfP4fETTxT3Z9RJM/LeuRq0YUyzcdRGs94doJUqceHlT+fRtU/sSnoIKtuelGIZmyETw==
+X-Received: by 2002:a17:90a:d34f:: with SMTP id i15mr11342285pjx.42.1566664424553;
+        Sat, 24 Aug 2019 09:33:44 -0700 (PDT)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id k3sm5733018pjo.3.2019.08.24.09.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Aug 2019 09:33:44 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] media: imx: Move capture device init to registered
+Date:   Sat, 24 Aug 2019 09:33:36 -0700
+Message-Id: <20190824163337.8260-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190824163337.8260-1-slongerbeam@gmail.com>
+References: <20190824163337.8260-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 01:10:49AM -0000, tip-bot2 for Tom Lendacky wrote:
->The following commit has been merged into the x86/urgent branch of tip:
->
->Commit-ID:     c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
->Gitweb:        https://git.kernel.org/tip/c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
->Author:        Tom Lendacky <thomas.lendacky@amd.com>
->AuthorDate:    Mon, 19 Aug 2019 15:52:35
->Committer:     Borislav Petkov <bp@suse.de>
->CommitterDate: Mon, 19 Aug 2019 19:42:52 +02:00
->
->x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
->
->There have been reports of RDRAND issues after resuming from suspend on
->some AMD family 15h and family 16h systems. This issue stems from a BIOS
->not performing the proper steps during resume to ensure RDRAND continues
->to function properly.
->
->RDRAND support is indicated by CPUID Fn00000001_ECX[30]. This bit can be
->reset by clearing MSR C001_1004[62]. Any software that checks for RDRAND
->support using CPUID, including the kernel, will believe that RDRAND is
->not supported.
->
->Update the CPU initialization to clear the RDRAND CPUID bit for any family
->15h and 16h processor that supports RDRAND. If it is known that the family
->15h or family 16h system does not have an RDRAND resume issue or that the
->system will not be placed in suspend, the "rdrand=force" kernel parameter
->can be used to stop the clearing of the RDRAND CPUID bit.
->
->Additionally, update the suspend and resume path to save and restore the
->MSR C001_1004 value to ensure that the RDRAND CPUID setting remains in
->place after resuming from suspend.
->
->Note, that clearing the RDRAND CPUID bit does not prevent a processor
->that normally supports the RDRAND instruction from executing it. So any
->code that determined the support based on family and model won't #UD.
->
->Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->Signed-off-by: Borislav Petkov <bp@suse.de>
->Cc: Andrew Cooper <andrew.cooper3@citrix.com>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Chen Yu <yu.c.chen@intel.com>
->Cc: "H. Peter Anvin" <hpa@zytor.com>
->Cc: Ingo Molnar <mingo@redhat.com>
->Cc: Jonathan Corbet <corbet@lwn.net>
->Cc: Josh Poimboeuf <jpoimboe@redhat.com>
->Cc: Juergen Gross <jgross@suse.com>
->Cc: Kees Cook <keescook@chromium.org>
->Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
->Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
->Cc: Nathan Chancellor <natechancellor@gmail.com>
->Cc: Paolo Bonzini <pbonzini@redhat.com>
->Cc: Pavel Machek <pavel@ucw.cz>
->Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->Cc: <stable@vger.kernel.org>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: "x86@kernel.org" <x86@kernel.org>
->Link: https://lkml.kernel.org/r/7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com
->---
-> Documentation/admin-guide/kernel-parameters.txt |  7 +-
-> arch/x86/include/asm/msr-index.h                |  1 +-
-> arch/x86/kernel/cpu/amd.c                       | 66 +------------
-> arch/x86/power/cpu.c                            | 86 ++--------------
-> 4 files changed, 13 insertions(+), 147 deletions(-)
->
->diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->index 4c19719..47d981a 100644
->--- a/Documentation/admin-guide/kernel-parameters.txt
->+++ b/Documentation/admin-guide/kernel-parameters.txt
->@@ -4090,13 +4090,6 @@
-> 			Run specified binary instead of /init from the ramdisk,
-> 			used for early userspace startup. See initrd.
->
->-	rdrand=		[X86]
->-			force - Override the decision by the kernel to hide the
->-				advertisement of RDRAND support (this affects
->-				certain AMD processors because of buggy BIOS
->-				support, specifically around the suspend/resume
->-				path).
->-
+If the CSI is unregistered and then registered again without the
+driver being removed and re-probed (which will happen when the media
+device is removed and re-probed without also removing/re-probing the
+CSI), the result is the kobject error and backtrace "tried to init an
+initialized object". This is because the video device is left in an
+initialized state after being unregistered, thus the video device's
+underlying kobject is also left in an initialized state when the device
+is registered again.
 
-Why is this being removed (along with supporting code)?
+Fix this by moving imx_media_capture_device_init() and _remove()
+into csi_registered() and csi_unregistered(). This will create a new
+un-initialized video device when the CSI is re-registered. Do this for
+all the subdevices that register a capture device.
 
---
-Thanks,
-Sasha
+Reported-by: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+---
+Changes in v2:
+Add missing local var ic_priv in prp_registered().
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ drivers/staging/media/imx/imx-ic-prpencvf.c | 25 ++++++++++++---------
+ drivers/staging/media/imx/imx-media-csi.c   | 20 ++++++++++-------
+ drivers/staging/media/imx/imx7-media-csi.c  | 22 +++++++++---------
+ 3 files changed, 38 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
+index 67ffa46a8e96..f8a0b21fcd02 100644
+--- a/drivers/staging/media/imx/imx-ic-prpencvf.c
++++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
+@@ -1246,6 +1246,7 @@ static int prp_s_frame_interval(struct v4l2_subdev *sd,
+ static int prp_registered(struct v4l2_subdev *sd)
+ {
+ 	struct prp_priv *priv = sd_to_priv(sd);
++	struct imx_ic_priv *ic_priv = priv->ic_priv;
+ 	int i, ret;
+ 	u32 code;
+ 
+@@ -1271,17 +1272,26 @@ static int prp_registered(struct v4l2_subdev *sd)
+ 	if (ret)
+ 		return ret;
+ 
++	priv->vdev = imx_media_capture_device_init(ic_priv->ipu_dev,
++						   &ic_priv->sd,
++						   PRPENCVF_SRC_PAD);
++	if (IS_ERR(priv->vdev))
++		return PTR_ERR(priv->vdev);
++
+ 	ret = imx_media_capture_device_register(priv->vdev);
+ 	if (ret)
+-		return ret;
++		goto remove_vdev;
+ 
+ 	ret = prp_init_controls(priv);
+ 	if (ret)
+-		goto unreg;
++		goto unreg_vdev;
+ 
+ 	return 0;
+-unreg:
++
++unreg_vdev:
+ 	imx_media_capture_device_unregister(priv->vdev);
++remove_vdev:
++	imx_media_capture_device_remove(priv->vdev);
+ 	return ret;
+ }
+ 
+@@ -1290,6 +1300,8 @@ static void prp_unregistered(struct v4l2_subdev *sd)
+ 	struct prp_priv *priv = sd_to_priv(sd);
+ 
+ 	imx_media_capture_device_unregister(priv->vdev);
++	imx_media_capture_device_remove(priv->vdev);
++
+ 	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
+ }
+ 
+@@ -1336,12 +1348,6 @@ static int prp_init(struct imx_ic_priv *ic_priv)
+ 	spin_lock_init(&priv->irqlock);
+ 	timer_setup(&priv->eof_timeout_timer, prp_eof_timeout, 0);
+ 
+-	priv->vdev = imx_media_capture_device_init(ic_priv->ipu_dev,
+-						   &ic_priv->sd,
+-						   PRPENCVF_SRC_PAD);
+-	if (IS_ERR(priv->vdev))
+-		return PTR_ERR(priv->vdev);
+-
+ 	mutex_init(&priv->lock);
+ 
+ 	return 0;
+@@ -1352,7 +1358,6 @@ static void prp_remove(struct imx_ic_priv *ic_priv)
+ 	struct prp_priv *priv = ic_priv->task_priv;
+ 
+ 	mutex_destroy(&priv->lock);
+-	imx_media_capture_device_remove(priv->vdev);
+ }
+ 
+ struct imx_ic_ops imx_ic_prpencvf_ops = {
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 367e39f5b382..b3f1cf08a102 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -1797,12 +1797,22 @@ static int csi_registered(struct v4l2_subdev *sd)
+ 	if (ret)
+ 		goto free_fim;
+ 
++	priv->vdev = imx_media_capture_device_init(priv->sd.dev,
++						   &priv->sd,
++						   CSI_SRC_PAD_IDMAC);
++	if (IS_ERR(priv->vdev)) {
++		ret = PTR_ERR(priv->vdev);
++		goto free_fim;
++	}
++
+ 	ret = imx_media_capture_device_register(priv->vdev);
+ 	if (ret)
+-		goto free_fim;
++		goto remove_vdev;
+ 
+ 	return 0;
+ 
++remove_vdev:
++	imx_media_capture_device_remove(priv->vdev);
+ free_fim:
+ 	if (priv->fim)
+ 		imx_media_fim_free(priv->fim);
+@@ -1816,6 +1826,7 @@ static void csi_unregistered(struct v4l2_subdev *sd)
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+ 
+ 	imx_media_capture_device_unregister(priv->vdev);
++	imx_media_capture_device_remove(priv->vdev);
+ 
+ 	if (priv->fim)
+ 		imx_media_fim_free(priv->fim);
+@@ -1963,11 +1974,6 @@ static int imx_csi_probe(struct platform_device *pdev)
+ 	imx_media_grp_id_to_sd_name(priv->sd.name, sizeof(priv->sd.name),
+ 				    priv->sd.grp_id, ipu_get_num(priv->ipu));
+ 
+-	priv->vdev = imx_media_capture_device_init(priv->sd.dev, &priv->sd,
+-						   CSI_SRC_PAD_IDMAC);
+-	if (IS_ERR(priv->vdev))
+-		return PTR_ERR(priv->vdev);
+-
+ 	mutex_init(&priv->lock);
+ 
+ 	v4l2_ctrl_handler_init(&priv->ctrl_hdlr, 0);
+@@ -1997,7 +2003,6 @@ static int imx_csi_probe(struct platform_device *pdev)
+ free:
+ 	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
+ 	mutex_destroy(&priv->lock);
+-	imx_media_capture_device_remove(priv->vdev);
+ 	return ret;
+ }
+ 
+@@ -2008,7 +2013,6 @@ static int imx_csi_remove(struct platform_device *pdev)
+ 
+ 	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
+ 	mutex_destroy(&priv->lock);
+-	imx_media_capture_device_remove(priv->vdev);
+ 	v4l2_async_unregister_subdev(sd);
+ 	media_entity_cleanup(&sd->entity);
+ 
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index 4ca79ff4c9b3..b61ab16a337a 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1119,7 +1119,16 @@ static int imx7_csi_registered(struct v4l2_subdev *sd)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return imx_media_capture_device_register(csi->vdev);
++	csi->vdev = imx_media_capture_device_init(csi->sd.dev, &csi->sd,
++						  IMX7_CSI_PAD_SRC);
++	if (IS_ERR(csi->vdev))
++		return PTR_ERR(csi->vdev);
++
++	ret = imx_media_capture_device_register(csi->vdev);
++	if (ret)
++		imx_media_capture_device_remove(csi->vdev);
++
++	return ret;
+ }
+ 
+ static void imx7_csi_unregistered(struct v4l2_subdev *sd)
+@@ -1127,6 +1136,7 @@ static void imx7_csi_unregistered(struct v4l2_subdev *sd)
+ 	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
+ 
+ 	imx_media_capture_device_unregister(csi->vdev);
++	imx_media_capture_device_remove(csi->vdev);
+ }
+ 
+ static int imx7_csi_init_cfg(struct v4l2_subdev *sd,
+@@ -1253,11 +1263,6 @@ static int imx7_csi_probe(struct platform_device *pdev)
+ 	csi->sd.grp_id = IMX_MEDIA_GRP_ID_CSI;
+ 	snprintf(csi->sd.name, sizeof(csi->sd.name), "csi");
+ 
+-	csi->vdev = imx_media_capture_device_init(csi->sd.dev, &csi->sd,
+-						  IMX7_CSI_PAD_SRC);
+-	if (IS_ERR(csi->vdev))
+-		return PTR_ERR(csi->vdev);
+-
+ 	v4l2_ctrl_handler_init(&csi->ctrl_hdlr, 0);
+ 	csi->sd.ctrl_handler = &csi->ctrl_hdlr;
+ 
+@@ -1271,8 +1276,6 @@ static int imx7_csi_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ free:
+-	imx_media_capture_device_unregister(csi->vdev);
+-	imx_media_capture_device_remove(csi->vdev);
+ 	v4l2_ctrl_handler_free(&csi->ctrl_hdlr);
+ 
+ cleanup:
+@@ -1300,9 +1303,6 @@ static int imx7_csi_remove(struct platform_device *pdev)
+ 	v4l2_device_unregister(&imxmd->v4l2_dev);
+ 	media_device_cleanup(&imxmd->md);
+ 
+-	imx_media_capture_device_unregister(csi->vdev);
+-	imx_media_capture_device_remove(csi->vdev);
+-
+ 	v4l2_async_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&csi->ctrl_hdlr);
+ 
+-- 
+2.17.1
+
