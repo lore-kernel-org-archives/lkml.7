@@ -2,114 +2,125 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49E8C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B342D21670
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCDF2133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:52:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1/sIPUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfHXDn7 (ORCPT
+        id S1726397AbfHXDwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 23:43:59 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:35950 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726436AbfHXDnp (ORCPT
+        Fri, 23 Aug 2019 23:52:42 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39030 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbfHXDwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 23:43:45 -0400
-X-UUID: fbc101e3f394400c904322ae2216d8a9-20190824
-X-UUID: fbc101e3f394400c904322ae2216d8a9-20190824
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 740457057; Sat, 24 Aug 2019 11:05:23 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 24 Aug 2019 11:05:15 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 24 Aug 2019 11:05:14 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>
-Subject: [PATCH v11 13/23] iommu/mediatek: Refine protect memory definition
-Date:   Sat, 24 Aug 2019 11:01:58 +0800
-Message-ID: <1566615728-26388-14-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
-References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Fri, 23 Aug 2019 23:52:42 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so6892977pgi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 20:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Syad2iPtdLZLKQPwC2EQhBs9/OI7kvb9K6gEE+BBruE=;
+        b=X1/sIPUj0fzr0BM3fFzEqMryzHdzp6gRdi8TsRSBKs+ftysd7IABbTojQxRf/j+Eb7
+         pHHnPdMY0uAoXzCjnLVExLt9DbuoM0BtAvSeCRHWgL0UE8zig96z3zysb90uNyDWOIbW
+         oMbbqOwPKKLWTdbqOiRQYzdq5CxV8768KEr9CM+Zx7NrLrVwMVOwR9RJON3EM0qhC5Dx
+         q2a4JU/yStuoYaV+lE1q/jSI3fGXeEs/cFPScr+TUgGn+WDdTU1MQH69xl0UvTtD7RcC
+         qlF0nTKDSHAFdZPbmESrPqehmFwAZpM328p2o1pL9kUehbPTV9URCIPs3jLX45MkYPDb
+         z1HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Syad2iPtdLZLKQPwC2EQhBs9/OI7kvb9K6gEE+BBruE=;
+        b=MEuy56Bcw5jCL4jbo8JlrxdtwExNcLu/ICip1QzkcqKW9kcPhlXgEpdS3ssZeWHF4j
+         nZ0vrWCtvQ17BfvHBVEGrvXUagkojua4cD/TCOj4b87YzkJaViouiUuZ0wu8q2oOhz/j
+         +ouWuUBp42/e2w+0wtSWT96EeHkY6x2WxSRfE/IMA/yweIjPuYVWVihhzwjBbXCQSUao
+         C0dDo4a7g3+eNZi7pFpdt2C8OQ+xGvOUo65ySw6recnDO8hAxWqBz5rjKh4BAeH44Bf+
+         T8xeHxMARDYIzGqcEFxIo3wnxQAnag62lfefBXdOuBsSY6YcH4ijFukZ1w1xyWuv/1rB
+         n+xw==
+X-Gm-Message-State: APjAAAW0fzVTByTm+F7yXdXjnDlncYAtPt7swEjQYnYcq3MCENisK9OZ
+        HGOzfunvV9GeLdU//hxMixY=
+X-Google-Smtp-Source: APXvYqy1eJmoXR6J5YoBthflZsSngyo21PqhntK319rgmYiR42uWn7csPibk7er1GPJm/u+s3sy8sA==
+X-Received: by 2002:aa7:8106:: with SMTP id b6mr8906009pfi.5.1566618761111;
+        Fri, 23 Aug 2019 20:52:41 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:9d6:5ad6:c421:f555:f963:8f89])
+        by smtp.gmail.com with ESMTPSA id c71sm4835015pfc.106.2019.08.23.20.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 20:52:40 -0700 (PDT)
+From:   Satendra Singh Thakur <sst2005@gmail.com>
+Cc:     satendrasingh.thakur@hcl.com,
+        Satendra Singh Thakur <sst2005@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] [semaphore] Removed redundant code from semaphore's down family of function
+Date:   Sat, 24 Aug 2019 09:20:59 +0530
+Message-Id: <20190824035100.7969-1-sst2005@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190822155112.GU2369@hirez.programming.kicks-ass.net>
+References: <20190822155112.GU2369@hirez.programming.kicks-ass.net>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The protect memory setting is a little different in the different SoCs.
-In the register REG_MMU_CTRL_REG(0x110), the TF_PROT(translation fault
-protect) shift bit is normally 4 while it shift 5 bits only in the
-mt8173. This patch delete the complex MACRO and use a common if-else
-instead.
+On Thu, 22 Aug 2019 17:51:12 +0200, Peter Zijlstra wrote:
+> On Mon, Aug 12, 2019 at 07:18:59PM +0530, Satendra Singh Thakur wrote:
+> > -The semaphore code has four funcs
+> > down,
+> > down_interruptible,
+> > down_killable,
+> > down_timeout
+> > -These four funcs have almost similar code except that
+> > they all call lower level function __down_xyz.
+> > -This lower level func in-turn call inline func
+> > __down_common with appropriate arguments.
+> > -This patch creates a common macro for above family of funcs
+> > so that duplicate code is eliminated.
+> > -Also, __down_common has been made noinline so that code is
+> > functionally similar to previous one
+> > -For example, earlier down_killable would call __down_killable
+> > , which in-turn would call inline func __down_common
+> > Now, down_killable calls noinline __down_common directly
+> > through a macro
+> > -The funcs __down_interruptible, __down_killable etc have been
+> > removed as they were just wrapper to __down_common
+>
+> The above is unreadable and seems to lack a reason for this change.
+Hi Mr Peter,
+Thanks for the comments.
+I will try to explain it further:
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- drivers/iommu/mtk_iommu.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+The semaphore has four functions named down*.
+The call flow of the functions is
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 34f0203..947a8c6b8 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -44,12 +44,9 @@
- #define REG_MMU_DCM_DIS				0x050
- 
- #define REG_MMU_CTRL_REG			0x110
-+#define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
- #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
--#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
--	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
--/* It's named by F_MMU_TF_PROT_SEL in mt2712. */
--#define F_MMU_TF_PROTECT_SEL(prot, data) \
--	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
-+#define F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173	(2 << 5)
- 
- #define REG_MMU_IVRP_PADDR			0x114
- 
-@@ -539,9 +536,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 		return ret;
- 	}
- 
--	regval = F_MMU_TF_PROTECT_SEL(2, data);
- 	if (data->plat_data->m4u_plat == M4U_MT8173)
--		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
-+		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-+			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
-+	else
-+		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
- 	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
- 
- 	regval = F_L2_MULIT_HIT_EN |
--- 
-1.9.1
+down* ----> __down* ----> inline __down_common
 
+The code of down* and __down* is redundant/duplicate except that
+the __down_common is called with different arguments from __down*
+functions.
+
+This patch defines a macro down_common which contain this common
+code of all down* functions.
+
+new call flow is
+
+down* ----> noinline __down_common (through a macro down_common).
+
+> AFAICT from the actual patch, you're destroying the explicit
+> instantiation of the __down*() functions
+> through constant propagation into __down_common().
+Intead of instantiation of __down* functions, we are instaintiating
+__down_common, is it a problem ?
+
+Thanks
+Satendra
