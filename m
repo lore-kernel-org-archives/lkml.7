@@ -2,161 +2,150 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A81C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC75C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2249A2146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GvW6JYBU"
+	by mail.kernel.org (Postfix) with ESMTP id D48832173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfHXMxP (ORCPT
+        id S1728070AbfHXM4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 08:53:15 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43706 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbfHXMxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 08:53:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so7292939pld.10
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 05:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=F/nPYFepDy0cUjW6EXTQwdfVi+FEnIDznVuIrRm/76A=;
-        b=GvW6JYBUVbXc2ui2gYORsIjOTFeKIL7aFET4Fh6Q1fjGX5ma243XPCtctwoAIBRx+B
-         HRSTGuKLsYHrtx/TJXzo+hq3zSdDEUOnHwWWzlS2hi96JavVbw5KHLfQJaY/1wDD2sfj
-         PEf3L1nhNeLzJGbFlSCAe/dfJ3AjaU8M5vFIvWg622vjgrORIZmamtKY+rpUbhxTLeb3
-         X3ZxxTGW/FxrA/P+w61QkVQGFd0EZdXY9mhBzLGB4XLehU3fSTu4hB7WK+oFTD0Kv5Yk
-         VxmuIFrkV70XEBs1VFFt69Runp3vapWFHskYnevB4alDXlmiWTkES0DGtIDn4o8yn0GE
-         +EqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=F/nPYFepDy0cUjW6EXTQwdfVi+FEnIDznVuIrRm/76A=;
-        b=cjQz+CVBRU1KHEKgRkYhs+iGHbRJ5hhCxO5GcFFf6dc528im3F4/zG06FrHFD70TBC
-         dzoqOG+loeRKs5mOm5huqH7IMLFfW17jAod4Mgukkq2OkZeu7RImyIRFiuZ6hXTFm7eh
-         jn+mpbG3y4KS3DkZujbu0l3CWko5s2l6BXQa0UawSLBAulH5SkqkjVE7AaZHHHtcoAyu
-         kTbYzPIVDMY1Z/EF6zkEMDsdYN2uFziaTea6lSzVCn+1whKG6BMWnghmSlqUmCuF9kCm
-         W7TSffUvhayg0tt99AFhZIsM0eReO6YMWMTYWKykee0h4nzBVNcRpPm61I8yQrlf/EFx
-         ne6A==
-X-Gm-Message-State: APjAAAXoaWM6mnWG4qYDPqNWKCvKp4H5MWsv+Zz46QrlJv615dZ+G6wt
-        PiU08LhL7dayllDhyVepVWdyWA==
-X-Google-Smtp-Source: APXvYqx+IURKcWdwfiEX/7uNVRhZ17G7ahM9Vc5+Ev5lEshJUeeeQA2/NEVdPLW7JlCdXRlh3EmkdA==
-X-Received: by 2002:a17:902:860b:: with SMTP id f11mr9745085plo.48.1566651194290;
-        Sat, 24 Aug 2019 05:53:14 -0700 (PDT)
-Received: from [192.168.11.133] (li1566-229.members.linode.com. [139.162.86.229])
-        by smtp.gmail.com with ESMTPSA id x9sm4493152pgp.75.2019.08.24.05.53.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 24 Aug 2019 05:53:13 -0700 (PDT)
-From:   zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/2] uacce: add uacce module
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
- <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
- <20190815142021.GE23267@kroah.com>
- <5d5a6f5b.1c69fb81.9d35e.5303SMTPIN_ADDED_BROKEN@mx.google.com>
- <20190819102413.GB2030@kroah.com>
- <0f7c6241-2028-76e7-0314-8b99cd353bd6@linaro.org>
- <20190820143341.GB1536@kroah.com>
-Message-ID: <3e237a99-8832-30d5-11de-f65325195478@linaro.org>
-Date:   Sat, 24 Aug 2019 20:53:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 24 Aug 2019 08:56:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47058 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727590AbfHXM4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 08:56:09 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5BB741089042;
+        Sat, 24 Aug 2019 12:56:08 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 606615D6D0;
+        Sat, 24 Aug 2019 12:55:58 +0000 (UTC)
+Date:   Sat, 24 Aug 2019 20:55:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Long Li <longli@microsoft.com>
+Cc:     Sagi Grimberg <sagi@grimberg.me>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU with
+ flooded interrupts
+Message-ID: <20190824125553.GA8474@ming.t460p>
+References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
+ <1566281669-48212-4-git-send-email-longli@linuxonhyperv.com>
+ <2a30a07f-982c-c291-e263-0cf72ec61235@grimberg.me>
+ <20190823032129.GA18680@ming.t460p>
+ <CY4PR21MB074173E79C7FC3AC13C69CB3CEA70@CY4PR21MB0741.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190820143341.GB1536@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR21MB074173E79C7FC3AC13C69CB3CEA70@CY4PR21MB0741.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Sat, 24 Aug 2019 12:56:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 24, 2019 at 12:27:18AM +0000, Long Li wrote:
+> >>>Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU
+> >>>with flooded interrupts
+> >>>
+> >>>On Tue, Aug 20, 2019 at 10:33:38AM -0700, Sagi Grimberg wrote:
+> >>>>
+> >>>> > From: Long Li <longli@microsoft.com>
+> >>>> >
+> >>>> > When a NVMe hardware queue is mapped to several CPU queues, it is
+> >>>> > possible that the CPU this hardware queue is bound to is flooded by
+> >>>> > returning I/O for other CPUs.
+> >>>> >
+> >>>> > For example, consider the following scenario:
+> >>>> > 1. CPU 0, 1, 2 and 3 share the same hardware queue 2. the hardware
+> >>>> > queue interrupts CPU 0 for I/O response 3. processes from CPU 1, 2
+> >>>> > and 3 keep sending I/Os
+> >>>> >
+> >>>> > CPU 0 may be flooded with interrupts from NVMe device that are I/O
+> >>>> > responses for CPU 1, 2 and 3. Under heavy I/O load, it is possible
+> >>>> > that CPU 0 spends all the time serving NVMe and other system
+> >>>> > interrupts, but doesn't have a chance to run in process context.
+> >>>> >
+> >>>> > To fix this, CPU 0 can schedule a work to complete the I/O request
+> >>>> > when it detects the scheduler is not making progress. This serves
+> >>>multiple purposes:
+> >>>> >
+> >>>> > 1. This CPU has to be scheduled to complete the request. The other
+> >>>> > CPUs can't issue more I/Os until some previous I/Os are completed.
+> >>>> > This helps this CPU get out of NVMe interrupts.
+> >>>> >
+> >>>> > 2. This acts a throttling mechanisum for NVMe devices, in that it
+> >>>> > can not starve a CPU while servicing I/Os from other CPUs.
+> >>>> >
+> >>>> > 3. This CPU can make progress on RCU and other work items on its
+> >>>queue.
+> >>>>
+> >>>> The problem is indeed real, but this is the wrong approach in my mind.
+> >>>>
+> >>>> We already have irqpoll which takes care proper budgeting polling
+> >>>> cycles and not hogging the cpu.
+> >>>
+> >>>The issue isn't unique to NVMe, and can be any fast devices which
+> >>>interrupts CPU too frequently, meantime the interrupt/softirq handler may
+> >>>take a bit much time, then CPU is easy to be lockup by the interrupt/sofirq
+> >>>handler, especially in case that multiple submission CPUs vs. single
+> >>>completion CPU.
+> >>>
+> >>>Some SCSI devices has the same problem too.
+> >>>
+> >>>Could we consider to add one generic mechanism to cover this kind of
+> >>>problem?
+> >>>
+> >>>One approach I thought of is to allocate one backup thread for handling such
+> >>>interrupt, which can be marked as IRQF_BACKUP_THREAD by drivers.
+> >>>
+> >>>Inside do_IRQ(), irqtime is accounted, before calling action->handler(),
+> >>>check if this CPU has taken too long time for handling IRQ(interrupt or
+> >>>softirq) and see if this CPU could be lock up. If yes, wakeup the backup
+> 
+> How do you know if this CPU is spending all the time in do_IRQ()?
+> 
+> Is it something like:
+> If (IRQ_time /elapsed_time > a threshold value)
+> 	wake up the backup thread
+
+Yeah, the above could work in theory.
+
+Another approach I thought of is to monitor average irq gap time on each
+CPU.
+
+We could use EWMA(Exponential Weighted Moving Average) to do it simply,
+such as:
+
+	curr_irq_gap(cpu) = current start time of do_IRQ() on 'cpu' -
+			end time of last do_IRQ() on 'cpu'
+	avg_irq_gap(cpu) = weight_prev * avg_irq_gap(cpu) + weight_curr * curr_irq_gap(cpu) 
+
+	note:
+		weight_prev + weight_curr = 1
+
+When avg_irq_gap(cpu) is close to one small enough threshold, we think irq flood is
+detected.
+
+'weight_prev' could be chosen as one big enough value for avoiding short-time flood.
 
 
-On 2019/8/20 下午10:33, Greg Kroah-Hartman wrote:
-> On Tue, Aug 20, 2019 at 08:36:50PM +0800, zhangfei wrote:
->> Hi, Greg
->>
->> On 2019/8/19 下午6:24, Greg Kroah-Hartman wrote:
->>>>>> +static int uacce_create_chrdev(struct uacce *uacce)
->>>>>> +{
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	ret = idr_alloc(&uacce_idr, uacce, 0, 0, GFP_KERNEL);
->>>>>> +	if (ret < 0)
->>>>>> +		return ret;
->>>>>> +
->>>>> Shouldn't this function create the memory needed for this structure?
->>>>> You are relying ont he caller to do it for you, why?
->>>> I think you mean uacce structure here.
->>>> Yes, currently we count on caller to prepare uacce structure and call
->>>> uacce_register(uacce).
->>>> We still think this method is simpler, prepare uacce, register uacce.
->>>> And there are other system using the same method, like crypto
->>>> (crypto_register_acomp), nand, etc.
->>> crypto is not a subsystem to ever try to emulate :)
->>>
->>> You are creating a structure with a lifetime that you control, don't
->>> have someone else create your memory, that's almost never what you want
->>> to do.  Most all driver subsystems create their own memory chunks for
->>> what they need to do, it's a much better pattern.
->>>
->>> Especially when you get into pointer lifetime issues...
->> OK, understand now, thanks for your patience.
->> will use this instead.
->> struct uacce_interface {
->>          char name[32];
->>          unsigned int flags;
->>          struct uacce_ops *ops;
->> };
->> struct uacce *uacce_register(struct device *dev, struct uacce_interface
->> *interface);
-> What?  Why do you need a structure?  A pointer to the name and the ops
-> should be all that is needed, right?
-We are thinking transfer structure will be more flexible.
-And modify api later would be difficult, requiring many drivers modify 
-together.
-Currently parameters need a flag, a pointer to the name, and ops, but in 
-case more requirement from future drivers usage.
-Also refer usb_register_dev, sdhci_pltfm_init etc, and the structure 
-para can be set as static.
-> And 'dev' here is a pointer to the parent, right?  Might want to make
-> that explicit in the name of the variable :)
-Yes, 'dev' is parent, will change to 'pdev', thanks.
->>>>>> +
->>>>>> +static int uacce_dev_match(struct device *dev, void *data)
->>>>>> +{
->>>>>> +	if (dev->parent == data)
->>>>>> +		return -EBUSY;
->>>>> There should be in-kernel functions for this now, no need for you to
->>>>> roll your own.
->>>> Sorry, do not find this function.
->>>> Only find class_find_device, which still require match.
->>> It is in linux-next, look there...
->>>
->> Suppose you mean the funcs: device_match_name,
->> device_match_of_node,device_match_devt etc.
->> Here we need dev->parent, there still no such func.
-> You should NEVER be matching on a parent.  If so, your use of the driver
-> model is wrong :)
->
-> Remind me to really review the use of the driver core code in your next
-> submission of this series please, I think it needs it.
->
->
-
-OK, thanks Greg.
-
+Thanks,
+Ming
