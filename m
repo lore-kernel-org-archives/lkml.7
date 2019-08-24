@@ -2,132 +2,193 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0E0C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E9C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D47620850
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C00922CEB
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:16:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmblOeXq"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aDghlMgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfHXWFY (ORCPT
+        id S1728128AbfHXWQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 18:05:24 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41187 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfHXWFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 18:05:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so7764202pls.8;
-        Sat, 24 Aug 2019 15:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=+GV4BcDpMPwMrWAL+/wgxfMaDv3Pfp4zeDsXA2CoPpk=;
-        b=QmblOeXqbhHNcdlu7I3jpi2b+kboYgkx8hD/dzNwI6jRefw1FfDG8rx0Owp+NZLbeC
-         3F2nYSIqSlHHEtjglnjJyYF6i0ykMy08V8NDNJw2rWLRQ3Tb7gZcyxKP6wltqeQWGaxW
-         7ZKst1tfwuAJkZGKCIpV9fKc31aa2VMO4JbskvaAstXGEbKAgMGOmaS+B0lr3KZRMzKB
-         /Hk3g1l6XVdwaQsAdvXx+J2BZhVpWiBtuDVCqNaze/ktg9SBRh58V6sG/XXVbL6cXObp
-         JJ8Q3SBR8PE3iev2romC5u0i1r2Eu/d40mvah2NKfVJ+ctiVYOD+xmSV3YKRzeDqQFOx
-         6teg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=+GV4BcDpMPwMrWAL+/wgxfMaDv3Pfp4zeDsXA2CoPpk=;
-        b=S3F8sni4UlNK01EDZxQZOUrTBq70uO7chNAZu4tuuYjyDUeSJFdnz5JEDuzH9YiZiH
-         qCse7FLnElTrPTkse75M6IZsFSKWUNNzrJ4Rb9sWlQW5denFolgvNQi/VG+Ju++BGeAW
-         HL5l3dqlgRHN+P7SNMQwGNVvoWxOBPdTNWX9/nSJ87WVwyywuiDJKzBoQzwwwyYJ4psU
-         13gXv5xx2ODa5X9/cRznEtM/30ij6T6ojJ16NKrIteuBLRQxdFKIA5qp2BrViusWXSW3
-         NxyKMWGD2+3DAai30TtLUDHoOxLQoDvmLrvRNzA6BoDkGzn1mq0G0og1pLAxXlhPHrR9
-         R3ww==
-X-Gm-Message-State: APjAAAWxu+mjN9sXgSYiIVtu5GyCC48E2A6SgxrUuV3DhPqk+SDs6akd
-        hC50EMg0OF/T6lGgufgeNac=
-X-Google-Smtp-Source: APXvYqxcWGsIxD+Fi4K9kDV0mqK+B/MmijIeDAiHoAsy29YIUjcUqFTQR6sLmmyd4N/nnYmH+Gkf2Q==
-X-Received: by 2002:a17:902:7442:: with SMTP id e2mr10510884plt.315.1566684322882;
-        Sat, 24 Aug 2019 15:05:22 -0700 (PDT)
-Received: from [172.26.127.117] ([2620:10d:c090:180::4714])
-        by smtp.gmail.com with ESMTPSA id d3sm6997751pjz.31.2019.08.24.15.05.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 24 Aug 2019 15:05:22 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Tim Froidcoeur" <tim.froidcoeur@tessares.net>
-Cc:     matthieu.baerts@tessares.net, aprout@ll.mit.edu, cpaasch@apple.com,
-        davem@davemloft.net, edumazet@google.com,
-        gregkh@linuxfoundation.org, jtl@netflix.com,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        ncardwell@google.com, sashal@kernel.org, stable@vger.kernel.org,
-        ycheng@google.com, netdev@vger.kernel.org
-Subject: Re: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
- retransmit queue
-Date:   Sat, 24 Aug 2019 15:05:20 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <400C4757-E7AD-4CCF-8077-79563EA869B1@gmail.com>
-In-Reply-To: <20190824060351.3776-1-tim.froidcoeur@tessares.net>
-References: <529376a4-cf63-f225-ce7c-4747e9966938@tessares.net>
- <20190824060351.3776-1-tim.froidcoeur@tessares.net>
+        Sat, 24 Aug 2019 18:16:41 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45612 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727690AbfHXWQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 18:16:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1566684998; bh=AsOxRhcbCf7VZl7oMHpWnpYauCEftDRhqiCkn6rkDqk=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=aDghlMgS0KlmNASkm6II80Hph5ASAkcy2zUuFCPWgZK4ffFAx4bGDHqmmgHb4KaB8
+         HtWoS2NTJ3LkvHf9h7uJwWjpHOXsarTIzTbia6Tq6cVGH/hVd67KA9yDE2wmyUjnAx
+         9uUMlrVR6N+/ymYdDfWbKtnIRDI/YXGaG6kJOJg0=
+Date:   Sun, 25 Aug 2019 00:16:38 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
+Message-ID: <20190824221638.ztoqpp5y6btshgit@core.my.home>
+Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        linux-sunxi@googlegroups.com, Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <20190820151934.3860-1-megous@megous.com>
+ <1690798.2HKiRSsjat@jernej-laptop>
+ <20190824212746.a5pyilkrrvysjjbd@core.my.home>
+ <7913281.jYEbquIlsS@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7913281.jYEbquIlsS@jernej-laptop>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 24, 2019 at 11:36:26PM +0200, Jernej Škrabec wrote:
+> Dne sobota, 24. avgust 2019 ob 23:27:46 CEST je Ondřej Jirman napisal(a):
+> > Hello Jernej,
+> > 
+> > On Sat, Aug 24, 2019 at 11:09:49PM +0200, Jernej Škrabec wrote:
+> > > > Visually?
+> > > > 
+> > > > That would explain why it doesn't work for you. The mainline RTC driver
+> > > > disables auto-switch feature, and if your board doesn't have a crystal
+> > > > for
+> > > > LOSC, RTC will not generate a clock for the RTC.
+> > > > 
+> > > > H6's dtsi describes by default a situatiuon with external 32k crystal
+> > > > oscillator. See ext_osc32k node. That's incorrect for your board if it
+> > > > doesn't have the crystal. You need to fix this in the DTS for your board
+> > > > instead of patching the driver.
+> > > 
+> > > I see that reparenting is supported, but I'm not sure how to fix that in
+> > > DT. Any suggestion?
+> > 
+> > You may try removing the clocks property from rtc node.
+> 
+> I don't think this would work:
+> https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L246
 
+Well, I don't know. There has to be some way to make it work, since the code
+deals with it here:
 
-On 23 Aug 2019, at 23:03, Tim Froidcoeur wrote:
+https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L270
 
-> Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
-> triggers following stack trace:
->
-> [25244.848046] kernel BUG at ./include/linux/skbuff.h:1406!
-> [25244.859335] RIP: 0010:skb_queue_prev+0x9/0xc
-> [25244.888167] Call Trace:
-> [25244.889182]  <IRQ>
-> [25244.890001]  tcp_fragment+0x9c/0x2cf
-> [25244.891295]  tcp_write_xmit+0x68f/0x988
-> [25244.892732]  __tcp_push_pending_frames+0x3b/0xa0
-> [25244.894347]  tcp_data_snd_check+0x2a/0xc8
-> [25244.895775]  tcp_rcv_established+0x2a8/0x30d
-> [25244.897282]  tcp_v4_do_rcv+0xb2/0x158
-> [25244.898666]  tcp_v4_rcv+0x692/0x956
-> [25244.899959]  ip_local_deliver_finish+0xeb/0x169
-> [25244.901547]  __netif_receive_skb_core+0x51c/0x582
-> [25244.903193]  ? inet_gro_receive+0x239/0x247
-> [25244.904756]  netif_receive_skb_internal+0xab/0xc6
-> [25244.906395]  napi_gro_receive+0x8a/0xc0
-> [25244.907760]  receive_buf+0x9a1/0x9cd
-> [25244.909160]  ? load_balance+0x17a/0x7b7
-> [25244.910536]  ? vring_unmap_one+0x18/0x61
-> [25244.911932]  ? detach_buf+0x60/0xfa
-> [25244.913234]  virtnet_poll+0x128/0x1e1
-> [25244.914607]  net_rx_action+0x12a/0x2b1
-> [25244.915953]  __do_softirq+0x11c/0x26b
-> [25244.917269]  ? handle_irq_event+0x44/0x56
-> [25244.918695]  irq_exit+0x61/0xa0
-> [25244.919947]  do_IRQ+0x9d/0xbb
-> [25244.921065]  common_interrupt+0x85/0x85
-> [25244.922479]  </IRQ>
->
-> tcp_rtx_queue_tail() (called by tcp_fragment()) can call
-> tcp_write_queue_prev() on the first packet in the queue, which will trigger
-> the BUG in tcp_write_queue_prev(), because there is no previous packet.
->
-> This happens when the retransmit queue is empty, for example in case of a
-> zero window.
->
-> Patch is needed for 4.4, 4.9 and 4.14 stable branches.
->
-> Fixes: 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
-> Change-Id: I839bde7167ae59e2f7d916c913507372445765c5
-> Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Reviewed-by: Christoph Paasch <cpaasch@apple.com>
+Number of parents for LOSC is calculated from the DT somehow. Maybne something
+to do with the #clock-cells property?
 
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Sorry I can't be of more help here.
+
+> > 
+> > > > The driver has parent clock selection logic in case the LOSC crystal is
+> > > > not
+> > > > used.
+> > > > 
+> > > > Your patch enables automatic detection of LOSC failure and RTC changes
+> > > > clock to LOSC automatically, despite what's described in the DTS. That
+> > > > may fix the issue, but is not the correct solution.
+> > > > 
+> > > > Registers on my board look like this (external 32k osc is used) for
+> > > > reference:
+> > > > 
+> > > > LOSC_CTRL_REG[7000000]: 8011
+> > > > 
+> > > > 	KEY_FIELD                      ???                  (0)
+> > > > 	LOSC_AUTO_SWT_BYPASS           EN                   (1)
+> > > > 	LOSC_AUTO_SWT_EN               DIS                  (0)
+> > > > 	EXT_LOSC_EN                    EN                   (1)
+> > > > 	EXT_LOSC_GSM                   LOW                  (0)
+> > > > 	BATTERY_DIR                    DISCHARGE            (0)
+> > > > 	LOSC_SRC_SEL                   EXT32k               (1)
+> > > > 
+> > > > LOSC_AUTO_SWT_STA_REG[7000004]: 1
+> > > > 
+> > > > 	EXT_LOSC_STA                   OK                   (0)
+> > > > 	LOSC_AUTO_SWT_PEND             NOEFF                (0)
+> > > > 	LOSC_SRC_SEL_STA               EXT32K               (1)
+> > > 
+> > > In my case LOSC_CTRL_REG has value 0x4010 and LOSC_AUTO_SWT_STA_REG
+> > > has value 0x4, so there is issue with external crystal (it's missing) and
+> > > RTC switched to internal one.
+> > > 
+> > > BTW, what's wrong with automatic switching? Why is it disabled?
+> > 
+> > It always was disabled on mainline (bit 14 was set to 0 even before my
+> > patch). H6 just probably has another extra undocummented bit, that's needed
+> > to disables it properly.
+> > 
+> > You probably don't want a glitch to switch your RTC from high-precision
+> > clock to a low precision one possibly without any indication in the
+> > userspace or a kernel log.
+> > 
+> > Regardless of all this, DTS needs to have a correct description of the HW,
+> > which means if RTC module is not connected to the 32.757kHz crystal/clock,
+> > clocks property should be empty.
+> 
+> If we are talking about correct HW description, then clock property should 
+> actually have possibility that two clocks are defined - one for internal RC 
+> (always present) and one external crystal (optional). In such case I could 
+> really just omit external clock and be done with it. But I'm not sure if such 
+
+Internal RC is thought to be part of the RTC module, so it's not defined as an
+input clock to the RTC module.
+
+regards,
+	Ondrej
+
+> 
+> Best regards,
+> Jernej
+> 
+> > 
+> > regards,
+> > 	o.
+> > 
+> > > Best regards,
+> > > Jernej
+> > > 
+> > > > regards,
+> > > > 
+> > > > 	o.
+> > > > 	
+> > > > > > The real issue probably is that the mainline driver is missing this:
+> > > > > > 
+> > > > > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=h6-4.9-b
+> > > > > > sp#n
+> > > > > > 650
+> > > > > 
+> > > > > Not sure what you mean by that. ext vs. int source selection?
+> > > > > 
+> > > > > 
+> > > > > 
+> > > > > Best regards,
+> > > > > Jernej
+> > > > > 
+> > > > > > regards,
+> > > > > > 
+> > > > > > 	o.
+> 
+> 
+> 
+> 
