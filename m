@@ -2,114 +2,70 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C8AC41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F94C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBB02146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7122133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566683374;
-	bh=AEi9xsN3Xx/abMEbB13bCDWDcwoVz1r6hZ6AC4FqEgY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=oAPps9a4hGjmjWHUm5/8R469Nv2YVusBTT1K44W1bbJrKCo4S+ovlIf5rGD8XWr4V
-	 GI+7wt6+xlhAtcW1G4EePj3KXbqfbQLBzeNBCwjYrJquBoRQ+UIMyC8gs74BxOr+Vm
-	 FNR3OZUs6COCYJtMYWynKsbepttCiQngKnV0abYQ=
+	s=default; t=1566683408;
+	bh=EA9xCPYzTOMiystICS0U2wfYpmLVAQH7EJKGtmzwXOA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=JmSzeXOmHJCQT+jkP6Zzi8KeYjIZaIwyBM7R+rFMu3KBijt6vuHAl6RZQTUW9qBZE
+	 oXRo+5pRJExWFZHEJFxc8pRKEXt2BXbEgO0mJ1v/SgEKehCareIX8S1NY8zYzPSq73
+	 F0+ir1RsK+/8Ob5hC0IXjFi9UAgpPOzL3spCNJRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfHXVtd (ORCPT
+        id S1728196AbfHXVuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 17:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33346 "EHLO mail.kernel.org"
+        Sat, 24 Aug 2019 17:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbfHXVtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 17:49:33 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FA312133F;
-        Sat, 24 Aug 2019 21:49:31 +0000 (UTC)
+        id S1727956AbfHXVuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 17:50:07 -0400
+Subject: Re: [GIT PULL] GPIO fixes for v5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566683372;
-        bh=AEi9xsN3Xx/abMEbB13bCDWDcwoVz1r6hZ6AC4FqEgY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=td9MUgrzMnGqZn8/N5xZvEi0gIOVZV3AvIn1KQJ7zBX8PGr99ohGoM4Wt75d2ETHb
-         JfeTD51UFPo3o0k2Wna5faSJehIXN1pHRJfeIbMUl4G0okK/vKCivoABjEbf62EQqC
-         AL8/GEPjceVscqgtEAvoQ3ezoWLbWhj55F2dvvXI=
-Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, shuah <shuah@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
- <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
- <20190824023829.GE9862@kroah.com>
- <e4d5ba59-8e38-a267-8a14-3c6bc03f77bd@kernel.org>
- <20190824153348.GA27505@kroah.com>
- <93850e40-7df9-b5db-bda4-5b4354d2c3f3@kernel.org>
- <20190824181445.GA10804@kroah.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <bf9b854f-0144-1260-9bab-d9d2ea455864@kernel.org>
-Date:   Sat, 24 Aug 2019 15:49:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190824181445.GA10804@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        s=default; t=1566683406;
+        bh=EA9xCPYzTOMiystICS0U2wfYpmLVAQH7EJKGtmzwXOA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=b5KG/Ru1V3/tZf5IURn2K6ZvwHt3CYGTEgumRxn3RUJtiolP5Ta5VMpYKhhPlAmXp
+         6M4Qhbz5XD155XXpMGF4WG5UmP7UHg5D8kujC9wfaJRPEmCNegTrjavp+Dja+xCHEa
+         W5/Mngd5nKyBJiMYNAiBcZ/DMbgDi/xIUDu/G2E0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdaWR9GZ0Hem4h-jdGcYc_Uwx29XvsHuEgvXiebRG6DCwA@mail.gmail.com>
+References: <CACRpkdaWR9GZ0Hem4h-jdGcYc_Uwx29XvsHuEgvXiebRG6DCwA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdaWR9GZ0Hem4h-jdGcYc_Uwx29XvsHuEgvXiebRG6DCwA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ tags/gpio-v5.3-4
+X-PR-Tracked-Commit-Id: 48057ed1840fde9239b1e000bea1a0a1f07c5e99
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 083f0f2cd402df40f62e16b1e4208e6033f52aba
+Message-Id: <156668340693.6376.1697881964961621306.pr-tracker-bot@kernel.org>
+Date:   Sat, 24 Aug 2019 21:50:06 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/19 12:14 PM, Greg KH wrote:
-> On Sat, Aug 24, 2019 at 11:01:19AM -0600, shuah wrote:
->> On 8/24/19 9:33 AM, Greg KH wrote:
->>> On Sat, Aug 24, 2019 at 09:21:53AM -0600, shuah wrote:
->>>> On 8/23/19 8:38 PM, Greg KH wrote:
->>>>> On Fri, Aug 23, 2019 at 12:41:03PM -0600, shuah wrote:
->>>>>> On 8/22/19 11:05 AM, Sasha Levin wrote:
->>>>>>>
->>>>>>> This is the start of the stable review cycle for the 5.2.10 release.
->>>>>>> There are 135 patches in this series, all will be posted as a response
->>>>>>> to this one.  If anyone has any issues with these being applied, please
->>>>>>> let me know.
->>>>>>>
->>>>>>> Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
->>>>>>> Anything received after that time might be too late.
->>>>>>>
->>>>>>> The whole patch series can be found in one patch at:
->>>>>>>             https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz
->>>>>>
->>>>>> I am seeing "Sorry I can't find your kernels". Is this posted?
->>>>>
->>>>> Ah, Sasha didn't generate the patch but it was still listed here, oops.
->>>>> He copied my format and we didn't notice this, sorry about that.
->>>>>
->>>>> As the thread shows, we didn't generate this file this time to see what
->>>>> would happen.  If your test process requires it, we can generate it as I
->>>>> don't want to break it.
->>>>>
->>>>
->>>> It will make it lot easier for me to have continued support for patch
->>>> generation. My scripts do "wget" to pull the patch and apply.
->>>
->>> Ok, we will get this back and working, sorry about that.
->>>
->>
->> Great. Thanks for accommodating my workflow.
-> 
-> I have uploaded it to kernel.org now, should show up on the "public
-> side" in 15 minutes or so.
-> 
+The pull request you sent on Sat, 24 Aug 2019 23:17:54 +0200:
 
-Great. Downloaded successfully.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.3-4
 
-thanks,
--- Shuah
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/083f0f2cd402df40f62e16b1e4208e6033f52aba
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
