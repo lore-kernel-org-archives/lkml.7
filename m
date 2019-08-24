@@ -2,112 +2,78 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC51DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A88E20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC592146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566670979;
+	bh=wwn25KAtlhTVxUgyGHWFSw8XC0EUfcLAQ3jg1KljjlI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zxHCf+RJ0t7USm9Q0RG3lrSfJFkvXou1yZIX14rj6sd9HWNWP53bPuVl8fA3X5lSB
+	 wrZVnENO5RBLqQ/YLhp5f75VvRhaLUpyzMhm/Kj0lFIVjPIbjWwX0rAaHMDVH/ZZ88
+	 BMmO7rHMst8jXUZD0I6d6AWN/oJOcF5kbie4j4II=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfHXSTf (ORCPT
+        id S1727824AbfHXSW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 14:19:35 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47033 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfHXSTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 14:19:34 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E32C681339; Sat, 24 Aug 2019 20:19:16 +0200 (CEST)
-Date:   Sat, 24 Aug 2019 20:19:29 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chen Yu <yu.c.chen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [tip: x86/urgent] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-Message-ID: <20190824181929.GA18551@amd>
-References: <7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com>
- <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
+        Sat, 24 Aug 2019 14:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbfHXSW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 14:22:58 -0400
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B0392146E
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 18:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566670977;
+        bh=wwn25KAtlhTVxUgyGHWFSw8XC0EUfcLAQ3jg1KljjlI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LKTcsNkvPNCSKUIZC0u3jRO2pc4WgqFHrfUPdBW0QAFFJp0l225WURQDltf19B32Q
+         xkNmanmdoK64D6CIqSMpghEpuJ+dkfBoE8voNMLtaZ7B2wamJN0dy/GcAW8Lyf1A+n
+         b3DSsG9QO/n12nUT5H1TgcQ2kPw9+/xCeo4GYsbs=
+Received: by mail-yb1-f175.google.com with SMTP id y21so5460072ybi.11
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 11:22:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAUXLkmXgVadzhA5K96cOKjHxbPONmQaHYiRliiI+80i/Py8qPHn
+        6eOktoxmdCGUseg1vwn7a1PcCVYDitV+Q+g/ZMo=
+X-Google-Smtp-Source: APXvYqxjxYuDkT7G2sfsbtYdGdTut3HUbxdvhgcLlUhp9PLXvtGkuWRbFcM9/bJA4qrQOyr2eHTzdHwpbuoGt5FhJzE=
+X-Received: by 2002:a25:587:: with SMTP id 129mr8070270ybf.121.1566670976521;
+ Sat, 24 Aug 2019 11:22:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190822213503.14726-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190822213503.14726-1-alexandre.belloni@bootlin.com>
+From:   Shawn Guo <shawnguo@kernel.org>
+Date:   Sat, 24 Aug 2019 20:22:39 +0200
+X-Gmail-Original-Message-ID: <CAJBJ56JQ1P9zpT6EadPgAxrauSS3fp8TqYmv=VkVvUvD1fLirg@mail.gmail.com>
+Message-ID: <CAJBJ56JQ1P9zpT6EadPgAxrauSS3fp8TqYmv=VkVvUvD1fLirg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: pbab01: correct rtc vendor
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Shawn Guo <shawn.guo@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 22, 2019 at 11:35 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> The rtc8564 is made by Epson but is similar to the NXP pcf8563. Use the
+> correct vendor name.
+>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please use my kernel.org mailbox <shawnguo@kernel.org> for future patches.
 
-On Fri 2019-08-23 01:10:49, tip-bot2 for Tom Lendacky wrote:
-> The following commit has been merged into the x86/urgent branch of tip:
->=20
-> Commit-ID:     c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
-> Gitweb:        https://git.kernel.org/tip/c49a0a80137c7ca7d6ced4c812c9e07=
-a949f6f24
-> Author:        Tom Lendacky <thomas.lendacky@amd.com>
-> AuthorDate:    Mon, 19 Aug 2019 15:52:35=20
-> Committer:     Borislav Petkov <bp@suse.de>
-> CommitterDate: Mon, 19 Aug 2019 19:42:52 +02:00
->=20
-> x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
->=20
-> There have been reports of RDRAND issues after resuming from suspend on
-> some AMD family 15h and family 16h systems. This issue stems from a BIOS
-> not performing the proper steps during resume to ensure RDRAND continues
-> to function properly.
-
-There are quite a few unanswered questions here.
-
-a) Is there/should there be CVE for this?
-
-b) Can we perform proper steps in kernel, thus making RDRAND usable
-even when BIOS is buggy?
-
-Best regards,
-									Pavel
-								=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1hf7EACgkQMOfwapXb+vJr8ACfYYvoVV2o2HMsFRXMI3vauU/K
-0fEAn3xhQSvQ1Slrcy2GZlR7YLTFuEsf
-=//ju
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+Applied, thanks.
