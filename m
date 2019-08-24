@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CE3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB36C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B3520870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA3420870
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="GadtC0t8"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="i9L0Zee5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfHXU1D (ORCPT
+        id S1728118AbfHXU1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 16:27:03 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:12082 "EHLO rere.qmqm.pl"
+        Sat, 24 Aug 2019 16:27:07 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:5968 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727524AbfHXU1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 16:27:00 -0400
+        id S1727954AbfHXU07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 16:26:59 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 46G8sG3RHFzhv;
-        Sat, 24 Aug 2019 22:25:22 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46G8sF1j5szcY;
+        Sat, 24 Aug 2019 22:25:21 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1566678322; bh=VMADLsNAb53KqJMxEINzewk+gjFvVaLwVHUb8Ct9D+Y=;
+        t=1566678321; bh=GwOHzkGm8clrvcWeJl2STu4OSTCx3WLNVMtfiTxNuU0=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=GadtC0t8GZJA/lhACGRFEtRl8Z69pZTr7VwbIJv7I5uAhvVM7V/Ea7mtmClXGF+WH
-         X21adHNbfwNw0YI+mHhPDWXdhDkZERVvSjuc/InEx1JEyK08hE6AuII3LfnpRMvieR
-         Ym54Z211qnXPqi9zWGF3QWHHWdOyGEv+4VMYXvp445EXOFsRwhk2uyQuyAhHwpAf0j
-         fs9jsMo7IrTHip65QLCfhxrWi3yG7oVxt+wse75vpEhY3Z/i64Xn6ucteb1cLGmOEA
-         wusM19TMVgygdapkBgu0woqjRFbG/AwK2VOxV5OzJgahPjjRhKv67+TZG9LaQbl2RX
-         OHGJAkxUIW0eQ==
+        b=i9L0Zee55MalxIEpKvOUzzET/ECH4QJvMh9/INDvMqLDNQCRyHC0e79/AGq6lF3xM
+         oe9LpME1uZtJ51Ks/ywYRTemHFZiLnNeTgoDOojYvKMM9OjxnD+D+jZ7a+yp9yOQXS
+         cDegMH5mHN0ZYq/FIYb1gJ76n2vQ5wz2HbdO29mXq9h4cKijGWtF6GsjsOPj9t/smm
+         JS0MeW9j42p44Yz57L2ML+8QtJNDqbXwkanUX6jN/EnO/3NpA5PZXM1wJAIlDJ3eyd
+         sz5vtClDHhE2cA1BqGW33Nf2H5QXzeoZ92s6630CzPDmXZKbVuu0HCcxvPgpBkEWU8
+         k8KUMWSdVO9jw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.2 at mail
-Date:   Sat, 24 Aug 2019 22:26:57 +0200
-Message-Id: <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
+Date:   Sat, 24 Aug 2019 22:26:56 +0200
+Message-Id: <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source in
- frame-slave mode
+Subject: [PATCH v2 5/6] misc: atmel-ssc: get LRCLK pin selection from DT
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,61 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSC driver allows only synchronous TX and RX. In slave mode for BCLK
-it uses only one of TK or RK pin, but for LRCLK it configured separate
-inputs from TF and RF pins. Allow configuration with common FS signal.
+Store LRCLK pin selection for use by ASoC DAI driver.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
 ---
- v2: use alternate DT binding
-     split DT and drivers/misc changes
+  v2: split from ASoC implementation
 
 ---
- sound/soc/atmel/atmel_ssc_dai.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ drivers/misc/atmel-ssc.c  | 9 +++++++++
+ include/linux/atmel-ssc.h | 2 ++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
-index 48e9eef34c0f..035d4da58f2b 100644
---- a/sound/soc/atmel/atmel_ssc_dai.c
-+++ b/sound/soc/atmel/atmel_ssc_dai.c
-@@ -605,14 +605,32 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 		return -EINVAL;
+diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
+index ab4144ea1f11..1322e29bc37a 100644
+--- a/drivers/misc/atmel-ssc.c
++++ b/drivers/misc/atmel-ssc.c
+@@ -210,6 +210,15 @@ static int ssc_probe(struct platform_device *pdev)
+ 		struct device_node *np = pdev->dev.of_node;
+ 		ssc->clk_from_rk_pin =
+ 			of_property_read_bool(np, "atmel,clk-from-rk-pin");
++		ssc->lrclk_from_tf_pin =
++			of_property_read_bool(np, "atmel,lrclk-from-tf-pin");
++		ssc->lrclk_from_rf_pin =
++			of_property_read_bool(np, "atmel,lrclk-from-rf-pin");
++
++		if (ssc->lrclk_from_tf_pin && ssc->lrclk_from_rf_pin) {
++			dev_err(&pdev->dev, "both LRCLK from RK/TK options found in DT node");
++			return -EINVAL;
++		}
  	}
  
--	if (!atmel_ssc_cfs(ssc_p)) {
-+	if (atmel_ssc_cfs(ssc_p)) {
-+		/*
-+		 * SSC provides LRCLK
-+		 *
-+		 * Both TF and RF are generated, so use them directly.
-+		 */
-+		rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-+		tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-+	} else {
- 		fslen = fslen_ext = 0;
- 		rcmr_period = tcmr_period = 0;
- 		fs_osync = SSC_FSOS_NONE;
--	}
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+diff --git a/include/linux/atmel-ssc.h b/include/linux/atmel-ssc.h
+index 6091d2abc1eb..fbe1c2ffaa81 100644
+--- a/include/linux/atmel-ssc.h
++++ b/include/linux/atmel-ssc.h
+@@ -21,6 +21,8 @@ struct ssc_device {
+ 	int			user;
+ 	int			irq;
+ 	bool			clk_from_rk_pin;
++	bool			lrclk_from_tf_pin;
++	bool			lrclk_from_rf_pin;
+ 	bool			sound_dai;
+ };
  
--	rcmr |=	  SSC_BF(RCMR_START, fs_edge);
--	tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-+		if (ssc->lrclk_from_tf_pin) {
-+			rcmr |=	  SSC_BF(RCMR_START, SSC_START_TX_RX);
-+			tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-+		} else if (ssc->lrclk_from_rf_pin) {
-+			/* assume RF is to be used when RK is used as BCLK input */
-+			/* Note: won't work correctly on SAMA5D2 due to errata */
-+			rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-+			tcmr |=	  SSC_BF(TCMR_START, SSC_START_TX_RX);
-+		} else {
-+			rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-+			tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-+		}
-+	}
- 
- 	if (atmel_ssc_cbs(ssc_p)) {
- 		/*
 -- 
 2.20.1
 
