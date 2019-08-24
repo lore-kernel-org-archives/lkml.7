@@ -2,100 +2,89 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29E1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C10FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BDD20870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="anw28Gsh"
+	by mail.kernel.org (Postfix) with ESMTP id D00DD22CE3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566678656;
+	bh=z0qC+tvzqoRXrGe3re9RsbVsv0fNXWZru8GpauizMzw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=K7+LAWW3PEXuXigTwozdKHGQejKiUdFmpcktgSE7NbcZfAqBwRvrCxKhxZuz+HLP+
+	 8DtKX8EJb8M0DjtZ7aotSWET8w+BaJTgee98vwNMRzP1xT1vbp6T+9/SiBP6eusSTW
+	 zgSbdrgcSGFBzoLGl1Z5TKVzsExYPSCXY6r0kffE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfHXU1R (ORCPT
+        id S1727738AbfHXUaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 16:27:17 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:12082 "EHLO rere.qmqm.pl"
+        Sat, 24 Aug 2019 16:30:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727879AbfHXU05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 16:26:57 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 46G8sC3TJ3zTs;
-        Sat, 24 Aug 2019 22:25:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1566678319; bh=VdbgtZ09Jmhv6nJYzpWS3ntFIzMHLWp5KKJVlktY88w=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=anw28Gshlg7ioShZh4jMUTbNhZLisNCofQ7YU/mNq1U957DdsRYUy0eFjOFaT5i53
-         5mP8AKvzz4Vl324o0DRvozaxEUsX3Aohg9XUhRjGDB9ewFakBsSD1Xw0+nz9dxeiza
-         1RPw2S12ZiNB55qaCwIK8xqfcbSM3fiYYAKifSbPZx9PnpG6U1kWCvWEV3lB6JwbI3
-         3yP8CTo02S2cKCt3uOKj0SzOugCwJPrYoyKtxs+MIibEG77Ra/mlfqqKza0ba+DJx7
-         KMsgfp+ulEIu7vzox++YCmsKj6TYM93ykMNsPY8RZAaijYzhmqcINdd+1KQ1jr0YVl
-         SS2AmLbJejucw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.2 at mail
-Date:   Sat, 24 Aug 2019 22:26:54 +0200
-Message-Id: <44fa6b700421e80778f20ff9ead2b148cf6d2e92.1566677788.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 3/6] ASoC: atmel_ssc_dai: implement left-justified data
- mode
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Chas Williams <3chas3@gmail.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh-dt@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+        id S1727094AbfHXUaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 16:30:55 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05E9120870;
+        Sat, 24 Aug 2019 20:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566678654;
+        bh=z0qC+tvzqoRXrGe3re9RsbVsv0fNXWZru8GpauizMzw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DbsD8UNuwVe9QY7Q3Jn61rlEm21WN35Kf5WUSeImK0lRdFpM1/kMr31+4xY2T5eGZ
+         JDczCBU4j4kdtomYxw97r8Eet/37N9ktd+4IfAwKG5zSNNNSRQ+WJdy9fZVha34qj3
+         3Yw0xyh4/N9Znf7TYjasf5/ih7b0glw9cXjjthbI=
+Date:   Sat, 24 Aug 2019 13:30:53 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCHv2] lib/test_kasan: add roundtrip tests
+Message-Id: <20190824133053.aa5c6393815a5cb55dbdb8a4@linux-foundation.org>
+In-Reply-To: <20190823104107.GA55480@lakrids.cambridge.arm.com>
+References: <20190819161449.30248-1-mark.rutland@arm.com>
+        <20190822164857.460353a8195bfd5ddb3d5f50@linux-foundation.org>
+        <20190823104107.GA55480@lakrids.cambridge.arm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable support for left-justified data mode for SSC-codec link.
+On Fri, 23 Aug 2019 11:41:08 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> >  
+> >  /*
+> > 
+> > which is really kinda wrong.  We should strictly include linux/io.h for
+> > things like virt_to_phys().
+> > 
+> > So I think I'll stick with v1 plus my fixlet:
+> > 
+> > --- a/lib/test_kasan.c~lib-test_kasan-add-roundtrip-tests-checkpatch-fixes
+> > +++ a/lib/test_kasan.c
+> > @@ -18,8 +18,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/string.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/io.h>
+> >  
+> > -#include <asm/io.h>
+> >  #include <asm/page.h>
+> >  
+> >  /*
+> > 
+> 
+> Assuming that you mean *v3* with that fix, that looks good to me!
 
----
- v2: rebased
-
----
- sound/soc/atmel/atmel_ssc_dai.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
-index 7dc6ec9b8c7a..48e9eef34c0f 100644
---- a/sound/soc/atmel/atmel_ssc_dai.c
-+++ b/sound/soc/atmel/atmel_ssc_dai.c
-@@ -564,6 +564,15 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 
- 	switch (ssc_p->daifmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		fs_osync = SSC_FSOS_POSITIVE;
-+		fs_edge = SSC_START_RISING_RF;
-+
-+		rcmr =	  SSC_BF(RCMR_STTDLY, 0);
-+		tcmr =	  SSC_BF(TCMR_STTDLY, 0);
-+
-+		break;
-+
- 	case SND_SOC_DAIFMT_I2S:
- 		fs_osync = SSC_FSOS_NEGATIVE;
- 		fs_edge = SSC_START_FALLING_RF;
--- 
-2.20.1
-
+Yes, that's what we have.
