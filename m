@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23662C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E8DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31CB2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCB321670
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Oy8xOXG6"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VyjcERP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfHXIxG (ORCPT
+        id S1727330AbfHXIxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 04:53:06 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44298 "EHLO mail.skyhub.de"
+        Sat, 24 Aug 2019 04:53:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44394 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfHXIxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 04:53:05 -0400
+        id S1725616AbfHXIxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 04:53:41 -0400
 Received: from zn.tnic (p200300EC2F1E9400E161D1CD3EE01E5E.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:9400:e161:d1cd:3ee0:1e5e])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0C9F1EC0BFD;
-        Sat, 24 Aug 2019 10:52:59 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 750541EC0BFD;
+        Sat, 24 Aug 2019 10:53:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566636779;
+        t=1566636820;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ZLn+13h2PlKx9iAq7LjCcfAf1Qw6jp25M0fbVgq2xQ0=;
-        b=Oy8xOXG6pEBjP35HhL8awxyHPNv+nDKnp+Bo6KtZmpEJ0w+EHLMwoFWV5LQeeDveuq2IP0
-        WYmOD0IYUlbWT4Zd+50lVDGPQenloUBw99bQeomuVrqS0eZ47IiGb/ndCDFGiKzrVQb0Gk
-        NCBu5wA9haJE+uGsyWbIWV51CheUFTE=
-Date:   Sat, 24 Aug 2019 10:53:00 +0200
+        bh=ax9XVr2446DKYzhDbuEl4JPufvVY1L74U+7t5fsNCv4=;
+        b=VyjcERP8D32OT3h5O7R/D74ex8GkZWAnAj89xq2OLQ3qBZvY6XGX7/Z6zpcmI1oYn6BMh8
+        Qv6FRGj3V8MuahhRNdSgznS9j37wa8ES+w6hhSDMk4JquQXnxhFYXJlF1zusGvr+Pnngdv
+        JTNEU6W4ovwHUvny33mOIq71n9xeR+E=
+Date:   Sat, 24 Aug 2019 10:53:41 +0200
 From:   Borislav Petkov <bp@alien8.de>
 To:     Mihai Carabas <mihai.carabas@oracle.com>
 Cc:     linux-kernel@vger.kernel.org, ashok.raj@intel.com,
         boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
         patrick.colp@oracle.com, kanth.ghatraju@oracle.com,
         Jon.Grimm@amd.com, Thomas.Lendacky@amd.com
-Subject: [PATCH 1/2] x86/microcode: Update late microcode in parallel
-Message-ID: <20190824085300.GB16813@zn.tnic>
+Subject: [PATCH 2/2] x86/microcode/intel: Issue the revision updated message
+ only on the BSP
+Message-ID: <20190824085341.GC16813@zn.tnic>
 References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
  <1566506627-16536-2-git-send-email-mihai.carabas@oracle.com>
  <20190824085156.GA16813@zn.tnic>
@@ -58,106 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
-Date: Thu, 22 Aug 2019 23:43:47 +0300
 
-Microcode update was changed to be serialized due to restrictions after
-Spectre days. Updating serially on a large multi-socket system can be
-painful since it is being done on one CPU at a time.
+From: Borislav Petkov <bp@suse.de>
+Date: Sat, 24 Aug 2019 10:01:53 +0200
 
-Cloud customers have expressed discontent as services disappear for a
-prolonged time. The restriction is that only one core goes through the
-update while other cores are quiesced.
+... in order to not pollute dmesg with a line for each updated microcode
+engine.
 
-Do the microcode update only on the first thread of each core while
-other siblings simply wait for this to complete.
-
- [ bp: Simplify, massage, cleanup comments. ]
-
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Ashok Raj <ashok.raj@intel.com>
 Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Jon Grimm <Jon.Grimm@amd.com>
 Cc: kanth.ghatraju@oracle.com
 Cc: konrad.wilk@oracle.com
+Cc: Mihai Carabas <mihai.carabas@oracle.com>
 Cc: patrick.colp@oracle.com
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1566506627-16536-2-git-send-email-mihai.carabas@oracle.com
 ---
- arch/x86/kernel/cpu/microcode/core.c | 36 ++++++++++++++++------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ arch/x86/kernel/cpu/microcode/intel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index cb0fdcaf1415..7019d4b2df0c 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -63,11 +63,6 @@ LIST_HEAD(microcode_cache);
-  */
- static DEFINE_MUTEX(microcode_mutex);
- 
--/*
-- * Serialize late loading so that CPUs get updated one-by-one.
-- */
--static DEFINE_RAW_SPINLOCK(update_lock);
--
- struct ucode_cpu_info		ucode_cpu_info[NR_CPUS];
- 
- struct cpu_info_ctx {
-@@ -566,11 +561,18 @@ static int __reload_late(void *info)
- 	if (__wait_for_cpus(&late_cpus_in, NSEC_PER_SEC))
- 		return -1;
- 
--	raw_spin_lock(&update_lock);
--	apply_microcode_local(&err);
--	raw_spin_unlock(&update_lock);
-+	/*
-+	 * On an SMT system, it suffices to load the microcode on one sibling of
-+	 * the core because the microcode engine is shared between the threads.
-+	 * Synchronization still needs to take place so that no concurrent
-+	 * loading attempts happen on multiple threads of an SMT core. See
-+	 * below.
-+	 */
-+	if (cpumask_first(topology_sibling_cpumask(cpu)) == cpu)
-+		apply_microcode_local(&err);
-+	else
-+		goto wait_for_siblings;
- 
--	/* siblings return UCODE_OK because their engine got updated already */
- 	if (err > UCODE_NFOUND) {
- 		pr_warn("Error reloading microcode on CPU %d\n", cpu);
- 		ret = -1;
-@@ -578,14 +580,18 @@ static int __reload_late(void *info)
- 		ret = 1;
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index ce799cfe9434..6a99535d7f37 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -791,6 +791,7 @@ static enum ucode_state apply_microcode_intel(int cpu)
+ {
+ 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
+ 	struct cpuinfo_x86 *c = &cpu_data(cpu);
++	bool bsp = c->cpu_index == boot_cpu_data.cpu_index;
+ 	struct microcode_intel *mc;
+ 	enum ucode_state ret;
+ 	static int prev_rev;
+@@ -836,7 +837,7 @@ static enum ucode_state apply_microcode_intel(int cpu)
+ 		return UCODE_ERROR;
  	}
  
-+wait_for_siblings:
-+	if (__wait_for_cpus(&late_cpus_out, NSEC_PER_SEC))
-+		panic("Timeout during microcode update!\n");
-+
- 	/*
--	 * Increase the wait timeout to a safe value here since we're
--	 * serializing the microcode update and that could take a while on a
--	 * large number of CPUs. And that is fine as the *actual* timeout will
--	 * be determined by the last CPU finished updating and thus cut short.
-+	 * At least one thread has completed update on each core.
-+	 * For others, simply call the update to make sure the
-+	 * per-cpu cpuinfo can be updated with right microcode
-+	 * revision.
- 	 */
--	if (__wait_for_cpus(&late_cpus_out, NSEC_PER_SEC * num_online_cpus()))
--		panic("Timeout during microcode update!\n");
-+	if (cpumask_first(topology_sibling_cpumask(cpu)) != cpu)
-+		apply_microcode_local(&err);
+-	if (rev != prev_rev) {
++	if (bsp && rev != prev_rev) {
+ 		pr_info("updated to revision 0x%x, date = %04x-%02x-%02x\n",
+ 			rev,
+ 			mc->hdr.date & 0xffff,
+@@ -852,7 +853,7 @@ static enum ucode_state apply_microcode_intel(int cpu)
+ 	c->microcode	 = rev;
+ 
+ 	/* Update boot_cpu_data's revision too, if we're on the BSP: */
+-	if (c->cpu_index == boot_cpu_data.cpu_index)
++	if (bsp)
+ 		boot_cpu_data.microcode = rev;
  
  	return ret;
- }
 -- 
 2.21.0
+
 
 -- 
 Regards/Gruss,
