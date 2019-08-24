@@ -2,132 +2,113 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7157C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB3BC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D09921848
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437EE21848
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bJhYAOth"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ou5uENMj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L9at2VRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfHXCh5 (ORCPT
+        id S1726935AbfHXCic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 22:37:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2782 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfHXCh5 (ORCPT
+        Fri, 23 Aug 2019 22:38:32 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:48705 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725807AbfHXCic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 22:37:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d60a3050000>; Fri, 23 Aug 2019 19:37:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 23 Aug 2019 19:37:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 23 Aug 2019 19:37:56 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 24 Aug
- 2019 02:37:56 +0000
-Subject: Re: linux-next: Tree for Aug 23
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190823192658.49e6f68d@canb.auug.org.au>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <47bf2ffc-a737-e4ba-8d37-96472f307094@nvidia.com>
-Date:   Fri, 23 Aug 2019 19:37:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 22:38:32 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E857246C5;
+        Fri, 23 Aug 2019 22:38:30 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 23 Aug 2019 22:38:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=uwo5KC6cm7RwrFdHorEZcbCanbJ
+        1Veh3/B8otgcZu4s=; b=ou5uENMjrJS43V17e1R/ele998tAPPEx8KBaa5M7Zec
+        8qdkE4/iak5DuLaMKsMfnrsYCeQ0hX5IpUfxoIEfQLMclQdS9wIITEFoHx6mNeBd
+        q49dbb2vUjigJnih4zedCL+k2MP/p7GyBbiC2DbUnhwtqGp1NzfRj4TmFIjmI5ya
+        9Giga/ZmE+PMKRKNialDqXCr5KWcitg23x2ZVPQ2nEQW+n+OFazyPnwp69vi1pCS
+        D2/h4A98vaYmJTtOXo/xWUD/7iqfDGcROuQBh8HQ4DJpNcvH0qOSJdPnp2QUPb9p
+        0/jLcBf7EddhQlEQgdLJDobhj6YiMYzc8UqqL9wU0/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=uwo5KC
+        6cm7RwrFdHorEZcbCanbJ1Veh3/B8otgcZu4s=; b=L9at2VRZ2lTHgtJBXoBpEQ
+        qNchxgB05BMyBBWxZNEjHdEytMqASE0G5m9G02liIYPMF1KuBxJJbP6hJa41nb8u
+        6l3Mzz73wEoAluriPH0CgSley0HlsP94KxBlduZ3snRybEv3/PxIdUtx+mBTQJ8u
+        Bl5+vRKN9DganC5x/ZMeYLkC5niEhchkqBZOhzF7Te5aRSZrPKEpkI4biMfvO6Jd
+        dXt22MCnZ3Dm96Q2FPWEkbRl3uBi1J8OdGkPVXPN/IykIIgrLyMgfCkLWlxKw4b2
+        QM7gBTaIVZ/9Ga8E8fDRQAD1bYT1FLyIJvvdXdBM/OUbeY7po3lJPii9tJw9REww
+        ==
+X-ME-Sender: <xms:JqNgXXTUVoXBa7H3AVc31lQROQtD8bdd19WjqvFb4zf7yKhL3HGDpA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegledgiedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhprghmkfhpqdhouhhtucdlhedttddmnecujfgurhepfffhvffukfhfgggtuggjfges
+    thdtredttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtg
+    homheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepieehrdduudegrdel
+    tddrudelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+    enucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:JqNgXSHfJi19z9xm4CA2g33LKwwVQqPS6Uc6_VVaNc_vkdkJafIvUg>
+    <xmx:JqNgXU0QQsBuC9IO3378tUI3LCJNPqTXuH1OobM7xcMoOy_ryqqgWg>
+    <xmx:JqNgXQt-0UeDrg0cNPurNCeo-l54NIHkblURt9HJKbgZcm8EIicMVw>
+    <xmx:JqNgXfWsv-rPNVxhXg7ih0HA4CxN_M5L9JReA5X5Em8lhBMUAK5HnA>
+Received: from localhost (65-114-90-19.dia.static.qwest.net [65.114.90.19])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D8B918005B;
+        Fri, 23 Aug 2019 22:38:29 -0400 (EDT)
+Date:   Fri, 23 Aug 2019 19:38:29 -0700
+From:   Greg KH <greg@kroah.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org
+Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
+Message-ID: <20190824023829.GE9862@kroah.com>
+References: <20190822170811.13303-1-sashal@kernel.org>
+ <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190823192658.49e6f68d@canb.auug.org.au>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566614278; bh=UVzZgCMP0diU+WGz9ZHXGnIikzh+FMgpaDM8zKhy/Kc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bJhYAOthJWCyPO1IXEQMvvN9zFHn/klDQqK2bN+rmiV3K2z7/UDjMlYlB1WT1a0lk
-         t0CMBokMFlyKGVPOxC19joHKRrMUhZUfaqJLDYF9lk3e09w4LqwGCw+w0IC8q8aUTW
-         tarcwteeak/8cvorjRF0fIsTmw9ju46XeXxz12Xc4OQMeeM+dZl6lTOfuFsg04LvLE
-         hRRrWL+jED7imauGbfPzzSkhts7Ond4x5nlfQsQGSpdv6ESFN1cfo0bZblk7NQdXih
-         cruplpO4AJSiOiNeFMW5lTvz9Ba23t1kbWys9ALVx4keRMLaKN04FRFDl/1nfaGvkm
-         3SClxWeStLBKQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/19 2:26 AM, Stephen Rothwell wrote:
-> Hi all,
+On Fri, Aug 23, 2019 at 12:41:03PM -0600, shuah wrote:
+> On 8/22/19 11:05 AM, Sasha Levin wrote:
+> > 
+> > This is the start of the stable review cycle for the 5.2.10 release.
+> > There are 135 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> >          https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz
 > 
-> Changes since 20190822:
-> 
-> The thermal tree gained a conflict against the jc_docs tree.
-> 
-> The rdma tree gained a conflict against the rdma-fixes tree.
-> 
-> The net-next tree gained conflicts against the pci tree.
-> 
-> The crypto tree gained a conflict against Linus' tree.
-> 
-> The drm tree gained a conflict against the drm-fixes tree.
+> I am seeing "Sorry I can't find your kernels". Is this posted?
 
-Hi,
+Ah, Sasha didn't generate the patch but it was still listed here, oops.
+He copied my format and we didn't notice this, sorry about that.
 
-Even though I saw email proposing fixes for one (maybe both) of the 
-following warnings, I'm still seeing them in this linux-next:
-
-WARNING: "ahci_em_messages" [drivers/ata/libahci] is a static EXPORT_SYMBOL_GPL
-WARNING: "ftrace_set_clr_event" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
-...and obviously these can be trivially fixed by:
-
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index e4c45d3cca79..bff369d9a1a7 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -175,7 +175,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
- EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
- 
- static bool ahci_em_messages __read_mostly = true;
--EXPORT_SYMBOL_GPL(ahci_em_messages);
- module_param(ahci_em_messages, bool, 0444);
- /* add other LED protocol types when they become supported */
- MODULE_PARM_DESC(ahci_em_messages,
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c7506bc81b75..648930823b57 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -787,7 +787,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
-        return ret;
- }
- 
--static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
-+int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
- {
-        char *event = NULL, *sub = NULL, *match;
-        int ret;
-
-
-
-...which I didn't create patches for, because I expect they are already
-in flight. But if those somehow got lost or skipped, then here's an early
-warning that these fixes still need to be applied.
-
+As the thread shows, we didn't generate this file this time to see what
+would happen.  If your test process requires it, we can generate it as I
+don't want to break it.
 
 thanks,
--- 
-John Hubbard
-NVIDIA
+
+greg k-h
