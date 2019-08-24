@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEEFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38385C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CF62064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3632064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfHXDFv (ORCPT
+        id S1727384AbfHXDGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 23:05:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18227 "EHLO
+        Fri, 23 Aug 2019 23:06:13 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5431 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727111AbfHXDFp (ORCPT
+        with ESMTP id S1727111AbfHXDGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 23:05:45 -0400
-X-UUID: 9e3f6573a2374bb9b7f30487b8ffdb55-20190824
-X-UUID: 9e3f6573a2374bb9b7f30487b8ffdb55-20190824
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        Fri, 23 Aug 2019 23:06:13 -0400
+X-UUID: 6b07a3d92d9e49d9bfc0acdc5fcc9b60-20190824
+X-UUID: 6b07a3d92d9e49d9bfc0acdc5fcc9b60-20190824
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1578458940; Sat, 24 Aug 2019 11:04:42 +0800
+        with ESMTP id 1619528194; Sat, 24 Aug 2019 11:05:58 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 24 Aug 2019 11:04:34 +0800
+ 15.0.1395.4; Sat, 24 Aug 2019 11:05:50 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 24 Aug 2019 11:04:33 +0800
+ Transport; Sat, 24 Aug 2019 11:05:49 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,9 +50,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
         <ming-fan.chen@mediatek.com>
-Subject: [PATCH v11 10/23] iommu/mediatek: Adjust the PA for the 4GB Mode
-Date:   Sat, 24 Aug 2019 11:01:55 +0800
-Message-ID: <1566615728-26388-11-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v11 16/23] memory: mtk-smi: Add gals support
+Date:   Sat, 24 Aug 2019 11:02:01 +0800
+Message-ID: <1566615728-26388-17-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
@@ -64,130 +64,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After extending the v7s support PA[33:32] for MediaTek, we have to adjust
-the PA ourself for the 4GB mode.
+In some SoCs like mt8183, SMI add GALS(Global Async Local Sync) module
+which can help synchronize for the modules in different clock frequency.
+It can be seen as a "asynchronous fifo". This is a example diagram:
 
-In the 4GB Mode, the PA will remap like this:
-CPU PA         ->    M4U output PA
-0x4000_0000          0x1_4000_0000 (Add bit32)
-0x8000_0000          0x1_8000_0000 ...
-0xc000_0000          0x1_c000_0000 ...
-0x1_0000_0000        0x1_0000_0000 (No change)
+            M4U
+             |
+         ----------
+         |        |
+     gals0-rx   gals1-rx
+         |        |
+         |        |
+     gals0-tx   gals1-tx
+         |        |
+        ------------
+         SMI Common
+        ------------
+             |
+  +-----+--------+-----+- ...
+  |     |        |     |
+  |  gals-rx  gals-rx  |
+  |     |        |     |
+  |     |        |     |
+  |  gals-tx  gals-tx  |
+  |     |        |     |
+larb1 larb2   larb3  larb4
 
-1) Always add bit32 for CPU PA in ->map.
-2) Discard the bit32 in iova_to_phys if PA > 0x1_4000_0000 since the
-iommu consumer always use the CPU PA.
+GALS only help transfer the command/data while it doesn't have the
+configuring register, thus it has the special "smi" clock and doesn't
+have the "apb" clock. From the diagram above, we add "gals0" and
+"gals1" clocks for smi-common and add a "gals" clock for smi-larb.
 
-Besides, the "oas" always is set to 34 since v7s has already supported our
-case.
+This patch adds gals clock supporting in the SMI. Note that some larbs
+may still don't have the "gals" clock like larb1 and larb4 above.
 
-Both mt2712 and mt8173 support this "4GB mode" while the mt8183 don't.
-The PA in mt8183 won't remap.
+This is also a preparing patch for mt8183 which has GALS.
 
+CC: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- drivers/iommu/mtk_iommu.c | 26 ++++++++++++++++----------
- drivers/iommu/mtk_iommu.h |  1 +
- 2 files changed, 17 insertions(+), 10 deletions(-)
+ drivers/memory/mtk-smi.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 62edce7..b5a40a4 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -129,7 +129,7 @@ struct mtk_iommu_domain {
-  * 'E', the CPU physical address keep as is.
-  * Additionally, The iommu consumers always use the CPU phyiscal address.
-  */
--#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
-+#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x140000000UL
+diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+index 47df7d0..53bd379 100644
+--- a/drivers/memory/mtk-smi.c
++++ b/drivers/memory/mtk-smi.c
+@@ -48,6 +48,7 @@ enum mtk_smi_gen {
  
- static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
+ struct mtk_smi_common_plat {
+ 	enum mtk_smi_gen gen;
++	bool             has_gals;
+ };
  
-@@ -287,17 +287,15 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
- 	dom->cfg = (struct io_pgtable_cfg) {
- 		.quirks = IO_PGTABLE_QUIRK_ARM_NS |
- 			IO_PGTABLE_QUIRK_NO_PERMS |
--			IO_PGTABLE_QUIRK_TLBI_ON_MAP,
-+			IO_PGTABLE_QUIRK_TLBI_ON_MAP |
-+			IO_PGTABLE_QUIRK_ARM_MTK_EXT,
- 		.pgsize_bitmap = mtk_iommu_ops.pgsize_bitmap,
- 		.ias = 32,
--		.oas = 32,
-+		.oas = 34,
- 		.tlb = &mtk_iommu_gather_ops,
- 		.iommu_dev = data->dev,
- 	};
+ struct mtk_smi_larb_gen {
+@@ -55,11 +56,13 @@ struct mtk_smi_larb_gen {
+ 	int port_in_larb[MTK_LARB_NR_MAX + 1];
+ 	void (*config_port)(struct device *);
+ 	unsigned int			larb_direct_to_common_mask;
++	bool				has_gals;
+ };
  
--	if (data->enable_4GB)
--		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_EXT;
--
- 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
- 	if (!dom->iop) {
- 		dev_err(data->dev, "Failed to alloc io pgtable\n");
-@@ -383,12 +381,16 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
- 			 phys_addr_t paddr, size_t size, int prot)
- {
- 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
-+	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
- 	unsigned long flags;
- 	int ret;
+ struct mtk_smi {
+ 	struct device			*dev;
+ 	struct clk			*clk_apb, *clk_smi;
++	struct clk			*clk_gals0, *clk_gals1;
+ 	struct clk			*clk_async; /*only needed by mt2701*/
+ 	void __iomem			*smi_ao_base;
  
-+	/* The "4GB mode" M4U physically can not use the lower remap of Dram. */
-+	if (data->enable_4GB)
-+		paddr |= BIT_ULL(32);
+@@ -91,8 +94,20 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
+ 	if (ret)
+ 		goto err_disable_apb;
+ 
++	ret = clk_prepare_enable(smi->clk_gals0);
++	if (ret)
++		goto err_disable_smi;
 +
- 	spin_lock_irqsave(&dom->pgtlock, flags);
--	ret = dom->iop->map(dom->iop, iova, paddr & DMA_BIT_MASK(32),
--			    size, prot);
-+	ret = dom->iop->map(dom->iop, iova, paddr, size, prot);
- 	spin_unlock_irqrestore(&dom->pgtlock, flags);
++	ret = clk_prepare_enable(smi->clk_gals1);
++	if (ret)
++		goto err_disable_gals0;
++
+ 	return 0;
  
- 	return ret;
-@@ -425,8 +427,8 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
- 	pa = dom->iop->iova_to_phys(dom->iop, iova);
- 	spin_unlock_irqrestore(&dom->pgtlock, flags);
++err_disable_gals0:
++	clk_disable_unprepare(smi->clk_gals0);
++err_disable_smi:
++	clk_disable_unprepare(smi->clk_smi);
+ err_disable_apb:
+ 	clk_disable_unprepare(smi->clk_apb);
+ err_put_pm:
+@@ -102,6 +117,8 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
  
--	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
--		pa |= BIT_ULL(32);
-+	if (data->enable_4GB && pa >= MTK_IOMMU_4GB_MODE_REMAP_BASE)
-+		pa &= ~BIT_ULL(32);
+ static void mtk_smi_disable(const struct mtk_smi *smi)
+ {
++	clk_disable_unprepare(smi->clk_gals1);
++	clk_disable_unprepare(smi->clk_gals0);
+ 	clk_disable_unprepare(smi->clk_smi);
+ 	clk_disable_unprepare(smi->clk_apb);
+ 	pm_runtime_put_sync(smi->dev);
+@@ -302,6 +319,15 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ 	larb->smi.clk_smi = devm_clk_get(dev, "smi");
+ 	if (IS_ERR(larb->smi.clk_smi))
+ 		return PTR_ERR(larb->smi.clk_smi);
++
++	if (larb->larb_gen->has_gals) {
++		/* The larbs may still haven't gals even if the SoC support.*/
++		larb->smi.clk_gals0 = devm_clk_get(dev, "gals");
++		if (PTR_ERR(larb->smi.clk_gals0) == -ENOENT)
++			larb->smi.clk_gals0 = NULL;
++		else if (IS_ERR(larb->smi.clk_gals0))
++			return PTR_ERR(larb->smi.clk_gals0);
++	}
+ 	larb->smi.dev = dev;
  
- 	return pa;
- }
-@@ -618,6 +620,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+ 	if (larb->larb_gen->need_larbid) {
+@@ -394,6 +420,16 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
+ 	if (IS_ERR(common->clk_smi))
+ 		return PTR_ERR(common->clk_smi);
  
- 	/* Whether the current dram is over 4GB */
- 	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
-+	if (!data->plat_data->has_4gb_mode)
-+		data->enable_4GB = false;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	data->base = devm_ioremap_resource(dev, res);
-@@ -758,10 +762,12 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 
- static const struct mtk_iommu_plat_data mt2712_data = {
- 	.m4u_plat     = M4U_MT2712,
-+	.has_4gb_mode = true,
- };
- 
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
-+	.has_4gb_mode = true,
- };
- 
- static const struct of_device_id mtk_iommu_of_ids[] = {
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index 9725b08..c281c01 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -34,6 +34,7 @@ enum mtk_iommu_plat {
- 
- struct mtk_iommu_plat_data {
- 	enum mtk_iommu_plat m4u_plat;
-+	bool                has_4gb_mode;
- };
- 
- struct mtk_iommu_domain;
++	if (common->plat->has_gals) {
++		common->clk_gals0 = devm_clk_get(dev, "gals0");
++		if (IS_ERR(common->clk_gals0))
++			return PTR_ERR(common->clk_gals0);
++
++		common->clk_gals1 = devm_clk_get(dev, "gals1");
++		if (IS_ERR(common->clk_gals1))
++			return PTR_ERR(common->clk_gals1);
++	}
++
+ 	/*
+ 	 * for mtk smi gen 1, we need to get the ao(always on) base to config
+ 	 * m4u port, and we need to enable the aync clock for transform the smi
 -- 
 1.9.1
 
