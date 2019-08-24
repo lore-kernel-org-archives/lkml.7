@@ -2,37 +2,38 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6166C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 23:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0175C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 23:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E7720850
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 23:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF7920850
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 23:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfHXXhm (ORCPT
+        id S1728326AbfHXXhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 19:37:42 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:40748 "EHLO
+        Sat, 24 Aug 2019 19:37:46 -0400
+Received: from antares.kleine-koenig.org ([94.130.110.236]:40764 "EHLO
         antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfHXXhm (ORCPT
+        with ESMTP id S1727950AbfHXXhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 19:37:42 -0400
+        Sat, 24 Aug 2019 19:37:45 -0400
 Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id 54F6A77F67D; Sun, 25 Aug 2019 01:37:39 +0200 (CEST)
+        id E542D77F67F; Sun, 25 Aug 2019 01:37:43 +0200 (CEST)
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
-Date:   Sun, 25 Aug 2019 01:37:23 +0200
-Message-Id: <20190824233724.1775-1-uwe@kleine-koenig.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v1 2/2] gpiolib: print an error name instead of a plain number in error string
+Date:   Sun, 25 Aug 2019 01:37:24 +0200
+Message-Id: <20190824233724.1775-2-uwe@kleine-koenig.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -41,258 +42,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	pr_info("probing failed (%dE)\n", ret);
-
-expands to
-
-	probing failed (EIO)
-
-if ret holds -EIO (or EIO). This introduces an array of error codes. If
-the error code is missing, %dE falls back to %d and so prints the plain
-number.
+This is an example that makes use of the just introduced printk format
+%dE that prints (e.g.) "EIO" when the matching integer is -EIO (or EIO).
 
 Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
 ---
-Hello
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-there are many code sites that benefit from this. Just grep for
-"(%d)" ...
-
-As an example the follow up patch converts a printk to use this new
-format escape.
-
-Best regards
-Uwe
-
- Documentation/core-api/printk-formats.rst |   3 +
- lib/vsprintf.c                            | 193 +++++++++++++++++++++-
- 2 files changed, 195 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index c6224d039bcb..81002414f956 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -35,6 +35,9 @@ Integer types
- 		u64			%llu or %llx
- 
- 
-+To print the name that corresponds to an integer error constant, use %dE and
-+pass the int.
-+
- If <type> is dependent on a config option for its size (e.g., sector_t,
- blkcnt_t) or is architecture-dependent for its size (e.g., tcflag_t), use a
- format specifier of its largest possible type and explicitly cast to it.
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index b0967cf17137..672eab8dab84 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long long num,
- 	return buf;
- }
- 
-+#define ERRORCODE(x) { .str = #x, .err = x }
-+
-+static const struct {
-+	const char *str;
-+	int err;
-+} errorcodes[] = {
-+	ERRORCODE(EPERM),
-+	ERRORCODE(ENOENT),
-+	ERRORCODE(ESRCH),
-+	ERRORCODE(EINTR),
-+	ERRORCODE(EIO),
-+	ERRORCODE(ENXIO),
-+	ERRORCODE(E2BIG),
-+	ERRORCODE(ENOEXEC),
-+	ERRORCODE(EBADF),
-+	ERRORCODE(ECHILD),
-+	ERRORCODE(EAGAIN),
-+	ERRORCODE(ENOMEM),
-+	ERRORCODE(EACCES),
-+	ERRORCODE(EFAULT),
-+	ERRORCODE(ENOTBLK),
-+	ERRORCODE(EBUSY),
-+	ERRORCODE(EEXIST),
-+	ERRORCODE(EXDEV),
-+	ERRORCODE(ENODEV),
-+	ERRORCODE(ENOTDIR),
-+	ERRORCODE(EISDIR),
-+	ERRORCODE(EINVAL),
-+	ERRORCODE(ENFILE),
-+	ERRORCODE(EMFILE),
-+	ERRORCODE(ENOTTY),
-+	ERRORCODE(ETXTBSY),
-+	ERRORCODE(EFBIG),
-+	ERRORCODE(ENOSPC),
-+	ERRORCODE(ESPIPE),
-+	ERRORCODE(EROFS),
-+	ERRORCODE(EMLINK),
-+	ERRORCODE(EPIPE),
-+	ERRORCODE(EDOM),
-+	ERRORCODE(ERANGE),
-+	ERRORCODE(EDEADLK),
-+	ERRORCODE(ENAMETOOLONG),
-+	ERRORCODE(ENOLCK),
-+	ERRORCODE(ENOSYS),
-+	ERRORCODE(ENOTEMPTY),
-+	ERRORCODE(ELOOP),
-+	ERRORCODE(EWOULDBLOCK),
-+	ERRORCODE(ENOMSG),
-+	ERRORCODE(EIDRM),
-+	ERRORCODE(ECHRNG),
-+	ERRORCODE(EL2NSYNC),
-+	ERRORCODE(EL3HLT),
-+	ERRORCODE(EL3RST),
-+	ERRORCODE(ELNRNG),
-+	ERRORCODE(EUNATCH),
-+	ERRORCODE(ENOCSI),
-+	ERRORCODE(EL2HLT),
-+	ERRORCODE(EBADE),
-+	ERRORCODE(EBADR),
-+	ERRORCODE(EXFULL),
-+	ERRORCODE(ENOANO),
-+	ERRORCODE(EBADRQC),
-+	ERRORCODE(EBADSLT),
-+	ERRORCODE(EBFONT),
-+	ERRORCODE(ENOSTR),
-+	ERRORCODE(ENODATA),
-+	ERRORCODE(ETIME),
-+	ERRORCODE(ENOSR),
-+	ERRORCODE(ENONET),
-+	ERRORCODE(ENOPKG),
-+	ERRORCODE(EREMOTE),
-+	ERRORCODE(ENOLINK),
-+	ERRORCODE(EADV),
-+	ERRORCODE(ESRMNT),
-+	ERRORCODE(ECOMM),
-+	ERRORCODE(EPROTO),
-+	ERRORCODE(EMULTIHOP),
-+	ERRORCODE(EDOTDOT),
-+	ERRORCODE(EBADMSG),
-+	ERRORCODE(EOVERFLOW),
-+	ERRORCODE(ENOTUNIQ),
-+	ERRORCODE(EBADFD),
-+	ERRORCODE(EREMCHG),
-+	ERRORCODE(ELIBACC),
-+	ERRORCODE(ELIBBAD),
-+	ERRORCODE(ELIBSCN),
-+	ERRORCODE(ELIBMAX),
-+	ERRORCODE(ELIBEXEC),
-+	ERRORCODE(EILSEQ),
-+	ERRORCODE(ERESTART),
-+	ERRORCODE(ESTRPIPE),
-+	ERRORCODE(EUSERS),
-+	ERRORCODE(ENOTSOCK),
-+	ERRORCODE(EDESTADDRREQ),
-+	ERRORCODE(EMSGSIZE),
-+	ERRORCODE(EPROTOTYPE),
-+	ERRORCODE(ENOPROTOOPT),
-+	ERRORCODE(EPROTONOSUPPORT),
-+	ERRORCODE(ESOCKTNOSUPPORT),
-+	ERRORCODE(EOPNOTSUPP),
-+	ERRORCODE(EPFNOSUPPORT),
-+	ERRORCODE(EAFNOSUPPORT),
-+	ERRORCODE(EADDRINUSE),
-+	ERRORCODE(EADDRNOTAVAIL),
-+	ERRORCODE(ENETDOWN),
-+	ERRORCODE(ENETUNREACH),
-+	ERRORCODE(ENETRESET),
-+	ERRORCODE(ECONNABORTED),
-+	ERRORCODE(ECONNRESET),
-+	ERRORCODE(ENOBUFS),
-+	ERRORCODE(EISCONN),
-+	ERRORCODE(ENOTCONN),
-+	ERRORCODE(ESHUTDOWN),
-+	ERRORCODE(ETOOMANYREFS),
-+	ERRORCODE(ETIMEDOUT),
-+	ERRORCODE(ECONNREFUSED),
-+	ERRORCODE(EHOSTDOWN),
-+	ERRORCODE(EHOSTUNREACH),
-+	ERRORCODE(EALREADY),
-+	ERRORCODE(EINPROGRESS),
-+	ERRORCODE(ESTALE),
-+	ERRORCODE(EUCLEAN),
-+	ERRORCODE(ENOTNAM),
-+	ERRORCODE(ENAVAIL),
-+	ERRORCODE(EISNAM),
-+	ERRORCODE(EREMOTEIO),
-+	ERRORCODE(EDQUOT),
-+	ERRORCODE(ENOMEDIUM),
-+	ERRORCODE(EMEDIUMTYPE),
-+	ERRORCODE(ECANCELED),
-+	ERRORCODE(ENOKEY),
-+	ERRORCODE(EKEYEXPIRED),
-+	ERRORCODE(EKEYREVOKED),
-+	ERRORCODE(EKEYREJECTED),
-+	ERRORCODE(EOWNERDEAD),
-+	ERRORCODE(ENOTRECOVERABLE),
-+	ERRORCODE(ERFKILL),
-+	ERRORCODE(EHWPOISON),
-+	ERRORCODE(ERESTARTSYS),
-+	ERRORCODE(ERESTARTNOINTR),
-+	ERRORCODE(ERESTARTNOHAND),
-+	ERRORCODE(ENOIOCTLCMD),
-+	ERRORCODE(ERESTART_RESTARTBLOCK),
-+	ERRORCODE(EPROBE_DEFER),
-+	ERRORCODE(EOPENSTALE),
-+	ERRORCODE(ENOPARAM),
-+	ERRORCODE(EBADHANDLE),
-+	ERRORCODE(ENOTSYNC),
-+	ERRORCODE(EBADCOOKIE),
-+	ERRORCODE(ENOTSUPP),
-+	ERRORCODE(ETOOSMALL),
-+	ERRORCODE(ESERVERFAULT),
-+	ERRORCODE(EBADTYPE),
-+	ERRORCODE(EJUKEBOX),
-+	ERRORCODE(EIOCBQUEUED),
-+	ERRORCODE(ERECALLCONFLICT),
-+};
-+
-+static noinline_for_stack
-+char *errstr(char *buf, char *end, unsigned long long num,
-+	     struct printf_spec spec)
-+{
-+	char *errname = NULL;
-+	size_t errnamelen, copy;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(errorcodes); ++i) {
-+		if (num == errorcodes[i].err || num == -errorcodes[i].err) {
-+			errname = errorcodes[i].str;
-+			break;
-+		}
-+	}
-+
-+	if (!errname) {
-+		/* fall back to ordinary number */
-+		return number(buf, end, num, spec);
-+	}
-+
-+	copy = errnamelen = strlen(errname);
-+	if (copy > end - buf)
-+		copy = end - buf;
-+	buf = memcpy(buf, errname, copy);
-+
-+	return buf + errnamelen;
-+}
-+
- static noinline_for_stack
- char *special_hex_number(char *buf, char *end, unsigned long long num, int size)
- {
-@@ -2566,7 +2752,12 @@ int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
- 				num = va_arg(args, unsigned int);
- 			}
- 
--			str = number(str, end, num, spec);
-+			if (spec.type == FORMAT_TYPE_INT && *fmt == 'E') {
-+				fmt++;
-+				str = errstr(str, end, num, spec);
-+			} else {
-+				str = number(str, end, num, spec);
-+			}
- 		}
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f497003f119c..b50ea24f087f 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1247,7 +1247,7 @@ static void gpiochip_setup_devs(void)
+ 	list_for_each_entry(gdev, &gpio_devices, list) {
+ 		err = gpiochip_setup_dev(gdev);
+ 		if (err)
+-			pr_err("%s: Failed to initialize gpio device (%d)\n",
++			pr_err("%s: Failed to initialize gpio device (%dE)\n",
+ 			       dev_name(&gdev->dev), err);
  	}
- 
+ }
 -- 
 2.20.1
 
