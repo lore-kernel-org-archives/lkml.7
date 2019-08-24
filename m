@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1071AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E76C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0B82146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64491206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:50:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ta+h6P6P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipXG6/TX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfHXSuB (ORCPT
+        id S1728045AbfHXSuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 14:50:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33659 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbfHXSuA (ORCPT
+        Sat, 24 Aug 2019 14:50:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36456 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbfHXSuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 14:50:00 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go14so7612120plb.0;
-        Sat, 24 Aug 2019 11:49:59 -0700 (PDT)
+        Sat, 24 Aug 2019 14:50:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w2so8901439pfi.3;
+        Sat, 24 Aug 2019 11:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KG3wU0cDOLtAU+yc37BRhIg5M3JzRBY8MVvSn1NtlyE=;
-        b=Ta+h6P6PVcFDwVsgbSLDnX7gW1kemD4czlwwbc9mlHYkvo3nUiUfIZBGt3zo3guLa2
-         +lv7tOVxu5RWaoChp/DBlEUeL6kBIk4KP14FEyD81Rw7dkDatNKh1Nx8aPrIRW+055uE
-         mzL7uMMNrUTDfre2uT4D5ewQRUlzt9CT0EzQTwMZKa+3YCyxwEL6zctSftTDqdf+DRv0
-         +XcRw2nk+xjeyD+uLyjgRyJvj919MO0EQqIiDCN32Cd4LjINgcLXvn5HHX3PpXb/tey5
-         uU5c8DHLDDoaRu1PXKgKITwBUejIhQFdLX1OoUhgVCKeEfJClSCPmhqS4uPSD2KF0CzQ
-         1VWQ==
+        bh=59/Yioac1wmSGF4aiy48Eg48b+I3Gv7gnDjIai6g49Y=;
+        b=ipXG6/TXo7XnZaslR75QIXazjXxOUONMAWDmIoQ129EfXrDYNXtxlS0J/PJQn1TcI6
+         I9aE3mJj890EHfJbVk6Rbh46lWAEMTYNhQXjxQfhYDbeR48aFBfQhj8l7EcTCIosHjYp
+         QXyzQGYwnLMQm7S7syQYzHxkoaaNJ1eA5tosPuG6DmROMVaGjCZalT/l9UrTxO9njdqJ
+         O0gUIbJd0wZQ3qA23u6uSuQ/iGutG9V4p4/qAS/pC9ebgTA6lZA4VUBy9ZPA74pk454z
+         PEqa81NDZ0q7lgRxgHg08yKxA2kca98dT7sq4UEXSBlNuOqdZFqaX0MaZ89UBYW8DV1p
+         iCDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KG3wU0cDOLtAU+yc37BRhIg5M3JzRBY8MVvSn1NtlyE=;
-        b=VZT7XWfcZRvkSbJywkMVyHepQ2fLiervLvmNuSSaTg8rI/WSOd8JfnPVJ2DwYMIFvc
-         tL+dkG1saVACMckZe2oZ9oWC549uWqsNZhRukkVr1V8SJHfGoOxl8EiHI+Ms39HgP3xj
-         XcWMmVlvvXdXplJFGsxXqCudZHhLLNXK6d8m8xG2FV3CV7lWAS31kAfpK6ObxP2mur9b
-         rsprOoRndnR6ExkrBng9H/pB+jB5jxUDo5r+LIk8saTeP54ZlrkK7T1uAXZQDIryN5xz
-         sObmn86V1m2bOaSCUKHfvv8hAJ6DAET4/hMyvNdMULSCLgoWHRuWP3lxxPcqXDdvCjoJ
-         PUwA==
-X-Gm-Message-State: APjAAAVjW0awsgiISab0LkuhIBfjRUOhIEZqqWgaJAKgBhgdv9hEmB1d
-        tHAPhPqjr8IbhVXaCCLV7eI=
-X-Google-Smtp-Source: APXvYqyMAOX4IlwwT6RsKneClv2NtasaHom5hyOCs/mi2fe6yXE26vU3ERE59ELNNeC8HH/dakqjPw==
-X-Received: by 2002:a17:902:e30f:: with SMTP id cg15mr11298012plb.46.1566672599386;
-        Sat, 24 Aug 2019 11:49:59 -0700 (PDT)
+        bh=59/Yioac1wmSGF4aiy48Eg48b+I3Gv7gnDjIai6g49Y=;
+        b=UQHMAwK79hDdRrst3Pg80d4HUNpPxR4mxMFju4GaDnIlTrgt/Lg5V157GejEiqLsRw
+         n+TlFh7ihbQ1Ita+lvdqnKcV5ZXUwfOuz1FmNrB5Yztmr82b9ZIb5MbFnZ5suOrWIaO6
+         EcdR7tANpH3E2xqAIKMhHmYm7UN8xIboWp6EFk5puqRKwgHgUzZ1H7xRVdad6dMscvLZ
+         8g2m3grGNIfvw7semIAdMDBWw/dQfr5t4W7LD11lwMADS+nUK7R7CljdtzpGYDvZEGOP
+         nUuXptp6vQT7AwQ2iTV8KkXlLCfdh85YPfirsmyq8pBawKGtLO/9Ctt8ZrSd7I7XjObi
+         BOtA==
+X-Gm-Message-State: APjAAAX8SpyUMwpbU/ZHlst3AElH0L+1aPXoYwdKWoczVhtXUcI35EjE
+        F9v5OcFeedaF2YahAlaAH9Q=
+X-Google-Smtp-Source: APXvYqxD0b9/MKWjv3XWuEArcK6klsnRM4NKwXYG3QRizaFX2Yjqe7JhKZVz6nOidZWPC/0TWsAlPQ==
+X-Received: by 2002:a62:5501:: with SMTP id j1mr11680577pfb.166.1566672602535;
+        Sat, 24 Aug 2019 11:50:02 -0700 (PDT)
 Received: from localhost.localdomain ([103.51.74.111])
-        by smtp.gmail.com with ESMTPSA id t8sm5519292pji.24.2019.08.24.11.49.56
+        by smtp.gmail.com with ESMTPSA id t8sm5519292pji.24.2019.08.24.11.49.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2019 11:49:59 -0700 (PDT)
+        Sat, 24 Aug 2019 11:50:02 -0700 (PDT)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Kevin Hilman <khilman@baylibre.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCHv4 2/3] arm64: dts: meson: odroid-c2: Add missing linking regulator to usb bus
-Date:   Sat, 24 Aug 2019 18:49:11 +0000
-Message-Id: <20190824184912.795-3-linux.amoon@gmail.com>
+Subject: [PATCHv4 3/3] arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power failed warning
+Date:   Sat, 24 Aug 2019 18:49:12 +0000
+Message-Id: <20190824184912.795-4-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190824184912.795-1-linux.amoon@gmail.com>
 References: <20190824184912.795-1-linux.amoon@gmail.com>
@@ -78,40 +78,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing linking regulator node to usb bus for power usb devices.
+usb_otg bus needs to get initialize from the u-boot to be configured
+to used as power source to SBC or usb otg port will get configured
+as host device. Right now this support is missing in the u-boot and
+phy driver so to avoid power failed warning, we would disable this
+feature  until proper fix is found.
 
+[    2.716048] phy phy-c0000000.phy.0: USB ID detect failed!
+[    2.720186] phy phy-c0000000.phy.0: phy poweron failed --> -22
+[    2.726001] ------------[ cut here ]------------
+[    2.730583] WARNING: CPU: 0 PID: 12 at drivers/regulator/core.c:2039 _regulator_put+0x3c/0xe8
+[    2.738983] Modules linked in:
+[    2.742005] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.9-1-ARCH #1
+[    2.748643] Hardware name: Hardkernel ODROID-C2 (DT)
+[    2.753566] Workqueue: events deferred_probe_work_func
+[    2.758649] pstate: 60000005 (nZCv daif -PAN -UAO)
+[    2.763394] pc : _regulator_put+0x3c/0xe8
+[    2.767361] lr : _regulator_put+0x3c/0xe8
+[    2.771326] sp : ffff000011aa3a50
+[    2.774604] x29: ffff000011aa3a50 x28: ffff80007ed1b600
+[    2.779865] x27: ffff80007f7036a8 x26: ffff80007f7036a8
+[    2.785126] x25: 0000000000000000 x24: ffff000011a44458
+[    2.790387] x23: ffff000011344218 x22: 0000000000000009
+[    2.795649] x21: ffff000011aa3b68 x20: ffff80007ed1b500
+[    2.800910] x19: ffff80007ed1b500 x18: 0000000000000010
+[    2.806171] x17: 000000005be5943c x16: 00000000f1c73b29
+[    2.811432] x15: ffffffffffffffff x14: ffff0000117396c8
+[    2.816694] x13: ffff000091aa37a7 x12: ffff000011aa37af
+[    2.821955] x11: ffff000011763000 x10: ffff000011aa3730
+[    2.827216] x9 : 00000000ffffffd0 x8 : ffff000010871760
+[    2.832477] x7 : 00000000000000d0 x6 : ffff0000119d151b
+[    2.837739] x5 : 000000000000000f x4 : 0000000000000000
+[    2.843000] x3 : 0000000000000000 x2 : 38104b2678c20100
+[    2.848261] x1 : 0000000000000000 x0 : 0000000000000024
+[    2.853523] Call trace:
+[    2.855940]  _regulator_put+0x3c/0xe8
+[    2.859562]  regulator_put+0x34/0x48
+[    2.863098]  regulator_bulk_free+0x40/0x58
+[    2.867153]  devm_regulator_bulk_release+0x24/0x30
+[    2.871896]  release_nodes+0x1f0/0x2e0
+[    2.875604]  devres_release_all+0x64/0xa4
+[    2.879571]  really_probe+0x1c8/0x3e0
+[    2.883194]  driver_probe_device+0xe4/0x138
+[    2.887334]  __device_attach_driver+0x90/0x110
+[    2.891733]  bus_for_each_drv+0x8c/0xd8
+[    2.895527]  __device_attach+0xdc/0x160
+[    2.899322]  device_initial_probe+0x24/0x30
+[    2.903463]  bus_probe_device+0x9c/0xa8
+[    2.907258]  deferred_probe_work_func+0xa0/0xf0
+[    2.911745]  process_one_work+0x1b4/0x408
+[    2.915711]  worker_thread+0x54/0x4b8
+[    2.919334]  kthread+0x12c/0x130
+[    2.922526]  ret_from_fork+0x10/0x1c
+[    2.926060] ---[ end trace 51a68f4c0035d6c0 ]---
+[    2.930691] ------------[ cut here ]------------
+[    2.935242] WARNING: CPU: 0 PID: 12 at drivers/regulator/core.c:2039 _regulator_put+0x3c/0xe8
+[    2.943653] Modules linked in:
+[    2.946675] CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: G        W         5.2.9-1-ARCH #1
+[    2.954694] Hardware name: Hardkernel ODROID-C2 (DT)
+[    2.959613] Workqueue: events deferred_probe_work_func
+[    2.964700] pstate: 60000005 (nZCv daif -PAN -UAO)
+[    2.969445] pc : _regulator_put+0x3c/0xe8
+[    2.973412] lr : _regulator_put+0x3c/0xe8
+[    2.977377] sp : ffff000011aa3a50
+[    2.980655] x29: ffff000011aa3a50 x28: ffff80007ed1b600
+[    2.985916] x27: ffff80007f7036a8 x26: ffff80007f7036a8
+[    2.991177] x25: 0000000000000000 x24: ffff000011a44458
+[    2.996439] x23: ffff000011344218 x22: 0000000000000009
+[    3.001700] x21: ffff000011aa3b68 x20: ffff80007ed1bd00
+[    3.006961] x19: ffff80007ed1bd00 x18: 0000000000000010
+[    3.012222] x17: 000000005be5943c x16: 00000000f1c73b29
+[    3.017484] x15: ffffffffffffffff x14: ffff0000117396c8
+[    3.022745] x13: ffff000091aa37a7 x12: ffff000011aa37af
+[    3.028006] x11: ffff000011763000 x10: ffff000011aa3730
+[    3.033267] x9 : 00000000ffffffd0 x8 : ffff000010871760
+[    3.038528] x7 : 00000000000000fd x6 : ffff0000119d151b
+[    3.043790] x5 : 000000000000000f x4 : 0000000000000000
+[    3.049051] x3 : 0000000000000000 x2 : 38104b2678c20100
+[    3.054312] x1 : 0000000000000000 x0 : 0000000000000024
+[    3.059574] Call trace:
+[    3.061991]  _regulator_put+0x3c/0xe8
+[    3.065613]  regulator_put+0x34/0x48
+[    3.069149]  regulator_bulk_free+0x40/0x58
+[    3.073203]  devm_regulator_bulk_release+0x24/0x30
+[    3.077947]  release_nodes+0x1f0/0x2e0
+[    3.081655]  devres_release_all+0x64/0xa4
+[    3.085622]  really_probe+0x1c8/0x3e0
+[    3.089245]  driver_probe_device+0xe4/0x138
+[    3.093385]  __device_attach_driver+0x90/0x110
+[    3.097784]  bus_for_each_drv+0x8c/0xd8
+[    3.101578]  __device_attach+0xdc/0x160
+[    3.105373]  device_initial_probe+0x24/0x30
+[    3.109514]  bus_probe_device+0x9c/0xa8
+[    3.113309]  deferred_probe_work_func+0xa0/0xf0
+[    3.117796]  process_one_work+0x1b4/0x408
+[    3.121762]  worker_thread+0x54/0x4b8
+[    3.125384]  kthread+0x12c/0x130
+[    3.128575]  ret_from_fork+0x10/0x1c
+[    3.132110] ---[ end trace 51a68f4c0035d6c1 ]---
+[    3.136753] dwc2: probe of c9000000.usb failed with error -22
+
+Fixes: 5a0803bd5ae2 ("ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes")
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
-Changes from previous patch
-[1] https://lore.kernel.org/patchwork/patch/1031243/
-split the changes and add the comments to power source
+
+[0] https://patchwork.kernel.org/patch/10757569/
+Earlier my approach to initialize the usb0 bus was limited, some more
+phy tuning is required both at driver and u-boot to get this feature
+working. So for now just disable this.
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 41d5fa370eb3..f3dcabf97c63 100644
+index f3dcabf97c63..792698a60a12 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -36,8 +36,15 @@
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
+@@ -312,7 +312,7 @@
+ };
  
-+		/*
-+		 * signal name from schematics: PWREN
-+		 */
- 		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
-+		/*
-+		 * signal name from sehematics: USB_POWER
-+		 */
-+		vin-supply = <&p5v0>;
- 	};
+ &usb0_phy {
+-	status = "okay";
++	status = "disabled";
+ 	phy-supply = <&usb_otg_pwr>;
+ };
  
- 	leds {
+@@ -322,7 +322,7 @@
+ };
+ 
+ &usb0 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &usb1 {
 -- 
 2.23.0
 
