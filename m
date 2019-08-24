@@ -2,138 +2,564 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CA5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F1CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA42206BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566680235;
-	bh=+q+uORFs9TRLYXFSpmQS7lxTbHi6yGFOQNw1kZKJREk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lNtZmQcJSzo4I6CHvSiUIy40lrgamHIHQY1niqgLaDE8YHzpNYeSRh62hqIJrfVG0
-	 atKHfP63H6mtqChNxHIYchw8NPhwRH+M9rdCp2X488TzlT9h4q+kDSQBlHNhko8QNQ
-	 0iwi43JsEsr+d3GEZN/BKvRRgfHyDWGWDX00QaZg=
+	by mail.kernel.org (Postfix) with ESMTP id 3DA8A2146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:03:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="krc0TzcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfHXU5O (ORCPT
+        id S1728057AbfHXVDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 16:57:14 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:32906 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfHXU5O (ORCPT
+        Sat, 24 Aug 2019 17:03:22 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40386 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfHXVDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 16:57:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x3so9567220lfc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 13:57:12 -0700 (PDT)
+        Sat, 24 Aug 2019 17:03:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c5so12073355wmb.5;
+        Sat, 24 Aug 2019 14:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4FNawqrGstVg6/hchmJtJa+3GbYylvff3HJoX49z1Bg=;
-        b=gXFLdh+h1JD7M0QXxAssSmO7tCgPsqexep8TcMfZYMtlEq3GemctWmlFZXrwmMpgx4
-         j2eSyrBEVQRalyQTUcFDyIGUhZp+bkb3dLQHAn+SjsmDgYctuqTCd3Rv8t3Z3iVbyrnT
-         CWkiwNQCW92lSuB+8JMuWQBbJVufIfkr0aW9s=
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ncxW23Tu3kq4YMc53nC9uV4auS1t8w9F3Ohyh0nX3N4=;
+        b=krc0TzcBSvh+cNCjnfVUO3OnNOIp16xBQdH++GdjxiowmR3+TdTnKBx1sOwXUWL1rj
+         oApNSDvzseQh8r9hBbvoLhxLd5Ep4AODBd0QTsFV/FOl/YZfhZHrkLUid+o/cpfl7ZaP
+         uUJAcfkRtlGogFSxrpjaDh+ROKcnIMzjPooQGnEG2/RlHhcos8RwuZDaaSt9MAfkSLtQ
+         kCJwQXBIj5HdrBuF0gPE0oF3jCFOO77fQhT2fjzgGYXsMDqRjb0uDEHEXS0ymwO7LT+7
+         B5mOWtWXSUXSUBzQnbr4mpNDYy1RBnLMl1LZdvUHVYKQRMkAw9pEGzat7+xPGyQXldo+
+         KpnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4FNawqrGstVg6/hchmJtJa+3GbYylvff3HJoX49z1Bg=;
-        b=S4l/1k9AJ57lldvSDdgD88IuecXR4SU7vIsQcW/y26IVh5qGyY0vxHzmnRBI7eT7J+
-         YaULOtpz3GPywTp2UW52pEVj5YqJYwdc3Ylg40gWHC3YTb+91+8AKUt3GPy+faP1QsWN
-         CsOeFc6Yu4kyjEYEDMDTWonmkfgOdiEee4Haq1/zGvYt6wC0A+UR9yHkLfgyMFU2ZUpd
-         Tt3qPRMcIeKSubzK2BroK+ZuZrucCMLiRkTWkRN81CUcI/ZyRD50A4y/jwZQidNQxTmR
-         iGSuSMq16stf3r2snyHNyGuCLi4mtr9Q2fijw9/0XYZWCfZzvxWe91Po2/ME00mPsaW6
-         aMqg==
-X-Gm-Message-State: APjAAAVGBO1qLsWZz3aHbzNrpLNx69LGV2i/q5XPiTIu2xAmpYRJFk7N
-        Cqx6YPaGdR77q1/OayJYx3cOji3I1dc=
-X-Google-Smtp-Source: APXvYqzU8FHg5MJQuT+XOQZ7ZxgPCEXu/7NQdIp+v7VLrXlQ1pvkIMfKxTNkHLK8TI+FHlIvxwGJKQ==
-X-Received: by 2002:a19:f11a:: with SMTP id p26mr6309655lfh.160.1566680231453;
-        Sat, 24 Aug 2019 13:57:11 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id j4sm1260888lfm.19.2019.08.24.13.57.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Aug 2019 13:57:10 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id x3so9539589lfn.6
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 13:57:10 -0700 (PDT)
-X-Received: by 2002:ac2:4c12:: with SMTP id t18mr6495890lfq.134.1566680230001;
- Sat, 24 Aug 2019 13:57:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ncxW23Tu3kq4YMc53nC9uV4auS1t8w9F3Ohyh0nX3N4=;
+        b=nM+SAOmOxprWZch74MB4FD9CiNkNYtCbflKlEgNlVGtMbqRhpYKDl4+TG7wFFbvcLE
+         C71DWGpEg8jkPk3L/1jgLvHYeF+PkhZfUeN2Ms/12z6uhzA94iK6fzb1BwLXvS+q+sIp
+         zoTIpWtN8g4eofcXjxy2/qDcB85VEGVK6ccqWBXebC3oP4Qd+79upKq5k2/Yntf9/CND
+         y7BeYB85mCtxfQtiZGSZ/ZTg19ew7XVZkzYi+mhMUDqWZFoSdyUI04TlQDqRMWjS1akH
+         s/1/xkO9bOWzXii793rQ8m+MKT5uJhzurX3O/qQdF/IgULkGvc/+pCzE8z9RViLCKkvW
+         vT0w==
+X-Gm-Message-State: APjAAAV1ZX9E+4sPHzTmcOArSTzR8cVEIp3QGWjO/1HwTfPumY8JmBzG
+        NCihvCqB1ame1eoG2VP++j4=
+X-Google-Smtp-Source: APXvYqyZgM95l2a7SY5nUwcLBe8f7VH8YKtGhYQdcTcmrL+74kdmBdSdGLfI4Mm8fePEuPryJPZXCQ==
+X-Received: by 2002:a7b:ce98:: with SMTP id q24mr13161158wmj.142.1566680597133;
+        Sat, 24 Aug 2019 14:03:17 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C1F6001D020CA8E905822D.dip0.t-ipconnect.de. [2003:f1:33c1:f600:1d02:ca8:e905:822d])
+        by smtp.googlemail.com with ESMTPSA id w8sm18902461wmc.1.2019.08.24.14.03.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Aug 2019 14:03:16 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     eswara.kota@linux.intel.com
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, hch@infradead.org,
+        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, qi-ming.wu@intel.com
+Subject: RE: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date:   Sat, 24 Aug 2019 23:03:02 +0200
+Message-Id: <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
- <20190823091636.GA10064@gmail.com> <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
- <20190824161432.GA25950@gmail.com> <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
- <20190824202224.GA5286@gmail.com>
-In-Reply-To: <20190824202224.GA5286@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 24 Aug 2019 13:56:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjD5MMbAm0OkbKadzerwG3yGr9SvE7mrsCnhmiqRRdxMw@mail.gmail.com>
-Message-ID: <CAHk-=wjD5MMbAm0OkbKadzerwG3yGr9SvE7mrsCnhmiqRRdxMw@mail.gmail.com>
-Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 1:22 PM Ingo Molnar <mingo@kernel.org> wrote:
->
-> That makes sense: I measured 17 seconds per 100 MB of data, which is is
-> 0.16 usecs per byte. The instruction used by
-> copy_user_enhanced_fast_string() is REP MOVSB - which supposedly goes as
-> high as cacheline size accesses - but perhaps those get broken down for
-> physical memory that has no device claiming it?
+Hi Dilip,
 
-All the "rep string" optimizations are _only_ done for regular memory.
+first of all: thank you for submitting this upstream!
+I hope that we can use this driver to replace the out-of-tree PCIe
+driver that's used in OpenWrt for the Lantiq VRX200 SoCs.
 
-When it hits any IO accesses, it will do the accesses at the specified
-size (so "movsb" will do it a byte at a time).
+a small disclaimer: I don't have access to any Lantiq, Intel or
+DesignWare datasheets. so everything I write below is based on my own
+understanding of the Tegra public datasheet (which describes the
+DesignWare PCIe registers) as well as the public Lantiq UGW code drops
+with out-of-tree drivers for an older version of this PCIe IP.
+thus some of my statements below may be wrong - in this case I would
+appreciate an explanation of how the hardware really works.
 
-0.16 usec per byte is faster than the traditional ISA 'inb', but not
-by a huge factor.
+please keep me CC'ed on further revisions of this series. I am highly
+interested in making this driver work on the Lantiq VRX200 SoCs once
+the initial version has landed in linux-next.
 
-> Interruption is arguably *not* an 'error', so preserving partial reads
-> sounds like the higher quality solution, nevertheless one could argue
-> that particual read *could* be returned by read_kmem() if progress was
-> made.
+> +config PCIE_INTEL_AXI
+> +        bool "Intel AHB/AXI PCIe host controller support"
+I believe that this is mostly the same IP block as it's used in Lantiq
+(xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
+(before Intel acquired Lantiq).
+This is why I would have personally called the driver PCIE_LANTIQ
 
-So if we react to regular signals, not just fatal ones, we definitely
-need to honor partial reads.
+[...]
+> +#define PCIE_CCRID				0x8
+> +
+> +#define PCIE_LCAP				0x7C
+> +#define PCIE_LCAP_MAX_LINK_SPEED		GENMASK(3, 0)
+> +#define PCIE_LCAP_MAX_LENGTH_WIDTH		GENMASK(9, 4)
+> +
+> +/* Link Control and Status Register */
+> +#define PCIE_LCTLSTS				0x80
+> +#define PCIE_LCTLSTS_ASPM_ENABLE		GENMASK(1, 0)
+> +#define PCIE_LCTLSTS_RCB128			BIT(3)
+> +#define PCIE_LCTLSTS_LINK_DISABLE		BIT(4)
+> +#define PCIE_LCTLSTS_COM_CLK_CFG		BIT(6)
+> +#define PCIE_LCTLSTS_HW_AW_DIS			BIT(9)
+> +#define PCIE_LCTLSTS_LINK_SPEED			GENMASK(19, 16)
+> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH	GENMASK(25, 20)
+> +#define PCIE_LCTLSTS_SLOT_CLK_CFG		BIT(28)
+> +
+> +#define PCIE_LCTLSTS2				0xA0
+> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED		GENMASK(3, 0)
+> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT	0x1
+> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT	0x2
+> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT	0x3
+> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT	0x4
+> +#define PCIE_LCTLSTS2_HW_AUTO_DIS		BIT(5)
+> +
+> +/* Ack Frequency Register */
+> +#define PCIE_AFR				0x70C
+> +#define PCIE_AFR_FTS_NUM			GENMASK(15, 8)
+> +#define PCIE_AFR_COM_FTS_NUM			GENMASK(23, 16)
+> +#define PCIE_AFR_GEN12_FTS_NUM_DFT		(SZ_128 - 1)
+> +#define PCIE_AFR_GEN3_FTS_NUM_DFT		180
+> +#define PCIE_AFR_GEN4_FTS_NUM_DFT		196
+> +
+> +#define PCIE_PLCR_DLL_LINK_EN			BIT(5)
+> +#define PCIE_PORT_LOGIC_FTS			GENMASK(7, 0)
+> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM		(SZ_128 - 1)
+> +
+> +#define PCIE_MISC_CTRL				0x8BC
+> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN		BIT(0)
+> +
+> +#define PCIE_MULTI_LANE_CTRL			0x8C0
+> +#define PCIE_UPCONFIG_SUPPORT			BIT(7)
+> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE		BIT(6)
+> +#define PCIE_TARGET_LINK_WIDTH			GENMASK(5, 0)
+> +
+> +#define PCIE_IOP_CTRL				0x8C4
+> +#define PCIE_IOP_RX_STANDBY_CTRL		GENMASK(6, 0)
+are you sure that you need any of the registers above?
+as far as I can tell most (all?) of them are part of the DesignWare
+register set. why doesn't pcie-designware-host initialize these?
+I don't have any datasheet or register documentation for the DesignWare
+PCIe core. In my own experiment from a month ago on the Lantiq VRX200
+SoC I didn't need any of this: [0]
 
-> I.e. if for example an iomem area is already mapped by a driver with some
-> conflicting cache attribute, xlate_dev_mem_ptr() AFAICS will not
-> ioremap_cache() it to cached? IIRC some CPUs would triple fault or
-> completely misbehave on certain cache attribute conflicts.
+this also makes me wonder if various functions below like
+intel_pcie_link_setup() and intel_pcie_max_speed_setup() (and probably
+more) are really needed or if it's just cargo cult / copy paste from
+an out-of-tree driver).
 
-Yeah, I guess we have the machine check possibility with mixed cached cases.
+> +/* APP RC Core Control Register */
+> +#define PCIE_RC_CCR				0x10
+> +#define PCIE_RC_CCR_LTSSM_ENABLE		BIT(0)
+> +#define PCIE_DEVICE_TYPE			GENMASK(7, 4)
+> +#define PCIE_RC_CCR_RC_MODE			BIT(2)
+> +
+> +/* PCIe Message Control */
+> +#define PCIE_MSG_CR				0x30
+> +#define PCIE_XMT_PM_TURNOFF			BIT(0)
+> +
+> +/* PCIe Power Management Control */
+> +#define PCIE_PMC				0x44
+> +#define PCIE_PM_IN_L2				BIT(20)
+> +
+> +/* Interrupt Enable Register */
+> +#define PCIE_IRNEN				0xF4
+> +#define PCIE_IRNCR				0xF8
+> +#define PCIE_IRN_AER_REPORT			BIT(0)
+> +#define PCIE_IRN_PME				BIT(2)
+> +#define PCIE_IRN_HOTPLUG			BIT(3)
+> +#define PCIE_IRN_RX_VDM_MSG			BIT(4)
+> +#define PCIE_IRN_PM_TO_ACK			BIT(9)
+> +#define PCIE_IRN_PM_TURNOFF_ACK			BIT(10)
+> +#define PCIE_IRN_LINK_AUTO_BW_STATUS		BIT(11)
+> +#define PCIE_IRN_BW_MGT				BIT(12)
+> +#define PCIE_IRN_WAKEUP				BIT(17)
+> +#define PCIE_IRN_MSG_LTR			BIT(18)
+> +#define PCIE_IRN_SYS_INT			BIT(28)
+> +#define PCIE_IRN_SYS_ERR_RC			BIT(29)
+> +
+> +#define PCIE_IRN_IR_INT	(PCIE_IRN_AER_REPORT | PCIE_IRN_PME | \
+> +			PCIE_IRN_RX_VDM_MSG | PCIE_IRN_SYS_ERR_RC | \
+> +			PCIE_IRN_PM_TO_ACK | PCIE_IRN_LINK_AUTO_BW_STATUS | \
+> +			PCIE_IRN_BW_MGT | PCIE_IRN_MSG_LTR)
+I would rename all of the APP register #defines to match the pattern
+PCIE_APP_*
+That makes it easy to differentiate the PCIe (DBI) registers from the
+APP registers.
 
-> This check in mremap() might also trigger:
->
->         if (is_ram == REGION_MIXED) {
->                 WARN_ONCE(1, "memremap attempted on mixed range %pa size: %#lx\n",
->                                 &offset, (unsigned long) size);
->                 return NULL;
->         }
->
-> So I'd say xlate_dev_mem_ptr() looks messy, but is possibly a bit more
-> robust in this regard?
+[...]
+> +static inline u32 pcie_app_rd(struct intel_pcie_port *lpp, u32 ofs)
+> +{
+> +	return readl(lpp->app_base + ofs);
+> +}
+> +
+> +static inline void pcie_app_wr(struct intel_pcie_port *lpp, u32 val, u32 ofs)
+> +{
+> +	writel(val, lpp->app_base + ofs);
+> +}
+> +
+> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
+> +			     u32 mask, u32 val, u32 ofs)
+> +{
+> +	pcie_update_bits(lpp->app_base, mask, val, ofs);
+> +}
+do you have plans to support the MIPS SoCs (VRX200, ARX300, XRX350,
+XRX550)?
+These will need register writes in big endian. in my own experiment [0]
+I simply used the regmap interface which will default to little endian
+register access but switch to big endian when the devicetree node is
+marked with big-endian.
 
-It clearly does work. Slowly, but work.
+[...]
+> +static int intel_pcie_bios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> +{
+> +
+> +	struct pcie_port *pp = dev->bus->sysdata;
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
+> +	struct device *pdev = lpp->pci->dev;
+> +	u32 irq_bit;
+> +	int irq;
+> +
+> +	if (pin == PCI_INTERRUPT_UNKNOWN || pin > PCI_NUM_INTX) {
+> +		dev_warn(pdev, "WARNING: dev %s: invalid interrupt pin %d\n",
+> +			 pci_name(dev), pin);
+> +		return -1;
+> +	}
+> +	irq = of_irq_parse_and_map_pci(dev, slot, pin);
+> +	if (!irq) {
+> +		dev_err(pdev, "trying to map irq for unknown slot:%d pin:%d\n",
+> +			slot, pin);
+> +		return -1;
+> +	}
+> +	/* Pin to irq offset bit position */
+> +	irq_bit = BIT(pin + PCIE_INTX_OFFSET);
+> +
+> +	/* Clear possible pending interrupts first */
+> +	pcie_app_wr(lpp, irq_bit, PCIE_IRNCR);
+> +
+> +	pcie_app_wr_mask(lpp, irq_bit, irq_bit, PCIE_IRNEN);
+> +	return irq;
+> +}
+my interpretation is that there's an interrupt controller embedded into
+the APP registers. The integrated interrupt controller takes 5
+interrupts and provides the legacy PCI_INTA/B/C/D interrupts as well as
+a WAKEUP IRQ. Each of it's own interrupts is tied to one of the parent
+interrupts.
 
-At least it works on x86. On some other architectures /dev/mem
-definitely cannot possibly handle IO memory correctly, because you
-can't even try to just read it as regular memory.
+my solution (in the experiment on the VRX200 SoC [1]) was to implement an
+interrupt controller and have it as a child devicetree node. then I used
+interrupt-map to route the interrupts to the PCIe interrupt controller.
+with that I didn't have to overwrite .map_irq.
 
-But those architectures are few and likely not relevant anyway (eg early alpha).
+(note that this comment is only related to the PCI_INTx and WAKE
+interrupts but not the other interrupt configuration bits, because as
+far as I understand the other ones are only related to the controller)
 
-             Linus
+> +static void intel_pcie_bridge_class_code_setup(struct intel_pcie_port *lpp)
+> +{
+> +	pcie_rc_cfg_wr_mask(lpp, PCIE_MISC_CTRL_DBI_RO_WR_EN,
+> +			    PCIE_MISC_CTRL_DBI_RO_WR_EN, PCIE_MISC_CTRL);
+> +	pcie_rc_cfg_wr_mask(lpp, 0xffffff00, PCI_CLASS_BRIDGE_PCI << 16,
+> +			    PCIE_CCRID);
+> +	pcie_rc_cfg_wr_mask(lpp, PCIE_MISC_CTRL_DBI_RO_WR_EN, 0,
+> +			    PCIE_MISC_CTRL);
+> +}
+in my own experiments I didn't need this - have you confirmed that it's
+required? and if it is required: why is that?
+if others are curious as well then maybe add the explanation as comment
+to the driver
+
+[...]
+> +static const char *pcie_link_gen_to_str(int gen)
+> +{
+> +	switch (gen) {
+> +	case PCIE_LINK_SPEED_GEN1:
+> +		return "2.5";
+> +	case PCIE_LINK_SPEED_GEN2:
+> +		return "5.0";
+> +	case PCIE_LINK_SPEED_GEN3:
+> +		return "8.0";
+> +	case PCIE_LINK_SPEED_GEN4:
+> +		return "16.0";
+> +	default:
+> +		return "???";
+> +	}
+> +}
+why duplicate PCIE_SPEED2STR from drivers/pci/pci.h?
+
+> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+> +{
+> +	struct device *dev = lpp->pci->dev;
+> +	int ret = 0;
+> +
+> +	lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(lpp->reset_gpio)) {
+> +		ret = PTR_ERR(lpp->reset_gpio);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+> +		return ret;
+> +	}
+> +	/* Make initial reset last for 100ms */
+> +	msleep(100);
+why is there lpp->rst_interval when you hardcode 100ms here?
+
+[...]
+> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
+> +{
+> +	struct device *dev = lpp->pci->dev;
+> +	struct platform_device *pdev;
+> +	char *irq_name;
+> +	int irq, ret;
+> +
+> +	pdev = to_platform_device(dev);
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "missing sys integrated irq resource\n");
+> +		return irq;
+> +	}
+> +
+> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
+> +	if (!irq_name) {
+> +		dev_err(dev, "failed to alloc irq name\n");
+> +		return -ENOMEM;
+you are only requesting one IRQ line for the whole driver. personally
+I would drop the custom irq_name and pass NULL to devm_request_irq
+because that will then fall-back to auto-generating an IRQ name based
+on the devicetree node. I assume it's the same for ACPI but I haven't
+tried that yet.
+
+> +static void intel_pcie_disable_clks(struct intel_pcie_port *lpp)
+> +{
+> +	clk_disable_unprepare(lpp->core_clk);
+> +}
+> +
+> +static int intel_pcie_enable_clks(struct intel_pcie_port *lpp)
+> +{
+> +	int ret = clk_prepare_enable(lpp->core_clk);
+> +
+> +	if (ret)
+> +		dev_err(lpp->pci->dev, "Core clock enable failed: %d\n", ret);
+> +
+> +	return ret;
+> +}
+you have some functions (using these two as an example) which are only
+used once. they add some boilerplate and (in my opinion) make the code
+harder to read.
+
+> +static int intel_pcie_get_resources(struct platform_device *pdev)
+> +{
+> +	struct intel_pcie_port *lpp;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	lpp = platform_get_drvdata(pdev);
+> +	dev = lpp->pci->dev;
+> +
+> +	lpp->core_clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(lpp->core_clk)) {
+> +		ret = PTR_ERR(lpp->core_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get clks: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	lpp->core_rst = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(lpp->core_rst)) {
+> +		ret = PTR_ERR(lpp->core_rst);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get resets: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = device_property_match_string(dev, "device_type", "pci");
+> +	if (ret) {
+> +		dev_err(dev, "failed to find pci device type: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (device_property_read_u32(dev, "intel,rst-interval",
+> +				     &lpp->rst_interval))
+> +		lpp->rst_interval = RST_INTRVL_DFT_MS;
+> +
+> +	if (device_property_read_u32(dev, "max-link-speed", &lpp->link_gen))
+> +		lpp->link_gen = 0; /* Fallback to auto */
+> +
+> +	lpp->app_base = devm_platform_ioremap_resource(pdev, 2);
+I suggest using platform_get_resource_byname(pdev, "app") because
+pcie-designware uses named resources for the "config" space already
+
+that said, devm_platform_ioremap_resource_byname would be a great
+addition in my opinion ;)
+
+> +	if (IS_ERR(lpp->app_base))
+> +		return PTR_ERR(lpp->app_base);
+> +
+> +	ret = intel_pcie_ep_rst_init(lpp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	lpp->phy = devm_phy_get(dev, "phy");
+I suggest to use "pcie" as phy-name, otherwise the binding looks odd:
+  phys = <&pcie0_phy>;
+  phy-names = "phy";
+versus:
+  phys = <&pcie0_phy>;
+  phy-names = "pcie";
+
+> +static ssize_t
+> +pcie_link_status_show(struct device *dev, struct device_attribute *attr,
+> +		      char *buf)
+> +{
+> +	u32 reg, width, gen;
+> +	struct intel_pcie_port *lpp;
+> +
+> +	lpp = dev_get_drvdata(dev);
+> +
+> +	reg = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
+> +	width = FIELD_GET(PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH, reg);
+> +	gen = FIELD_GET(PCIE_LCTLSTS_LINK_SPEED, reg);
+> +	if (gen > lpp->max_speed)
+> +		return -EINVAL;
+> +
+> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
+> +		       width, pcie_link_gen_to_str(gen));
+> +}
+> +static DEVICE_ATTR_RO(pcie_link_status);
+"lspci -vv | grep LnkSta" already shows the link speed and width.
+why do you need this?
+
+> +static ssize_t pcie_speed_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t len)
+> +{
+> +	struct intel_pcie_port *lpp;
+> +	unsigned long val;
+> +	int ret;
+> +
+> +	lpp = dev_get_drvdata(dev);
+> +
+> +	ret = kstrtoul(buf, 10, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val > lpp->max_speed)
+> +		return -EINVAL;
+> +
+> +	lpp->link_gen = val;
+> +	intel_pcie_max_speed_setup(lpp);
+> +	intel_pcie_speed_change_disable(lpp);
+> +	intel_pcie_speed_change_enable(lpp);
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_WO(pcie_speed);
+this is already configurable via devicetree, why do you need this?
+
+> +/*
+> + * Link width change on the fly is not always successful.
+> + * It also depends on the partner.
+> + */
+> +static ssize_t pcie_width_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t len)
+> +{
+> +	struct intel_pcie_port *lpp;
+> +	unsigned long val;
+> +
+> +	lpp = dev_get_drvdata(dev);
+> +
+> +	if (kstrtoul(buf, 10, &val))
+> +		return -EINVAL;
+> +
+> +	if (val > lpp->max_width)
+> +		return -EINVAL;
+> +
+> +	lpp->lanes = val;
+> +	intel_pcie_max_link_width_setup(lpp);
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_WO(pcie_width);
+is it needed because of a bug somewhere? who do you expect to use this
+sysfs attribute and when (which condition) do you expect people to use
+this?
+
+[...]
+> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+> +{
+> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+> +			    0, PCI_COMMAND);
+I expect logic like this to be part of the PCI subsystem in Linux.
+why is this needed?
+
+[...]
+> +int intel_pcie_msi_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +
+> +	dev_dbg(pci->dev, "MSI is handled in x86 arch\n");
+I would rephrase this to "MSI is handled by a separate MSI interrupt
+controller"
+on the VRX200 SoC there's also a MSI interrupt controller and it seems
+that "x86" has this as well (even though it might be two different MSI
+IRQ IP blocks).
+
+[...]
+> +static int intel_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const struct intel_pcie_soc *data;
+> +	struct intel_pcie_port *lpp;
+> +	struct pcie_port *pp;
+> +	struct dw_pcie *pci;
+> +	int ret;
+> +
+> +	lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
+> +	if (!lpp)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+other drivers have a "struct dw_pcie	pci" struct member (I assume
+that it's to prevent memory fragmentation). why not do the same here
+and embed it into struct intel_pcie_port?
+
+> +	platform_set_drvdata(pdev, lpp);
+> +	lpp->pci = pci;
+> +	pci->dev = dev;
+> +	pp = &pci->pp;
+> +
+> +	ret = device_property_read_u32(dev, "linux,pci-domain", &lpp->id);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get domain id, errno %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	pci->dbi_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+as stated above I would use the _byname variant
+
+
+Martin
+
+
+[0] https://github.com/xdarklight/linux/blob/lantiq-pcie-driver-next-20190727/drivers/pci/controller/dwc/pcie-lantiq.c
+[1] https://github.com/xdarklight/linux/blob/lantiq-pcie-driver-next-20190727/Documentation/devicetree/bindings/pci/lantiq%2Cdw-pcie.yaml
