@@ -2,89 +2,131 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C10FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427B9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00DD22CE3
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566678656;
-	bh=z0qC+tvzqoRXrGe3re9RsbVsv0fNXWZru8GpauizMzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K7+LAWW3PEXuXigTwozdKHGQejKiUdFmpcktgSE7NbcZfAqBwRvrCxKhxZuz+HLP+
-	 8DtKX8EJb8M0DjtZ7aotSWET8w+BaJTgee98vwNMRzP1xT1vbp6T+9/SiBP6eusSTW
-	 zgSbdrgcSGFBzoLGl1Z5TKVzsExYPSCXY6r0kffE=
+	by mail.kernel.org (Postfix) with ESMTP id B8AD920850
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="bc7dnF5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfHXUaz (ORCPT
+        id S1727936AbfHXUiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 16:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727094AbfHXUaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 16:30:55 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E9120870;
-        Sat, 24 Aug 2019 20:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566678654;
-        bh=z0qC+tvzqoRXrGe3re9RsbVsv0fNXWZru8GpauizMzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DbsD8UNuwVe9QY7Q3Jn61rlEm21WN35Kf5WUSeImK0lRdFpM1/kMr31+4xY2T5eGZ
-         JDczCBU4j4kdtomYxw97r8Eet/37N9ktd+4IfAwKG5zSNNNSRQ+WJdy9fZVha34qj3
-         3Yw0xyh4/N9Znf7TYjasf5/ih7b0glw9cXjjthbI=
-Date:   Sat, 24 Aug 2019 13:30:53 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCHv2] lib/test_kasan: add roundtrip tests
-Message-Id: <20190824133053.aa5c6393815a5cb55dbdb8a4@linux-foundation.org>
-In-Reply-To: <20190823104107.GA55480@lakrids.cambridge.arm.com>
-References: <20190819161449.30248-1-mark.rutland@arm.com>
-        <20190822164857.460353a8195bfd5ddb3d5f50@linux-foundation.org>
-        <20190823104107.GA55480@lakrids.cambridge.arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 24 Aug 2019 16:38:52 -0400
+Received: from mail-eopbgr80121.outbound.protection.outlook.com ([40.107.8.121]:44099
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727094AbfHXUiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 16:38:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hH/aHobA6Sf4M/7coNLbrpReTqME1ovnifPKeNbWlwHKZRP1ALj0kkxKVDg+X0BtFNREW4vmbilJv0ZIzclGyRcNpEvAg6UCZLLNCrN79ad2cPnbabqMQBGpyPMm/bEY3WGnxWyW+tNor39iT0qGmdCVGbOOKB9aMvgRpm7Bmp6hIBbRXUW4VGzjFk4HLknBHUBvSpQuI/2qOw1DCC2cXwvG/FNxqRXUVtBY8j6YduLmZv5zpjGQicGEAWu/vWUdCw+FOP5U7zIzvqrNVvIG7ZkkqPrd+Dr/+vGZ8rsTTb1YEYtmy6CTcsiRaE7GgM7AgNS/nFqjzk19zz/3OyRCjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fDLT4K0b4CX5GV/n4TjPiCUf+It8LnuSSJRX5fSuVEg=;
+ b=LEWzL3PIWr2tQRQ5w9W/b8KtGA7CUg0+Ml/H5ssEpXwpIYh0DfWvO7MoH4k+WyE17cuvJ0RsGueWdagtcW3dks0G/HbHUOk6W045Wk9swbpuLUnbK6MqqmYCWyuvbf5Z9ej3pYk5uvEuYil7QeFx8t/AyHQz8xRZS+6Yqn3IlL2yDKsBEGSzhHpZZmXErcXpbS3HXMGJNExQH2wFagQ/XuOhx6DXw7d/oXlBFvmANESO5ivVRHu9nVwcvqdxoMd2pr/OalWFtbAU+9c4Ovi+uEBqbF/vJbTjrDTO9oDr+9GNsW86xn/XbPXQde1ZMdo1Hr8Goe00Mg2PXesDzd5SGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fDLT4K0b4CX5GV/n4TjPiCUf+It8LnuSSJRX5fSuVEg=;
+ b=bc7dnF5vDayNMDlvmN/bueF8je/Iw8TjK17ZsoZcbX6D1Ubfns8MvSGeT7xfP5vOIpzoHlVV21A88qFqUwaMnlOWnOfAMBsoUVa6RsMpYaUyaOr1cYZXuh6E40CpYuA0nf1NogY6/NQA3leIb6/J2DVvyLOF13dI6n4pfYVAcRk=
+Received: from DBBPR08MB4250.eurprd08.prod.outlook.com (20.179.40.149) by
+ DBBPR08MB4917.eurprd08.prod.outlook.com (20.179.47.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Sat, 24 Aug 2019 20:38:48 +0000
+Received: from DBBPR08MB4250.eurprd08.prod.outlook.com
+ ([fe80::c1aa:9c2d:d6b8:b0d]) by DBBPR08MB4250.eurprd08.prod.outlook.com
+ ([fe80::c1aa:9c2d:d6b8:b0d%7]) with mapi id 15.20.2178.022; Sat, 24 Aug 2019
+ 20:38:48 +0000
+From:   Denis Lunev <den@virtuozzo.com>
+To:     David Miller <davem@davemloft.net>,
+        Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "hare@suse.com" <hare@suse.com>,
+        "kgraul@linux.ibm.com" <kgraul@linux.ibm.com>,
+        "kyeongdon.kim@lge.com" <kyeongdon.kim@lge.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] af_unix: utilize skb's fragment list for sending large
+ datagrams
+Thread-Topic: [PATCH] af_unix: utilize skb's fragment list for sending large
+ datagrams
+Thread-Index: AQHVWNXCVy+NB8D6AkS8eOMw9lnGGacHhyOAgAM/CoA=
+Date:   Sat, 24 Aug 2019 20:38:48 +0000
+Message-ID: <bdf81fa5-c578-a4c0-a7b3-87cbd3ea10cc@virtuozzo.com>
+References: <1566470311-4089-1-git-send-email-jan.dakinevich@virtuozzo.com>
+ <20190822.120421.71092037400077946.davem@davemloft.net>
+In-Reply-To: <20190822.120421.71092037400077946.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM3PR05CA0133.eurprd05.prod.outlook.com
+ (2603:10a6:207:3::11) To DBBPR08MB4250.eurprd08.prod.outlook.com
+ (2603:10a6:10:c2::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=den@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [87.26.82.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e13d3e08-680d-41d3-ff68-08d728d310d6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DBBPR08MB4917;
+x-ms-traffictypediagnostic: DBBPR08MB4917:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBBPR08MB4917DA2030035E94925CE56AB6A70@DBBPR08MB4917.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0139052FDB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(39840400004)(346002)(396003)(199004)(189003)(5660300002)(305945005)(7736002)(71190400001)(71200400001)(66066001)(2906002)(6512007)(86362001)(66476007)(66946007)(6436002)(66446008)(64756008)(3846002)(6116002)(66556008)(31696002)(81156014)(6636002)(14454004)(81166006)(8936002)(8676002)(99286004)(54906003)(76176011)(102836004)(53546011)(52116002)(316002)(7416002)(386003)(6506007)(110136005)(36756003)(446003)(11346002)(2616005)(476003)(486006)(53936002)(26005)(186003)(478600001)(256004)(14444005)(25786009)(4326008)(6486002)(31686004)(6246003)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:DBBPR08MB4917;H:DBBPR08MB4250.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: X0YrnbOteFGR6dtoGTK5ISizXhhc4EurKSufDACYLmGpX1oQkU2MsN3XyFXCnW57Bq7X/gRWgUNIIDH3Dx80oIxjwYwC5QGOvyO51IceqEboUSnuERzmsFfu+8ifCycSTTbKvs37YOo76xYcz5JUGDFgit07SPWijDENu11VPp8cGa1APAlqn7Sxj8hoQ10jlCpqdZLliQScQVkl3nhf6YCqgs84c1Nw9r5bY+9b7i1IeSp/xaONbdvhzDMXnAXwYfW3xaRDsEPpmWPo2ZhzJOuUs77rPQCcI6yb15XKM52RihoWA0i3fXMerAl9nXeeyK/LhattjwMux74wtraaXO8uVJFrfkMO5h340HTcjdmg8kN1PaTNtq6yLWjrGpnzn8KUfQZxpD/XVqJhHK9ExNMvOM37YLJYYAXRheoY/Co=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0E1EBF43BA416542980747C787186FDF@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e13d3e08-680d-41d3-ff68-08d728d310d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2019 20:38:48.4279
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LnHDXVUOHmZI45iPX+TlkjelBl/2Wke5ugfej3H/K1A2dqxFj6IcJyRpbhO5m84oSO/pN6wYbTzdpO+Y20LIQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4917
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 23 Aug 2019 11:41:08 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
-
-> >  
-> >  /*
-> > 
-> > which is really kinda wrong.  We should strictly include linux/io.h for
-> > things like virt_to_phys().
-> > 
-> > So I think I'll stick with v1 plus my fixlet:
-> > 
-> > --- a/lib/test_kasan.c~lib-test_kasan-add-roundtrip-tests-checkpatch-fixes
-> > +++ a/lib/test_kasan.c
-> > @@ -18,8 +18,8 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/string.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/io.h>
-> >  
-> > -#include <asm/io.h>
-> >  #include <asm/page.h>
-> >  
-> >  /*
-> > 
-> 
-> Assuming that you mean *v3* with that fix, that looks good to me!
-
-Yes, that's what we have.
+T24gOC8yMi8xOSA5OjA0IFBNLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+IEZyb206IEphbiBEYWtp
+bmV2aWNoIDxqYW4uZGFraW5ldmljaEB2aXJ0dW96em8uY29tPg0KPiBEYXRlOiBUaHUsIDIyIEF1
+ZyAyMDE5IDEwOjM4OjM5ICswMDAwDQo+DQo+PiBIb3dldmVyLCBwYWdlZCBwYXJ0IGNhbiBub3Qg
+ZXhjZWVkIE1BWF9TS0JfRlJBR1MgKiBQQUdFX1NJWkUsIGFuZCBsYXJnZQ0KPj4gZGF0YWdyYW0g
+Y2F1c2VzIGluY3JlYXNpbmcgc2tiJ3MgZGF0YSBidWZmZXIuIFRodXMsIGlmIGFueSB1c2VyLXNw
+YWNlDQo+PiBwcm9ncmFtIHNldHMgc2VuZCBidWZmZXIgKGJ5IGNhbGxpbmcgc2V0c29ja29wdChT
+T19TTkRCVUYsIC4uLikpIHRvDQo+PiBtYXhpbXVtIGFsbG93ZWQgc2l6ZSAod21lbV9tYXgpIGl0
+IGJlY29tZXMgYWJsZSB0byBjYXVzZSBhbnkgYW1vdW50DQo+PiBvZiB1bmNvbnRyb2xsZWQgaGln
+aC1vcmRlciBrZXJuZWwgYWxsb2NhdGlvbnMuDQo+IFNvPyAgWW91IHdhbnQgaHVnZSBTS0JzIHlv
+dSBnZXQgdGhlIGhpZ2ggb3JkZXIgYWxsb2NhdGlvbnMsIHNlZW1zDQo+IHJhdGhlciByZWFzb25h
+YmxlIHRvIG1lLg0KPg0KPiBTS0JzIHVzaW5nIGZyYWdtZW50IGxpc3RzIGFyZSB0aGUgbW9zdCBk
+aWZmaWN1bHQgYW5kIGNwdSBpbnRlbnNpdmUNCj4gZ2VvbWV0cnkgZm9yIGFuIFNLQiB0byBoYXZl
+IGFuZCB3ZSBzaG91bGQgYXZvaWQgdXNpbmcgaXQgd2hlcmUNCj4gZmVhc2libGUuDQo+DQo+IEkg
+ZG9uJ3Qgd2FudCB0byBhcHBseSB0aGlzLCBzb3JyeS4NClVuZGVyIGV2ZW4gbWVkaW9jcmUgbWVt
+b3J5IHByZXNzdXJlIHRoaXMgd2lsbCBlaXRoZXIgdGFrZXMgc2Vjb25kcyBvciBmYWlsLA0Kd2hp
+Y2ggZG9lcyBub3QgbG9vayBnb29kLiBXZSBjYW4gdHJ5IHRvIGFsbG9jYXRlIG1lbW9yeSBvZiBi
+aWcgb3JkZXINCmJ1dCBub3QgdGhhdCBoYXJkIGFuZCBzd2l0Y2ggdG8gZnJhZ21lbnRzIHdoZW4g
+cG9zc2libGUuDQoNClBsZWFzZSBhbHNvIG5vdGUgdGhhdCBldmVuIG9yZGluYXJ5IHVzZXIgY291
+bGQgdHJpZ2dlciByZWFsbHkgYmlnDQphbGxvY2F0aW9ucw0KYW5kIHRodXMgZm9yY2UgdGhlIHdo
+b2xlIG5vZGUgdG8gZGFuY2UuDQoNCkRlbg0KDQpEZW4NCg==
