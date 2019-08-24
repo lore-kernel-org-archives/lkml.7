@@ -2,88 +2,83 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6209EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 17:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980D7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 17:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362A622CE3
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 17:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6184522CF7
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 17:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566669095;
-	bh=ncwvc5nmk2FoFnoZ+9xEzHh/gYayCluvZ+VxDuLhMhU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=oGluNdws2ju+mt1oEZ2uePwPaNRUxNdpBphrro1k9Ys6VPLblcy7L5ehOkM3Ur4eI
-	 HYHJJsiSWfpt7jf85vR+NUzQnfuXkeV7Rw09BfBtjbjyu1ECBT8WFPQ/ab6NahD3iZ
-	 NHedZqYAdUjDgA5OPsWtmAn5xVkBaDv88Intl0Vw=
+	s=default; t=1566669155;
+	bh=jmskMfB4yzTBf2+Y4zUZ6yeUmQsGwe+hg5CDSAQN+LE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wm6HKXvaYtGEjeYXQzEQs3dKcs22SHDlciPSlqBWXSP6SsAfO2Sv/sZOkYd6ffLYp
+	 NPlG7HG6wICYHhVQezuatWDyECML/svuxgYFkkZ272HHKUTPxIP8sG/NOF1v3iE8BW
+	 vXnCLuhd22Fu/y51WCj/sIEwuNea0wA0LrPhTswU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfHXRve (ORCPT
+        id S1727812AbfHXRwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 13:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42508 "EHLO mail.kernel.org"
+        Sat, 24 Aug 2019 13:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfHXRve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 13:51:34 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726604AbfHXRwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 13:52:34 -0400
+Received: from localhost (unknown [8.46.76.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030352146E;
-        Sat, 24 Aug 2019 17:51:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56F5521897;
+        Sat, 24 Aug 2019 17:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566669093;
-        bh=ncwvc5nmk2FoFnoZ+9xEzHh/gYayCluvZ+VxDuLhMhU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sOavPHTspQ6C4XeJTNhCLFVk0WplCioXTW91lpolpaGEhuWfSn9N9rJE30Oa1xsWl
-         XrNRZgvEUDp8zl5t8/2Ct6KtyG5D/mf5fGCUqm9x80dGTq2dmMGBhvrNTTxbdyIvI2
-         tBcvCa70jOg6H8U7cgEEhxyKxby3KMAEmvF/f96U=
-Subject: Re: [PATCH 4.19 00/85] 4.19.68-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190822171731.012687054@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <759662ef-8e9a-4107-feb3-2102ecd159ea@kernel.org>
-Date:   Sat, 24 Aug 2019 11:51:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        s=default; t=1566669153;
+        bh=jmskMfB4yzTBf2+Y4zUZ6yeUmQsGwe+hg5CDSAQN+LE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jAaT1G/zNh3OYFNVAhBehLPWz+nztu1bAIKuSHCZNWrlKXCinGXamSGDCsCI7GCYu
+         /pazqhAzeuWcYjeEpKTc5aryfOVn8lg0iSp5KUm/bPU8avwyuvdacJbnmok+Azm0V7
+         xXmjaBM3HEAqe3uTpYcZkhdJJa4IV7SN+GIisqW8=
+Date:   Sat, 24 Aug 2019 11:12:18 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     lantianyu1986@gmail.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, daniel.lezcano@linaro.org,
+        michael.h.kelley@microsoft.com
+Subject: Re: [PATCH] x86/Hyper-V: Fix build error with CONFIG_HYPERV_TSCPAGE=N
+Message-ID: <20190824151218.GM1581@sasha-vm>
+References: <20190822053852.239309-1-Tianyu.Lan@microsoft.com>
+ <87zhk1pp9p.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <87zhk1pp9p.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 11:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.68 release.
-> There are 85 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 24 Aug 2019 05:15:49 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.68-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Thu, Aug 22, 2019 at 10:39:46AM +0200, Vitaly Kuznetsov wrote:
+>lantianyu1986@gmail.com writes:
+>
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
+>> hv_sched_clock_offset for their sched clock callback and so
+>> define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
+>
+>CONFIG_HYPERV_TSCPAGE is gone after my "x86/hyper-v: enable TSC page
+>clocksource on 32bit" patch. Do we still have an issue to fix?
 
-Compiled and booted on my test system. No dmesg regressions.
+Yes. Let's get it fixed on older kernels (as such we need to tag this
+one for stable). The 32bit TSC patch won't come in before 5.4 anyway.
 
-thanks,
--- Shuah
+Vitaly, does can you ack this patch? It might require you to re-spin
+your patch.
 
+--
+Thanks,
+Sasha
