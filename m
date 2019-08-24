@@ -2,150 +2,134 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC75C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFE8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48832173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7052173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="jWLbiVYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbfHXM4J (ORCPT
+        id S1728257AbfHXM4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 08:56:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47058 "EHLO mx1.redhat.com"
+        Sat, 24 Aug 2019 08:56:15 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41732 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbfHXM4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 08:56:09 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5BB741089042;
-        Sat, 24 Aug 2019 12:56:08 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 606615D6D0;
-        Sat, 24 Aug 2019 12:55:58 +0000 (UTC)
-Date:   Sat, 24 Aug 2019 20:55:54 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Long Li <longli@microsoft.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU with
- flooded interrupts
-Message-ID: <20190824125553.GA8474@ming.t460p>
-References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
- <1566281669-48212-4-git-send-email-longli@linuxonhyperv.com>
- <2a30a07f-982c-c291-e263-0cf72ec61235@grimberg.me>
- <20190823032129.GA18680@ming.t460p>
- <CY4PR21MB074173E79C7FC3AC13C69CB3CEA70@CY4PR21MB0741.namprd21.prod.outlook.com>
+        id S1727590AbfHXM4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 08:56:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1566651372; bh=/NrS6aEln0h6Nb+L6ubBa0Y4HHAw9yLpQ5MYGmF7ohk=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=jWLbiVYkns6Gqiqtu+08BKIDiA6ThnJFKCAcsPUWFABJZvgDcxScx4/DPJgrDoT3k
+         zEP++TI3U08v2G8JtDKJbrCTI2zHxCgZrleIvLbMXwXmxlPMxm3hu6eL+CPslExgfT
+         YXbL/KHjY1qq14+hymHaBRSVGJJfQGKRWDtXFq0s=
+Date:   Sat, 24 Aug 2019 14:56:12 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 0/3] Add basic support for RTC on
+ Allwinner H6 SoC
+Message-ID: <20190824125612.zq5qsay2wv62wykt@core.my.home>
+Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        linux-sunxi@googlegroups.com,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <20190820151934.3860-1-megous@megous.com>
+ <3686940.YHdMKP4MVq@jernej-laptop>
+ <5421621.t8Lore9UF7@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CY4PR21MB074173E79C7FC3AC13C69CB3CEA70@CY4PR21MB0741.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Sat, 24 Aug 2019 12:56:08 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5421621.t8Lore9UF7@jernej-laptop>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 12:27:18AM +0000, Long Li wrote:
-> >>>Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU
-> >>>with flooded interrupts
-> >>>
-> >>>On Tue, Aug 20, 2019 at 10:33:38AM -0700, Sagi Grimberg wrote:
-> >>>>
-> >>>> > From: Long Li <longli@microsoft.com>
-> >>>> >
-> >>>> > When a NVMe hardware queue is mapped to several CPU queues, it is
-> >>>> > possible that the CPU this hardware queue is bound to is flooded by
-> >>>> > returning I/O for other CPUs.
-> >>>> >
-> >>>> > For example, consider the following scenario:
-> >>>> > 1. CPU 0, 1, 2 and 3 share the same hardware queue 2. the hardware
-> >>>> > queue interrupts CPU 0 for I/O response 3. processes from CPU 1, 2
-> >>>> > and 3 keep sending I/Os
-> >>>> >
-> >>>> > CPU 0 may be flooded with interrupts from NVMe device that are I/O
-> >>>> > responses for CPU 1, 2 and 3. Under heavy I/O load, it is possible
-> >>>> > that CPU 0 spends all the time serving NVMe and other system
-> >>>> > interrupts, but doesn't have a chance to run in process context.
-> >>>> >
-> >>>> > To fix this, CPU 0 can schedule a work to complete the I/O request
-> >>>> > when it detects the scheduler is not making progress. This serves
-> >>>multiple purposes:
-> >>>> >
-> >>>> > 1. This CPU has to be scheduled to complete the request. The other
-> >>>> > CPUs can't issue more I/Os until some previous I/Os are completed.
-> >>>> > This helps this CPU get out of NVMe interrupts.
-> >>>> >
-> >>>> > 2. This acts a throttling mechanisum for NVMe devices, in that it
-> >>>> > can not starve a CPU while servicing I/Os from other CPUs.
-> >>>> >
-> >>>> > 3. This CPU can make progress on RCU and other work items on its
-> >>>queue.
-> >>>>
-> >>>> The problem is indeed real, but this is the wrong approach in my mind.
-> >>>>
-> >>>> We already have irqpoll which takes care proper budgeting polling
-> >>>> cycles and not hogging the cpu.
-> >>>
-> >>>The issue isn't unique to NVMe, and can be any fast devices which
-> >>>interrupts CPU too frequently, meantime the interrupt/softirq handler may
-> >>>take a bit much time, then CPU is easy to be lockup by the interrupt/sofirq
-> >>>handler, especially in case that multiple submission CPUs vs. single
-> >>>completion CPU.
-> >>>
-> >>>Some SCSI devices has the same problem too.
-> >>>
-> >>>Could we consider to add one generic mechanism to cover this kind of
-> >>>problem?
-> >>>
-> >>>One approach I thought of is to allocate one backup thread for handling such
-> >>>interrupt, which can be marked as IRQF_BACKUP_THREAD by drivers.
-> >>>
-> >>>Inside do_IRQ(), irqtime is accounted, before calling action->handler(),
-> >>>check if this CPU has taken too long time for handling IRQ(interrupt or
-> >>>softirq) and see if this CPU could be lock up. If yes, wakeup the backup
+Hi,
+
+On Sat, Aug 24, 2019 at 10:06:14AM +0200, Jernej Škrabec wrote:
+> Dne sobota, 24. avgust 2019 ob 10:04:24 CEST je Jernej Škrabec napisal(a):
+> > Hi!
+> > 
+> > Dne torek, 20. avgust 2019 ob 17:19:31 CEST je megous@megous.com napisal(a):
+> > > From: Ondrej Jirman <megous@megous.com>
+> > > 
+> > > I went through the datasheets for H6 and H5, and compared the differences.
+> > > RTCs are largely similar, but not entirely compatible. Incompatibilities
+> > > are in details not yet implemented by the rtc driver though.
+> > > 
+> > > I also corrected the clock tree in H6 DTSI.
+> > > 
+> > > This patchset is necessary for implementing the WiFi/Bluetooth support
+> > > on boards using H6 SoC.
+> > > 
+> > > There was some discussion previously of describing HOSC, DCXO and XO
+> > > oscillators and clocks as part of RTC in DT, but I decided against it
+> > > because it's not necessary, becuse information that would be provided
+> > > as a part of DT can already be determined at runtime from RTC registers,
+> > > so this woudn't add any value and would only introduce complications
+> > > to the driver. See: https://patchwork.kernel.org/cover/10898083/
+> > > 
+> > > Please take a look.
+> > > 
+> > > 
+> > > Thank you and regards,
+> > > 
+> > >   Ondrej Jirman
+> > 
+> > Sorry for a bit late test, but with your patches on Tanix TX6 box I get this
+> > in dmesg:
+> > 
+> > [   17.431742] sun6i-rtc 7000000.rtc: Failed to set rtc time.
+> > [   20.439742] sun6i-rtc 7000000.rtc: rtc is still busy.
+> > [   21.435744] sun6i-rtc 7000000.rtc: rtc is still busy.
+> > [   24.055741] sun6i-rtc 7000000.rtc: rtc is still busy.
+> > [   24.439752] sun6i-rtc 7000000.rtc: rtc is still busy.
+> > 
+> > Last line is repeated non-stop.
+> > 
+> > Any idea what could be wrong?
 > 
-> How do you know if this CPU is spending all the time in do_IRQ()?
+> Additional info - this is on kernel 5.2.6 with your patches applied.
+
+Do you have schematics, or a FEX file for the board or any other info on how the
+RTC is set up on that board?
+
+Can you dump the RTC register range?
+
+regards,
+	o.
+
+> Best regards,
+> Jernej
 > 
-> Is it something like:
-> If (IRQ_time /elapsed_time > a threshold value)
-> 	wake up the backup thread
-
-Yeah, the above could work in theory.
-
-Another approach I thought of is to monitor average irq gap time on each
-CPU.
-
-We could use EWMA(Exponential Weighted Moving Average) to do it simply,
-such as:
-
-	curr_irq_gap(cpu) = current start time of do_IRQ() on 'cpu' -
-			end time of last do_IRQ() on 'cpu'
-	avg_irq_gap(cpu) = weight_prev * avg_irq_gap(cpu) + weight_curr * curr_irq_gap(cpu) 
-
-	note:
-		weight_prev + weight_curr = 1
-
-When avg_irq_gap(cpu) is close to one small enough threshold, we think irq flood is
-detected.
-
-'weight_prev' could be chosen as one big enough value for avoiding short-time flood.
-
-
-Thanks,
-Ming
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
