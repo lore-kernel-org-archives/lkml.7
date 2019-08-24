@@ -2,168 +2,125 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76664C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 07:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40625C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF4121897
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 07:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D242133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="K3z+flYV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLFe9GDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfHXH5M (ORCPT
+        id S1726961AbfHXIE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 03:57:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40276 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfHXH5M (ORCPT
+        Sat, 24 Aug 2019 04:04:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39636 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfHXIE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 03:57:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id t6so25553391ios.7
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 00:57:11 -0700 (PDT)
+        Sat, 24 Aug 2019 04:04:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i63so11147872wmg.4;
+        Sat, 24 Aug 2019 01:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Rt7wtYCc1s5tor1o81jIoZmh+z8hgaSPweyus4OLaDI=;
-        b=K3z+flYVSNNSWoTBFmevj6fYPEM2G+divlFtL3oFGJ/e/x/iInhDr1dHK6vOFA/Sbp
-         0UBZ0ILyiMLYwgPhEtNbPrCfbqGmZtE/iabl81cCpUXQwu/WVEpKa5tCim0w1eCIh71t
-         eInx/aknxqQIs4gIxsdejGNRIx8xP+U2vTrq8ZHY1WRqCjxz80WNyH+rIwQ2mT6JfE1B
-         QwqIwtiPieUU8kHxEfuWEcHR8GIRvzO2XbMzcLUUBoaBKhzkgm+6/ek9kkwQndKDRlwN
-         Bo6V5oJZr/cP6fVAv0g7HenkS6s1hcn7PjRTIxgVGyzPH3mpyl52vEoa/RUroG5wsa33
-         XzSg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VWTrrD9BiZwTcjf+bsz7w5cdA1f2skqCvm3ZXEVoQko=;
+        b=rLFe9GDUmcKFAgh3siKa6rcZjV6ZTqAECcU7vFmKs+8luJPS6lPf/30lo87A+v/YdA
+         k0eEahzlS4MN2UyQZwkJBEXNHSMpQeprmvFCm83j8540sng/XeMTj0zGAEVL3SxFUXMT
+         XsEjYrGfUCeeoSPLXrVghHN5ADPy0t6FkPL/RGpXJSr1V6LrhBWeYtVVDVaa+p0gj+Nq
+         vXCEarwIW3Z1tJQqFoSHwR2HjJcUUpIj4Q1K0XZ+Q/nV838if8H0+ILcmrYPrqyR/75q
+         xB0KQhROV0WLleteEgaruKAin4MdIgqdyxAkARwLvdg7uViPhF9sW6GdV9Tx0fMhfySL
+         SIyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Rt7wtYCc1s5tor1o81jIoZmh+z8hgaSPweyus4OLaDI=;
-        b=A/72K2chnqCF22kUAHvCXBg0NilUaRy/HoAlzHuJI6vHQfhm5BscBybgorIeKChpT+
-         2xoOReNI4IlfjHNCX9Ag8dRbn5jryKxI0Jh71KgXpzWv0NrgPBI2iNBGHx+Nd7Oo0Aor
-         CgTXgAjDhume5bOjjg9jqWaN90LIK646ODQIabsW9SZ6KfjNm5taAlWgD7itUXMCY71V
-         JCYhgWeJSkoBYDSUzjYwt5NRFeP++v7oeti3F6A3y6Jziq8C4h9K5EEALAUnKLizCNv7
-         J+MJA17XwY//UQhnTEuy+hZuKjoyqUxscJWUU5+7+0ApkL9VcJMGKJdvNjve1mfCNzoz
-         VRAw==
-X-Gm-Message-State: APjAAAXIxySkuVaP/LLfKsGm8OlAqDYbvRtkFpQYC8k6vkxvcqf9UpCU
-        NeESRyk/J6rJfA+HNrn8+Krphnr6xHyAXZj2y5iqPQ==
-X-Google-Smtp-Source: APXvYqwxcXr8xhaFGFkwJobfl5gf6+4v9QSf+/e/XxuJihI8hsXlCsjVuqNrS0RHDZAcIleIWvUKgloQNh3YdFkKQX8=
-X-Received: by 2002:a6b:b8c4:: with SMTP id i187mr12749931iof.102.1566633430565;
- Sat, 24 Aug 2019 00:57:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VWTrrD9BiZwTcjf+bsz7w5cdA1f2skqCvm3ZXEVoQko=;
+        b=Vf7uIFtupt8ZbDAC2MCpOl8lGX+zGYbe5gbRY8ORCTnSKEyzBSfxAYBNkVxQV2VItc
+         X/FguT9d04mcbQ/jS4BwnAxUitJgba1KBsf1CQl3r/NDez60ckPoEPUrD5j507LGCNeb
+         SNcghKuBrIgQlnJdiRgh8Xk65gLKLIOzwWfg5iapAJwvaNacaH598ySNbv+WV+yufpVZ
+         ejyQWR9wr427o8rThUxmYIAvmibT6lR7pjyWivPTGPAEZSCDz2cDxPNuY5XMyHBZ0h2A
+         evTt0IbZd2Pk3RIIf9mh1vrZdBVJQ3PLsr8ApwC/vF6IJ+Xb7a7lSXwjRBfAuwzOjiKE
+         OvBQ==
+X-Gm-Message-State: APjAAAWvbXBRoOmYWDdvxucyxToVf0osdCEoaIbiszhOcMaLQr+/adRi
+        xs13CwPPgMhmmDKBnZ08xUM=
+X-Google-Smtp-Source: APXvYqzD0Dns5joa+Ot++jWHSQNsQH7+esIAVGFYLB7Fuk220hjiNVzXi3Tb84YV9R8dtQReMAQ8QA==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr9986010wml.175.1566633867494;
+        Sat, 24 Aug 2019 01:04:27 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net. [86.58.59.25])
+        by smtp.gmail.com with ESMTPSA id r11sm4727847wrt.84.2019.08.24.01.04.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Aug 2019 01:04:26 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com, megous@megous.com
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 0/3] Add basic support for RTC on Allwinner H6 SoC
+Date:   Sat, 24 Aug 2019 10:04:24 +0200
+Message-ID: <3686940.YHdMKP4MVq@jernej-laptop>
+In-Reply-To: <20190820151934.3860-1-megous@megous.com>
+References: <20190820151934.3860-1-megous@megous.com>
 MIME-Version: 1.0
-References: <20190815110944.3579-1-murphyt7@tcd.ie> <20190815110944.3579-2-murphyt7@tcd.ie>
- <20190820094143.GA24154@infradead.org>
-In-Reply-To: <20190820094143.GA24154@infradead.org>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Sat, 24 Aug 2019 08:56:59 +0100
-Message-ID: <CALQxJussiGDzWFT1xhko6no5jZNOezWCFuJQUCr4XwH4NHri3Q@mail.gmail.com>
-Subject: Re: [PATCH V5 1/5] iommu/amd: Remove unnecessary locking from AMD
- iommu driver
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-tegra@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->I have to admit I don't fully understand the concurrency issues here, but =
-neither do I understand what the mutex you removed might have helped to sta=
-rt with.
+Hi!
 
-Each range in the page tables is protected by the IO virtual address
-allocator. The iommu driver allocates an IOVA range using locks before
-it writes to a page table range. The IOVA allocator acts like a lock
-on a specific range of the page tables. So we can handle most of the
-concurrency issues in the IOVA allocator and avoid locking while
-writing to a range in the page tables.
+Dne torek, 20. avgust 2019 ob 17:19:31 CEST je megous@megous.com napisal(a):
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> I went through the datasheets for H6 and H5, and compared the differences.
+> RTCs are largely similar, but not entirely compatible. Incompatibilities
+> are in details not yet implemented by the rtc driver though.
+> 
+> I also corrected the clock tree in H6 DTSI.
+> 
+> This patchset is necessary for implementing the WiFi/Bluetooth support
+> on boards using H6 SoC.
+> 
+> There was some discussion previously of describing HOSC, DCXO and XO
+> oscillators and clocks as part of RTC in DT, but I decided against it
+> because it's not necessary, becuse information that would be provided
+> as a part of DT can already be determined at runtime from RTC registers,
+> so this woudn't add any value and would only introduce complications
+> to the driver. See: https://patchwork.kernel.org/cover/10898083/
+> 
+> Please take a look.
+> 
+> 
+> Thank you and regards,
+>   Ondrej Jirman
 
-However because we have multiple levels of pages we might have to
-allocate a middle page (a PMD) which covers more than the IOVA range
-we have allocated.
-To solve this we could use locks:
+Sorry for a bit late test, but with your patches on Tanix TX6 box I get this 
+in dmesg:
 
-//pseudo code
-lock_page_table()
-if (we need to allocate middle pages) {
- //allocate the page
- //set the PMD value
-}
-unlock_page_table()
+[   17.431742] sun6i-rtc 7000000.rtc: Failed to set rtc time.
+[   20.439742] sun6i-rtc 7000000.rtc: rtc is still busy.
+[   21.435744] sun6i-rtc 7000000.rtc: rtc is still busy.
+[   24.055741] sun6i-rtc 7000000.rtc: rtc is still busy.
+[   24.439752] sun6i-rtc 7000000.rtc: rtc is still busy.
 
-but we can actually avoid having any locking by doing the following:
+Last line is repeated non-stop.
 
-//pseudo code
-if (we need to allocate middle pages) {
- //allocate the page
- //cmpxchg64 to set the PMD if it wasn't already set since we last checked
- if (the PMD was set while since we last checked)
-   //free the page we just allocated
-}
+Any idea what could be wrong?
 
-In this case we can end up doing a pointless page allocate and free
-but it's worth it to avoid using locks
+Best regards,
+Jernej
 
-You can see this in the intel iommu code here:
-https://github.com/torvalds/linux/blob/9140d8bdd4c5a04abe181bb300378355d569=
-90a4/drivers/iommu/intel-iommu.c#L904
 
->what the mutex you removed might have helped to start with.
-The mutex I removed is arguably completely useless.
 
-In the dma ops path we handle the IOVA allocations in the driver so we
-can be sure a certain range is protected by the IOVA allocator.
-
-Because the iommu ops path doesn't handle the IOVA allocations it
-seems reasonable to lock the page tables to avoid two writers writing
-to the same range at the same time. Without the lock it's complete
-chaos and all writers can be writing to the same range at the same
-time resulting in complete garbage.
-BUT the locking doesn't actually make any real difference. Even with
-locking we still have a race condition if two writers want to write to
-the same range at the same time, the race is just whoever gets the
-lock first, we still can't be sure what the result will be. So the
-result is still garbage, just slightly more usable garbage because at
-least the range is correct for one writer.
-It just makes no sense to ever have two writers writing to the same
-range and adding a lock doesn't fix that.
-Already the Intel iommu ops path doesn't use locks for it's page table
-so this isn't a new idea I'm just doing the same for the AMD iommu
-driver
-
-Does all that make sense?
-
-On Tue, 20 Aug 2019 at 10:41, Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Aug 15, 2019 at 12:09:39PM +0100, Tom Murphy wrote:
-> > We can remove the mutex lock from amd_iommu_map and amd_iommu_unmap.
-> > iommu_map doesn=E2=80=99t lock while mapping and so no two calls should=
- touch
-> > the same iova range. The AMD driver already handles the page table page
-> > allocations without locks so we can safely remove the locks.
->
-> I've been looking over the code and trying to understand how the
-> synchronization works.  I gues we the cmpxchg64 in free_clear_pte
-> is the important point here?  I have to admit I don't fully understand
-> the concurrency issues here, but neither do I understand what the
-> mutex you removed might have helped to start with.
