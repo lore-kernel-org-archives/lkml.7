@@ -2,202 +2,108 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B51C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95678C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF14320870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6293820870
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gq4JZhQ6"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jfa8ujf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfHXVgd (ORCPT
+        id S1728317AbfHXVgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 24 Aug 2019 17:36:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39725 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727708AbfHXVgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 24 Aug 2019 17:36:33 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55237 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbfHXVgc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 17:36:32 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so11966085wme.4;
-        Sat, 24 Aug 2019 14:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TO0VXq9p9jk6JyqDRkPQMqRwi7hPTlHb4mG3H1wkzKo=;
-        b=gq4JZhQ6lGZA3R4u07JRf0ucdDI3M1XYbiFCAgA7Q+SaGcCInKtRkbBgmPYbCLdHf/
-         snWtIbJtXZl2r4xV6MkglSpO1dDzMalPDzIIbR+Ysv86o8KUFlA0NVC1/BeI75fr449c
-         ktJcs6Z1bXPV7tjS2fBzZhcLBqbGJXShnZutrnM19Gvc2rDrUT9YHKw/Ryk4O0tphkgs
-         2fMmduibQ0EXwt9cPGHvwAb8SJKE5TBDyT7g2DjfVW4Te54/vNvcJOIsN3xSdhnopqi/
-         s18w8M5wRbcjXZKuGEhoFzJk1c7vMhPDjsQI8p8sz/84OJm4/KrUqpuQA6SnoXorqcrZ
-         McyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TO0VXq9p9jk6JyqDRkPQMqRwi7hPTlHb4mG3H1wkzKo=;
-        b=HnPSOjeMVkyN+n4ke4FgihsZ5XkxtfbGBx5gAxtWYf423gn0G2RIyGDhBGjbfRkf4h
-         YYR2N0htneD5529yfwVivyyJpmzrqfUuccz42yb1OB0onbZGai9V9jHhRI1dJnfH66jI
-         zUqMgqdYO4PLrchjg6tTlWhVOGv3hbe3HFegzkGX7Q0ZaUNMQMXaAERryOl2VsJEecb0
-         v3dXOiFi1/AZOwgAgmShBIFImPGWPp+/GhVX0RQ7ugx9aKErPi3fTMRyrc7mQj+7P1fw
-         2qSlIFdLBsEM8HAfEmpOlIOVtR1fo0gCz9dFJsLW1bl6Loakbf6CH5I3KANO2peRzxZG
-         FhaQ==
-X-Gm-Message-State: APjAAAXCdL4SvjukhfVXs+VgnpVlocRclaVFONY2VqNVOX2eCGms8jII
-        qUf9BmSBCv18cPjYqqkZiUc=
-X-Google-Smtp-Source: APXvYqzxcqv5xb7sIjkMyUOoUWDuMhBA+aSF+kFWJlAXsr7b1dzTNuRd8ckbPMO8r+VndOTvj2Lv7g==
-X-Received: by 2002:a7b:c0d0:: with SMTP id s16mr12390462wmh.65.1566682589356;
-        Sat, 24 Aug 2019 14:36:29 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net. [86.58.59.25])
-        by smtp.gmail.com with ESMTPSA id a18sm8394239wrt.18.2019.08.24.14.36.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2019 14:36:28 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     linux-sunxi@googlegroups.com, megous@megous.com
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Subject: Re: [linux-sunxi] [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
-Date:   Sat, 24 Aug 2019 23:36:26 +0200
-Message-ID: <7913281.jYEbquIlsS@jernej-laptop>
-In-Reply-To: <20190824212746.a5pyilkrrvysjjbd@core.my.home>
-References: <20190820151934.3860-1-megous@megous.com> <1690798.2HKiRSsjat@jernej-laptop> <20190824212746.a5pyilkrrvysjjbd@core.my.home>
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x7OLZlZI1693806
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Sat, 24 Aug 2019 14:35:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x7OLZlZI1693806
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019081901; t=1566682550;
+        bh=2gQzKPo4WrQnlvDY26oni/RH8wMNjOHmljo2FnAYqSQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jfa8ujf6Bo1t5AdTUjdpXdAFm8XuC39+BjMNqj+VUJ3I53oJo8pLL8aqGEuCFFlpF
+         mwuiVt5W4twlgKdrwazMwd/61MKfTF4NAY11XuCMz/Ej1knheH/Kqod+N3MIPMcnIK
+         cktpL1xZjdX5eoOtI9MknxvSwHVr1fI8qBSoNC3LNQYeNSnmeD84o3whZzxDwNPfwG
+         gh/3M8807qmCeoj0hhRip3VMQkcUT2k058MR72yR9RAETn0/4FIKzK3WhJgnwoAar5
+         HnEPzDPWJwws1MytshNO8EJOiF+QUagVUh1dO3bzXlhf83JKnsGzcKS+aVx/usQ/fp
+         EvEO265n3vcaQ==
+Subject: Re: [tip: x86/urgent] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
+ family 15h/16h
+To:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>, Chen Yu <yu.c.chen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com>
+ <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
+ <20190824181929.GA18551@amd>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <409703ae-6d70-3f6a-d6fc-b7dada3c2797@zytor.com>
+Date:   Sat, 24 Aug 2019 14:35:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190824181929.GA18551@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sobota, 24. avgust 2019 ob 23:27:46 CEST je Ond=C5=99ej Jirman napisal(=
-a):
-> Hello Jernej,
->=20
-> On Sat, Aug 24, 2019 at 11:09:49PM +0200, Jernej =C5=A0krabec wrote:
-> > > Visually?
-> > >=20
-> > > That would explain why it doesn't work for you. The mainline RTC driv=
-er
-> > > disables auto-switch feature, and if your board doesn't have a crystal
-> > > for
-> > > LOSC, RTC will not generate a clock for the RTC.
-> > >=20
-> > > H6's dtsi describes by default a situatiuon with external 32k crystal
-> > > oscillator. See ext_osc32k node. That's incorrect for your board if it
-> > > doesn't have the crystal. You need to fix this in the DTS for your bo=
-ard
-> > > instead of patching the driver.
-> >=20
-> > I see that reparenting is supported, but I'm not sure how to fix that in
-> > DT. Any suggestion?
->=20
-> You may try removing the clocks property from rtc node.
+On 8/24/19 11:19 AM, Pavel Machek wrote:
+> On Fri 2019-08-23 01:10:49, tip-bot2 for Tom Lendacky wrote:
+>> The following commit has been merged into the x86/urgent branch of tip:
+>>
+>> Commit-ID:     c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
+>> Gitweb:        https://git.kernel.org/tip/c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
+>> Author:        Tom Lendacky <thomas.lendacky@amd.com>
+>> AuthorDate:    Mon, 19 Aug 2019 15:52:35 
+>> Committer:     Borislav Petkov <bp@suse.de>
+>> CommitterDate: Mon, 19 Aug 2019 19:42:52 +02:00
+>>
+>> x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
+>>
+>> There have been reports of RDRAND issues after resuming from suspend on
+>> some AMD family 15h and family 16h systems. This issue stems from a BIOS
+>> not performing the proper steps during resume to ensure RDRAND continues
+>> to function properly.
+> 
+> There are quite a few unanswered questions here.
+> 
+> a) Is there/should there be CVE for this?
+> 
+> b) Can we perform proper steps in kernel, thus making RDRAND usable
+> even when BIOS is buggy?
+> 
 
-I don't think this would work:
-https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L246
+The kernel should at least be able to set its internal "CPUID" bit, visible
+through /proc/cpuinfo.
 
->=20
-> > > The driver has parent clock selection logic in case the LOSC crystal =
-is
-> > > not
-> > > used.
-> > >=20
-> > > Your patch enables automatic detection of LOSC failure and RTC changes
-> > > clock to LOSC automatically, despite what's described in the DTS. That
-> > > may fix the issue, but is not the correct solution.
-> > >=20
-> > > Registers on my board look like this (external 32k osc is used) for
-> > > reference:
-> > >=20
-> > > LOSC_CTRL_REG[7000000]: 8011
-> > >=20
-> > > 	KEY_FIELD                      ???                  (0)
-> > > 	LOSC_AUTO_SWT_BYPASS           EN                   (1)
-> > > 	LOSC_AUTO_SWT_EN               DIS                  (0)
-> > > 	EXT_LOSC_EN                    EN                   (1)
-> > > 	EXT_LOSC_GSM                   LOW                  (0)
-> > > 	BATTERY_DIR                    DISCHARGE            (0)
-> > > 	LOSC_SRC_SEL                   EXT32k               (1)
-> > >=20
-> > > LOSC_AUTO_SWT_STA_REG[7000004]: 1
-> > >=20
-> > > 	EXT_LOSC_STA                   OK                   (0)
-> > > 	LOSC_AUTO_SWT_PEND             NOEFF                (0)
-> > > 	LOSC_SRC_SEL_STA               EXT32K               (1)
-> >=20
-> > In my case LOSC_CTRL_REG has value 0x4010 and LOSC_AUTO_SWT_STA_REG
-> > has value 0x4, so there is issue with external crystal (it's missing) a=
-nd
-> > RTC switched to internal one.
-> >=20
-> > BTW, what's wrong with automatic switching? Why is it disabled?
->=20
-> It always was disabled on mainline (bit 14 was set to 0 even before my
-> patch). H6 just probably has another extra undocummented bit, that's need=
-ed
-> to disables it properly.
->=20
-> You probably don't want a glitch to switch your RTC from high-precision
-> clock to a low precision one possibly without any indication in the
-> userspace or a kernel log.
->=20
-> Regardless of all this, DTS needs to have a correct description of the HW,
-> which means if RTC module is not connected to the 32.757kHz crystal/clock,
-> clocks property should be empty.
-
-If we are talking about correct HW description, then clock property should=
-=20
-actually have possibility that two clocks are defined - one for internal RC=
-=20
-(always present) and one external crystal (optional). In such case I could=
-=20
-really just omit external clock and be done with it. But I'm not sure if su=
-ch=20
-solution is acceptable at this point.
-
-Best regards,
-Jernej
-
->=20
-> regards,
-> 	o.
->=20
-> > Best regards,
-> > Jernej
-> >=20
-> > > regards,
-> > >=20
-> > > 	o.
-> > > =09
-> > > > > The real issue probably is that the mainline driver is missing th=
-is:
-> > > > >=20
-> > > > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dh6-=
-4.9-b
-> > > > > sp#n
-> > > > > 650
-> > > >=20
-> > > > Not sure what you mean by that. ext vs. int source selection?
-> > > >=20
-> > > >=20
-> > > >=20
-> > > > Best regards,
-> > > > Jernej
-> > > >=20
-> > > > > regards,
-> > > > >=20
-> > > > > 	o.
-
-
-
+	-hpa
 
