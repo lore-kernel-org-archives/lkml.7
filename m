@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21E5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648D4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926F222CEC
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4388021897
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfHXDno (ORCPT
+        id S1727118AbfHXDnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 23:43:44 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47399 "EHLO
+        Fri, 23 Aug 2019 23:43:49 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:35950 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726397AbfHXDnn (ORCPT
+        with ESMTP id S1726397AbfHXDnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 23:43:43 -0400
-X-UUID: 28af3dac038240a1924bd0ffd8bca3cd-20190824
-X-UUID: 28af3dac038240a1924bd0ffd8bca3cd-20190824
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        Fri, 23 Aug 2019 23:43:46 -0400
+X-UUID: 5f817fab7ed74399861e260eb908aa3d-20190824
+X-UUID: 5f817fab7ed74399861e260eb908aa3d-20190824
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1958240382; Sat, 24 Aug 2019 11:05:09 +0800
+        with ESMTP id 76699158; Sat, 24 Aug 2019 11:04:31 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 24 Aug 2019 11:05:01 +0800
+ 15.0.1395.4; Sat, 24 Aug 2019 11:04:23 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 24 Aug 2019 11:05:00 +0800
+ Transport; Sat, 24 Aug 2019 11:04:22 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,9 +50,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
         <ming-fan.chen@mediatek.com>
-Subject: [PATCH v11 12/23] iommu/mediatek: Add larb-id remapped support
-Date:   Sat, 24 Aug 2019 11:01:57 +0800
-Message-ID: <1566615728-26388-13-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v11 09/23] iommu/io-pgtable-arm-v7s: Extend to support PA[33:32] for MediaTek
+Date:   Sat, 24 Aug 2019 11:01:54 +0800
+Message-ID: <1566615728-26388-10-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
@@ -64,80 +64,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The larb-id may be remapped in the smi-common, this means the
-larb-id reported in the mtk_iommu_isr isn't the real larb-id,
+MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
+the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
+respectively. Meanwhile the iova still is 32bits.
 
-Take mt8183 as a example:
-                       M4U
-                        |
----------------------------------------------
-|               SMI common                  |
--0-----7-----5-----6-----1-----2------3-----4- <- Id remapped
- |     |     |     |     |     |      |     |
-larb0 larb1 IPU0  IPU1 larb4 larb5  larb6  CCU
-disp  vdec  img   cam   venc  img    cam
-As above, larb0 connects with the id 0 in smi-common.
-          larb1 connects with the id 7 in smi-common.
-          ...
-If the larb-id reported in the isr is 7, actually it's larb1(vdec).
-In order to output the right larb-id in the isr, we add a larb-id
-remapping relationship in this patch.
-
-If there is no this larb-id remapping in some SoCs, use the linear
-mapping array instead.
-
-This also is a preparing patch for mt8183.
+Regarding whether the pagetable address could be over 4GB, the mt8183
+support it while the previous mt8173 don't, thus keep it as is.
 
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Acked-by: Will Deacon <will@kernel.org>
 ---
- drivers/iommu/mtk_iommu.c | 4 ++++
- drivers/iommu/mtk_iommu.h | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/iommu/io-pgtable-arm-v7s.c | 40 +++++++++++++++++++++++++++++++-------
+ include/linux/io-pgtable.h         |  7 +++----
+ 2 files changed, 36 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 4df3cb4..34f0203 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -236,6 +236,8 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
- 	fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
- 	fault_port = F_MMU0_INT_ID_PORT_ID(regval);
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index 77cc1eb..5452871 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -112,7 +112,9 @@
+ #define ARM_V7S_TEX_MASK		0x7
+ #define ARM_V7S_ATTR_TEX(val)		(((val) & ARM_V7S_TEX_MASK) << ARM_V7S_TEX_SHIFT)
  
-+	fault_larb = data->plat_data->larbid_remap[fault_larb];
+-#define ARM_V7S_ATTR_MTK_4GB		BIT(9) /* MTK extend it for 4GB mode */
++/* MediaTek extend the two bits for PA 32bit/33bit */
++#define ARM_V7S_ATTR_MTK_PA_BIT32	BIT(9)
++#define ARM_V7S_ATTR_MTK_PA_BIT33	BIT(4)
+ 
+ /* *well, except for TEX on level 2 large pages, of course :( */
+ #define ARM_V7S_CONT_PAGE_TEX_SHIFT	6
+@@ -176,16 +178,32 @@ static dma_addr_t __arm_v7s_dma_addr(void *pages)
+ 	return (dma_addr_t)virt_to_phys(pages);
+ }
+ 
++static bool arm_v7s_is_mtk_enabled(struct io_pgtable_cfg *cfg)
++{
++	return IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
++		(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT);
++}
 +
- 	if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
- 			       write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
- 		dev_err_ratelimited(
-@@ -766,12 +768,14 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 	.m4u_plat     = M4U_MT2712,
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
- };
- 
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
- };
- 
- static const struct of_device_id mtk_iommu_of_ids[] = {
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index 821172b..d1a1d88 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -38,6 +38,8 @@ struct mtk_iommu_plat_data {
- 
- 	/* HW will use the EMI clock if there isn't the "bclk". */
- 	bool                has_bclk;
+ static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
+ 				    struct io_pgtable_cfg *cfg)
+ {
+-	return paddr & ARM_V7S_LVL_MASK(lvl);
++	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
 +
-+	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
- };
++	if (!arm_v7s_is_mtk_enabled(cfg))
++		return pte;
++
++	if (paddr & BIT_ULL(32))
++		pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
++	if (paddr & BIT_ULL(33))
++		pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
++	return pte;
+ }
  
- struct mtk_iommu_domain;
+ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 				  struct io_pgtable_cfg *cfg)
+ {
+ 	arm_v7s_iopte mask;
++	phys_addr_t paddr;
+ 
+ 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
+ 		mask = ARM_V7S_TABLE_MASK;
+@@ -194,7 +212,15 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 	else
+ 		mask = ARM_V7S_LVL_MASK(lvl);
+ 
+-	return pte & mask;
++	paddr = pte & mask;
++	if (!arm_v7s_is_mtk_enabled(cfg))
++		return paddr;
++
++	if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
++		paddr |= BIT_ULL(32);
++	if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
++		paddr |= BIT_ULL(33);
++	return paddr;
+ }
+ 
+ static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl,
+@@ -315,9 +341,6 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot, int lvl,
+ 	if (lvl == 1 && (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS))
+ 		pte |= ARM_V7S_ATTR_NS_SECTION;
+ 
+-	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+-		pte |= ARM_V7S_ATTR_MTK_4GB;
+-
+ 	return pte;
+ }
+ 
+@@ -731,7 +754,10 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+ {
+ 	struct arm_v7s_io_pgtable *data;
+ 
+-	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
++	if (cfg->ias > ARM_V7S_ADDR_BITS)
++		return NULL;
++
++	if (cfg->oas > (arm_v7s_is_mtk_enabled(cfg) ? 34 : ARM_V7S_ADDR_BITS))
+ 		return NULL;
+ 
+ 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+index 915fb73..a2a52c3 100644
+--- a/include/linux/io-pgtable.h
++++ b/include/linux/io-pgtable.h
+@@ -65,10 +65,9 @@ struct io_pgtable_cfg {
+ 	 *	(unmapped) entries but the hardware might do so anyway, perform
+ 	 *	TLB maintenance when mapping as well as when unmapping.
+ 	 *
+-	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) Set bit 9 in all
+-	 *	PTEs, for Mediatek IOMMUs which treat it as a 33rd address bit
+-	 *	when the SoC is in "4GB mode" and they can only access the high
+-	 *	remap of DRAM (0x1_00000000 to 0x1_ffffffff).
++	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) MediaTek IOMMUs extend
++	 *	to support up to 34 bits PA where the bit32 and bit33 are
++	 *	encoded in the bit9 and bit4 of the PTE respectively.
+ 	 *
+ 	 * IO_PGTABLE_QUIRK_NON_STRICT: Skip issuing synchronous leaf TLBIs
+ 	 *	on unmap, for DMA domains using the flush queue mechanism for
 -- 
 1.9.1
 
