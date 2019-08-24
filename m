@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F53C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB439C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222D221670
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C606D21897
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfHXDnr (ORCPT
+        id S1726985AbfHXDnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 23 Aug 2019 23:43:47 -0400
 Received: from mailgw02.mediatek.com ([210.61.82.184]:47399 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725782AbfHXDnq (ORCPT
+        with ESMTP id S1726793AbfHXDno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 23:43:46 -0400
-X-UUID: b524c2d1ea66414fbdd0593ba5b415af-20190824
-X-UUID: b524c2d1ea66414fbdd0593ba5b415af-20190824
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        Fri, 23 Aug 2019 23:43:44 -0400
+X-UUID: 94847ecf790d458e8eb21d4e003c3ac6-20190824
+X-UUID: 94847ecf790d458e8eb21d4e003c3ac6-20190824
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 127861977; Sat, 24 Aug 2019 11:04:17 +0800
+        with ESMTP id 2038650983; Sat, 24 Aug 2019 11:06:42 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 24 Aug 2019 11:04:09 +0800
+ 15.0.1395.4; Sat, 24 Aug 2019 11:06:34 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 24 Aug 2019 11:04:08 +0800
+ Transport; Sat, 24 Aug 2019 11:06:33 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,9 +50,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
         <ming-fan.chen@mediatek.com>
-Subject: [PATCH v11 08/23] iommu/io-pgtable-arm-v7s: Rename the quirk from MTK_4GB to MTK_EXT
-Date:   Sat, 24 Aug 2019 11:01:53 +0800
-Message-ID: <1566615728-26388-9-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v11 20/23] memory: mtk-smi: Add bus_sel for mt8183
+Date:   Sat, 24 Aug 2019 11:02:05 +0800
+Message-ID: <1566615728-26388-21-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
@@ -64,82 +64,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In previous mt2712/mt8173, MediaTek extend the v7s to support 4GB dram.
-But in the latest mt8183, We extend it to support the PA up to 34bit.
-Then the "MTK_4GB" name is not so fit, This patch only change the quirk
-name to "MTK_EXT".
+There are 2 mmu cells in a M4U HW. we could adjust some larbs entering
+mmu0 or mmu1 to balance the bandwidth via the smi-common register
+SMI_BUS_SEL(0x220)(Each larb occupy 2 bits).
 
+In mt8183, For better performance, we switch larb1/2/5/7 to enter
+mmu1 while the others still keep enter mmu0.
+
+In mt8173 and mt2712, we don't get the performance issue,
+Keep its default value(0x0), that means all the larbs enter mmu0.
+
+Note: smi gen1(mt2701/mt7623) don't have this bus_sel.
+
+And, the base of smi-common is completely different with smi_ao_base
+of gen1, thus I add new variable for that.
+
+CC: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- drivers/iommu/io-pgtable-arm-v7s.c | 6 +++---
- drivers/iommu/mtk_iommu.c          | 2 +-
- include/linux/io-pgtable.h         | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/memory/mtk-smi.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index fa1b38f..77cc1eb 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -315,7 +315,7 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot, int lvl,
- 	if (lvl == 1 && (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS))
- 		pte |= ARM_V7S_ATTR_NS_SECTION;
+diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+index 2bb55b86..289e595 100644
+--- a/drivers/memory/mtk-smi.c
++++ b/drivers/memory/mtk-smi.c
+@@ -41,6 +41,12 @@
+ #define SMI_LARB_NONSEC_CON(id)	(0x380 + ((id) * 4))
+ #define F_MMU_EN		BIT(0)
  
--	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB)
-+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
- 		pte |= ARM_V7S_ATTR_MTK_4GB;
++/* SMI COMMON */
++#define SMI_BUS_SEL			0x220
++#define SMI_BUS_LARB_SHIFT(larbid)	((larbid) << 1)
++/* All are MMU0 defaultly. Only specialize mmu1 here. */
++#define F_MMU1_LARB(larbid)		(0x1 << SMI_BUS_LARB_SHIFT(larbid))
++
+ enum mtk_smi_gen {
+ 	MTK_SMI_GEN1,
+ 	MTK_SMI_GEN2
+@@ -49,6 +55,7 @@ enum mtk_smi_gen {
+ struct mtk_smi_common_plat {
+ 	enum mtk_smi_gen gen;
+ 	bool             has_gals;
++	u32              bus_sel; /* Balance some larbs to enter mmu0 or mmu1 */
+ };
  
- 	return pte;
-@@ -737,12 +737,12 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
- 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
- 			    IO_PGTABLE_QUIRK_NO_PERMS |
- 			    IO_PGTABLE_QUIRK_TLBI_ON_MAP |
--			    IO_PGTABLE_QUIRK_ARM_MTK_4GB |
-+			    IO_PGTABLE_QUIRK_ARM_MTK_EXT |
- 			    IO_PGTABLE_QUIRK_NON_STRICT))
- 		return NULL;
+ struct mtk_smi_larb_gen {
+@@ -64,8 +71,10 @@ struct mtk_smi {
+ 	struct clk			*clk_apb, *clk_smi;
+ 	struct clk			*clk_gals0, *clk_gals1;
+ 	struct clk			*clk_async; /*only needed by mt2701*/
+-	void __iomem			*smi_ao_base;
+-
++	union {
++		void __iomem		*smi_ao_base; /* only for gen1 */
++		void __iomem		*base;	      /* only for gen2 */
++	};
+ 	const struct mtk_smi_common_plat *plat;
+ };
  
- 	/* If ARM_MTK_4GB is enabled, the NO_PERMS is also expected. */
--	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB &&
-+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT &&
- 	    !(cfg->quirks & IO_PGTABLE_QUIRK_NO_PERMS))
- 			return NULL;
+@@ -402,6 +411,8 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
+ static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
+ 	.gen      = MTK_SMI_GEN2,
+ 	.has_gals = true,
++	.bus_sel  = F_MMU1_LARB(1) | F_MMU1_LARB(2) | F_MMU1_LARB(5) |
++		    F_MMU1_LARB(7),
+ };
  
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 9ba2706..62edce7 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -296,7 +296,7 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
- 	};
+ static const struct of_device_id mtk_smi_common_of_ids[] = {
+@@ -474,6 +485,11 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
+ 		ret = clk_prepare_enable(common->clk_async);
+ 		if (ret)
+ 			return ret;
++	} else {
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		common->base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(common->base))
++			return PTR_ERR(common->base);
+ 	}
+ 	pm_runtime_enable(dev);
+ 	platform_set_drvdata(pdev, common);
+@@ -489,6 +505,7 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
+ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
+ {
+ 	struct mtk_smi *common = dev_get_drvdata(dev);
++	u32 bus_sel = common->plat->bus_sel;
+ 	int ret;
  
- 	if (data->enable_4GB)
--		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_4GB;
-+		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_EXT;
+ 	ret = mtk_smi_clk_enable(common);
+@@ -496,6 +513,9 @@ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
+ 		dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
+ 		return ret;
+ 	}
++
++	if (common->plat->gen == MTK_SMI_GEN2 && bus_sel)
++		writel(bus_sel, common->base + SMI_BUS_SEL);
+ 	return 0;
+ }
  
- 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
- 	if (!dom->iop) {
-diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index b5a450a..915fb73 100644
---- a/include/linux/io-pgtable.h
-+++ b/include/linux/io-pgtable.h
-@@ -65,7 +65,7 @@ struct io_pgtable_cfg {
- 	 *	(unmapped) entries but the hardware might do so anyway, perform
- 	 *	TLB maintenance when mapping as well as when unmapping.
- 	 *
--	 * IO_PGTABLE_QUIRK_ARM_MTK_4GB: (ARM v7s format) Set bit 9 in all
-+	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) Set bit 9 in all
- 	 *	PTEs, for Mediatek IOMMUs which treat it as a 33rd address bit
- 	 *	when the SoC is in "4GB mode" and they can only access the high
- 	 *	remap of DRAM (0x1_00000000 to 0x1_ffffffff).
-@@ -77,7 +77,7 @@ struct io_pgtable_cfg {
- 	#define IO_PGTABLE_QUIRK_ARM_NS		BIT(0)
- 	#define IO_PGTABLE_QUIRK_NO_PERMS	BIT(1)
- 	#define IO_PGTABLE_QUIRK_TLBI_ON_MAP	BIT(2)
--	#define IO_PGTABLE_QUIRK_ARM_MTK_4GB	BIT(3)
-+	#define IO_PGTABLE_QUIRK_ARM_MTK_EXT	BIT(3)
- 	#define IO_PGTABLE_QUIRK_NON_STRICT	BIT(4)
- 	unsigned long			quirks;
- 	unsigned long			pgsize_bitmap;
 -- 
 1.9.1
 
