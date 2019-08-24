@@ -2,161 +2,135 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298C3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F991C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC32B20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GI57Jvri"
+	by mail.kernel.org (Postfix) with ESMTP id 710102173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfHXAIq (ORCPT
+        id S1726437AbfHXAMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 20:08:46 -0400
-Received: from mail-eopbgr140052.outbound.protection.outlook.com ([40.107.14.52]:11822
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725930AbfHXAIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 20:08:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hDVGL8Hh6fpQ+psCMrZygKc9veNlp2JoplF5yjd4m+ou0q+JIFD/06Ug9NWLvezqx5RZY7T6uKR+3AQ6nZ0ZS7rS0jLKyYW0o9FlIpzYm4L0bTNukpBBBaUQiZ4ZZNaeR9Tp959/pKoqsq9AhZ/4WGAAOTKdijke5i9qnutRKbjIz4Lilk4V1BHBHqKWmwo0FueVBseY7O0IA7rQUauAez60BO5MzcbL0OkNCUf6uFv92MJdyn+M8nJaWIvmPHE/9muKREBsfSw4f+wQVGCqbZC5jcFqBGtNb1KwGDUwmmQ5MGDwBl8ks99l5z5A89dSZQUxmbHWKJV0C9D4ubhvXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dap3kQVTaBTLLvLZPpb+PMLQsyGNS9sDpraZVIRoTNg=;
- b=E93gP029yZr26Me0VB+zB3cQjLseM6zHdu/Uo7WJyJjjqIduewg7rc1q/X1/x6MiYWvbaeW9uV9YA/LB2QDUxfivbZhg4rA9+Z6OnEZjdzUjaeYbIFtpWXFiZfJxdWYE33TzUTg5BoD4aeLZdAdZBsBbjJC24A/63ICHBSTpyWpDvzQXVelz3p8MOUSQEiDHUowR77Y6Hrhn2JMTffApD0oHs4L2Wcc7OWRDoeTLienY05SgqZqGzd2nvV+9y1gzE4JG/4y6Nk7rwCTt5VxNasm0CooPBa9YkwCe73+esdxlzXg8JzGx8uf9JNdpx9yZqVOfkrYj2ik9LGJkVTOUJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dap3kQVTaBTLLvLZPpb+PMLQsyGNS9sDpraZVIRoTNg=;
- b=GI57JvriMw927NzkkwPEzK7ND01A0ai0POsML5QYVK74uxEcNlR5fxhvHFNwvJE7i8We026t2Uh6GBipSpdPyr4LdnkbZRl0J5o+H9QL2rLyd1yAN87UR5VDw3L8RWwpD7VRAuwWGmC0Or1+KsspXCI6gHbuw2rD/qR0fT5ho0c=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3204.eurprd04.prod.outlook.com (10.167.169.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Sat, 24 Aug 2019 00:08:40 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043%7]) with mapi id 15.20.2178.020; Sat, 24 Aug 2019
- 00:08:40 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-Thread-Topic: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
- doorbell way
-Thread-Index: AQHVWN1daYnbY17h2k2o9Z3qkBZ1lKcIw+QAgACoZvA=
-Date:   Sat, 24 Aug 2019 00:08:40 +0000
-Message-ID: <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2107153e-49b5-4d3c-b4df-08d728273832
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM5PR04MB3204;
-x-ms-traffictypediagnostic: AM5PR04MB3204:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB32048EBC7128BEC5EC97E920F5A70@AM5PR04MB3204.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0139052FDB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(13464003)(256004)(81166006)(476003)(8676002)(6246003)(3846002)(2906002)(6116002)(53936002)(8936002)(14444005)(76116006)(66946007)(44832011)(66476007)(7736002)(5660300002)(64756008)(66556008)(25786009)(4326008)(486006)(66446008)(86362001)(99286004)(55016002)(9686003)(7696005)(14454004)(76176011)(52536014)(81156014)(229853002)(54906003)(316002)(6916009)(478600001)(305945005)(74316002)(6506007)(7416002)(53546011)(26005)(186003)(102836004)(6436002)(66066001)(33656002)(11346002)(446003)(71200400001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3204;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nWadkxb4oB6Tl9+NjWOFztPHDK/FwjWFH2D58LKYfCS9SkEo0Xxg0WlqWQbI+cyoq1rC2dqzPiG6/qy0fSzPiXrPSegrydTsHPKxxpVzWzPvLhOrSQuDUqVKWestfW/Bx82kvVFkBhWMhLg+zI5oAwKYZMG/Dgv7Bdo3n9Nr3rKx6G4A0M3bU0idS+qFp9HKhZ/QXOdKYWu+jXQkUsAH3k+PzrFjvWzJeqUSXNNJiSoInC7o4z4FTqYwM2gOJRY20U86zb4v2We60Slcfq8eFvWnr5hctIBzBqPMM3SjRJXdAAvRZoi4RBEWCju8o7af/D0Y+gOIJQ+8+bcijetTUPYaQaGeWLMvcqr5zP0ijPksVYMkM8fBToqnPlV/SXSLfhH+ZXJaPokcvU/ZBiE6jpNeNLeq459vdsqwjxCGcXc=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 23 Aug 2019 20:12:40 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45548 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726283AbfHXAMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 20:12:40 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id EF9B9361F93;
+        Sat, 24 Aug 2019 10:12:31 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i1JeO-0007di-F2; Sat, 24 Aug 2019 10:11:24 +1000
+Date:   Sat, 24 Aug 2019 10:11:24 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190824001124.GI1119@dread.disaster.area>
+References: <20190819123841.GC5058@ziepe.ca>
+ <20190820011210.GP7777@dread.disaster.area>
+ <20190820115515.GA29246@ziepe.ca>
+ <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190821181343.GH8653@ziepe.ca>
+ <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area>
+ <20190823120428.GA12968@ziepe.ca>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2107153e-49b5-4d3c-b4df-08d728273832
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2019 00:08:40.6078
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tOKlaXqrRvKp3EqxldhfNTitBR2pPY3mEdvuwPVyJHfTez4xuBDvlu7oAGoWmOZDJN+UjO2Tvhk32kNzx1mXjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3204
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823120428.GA12968@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=G1NtteZr6bW4K8DtrmYA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo41MIyM8jVIDIxOjU4DQo+IFRv
-OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdvb2ds
-ZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXdu
-Z3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNv
-bTsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBN
-aW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdAbnhw
-LmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lz
-LmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIE1T
-SVggdG8gdGhlDQo+IGRvb3JiZWxsIHdheQ0KPiANCj4gT24gVGh1LCBBdWcgMjIsIDIwMTkgYXQg
-MDc6MjI6MzlQTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gVGhlIGxheWVyc2NhcGUg
-cGxhdGZvcm0gdXNlIHRoZSBkb29yYmVsbCB3YXkgdG8gdHJpZ2dlciBNU0lYIGludGVycnVwdA0K
-PiA+IGluIEVQIG1vZGUuDQo+ID4NCj4gDQo+IEkgaGF2ZSBubyBwcm9ibGVtcyB3aXRoIHRoaXMg
-cGF0Y2gsIGhvd2V2ZXIuLi4NCj4gDQo+IEFyZSB5b3UgYWJsZSB0byBhZGQgdG8gdGhpcyBtZXNz
-YWdlIGEgcmVhc29uIGZvciB3aHkgeW91IGFyZSBtYWtpbmcgdGhpcw0KPiBjaGFuZ2U/IERpZCBk
-d19wY2llX2VwX3JhaXNlX21zaXhfaXJxIG5vdCB3b3JrIHdoZW4gZnVuY19ubyAhPSAwPyBPciBk
-aWQNCj4gaXQgd29yayB5ZXQgZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbCBpcyBt
-b3JlIGVmZmljaWVudD8NCg0KVGhlIGZhY3QgaXMgdGhhdCwgdGhpcyBkcml2ZXIgaXMgdmVyaWZp
-ZWQgaW4gbHMxMDQ2YSBwbGF0Zm9ybSBvZiBOWFAgYmVmb3JlLCBhbmQgbHMxMDQ2YSBkb24ndA0K
-c3VwcG9ydCBNU0lYIGZlYXR1cmUsIHNvIEkgc2V0IHRoZSBtc2l4X2NhcGFibGUgb2YgcGNpX2Vw
-Y19mZWF0dXJlcyBzdHJ1Y3QgaXMgZmFsc2UsDQpidXQgaW4gb3RoZXIgcGxhdGZvcm0sIGUuZy4g
-bHMxMDg4YSwgaXQgc3VwcG9ydCB0aGUgTVNJWCBmZWF0dXJlLCBJIHZlcmlmaWVkIHRoZSBNU0lY
-DQpmZWF0dXJlIGluIGxzMTA4OGEsIGl0IGlzIG5vdCBPSywgc28gSSBjaGFuZ2VkIHRvIGFub3Ro
-ZXIgd2F5LiBUaGFua3MuDQoNCj4gDQo+IFRoYW5rcywNCj4gDQo+IEFuZHJldyBNdXJyYXkNCj4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+
-ID4gLS0tDQo+ID4gdjI6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAzICsrLQ0KPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+
-IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGlu
-ZGV4IDg0NjFmNjIuLjdjYTVmZTggMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBAQCAtNzQsNyArNzQsOCBAQCBzdGF0
-aWMgaW50IGxzX3BjaWVfZXBfcmFpc2VfaXJxKHN0cnVjdCBkd19wY2llX2VwICplcCwNCj4gdTgg
-ZnVuY19ubywNCj4gPiAgCWNhc2UgUENJX0VQQ19JUlFfTVNJOg0KPiA+ICAJCXJldHVybiBkd19w
-Y2llX2VwX3JhaXNlX21zaV9pcnEoZXAsIGZ1bmNfbm8sIGludGVycnVwdF9udW0pOw0KPiA+ICAJ
-Y2FzZSBQQ0lfRVBDX0lSUV9NU0lYOg0KPiA+IC0JCXJldHVybiBkd19wY2llX2VwX3JhaXNlX21z
-aXhfaXJxKGVwLCBmdW5jX25vLCBpbnRlcnJ1cHRfbnVtKTsNCj4gPiArCQlyZXR1cm4gZHdfcGNp
-ZV9lcF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbChlcCwgZnVuY19ubywNCj4gPiArCQkJCQkJCSAg
-aW50ZXJydXB0X251bSk7DQo+ID4gIAlkZWZhdWx0Og0KPiA+ICAJCWRldl9lcnIocGNpLT5kZXYs
-ICJVTktOT1dOIElSUSB0eXBlXG4iKTsNCj4gPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiAtLQ0K
-PiA+IDIuOS41DQo+ID4NCg==
+On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
+> On Fri, Aug 23, 2019 at 01:23:45PM +1000, Dave Chinner wrote:
+> 
+> > > But the fact that RDMA, and potentially others, can "pass the
+> > > pins" to other processes is something I spent a lot of time trying to work out.
+> > 
+> > There's nothing in file layout lease architecture that says you
+> > can't "pass the pins" to another process.  All the file layout lease
+> > requirements say is that if you are going to pass a resource for
+> > which the layout lease guarantees access for to another process,
+> > then the destination process already have a valid, active layout
+> > lease that covers the range of the pins being passed to it via the
+> > RDMA handle.
+> 
+> How would the kernel detect and enforce this? There are many ways to
+> pass a FD.
+
+AFAIC, that's not really a kernel problem. It's more of an
+application design constraint than anything else. i.e. if the app
+passes the IB context to another process without a lease, then the
+original process is still responsible for recalling the lease and
+has to tell that other process to release the IB handle and it's
+resources.
+
+> IMHO it is wrong to try and create a model where the file lease exists
+> independently from the kernel object relying on it. In other words the
+> IB MR object itself should hold a reference to the lease it relies
+> upon to function properly.
+
+That still doesn't work. Leases are not individually trackable or
+reference counted objects objects - they are attached to a struct
+file bUt, in reality, they are far more restricted than a struct
+file.
+
+That is, a lease specifically tracks the pid and the _open fd_ it
+was obtained for, so it is essentially owned by a specific process
+context. Hence a lease is not able to be passed to a separate
+process context and have it still work correctly for lease break
+notifications.  i.e. the layout break signal gets delivered to
+original process that created the struct file, if it still exists
+and has the original fd still open. It does not get sent to the
+process that currently holds a reference to the IB context.
+
+So while a struct file passed to another process might still have
+an active lease, and you can change the owner of the struct file
+via fcntl(F_SETOWN), you can't associate the existing lease with a
+the new fd in the new process and so layout break signals can't be
+directed at the lease fd....
+
+This really means that a lease can only be owned by a single process
+context - it can't be shared across multiple processes (so I was
+wrong about dup/pass as being a possible way of passing them)
+because there's only one process that can "own" a struct file, and
+that where signals are sent when the lease needs to be broken.
+
+So, fundamentally, if you want to pass a resource that pins a file
+layout between processes, both processes need to hold a layout lease
+on that file range. And that means exclusive leases and passing
+layouts between processes are fundamentally incompatible because you
+can't hold two exclusive leases on the same file range....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
