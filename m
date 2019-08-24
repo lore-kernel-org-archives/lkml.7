@@ -7,93 +7,70 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C914C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 19:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D7BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 19:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D451B2173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 19:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4712173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 19:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566673319;
-	bh=Ur27vR1/2HgfpDMbK7K/TlEe+q+j8m31vDlrvbuGmJU=;
+	s=default; t=1566673421;
+	bh=V8faoiSowxfdVDSnfuFJKqgtuKh9q9FIIhDTXCo+WOo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uPHioSRT1rY0cSbAKj7KVJl2O8o3KGNSybyagttn3RO72kzgH85NpjsUmjELUY+yd
-	 4vQzNV2sBU9j7Fy+oohcSrOgQcNPpS4AFIFQ2mrpoVudvLNuVOfpxpnIlPk0W8nD9N
-	 JwhGif8/uA980epQrsEsS6eGPGfjv70w9+hWEFeg=
+	b=jgngX6tvSCoQ92xDmQELZdEIocqIgs6GPjZfPb8HYl0A9yQOcgEeSzpRKdAV5ZY+i
+	 PCHevpWcDc12sNCBOoahXZMKhR7LxUuXdVvkwpulrZtUJ76tVuh8xn1pXhuezBqxVv
+	 SjMdgGnSEfM9aDCjYYwlZlsvZxOKV+ldxnIGpAYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfHXTB6 (ORCPT
+        id S1728076AbfHXTDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 15:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
+        Sat, 24 Aug 2019 15:03:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbfHXTB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 15:01:57 -0400
+        id S1727690AbfHXTDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 15:03:39 -0400
 Received: from X250.getinternet.no (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2981920850;
-        Sat, 24 Aug 2019 19:01:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0D620850;
+        Sat, 24 Aug 2019 19:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566673316;
-        bh=Ur27vR1/2HgfpDMbK7K/TlEe+q+j8m31vDlrvbuGmJU=;
+        s=default; t=1566673418;
+        bh=V8faoiSowxfdVDSnfuFJKqgtuKh9q9FIIhDTXCo+WOo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yc+tM+luWTvIH5tNv1EinwZi8WeOYZ+MRt54MM89QW+OvquNVB8BOHv6BeEvgbpcx
-         KBlhBr9j3YwJGY4OQurjIRRb71CD6izEPkotTUObcnZUYX9kXNiZljhypH6Savn6ga
-         3Tt4Fs2DAnbWohy+3CGU1QICG2Iy5Ow+hrfcHq/M=
-Date:   Sat, 24 Aug 2019 21:01:44 +0200
+        b=AErla3A3rEc7cT9EqjgHaROYiQvS2t+r0MBwXldY1Pm1EJUSRLV5IVNZ4OsaP36SZ
+         iDSYEcxa5CbI+aiSMGTusWCKwTWA9iI2dXcZ8ZpiGZF5X84WkOJ3rQl9+WDKsv4acY
+         zQnhOcnRTu46oJjn0e6QP/czZRpDWNdr/6Z6Btes=
+Date:   Sat, 24 Aug 2019 21:03:25 +0200
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, kernel@collabora.com,
         Gary Bisson <gary.bisson@boundarydevices.com>,
         Troy Kisky <troy.kisky@boundarydevices.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
-Message-ID: <20190824190142.GA16308@X250.getinternet.no>
+Subject: Re: [PATCH v4 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts
+ support
+Message-ID: <20190824190324.GB16308@X250.getinternet.no>
 References: <20190819172606.6410-1-dafna.hirschfeld@collabora.com>
- <20190819172606.6410-2-dafna.hirschfeld@collabora.com>
- <CAL_JsqJx6pTw7Pr=7f0jkC81JF+EDkyhHrvFehSWZV=0wy+YXQ@mail.gmail.com>
- <26b78fe57106f47d34f14bec2f81732af40c3d8d.camel@collabora.com>
+ <20190819172606.6410-3-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26b78fe57106f47d34f14bec2f81732af40c3d8d.camel@collabora.com>
+In-Reply-To: <20190819172606.6410-3-dafna.hirschfeld@collabora.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:27:39PM +0200, Dafna Hirschfeld wrote:
-> On Mon, 2019-08-19 at 14:08 -0500, Rob Herring wrote:
-> > On Mon, Aug 19, 2019 at 12:26 PM Dafna Hirschfeld
-> > <dafna.hirschfeld@collabora.com> wrote:
-> > > From: Gary Bisson <gary.bisson@boundarydevices.com>
-> > > 
-> > > The Nitrogen8M is an ARM based single board computer (SBC)
-> > > designed to leverage the full capabilities of NXP’s i.MX8M
-> > > Quad processor.
-> > > 
-> > > Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> > > Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> > > [Dafna: porting vendor's code to mainline]
-> > > Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > 
-> > Please add acks/reviewed-bys when posting new versions.
-> > 
-> Hi,
-> Thank you for the remark, I forgot to add it. I will add it in the
-> next.
+On Mon, Aug 19, 2019 at 07:26:06PM +0200, Dafna Hirschfeld wrote:
+> From: Gary Bisson <gary.bisson@boundarydevices.com>
+> 
+> Add basic dts support for i.MX8MQ NITROGEN8M.
+> 
+> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
+> [Dafna: porting vendor's code to mainline]
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-I applied the patch with Rob's Reviewed-by on v3.
-
-Shawn
+Applied, thanks.
