@@ -2,296 +2,174 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7964DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD52C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDDE21670
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566663279;
-	bh=nP0Hyrtr3QhEfYDM+zNKHZi1M+mwSZUgnfmmw+pVla8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gEqXlSCWlL60dl6hDssOMTtjJECavZ9rCByN09gfSg2OuvAVw1hkHbOFZ4lRRojoE
-	 oKGUAioygrDIFoLfzN6dRi3MqYsiW4sYjPaRj9cdI3wqJJZJaGC/pQKq3EN/u0lvf6
-	 7iBJY5kR9EHDobvagrrGcYfy3sIAftVo45WHe96M=
+	by mail.kernel.org (Postfix) with ESMTP id 4E9D32133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfHXQOi (ORCPT
+        id S1727600AbfHXQW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 12:14:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45698 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfHXQOh (ORCPT
+        Sat, 24 Aug 2019 12:22:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46042 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfHXQW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 12:14:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q12so11306818wrj.12
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 09:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xofA0Q+2DhD6aYBYq1PxV+QCF4qL3qO+KVop1PqB7JM=;
-        b=AZyuTpXxEq7JH6uYUefbSjthSH8ufi9nAapjtQNJSGxN997/FENHW4s+5huDvRdBnP
-         453saShqM7bGeDbxi3rv9tGVncwjAaG7niX40RivDfMBWjeHOESapTp7UO5KiVSaOBDa
-         +CLq36LVX3s2RiuMH+hFytP2CvVQ20HRp+x1SrGvbqnu6GtZ9jIGEqFwJ+LafjASaBnV
-         XbemaWP2S8MptZrOCg4yInLElWnXmd+O7B0aJSQ+l0DVMxEV8lXdJ8c+yVjs84Ftvobe
-         HF6xCEFqUUqNHALjCfVskjRWBe7vsITTQx1YjNvMxMzGIQrokoZ3tlbGz3ixobokEY3/
-         Mnrw==
+        Sat, 24 Aug 2019 12:22:58 -0400
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i1Yoa-00058e-Ng
+        for linux-kernel@vger.kernel.org; Sat, 24 Aug 2019 16:22:56 +0000
+Received: by mail-pf1-f197.google.com with SMTP id b8so417300pfd.5
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 09:22:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xofA0Q+2DhD6aYBYq1PxV+QCF4qL3qO+KVop1PqB7JM=;
-        b=tKoj62zSNQ1ZVU4D8k810fXAR97PigDlhpzCFNVnBnerMG4ixg1727TSj1EPUUHZ+q
-         LfHMwUSL6ONpgnPG/oTjwVOcF7nvY2TQmOYNRvPt0VCj+UWDf3KUyY0M50ohB3pUtqGT
-         xa7RPe3WkiVTRqk9NXz2fZSdXSmOUbDnOC8q6cb8Zhz9pil3jM+s1kvux3i3BzhcJ7/u
-         cdvY3er236WlMa7GHUSZiX6W5hxh7EhpSWHMss+lZIrq73LNc+FiKV4eKDA//B/3OENN
-         wQAmDW+lOkTESKPJwLqZlD0NM14TsnYWHpdPCOosmlOkbeFgj4NcLpTgKDzHirhpFeQL
-         Vv0Q==
-X-Gm-Message-State: APjAAAVpOGMEQnUO8sWl8NkJRT8hjmlztxDzIaL5+fdEbg4pt/cbGE1O
-        Cfgrudx028VniE09rRFJjJo=
-X-Google-Smtp-Source: APXvYqzVB9TKEfZz2yhKZYOrbQTs8bwXX2qqpU27M2L8iGJhtX4VHq4EpEiy7Ac9blpqDjwv/S1ElA==
-X-Received: by 2002:a5d:4d4c:: with SMTP id a12mr12183153wru.343.1566663274582;
-        Sat, 24 Aug 2019 09:14:34 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a19sm18583010wra.2.2019.08.24.09.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2019 09:14:33 -0700 (PDT)
-Date:   Sat, 24 Aug 2019 18:14:32 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-Message-ID: <20190824161432.GA25950@gmail.com>
-References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
- <20190823091636.GA10064@gmail.com>
- <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=5KUerDlSmB77Lo12oQ8r4Q4eH+L8kNrW2/kTpeARao4=;
+        b=LlnIFFJwg52Godd5vi09vM4Iwjwwh1OsuRP1dyk/5D7+riIvr/055zgIE2LrvxckTU
+         3aw73Cdow1JL+GlRRWvshix7iENPedKrbqfyCLaas2c/cjIURSjSeTZj6r0Vk9Z0EOlv
+         uiOVSjfFV7xC2b1p9sFKuTwHDUjjzmutc9Tv3I9I0ZAgbiKaF2ioL6haunmsG5XGs9AU
+         5Tdnn+77M/7mejQ6enOKGyQztoaC6AVYZX2IsKKG2PL6XOo5kWn8myDoavVhKtnHwziH
+         iyHL5ts2ZYKy4TUutS3Nv/Wacz/J29+C9IOFB6tn3Aa6k1JrAJ/3x//SR1BSiZN+amwD
+         PYuA==
+X-Gm-Message-State: APjAAAWc2Es7JZJA3x8evm9Em6gNArJnNlVouWuH6uZxtdWhCtlJvjAO
+        gzO35SlXHHS90cdr05CCIm7d1LyFKcR1Fud8/4HWfJx0QaeQQvFi/SHS8auuf6N8oOdq0aNMreL
+        woRUR43u+CZYuhlOcHY7r7fYQ5CZ1vG8eS81Y4AlwCQ==
+X-Received: by 2002:a17:902:1024:: with SMTP id b33mr9858060pla.325.1566663775426;
+        Sat, 24 Aug 2019 09:22:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxmg8gFJdWJtcToHyLrlyWnul3s1B2nKRoi4wilC9bUOgNMwGIwzjgfqh45xtiOOXF1F2sfhg==
+X-Received: by 2002:a17:902:1024:: with SMTP id b33mr9858041pla.325.1566663775217;
+        Sat, 24 Aug 2019 09:22:55 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-54b0-44c4-6d25-80e5.dynamic-ip6.hinet.net (2001-b011-380f-3c42-54b0-44c4-6d25-80e5.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:54b0:44c4:6d25:80e5])
+        by smtp.gmail.com with ESMTPSA id g19sm7073182pfh.27.2019.08.24.09.22.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 24 Aug 2019 09:22:54 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] HID: quirks: Disable runtime suspend on Microsoft Corp.
+ Basic Optical Mouse v2.0
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <1566481032.8347.44.camel@suse.com>
+Date:   Sun, 25 Aug 2019 00:22:51 +0800
+Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <E1CAAA78-D4F1-4EA4-8ED2-5B17839BB8D2@canonical.com>
+References: <20190822091744.3451-1-kai.heng.feng@canonical.com>
+ <1566467151.8347.23.camel@suse.com>
+ <AD8A4135-0275-45B3-BEB9-031737A2C756@canonical.com>
+ <1566470325.8347.35.camel@suse.com>
+ <D6E31CB0-BC2B-4B52-AF18-4BE990D3FDA5@canonical.com>
+ <1566481032.8347.44.camel@suse.com>
+To:     Oliver Neukum <oneukum@suse.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+at 21:37, Oliver Neukum <oneukum@suse.com> wrote:
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Fri, Aug 23, 2019 at 2:16 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > > +      */
-> > > +     if (fatal_signal_pending(current)) {
-> > > +             if (!(error_code & X86_PF_USER))
-> > > +                     no_context(regs, error_code, address, 0, 0);
-> >
-> > Since the 'signal' parameter to no_context() is 0, will there be another
-> > signal generated? I don't think so - so the comment looks wrong to me,
-> > unless I'm missing something.
-> 
-> The old case only handled the kernel case - which never added a signal
-> at all, it just failed the access (and results in EFAULT or similar,
-> but nobody cares since the whole point is that the process is going to
-> be killed).
-> 
-> The *changed* case handles user space accesses too - by just returning
-> without any new signal being generated. The old case would fall
-> through to the "generate SIGSEGV", which seems pointless and wrong
-> (and also possibly generates misleading messages in the kernel logs).
-
-Indeed!
-
-> > Other than that, what we are skipping here if a KILL signal is pending is
-> > the printout of oops information if the fault is a kernel one.
-> >
-> > Not sure that's a good idea in general: carefully timing a KILL signal
-> > would allow the 'stealth probing' of otherwise oops generating addresses?
-> 
-> That sounds really like a non-issue to me. Plus the old code ALREADY
-> did that exact thing. The only _new_ case is that it does is silently
-> for user page faults.
-> 
-> > I.e. I'm not sure this hunk is necessary or even a good idea.
-> 
-> As mentioned, the new code doesn't change the case you are talking about at all.
-> 
-> The new code only changes the case of this happening from user space,
-> when it doesn't generate a pointless signal and a pointless possible
-> show_signal_msg() garbage for a user mode access that was denied due
-> to the new
-> 
-> > > +     if (flags & FAULT_FLAG_KILLABLE) {
-> > > +             if (fatal_signal_pending(current))
-> > > +                     return VM_FAULT_SIGSEGV;
-> > > +     }
-> 
-> code in handle_mm_fault().
-> 
-> And you said that new code looks fine to you, but you didn't seem to
-> realize that it causes stupid incorrect kernel messages to be printed
-> ("segfault at xyz" etc) that are completely wrong.
-> 
-> Because it's not a "real" SIGSEGV. It gets repressed by the fact that
-> there's a fatal signal pending.
-> 
-> Otherwise we'd have to add a whole new case of VM_FAULT_xyz..
-
-Indeed :-/
-
-At least I can report that I was able to reproduce a probable variant of 
-the bug Tetsuo reported on a regular PC as well, with this command:
-
-  dd if=/dev/mem of=/dev/null status=progress conv=noerror bs=100M
-
-The 'noerror' is needed to skip unreadable holes early in the memory map.
-
-What I noticed is that while reading regular RAM is reasonably fast even 
-in very large chunks, accesses become very slow once they hit iomem - and 
-delays even longer than the reported 145 seconds become possible if 
-bs=100M is increased to say bs=1000M.
-
-With your patch applied these large read chunks are still possible and 
-not interruptible within read_mem(), and because the source of the 
-slowdown is the iomem access and memcpy()s, not the paging overhead, the 
-new page fault code doesn't even trigger and the delays remain.
-
-I.e. this hypothesis is not true, on my testbox at least - and with my 
-different testcase:
-
-> > > Also, if it takes minutes to delay killing things, that implies 
-> > > that we're probably still faulting in pages for the read_mem(). 
-> > > Which points to another possible thing we could do in general: just 
-> > > don't bother to handle page faults when a fatal signal is pending.
-
-With Tetsuo's approach the delays are fixed, because the fatal signal is 
-noticed within the 4K chunks of read_mem() immediately:
-
-[pid  1674] 1566662105.052485 write(1, "ZZZZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 104857600) = 104857600 <0.000008>
-[pid  1674] 1566662105.052512 read(0, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 104857600) = 104857600 <17.006740>
-[pid  1674] 1566662122.059306 write(1, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 104857600) = 104857600 <0.000009>
-) = 1 <0.000010>662122.059334 write(2, "\r", 1
-[pid  1674] 1566662122.059372 write(2, "3145728000 bytes (3.1 GB) copied", 323145728000 bytes (3.1 GB) copied) = 32 <0.000009>
-[pid  1674] 1566662122.059411 write(2, ", 18.214699 s, 173 MB/s", 23, 18.214699 s, 173 MB/s) = 23 <0.000008>
-[pid  1674] 1566662122.059433 read(0,  <unfinished ...>
-[pid  1674] 1566662123.082491 +++ killed by SIGKILL +++
-
-Note how the first 100MB chunk took 17 seconds, the second chunk was 
-interrupted within ~2 seconds after I sent a SIGKILL.
-
-Find below a variant of Tetsuo's patch, that uses a more regular signal 
-return pattern that you suggested in your other mail:
-
-> (Ok, in this case I think it wants
+> Am Donnerstag, den 22.08.2019, 21:23 +0800 schrieb Kai-Heng Feng:
+>> at 18:38, Oliver Neukum <oneukum@suse.com> wrote:
+>>> Well, sort of. The USB spec merely states how to enter and exit
+>>> a suspended state and that device state must not be lost.
+>>> It does not tell you what a suspended device must be able to do.
+>>
+>> But shouldn’t remote wakeup signaling wakes the device up and let it exit
+>> suspend state?
 >
->         err = -EINTR;
->         if (fatal_signal_pending(current))
->                 break;
+> Yes. Have you tested using a button? If they indeed do not work, then
+> the device lies about supporting remote wakeup. That would warrant a
+> quirk, but for remote wakeup.
+
+Button click can wake the mouse up but not movement.
+
 >
-> instead, but the point is to make it look like signal handling, just
-> with the special "fatal signals can sometimes be handled even when
-> regular signals might not make it through".
+>> Or it’s okay to let the device be suspended when remote wakeup is needed
+>> but broken?
+>
+> Again, the HID spec does not specify what should trigger a remote
+> wakeup. Limiting this to mouse buttons but not movements is
+> inconvinient, but not buggy.
 
-Except that I think the regular pattern here is not 'break' but 'goto 
-failed' - 'break' would just result in a partial read and 'err' gets 
-ignored.
+Ok, I still find the behavior really surprising.
 
-I also agree that we should probably allow regular interrupts to 
-interrupt /dev/mem accesses - while the 'dd' process is killable, it's 
-not Ctrl-C-able.
+>
+> This is indeed what Windows does. The device is suspended when the
+> screen saver switches on. That we do not do that is a deficiency
+> of X.
+> To use runtime PM regularly you need an .ini file
 
-If I change the fatal_signal_pending() to signal_pending() it all behaves 
-much better IMHO - assuming that no utility learned rely on 
-non-interruptibility ...
+Thanks for the explanation. I guess we can mimic the behavior in systemd or  
+upower.
 
-The second patch is attached below the first one.
+>
+>
+>>> In other words, if on your system it is on, you need to look
+>>> at udev, not the kernel.
+>>
+>> So if a device is broken when “power/control” is flipped by user, we  
+>> should
+>> deal it at userspace? That doesn’t sound right to me.
+>
+> If it is broken, as in crashing we could talk about it. If it merely
+> does not do what you want, then, yes, that is for user space to deal
+> with.
 
-Independently of this I also agree with Tetsuo that a cond_resched() 
-might be in order to break up this loop on non-preempt kernels. The third 
-patch below implements this variant.
+Ok, I’ll take a look at userspace then.
 
-Is this closer to what you had in mind?
+>
+>>> Well, no. Runtime PM is a trade off. You lose something if you use
+>>> it. If it worked just as well as full power, you would never use
+>>> full power, would you?
+>>
+>> I am not asking the suspended state to work as full power, but to  
+>> prevent a
+>> device enters suspend state because of broken remote wakeup.
+>
+> What then would be the difference between suspended and active? A small
+> delay in data transfer?
 
-Thanks,
+Non-operational but with wakeup capability and vise versa.
 
-	Ingo
+>
+>>> Whether the loss of functionality or performance is worth the energy
+>>> savings is a policy decision. Hence it belongs into udev.
+>>> Ideally the kernel would tell user space what will work in a
+>>> suspended state. Unfortunately HID does not provide support for that.
+>>
+>> I really don’t think “loss of functionally” belongs to policy decision.  
+>> But
+>> that’s just my opinion.
+>
+> That is just what we do if, for example, you choose between the configs
+> of a USB device or when you use authorization.
+>
+>> Maybe just calling usb_autopm_put_interface() in usbhid_close() to balance
+>> the refcount?
+>
+> No, the refcount is good. If remote wakeup is totally broken, you need
+> to introduce a quirk that will prevent the kernel from believing the
+> device when it claims to support it.
 
----
- drivers/char/mem.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+Ok. I’ll see if it’s possible to mimic other OS under current Linux Desktop.
 
-Index: linux/drivers/char/mem.c
-===================================================================
---- linux.orig/drivers/char/mem.c
-+++ linux/drivers/char/mem.c
-@@ -175,6 +175,15 @@ static ssize_t read_mem(struct file *fil
- 		p += sz;
- 		count -= sz;
- 		read += sz;
-+
-+		/*
-+		 * Reading from iomem areas of /dev/mem can be slow,
-+		 * depending on the hardware, so allow such read()s
-+		 * to be interrupted via fatal signals (SIGKILL):
-+		 */
-+		err = -EINTR;
-+		if (fatal_signal_pending(current))
-+			goto failed;
- 	}
- 	kfree(bounce);
- 
- 
- drivers/char/mem.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+Kai-Heng
 
-Index: linux/drivers/char/mem.c
-===================================================================
---- linux.orig/drivers/char/mem.c
-+++ linux/drivers/char/mem.c
-@@ -175,6 +175,15 @@ static ssize_t read_mem(struct file *fil
- 		p += sz;
- 		count -= sz;
- 		read += sz;
-+
-+		/*
-+		 * Reading from iomem areas of /dev/mem can be slow,
-+		 * depending on the hardware, so allow such read()s
-+		 * to be interruptible:
-+		 */
-+		err = -EINTR;
-+		if (signal_pending(current))
-+			goto failed;
- 	}
- 	kfree(bounce);
- 
-Index: linux/drivers/char/mem.c
-===================================================================
---- linux.orig/drivers/char/mem.c
-+++ linux/drivers/char/mem.c
-@@ -175,6 +175,18 @@ static ssize_t read_mem(struct file *fil
- 		p += sz;
- 		count -= sz;
- 		read += sz;
-+
-+		/*
-+		 * Reading from iomem areas of /dev/mem can be slow,
-+		 * depending on the hardware, so allow such read()s
-+		 * to be interruptible and preemptible:
-+		 */
-+		err = -EINTR;
-+		if (signal_pending(current))
-+			goto failed;
-+
-+		if (need_resched())
-+			cond_resched();
- 	}
- 	kfree(bounce);
- 
+>
+> 	Regards
+> 		Oliver
+
+
