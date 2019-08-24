@@ -2,157 +2,205 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6E9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 04:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFCFC41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 04:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2979A2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 04:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Zin80qcM"
+	by mail.kernel.org (Postfix) with ESMTP id 0BFFE2133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 04:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbfHXEpo (ORCPT
+        id S1726243AbfHXEtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 00:45:44 -0400
-Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:6049
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbfHXEpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 00:45:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=har4WHCvP4HtKSDD4IX7w5Y8fe3BZmimwoo1I45yOJQKnonJRbP78tSaTdml6gvIq53HpQBceap1AEcYjvkWiQy7Sob1dWO4PyK7LZqIwOyxEz9pQTUwbTrhO42lHsri/FCO0gxi4l+2kGeE/uH8oof7NkLcit+QHxOoit4jfFmdNaWXQ61jb8JqgVyRoUT5GmYmGe59dkH9L8N56zIyCoHoz8mUtXvWb5pZbQ7pmvx0bjpUi5ATWJz3dIStKbsc6f04Z0fozwu/MSUJe9uq+kf2cSyExeXfPsDPHxox6iP7rvcYAuYCgBD+5uZhoxDdGPssaI7F6PfiUmfAF6KFww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SCUHwGbz/VVxA1+F92cZgCBF30GyVanu2e/qxAZ7ydM=;
- b=Ig/jzIMnqT55UfQr8fRkukjsPbYNSUOI6LF7NqLF1QzPgU6y8iKP+3YQcNVZRKFEltdTELrXT7/F/nW0OGrTs2CCo3uHdx3amj2AHWb+yYlrB5hq5ntFQ9gH/T2LLsRvfnANrFQPCUjj/PTbhPCeCZGamta4ipJup/3arC5sEvqePW94OsAp/BxDqbBEuFPAwb6hMhF6jqNHDt6BoVKMhhkPU66uPjsEp2fGWCB5cxuoFDPLqfvD7LLp49+pXjSMa4AIWyw9iuZC39uVABhy8BvlKOWfRY8Eygo4apgMLd6dzd3i6StHsccQ3n6WBHFl9XY1C/mKqtmmzg+eYoITsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SCUHwGbz/VVxA1+F92cZgCBF30GyVanu2e/qxAZ7ydM=;
- b=Zin80qcMRB1FYzpsg3th/hw3eqelmQj3Ejqb/jEUrqt8TK/VOdyDduaP0+9NmiTV9v+rtYTohZt0k3GYHkoFraHTPZTn3edoQaUWaPYLrPD+wjtfFpwcGDM46+9mAdjY9MFAo9G5JKuovA4EtaeeepWW1dp682hrhNwt6KinsXE=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6274.eurprd05.prod.outlook.com (20.179.32.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.20; Sat, 24 Aug 2019 04:45:25 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2178.020; Sat, 24 Aug 2019
- 04:45:25 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     Jiri Pirko <jiri@resnulli.us>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAWJU4CAAcVCEIAABCsAgAAWVtCAABCDgIAAzoewgAAqE4CAAECFQIAAFWyAgAAGbNCAABfqAIAAErcwgAjpulCAAJkHAIAAnVNggAAbk4CAAAOYgIAABpwAgAAAVrCAAAfEAIAADNCggAHJU4CAAAIMEIAABiaAgAAA2ACAACadAIAAFGdwgAE42YCAAABasIAAaLIAgAAC1QCAABSugIAAA+pAgAATnYCAAAO7UIAAJVKAgACGAeCAABAIQA==
-Date:   Sat, 24 Aug 2019 04:45:25 +0000
-Message-ID: <AM0PR05MB48666AE325759E51D0737F04D1A70@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190820225722.237a57d2@x1.home>
-        <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822092903.GA2276@nanopsycho.orion>
-        <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822095823.GB2276@nanopsycho.orion>
-        <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822121936.GC2276@nanopsycho.orion>
-        <AM0PR05MB4866F9650CF73FC671972127D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823081221.GG2276@nanopsycho.orion>
-        <AM0PR05MB4866DED407D6F1C653D5D560D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823082820.605deb07@x1.home>
-        <AM0PR05MB4866867150DAABA422F25FF8D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823095229.210e1e84@x1.home>
-        <AM0PR05MB4866E33AF7203DE47F713FAAD1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823111641.7f928917@x1.home>
-        <AM0PR05MB486648FF7E6624F34842E425D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190823134337.37e4b215@x1.home>
- <AM0PR05MB4866008B0571B90DAFFADA97D1A70@AM0PR05MB4866.eurprd05.prod.outlook.com>
-In-Reply-To: <AM0PR05MB4866008B0571B90DAFFADA97D1A70@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24082db6-526d-425d-8b6d-08d7284de147
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6274;
-x-ms-traffictypediagnostic: AM0PR05MB6274:
-x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB62741EBC426BC3297E6E18C3D1A70@AM0PR05MB6274.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0139052FDB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(189003)(199004)(13464003)(5660300002)(9456002)(486006)(14454004)(4326008)(86362001)(8936002)(81156014)(81166006)(476003)(8676002)(66476007)(7696005)(186003)(66946007)(33656002)(6506007)(53546011)(26005)(102836004)(55236004)(53936002)(74316002)(54906003)(99286004)(6116002)(7736002)(110136005)(11346002)(478600001)(3846002)(6436002)(76176011)(66066001)(316002)(2906002)(256004)(71200400001)(71190400001)(14444005)(446003)(6246003)(52536014)(25786009)(2940100002)(305945005)(55016002)(9686003)(66446008)(66556008)(76116006)(64756008)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6274;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: e7jtmWnB549hcmbRZTnKiMSAFv61tnU3SeERshJ6KPPWfxi9u//LwcHD6/SMVOzPKab/VzQMI6/29xQ5bJeE+P7Q7WvUwDMkSFd/vv518BnaKFv51vyjAYne6oAFEsR7THFk2prdX8/fXjgMMOmhDJOvuDD8wYFoR48EIzx5E4zTHnWKEF2sCX2dzyi3wv33NMG2mxmDEvea4vM6rGeIJoQ6Iolvb5rM9AppyGbOnjILeKiHQEtyOqfH66+gwAbpNmmssYkWzzG3bGXpIlmjU7pkafPe+VIChWKrcrAkH6e5N3ehA8sCGM8jH04QkcwR9/tB5JHGR1oQ6bXH/bhtFC5k1UH+u8Lvd/U81mBT6jC3+hVa0m8w4uxUJY8oJ98s2geCFRW7z+3IzaqCb6nQV/dckbwGMkgJQLm9pks5iIo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 24 Aug 2019 00:49:14 -0400
+Received: from mga18.intel.com ([134.134.136.126]:53747 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfHXEtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 00:49:14 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 21:49:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,423,1559545200"; 
+   d="scan'208";a="354867531"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 23 Aug 2019 21:49:12 -0700
+Date:   Fri, 23 Aug 2019 21:49:12 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190824044911.GB1092@iweiny-DESK2.sc.intel.com>
+References: <20190819092409.GM7777@dread.disaster.area>
+ <20190819123841.GC5058@ziepe.ca>
+ <20190820011210.GP7777@dread.disaster.area>
+ <20190820115515.GA29246@ziepe.ca>
+ <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190821181343.GH8653@ziepe.ca>
+ <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24082db6-526d-425d-8b6d-08d7284de147
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2019 04:45:25.2390
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xbQ8onFBG7Do4MipSeseDbga8qxCeuFZN9TUwgRREQhnscR80+bJL3Z5FAUkVegpKtuHmsuMuk7tm30ghWpCoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6274
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823032345.GG1119@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Fri, Aug 23, 2019 at 01:23:45PM +1000, Dave Chinner wrote:
+> On Wed, Aug 21, 2019 at 01:44:21PM -0700, Ira Weiny wrote:
+> > On Wed, Aug 21, 2019 at 04:48:10PM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Aug 21, 2019 at 11:57:03AM -0700, Ira Weiny wrote:
+> > > 
+> > > > > Oh, I didn't think we were talking about that. Hanging the close of
+> > > > > the datafile fd contingent on some other FD's closure is a recipe for
+> > > > > deadlock..
+> > > > 
+> > > > The discussion between Jan and Dave was concerning what happens when a user
+> > > > calls
+> > > > 
+> > > > fd = open()
+> > > > fnctl(...getlease...)
+> > > > addr = mmap(fd...)
+> > > > ib_reg_mr() <pin>
+> > > > munmap(addr...)
+> > > > close(fd)
+> > > 
+> > > I don't see how blocking close(fd) could work.
+> > 
+> > Well Dave was saying this _could_ work. FWIW I'm not 100% sure it will but I
+> > can't prove it won't..
+> 
+> Right, I proposed it as a possible way of making sure application
+> developers don't do this. It _could_ be made to work (e.g. recording
+> longterm page pins on the vma->file), but this is tangential to 
+> the discussion of requiring active references to all resources
+> covered by the layout lease.
+> 
+> I think allowing applications to behave like the above is simply
+> poor system level design, regardless of the interaction with
+> filesystems and layout leases.
+> 
+> > Maybe we are all just touching a different part of this
+> > elephant[1] but the above scenario or one without munmap is very reasonably
+> > something a user would do.  So we can either allow the close to complete (my
+> > current patches) or try to make it block like Dave is suggesting.
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> owner@vger.kernel.org> On Behalf Of Parav Pandit
-> Sent: Saturday, August 24, 2019 9:26 AM
-> To: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>; David =
-S .
-> Miller <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>;
-> Cornelia Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; cjia <cjia@nvidia.com>; netdev@vger.kernel.org
-> Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > I don't understand this logic.  I'm simply asking that we have a way
-> > to test the collision behavior without changing the binary.  The path
-> > we're driving towards seems to be making this easier and easier.  If
-> > the vendor can request an alias of a specific length, then a sample
-> > driver with a module option to set the desired alias length to 1-char m=
-akes
-> it trivially easy to induce a collision.
-> Sure it is easy to test collision, but my point is - mdev core is not sha=
-1 test
-> module.
-> Hence adding functionality of variable alias length to test collision doe=
-sn't
-> make sense.
-> When the actual user arrives who needs small alias, we will be able to ad=
-d
-> additional pieces very easily.
+My belief when writing the current series was that hanging the close would
+cause deadlock.  But it seems I was wrong because of the delayed __fput().
 
-My initial thoughts to add parent_ops to have bool flag to generate alias o=
-r not.
-However, instead of bool, keeping it unsigned int to say, zero to skip alia=
-s and non-zero length to convey generate alias.
-This will serve both the purpose with trivial handling.
+So far, I have not been able to get RDMA to have an issue like Jason suggested
+would happen (or used to happen).  So from that perspective it may be ok to
+hang the close.
 
+> > 
+> > I don't disagree with Dave with the semantics being nice and clean for the
+> > filesystem.
+> 
+> I'm not trying to make it "nice and clean for the filesystem".
+> 
+> The problem is not just RDMA/DAX - anything that is directly
+> accessing the block device under the filesystem has the same set of
+> issues. That is, the filesystem controls the life cycle of the
+> blocks in the block device, so direct access to the blocks by any
+> means needs to be co-ordinated with the filesystem. Pinning direct
+> access to a file via page pins attached to a hardware context that
+> the filesystem knows nothing about is not an access model that the
+> filesystems can support.
+> 
+> IOWs, anyone looking at this problem just from the RDMA POV of page
+> pins is not seeing all the other direct storage access mechainsms
+> that we need to support in the filesystems. RDMA on DAX is just one
+> of them.  pNFS is another. Remote acces via NVMeOF is another. XDP
+> -> DAX (direct file data placement from the network hardware) is
+> another. There are /lots/ of different direct storage access
+> mechanisms that filesystems need to support and we sure as hell do
+> not want to have to support special case semantics for every single
+> one of them.
+
+My use of struct file was based on the fact that FDs are a primary interface
+for linux and my thought was that they would be more universal than having file
+pin information stored in an RDMA specific structure.
+
+XDP is not as direct; it uses sockets.  But sockets also have a struct file
+which I believe could be used in a similar manner.  I'm not 100% sure of the
+xdp_umem lifetime yet but it seems that my choice of using struct file was a
+good one in this respect.
+
+> 
+> Hence if we don't start with a sane model for arbitrating direct
+> access to the storage at the filesystem level we'll never get this
+> stuff to work reliably, let alone work together coherently.  An
+> application that wants a direct data path to storage should have a
+> single API that enables then to safely access the storage,
+> regardless of how they are accessing the storage.
+> 
+> From that perspective, what we are talking about here with RDMA
+> doing "mmap, page pin, unmap, close" and "pass page pins via
+> SCM_RIGHTS" are fundamentally unworkable from the filesystem
+> perspective. They are use-after-free situations from the filesystem
+> perspective - they do not hold direct references to anything in the
+> filesystem, and so the filesytem is completely unaware of them.
+
+I see your point of view but looking at it from a different point of view I
+don't see this as a "use after free".
+
+The user has explicitly registered this memory (and layout) with another direct
+access subsystem (RDMA for example) so why do they need to keep the FD around?
+
+> 
+> The filesystem needs to be aware of /all users/ of it's resources if
+> it's going to manage them sanely.
+
+From the way I look at it the underlying filesystem _is_ aware of the leases
+with my patch set.  And so to is the user.  It is just not through the original
+"data file fd".
+
+And the owner of the lease becomes the subsystem object ("RDMA FD" in this
+case) which is holding the pins.  Furthermore, the lease is maintained and
+transferred automatically through the normal FD processing.
+
+(Furthermore, tracking of these pins is available for whatever subsystem by
+tracking them with struct file; _not_ just RDMA).  When those subsystem objects
+are released the "data file lease" will be released as well.  That was the
+design.
+
+> 
+> > But the fact that RDMA, and potentially others, can "pass the
+> > pins" to other processes is something I spent a lot of time trying to work out.
+> 
+> There's nothing in file layout lease architecture that says you
+> can't "pass the pins" to another process.  All the file layout lease
+> requirements say is that if you are going to pass a resource for
+> which the layout lease guarantees access for to another process,
+> then the destination process already have a valid, active layout
+> lease that covers the range of the pins being passed to it via the
+> RDMA handle.
+> 
+> i.e. as the pins pass from one process to another, they pass from
+> the protection of the lease process A holds to the protection that
+> the lease process B holds. This can probably even be done by
+> duplicating the lease fd and passing it by SCM_RIGHTS first.....
+
+My worry with this is how to enforce it.  As I said in the other thread I think
+we could potentially block SCM_RIGHTS use in the short term.  But I'm not sure
+about blocking every call which may "dup()" an FD to random processes.
+
+Ira
 
