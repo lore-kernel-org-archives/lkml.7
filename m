@@ -2,81 +2,94 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB88FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DBCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FE520870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB54D22CE3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:26:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Qy14nzbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfHXUXL (ORCPT
+        id S1727794AbfHXU0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 16:23:11 -0400
-Received: from mx1.yrkesakademin.fi ([85.134.45.194]:60210 "EHLO
-        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfHXUXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 16:23:11 -0400
-Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM counters
- in sync with the hierarchical ones"
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-CC:     Greg KH <greg@kroah.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20190817004726.2530670-1-guro@fb.com>
- <20190817063616.GA11747@kroah.com> <20190817191518.GB11125@castle>
- <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
-Date:   Sat, 24 Aug 2019 23:23:07 +0300
+        Sat, 24 Aug 2019 16:26:54 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:47251 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbfHXU0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 16:26:54 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46G8s64hS6zw;
+        Sat, 24 Aug 2019 22:25:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1566678316; bh=cjKOovDL+bRYnoSIR5KoHK4uHeLbz95Ofcl724n69I8=;
+        h=Date:From:Subject:To:Cc:From;
+        b=Qy14nzbf1OgvFwcEdGs/WQZj/XWXrU6g157AJRvrsXx3oKLN0xPeltoxNUESbPO2g
+         k1k49Sh6r4oMEKGd+h61L1MvwwqHgs3k3NJZ3LnZBitxsYWQYDmFiSceXKVxXsEVjX
+         N9PQ4aEkRZnO8wm+jC76ojyXEhtS5S1SqI/O5T/VLcnfSxf2Vf0ilhCrXeLdrgItuE
+         dh72p4KWtN9zwr78X7KF9H6r52CaghFFIcazQEiWQP3LLlrIDXm+CZmLEAS5n1ZRau
+         bwF7UMR5jztspvx9GW+YV6CyiIvIS6S/z4pAiDgAp0CTNoYCMnv5vd5IvdI098BL24
+         KXvjzGDbP51dA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.2 at mail
+Date:   Sat, 24 Aug 2019 22:26:49 +0200
+Message-Id: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 0/6] ] ASoC: atmel: extend SSC support
 MIME-Version: 1.0
-In-Reply-To: <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-WatchGuard-Spam-ID: str=0001.0A0C0213.5D619CAE.006D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.194
-X-WatchGuard-Mail-From: tmb@mageia.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Chas Williams <3chas3@gmail.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den 24-08-2019 kl. 22:57, skrev Andrew Morton:
-> On Sat, 17 Aug 2019 19:15:23 +0000 Roman Gushchin <guro@fb.com> wrote:
-> 
->>>> Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
->>>> Signed-off-by: Roman Gushchin <guro@fb.com>
->>>> Cc: Yafang Shao <laoar.shao@gmail.com>
->>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>> ---
->>>>   mm/memcontrol.c | 8 +++-----
->>>>   1 file changed, 3 insertions(+), 5 deletions(-)
->>>
->>> <formletter>
->>>
->>> This is not the correct way to submit patches for inclusion in the
->>> stable kernel tree.  Please read:
->>>      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
->>> for how to do this properly.
->>
->> Oh, I'm sorry, will read and follow next time. Thanks!
-> 
-> 766a4c19d880 is not present in 5.2 so no -stable backport is needed, yes?
-> 
+This series improves support for various configurations using SSC module
+as implemented in Atmel SAMA5Dx SoCs. Patches are:
 
-Unfortunately it got added in 5.2.7, so backport is needed.
+1. enable SSC in Kconfig for audio-graph-card support
+2. DRY mode setting code
+3. implement left-justified data mode
+4-6. enable shared FSYNC source for slave mode
 
---
-Thomas
+Patches against tiwai/sound/for-next tree. You can also pull from
+   https://rere.qmqm.pl/git/linux
+branch:
+   atmel-ssc
+
+
+Michał Mirosław (6):
+  ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig
+  ASoC: atmel_ssc_dai: rework DAI format configuration
+  ASoC: atmel_ssc_dai: implement left-justified data mode
+  dt-bindings: misc: atmel-ssc: LRCLK from TF/RF pin option
+  misc: atmel-ssc: get LRCLK pin selection from DT
+  ASoC: atmel_ssc_dai: Enable shared FSYNC source in frame-slave mode
+
+ .../devicetree/bindings/misc/atmel-ssc.txt    |   5 +
+ drivers/misc/atmel-ssc.c                      |   9 +
+ include/linux/atmel-ssc.h                     |   2 +
+ sound/soc/atmel/Kconfig                       |  30 +-
+ sound/soc/atmel/atmel_ssc_dai.c               | 305 ++++++------------
+ 5 files changed, 137 insertions(+), 214 deletions(-)
+
+-- 
+2.20.1
 
