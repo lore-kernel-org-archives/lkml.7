@@ -2,122 +2,126 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86042C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 07:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D5EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 07:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5774E206E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 07:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A612146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 07:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ilju32GZ"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="UuCMpAb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfHXH2c (ORCPT
+        id S1726983AbfHXHmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 03:28:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52890 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfHXH2b (ORCPT
+        Sat, 24 Aug 2019 03:42:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39185 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfHXHmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 03:28:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7O79jwe056487;
-        Sat, 24 Aug 2019 07:27:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=mjq9fGw/Hlu3tLUadkrZ7NggHzDl6+rHr1rrLruw8us=;
- b=Ilju32GZjRTvskRFshNjOiuBhCDV2zbgDlgGHvE2MqzcQcYsl71fGWXoj5iQzppsKLOn
- qR/EBy6bOEe1mgx9RkBuXOF3MkHgBcEGxWcsmCkm28DAJl/vWc5/ZGD07PCwRnQuL79a
- ysrnAObTapR9HN7ev4e4yHBX7xcA7uzsGcJpg1S7UW4PxaAwx8AFfJgqqThlbltt3ibh
- sU0Pjcygcn6GXPkUJRbxzBeNfSYuElr5Nbicpr5zUSrMaG3AwA0AEiXQP1p1CTrO1Mue
- ouz9DTbJd1NVvMc8+w9lScFW8z8/r9Bfgaa4q2J3mlhTElt9UJSgd35Ab67B5v8Uq4WP JA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2ujw6yred3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 24 Aug 2019 07:27:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7O7O4LK032311;
-        Sat, 24 Aug 2019 07:25:40 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2ujw6t445q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 24 Aug 2019 07:25:40 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7O7PMi9019258;
-        Sat, 24 Aug 2019 07:25:23 GMT
-Received: from [192.168.43.36] (/172.58.30.166)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 24 Aug 2019 00:25:22 -0700
-Subject: Re: [RFC] mm: Proactive compaction
-To:     Vlastimil Babka <vbabka@suse.cz>, Nitin Gupta <nigupta@nvidia.com>,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        mhocko@suse.com, dan.j.williams@intel.com
-Cc:     Yu Zhao <yuzhao@google.com>, Matthew Wilcox <willy@infradead.org>,
-        Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Roman Gushchin <guro@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Arun KS <arunks@codeaurora.org>,
-        Janne Huttunen <janne.huttunen@nokia.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190816214413.15006-1-nigupta@nvidia.com>
- <87634ddc-8bfd-8311-46c4-35f7dc32d42f@suse.cz>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <ca33d8ea-71a4-282e-4d0f-6d06a30d3ecd@oracle.com>
-Date:   Sat, 24 Aug 2019 01:24:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 24 Aug 2019 03:42:08 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t16so10562028wra.6
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 00:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ip+/2UFsqnRlpVZ0C6S+KUXKzEwaCh99ektOwnbv38M=;
+        b=UuCMpAb11y8XQBxUDvyzG/sYs6kCsahahng2dlI1Doyc765+ekid3Qe81k/e1RHZUW
+         65+batFV8m3njiH+RyVaJ6mzjqtRlT76OpnyoWMhIfFga7gmJ14chi300sp2IIpysc3b
+         tBu1Kz5X7ybLQxnrMPqUUkJy0a5oMTurfs9q6DBcGlUhCfxTURPCp66IEYx116QJ2OgP
+         OaUaxYlRk+BIQz+v/Q49UE9WXFRoSHAoxXwFYh9DnSthSp3kBaRiP3ZyodTGamgZ/HTH
+         uDFjluKeCAmm5OTvxdnM9GTHaViSQHxcAoeUSdw+QtfuKNz/X3FKIulLhKa/lA6uxuug
+         Nbag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ip+/2UFsqnRlpVZ0C6S+KUXKzEwaCh99ektOwnbv38M=;
+        b=nYFFfxSMdUt+KYrW1eZsa1M50xjcHCtb0TgzSFGN26UZELfcZ5ht97KZdt1f/RkPME
+         AIrZHDHDD9nevtRlAHjoYG2g9thwx7qj/QsZc/2kZjx5ycVaNkTsd5oSy8qtaIcXhPvI
+         H4TjcmD4mILRsBBB3aZfNxYirYgRT/+qAydkTDaCMdXXpePIitVJOa5RPnWBIuv4d9uR
+         L8YApm2/UjBblzYch0xjRBfiK2upYkIVxK7UmfERJRdwkx0hgThsBmFfhyT2BoioVReS
+         LWn/agAqQ041ca+edKWjPnBMBKAfkPZSpbV9eywWe3eLGLw/OdE1E4UYd1aSO/hEsXd6
+         ig0Q==
+X-Gm-Message-State: APjAAAUMC7BIFMddxSKWH6TmTs9mwnFg+Qv6Az/+pVsQ6zqgM1lGS+fg
+        6hcJHLeA0BugKx6kzLSrjImzSQ==
+X-Google-Smtp-Source: APXvYqz3ZBZz3CY8KRTU2t8eeN5o2vyZN7IdC6zEX1A+AZJ4A51eh54y1FOYtJjw3XetINFyAhHksQ==
+X-Received: by 2002:adf:ba4a:: with SMTP id t10mr9322894wrg.325.1566632526261;
+        Sat, 24 Aug 2019 00:42:06 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id 74sm9736213wma.15.2019.08.24.00.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Aug 2019 00:42:05 -0700 (PDT)
+Date:   Sat, 24 Aug 2019 09:42:05 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
+        davem@davemloft.net, UNGLinuxDriver@microchip.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+Subject: Re: [PATCH 0/3] Add NETIF_F_HW_BRIDGE feature
+Message-ID: <20190824074204.GA15041@nanopsycho.orion>
+References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
+ <e47a318c-6446-71cd-660c-8592037d8166@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87634ddc-8bfd-8311-46c4-35f7dc32d42f@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9358 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908240082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9358 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908240080
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e47a318c-6446-71cd-660c-8592037d8166@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 2:46 AM, Vlastimil Babka wrote:
-> +CC Khalid Aziz who proposed a different approach:
-> https://lore.kernel.org/linux-mm/20190813014012.30232-1-khalid.aziz@ora=
-cle.com/T/#u
->=20
-> On 8/16/19 11:43 PM, Nitin Gupta wrote:
->> The patch has plenty of rough edges but posting it early to see if I'm=
+Sat, Aug 24, 2019 at 01:25:02AM CEST, f.fainelli@gmail.com wrote:
+>On 8/22/19 12:07 PM, Horatiu Vultur wrote:
+>> Current implementation of the SW bridge is setting the interfaces in
+>> promisc mode when they are added to bridge if learning of the frames is
+>> enabled.
+>> In case of Ocelot which has HW capabilities to switch frames, it is not
+>> needed to set the ports in promisc mode because the HW already capable of
+>> doing that. Therefore add NETIF_F_HW_BRIDGE feature to indicate that the
+>> HW has bridge capabilities. Therefore the SW bridge doesn't need to set
+>> the ports in promisc mode to do the switching.
+>
+>Then do not do anything when the ndo_set_rx_mode() for the ocelot
+>network device is called and indicates that IFF_PROMISC is set and that
+>your network port is a bridge port member. That is what mlxsw does AFAICT.
 
->> going in the right direction and to get some early feedback.
->=20
-> That's a lot of control knobs - how is an admin supposed to tune them t=
-o their
-> needs?
->=20
+Correct.
 
-At a high level, this idea makes sense and is similar to the idea of
-watermarks for free pages. My concern is the same. We now have more
-knobs to tune and that increases complexity for sys admins as well as
-the chances of a misconfigured system.
-
---
-Khalid
-
-
+>
+>As other pointed out, the Linux bridge implements a software bridge by
+>default, and because it needs to operate on a wide variety of network
+>devices, all with different capabilities, the easiest way to make sure
+>that all management (IGMP, BPDU, etc. ) as well as non-management
+>traffic can make it to the bridge ports, is to put the network devices
+>in promiscuous mode. If this is suboptimal for you, you can take
+>shortcuts in your driver that do not hinder the overall functionality.
+>
+>> This optimization takes places only if all the interfaces that are part
+>> of the bridge have this flag and have the same network driver.
+>> 
+>> If the bridge interfaces is added in promisc mode then also the ports part
+>> of the bridge are set in promisc mode.
+>> 
+>> Horatiu Vultur (3):
+>>   net: Add HW_BRIDGE offload feature
+>>   net: mscc: Use NETIF_F_HW_BRIDGE
+>>   net: mscc: Implement promisc mode.
+>> 
+>>  drivers/net/ethernet/mscc/ocelot.c | 26 ++++++++++++++++++++++++--
+>>  include/linux/netdev_features.h    |  3 +++
+>>  net/bridge/br_if.c                 | 29 ++++++++++++++++++++++++++++-
+>>  net/core/ethtool.c                 |  1 +
+>>  4 files changed, 56 insertions(+), 3 deletions(-)
+>> 
+>
+>
+>-- 
+>Florian
