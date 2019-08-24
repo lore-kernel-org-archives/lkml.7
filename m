@@ -2,178 +2,180 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9448FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03ADC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7242173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FA521874
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekfnuZsp"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IDD9briY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfHXPSu (ORCPT
+        id S1727922AbfHXPVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 11:18:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44992 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfHXPSt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 11:18:49 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p17so11238218wrf.11;
-        Sat, 24 Aug 2019 08:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dxisSCHOCPyLMPuzXwNXM1NTQPJznyVhrtka9jOq7XQ=;
-        b=ekfnuZsp4a4C5O5IKaVqGFkSU6MRt3Pm69ueJL71pqPPfSnKIuj60nbURDdEvXZh5/
-         fBEPYfTpnMiDDY3aQjkLQMG/HHdnQi2lj7HWUlasjARQNlDEUYbsoHOEz0qKIbn/ju7j
-         E1V8FV7filVzChLgNVXRwCNk822bNB+k9nvVjRJWMrOPtcu47qVPDSW83pJtbatFwH+i
-         PaMR+F6X2XOcP/nUpiONz4Xby947ywV5Tu7hXk3InhNKwDqNRaMvXFD8MJlGz1PEd+Wi
-         mvnm53KoRaiLWws1qsC2IZAJKJD2blRF3Q82bCZfImcs8m9WLY35kXwKYCipOWELlg1i
-         NpCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dxisSCHOCPyLMPuzXwNXM1NTQPJznyVhrtka9jOq7XQ=;
-        b=pYD6HgrIbulfR06Yx24DIIN1eZb3RZ4mv9LxCdIDyvbjLrc2i/GmR/PyEDtWlUDRyF
-         Tk9auA2hPM/I+kgwNyO0iB1yzJVp9Oynpv2SkE7zohm8/31OZ5fHn5djiQCmU6xjSy9P
-         +LIPoa8M+Q5GabAC9fAMNPghE9nvZ1213WUoKE1I9Ix9MlrU8spTe3niJepPhKBJZi04
-         sAS67jK/IULwY5ZY6432QohK2hEAMW7Js3DNpK3ONP6BTuxtQe0Jyb9G+B6+oc3kFiHX
-         IxbLz/r8WHioEf6IZDy70m1Vv2QFwOcHEysKA7BF05p8wXP6aXZcMC2EI5CsYJBm7Wp8
-         lsrA==
-X-Gm-Message-State: APjAAAXhzji/OYRDMhTxbc9O/07yxecqWp4hjWRPIU9zNjuuMAzRN3qe
-        4Nb/voDNns1oSARJ94AsL7Hep2Q/
-X-Google-Smtp-Source: APXvYqzXsALOqzS4Y3dYjAYbx2UmJObFqtsT6sXq16km7KbBFHjasaukFJJ2ivblBG921WK6DtrvhA==
-X-Received: by 2002:adf:c7cb:: with SMTP id y11mr12054607wrg.281.1566659926333;
-        Sat, 24 Aug 2019 08:18:46 -0700 (PDT)
-Received: from [192.168.1.19] (bkw182.neoplus.adsl.tpnet.pl. [83.28.190.182])
-        by smtp.gmail.com with ESMTPSA id f197sm18119567wme.22.2019.08.24.08.18.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 24 Aug 2019 08:18:45 -0700 (PDT)
-Subject: Re: [PATCH] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190823195523.20950-1-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4a1872e8-89a5-4bc4-6aa4-bcadbc48697a@gmail.com>
-Date:   Sat, 24 Aug 2019 17:18:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 24 Aug 2019 11:21:09 -0400
+Received: from mout.gmx.net ([212.227.17.22]:38507 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727682AbfHXPVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 11:21:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566660054;
+        bh=21g5UFCvn3oFn35pF2pL6tSHWuVW0ZKs5+RW/c9+xrU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=IDD9briYoUXWz43GxLSq7b2Y7rMq1FhCgTYmbEkcILfahCcXAEz7RE9R1vXHpMxrD
+         QcWLEM7AeWNC7D4BmxrL+hRyCK/TmjMEVbMG5kDj2kFFe9oMbqho7tUn9aOMqv72Iu
+         s/s9gTIge0xY73Er0e0Av26blnELYgfDbR9Ok49I=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
+ (mrgmx101 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 0LfXmv-1iYQhA3Z9N-00p6RW; Sat, 24 Aug 2019 17:20:53 +0200
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     keescook@chromium.org, re.emese@gmail.com
+Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        Alex Dewar <alex.dewar@gmx.co.uk>
+Subject: [PATCH] scripts/gcc-plugins: Add SPDX header for files without
+Date:   Sat, 24 Aug 2019 16:20:41 +0100
+Message-Id: <20190824152041.19127-1-alex.dewar@gmx.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190823195523.20950-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:qSDt+v/H/vNfoO3FeyMOZYs0LmytlhdxJriO184bpEsJVfUCN+m
+ XdwMgzD1VqRNi4ar8o58tJ55OKgw2MV5mZwA43hd8cXj+NgvAJ07+zZp4FiWroIsZ68w4Uf
+ hbLgwviQk6T3e5cSUQ08mrC4zM5O7cUSlw7TF7PqnUsrRtcOdr0b20RQmql9ELDxARJZ1F4
+ iobVEyWnnc3mmPi3S4UlA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yYkRyIhfMoE=:24wEuPsLl3mgTzS5w306WM
+ pkmmYgq7vtxz4WVrN4a6ptbEQwa/ZCdUUvXyLenbimTidYLZIFndW783viDcxJuWmZCO9eZu/
+ SVyZM/wsfC45CjAjd05D5juRA+PeTB7ZS9NdaqONnkXyPJEY0wXRRI76LM2xwqlhBRHaNeGyD
+ 3KC0rF2SSm87KTTUQ/1hKlO4EMm4mnPNa8NMPRTgm/2e0EZxS+iDQeFRMdRHRZFqpIfMG45xO
+ mDc0BdvrVb+9qGdkmjvcZK6wTCRrgUsyrp5l/LjLATjau1z9ZLkrHPw3+ohS60Ih3urXuhjyM
+ eylm+d7IA0LvaKXTn0DUsMcnK5fPL0CVpmEIq8oqic8WUg+QO3kTeg4ZX1jTmiRBOmlteYN3h
+ F/MQa/dN44cl7duxNYpsAAkD5UVfkEhQNwmXmsExBcyFnjfsGG3e0XhgKGsnTfGNSUIGSnkUh
+ c4x3PMHYQpu0gUabbcoGIxOGdGYTomTsPXrucHpI2nyqUXZ7EZfojX1gblDU9zopCJSxTiSXI
+ sl4KUhD6CWl3CDInwZ5D7zoBp5Mxgzh/huhV3azjh8dp9BfrtdurtXhwVHS8GWDJSLXuYugYx
+ jAcGtJA8GjD91VOQfPGyohGvGo7jp1to7aHUpi3bfM9Te7zZr+KcslwWEW8xR4Dhi7p9cxlX7
+ yLik0TaDk0MsWf8mYjhSgZ8N7hnEoCvmGy/SE1JBE6Fc48sCkEHmoc8NmAFJCgsBNsiwzPCWI
+ A8794mHCjE6J1YYvxsjbMxzWLRWlMX/6eoysiyiE1QaqDf6KQOCDyn4Kp+1zUZKjTrWJV6911
+ 7cJzEydGfvmWGogH0GgVkdW0DbMmEcqay4n4bcDxDmXzQw8Qg1uQfj0weAkJPtbKTYIAeywqF
+ IN5kvn1uR6gNOkI392p/3rZq5E+HwG7dOnuBy0FKnoWZbf0kE1vqjccSSFlLK6Q0imUd3aS6D
+ oyXtsHoGjAmac1zg6LPU/1SvCRuM6ScxMYjTXBhNm3GRajOjm2406AOd9ooniJac+2ojU66eO
+ abLB9cCSj0r+TjHleY2QEL6BdB+QgejntjWs22ZqCFV8ba85HF1xc3Z/gKnEEjOurP8b7SSkC
+ Xolm7//WUIuctjzYo20J+TAds2pry80shk8pOzDu671dhh9wycrC1LWlw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Replace boilerplate with approproate SPDX header. Vim also auto-trimmed
+whitespace from one line.
 
-Thank you for the patch.
+Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+=2D--
+ scripts/gcc-plugins/cyc_complexity_plugin.c   | 2 +-
+ scripts/gcc-plugins/latent_entropy_plugin.c   | 2 +-
+ scripts/gcc-plugins/randomize_layout_plugin.c | 4 ++--
+ scripts/gcc-plugins/sancov_plugin.c           | 2 +-
+ scripts/gcc-plugins/stackleak_plugin.c        | 2 +-
+ scripts/gcc-plugins/structleak_plugin.c       | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
 
-On 8/23/19 9:55 PM, Dan Murphy wrote:
-> Fix the coccinelle issues found in the TI LMU common code
-> 
-> drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned expression compared with zero: ramp_down < 0
-> drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned expression compared with zero: ramp_up < 0
+diff --git a/scripts/gcc-plugins/cyc_complexity_plugin.c b/scripts/gcc-plu=
+gins/cyc_complexity_plugin.c
+index 1909ec617431..870266f36b5c 100644
+=2D-- a/scripts/gcc-plugins/cyc_complexity_plugin.c
++++ b/scripts/gcc-plugins/cyc_complexity_plugin.c
+@@ -1,6 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
+- * Licensed under the GPL v2, or (at your option) v3
+  *
+  * Homepage:
+  * https://github.com/ephox-gcc-plugins/cyclomatic_complexity
+diff --git a/scripts/gcc-plugins/latent_entropy_plugin.c b/scripts/gcc-plu=
+gins/latent_entropy_plugin.c
+index cbe1d6c4b1a5..c693ac27ddf1 100644
+=2D-- a/scripts/gcc-plugins/latent_entropy_plugin.c
++++ b/scripts/gcc-plugins/latent_entropy_plugin.c
+@@ -1,7 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright 2012-2016 by the PaX Team <pageexec@freemail.hu>
+  * Copyright 2016 by Emese Revfy <re.emese@gmail.com>
+- * Licensed under the GPL v2
+  *
+  * Note: the choice of the license means that the compilation process is
+  *       NOT 'eligible' as defined by gcc's library exception to the GPL =
+v3,
+diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-p=
+lugins/randomize_layout_plugin.c
+index bd29e4e7a524..f46d049da26c 100644
+=2D-- a/scripts/gcc-plugins/randomize_layout_plugin.c
++++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+@@ -1,7 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright 2014-2016 by Open Source Security, Inc., Brad Spengler <spen=
+der@grsecurity.net>
+  *                   and PaX Team <pageexec@freemail.hu>
+- * Licensed under the GPL v2
+  *
+  * Note: the choice of the license means that the compilation process is
+  *       NOT 'eligible' as defined by gcc's library exception to the GPL =
+v3,
+@@ -909,7 +909,7 @@ static unsigned int find_bad_casts_execute(void)
+ 			} else {
+ 				const_tree ssa_name_var =3D SSA_NAME_VAR(rhs1);
+ 				/* skip bogus type casts introduced by container_of */
+-				if (ssa_name_var !=3D NULL_TREE && DECL_NAME(ssa_name_var) &&
++				if (ssa_name_var !=3D NULL_TREE && DECL_NAME(ssa_name_var) &&
+ 				    !strcmp((const char *)DECL_NAME_POINTER(ssa_name_var), "__mptr"))
+ 					continue;
+ #ifndef __DEBUG_PLUGIN
+diff --git a/scripts/gcc-plugins/sancov_plugin.c b/scripts/gcc-plugins/san=
+cov_plugin.c
+index 0f98634c20a0..9845ad67a7d8 100644
+=2D-- a/scripts/gcc-plugins/sancov_plugin.c
++++ b/scripts/gcc-plugins/sancov_plugin.c
+@@ -1,6 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
+- * Licensed under the GPL v2, or (at your option) v3
+  *
+  * Homepage:
+  * https://github.com/ephox-gcc-plugins/sancov
+diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/=
+stackleak_plugin.c
+index dbd37460c573..3abaea274651 100644
+=2D-- a/scripts/gcc-plugins/stackleak_plugin.c
++++ b/scripts/gcc-plugins/stackleak_plugin.c
+@@ -1,7 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright 2011-2017 by the PaX Team <pageexec@freemail.hu>
+  * Modified by Alexander Popov <alex.popov@linux.com>
+- * Licensed under the GPL v2
+  *
+  * Note: the choice of the license means that the compilation process is
+  * NOT 'eligible' as defined by gcc's library exception to the GPL v3,
+diff --git a/scripts/gcc-plugins/structleak_plugin.c b/scripts/gcc-plugins=
+/structleak_plugin.c
+index e89be8f5c859..eb8d6b5c83b5 100644
+=2D-- a/scripts/gcc-plugins/structleak_plugin.c
++++ b/scripts/gcc-plugins/structleak_plugin.c
+@@ -1,6 +1,6 @@
++// Licensed under the GPL v2
+ /*
+  * Copyright 2013-2017 by PaX Team <pageexec@freemail.hu>
+- * Licensed under the GPL v2
+  *
+  * Note: the choice of the license means that the compilation process is
+  *       NOT 'eligible' as defined by gcc's library exception to the GPL =
+v3,
+=2D-
+2.23.0
 
-Wouldn't it make more sense to remove those pointless checks?
-Clearly a correct index of an array cannot be negative.
-Looking at the code I would make more int -> unsigned int conversions:
-
-- ramp_table should be unsigned int
-- ti_lmu_common_convert_ramp_to_index should return unsigned int
-
-
-> Fixes: f717460ba4d7 ("leds: TI LMU: Add common code for TI LMU devices")
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/leds-ti-lmu-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
-> index adc7293004f1..c9ab40d5a6ba 100644
-> --- a/drivers/leds/leds-ti-lmu-common.c
-> +++ b/drivers/leds/leds-ti-lmu-common.c
-> @@ -84,7 +84,7 @@ static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
->  int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
->  {
->  	struct regmap *regmap = lmu_bank->regmap;
-> -	u8 ramp, ramp_up, ramp_down;
-> +	int ramp, ramp_up, ramp_down;
->  
->  	if (lmu_bank->ramp_up_usec == 0 && lmu_bank->ramp_down_usec == 0) {
->  		ramp_up = 0;
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
