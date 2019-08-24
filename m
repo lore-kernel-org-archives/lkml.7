@@ -2,127 +2,105 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7C6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFCAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9508E21726
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC4221670
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lVEqWFw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfHXCSr (ORCPT
+        id S1726832AbfHXCXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 22:18:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46088 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbfHXCSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 22:18:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 19:18:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,422,1559545200"; 
-   d="scan'208";a="173655356"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 23 Aug 2019 19:18:41 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v7 1/7] iommu/vt-d: Don't switch off swiotlb if use direct
- dma
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20190823071735.30264-1-baolu.lu@linux.intel.com>
- <20190823071735.30264-2-baolu.lu@linux.intel.com>
- <20190823083956.GB24194@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <8fb96c3b-c535-6d90-e1e1-c635aec6f178@linux.intel.com>
-Date:   Sat, 24 Aug 2019 10:17:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 22:23:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35445 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfHXCW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 22:22:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id b10so15415805ioj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 19:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NGSMDcjJGR/lxbJbfE5aNWOUlk38H0AtLy17bR4uyIE=;
+        b=lVEqWFw60a4Z78tdeJFx8bcay1/2obbySui1sMdFVBfXHcgKpx3c7rSPBxka29TjRj
+         kKdemlYYm1Lzn8YkZEVR3sFLamF69Ck4ne2HSR63Sm3wtF9QX7qi0FybeTyHDZWllcOt
+         9olkCxKRKxC/WFDRrMStm0wffKbBnOsizhXt/7iaf1z7Xombt646BkIXK4waSGazKztD
+         UNqTIUY7+mDTKgU/pgUKSSFZGCgshzDMYZMRjoGuexMsxVmpfx6L8YBqSo6G6kT1X7Kv
+         ntUSabphSNwXSGVRGvlRt9s3rSk8vtwvw7/8HaUSQClH89NuR0jzkDtZhxfTW0ekNRY/
+         Fs/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NGSMDcjJGR/lxbJbfE5aNWOUlk38H0AtLy17bR4uyIE=;
+        b=nJFGZ6l6rCzhOJKw2dLCb+bMjG4Rl5rCHsTr+nH72XvL/I43FHo0wsJ6UQLhMoZMi8
+         H/LlC3agQt2qy3U4/trP/dLKXQOXhzKBgOi3wDLSsnYZmjgkROGVPHg36z6bnloOcUj/
+         Y+q7CD799QE1avonZ0F5y0PcySPyU+CB63IijyCqBB0zC4G1PTpHwzdgzYQXEbnI8x1E
+         hmJxDACip2D86yI6MA+GrenkennzMVWaplDaN24G13fgxy7R8AOrmm1olrEdkKJbGf0p
+         K8RueVQEiH/YOzvu0ctkl7V4PWhRhQSvw/l3Hg7grc7ZuTdflfFnRt5HySPVPFIpda+2
+         QB9g==
+X-Gm-Message-State: APjAAAWnv1Rm15x78pGDGXkpPSA3o9lRRoKZs17tcgLB26D2lZQRw2oe
+        A66Gcx32FVx+h6a8lRzSjPZjcarGvw1d2Eqbqyw=
+X-Google-Smtp-Source: APXvYqyQIS+kgykE1sTKO8zMu+2MUNM9kWz2yqg6PIfQIEfkX6L20qIXdmAnNPfbFL2O745HrdYDKv5zosTqwd5B/9U=
+X-Received: by 2002:a5d:9714:: with SMTP id h20mr4704721iol.294.1566613378979;
+ Fri, 23 Aug 2019 19:22:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190823083956.GB24194@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190824002703.13902-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190824002703.13902-1-andrew.smirnov@gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Fri, 23 Aug 2019 19:22:47 -0700
+Message-ID: <CAFXsbZqxoR491hT2oqNcH3YbO+C0=EsFYc_Wu+UVQMw5zqH4cw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-scu4-aib: Configure IRQ line for GPIO expander
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+On Fri, Aug 23, 2019 at 5:27 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+>
+> Configure IRQ line for SX1503 GPIO expander. We already have
+> appropriate pinmux entry and all that is missing is "interrupt-parent"
+> and "interrupts" properties. Add them.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+> index e6c3621079e0..45a978defbdc 100644
+> --- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+> +++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+> @@ -570,6 +570,8 @@
+>                 #gpio-cells = <2>;
+>                 reg = <0x20>;
+>                 gpio-controller;
+> +               interrupt-parent = <&gpio1>;
+> +               interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+>         };
+>
+>         lm75@4e {
+> --
 
-On 8/23/19 4:39 PM, Joerg Roedel wrote:
-> On Fri, Aug 23, 2019 at 03:17:29PM +0800, Lu Baolu wrote:
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -4569,9 +4569,6 @@ static int __init platform_optin_force_iommu(void)
->>   		iommu_identity_mapping |= IDENTMAP_ALL;
->>   
->>   	dmar_disabled = 0;
->> -#if defined(CONFIG_X86) && defined(CONFIG_SWIOTLB)
->> -	swiotlb = 0;
->> -#endif
->>   	no_iommu = 0;
->>   
->>   	return 1;
->> @@ -4710,9 +4707,6 @@ int __init intel_iommu_init(void)
->>   	}
->>   	up_write(&dmar_global_lock);
->>   
->> -#if defined(CONFIG_X86) && defined(CONFIG_SWIOTLB)
->> -	swiotlb = 0;
->> -#endif
-> 
-> So this will cause the 64MB SWIOTLB aperture to be allocated even when
-> there will never be an untrusted device in the system, right? I guess
-> this will break some kdump setups as they need to resize their low
-> memory allocations to make room for the aperture because of this
-> patch-set.
-
-Yes, you are right. I didn't consider the kdump case.
-
-> 
-> But I also don't see a way around this for now as untrusted devices are
-> usually hotplugged and might not be present at boot. So we can't make
-> the decision about the allocation at boot time.
-
-If a system has any external port, through which an untrusted device
-might be connected, the external port itself should be marked as an
-untrusted device, and all devices beneath it just inherit this
-attribution.
-
-So during iommu driver initialization, we can easily know whether the
-system has (or potentially has) untrusted devices by iterating the
-device tree. I will add such check in the next version if no objections.
-
-> 
-> But this mechanism needs to be moved to the dma-iommu implementation at
-> some point, and then we should allocate the bounce memory pages
-> on-demand. We can easily do this in page-size chunks and map them
-> together with iommu page-tables. This way we don't need to pre-allocate
-> a large memory-chunk at boot.
-> 
-> Regards,
-> 
-> 	Joerg
-
-Best regards,
-Baolu
-
+Tested-by: Chris Healy <cphealy@gmail.com>
