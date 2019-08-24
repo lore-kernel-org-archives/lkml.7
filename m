@@ -2,202 +2,162 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA83CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8262C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBD92133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD57722CE3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566664246;
+	bh=+JuKxCOgJyBntCQvY6U3JY+tJ2pkpRKpi7Kas9YX6aQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kDDzNSVOyH1H3mFKW+MifCajqjitGuFKAnQv4E9BNDrQiYsfaFsTSh9mO6XXJFQYd
+	 Kii85bAQFA9tOig7CrtQ9SBRyloawVwVJmCix/8p+wXWUe2YOk1fA8cYqzh9udiEDB
+	 W/do8ATkRO/RpKB9IddChd9xXY2k9RUg1Bqtfq8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfHXQa1 (ORCPT
+        id S1727854AbfHXQap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 12:30:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46143 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfHXQa1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 12:30:27 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i1YuA-0005Pk-1n
-        for linux-kernel@vger.kernel.org; Sat, 24 Aug 2019 16:28:42 +0000
-Received: by mail-pg1-f199.google.com with SMTP id c9so6689945pgm.18
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 09:28:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=unN30PKH+ZZ8YsivpT1ei8/hAxR34oI4epIJUsWIs08=;
-        b=hzPNQGCwgDAI9U602WGsm5Uy8z+I53mb3CW0mrZajoGfLo7ajtxc/IU0S3LtvllADl
-         WcTDqpjeqtFdP+gglyYyQNBtY5gaaUPfFnYllYSiNBs8BHKeyqgGN+he6xRYuimEXpJu
-         R4kHOlhoDDSEFIQZKIyEGp0XTc9CwPUTnkw0gozbFvLHAn3fx8EU0gDfgfim5bTCycLF
-         Fl/LpKimBt9sqei3NqaBEDsEIYR2WCYNdNwY4ZF/784Qqq+YK0Lsz8n171OFsWIEs/Dk
-         SCjf0uG9JKXXpugNLDWud2NiAq1uGHgkSTRWcQGUuk4Ao7lB2KZOOhsAr6RRq698XLn/
-         0lYA==
-X-Gm-Message-State: APjAAAUMfrNuHYJIDmSHas4Qmsw6AtvYUw+prTLb8aVP/B+eb0pnlDVE
-        /yhCuHvH3BLto2gfuqpiK7ua9v9GzPce8nnim63dKAeV0j7F5OILk9bFdVM7nU+IPM4bMMI2Xv5
-        nC3A4hVhrcVltpuVL2x/sWfIUNmN2CHifByJOAXI95A==
-X-Received: by 2002:a17:902:e30f:: with SMTP id cg15mr10839455plb.46.1566664120766;
-        Sat, 24 Aug 2019 09:28:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxzHiwTSAeEthDTCHx43zMtuCwV8V8nm1NvgnWj8+NHoizBqfQJ4MwvPMdViJlNApGYgGtVyQ==
-X-Received: by 2002:a17:902:e30f:: with SMTP id cg15mr10839445plb.46.1566664120517;
-        Sat, 24 Aug 2019 09:28:40 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-54b0-44c4-6d25-80e5.dynamic-ip6.hinet.net (2001-b011-380f-3c42-54b0-44c4-6d25-80e5.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:54b0:44c4:6d25:80e5])
-        by smtp.gmail.com with ESMTPSA id p20sm5729144pgi.81.2019.08.24.09.28.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 24 Aug 2019 09:28:40 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] HID: quirks: Disable runtime suspend on Microsoft Corp.
- Basic Optical Mouse v2.0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Pine.LNX.4.44L0.1908221043080.1311-100000@iolanthe.rowland.org>
-Date:   Sun, 25 Aug 2019 00:28:37 +0800
-Cc:     Oliver Neukum <oneukum@suse.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <3620A9D2-36CD-49EA-928F-F30D49F7F5DB@canonical.com>
-References: <Pine.LNX.4.44L0.1908221043080.1311-100000@iolanthe.rowland.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sat, 24 Aug 2019 12:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbfHXQap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 12:30:45 -0400
+Received: from localhost (unknown [8.46.76.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E87272133F;
+        Sat, 24 Aug 2019 16:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566664243;
+        bh=+JuKxCOgJyBntCQvY6U3JY+tJ2pkpRKpi7Kas9YX6aQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2JCsvY6KrYzxYIpv+m8WMh+iSkH0tmAKK2RhzWqbs9T4ahODOuEjgejLGapr5RUd9
+         tffZ1z1dcUGfhiBbn+/plVU7AmJxYa08G3zby2VydzN3K4cMa8xutpmhkbQBEWLw7d
+         dmhrbql6MJj0ka0EGuC9P5zWcopoMB8TBOVm/uo0=
+Date:   Sat, 24 Aug 2019 09:50:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Chen Yu <yu.c.chen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [tip: x86/urgent] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
+ family 15h/16h
+Message-ID: <20190824135028.GJ1581@sasha-vm>
+References: <7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com>
+ <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <156652264945.9541.4969272027980914591.tip-bot2@tip-bot2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 22:49, Alan Stern <stern@rowland.harvard.edu> wrote:
-
-> On Thu, 22 Aug 2019, Kai-Heng Feng wrote:
+On Fri, Aug 23, 2019 at 01:10:49AM -0000, tip-bot2 for Tom Lendacky wrote:
+>The following commit has been merged into the x86/urgent branch of tip:
 >
->> at 18:38, Oliver Neukum <oneukum@suse.com> wrote:
->>
->>> Am Donnerstag, den 22.08.2019, 18:04 +0800 schrieb Kai-Heng Feng:
->>>> Hi Oliver,
->>>>
->>>> at 17:45, Oliver Neukum <oneukum@suse.com> wrote:
->>>>
->>>>> Am Donnerstag, den 22.08.2019, 17:17 +0800 schrieb Kai-Heng Feng:
->>>>>> The optical sensor of the mouse gets turned off when it's runtime
->>>>>> suspended, so moving the mouse can't wake the mouse up, despite that
->>>>>> USB remote wakeup is successfully set.
->>>>>>
->>>>>> Introduce a new quirk to prevent the mouse from getting runtime
->>>>>> suspended.
->>>>>
->>>>> Hi,
->>>>>
->>>>> I am afraid this is a bad approach in principle. The device
->>>>> behaves according to spec.
->>>>
->>>> Can you please point out which spec it is? Is it USB 2.0 spec?
->>>
->>> Well, sort of. The USB spec merely states how to enter and exit
->>> a suspended state and that device state must not be lost.
->>> It does not tell you what a suspended device must be able to do.
->>
->> But shouldn’t remote wakeup signaling wakes the device up and let it exit
->> suspend state?
->> Or it’s okay to let the device be suspended when remote wakeup is needed
->> but broken?
->>
->>>>> And it behaves like most hardware.
->>>>
->>>> So seems like most hardware are broken.
->>>> Maybe a more appropriate solution is to disable RPM for all USB mice.
->>>
->>> That is a decision a distro certainly can make. However, the kernel
->>> does not, by default, call usb_enable_autosuspend() for HID devices
->>> for this very reason. It is enabled by default only for hubs,
->>> BT dongles and UVC cameras (and some minor devices)
->>>
->>> In other words, if on your system it is on, you need to look
->>> at udev, not the kernel.
->>
->> So if a device is broken when “power/control” is flipped by user, we  
->> should
->> deal it at userspace? That doesn’t sound right to me.
->>
->>>>> If you do not want runtime PM for such devices, do not switch
->>>>> it on.
->>>>
->>>> A device should work regardless of runtime PM status.
->>>
->>> Well, no. Runtime PM is a trade off. You lose something if you use
->>> it. If it worked just as well as full power, you would never use
->>> full power, would you?
->>
->> I am not asking the suspended state to work as full power, but to  
->> prevent a
->> device enters suspend state because of broken remote wakeup.
->>
->>> Whether the loss of functionality or performance is worth the energy
->>> savings is a policy decision. Hence it belongs into udev.
->>> Ideally the kernel would tell user space what will work in a
->>> suspended state. Unfortunately HID does not provide support for that.
->>
->> I really don’t think “loss of functionally” belongs to policy decision.  
->> But
->> that’s just my opinion.
->>
->>> This is a deficiency of user space. The kernel has an ioctl()
->>> to let user space tell it, whether a device is fully needed.
->>> X does not use them.
->>
->> Ok, I’ll take a look at other device drivers that use it.
->>
->>>>> The refcounting needs to be done correctly.
->>>>
->>>> Will do.
->>>
->>> Well, I am afraid your patch breaks it and if you do not break
->>> it, the patch is reduced to nothing.
->>
->> Maybe just calling usb_autopm_put_interface() in usbhid_close() to balance
->> the refcount?
->>
->>>>> This patch does something that udev should do and in a
->>>>> questionable manner.
->>>>
->>>> IMO if the device doesn’t support runtime suspend, then it needs to be
->>>> disabled in kernel but not workaround in userspace.
->>>
->>> You switch it on from user space. Of course the kernel default
->>> must be safe, as you said. It already is.
->>
->> I’d also like to hear maintainers' opinion on this issue.
+>Commit-ID:     c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
+>Gitweb:        https://git.kernel.org/tip/c49a0a80137c7ca7d6ced4c812c9e07a949f6f24
+>Author:        Tom Lendacky <thomas.lendacky@amd.com>
+>AuthorDate:    Mon, 19 Aug 2019 15:52:35
+>Committer:     Borislav Petkov <bp@suse.de>
+>CommitterDate: Mon, 19 Aug 2019 19:42:52 +02:00
 >
-> I agree with Oliver.  There is no formal requirement on what actions
-> should cause a mouse to generate a remote wakeup request.  Some mice
-> will do it when they are moved and some mice won't.
+>x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
 >
-> If you don't like the way a particular mouse behaves then you should
-> not allow it to go into runtime suspend.  By default, the kernel
-> prevents _all_ USB mice from being runtime suspended; the only way a
-> mouse can be suspended is if some userspace program tells the kernel to
-> allow it.
+>There have been reports of RDRAND issues after resuming from suspend on
+>some AMD family 15h and family 16h systems. This issue stems from a BIOS
+>not performing the proper steps during resume to ensure RDRAND continues
+>to function properly.
 >
-> It might be a udev script which does this, or a powertop setting, or
-> something else.  Regardless, what the kernel does is correct.
-> Furthermore, the kernel has to accomodate users who don't mind pressing
-> a mouse button to wake up their mice.  For their sake, the kernel
-> should not forbid a mouse from ever going into runtime suspend merely
-> because it won't generate a wakeup request when it is moved.
-
-True, if some users don’t mind clicking mouse button before using it then  
-we need to keep the current behavior.
-
-Kai-Heng
-
+>RDRAND support is indicated by CPUID Fn00000001_ECX[30]. This bit can be
+>reset by clearing MSR C001_1004[62]. Any software that checks for RDRAND
+>support using CPUID, including the kernel, will believe that RDRAND is
+>not supported.
 >
-> Alan Stern
+>Update the CPU initialization to clear the RDRAND CPUID bit for any family
+>15h and 16h processor that supports RDRAND. If it is known that the family
+>15h or family 16h system does not have an RDRAND resume issue or that the
+>system will not be placed in suspend, the "rdrand=force" kernel parameter
+>can be used to stop the clearing of the RDRAND CPUID bit.
+>
+>Additionally, update the suspend and resume path to save and restore the
+>MSR C001_1004 value to ensure that the RDRAND CPUID setting remains in
+>place after resuming from suspend.
+>
+>Note, that clearing the RDRAND CPUID bit does not prevent a processor
+>that normally supports the RDRAND instruction from executing it. So any
+>code that determined the support based on family and model won't #UD.
+>
+>Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>Signed-off-by: Borislav Petkov <bp@suse.de>
+>Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Chen Yu <yu.c.chen@intel.com>
+>Cc: "H. Peter Anvin" <hpa@zytor.com>
+>Cc: Ingo Molnar <mingo@redhat.com>
+>Cc: Jonathan Corbet <corbet@lwn.net>
+>Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+>Cc: Juergen Gross <jgross@suse.com>
+>Cc: Kees Cook <keescook@chromium.org>
+>Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+>Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+>Cc: Nathan Chancellor <natechancellor@gmail.com>
+>Cc: Paolo Bonzini <pbonzini@redhat.com>
+>Cc: Pavel Machek <pavel@ucw.cz>
+>Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+>Cc: <stable@vger.kernel.org>
+>Cc: Thomas Gleixner <tglx@linutronix.de>
+>Cc: "x86@kernel.org" <x86@kernel.org>
+>Link: https://lkml.kernel.org/r/7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com
+>---
+> Documentation/admin-guide/kernel-parameters.txt |  7 +-
+> arch/x86/include/asm/msr-index.h                |  1 +-
+> arch/x86/kernel/cpu/amd.c                       | 66 +------------
+> arch/x86/power/cpu.c                            | 86 ++--------------
+> 4 files changed, 13 insertions(+), 147 deletions(-)
+>
+>diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>index 4c19719..47d981a 100644
+>--- a/Documentation/admin-guide/kernel-parameters.txt
+>+++ b/Documentation/admin-guide/kernel-parameters.txt
+>@@ -4090,13 +4090,6 @@
+> 			Run specified binary instead of /init from the ramdisk,
+> 			used for early userspace startup. See initrd.
+>
+>-	rdrand=		[X86]
+>-			force - Override the decision by the kernel to hide the
+>-				advertisement of RDRAND support (this affects
+>-				certain AMD processors because of buggy BIOS
+>-				support, specifically around the suspend/resume
+>-				path).
+>-
 
+Why is this being removed (along with supporting code)?
 
+--
+Thanks,
+Sasha
