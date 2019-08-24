@@ -6,145 +6,209 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C14C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF836C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B935D2082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B600320870
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbfHXFIi (ORCPT
+        id S1726068AbfHXFPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 01:08:38 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26578 "EHLO mga03.intel.com"
+        Sat, 24 Aug 2019 01:15:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24229 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfHXFIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 01:08:38 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1725777AbfHXFPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 01:15:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 22:08:37 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Aug 2019 22:15:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,424,1559545200"; 
-   d="scan'208";a="191147429"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 23 Aug 2019 22:08:36 -0700
-Date:   Fri, 23 Aug 2019 22:08:36 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
-References: <20190820011210.GP7777@dread.disaster.area>
- <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190821181343.GH8653@ziepe.ca>
- <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
- <20190821194810.GI8653@ziepe.ca>
- <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
- <20190823032345.GG1119@dread.disaster.area>
- <20190823120428.GA12968@ziepe.ca>
- <20190824001124.GI1119@dread.disaster.area>
+   d="scan'208";a="196627309"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Aug 2019 22:15:43 -0700
+Date:   Sat, 24 Aug 2019 13:16:05 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rong Chen <rong.a.chen@intel.com>, michel@daenzer.net,
+        linux-kernel@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        ying.huang@intel.com, lkp@01.org
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+Message-ID: <20190824051605.GA63850@shbuild999.sh.intel.com>
+References: <14fdaaed-51c8-b270-b46b-cba7b5c4ba52@suse.de>
+ <20190805070200.GA91650@shbuild999.sh.intel.com>
+ <c0c3f387-dc93-3146-788c-23258b28a015@intel.com>
+ <045a23ab-78f7-f363-4a2e-bf24a7a2f79e@suse.de>
+ <37ae41e4-455d-c18d-5c93-7df854abfef9@intel.com>
+ <370747ca-4dc9-917b-096c-891dcc2aedf0@suse.de>
+ <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com>
+ <20190812072545.GA63191@shbuild999.sh.intel.com>
+ <20190813093616.GA65475@shbuild999.sh.intel.com>
+ <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190824001124.GI1119@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
-> On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Aug 23, 2019 at 01:23:45PM +1000, Dave Chinner wrote:
+Hi Thomas,
+
+On Thu, Aug 22, 2019 at 07:25:11PM +0200, Thomas Zimmermann wrote:
+> Hi
+> 
+> I was traveling and could reply earlier. Sorry for taking so long.
+
+No problem! I guessed so :)
+
+> 
+> Am 13.08.19 um 11:36 schrieb Feng Tang:
+> > Hi Thomas, 
 > > 
-> > > > But the fact that RDMA, and potentially others, can "pass the
-> > > > pins" to other processes is something I spent a lot of time trying to work out.
-> > > 
-> > > There's nothing in file layout lease architecture that says you
-> > > can't "pass the pins" to another process.  All the file layout lease
-> > > requirements say is that if you are going to pass a resource for
-> > > which the layout lease guarantees access for to another process,
-> > > then the destination process already have a valid, active layout
-> > > lease that covers the range of the pins being passed to it via the
-> > > RDMA handle.
+> > On Mon, Aug 12, 2019 at 03:25:45PM +0800, Feng Tang wrote:
+> >> Hi Thomas,
+> >>
+> >> On Fri, Aug 09, 2019 at 04:12:29PM +0800, Rong Chen wrote:
+> >>> Hi,
+> >>>
+> >>>>> Actually we run the benchmark as a background process, do we need to
+> >>>>> disable the cursor and test again?
+> >>>> There's a worker thread that updates the display from the shadow buffer.
+> >>>> The blinking cursor periodically triggers the worker thread, but the
+> >>>> actual update is just the size of one character.
+> >>>>
+> >>>> The point of the test without output is to see if the regression comes
+> >>> >from the buffer update (i.e., the memcpy from shadow buffer to VRAM), or
+> >>> >from the worker thread. If the regression goes away after disabling the
+> >>>> blinking cursor, then the worker thread is the problem. If it already
+> >>>> goes away if there's simply no output from the test, the screen update
+> >>>> is the problem. On my machine I have to disable the blinking cursor, so
+> >>>> I think the worker causes the performance drop.
+> >>>
+> >>> We disabled redirecting stdout/stderr to /dev/kmsg,  and the regression is
+> >>> gone.
+> >>>
+> >>> commit:
+> >>>   f1f8555dfb9 drm/bochs: Use shadow buffer for bochs framebuffer console
+> >>>   90f479ae51a drm/mgag200: Replace struct mga_fbdev with generic framebuffer
+> >>> emulation
+> >>>
+> >>> f1f8555dfb9a70a2  90f479ae51afa45efab97afdde testcase/testparams/testbox
+> >>> ----------------  -------------------------- ---------------------------
+> >>>          %stddev      change         %stddev
+> >>>              \          |                \
+> >>>      43785                       44481
+> >>> vm-scalability/300s-8T-anon-cow-seq-hugetlb/lkp-knm01
+> >>>      43785                       44481        GEO-MEAN vm-scalability.median
+> >>
+> >> Till now, from Rong's tests:
+> >> 1. Disabling cursor blinking doesn't cure the regression.
+> >> 2. Disabling printint test results to console can workaround the
+> >> regression.
+> >>
+> >> Also if we set the perfer_shadown to 0, the regression is also
+> >> gone.
 > > 
-> > How would the kernel detect and enforce this? There are many ways to
-> > pass a FD.
+> > We also did some further break down for the time consumed by the
+> > new code.
+> > 
+> > The drm_fb_helper_dirty_work() calls sequentially 
+> > 1. drm_client_buffer_vmap	  (290 us)
+> > 2. drm_fb_helper_dirty_blit_real  (19240 us)
+> > 3. helper->fb->funcs->dirty()    ---> NULL for mgag200 driver
+> > 4. drm_client_buffer_vunmap       (215 us)
+> >
 > 
-> AFAIC, that's not really a kernel problem. It's more of an
-> application design constraint than anything else. i.e. if the app
-> passes the IB context to another process without a lease, then the
-> original process is still responsible for recalling the lease and
-> has to tell that other process to release the IB handle and it's
-> resources.
+> It's somewhat different to what I observed, but maybe I just couldn't
+> reproduce the problem correctly.
 > 
-> > IMHO it is wrong to try and create a model where the file lease exists
-> > independently from the kernel object relying on it. In other words the
-> > IB MR object itself should hold a reference to the lease it relies
-> > upon to function properly.
+> > The average run time is listed after the function names.
+> > 
+> > From it, we can see drm_fb_helper_dirty_blit_real() takes too long
+> > time (about 20ms for each run). I guess this is the root cause
+> > of this regression, as the original code doesn't use this dirty worker.
 > 
-> That still doesn't work. Leases are not individually trackable or
-> reference counted objects objects - they are attached to a struct
-> file bUt, in reality, they are far more restricted than a struct
-> file.
+> True, the original code uses a temporary buffer, but updates the display
+> immediately.
 > 
-> That is, a lease specifically tracks the pid and the _open fd_ it
-> was obtained for, so it is essentially owned by a specific process
-> context.  Hence a lease is not able to be passed to a separate
-> process context and have it still work correctly for lease break
-> notifications.  i.e. the layout break signal gets delivered to
-> original process that created the struct file, if it still exists
-> and has the original fd still open. It does not get sent to the
-> process that currently holds a reference to the IB context.
->
+> My guess is that this could be a caching problem. The worker runs on a
+> different CPU, which doesn't have the shadow buffer in cache.
 
-The fcntl man page says:
+Yes, that's my thought too. I profiled the working set size, for most of
+the drm_fb_helper_dirty_blit_real(), it will update a buffer 4096x768(3 MB),
+and as it is called 30~40 times per second, it surely will affect the cache.
 
-"Leases are associated with an open file description (see open(2)).  This means
-that duplicate file descriptors (created by, for example, fork(2) or dup(2))
-refer to the same lease, and this lease may be modified or released using any
-of these descriptors.  Furthermore,  the lease is released by either an
-explicit F_UNLCK operation on any of these duplicate file descriptors, or when
-all such file descriptors have been closed."
 
-From this I took it that the child process FD would have the lease as well
-_and_ could release it.  I _assumed_ that applied to SCM_RIGHTS but it does not
-seem to work the same way as dup() so I'm not so sure.
+> > As said in last email, setting the prefer_shadow to 0 can avoid
+> > the regrssion. Could it be an option?
+> 
+> Unfortunately not. Without the shadow buffer, the console's display
+> buffer permanently resides in video memory. It consumes significant
+> amount of that memory (say 8 MiB out of 16 MiB). That doesn't leave
+> enough room for anything else.
+> 
+> The best option is to not print to the console.
 
-Ira
+Do we have other options here?
 
+My thought is this is clearly a regression, that the old driver works
+fine, while the new version in linux-next doesn't. Also for a frame
+buffer console, writting dozens line of message to it is not a rare
+user case. We have many test platforms (servers/desktops/laptops)
+with different kinds of GFX hardwares, and this model works fine for
+many years :)
+
+Thanks,
+Feng
+
+
+ 
+> Best regards
+> Thomas
 > 
-> So while a struct file passed to another process might still have
-> an active lease, and you can change the owner of the struct file
-> via fcntl(F_SETOWN), you can't associate the existing lease with a
-> the new fd in the new process and so layout break signals can't be
-> directed at the lease fd....
+> > Thanks,
+> > Feng
+> > 
+> >>
+> >> --- a/drivers/gpu/drm/mgag200/mgag200_main.c
+> >> +++ b/drivers/gpu/drm/mgag200/mgag200_main.c
+> >> @@ -167,7 +167,7 @@ int mgag200_driver_load(struct drm_device *dev, unsigned long flags)
+> >>  		dev->mode_config.preferred_depth = 16;
+> >>  	else
+> >>  		dev->mode_config.preferred_depth = 32;
+> >> -	dev->mode_config.prefer_shadow = 1;
+> >> +	dev->mode_config.prefer_shadow = 0;
+> >>
+> >> And from the perf data, one obvious difference is good case don't
+> >> call drm_fb_helper_dirty_work(), while bad case calls.
+> >>
+> >> Thanks,
+> >> Feng
+> >>
+> >>> Best Regards,
+> >>> Rong Chen
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
 > 
-> This really means that a lease can only be owned by a single process
-> context - it can't be shared across multiple processes (so I was
-> wrong about dup/pass as being a possible way of passing them)
-> because there's only one process that can "own" a struct file, and
-> that where signals are sent when the lease needs to be broken.
-> 
-> So, fundamentally, if you want to pass a resource that pins a file
-> layout between processes, both processes need to hold a layout lease
-> on that file range. And that means exclusive leases and passing
-> layouts between processes are fundamentally incompatible because you
-> can't hold two exclusive leases on the same file range....
-> 
-> Cheers,
-> 
-> Dave.
 > -- 
-> Dave Chinner
-> david@fromorbit.com
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+> GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+> HRB 21284 (AG Nürnberg)
+> 
+
+
+
