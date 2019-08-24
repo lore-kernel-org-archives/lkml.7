@@ -2,116 +2,144 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DA4C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC79C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB43A20870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="W2AM6gex"
+	by mail.kernel.org (Postfix) with ESMTP id 3AD6720870
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfHXAaz (ORCPT
+        id S1726457AbfHXAcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 20:30:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45604 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfHXAaz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 20:30:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so6495176plr.12
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 17:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=xnR71yxvWSFn7GNIN4j2Fr3rKuwX+n1QmLSLVRDzZPA=;
-        b=W2AM6gexTKN/VXcMZcNlCQUd1t7QNxA2cYHEuT6iNPI+LLeisFbLGSp7EFWmfR/GqJ
-         ukVzvf47sFPlyUlhrgBgefa3c7ywbe85INX7ypVuklNfnx6nvpvLMTazX+f0PYBsK3j8
-         2eFIoiuvEZOQxF2Jqk0NRW4rLxK3k3vp7yuu3KLd805bbiw/GDeFzDlmTkMRh0b+e8u/
-         6BdSDVqdKECnS95a+YReAWFtZyA/LxvK8E48vaGRDb5CzKWAI/aSoy+v3zqvrFPazhs2
-         BfyBlcWZkL2HrkKyQ5wWUtZpK/NGNqqCX1lpcQrzvqJSlXIl3aUFcEwmhjE1//XwP4sl
-         fDOw==
+        Fri, 23 Aug 2019 20:32:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50440 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbfHXAcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 20:32:03 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3E17BC08C325
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 00:32:02 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id r9so4904128wme.8
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 17:32:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=xnR71yxvWSFn7GNIN4j2Fr3rKuwX+n1QmLSLVRDzZPA=;
-        b=YKkZzSx4taJ98gp5NWLOPCy/V7wQLNM0W8ZoxQzVB7sYHyBbif+jvoVl+eCW76+RXK
-         djuJklRx9BRqcFND7OgxpkVsLQ8WFR3BzniYMXoDiHWfLenojy/6ADCBEHGMx/dyTgKy
-         Yvq9Jgmsj+PSddJrpnGzrDXtJsQtPSNvWdAhZA5JkXJVoda4Bmj6Hfz2GFBL8QoemORB
-         mPwwE1F68TkO6IOzOO4NiR7vZDxgdT1TgZLRInvpsPmg+OBzvcfy0WCswGCLiBfTDnz9
-         raIKBi9W5CTk2HCOCSTmHtFIYt3tJyXyvRhnlXKhvfO6W7ks9jw6RN/Q+m0Z3XAfittX
-         1XCQ==
-X-Gm-Message-State: APjAAAXYQdpDW+fdFvR4C/DOdRD8RPW5M/sncOym1w71S5ymm8Ia2IhN
-        DBhHdz5m4seeGXTLM3JFrYOXsg==
-X-Google-Smtp-Source: APXvYqypnIHRw+gX7a2zAkaV+URyBUoTsPo6A6KcuRTTuMEOhltXd4pwHW+VP0k4vY8gZmJbUDCW8A==
-X-Received: by 2002:a17:902:e613:: with SMTP id cm19mr7207697plb.299.1566606654666;
-        Fri, 23 Aug 2019 17:30:54 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id h9sm2890450pgh.51.2019.08.23.17.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 17:30:54 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 17:30:53 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Tycho Andersen <tycho@tycho.ws>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-In-Reply-To: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com>
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=v6yGslRWKQbnbzawZHfpm4myFDx8OIr1Kch/Aw5UbLU=;
+        b=OCWZVybh1Yy1Xb4KzOeY0Fv6eDWzVmmD9pEJ7jUjtSbwZfV+D5b+VXFVGrryzJ4jbD
+         n/Aem7xyCbxWsRaFJhmRn0Ssywk/YX0Nu/sLW0YKHzbpXnUmPxx0eVWfdw/AARlXhO8K
+         dEtw7sBZ7AdR2l5MrZHUndN+iJBhQMHQpsvH1JqSUpIDdPbgqMFesAHBLTbsG+yFvOJ/
+         YMhQgiW/gowqlcOf9RURJNpwky7iqQBeGucfvxRnvAMTpEo6ktRTCPAJDGmoOZmlFdcM
+         4CEZ0xa34BF1pIbhp1LAundX3DT5ldIXehQTFdfE8QPtvNfs1/Z+uMvtXil4C3dRRl+9
+         t55w==
+X-Gm-Message-State: APjAAAVA2T+oloESPI/YJ5Koh3y3m82fm0pDa5D3GeBEiUZaCbfrWLX5
+        ++OOqs9c0OpK6WRIe15xK1axahXApVqK2yrup7hpFyvEvMivAw4ErRlr1SAqYSISTsVqq44iR+f
+        pMDyccnEaoRWzU5qbpQhoqBcV
+X-Received: by 2002:a1c:107:: with SMTP id 7mr7938878wmb.84.1566606720691;
+        Fri, 23 Aug 2019 17:32:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwqXgoJTESXJP84jZ24DCDQs3wUu8A0ZqXY0CLspNoheat3ANG9iCnAmk7klnkb79pTEomjvw==
+X-Received: by 2002:a1c:107:: with SMTP id 7mr7938869wmb.84.1566606720399;
+        Fri, 23 Aug 2019 17:32:00 -0700 (PDT)
+Received: from t460s.bristot.redhat.com ([193.205.82.15])
+        by smtp.gmail.com with ESMTPSA id u8sm3532874wmj.3.2019.08.23.17.31.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Aug 2019 17:31:59 -0700 (PDT)
+To:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@sssup.it>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luca Abeni <luca.abeni@santannapisa.it>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [CFP] Real-Time Summit 2019 Call for Presentations
+Message-ID: <6c78f0b0-c124-b8b7-1cb9-7422179a8200@redhat.com>
+Date:   Sat, 24 Aug 2019 02:31:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019, David Abdurachmanov wrote:
+The Real-Time Summit is organized by the Linux Foundation Real-Time Linux (RTL)
+collaborative project. The event is intended to gather developers and users of
+Linux as a Real-Time Operating System. The main intent is to provide room for
+discussion between developers, tooling experts, and users.
 
-> There is one failing kernel selftest: global.user_notification_signal
+The summit will take place alongside the Open Source Summit + Embedded Linux
+Conference Europe 2019 in Lyon, France. The summit is planned the day after the
+main conference, Thursday, October 31st, 2019, from 8:00 to 17:00 at the
+conference venue. If you are already considering your travel arrangements for
+the Open Source Summit + Embedded Linux Conference Europe 2019 in Lyon, France,
+and you have a general interest in this topic, please extend your travel by one
+day to be in Lyon on Thursday, 31st.
 
-Is this the only failing test?  Or are the rest of the selftests skipped 
-when this test fails, and no further tests are run, as seems to be shown 
-here:
+If you are interested to present, please submit a proposal [1] before September
+14th, 2019, at 23:59 EST. Please provide a title, an abstract describing the
+proposed talk (900 characters maximum), a short biography (900 characters
+maximum), and describe the targeted audience (900 characters maximum). Please
+indicate the slot length you are aiming for: The format is a single track with
+presentation slots of 30, 45 or 60 minutes long. Considering that the
+presentation should use at most half of the slot time, leaving the rest of the
+slot reserved for discussion. The focus of this event is the discussion.
 
-  https://lore.kernel.org/linux-riscv/CADnnUqcmDMRe1f+3jG8SPR6jRrnBsY8VVD70VbKEm0NqYeoicA@mail.gmail.com/
+We are welcoming presentations from both end-users and developers, on topics
+covering, but not limited to:
 
-For example, looking at the source, I'd naively expect to see the 
-user_notification_closed_listener test result -- which follows right 
-after the failing test in the selftest source.  But there aren't any 
-results?
+ - Real-time Linux development
+ - Real-time Linux evaluation
+ - Real-time Linux use cases (Success and failures)
+ - Real-time Linux tooling (tracing, configuration, …)
+ - Real-time Linux academic work, already presented or under development, for
+   direct feedback from practitioners community.
 
-Also - could you follow up with the author of this failing test to see if 
-we can get some more clarity about what might be going wrong here?  It 
-appears that the failing test was added in commit 6a21cc50f0c7f ("seccomp: 
-add a return code to trap to userspace") by Tycho Andersen 
-<tycho@tycho.ws>.
+Those can cover recently available technologies, ongoing work, and new ideas.
 
+Important Notes for Speakers:
 
-- Paul
+ - All speakers are required to adhere to the Linux Foundation events’ Code of
+   Conduct. We also highly recommend that speakers take the Linux Foundation
+   online Inclusive Speaker Orientation Course.
+
+ - Avoid sales or marketing pitches and discussing unlicensed or potentially
+   closed-source technologies when preparing your proposal; these talks are
+   almost always rejected due to the fact that they take away from the integrity
+   of our events, and are rarely well-received by conference attendees.
+
+ - All accepted speakers are required to submit their slides prior to the
+    event.
+
+Submission must be received by 11:59 pm PST on September 14th, 2019
+
+[1] Submission page: https://forms.gle/yQeqyrtJYezM5VRJA
+
+Important Dates:
+
+  - CFP Close: Saturday, September 14th, 2019, 11:59PM PST
+  - Speaker notification: September 21st, 2019
+  - Conference: Thursday, October 31st, 2019
+
+Questions on submitting a proposal?
+Email Daniel Bristot de Oliveira <bristot@redhat.com>
+
+Thanks!
+-- Daniel
