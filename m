@@ -2,262 +2,121 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F85C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA46C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB08F2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C25B206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 05:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ricEaYLC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucxSIsCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfHXFWx (ORCPT
+        id S1726559AbfHXFXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 01:22:53 -0400
-Received: from mail-eopbgr00075.outbound.protection.outlook.com ([40.107.0.75]:31515
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfHXFWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 01:22:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hD7LkrqdTMR7dfaF2PTOyxo02f6rACvouCoQTJ66WyIuzxH45JasvMbgq2zZrEnRRYjDeSCX7YsBPhEI5NYgpjPkaaR5k37OP9s1tpxdnxuvVd0b70+EVMigs7nxwAAa1lWP0dzWj6mpk1PSKQdo01Fj6Fn4BXd9+jaKUVQjL/0ziBUzwLwUcBjwPVdCyawvnrsC7LEyGkaNNedRq/PaBaUTsi+oLyobxPgEY0fGw5/mg0qwLzUYXR5mjYVpl4Z3D8p9ZNsD789gwgVqTcxIiNlYXOZOqxcc+ngiX9iht3JOfiyqz1KzFAqgqzzI23E1gRBcMjpA8UBro4ftRcoZpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NO2zTCqx23vNsph5s/ZNdEkbSrBd/gzN7Lkci9DhJwA=;
- b=Bf1P27Pfk/feQlYofWHOUdSKFkEbxR0knAmjwCOlztuhQ0038uBvVqz8R6QKl5+KFnqPZHAmLfrGLr0403zH5pPyTiRQ6QXVE+fHVxrboQo4JzuzmHUhqqOz2Z2csEgq1t2tpUEjN3ypi7DKcrutPo9TQmEq+jaIrLgN1dJ+MfozMG0w0mNWTQ+2fiIAW7jr3yBzSiWAzJlfdEZZ8XUEAk43sWEgtZGSb+Yi1dnuL4V7NkJjYNsyODPmES4VaSc8xvRkaDgvZo5MUaOG0fbgU1NAEP7je+slmvoxLf77nKlfxmHDWLwpMA/+CiWLgMAeqctPdh4w2iP6l4vYz8za7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NO2zTCqx23vNsph5s/ZNdEkbSrBd/gzN7Lkci9DhJwA=;
- b=ricEaYLCiYgD48a1p3hsmtVxwvw22VvxiPfAcxYWuYMOgb8WWgsJk7IA4ZjazCrG1y1RDKf5xdcGLEFAfeJNftiwbAGqwosK1XJ3Gh0mZ4dT+GsGnQP7bYzdnF6bTbOtz8T/hF9pJgi8VKMRE6KmrjMBf/QwGvUGvhp0eX2a1G0=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6306.eurprd05.prod.outlook.com (20.179.35.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Sat, 24 Aug 2019 05:22:46 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2178.020; Sat, 24 Aug 2019
- 05:22:46 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Jiri Pirko <jiri@resnulli.us>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAWJU4CAAcVCEIAABCsAgAAWVtCAABCDgIAAzoewgAAqE4CAAECFQIAAFWyAgAAGbNCAABfqAIAAErcwgAjpulCAAJkHAIAAnVNggAAbk4CAAAOYgIAABpwAgAAAVrCAAAfEAIAADNCggAHJU4CAAAIMEIAABiaAgAAA2ACAACadAIAAFGdwgAE42YCAAABasIAAaLIAgAAC1QCAABSugIAAA+pAgAATnYCAAAO7UIAAJVKAgACGAeCAABVOgIAABI+Q
-Date:   Sat, 24 Aug 2019 05:22:46 +0000
-Message-ID: <AM0PR05MB4866EEC687C9C46189939103D1A70@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190820225722.237a57d2@x1.home>
-        <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822095823.GB2276@nanopsycho.orion>
-        <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190822121936.GC2276@nanopsycho.orion>
-        <AM0PR05MB4866F9650CF73FC671972127D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823081221.GG2276@nanopsycho.orion>
-        <AM0PR05MB4866DED407D6F1C653D5D560D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823082820.605deb07@x1.home>
-        <AM0PR05MB4866867150DAABA422F25FF8D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823095229.210e1e84@x1.home>
-        <AM0PR05MB4866E33AF7203DE47F713FAAD1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823111641.7f928917@x1.home>
-        <AM0PR05MB486648FF7E6624F34842E425D1A40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190823134337.37e4b215@x1.home>
-        <AM0PR05MB4866008B0571B90DAFFADA97D1A70@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190823225929.38fd86f5@x1.home>
-In-Reply-To: <20190823225929.38fd86f5@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9ac9f60c-64c3-406e-5d76-08d728531956
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6306;
-x-ms-traffictypediagnostic: AM0PR05MB6306:
-x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB6306A655D3E87B21A3E3D281D1A70@AM0PR05MB6306.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0139052FDB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(346002)(396003)(376002)(13464003)(199004)(189003)(66556008)(478600001)(53936002)(52536014)(186003)(33656002)(3846002)(71200400001)(71190400001)(9686003)(55016002)(99286004)(25786009)(6116002)(76176011)(7696005)(11346002)(305945005)(7736002)(6436002)(8936002)(66066001)(2906002)(74316002)(26005)(229853002)(8676002)(4326008)(86362001)(5660300002)(64756008)(66446008)(81166006)(53546011)(55236004)(102836004)(446003)(486006)(14454004)(9456002)(14444005)(476003)(66946007)(66476007)(76116006)(54906003)(81156014)(256004)(6506007)(6916009)(6246003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6306;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BI8GnnTssYFYLqwtWFs6qLhq3YouRInPMLjUxm/YdU7sVhWpEbFuQfGuJZ1uqB7sG3G/7Pt9Uw3c2NIoU+zPNgZuV+4qmOIPagWeTV/Hp549Ht9HvNzwi69BFW48V4tAS82PGJq4ApjLv5f01aqgdErQMqihWIrR/izq3KlCZifp4z6PMRD0nNZG5CSdQLycOth/Y4tAujSAwWYm4HmWcbNd9d0s/EU0k3FS5DhDa3iJG+BTXwzJzHEqWIzadsD66zBqPs+e6kxIgTBhzSP5SUnMThzDrV4vj5YxpLwNPf8E9A1a0CjUZEgDMicIqc8qlTUFnvNULndGp2EMMm1hfy8r9a6PHa9IHSQGzpsNTXl481H8Axm8KbYO1QQm7yeHt69R2jJJfXADnEFFicQMgftVrhoFg/MAEDbj/9qzbmQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 24 Aug 2019 01:23:09 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:33377 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfHXFXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 01:23:08 -0400
+Received: by mail-lf1-f44.google.com with SMTP id x3so8622453lfc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 22:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=u6/+wFW8V2VNoIXw+4p1fdQvpQu+HadJVx/6VAdQfK4=;
+        b=ucxSIsCZbsj+lVB6JqcvZX9B77ULKHjh/6W2T9/qDt1CJbcW5ei7Wy2UCd9OMwU749
+         3xCfcA5sdqL66FCYNBi66rbRizZuCjqT/jttPnwVFeSgfZTpUKKhoLukzeT0GGwpqNQp
+         CgUZdHeiU3FfDwMz6S+6UI029KNgZseQZEX0U/Fus0TLl7mapDuhX6HT0D/38PhSu0qG
+         nXTZED2f2LIHAH4KF4P/RBHfI6rtgoEfSsSsuANxFd1YA2SNvSSWHq7r0xjT3jytYksg
+         vanKmLjczKPR2Pux+q5VVA8MWhz098i9CRHT0BnTCqfQwMtr93pycEz/50m4QUMaazMt
+         HtGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=u6/+wFW8V2VNoIXw+4p1fdQvpQu+HadJVx/6VAdQfK4=;
+        b=tHZKFUC3Jv4P73bO6cB3xikNkz6pIwGWklK9VVXKWWZsIZannyFALA1Rbx9UNB1v1l
+         1mVf+S7wKDevc3ETq6OVCfK/uxCakn8/8XAj/Z236ta+vaLccdkrXnbnAJ7T5IHjn/Fw
+         zPn35o3r5uVMWYl7uocxZrkhk3WzJH+eDr8OWz6HE1b4qgQpvXbDTuVLcJtw0AZAqGqi
+         hhW4N6HkVSjAZ94Pdn8p6X7BDCM25ywHiwKn/q4PKIFnQfyqfij2heyNsEG+mOxa9dBM
+         vcfBcu1vPM+9udkVUkBdMFgdmWdzJhfEJFkAdFCJzYaXTJWTBtIfzsZWOqW9+9rRMcXK
+         Rcuw==
+X-Gm-Message-State: APjAAAUXJx0kLjYXDr8KDjAzIPP9VGj9UKj/DdtZKd2NmdtJoOMa3YI7
+        D3ilGvXHvbtWAVDGcicDn6sD5P8NAY00JL597hc=
+X-Google-Smtp-Source: APXvYqyMQ3B/fV6I229TFJGpuuSsZT/R+bhkUCO5DrGtNZcGvKbFfaPbfkJLfhpM5ATgbxw1Yo4Ijy2WGJW7Cu593cU=
+X-Received: by 2002:a05:6512:4c8:: with SMTP id w8mr4697724lfq.98.1566624186100;
+ Fri, 23 Aug 2019 22:23:06 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ac9f60c-64c3-406e-5d76-08d728531956
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2019 05:22:46.7302
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kz2pL8XHURLWRLg8YJGbixvXS0DSFNAdh3p1xAUoPzrpMdgJFQrvsyNA6KMNkIzhC0CC2D+Xs2Vu4GGf+azVsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6306
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Sat, 24 Aug 2019 15:22:55 +1000
+Message-ID: <CAPM=9twtUmogvabQJD8CcazYfhWUjTUOyRkFomor77LbVDrcKA@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.3-rc6 (the second coming)
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey Linus,
 
+Although the tree built for me fine on arm here, it appears either
+header cleanups in next or some kconfig combo it breaks, so this
+contains a fix to mediatek to include dma-mapping.h explicitly.
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Saturday, August 24, 2019 10:29 AM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>; David =
-S .
-> Miller <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>;
-> Cornelia Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; cjia <cjia@nvidia.com>; netdev@vger.kernel.org
-> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
->=20
-> On Sat, 24 Aug 2019 03:56:08 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > > -----Original Message-----
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Saturday, August 24, 2019 1:14 AM
-> > > To: Parav Pandit <parav@mellanox.com>
-> > > Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko <jiri@mellanox.com>;
-> > > David S . Miller <davem@davemloft.net>; Kirti Wankhede
-> > > <kwankhede@nvidia.com>; Cornelia Huck <cohuck@redhat.com>;
-> > > kvm@vger.kernel.org; linux- kernel@vger.kernel.org; cjia
-> > > <cjia@nvidia.com>; netdev@vger.kernel.org
-> > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > >
-> > > On Fri, 23 Aug 2019 18:00:30 +0000
-> > > Parav Pandit <parav@mellanox.com> wrote:
-> > >
-> > > > > -----Original Message-----
-> > > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > > Sent: Friday, August 23, 2019 10:47 PM
-> > > > > To: Parav Pandit <parav@mellanox.com>
-> > > > > Cc: Jiri Pirko <jiri@resnulli.us>; Jiri Pirko
-> > > > > <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
-> > > > > Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck
-> > > > > <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
-> > > > > kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
-> > > > > netdev@vger.kernel.org
-> > > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > > > >
-> > > > > On Fri, 23 Aug 2019 16:14:04 +0000 Parav Pandit
-> > > > > <parav@mellanox.com> wrote:
-> > > > >
-> > > > > > > > Idea is to have mdev alias as optional.
-> > > > > > > > Each mdev_parent says whether it wants mdev_core to
-> > > > > > > > generate an alias or not. So only networking device drivers
-> would set it to true.
-> > > > > > > > For rest, alias won't be generated, and won't be compared
-> > > > > > > > either during creation time. User continue to provide only =
-uuid.
-> > > > > > >
-> > > > > > > Ok
-> > > > > > >
-> > > > > > > > I am tempted to have alias collision detection only within
-> > > > > > > > children mdevs of the same parent, but doing so will
-> > > > > > > > always mandate to prefix in netdev name. And currently we
-> > > > > > > > are left with only 3 characters to prefix it, so that may n=
-ot be
-> good either.
-> > > > > > > > Hence, I think mdev core wide alias is better with 12 chara=
-cters.
-> > > > > > >
-> > > > > > > I suppose it depends on the API, if the vendor driver can
-> > > > > > > ask the mdev core for an alias as part of the device
-> > > > > > > creation process, then it could manage the netdev namespace
-> > > > > > > for all its devices, choosing how many characters to use,
-> > > > > > > and fail the creation if it can't meet a uniqueness
-> > > > > > > requirement.  IOW, mdev-core would always provide a full
-> > > > > > > sha1 and therefore gets itself out of the uniqueness/collisio=
-n
-> aspects.
-> > > > > > >
-> > > > > > This doesn't work. At mdev core level 20 bytes sha1 are
-> > > > > > unique, so mdev core allowed to create a mdev.
-> > > > >
-> > > > > The mdev vendor driver has the opportunity to fail the device
-> > > > > creation in mdev_parent_ops.create().
-> > > > >
-> > > > That is not helpful for below reasons.
-> > > > 1. vendor driver doesn't have visibility in other vendor's alias.
-> > > > 2. Even for single vendor, it needs to maintain global list of
-> > > > devices to see
-> > > collision.
-> > > > 3. multiple vendors needs to implement same scheme.
-> > > >
-> > > > Mdev core should be the owner. Shifting ownership from one layer
-> > > > to a lower layer in vendor driver doesn't solve the problem (if
-> > > > there is one, which I think doesn't exist).
-> > > >
-> > > > > > And then devlink core chooses
-> > > > > > only 6 bytes (12 characters) and there is collision. Things
-> > > > > > fall apart. Since mdev provides unique uuid based scheme, it's
-> > > > > > the mdev core's ownership to provide unique aliases.
-> > > > >
-> > > > > You're suggesting/contemplating multiple solutions here, 3-char
-> > > > > prefix + 12- char sha1 vs <parent netdev> + ?-char sha1.  Also,
-> > > > > the 15-char total limit is imposed by an external subsystem,
-> > > > > where the vendor driver is the gateway between that subsystem
-> > > > > and mdev.  How would mdev integrate with another subsystem that
-> > > > > maybe only has 9-chars available?  Would the vendor driver API
-> > > > > specify "I need an alias" or would it specify "I need an X-char l=
-ength
-> alias"?
-> > > > Yes, Vendor driver should say how long the alias it wants.
-> > > > However before we implement that, I suggest let such
-> > > > vendor/user/driver arrive which needs that. Such variable length
-> > > > alias can be added at that time and even with that alias collision
-> > > > can be detected by single mdev module.
-> > >
-> > > If we agree that different alias lengths are possible, then I would
-> > > request that minimally an mdev sample driver be modified to request
-> > > an alias with a length that can be adjusted without recompiling in or=
-der
-> to exercise the collision path.
-> > >
-> > Yes. this can be done. But I fail to understand the need to do so.
-> > It is not the responsibility of the mdev core to show case sha1
-> > collision efficiency/deficiency. So why do you insist exercise it?
->=20
-> I don't understand what you're trying to imply with "show case sha1 colli=
-sion
-> efficiency/deficiency".  Are you suggesting that I'm asking for this feat=
-ure to
-> experimentally test the probability of collisions at different character
-> lengths?  We can use shell scripts for that.
-> I'm simply observing that collisions are possible based on user input, bu=
-t
-> they're not practical to test for at the character lengths we're using.
-> Therefore, how do I tell QA to develop a tests to make sure the kernel an=
-d
-> userspace tools that might be involved behave correctly when this rare ev=
-ent
-> occurs?
->
-Ok. so you want to have code coverage and want to add a knob for that.
-That is fine. I will have the mdev_parent->ops.alias_len as API instead of =
-bool.
-And extend mtty module parameter to set the alias length.
+There was also one nouveau fix that came in late that I was going to
+leave until next week, but since I was sending this I thought it may
+as well be in here.
 
-Unfortunately similar code coverage doesn't exist for API like mdev_get/set=
-_iommu_device() in sample of real vendor driver.
-And QA is not able to test this functionality without tainting the kernel.
+Dave.
+
+drm-fixes-2019-08-24:
+drm fixes for 5.3-rc6 (part 2)
+
+mediatek:
+- fix build in some cases
+
+nouveau:
+- fix hang with i2c and mst docks
+The following changes since commit 75710f08ea7e41b2f7010da3f6deab061f7a853b:
+
+  drm/amdgpu/powerplay: silence a warning in smu_v11_0_setup_pptable
+(2019-08-23 11:46:32 +1000)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-08-24
+
+for you to fetch changes up to 7837951a12fdaf88d2c51ff0757980c00072790c:
+
+  drm/mediatek: include dma-mapping header (2019-08-24 15:09:20 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.3-rc6 (part 2)
+
+mediatek:
+- fix build in some cases
+
+nouveau:
+- fix hang with i2c and mst docks
+
+----------------------------------------------------------------
+Dave Airlie (2):
+      Merge branch 'linux-5.3' of git://github.com/skeggsb/linux into drm-fixes
+      drm/mediatek: include dma-mapping header
+
+Lyude Paul (1):
+      drm/nouveau: Don't retry infinitely when receiving no data on i2c over AUX
+
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c | 24 +++++++++++++++++-------
+ 2 files changed, 18 insertions(+), 7 deletions(-)
