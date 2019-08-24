@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CADC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29E1C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4AA20870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BDD20870
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 20:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="kV9Oso3/"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="anw28Gsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfHXU05 (ORCPT
+        id S1728187AbfHXU1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 16:26:57 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:62629 "EHLO rere.qmqm.pl"
+        Sat, 24 Aug 2019 16:27:17 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:12082 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfHXU0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 16:26:55 -0400
+        id S1727879AbfHXU05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 16:26:57 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 46G8s91604zGl;
-        Sat, 24 Aug 2019 22:25:17 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46G8sC3TJ3zTs;
+        Sat, 24 Aug 2019 22:25:19 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1566678317; bh=bI4z6h+GTprYkJG4UIeziaeNCROEh3xOu5vMoCUwBkc=;
+        t=1566678319; bh=VdbgtZ09Jmhv6nJYzpWS3ntFIzMHLWp5KKJVlktY88w=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=kV9Oso3/S7TQywbIKVaxb9X+muAQ/SPO73jIs0Vf8pfH0YJ8qKetq8TQw0wt3F5Yc
-         EFQ1cVLJujArhDaMGce+XLp/EO8kbUa+jH9EdpqeT1UTA3w9yZhkontd88bW/Y4qAP
-         fKdrgW7cc/rYdqhxV2FJgkjHnhMB5sRFC6TBV9IXALS4YEmrvVWWdHwgATCU1DnDhn
-         +jeGIkW91SqGkpTJb1VP7fPxb8msf27AfCLQruKYWn5bwiAA4p1szQMgw0QccJaQh5
-         cLu3zJaBVKi/Kq+LqBAWbkZUd9gKb7rV89d2PhCz4ywvm8/JASyxGtfAcBKkgQagFn
-         9xsjFe4s3wHeQ==
+        b=anw28Gshlg7ioShZh4jMUTbNhZLisNCofQ7YU/mNq1U957DdsRYUy0eFjOFaT5i53
+         5mP8AKvzz4Vl324o0DRvozaxEUsX3Aohg9XUhRjGDB9ewFakBsSD1Xw0+nz9dxeiza
+         1RPw2S12ZiNB55qaCwIK8xqfcbSM3fiYYAKifSbPZx9PnpG6U1kWCvWEV3lB6JwbI3
+         3yP8CTo02S2cKCt3uOKj0SzOugCwJPrYoyKtxs+MIibEG77Ra/mlfqqKza0ba+DJx7
+         KMsgfp+ulEIu7vzox++YCmsKj6TYM93ykMNsPY8RZAaijYzhmqcINdd+1KQ1jr0YVl
+         SS2AmLbJejucw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.2 at mail
-Date:   Sat, 24 Aug 2019 22:26:52 +0200
-Message-Id: <233d5461f4448df151755de7b69a0cd3ad310d5c.1566677788.git.mirq-linux@rere.qmqm.pl>
+Date:   Sat, 24 Aug 2019 22:26:54 +0200
+Message-Id: <44fa6b700421e80778f20ff9ead2b148cf6d2e92.1566677788.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 1/6] ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in
- Kconfig
+Subject: [PATCH v2 3/6] ASoC: atmel_ssc_dai: implement left-justified data
+ mode
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,67 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow SSC to be used on platforms described using audio-graph-card
-in Device Tree.
+Enable support for left-justified data mode for SSC-codec link.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
 ---
- v2: extended to PDC mode
-     reworked and fixed Kconfig option dependencies
+ v2: rebased
 
 ---
- sound/soc/atmel/Kconfig | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ sound/soc/atmel/atmel_ssc_dai.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 06c1d5ce642c..f118c229ed82 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -12,25 +12,31 @@ if SND_ATMEL_SOC
- config SND_ATMEL_SOC_PDC
- 	tristate
- 	depends on HAS_DMA
--	default m if SND_ATMEL_SOC_SSC_PDC=m && SND_ATMEL_SOC_SSC=m
--	default y if SND_ATMEL_SOC_SSC_PDC=y || (SND_ATMEL_SOC_SSC_PDC=m && SND_ATMEL_SOC_SSC=y)
--
--config SND_ATMEL_SOC_SSC_PDC
--	tristate
+diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
+index 7dc6ec9b8c7a..48e9eef34c0f 100644
+--- a/sound/soc/atmel/atmel_ssc_dai.c
++++ b/sound/soc/atmel/atmel_ssc_dai.c
+@@ -564,6 +564,15 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
  
- config SND_ATMEL_SOC_DMA
- 	tristate
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
--	default m if SND_ATMEL_SOC_SSC_DMA=m && SND_ATMEL_SOC_SSC=m
--	default y if SND_ATMEL_SOC_SSC_DMA=y || (SND_ATMEL_SOC_SSC_DMA=m && SND_ATMEL_SOC_SSC=y)
--
--config SND_ATMEL_SOC_SSC_DMA
--	tristate
+ 	switch (ssc_p->daifmt & SND_SOC_DAIFMT_FORMAT_MASK) {
  
- config SND_ATMEL_SOC_SSC
- 	tristate
--	default y if SND_ATMEL_SOC_SSC_DMA=y || SND_ATMEL_SOC_SSC_PDC=y
--	default m if SND_ATMEL_SOC_SSC_DMA=m || SND_ATMEL_SOC_SSC_PDC=m
++	case SND_SOC_DAIFMT_LEFT_J:
++		fs_osync = SSC_FSOS_POSITIVE;
++		fs_edge = SSC_START_RISING_RF;
 +
-+config SND_ATMEL_SOC_SSC_PDC
-+	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
-+	depends on ATMEL_SSC
-+	select SND_ATMEL_SOC_PDC
-+	select SND_ATMEL_SOC_SSC
-+	help
-+	  Say Y or M if you want to add support for Atmel SSC interface
-+	  in PDC mode configured using audio-graph-card in device-tree.
++		rcmr =	  SSC_BF(RCMR_STTDLY, 0);
++		tcmr =	  SSC_BF(TCMR_STTDLY, 0);
 +
-+config SND_ATMEL_SOC_SSC_DMA
-+	tristate "SoC PCM DAI support for AT91 SSC controller using DMA"
-+	depends on ATMEL_SSC
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_SSC
-+	help
-+	  Say Y or M if you want to add support for Atmel SSC interface
-+	  in DMA mode configured using audio-graph-card in device-tree.
- 
- config SND_AT91_SOC_SAM9G20_WM8731
- 	tristate "SoC Audio support for WM8731-based At91sam9g20 evaluation board"
++		break;
++
+ 	case SND_SOC_DAIFMT_I2S:
+ 		fs_osync = SSC_FSOS_NEGATIVE;
+ 		fs_edge = SSC_START_FALLING_RF;
 -- 
 2.20.1
 
