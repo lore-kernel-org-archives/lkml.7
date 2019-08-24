@@ -2,120 +2,108 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BAAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD89C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C92221670
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566648070;
-	bh=JxOU0IXr725WPeNcBzmrDiNn1P8kfgcczMoe1Pv7mFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IOxrDOrGxEBOuXdzTlpAuxcu/UsR1A0EpFCQD1elb3uoGJnTla209KYH4uGNAN5Uq
-	 Cp8lIU0ehDC0OJbHNsdsrJ7x52KtHFC1lvrcQ09/nJzL28NpGo1eTOIXLnI13TrWvX
-	 nDbW1xft1X7EAwBWkPC/sqWSWBhfWq8P1oiDnNRg=
+	by mail.kernel.org (Postfix) with ESMTP id E900021670
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 12:05:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="qSY3vN9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfHXMBJ (ORCPT
+        id S1728085AbfHXMFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 08:01:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36908 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfHXMBI (ORCPT
+        Sat, 24 Aug 2019 08:05:43 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44253 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbfHXMFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 08:01:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so10955591wrt.4;
-        Sat, 24 Aug 2019 05:01:06 -0700 (PDT)
+        Sat, 24 Aug 2019 08:05:43 -0400
+Received: by mail-io1-f67.google.com with SMTP id j4so18033960iog.11
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 05:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SLvUTMTiJDzyjwMeur1g+ElZX7+zQugB4EfcBCyQFro=;
-        b=hxnDbR2cTu69lc1mV4YcBS7fMxAa8+YOdlWviSz8oib2QLORRoLRifTkhqQQFBlvbf
-         1eSKyo6cHNEqua5Sr0tnI+fx2vGexhgY7ZOM5rnxXzwa1r8+Te0JX7Z5VO9Bb7OjeDjR
-         FJ4GRKvKmzTPpmTu+c1KfTm2lZbxbTzbmg1tdM2y62Ooce1q1aHxfaJV2XPHD6L1O0NR
-         lI1JmDR6kMS+r5b8SNaahk6w6birWbRnNm0A7jj1eSjiRzcZdsWVDkdTjxsPWXJK239m
-         v85+4rznTA1GJc+lUJf7SgioZhWP8/px5g51jNPS50Mmm/0TJeu0GZ7dAqzyB7cTPgYY
-         Q9KQ==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0hvg8EcOFy1hV2UV4sVHiLXXFhFD6hDENq5iidN2YYU=;
+        b=qSY3vN9kfRyMrR0s+KtgMC54iFwLVcFRzH9+NcDJCePlL2a8xUzCkuImtzreATJyvq
+         VihcLboVrvBQOosXlNGS6P7BXq2Gk+Ex82CskP8ZyojkWoR2uLDDKGgbHphzjV/80Yxe
+         AhGH/HKzjwSR/aJx8544cJIpvmePOx+WDhSBkvVL4mGJeNyk3VsmcLwvtaP8ftry8HDK
+         42/Ppc2RMtFvE2Xkh55152WJnXm6Z88+JqmnNU7Am+AaErt7G1yd/1EMiJJtUlOvXmNX
+         eiEmzTVNUC7P4yvfpA89otsB11yyAPDnF6ueut9V7AROStf57qPAOonQfx8vP7PHsNdf
+         gHfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SLvUTMTiJDzyjwMeur1g+ElZX7+zQugB4EfcBCyQFro=;
-        b=sA3MKT41fm/6kXdRkflW0w9IBghiEswlUNJURP8ckPfRYg+vsSDrMH/GQRDtJ0Gj6s
-         3sy9jFG0Pf5Vwg7e2UWivXHDY/JyWOGfSBHVTCbWmCLfFJLkkv8znWx5xiXYM/Navouy
-         Ed2LzuNm5W2ppywOAv1ZQO0Hw6gIaV6Pi/DoR0AyQCVwKRSHUsFvcj3lv8/SPzT1WTkk
-         YNAWr3yPBHSiVJh6u7GHqP2Dy5ykOpWALnjepoU096cJqp1vK52HZGd+8KY6r7jkOS5j
-         Lcr6VW1wEuijKYIDroQs5FBS81l/asDU+1RQAuMzKkmMSvKhRgirfs7Pfg9+BEA0lrLr
-         /Z6A==
-X-Gm-Message-State: APjAAAWuMPGnDi+cFpQgERZ6plRaPM9In3Sv4c6O87jNOpDH0b8Zuri1
-        F9WOT7w14t+v5RNaMrRqD3G5z79x
-X-Google-Smtp-Source: APXvYqzxzEo+nhDmQUoJUMEOwekmtW5P8rW2JAiFWV1BHHo1yc+2p0BNUVY3qhApiIp14VxcPBSY2g==
-X-Received: by 2002:adf:cd84:: with SMTP id q4mr10370755wrj.232.1566648066018;
-        Sat, 24 Aug 2019 05:01:06 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id m188sm13605129wmm.32.2019.08.24.05.01.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2019 05:01:05 -0700 (PDT)
-Date:   Sat, 24 Aug 2019 14:01:02 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, parri.andrea@gmail.com,
-        byungchul.park@lge.com, peterz@infradead.org, mojha@codeaurora.org,
-        ice_yangxiao@163.com, efremov@linux.com, edumazet@google.com
-Subject: Re: [GIT PULL rcu/next + tools/memory-model] RCU and LKMM commits
- for 5.4
-Message-ID: <20190824120102.GA10758@gmail.com>
-References: <20190822151811.GA8894@linux.ibm.com>
- <20190822185429.GA110910@gmail.com>
- <20190822192132.GJ28441@linux.ibm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0hvg8EcOFy1hV2UV4sVHiLXXFhFD6hDENq5iidN2YYU=;
+        b=ZgNg0myFUUuVRc3ojuo7dW27PQgI6G3JLmJ5DvBECECiGGdm12NfEjOAavSLWjfmCi
+         rxjIZup0t1WQWkoQ/ZDXiPKXDhJETV+03Hb0Mik3mt3u1dXO9Kpg4sQL4VhzW3tUp5Vo
+         kREJhOKp9kEa3zsMUCJfGh/bj/+WL75Q5y4CegpPtyAz5mSOaJgtu4iR8gpCkvljUAQV
+         lKEP7IW/7EYk7Uf/W3JuK3s7h+fulVAEv2vrImejEIY/biBcunRRZjjdbzilIkBPgr4u
+         uFqvUO9YFI4RKnNVWstiOulVPmUINPi52U7nds9EDAmT5W8ZwQGQMXWBukWC37rhr5cJ
+         zJNA==
+X-Gm-Message-State: APjAAAVceZX6oqzFguy4K3IyUx1udLCwv1fCejBB/vQcRHYOVdFaarS2
+        OJZtyo5EWYxzhB15pnLH7tWRgg==
+X-Google-Smtp-Source: APXvYqyIK4zLPXbh2ON1KZJES4TjV79eN/AeszSh3JNwvu8Vi9/CICCb8AZZeFzPLyPUFQ6pt2GEbg==
+X-Received: by 2002:a6b:5116:: with SMTP id f22mr4074585iob.108.1566648342297;
+        Sat, 24 Aug 2019 05:05:42 -0700 (PDT)
+Received: from xps13.local.tld (cpe-67-255-90-149.maine.res.rr.com. [67.255.90.149])
+        by smtp.gmail.com with ESMTPSA id k7sm4651829iop.88.2019.08.24.05.05.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 24 Aug 2019 05:05:42 -0700 (PDT)
+Date:   Sat, 24 Aug 2019 08:05:37 -0400
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <davem@davemloft.net>, <UNGLinuxDriver@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <allan.nielsen@microchip.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+Subject: Re: [Bridge] [PATCH 0/3] Add NETIF_F_HW_BRIDGE feature
+Message-ID: <20190824080537.5ce7083d@xps13.local.tld>
+In-Reply-To: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
+References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822192132.GJ28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 22 Aug 2019 21:07:27 +0200
+Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
 
-* Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-
-> On Thu, Aug 22, 2019 at 08:54:29PM +0200, Ingo Molnar wrote:
+> Current implementation of the SW bridge is setting the interfaces in
+> promisc mode when they are added to bridge if learning of the frames is
+> enabled.
+> In case of Ocelot which has HW capabilities to switch frames, it is not
+> needed to set the ports in promisc mode because the HW already capable of
+> doing that. Therefore add NETIF_F_HW_BRIDGE feature to indicate that the
+> HW has bridge capabilities. Therefore the SW bridge doesn't need to set
+> the ports in promisc mode to do the switching.
+> This optimization takes places only if all the interfaces that are part
+> of the bridge have this flag and have the same network driver.
 > 
-> [ . . . ]
+> If the bridge interfaces is added in promisc mode then also the ports part
+> of the bridge are set in promisc mode.
 > 
-> > Pulled into tip:core/rcu, thanks a lot Paul!
+> Horatiu Vultur (3):
+>   net: Add HW_BRIDGE offload feature
+>   net: mscc: Use NETIF_F_HW_BRIDGE
+>   net: mscc: Implement promisc mode.
 > 
-> Thank you!
+>  drivers/net/ethernet/mscc/ocelot.c | 26 ++++++++++++++++++++++++--
+>  include/linux/netdev_features.h    |  3 +++
+>  net/bridge/br_if.c                 | 29 ++++++++++++++++++++++++++++-
+>  net/core/ethtool.c                 |  1 +
+>  4 files changed, 56 insertions(+), 3 deletions(-)
 > 
-> > The merge commit is a bit non-standard:
-> > 
-> >   07f038a408fb: Merge LKMM and RCU commits
-> > 
-> > but clear enough IMHO. Usually we try to keep this format:
-> > 
-> >   6c06b66e957c: Merge branch 'X' into Y
-> > 
-> > even for internal merge commits.
-> 
-> Please accept my apologies!  How about as shown below?  If this works
-> for you, I will rebase my development commits on top this merge commit
-> in order to make sure I don't revert back to my old format for next
-> merge window.
 
-Looks good - but I don't think we should create a new merge commit just 
-for this.
-
-> Ah, speaking of reminding me...  There is likely to be one more small RCU
-> commit requested by the RISC-V guys.  If testing and review goes well,
-> I will send you a pull request for it by the middle of next week.
-
-Thanks!
-
-	Ingo
+IMHO there are already enough nerd knobs in bridge to support this.
+If you hardware can't do real bridging, it is only doing MACVLAN so that
+is what you should support instead.
