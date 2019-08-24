@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD38BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661DCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C47F2133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE362133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfHXDUf (ORCPT
+        id S1726982AbfHXDUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 23:20:35 -0400
+        Fri, 23 Aug 2019 23:20:42 -0400
 Received: from mailgw02.mediatek.com ([210.61.82.184]:55305 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbfHXDUf (ORCPT
+        with ESMTP id S1726739AbfHXDUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 23:20:35 -0400
-X-UUID: ad9e56ca1daa4d6fbced1c481d6266fd-20190824
-X-UUID: ad9e56ca1daa4d6fbced1c481d6266fd-20190824
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        Fri, 23 Aug 2019 23:20:36 -0400
+X-UUID: 70d615a33d444a5099770fc168821b1e-20190824
+X-UUID: 70d615a33d444a5099770fc168821b1e-20190824
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 612082373; Sat, 24 Aug 2019 11:03:39 +0800
+        with ESMTP id 1343447941; Sat, 24 Aug 2019 11:07:06 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 24 Aug 2019 11:03:31 +0800
+ 15.0.1395.4; Sat, 24 Aug 2019 11:06:58 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 24 Aug 2019 11:03:30 +0800
+ Transport; Sat, 24 Aug 2019 11:06:57 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,9 +50,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
         <ming-fan.chen@mediatek.com>
-Subject: [PATCH v11 05/23] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
-Date:   Sat, 24 Aug 2019 11:01:50 +0800
-Message-ID: <1566615728-26388-6-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v11 23/23] iommu/mediatek: Clean up struct mtk_smi_iommu
+Date:   Sat, 24 Aug 2019 11:02:08 +0800
+Message-ID: <1566615728-26388-24-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
@@ -64,88 +64,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In M4U 4GB mode, the physical address is remapped as below:
+Remove the "struct mtk_smi_iommu" to simplify the code since it has only
+one item in it right now.
 
-CPU Physical address:
-
-====================
-
-0      1G       2G     3G       4G     5G
-|---A---|---B---|---C---|---D---|---E---|
-+--I/O--+------------Memory-------------+
-
-IOMMU output physical address:
- =============================
-
-                                4G      5G     6G      7G      8G
-                                |---E---|---B---|---C---|---D---|
-                                +------------Memory-------------+
-
-The Region 'A'(I/O) can not be mapped by M4U; For Region 'B'/'C'/'D', the
-bit32 of the CPU physical address always is needed to set, and for Region
-'E', the CPU physical address keep as is. something looks like this:
-CPU PA         ->    M4U OUTPUT PA
-0x4000_0000          0x1_4000_0000 (Add bit32)
-0x8000_0000          0x1_8000_0000 ...
-0xc000_0000          0x1_c000_0000 ...
-0x1_0000_0000        0x1_0000_0000 (No change)
-
-Additionally, the iommu consumers always use the CPU phyiscal address.
-
-The PA in the iova_to_phys that is got from v7s always is u32, But
-from the CPU point of view, PA only need add BIT(32) when PA < 0x4000_0000.
-
-Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
-for 4GB mode")
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- drivers/iommu/mtk_iommu.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ drivers/iommu/mtk_iommu.c    | 4 ++--
+ drivers/iommu/mtk_iommu.h    | 6 +++---
+ drivers/iommu/mtk_iommu_v1.c | 4 ++--
+ drivers/memory/mtk-smi.c     | 6 +++---
+ include/soc/mediatek/smi.h   | 4 ----
+ 5 files changed, 10 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index c6e6dc3..9ba2706 100644
+index cc81de2..400066d 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -107,6 +107,30 @@ struct mtk_iommu_domain {
+@@ -278,7 +278,7 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+ 	for (i = 0; i < fwspec->num_ids; ++i) {
+ 		larbid = MTK_M4U_TO_LARB(fwspec->ids[i]);
+ 		portid = MTK_M4U_TO_PORT(fwspec->ids[i]);
+-		larb_mmu = &data->smi_imu.larb_imu[larbid];
++		larb_mmu = &data->larb_imu[larbid];
  
- static const struct iommu_ops mtk_iommu_ops;
+ 		dev_dbg(dev, "%s iommu port: %d\n",
+ 			enable ? "enable" : "disable", portid);
+@@ -680,7 +680,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+ 			of_node_put(larbnode);
+ 			return -EPROBE_DEFER;
+ 		}
+-		data->smi_imu.larb_imu[id].dev = &plarbdev->dev;
++		data->larb_imu[id].dev = &plarbdev->dev;
  
-+/*
-+ * In M4U 4GB mode, the physical address is remapped as below:
-+ *
-+ * CPU Physical address:
-+ * ====================
-+ *
-+ * 0      1G       2G     3G       4G     5G
-+ * |---A---|---B---|---C---|---D---|---E---|
-+ * +--I/O--+------------Memory-------------+
-+ *
-+ * IOMMU output physical address:
-+ *  =============================
-+ *
-+ *                                 4G      5G     6G      7G      8G
-+ *                                 |---E---|---B---|---C---|---D---|
-+ *                                 +------------Memory-------------+
-+ *
-+ * The Region 'A'(I/O) can NOT be mapped by M4U; For Region 'B'/'C'/'D', the
-+ * bit32 of the CPU physical address always is needed to set, and for Region
-+ * 'E', the CPU physical address keep as is.
-+ * Additionally, The iommu consumers always use the CPU phyiscal address.
-+ */
-+#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
-+
- static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
+ 		component_match_add_release(dev, &match, release_of,
+ 					    compare_of, larbnode);
+diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+index 56b579c..fc0f16e 100644
+--- a/drivers/iommu/mtk_iommu.h
++++ b/drivers/iommu/mtk_iommu.h
+@@ -56,7 +56,6 @@ struct mtk_iommu_data {
+ 	struct mtk_iommu_suspend_reg	reg;
+ 	struct mtk_iommu_domain		*m4u_dom;
+ 	struct iommu_group		*m4u_group;
+-	struct mtk_smi_iommu		smi_imu;      /* SMI larb iommu info */
+ 	bool                            enable_4GB;
+ 	bool				tlb_flush_active;
  
- #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
-@@ -401,7 +425,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
- 	pa = dom->iop->iova_to_phys(dom->iop, iova);
- 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+@@ -64,6 +63,7 @@ struct mtk_iommu_data {
+ 	const struct mtk_iommu_plat_data *plat_data;
  
--	if (data->enable_4GB)
-+	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
- 		pa |= BIT_ULL(32);
+ 	struct list_head		list;
++	struct mtk_smi_larb_iommu	larb_imu[MTK_LARB_NR_MAX];
+ };
  
- 	return pa;
+ static inline int compare_of(struct device *dev, void *data)
+@@ -80,14 +80,14 @@ static inline int mtk_iommu_bind(struct device *dev)
+ {
+ 	struct mtk_iommu_data *data = dev_get_drvdata(dev);
+ 
+-	return component_bind_all(dev, &data->smi_imu);
++	return component_bind_all(dev, &data->larb_imu);
+ }
+ 
+ static inline void mtk_iommu_unbind(struct device *dev)
+ {
+ 	struct mtk_iommu_data *data = dev_get_drvdata(dev);
+ 
+-	component_unbind_all(dev, &data->smi_imu);
++	component_unbind_all(dev, &data->larb_imu);
+ }
+ 
+ #endif
+diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+index 3922358..860926c 100644
+--- a/drivers/iommu/mtk_iommu_v1.c
++++ b/drivers/iommu/mtk_iommu_v1.c
+@@ -206,7 +206,7 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+ 	for (i = 0; i < fwspec->num_ids; ++i) {
+ 		larbid = mt2701_m4u_to_larb(fwspec->ids[i]);
+ 		portid = mt2701_m4u_to_port(fwspec->ids[i]);
+-		larb_mmu = &data->smi_imu.larb_imu[larbid];
++		larb_mmu = &data->larb_imu[larbid];
+ 
+ 		dev_dbg(dev, "%s iommu port: %d\n",
+ 			enable ? "enable" : "disable", portid);
+@@ -610,7 +610,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 
+-		data->smi_imu.larb_imu[larb_nr].dev = &plarbdev->dev;
++		data->larb_imu[larb_nr].dev = &plarbdev->dev;
+ 		component_match_add_release(dev, &match, release_of,
+ 					    compare_of, larb_spec.np);
+ 		larb_nr++;
+diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+index d6dc62f..439d7d8 100644
+--- a/drivers/memory/mtk-smi.c
++++ b/drivers/memory/mtk-smi.c
+@@ -143,13 +143,13 @@ void mtk_smi_larb_put(struct device *larbdev)
+ mtk_smi_larb_bind(struct device *dev, struct device *master, void *data)
+ {
+ 	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
+-	struct mtk_smi_iommu *smi_iommu = data;
++	struct mtk_smi_larb_iommu *larb_mmu = data;
+ 	unsigned int         i;
+ 
+ 	for (i = 0; i < MTK_LARB_NR_MAX; i++) {
+-		if (dev == smi_iommu->larb_imu[i].dev) {
++		if (dev == larb_mmu[i].dev) {
+ 			larb->larbid = i;
+-			larb->mmu = &smi_iommu->larb_imu[i].mmu;
++			larb->mmu = &larb_mmu[i].mmu;
+ 			return 0;
+ 		}
+ 	}
+diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
+index 6f0b00c..5a34b87 100644
+--- a/include/soc/mediatek/smi.h
++++ b/include/soc/mediatek/smi.h
+@@ -20,10 +20,6 @@ struct mtk_smi_larb_iommu {
+ 	unsigned int   mmu;
+ };
+ 
+-struct mtk_smi_iommu {
+-	struct mtk_smi_larb_iommu larb_imu[MTK_LARB_NR_MAX];
+-};
+-
+ /*
+  * mtk_smi_larb_get: Enable the power domain and clocks for this local arbiter.
+  *                   It also initialize some basic setting(like iommu).
 -- 
 1.9.1
 
