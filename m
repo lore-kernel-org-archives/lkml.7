@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E1AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF2320870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E281921670
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfHXA2u (ORCPT
+        id S1726603AbfHXA3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 20:28:50 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51313 "EHLO
+        Fri, 23 Aug 2019 20:29:21 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57891 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfHXA2u (ORCPT
+        with ESMTP id S1726081AbfHXA3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 20:28:50 -0400
+        Fri, 23 Aug 2019 20:29:21 -0400
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1i1Jv6-00058M-8d; Sat, 24 Aug 2019 02:28:40 +0200
+        id 1i1Jvb-0005Ae-2W; Sat, 24 Aug 2019 02:29:11 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1i1Jv4-0000CC-El; Sat, 24 Aug 2019 02:28:38 +0200
-Date:   Sat, 24 Aug 2019 02:28:38 +0200
+        id 1i1Jva-0000CJ-HO; Sat, 24 Aug 2019 02:29:10 +0200
+Date:   Sat, 24 Aug 2019 02:29:10 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Sam Shih <sam.shih@mediatek.com>
@@ -40,15 +40,16 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 01/13] pwm: mediatek: add a property "num-pwms"
-Message-ID: <20190824002838.tamrztzxv2wj6vyj@pengutronix.de>
+Subject: Re: [PATCH v5 02/13] pwm: mediatek: droping the check for
+ of_device_get_match_data
+Message-ID: <20190824002910.hwlvtslsd2wssevm@pengutronix.de>
 References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
- <1566457123-20791-2-git-send-email-sam.shih@mediatek.com>
+ <1566457123-20791-3-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566457123-20791-2-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <1566457123-20791-3-git-send-email-sam.shih@mediatek.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -59,16 +60,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 02:58:31PM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> This adds a property "num-pwms" to avoid having an endless
-> list of compatibles with no differences for the same driver.
+On Thu, Aug 22, 2019 at 02:58:32PM +0800, Sam Shih wrote:
+> This patch drop the check for of_device_get_match_data.
+> Due to the only way call driver probe is compatible match.
+> The .data pointer which point to the SoC specify data is
+> directly set by driver, and it should not be NULL in our case.
+> We can safety remove the check for of_device_get_match_data.
 > 
 > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
 Thanks
 Uwe
