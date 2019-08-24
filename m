@@ -2,95 +2,83 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDFDC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921A2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE822070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566660201;
-	bh=XsQqGNZN3pqcYydzFYTtqLe3jEdotnJ8bDl0Ci9sBFU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=XWsIZU4sMjGgJ6E+fdSr4YwVb87sp7DfUs2qiFDM/aELVQNyYWArRqlXPait3ScMD
-	 sOwiUIUDVx389SW8qXyR7NS7Ie2ZJtfopt5IDtlV2HortA81gDdmtm7YTrPAxIvILZ
-	 VGasO0SaYtFgIGOwUjJV2FtiiZQrimHTxWI3DLiw=
+	by mail.kernel.org (Postfix) with ESMTP id 59509206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:24:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ioWfTaur";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FdfYKerq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfHXPXU (ORCPT
+        id S1728213AbfHXPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 11:23:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727638AbfHXPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 11:23:20 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 24 Aug 2019 11:24:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50752 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfHXPYY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 11:24:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3B954608BA; Sat, 24 Aug 2019 15:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566660263;
+        bh=pXOJr5ShE7iOEk7J667xinG+FyP4FlLtYOC8UYtWXC8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ioWfTaurykMpXg/Mz6duvVFgQn3eXjhIbnPbsej9cgdTIO3Xf29eff+nz5IYZ6tvu
+         mWe94R5nAWpFMYgGvsR+aV8KuIlUMG5mvQwxz7yOavYU2iJJ21mRsNutkMvahvS1cp
+         bDSuxVZAznf3C7rXXl1AeBmlhdiNAdgJQ8QxZ5PM=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53721206DD;
-        Sat, 24 Aug 2019 15:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566660199;
-        bh=XsQqGNZN3pqcYydzFYTtqLe3jEdotnJ8bDl0Ci9sBFU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=f+YuaW34sSUbkoQVL07KyIVUiyzUEzq+yXr8zbdRJeqWhGrNW45h4prc215OrWYEd
-         4Ip/zduMSMbK+wKkkXYxwft2ZU32iuTdvZI6kALVOS0FS0iX4WRBSwgSMhP8bw+hti
-         urmCFNh4vZJG+Wf5nYFNLaxnx8mQe0t8KTvAME8A=
-Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, shuah <shuah@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
- <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
- <20190824023829.GE9862@kroah.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e4d5ba59-8e38-a267-8a14-3c6bc03f77bd@kernel.org>
-Date:   Sat, 24 Aug 2019 09:21:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A49D3608BA;
+        Sat, 24 Aug 2019 15:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566660262;
+        bh=pXOJr5ShE7iOEk7J667xinG+FyP4FlLtYOC8UYtWXC8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FdfYKerqtvJ6a7zVBCQ0e6vFIOOEfCtjj+yXSfEBoziIc1r3HBKE2B6zi0CF3KKif
+         bCS9qbvNbMHgzo09aWMFCRyHQ3PEdJhIgiaFH8/OewlwgznXMqHbnHFO+yx2DrmxCN
+         GUQD8r13GZz9NkU3OWnomiIXZrrW+AMNtjvaWpDQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A49D3608BA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [RESEND PATCH v2 0/2] Add PDC Global and AOSS reset support
+Date:   Sat, 24 Aug 2019 20:54:09 +0530
+Message-Id: <20190824152411.21757-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <20190824023829.GE9862@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/19 8:38 PM, Greg KH wrote:
-> On Fri, Aug 23, 2019 at 12:41:03PM -0600, shuah wrote:
->> On 8/22/19 11:05 AM, Sasha Levin wrote:
->>>
->>> This is the start of the stable review cycle for the 5.2.10 release.
->>> There are 135 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>>           https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz
->>
->> I am seeing "Sorry I can't find your kernels". Is this posted?
-> 
-> Ah, Sasha didn't generate the patch but it was still listed here, oops.
-> He copied my format and we didn't notice this, sorry about that.
-> 
-> As the thread shows, we didn't generate this file this time to see what
-> would happen.  If your test process requires it, we can generate it as I
-> don't want to break it.
-> 
+This patch series adds PDC Global and AOSS reset support on SC7180 SoCs.
 
-It will make it lot easier for me to have continued support for patch
-generation. My scripts do "wget" to pull the patch and apply.
+v2:
+ * Addressed Philipp's review comments
 
-thanks,
--- Shuah
+Sibi Sankar (2):
+  dt-bindings: reset: aoss: Add AOSS reset binding for SC7180 SoCs
+  dt-bindings: reset: pdc: Add PDC Global binding for SC7180 SoCs
+
+ Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 4 ++--
+ Documentation/devicetree/bindings/reset/qcom,pdc-global.txt | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
