@@ -2,132 +2,151 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5804FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D04EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303F32173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD91021670
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="E0CEXHhi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HVklJPxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfHXBST (ORCPT
+        id S1726607AbfHXBeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 21:18:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46978 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfHXBSS (ORCPT
+        Fri, 23 Aug 2019 21:34:37 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:40132 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfHXBeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 21:18:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m3so6697187pgv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 18:18:18 -0700 (PDT)
+        Fri, 23 Aug 2019 21:34:37 -0400
+Received: by mail-vk1-f202.google.com with SMTP id k7so3869844vkn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Aug 2019 18:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hFC89CjETE6kSjgcVSwHDSYQXSiMoiEBQa3e+HIYt4Q=;
-        b=E0CEXHhixhPPnduz4oCvzrE4SYv5LhBG86wlPOFAaizB/7Pzj9s3MqGo3cOQiKxH2H
-         WMYn5lQwwEBQZbEaeBAENQsk/YFrhXIrg0RzuZMLncZ02XfQwLbYWYR9rt3b/takcJhE
-         aSXhDyTFtKSGnsa2qZk6RJyQxRh2sPqWCqyGT3lBAIH99Hqpr3Pp4LuQHYrpj1T7RfKD
-         NxtKlXH80DwCrwLgtye00jD3r875YOCXbKImkxbcOtaKojLdfF0B3pPECxdxWzjFWKZR
-         a9AcMclmd+i08OU7h4fTOBV/Ey/MmTbLs2v1E5yu8DxLZcGN2G9BtmB5htE9RbR0cpgD
-         S6nA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=u6vmmnwRUzLKD5y/rsoe3hBquEKZMDYQLdEtGhcWv3g=;
+        b=HVklJPxbqbRBtpBK3hdl+VswNRV4P2EWUoTQ6/jzlla/43tMUYx52ieNsrWja1cMAd
+         aJXK63eT0AeMDFxYtZyBESJGuF52uPkRIRazyPmUFSSpZlHx/sV1I2pC8wcJoG/Jy+z7
+         0ebrqRvPPaqx+epAoYNiv2Z6F0OPXUrzfluIz3B0PZsRxGAjoAWPYO3kBtG4yhrHecAA
+         fwkXjbrqFMOaTYkIzZof+8WI+OZNq8YRk4OSEiBdVc0hDOjOiYENTJZIZIQpFAlgeRT6
+         5UwDu9vDrX9VEXJMCDM32wr6kC4xm78SHY7UBAnZUT4L8JjxDdyUQ0eJ2Gew4CMdHuAQ
+         esXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hFC89CjETE6kSjgcVSwHDSYQXSiMoiEBQa3e+HIYt4Q=;
-        b=pPlJguxZP6jukhk04sMS7dBOm2eRwXEqBAvfvMX+r/4Z2XIX3R6MBC7OOX7cqQIqcX
-         D+oTEb1YB7wETrChR7MQ0G6ImKMgHVezd/ceHzcd0vNIydN79ahoE9eGLy11QWHqN/NT
-         iCPUKCXKQtvTThUcpbL8OHpPdBTgm3LQ+mKMmgkz9NFGe9yOsISYTpXtGen+CEONM/D1
-         bPHrMSnVy7tb1GtiVuA0ipi+agJhzeCLs7ka5dC5PnNO8dMziRtM5MsRODpizYp5IkD2
-         swjUF0MFzn91BoQAMkZoqqEcvXl8GCaPZRhhwLW8ib+repQLJfElPn75Zx0QiCqey85w
-         J0cw==
-X-Gm-Message-State: APjAAAV7n4NHGH+5fYhpezmVRKFaC+9SV2XBlHsS6HLu3Zcp51UB3eL3
-        RZu7PpLRflYG+gDOma5CkQ1QPg==
-X-Google-Smtp-Source: APXvYqwuX2JonhdUQesJbI454z6VwBTbUlXdP9d0uxq5+0I9DCD2aD552ligSdNeFL7iVFwXuBSZOw==
-X-Received: by 2002:a17:90a:b890:: with SMTP id o16mr5418766pjr.41.1566609497976;
-        Fri, 23 Aug 2019 18:18:17 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id g2sm8023188pfq.88.2019.08.23.18.18.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2019 18:18:17 -0700 (PDT)
-Date:   Fri, 23 Aug 2019 18:18:16 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
-cc:     Tycho Andersen <tycho@tycho.ws>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-In-Reply-To: <CAEn-LTp=ss0Dfv6J00=rCAy+N78U2AmhqJNjfqjr2FDpPYjxEQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1908231816500.18210@viisi.sifive.com>
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com> <CAEn-LTp=ss0Dfv6J00=rCAy+N78U2AmhqJNjfqjr2FDpPYjxEQ@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=u6vmmnwRUzLKD5y/rsoe3hBquEKZMDYQLdEtGhcWv3g=;
+        b=Rr7+kTtEDn3M8LUBmunA9NFKDk4N9qSSKcKtJ+mjkQAyO0r5HKqI1GTq5pMSEEmyJF
+         3st1wG2k8HrW2OgWUrgS7sz22fWXHrSrrybeJR/Xpcn5JCIPpS6xOluyJuMr+Q7gsvfJ
+         fqgmNabKAOqqoUdZT1m2/ewf80YIhRU9A3N4b7DPBb3EJkjEEDrl47dnEUYfHMPFNFFi
+         fV4w0j5G1tJU+ray7sAclzeIxm6cE70fjj03mbFw46vSc9iWtm+Lno5hthWXU/jLljqn
+         heN6t0DXrGhoeSuJ6a//+ZQBQvtYcCqGmioB0o4ucUVH8FNd6mpMnRSM7xwgCe20EUco
+         UrWg==
+X-Gm-Message-State: APjAAAWjuym6kUkQfhtWhM8jCZhS8N3ihf9leeVlYJTjrJYIcLnyDgdF
+        Pfz8srQsGVpMj4Wb2fcQOrDmySffgzoQ1ngJGT+mzQ==
+X-Google-Smtp-Source: APXvYqwBNX0MXCogqcD2ZWv4/PeYSKyopYGJC89lxHpR6CjYFzzu83jqcycsHbnwRnQxtUoBH+I61TfjBVcTRyxmbsVxMw==
+X-Received: by 2002:a67:dd91:: with SMTP id i17mr4328220vsk.21.1566610475582;
+ Fri, 23 Aug 2019 18:34:35 -0700 (PDT)
+Date:   Fri, 23 Aug 2019 18:34:07 -0700
+Message-Id: <20190824013425.175645-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v15 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 23 Aug 2019, David Abdurachmanov wrote:
+## TL;DR
 
-> On Fri, Aug 23, 2019 at 5:30 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >
-> > On Thu, 22 Aug 2019, David Abdurachmanov wrote:
-> >
-> > > There is one failing kernel selftest: global.user_notification_signal
-> >
-> > Is this the only failing test?  Or are the rest of the selftests skipped
-> > when this test fails, and no further tests are run, as seems to be shown
-> > here:
-> >
-> >   https://lore.kernel.org/linux-riscv/CADnnUqcmDMRe1f+3jG8SPR6jRrnBsY8VVD70VbKEm0NqYeoicA@mail.gmail.com/
-> 
-> Yes, it's a single test failing. After removing global.user_notification_signal
-> test everything else pass and you get the results printed.
+This revision addresses comments from Shuah by fixing a couple
+checkpatch warnings and fixing some comment readability issues. No API
+or major structual changes have been made since v13.
 
-OK.
+## Background
 
-> Well the code states ".. and hope that it doesn't break when there
-> is actually a signal :)". Maybe we are just unlucky. I don't have results
-> from other architectures to compare.
-> 
-> I found that Linaro is running selftests, but SECCOMP is disabled
-> and thus it's failing. Is there another CI which tracks selftests?
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
 
-0day runs the kselftests, and at least on some architectures/Kconfigs, 
-it's succeeding:
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
 
-https://lore.kernel.org/lkml/20190726083740.GG22106@shao2-debian/
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
 
-https://lore.kernel.org/lkml/20190712064850.GC20848@shao2-debian/
+### What's so special about unit testing?
 
-https://lore.kernel.org/lkml/20190311074115.GC10839@shao2-debian/
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
 
-etc.
+### Is KUnit trying to replace other testing frameworks for the kernel?
 
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
 
-- Paul
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.3/v15 branch.
+
+## Changes Since Last Version
+
+- Moved comment from inline in macro to kernel-doc to address checkpatch
+  warning.
+- Demoted BUG() to WARN_ON.
+- Formatted some kernel-doc comments to make them more readible.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.3/v15
+
+-- 
+2.23.0.187.g17f5b7556c-goog
+
