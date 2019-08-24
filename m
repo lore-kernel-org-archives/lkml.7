@@ -4,66 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530F3C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68B0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272CF2146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5C722CE9
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 18:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566672304;
-	bh=gHyDCE3aCptXa2E6OKMDFE/9jBwzksomog71PhkwAgk=;
+	s=default; t=1566672314;
+	bh=0EifMnHF0dXWeVEJO39RSkX1igyuAB6qFQUFX/o3MXI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Qqg//QPh07DAd8Qr2r03snXGmlOEuh0TfWtGH8G4vK6Lx/G4Oi6Vc7MMKKdnYhJQx
-	 BpImTonefcpz92T+lFj/NeX5+SuWB4AKSqDBa/W+1CG7LDWEWq6uoKFih154/6Z+pa
-	 /2ZLj7oSpyvXdMCY9ODFct+P8LiMko6/qH5sMHcA=
+	b=BBXhptMg+0GKlG3SsEK7wGglf3lv/2AR0y+q26kzE9ver/x4/Z297NpJWAEk6OWBE
+	 t51YWQ4bfaYChsG6gZDhXjDc2FiPN/uCuA895bubQ8ubT9bmMmSSbdz+SkoIfr4n/+
+	 Hv/wqmqWY0/VaBAQvT4471zh9vG9OY28TrHf/1UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfHXSpD (ORCPT
+        id S1728004AbfHXSpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 14:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53684 "EHLO mail.kernel.org"
+        Sat, 24 Aug 2019 14:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbfHXSpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 14:45:02 -0400
-Subject: Re: [GIT PULL] xfs: fix for 5.3-rc6
+        id S1727912AbfHXSpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 14:45:08 -0400
+Subject: Re: [GIT PULL] SCSI fixes for 5.3-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566672301;
-        bh=gHyDCE3aCptXa2E6OKMDFE/9jBwzksomog71PhkwAgk=;
+        s=default; t=1566672308;
+        bh=0EifMnHF0dXWeVEJO39RSkX1igyuAB6qFQUFX/o3MXI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=GO1ZetpsTXMRFk4fK1FYEgwA3m3vwqwGrG5DUf06Plj3qmAzwVPkMxYG8nBK8ptAv
-         /nBM0uLqQcbF+8Zs1TtzzNFaGO4X/bQNXiD1AGatoQ7VOrzM1IFc6HbN2E9A/5EKgS
-         xmp/8xyI/wCuaLl2uID+bFOh4ppm9mUdhlvGaJuU=
+        b=omEhZJXRsvCDidF32DXFfxtJynZQBrg7wdOD1lGao7ml4zpVJna7JXh9c4nbxgQcM
+         VWKI7AXy7EGDtbVJsakJKYF9B36O+fkZtkl48ymv7ugJRM9dl7ViROeAsOxSIz7zTK
+         72WDa+hz9Z/d4jhAT4Ou/eA3clHQudxzuObrjZ3c=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190824162705.GM1037350@magnolia>
-References: <20190824162705.GM1037350@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190824162705.GM1037350@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.3-fixes-6
-X-PR-Tracked-Commit-Id: 1fb254aa983bf190cfd685d40c64a480a9bafaee
+In-Reply-To: <1566638608.2975.19.camel@HansenPartnership.com>
+References: <1566638608.2975.19.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1566638608.2975.19.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: 77ffd3465ba837e9dc714e17b014e77b2eae765a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8942230a7e1c5277969adb0fbaad50dec9b4651b
-Message-Id: <156667230161.2337.16202262875866242315.pr-tracker-bot@kernel.org>
-Date:   Sat, 24 Aug 2019 18:45:01 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+X-PR-Merge-Commit-Id: 17d0fbf47eb15ab7780cc77b28de070ec37e15c5
+Message-Id: <156667230804.2337.8948750981514850563.pr-tracker-bot@kernel.org>
+Date:   Sat, 24 Aug 2019 18:45:08 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 24 Aug 2019 09:27:05 -0700:
+The pull request you sent on Sat, 24 Aug 2019 10:23:28 +0100:
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.3-fixes-6
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8942230a7e1c5277969adb0fbaad50dec9b4651b
+https://git.kernel.org/torvalds/c/17d0fbf47eb15ab7780cc77b28de070ec37e15c5
 
 Thank you!
 
