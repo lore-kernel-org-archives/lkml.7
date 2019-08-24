@@ -2,174 +2,89 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD52C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38C6C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9D32133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A01122CE3
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 16:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566664027;
+	bh=hcaxNPorSpY124jIa9w8rWIov+dp/m3JU7ie7GcfkCE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=EIcO/FyN+fcQYDo1Pug33AT+Y51F5X9/qnnZC8b9btcwkYS/ogPEPkyTNRvm1w2jZ
+	 e5SXQYMd7OIG1Htn97Ffy++NlxJrns5jPVBkBysS+qXCKECnpX0q4k+m7aVgVFJZlk
+	 S0W59jqgvaiBk5r9AJtIBE2f3YCqKjKNRTWUihRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfHXQW7 (ORCPT
+        id S1727770AbfHXQ1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 12:22:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46042 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfHXQW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 12:22:58 -0400
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i1Yoa-00058e-Ng
-        for linux-kernel@vger.kernel.org; Sat, 24 Aug 2019 16:22:56 +0000
-Received: by mail-pf1-f197.google.com with SMTP id b8so417300pfd.5
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 09:22:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5KUerDlSmB77Lo12oQ8r4Q4eH+L8kNrW2/kTpeARao4=;
-        b=LlnIFFJwg52Godd5vi09vM4Iwjwwh1OsuRP1dyk/5D7+riIvr/055zgIE2LrvxckTU
-         3aw73Cdow1JL+GlRRWvshix7iENPedKrbqfyCLaas2c/cjIURSjSeTZj6r0Vk9Z0EOlv
-         uiOVSjfFV7xC2b1p9sFKuTwHDUjjzmutc9Tv3I9I0ZAgbiKaF2ioL6haunmsG5XGs9AU
-         5Tdnn+77M/7mejQ6enOKGyQztoaC6AVYZX2IsKKG2PL6XOo5kWn8myDoavVhKtnHwziH
-         iyHL5ts2ZYKy4TUutS3Nv/Wacz/J29+C9IOFB6tn3Aa6k1JrAJ/3x//SR1BSiZN+amwD
-         PYuA==
-X-Gm-Message-State: APjAAAWc2Es7JZJA3x8evm9Em6gNArJnNlVouWuH6uZxtdWhCtlJvjAO
-        gzO35SlXHHS90cdr05CCIm7d1LyFKcR1Fud8/4HWfJx0QaeQQvFi/SHS8auuf6N8oOdq0aNMreL
-        woRUR43u+CZYuhlOcHY7r7fYQ5CZ1vG8eS81Y4AlwCQ==
-X-Received: by 2002:a17:902:1024:: with SMTP id b33mr9858060pla.325.1566663775426;
-        Sat, 24 Aug 2019 09:22:55 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxmg8gFJdWJtcToHyLrlyWnul3s1B2nKRoi4wilC9bUOgNMwGIwzjgfqh45xtiOOXF1F2sfhg==
-X-Received: by 2002:a17:902:1024:: with SMTP id b33mr9858041pla.325.1566663775217;
-        Sat, 24 Aug 2019 09:22:55 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-54b0-44c4-6d25-80e5.dynamic-ip6.hinet.net (2001-b011-380f-3c42-54b0-44c4-6d25-80e5.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:54b0:44c4:6d25:80e5])
-        by smtp.gmail.com with ESMTPSA id g19sm7073182pfh.27.2019.08.24.09.22.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 24 Aug 2019 09:22:54 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] HID: quirks: Disable runtime suspend on Microsoft Corp.
- Basic Optical Mouse v2.0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <1566481032.8347.44.camel@suse.com>
-Date:   Sun, 25 Aug 2019 00:22:51 +0800
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <E1CAAA78-D4F1-4EA4-8ED2-5B17839BB8D2@canonical.com>
-References: <20190822091744.3451-1-kai.heng.feng@canonical.com>
- <1566467151.8347.23.camel@suse.com>
- <AD8A4135-0275-45B3-BEB9-031737A2C756@canonical.com>
- <1566470325.8347.35.camel@suse.com>
- <D6E31CB0-BC2B-4B52-AF18-4BE990D3FDA5@canonical.com>
- <1566481032.8347.44.camel@suse.com>
-To:     Oliver Neukum <oneukum@suse.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sat, 24 Aug 2019 12:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbfHXQ1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 12:27:06 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68562133F;
+        Sat, 24 Aug 2019 16:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566664025;
+        bh=hcaxNPorSpY124jIa9w8rWIov+dp/m3JU7ie7GcfkCE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=r94swXoKa/uz9lHpJMlR+xBqyk/7xwAbnOFs5+EGRgh4C1Kges/VUelKS2x6L9cL8
+         IRjvMOiYcOAYXGgEDA9PgodALUR3a01D0wdV1OEbasShQ5qNrbqbYZ2HpdYecBJLpo
+         fssndCq7omCzPd8HoQA+2YI8TRoCW2AHSa7oq0+M=
+Date:   Sat, 24 Aug 2019 09:27:05 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fix for 5.3-rc6
+Message-ID: <20190824162705.GM1037350@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 21:37, Oliver Neukum <oneukum@suse.com> wrote:
+Hi Linus,
 
-> Am Donnerstag, den 22.08.2019, 21:23 +0800 schrieb Kai-Heng Feng:
->> at 18:38, Oliver Neukum <oneukum@suse.com> wrote:
->>> Well, sort of. The USB spec merely states how to enter and exit
->>> a suspended state and that device state must not be lost.
->>> It does not tell you what a suspended device must be able to do.
->>
->> But shouldn’t remote wakeup signaling wakes the device up and let it exit
->> suspend state?
->
-> Yes. Have you tested using a button? If they indeed do not work, then
-> the device lies about supporting remote wakeup. That would warrant a
-> quirk, but for remote wakeup.
+Please pull this single patch that fixes a xfs lockup problem when a
+chown/chgrp operation fails due to running out of quota.  It has
+survived the usual xfstests runs and merges cleanly with this morning's
+master.  Please let me know if anything strange happens.
 
-Button click can wake the mouse up but not movement.
+--D
 
->
->> Or it’s okay to let the device be suspended when remote wakeup is needed
->> but broken?
->
-> Again, the HID spec does not specify what should trigger a remote
-> wakeup. Limiting this to mouse buttons but not movements is
-> inconvinient, but not buggy.
+The following changes since commit b68271609c4f16a79eae8069933f64345afcf888:
 
-Ok, I still find the behavior really surprising.
+  fs/xfs: Fix return code of xfs_break_leased_layouts() (2019-08-19 18:15:28 -0700)
 
->
-> This is indeed what Windows does. The device is suspended when the
-> screen saver switches on. That we do not do that is a deficiency
-> of X.
-> To use runtime PM regularly you need an .ini file
+are available in the Git repository at:
 
-Thanks for the explanation. I guess we can mimic the behavior in systemd or  
-upower.
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.3-fixes-6
 
->
->
->>> In other words, if on your system it is on, you need to look
->>> at udev, not the kernel.
->>
->> So if a device is broken when “power/control” is flipped by user, we  
->> should
->> deal it at userspace? That doesn’t sound right to me.
->
-> If it is broken, as in crashing we could talk about it. If it merely
-> does not do what you want, then, yes, that is for user space to deal
-> with.
+for you to fetch changes up to 1fb254aa983bf190cfd685d40c64a480a9bafaee:
 
-Ok, I’ll take a look at userspace then.
+  xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to EDQUOT (2019-08-22 20:55:54 -0700)
 
->
->>> Well, no. Runtime PM is a trade off. You lose something if you use
->>> it. If it worked just as well as full power, you would never use
->>> full power, would you?
->>
->> I am not asking the suspended state to work as full power, but to  
->> prevent a
->> device enters suspend state because of broken remote wakeup.
->
-> What then would be the difference between suspended and active? A small
-> delay in data transfer?
+----------------------------------------------------------------
+Changes since last time:
+- Fix a forgotten inode unlock when chown/chgrp fail due to quota.
 
-Non-operational but with wakeup capability and vise versa.
+----------------------------------------------------------------
+Darrick J. Wong (1):
+      xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to EDQUOT
 
->
->>> Whether the loss of functionality or performance is worth the energy
->>> savings is a policy decision. Hence it belongs into udev.
->>> Ideally the kernel would tell user space what will work in a
->>> suspended state. Unfortunately HID does not provide support for that.
->>
->> I really don’t think “loss of functionally” belongs to policy decision.  
->> But
->> that’s just my opinion.
->
-> That is just what we do if, for example, you choose between the configs
-> of a USB device or when you use authorization.
->
->> Maybe just calling usb_autopm_put_interface() in usbhid_close() to balance
->> the refcount?
->
-> No, the refcount is good. If remote wakeup is totally broken, you need
-> to introduce a quirk that will prevent the kernel from believing the
-> device when it claims to support it.
-
-Ok. I’ll see if it’s possible to mimic other OS under current Linux Desktop.
-
-Kai-Heng
-
->
-> 	Regards
-> 		Oliver
-
-
+ fs/xfs/xfs_iops.c | 1 +
+ 1 file changed, 1 insertion(+)
