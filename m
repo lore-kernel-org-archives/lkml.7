@@ -2,84 +2,161 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB49CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E01C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6EC206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FB621726
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566608080;
+	bh=x1rZgFuF7zhBu+PF5V0DipyAdjWjQPQFLw5J0HZwA5M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bkTEpr4UP5wd/Y7T0fpcUwtgu5n3j+xBhMdgQVJogrfUl2Vqd0XkXDmKqWnIgQaAx
+	 D1Uz0ZcGnX6/SvUmKwKv0a1GKLqmIRQ8UR0KASQWl390dTyXnojP7MmlbK6OQugQRt
+	 +TItt1kfCt7bbjqctvbB7gZtibiK5+Y2Tb8sh1kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfHXAmB (ORCPT
+        id S1726508AbfHXAye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 20:42:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36535 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfHXAmB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 20:42:01 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i1K7s-0006Ym-5c; Sat, 24 Aug 2019 02:41:52 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i1K7r-0000aN-Mq; Sat, 24 Aug 2019 02:41:51 +0200
-Date:   Sat, 24 Aug 2019 02:41:51 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 12/13] pwm: mediatek: remove a property "has-clock"
-Message-ID: <20190824004151.vitjflxsexlazdzy@pengutronix.de>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
- <1566457123-20791-13-git-send-email-sam.shih@mediatek.com>
+        Fri, 23 Aug 2019 20:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfHXAye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 20:54:34 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C31C921726;
+        Sat, 24 Aug 2019 00:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566608073;
+        bh=x1rZgFuF7zhBu+PF5V0DipyAdjWjQPQFLw5J0HZwA5M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hJIBkp4ex9ZQ+tOckho4eXsCjZbuM810uzB7w5IH58Bqs2z+lIZLVM/bc9U8TR/YR
+         l+oDbLPWD2lgNiCR7JcICewn1FjjjyiT9ApaW6Imq8GkCfMUU7CKBGzikFASqtalti
+         3EbpZ7K4v5OR8Ce/wAqR2Dii4Q5dmLJBQi6kXTZw=
+Received: by mail-wr1-f54.google.com with SMTP id t16so10101253wra.6;
+        Fri, 23 Aug 2019 17:54:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAU9BMFet6hLroVu4uZFp7i3mLSj1BoLvAUtut8HBH4Ypp1UEACr
+        EqydTrt8gFXRvuLCGmLBJL2plEqLOunjLcQOfqk=
+X-Google-Smtp-Source: APXvYqyI98b8Dl70U6kZwnD10MoCpbCJnl4Auf5yfWbX5BLmU+zB34pfFNQ3wjB2FOOR2rz/gQqROnaTxKDoJSnZwjU=
+X-Received: by 2002:adf:dc03:: with SMTP id t3mr7762051wri.80.1566608071352;
+ Fri, 23 Aug 2019 17:54:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566457123-20791-13-git-send-email-sam.shih@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <cover.1566540652.git.han_mao@c-sky.com> <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
+ <CAEbi=3fbe9zbsLyfA=s9gHtAFJrp5Ox0jWoAqcZudQ_xODicgA@mail.gmail.com>
+In-Reply-To: <CAEbi=3fbe9zbsLyfA=s9gHtAFJrp5Ox0jWoAqcZudQ_xODicgA@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 24 Aug 2019 08:54:20 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS80XU=4z-_=N=oGV6GH-+8KXCa74DyhVMcRxJRBq5g4A@mail.gmail.com>
+Message-ID: <CAJF2gTS80XU=4z-_=N=oGV6GH-+8KXCa74DyhVMcRxJRBq5g4A@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] riscv: Add perf callchain support
+To:     Greentime Hu <green.hu@gmail.com>
+Cc:     Mao Han <han_mao@c-sky.com>, linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 02:58:42PM +0800, Sam Shih wrote:
-> Due to we added clock-frequency property to fix
-> mt7628 pwm during configure from userspace.
-> We can alos use this property to determine whether
-> the complex clock tree exists in the SoC or not.
-> So we can safety remove has-clock property in the
-> driver specific data.
+Please check CONFIG_FRAME_POINTER
 
-Some suggestions in short form:
+1 *frame =3D *((struct stackframe *)frame->fp - 1);
+This code is origionally from riscv/kernel/stacktrace.c: walk_stackframe
 
-s/Due/Since/
-s/alos/also/
+In linux/Makefile it'll involve the options for gcc to definitely
+store ra & prev_fp in fp pointer.
+ifdef CONFIG_FRAME_POINTER
+KBUILD_CFLAGS +=3D -fno-omit-frame-pointer -fno-optimize-sibling-calls
 
-Also please use more horizontal space, up to 76 chars per line is fine.
+So --call-graph fp need depends on CONFIG_FRAME_POINTER.
 
-Other than that I suggest to first address the feedback for the earlier
-patches as the needed changes there has influence on this patch.
+On Fri, Aug 23, 2019 at 4:56 PM Greentime Hu <green.hu@gmail.com> wrote:
+>
+> Hi Mao,
+>
+> Mao Han <han_mao@c-sky.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8823=E6=97=A5 =
+=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:16=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> >
+> > This patch add support for perf callchain sampling on riscv platform.
+> > The return address of leaf function is retrieved from pt_regs as
+> > it is not saved in the outmost frame.
+> >
+> > Signed-off-by: Mao Han <han_mao@c-sky.com>
+> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> > Cc: Greentime Hu <green.hu@gmail.com>
+> > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > Cc: linux-riscv <linux-riscv@lists.infradead.org>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Guo Ren <guoren@kernel.org>
+> > ---
+> >  arch/riscv/Makefile                |   3 +
+> >  arch/riscv/kernel/Makefile         |   3 +-
+> >  arch/riscv/kernel/perf_callchain.c | 115 +++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 120 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/riscv/kernel/perf_callchain.c
+>
+> I just tested "./perf record -e cpu-clock --call-graph fp ls" on
+> Unleashed board and I got this failure.
+> I take a look at it. It seem failed in here. Do you have any idea?
+> It seems fine in Qemu.
+>
+> 1 *frame =3D *((struct stackframe *)frame->fp - 1);
+> ffffffe0001a198c: 00863a83 ld s5,8(a2)
+> ffffffe0001a1990: ff093903 ld s2,-16(s2)
+>
+> ./perf record -e cpu-clock --call-graph fp ls
+> [ 9619.423884] hrtimer: interrupt took 733000 ns
+> [ 9619.977017] Unable to handle kernel paging request at virtual
+> address ffffffffffffff94
+> [ 9620.214736] Oops [#1]
+> [ 9620.289893] Modules linked in:
+> [ 9620.391378] CPU: 0 PID: 264 Comm: ls Not tainted
+> 5.3.0-rc5-00003-gb008f6bcd67c #4
+> [ 9620.640176] sepc: ffffffe0001a198c ra : ffffffe0001a199a sp :
+> ffffffe000093720
+> [ 9620.880366] gp : ffffffe00097dad8 tp : ffffffe000082e40 t0 : 000000000=
+0046000
+> [ 9621.120564] t1 : 0000000000000002 t2 : 0000000000000007 s0 : ffffffe00=
+0093760
+> [ 9621.360768] s1 : ffffffe000093788 a0 : 0000000000000003 a1 : 000000000=
+0000000
+> [ 9621.600991] a2 : ffffffffffffff8c a3 : 0000000000001fa0 a4 : 000000000=
+0000010
+> [ 9621.841181] a5 : 0000000000000002 a6 : 0000000000000001 a7 : ffffffe07=
+9b34e10
+> [ 9622.081400] s2 : ffffffffffffff9c s3 : ffffffe000000000 s4 : 000000000=
+0001ff8
+> [ 9622.321618] s5 : ffffffe000093da0 s6 : ffffffe00097d540 s7 : ffffffe07=
+a1517a0
+> [ 9622.561811] s8 : 000008bf01c7ff60 s9 : ffffffe000235b2a s10: 000000020=
+0000120
+> [ 9622.802015] s11: 0000000000000001 t3 : ffffffe079b34e00 t4 : 000000000=
+0000001
+> [ 9623.042194] t5 : 0000000000000008 t6 : ffffffe0009208d0
+> [ 9623.218785] sstatus: 0000000200000100 sbadaddr: ffffffffffffff94
+> scause: 000000000000000d
+> [ 9623.490850] ---[ end trace 49043f28e856d84d ]---
+> [ 9623.644217] Kernel panic - not syncing: Fatal exception in interrupt
+> [ 9623.855470] SMP: stopping secondary CPUs
+> [ 9623.985955] ---[ end Kernel panic - not syncing: Fatal exception in
+> interrupt ]---
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--=20
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
