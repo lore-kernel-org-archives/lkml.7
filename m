@@ -2,113 +2,248 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB3BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183E0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437EE21848
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 02:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ou5uENMj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L9at2VRZ"
+	by mail.kernel.org (Postfix) with ESMTP id DFE0C2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfHXCic (ORCPT
+        id S1726901AbfHXDDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 22:38:32 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:48705 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725807AbfHXCic (ORCPT
+        Fri, 23 Aug 2019 23:03:17 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:54543 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725782AbfHXDDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 22:38:32 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E857246C5;
-        Fri, 23 Aug 2019 22:38:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 23 Aug 2019 22:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=uwo5KC6cm7RwrFdHorEZcbCanbJ
-        1Veh3/B8otgcZu4s=; b=ou5uENMjrJS43V17e1R/ele998tAPPEx8KBaa5M7Zec
-        8qdkE4/iak5DuLaMKsMfnrsYCeQ0hX5IpUfxoIEfQLMclQdS9wIITEFoHx6mNeBd
-        q49dbb2vUjigJnih4zedCL+k2MP/p7GyBbiC2DbUnhwtqGp1NzfRj4TmFIjmI5ya
-        9Giga/ZmE+PMKRKNialDqXCr5KWcitg23x2ZVPQ2nEQW+n+OFazyPnwp69vi1pCS
-        D2/h4A98vaYmJTtOXo/xWUD/7iqfDGcROuQBh8HQ4DJpNcvH0qOSJdPnp2QUPb9p
-        0/jLcBf7EddhQlEQgdLJDobhj6YiMYzc8UqqL9wU0/g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=uwo5KC
-        6cm7RwrFdHorEZcbCanbJ1Veh3/B8otgcZu4s=; b=L9at2VRZ2lTHgtJBXoBpEQ
-        qNchxgB05BMyBBWxZNEjHdEytMqASE0G5m9G02liIYPMF1KuBxJJbP6hJa41nb8u
-        6l3Mzz73wEoAluriPH0CgSley0HlsP94KxBlduZ3snRybEv3/PxIdUtx+mBTQJ8u
-        Bl5+vRKN9DganC5x/ZMeYLkC5niEhchkqBZOhzF7Te5aRSZrPKEpkI4biMfvO6Jd
-        dXt22MCnZ3Dm96Q2FPWEkbRl3uBi1J8OdGkPVXPN/IykIIgrLyMgfCkLWlxKw4b2
-        QM7gBTaIVZ/9Ga8E8fDRQAD1bYT1FLyIJvvdXdBM/OUbeY7po3lJPii9tJw9REww
-        ==
-X-ME-Sender: <xms:JqNgXXTUVoXBa7H3AVc31lQROQtD8bdd19WjqvFb4zf7yKhL3HGDpA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegledgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhprghmkfhpqdhouhhtucdlhedttddmnecujfgurhepfffhvffukfhfgggtuggjfges
-    thdtredttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtg
-    homheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepieehrdduudegrdel
-    tddrudelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-    enucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:JqNgXSHfJi19z9xm4CA2g33LKwwVQqPS6Uc6_VVaNc_vkdkJafIvUg>
-    <xmx:JqNgXU0QQsBuC9IO3378tUI3LCJNPqTXuH1OobM7xcMoOy_ryqqgWg>
-    <xmx:JqNgXQt-0UeDrg0cNPurNCeo-l54NIHkblURt9HJKbgZcm8EIicMVw>
-    <xmx:JqNgXfWsv-rPNVxhXg7ih0HA4CxN_M5L9JReA5X5Em8lhBMUAK5HnA>
-Received: from localhost (65-114-90-19.dia.static.qwest.net [65.114.90.19])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D8B918005B;
-        Fri, 23 Aug 2019 22:38:29 -0400 (EDT)
-Date:   Fri, 23 Aug 2019 19:38:29 -0700
-From:   Greg KH <greg@kroah.com>
-To:     shuah <shuah@kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
-Message-ID: <20190824023829.GE9862@kroah.com>
-References: <20190822170811.13303-1-sashal@kernel.org>
- <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
+        Fri, 23 Aug 2019 23:03:17 -0400
+X-UUID: 55c6a491fefd4f8ca65d1f178b33a419-20190824
+X-UUID: 55c6a491fefd4f8ca65d1f178b33a419-20190824
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1405250342; Sat, 24 Aug 2019 11:02:33 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 24 Aug 2019 11:02:25 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 24 Aug 2019 11:02:24 +0800
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
+        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
+        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
+        <ming-fan.chen@mediatek.com>
+Subject: [PATCH v11 00/23] MT8183 IOMMU SUPPORT
+Date:   Sat, 24 Aug 2019 11:01:45 +0800
+Message-ID: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 12:41:03PM -0600, shuah wrote:
-> On 8/22/19 11:05 AM, Sasha Levin wrote:
-> > 
-> > This is the start of the stable review cycle for the 5.2.10 release.
-> > There are 135 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> >          https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz
-> 
-> I am seeing "Sorry I can't find your kernels". Is this posted?
+This patchset mainly adds support for mt8183 IOMMU and SMI.
 
-Ah, Sasha didn't generate the patch but it was still listed here, oops.
-He copied my format and we didn't notice this, sorry about that.
+mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+uses ARM Short-Descriptor translation table format.
 
-As the thread shows, we didn't generate this file this time to see what
-would happen.  If your test process requires it, we can generate it as I
-don't want to break it.
+The mt8183 M4U-SMI HW diagram is as below:
 
-thanks,
+                          EMI
+                           |
+                          M4U
+                           |
+                       ----------
+                       |        |
+                   gals0-rx   gals1-rx
+                       |        |
+                       |        |
+                   gals0-tx   gals1-tx
+                       |        |
+                      ------------
+                       SMI Common
+                      ------------
+                           |
+  +-----+-----+--------+-----+-----+-------+-------+
+  |     |     |        |     |     |       |       |
+  |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+  |     |     |        |     |     |       |       |
+  |     |     |        |     |     |       |       |
+  |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+  |     |     |        |     |     |       |       |
+larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+disp  vdec   img     cam    venc   img    cam
 
-greg k-h
+All the connections are HW fixed, SW can NOT adjust it.
+
+Compared with mt8173, we add a GALS(Global Async Local Sync) module
+between SMI-common and M4U, and additional GALS between larb2/3/5/6
+and SMI-common. GALS can help synchronize for the modules in different
+clock frequency, it can be seen as a "asynchronous fifo".
+
+GALS can only help transfer the command/data while it doesn't have
+the configuring register, thus it has the special "smi" clock and it
+doesn't have the "apb" clock. From the diagram above, we add "gals0"
+and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+
+From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+Control Unit) is connected with smi-common directly, we can take them
+as "larb2", "larb3" and "larb7", and their register spaces are
+different with the normal larb.
+
+The dtsi was sent at: [1] https://lore.kernel.org/patchwork/patch/1054099/
+
+Change notes:
+v11:
+   1) Adjust a bit code for mtk quirk in v7s.
+   2) Collect ack from will and Matthias of the last patch.
+
+v10: https://lists.linuxfoundation.org/pipermail/iommu/2019-August/038349.html
+   1) Keep v7s only dealing with the pa32/pa33. Move the special "4gb mode"
+    flow into mtk iommu. like v8 did.
+   2) Split the "4gb mode" into two patches. one is only for the v7s, the other
+    is for mtk iommu.
+   3) Add a fixup patch(5/23) for 4gb mode, like v8 did.
+
+v9: https://lists.linuxfoundation.org/pipermail/iommu/2019-August/037925.html
+   1) rebase on v5.3-rc1.
+   2) In v7s, Use oas to implement MTK 4GB mode. It nearly reconstruct the
+      patch, so I don't keep the R-b.
+
+v8: https://lists.linuxfoundation.org/pipermail/iommu/2019-June/037095.html
+   1) From the 4GB mode:
+      a. Move the patch sequency(Move "iommu/mediatek: Fix iova_to_phys PA
+      start for 4GB mode" before "iommu/io-pgtable-arm-v7s: Extend MediaTek
+      4G Mode").
+      b. Remove the patch "Rename enable_4GB to dram_is_4gb" and Use Evan's
+      suggestion.
+   2) add a "union" for smi gen1/gen2 base.
+   3) Clean up the structure "struct mtk_smi_iommu" since it have only one item,
+      suggested from Matthias.
+
+v7: https://lists.linuxfoundation.org/pipermail/iommu/2019-June/036552.html
+   1) rebase on v5.2-rc1.
+   2) Add fixed tags in patch 20.
+   3) Remove shutdown patch. I will send it independently if necessary.
+
+v6: https://lists.linuxfoundation.org/pipermail/iommu/2019-February/033685.html
+    1) rebase on v5.0-rc1.
+    2) About the register name (VLD_PA_RNG), Keep consistent in the patches.
+    3) In the 4GB mode, Always add MTK_4GB_quirk.
+    4) Reword some commit message helped from Evan. like common->smi_ao_base is
+       completely different from common->base; STANDARD_AXI_MODE reg is completely
+       different from CTRL_MISC; commit in the shutdown patch.
+    5) Add 2 new patches again:
+       iommu/mediatek: Rename enable_4GB to dram_is_4gb
+       iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+
+v5: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
+    1) Remove this patch "iommu/mediatek: Constify iommu_ops" from here as it
+       was applied for v5.0.
+    2) Again, add 3 preparing patches. Move two property into the plat_data.
+       iommu/mediatek: Move vld_pa_rng into plat_data
+       iommu/mediatek: Move reset_axi into plat_data
+       iommu/mediatek: Refine protect memory definition
+    3) Add shutdown callback for mtk_iommu_v1 in patch[19/20].
+
+v4: http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016205.html
+    1) Add 3 preparing patches. Seperate some minor meaningful code into
+       a new patch according to Matthias's suggestion.
+       memory: mtk-smi: Add gals support         
+       iommu/mediatek: Add larb-id remapped support 
+       iommu/mediatek: Add bclk can be supported optionally       
+    2) rebase on "iommu/mediatek: Make it explicitly non-modular"
+       which was applied.
+       https://lore.kernel.org/patchwork/patch/1020125/
+    3) add some comment about "mediatek,larb-id" in the commit message of
+       the patch "mtk-smi: Get rid of need_larbid".
+    4) Fix bus_sel value.
+
+v3: https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031121.html
+    1) rebase on v4.20-rc1.
+    2) In the dt-binding, add a minor string "mt7623" which also use gen1
+       since Matthias added it in v4.20.
+    3) About v7s:
+       a) for paddr_to_pte, change the param from "arm_v7s_io_pgtable" to
+          "arm_pgtable_cfg", according to Robin suggestion.
+       b) Don't use CONFIG_PHYS_ADDR_T_64BIT.
+       c) add a little comment(pgtable address still don't over 4GB) in the
+          commit message of the patch "Extend MediaTek 4GB Mode".
+    4) add "iommu/mediatek: Constify iommu_ops" into this patchset. this may
+       be helpful for review and merge.
+       https://lists.linuxfoundation.org/pipermail/iommu/2018-October/030637.html
+
+v2: https://lists.linuxfoundation.org/pipermail/iommu/2018-September/030164.html
+    1) Fix typo in the commit message of dt-binding.
+    2) Change larb2/larb3 to the special larbs.
+    3) Refactor the larb-id remapped array(larbid_remapped), then we
+    don't need add the new function(mtk_iommu_get_larbid).
+    4) Add a new patch for v7s two helpers(paddr_to_iopte and
+    iopte_to_paddr).
+    5) Change some comment for MTK 4GB mode.
+
+v1: base on v4.19-rc1.
+http://lists.infradead.org/pipermail/linux-mediatek/2018-September/014881.html
+
+Yong Wu (23):
+  dt-bindings: mediatek: Add binding for mt8183 IOMMU and SMI
+  iommu/mediatek: Use a struct as the platform data
+  memory: mtk-smi: Use a general config_port interface
+  memory: mtk-smi: Use a struct for the platform data for smi-common
+  iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+  iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr
+    helpers
+  iommu/io-pgtable-arm-v7s: Use ias/oas to check the valid iova/pa
+  iommu/io-pgtable-arm-v7s: Rename the quirk from MTK_4GB to MTK_EXT
+  iommu/io-pgtable-arm-v7s: Extend to support PA[33:32] for MediaTek
+  iommu/mediatek: Adjust the PA for the 4GB Mode
+  iommu/mediatek: Add bclk can be supported optionally
+  iommu/mediatek: Add larb-id remapped support
+  iommu/mediatek: Refine protect memory definition
+  iommu/mediatek: Move reset_axi into plat_data
+  iommu/mediatek: Move vld_pa_rng into plat_data
+  memory: mtk-smi: Add gals support
+  iommu/mediatek: Add mt8183 IOMMU support
+  iommu/mediatek: Add mmu1 support
+  memory: mtk-smi: Invoke pm runtime_callback to enable clocks
+  memory: mtk-smi: Add bus_sel for mt8183
+  iommu/mediatek: Fix VLD_PA_RNG register backup when suspend
+  memory: mtk-smi: Get rid of need_larbid
+  iommu/mediatek: Clean up struct mtk_smi_iommu
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |  30 ++-
+ .../memory-controllers/mediatek,smi-common.txt     |  12 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   4 +
+ drivers/iommu/io-pgtable-arm-v7s.c                 |  88 +++++--
+ drivers/iommu/mtk_iommu.c                          | 168 +++++++++----
+ drivers/iommu/mtk_iommu.h                          |  21 +-
+ drivers/iommu/mtk_iommu_v1.c                       |   6 +-
+ drivers/memory/mtk-smi.c                           | 268 ++++++++++++++-------
+ include/dt-bindings/memory/mt8183-larb-port.h      | 130 ++++++++++
+ include/linux/io-pgtable.h                         |   9 +-
+ include/soc/mediatek/smi.h                         |   5 -
+ 11 files changed, 561 insertions(+), 180 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
+
+-- 
+1.9.1
+
