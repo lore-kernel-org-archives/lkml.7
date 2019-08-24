@@ -2,212 +2,130 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB288C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C26C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B854021726
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EDE21726
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 01:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZHvEK/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfHXBDL (ORCPT
+        id S1726847AbfHXBFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 21:03:11 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:39486 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725844AbfHXBDL (ORCPT
+        Fri, 23 Aug 2019 21:05:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38180 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfHXBFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 21:03:11 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TaFoS1c_1566608581;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TaFoS1c_1566608581)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 24 Aug 2019 09:03:04 +0800
-Subject: Re: WARNINGs in set_task_reclaim_state with memory cgroup and full
- memory usage
-To:     Adric Blake <promarbler14@gmail.com>, akpm@linux-foundation.org
-Cc:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
-        daniel.m.jordan@oracle.com, laoar.shao@gmail.com,
-        mgorman@techsingularity.net, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <b9cd7603-2441-d351-156a-57d6c13b2c79@linux.alibaba.com>
-Date:   Fri, 23 Aug 2019 18:03:01 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 23 Aug 2019 21:05:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so10128586wrr.5;
+        Fri, 23 Aug 2019 18:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gO3LZsXjDlrVljuF9pShs5ZK+ZVOT1ian+diPFOlUwA=;
+        b=NZHvEK/V3VkNVqCIhrt20Lp0WSO1CreVQJZ66aCZCkcyIB8z4QKnjAs/psGK4aK7Rr
+         CQ1upJMbOYnl0VFSIZxTgQ4dT4ZN/JwOG1juhr/MY7HGgZi56OVPJ++4nNZfelAQDand
+         6IJvdE/PDPxqHcOUv0xinNwmBuytwU+ZALDOaanc+5FFIfPOHCm0PRT9PMR4hJxCbN+w
+         hkrH5QjyjawjNbpMdj/d+Uh7sZfoCRdhmx0TukKHL1A+jksI6dy+elWrJoKnaGNSichm
+         PN5eT6btNihSlj3aJOlxMZHxRGIphTtMup50MaI0l6okUd1fieScQEi9gcG8ce53louc
+         /26Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gO3LZsXjDlrVljuF9pShs5ZK+ZVOT1ian+diPFOlUwA=;
+        b=jnaHXRQqGDMh5JQj6gQKLjOuhYsV4F0vkV1QXFD4O1Xg3jjPxyPMA4y8mwEw15QcMZ
+         3wyTP1awRZagSq7lBOyYBFDTfhU9kBzUB8Mag9e9/9Z47B78VWKRx7++R5onuMf7qNDI
+         aS1hG/9KxnMmE56Ijgbt/i5nZ+hRhnXvj0oWmXGz2jnP6ER6AO2l0MY3ceu1e2JjR+xg
+         A3JJ0FE5DzriTSvuzr3eJR0igNlOVBncId/3lsURpNfZtLAEOHQPLXBsWdlyPEsJ8rMq
+         qlYMusS3l+rQ5DrWqL3RyUPAh0zLmTJ/onpAKQPAqoVEAg/9CgvlcHUv5IZlCb7UwsXn
+         HW9w==
+X-Gm-Message-State: APjAAAU/WfwBp8UORN8mAkTsxOdp+SEs6Cmw0vpOEi664QjJUHWlcGQ9
+        wM/5V088qPJFsdtOvQIaTkX0N0rTzrvjQDGciiI=
+X-Google-Smtp-Source: APXvYqz5D7mMCrFwuM61+YXLObcN7TIlZLLBVn5w7crug7bbJPeOkjW+pxDkAfdiT8kM2i/oWuAUBaisZi/3YkTbHYQ=
+X-Received: by 2002:adf:f2c1:: with SMTP id d1mr8183863wrp.157.1566608697250;
+ Fri, 23 Aug 2019 18:04:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com>
+From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
+Date:   Fri, 23 Aug 2019 18:04:21 -0700
+Message-ID: <CAEn-LTp=ss0Dfv6J00=rCAy+N78U2AmhqJNjfqjr2FDpPYjxEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Tycho Andersen <tycho@tycho.ws>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Alan Kao <alankao@andestech.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, me@carlosedp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/23/19 3:00 PM, Adric Blake wrote:
-> Synopsis:
-> A WARN_ON_ONCE is hit twice in set_task_reclaim_state under the
-> following conditions:
-> - a memory cgroup has been created and a task assigned it it
-> - memory.limit_in_bytes has been set
-> - memory has filled up, likely from cache
+On Fri, Aug 23, 2019 at 5:30 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
 >
-> In my usage, I create a cgroup under the current session scope and
-> assign a task to it. I then set memory.limit_in_bytes and
-> memory.soft_limit_in_bytes for the cgroup to reasonable values, say
-> 1G/512M. The program accesses large files frequently and gradually
-> fills memory with the page cache. The warnings appears when the
-> entirety of the system memory is filled, presumably from other
-> programs.
+> On Thu, 22 Aug 2019, David Abdurachmanov wrote:
 >
-> If I wait until the program has filled the entirety of system memory
-> with cache and then assign a memory limit, the warnings appear
-> immediately.
+> > There is one failing kernel selftest: global.user_notification_signal
+>
+> Is this the only failing test?  Or are the rest of the selftests skipped
+> when this test fails, and no further tests are run, as seems to be shown
+> here:
+>
+>   https://lore.kernel.org/linux-riscv/CADnnUqcmDMRe1f+3jG8SPR6jRrnBsY8VVD70VbKEm0NqYeoicA@mail.gmail.com/
 
-It looks the warning is triggered because kswapd set reclaim_state then 
-the memcg soft limit reclaim in the same kswapd set it again.
-
-But, kswapd and memcg soft limit uses different reclaim_state from 
-different scan control. It sounds not correct, they should use the same 
-reclaim_state if they come from the same context if my understanding is 
-correct.
+Yes, it's a single test failing. After removing global.user_notification_signal
+test everything else pass and you get the results printed.
 
 >
-> I am building the linux git. I first noticed this issue with the
-> drm-tip 5.3rc3 and 5.3rc4 kernels, and tested linux master after
-> 5.3rc5 to confirm the bug more resoundingly.
->
-> Here are the warnings.
->
-> [38491.963105] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:245
-> set_task_reclaim_state+0x1e/0x40
-> [38491.963106] Modules linked in: iwlmvm mac80211 libarc4 iwlwifi
-> cfg80211 xt_comment nls_iso8859_1 nls_cp437 vfat fat xfs jfs btrfs xor
-> raid6_pq libcrc32c ccm tun rfcomm fuse xt_tcpudp ip6t_REJECT
-> nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_multiport xt_owner
-> snd_hda_codec_hdmi ip6table_filter ip6_tables iptable_filter bnep ext4
-> crc32c_generic mbcache jbd2 snd_hda_codec_realtek
-> snd_hda_codec_generic snd_soc_skl snd_soc_hdac_hda snd_hda_ext_core
-> snd_soc_skl_ipc x86_pkg_temp_thermal intel_powerclamp snd_soc_sst_ipc
-> coretemp snd_soc_sst_dsp snd_soc_acpi_intel_match kvm_intel
-> snd_soc_acpi i915 snd_soc_core kvm snd_compress ac97_bus
-> snd_pcm_dmaengine snd_hda_intel i2c_algo_bit btusb irqbypass
-> drm_kms_helper btrtl snd_hda_codec dell_laptop btbcm crct10dif_pclmul
-> snd_hda_core crc32c_intel btintel iTCO_wdt ghash_clmulni_intel drm
-> ledtrig_audio aesni_intel iTCO_vendor_support snd_hwdep dell_wmi
-> rtsx_usb_ms r8169 dell_smbios aes_x86_64 mei_hdcp crypto_simd
-> intel_gtt bluetooth snd_pcm cryptd dcdbas
-> [38491.963155]  wmi_bmof dell_wmi_descriptor intel_rapl_msr
-> glue_helper snd_timer joydev intel_cstate snd realtek memstick
-> dell_smm_hwmon mousedev psmouse input_leds libphy intel_uncore
-> ecdh_generic ecc crc16 rfkill intel_rapl_perf soundcore i2c_i801
-> agpgart mei_me tpm_crb syscopyarea sysfillrect sysimgblt mei
-> intel_xhci_usb_role_switch fb_sys_fops idma64 tpm_tis roles
-> processor_thermal_device intel_rapl_common i2c_hid tpm_tis_core
-> int3403_thermal intel_soc_dts_iosf battery wmi intel_lpss_pci
-> intel_lpss intel_pch_thermal tpm int3400_thermal int3402_thermal
-> acpi_thermal_rel int340x_thermal_zone rng_core intel_hid ac
-> sparse_keymap evdev mac_hid crypto_user ip_tables x_tables
-> hid_multitouch rtsx_usb_sdmmc mmc_core rtsx_usb hid_logitech_hidpp
-> sr_mod cdrom sd_mod uas usb_storage hid_logitech_dj hid_generic usbhid
-> hid ahci serio_raw libahci atkbd libps2 libata xhci_pci scsi_mod
-> xhci_hcd crc32_pclmul i8042 serio f2fs [last unloaded: cfg80211]
-> [38491.963221] CPU: 7 PID: 175 Comm: kswapd0 Not tainted
-> 5.3.0-rc5+149+gbb7ba8069de9 #1
-> [38491.963222] Hardware name: Dell Inc. Inspiron 5570/09YTN7, BIOS
-> 1.2.3 05/15/2019
-> [38491.963226] RIP: 0010:set_task_reclaim_state+0x1e/0x40
-> [38491.963228] Code: 78 a9 e7 ff 0f 1f 84 00 00 00 00 00 0f 1f 44 00
-> 00 55 48 89 f5 53 48 89 fb 48 85 ed 48 8b 83 08 08 00 00 74 11 48 85
-> c0 74 02 <0f> 0b 48 89 ab 08 08 00 00 5b 5d c3 48 85 c0 75 f1 0f 0b 48
-> 89 ab
-> [38491.963229] RSP: 0018:ffff8c898031fc60 EFLAGS: 00010286
-> [38491.963230] RAX: ffff8c898031fe28 RBX: ffff892aa04ddc40 RCX: 0000000000000000
-> [38491.963231] RDX: ffff8c898031fc60 RSI: ffff8c898031fcd0 RDI: ffff892aa04ddc40
-> [38491.963233] RBP: ffff8c898031fcd0 R08: ffff8c898031fd48 R09: ffff89279674b800
-> [38491.963234] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff8c898031fd48
-> [38491.963235] R13: ffff892a842ef000 R14: ffff892aaf7fc000 R15: 0000000000000000
-> [38491.963236] FS:  0000000000000000(0000) GS:ffff892aa33c0000(0000)
-> knlGS:0000000000000000
-> [38491.963238] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [38491.963239] CR2: 00007f90628fa000 CR3: 000000027ee0a002 CR4: 00000000003606e0
-> [38491.963239] Call Trace:
-> [38491.963246]  mem_cgroup_shrink_node+0x9b/0x1d0
-> [38491.963250]  mem_cgroup_soft_limit_reclaim+0x10c/0x3a0
-> [38491.963254]  balance_pgdat+0x276/0x540
-> [38491.963258]  kswapd+0x200/0x3f0
-> [38491.963261]  ? wait_woken+0x80/0x80
-> [38491.963265]  kthread+0xfd/0x130
-> [38491.963267]  ? balance_pgdat+0x540/0x540
-> [38491.963269]  ? kthread_park+0x80/0x80
-> [38491.963273]  ret_from_fork+0x35/0x40
-> [38491.963276] ---[ end trace 727343df67b2398a ]---
-> [38492.129877] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:248
-> set_task_reclaim_state+0x2f/0x40
-> [38492.129879] Modules linked in: iwlmvm mac80211 libarc4 iwlwifi
-> cfg80211 xt_comment nls_iso8859_1 nls_cp437 vfat fat xfs jfs btrfs xor
-> raid6_pq libcrc32c ccm tun rfcomm fuse xt_tcpudp ip6t_REJECT
-> nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_multiport xt_owner
-> snd_hda_codec_hdmi ip6table_filter ip6_tables iptable_filter bnep ext4
-> crc32c_generic mbcache jbd2 snd_hda_codec_realtek
-> snd_hda_codec_generic snd_soc_skl snd_soc_hdac_hda snd_hda_ext_core
-> snd_soc_skl_ipc x86_pkg_temp_thermal intel_powerclamp snd_soc_sst_ipc
-> coretemp snd_soc_sst_dsp snd_soc_acpi_intel_match kvm_intel
-> snd_soc_acpi i915 snd_soc_core kvm snd_compress ac97_bus
-> snd_pcm_dmaengine snd_hda_intel i2c_algo_bit btusb irqbypass
-> drm_kms_helper btrtl snd_hda_codec dell_laptop btbcm crct10dif_pclmul
-> snd_hda_core crc32c_intel btintel iTCO_wdt ghash_clmulni_intel drm
-> ledtrig_audio aesni_intel iTCO_vendor_support snd_hwdep dell_wmi
-> rtsx_usb_ms r8169 dell_smbios aes_x86_64 mei_hdcp crypto_simd
-> intel_gtt bluetooth snd_pcm cryptd dcdbas
-> [38492.129919]  wmi_bmof dell_wmi_descriptor intel_rapl_msr
-> glue_helper snd_timer joydev intel_cstate snd realtek memstick
-> dell_smm_hwmon mousedev psmouse input_leds libphy intel_uncore
-> ecdh_generic ecc crc16 rfkill intel_rapl_perf soundcore i2c_i801
-> agpgart mei_me tpm_crb syscopyarea sysfillrect sysimgblt mei
-> intel_xhci_usb_role_switch fb_sys_fops idma64 tpm_tis roles
-> processor_thermal_device intel_rapl_common i2c_hid tpm_tis_core
-> int3403_thermal intel_soc_dts_iosf battery wmi intel_lpss_pci
-> intel_lpss intel_pch_thermal tpm int3400_thermal int3402_thermal
-> acpi_thermal_rel int340x_thermal_zone rng_core intel_hid ac
-> sparse_keymap evdev mac_hid crypto_user ip_tables x_tables
-> hid_multitouch rtsx_usb_sdmmc mmc_core rtsx_usb hid_logitech_hidpp
-> sr_mod cdrom sd_mod uas usb_storage hid_logitech_dj hid_generic usbhid
-> hid ahci serio_raw libahci atkbd libps2 libata xhci_pci scsi_mod
-> xhci_hcd crc32_pclmul i8042 serio f2fs [last unloaded: cfg80211]
-> [38492.129961] CPU: 7 PID: 175 Comm: kswapd0 Tainted: G        W
->    5.3.0-rc5+149+gbb7ba8069de9 #1
-> [38492.129962] Hardware name: Dell Inc. Inspiron 5570/09YTN7, BIOS
-> 1.2.3 05/15/2019
-> [38492.129965] RIP: 0010:set_task_reclaim_state+0x2f/0x40
-> [38492.129968] Code: 55 48 89 f5 53 48 89 fb 48 85 ed 48 8b 83 08 08
-> 00 00 74 11 48 85 c0 74 02 0f 0b 48 89 ab 08 08 00 00 5b 5d c3 48 85
-> c0 75 f1 <0f> 0b 48 89 ab 08 08 00 00 5b 5d c3 0f 1f 44 00 00 55 48 89
-> fd 53
-> [38492.129969] RSP: 0018:ffff8c898031fd88 EFLAGS: 00010246
-> [38492.129971] RAX: 0000000000000000 RBX: ffff892aa04ddc40 RCX: 0000000000000000
-> [38492.129972] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff892aa04ddc40
-> [38492.129973] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> [38492.129974] R10: ffff892aa33d7544 R11: 0000000000000000 R12: ffff8c898031fe40
-> [38492.129974] R13: 0000000000000200 R14: ffff8c898031fe40 R15: 0000000000000001
-> [38492.129976] FS:  0000000000000000(0000) GS:ffff892aa33c0000(0000)
-> knlGS:0000000000000000
-> [38492.129977] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [38492.129978] CR2: 00007fc3a2787010 CR3: 000000035c794001 CR4: 00000000003606e0
-> [38492.129979] Call Trace:
-> [38492.129985]  balance_pgdat+0x4e6/0x540
-> [38492.129991]  kswapd+0x200/0x3f0
-> [38492.129994]  ? wait_woken+0x80/0x80
-> [38492.129997]  kthread+0xfd/0x130
-> [38492.130000]  ? balance_pgdat+0x540/0x540
-> [38492.130001]  ? kthread_park+0x80/0x80
-> [38492.130005]  ret_from_fork+0x35/0x40
-> [38492.130008] ---[ end trace 727343df67b2398b ]---
->
-> Thanks for reading. Please be gentle.
+> For example, looking at the source, I'd naively expect to see the
+> user_notification_closed_listener test result -- which follows right
+> after the failing test in the selftest source.  But there aren't any
+> results?
 
+Yes, it hangs at this point. You have to manually terminate it.
+
+>
+> Also - could you follow up with the author of this failing test to see if
+> we can get some more clarity about what might be going wrong here?  It
+> appears that the failing test was added in commit 6a21cc50f0c7f ("seccomp:
+> add a return code to trap to userspace") by Tycho Andersen
+> <tycho@tycho.ws>.
+
+Well the code states ".. and hope that it doesn't break when there
+is actually a signal :)". Maybe we are just unlucky. I don't have results
+from other architectures to compare.
+
+I found that Linaro is running selftests, but SECCOMP is disabled
+and thus it's failing. Is there another CI which tracks selftests?
+
+https://qa-reports.linaro.org/lkft/linux-next-oe/tests/kselftest/seccomp_seccomp_bpf?top=next-20190823
+
+>
+>
+> - Paul
