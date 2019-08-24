@@ -2,193 +2,77 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E9C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A965C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C00922CEB
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466242146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 22:27:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aDghlMgS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ApdJs2Ng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfHXWQl (ORCPT
+        id S1728098AbfHXW1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 18:16:41 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45612 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfHXWQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 18:16:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566684998; bh=AsOxRhcbCf7VZl7oMHpWnpYauCEftDRhqiCkn6rkDqk=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=aDghlMgS0KlmNASkm6II80Hph5ASAkcy2zUuFCPWgZK4ffFAx4bGDHqmmgHb4KaB8
-         HtWoS2NTJ3LkvHf9h7uJwWjpHOXsarTIzTbia6Tq6cVGH/hVd67KA9yDE2wmyUjnAx
-         9uUMlrVR6N+/ymYdDfWbKtnIRDI/YXGaG6kJOJg0=
-Date:   Sun, 25 Aug 2019 00:16:38 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc:     linux-sunxi@googlegroups.com, Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Subject: Re: [linux-sunxi] [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
-Message-ID: <20190824221638.ztoqpp5y6btshgit@core.my.home>
-Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        linux-sunxi@googlegroups.com, Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-References: <20190820151934.3860-1-megous@megous.com>
- <1690798.2HKiRSsjat@jernej-laptop>
- <20190824212746.a5pyilkrrvysjjbd@core.my.home>
- <7913281.jYEbquIlsS@jernej-laptop>
+        Sat, 24 Aug 2019 18:27:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53808 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfHXW1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 18:27:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nurlPYQx2ItprLfZNVFEAgIWj9lAPjByXFVyqakf/bs=; b=ApdJs2NgoerPDGq+Qjl6yD3Md
+        GAULGKDGkBAbH361DaCiAt7apWygm/BAIZROhFYyzzMy4bwRaulxMebUnRGt24wWjEHXE7r4N/M+1
+        7K1XiSiZbchjPReLHlJUoBk8rUxdYj8WswiJJgI1k8AMf2ndViz9WFs48YpT2ny0R4jkZAGNBZY7z
+        SrbzGB+qb1C1wMkNFkQXyo/QADwO9W4GP2/vGdw40zAoAIJxqymHVTyATGkDslXwQieI9sYh+BbxP
+        WbaWlsz0+F+mkfsbscFFsGSRFpy++c/HluVp56qcN2/+dQLk5bMWMceetVLSPQ6dESrRMYa7edSJa
+        L01aladlw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i1eUp-0007Y8-25; Sat, 24 Aug 2019 22:26:55 +0000
+Date:   Sat, 24 Aug 2019 15:26:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: cleanup the walk_page_range interface
+Message-ID: <20190824222654.GA28766@infradead.org>
+References: <20190808154240.9384-1-hch@lst.de>
+ <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
+ <20190816062751.GA16169@infradead.org>
+ <20190823134308.GH12847@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7913281.jYEbquIlsS@jernej-laptop>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20190823134308.GH12847@mellanox.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 11:36:26PM +0200, Jernej Škrabec wrote:
-> Dne sobota, 24. avgust 2019 ob 23:27:46 CEST je Ondřej Jirman napisal(a):
-> > Hello Jernej,
-> > 
-> > On Sat, Aug 24, 2019 at 11:09:49PM +0200, Jernej Škrabec wrote:
-> > > > Visually?
-> > > > 
-> > > > That would explain why it doesn't work for you. The mainline RTC driver
-> > > > disables auto-switch feature, and if your board doesn't have a crystal
-> > > > for
-> > > > LOSC, RTC will not generate a clock for the RTC.
-> > > > 
-> > > > H6's dtsi describes by default a situatiuon with external 32k crystal
-> > > > oscillator. See ext_osc32k node. That's incorrect for your board if it
-> > > > doesn't have the crystal. You need to fix this in the DTS for your board
-> > > > instead of patching the driver.
-> > > 
-> > > I see that reparenting is supported, but I'm not sure how to fix that in
-> > > DT. Any suggestion?
-> > 
-> > You may try removing the clocks property from rtc node.
+On Fri, Aug 23, 2019 at 01:43:12PM +0000, Jason Gunthorpe wrote:
+> > So what is the plan forward?  Probably a little late for 5.3,
+> > so queue it up in -mm for 5.4 and deal with the conflicts in at least
+> > hmm?  Queue it up in the hmm tree even if it doesn't 100% fit?
 > 
-> I don't think this would work:
-> https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L246
+> Did we make a decision on this? Due to travel & LPC I'd like to
+> finalize the hmm tree next week.
 
-Well, I don't know. There has to be some way to make it work, since the code
-deals with it here:
-
-https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L270
-
-Number of parents for LOSC is calculated from the DT somehow. Maybne something
-to do with the #clock-cells property?
-
-Sorry I can't be of more help here.
-
-> > 
-> > > > The driver has parent clock selection logic in case the LOSC crystal is
-> > > > not
-> > > > used.
-> > > > 
-> > > > Your patch enables automatic detection of LOSC failure and RTC changes
-> > > > clock to LOSC automatically, despite what's described in the DTS. That
-> > > > may fix the issue, but is not the correct solution.
-> > > > 
-> > > > Registers on my board look like this (external 32k osc is used) for
-> > > > reference:
-> > > > 
-> > > > LOSC_CTRL_REG[7000000]: 8011
-> > > > 
-> > > > 	KEY_FIELD                      ???                  (0)
-> > > > 	LOSC_AUTO_SWT_BYPASS           EN                   (1)
-> > > > 	LOSC_AUTO_SWT_EN               DIS                  (0)
-> > > > 	EXT_LOSC_EN                    EN                   (1)
-> > > > 	EXT_LOSC_GSM                   LOW                  (0)
-> > > > 	BATTERY_DIR                    DISCHARGE            (0)
-> > > > 	LOSC_SRC_SEL                   EXT32k               (1)
-> > > > 
-> > > > LOSC_AUTO_SWT_STA_REG[7000004]: 1
-> > > > 
-> > > > 	EXT_LOSC_STA                   OK                   (0)
-> > > > 	LOSC_AUTO_SWT_PEND             NOEFF                (0)
-> > > > 	LOSC_SRC_SEL_STA               EXT32K               (1)
-> > > 
-> > > In my case LOSC_CTRL_REG has value 0x4010 and LOSC_AUTO_SWT_STA_REG
-> > > has value 0x4, so there is issue with external crystal (it's missing) and
-> > > RTC switched to internal one.
-> > > 
-> > > BTW, what's wrong with automatic switching? Why is it disabled?
-> > 
-> > It always was disabled on mainline (bit 14 was set to 0 even before my
-> > patch). H6 just probably has another extra undocummented bit, that's needed
-> > to disables it properly.
-> > 
-> > You probably don't want a glitch to switch your RTC from high-precision
-> > clock to a low precision one possibly without any indication in the
-> > userspace or a kernel log.
-> > 
-> > Regardless of all this, DTS needs to have a correct description of the HW,
-> > which means if RTC module is not connected to the 32.757kHz crystal/clock,
-> > clocks property should be empty.
-> 
-> If we are talking about correct HW description, then clock property should 
-> actually have possibility that two clocks are defined - one for internal RC 
-> (always present) and one external crystal (optional). In such case I could 
-> really just omit external clock and be done with it. But I'm not sure if such 
-
-Internal RC is thought to be part of the RTC module, so it's not defined as an
-input clock to the RTC module.
-
-regards,
-	Ondrej
-
-> 
-> Best regards,
-> Jernej
-> 
-> > 
-> > regards,
-> > 	o.
-> > 
-> > > Best regards,
-> > > Jernej
-> > > 
-> > > > regards,
-> > > > 
-> > > > 	o.
-> > > > 	
-> > > > > > The real issue probably is that the mainline driver is missing this:
-> > > > > > 
-> > > > > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=h6-4.9-b
-> > > > > > sp#n
-> > > > > > 650
-> > > > > 
-> > > > > Not sure what you mean by that. ext vs. int source selection?
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > Best regards,
-> > > > > Jernej
-> > > > > 
-> > > > > > regards,
-> > > > > > 
-> > > > > > 	o.
-> 
-> 
-> 
-> 
+I don't think we've made any decision.  I'd still love to see this
+in hmm.git.  It has a minor conflict, but I can resend a rebased
+version.
