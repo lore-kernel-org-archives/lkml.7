@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF0DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEEFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF9E2064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CF62064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 03:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfHXDFr (ORCPT
+        id S1727345AbfHXDFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 23:05:47 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:65515 "EHLO
+        Fri, 23 Aug 2019 23:05:51 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:18227 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726982AbfHXDFo (ORCPT
+        with ESMTP id S1727111AbfHXDFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 23:05:44 -0400
-X-UUID: 36d7e59e6af44fc68f549b6bfe15b9e3-20190824
-X-UUID: 36d7e59e6af44fc68f549b6bfe15b9e3-20190824
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        Fri, 23 Aug 2019 23:05:45 -0400
+X-UUID: 9e3f6573a2374bb9b7f30487b8ffdb55-20190824
+X-UUID: 9e3f6573a2374bb9b7f30487b8ffdb55-20190824
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 630864807; Sat, 24 Aug 2019 11:04:54 +0800
+        with ESMTP id 1578458940; Sat, 24 Aug 2019 11:04:42 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 24 Aug 2019 11:04:46 +0800
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 24 Aug 2019 11:04:34 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 24 Aug 2019 11:04:45 +0800
+ Transport; Sat, 24 Aug 2019 11:04:33 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,9 +50,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
         <ming-fan.chen@mediatek.com>
-Subject: [PATCH v11 11/23] iommu/mediatek: Add bclk can be supported optionally
-Date:   Sat, 24 Aug 2019 11:01:56 +0800
-Message-ID: <1566615728-26388-12-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v11 10/23] iommu/mediatek: Adjust the PA for the 4GB Mode
+Date:   Sat, 24 Aug 2019 11:01:55 +0800
+Message-ID: <1566615728-26388-11-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
@@ -64,65 +64,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some SoCs, M4U doesn't have its "bclk", it will use the EMI
-clock instead which has always been enabled when entering kernel.
+After extending the v7s support PA[33:32] for MediaTek, we have to adjust
+the PA ourself for the 4GB mode.
 
-Currently mt2712 and mt8173 have this bclk while mt8183 doesn't.
+In the 4GB Mode, the PA will remap like this:
+CPU PA         ->    M4U output PA
+0x4000_0000          0x1_4000_0000 (Add bit32)
+0x8000_0000          0x1_8000_0000 ...
+0xc000_0000          0x1_c000_0000 ...
+0x1_0000_0000        0x1_0000_0000 (No change)
 
-This also is a preparing patch for mt8183.
+1) Always add bit32 for CPU PA in ->map.
+2) Discard the bit32 in iova_to_phys if PA > 0x1_4000_0000 since the
+iommu consumer always use the CPU PA.
+
+Besides, the "oas" always is set to 34 since v7s has already supported our
+case.
+
+Both mt2712 and mt8173 support this "4GB mode" while the mt8183 don't.
+The PA in mt8183 won't remap.
 
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- drivers/iommu/mtk_iommu.c | 10 +++++++---
- drivers/iommu/mtk_iommu.h |  3 +++
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ drivers/iommu/mtk_iommu.c | 26 ++++++++++++++++----------
+ drivers/iommu/mtk_iommu.h |  1 +
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index b5a40a4..4df3cb4 100644
+index 62edce7..b5a40a4 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -633,9 +633,11 @@ static int mtk_iommu_probe(struct platform_device *pdev)
- 	if (data->irq < 0)
- 		return data->irq;
+@@ -129,7 +129,7 @@ struct mtk_iommu_domain {
+  * 'E', the CPU physical address keep as is.
+  * Additionally, The iommu consumers always use the CPU phyiscal address.
+  */
+-#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
++#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x140000000UL
  
--	data->bclk = devm_clk_get(dev, "bclk");
--	if (IS_ERR(data->bclk))
--		return PTR_ERR(data->bclk);
-+	if (data->plat_data->has_bclk) {
-+		data->bclk = devm_clk_get(dev, "bclk");
-+		if (IS_ERR(data->bclk))
-+			return PTR_ERR(data->bclk);
-+	}
+ static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
  
- 	larb_nr = of_count_phandle_with_args(dev->of_node,
- 					     "mediatek,larbs", NULL);
-@@ -763,11 +765,13 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+@@ -287,17 +287,15 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
+ 	dom->cfg = (struct io_pgtable_cfg) {
+ 		.quirks = IO_PGTABLE_QUIRK_ARM_NS |
+ 			IO_PGTABLE_QUIRK_NO_PERMS |
+-			IO_PGTABLE_QUIRK_TLBI_ON_MAP,
++			IO_PGTABLE_QUIRK_TLBI_ON_MAP |
++			IO_PGTABLE_QUIRK_ARM_MTK_EXT,
+ 		.pgsize_bitmap = mtk_iommu_ops.pgsize_bitmap,
+ 		.ias = 32,
+-		.oas = 32,
++		.oas = 34,
+ 		.tlb = &mtk_iommu_gather_ops,
+ 		.iommu_dev = data->dev,
+ 	};
+ 
+-	if (data->enable_4GB)
+-		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_EXT;
+-
+ 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
+ 	if (!dom->iop) {
+ 		dev_err(data->dev, "Failed to alloc io pgtable\n");
+@@ -383,12 +381,16 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+ 			 phys_addr_t paddr, size_t size, int prot)
+ {
+ 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
++	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
+ 	unsigned long flags;
+ 	int ret;
+ 
++	/* The "4GB mode" M4U physically can not use the lower remap of Dram. */
++	if (data->enable_4GB)
++		paddr |= BIT_ULL(32);
++
+ 	spin_lock_irqsave(&dom->pgtlock, flags);
+-	ret = dom->iop->map(dom->iop, iova, paddr & DMA_BIT_MASK(32),
+-			    size, prot);
++	ret = dom->iop->map(dom->iop, iova, paddr, size, prot);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+ 	return ret;
+@@ -425,8 +427,8 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	pa = dom->iop->iova_to_phys(dom->iop, iova);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+-	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
+-		pa |= BIT_ULL(32);
++	if (data->enable_4GB && pa >= MTK_IOMMU_4GB_MODE_REMAP_BASE)
++		pa &= ~BIT_ULL(32);
+ 
+ 	return pa;
+ }
+@@ -618,6 +620,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+ 
+ 	/* Whether the current dram is over 4GB */
+ 	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
++	if (!data->plat_data->has_4gb_mode)
++		data->enable_4GB = false;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	data->base = devm_ioremap_resource(dev, res);
+@@ -758,10 +762,12 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+ 
  static const struct mtk_iommu_plat_data mt2712_data = {
  	.m4u_plat     = M4U_MT2712,
- 	.has_4gb_mode = true,
-+	.has_bclk     = true,
++	.has_4gb_mode = true,
  };
  
  static const struct mtk_iommu_plat_data mt8173_data = {
  	.m4u_plat     = M4U_MT8173,
- 	.has_4gb_mode = true,
-+	.has_bclk     = true,
++	.has_4gb_mode = true,
  };
  
  static const struct of_device_id mtk_iommu_of_ids[] = {
 diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index c281c01..821172b 100644
+index 9725b08..c281c01 100644
 --- a/drivers/iommu/mtk_iommu.h
 +++ b/drivers/iommu/mtk_iommu.h
-@@ -35,6 +35,9 @@ enum mtk_iommu_plat {
+@@ -34,6 +34,7 @@ enum mtk_iommu_plat {
+ 
  struct mtk_iommu_plat_data {
  	enum mtk_iommu_plat m4u_plat;
- 	bool                has_4gb_mode;
-+
-+	/* HW will use the EMI clock if there isn't the "bclk". */
-+	bool                has_bclk;
++	bool                has_4gb_mode;
  };
  
  struct mtk_iommu_domain;
