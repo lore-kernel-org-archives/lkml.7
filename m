@@ -2,125 +2,92 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40625C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1597EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D242133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA8B2133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 08:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLFe9GDU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+deEbbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfHXIE3 (ORCPT
+        id S1727065AbfHXIFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 04:04:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39636 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfHXIE3 (ORCPT
+        Sat, 24 Aug 2019 04:05:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41484 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfHXIFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 04:04:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so11147872wmg.4;
-        Sat, 24 Aug 2019 01:04:28 -0700 (PDT)
+        Sat, 24 Aug 2019 04:05:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j16so10579947wrr.8;
+        Sat, 24 Aug 2019 01:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VWTrrD9BiZwTcjf+bsz7w5cdA1f2skqCvm3ZXEVoQko=;
-        b=rLFe9GDUmcKFAgh3siKa6rcZjV6ZTqAECcU7vFmKs+8luJPS6lPf/30lo87A+v/YdA
-         k0eEahzlS4MN2UyQZwkJBEXNHSMpQeprmvFCm83j8540sng/XeMTj0zGAEVL3SxFUXMT
-         XsEjYrGfUCeeoSPLXrVghHN5ADPy0t6FkPL/RGpXJSr1V6LrhBWeYtVVDVaa+p0gj+Nq
-         vXCEarwIW3Z1tJQqFoSHwR2HjJcUUpIj4Q1K0XZ+Q/nV838if8H0+ILcmrYPrqyR/75q
-         xB0KQhROV0WLleteEgaruKAin4MdIgqdyxAkARwLvdg7uViPhF9sW6GdV9Tx0fMhfySL
-         SIyQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=QxuDzkK00aaOAlXF/Oj/CO+qrmGUaqzzWbuNX1BI4gs=;
+        b=p+deEbblvZep63OJ0tg1ZKNocoHPtca5rUFwIcNYqjzJQ6fz3J4MFZx1TfRKM9Zquo
+         puHSAqkeniym3CgmDQJk+r12Tz8UNQL3FWo/qhM9DEHEfb1UDSyvVOcnczXcMEt5KOLf
+         ByK6/vbFyNUoGTF7qjLR0fwX2f3oAgmxLhqeP69pGoFB/49Oq/GVgNzJ8aeV1PyjeiQ1
+         KbBySZ7q6CLmlCHrfsnW1tIBF1PgjAtRBb4pvOPlvY/jrjbin6F303vdKv2wYHb1GaNU
+         v42PuoVnuVo3fA6TG5+fNl3ocDAjOGiVPgyqXVUCS71tZX63lshDW1iGT0pnDUPXV8Bv
+         52xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VWTrrD9BiZwTcjf+bsz7w5cdA1f2skqCvm3ZXEVoQko=;
-        b=Vf7uIFtupt8ZbDAC2MCpOl8lGX+zGYbe5gbRY8ORCTnSKEyzBSfxAYBNkVxQV2VItc
-         X/FguT9d04mcbQ/jS4BwnAxUitJgba1KBsf1CQl3r/NDez60ckPoEPUrD5j507LGCNeb
-         SNcghKuBrIgQlnJdiRgh8Xk65gLKLIOzwWfg5iapAJwvaNacaH598ySNbv+WV+yufpVZ
-         ejyQWR9wr427o8rThUxmYIAvmibT6lR7pjyWivPTGPAEZSCDz2cDxPNuY5XMyHBZ0h2A
-         evTt0IbZd2Pk3RIIf9mh1vrZdBVJQ3PLsr8ApwC/vF6IJ+Xb7a7lSXwjRBfAuwzOjiKE
-         OvBQ==
-X-Gm-Message-State: APjAAAWvbXBRoOmYWDdvxucyxToVf0osdCEoaIbiszhOcMaLQr+/adRi
-        xs13CwPPgMhmmDKBnZ08xUM=
-X-Google-Smtp-Source: APXvYqzD0Dns5joa+Ot++jWHSQNsQH7+esIAVGFYLB7Fuk220hjiNVzXi3Tb84YV9R8dtQReMAQ8QA==
-X-Received: by 2002:a7b:c95a:: with SMTP id i26mr9986010wml.175.1566633867494;
-        Sat, 24 Aug 2019 01:04:27 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net. [86.58.59.25])
-        by smtp.gmail.com with ESMTPSA id r11sm4727847wrt.84.2019.08.24.01.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2019 01:04:26 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     linux-sunxi@googlegroups.com, megous@megous.com
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QxuDzkK00aaOAlXF/Oj/CO+qrmGUaqzzWbuNX1BI4gs=;
+        b=BqsR4z6dDqsiQOtDIQfOh9d+3pwA32Hrdtnbw5OG8Ms0xwz8iMrxlOwc3g+MN+OTWJ
+         GJpGcZJOaUfIFs5ZAqnNPoEmBVKXOzB2btZWGQ3kCLw3DyxziBkGhgV/Lazil2T1Zx5Q
+         FMtxTDWHGrWXVxWxVudyTsgrReqH9kfodtIIXipPrbDX2akqevBbVizmpjG5ZbK5puug
+         8j7ReTJGURlrcJHx/PtyhJ+sHq9NBw44Tfu+gzaX3pnQww893JRxb36JwMM3htXANHrN
+         ccaom//ewjuRHDLtOg4Wlaq/poxpgva6fmE6EX/zSrpH+WcISieGYWddNtkHV0XfyI5s
+         XHqQ==
+X-Gm-Message-State: APjAAAU4JT1PTJuw16oJ90XHpWmCjnYHvwjCp+yj1dQzRHjpQ3qFbQ/7
+        LmLJ952WBKnvLapO0p0LJXM=
+X-Google-Smtp-Source: APXvYqwWknuBhaNc3FSges1Tbji5oWqWhpZ+K1p772146QPQkalYEinGlEhMb/GbaP5Fuxtfph/2+w==
+X-Received: by 2002:adf:ecc3:: with SMTP id s3mr9944795wro.302.1566633900177;
+        Sat, 24 Aug 2019 01:05:00 -0700 (PDT)
+Received: from localhost.localdomain ([94.204.252.234])
+        by smtp.gmail.com with ESMTPSA id w8sm16615656wmc.1.2019.08.24.01.04.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 24 Aug 2019 01:04:59 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [linux-sunxi] [PATCH v2 0/3] Add basic support for RTC on Allwinner H6 SoC
-Date:   Sat, 24 Aug 2019 10:04:24 +0200
-Message-ID: <3686940.YHdMKP4MVq@jernej-laptop>
-In-Reply-To: <20190820151934.3860-1-megous@megous.com>
-References: <20190820151934.3860-1-megous@megous.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>,
+        Oleg Ivanov <balbes-150@yandex.ru>
+Subject: [PATCH v2,0/3] arm64: meson-g12b: Add support for the Ugoos AM6
+Date:   Sat, 24 Aug 2019 12:04:07 +0400
+Message-Id: <1566633850-9421-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+This patchset adds support for the Ugoos AM6, an Android STB based on
+the Amlogic W400 reference design with the S922X chipset.
 
-Dne torek, 20. avgust 2019 ob 17:19:31 CEST je megous@megous.com napisal(a):
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> I went through the datasheets for H6 and H5, and compared the differences.
-> RTCs are largely similar, but not entirely compatible. Incompatibilities
-> are in details not yet implemented by the rtc driver though.
-> 
-> I also corrected the clock tree in H6 DTSI.
-> 
-> This patchset is necessary for implementing the WiFi/Bluetooth support
-> on boards using H6 SoC.
-> 
-> There was some discussion previously of describing HOSC, DCXO and XO
-> oscillators and clocks as part of RTC in DT, but I decided against it
-> because it's not necessary, becuse information that would be provided
-> as a part of DT can already be determined at runtime from RTC registers,
-> so this woudn't add any value and would only introduce complications
-> to the driver. See: https://patchwork.kernel.org/cover/10898083/
-> 
-> Please take a look.
-> 
-> 
-> Thank you and regards,
->   Ondrej Jirman
+v2: correction of minor nits
 
-Sorry for a bit late test, but with your patches on Tanix TX6 box I get this 
-in dmesg:
+Christian Hewitt (3):
+  dt-bindings: arm: amlogic: Add support for the Ugoos AM6
+  dt-bindings: Add vendor prefix for Ugoos
+  arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
 
-[   17.431742] sun6i-rtc 7000000.rtc: Failed to set rtc time.
-[   20.439742] sun6i-rtc 7000000.rtc: rtc is still busy.
-[   21.435744] sun6i-rtc 7000000.rtc: rtc is still busy.
-[   24.055741] sun6i-rtc 7000000.rtc: rtc is still busy.
-[   24.439752] sun6i-rtc 7000000.rtc: rtc is still busy.
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 567 +++++++++++++++++++++
+ 4 files changed, 571 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
 
-Last line is repeated non-stop.
-
-Any idea what could be wrong?
-
-Best regards,
-Jernej
-
-
+-- 
+2.7.4
 
