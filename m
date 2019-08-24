@@ -2,83 +2,157 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C71C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23809C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D07C20870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D647121897
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 21:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dJ8exNaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfHXVYz (ORCPT
+        id S1727997AbfHXV1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 17:24:55 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50340 "EHLO ms.lwn.net"
+        Sat, 24 Aug 2019 17:27:50 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45272 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfHXVYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 17:24:54 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 1BB5B300;
-        Sat, 24 Aug 2019 21:24:54 +0000 (UTC)
-Date:   Sat, 24 Aug 2019 15:24:53 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Ayush Ranjan <ayushr2@illinois.edu>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Ext4 documentation fixes.
-Message-ID: <20190824152453.03737143@lwn.net>
-In-Reply-To: <DEDD6BA5-6E18-4ED6-9EF6-E11EDA593700@dilger.ca>
-References: <CA+UE=SPyMXZUhHFm0KgvihPdaE=yH5ra6n1C4XhKgM6aGheo=A@mail.gmail.com>
-        <DEDD6BA5-6E18-4ED6-9EF6-E11EDA593700@dilger.ca>
-Organization: LWN.net
+        id S1727354AbfHXV1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 17:27:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1566682066; bh=E4T9D8ZO2hDesuoosboxZajfg8P+ympomHO6rRYJdqU=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=dJ8exNaIanIhqn1NEvThpKApSpdqHNDJMYzWOmjcR1xNcej/mIKF7ZhKPg7XHRy9I
+         9P0PEUJ5sgCOnLQOalzhAwCsii7AjNBCfEyE3nuHs+TR/Q9r2ythIcjBmdwy5wcvTW
+         T7T8ZT/hg975j+HUKM8ZIKZOPEkW3D+Enx29965g=
+Date:   Sat, 24 Aug 2019 23:27:46 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
+Message-ID: <20190824212746.a5pyilkrrvysjjbd@core.my.home>
+Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        linux-sunxi@googlegroups.com, Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <20190820151934.3860-1-megous@megous.com>
+ <10880274.nteIY8W56H@jernej-laptop>
+ <20190824133057.rhpj3xuzr3vymdiy@core.my.home>
+ <1690798.2HKiRSsjat@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1690798.2HKiRSsjat@jernej-laptop>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019 09:16:23 -0700
-Andreas Dilger <adilger@dilger.ca> wrote:
+Hello Jernej,
 
-> On Aug 15, 2019, at 09:11, Ayush Ranjan <ayushr2@illinois.edu> wrote:
+On Sat, Aug 24, 2019 at 11:09:49PM +0200, Jernej Škrabec wrote:
+> > Visually?
 > > 
-> > This commit aims to fix the following issues in ext4 documentation:
-> > - Flexible block group docs said that the aim was to group block
-> >   metadata together instead of block group metadata.
-> > - The documentation consistly uses "location" instead of "block number".
-> >   It is easy to confuse location to be an absolute offset on disk. Added
-> >   a line to clarify all location values are in terms of block numbers.
-> > - Dirent2 docs said that the rec_len field is shortened instead of the
-> >   name_len field.
-> > - Typo in bg_checksum description.
-> > - Inode size is 160 bytes now, and hence i_extra_isize is now 32.
-> > - Cluster size formula was incorrect, it did not include the +10 to
-> >   s_log_cluster_size value.
-> > - Typo: there were two s_wtime_hi in the superblock struct.
-> > - Superblock struct was outdated, added the new fields which were part
-> >   of s_reserved earlier.
-> > - Multiple mount protection seems to be implemented in fs/ext4/mmp.c.
+> > That would explain why it doesn't work for you. The mainline RTC driver
+> > disables auto-switch feature, and if your board doesn't have a crystal for
+> > LOSC, RTC will not generate a clock for the RTC.
 > > 
-> > Signed-off-by: Ayush Ranjan <ayushr2@illinois.edu>  
+> > H6's dtsi describes by default a situatiuon with external 32k crystal
+> > oscillator. See ext_osc32k node. That's incorrect for your board if it
+> > doesn't have the crystal. You need to fix this in the DTS for your board
+> > instead of patching the driver.
 > 
-> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+> I see that reparenting is supported, but I'm not sure how to fix that in DT. 
+> Any suggestion?
 
-I've applied this to the docs tree.
+You may try removing the clocks property from rtc node.
 
-However, Ayush: the patch was rather badly corrupted by your mail client.
-I managed to fix it up, but please in the future verify that you can email
-a patch to yourself and apply it before submitting it.  There may be some
-useful hints in Documentation/process/email-clients.rst .
+> > 
+> > The driver has parent clock selection logic in case the LOSC crystal is not
+> > used.
+> > 
+> > Your patch enables automatic detection of LOSC failure and RTC changes clock
+> > to LOSC automatically, despite what's described in the DTS. That may fix
+> > the issue, but is not the correct solution.
+> > 
+> > Registers on my board look like this (external 32k osc is used) for
+> > reference:
+> > 
+> > LOSC_CTRL_REG[7000000]: 8011
+> > 	KEY_FIELD                      ???                  (0)
+> > 	LOSC_AUTO_SWT_BYPASS           EN                   (1)
+> > 	LOSC_AUTO_SWT_EN               DIS                  (0)
+> > 	EXT_LOSC_EN                    EN                   (1)
+> > 	EXT_LOSC_GSM                   LOW                  (0)
+> > 	BATTERY_DIR                    DISCHARGE            (0)
+> > 	LOSC_SRC_SEL                   EXT32k               (1)
+> > 
+> > LOSC_AUTO_SWT_STA_REG[7000004]: 1
+> > 	EXT_LOSC_STA                   OK                   (0)
+> > 	LOSC_AUTO_SWT_PEND             NOEFF                (0)
+> > 	LOSC_SRC_SEL_STA               EXT32K               (1)
+> > 
+> 
+> In my case LOSC_CTRL_REG has value 0x4010 and LOSC_AUTO_SWT_STA_REG
+> has value 0x4, so there is issue with external crystal (it's missing) and RTC 
+> switched to internal one.
+> 
+> BTW, what's wrong with automatic switching? Why is it disabled?
 
-Thanks,
+It always was disabled on mainline (bit 14 was set to 0 even before my patch).
+H6 just probably has another extra undocummented bit, that's needed to disables
+it properly.
 
-jon
+You probably don't want a glitch to switch your RTC from high-precision
+clock to a low precision one possibly without any indication in the userspace
+or a kernel log.
+
+Regardless of all this, DTS needs to have a correct description of the HW,
+which means if RTC module is not connected to the 32.757kHz crystal/clock,
+clocks property should be empty.
+
+regards,
+	o.
+
+> Best regards,
+> Jernej
+> 
+> > regards,
+> > 	o.
+> > 
+> > > > The real issue probably is that the mainline driver is missing this:
+> > > > 
+> > > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=h6-4.9-bsp#n
+> > > > 650
+> > > 
+> > > Not sure what you mean by that. ext vs. int source selection?
+> > > 
+> > > 
+> > > 
+> > > Best regards,
+> > > Jernej
+> > > 
+> > > > regards,
+> > > > 
+> > > > 	o.
+> 
+> 
+> 
+> 
