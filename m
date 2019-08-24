@@ -2,236 +2,169 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1575C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588D9C41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775E021897
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QRAtO70o"
+	by mail.kernel.org (Postfix) with ESMTP id 2BA0B21726
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 00:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfHXAS0 (ORCPT
+        id S1726488AbfHXATy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 20:18:26 -0400
-Received: from mail-eopbgr30044.outbound.protection.outlook.com ([40.107.3.44]:12103
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfHXAS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 20:18:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FsXvtexkl3dmM0bhTTAa4IIX7mNdUpJUS9W/t6/8fqtTlrnIWGIz4faiufv06wv7u36YL275FOTo9tt5he5pn89wbeGPUpgOKtNZBrUX95VH7J9v0MPo7D4O48wSqbGcsHKyClrIcCSXYwSaFI7P2paxdcj8RnDnYlhdBBpVcc1A+/qmK5jLqGKSiec4mwIpIE+bYiSsKiV1tNcqWYx/Er87zNp8M/pIDalWS/9Ql3FimzVK5ujgK4x0ZRLxzA68zj436e0ErFW5bCgMKPoa79Uywouub0z+YpO9sl1EkDc60g6/KBA/DOj1D3lI5sS2GVEel0FRmvspyXnx3d8MwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O0IoV9GpDD1jrJnuBiVjBHbz9FfhNcLF0F1OO+k+jBQ=;
- b=AXAY/GFMpRXzkAZnOi7KhU6EPjUeysH/14oOHdXz98XSV8NeZXZOo/b53/CavJuHM8TsH/NK7UjZ9cxqw8TWxSKKlIi5Jr/yrIcMChD6oy0Fak1FcHdvDCuCQaZrVh4KB3ntDHHulWb96Wq0++wEgfH8Cbm0AIBObVDUTBC8r/8SWBWI/lfW2nPn8nLRfj2vWfpCOWb8vALufzHRgj18v1ibMLoeHoMk7bBbB1MVgLNWxARQNXIDvq73dpI9J6KqCqFinsT5egIUlVzdXM4n/toTd0mPJiq4lN1Nxpof7UdIwtIgR6abn5OmhirTiVM4ZqvsR+wMDMvOVr3PxJfjoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O0IoV9GpDD1jrJnuBiVjBHbz9FfhNcLF0F1OO+k+jBQ=;
- b=QRAtO70oTHm0/3fEVmJB3mwzTWEaJkLGyUUnYPLCQG245KVpofMIHPXIYtrzw6BYx7nzzj6xhRcWibn9cGWhwOyvuRM60nWWxkq/UAlFJGnNpjg4HMPiG09oMgxQ0RX3DxnHB8QRLHEk2zFHsXRPZO4bR2CUKQdWa6/W7uiMzS0=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5SPR01MB01.eurprd04.prod.outlook.com (10.161.64.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Sat, 24 Aug 2019 00:18:17 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043%7]) with mapi id 15.20.2178.020; Sat, 24 Aug 2019
- 00:18:17 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for ls1088a
- and ls2088a
-Thread-Topic: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
- ls1088a and ls2088a
-Thread-Index: AQHVWN1gKEkcDc/BT0q+LkXHF2Gt76cIzC+AgACiVVA=
-Date:   Sat, 24 Aug 2019 00:18:17 +0000
-Message-ID: <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-8-xiaowei.bao@nxp.com>
- <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 96f1539f-1c5a-4303-eeb5-08d72828902e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5SPR01MB01;
-x-ms-traffictypediagnostic: AM5SPR01MB01:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5SPR01MB01F79CE75F5DD271D969FEF5A70@AM5SPR01MB01.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0139052FDB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(136003)(366004)(13464003)(199004)(189003)(81166006)(446003)(64756008)(66446008)(53546011)(102836004)(81156014)(26005)(4326008)(8676002)(229853002)(5660300002)(86362001)(316002)(66476007)(54906003)(66946007)(76116006)(6506007)(6246003)(6916009)(486006)(44832011)(14454004)(476003)(256004)(7416002)(6116002)(3846002)(76176011)(55016002)(9686003)(71190400001)(71200400001)(53936002)(66556008)(33656002)(186003)(52536014)(478600001)(2906002)(74316002)(66066001)(6436002)(8936002)(11346002)(7736002)(305945005)(7696005)(25786009)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5SPR01MB01;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZNT9xOAS8hBwdobIh207q4JXzQYHMvfBQMZDc0f2TxIxbhp6YportzwAO2Vdk9fpUjvsHtnOZGCSwv2T8zDibnwbwutBBOGhZ6nRuzYkycCmqBD+sxACKfHvtLOqFUG6eA86Sk9F0RB/SQpLBSM1BunqLD9WCuFkI3EJibEerzpoqGNzzSq5sP5BrjTJvii6K1T/qyV+kw62bKcuYhm3ASmQ0tfpLziosHROTIoTJnjOKSVhTdjN28D1QwfeZoUhboo2Whq9/BJTf28N/2xt3aK+ALCWSp4eS/pW6a0UH95cs/iNPZNdVo1tChC1RKIC37KoKg9Nql4sKYgCusw1qKzdE3Bk6ypjf372SUJPnxa3w50u5u2UgTyNmyS8xwQPSiYRu0/Ls436WOixk6nQVBCG9nJiYh9S+4M5wCwP3K8=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 23 Aug 2019 20:19:54 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47613 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725886AbfHXATy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 20:19:54 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A5FD843E73B;
+        Sat, 24 Aug 2019 10:19:46 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i1JlP-0007eP-Cg; Sat, 24 Aug 2019 10:18:39 +1000
+Date:   Sat, 24 Aug 2019 10:18:39 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190824001839.GJ1119@dread.disaster.area>
+References: <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+ <20190817022603.GW6129@dread.disaster.area>
+ <20190819063412.GA20455@quack2.suse.cz>
+ <20190819092409.GM7777@dread.disaster.area>
+ <20190819123841.GC5058@ziepe.ca>
+ <20190820011210.GP7777@dread.disaster.area>
+ <20190820115515.GA29246@ziepe.ca>
+ <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190823005914.GF1119@dread.disaster.area>
+ <20190823171504.GA1092@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96f1539f-1c5a-4303-eeb5-08d72828902e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2019 00:18:17.7063
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9K07FQ6nGToDgsJdm/bwXugvKTkfzHxc4Duy6CD1ri/RJb2S4461m1+WRQMR8+DHBl74t29m1srtKTrfSl7/5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5SPR01MB01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190823171504.GA1092@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=QZy_m0AoVJ59bLp0kawA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo41MIyM8jVIDIyOjI4DQo+IFRv
-OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdvb2ds
-ZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXdu
-Z3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNv
-bTsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBN
-aW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdAbnhw
-LmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lz
-LmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2MiAwOC8xMF0gUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZSBz
-dXBwb3J0IGZvcg0KPiBsczEwODhhIGFuZCBsczIwODhhDQo+IA0KPiBPbiBUaHUsIEF1ZyAyMiwg
-MjAxOSBhdCAwNzoyMjo0MFBNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiBBZGQgUENJ
-ZSBFUCBtb2RlIHN1cHBvcnQgZm9yIGxzMTA4OGEgYW5kIGxzMjA4OGEsIHRoZXJlIGFyZSBzb21l
-DQo+ID4gZGlmZmVyZW5jZSBiZXR3ZWVuIExTMSBhbmQgTFMyIHBsYXRmb3JtLCBzbyByZWZhY3Rv
-ciB0aGUgY29kZSBvZiB0aGUNCj4gPiBFUCBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoNCj4g
-PiAgLSBOZXcgbWVjaGFuaXNtIGZvciBsYXllcnNjYXBlIEVQIGRyaXZlci4NCj4gDQo+IFdhcyB0
-aGVyZSBhIHYxIG9mIHRoaXMgcGF0Y2g/DQoNClllcywgYnV0IEkgZG9uJ3Qga25vdyBob3cgdG8g
-Y29tbWVudHMsIF5fXg0KDQo+IA0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaS1sYXllcnNjYXBlLWVwLmMgfCA3Ng0KPiA+ICsrKysrKysrKysrKysrKysrKysrLS0tLS0t
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5
-ZXJzY2FwZS1lcC5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJz
-Y2FwZS1lcC5jDQo+ID4gaW5kZXggN2NhNWZlOC4uMmE2NmYwNyAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gKysrIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IEBAIC0y
-MCwyNyArMjAsMjkgQEANCj4gPg0KPiA+ICAjZGVmaW5lIFBDSUVfREJJMl9PRkZTRVQJCTB4MTAw
-MAkvKiBEQkkyIGJhc2UgYWRkcmVzcyovDQo+ID4NCj4gPiAtc3RydWN0IGxzX3BjaWVfZXAgew0K
-PiA+IC0Jc3RydWN0IGR3X3BjaWUJCSpwY2k7DQo+ID4gLQlzdHJ1Y3QgcGNpX2VwY19mZWF0dXJl
-cwkqbHNfZXBjOw0KPiA+ICsjZGVmaW5lIHRvX2xzX3BjaWVfZXAoeCkJZGV2X2dldF9kcnZkYXRh
-KCh4KS0+ZGV2KQ0KPiA+ICsNCj4gPiArc3RydWN0IGxzX3BjaWVfZXBfZHJ2ZGF0YSB7DQo+ID4g
-Kwl1MzIJCQkJZnVuY19vZmZzZXQ7DQo+ID4gKwljb25zdCBzdHJ1Y3QgZHdfcGNpZV9lcF9vcHMJ
-Km9wczsNCj4gPiArCWNvbnN0IHN0cnVjdCBkd19wY2llX29wcwkqZHdfcGNpZV9vcHM7DQo+ID4g
-IH07DQo+ID4NCj4gPiAtI2RlZmluZSB0b19sc19wY2llX2VwKHgpCWRldl9nZXRfZHJ2ZGF0YSgo
-eCktPmRldikNCj4gPiArc3RydWN0IGxzX3BjaWVfZXAgew0KPiA+ICsJc3RydWN0IGR3X3BjaWUJ
-CQkqcGNpOw0KPiA+ICsJc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMJCSpsc19lcGM7DQo+ID4gKwlj
-b25zdCBzdHJ1Y3QgbHNfcGNpZV9lcF9kcnZkYXRhICpkcnZkYXRhOyB9Ow0KPiA+DQo+ID4gIHN0
-YXRpYyBpbnQgbHNfcGNpZV9lc3RhYmxpc2hfbGluayhzdHJ1Y3QgZHdfcGNpZSAqcGNpKSAgew0K
-PiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0NCj4gPg0KPiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X3BjaWVfb3BzIGxzX3BjaWVfZXBfb3BzID0gew0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X3BjaWVfb3BzIGR3X2xzX3BjaWVfZXBfb3BzID0gew0KPiA+ICAJLnN0YXJ0X2xpbmsgPSBsc19w
-Y2llX2VzdGFibGlzaF9saW5rLCAgfTsNCj4gPg0KPiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG9m
-X2RldmljZV9pZCBsc19wY2llX2VwX29mX21hdGNoW10gPSB7DQo+ID4gLQl7IC5jb21wYXRpYmxl
-ID0gImZzbCxscy1wY2llLWVwIix9LA0KPiA+IC0JeyB9LA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKiAgbHNfcGNpZV9lcF9nZXRfZmVh
-dHVyZXMoc3RydWN0DQo+ID4gZHdfcGNpZV9lcCAqZXApICB7IEBAIC04MiwxMCArODQsNDQgQEAg
-c3RhdGljIGludA0KPiA+IGxzX3BjaWVfZXBfcmFpc2VfaXJxKHN0cnVjdCBkd19wY2llX2VwICpl
-cCwgdTggZnVuY19ubywNCj4gPiAgCX0NCj4gPiAgfQ0KPiA+DQo+ID4gLXN0YXRpYyBjb25zdCBz
-dHJ1Y3QgZHdfcGNpZV9lcF9vcHMgcGNpZV9lcF9vcHMgPSB7DQo+ID4gK3N0YXRpYyB1bnNpZ25l
-ZCBpbnQgbHNfcGNpZV9lcF9mdW5jX2NvbmZfc2VsZWN0KHN0cnVjdCBkd19wY2llX2VwICplcCwN
-Cj4gPiArCQkJCQkJdTggZnVuY19ubykNCj4gPiArew0KPiA+ICsJc3RydWN0IGR3X3BjaWUgKnBj
-aSA9IHRvX2R3X3BjaWVfZnJvbV9lcChlcCk7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNp
-ZSA9IHRvX2xzX3BjaWVfZXAocGNpKTsNCj4gPiArCXU4IGhlYWRlcl90eXBlOw0KPiA+ICsNCj4g
-PiArCWhlYWRlcl90eXBlID0gaW9yZWFkOChwY2ktPmRiaV9iYXNlICsgUENJX0hFQURFUl9UWVBF
-KTsNCj4gPiArDQo+ID4gKwlpZiAoaGVhZGVyX3R5cGUgJiAoMSA8PCA3KSkNCj4gPiArCQlyZXR1
-cm4gcGNpZS0+ZHJ2ZGF0YS0+ZnVuY19vZmZzZXQgKiBmdW5jX25vOw0KPiA+ICsJZWxzZQ0KPiA+
-ICsJCXJldHVybiAwOw0KPiANCj4gSXQgbG9va3MgbGlrZSB0aGVyZSBpc24ndCBhIFBDSSBkZWZp
-bmUgZm9yIG11bHRpIGZ1bmN0aW9uLCB0aGUgbmVhcmVzdCBJIGNvdWxkIGZpbmQNCj4gd2FzIFBD
-SV9IRUFERVJfVFlQRV9NVUxUSURFVklDRSBpbiBob3RwbHVnL2libXBocC5oLiBBIGNvbW1lbnQN
-Cj4gYWJvdmUgdGhlIHRlc3QgbWlnaHQgYmUgaGVscGZ1bCB0byBleHBsYWluIHRoZSB0ZXN0Lg0K
-DQpZZXMsIEkgaGF2ZSBub3QgZmluZCB0aGUgUENJX0hFQURFUl9UWVBFX01VTFRJREVWSUNFIGRl
-ZmluZS4gT0ssIEkgd2lsbCBhZGQNClRoZSBjb21tZW50cyBpbiBuZXh0IHZlcnNpb24gcGF0Y2gu
-DQoNCj4gDQo+IEFzIHRoZSBsc19wY2llX2VwX2RydmRhdGEgc3RydWN0dXJlcyBhcmUgc3RhdGlj
-LCB0aGUgdW5zZXQgLmZ1bmNfb2Zmc2V0IHdpbGwgYmUNCj4gaW5pdGlhbGlzZWQgdG8gMCwgc28g
-eW91IGNvdWxkIGp1c3QgZHJvcCB0aGUgdGVzdCBhYm92ZS4NCg0KT0ssIHRoYW5rcw0KDQo+IA0K
-PiBIb3dldmVyIHNvbWV0aGluZyB0byB0aGUgZWZmZWN0IG9mIHRoZSBmb2xsb3dpbmcgbWF5IGhl
-bHAgc3BvdA0KPiBtaXNjb25maWd1cmF0aW9uOg0KPiANCj4gV0FSTl9PTihmdW5jX25vICYmICFw
-Y2llLT5kcnZkYXRhLT5mdW5jX29mZnNldCk7IHJldHVybg0KPiBwY2llLT5kcnZkYXRhLT5mdW5j
-X29mZnNldCAqIGZ1bmNfbm87DQoNClRoYW5rcyBhIGxvdCwgdGhpcyBsb29rcyBiZXR0ZXIuDQoN
-Cj4gDQo+IFRoZSBXQVJOIGlzIHByb2JhYmx5IHF1aXRlIHVzZWZ1bCBhcyBpZiB5b3UgYXJlIGF0
-dGVtcHRpbmcgdG8gdXNlIG5vbi16ZXJvDQo+IGZ1bmN0aW9ucyBhbmQgZnVuY19vZmZzZXQgaXNu
-J3Qgc2V0IC0gdGhlbiB0aGluZ3MgbWF5IGFwcGVhciB0byB3b3JrIG5vcm1hbGx5DQo+IGJ1dCBh
-Y3R1YWxseSB3aWxsIGJyZWFrIGhvcnJpYmx5Lg0KDQpnb3QgaXQsIHRoYW5rcy4NCg0KPiANCj4g
-VGhhbmtzLA0KPiANCj4gQW5kcmV3IE11cnJheQ0KPiANCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBkd19wY2llX2VwX29wcyBsc19wY2llX2VwX29wcyA9IHsNCj4gPiAg
-CS5lcF9pbml0ID0gbHNfcGNpZV9lcF9pbml0LA0KPiA+ICAJLnJhaXNlX2lycSA9IGxzX3BjaWVf
-ZXBfcmFpc2VfaXJxLA0KPiA+ICAJLmdldF9mZWF0dXJlcyA9IGxzX3BjaWVfZXBfZ2V0X2ZlYXR1
-cmVzLA0KPiA+ICsJLmZ1bmNfY29uZl9zZWxlY3QgPSBsc19wY2llX2VwX2Z1bmNfY29uZl9zZWxl
-Y3QsIH07DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGxzX3BjaWVfZXBfZHJ2ZGF0
-YSBsczFfZXBfZHJ2ZGF0YSA9IHsNCj4gPiArCS5vcHMgPSAmbHNfcGNpZV9lcF9vcHMsDQo+ID4g
-KwkuZHdfcGNpZV9vcHMgPSAmZHdfbHNfcGNpZV9lcF9vcHMsDQo+ID4gK307DQo+ID4gKw0KPiA+
-ICtzdGF0aWMgY29uc3Qgc3RydWN0IGxzX3BjaWVfZXBfZHJ2ZGF0YSBsczJfZXBfZHJ2ZGF0YSA9
-IHsNCj4gPiArCS5mdW5jX29mZnNldCA9IDB4MjAwMDAsDQo+ID4gKwkub3BzID0gJmxzX3BjaWVf
-ZXBfb3BzLA0KPiA+ICsJLmR3X3BjaWVfb3BzID0gJmR3X2xzX3BjaWVfZXBfb3BzLA0KPiA+ICt9
-Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHNfcGNpZV9l
-cF9vZl9tYXRjaFtdID0gew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDQ2YS1wY2ll
-LWVwIiwgLmRhdGEgPSAmbHMxX2VwX2RydmRhdGEgfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAi
-ZnNsLGxzMTA4OGEtcGNpZS1lcCIsIC5kYXRhID0gJmxzMl9lcF9kcnZkYXRhIH0sDQo+ID4gKwl7
-IC5jb21wYXRpYmxlID0gImZzbCxsczIwODhhLXBjaWUtZXAiLCAuZGF0YSA9ICZsczJfZXBfZHJ2
-ZGF0YSB9LA0KPiA+ICsJeyB9LA0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRpYyBpbnQgX19pbml0
-IGxzX2FkZF9wY2llX2VwKHN0cnVjdCBsc19wY2llX2VwICpwY2llLCBAQCAtOTgsNw0KPiA+ICsx
-MzQsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19hZGRfcGNpZV9lcChzdHJ1Y3QgbHNfcGNpZV9l
-cCAqcGNpZSwNCj4gPiAgCWludCByZXQ7DQo+ID4NCj4gPiAgCWVwID0gJnBjaS0+ZXA7DQo+ID4g
-LQllcC0+b3BzID0gJnBjaWVfZXBfb3BzOw0KPiA+ICsJZXAtPm9wcyA9IHBjaWUtPmRydmRhdGEt
-Pm9wczsNCj4gPg0KPiA+ICAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2
-LCBJT1JFU09VUkNFX01FTSwNCj4gImFkZHJfc3BhY2UiKTsNCj4gPiAgCWlmICghcmVzKQ0KPiA+
-IEBAIC0xMzcsMTQgKzE3MywxMSBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2Jl
-KHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlpZiAoIWxzX2VwYykNCj4g
-PiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gPg0KPiA+IC0JZGJpX2Jhc2UgPSBwbGF0Zm9ybV9nZXRf
-cmVzb3VyY2VfYnluYW1lKHBkZXYsIElPUkVTT1VSQ0VfTUVNLA0KPiAicmVncyIpOw0KPiA+IC0J
-cGNpLT5kYmlfYmFzZSA9IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZShkZXYsIGRiaV9iYXNl
-KTsNCj4gPiAtCWlmIChJU19FUlIocGNpLT5kYmlfYmFzZSkpDQo+ID4gLQkJcmV0dXJuIFBUUl9F
-UlIocGNpLT5kYmlfYmFzZSk7DQo+ID4gKwlwY2llLT5kcnZkYXRhID0gb2ZfZGV2aWNlX2dldF9t
-YXRjaF9kYXRhKGRldik7DQo+ID4NCj4gPiAtCXBjaS0+ZGJpX2Jhc2UyID0gcGNpLT5kYmlfYmFz
-ZSArIFBDSUVfREJJMl9PRkZTRVQ7DQo+ID4gIAlwY2ktPmRldiA9IGRldjsNCj4gPiAtCXBjaS0+
-b3BzID0gJmxzX3BjaWVfZXBfb3BzOw0KPiA+ICsJcGNpLT5vcHMgPSBwY2llLT5kcnZkYXRhLT5k
-d19wY2llX29wczsNCj4gPiArDQo+ID4gIAlwY2llLT5wY2kgPSBwY2k7DQo+ID4NCj4gPiAgCWxz
-X2VwYy0+bGlua3VwX25vdGlmaWVyID0gZmFsc2UsDQo+ID4gQEAgLTE1Miw2ICsxODUsMTMgQEAg
-c3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QNCj4gPiBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpDQo+ID4NCj4gPiAgCXBjaWUtPmxzX2VwYyA9IGxzX2VwYzsNCj4gPg0KPiA+
-ICsJZGJpX2Jhc2UgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsIElPUkVTT1VS
-Q0VfTUVNLA0KPiAicmVncyIpOw0KPiA+ICsJcGNpLT5kYmlfYmFzZSA9IGRldm1fcGNpX3JlbWFw
-X2NmZ19yZXNvdXJjZShkZXYsIGRiaV9iYXNlKTsNCj4gPiArCWlmIChJU19FUlIocGNpLT5kYmlf
-YmFzZSkpDQo+ID4gKwkJcmV0dXJuIFBUUl9FUlIocGNpLT5kYmlfYmFzZSk7DQo+ID4gKw0KPiA+
-ICsJcGNpLT5kYmlfYmFzZTIgPSBwY2ktPmRiaV9iYXNlICsgUENJRV9EQkkyX09GRlNFVDsNCj4g
-PiArDQo+ID4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBwY2llKTsNCj4gPg0KPiA+ICAJ
-cmV0ID0gbHNfYWRkX3BjaWVfZXAocGNpZSwgcGRldik7DQo+ID4gLS0NCj4gPiAyLjkuNQ0KPiA+
-DQo=
+On Fri, Aug 23, 2019 at 10:15:04AM -0700, Ira Weiny wrote:
+> On Fri, Aug 23, 2019 at 10:59:14AM +1000, Dave Chinner wrote:
+> > On Wed, Aug 21, 2019 at 11:02:00AM -0700, Ira Weiny wrote:
+> > > On Tue, Aug 20, 2019 at 08:55:15AM -0300, Jason Gunthorpe wrote:
+> > > > On Tue, Aug 20, 2019 at 11:12:10AM +1000, Dave Chinner wrote:
+> > > > > On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
+> > > > > > On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
+> > > > > > 
+> > > > > > > So that leaves just the normal close() syscall exit case, where the
+> > > > > > > application has full control of the order in which resources are
+> > > > > > > released. We've already established that we can block in this
+> > > > > > > context.  Blocking in an interruptible state will allow fatal signal
+> > > > > > > delivery to wake us, and then we fall into the
+> > > > > > > fatal_signal_pending() case if we get a SIGKILL while blocking.
+> > > > > > 
+> > > > > > The major problem with RDMA is that it doesn't always wait on close() for the
+> > > > > > MR holding the page pins to be destoyed. This is done to avoid a
+> > > > > > deadlock of the form:
+> > > > > > 
+> > > > > >    uverbs_destroy_ufile_hw()
+> > > > > >       mutex_lock()
+> > > > > >        [..]
+> > > > > >         mmput()
+> > > > > >          exit_mmap()
+> > > > > >           remove_vma()
+> > > > > >            fput();
+> > > > > >             file_operations->release()
+> > > > > 
+> > > > > I think this is wrong, and I'm pretty sure it's an example of why
+> > > > > the final __fput() call is moved out of line.
+> > > > 
+> > > > Yes, I think so too, all I can say is this *used* to happen, as we
+> > > > have special code avoiding it, which is the code that is messing up
+> > > > Ira's lifetime model.
+> > > > 
+> > > > Ira, you could try unraveling the special locking, that solves your
+> > > > lifetime issues?
+> > > 
+> > > Yes I will try to prove this out...  But I'm still not sure this fully solves
+> > > the problem.
+> > > 
+> > > This only ensures that the process which has the RDMA context (RDMA FD) is safe
+> > > with regard to hanging the close for the "data file FD" (the file which has
+> > > pinned pages) in that _same_ process.  But what about the scenario.
+> > > 
+> > > Process A has the RDMA context FD and data file FD (with lease) open.
+> > > 
+> > > Process A uses SCM_RIGHTS to pass the RDMA context FD to Process B.
+> > 
+> > Passing the RDMA context dependent on a file layout lease to another
+> > process that doesn't have a file layout lease or a reference to the
+> > original lease should be considered a violation of the layout lease.
+> > Process B does not have an active layout lease, and so by the rules
+> > of layout leases, it is not allowed to pin the layout of the file.
+> > 
+> 
+> I don't disagree with the semantics of this.  I just don't know how to enforce
+> it.
+> 
+> > > Process A attempts to exit (hangs because data file FD is pinned).
+> > > 
+> > > Admin kills process A.  kill works because we have allowed for it...
+> > > 
+> > > Process B _still_ has the RDMA context FD open _and_ therefore still holds the
+> > > file pins.
+> > > 
+> > > Truncation still fails.
+> > > 
+> > > Admin does not know which process is holding the pin.
+> > > 
+> > > What am I missing?
+> > 
+> > Application does not hold the correct file layout lease references.
+> > Passing the fd via SCM_RIGHTS to a process without a layout lease
+> > is equivalent to not using layout leases in the first place.
+> 
+> Ok, So If I understand you correctly you would support a failure of SCM_RIGHTS
+> in this case?  I'm ok with that but not sure how to implement it right now.
+> 
+> To that end, I would like to simplify this slightly because I'm not convinced
+> that SCM_RIGHTS is a problem we need to solve right now.  ie I don't know of a
+> user who wants to do this.
+
+I don't think we can support it, let alone want to. SCM_RIGHTS was a
+mistake made years ago that has been causing bugs and complexity to
+try and avoid those bugs ever since.  I'm only taking about it
+because someone else raised it and I asummed they raised it because
+they want it to "work".
+
+> Right now duplication via SCM_RIGHTS could fail if _any_ file pins (and by
+> definition leases) exist underneath the "RDMA FD" (or other direct access FD,
+> like XDP etc) being duplicated.
+
+Sounds like a fine idea to me.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
