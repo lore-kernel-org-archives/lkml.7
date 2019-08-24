@@ -2,180 +2,95 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03ADC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDFDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FA521874
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IDD9briY"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE822070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566660201;
+	bh=XsQqGNZN3pqcYydzFYTtqLe3jEdotnJ8bDl0Ci9sBFU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=XWsIZU4sMjGgJ6E+fdSr4YwVb87sp7DfUs2qiFDM/aELVQNyYWArRqlXPait3ScMD
+	 sOwiUIUDVx389SW8qXyR7NS7Ie2ZJtfopt5IDtlV2HortA81gDdmtm7YTrPAxIvILZ
+	 VGasO0SaYtFgIGOwUjJV2FtiiZQrimHTxWI3DLiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfHXPVJ (ORCPT
+        id S1728086AbfHXPXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 11:21:09 -0400
-Received: from mout.gmx.net ([212.227.17.22]:38507 "EHLO mout.gmx.net"
+        Sat, 24 Aug 2019 11:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727682AbfHXPVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 11:21:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566660054;
-        bh=21g5UFCvn3oFn35pF2pL6tSHWuVW0ZKs5+RW/c9+xrU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=IDD9briYoUXWz43GxLSq7b2Y7rMq1FhCgTYmbEkcILfahCcXAEz7RE9R1vXHpMxrD
-         QcWLEM7AeWNC7D4BmxrL+hRyCK/TmjMEVbMG5kDj2kFFe9oMbqho7tUn9aOMqv72Iu
-         s/s9gTIge0xY73Er0e0Av26blnELYgfDbR9Ok49I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx101 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 0LfXmv-1iYQhA3Z9N-00p6RW; Sat, 24 Aug 2019 17:20:53 +0200
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     keescook@chromium.org, re.emese@gmail.com
-Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        Alex Dewar <alex.dewar@gmx.co.uk>
-Subject: [PATCH] scripts/gcc-plugins: Add SPDX header for files without
-Date:   Sat, 24 Aug 2019 16:20:41 +0100
-Message-Id: <20190824152041.19127-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.23.0
+        id S1727638AbfHXPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 11:23:20 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53721206DD;
+        Sat, 24 Aug 2019 15:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566660199;
+        bh=XsQqGNZN3pqcYydzFYTtqLe3jEdotnJ8bDl0Ci9sBFU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=f+YuaW34sSUbkoQVL07KyIVUiyzUEzq+yXr8zbdRJeqWhGrNW45h4prc215OrWYEd
+         4Ip/zduMSMbK+wKkkXYxwft2ZU32iuTdvZI6kALVOS0FS0iX4WRBSwgSMhP8bw+hti
+         urmCFNh4vZJG+Wf5nYFNLaxnx8mQe0t8KTvAME8A=
+Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
+To:     Greg KH <greg@kroah.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, shuah <shuah@kernel.org>
+References: <20190822170811.13303-1-sashal@kernel.org>
+ <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
+ <20190824023829.GE9862@kroah.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <e4d5ba59-8e38-a267-8a14-3c6bc03f77bd@kernel.org>
+Date:   Sat, 24 Aug 2019 09:21:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qSDt+v/H/vNfoO3FeyMOZYs0LmytlhdxJriO184bpEsJVfUCN+m
- XdwMgzD1VqRNi4ar8o58tJ55OKgw2MV5mZwA43hd8cXj+NgvAJ07+zZp4FiWroIsZ68w4Uf
- hbLgwviQk6T3e5cSUQ08mrC4zM5O7cUSlw7TF7PqnUsrRtcOdr0b20RQmql9ELDxARJZ1F4
- iobVEyWnnc3mmPi3S4UlA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yYkRyIhfMoE=:24wEuPsLl3mgTzS5w306WM
- pkmmYgq7vtxz4WVrN4a6ptbEQwa/ZCdUUvXyLenbimTidYLZIFndW783viDcxJuWmZCO9eZu/
- SVyZM/wsfC45CjAjd05D5juRA+PeTB7ZS9NdaqONnkXyPJEY0wXRRI76LM2xwqlhBRHaNeGyD
- 3KC0rF2SSm87KTTUQ/1hKlO4EMm4mnPNa8NMPRTgm/2e0EZxS+iDQeFRMdRHRZFqpIfMG45xO
- mDc0BdvrVb+9qGdkmjvcZK6wTCRrgUsyrp5l/LjLATjau1z9ZLkrHPw3+ohS60Ih3urXuhjyM
- eylm+d7IA0LvaKXTn0DUsMcnK5fPL0CVpmEIq8oqic8WUg+QO3kTeg4ZX1jTmiRBOmlteYN3h
- F/MQa/dN44cl7duxNYpsAAkD5UVfkEhQNwmXmsExBcyFnjfsGG3e0XhgKGsnTfGNSUIGSnkUh
- c4x3PMHYQpu0gUabbcoGIxOGdGYTomTsPXrucHpI2nyqUXZ7EZfojX1gblDU9zopCJSxTiSXI
- sl4KUhD6CWl3CDInwZ5D7zoBp5Mxgzh/huhV3azjh8dp9BfrtdurtXhwVHS8GWDJSLXuYugYx
- jAcGtJA8GjD91VOQfPGyohGvGo7jp1to7aHUpi3bfM9Te7zZr+KcslwWEW8xR4Dhi7p9cxlX7
- yLik0TaDk0MsWf8mYjhSgZ8N7hnEoCvmGy/SE1JBE6Fc48sCkEHmoc8NmAFJCgsBNsiwzPCWI
- A8794mHCjE6J1YYvxsjbMxzWLRWlMX/6eoysiyiE1QaqDf6KQOCDyn4Kp+1zUZKjTrWJV6911
- 7cJzEydGfvmWGogH0GgVkdW0DbMmEcqay4n4bcDxDmXzQw8Qg1uQfj0weAkJPtbKTYIAeywqF
- IN5kvn1uR6gNOkI392p/3rZq5E+HwG7dOnuBy0FKnoWZbf0kE1vqjccSSFlLK6Q0imUd3aS6D
- oyXtsHoGjAmac1zg6LPU/1SvCRuM6ScxMYjTXBhNm3GRajOjm2406AOd9ooniJac+2ojU66eO
- abLB9cCSj0r+TjHleY2QEL6BdB+QgejntjWs22ZqCFV8ba85HF1xc3Z/gKnEEjOurP8b7SSkC
- Xolm7//WUIuctjzYo20J+TAds2pry80shk8pOzDu671dhh9wycrC1LWlw==
+In-Reply-To: <20190824023829.GE9862@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace boilerplate with approproate SPDX header. Vim also auto-trimmed
-whitespace from one line.
+On 8/23/19 8:38 PM, Greg KH wrote:
+> On Fri, Aug 23, 2019 at 12:41:03PM -0600, shuah wrote:
+>> On 8/22/19 11:05 AM, Sasha Levin wrote:
+>>>
+>>> This is the start of the stable review cycle for the 5.2.10 release.
+>>> There are 135 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>>           https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz
+>>
+>> I am seeing "Sorry I can't find your kernels". Is this posted?
+> 
+> Ah, Sasha didn't generate the patch but it was still listed here, oops.
+> He copied my format and we didn't notice this, sorry about that.
+> 
+> As the thread shows, we didn't generate this file this time to see what
+> would happen.  If your test process requires it, we can generate it as I
+> don't want to break it.
+> 
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- scripts/gcc-plugins/cyc_complexity_plugin.c   | 2 +-
- scripts/gcc-plugins/latent_entropy_plugin.c   | 2 +-
- scripts/gcc-plugins/randomize_layout_plugin.c | 4 ++--
- scripts/gcc-plugins/sancov_plugin.c           | 2 +-
- scripts/gcc-plugins/stackleak_plugin.c        | 2 +-
- scripts/gcc-plugins/structleak_plugin.c       | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
+It will make it lot easier for me to have continued support for patch
+generation. My scripts do "wget" to pull the patch and apply.
 
-diff --git a/scripts/gcc-plugins/cyc_complexity_plugin.c b/scripts/gcc-plu=
-gins/cyc_complexity_plugin.c
-index 1909ec617431..870266f36b5c 100644
-=2D-- a/scripts/gcc-plugins/cyc_complexity_plugin.c
-+++ b/scripts/gcc-plugins/cyc_complexity_plugin.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
-- * Licensed under the GPL v2, or (at your option) v3
-  *
-  * Homepage:
-  * https://github.com/ephox-gcc-plugins/cyclomatic_complexity
-diff --git a/scripts/gcc-plugins/latent_entropy_plugin.c b/scripts/gcc-plu=
-gins/latent_entropy_plugin.c
-index cbe1d6c4b1a5..c693ac27ddf1 100644
-=2D-- a/scripts/gcc-plugins/latent_entropy_plugin.c
-+++ b/scripts/gcc-plugins/latent_entropy_plugin.c
-@@ -1,7 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright 2012-2016 by the PaX Team <pageexec@freemail.hu>
-  * Copyright 2016 by Emese Revfy <re.emese@gmail.com>
-- * Licensed under the GPL v2
-  *
-  * Note: the choice of the license means that the compilation process is
-  *       NOT 'eligible' as defined by gcc's library exception to the GPL =
-v3,
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-p=
-lugins/randomize_layout_plugin.c
-index bd29e4e7a524..f46d049da26c 100644
-=2D-- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -1,7 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright 2014-2016 by Open Source Security, Inc., Brad Spengler <spen=
-der@grsecurity.net>
-  *                   and PaX Team <pageexec@freemail.hu>
-- * Licensed under the GPL v2
-  *
-  * Note: the choice of the license means that the compilation process is
-  *       NOT 'eligible' as defined by gcc's library exception to the GPL =
-v3,
-@@ -909,7 +909,7 @@ static unsigned int find_bad_casts_execute(void)
- 			} else {
- 				const_tree ssa_name_var =3D SSA_NAME_VAR(rhs1);
- 				/* skip bogus type casts introduced by container_of */
--				if (ssa_name_var !=3D NULL_TREE && DECL_NAME(ssa_name_var) &&
-+				if (ssa_name_var !=3D NULL_TREE && DECL_NAME(ssa_name_var) &&
- 				    !strcmp((const char *)DECL_NAME_POINTER(ssa_name_var), "__mptr"))
- 					continue;
- #ifndef __DEBUG_PLUGIN
-diff --git a/scripts/gcc-plugins/sancov_plugin.c b/scripts/gcc-plugins/san=
-cov_plugin.c
-index 0f98634c20a0..9845ad67a7d8 100644
-=2D-- a/scripts/gcc-plugins/sancov_plugin.c
-+++ b/scripts/gcc-plugins/sancov_plugin.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
-- * Licensed under the GPL v2, or (at your option) v3
-  *
-  * Homepage:
-  * https://github.com/ephox-gcc-plugins/sancov
-diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/=
-stackleak_plugin.c
-index dbd37460c573..3abaea274651 100644
-=2D-- a/scripts/gcc-plugins/stackleak_plugin.c
-+++ b/scripts/gcc-plugins/stackleak_plugin.c
-@@ -1,7 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright 2011-2017 by the PaX Team <pageexec@freemail.hu>
-  * Modified by Alexander Popov <alex.popov@linux.com>
-- * Licensed under the GPL v2
-  *
-  * Note: the choice of the license means that the compilation process is
-  * NOT 'eligible' as defined by gcc's library exception to the GPL v3,
-diff --git a/scripts/gcc-plugins/structleak_plugin.c b/scripts/gcc-plugins=
-/structleak_plugin.c
-index e89be8f5c859..eb8d6b5c83b5 100644
-=2D-- a/scripts/gcc-plugins/structleak_plugin.c
-+++ b/scripts/gcc-plugins/structleak_plugin.c
-@@ -1,6 +1,6 @@
-+// Licensed under the GPL v2
- /*
-  * Copyright 2013-2017 by PaX Team <pageexec@freemail.hu>
-- * Licensed under the GPL v2
-  *
-  * Note: the choice of the license means that the compilation process is
-  *       NOT 'eligible' as defined by gcc's library exception to the GPL =
-v3,
-=2D-
-2.23.0
+thanks,
+-- Shuah
 
