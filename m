@@ -2,102 +2,127 @@ Return-Path: <SRS0=kjqD=WY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=DATE_IN_PAST_24_48,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44116C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E620C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C392077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B072077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 28 Aug 2019 17:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hBpwGl91"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nml2rPgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfH1RhL (ORCPT
+        id S1726693AbfH1Rg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 28 Aug 2019 13:37:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44965 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbfH1Rgd (ORCPT
+        Wed, 28 Aug 2019 13:36:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38961 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbfH1RgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 28 Aug 2019 13:36:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c81so228882pfc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:36:33 -0700 (PDT)
+        Wed, 28 Aug 2019 13:36:23 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y200so246802pfb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Aug 2019 10:36:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UBNYDOQLiPHI747g3CvJSLTMKiFZvSX4+F+h+ZK0RGk=;
-        b=hBpwGl91JHahbLFCmv2w1Mjzc7Oz3kRyNRNlfokM3jA96+3Z6siqSGJK3qXqEvZYXw
-         209fRwW977JPTkPz9WVu94EDq8zT1usK2FPzVbiynFtN99nMvFDHeFEXObaCht1TcFgd
-         4xrqVdOp6iVorPHpgxumzhQ/jyb1V//MFBv7E=
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=EUMK8UKoJN8MBf0J3kYsSiXaGWd4l00MuXQSkXHjEkU=;
+        b=nml2rPgziIqKJ0ypA3HhZGv7pV0jpaWRM0sCJ9s6ye1Vt7mkf6Rl2xmGkJQg4ZnVF3
+         VhtIb7wJRRuVF8zrEpVU5NqQHImBtaOcva3nG2A6W77s4ijYRhKOQwwp4zqoxpw+Wcz2
+         C4mgd5vb4RlcMoNyuTQJNVLrpyoJm11W/LMtg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UBNYDOQLiPHI747g3CvJSLTMKiFZvSX4+F+h+ZK0RGk=;
-        b=YEJ9alPzv5bd7m3CRpSFeOnMQem0slVHb+mCawzDOuyhdA8nNlw0+xd2rX/pC/u1Z7
-         ql5my0TEGzYSxPgCYFK5kZppo+Cp64OqFWbLyg9Z+wf4xORN7xRodmtB4/VyTA9q5QKu
-         fJAyBg8uIXehN8fktux32SJ+yaDBX8nr1FH+f5BGoGf+25d3kSaZBjtxbBn+ONVy/kbg
-         CuiYZUZuBZ4VFk91ya1WxCLFuPq7C+sMwsdE10RynBeTXH/eVOCS3XxhgbdILiNH33cV
-         tUPG5Un244oq7uX//JVK6FtvbE4rJgxM+4cmJaMIg8Kg+8iuyZR4yCsg8kVlo7cNhj33
-         gbLw==
-X-Gm-Message-State: APjAAAVq4hcjWurw9UnXLDqF4dcc7pZiqahLds7XER/BrL69TfIK0dad
-        vu0MlY/bsUTMgnMXE02fN7ne1A==
-X-Google-Smtp-Source: APXvYqzwkMj0PJ8taLffJ8W2JrcvATme98GQGJX0LS7TPTRiUEPTNp5IYu8fT7uFmLx8nEqHd37GDw==
-X-Received: by 2002:a17:90a:f0d8:: with SMTP id fa24mr5639027pjb.142.1567013792822;
-        Wed, 28 Aug 2019 10:36:32 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=EUMK8UKoJN8MBf0J3kYsSiXaGWd4l00MuXQSkXHjEkU=;
+        b=sB7eRTA0hn1R1BjM8tSHWLqt7w3WoLK/r0joHIWlcfM52d6Dt2stfU/lJwyaGguZx1
+         c5Ovz37gHptq7KXobNZ7W4plhgdW/sudSNa5+JOomOklfvNfvx/UxCU/iy4UsPReBbNo
+         TwdBnX7UAp/ZUQvjfykmLYasBv04vTCZiEwrGM9l1BAffKHGXNj/JwDK+Fw1eknwWqRX
+         1ZmvIu6RU0F3v1QoXwcSXGd1fvzxFNYWzASdb4wbG9+/FCdNIiAsAVKfAvgzkAzjWVsU
+         w2Vma4Pq/JGGXgMP2M5EtH4+7C0xk35vgdpV85T9OmG+0btMS/83Z2VvTg0TUjMgp2Ud
+         KeaQ==
+X-Gm-Message-State: APjAAAVJXvURJM8nlwL0aZqAWMN2HcSCK+UqNfW6v900U5NL7r2NzFUJ
+        0iIv3e700aOo1vQS+mXDtkI0MQ==
+X-Google-Smtp-Source: APXvYqzElEqg+zkKsqa/GUFMyi2GafNnjd+E8JvecYKCOt+Q9UFz6HH9rmld8KOXaKUdBxtTP1/AiQ==
+X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr5279289pja.135.1567013783037;
+        Wed, 28 Aug 2019 10:36:23 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m145sm5047005pfd.68.2019.08.28.10.36.24
+        by smtp.gmail.com with ESMTPSA id j11sm3480331pfa.113.2019.08.28.10.36.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2019 10:36:29 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 10:48:34 -0700
+        Wed, 28 Aug 2019 10:36:20 -0700 (PDT)
+Date:   Sat, 24 Aug 2019 12:08:00 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-Message-ID: <201908261043.08510F5E66@keescook>
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
- <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com>
- <20190826145756.GB4664@cisco>
- <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        20190819234111.9019-8-keescook@chromium.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
+ handler
+Message-ID: <201908241206.D223659@keescook>
+References: <201908200943.601DD59DCE@keescook>
+ <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
+ <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86003539-18ec-f2ff-a46f-764edb820dcd@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 09:39:50AM -0700, David Abdurachmanov wrote:
-> I don't have the a build with SECCOMP for the board right now, so it
-> will have to wait. I just finished a new kernel (almost rc6) for Fedora,
+On Fri, Aug 23, 2019 at 04:26:59PM +0200, Christophe Leroy wrote:
+> 
+> 
+> Le 23/08/2019 à 00:56, Andrew Morton a écrit :
+> > On Tue, 20 Aug 2019 09:47:55 -0700 Kees Cook <keescook@chromium.org> wrote:
+> > 
+> > > Reply-To: 20190819234111.9019-8-keescook@chromium.org
+> > 
+> > Really?
+> 
+> That seems correct, that's the "[PATCH 7/7] bug: Move WARN_ON() "cut here"
+> into exception handler" from the series at
+> https://lkml.org/lkml/2019/8/19/1155
+> 
+> 
+> > 
+> > > Subject: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception handler
+> > 
+> > It's strange to receive a standalone [7/7] patch.
+> 
+> Iaw the Reply_To, I understand it as an update of the 7th patch of the
+> series.
 
-FWIW, I don't think this should block landing the code: all the tests
-fail without seccomp support. ;) So this patch is an improvement!
+Was trying to avoid the churn of resending the identical 1-6 patches
+(which are all just refactoring to make 7/7 not a mess).
+
+I can resend the whole series, if that's preferred.
+
+> > > Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > > Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
+> > 
+> > I'm seeing double.
+
+Tracking down all these combinations has been tricky, which is why I did
+the patch 1-6 refactoring: it makes the call hierarchy much easier to
+examine (IMO).
+
+-Kees
 
 -- 
 Kees Cook
