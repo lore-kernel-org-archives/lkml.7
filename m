@@ -2,167 +2,166 @@ Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26001C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 14:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3823BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED38820870
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 14:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3ED721670
+	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 15:02:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sQCRGRLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfHXOkv (ORCPT
+        id S1727734AbfHXPCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 10:40:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:3204 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbfHXOku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 10:40:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Aug 2019 07:40:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,425,1559545200"; 
-   d="scan'208";a="379164198"
-Received: from sneftin-mobl1.ger.corp.intel.com (HELO [10.249.93.120]) ([10.249.93.120])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Aug 2019 07:40:47 -0700
-Subject: Re: [PATCH] igb/igc: Don't warn on fatal read failures when the
- device is removed
-To:     Lyude Paul <lyude@redhat.com>, intel-wired-lan@lists.osuosl.org,
-        netdev@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-References: <20190822183318.27634-1-lyude@redhat.com>
-From:   "Neftin, Sasha" <sasha.neftin@intel.com>
-Message-ID: <0e601456-58c3-b6ed-3be2-3eb5eec12eb4@intel.com>
-Date:   Sat, 24 Aug 2019 17:40:45 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190822183318.27634-1-lyude@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 24 Aug 2019 11:02:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42656 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfHXPCn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 11:02:43 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i30so8658096pfk.9;
+        Sat, 24 Aug 2019 08:02:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yvlfcwHhYYEt45AEV3kpvsKP89qUArjfynDA7p15x1g=;
+        b=sQCRGRLg0XwcENprB4U9XKoLQbl1pdzKeXP908+f4eAo2UBXTk8lR9dNTjBJMd7qBG
+         AjPytexu7y1JIqX9qSxvYS3BDFBhCXAmy1f5ghYVnz1r2QawaNcH7wQJm0CJOg5yhwZD
+         MCqF3oV8hnNpxiafdWmsdXf79QMdNCKteycBGb5ZaMMUHTF3MsQLo8bzPpfswjEsL3fe
+         LVWfVUtzaUcYy0CxenU+6kOHySLPDYzvqb/Mre5xRKuprWH7CpNPlMKGunl/Phq5Jc9p
+         3hFHov4jyt3cN+W/+xhJvEvp4s8hgisDyEWn/Bw/qca59reUvTJQTc7OS0199PxeXHqf
+         T2kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yvlfcwHhYYEt45AEV3kpvsKP89qUArjfynDA7p15x1g=;
+        b=XgqJRH0fKcVnhmLTIsRgnhEbvRDac+cuAvfvkH17hERL83E3oTv9fgarHbO55e2XP6
+         KE4HT98PZBciMYxFZb6iDZBa4/931f6vbFcAiUiEE2ApedBO0YO3TeDdf0KgBaRBkLFz
+         onot/eAzfOLgOdUdh3GdjYFVww4nL/yotBXhWdeFfil7oI/sDqYsaiCH0eyVf2GVFttc
+         /OKN8GvK9evcPaItOrVoZz0EYCmg9tqJkMIsxEvgpvCeD+Ad4hESCWiAySav6asrHTjU
+         LTOp0ahuviB0vFzazKlnqOnAgj9ytOBAPkYUOz3SNPRiuzbgzFpTuL8IyH6kWzCzifQm
+         nnhA==
+X-Gm-Message-State: APjAAAUt5RTOElQS1EZ9irPZ1d7GearvIa8z0MiYkk3z1n4mSpmen6hc
+        r1BDMFufEYHUTRIL1GYQl8w=
+X-Google-Smtp-Source: APXvYqwVdR14UXJ4cILqtv2OODOEEm6/JWssfKvn3BXAgbuL/zLqTejw/DZHr0LenO5mEuGLQEP1GA==
+X-Received: by 2002:a17:90a:23c5:: with SMTP id g63mr10621207pje.124.1566658962276;
+        Sat, 24 Aug 2019 08:02:42 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.17.2])
+        by smtp.gmail.com with ESMTPSA id c12sm8680413pfc.22.2019.08.24.08.02.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 24 Aug 2019 08:02:41 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     hare@suse.com, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] scsi: aic7xxx: Remove dead code
+Date:   Sat, 24 Aug 2019 20:38:22 +0530
+Message-Id: <1566659302-3514-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/2019 21:33, Lyude Paul wrote:
-> Fatal read errors are worth warning about, unless of course the device
-> was just unplugged from the machine - something that's a rather normal
-> occurence when the igb/igc adapter is located on a Thunderbolt dock. So,
-> let's only WARN() if there's a fatal read error while the device is
-> still present.
-> 
-> This fixes the following WARN splat that's been appearing whenever I
-> unplug my Caldigit TS3 Thunderbolt dock from my laptop:
-> 
->    igb 0000:09:00.0 enp9s0: PCIe link lost
->    ------------[ cut here ]------------
->    igb: Failed to read reg 0x18!
->    WARNING: CPU: 7 PID: 516 at
->    drivers/net/ethernet/intel/igb/igb_main.c:756 igb_rd32+0x57/0x6a [igb]
->    Modules linked in: igb dca thunderbolt fuse vfat fat elan_i2c mei_wdt
->    mei_hdcp i915 wmi_bmof intel_wmi_thunderbolt iTCO_wdt
->    iTCO_vendor_support x86_pkg_temp_thermal intel_powerclamp joydev
->    coretemp crct10dif_pclmul crc32_pclmul i2c_algo_bit ghash_clmulni_intel
->    intel_cstate drm_kms_helper intel_uncore syscopyarea sysfillrect
->    sysimgblt fb_sys_fops intel_rapl_perf intel_xhci_usb_role_switch mei_me
->    drm roles idma64 i2c_i801 ucsi_acpi typec_ucsi mei intel_lpss_pci
->    processor_thermal_device typec intel_pch_thermal intel_soc_dts_iosf
->    intel_lpss int3403_thermal thinkpad_acpi wmi int340x_thermal_zone
->    ledtrig_audio int3400_thermal acpi_thermal_rel acpi_pad video
->    pcc_cpufreq ip_tables serio_raw nvme nvme_core crc32c_intel uas
->    usb_storage e1000e i2c_dev
->    CPU: 7 PID: 516 Comm: kworker/u16:3 Not tainted 5.2.0-rc1Lyude-Test+ #14
->    Hardware name: LENOVO 20L8S2N800/20L8S2N800, BIOS N22ET35W (1.12 ) 04/09/2018
->    Workqueue: kacpi_hotplug acpi_hotplug_work_fn
->    RIP: 0010:igb_rd32+0x57/0x6a [igb]
->    Code: 87 b8 fc ff ff 48 c7 47 08 00 00 00 00 48 c7 c6 33 42 9b c0 4c 89
->    c7 e8 47 45 cd dc 89 ee 48 c7 c7 43 42 9b c0 e8 c1 94 71 dc <0f> 0b eb
->    08 8b 00 ff c0 75 b0 eb c8 44 89 e0 5d 41 5c c3 0f 1f 44
->    RSP: 0018:ffffba5801cf7c48 EFLAGS: 00010286
->    RAX: 0000000000000000 RBX: ffff9e7956608840 RCX: 0000000000000007
->    RDX: 0000000000000000 RSI: ffffba5801cf7b24 RDI: ffff9e795e3d6a00
->    RBP: 0000000000000018 R08: 000000009dec4a01 R09: ffffffff9e61018f
->    R10: 0000000000000000 R11: ffffba5801cf7ae5 R12: 00000000ffffffff
->    R13: ffff9e7956608840 R14: ffff9e795a6f10b0 R15: 0000000000000000
->    FS:  0000000000000000(0000) GS:ffff9e795e3c0000(0000) knlGS:0000000000000000
->    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->    CR2: 0000564317bc4088 CR3: 000000010e00a006 CR4: 00000000003606e0
->    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->    Call Trace:
->     igb_release_hw_control+0x1a/0x30 [igb]
->     igb_remove+0xc5/0x14b [igb]
->     pci_device_remove+0x3b/0x93
->     device_release_driver_internal+0xd7/0x17e
->     pci_stop_bus_device+0x36/0x75
->     pci_stop_bus_device+0x66/0x75
->     pci_stop_bus_device+0x66/0x75
->     pci_stop_and_remove_bus_device+0xf/0x19
->     trim_stale_devices+0xc5/0x13a
->     ? __pm_runtime_resume+0x6e/0x7b
->     trim_stale_devices+0x103/0x13a
->     ? __pm_runtime_resume+0x6e/0x7b
->     trim_stale_devices+0x103/0x13a
->     acpiphp_check_bridge+0xd8/0xf5
->     acpiphp_hotplug_notify+0xf7/0x14b
->     ? acpiphp_check_bridge+0xf5/0xf5
->     acpi_device_hotplug+0x357/0x3b5
->     acpi_hotplug_work_fn+0x1a/0x23
->     process_one_work+0x1a7/0x296
->     worker_thread+0x1a8/0x24c
->     ? process_scheduled_works+0x2c/0x2c
->     kthread+0xe9/0xee
->     ? kthread_destroy_worker+0x41/0x41
->     ret_from_fork+0x35/0x40
->    ---[ end trace 252bf10352c63d22 ]---
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: 47e16692b26b ("igb/igc: warn when fatal read failure happens")
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: Sasha Neftin <sasha.neftin@intel.com>
-> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> Cc: intel-wired-lan@lists.osuosl.org
-> ---
->   drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
->   drivers/net/ethernet/intel/igc/igc_main.c | 3 ++-
->   2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index e5b7e638df28..1a7f7cd28df9 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -753,7 +753,8 @@ u32 igb_rd32(struct e1000_hw *hw, u32 reg)
->   		struct net_device *netdev = igb->netdev;
->   		hw->hw_addr = NULL;
->   		netdev_err(netdev, "PCIe link lost\n");
-> -		WARN(1, "igb: Failed to read reg 0x%x!\n", reg);
-> +		WARN(pci_device_is_present(igb->pdev),
-> +		     "igb: Failed to read reg 0x%x!\n", reg);
->   	}
->   
->   	return value;
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index 28072b9aa932..f873a4b35eaf 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -3934,7 +3934,8 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
->   		hw->hw_addr = NULL;
->   		netif_device_detach(netdev);
->   		netdev_err(netdev, "PCIe link lost, device now detached\n");
-> -		WARN(1, "igc: Failed to read reg 0x%x!\n", reg);
-> +		WARN(pci_device_is_present(igc->pdev),
-> +		     "igc: Failed to read reg 0x%x!\n", reg);
->   	}
->   
->   	return value;
-> 
-Thanks, for igc
-Acked-by: Sasha Neftin <sasha.neftin@intel.com>
+These are dead code since 2.6.13. If there is no plan
+to use it further, these can be removed forever.
+
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+ drivers/scsi/aic7xxx/aic7xxx_osm.c | 68 --------------------------------------
+ 1 file changed, 68 deletions(-)
+
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+index d5c4a0d..98d2e14 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+@@ -2445,68 +2445,6 @@ static void ahc_linux_set_dt(struct scsi_target *starget, int dt)
+ 	ahc_unlock(ahc, &flags);
+ }
+ 
+-#if 0
+-/* FIXME: This code claims to support IU and QAS.  However, the actual
+- * sequencer code and aic7xxx_core have no support for these parameters and
+- * will get into a bad state if they're negotiated.  Do not enable this
+- * unless you know what you're doing */
+-static void ahc_linux_set_qas(struct scsi_target *starget, int qas)
+-{
+-	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+-	struct ahc_softc *ahc = *((struct ahc_softc **)shost->hostdata);
+-	struct ahc_tmode_tstate *tstate;
+-	struct ahc_initiator_tinfo *tinfo 
+-		= ahc_fetch_transinfo(ahc,
+-				      starget->channel + 'A',
+-				      shost->this_id, starget->id, &tstate);
+-	struct ahc_devinfo devinfo;
+-	unsigned int ppr_options = tinfo->goal.ppr_options
+-		& ~MSG_EXT_PPR_QAS_REQ;
+-	unsigned int period = tinfo->goal.period;
+-	unsigned long flags;
+-	struct ahc_syncrate *syncrate;
+-
+-	if (qas)
+-		ppr_options |= MSG_EXT_PPR_QAS_REQ;
+-
+-	ahc_compile_devinfo(&devinfo, shost->this_id, starget->id, 0,
+-			    starget->channel + 'A', ROLE_INITIATOR);
+-	syncrate = ahc_find_syncrate(ahc, &period, &ppr_options, AHC_SYNCRATE_DT);
+-	ahc_lock(ahc, &flags);
+-	ahc_set_syncrate(ahc, &devinfo, syncrate, period, tinfo->goal.offset,
+-			 ppr_options, AHC_TRANS_GOAL, FALSE);
+-	ahc_unlock(ahc, &flags);
+-}
+-
+-static void ahc_linux_set_iu(struct scsi_target *starget, int iu)
+-{
+-	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+-	struct ahc_softc *ahc = *((struct ahc_softc **)shost->hostdata);
+-	struct ahc_tmode_tstate *tstate;
+-	struct ahc_initiator_tinfo *tinfo 
+-		= ahc_fetch_transinfo(ahc,
+-				      starget->channel + 'A',
+-				      shost->this_id, starget->id, &tstate);
+-	struct ahc_devinfo devinfo;
+-	unsigned int ppr_options = tinfo->goal.ppr_options
+-		& ~MSG_EXT_PPR_IU_REQ;
+-	unsigned int period = tinfo->goal.period;
+-	unsigned long flags;
+-	struct ahc_syncrate *syncrate;
+-
+-	if (iu)
+-		ppr_options |= MSG_EXT_PPR_IU_REQ;
+-
+-	ahc_compile_devinfo(&devinfo, shost->this_id, starget->id, 0,
+-			    starget->channel + 'A', ROLE_INITIATOR);
+-	syncrate = ahc_find_syncrate(ahc, &period, &ppr_options, AHC_SYNCRATE_DT);
+-	ahc_lock(ahc, &flags);
+-	ahc_set_syncrate(ahc, &devinfo, syncrate, period, tinfo->goal.offset,
+-			 ppr_options, AHC_TRANS_GOAL, FALSE);
+-	ahc_unlock(ahc, &flags);
+-}
+-#endif
+-
+ static void ahc_linux_get_signalling(struct Scsi_Host *shost)
+ {
+ 	struct ahc_softc *ahc = *(struct ahc_softc **)shost->hostdata;
+@@ -2545,12 +2483,6 @@ static void ahc_linux_get_signalling(struct Scsi_Host *shost)
+ 	.show_width	= 1,
+ 	.set_dt		= ahc_linux_set_dt,
+ 	.show_dt	= 1,
+-#if 0
+-	.set_iu		= ahc_linux_set_iu,
+-	.show_iu	= 1,
+-	.set_qas	= ahc_linux_set_qas,
+-	.show_qas	= 1,
+-#endif
+ 	.get_signalling	= ahc_linux_get_signalling,
+ };
+ 
+-- 
+1.9.1
+
