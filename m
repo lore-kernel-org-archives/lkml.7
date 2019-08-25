@@ -2,80 +2,79 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D2AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E676C41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7BD206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F9A2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566772541;
+	bh=fWYAPG+1006AeWWBWjdG72l6elL2X09zkjVtE8i+LMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mvdAtYB+UBUleLAyLw5s+4AcqLHf7FboWmy+9mtwoNdY8ZZ/EKZEUdCai8OfN+GFF
+	 xUFcAbfg9NRMisYOTa5zqb4mIDudKfKDY29x2mJNrqnxQQnJCH0ovlKV8jwtmA1BWQ
+	 TjlSVDN73sE9W4BExZgP5V9HzFDw9EyqhjPYWaIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbfHYWNN (ORCPT
+        id S1729061AbfHYWfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 18:13:13 -0400
-Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:34111 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728931AbfHYWNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 18:13:13 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 89B4818224D78;
-        Sun, 25 Aug 2019 22:13:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: lock65_1bc21af378138
-X-Filterd-Recvd-Size: 1900
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 25 Aug 2019 22:13:10 +0000 (UTC)
-Message-ID: <98427b15d2a5cc93c72867bb7800df6c38f1f7bf.camel@perches.com>
-Subject: Re: [PATCH] cdrom: make debug logging rely on pr_debug and debugfs
- only.
-From:   Joe Perches <joe@perches.com>
-To:     Diego Elio =?ISO-8859-1?Q?Petten=F2?= <flameeyes@flameeyes.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Sun, 25 Aug 2019 15:13:09 -0700
-In-Reply-To: <20190825215833.25817-1-flameeyes@flameeyes.com>
-References: <20190825215833.25817-1-flameeyes@flameeyes.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Sun, 25 Aug 2019 18:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728944AbfHYWfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 18:35:40 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E8942070B;
+        Sun, 25 Aug 2019 22:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566772539;
+        bh=fWYAPG+1006AeWWBWjdG72l6elL2X09zkjVtE8i+LMM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pG5I1EzAHntwN3s4m3gHH+8/TIlRnVM79XmNAIeWYXWplYBB58l/xUs6H+05dt4J+
+         XwS+Kv4zcbRXT6HXgyUm0ANczl6MpluKFQVQGaY7qzBGzGd2xtvheXcoDfCXxWI5JD
+         Rb5Z4SErUlv2gPPlzL6m+NyWJ7KnHKZ59CnCW+Yg=
+Date:   Sun, 25 Aug 2019 18:35:38 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     =?iso-8859-1?Q?J=F6rg-Volker?= Peetz <jvpeetz@web.de>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Linux 5.2.10
+Message-ID: <20190825223537.GB5281@sasha-vm>
+References: <20190825144703.6518-1-sashal@kernel.org>
+ <qju9bd$47qi$1@blaine.gmane.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <qju9bd$47qi$1@blaine.gmane.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-08-25 at 22:58 +0100, Diego Elio Pettenò wrote:
-> The cdrom driver predates debugfs and most of the modern debugging
-> facilities, so instead it has been includings a module parameter and an
-> ioctl to enable debug messages.
-> 
-> In 2019, debugfs and dynamic debug makes most of that redundant, and even
-> confusing when trying to trace things in the dept of the driver.
-[]
-> diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-[]
-> @@ -591,7 +556,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
->  	static char banner_printed;
->  	const struct cdrom_device_ops *cdo = cdi->ops;
->  
-> -	cd_dbg(CD_OPEN, "entering register_cdrom\n");
-> +	pr_debug("entering register_cdrom\n");
+Thanks for looking into this!
 
-debut output for function tracing can also be removed
-and ftrace used instead.
+On Sun, Aug 25, 2019 at 05:26:37PM +0200, Jörg-Volker Peetz wrote:
+>Where can I find your public gpg key and it's fingerprint?
+>It's not yet documented on https://www.kernel.org/category/signatures.html .
 
-> @@ -643,7 +608,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
->  
->  void unregister_cdrom(struct cdrom_device_info *cdi)
->  {
-> -	cd_dbg(CD_OPEN, "entering unregister_cdrom\n");
-> +	pr_debug("entering unregister_cdrom\n");
+You're right, I'll send a patch to add my fingerprint as well.
 
-etc...
+>I'm asking because the "gpg --locate-keys" method does not work for me.
 
+I can confirm this, and this is weird... I see a kernel.org UID on the
+key, and gpg seems to confirm that as well:
 
+$ gpg --quick-add-uid DEA66FF797772CDC 'Sasha Levin <sashal@kernel.org>'
+gpg: Such a user ID already exists on this key!
+
+Let me contact kernel.org support to see what I'm doing wrong...
+
+--
+Thanks,
+Sasha
