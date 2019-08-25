@@ -2,111 +2,111 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45911C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95162C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9102080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YW3QSgHD"
+	by mail.kernel.org (Postfix) with ESMTP id 6932A206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfHYUTy (ORCPT
+        id S1729164AbfHYU0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 16:19:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46065 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbfHYUTy (ORCPT
+        Sun, 25 Aug 2019 16:26:46 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:54403 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbfHYU0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 16:19:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w26so10216287pfq.12;
-        Sun, 25 Aug 2019 13:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XguKWnDffzr7AqoRgU/VQBvkCeOmZ8YXW620WGCFcfo=;
-        b=YW3QSgHDV9Q2oB/DaRTgLqHVpp+tb6/qlnDXjS2FGkD6nSJnfy85oNTBk4etP2NHi3
-         +/0gDN3m4D/SWDQUC6gS5oGiRubMmb0zJkpJyAhtr4qVjisX8t41DTDewaBa7/v2LlgZ
-         lAK2N19JKUUSpcbFyToNtakgdN/fkGdQiPrXKLMT97a4dAxoiD59i4KI+Vn88Sn9cLo2
-         3xMYRj9uVtPW7x6/ba6NBtijD8tCARpJ0KjIu2ZYSPRKaRLsEyiNXFqrHup3sWaucqZ3
-         xl43vSKzuCcRtKHY+JGb9Ui6/faN0TWeoGBJR5LUcQaDF4LSha1nTCeXcrhWvPUI0/Yt
-         AdCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XguKWnDffzr7AqoRgU/VQBvkCeOmZ8YXW620WGCFcfo=;
-        b=OkC8AF+ek4PrScEIgyIEcYZAFDh0ol1G8WVHqqfYq3zqNySRR+Qh4y8BBpc1VwoOe0
-         MezFknV2edJI3I3etKlxuOWevkxhsJGrN2lxl9n8hj55GM/WKc9JhMPUVPI6FBzZawhw
-         t+9mTEQTi7VQOjcP/tlLDg+OYjNHKGByyvYtnUxnbcqbNtBypHQbqDllpY0xKK0yVvGd
-         VyU5KGDUIMGV/nSnLjTmnOy5gebUdh8w/H5zlUaezsTjXafuDAuaPQLjHkrApTxBgF2r
-         cJaOaKMzJnq18DXGdQsz0K2aREuYdmIQsnh+pgBbkU3Sj83GvR1Zy0FFzz56zR8KJ+G6
-         jmTA==
-X-Gm-Message-State: APjAAAU/11+hQOAvVcvJJeOFXDpxR0WJYT6sNhf1tj/eMWMXS5jmkILf
-        hV0v+0sVVeaRqLbLsMNrfKc=
-X-Google-Smtp-Source: APXvYqwutof2ugAF94wxlwY8EOnF+gDFNVgBVVKkkiKWFiP78nVn7Hqb1sA7FARFx1DjCN/P5MXV8Q==
-X-Received: by 2002:a65:6846:: with SMTP id q6mr13510455pgt.150.1566764393672;
-        Sun, 25 Aug 2019 13:19:53 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.17.2])
-        by smtp.gmail.com with ESMTPSA id 4sm10855710pfe.76.2019.08.25.13.19.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 25 Aug 2019 13:19:52 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     mchehab@kernel.org, hverkuil@xs4all.nl, gregkh@linuxfoundation.org,
-        rfontana@redhat.com, sakari.ailus@linux.intel.com,
-        tglx@linutronix.de
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] [media]: usbvision: Remove dead code
-Date:   Mon, 26 Aug 2019 01:55:41 +0530
-Message-Id: <1566764741-20098-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sun, 25 Aug 2019 16:26:45 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2DD261C0003;
+        Sun, 25 Aug 2019 20:26:43 +0000 (UTC)
+Date:   Sun, 25 Aug 2019 22:26:42 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: at91: DT for 5.4
+Message-ID: <20190825202642.GA18853@piout.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These codes are commented since v4.2-rc1. If there is no plan
-to enable the #else part in future, these can be removed
-forever.
+Hi,
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/media/usb/usbvision/usbvision-video.c | 10 ----------
- 1 file changed, 10 deletions(-)
+A few DT changes affecting only the style but not the DTB output. There
+may be some late DT changes a bit later (but hopefully not too late).
 
-diff --git a/drivers/media/usb/usbvision/usbvision-video.c b/drivers/media/usb/usbvision/usbvision-video.c
-index 93750af..896837f 100644
---- a/drivers/media/usb/usbvision/usbvision-video.c
-+++ b/drivers/media/usb/usbvision/usbvision-video.c
-@@ -967,7 +967,6 @@ static ssize_t usbvision_read(struct file *file, char __user *buf,
- 	       __func__,
- 	       (unsigned long)count, frame->bytes_read);
- 
--#if 1
- 	/*
- 	 * FIXME:
- 	 * For now, forget the frame if it has not been read in one shot.
-@@ -976,15 +975,6 @@ static ssize_t usbvision_read(struct file *file, char __user *buf,
- 
- 	/* Mark it as available to be used again. */
- 	frame->grabstate = frame_state_unused;
--#else
--	if (frame->bytes_read >= frame->scanlength) {
--		/* All data has been read */
--		frame->bytes_read = 0;
--
--		/* Mark it as available to be used again. */
--		frame->grabstate = frame_state_unused;
--	}
--#endif
- 
- 	return count;
- }
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.4-dt
+
+for you to fetch changes up to bb3e9c767c6134a5761470038e8c75cdb6f04867:
+
+  ARM: dts: at91: at91sam9x5dm.dtsi: Style cleanup (2019-08-21 18:41:36 +0200)
+
+----------------------------------------------------------------
+AT91 DT for 5.4
+
+ - style cleanup for at91sam9x5 based boards
+ - avoid colliding node and property names
+
+----------------------------------------------------------------
+Rob Herring (1):
+      ARM: dts: at91: Avoid colliding 'display' node and property names
+
+Uwe Kleine-König (10):
+      dt-bindings: add vendor prefix "acme" for "Acme Systems srl"
+      ARM: dts: at91: Add label for sam9x5's internal RTC
+      ARM: dts: at91: ariag25: Style cleanup
+      ARM: dts: at91: ariettag25: style cleanup
+      ARM: dts: at91: cosino: Style cleanup
+      ARM: dts: at91: kizboxmini: Style cleanup
+      ARM: dts: at91: at91sam9g15: Style cleanup
+      ARM: dts: at91: at91sam9xx5ek: Style cleanup
+      ARM: dts: at91: at91sam9x5_lcd.dtsi: Style cleanup
+      ARM: dts: at91: at91sam9x5dm.dtsi: Style cleanup
+
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm/boot/dts/at91-ariag25.dts                 | 255 ++++++++++----------
+ arch/arm/boot/dts/at91-ariettag25.dts              | 100 ++++----
+ arch/arm/boot/dts/at91-cosino.dtsi                 | 203 ++++++++--------
+ arch/arm/boot/dts/at91-cosino_mega2560.dts         |  93 ++++----
+ arch/arm/boot/dts/at91-kizboxmini.dts              | 179 +++++++-------
+ arch/arm/boot/dts/at91sam9261ek.dts                |   2 +-
+ arch/arm/boot/dts/at91sam9263ek.dts                |   2 +-
+ arch/arm/boot/dts/at91sam9g15.dtsi                 |  28 +--
+ arch/arm/boot/dts/at91sam9g15ek.dts                |  12 +-
+ arch/arm/boot/dts/at91sam9g25ek.dts                |  89 ++++---
+ arch/arm/boot/dts/at91sam9g35ek.dts                |  22 +-
+ arch/arm/boot/dts/at91sam9m10g45ek.dts             |   2 +-
+ arch/arm/boot/dts/at91sam9rlek.dts                 |   2 +-
+ arch/arm/boot/dts/at91sam9x25ek.dts                |  36 ++-
+ arch/arm/boot/dts/at91sam9x35ek.dts                |  43 ++--
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |   2 +-
+ arch/arm/boot/dts/at91sam9x5_lcd.dtsi              | 194 +++++++--------
+ arch/arm/boot/dts/at91sam9x5dm.dtsi                |  86 ++++---
+ arch/arm/boot/dts/at91sam9x5ek.dtsi                | 265 ++++++++++-----------
+ 20 files changed, 785 insertions(+), 832 deletions(-)
+
 -- 
-1.9.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
