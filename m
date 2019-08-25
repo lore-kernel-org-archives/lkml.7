@@ -2,102 +2,81 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C68C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20650C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F0120870
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566763185;
-	bh=8dab/N+G+Ws2pEvTnFj8a60ZvdFyDvBBE7tGRKz3PG0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bvHjh/k3dLt1atW5TF2M+XoK4X9bgOAj23oOY7KQxbWgbLFBbRcpL/gcc05Gotvfa
-	 Bq0O5qXzLwG4W8leJe5oxGT2DMiCZmFjrcSbaNzOzTAdhkKz7mgncvvwK1LaHn7KXa
-	 ye0dvFnsEVt4FdTVnMy5efNQAH/yzbnSnnwE6OMg=
+	by mail.kernel.org (Postfix) with ESMTP id EC79E2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="F2OO1oz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfHYT7o (ORCPT
+        id S1729085AbfHYUAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 15:59:44 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36203 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfHYT7o (ORCPT
+        Sun, 25 Aug 2019 16:00:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39219 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfHYUAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 15:59:44 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r5so5190594lfc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 12:59:43 -0700 (PDT)
+        Sun, 25 Aug 2019 16:00:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b1so13314539otp.6;
+        Sun, 25 Aug 2019 13:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XVa8anCZ+4vkRzIouGu0LBPnwGXRh/AHZn823ax1V5Q=;
-        b=Y0BTrtMRbnRRY5Pld/ZZQTW8Q67qN5m1j0be9LImGfHgJfaW9aqNlau409QswX02Al
-         K/uZjUY0EJKN19kL81vDzukd+1ZmLD0iZxP0KWabgBmwRmQyB577RVQgWH+AWXcvtPxU
-         sVsOjHD13Ve2I5h5gIEAfi7a57cjr0n/MGDnQ=
+        bh=zXY+vp9jRGpj9AwVjvaZbbtqnQMg4LrCQrKGAkuzItM=;
+        b=F2OO1oz7p1xplg6LJMZYwvRm0fnVwDnp6BRBhYp0l8A0qZjst2X8KsuaKIMIkDoZEQ
+         pCHsZ9rC94kNLoL6YSH6/UWkUw1spBjrUwNIBJvzjRCuxSBZse74rLt6T3Jx9ngLcKtc
+         H/yi/sDUOMb3elM1YnWXXuYV8esWMdW4hvGp2i90GxJGo1wxktZINaHPZiQcJVgnRdVV
+         LL9oSNIQr/Vg0fd15sq9o34SjRfS6hwtW68De9wkPWyKiUewd5+ODOJOcUwRzwb+LhBx
+         +r6b7s9vRhtciZ4c5Zu6Uj4vwu4f1icD7pmiOm8XkYCAHbnwDvMuzXYE7u8lXOrfH8qp
+         bxzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XVa8anCZ+4vkRzIouGu0LBPnwGXRh/AHZn823ax1V5Q=;
-        b=SP1RZU9jcLxT4ZQcOjriNkX0FNaxH3tHnSw5SiU73fPRlDQoSzaA2R1N4WTiwgGAdY
-         C7er/cXMqP79iolDZ4foKGd5G7v+L2MxG5hrjZEdIwRADrl0tDLw97h3WrZRFeTnHj3r
-         gEeOKr+f3rHcqJpByIsbcypSWisxmXtTcIAVg6xg11ygZh0Mm+lF0dry0JdR6w/XwkQH
-         1Jw6sgzNmtsK3s+bGbeWilSGHWiSAij/di/okg+nU4/lR9z5wMSDbpjdGz8eHADK78Si
-         Fut7xSbu73D+qdme0Y3wqV33TNn2Jiahx+ql0YjDiY5EwrFEXWSoGzrWx+s+FJU8frGk
-         GIow==
-X-Gm-Message-State: APjAAAXUamQJE9w/JA7WHX5t8NO9EkYsvReMce9IFg5WFnFtkB4c0J/c
-        WZ7ey1MytVrYMdMOXzXcm2upFUWU6iw=
-X-Google-Smtp-Source: APXvYqxL+q4O7vul+jYLivShOoEHlfca7fXTTRy9MJmqZirtU+53ojpEocpn+WMHA4GoDSGgrtRQpA==
-X-Received: by 2002:ac2:5ec8:: with SMTP id d8mr7424224lfq.183.1566763181943;
-        Sun, 25 Aug 2019 12:59:41 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id 69sm1687112ljj.101.2019.08.25.12.59.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Aug 2019 12:59:41 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id n19so10662872lfe.13
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 12:59:41 -0700 (PDT)
-X-Received: by 2002:ac2:428d:: with SMTP id m13mr8633607lfh.52.1566763180838;
- Sun, 25 Aug 2019 12:59:40 -0700 (PDT)
+        bh=zXY+vp9jRGpj9AwVjvaZbbtqnQMg4LrCQrKGAkuzItM=;
+        b=SfNvXW+0J2H7r+hktDLz2DS4cIQDpPlZ7Rgvvk6dPc7GZdV0bdNBPuboYjUlyrLiJr
+         Dc/sRfebRPHrKQIEExatRA8BJdND1KCJRuVetH7ZAUtbm5FFlDS79cL47V5uN6Wn8mbJ
+         KSCHJuP38DQ+NTxn4pcYUG5fPU+vegaFdDpAA66a5VprdPSk7v8s8a6VrbEZpU7xzWX7
+         rJWJ9X/2k0nfdD7y6pSC95u0u7uCaE20TQeOMnX8+5U9uSKGza5Xdkcd7/fuwB9sLElY
+         LfNCphNQf0fWWgss2prIznGFu/07pcpYqHt5Oi8pQGogIunjTeFIW5CqJ6tgqafLYuUS
+         cmgw==
+X-Gm-Message-State: APjAAAWuA6pSghE0jua2JgGOuvAVQQADSFbFD8flpcgLqazp053IwXEs
+        5YMb/8Fuf7vtuzwoEh+AlU0yNr8pOBNlbsfhIcAiN2gA
+X-Google-Smtp-Source: APXvYqyZu4IJ7I+DpLeCK6W/EgEKtsIl2fZBrWMoOYcz2co8fxVnv4eQJJUV/XDH381rnV0JfTwdjzjeHaJs5fJoXAg=
+X-Received: by 2002:a9d:7b44:: with SMTP id f4mr3819368oto.42.1566763207717;
+ Sun, 25 Aug 2019 13:00:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <156672618029.19810.8479315461492191933.tglx@nanos.tec.linutronix.de>
- <156672618029.19810.9732807383797358917.tglx@nanos.tec.linutronix.de>
- <CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com>
- <20190825173000.GB20639@zn.tnic> <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
- <20190825182922.GC20639@zn.tnic> <CAHk-=wjhyg-MndXHZGRD+ZKMK1UrcghyLH32rqQA=YmcxV7Z0Q@mail.gmail.com>
- <20190825193218.GD20639@zn.tnic> <CAHk-=wiBqmHTFYJWOehB=k3mC7srsx0DWMCYZ7fMOC0T7v1KHA@mail.gmail.com>
- <20190825194912.GF20639@zn.tnic>
-In-Reply-To: <20190825194912.GF20639@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 25 Aug 2019 12:59:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
-Message-ID: <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
-Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <20190823090418.17148-1-narmstrong@baylibre.com> <20190823090418.17148-6-narmstrong@baylibre.com>
+In-Reply-To: <20190823090418.17148-6-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sun, 25 Aug 2019 21:59:56 +0200
+Message-ID: <CAFBinCDjO2sWcE8hmPfn1vsar52yeeTVAZaYJ6vR3rXaVJQQPg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] arm64: dts: meson-sm1-sei610: add USB support
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, ulf.hansson@linaro.org,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 12:49 PM Borislav Petkov <bp@suse.de> wrote:
+On Fri, Aug 23, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> We're really verbose, though. Dunno if we should make this a WARN_ONCE
-> or we say that we really should be very loud with a non-functioning
-> RDRAND...
-
-I think WARN_ONCE() is good. It's big enough that it will show up in
-dmesg if anybody looks, and if nobody looks I think distros still have
-logging for things like that, don't they?
-
-Hopefully this never actually triggers in practice, thanks to rdrand
-being turned off on known-bad machines now, and Zen 2 being fixed.
-
-               Linus
+> Add the USB properties for the Amlogic SM1 Based SEI610 Board in order to
+> support the USB DRD Type-C port and the USB3 Type A port.
+>
+> The USB DRD Type-C controller uses the ID signal to toggle the USB role
+> between the DWC3 Host controller and the DWC2 Device controller.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+(based on the patch description as I don't have the schematics for this board)
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
