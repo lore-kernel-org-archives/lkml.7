@@ -2,114 +2,121 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7221EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFC3C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 23:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46ECA2080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0F121848
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 23:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKRnKukp"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pJ+xgR4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbfHYWqV (ORCPT
+        id S1728882AbfHYXSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 18:46:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36232 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbfHYWqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 18:46:21 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r3so13501248wrt.3;
-        Sun, 25 Aug 2019 15:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+7qd1X6rg/vrKrkBZiOoTeJ3D1xlptLFe6fvd/kCGec=;
-        b=fKRnKukp1uCf6vgXgkNw8dVyMaqYPm5WdW26pJ/3u6tXAh/Y9Wj2noRzyJY/m7TuG7
-         8PsrPmUHqi5/s6YVq1WzHkdsLjD5M5aJmhXDBjbLRgVTc62j7yzdprrCgaHogCW7I9kg
-         ExWZdKtp5hDH/mtfBtS+byAwnJ4xMf2qeEGPSpSn4SJB2z/sst8zTx20GW5GytQORRIX
-         TXjuAz9ZWHJsyEkQwaUR0aqg6u7jVljD3GE8IrBL9drMI3BRMVcZ1wDYlchKewnY6LGD
-         VzA0MDBn/Aww5Gs3RpbemdHBuIKalU+BEpE1v4FaT9w1HxIihNiax55PEONhEVsiuiMX
-         wtQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=+7qd1X6rg/vrKrkBZiOoTeJ3D1xlptLFe6fvd/kCGec=;
-        b=f/y0DwHBTu3kVj6KzU3R5S2xVNJYinHsBjVXuYYk00tas2g8sCKXzoavr3RCUUerze
-         gL0xMHS1cLKpdAmXUOoU9VPdDri6ElzJVg2i3+dMgDh9RXBlz7ur4echne6iDGXohjpl
-         2Ye4E4jD1Mn/HVMMbVP60AYTR/upm0VK6g6LwC36ThpH7NLdT5g46BqJCx38J0RWQ4+r
-         RTbjnugw1bEV7LICUozT6FaN8QSoR1L2ILu0NilpZGam/HkT3La7hULRMquLY/ZhZOHB
-         4yWtk+R5bs283MoAQEtBZxPrC879yMSxW1u1y+78t/c84YPJAUlkVveupcju68d/mg/C
-         +mjg==
-X-Gm-Message-State: APjAAAXqEBM8ydNhiAqKSZjt8DyqK1ZKfocbKqWaH5b2xuJSpSI4Pn6i
-        g2EQPooai3WAMbNOlE7IZwo=
-X-Google-Smtp-Source: APXvYqyT1PuPmpvkvGvANX5g0+7WO1DxuKEAwhPENnCuKxVLLxj2mkeyJFQwPN58pmLBQhbeuDNMHg==
-X-Received: by 2002:a5d:4206:: with SMTP id n6mr18628640wrq.110.1566773178888;
-        Sun, 25 Aug 2019 15:46:18 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id o11sm8578922wmh.46.2019.08.25.15.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2019 15:46:17 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Remove the use of printk_ratelimit() in pci.c
-Date:   Mon, 26 Aug 2019 00:46:16 +0200
-Message-Id: <20190825224616.8021-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Sun, 25 Aug 2019 19:18:21 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41423 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfHYXSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 19:18:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46GrfK1R5mz9s7T;
+        Mon, 26 Aug 2019 09:18:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566775098;
+        bh=C+NU4v33oaKNdQ6JvZFe5xkem3dalXSQfAfo4VatRIU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pJ+xgR4l6hgrKSygPnlbjPoFvmnvO4ubmmNfgUkLC97rNPhtOItL1mnZQbHvdyCZi
+         KB+Zy1gjwVvbL0fVJZ0vZMcETvqoDEHr/00SFTDRda26AaGtW1/6GJ945kWz6Ng6+n
+         GQVp/1zmDT/Lfmtg6mXte42Jfyhnay/I5DHLJp8SuPKA8mjKxBiIexlqPI38UzGMn8
+         0nBN+VcsYNQciDIA/v9T5Z9bUUvqyW1vXNwI8pnlNBOSMMTzFw2WpXEqdGUKm2eImK
+         xbS13LEcHvGg1xYYUFe7qHAYdwyZU6vNShHfLuFTpy2l7uycw3zYmnB6UHql+iCza3
+         Wnek9YW3p4FoA==
+Date:   Mon, 26 Aug 2019 09:17:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: linux-next: manual merge of the mips tree with the kbuild tree
+Message-ID: <20190826091758.1a40ac66@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/.rooHpJkG1UewFaYSTGcuZq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the
-rate limiting state with all other callers to the printk_ratelimit().
+--Sig_/.rooHpJkG1UewFaYSTGcuZq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add pci_info_ratelimited macro similar to pci_notice_ratelimited
-added in the commit a88a7b3eb076 ("vfio: Use dev_printk() when
-possible") and use it instead of pr_info inside the if-statement.
+Hi all,
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/pci/pci.c   | 4 ++--
- include/linux/pci.h | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Today's linux-next merge of the mips tree got a conflict in:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f20a3de57d21..e3d190d003c5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -890,8 +890,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
--	if (dev->current_state != state && printk_ratelimit())
--		pci_info(dev, "Refused to change power state, currently in D%d\n",
-+	if (dev->current_state != state)
-+		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
- 			 dev->current_state);
- 
- 	/*
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 463486016290..73ce8d908322 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2367,4 +2367,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #define pci_notice_ratelimited(pdev, fmt, arg...) \
- 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
- 
-+#define pci_info_ratelimited(pdev, fmt, arg...) \
-+	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
-+
- #endif /* LINUX_PCI_H */
--- 
-2.22.1
+  arch/mips/Kconfig
 
+between commit:
+
+  2ff2b7ec65dc ("kbuild: add CONFIG_ASM_MODVERSIONS")
+
+from the kbuild tree and commit:
+
+  45e03e62724f ("MIPS: Decouple CPU_SUPPORTS_HUGEPAGES from 64BIT")
+
+from the mips tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/mips/Kconfig
+index 3db919b5c93a,31c7044e34e6..000000000000
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@@ -43,8 -44,7 +44,8 @@@ config MIP
+  	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if MMU && COMPAT
+  	select HAVE_ARCH_SECCOMP_FILTER
+  	select HAVE_ARCH_TRACEHOOK
+- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES && 64BIT
++ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES
+ +	select HAVE_ASM_MODVERSIONS
+  	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
+  	select HAVE_CONTEXT_TRACKING
+  	select HAVE_COPY_THREAD_TLS
+
+--Sig_/.rooHpJkG1UewFaYSTGcuZq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1jFyYACgkQAVBC80lX
+0GwfeQgAhi1DEgFKN1Om5LrPp0+JAMemaEsFlENZ2j5YN+Lw3pV2LGah+d3WjGrD
+AALiKQHPE6WbxMR5b6i0GkkTyfu4PdTvnyPjfAjhx+kYIjpGBncEqFg2zfckPawB
+Pk+OilCMaWwcfik/cf1Bk/tBOnpgCbHStih/8R3djZjfq7BqDTo6wzx2FUhe1PQe
+vqSey1wS44hd3uqE95FEHF6KZzwN2xPzSPfdasdO35sP74eIgDFAcWZ1HkX4gRJs
+O+PCV9rO2FaY1myPA9ohq9McjVSff7JRwqfZKFtSlJV/LBTlib1ZGy2sh0ijdUfv
+zihQrU2QFWB/M9pXmURU/2A7gFvL/Q==
+=F1Qz
+-----END PGP SIGNATURE-----
+
+--Sig_/.rooHpJkG1UewFaYSTGcuZq--
