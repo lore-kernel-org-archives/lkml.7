@@ -2,105 +2,113 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BFDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDC9206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L2Jg/CqW"
+	by mail.kernel.org (Postfix) with ESMTP id 48D42206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfHYUGa (ORCPT
+        id S1729134AbfHYURb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 16:06:30 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:45829 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbfHYUGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 16:06:30 -0400
-Received: by mail-vk1-f201.google.com with SMTP id c65so6663931vkg.12
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 13:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=+zhJzMhw6LdP2t6/07CSEKMx7kRxH5t+tfZUooODa+g=;
-        b=L2Jg/CqWUEmpIPG5COD9iu+asYhkTPlrV1Q3nfbiS5JqpeyeQnVPxOO004YatNuXGf
-         IgNfpUj++zV6+P/wRxIyR8YTZkOnyFOrRMiBK/iWdspcpYQ/KE4jfczN2CAXOjsbjxp2
-         KPBOK4JZFlOEwrkTbfaA8vlJYhSeHMgy2NOHcKNcm5bQITXTprbs+teNnc1K0gCWygv6
-         s6XrXKTToFH57nXNdsBmUAjL+pLjKWkLeb7k6wwPsyxyge0vVicDVzpevV7DEKKozbmn
-         xtZw/n1Y4ugLmDh16MnQjI7OxbqpgUvVEaHzjTfD3yzx7ZEP3Z9QdMfPWp4m1yHVEr7o
-         m/9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=+zhJzMhw6LdP2t6/07CSEKMx7kRxH5t+tfZUooODa+g=;
-        b=ePO9WHUZ2VPHeC+woF7jUYMMVfaDBdAXjujsgR7qBXNu9sKWJZsnmMSlhDE5d+5hWe
-         miECC5Iwx9C3EHsZ7XmaBue/AnHumKsm6uj5tU68ORODPiv8Z9XujsmHvZP224MFxOeN
-         +5ufXyLgZXXtCBJQbBIQpqJh2z+q8BGWbzHjngMSaY8EunIEtikqhLeIJEhWjPN+/QzL
-         +jMc9iEFu1FVklP6bNa2hqGRDWMwj6FffKJ7qtMy9qCZ4m6CmykKvnvMY4aO7bd8y3S8
-         18Lry6Xh3g/xPN2dQD1G1rV29y0v8LGr4cph5YnneR5GxU3/LAfN2xCubMICT0Cy8VqS
-         b23A==
-X-Gm-Message-State: APjAAAXS2gSD+w6uFspu/xxkh1/+vrijFVNNnDwWdiK+ibLvNbmcKxQc
-        bOHaoUatVOuibivJAC0XcS/CUM4yfiA=
-X-Google-Smtp-Source: APXvYqwCbijI/fQz4VN4t/HjzBu52ybOI+J9R6kFb3HnnUqczko0IsLssuLE/txa+OJ4ol1ptVGpIhwCSCw=
-X-Received: by 2002:a67:bb18:: with SMTP id m24mr8073907vsn.201.1566763588690;
- Sun, 25 Aug 2019 13:06:28 -0700 (PDT)
-Date:   Sun, 25 Aug 2019 14:06:21 -0600
-Message-Id: <20190825200621.211494-1-yuzhao@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH] mm: replace is_zero_pfn with is_huge_zero_pmd for thp
-From:   Yu Zhao <yuzhao@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?=" <jglisse@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 25 Aug 2019 16:17:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51840 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728730AbfHYURa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 16:17:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 88870AE12;
+        Sun, 25 Aug 2019 20:17:29 +0000 (UTC)
+Date:   Sun, 25 Aug 2019 22:17:23 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
+Message-ID: <20190825201723.GG20639@zn.tnic>
+References: <156672618029.19810.9732807383797358917.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com>
+ <20190825173000.GB20639@zn.tnic>
+ <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
+ <20190825182922.GC20639@zn.tnic>
+ <CAHk-=wjhyg-MndXHZGRD+ZKMK1UrcghyLH32rqQA=YmcxV7Z0Q@mail.gmail.com>
+ <20190825193218.GD20639@zn.tnic>
+ <CAHk-=wiBqmHTFYJWOehB=k3mC7srsx0DWMCYZ7fMOC0T7v1KHA@mail.gmail.com>
+ <20190825194912.GF20639@zn.tnic>
+ <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For hugely mapped thp, we use is_huge_zero_pmd() to check if it's
-zero page or not.
+On Sun, Aug 25, 2019 at 12:59:25PM -0700, Linus Torvalds wrote:
+> I think WARN_ONCE() is good. It's big enough that it will show up in
+> dmesg if anybody looks, and if nobody looks I think distros still have
+> logging for things like that, don't they?
 
-We do fill ptes with my_zero_pfn() when we split zero thp pmd, but
- this is not what we have in vm_normal_page_pmd().
-pmd_trans_huge_lock() makes sure of it.
+Probably. Lemme research that.
 
-This is a trivial fix for /proc/pid/numa_maps, and AFAIK nobody
-complains about it.
+> Hopefully this never actually triggers in practice, thanks to rdrand
+> being turned off on known-bad machines now, and Zen 2 being fixed.
 
-Signed-off-by: Yu Zhao <yuzhao@google.com>
+Right. Here's v2, will do a proper patch tomorrow:
+
 ---
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..ea3c74855b23 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -654,7 +654,7 @@ struct page *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
+diff --git a/arch/x86/kernel/cpu/rdrand.c b/arch/x86/kernel/cpu/rdrand.c
+index 5c900f9527ff..00a9d13c0a92 100644
+--- a/arch/x86/kernel/cpu/rdrand.c
++++ b/arch/x86/kernel/cpu/rdrand.c
+@@ -29,7 +29,8 @@ __setup("nordrand", x86_rdrand_setup);
+ #ifdef CONFIG_ARCH_RANDOM
+ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ {
+-	unsigned long tmp;
++	unsigned int changed = 0;
++	unsigned long tmp, prev;
+ 	int i;
  
- 	if (pmd_devmap(pmd))
- 		return NULL;
--	if (is_zero_pfn(pfn))
-+	if (is_huge_zero_pmd(pmd))
- 		return NULL;
- 	if (unlikely(pfn > highest_memmap_pfn))
- 		return NULL;
--- 
-2.23.0.187.g17f5b7556c-goog
+ 	if (!cpu_has(c, X86_FEATURE_RDRAND))
+@@ -42,5 +43,24 @@ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ 			return;
+ 		}
+ 	}
++
++	/*
++	 * Stupid sanity-check whether RDRAND does *actually* generate
++	 * some at least random-looking data.
++	 */
++	prev = tmp;
++	for (i = 0; i < SANITY_CHECK_LOOPS; i++) {
++		if (rdrand_long(&tmp)) {
++			if (prev != tmp)
++				changed++;
++
++			prev = tmp;
++		}
++	}
++
++	if (!changed)
++		WARN_ONCE(1,
++"RDRAND gives funky smelling output, might consider not using it by booting with \"nordrand\"");
++
+ }
+ #endif
 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
