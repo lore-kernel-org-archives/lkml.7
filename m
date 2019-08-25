@@ -2,269 +2,152 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6DEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B12C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C296206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHavlmak"
+	by mail.kernel.org (Postfix) with ESMTP id 86AAF2080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfHYQOR (ORCPT
+        id S1728468AbfHYQaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 12:14:17 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43267 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbfHYQOR (ORCPT
+        Sun, 25 Aug 2019 12:30:35 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:43027 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728382AbfHYQaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 12:14:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id 18so31483605ioe.10;
-        Sun, 25 Aug 2019 09:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=o5hlv7LBBBQ7yX2vTJxs90ureJ9F2QkcSE1n+2RFehQ=;
-        b=EHavlmakZHdQ2TgI6cSSUt8egECu5c6Qhvd6qXCgaANp5/fbK7QaYLlOeT2Wf/VmE2
-         7H285DQaahoH+A8XtfQJ+hLzp5mz28CdpA1uxRJcLZDJkLSbNOnbJJqwNNVAYFLc4I77
-         mhQVxaR2RDyuPRQ8USa944iZcy2tzFRhoDXd7lmA8WVXQklV1xGiMsPS3rn/vbs35E+1
-         4eFik9hUKYo/S+F9x5MrqbrHXvafS84a4K49ajq868ezZtvzRY9se/08M3m4d6D+Xlpq
-         RxZR50pAePjM5B0BR5mQDBrSIN++nLZ3MXNRxDRr3/1KHVAgh6rGrf62Tf/U9yo7sdwF
-         4rUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=o5hlv7LBBBQ7yX2vTJxs90ureJ9F2QkcSE1n+2RFehQ=;
-        b=cEIb01bBuf0dKeminnkc+LPd78o57jRNp8zyDWAhjHtuS6HXjy6567wPwjZHlL8915
-         nNMruwmQ2BIwg3AyFAsP4+zQrT/1Kb5QtE9dF7re3Dvkv/tJE52zBIY0eRItygetNrWF
-         QYFP8OF4EPYrtzb4vc754hVGrPVdlZWb6QGU2wCvY6V1LxverYWf6McfOA46BXJPU0ug
-         XCGgyrXYOridzPqmGt7hWqS5L9fHCjdliMK55RVS6/i6CpsOQ7ZLWFABLOlhUyHUyW0L
-         ahgporb1Xnr2BS7QPI+FDvhhfhTXI4zGwg0KKCuzg1Euqn/6BvR0sW8UcK0XsBCZDU19
-         4dDg==
-X-Gm-Message-State: APjAAAUSttRNJuQNXZNB3uxyuhuhLcjMYrbf+6Unt2COCgRl7w8vyCrq
-        Vx5sKFGvmdO+dzZDYF4kt8zwsrXsg1sqrCEmtWQ=
-X-Google-Smtp-Source: APXvYqyYW/WgCe7KrtqDjbWr9khgZgLkZFrQPqqWIE/KTfnyeROY9OqnnPpzAzTtsJwGJAkMVkGdRQnAPcorkdXkPEI=
-X-Received: by 2002:a05:6602:cb:: with SMTP id z11mr2793812ioe.4.1566749655914;
- Sun, 25 Aug 2019 09:14:15 -0700 (PDT)
+        Sun, 25 Aug 2019 12:30:35 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 3X9lT3fgRWqEy3ymSwR6mZoLl1PqtNc7RMtkjEPM6qHhPwoSFMxwHQyCe4o1YO8WbbAbjSs+nx
+ YJFoO5TEaHl6E46Fs46i0TiHmLvnUpLOZovdNYjwUOH1V7l1vJLWi+1Ummg0apzITBESTrkA7R
+ MDOb/OqPwMOOHf4yrdRrdS8bbSYMVZKd0L79NRW7lQ9O+dLsKRk9b3bX8Czfdf+rgHPSlhNCZd
+ fBvvUXPfwT5r/ff0zsMZq1vl5rvChSIbeYGNXG9Ao+9FrB+Gj2Q/BxXTJIyDCmxoNia2uZtsAf
+ dvI=
+X-IronPort-AV: E=Sophos;i="5.64,429,1559545200"; 
+   d="scan'208";a="47898997"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2019 09:30:26 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 25 Aug 2019 09:30:25 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sun, 25 Aug 2019 09:30:25 -0700
+Date:   Sun, 25 Aug 2019 18:30:25 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Jiri Pirko <jiri@resnulli.us>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <davem@davemloft.net>, <UNGLinuxDriver@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <allan.nielsen@microchip.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH 0/3] Add NETIF_F_HW_BRIDGE feature
+Message-ID: <20190825163023.hkc23lv7b5vvphdb@soft-dev3.microsemi.net>
+References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
+ <e47a318c-6446-71cd-660c-8592037d8166@gmail.com>
+ <20190824074204.GA15041@nanopsycho.orion>
 MIME-Version: 1.0
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
- <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
- <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
- <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
- <20190813200623.2dmxcwibuyolnuhh@core.my.home> <CA+E=qVd-hz68VhL0n+3-HDNua2QsT0dOVY9mRjhb5e5+tBW5Fg@mail.gmail.com>
-In-Reply-To: <CA+E=qVd-hz68VhL0n+3-HDNua2QsT0dOVY9mRjhb5e5+tBW5Fg@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Mon, 26 Aug 2019 00:14:04 +0800
-Message-ID: <CAEExFWueWPOvXoE+zj67DuKWeamcLgawfOxanfPp6Jyo9Envzg@mail.gmail.com>
-Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan.Cameron@huawei.com,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        rui.zhang@intel.com, "David S. Miller" <davem@davemloft.net>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20190824074204.GA15041@nanopsycho.orion>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Vasily,
+The 08/24/2019 09:42, Jiri Pirko wrote:
+> External E-Mail
+> 
+> 
+> Sat, Aug 24, 2019 at 01:25:02AM CEST, f.fainelli@gmail.com wrote:
+> >On 8/22/19 12:07 PM, Horatiu Vultur wrote:
+> >> Current implementation of the SW bridge is setting the interfaces in
+> >> promisc mode when they are added to bridge if learning of the frames is
+> >> enabled.
+> >> In case of Ocelot which has HW capabilities to switch frames, it is not
+> >> needed to set the ports in promisc mode because the HW already capable of
+> >> doing that. Therefore add NETIF_F_HW_BRIDGE feature to indicate that the
+> >> HW has bridge capabilities. Therefore the SW bridge doesn't need to set
+> >> the ports in promisc mode to do the switching.
+> >
+> >Then do not do anything when the ndo_set_rx_mode() for the ocelot
+> >network device is called and indicates that IFF_PROMISC is set and that
+> >your network port is a bridge port member. That is what mlxsw does AFAICT.
 
-On Wed, Aug 14, 2019 at 11:01 AM Vasily Khoruzhick <anarsoul@gmail.com> wro=
-te:
->
-> On Tue, Aug 13, 2019 at 1:06 PM Ond=C5=99ej Jirman <megous@megous.com> wr=
-ote:
-> >
-> > On Mon, Aug 12, 2019 at 04:54:15PM -0700, Vasily Khoruzhick wrote:
-> > > On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> wro=
-te:
-> > > >
-> > > > HI Vasily,
-> > > >
-> > > > On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.c=
-om> wrote:
-> > > > >
-> > > > > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com=
-> wrote:
-> > > > > >
-> > > > > > H3 has extra clock, so introduce something in ths_thermal_chip/=
-ths_device
-> > > > > > and adds the process of the clock.
-> > > > > >
-> > > > > > This is pre-work for supprt it.
-> > > > > >
-> > > > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
-> > > > > >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/=
-sun8i_thermal.c
-> > > > > > index b934bc81eba7..6f4294c2aba7 100644
-> > > > > > --- a/drivers/thermal/sun8i_thermal.c
-> > > > > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > > > > @@ -54,6 +54,7 @@ struct tsensor {
-> > > > > >  };
-> > > > > >
-> > > > > >  struct ths_thermal_chip {
-> > > > > > +       bool            has_mod_clk;
-> > > > > >         int             sensor_num;
-> > > > > >         int             offset;
-> > > > > >         int             scale;
-> > > > > > @@ -69,6 +70,7 @@ struct ths_device {
-> > > > > >         struct regmap                           *regmap;
-> > > > > >         struct reset_control                    *reset;
-> > > > > >         struct clk                              *bus_clk;
-> > > > > > +       struct clk                              *mod_clk;
-> > > > > >         struct tsensor                          sensor[MAX_SENS=
-OR_NUM];
-> > > > > >  };
-> > > > > >
-> > > > > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct =
-ths_device *tmdev)
-> > > > > >         if (IS_ERR(tmdev->bus_clk))
-> > > > > >                 return PTR_ERR(tmdev->bus_clk);
-> > > > > >
-> > > > > > +       if (tmdev->chip->has_mod_clk) {
-> > > > > > +               tmdev->mod_clk =3D devm_clk_get(&pdev->dev, "mo=
-d");
-> > > > > > +               if (IS_ERR(tmdev->mod_clk))
-> > > > > > +                       return PTR_ERR(tmdev->mod_clk);
-> > > > > > +       }
-> > > > > > +
-> > > > > >         ret =3D reset_control_deassert(tmdev->reset);
-> > > > > >         if (ret)
-> > > > > >                 return ret;
-> > > > > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct=
- ths_device *tmdev)
-> > > > > >         if (ret)
-> > > > > >                 goto assert_reset;
-> > > > > >
-> > > > > > -       ret =3D sun50i_ths_calibrate(tmdev);
-> > > > > > +       ret =3D clk_prepare_enable(tmdev->mod_clk);
-> > > > >
-> > > > > You have to set rate of modclk before enabling it since you can't=
- rely
-> > > > > on whatever bootloader left for you.
-> > > > >
-> > > > > Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ=
-0 and
-> > > > > ACQ1 are too aggressive and may result in high interrupt rate to =
-the
-> > > > > point when it may stall RCU. I changed driver a bit to use params=
- from
-> > > > > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, A=
-CQ0
-> > > > > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
-> > > > > details.
-> > > >
-> > > > Why is the RCU stall happening, is it caused by a deadlock?
-> > > > Can you provide log information and your configuration?
-> > > > I am a bit curious.
-> > >
-> > > It's not deadlock, I believe it just can't handle that many interrupt=
-s
-> > > when running at lowest CPU frequency. Even with Philipp's settings
-> > > there's ~20 interrupts a second from ths. I don't remember how many
-> > > interrupts were there with your settings.
-> > >
-> > > Unfortunately there's nothing interesting in backtraces, I'm using
-> > > Pine64-LTS board.
-> >
-> > Recently there was a similar issue, with buggy CCU driver that caused
-> > CIR interrupts being fired constantly, and it also resulted in RCU
-> > stalls. Looks like a comon cause of RCU stalls.
-> >
-> > THS timing settings probably need to be made specific to the SoC, becau=
-se
-> > I noticed that the same settings lead to wildly different timings on
-> > different SoCs.
-> >
-> > It would be good to measure how often ths interrupt fires with this dri=
-ver
-> > on various SoCs.
-> >
-> > 20 times a second and more sounds like overkill. I'd expect a useful
-> > range to be at most 5-10 times a second. That should be enough to stop
-> > overheating the SoC due to suddenly increased load, even without a
-> > heatsink.
->
-> Note that A64 has 3 sensors and each sensor has individual interrupt,
-> so technically it's 6-7 interrupts per sensor per second
+Yes, but then if you want to monitor all the traffic on a bridge port
+you will not be able to do that. And this seems to be a limitation.
+This is the case for mlxsw and ocelot(it doesn't implement at all
+promisc mode) and might be others.
 
-You only need to increase the value of the period to reduce the number
-of interrupts.
-Can you test the relationship between the period and the number of interrup=
-ts
-when the mod clock does not change and stays 24M?
-
-Thx.
-Yangtao
-
->
-> > regards,
-> >         o.
+> 
+> Correct.
+> 
 > >
-> > > > Thx,
-> > > > Yangtao
-> > > >
-> > > > >
-> > > > > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd=
-88fa9181a2ecbf79e8d513b2
-> > > > >
-> > > > >
-> > > > > >         if (ret)
-> > > > > >                 goto bus_disable;
-> > > > > >
-> > > > > > +       ret =3D sun50i_ths_calibrate(tmdev);
-> > > > > > +       if (ret)
-> > > > > > +               goto mod_disable;
-> > > > > > +
-> > > > > >         return 0;
-> > > > > >
-> > > > > > +mod_disable:
-> > > > > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > > > > >  bus_disable:
-> > > > > >         clk_disable_unprepare(tmdev->bus_clk);
-> > > > > >  assert_reset:
-> > > > > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform=
-_device *pdev)
-> > > > > >  {
-> > > > > >         struct ths_device *tmdev =3D platform_get_drvdata(pdev)=
-;
-> > > > > >
-> > > > > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > > > > >         clk_disable_unprepare(tmdev->bus_clk);
-> > > > > >         reset_control_assert(tmdev->reset);
-> > > > > >
-> > > > > > --
-> > > > > > 2.17.1
-> > > > > >
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > linux-arm-kernel mailing list
-> > > > > > linux-arm-kernel@lists.infradead.org
-> > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >As other pointed out, the Linux bridge implements a software bridge by
+> >default, and because it needs to operate on a wide variety of network
+> >devices, all with different capabilities, the easiest way to make sure
+> >that all management (IGMP, BPDU, etc. ) as well as non-management
+> >traffic can make it to the bridge ports, is to put the network devices
+> >in promiscuous mode.
+
+What if the HW can copy all the management traffic to the SW bridge and
+HW knows to learn and flood frames. Then there is no point to set a
+network port in promisc mode just because it is a bridge port member.
+> >If this is suboptimal for you, you can take
+> >shortcuts in your driver that do not hinder the overall functionality.
+
+If I add this check, I don't see how any other network drivers will be
+affected by this. If a network driver will start to use this then it
+needs to know that the HW should be configure to include CPU in the
+flood mask and to know which addresses can be reached through SW bridge.
+
+> >
+> >> This optimization takes places only if all the interfaces that are part
+> >> of the bridge have this flag and have the same network driver.
+> >> 
+> >> If the bridge interfaces is added in promisc mode then also the ports part
+> >> of the bridge are set in promisc mode.
+> >> 
+> >> Horatiu Vultur (3):
+> >>   net: Add HW_BRIDGE offload feature
+> >>   net: mscc: Use NETIF_F_HW_BRIDGE
+> >>   net: mscc: Implement promisc mode.
+> >> 
+> >>  drivers/net/ethernet/mscc/ocelot.c | 26 ++++++++++++++++++++++++--
+> >>  include/linux/netdev_features.h    |  3 +++
+> >>  net/bridge/br_if.c                 | 29 ++++++++++++++++++++++++++++-
+> >>  net/core/ethtool.c                 |  1 +
+> >>  4 files changed, 56 insertions(+), 3 deletions(-)
+> >> 
+> >
+> >
+> >-- 
+> >Florian
+> 
+
+-- 
+/Horatiu
