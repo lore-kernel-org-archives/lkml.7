@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81723C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 09:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E207C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 09:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393A1217F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 09:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C48F217F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 09:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lnkmByke"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FeQNjNgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfHYJtx (ORCPT
+        id S1728059AbfHYJuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 05:49:53 -0400
-Received: from mout.gmx.net ([212.227.17.21]:45813 "EHLO mout.gmx.net"
+        Sun, 25 Aug 2019 05:50:00 -0400
+Received: from mout.gmx.net ([212.227.17.22]:54287 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfHYJtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 05:49:43 -0400
+        id S1727733AbfHYJt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 05:49:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566726573;
-        bh=CFHECT9bG5X2IwhyGCyeIwHD0r6uYD/XCUW8ioxoR5w=;
+        s=badeba3b8450; t=1566726575;
+        bh=12JG/zbI6hfq4NAMOSZHOunCsNPbBMiTlzvrkGdEwkw=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=lnkmBykerAKIkjNdLQcplqRJfvj3vITLYOgXVkOxqB/bCpGrL56M7D8XGx3UKT1O5
-         wmDIyBtuWs0U7Mhxf2UUrgosbihzJbSbW1y6EbQsqwBdejpIE665bgZOdjSXmkdyZ/
-         dka9uNAUKUv7+XF2Apedc+Zsyj6B/s5quJx/LWys=
+        b=FeQNjNgGYtvjC/1SnpPJiMS1dUjie18ZUypP8htakIWCVwiWePRjcX+KkFMUKLvla
+         Y6s1vCE8UO1AqATVeEiJKpiI9f3vaB7WsUK5MbN+HXRFWoPioQ1E0zF9hixohYhnxq
+         sip7ZbXjil4ZQifrcBIEQ6PgBkDXiuu7q57jvPg8=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
  (mrgmx101 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 0LfXmv-1iZF1I23FR-00p6ea; Sun, 25 Aug 2019 11:49:33 +0200
+ 0LjeWC-1idLl90MPY-00beGD; Sun, 25 Aug 2019 11:49:35 +0200
 From:   Alex Dewar <alex.dewar@gmx.co.uk>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
 Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alex Dewar <alex.dewar@gmx.co.uk>
-Subject: [PATCH 1/4] Add SPDX headers for files in arch/um/drivers
-Date:   Sun, 25 Aug 2019 10:49:16 +0100
-Message-Id: <20190825094919.4731-2-alex.dewar@gmx.co.uk>
+Subject: [PATCH 4/4] Add SPDX headers for files in arch/um/include
+Date:   Sun, 25 Aug 2019 10:49:19 +0100
+Message-Id: <20190825094919.4731-5-alex.dewar@gmx.co.uk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190825094919.4731-1-alex.dewar@gmx.co.uk>
 References: <20190825094919.4731-1-alex.dewar@gmx.co.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gOaFSu8LHwciPiE/S9LLsyFFI2E/gaK6h+7AXVamNBAgGiDl6Mw
- CpBOUvwMlmhtzxBDnDHtNtcp7lbdqEtP6TJMZ/wJJkDoiRWmLnhDRLGVb6X/XS2BUIuu4SK
- ZY32ZqKeEQADSlApR7TUeSLE3OQdoqurH4v0t71suvpQenUVQD9NpmJEb8vVIYVZ9e3KG0b
- w1LsoEkjRlLMXXzl0gtlQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:C8WiAqJH790=:4zGYI7QsJY/pbomWFRgEwz
- z6mn6OSRmmul1rFmLwwmnlQGJzLWe1ntrtGjvdBFhKhIkrgqu9OHGdeY7iWJSVfrs/4orEDkb
- 7S3caf80jI5h4G2W1H+9f1BX10taL+SVHnyv9OOWmoWlo0wdTRqmkrUEUrgJOnGOZMOGr8PV2
- FMWukGNylIbz/apD5ytjfXj3HU48lHZdppge5D41RNSFQ+EI+A08uDgtKnnPXDkGWEdmTJOyw
- WzBigE/eofRSPUIyNqlm4MZ1Yu32Fov/DsfRADs8vi8uFYZk0ZCfznQDUje+Nmv95djUfBem4
- WtBVx9w7escbw9T4s+Ug9JQqSF2qCBUJPlc9r1qEQ8AJQvDIrjVwZIO9pRR2Pm6EbtA51/hgU
- YsxYw++bHAOEYaBAKKIM3trV/4inSdVauK3EAXOkBoYSx+yZMFvSuLVJHnAfCMZ+bbsBoSMiE
- oj2GKO+Gl5VGbJdyrcSpcp+eT0aiKX0wR+Xj66kjtP2KckcKdBEgvSx/QgRp9dtOPYzUo4YFg
- D7shqk2pX9J4CiYbzaMLrq/jJaUuqI4uDU2Dfwguuzxj1rUdA22gdPhQw16B+DM72h0va9QBI
- agohxXUym+JXgnZXTzHCQjV4VY+sR0LOa9XGg0RPBGnqvtl/M2Gr57y/JhyrMKJopoLqkJsic
- P5JTwfRqfs9CGJT6gX0qvvSNwZo7MOCBDuuA9WHxy7vvEN9S5s0NuUAPP9hE4WMCAqCkpP+lL
- r4Q7qn2dFXwsUTkpfRJYOSi43mPS5ez7zG0alRpEV2z1MBT5exLWFPTCLE7vWiVOYl13B7OfY
- h2tv0wZXInfDuDPstAakA9NJGi2hTN6HRa02c4LTkYPZMzzZvFWnb2NRkYDmmL465nP40wgr1
- JI7a2VhjbaehaESRuZyWv/EDmY3QBADhrlcL2xn5QtovkezoA1sweRfZXK7I5fXOa7CBin/gW
- z601/w4bc3W6cpOCL36JiqHbX0B0tgVf3P7/stvldcOCbFMhRInHeWyxdI/WcItoUDtJtnvs6
- 1juJvEq54/5+QrkXLBaOqkwCa6Pzf7dsrS6sEpXPUJYyeqPk+5MY63Irq2IC1gkqpS3P//cfH
- Y1W0oOoKUUzhTxrY01bsuziTloCcGfaer+jWngpQJEpYWalACPt/hwjyQ==
+X-Provags-ID: V03:K1:ZISJ07dTEo7gxrcSr6M77jl/FKKF7+iAKONRyp4mdVbgdRNeXP8
+ a8qmiR5QbzSVkFKgw8M1iIKQkY7p5O/5+PXFLrza1EUzwtfMBePW/ruin+iExx3finUpBDa
+ kiU0/fYjBPoTD+ONnMJ/BQbSpQr27k+eEDtKC5FIVMpBtGalhYClixKRqXrX7UDCCC3oBPr
+ 92T7rI04tlTFMQOArnnyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AAEHhDNc/Ys=:6g1ksMq6zgLhOERiS7Obel
+ VdMQyP5Ro/3uIsmp2OtloAlHhmqQNmbah4R2siw/dhvHAhtMuK5IFqqKo/NNcmFLhx7ModbNd
+ lMffMnHIknmrn+7jG5GqdY+Cfe8JpOl0B9mBIbes1cSz+nqhHweWvmJOL04QMiGGnAop2hqHa
+ A9guxGIafKlZdzeOopHRThQ6m60QZaxfuW12OBzjr4PAkyVAUlJ4k4MkwvenpQkUToroHb+y0
+ h8nvDkiQs8801tHJDjtTCiawfKy/ECrnwyZzM6NnbqF2S1zU8BzZ/uiPsDxCT8GKMSNwWzbl9
+ k8lOLx7QerftrEHLJXvbYzvuIfzJlOFIqafG5MKA8tdSP+kno53ig0aXVmPmNb7Hwn0yMv+pr
+ W70kXnhHF7J/BDcrWscTZ1WpBcXx4sZJQ/4CgrN/pNKrq1rZKvihJOe9jgdIZFa6RXiFR98XF
+ AL9OP1GgcNTPRRuNXiHNUvMq8Li9zC5lcYPJkxYLu5w9Vyy84G1bVgi18n4QYmZwivcn73lTG
+ RngorCfpstdZdV4e+PQ0iEWU0pn9b4RwunM4ZgXm0qXEAUfWkU4ium18YuCUcj8TnVOgPhPMu
+ 6aCvTspYPm6l8FsHrUrFtIMyaXmElkr4k+KJAtfAe7GN3kRqzHm1m1+4SdTD6rVqwNmNfzzdP
+ 1ll39D+rM4jWwXn4nB+CSJWOz2Ccsfo/qlK5X3hp4o/w1DHB+Gwg8S4s/CB6hIHVrYc/SVDsN
+ 0BN59m9ZnYie8XDNjlznMCEkwsOtwqJLLfTyDMp0dwaJSGWSbdfjMYHnV0W9AZv4DojkPO6R4
+ ysV637F0tDgMqjCX96FXZdEJeuNACCoezqSriRUy1QL1GuO1IRIpnSavKyv3XA4FtRixOOxjY
+ P49njI+BEWPZAv2keBcSlO/WQebgAZXHji+agEhSo9f6gd4kFaDUjGeCJYaDAkqzZu0uMSaK1
+ +oCWM+CpA+UxUm6Xo87QSS7K+c9x4eMsITs9sLczloNwdjKreLdIKLElOe2mhGwTd1QgTsAjr
+ UQmMCzxhQ97c+ZMa71tQVg2DHIQUCb7nm2pZC9ww80GjDPuWe/UzDlcdNSQfkqun7vqE92xg1
+ vxkxxgVVLzmzROA0IjYMi5NKotFZU9zArkvbP4gNikMmdwe/YywLVh87w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,361 +75,47 @@ Convert files to use SPDX header. All files are licensed under the GPLv2.
 
 Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
 =2D--
- arch/um/drivers/Makefile            | 2 +-
- arch/um/drivers/chan.h              | 2 +-
- arch/um/drivers/chan_kern.c         | 2 +-
- arch/um/drivers/chan_user.c         | 2 +-
- arch/um/drivers/chan_user.h         | 2 +-
- arch/um/drivers/cow_user.c          | 2 +-
- arch/um/drivers/daemon.h            | 2 +-
- arch/um/drivers/daemon_kern.c       | 2 +-
- arch/um/drivers/daemon_user.c       | 2 +-
- arch/um/drivers/fd.c                | 2 +-
- arch/um/drivers/harddog_user.c      | 2 +-
- arch/um/drivers/hostaudio_kern.c    | 2 +-
- arch/um/drivers/line.c              | 2 +-
- arch/um/drivers/line.h              | 2 +-
- arch/um/drivers/mconsole.h          | 2 +-
- arch/um/drivers/mconsole_kern.c     | 2 +-
- arch/um/drivers/mconsole_kern.h     | 2 +-
- arch/um/drivers/mconsole_user.c     | 2 +-
- arch/um/drivers/net_kern.c          | 2 +-
- arch/um/drivers/net_user.c          | 2 +-
- arch/um/drivers/null.c              | 2 +-
- arch/um/drivers/pcap_kern.c         | 2 +-
- arch/um/drivers/pcap_user.c         | 2 +-
- arch/um/drivers/pcap_user.h         | 2 +-
- arch/um/drivers/port.h              | 2 +-
- arch/um/drivers/port_kern.c         | 2 +-
- arch/um/drivers/port_user.c         | 2 +-
- arch/um/drivers/pty.c               | 2 +-
- arch/um/drivers/slip_kern.c         | 2 +-
- arch/um/drivers/slip_user.c         | 2 +-
- arch/um/drivers/slirp_kern.c        | 2 +-
- arch/um/drivers/slirp_user.c        | 2 +-
- arch/um/drivers/ssl.c               | 2 +-
- arch/um/drivers/stdio_console.c     | 2 +-
- arch/um/drivers/stdio_console.h     | 2 +-
- arch/um/drivers/tty.c               | 2 +-
- arch/um/drivers/ubd.h               | 2 +-
- arch/um/drivers/ubd_kern.c          | 2 +-
- arch/um/drivers/ubd_user.c          | 2 +-
- arch/um/drivers/umcast.h            | 2 +-
- arch/um/drivers/umcast_kern.c       | 2 +-
- arch/um/drivers/umcast_user.c       | 2 +-
- arch/um/drivers/vde.h               | 2 +-
- arch/um/drivers/vde_kern.c          | 2 +-
- arch/um/drivers/vde_user.c          | 2 +-
- arch/um/drivers/vector_kern.c       | 2 +-
- arch/um/drivers/vector_kern.h       | 2 +-
- arch/um/drivers/vector_transports.c | 2 +-
- arch/um/drivers/vector_user.c       | 2 +-
- arch/um/drivers/vector_user.h       | 2 +-
- arch/um/drivers/xterm.c             | 2 +-
- arch/um/drivers/xterm.h             | 2 +-
- arch/um/drivers/xterm_kern.c        | 2 +-
- 53 files changed, 53 insertions(+), 53 deletions(-)
+ arch/um/include/asm/kmap_types.h        | 2 +-
+ arch/um/include/asm/mmu.h               | 2 +-
+ arch/um/include/asm/mmu_context.h       | 2 +-
+ arch/um/include/asm/page.h              | 2 +-
+ arch/um/include/asm/pgalloc.h           | 2 +-
+ arch/um/include/asm/pgtable-2level.h    | 2 +-
+ arch/um/include/asm/pgtable-3level.h    | 2 +-
+ arch/um/include/asm/pgtable.h           | 2 +-
+ arch/um/include/asm/processor-generic.h | 2 +-
+ arch/um/include/asm/ptrace-generic.h    | 2 +-
+ arch/um/include/asm/thread_info.h       | 2 +-
+ arch/um/include/asm/tlbflush.h          | 2 +-
+ arch/um/include/asm/uaccess.h           | 2 +-
+ arch/um/include/shared/arch.h           | 2 +-
+ arch/um/include/shared/as-layout.h      | 2 +-
+ arch/um/include/shared/elf_user.h       | 2 +-
+ arch/um/include/shared/frame_kern.h     | 2 +-
+ arch/um/include/shared/irq_kern.h       | 2 +-
+ arch/um/include/shared/irq_user.h       | 2 +-
+ arch/um/include/shared/kern.h           | 2 +-
+ arch/um/include/shared/kern_util.h      | 2 +-
+ arch/um/include/shared/mem.h            | 2 +-
+ arch/um/include/shared/net_kern.h       | 2 +-
+ arch/um/include/shared/net_user.h       | 2 +-
+ arch/um/include/shared/os.h             | 2 +-
+ arch/um/include/shared/ptrace_user.h    | 2 +-
+ arch/um/include/shared/registers.h      | 2 +-
+ arch/um/include/shared/sigio.h          | 2 +-
+ arch/um/include/shared/skas/mm_id.h     | 2 +-
+ arch/um/include/shared/skas/skas.h      | 2 +-
+ arch/um/include/shared/skas/stub-data.h | 2 +-
+ arch/um/include/shared/timer-internal.h | 2 +-
+ arch/um/include/shared/um_malloc.h      | 2 +-
+ arch/um/include/shared/user.h           | 2 +-
+ 34 files changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
-index 693319839f69..84d6f6e42c3a 100644
-=2D-- a/arch/um/drivers/Makefile
-+++ b/arch/um/drivers/Makefile
-@@ -1,6 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
- #
- # Copyright (C) 2000, 2002, 2003 Jeff Dike (jdike@karaya.com)
--# Licensed under the GPL
- #
-
- # pcap is broken in 2.5 because kbuild doesn't allow pcap.a to be linked
-diff --git a/arch/um/drivers/chan.h b/arch/um/drivers/chan.h
-index c512b0306dd4..c37cc4f26f91 100644
-=2D-- a/arch/um/drivers/chan.h
-+++ b/arch/um/drivers/chan.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2000, 2001 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __CHAN_KERN_H__
-diff --git a/arch/um/drivers/chan_kern.c b/arch/um/drivers/chan_kern.c
-index 749d2bf59599..62997055c454 100644
-=2D-- a/arch/um/drivers/chan_kern.c
-+++ b/arch/um/drivers/chan_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <linux/slab.h>
-diff --git a/arch/um/drivers/chan_user.c b/arch/um/drivers/chan_user.c
-index 3fd7c3efdb18..4d80526a4236 100644
-=2D-- a/arch/um/drivers/chan_user.c
-+++ b/arch/um/drivers/chan_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <stdlib.h>
-diff --git a/arch/um/drivers/chan_user.h b/arch/um/drivers/chan_user.h
-index 03f1b565c5f9..72222bb036f5 100644
-=2D-- a/arch/um/drivers/chan_user.h
-+++ b/arch/um/drivers/chan_user.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2000, 2001 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __CHAN_USER_H__
-diff --git a/arch/um/drivers/cow_user.c b/arch/um/drivers/cow_user.c
-index 0ee9cc6cc4c7..74b0c2686c95 100644
-=2D-- a/arch/um/drivers/cow_user.c
-+++ b/arch/um/drivers/cow_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- /*
-diff --git a/arch/um/drivers/daemon.h b/arch/um/drivers/daemon.h
-index c2dd1951559f..1509cc7eb907 100644
-=2D-- a/arch/um/drivers/daemon.h
-+++ b/arch/um/drivers/daemon.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __DAEMON_H__
-diff --git a/arch/um/drivers/daemon_kern.c b/arch/um/drivers/daemon_kern.c
-index 7568cc2f3cd6..fd2402669c49 100644
-=2D-- a/arch/um/drivers/daemon_kern.c
-+++ b/arch/um/drivers/daemon_kern.c
-@@ -1,9 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org) and
-  * James Leu (jleu@mindspring.net).
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-  * Copyright (C) 2001 by various other people who didn't put their name h=
-ere.
-- * Licensed under the GPL.
-  */
-
- #include <linux/init.h>
-diff --git a/arch/um/drivers/daemon_user.c b/arch/um/drivers/daemon_user.c
-index 8813c10d0177..3695821d06a2 100644
-=2D-- a/arch/um/drivers/daemon_user.c
-+++ b/arch/um/drivers/daemon_user.c
-@@ -1,9 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org) and
-  * James Leu (jleu@mindspring.net).
-  * Copyright (C) 2001 by various other people who didn't put their name h=
-ere.
-- * Licensed under the GPL.
-  */
-
- #include <stdint.h>
-diff --git a/arch/um/drivers/fd.c b/arch/um/drivers/fd.c
-index a13a427b996b..082d739dc052 100644
-=2D-- a/arch/um/drivers/fd.c
-+++ b/arch/um/drivers/fd.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <stdio.h>
-diff --git a/arch/um/drivers/harddog_user.c b/arch/um/drivers/harddog_user=
-.c
-index 3aa8b0d52a48..070468d22e39 100644
-=2D-- a/arch/um/drivers/harddog_user.c
-+++ b/arch/um/drivers/harddog_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #include <stdio.h>
-diff --git a/arch/um/drivers/hostaudio_kern.c b/arch/um/drivers/hostaudio_=
-kern.c
-index 7f9dbdbc4eb7..bf75b1ceac47 100644
-=2D-- a/arch/um/drivers/hostaudio_kern.c
-+++ b/arch/um/drivers/hostaudio_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2002 Steve Schmidtke
-- * Licensed under the GPL
-  */
-
- #include <linux/fs.h>
-diff --git a/arch/um/drivers/line.c b/arch/um/drivers/line.c
-index e0e63931fb2b..4f2a4ac8a82b 100644
-=2D-- a/arch/um/drivers/line.c
-+++ b/arch/um/drivers/line.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #include <linux/irqreturn.h>
-diff --git a/arch/um/drivers/line.h b/arch/um/drivers/line.h
-index 138a14526d9c..a151ff5155ef 100644
-=2D-- a/arch/um/drivers/line.h
-+++ b/arch/um/drivers/line.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2001, 2002 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __LINE_H__
-diff --git a/arch/um/drivers/mconsole.h b/arch/um/drivers/mconsole.h
-index 44af7379ea19..6356378304fd 100644
-=2D-- a/arch/um/drivers/mconsole.h
-+++ b/arch/um/drivers/mconsole.h
-@@ -1,7 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org)
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __MCONSOLE_H__
-diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_ke=
-rn.c
-index ff3ab72fd90f..0117489e9b30 100644
-=2D-- a/arch/um/drivers/mconsole_kern.c
-+++ b/arch/um/drivers/mconsole_kern.c
-@@ -1,7 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org)
-  * Copyright (C) 2001 - 2008 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #include <linux/console.h>
-diff --git a/arch/um/drivers/mconsole_kern.h b/arch/um/drivers/mconsole_ke=
-rn.h
-index 7a0c6a1ad1d4..56d8d6a3ff76 100644
-=2D-- a/arch/um/drivers/mconsole_kern.h
-+++ b/arch/um/drivers/mconsole_kern.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2001, 2002 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __MCONSOLE_KERN_H__
-diff --git a/arch/um/drivers/mconsole_user.c b/arch/um/drivers/mconsole_us=
-er.c
-index 99209826adb1..e24298a734be 100644
-=2D-- a/arch/um/drivers/mconsole_user.c
-+++ b/arch/um/drivers/mconsole_user.c
-@@ -1,7 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org)
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #include <errno.h>
-diff --git a/arch/um/drivers/net_kern.c b/arch/um/drivers/net_kern.c
-index 6e5be5fb4143..327b728f7244 100644
-=2D-- a/arch/um/drivers/net_kern.c
-+++ b/arch/um/drivers/net_kern.c
-@@ -1,9 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org) and
-  * James Leu (jleu@mindspring.net).
-  * Copyright (C) 2001 by various other people who didn't put their name h=
-ere.
-- * Licensed under the GPL.
-  */
-
- #include <linux/memblock.h>
-diff --git a/arch/um/drivers/net_user.c b/arch/um/drivers/net_user.c
-index e9f8445861dc..4c9576452ab0 100644
-=2D-- a/arch/um/drivers/net_user.c
-+++ b/arch/um/drivers/net_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #include <stdio.h>
-diff --git a/arch/um/drivers/null.c b/arch/um/drivers/null.c
-index 10495747ce8e..87087763a417 100644
-=2D-- a/arch/um/drivers/null.c
-+++ b/arch/um/drivers/null.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <stddef.h>
-diff --git a/arch/um/drivers/pcap_kern.c b/arch/um/drivers/pcap_kern.c
-index be0fb57bd1d7..cfe4cb17694c 100644
-=2D-- a/arch/um/drivers/pcap_kern.c
-+++ b/arch/um/drivers/pcap_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL.
-  */
-
- #include <linux/init.h>
-diff --git a/arch/um/drivers/pcap_user.c b/arch/um/drivers/pcap_user.c
-index c07b9c752c86..bbd20638788a 100644
-=2D-- a/arch/um/drivers/pcap_user.c
-+++ b/arch/um/drivers/pcap_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL.
-  */
-
- #include <errno.h>
-diff --git a/arch/um/drivers/pcap_user.h b/arch/um/drivers/pcap_user.h
-index 1ca7c764cc63..216246f5f09b 100644
-=2D-- a/arch/um/drivers/pcap_user.h
-+++ b/arch/um/drivers/pcap_user.h
+diff --git a/arch/um/include/asm/kmap_types.h b/arch/um/include/asm/kmap_t=
+ypes.h
+index 2e0a6b1d8300..b0bd12de1d23 100644
+=2D-- a/arch/um/include/asm/kmap_types.h
++++ b/arch/um/include/asm/kmap_types.h
 @@ -1,6 +1,6 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
@@ -437,363 +123,211 @@ index 1ca7c764cc63..216246f5f09b 100644
 - * Licensed under the GPL
   */
 
- #include <net_user.h>
-diff --git a/arch/um/drivers/port.h b/arch/um/drivers/port.h
-index 372a80c0556a..9085b336e683 100644
-=2D-- a/arch/um/drivers/port.h
-+++ b/arch/um/drivers/port.h
+ #ifndef __UM_KMAP_TYPES_H
+diff --git a/arch/um/include/asm/mmu.h b/arch/um/include/asm/mmu.h
+index da705448590f..5b072aba5b65 100644
+=2D-- a/arch/um/include/asm/mmu.h
++++ b/arch/um/include/asm/mmu.h
 @@ -1,6 +1,6 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2001 Jeff Dike (jdike@karaya.com)
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
 - * Licensed under the GPL
   */
 
- #ifndef __PORT_H__
-diff --git a/arch/um/drivers/port_kern.c b/arch/um/drivers/port_kern.c
-index b0e9ff35daee..a47ca5376d9d 100644
-=2D-- a/arch/um/drivers/port_kern.c
-+++ b/arch/um/drivers/port_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <linux/completion.h>
-diff --git a/arch/um/drivers/port_user.c b/arch/um/drivers/port_user.c
-index 5f56d11b886f..5b5b64cb1071 100644
-=2D-- a/arch/um/drivers/port_user.c
-+++ b/arch/um/drivers/port_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <stdio.h>
-diff --git a/arch/um/drivers/pty.c b/arch/um/drivers/pty.c
-index f1fcc2cedb5e..39c60068cfdf 100644
-=2D-- a/arch/um/drivers/pty.c
-+++ b/arch/um/drivers/pty.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #include <stdio.h>
-diff --git a/arch/um/drivers/slip_kern.c b/arch/um/drivers/slip_kern.c
-index ed5249fc0574..c58ccdcc16d6 100644
-=2D-- a/arch/um/drivers/slip_kern.c
-+++ b/arch/um/drivers/slip_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL.
-  */
-
- #include <linux/if_arp.h>
-diff --git a/arch/um/drivers/slip_user.c b/arch/um/drivers/slip_user.c
-index 0d6b66c64a81..8016d32b6809 100644
-=2D-- a/arch/um/drivers/slip_user.c
-+++ b/arch/um/drivers/slip_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL.
-  */
-
- #include <stdio.h>
-diff --git a/arch/um/drivers/slirp_kern.c b/arch/um/drivers/slirp_kern.c
-index 4ef11ca7cacf..2d9769237f08 100644
-=2D-- a/arch/um/drivers/slirp_kern.c
-+++ b/arch/um/drivers/slirp_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL.
-  */
-
- #include <linux/if_arp.h>
-diff --git a/arch/um/drivers/slirp_user.c b/arch/um/drivers/slirp_user.c
-index 98b6a41a254e..8f633e2e5f3d 100644
-=2D-- a/arch/um/drivers/slirp_user.c
-+++ b/arch/um/drivers/slirp_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL.
-  */
-
- #include <unistd.h>
-diff --git a/arch/um/drivers/ssl.c b/arch/um/drivers/ssl.c
-index 7ae407d5337e..b213201b8a3b 100644
-=2D-- a/arch/um/drivers/ssl.c
-+++ b/arch/um/drivers/ssl.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2000, 2002 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- #include <linux/fs.h>
-diff --git a/arch/um/drivers/stdio_console.c b/arch/um/drivers/stdio_conso=
-le.c
-index c90817b04da9..0021d7ffb528 100644
-=2D-- a/arch/um/drivers/stdio_console.c
-+++ b/arch/um/drivers/stdio_console.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2000, 2001 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- #include <linux/posix_types.h>
-diff --git a/arch/um/drivers/stdio_console.h b/arch/um/drivers/stdio_conso=
-le.h
-index 6d8275f71fd4..3a409ec23d63 100644
-=2D-- a/arch/um/drivers/stdio_console.h
-+++ b/arch/um/drivers/stdio_console.h
+ #ifndef __ARCH_UM_MMU_H
+diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_c=
+ontext.h
+index 00cefd33afdd..5aee0626e390 100644
+=2D-- a/arch/um/include/asm/mmu_context.h
++++ b/arch/um/include/asm/mmu_context.h
 @@ -1,6 +1,6 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
 - * Licensed under the GPL
   */
 
- #ifndef __STDIO_CONSOLE_H
-diff --git a/arch/um/drivers/tty.c b/arch/um/drivers/tty.c
-index eaa201bca5ed..884a762d21c7 100644
-=2D-- a/arch/um/drivers/tty.c
-+++ b/arch/um/drivers/tty.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{linux.intel,addtoit}.com)
-- * Licensed under the GPL
-  */
-
- #include <errno.h>
-diff --git a/arch/um/drivers/ubd.h b/arch/um/drivers/ubd.h
-index cc1cc85f5afc..f016fe15499f 100644
-=2D-- a/arch/um/drivers/ubd.h
-+++ b/arch/um/drivers/ubd.h
+ #ifndef __UM_MMU_CONTEXT_H
+diff --git a/arch/um/include/asm/page.h b/arch/um/include/asm/page.h
+index f878bec23576..95af12e82a32 100644
+=2D-- a/arch/um/include/asm/page.h
++++ b/arch/um/include/asm/page.h
 @@ -1,7 +1,7 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
-  * Copyright (C) 2001 RidgeRun, Inc (glonnon@ridgerun.com)
+  * Copyright (C) 2000 - 2003 Jeff Dike (jdike@addtoit.com)
+  * Copyright 2003 PathScale, Inc.
 - * Licensed under the GPL
   */
 
- #ifndef __UM_UBD_USER_H
-diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-index 33c1cd6a12ac..612535cd9706 100644
-=2D-- a/arch/um/drivers/ubd_kern.c
-+++ b/arch/um/drivers/ubd_kern.c
+ #ifndef __UM_PAGE_H
+diff --git a/arch/um/include/asm/pgalloc.h b/arch/um/include/asm/pgalloc.h
+index 2a3860b5fd56..881e76da1938 100644
+=2D-- a/arch/um/include/asm/pgalloc.h
++++ b/arch/um/include/asm/pgalloc.h
 @@ -1,8 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2018 Cambridge Greys Ltd
-  * Copyright (C) 2015-2016 Anton Ivanov (aivanov@brocade.com)
-  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
-- * Licensed under the GPL
-  */
-
- /* 2001-09-28...2002-04-17
-diff --git a/arch/um/drivers/ubd_user.c b/arch/um/drivers/ubd_user.c
-index 6f744794d141..a1afe414ce48 100644
-=2D-- a/arch/um/drivers/ubd_user.c
-+++ b/arch/um/drivers/ubd_user.c
-@@ -1,8 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2016 Anton Ivanov (aivanov@brocade.com)
   * Copyright (C) 2000, 2001, 2002 Jeff Dike (jdike@karaya.com)
-  * Copyright (C) 2001 Ridgerun,Inc (glonnon@ridgerun.com)
+  * Copyright 2003 PathScale, Inc.
+  * Derived from include/asm-i386/pgalloc.h and include/asm-i386/pgtable.h
 - * Licensed under the GPL
   */
 
- #include <stddef.h>
-diff --git a/arch/um/drivers/umcast.h b/arch/um/drivers/umcast.h
-index c190c6440911..fe39bee1e3bd 100644
-=2D-- a/arch/um/drivers/umcast.h
-+++ b/arch/um/drivers/umcast.h
-@@ -1,6 +1,6 @@
+ #ifndef __UM_PGALLOC_H
+diff --git a/arch/um/include/asm/pgtable-2level.h b/arch/um/include/asm/pg=
+table-2level.h
+index 179c0ea87a0c..32b3d26a7109 100644
+=2D-- a/arch/um/include/asm/pgtable-2level.h
++++ b/arch/um/include/asm/pgtable-2level.h
+@@ -1,8 +1,8 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+  * Copyright (C) 2000, 2001, 2002 Jeff Dike (jdike@karaya.com)
+  * Copyright 2003 PathScale, Inc.
+  * Derived from include/asm-i386/pgtable.h
 - * Licensed under the GPL
   */
 
- #ifndef __DRIVERS_UMCAST_H
-diff --git a/arch/um/drivers/umcast_kern.c b/arch/um/drivers/umcast_kern.c
-index f5ba6e377913..595a54f2b9c6 100644
-=2D-- a/arch/um/drivers/umcast_kern.c
-+++ b/arch/um/drivers/umcast_kern.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * user-mode-linux networking multicast transport
-  * Copyright (C) 2001 by Harald Welte <laforge@gnumonks.org>
-@@ -8,7 +9,6 @@
-  * James Leu (jleu@mindspring.net).
-  * Copyright (C) 2001 by various other people who didn't put their name h=
-ere.
-  *
-- * Licensed under the GPL.
-  */
-
- #include <linux/init.h>
-diff --git a/arch/um/drivers/umcast_user.c b/arch/um/drivers/umcast_user.c
-index 6074184bb51b..b50b13cff04e 100644
-=2D-- a/arch/um/drivers/umcast_user.c
-+++ b/arch/um/drivers/umcast_user.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * user-mode-linux networking multicast transport
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-@@ -8,7 +9,6 @@
-  * James Leu (jleu@mindspring.net).
-  * Copyright (C) 2001 by various other people who didn't put their name h=
-ere.
-  *
-- * Licensed under the GPL.
-  *
-  */
-
-diff --git a/arch/um/drivers/vde.h b/arch/um/drivers/vde.h
-index fc3a05902ba1..cab0379e6142 100644
-=2D-- a/arch/um/drivers/vde.h
-+++ b/arch/um/drivers/vde.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2007 Luca Bigliardi (shammash@artha.org).
-- * Licensed under the GPL.
-  */
-
- #ifndef __UM_VDE_H__
-diff --git a/arch/um/drivers/vde_kern.c b/arch/um/drivers/vde_kern.c
-index 6a365fadc7c4..bc6f22cbfb35 100644
-=2D-- a/arch/um/drivers/vde_kern.c
-+++ b/arch/um/drivers/vde_kern.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Luca Bigliardi (shammash@artha.org).
-- * Licensed under the GPL.
-  *
-  * Transport usage:
-  *  ethN=3Dvde,<vde_switch>,<mac addr>,<port>,<group>,<mode>,<description=
->
-diff --git a/arch/um/drivers/vde_user.c b/arch/um/drivers/vde_user.c
-index 64cb630d1157..bc7dc4e1e486 100644
-=2D-- a/arch/um/drivers/vde_user.c
-+++ b/arch/um/drivers/vde_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2007 Luca Bigliardi (shammash@artha.org).
-- * Licensed under the GPL.
-  */
-
- #include <stddef.h>
-diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
-index e190e4ca52e1..423928fc68f0 100644
-=2D-- a/arch/um/drivers/vector_kern.c
-+++ b/arch/um/drivers/vector_kern.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2017 - Cambridge Greys Limited
-  * Copyright (C) 2011 - 2014 Cisco Systems Inc
-@@ -5,7 +6,6 @@
-  * Copyright (C) 2001 Lennert Buytenhek (buytenh@gnu.org) and
-  * James Leu (jleu@mindspring.net).
-  * Copyright (C) 2001 by various other people who didn't put their name h=
-ere.
-- * Licensed under the GPL.
-  */
-
- #include <linux/version.h>
-diff --git a/arch/um/drivers/vector_kern.h b/arch/um/drivers/vector_kern.h
-index 0b0a767b9076..648c1890f723 100644
-=2D-- a/arch/um/drivers/vector_kern.h
-+++ b/arch/um/drivers/vector_kern.h
-@@ -1,6 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2002 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-- * Licensed under the GPL
-  */
-
- #ifndef __UM_VECTOR_KERN_H
-diff --git a/arch/um/drivers/vector_transports.c b/arch/um/drivers/vector_=
-transports.c
-index 77e4ebc206ae..7675f8cdcfa1 100644
-=2D-- a/arch/um/drivers/vector_transports.c
-+++ b/arch/um/drivers/vector_transports.c
+ #ifndef __UM_PGTABLE_2LEVEL_H
+diff --git a/arch/um/include/asm/pgtable-3level.h b/arch/um/include/asm/pg=
+table-3level.h
+index c4d876dfb9ac..9812269fefc9 100644
+=2D-- a/arch/um/include/asm/pgtable-3level.h
++++ b/arch/um/include/asm/pgtable-3level.h
 @@ -1,7 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2017 - Cambridge Greys Limited
-  * Copyright (C) 2011 - 2014 Cisco Systems Inc
-- * Licensed under the GPL.
-  */
-
- #include <linux/etherdevice.h>
-diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-index b3f7b3ca896d..339c71c4537d 100644
-=2D-- a/arch/um/drivers/vector_user.c
-+++ b/arch/um/drivers/vector_user.c
-@@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+  * Copyright 2003 PathScale Inc
+  * Derived from include/asm-i386/pgtable.h
 - * Licensed under the GPL
   */
 
- #include <stdio.h>
-diff --git a/arch/um/drivers/vector_user.h b/arch/um/drivers/vector_user.h
-index d7cbff73b7ff..0bc34e0c8cba 100644
-=2D-- a/arch/um/drivers/vector_user.h
-+++ b/arch/um/drivers/vector_user.h
+ #ifndef __UM_PGTABLE_3LEVEL_H
+diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.h
+index b377df76cc28..e4d3ed980d82 100644
+=2D-- a/arch/um/include/asm/pgtable.h
++++ b/arch/um/include/asm/pgtable.h
+@@ -1,8 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+  * Copyright 2003 PathScale, Inc.
+  * Derived from include/asm-i386/pgtable.h
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_PGTABLE_H
+diff --git a/arch/um/include/asm/processor-generic.h b/arch/um/include/asm=
+/processor-generic.h
+index b58b746d3f2c..afd9b267cf81 100644
+=2D-- a/arch/um/include/asm/processor-generic.h
++++ b/arch/um/include/asm/processor-generic.h
 @@ -1,6 +1,6 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2002 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
 - * Licensed under the GPL
   */
 
- #ifndef __UM_VECTOR_USER_H
-diff --git a/arch/um/drivers/xterm.c b/arch/um/drivers/xterm.c
-index 20e30be44795..fc7f1e746703 100644
-=2D-- a/arch/um/drivers/xterm.c
-+++ b/arch/um/drivers/xterm.c
+ #ifndef __UM_PROCESSOR_GENERIC_H
+diff --git a/arch/um/include/asm/ptrace-generic.h b/arch/um/include/asm/pt=
+race-generic.h
+index 5ab20620fc97..81c647ef9c6c 100644
+=2D-- a/arch/um/include/asm/ptrace-generic.h
++++ b/arch/um/include/asm/ptrace-generic.h
 @@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
 - * Licensed under the GPL
   */
 
- #include <stddef.h>
-diff --git a/arch/um/drivers/xterm.h b/arch/um/drivers/xterm.h
-index 56b9c4aba423..5968da3a6aba 100644
-=2D-- a/arch/um/drivers/xterm.h
-+++ b/arch/um/drivers/xterm.h
+ #ifndef __UM_PTRACE_GENERIC_H
+diff --git a/arch/um/include/asm/thread_info.h b/arch/um/include/asm/threa=
+d_info.h
+index 4eecd960ee8c..4c19ce4c49f1 100644
+=2D-- a/arch/um/include/asm/thread_info.h
++++ b/arch/um/include/asm/thread_info.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_THREAD_INFO_H
+diff --git a/arch/um/include/asm/tlbflush.h b/arch/um/include/asm/tlbflush=
+.h
+index 614f2c091178..a5bda890390d 100644
+=2D-- a/arch/um/include/asm/tlbflush.h
++++ b/arch/um/include/asm/tlbflush.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_TLBFLUSH_H
+diff --git a/arch/um/include/asm/uaccess.h b/arch/um/include/asm/uaccess.h
+index cc00fc50768f..fe66d659acad 100644
+=2D-- a/arch/um/include/asm/uaccess.h
++++ b/arch/um/include/asm/uaccess.h
+@@ -1,7 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 Jeff Dike (jdike@karaya.com)
+  * Copyright (C) 2015 Richard Weinberger (richard@nod.at)
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_UACCESS_H
+diff --git a/arch/um/include/shared/arch.h b/arch/um/include/shared/arch.h
+index 4f46abda060d..880ee42a3329 100644
+=2D-- a/arch/um/include/shared/arch.h
++++ b/arch/um/include/shared/arch.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __ARCH_H__
+diff --git a/arch/um/include/shared/as-layout.h b/arch/um/include/shared/a=
+s-layout.h
+index ca1843e1df15..5f286ef2721b 100644
+=2D-- a/arch/um/include/shared/as-layout.h
++++ b/arch/um/include/shared/as-layout.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __START_H__
+diff --git a/arch/um/include/shared/elf_user.h b/arch/um/include/shared/el=
+f_user.h
+index 53516b637272..fd461ee40c05 100644
+=2D-- a/arch/um/include/shared/elf_user.h
++++ b/arch/um/include/shared/elf_user.h
+@@ -1,7 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2004 Fujitsu Siemens Computers GmbH
+  * Author: Bodo Stroesser <bstroesser@fujitsu-siemens.com>
+- * Licensed under the GPL
+  */
+
+ #ifndef __ELF_USER_H__
+diff --git a/arch/um/include/shared/frame_kern.h b/arch/um/include/shared/=
+frame_kern.h
+index a5cde5c433b4..ed952ac661ca 100644
+=2D-- a/arch/um/include/shared/frame_kern.h
++++ b/arch/um/include/shared/frame_kern.h
 @@ -1,6 +1,6 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
  /*
@@ -801,19 +335,231 @@ index 56b9c4aba423..5968da3a6aba 100644
 - * Licensed under the GPL
   */
 
- #ifndef __XTERM_H__
-diff --git a/arch/um/drivers/xterm_kern.c b/arch/um/drivers/xterm_kern.c
-index e8f9957bfbf6..d64ef6d0d463 100644
-=2D-- a/arch/um/drivers/xterm_kern.c
-+++ b/arch/um/drivers/xterm_kern.c
+ #ifndef __FRAME_KERN_H_
+diff --git a/arch/um/include/shared/irq_kern.h b/arch/um/include/shared/ir=
+q_kern.h
+index e05bd667de15..7cd1a10c6244 100644
+=2D-- a/arch/um/include/shared/irq_kern.h
++++ b/arch/um/include/shared/irq_kern.h
 @@ -1,6 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2001, 2002 Jeff Dike (jdike@karaya.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __IRQ_KERN_H__
+diff --git a/arch/um/include/shared/irq_user.h b/arch/um/include/shared/ir=
+q_user.h
+index e7242a0ae489..107751dce153 100644
+=2D-- a/arch/um/include/shared/irq_user.h
++++ b/arch/um/include/shared/irq_user.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
  /*
   * Copyright (C) 2001 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
 - * Licensed under the GPL
   */
 
- #include <linux/slab.h>
+ #ifndef __IRQ_USER_H__
+diff --git a/arch/um/include/shared/kern.h b/arch/um/include/shared/kern.h
+index 6cd01240bbf0..3a9c75a8413c 100644
+=2D-- a/arch/um/include/shared/kern.h
++++ b/arch/um/include/shared/kern.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __KERN_H__
+diff --git a/arch/um/include/shared/kern_util.h b/arch/um/include/shared/k=
+ern_util.h
+index 35ab97e4bb9b..ccafb62e8cce 100644
+=2D-- a/arch/um/include/shared/kern_util.h
++++ b/arch/um/include/shared/kern_util.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __KERN_UTIL_H__
+diff --git a/arch/um/include/shared/mem.h b/arch/um/include/shared/mem.h
+index 5cd40e99e8d5..4862c91d4213 100644
+=2D-- a/arch/um/include/shared/mem.h
++++ b/arch/um/include/shared/mem.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __MEM_H__
+diff --git a/arch/um/include/shared/net_kern.h b/arch/um/include/shared/ne=
+t_kern.h
+index 40442b98b173..a87be13c5b87 100644
+=2D-- a/arch/um/include/shared/net_kern.h
++++ b/arch/um/include/shared/net_kern.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_NET_KERN_H
+diff --git a/arch/um/include/shared/net_user.h b/arch/um/include/shared/ne=
+t_user.h
+index 3dabbe128e40..1b0531769a5e 100644
+=2D-- a/arch/um/include/shared/net_user.h
++++ b/arch/um/include/shared/net_user.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_NET_USER_H__
+diff --git a/arch/um/include/shared/os.h b/arch/um/include/shared/os.h
+index 4a62ac4251a5..b335b6bc3fd6 100644
+=2D-- a/arch/um/include/shared/os.h
++++ b/arch/um/include/shared/os.h
+@@ -1,8 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2015 Anton Ivanov (aivanov@{brocade.com,kot-begemot.co.u=
+k})
+  * Copyright (C) 2015 Thomas Meyer (thomas@m3y3r.de)
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __OS_H__
+diff --git a/arch/um/include/shared/ptrace_user.h b/arch/um/include/shared=
+/ptrace_user.h
+index 56b2f284b108..95455e8996e7 100644
+=2D-- a/arch/um/include/shared/ptrace_user.h
++++ b/arch/um/include/shared/ptrace_user.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __PTRACE_USER_H__
+diff --git a/arch/um/include/shared/registers.h b/arch/um/include/shared/r=
+egisters.h
+index a74449b5b0e3..0c50fa6e8a55 100644
+=2D-- a/arch/um/include/shared/registers.h
++++ b/arch/um/include/shared/registers.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2004 PathScale, Inc
+- * Licensed under the GPL
+  */
+
+ #ifndef __REGISTERS_H
+diff --git a/arch/um/include/shared/sigio.h b/arch/um/include/shared/sigio=
+.h
+index 434f1a9ae4b3..8fe8f57c05de 100644
+=2D-- a/arch/um/include/shared/sigio.h
++++ b/arch/um/include/shared/sigio.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 Jeff Dike (jdike@karaya.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __SIGIO_H__
+diff --git a/arch/um/include/shared/skas/mm_id.h b/arch/um/include/shared/=
+skas/mm_id.h
+index 48dd0989ddaa..4337b4ced095 100644
+=2D-- a/arch/um/include/shared/skas/mm_id.h
++++ b/arch/um/include/shared/skas/mm_id.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2005 Jeff Dike (jdike@karaya.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __MM_ID_H
+diff --git a/arch/um/include/shared/skas/skas.h b/arch/um/include/shared/s=
+kas/skas.h
+index 911f3c45ad1f..c93d2cbc8f32 100644
+=2D-- a/arch/um/include/shared/skas/skas.h
++++ b/arch/um/include/shared/skas/skas.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2002 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __SKAS_H
+diff --git a/arch/um/include/shared/skas/stub-data.h b/arch/um/include/sha=
+red/skas/stub-data.h
+index 13f404e1262b..6b01d97a9386 100644
+=2D-- a/arch/um/include/shared/skas/stub-data.h
++++ b/arch/um/include/shared/skas/stub-data.h
+@@ -1,8 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+
+  * Copyright (C) 2015 Thomas Meyer (thomas@m3y3r.de)
+  * Copyright (C) 2005 Jeff Dike (jdike@karaya.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __STUB_DATA_H
+diff --git a/arch/um/include/shared/timer-internal.h b/arch/um/include/sha=
+red/timer-internal.h
+index 9991ec2371e4..f386e838dc12 100644
+=2D-- a/arch/um/include/shared/timer-internal.h
++++ b/arch/um/include/shared/timer-internal.h
+@@ -1,7 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2012 - 2014 Cisco Systems
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __TIMER_INTERNAL_H__
+diff --git a/arch/um/include/shared/um_malloc.h b/arch/um/include/shared/u=
+m_malloc.h
+index 6395fef6b69b..13da93284c2c 100644
+=2D-- a/arch/um/include/shared/um_malloc.h
++++ b/arch/um/include/shared/um_malloc.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2005 Paolo 'Blaisorblade' Giarrusso <blaisorblade@yahoo.=
+it>
+- * Licensed under the GPL
+  */
+
+ #ifndef __UM_MALLOC_H__
+diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user.h
+index 4cff19f6207a..e793e4212f0a 100644
+=2D-- a/arch/um/include/shared/user.h
++++ b/arch/um/include/shared/user.h
+@@ -1,6 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
+- * Licensed under the GPL
+  */
+
+ #ifndef __USER_H__
 =2D-
 2.23.0
 
