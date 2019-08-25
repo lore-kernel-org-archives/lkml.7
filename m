@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20650C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9280AC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC79E2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F62120870
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 20:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="F2OO1oz7"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AsbeQfzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfHYUAJ (ORCPT
+        id S1729108AbfHYUAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 16:00:09 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39219 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfHYUAI (ORCPT
+        Sun, 25 Aug 2019 16:00:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45802 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfHYUAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 16:00:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b1so13314539otp.6;
-        Sun, 25 Aug 2019 13:00:08 -0700 (PDT)
+        Sun, 25 Aug 2019 16:00:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m24so13284410otp.12;
+        Sun, 25 Aug 2019 13:00:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zXY+vp9jRGpj9AwVjvaZbbtqnQMg4LrCQrKGAkuzItM=;
-        b=F2OO1oz7p1xplg6LJMZYwvRm0fnVwDnp6BRBhYp0l8A0qZjst2X8KsuaKIMIkDoZEQ
-         pCHsZ9rC94kNLoL6YSH6/UWkUw1spBjrUwNIBJvzjRCuxSBZse74rLt6T3Jx9ngLcKtc
-         H/yi/sDUOMb3elM1YnWXXuYV8esWMdW4hvGp2i90GxJGo1wxktZINaHPZiQcJVgnRdVV
-         LL9oSNIQr/Vg0fd15sq9o34SjRfS6hwtW68De9wkPWyKiUewd5+ODOJOcUwRzwb+LhBx
-         +r6b7s9vRhtciZ4c5Zu6Uj4vwu4f1icD7pmiOm8XkYCAHbnwDvMuzXYE7u8lXOrfH8qp
-         bxzw==
+        bh=2BnqxOLA8r90y97Lp5feVAq8KO0vU53UAi87Q9EqgQA=;
+        b=AsbeQfzzSIJo+vyXHZwV6YfVP6kZ4Kohm8HBci2wkuTRoFc8tq+Yh3uXGgGe3Bc6N/
+         iJBherhwguu9LRd+ii94Iv6OG6fOSiE4V8msy7Wt23zzpNw5A3khVtR9FioVtJMNg3+j
+         bX2/S+Y9InIe1yICt5ARAoiTDiyiQLFIPSLJeBNfF5LeRMMvoZTjT5FdT0sgFhxdI0eZ
+         zyGXLU9ZNMWDuZ+MuYAp8IYKfyIrCOHGkwf6k4VpV3WPAxyN+GcdSsGxAv1w6SvOB8MK
+         btkLfJ75gpD+uABJUlo9Ma0PF2vVEWTfehO8O0TcB7QkRI03fAQO45tqsgEdcYrNFVTH
+         p96w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zXY+vp9jRGpj9AwVjvaZbbtqnQMg4LrCQrKGAkuzItM=;
-        b=SfNvXW+0J2H7r+hktDLz2DS4cIQDpPlZ7Rgvvk6dPc7GZdV0bdNBPuboYjUlyrLiJr
-         Dc/sRfebRPHrKQIEExatRA8BJdND1KCJRuVetH7ZAUtbm5FFlDS79cL47V5uN6Wn8mbJ
-         KSCHJuP38DQ+NTxn4pcYUG5fPU+vegaFdDpAA66a5VprdPSk7v8s8a6VrbEZpU7xzWX7
-         rJWJ9X/2k0nfdD7y6pSC95u0u7uCaE20TQeOMnX8+5U9uSKGza5Xdkcd7/fuwB9sLElY
-         LfNCphNQf0fWWgss2prIznGFu/07pcpYqHt5Oi8pQGogIunjTeFIW5CqJ6tgqafLYuUS
-         cmgw==
-X-Gm-Message-State: APjAAAWuA6pSghE0jua2JgGOuvAVQQADSFbFD8flpcgLqazp053IwXEs
-        5YMb/8Fuf7vtuzwoEh+AlU0yNr8pOBNlbsfhIcAiN2gA
-X-Google-Smtp-Source: APXvYqyZu4IJ7I+DpLeCK6W/EgEKtsIl2fZBrWMoOYcz2co8fxVnv4eQJJUV/XDH381rnV0JfTwdjzjeHaJs5fJoXAg=
-X-Received: by 2002:a9d:7b44:: with SMTP id f4mr3819368oto.42.1566763207717;
- Sun, 25 Aug 2019 13:00:07 -0700 (PDT)
+        bh=2BnqxOLA8r90y97Lp5feVAq8KO0vU53UAi87Q9EqgQA=;
+        b=Ng9ww7BEtrQ05dliay+B/spuskCjN4hn2R1TC7JpjWx9b11E0wn0uHGVna29o85EdF
+         sxTOfDWXIrbx/R9FnYdXvGgFOQfJ8eg9aXYD1pxxNa/bHGQo5nfdsonCdN8G3sSli/li
+         QGMVx6g7mldySJl5eoANJmHNBIZwtgEEdBCstOq/9ReXJe8kSOmbv2PmJxm6PJNgp+5W
+         R/0v1PYvgi70X5jrCmXGF8BFa3xiYxJjuczkaYBD2YcFHH8+vxC4/Oo6ySak2L6EPoro
+         T5PmvoDpkuwC48bEjGEaURRLpbzGH3u+6MRCVkXg095XkqtKtrrBQs22DApzdmTOrbRG
+         CYcQ==
+X-Gm-Message-State: APjAAAVAOEb6bDY2Qxdz+rgragba8dJthV/8dz5C51H54QsR55MmVSJA
+        /drG6gW33BC4Kx0+/JRTgxNkUbfNQadY0W60Lu9RwxDV
+X-Google-Smtp-Source: APXvYqyqDo8QI0aN4J75YWtE2lRXHhmIJArBPeiCvJHlr70ZxYAwAzvjeKsx3hcpNPj91nj2cogn9EDf0qfX7vzAkP0=
+X-Received: by 2002:a9d:6c0e:: with SMTP id f14mr8712052otq.6.1566763250104;
+ Sun, 25 Aug 2019 13:00:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190823090418.17148-1-narmstrong@baylibre.com> <20190823090418.17148-6-narmstrong@baylibre.com>
-In-Reply-To: <20190823090418.17148-6-narmstrong@baylibre.com>
+References: <20190823090418.17148-1-narmstrong@baylibre.com> <20190823090418.17148-5-narmstrong@baylibre.com>
+In-Reply-To: <20190823090418.17148-5-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 25 Aug 2019 21:59:56 +0200
-Message-ID: <CAFBinCDjO2sWcE8hmPfn1vsar52yeeTVAZaYJ6vR3rXaVJQQPg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: meson-sm1-sei610: add USB support
+Date:   Sun, 25 Aug 2019 22:00:39 +0200
+Message-ID: <CAFBinCBypL5D0Rs09V5xZBrV+Spnz-9H8WnFq+0KoLZbtEprfg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] arm64: dts: meson-sm1-sei610: add HDMI display support
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     khilman@baylibre.com, ulf.hansson@linaro.org,
         linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
@@ -71,12 +71,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Aug 23, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> Add the USB properties for the Amlogic SM1 Based SEI610 Board in order to
-> support the USB DRD Type-C port and the USB3 Type A port.
->
-> The USB DRD Type-C controller uses the ID signal to toggle the USB role
-> between the DWC3 Host controller and the DWC2 Device controller.
+> Add the HDMI support nodes for the Amlogic SM1 Based SEI610 Board.
 >
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-(based on the patch description as I don't have the schematics for this board)
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+this looks sane so feel free to add my:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
