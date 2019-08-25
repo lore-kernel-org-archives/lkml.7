@@ -2,85 +2,165 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F93C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80315C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DB4206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593B72173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csQfjGHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfHYSSr (ORCPT
+        id S1728809AbfHYS0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 14:18:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43790 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbfHYSSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 14:18:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8A02AA28883;
-        Sun, 25 Aug 2019 18:18:46 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-52.ams2.redhat.com [10.36.116.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DD6E5D6A3;
-        Sun, 25 Aug 2019 18:18:42 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Sun, 25 Aug 2019 14:26:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53155 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728726AbfHYS0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 14:26:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id o4so13371163wmh.2;
+        Sun, 25 Aug 2019 11:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zinVPTRrFMWmbFpflRee4MjyqNNUGw02xWqZXy1/69k=;
+        b=csQfjGHjdjnGbhjHhjzMwxabrS1hMS6BHP5atjIfqCe0UGW4wPPbrtwswiFFIcREZZ
+         d0EqHBI6eKyAq7LkddEew2gHfb7kc6VdFglxNVvZEFC8ilhl7lD2RnD2pBrAyauDHJnr
+         YolIBjTCofwDtHHk8wS3k/D82270rcATpYWA8vGale8Mh4pglPsnK+94lmn+CrINXG2z
+         Ga1VzLiul6ieyhb5n556irDCMekBoWXnY9RThjnKR9pJUdxuU4bB0lY1dACrT7waXFjO
+         m66EJ55HIFKLKNkdCzqy341uXtnFTbh94r5AKqMlmbIG7BxmhoKvQzJxcMS9HK4pAMFe
+         q+jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=zinVPTRrFMWmbFpflRee4MjyqNNUGw02xWqZXy1/69k=;
+        b=bnG9lsu7+kxGwt0kfLnfMa1Zacg+ySOovhnGkDKSji6VacSFigM/ARXw8dlB40H1xm
+         1OHFRIr6l5Yjnk+vagMkBvHtQvcrp5rEVHO2xyB4kxyjEms43XThpuiJE1DAMpooP5op
+         HpaHbjJMygLppNhBMQUGU2w8UL4+46tjTS4hunAwVifpV+xYNKjzIHyy8wZEtiFeypsb
+         yKEKR71jtvFsjT/3B3jvUo0HnTpllP6yCKQdrgUFanU5g97DngSdqKWYdWfG0FdZtwVp
+         PsdxrcZw/2k0qqnnp3mC386ArSFtLDGxNh9p+/uJ6DTLhuaYw7GvQA+rxa4jBNWfO+pL
+         ejiQ==
+X-Gm-Message-State: APjAAAXUlVCiC2A4raFZpua7UbnbIUlD4aQSYeXMGmbUvwta6Iw3rWFW
+        dAD4JOcmo1phSrJ5gtgoIsQ=
+X-Google-Smtp-Source: APXvYqyoT+gPy9NIIqEMHJwXvzYdZxId7ZhBTB32X9r2FSRXKkQTVRC2K4EpGRAb3l1AgGUdklypuA==
+X-Received: by 2002:a1c:7d08:: with SMTP id y8mr18308715wmc.50.1566757560333;
+        Sun, 25 Aug 2019 11:26:00 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id t14sm9167100wrv.12.2019.08.25.11.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 11:25:59 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: sha256 - Add missing MODULE_LICENSE() to lib/crypto/sha256.c
-Date:   Sun, 25 Aug 2019 20:18:41 +0200
-Message-Id: <20190825181841.2494-1-hdegoede@redhat.com>
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/PCI: Add missing log facility and move to use pr_ macros in pcbios.c
+Date:   Sun, 25 Aug 2019 20:25:57 +0200
+Message-Id: <20190825182557.23260-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Sun, 25 Aug 2019 18:18:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lib/crypto/sha256.c / lib/crypto/libsha256.o may end up being a module,
-so it needs a MODULE_LICENSE() line, add this.
+Make the log facility used to print warnings to be KERN_WARNING
+explicitly, rather than rely on the current (or default) value
+of the MESSAGE_LOGLEVEL_DEFAULT set in Kconfig.  This will make
+all the warnings in the arch/x86/pci/pcbios.c to be printed
+consistently at the same log facility.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Replace printk(KERN_<level> ...) with corresponding pr_ macros,
+while adding the missing log facility.
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 ---
- lib/crypto/sha256.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/pci/pcbios.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
-index 45ad87520769..42d75e490a97 100644
---- a/lib/crypto/sha256.c
-+++ b/lib/crypto/sha256.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/export.h>
-+#include <linux/module.h>
- #include <linux/string.h>
- #include <crypto/sha256.h>
- #include <asm/unaligned.h>
-@@ -314,3 +315,5 @@ int sha224_final(struct sha256_state *sctx, u8 *out)
- 	return __sha256_final(sctx, out, 7);
+diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
+index 9c97d814125e..0c3673f50bce 100644
+--- a/arch/x86/pci/pcbios.c
++++ b/arch/x86/pci/pcbios.c
+@@ -47,7 +47,7 @@ static inline void set_bios_x(void)
+ 	pcibios_enabled = 1;
+ 	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
+ 	if (__supported_pte_mask & _PAGE_NX)
+-		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
++		pr_info("PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
  }
- EXPORT_SYMBOL(sha224_final);
-+
-+MODULE_LICENSE("GPL");
+ 
+ /*
+@@ -111,10 +111,10 @@ static unsigned long __init bios32_service(unsigned long service)
+ 		case 0:
+ 			return address + entry;
+ 		case 0x80:	/* Not present */
+-			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
++			pr_warn("bios32_service(0x%lx): not present\n", service);
+ 			return 0;
+ 		default: /* Shouldn't happen */
+-			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
++			pr_warn("bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
+ 				service, return_code);
+ 			return 0;
+ 	}
+@@ -163,11 +163,11 @@ static int __init check_pcibios(void)
+ 		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
+ 			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
+ 		if (status || signature != PCI_SIGNATURE) {
+-			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
++			pr_err("PCI: BIOS BUG #%x[%08x] found\n",
+ 				status, signature);
+ 			return 0;
+ 		}
+-		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
++		pr_info("PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
+ 			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
+ #ifdef CONFIG_PCI_DIRECT
+ 		if (!(hw_mech & PCIBIOS_HW_TYPE1))
+@@ -316,13 +316,13 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
+ 		if (sum != 0)
+ 			continue;
+ 		if (check->fields.revision != 0) {
+-			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
++			pr_warn("PCI: unsupported BIOS32 revision %d at 0x%p\n",
+ 				check->fields.revision, check);
+ 			continue;
+ 		}
+ 		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
+ 		if (check->fields.entry >= 0x100000) {
+-			printk("PCI: BIOS32 entry (0x%p) in high memory, "
++			pr_warn("PCI: BIOS32 entry (0x%p) in high memory, "
+ 					"cannot use.\n", check);
+ 			return NULL;
+ 		} else {
+@@ -386,7 +386,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 		: "memory");
+ 	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
+ 	if (ret & 0xff00)
+-		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
++		pr_err("PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
+ 	else if (opt.size) {
+ 		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
+ 		if (rt) {
+@@ -394,7 +394,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
+ 			rt->size = opt.size + sizeof(struct irq_routing_table);
+ 			rt->exclusive_irqs = map;
+ 			memcpy(rt->slots, (void *) page, opt.size);
+-			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
++			pr_info("PCI: Using BIOS Interrupt Routing Table\n");
+ 		}
+ 	}
+ 	free_page(page);
 -- 
-2.23.0
+2.22.1
 
