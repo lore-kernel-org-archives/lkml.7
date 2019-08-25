@@ -4,170 +4,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED3FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE8FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDA421848
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979382173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:28:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fcwCzLr2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyNVcz0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfHYLZ2 (ORCPT
+        id S1727888AbfHYL2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 07:25:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36701 "EHLO
+        Sun, 25 Aug 2019 07:28:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41337 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbfHYLZ2 (ORCPT
+        with ESMTP id S1726182AbfHYL2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 07:25:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id o9so30604456iom.3;
-        Sun, 25 Aug 2019 04:25:27 -0700 (PDT)
+        Sun, 25 Aug 2019 07:28:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id j5so30578363ioj.8
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 04:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dIuyrG3/dTHyGA/J/KYequizhWcmMaNv8m8PYDwNWI4=;
-        b=fcwCzLr2Oyfngu50pqfzqF552F9pwU+iIcIoIWSJsaPcfRHw8O8jyLeg2+7vfTS83w
-         KmgvC13akzfojk5+E0580ibiUQjf6MPrnGYkfWDrOBCeoPfetof7RBu8DjfRF46e4exl
-         7abMklO7B5s77Z9U/PKq+XBfZ6mGM8WT7czVVkGGdSmEA/3W3xeDwACrNib1KRRdNRzL
-         TB242cenbOrZh7WNmWSusSMO+bYgzVFULlGlAxjpSGL5lPPuWMMWCC7c8U4Un1fEq70Z
-         fh3ROfj6+5IsWiiFsGDpFAfsoOycVT8MM1cNkTtkoPmdy/2r0pXKn/WBQ10R7b5RmCE2
-         WsvQ==
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=C14nfWyt0iidqReRCOmecHAYDO2sZOU70ff5sYCUtZ4=;
+        b=QyNVcz0vvj2nmGldZ4Qxa6auQPEp3flN3CFrZHzBr5wKi392VM8S9qZrezXTh3c8ql
+         G35L2xSUvGfKvFzCKGS/YWvLy0SKGSFAHuHhCmZYxOF01pGFJUBmtJ/Y5BbXv5+dw8yO
+         3srjsKacHMktfoZCHjaoZQo7RjZqFkVukn4pXegDDP3kU6Hg66Et/5qV6a/pUrSSV0Ao
+         7N738c0NbLagzLrNtDFWPVj1FQkXCMOtIr/+1oD8RXXXUoRM45dlwQIKjChMiHPQZ/Z8
+         xPxzzWGLgm5tp1/uykifbFSc0qDQom0rbswaoYW09xFkZstYBb2IQaVU7Dgho/G9tPOO
+         +rCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dIuyrG3/dTHyGA/J/KYequizhWcmMaNv8m8PYDwNWI4=;
-        b=kFYOt1zv/3Tz7HJpjW6X++fNne43iU1W9VwKa5NzDxKmkglcCsHFybH3Hy/Tli6elY
-         SWxXCniMSv0sFN/j4S/e/oVi56PV/8dCTfiCPSgbtbce5xDzdproe08Hy1SrG5q6vuBj
-         eIGaodhXzyS9FysyGi098FZEH5NV+j3/uHxgnNBeOGNZztZTYbpjA+2i1n+oINjzzwDG
-         KxAb/Wo3PhHHrDjD3ITG2ZlnwnHf+vIuliHorzobAhho3hV6Tjt+TmbHCqjNE6orNZdy
-         dbWSHqxpLlp26GyDjmejOSjrbXxuuGiSQlUz7W/2bSAkhf7UfJOEPMBOpMDDGMNGBnLd
-         PiTA==
-X-Gm-Message-State: APjAAAVb5RWHTeNuY7aEswLu+yhBIH3aQh+tKSQAOTfObJV5anB/Gc+b
-        rfg3Yc7+SGah5ho+osPgq4fqUn878RHeueAGrG8=
-X-Google-Smtp-Source: APXvYqwvEo+Td14aRT0PjhhgoTej9aKxEX7xld6WL/Ul4aBPePGWEZJs4Djx1s/U1N1jbPjwJwC4Ez25O/btr4FOww4=
-X-Received: by 2002:a6b:5d0d:: with SMTP id r13mr1365601iob.89.1566732326980;
- Sun, 25 Aug 2019 04:25:26 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=C14nfWyt0iidqReRCOmecHAYDO2sZOU70ff5sYCUtZ4=;
+        b=ukWBdGJktU3dDCMpWhiWQIvGnuzGC9k6yeTG6XvKc/cDxjZYpG4bSgcj1FYES3nf9L
+         cnl9mMeT5ltHSTrgniubOFKrgFq9P2foz0OXm++SM7FPQJUTfjWgPxq+65R7ZpKiPoqI
+         HJBEwK6qj+a4kmMXSHTE55yJ3iuWUdqLFjAZxXJpJEtXxgua/d0hSa7PdeEJ2RY15Ne3
+         WEjnBHy8j66SC8Z6JDaTPngvxMl61JNuEaTFMpqUIpWh4W7mVFL0XqT7dJC7a5IbZ/hd
+         cZe2n3nWEV7wvWp3fj+4VUTouwNjobr/uKbNe6qXg0VEvDFl/60WgIUSflFjibwNCv7d
+         Mv3Q==
+X-Gm-Message-State: APjAAAVguKFEEqWDwUmgvlBFfbwwq77J6NaNxSU3EpnuwBe7x9pFfArj
+        FLPr3WL+cydBry+m+J4Ex76sygxTly8LbwGjkdmq6c1sxVE=
+X-Google-Smtp-Source: APXvYqxUfQlQWgZl9jh/mioyCNmSMiwwKlzLHOxqZ4QtoYJ9ujVTghEXCB577AMsKzdynbwpiVyElM716gFfDjTtAeo=
+X-Received: by 2002:a02:852d:: with SMTP id g42mr7405968jai.93.1566732481618;
+ Sun, 25 Aug 2019 04:28:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
- <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com> <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
- <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
- <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com> <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
- <20190715094541.zjqxainggjuvjxd2@linux.intel.com> <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
- <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com> <CAM9mBwL=5+pGTYUKbSdw5F6soR=tW-cqfbEQ9_NmCQTO=fSVZQ@mail.gmail.com>
- <528c9364-f4f4-d7c1-5e58-6ba6b8e90a6c@infineon.com>
-In-Reply-To: <528c9364-f4f4-d7c1-5e58-6ba6b8e90a6c@infineon.com>
-From:   Oshri Alkobi <oshrialkoby85@gmail.com>
-Date:   Sun, 25 Aug 2019 14:25:17 +0300
-Message-ID: <CAM9mBw+bz4OLoaWqJVs-+O0Wuovcx9bbj+PJWMHq_60WNbgTCg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-To:     Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc:     Eyal.Cohen@nuvoton.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        tmaimon77@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de,
-        gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        amir.mizinski@nuvoton.com
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Sun, 25 Aug 2019 16:27:50 +0500
+Message-ID: <CABXGCsNuQMnJeXZ8Fc0CKFxvKqZTxBsJ62NYcrQXR-LT7c2JHQ@mail.gmail.com>
+Subject: gnome-shell stuck because of amdgpu driver [5.3 RC5]
+To:     amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 7:12 PM Alexander Steffen
-<Alexander.Steffen@infineon.com> wrote:
->
-> On 15.08.2019 19:03, Oshri Alkobi wrote:
-> > On Thu, Jul 18, 2019 at 8:10 PM Alexander Steffen
-> > <Alexander.Steffen@infineon.com> wrote:
-> >>
-> >> On 18.07.2019 14:51, Eyal.Cohen@nuvoton.com wrote:
-> >>> Hi Jarkko and Alexander,
-> >>>
-> >>> We have made an additional code review on the TPM TIS core driver, it looks quite good and we can connect our new I2C driver to this layer.
-> >>
-> >> Great :) In the meantime, I've done some experiments creating an I2C
-> >> driver based on tpm_tis_core, see
-> >> https://patchwork.kernel.org/patch/11049363/ Please have a look at that
-> >> and provide your feedback (and/or use it as a basis for further
-> >> implementations).
-> >>
-> >
-> > Sorry for the late response.
-> >
-> > Thanks Alexander, indeed it looks much simpler.
-> > I've checked it with Nuvoton's TPM - basic TPM commands work
->
-> Nice :)
->
-> > I only
-> > had to remove the first msg from the read/write I2C transmitting
-> > (from/to TPM_LOC_SEL), the TPM couldn't handle two register writes in
-> > a sequence.
-> > Actually it is more efficient to set TPM_LOC_SEL only before locality
-> > check/request/relinquish - it is sticky.
->
-> There is one problem though: Do we assume that only the kernel driver
-> will communicate with the TPM or might there be something else that also
-> talks to the TPM?
->
-> If it is only the kernel driver, we could probably skip setting
-> TPM_LOC_SEL at all, since it defaults to 0 and the driver will never use
-> anything else. If something else does its own I2C communication with the
-> TPM, it might write different values to TPM_LOC_SEL at any time, causing
-> the kernel driver to use a different locality than intended. This was
-> the reason I always set TPM_LOC_SEL within the same transaction.
->
-> > I still didn't manage to work with interrupts, will debug it.
->
-> Interrupt support might be broken in general at the moment, see this
-> thread: https://www.spinics.net/lists/linux-integrity/msg08663.html
->
-> > We weren't aware to the implementation of Christophe/ST which looks
-> > good and can be complement to yours.
-> > If no one is currently working on that, we can prepare a new patch
-> > that is based on both.
-> > Please let us know.
->
-> I won't have the time to do anything, at least for the next two weeks,
-> so feel free to pick it up.
->
+Hi folks,
+I left unblocked gnome-shell at noon, and when I returned at the
+evening I discovered than monitor not sleeping and show open gnome
+activity. At first, I thought that some application did not let fall
+asleep the system. But when I try to move the mouse, I realized that
+the system hanged. So I connect via ssh and tried to investigate the
+problem. I did not see anything strange in kernel logs. And my last
+idea before trying to kill the gnome-shell process was dumps tasks
+that are in uninterruptable (blocked) state.
 
-Great, we will start working on it.
+After [Alt + PrnScr + W] I saw this:
 
-> >>> However, there are several differences between the SPI interface and the I2C interface that will require changes to the TIS core.
-> >>> At a minimum we thought of:
-> >>> 1. Handling TPM Localities in I2C is different
-> >>
-> >> It turned out not to be that different in the end, see the code
-> >> mentioned above and my comment here:
-> >> https://patchwork.kernel.org/cover/11049365/
-> >>
-> >>> 2. Handling I2C CRC - relevant only to I2C bus hence not supported today by TIS core
-> >>
-> >> That is completely optional, so there is no need to implement it in the
-> >> beginning. Also, do you expect a huge benefit from that functionality?
-> >> Are bit flips that much more likely on I2C compared to SPI, which has no
-> >> CRC at all, but still works fine?
-> >>
-> >
-> > I2C is noisy bus with potentially more devices with larger variety
-> > than SPI. I2C may have more than one master and may have collisions
-> > and/or arbitration.
->
-> If multi-master usage is a concern, there are probably a lot more places
-> in the driver that need to be adapted to deal with concurrent
-> access/data corruption. For now, I'd assume a single master, similar to SPI.
->
-> Alexander
+[32840.701909] sysrq: Show Blocked State
+[32840.701976]   task                        PC stack   pid father
+[32840.702407] gnome-shell     D11240  1900   1830 0x00000000
+[32840.702438] Call Trace:
+[32840.702446]  ? __schedule+0x352/0x900
+[32840.702453]  schedule+0x3a/0xb0
+[32840.702457]  schedule_timeout+0x289/0x3c0
+[32840.702461]  ? find_held_lock+0x32/0x90
+[32840.702464]  ? find_held_lock+0x32/0x90
+[32840.702469]  ? mark_held_locks+0x50/0x80
+[32840.702473]  ? _raw_spin_unlock_irqrestore+0x4b/0x60
+[32840.702478]  dma_fence_default_wait+0x1f5/0x340
+[32840.702482]  ? dma_fence_free+0x20/0x20
+[32840.702487]  dma_fence_wait_timeout+0x182/0x1e0
+[32840.702533]  amdgpu_fence_wait_empty+0xe7/0x210 [amdgpu]
+[32840.702577]  amdgpu_pm_compute_clocks+0x70/0x5f0 [amdgpu]
+[32840.702641]  dm_pp_apply_display_requirements+0x19e/0x1c0 [amdgpu]
+[32840.702705]  dce12_update_clocks+0xd8/0x110 [amdgpu]
+[32840.702766]  dc_commit_state+0x414/0x590 [amdgpu]
+[32840.702834]  amdgpu_dm_atomic_commit_tail+0xd1e/0x1cf0 [amdgpu]
+[32840.702840]  ? reacquire_held_locks+0xed/0x210
+[32840.702848]  ? ttm_eu_backoff_reservation+0xa5/0x160 [ttm]
+[32840.702853]  ? find_held_lock+0x32/0x90
+[32840.702855]  ? find_held_lock+0x32/0x90
+[32840.702860]  ? __lock_acquire+0x247/0x1910
+[32840.702867]  ? find_held_lock+0x32/0x90
+[32840.702871]  ? mark_held_locks+0x50/0x80
+[32840.702874]  ? _raw_spin_unlock_irq+0x29/0x40
+[32840.702877]  ? lockdep_hardirqs_on+0xf0/0x180
+[32840.702881]  ? _raw_spin_unlock_irq+0x29/0x40
+[32840.702884]  ? wait_for_completion_timeout+0x75/0x190
+[32840.702895]  ? commit_tail+0x3c/0x70 [drm_kms_helper]
+[32840.702902]  commit_tail+0x3c/0x70 [drm_kms_helper]
+[32840.702909]  drm_atomic_helper_commit+0xe3/0x150 [drm_kms_helper]
+[32840.702922]  drm_atomic_connector_commit_dpms+0xd7/0x100 [drm]
+[32840.702936]  set_property_atomic+0xcc/0x140 [drm]
+[32840.702955]  drm_mode_obj_set_property_ioctl+0xcb/0x1c0 [drm]
+[32840.702968]  ? drm_mode_obj_find_prop_id+0x40/0x40 [drm]
+[32840.702978]  drm_ioctl_kernel+0xaa/0xf0 [drm]
+[32840.702990]  drm_ioctl+0x208/0x390 [drm]
+[32840.703003]  ? drm_mode_obj_find_prop_id+0x40/0x40 [drm]
+[32840.703007]  ? sched_clock_cpu+0xc/0xc0
+[32840.703012]  ? lockdep_hardirqs_on+0xf0/0x180
+[32840.703053]  amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+[32840.703058]  do_vfs_ioctl+0x411/0x750
+[32840.703065]  ksys_ioctl+0x5e/0x90
+[32840.703069]  __x64_sys_ioctl+0x16/0x20
+[32840.703072]  do_syscall_64+0x5c/0xb0
+[32840.703076]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[32840.703079] RIP: 0033:0x7f8bcab0f00b
+[32840.703084] Code: Bad RIP value.
+[32840.703086] RSP: 002b:00007ffe76c62338 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[32840.703089] RAX: ffffffffffffffda RBX: 00007ffe76c62370 RCX: 00007f8bcab=
+0f00b
+[32840.703092] RDX: 00007ffe76c62370 RSI: 00000000c01864ba RDI: 00000000000=
+00009
+[32840.703094] RBP: 00000000c01864ba R08: 0000000000000003 R09: 00000000c0c=
+0c0c0
+[32840.703096] R10: 000056476c86a018 R11: 0000000000000246 R12: 000056476c8=
+ad940
+[32840.703098] R13: 0000000000000009 R14: 0000000000000002 R15: 00000000000=
+00003
+[root@localhost ~]#
+[root@localhost ~]# ps aux | grep gnome-shell
+mikhail     1900  0.3  1.1 6447496 378696 tty2   Dl+  Aug24   2:10
+/usr/bin/gnome-shell
+mikhail     2099  0.0  0.0 519984 23392 ?        Ssl  Aug24   0:00
+/usr/libexec/gnome-shell-calendar-server
+mikhail    12214  0.0  0.0 399484 29660 pts/2    Sl+  Aug24   0:00
+/usr/bin/python3 /usr/bin/chrome-gnome-shell
+chrome-extension://gphhapmejobijbbhgpjhcjognlahblep/
+root       22957  0.0  0.0 216120  2456 pts/10   S+   03:59   0:00
+grep --color=3Dauto gnome-shell
 
-Oshri
+After it, I tried to kill gnome-shell process with signal 9, but the
+process won't terminate after several unsuccessful attempts.
+
+Only [Alt + PrnScr + B] helped reboot the hanging system.
+I am writing here because I hope some ampgpu hackers cal look in the
+trace and understand that is happening.
+
+Sorry, I don=E2=80=99t know how to reproduce this bug. But the problem itse=
+lf
+is very annoying.
+
+Thanks.
+
+GPU: AMD Radeon VII
+Kernel: 5.3 RC5
+
+
+--
+Best Regards,
+Mike Gavrilov.
