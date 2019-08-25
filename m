@@ -2,161 +2,100 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB584C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DF1C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EED2173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D2A2190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="b7+f8EmK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H+Yq1F8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfHYN25 (ORCPT
+        id S1728229AbfHYNbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 09:28:57 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:20106 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfHYN24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 09:28:56 -0400
-Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x7PDSdou010046;
-        Sun, 25 Aug 2019 22:28:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7PDSdou010046
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566739720;
-        bh=M3TaxD8h5AxdPaHwejIeBEgX0+/Cg4lSUkEdsJeef3A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=b7+f8EmK8KBoXQqGYjaNpfyiu4TMwEsKWfJNQIhCUITjRQiMjkKCCL1/Sr5/KNICq
-         pyBN3GNovyRTEDjHf8xbBLC+Opcdy2Rvu4ptDEP3YTOvT+pNizG3GkB6UFA3d3wUs6
-         Im3KK4KI5t+6ntnxxhZh8KXFzli3LBhWBfAYW358F0Y3+/zLtehsK7xub4zSvVkK4O
-         HPCMq4iPbWlosyagT7jDDkaKfm9zDMATdFaE0TXCyEsdTanYMCaHf8tLDdjoC7lQcc
-         Vdc4b9ZKFOhTsn3vKz49FHB89D12OckpAzAlk1yytl/x7e2RJlxF6H/EzR+GcVKHmy
-         2JPdqyJN6MZsg==
-X-Nifty-SrcIP: [126.125.143.222]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: add $(BASH) to run scripts with bash-extension
-Date:   Sun, 25 Aug 2019 22:28:37 +0900
-Message-Id: <20190825132837.13873-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 25 Aug 2019 09:31:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44153 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbfHYNbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 09:31:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46GbdL1mTMz9sDQ;
+        Sun, 25 Aug 2019 23:31:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566739895;
+        bh=kwJeBAHhPJu1xjrfRZy4xtqRda5fmrFs/TKifaaS3Js=;
+        h=Date:From:To:Cc:Subject:From;
+        b=H+Yq1F8xtbQMMtlWhyz7eNpIHnknoCKQvFv+fK85T5FXh6uah3mz2KShLWevZjVJh
+         Qp0uAmJ/G4vK/0sEYBQBfI6hexRxB5ZSMkskjQZ8AibzYBCHFoOL+1Iz/pxFUIZRd2
+         PRurse9tWQF/jhCVQ0JtNZJo93PE0oQbwTzq6AGhbHGdqA//Wfa/f2LS3+OwqaPQFs
+         FtZUk3QXZxcLpzps4iPqN5K5kfySJcutH+Y0jVmHuVfyMuBL5T67Mmp83eTi2vv8n+
+         u3OCZNN2WoKkKoBsNc5aLy6XHPq2u96KsgOyYIcQRg8WfYCl7YzYqtsH+7Z+6zTHgz
+         umSpOqyPcMv+g==
+Date:   Sun, 25 Aug 2019 23:31:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: linux-next: Fixes tag needs some work in the tip tree
+Message-ID: <20190825233120.18ac25e4@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/6RZzrn0CYSO.og73XIcamBb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_SHELL falls back to sh when bash is not installed on the system,
-but nobody is testing such a case since bash is usually installed.
-That is, shell scripts invoked by CONFIG_SHELL are only tested with
-bash.
+--Sig_/6RZzrn0CYSO.og73XIcamBb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It makes it difficult to test whether the hashbang #!/bin/sh is real.
-In fact, I saw some patches trying to add bash-extension to #!/bin/sh
-script.
+Hi all,
 
-Besides, some shell scripts invoked by CONFIG_SHELL use bash-extension
-and #!/bin/bash is specified as the hashbang, while CONFIG_SHELL may
-not always be set to bash.
+In commit
 
-Probably, the right thing to do is to introduce BASH that is bash by
-default, and always set CONFIG_SHELL to sh. Replace $(CONFIG_SHELL)
-with $(BASH) for #!/bin/bash scripts.
+  b63f20a778c8 ("x86/retpoline: Don't clobber RFLAGS during CALL_NOSPEC on =
+i386")
 
-If somebody tries to add bash-extension to a #!/bin/sh script, it will
-be caught by somebody because /bin/sh is a symlink to dash on some
-major distributions.
+Fixes tag
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+  Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
 
- Makefile             | 11 +++++------
- kernel/Makefile      |  2 +-
- scripts/Makefile.lib |  2 +-
- 3 files changed, 7 insertions(+), 8 deletions(-)
+has these problem(s):
 
-diff --git a/Makefile b/Makefile
-index 3f95d1d04b08..23d8fa6b047b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -404,9 +404,7 @@ KCONFIG_CONFIG	?= .config
- export KCONFIG_CONFIG
- 
- # SHELL used by kbuild
--CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
--	  else if [ -x /bin/bash ]; then echo /bin/bash; \
--	  else echo sh; fi ; fi)
-+CONFIG_SHELL := sh
- 
- HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
- HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
-@@ -443,6 +441,7 @@ PYTHON		= python
- PYTHON2		= python2
- PYTHON3		= python3
- CHECK		= sparse
-+BASH		= bash
- 
- CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
- 		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
-@@ -488,7 +487,7 @@ KBUILD_LDFLAGS :=
- GCC_PLUGINS_CFLAGS :=
- CLANG_FLAGS :=
- 
--export ARCH SRCARCH CONFIG_SHELL HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
-+export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
- export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
- export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
-@@ -1694,7 +1693,7 @@ clean: $(clean-dirs)
- # Generate tags for editors
- # ---------------------------------------------------------------------------
- quiet_cmd_tags = GEN     $@
--      cmd_tags = $(CONFIG_SHELL) $(srctree)/scripts/tags.sh $@
-+      cmd_tags = $(BASH) $(srctree)/scripts/tags.sh $@
- 
- tags TAGS cscope gtags: FORCE
- 	$(call cmd,tags)
-@@ -1715,7 +1714,7 @@ versioncheck:
- 		| xargs $(PERL) -w $(srctree)/scripts/checkversion.pl
- 
- coccicheck:
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
-+	$(Q)$(BASH) $(srctree)/scripts/$@
- 
- namespacecheck:
- 	$(PERL) $(srctree)/scripts/namespace.pl
-diff --git a/kernel/Makefile b/kernel/Makefile
-index ef0d95a190b4..4deab893ca83 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -126,7 +126,7 @@ $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
- $(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
- 
- quiet_cmd_genikh = CHK     $(obj)/kheaders_data.tar.xz
--cmd_genikh = $(CONFIG_SHELL) $(srctree)/kernel/gen_kheaders.sh $@
-+cmd_genikh = $(BASH) $(srctree)/kernel/gen_kheaders.sh $@
- $(obj)/kheaders_data.tar.xz: FORCE
- 	$(call cmd,genikh)
- 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 888e5c830646..7ab17712ab24 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -364,7 +364,7 @@ UIMAGE_ENTRYADDR ?= $(UIMAGE_LOADADDR)
- UIMAGE_NAME ?= 'Linux-$(KERNELRELEASE)'
- 
- quiet_cmd_uimage = UIMAGE  $@
--      cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A $(UIMAGE_ARCH) -O linux \
-+      cmd_uimage = $(BASH) $(MKIMAGE) -A $(UIMAGE_ARCH) -O linux \
- 			-C $(UIMAGE_COMPRESSION) $(UIMAGE_OPTS-y) \
- 			-T $(UIMAGE_TYPE) \
- 			-a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
--- 
-2.17.1
+  - Target SHA1 does not exist
 
+Did you mean
+
+Fixes: 76b043848fd2 ("x86/retpoline: Add initial retpoline support")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6RZzrn0CYSO.og73XIcamBb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ijagACgkQAVBC80lX
+0GwFeAf+PWKh9IJ45Y2EShMr62m1zES4QolUTkaOLpIdnjcajAn0ZYZKTFHBkFLE
+0Z915jY89xHzjyc+hWhdswveF8kvEy724GNRlxEXuao2mMYIKcEmlFUiumYfS7VF
+RzOGWtX1MWx9y3Bdon2Cgcou1CbDXXkUlVR+YS8RWLj5yjmr1msrh4vnkbQRv10Q
+/rlIxw/v5UHdJkTq9+ES1rIWi+ipcPQZw2+baQCM2cIUPs8ZKfQsQlgjY44JUzP9
+0KCkF2yBJgCKJFK4ZIREYH2wfI5r8ExoSErBHIeBcMIXi/MRWKSZZiMaTFm+Jn4S
+mRySrsm16Qy8YvY1aua1Xfw+Ctc4qA==
+=+Hox
+-----END PGP SIGNATURE-----
+
+--Sig_/6RZzrn0CYSO.og73XIcamBb--
