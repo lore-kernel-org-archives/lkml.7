@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314B9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B58C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064652082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E542082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566757093;
-	bh=Vpu3tcxK57A4/F6/i6QFMrgZg+RznyjN/EGGz20aUqg=;
+	s=default; t=1566757095;
+	bh=gLYUuSbj0ljDzFmOZgaAU5GTxLAVm1JGI8DxXj3bt9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=th870WqJICOmBvByrQ9bt8wmwkwZZWR0P2C154nsiZqxsPzpp5sZHD4SdZZoDGsOh
-	 d0J2dSjS6Zg+omvfvmdbizL0O95YP4FfqgfP1hW4UIWYmfBci8ZC0dJJ7THhvJPBck
-	 FM+DFLxRCWkPYkvbJWrgK7LiN8lUA7Pg24JUtgrs=
+	b=mHxvf8HX6sMfwOm/vJvzg3uqVpxSFiXgmAXv33TnfD5JnBP3gvJsBdm67u3Ipva8U
+	 IgSJKqm+8A/NYu4NvhpX0OSD7jbNx6wnJ91NRHEXV0qi2sYdnPQLrYhPnmF9q/1F4d
+	 FqnJwXkqs9J0y9mVLls8UIdQyJjxw8llB4uNACy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfHYSSL (ORCPT
+        id S1728903AbfHYSSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 14:18:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40394 "EHLO mx1.redhat.com"
+        Sun, 25 Aug 2019 14:18:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33480 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbfHYSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 14:18:10 -0400
+        id S1728881AbfHYSSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 14:18:03 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E532710881CA;
-        Sun, 25 Aug 2019 18:18:09 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C4AC18C8910;
+        Sun, 25 Aug 2019 18:18:03 +0000 (UTC)
 Received: from krava.redhat.com (ovpn-204-45.brq.redhat.com [10.40.204.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 088905D9C3;
-        Sun, 25 Aug 2019 18:18:06 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43C6A5ED3C;
+        Sun, 25 Aug 2019 18:18:01 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -43,96 +43,65 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 05/12] libperf: Add fork_event to perf/event.h
-Date:   Sun, 25 Aug 2019 20:17:45 +0200
-Message-Id: <20190825181752.722-6-jolsa@kernel.org>
+Subject: [PATCH 03/12] libperf: Add comm_event to perf/event.h
+Date:   Sun, 25 Aug 2019 20:17:43 +0200
+Message-Id: <20190825181752.722-4-jolsa@kernel.org>
 In-Reply-To: <20190825181752.722-1-jolsa@kernel.org>
 References: <20190825181752.722-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Sun, 25 Aug 2019 18:18:10 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Sun, 25 Aug 2019 18:18:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moving fork_event event definition into libperf's event.h
+Moving comm_event event definition into libperf's event.h
 header include.
 
 In order to keep libperf simple, we switch 'u64/u32/u16/u8'
 types used events to their generic '__u*' versions.
 
-Perf added 'u*' types mainly to ease up printing __u64 values
-as stated in the linux/types.h comment:
-
-  /*
-   * We define u64 as uint64_t for every architecture
-   * so that we can print it with "%"PRIx64 without getting warnings.
-   *
-   * typedef __u64 u64;
-   * typedef __s64 s64;
-   */
-
-Adding and using new PRI_lu64 and PRI_lx64 macros to be used for
-that.  Using extra '_' to ease up the reading and differentiate
-them from standard PRI*64 macros.
-
-Link: http://lkml.kernel.org/n/tip-p4ooh7midl03a03o03xcsqws@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-2wp8wtf6p0dgdcul1in49wg6@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/lib/include/perf/event.h | 7 +++++++
- tools/perf/util/event.h             | 7 -------
- tools/perf/util/python.c            | 2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ tools/perf/lib/include/perf/event.h | 6 ++++++
+ tools/perf/util/event.h             | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 265bb01029f0..7a34221abbba 100644
+index f1f5b0787782..11adfb1b1524 100644
 --- a/tools/perf/lib/include/perf/event.h
 +++ b/tools/perf/lib/include/perf/event.h
-@@ -43,4 +43,11 @@ struct namespaces_event {
- 	struct perf_ns_link_info link_info[];
+@@ -30,4 +30,10 @@ struct mmap2_event {
+ 	char filename[PATH_MAX];
  };
  
-+struct fork_event {
++struct comm_event {
 +	struct perf_event_header header;
-+	__u32 pid, ppid;
-+	__u32 tid, ptid;
-+	__u64 time;
++	__u32 pid, tid;
++	char comm[16];
 +};
 +
  #endif /* __LIBPERF_EVENT_H */
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index e8c57c23aa24..817f12643f11 100644
+index fdff9dcd7c2b..12bc9de3d539 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -16,13 +16,6 @@
+@@ -16,12 +16,6 @@
  #define PRI_lu64 "l" PRIu64
  #define PRI_lx64 "l" PRIx64
  
--struct fork_event {
+-struct comm_event {
 -	struct perf_event_header header;
--	u32 pid, ppid;
--	u32 tid, ptid;
--	u64 time;
+-	u32 pid, tid;
+-	char comm[16];
 -};
 -
- struct lost_event {
+ struct namespaces_event {
  	struct perf_event_header header;
- 	u64 id;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 55ff0c3182d6..8bdadb24f6ba 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -170,7 +170,7 @@ static PyMemberDef pyrf_task_event__members[] = {
- static PyObject *pyrf_task_event__repr(struct pyrf_event *pevent)
- {
- 	return _PyUnicode_FromFormat("{ type: %s, pid: %u, ppid: %u, tid: %u, "
--				   "ptid: %u, time: %" PRIu64 "}",
-+				   "ptid: %u, time: %" PRI_lu64 "}",
- 				   pevent->event.header.type == PERF_RECORD_FORK ? "fork" : "exit",
- 				   pevent->event.fork.pid,
- 				   pevent->event.fork.ppid,
+ 	u32 pid, tid;
 -- 
 2.21.0
 
