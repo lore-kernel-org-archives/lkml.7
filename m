@@ -2,97 +2,139 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2576BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4650C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E960220673
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D94206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="u0cppoVM"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jY1JCn+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfHYTit (ORCPT
+        id S1729075AbfHYTjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 15:38:49 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46334 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfHYTit (ORCPT
+        Sun, 25 Aug 2019 15:39:04 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44146 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbfHYTjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 15:38:49 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t24so10572507oij.13;
-        Sun, 25 Aug 2019 12:38:48 -0700 (PDT)
+        Sun, 25 Aug 2019 15:39:03 -0400
+Received: by mail-qt1-f193.google.com with SMTP id 44so15980570qtg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 12:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=chkqvuhekHGQhYnW0yA1AUvunv0CUeXBozcgE5RCGR0=;
-        b=u0cppoVMppKPI4R3tE0oQQPUsjzQdBiwzIVOtcPozizIdOfQcPFCm4jdFut4NLyLHl
-         W7ia+LzopmIt5jWdEAFGUgT7HxX8pm5XT+F4VWzuako2kqYDtXCS2WaL0eRYHmbhut5i
-         Wx6Mqe9uay3JAyeHjmznXMHzmTGUENFoFJwfcWYbHOEEZpQN5h8ragkZrjd6CBuQPEC3
-         /DHI0LFnSIkbSLRhr8D4s+ip6Bfaj4gjbeP1qf2DNlVlLlNC1Jqu10ePv2ESrd+OUisf
-         vnRxY9V6p8RAh4ddtvYeGfnqMu+SgFkdQH9PV+AqPXPIE6Ou6MviSIidgWdoyT00Oo2j
-         Nq4A==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IcftYbtF8hmiS81ypdWg52goznYue2k46OBNV8xIDyo=;
+        b=jY1JCn+ldE3+NTo3VG4D8ssjZZ/12uHiNC485pYaAlQaG8pq2px0AOjE6MH3L2daUE
+         OBQQMbkBAQx1ajmooyQh4PWVjIdt6ikqEPLDm20L670hA8QUe1IDUU8Cq7RXHKvaCJs6
+         htKXA0TQcvkuZNBGS9+1p2d+L62V+4CGU22UmkrAkD8MZulxOHzPTTFZ136Y5UdWTW5x
+         idbHVJEbZfo8m9QYHUrZMB8nBu9bO4c81G3htyFqwzCZfcFCkUU0+OO9AT3zsqJ59i9L
+         HxpSOEcHwKnDcvmLtQNemKrtsmfjrFYpGaWhT4ebFkdejRPPm33Mc2qKmXCed7vAMCi4
+         f5sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=chkqvuhekHGQhYnW0yA1AUvunv0CUeXBozcgE5RCGR0=;
-        b=dgQWgdiLi1DuwOtrn+csirs25/3irHhtpEMGGv/ChbzdTCUH9WZ50MZmq0ryGLNm9M
-         ZidbjF/8w64U8L1tznwzGtDiGuarL1JrklfpcgP3W2lqtJYOFmoRbSbMOcZVVXhJ409h
-         XfT01C2mlMB/TBmxs2jhJFAleao/HrX6EOy0cQFV1+MGzzYXvrFXN+rr5dW1EZ3Ofe/4
-         wFgam1pQwL/niHFvlfMp0ywMn+aNKVI78hdLce8gOyQzLskJeIXj44dnnhtvDphslMaL
-         btJAdFCcH2NLuj+Sin8SYGYsbO0q+Vh7/EtWZ2ojRqjkXx9ocxT+YOGXi5HN/cuWsKdk
-         l1Fw==
-X-Gm-Message-State: APjAAAWsfoUTnml1YKrvw2zzY7J1Z5obT/r6KiauUGk1TfscgfseP7+w
-        8liFrn9JyOResHtOBLzaHnSAqrSw3tazF1WzhWg=
-X-Google-Smtp-Source: APXvYqy1R4zVYwEh8pivnSC69fyaMBLMJemyEus17wAdFf0HZLtZeNrG0Fme7e3Pe3MsSQoUcaWkpnlg8DlAMDncj6c=
-X-Received: by 2002:a05:6808:30d:: with SMTP id i13mr10330434oie.39.1566761928007;
- Sun, 25 Aug 2019 12:38:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IcftYbtF8hmiS81ypdWg52goznYue2k46OBNV8xIDyo=;
+        b=mAq0GsGqlSQw/o1RTa3Xv+iyZmol0vD1ZJbt/MMWDo2fE2QKDgKhvkMRzy76GfZHs3
+         i1FOlwPsKnHh9Q5aqZBgUBXD/Xa0+0rilLlaCjkym9ToAhJU6w2PumZO9mdHzK23N3c2
+         1as5GZk7qF/o1XzXKHc2Qp395UNQF+WIRie/u6xXk+Hm5dDdLpZBQaq5/UEasfzivLSb
+         553NZPvayq1cYL2yg/80Nn6RmNYZj6ffKaczuJytjVHwGhdAiwwndT63AFgyLiozcmNF
+         qO4kAak8D42KGuhrGR1ItVLYPBQWLqPuhumr7tL+6iYQDOGWXQZkLITBEOSrEppb7AwL
+         YrMg==
+X-Gm-Message-State: APjAAAXkrR56lX5cGWpdOgn9KDBa6NalEbisUYkJApdqDvkoQBph4Lky
+        znGjZHCIa3u5Yqmk9pWPVyUFSA==
+X-Google-Smtp-Source: APXvYqxGjNntfiQL8TISYg5BInHS+cQ0ODQq/4ockdGbt/O3U8AzybLVwFgyx4YCA0QWh5oy2S8plQ==
+X-Received: by 2002:ac8:450c:: with SMTP id q12mr14722642qtn.298.1566761942403;
+        Sun, 25 Aug 2019 12:39:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-216-168.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.216.168])
+        by smtp.gmail.com with ESMTPSA id m10sm4699826qka.43.2019.08.25.12.39.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 25 Aug 2019 12:39:01 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i1yLs-0005oN-Oc; Sun, 25 Aug 2019 16:39:00 -0300
+Date:   Sun, 25 Aug 2019 16:39:00 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190825193900.GA21239@ziepe.ca>
+References: <20190820011210.GP7777@dread.disaster.area>
+ <20190820115515.GA29246@ziepe.ca>
+ <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190821181343.GH8653@ziepe.ca>
+ <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area>
+ <20190823120428.GA12968@ziepe.ca>
+ <20190824001124.GI1119@dread.disaster.area>
 MIME-Version: 1.0
-References: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
-In-Reply-To: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 25 Aug 2019 21:38:37 +0200
-Message-ID: <CAFBinCD0uhE9Fj1we2MkaTbk7RwtmKh7Fn1C-2nn9wiWqCoNfg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] arm64: dts: meson: ir keymap updates
-To:     Christian Hewitt <christianshewitt@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190824001124.GI1119@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 6:03 AM Christian Hewitt
-<christianshewitt@gmail.com> wrote:
->
-> This series adds keymaps for several box/board vendor IR remote devices
-> to respective device-tree files. The keymaps were submitted in [0] and
-> have been queued for inclusion in Linux 5.4.
->
-> The Khadas remote change swaps the rc-geekbox keymap for rc-khadas. The
-> Geekbox branded remote was only sold for a brief period when VIM(1) was
-> a new device. The Khadas branded remote that replaced it exchanged the
-> Geekbox full-screen key for an Android mouse button using a different IR
-> keycode. The rc-khadas keymap supports the mouse button keycode and maps
-> it to KEY_MUTE.
->
-> [0] https://patchwork.kernel.org/project/linux-media/list/?series=160309
->
-> Christian Hewitt (7):
->   arm64: dts: meson-g12b-odroid-n2: add rc-odroid keymap
->   arm64: dts: meson-g12a-x96-max: add rc-x96max keymap
->   arm64: dts: meson-gxbb-wetek-hub: add rc-wetek-hub keymap
->   arm64: dts: meson-gxbb-wetek-play2: add rc-wetek-play2 keymap
->   arm64: dts: meson-gxl-s905x-khadas-vim: use rc-khadas keymap
->   arm64: dts: meson-gxl-s905w-tx3-mini: add rc-tx3mini keymap
->   arm64: dts: meson-gxm-khadas-vim2: use rc-khadas keymap
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
+> On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Aug 23, 2019 at 01:23:45PM +1000, Dave Chinner wrote:
+> > 
+> > > > But the fact that RDMA, and potentially others, can "pass the
+> > > > pins" to other processes is something I spent a lot of time trying to work out.
+> > > 
+> > > There's nothing in file layout lease architecture that says you
+> > > can't "pass the pins" to another process.  All the file layout lease
+> > > requirements say is that if you are going to pass a resource for
+> > > which the layout lease guarantees access for to another process,
+> > > then the destination process already have a valid, active layout
+> > > lease that covers the range of the pins being passed to it via the
+> > > RDMA handle.
+> > 
+> > How would the kernel detect and enforce this? There are many ways to
+> > pass a FD.
+> 
+> AFAIC, that's not really a kernel problem. It's more of an
+> application design constraint than anything else. i.e. if the app
+> passes the IB context to another process without a lease, then the
+> original process is still responsible for recalling the lease and
+> has to tell that other process to release the IB handle and it's
+> resources.
+
+It is a kernel problem, the MR exists and is doing DMA. That relies on
+the lease to prevent data corruption.
+
+The sanest outcome I could suggest is that when the kernel detects the
+MR has outlived the lease it needs then we forcibly abort the entire
+RDMA state. Ie the application has malfunctioned and gets wacked with
+a very big hammer.
+
+> That still doesn't work. Leases are not individually trackable or
+> reference counted objects objects - they are attached to a struct
+> file bUt, in reality, they are far more restricted than a struct
+> file.
+
+This is the problem. How to link something that is not refcounted to
+the refcounted world of file descriptors does not seem very obvious.
+
+There are too many places where struct file relies on its refcounting
+to try to and plug them.
+
+Jason
