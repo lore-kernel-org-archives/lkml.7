@@ -2,79 +2,114 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E676C41514
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7221EC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F9A2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566772541;
-	bh=fWYAPG+1006AeWWBWjdG72l6elL2X09zkjVtE8i+LMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mvdAtYB+UBUleLAyLw5s+4AcqLHf7FboWmy+9mtwoNdY8ZZ/EKZEUdCai8OfN+GFF
-	 xUFcAbfg9NRMisYOTa5zqb4mIDudKfKDY29x2mJNrqnxQQnJCH0ovlKV8jwtmA1BWQ
-	 TjlSVDN73sE9W4BExZgP5V9HzFDw9EyqhjPYWaIk=
+	by mail.kernel.org (Postfix) with ESMTP id 46ECA2080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKRnKukp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbfHYWfk (ORCPT
+        id S1729174AbfHYWqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 18:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbfHYWfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 18:35:40 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E8942070B;
-        Sun, 25 Aug 2019 22:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566772539;
-        bh=fWYAPG+1006AeWWBWjdG72l6elL2X09zkjVtE8i+LMM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pG5I1EzAHntwN3s4m3gHH+8/TIlRnVM79XmNAIeWYXWplYBB58l/xUs6H+05dt4J+
-         XwS+Kv4zcbRXT6HXgyUm0ANczl6MpluKFQVQGaY7qzBGzGd2xtvheXcoDfCXxWI5JD
-         Rb5Z4SErUlv2gPPlzL6m+NyWJ7KnHKZ59CnCW+Yg=
-Date:   Sun, 25 Aug 2019 18:35:38 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     =?iso-8859-1?Q?J=F6rg-Volker?= Peetz <jvpeetz@web.de>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Linux 5.2.10
-Message-ID: <20190825223537.GB5281@sasha-vm>
-References: <20190825144703.6518-1-sashal@kernel.org>
- <qju9bd$47qi$1@blaine.gmane.org>
+        Sun, 25 Aug 2019 18:46:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36232 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbfHYWqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 18:46:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r3so13501248wrt.3;
+        Sun, 25 Aug 2019 15:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+7qd1X6rg/vrKrkBZiOoTeJ3D1xlptLFe6fvd/kCGec=;
+        b=fKRnKukp1uCf6vgXgkNw8dVyMaqYPm5WdW26pJ/3u6tXAh/Y9Wj2noRzyJY/m7TuG7
+         8PsrPmUHqi5/s6YVq1WzHkdsLjD5M5aJmhXDBjbLRgVTc62j7yzdprrCgaHogCW7I9kg
+         ExWZdKtp5hDH/mtfBtS+byAwnJ4xMf2qeEGPSpSn4SJB2z/sst8zTx20GW5GytQORRIX
+         TXjuAz9ZWHJsyEkQwaUR0aqg6u7jVljD3GE8IrBL9drMI3BRMVcZ1wDYlchKewnY6LGD
+         VzA0MDBn/Aww5Gs3RpbemdHBuIKalU+BEpE1v4FaT9w1HxIihNiax55PEONhEVsiuiMX
+         wtQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=+7qd1X6rg/vrKrkBZiOoTeJ3D1xlptLFe6fvd/kCGec=;
+        b=f/y0DwHBTu3kVj6KzU3R5S2xVNJYinHsBjVXuYYk00tas2g8sCKXzoavr3RCUUerze
+         gL0xMHS1cLKpdAmXUOoU9VPdDri6ElzJVg2i3+dMgDh9RXBlz7ur4echne6iDGXohjpl
+         2Ye4E4jD1Mn/HVMMbVP60AYTR/upm0VK6g6LwC36ThpH7NLdT5g46BqJCx38J0RWQ4+r
+         RTbjnugw1bEV7LICUozT6FaN8QSoR1L2ILu0NilpZGam/HkT3La7hULRMquLY/ZhZOHB
+         4yWtk+R5bs283MoAQEtBZxPrC879yMSxW1u1y+78t/c84YPJAUlkVveupcju68d/mg/C
+         +mjg==
+X-Gm-Message-State: APjAAAXqEBM8ydNhiAqKSZjt8DyqK1ZKfocbKqWaH5b2xuJSpSI4Pn6i
+        g2EQPooai3WAMbNOlE7IZwo=
+X-Google-Smtp-Source: APXvYqyT1PuPmpvkvGvANX5g0+7WO1DxuKEAwhPENnCuKxVLLxj2mkeyJFQwPN58pmLBQhbeuDNMHg==
+X-Received: by 2002:a5d:4206:: with SMTP id n6mr18628640wrq.110.1566773178888;
+        Sun, 25 Aug 2019 15:46:18 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id o11sm8578922wmh.46.2019.08.25.15.46.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 15:46:17 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Remove the use of printk_ratelimit() in pci.c
+Date:   Mon, 26 Aug 2019 00:46:16 +0200
+Message-Id: <20190825224616.8021-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <qju9bd$47qi$1@blaine.gmane.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for looking into this!
+Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the
+rate limiting state with all other callers to the printk_ratelimit().
 
-On Sun, Aug 25, 2019 at 05:26:37PM +0200, Jörg-Volker Peetz wrote:
->Where can I find your public gpg key and it's fingerprint?
->It's not yet documented on https://www.kernel.org/category/signatures.html .
+Add pci_info_ratelimited macro similar to pci_notice_ratelimited
+added in the commit a88a7b3eb076 ("vfio: Use dev_printk() when
+possible") and use it instead of pr_info inside the if-statement.
 
-You're right, I'll send a patch to add my fingerprint as well.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/pci/pci.c   | 4 ++--
+ include/linux/pci.h | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
->I'm asking because the "gpg --locate-keys" method does not work for me.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index f20a3de57d21..e3d190d003c5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -890,8 +890,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+-	if (dev->current_state != state && printk_ratelimit())
+-		pci_info(dev, "Refused to change power state, currently in D%d\n",
++	if (dev->current_state != state)
++		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
+ 			 dev->current_state);
+ 
+ 	/*
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 463486016290..73ce8d908322 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2367,4 +2367,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #define pci_notice_ratelimited(pdev, fmt, arg...) \
+ 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
+ 
++#define pci_info_ratelimited(pdev, fmt, arg...) \
++	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
++
+ #endif /* LINUX_PCI_H */
+-- 
+2.22.1
 
-I can confirm this, and this is weird... I see a kernel.org UID on the
-key, and gpg seems to confirm that as well:
-
-$ gpg --quick-add-uid DEA66FF797772CDC 'Sasha Levin <sashal@kernel.org>'
-gpg: Such a user ID already exists on this key!
-
-Let me contact kernel.org support to see what I'm doing wrong...
-
---
-Thanks,
-Sasha
