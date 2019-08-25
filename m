@@ -2,100 +2,360 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07495C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D9DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C95582082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAE12173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566753568;
-	bh=/JqH3f92PliH9jk3gtuufnh+J5q5SoxvBPV6BD1cy/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fvvTTdJwhX/TXx3AAR9z726c0ujUDPk/0RwCbrKOiYTVwCvuo/1XHjmQGSK0n1Twt
-	 okGckIRQh5y7iEiSW6P1HqJ4m6ko9kjvvqYsQKPMkJwmQ/FtiW28zCmWJKKhvitVDS
-	 sw4F8t4fCBWb/McpGtIfSsiCsT32uZZtFhQR+9rw=
+	s=default; t=1566753812;
+	bh=Gy5VbonUoyBBwkCMGlcJzsai8tLLq8emMnvB8ZP7Tss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n70AqM81X3TeA3L5zVHCNeh5pn5vulQOYEA34YERIcafDTWjADznyIwFkkHeB2738
+	 dL7bI10Sm2JtX75NVg8DdQFWUZqm3lyXq2aymPl6tLmSq9JQRXaGCEvcI5kPzZ5nic
+	 C6pq/b+vTGa0+p1eEheSfzEbWqdlkiuv1l3bvMx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfHYRSW (ORCPT
+        id S1728654AbfHYRXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 13:18:22 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45447 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfHYRSW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 13:18:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l1so12976992lji.12
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 10:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vxGrty9J0mjsyf5s9Uj4uLZalQZtgJQRnVwqWIB0Pmc=;
-        b=Z1IzHuCLIrJkJ8QqxN7FI+o9E3YcAFpDadDcsjE941z+FuKFSC6E5XgjBi72uQbQn0
-         l07zY8QCuoV83x4uBL1W3nNqPuT8ORzCHnDytjzA289uciIHu6yBpwyx1qhfmZL3t5ON
-         Do9mnO6aPwVtPg47xeJ8uXv+E0oJyS7shGrwE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vxGrty9J0mjsyf5s9Uj4uLZalQZtgJQRnVwqWIB0Pmc=;
-        b=G05v9jTEmBbcmYR0Fj+wjSq6uyOHNReZkogabJ5vGW5WnWnAymxrh83XvV32sNm7Om
-         IizbAyvR5leU5ssXswnSAjpqVFHhctpMsrARse56lHEIt2/eGgcN1te8E1XzbtVn2ckO
-         v94c8H9LOKSI2jinArmZz53U4LW01XtRZfYZREaOy/M28quZgbS+DnWLG5HOjq9ok+Bu
-         +SA1/RxNDl3NDVX6dFSW8tSWq93JnIfVa6Ochuo3DefLpEr6W3S5Ci1O7gj/kzYzFSCk
-         iyFVM3eAHFXaZ+UBNsHBfBFWtcXZWCUmKXL8aYp7dQTz3f5vr3bgtbfC4W+E+gr3GdfR
-         PfSA==
-X-Gm-Message-State: APjAAAUXyC4eqlHUnnurLyWPKYB8nRRmiVNRmEor9EMWe5SgZbPsk6hl
-        a7N2P78ENm6ZWGNf2S2qLPu1IcOXozs=
-X-Google-Smtp-Source: APXvYqz/5F+Dq1zjK29PBorV4YEAkpIf/iCR8XGW2tvbqAJGseMlCMz3TkGsnQaH60dGKmHJkVThpw==
-X-Received: by 2002:a2e:9417:: with SMTP id i23mr8382533ljh.12.1566753499451;
-        Sun, 25 Aug 2019 10:18:19 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id t10sm1662898lfc.85.2019.08.25.10.18.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Aug 2019 10:18:18 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id x3so10536530lfn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 10:18:18 -0700 (PDT)
-X-Received: by 2002:ac2:4c12:: with SMTP id t18mr8635961lfq.134.1566753498224;
- Sun, 25 Aug 2019 10:18:18 -0700 (PDT)
+        Sun, 25 Aug 2019 13:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728623AbfHYRXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 13:23:31 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4406320870;
+        Sun, 25 Aug 2019 17:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566753809;
+        bh=Gy5VbonUoyBBwkCMGlcJzsai8tLLq8emMnvB8ZP7Tss=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G/OHQcmlLQxMn/fv+kWK40ABktENeT89c/onNMBbMOBEetZ8kFsZQSP2QkyQoDcT6
+         jfWemS6YbB9Z5tyKBVgJZDsS5TBAo+w1VuqhPLySq+UuTdfQnUOXKg9w3zTAkquFT2
+         g22uqA28xefuXjOBhiCkA4j0uVrsjtMIAWENlZ/s=
+Date:   Sun, 25 Aug 2019 18:23:23 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>
+Subject: Re: [PATCH v3 3/4] dt-bindings: iio: adc: Migrate AD7606
+ documentation to yaml
+Message-ID: <20190825182323.21d6ef76@archlinux>
+In-Reply-To: <20190821141656.4815-3-beniamin.bia@analog.com>
+References: <20190821141656.4815-1-beniamin.bia@analog.com>
+        <20190821141656.4815-3-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <156672618029.19810.8479315461492191933.tglx@nanos.tec.linutronix.de>
- <156672618029.19810.9732807383797358917.tglx@nanos.tec.linutronix.de>
-In-Reply-To: <156672618029.19810.9732807383797358917.tglx@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 25 Aug 2019 10:18:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com>
-Message-ID: <CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com>
-Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 2:45 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
->   - Clear the RDRAND CPUID bit on AMD family 15h and 16h CPUs which are
->     affected by broken firmware which does not initialize RDRAND correctly
->     after resume. Add a command line parameter to override this for machine
->     which either do not use suspend/resume or have a fixed
->     BIOS. Unfortunately there is no way to detect this on boot, so the only
->     safe decision is to turn it off by default.
+On Wed, 21 Aug 2019 17:16:55 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-Not doing the Zen 2 boot-time case? Everybody assumes that all
-firmware has been fixed?
+> The documentation for ad7606 was migrated to yaml.
+>=20
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 
-That one should be easy to verify since it happens at boot: just do
-"rdrand" twice, and if it returns all-ones both times, it's broken.
+make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/i=
+io/adc/adi,ad7606.yaml
 
-              Linus
+3 things needed fixing beyond the tweak Rob mentioned (also done).
+
+2 missing headers + one required property isn't present in the example.
+
+I'll be grumpy next time...  Particularly as the warnings don't exactly
+point clearly to what is wrong for missing headers.
+
+Applied with those changes to the togreg branch of iio.git and pushed out
+as testing.
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v3:
+> -nothing changed
+>=20
+>  .../bindings/iio/adc/adi,ad7606.txt           |  66 ---------
+>  .../bindings/iio/adc/adi,ad7606.yaml          | 134 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 135 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.=
+txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/D=
+ocumentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> deleted file mode 100644
+> index d8652460198e..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> +++ /dev/null
+> @@ -1,66 +0,0 @@
+> -Analog Devices AD7606 Simultaneous Sampling ADC
+> -
+> -Required properties for the AD7606:
+> -
+> -- compatible: Must be one of
+> -	* "adi,ad7605-4"
+> -	* "adi,ad7606-8"
+> -	* "adi,ad7606-6"
+> -	* "adi,ad7606-4"
+> -	* "adi,ad7616"
+> -- reg: SPI chip select number for the device
+> -- spi-max-frequency: Max SPI frequency to use
+> -	see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> -- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
+> -- avcc-supply: phandle to the Avcc power supply
+> -- interrupts: IRQ line for the ADC
+> -	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.=
+txt
+> -- adi,conversion-start-gpios: must be the device tree identifier of the =
+CONVST pin.
+> -		  This logic input is used to initiate conversions on the analog
+> -		  input channels. As the line is active high, it should be marked
+> -		  GPIO_ACTIVE_HIGH.
+> -
+> -Optional properties:
+> -
+> -- reset-gpios: must be the device tree identifier of the RESET pin. If s=
+pecified,
+> -	       it will be asserted during driver probe. As the line is active h=
+igh,
+> -	       it should be marked GPIO_ACTIVE_HIGH.
+> -- standby-gpios: must be the device tree identifier of the STBY pin. Thi=
+s pin is used
+> -		to place the AD7606 into one of two power-down modes, Standby mode or
+> -		Shutdown mode. As the line is active low, it should be marked
+> -		GPIO_ACTIVE_LOW.
+> -- adi,first-data-gpios: must be the device tree identifier of the FRSTDA=
+TA pin.
+> -		    The FRSTDATA output indicates when the first channel, V1, is
+> -		    being read back on either the parallel, byte or serial interface.
+> -		    As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> -- adi,range-gpios: must be the device tree identifier of the RANGE pin. =
+The polarity on
+> -	      this pin determines the input range of the analog input channels.=
+ If
+> -	      this pin is tied to a logic high, the analog input range is =C2=
+=B110V for
+> -	      all channels. If this pin is tied to a logic low, the analog inpu=
+t range
+> -	      is =C2=B15V for all channels. As the line is active high, it shou=
+ld be marked
+> -	      GPIO_ACTIVE_HIGH.
+> -- adi,oversampling-ratio-gpios: must be the device tree identifier of th=
+e over-sampling
+> -				mode pins. As the line is active high, it should be marked
+> -				GPIO_ACTIVE_HIGH.
+> -
+> -Example:
+> -
+> -	adc@0 {
+> -		compatible =3D "adi,ad7606-8";
+> -		reg =3D <0>;
+> -		spi-max-frequency =3D <1000000>;
+> -		spi-cpol;
+> -
+> -		avcc-supply =3D <&adc_vref>;
+> -
+> -		interrupts =3D <25 IRQ_TYPE_EDGE_FALLING>;
+> -		interrupt-parent =3D <&gpio>;
+> -
+> -		adi,conversion-start-gpios =3D <&gpio 17 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios =3D <&gpio 27 GPIO_ACTIVE_HIGH>;
+> -		adi,first-data-gpios =3D <&gpio 22 GPIO_ACTIVE_HIGH>;
+> -		adi,oversampling-ratio-gpios =3D <&gpio 18 GPIO_ACTIVE_HIGH
+> -						&gpio 23 GPIO_ACTIVE_HIGH
+> -						&gpio 26 GPIO_ACTIVE_HIGH>;
+> -		standby-gpios =3D <&gpio 24 GPIO_ACTIVE_LOW>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> new file mode 100644
+> index 000000000000..509dbe9c84d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7606 Simultaneous Sampling ADC
+> +
+> +maintainers:
+> +  - Beniamin Bia <beniamin.bia@analog.com>
+> +  - Stefan Popa <stefan.popa@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD7606 Simultaneous Sampling ADC
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+7606_7606-6_7606-4.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
+7616.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7605-4
+> +      - adi,ad7606-8
+> +      - adi,ad7606-6
+> +      - adi,ad7606-4
+> +      - adi,ad7616
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-cpha: true
+> +
+> +  avcc-supply:
+> +    description:
+> +      Phandle to the Avcc power supply
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  adi,conversion-start-gpios:
+> +    description:
+> +      Must be the device tree identifier of the CONVST pin.
+> +      This logic input is used to initiate conversions on the analog
+> +      input channels. As the line is active high, it should be marked
+> +      GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description:
+> +      Must be the device tree identifier of the RESET pin. If specified,
+> +      it will be asserted during driver probe. As the line is active hig=
+h,
+> +      it should be marked GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  standby-gpios:
+> +    description:
+> +       Must be the device tree identifier of the STBY pin. This pin is u=
+sed
+> +       to place the AD7606 into one of two power-down modes, Standby mod=
+e or
+> +       Shutdown mode. As the line is active low, it should be marked
+> +       GPIO_ACTIVE_LOW.
+> +    maxItems: 1
+> +
+> +  adi,first-data-gpios:
+> +    description:
+> +      Must be the device tree identifier of the FRSTDATA pin.
+> +      The FRSTDATA output indicates when the first channel, V1, is
+> +      being read back on either the parallel, byte or serial interface.
+> +      As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,range-gpios:
+> +    description:
+> +      Must be the device tree identifier of the RANGE pin. The polarity =
+on
+> +      this pin determines the input range of the analog input channels. =
+If
+> +      this pin is tied to a logic high, the analog input range is =C2=B1=
+10V for
+> +      all channels. If this pin is tied to a logic low, the analog input=
+ range
+> +      is =C2=B15V for all channels. As the line is active high, it shoul=
+d be marked
+> +      GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,oversampling-ratio-gpios:
+> +    description:
+> +      Must be the device tree identifier of the over-sampling
+> +      mode pins. As the line is active high, it should be marked
+> +      GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,sw-mode:
+> +    description:
+> +      Software mode of operation, so far available only for ad7616.
+> +      It is enabled when all three oversampling mode pins are connected =
+to
+> +      high level. The device is configured by the corresponding register=
+s. If the
+> +      adi,oversampling-ratio-gpios property is defined, then the driver =
+will set the
+> +      oversampling gpios to high. Otherwise, it is assumed that the pins=
+ are hardwired
+> +      to VDD.
+> +    maxItems: 1
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-cpha
+> +  - avcc-supply
+> +  - interrupts
+> +  - adi,conversion-start-gpios
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        adc@0 {
+> +                compatible =3D "adi,ad7606-8";
+> +                reg =3D <0>;
+> +                spi-max-frequency =3D <1000000>;
+> +                spi-cpol;
+> +
+> +                avcc-supply =3D <&adc_vref>;
+> +
+> +                interrupts =3D <25 IRQ_TYPE_EDGE_FALLING>;
+> +                interrupt-parent =3D <&gpio>;
+> +
+> +                adi,conversion-start-gpios =3D <&gpio 17 GPIO_ACTIVE_HIG=
+H>;
+> +                reset-gpios =3D <&gpio 27 GPIO_ACTIVE_HIGH>;
+> +                adi,first-data-gpios =3D <&gpio 22 GPIO_ACTIVE_HIGH>;
+> +                adi,oversampling-ratio-gpios =3D <&gpio 18 GPIO_ACTIVE_H=
+IGH
+> +                                                &gpio 23 GPIO_ACTIVE_HIGH
+> +                                                &gpio 26 GPIO_ACTIVE_HIG=
+H>;
+> +                standby-gpios =3D <&gpio 24 GPIO_ACTIVE_LOW>;
+> +                adi,sw-mode;
+> +        };
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 052d7a8591fb..d2e465772071 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -900,7 +900,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/adc/ad7606.c
+> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> =20
+>  ANALOG DEVICES INC AD7768-1 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+
