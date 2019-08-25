@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C55C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0589FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1440C21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFAC21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNtOikS1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u0G77X/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfHYECc (ORCPT
+        id S1727114AbfHYECh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 00:02:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40319 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbfHYECa (ORCPT
+        Sun, 25 Aug 2019 00:02:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45453 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfHYECg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 00:02:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c3so12101209wrd.7;
-        Sat, 24 Aug 2019 21:02:29 -0700 (PDT)
+        Sun, 25 Aug 2019 00:02:36 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q12so12077818wrj.12;
+        Sat, 24 Aug 2019 21:02:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zA4JW/hg+wx6CJsdzmqfZbE0PagO6sXNIEqF5lUUdjU=;
-        b=NNtOikS18WU6T3gIKJEnRf8jbT7LMki9B8UG3870rXW0i05gDzzFcTZ+G7aKEZRrG4
-         5Egd6B1CDenIiIjCYMQkL78+LgBx+A8ur0hNUS1EY2KA7o1P42lpk1t6hpz+S/ytCYzJ
-         kW6fRvNd56jhbdBW9zTMktQKpk3JFfjFnnPeZIxPPwp5I202Ktj1lc9yMsi7OncHSlUq
-         lvWhD6ydLALH3CxZb4+Y41F12Z6mXz/JRZUfDbLPA82fQiwzRwMKu2CiLRrX/UM2/Fb1
-         26TmWcUvQAS3vNh7CsFggwVVLDzA6R+tRtUuT1h5gET5EbsyLhojyihgJgVr5ofgnkb+
-         nb/w==
+        bh=OfWp6DdTWFBY5iMG3Y4I12ubDq+isq8BawGVdp8q8tE=;
+        b=u0G77X/SBFfXDGhxY1mgwkw+Lc2DpUIoIdKiKE75hN27NrmpsHPOmAB9IvCgyFpaqq
+         rqRhGnNYOp+OwHv0oIwXSLEAcbca8ahJGUAlfO+gLJS5615+roz8DGgd2YFJiSiPppth
+         wolUraO1EjUXvX7Zk1xK9BPSsj37Tk9bck9BVZQK8a0SPRJRvPSfrQZnDBGBud1XnH7l
+         p47u5vyuCd70xoosyLni2CDNTOwMFqM3GkPUn4PBC1fHw4RsW7+9JmVfzzIKVsJznXNz
+         VqfLDKUQdveYiqSz6Zzj5P3wEMkJIrQIUdm/kstxbgI/DFhsAScgmbJQ4/7XGapeKdVY
+         xGbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=zA4JW/hg+wx6CJsdzmqfZbE0PagO6sXNIEqF5lUUdjU=;
-        b=aYLUNQaSZ44LP6g9m0rRZJBiv6lVlUUhuK3sfX0vlgI1QeOtgWLxJGMyGu4+CIw202
-         X3nyeqsZI7QsIyTKHuXGecEkbz6PFQVntsgIc1qLM5B+YbdNMYtxif1YzVPQIx5Kh/Q2
-         a2MxhsMKEZw1J7Gbb6F6Xym65QUQTAhUrWiZEC62gwuprUOcshnCT4yokyGid3mULlat
-         mjZ0+UNdwwhBD4WSQkR40HIAmmiTfyJ50eBRY65Q2pnqBPkzraIERQD22e4jtqyYwcGo
-         tafQUzJWcIMHd+Q6SXtg/d7BdQ56S8LoWrOy1adBZf0BvKwslVixy4Ei38E7IYL6S44c
-         PuPQ==
-X-Gm-Message-State: APjAAAX4WfndeOgupH4VrwVJQtk/mOGWzC1XEVkzn6PGt93kIXGUS4qv
-        p3yUZXe3GmdgnNP9Gj5Ytho=
-X-Google-Smtp-Source: APXvYqytpsaH+5s4MR9HODR+t+2siNqosgJSnzuzUa0mwtEnEkV1Q/JdbO8154er/EIwX3efOJM1dw==
-X-Received: by 2002:adf:dfc5:: with SMTP id q5mr14714925wrn.142.1566705748885;
-        Sat, 24 Aug 2019 21:02:28 -0700 (PDT)
+        bh=OfWp6DdTWFBY5iMG3Y4I12ubDq+isq8BawGVdp8q8tE=;
+        b=p2fwGTlJHBkeLoFSZ2P/A3Qe4pOVdDKhWtqsu9ztDVIjqNGwVt0wOWbzj0WTUC+owY
+         p7ayBKxrqVlnKNquqGRyxwAWZUgDpdEPxUk4RxBBr1SauTPRoLKbvvln3wf1JciHqHtn
+         6minVin5jz4emWjqyKsozvA71o3MDmxtWu/WjnmyY1sRRfE/56+WrkxzYsp+8keohUh5
+         tG5W1G+PHZDAdlkuPm8cbHjHK4NyoPbRp81kVfNAMihVvz7eIW3OdyWtj1bB9I6zHLFm
+         juVzQ/fQ0ANVt9RrRXZX509UH/TVtQCbRbZgaLA/h/FWzpCdlnRnTfZGVz4Nw58nUoI+
+         Kh/g==
+X-Gm-Message-State: APjAAAVyXuzM5po9oki/wmbMpIbGcsDnDSWwareqnhoI4l9RYr3jlpHF
+        AtQxXytPnEDFuIATvnhWDys=
+X-Google-Smtp-Source: APXvYqzIzM7anln1kp1dhBf/Fy8v6RC5KHmIZwhYYq5nmO5CVTPGaWeWNBN7WkqDnGAFj51lP5TGPg==
+X-Received: by 2002:adf:e94e:: with SMTP id m14mr14601540wrn.230.1566705753817;
+        Sat, 24 Aug 2019 21:02:33 -0700 (PDT)
 Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id a6sm6820985wmj.15.2019.08.24.21.02.26
+        by smtp.gmail.com with ESMTPSA id a6sm6820985wmj.15.2019.08.24.21.02.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 24 Aug 2019 21:02:28 -0700 (PDT)
+        Sat, 24 Aug 2019 21:02:33 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -63,9 +63,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 4/7] arm64: dts: meson-gxbb-wetek-play2: add rc-wetek-play2 keymap
-Date:   Sun, 25 Aug 2019 08:01:25 +0400
-Message-Id: <1566705688-18442-5-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 6/7] arm64: dts: meson-gxl-s905w-tx3-mini: add rc-tx3mini keymap
+Date:   Sun, 25 Aug 2019 08:01:27 +0400
+Message-Id: <1566705688-18442-7-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
 References: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
@@ -74,24 +74,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add the rc-wetek-play2 keymap to the ir node
+add the rc-tx3mini keymap to the ir node
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts | 4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-index 0038522..1d32d1f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-@@ -54,3 +54,7 @@
- &usb1 {
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
+index 789c819..dd729ac 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
+@@ -20,3 +20,7 @@
+ 		reg = <0x0 0x0 0x0 0x40000000>; /* 1 GiB or 2 GiB */
+ 	};
  };
 +
 +&ir {
-+	linux,rc-map-name = "rc-wetek-play2";
++	linux,rc-map-name = "rc-tanix-tx3mini";
 +};
 -- 
 2.7.4
