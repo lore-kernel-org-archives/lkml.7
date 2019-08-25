@@ -2,80 +2,88 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1791C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AA0C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792592082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4BD2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZWgvPDk+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyoTJVrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfHYTz0 (ORCPT
+        id S1729002AbfHYT4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 15:55:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44250 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbfHYTz0 (ORCPT
+        Sun, 25 Aug 2019 15:56:25 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38646 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728962AbfHYT4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 15:55:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id w4so13269319ote.11
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 12:55:25 -0700 (PDT)
+        Sun, 25 Aug 2019 15:56:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f21so5722033lfc.5;
+        Sun, 25 Aug 2019 12:56:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kGmPx2xuPkputCeT387Wpalg1a3GB50jgvbEZF5SlNQ=;
-        b=ZWgvPDk+e19f+KMo42AfleUbEhqmR1sbLN8un2pAZwnKo7R+VFoNu706wHkkepu0uj
-         d/Q9lHk+J4OW9bqN0IAkEXFMzpQAr7rpurCXwxo59pu6SUYdLxN2zHRLq3pQGCTHHkYm
-         4HnbVp8i7pIjGh9Xne1FL92bPb39lmbmnfBD6DhRM/6mWCUhl5DgB731UDJVNRLnIpbP
-         QDhGbaHKI6HDe1YTMMIYqmN9aH27a+tuZv8rdpuwpULP8svXVorHyX6tV43FGyRJMtJl
-         leWknAathV2ibsvyQgXz1FF9lfbszCiabYMdW5cnO1t7yG/L7PVtp29Hk4XfTg4YNk3l
-         FrIw==
+        bh=aNr4Eb/OClyqUi9J6625K0uKkXRSs4d01YJAiRjVE7A=;
+        b=WyoTJVrbbLq8FbO4TiYd5CrfgfvZ/Ws3Or/Q8fFtw+6WmPUY1j7gpEMSRodUhUCA/u
+         uL3qZp5ltjLSfCz6LbDA/DtjDqBdiqJ67Bc4JuF1DpY5gr3kdeufOd+WOXXqOBip92ob
+         z83W5JH3vT9mRTmY303X35KTBkey1NSm6LbMzRrI/axOhl2Z7F9K+7kWGECuT/nkHJ3L
+         4eULs2SQ/KWvBD7+do/T/laxix/bdmiyH/qNacguHRFkN546rytHBIAISs9pX1a6qH/k
+         iBGeWkqE9b/v9RPmLdz2tBw/pyYJfageU2NTsckkCjW0LbrGwH//VhtQ3GAoibE4HUXb
+         UfSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kGmPx2xuPkputCeT387Wpalg1a3GB50jgvbEZF5SlNQ=;
-        b=nc5u0dPUYGFnHpD8Hfyrks9e8ThnlBssuSjbFGuFG9xxH5rSrBdBM4VPUBl5ti4/h0
-         9BW/8jrdw76fmlM2Ca8/CM2MxN4q7NMheak/qhXGdMoKhzO3/iWOQTXOoN2XkoYEY8J6
-         gGh+XTjSsStQv1d0YmOFw0EWDcKnV6ZaI0AgP7TT0vYfDOgug8mKoD/INs9IN+JgglTV
-         uH5vEOvpfIE6GGbsZITFK9YB53QwvAb1o/D6PfUpBvl23d+PbhzzXjTsQXrpBd4xbp7U
-         bwhtimPWwcRc276mHDbg2nF9MAnLg6eobuNvA4ouUHAAVDE/j5Ls3+QMOfRm4/sXy1wH
-         EcGw==
-X-Gm-Message-State: APjAAAV+GFt3+ZS39biK7i4z48usz2ZUfLO3hF9HfRBLT1S9WS6F9Fk7
-        sbpJhpLupgY7oEAcc1ROia8pR8hy8SENXhUqdvk=
-X-Google-Smtp-Source: APXvYqzzvtkVUjkecPWG03cxd1nVZTZf8ShZr+HnDL6BFQMZnJcYWHUOL3e4dOdG1vazH5JciiRHL10NvWwaLCvR9a4=
-X-Received: by 2002:a9d:1d5:: with SMTP id e79mr12418370ote.98.1566762925225;
- Sun, 25 Aug 2019 12:55:25 -0700 (PDT)
+        bh=aNr4Eb/OClyqUi9J6625K0uKkXRSs4d01YJAiRjVE7A=;
+        b=dtVrnOyf99DXZGjxNhRoOYr7pT18X6CNdEih5GlPqtR+xDqMK/oiJ+A33l04unTutI
+         y9/qpXm3E36jWFLqCuKQAVKEr4IA+gT/01jkA3613Yo6tX3FkxhPQ1pwJCp3yjHU8ROj
+         ggDWS8lQ7UxhpQ7X+5nd5gyEipVIUq9rCVDLnqN8801W+LOBlEeNOYz3lX6+K01h8/ez
+         /iFgBJXAlERaG9JFnnrMvMh6gx/6dJTS15WGATLEEqUMVsE2RUO4GjXz39FGFuS9O+gn
+         KfOYlwlYHcg+26QEUDWnr/fwr2OUAgTMM1fyOp2PTmHMrsjFpIGU+ui8qhlOHi85ET4v
+         646w==
+X-Gm-Message-State: APjAAAU8JSkxZy7T9GO9YZK+RMGfmK4arZxI4pIFi4qI53UhP1F9xGPZ
+        Gkt+b0afrgk2/U75XqzO+VwrSqqNYLWV9mo6ab4=
+X-Google-Smtp-Source: APXvYqxNB9g686I/txTkwcUXa2qaf6TAlS+aO49/xFd/b6spcrqM8Blz4ezofbNhYBx3iNvXChpSvb/HbShO6VA4Gak=
+X-Received: by 2002:a19:c1cc:: with SMTP id r195mr8534933lff.95.1566762982456;
+ Sun, 25 Aug 2019 12:56:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190823081427.17228-1-narmstrong@baylibre.com> <20190823081427.17228-4-narmstrong@baylibre.com>
-In-Reply-To: <20190823081427.17228-4-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 25 Aug 2019 21:55:14 +0200
-Message-ID: <CAFBinCAH2LP2OyFEek290Prm9N=rxxAc-9gZ_jS0tY_4+utByA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: khadas-vim3: add support for the SM1
- based VIM3
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com> <20190825194354.GC21239@ziepe.ca>
+In-Reply-To: <20190825194354.GC21239@ziepe.ca>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Mon, 26 Aug 2019 01:32:09 +0530
+Message-ID: <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
+Subject: Re: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     leon@kernel.org, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:15 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Mon, Aug 26, 2019 at 1:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 >
-> Add the Amlogic SM1 based Khadas VIM3, sharing all the same features
-> as the G12B based one, but:
-> - a different DVFS support since only a single cluster is available
-> - audio is still not available on SM1
+> On Sun, Aug 25, 2019 at 11:37:27AM +0530, Souptick Joarder wrote:
+> > First, length passed to mmap is checked explicitly against
+> > PAGE_SIZE.
+> >
+> > Second, if vma->vm_pgoff is passed as non zero, it would return
+> > error. It appears like driver is expecting vma->vm_pgoff to
+> > be passed as 0 always.
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-schematics are not available yet but this looks sane so:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ? pg_off is not zero
+
+Sorry, I mean, driver has a check against non zero to return error -EOPNOTSUPP
+which means in true scenario driver is expecting vma->vm_pgoff should be passed
+as 0.
+
+-       if (get_index(vma->vm_pgoff) != MLX5_IB_CLOCK_INFO_V1)
+-               return -EOPNOTSUPP;
