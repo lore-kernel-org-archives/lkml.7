@@ -2,72 +2,46 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5637C41514
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D2AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91F02080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:10:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYfe+LJI"
+	by mail.kernel.org (Postfix) with ESMTP id 4F7BD206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 22:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfHYWKp (ORCPT
+        id S1729187AbfHYWNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 18:10:45 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45326 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbfHYWKo (ORCPT
+        Sun, 25 Aug 2019 18:13:13 -0400
+Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:34111 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728931AbfHYWNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 18:10:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so13416869wrj.12;
-        Sun, 25 Aug 2019 15:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FSDaDPkwEDuhPwyp2tph1yu0z2JTeSJAZvKVpXGb/b4=;
-        b=SYfe+LJIQxIUY6Yzw/uCtw32IfYh2xzQJidH53o0SLmHNQ5dydIffPk8LaV57MYJNV
-         Xw6qt1/cj6rKvtgyDtEAucFnyqUUD8UyqIf/GBd+EsPHKqCeMho6m50+VWdZC6yPxZ9F
-         6eqRJqKID8EzRkDjNhqICdBr81EnHMBsXQK+vhGQkjC8dzFqNLYGRWhnCQcNMHctC07s
-         SpqNLcDV4J66Jojgl45FpM/zbdNCbiWqSB45kUYXWwpv+pXDmqSD5UU5w6m6lYujfEJn
-         qJvTmp0YJITbS4Vd4vON/cG9sk+9aboYrmw9WBfNlgBh8P8dvA0XxN8z5dGVesQWmfnL
-         xWQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=FSDaDPkwEDuhPwyp2tph1yu0z2JTeSJAZvKVpXGb/b4=;
-        b=XM6aQKFLIc1wKpq+TNIBOXZLvwS1bsrE6455SDTkTXMWPy+507I+e+niUL9nZMPgbC
-         6+GH5ALUNS0CcNQJAmAcsAiWMVoFhxmHrdDxGjcvMtBrIaRRXgsr62S/XvjgIkZenOWm
-         f7NC8dXRYAntEs3pN/gM7P0KdPvBQoyC874w5h8OwZEC9ldqp1Onu/UCA1VWyEgKtmSG
-         crr1LSkVloFZtLYpV0xA3ROFQgV+B6ChbqeyAyWLl9L4uGqLvy/tIBreoVvrG6sTQxN6
-         hOETYQ/J8LCJVuOxFaiyGeDED0EWcJuLbYo/rI5KzzUs+CyoRFbSyVAlJ4DEN4XPKJfH
-         lCJQ==
-X-Gm-Message-State: APjAAAX4cw3eb3j8rmbs+yDH//a4wnOuQ9DSH8zT9JrslxvZEZFpFO1x
-        P64yGsy0u4fTjY4eRsEXFwA=
-X-Google-Smtp-Source: APXvYqxiGvZXVlVu/JaE0UslanWEGQOGDzHXiV60bRr5wjvX3RTgu5+0YA/diKHUOXLRsZzWY1BtPw==
-X-Received: by 2002:a5d:4a11:: with SMTP id m17mr18371554wrq.40.1566771042170;
-        Sun, 25 Aug 2019 15:10:42 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id r5sm8544562wmh.35.2019.08.25.15.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2019 15:10:41 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH] PCI: mediatek: Remove surplus return from a void function
-Date:   Mon, 26 Aug 2019 00:10:39 +0200
-Message-Id: <20190825221039.6977-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Sun, 25 Aug 2019 18:13:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 89B4818224D78;
+        Sun, 25 Aug 2019 22:13:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lock65_1bc21af378138
+X-Filterd-Recvd-Size: 1900
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 25 Aug 2019 22:13:10 +0000 (UTC)
+Message-ID: <98427b15d2a5cc93c72867bb7800df6c38f1f7bf.camel@perches.com>
+Subject: Re: [PATCH] cdrom: make debug logging rely on pr_debug and debugfs
+ only.
+From:   Joe Perches <joe@perches.com>
+To:     Diego Elio =?ISO-8859-1?Q?Petten=F2?= <flameeyes@flameeyes.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Sun, 25 Aug 2019 15:13:09 -0700
+In-Reply-To: <20190825215833.25817-1-flameeyes@flameeyes.com>
+References: <20190825215833.25817-1-flameeyes@flameeyes.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,32 +49,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary empty return statement at the
-end of a void function mtk_pcie_intr_handler() in
-the drivers/pci/controller/pcie-mediatek.c.
+On Sun, 2019-08-25 at 22:58 +0100, Diego Elio Pettenò wrote:
+> The cdrom driver predates debugfs and most of the modern debugging
+> facilities, so instead it has been includings a module parameter and an
+> ioctl to enable debug messages.
+> 
+> In 2019, debugfs and dynamic debug makes most of that redundant, and even
+> confusing when trying to trace things in the dept of the driver.
+[]
+> diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+[]
+> @@ -591,7 +556,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
+>  	static char banner_printed;
+>  	const struct cdrom_device_ops *cdo = cdi->ops;
+>  
+> -	cd_dbg(CD_OPEN, "entering register_cdrom\n");
+> +	pr_debug("entering register_cdrom\n");
 
-The surplus return statement was added as part of
-the work in commit 42fe2f91b4eb ("PCI: mediatek:
-Implement chained IRQ handling setup").
+debut output for function tracing can also be removed
+and ftrace used instead.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/pci/controller/pcie-mediatek.c | 2 --
- 1 file changed, 2 deletions(-)
+> @@ -643,7 +608,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
+>  
+>  void unregister_cdrom(struct cdrom_device_info *cdi)
+>  {
+> -	cd_dbg(CD_OPEN, "entering unregister_cdrom\n");
+> +	pr_debug("entering unregister_cdrom\n");
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 3eaa7081ab2a..626a7c352dfd 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -635,8 +635,6 @@ static void mtk_pcie_intr_handler(struct irq_desc *desc)
- 	}
- 
- 	chained_irq_exit(irqchip, desc);
--
--	return;
- }
- 
- static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
--- 
-2.22.1
+etc...
+
 
