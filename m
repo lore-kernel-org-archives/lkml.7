@@ -2,63 +2,430 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A75C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 14:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2CDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BBB2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 14:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C412173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 14:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566744427;
+	bh=NInArxzut819YwvQ+uMGi0ltdW8fRV2qiUHWNTknI8o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BLK/++LXf/mKLeILZ9GPeyG2EApXVEtV0aY9vs1SBpLJl4dlSZi5bgvXkMDidUr8e
+	 kUe1GcokK4574w1/GJtYRFvbjA+roQqOwndjwGLD5WuRmx0PvIQ9sCkQpQKBfv4CPj
+	 3wSBezeWAbgU/E2wYqdfwv4yoR6Kecov0/O7K3Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfHYOml (ORCPT
+        id S1728576AbfHYOrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 10:42:41 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53398 "EHLO ms.lwn.net"
+        Sun, 25 Aug 2019 10:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbfHYOmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 10:42:40 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728443AbfHYOrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 10:47:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E9BB3300;
-        Sun, 25 Aug 2019 14:42:39 +0000 (UTC)
-Date:   Sun, 25 Aug 2019 08:42:38 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        Ayush Ranjan <ayushr2@illinois.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Ext4 documentation fixes.
-Message-ID: <20190825084238.41b6f912@lwn.net>
-In-Reply-To: <20190824230930.GB5163@mit.edu>
-References: <CA+UE=SPyMXZUhHFm0KgvihPdaE=yH5ra6n1C4XhKgM6aGheo=A@mail.gmail.com>
-        <DEDD6BA5-6E18-4ED6-9EF6-E11EDA593700@dilger.ca>
-        <20190824152453.03737143@lwn.net>
-        <20190824230930.GB5163@mit.edu>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 54838206DD;
+        Sun, 25 Aug 2019 14:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566744424;
+        bh=NInArxzut819YwvQ+uMGi0ltdW8fRV2qiUHWNTknI8o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W/qjZzu726IBuPUK+z99/UfyK0AFUqmo4entTzUFH/eQYJIMW19V0fH5CnJuGOwoC
+         Qbbq6nJ/SmJfssZEzN96VdqTV7hZLOz3fDIpMGpjD6x7XhTWEx7ERfoYmc+RyCde7E
+         /ce69neG13tkpoR+Tp6r2Ckqxygsuwd7a03/JjPQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        akpm@linux-foundation.org
+Cc:     jslaby@suse.cz, lwn@lwn.net
+Subject: Linux 5.2.10
+Date:   Sun, 25 Aug 2019 10:47:02 -0400
+Message-Id: <20190825144703.6518-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 24 Aug 2019 19:09:30 -0400
-"Theodore Y. Ts'o" <tytso@mit.edu> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-> If you haven't pushed out your doc tree, can you please drop it?  I've
-> already applied an (improved) version of this patch to the ext4 tree,
-> and I actually have some plans to do further fixups of ext4 on-disk
-> format documentation in the ext4 tree.  So it would be easier if we
-> keep ext4 documentation updates in the ext4 git tree.
+I'm announcing the release of the 5.2.10 kernel.
 
-Sigh...I checked linux-next first and saw no signs of activity there.  Oh
-well; I guess I can disappear that change.
+All users of the 5.2 kernel series must upgrade.
 
-jon
+The updated 5.2.y git tree can be found at:
+        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
+and can be browsed at the normal kernel.org git web browser:
+        https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+
+--
+Thanks,
+Sasha
+
+
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Alan Stern (1):
+      USB: core: Fix races in character device registration and deregistraion
+
+Aleix Roca Nonell (1):
+      io_uring: fix manual setup of iov_iter for fixed buffers
+
+Anders Roxell (1):
+      arm64: KVM: regmap: Fix unexpected switch fall-through
+
+Aneesh Kumar K.V (1):
+      powerpc/nvdimm: Pick nearby online node if the device node is not online
+
+Arnaldo Carvalho de Melo (1):
+      tools perf beauty: Fix usbdevfs_ioctl table generator to handle _IOC()
+
+Arnd Bergmann (1):
+      page flags: prioritize kasan bits over last-cpuid
+
+Aya Levin (2):
+      net/mlx5e: Fix false negative indication on tx reporter CQE recovery
+      net/mlx5e: Remove redundant check in CQE recovery flow of tx reporter
+
+Bob Ham (1):
+      USB: serial: option: add the BroadMobi BM818 card
+
+Chen-Yu Tsai (1):
+      net: dsa: Check existence of .port_mdb_add callback before calling it
+
+Chris Packham (1):
+      tipc: initialise addr_trail_end when setting node addresses
+
+Christian König (1):
+      drm/amdgpu: fix error handling in amdgpu_cs_process_fence_dep
+
+Christoph Hellwig (2):
+      dma-mapping: check pfn validity in dma_common_{mmap,get_sgtable}
+      mm/hmm: always return EBUSY for invalid ranges in hmm_range_{fault,snapshot}
+
+Chuhong Yuan (1):
+      IB/mlx5: Replace kfree with kvfree
+
+Chunyan Zhang (1):
+      clk: sprd: Select REGMAP_MMIO to avoid compile errors
+
+Codrin Ciubotariu (1):
+      clk: at91: generated: Truncate divisor to GENERATED_MAX_DIV + 1
+
+Colin Ian King (1):
+      drm/exynos: fix missing decrement of retry counter
+
+David Ahern (2):
+      netdevsim: Restore per-network namespace accounting for fib entries
+      netlink: Fix nlmsg_parse as a wrapper for strict message parsing
+
+Denis Kirjanov (1):
+      net: usb: pegasus: fix improper read if get_registers() fail
+
+Dirk Morris (1):
+      netfilter: conntrack: Use consistent ct id hash calculation
+
+Don Brace (1):
+      scsi: hpsa: correct scsi command status issue after reset
+
+Eric Dumazet (2):
+      bpf: fix access to skb_shared_info->gso_segs
+      net/packet: fix race in tpacket_snd()
+
+Evan Quan (1):
+      drm/amd/powerplay: fix null pointer dereference around dpm state relates
+
+Fabio Estevam (1):
+      Revert "i2c: imx: improve the error handling in i2c_imx_dma_request()"
+
+Filipe Manana (1):
+      Btrfs: fix deadlock between fiemap and transaction commits
+
+Florian Westphal (1):
+      netfilter: ebtables: also count base chain policies
+
+Gal Pressman (1):
+      RDMA/restrack: Track driver QP types in resource tracker
+
+Geert Uytterhoeven (1):
+      clk: renesas: cpg-mssr: Fix reset control race condition
+
+Gustavo A. R. Silva (1):
+      sh: kernel: hw_breakpoint: Fix missing break in switch statement
+
+Guy Levi (1):
+      IB/mlx5: Fix MR registration flow to use UMR properly
+
+Haim Dreyfuss (1):
+      iwlwifi: Add support for SAR South Korea limitation
+
+Heiner Kallweit (1):
+      net: phy: consider AN_RESTART status when reading link status
+
+Henry Burns (2):
+      mm/z3fold.c: fix z3fold_destroy_pool() ordering
+      mm/z3fold.c: fix z3fold_destroy_pool() race condition
+
+Hillf Danton (2):
+      HID: hiddev: avoid opening a disconnected device
+      HID: hiddev: do cleanup in failure of opening a device
+
+Hui Peng (2):
+      ALSA: usb-audio: Fix a stack buffer overflow bug in check_input_term
+      ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
+
+Hui Wang (2):
+      ALSA: hda - Add a generic reboot_notify
+      ALSA: hda - Let all conexant codec enter D3 when rebooting
+
+Huy Nguyen (1):
+      net/mlx5e: Only support tx/rx pause setting for port owner
+
+Ian Abbott (2):
+      staging: comedi: dt3000: Fix signed integer overflow 'divider * base'
+      staging: comedi: dt3000: Fix rounding up of timer divisor
+
+Isaac J. Manjarres (1):
+      mm/usercopy: use memory range to be accessed for wraparound check
+
+Ivan Khoronzhuk (1):
+      net: sched: sch_taprio: fix memleak in error path for sched list parse
+
+Jack Morgenstein (1):
+      IB/mad: Fix use-after-free in ib mad completion handling
+
+Jacopo Mondi (1):
+      iio: adc: max9611: Fix temperature reading in probe
+
+Jaegeuk Kim (1):
+      f2fs: fix to read source block before invalidating it
+
+Jakub Kicinski (1):
+      net/tls: prevent skb_orphan() from leaking TLS plain text with offload
+
+Jean Delvare (1):
+      platform/x86: pcengines-apuv2: Fix softdep statement
+
+Jeffrey Hugo (1):
+      drm: msm: Fix add_gpu_components
+
+Jia-Ju Bai (1):
+      scsi: qla2xxx: Fix possible fcport null-pointer dereferences
+
+Julien Thierry (1):
+      arm64: Lower priority mask for GIC_PRIO_IRQON
+
+Kees Cook (1):
+      libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
+
+Kent Russell (1):
+      drm/amdkfd: Fix byte align on VegaM
+
+Leon Romanovsky (1):
+      RDMA/mlx5: Release locks during notifier unregister
+
+Lucas Stach (1):
+      irqchip/irq-imx-gpcv2: Forward irq type to parent
+
+Lyude Paul (1):
+      drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
+
+Manish Chopra (1):
+      bnx2x: Fix VF's VLAN reconfiguration in reload.
+
+Mao Han (1):
+      riscv: Fix perf record without libelf support
+
+Masahiro Yamada (2):
+      tracing: Fix header include guards in trace event headers
+      kbuild: modpost: handle KBUILD_EXTRA_SYMBOLS only for external modules
+
+Masami Hiramatsu (3):
+      arm64: unwind: Prohibit probing on return_address()
+      arm64: kprobes: Recover pstate.D in single-step exception handler
+      arm64: Make debug exception handlers visible from RCU
+
+Max Filippov (1):
+      xtensa: add missing isync to the cpu_reset TLB code
+
+Maxim Mikityanskiy (1):
+      net/mlx5e: Use flow keys dissector to parse packets for ARFS
+
+Mel Gorman (1):
+      mm, vmscan: do not special-case slab reclaim when watermarks are boosted
+
+Michael Chan (2):
+      bnxt_en: Fix VNIC clearing logic for 57500 chips.
+      bnxt_en: Improve RX doorbell sequence.
+
+Michal Kalderon (1):
+      RDMA/qedr: Fix the hca_type and hca_rev returned in device attributes
+
+Miles Chen (1):
+      mm/memcontrol.c: fix use after free in mem_cgroup_iter()
+
+Miquel Raynal (1):
+      ata: libahci: do not complain in case of deferred probe
+
+Mohamad Heib (1):
+      net/mlx5e: ethtool, Avoid setting speed to 56GBASE when autoneg off
+
+Nayna Jain (1):
+      tpm: tpm_ibm_vtpm: Fix unallocated banks
+
+NeilBrown (1):
+      seq_file: fix problem when seeking mid-record
+
+Nianyao Tang (1):
+      irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
+
+Numfor Mbiziwo-Tiapo (1):
+      perf header: Fix use of unitialized value warning
+
+Oliver Neukum (5):
+      HID: holtek: test for sanity of intfdata
+      Input: kbtab - sanity check for endpoint type
+      Input: iforce - add sanity checks
+      usb: cdc-acm: make sure a refcount is taken early enough
+      USB: CDC: fix sanity checks in CDC union parser
+
+Pierre-Eric Pelloux-Prayer (1):
+      drm/amdgpu: fix gfx9 soft recovery
+
+Qian Cai (4):
+      arm64/efi: fix variable 'si' set but not used
+      arm64/mm: fix variable 'pud' set but not used
+      arm64/mm: fix variable 'tag' set but not used
+      asm-generic: fix -Wtype-limits compiler warnings
+
+Rajneesh Bhardwaj (1):
+      platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
+
+Ralph Campbell (1):
+      mm/hmm: fix bad subpage pointer in try_to_unmap_one
+
+Roberto Sassu (1):
+      KEYS: trusted: allow module init if TPM is inactive or deactivated
+
+Rogan Dawes (1):
+      USB: serial: option: add D-Link DWM-222 device ID
+
+Roman Mashak (2):
+      net sched: update skbedit action for batched events operations
+      tc-testing: updated skbedit action tests with batch create/delete
+
+Ross Lagerwall (1):
+      xen/netback: Reset nr_frags before freeing skb
+
+Sasha Levin (1):
+      Linux 5.2.10-rc1
+
+Somnath Kotur (1):
+      bnxt_en: Fix to include flow direction in L2 key
+
+Stephen Boyd (1):
+      kbuild: Check for unknown options with cc-option usage in Kconfig and clang
+
+Takashi Iwai (2):
+      ALSA: hda/realtek - Add quirk for HP Envy x360
+      ALSA: hda - Apply workaround for another AMD chip 1022:1487
+
+Thiébaud Weksteen (1):
+      usb: setup authorized_default attributes using usb_bus_notify
+
+Tony Lindgren (1):
+      USB: serial: option: Add Motorola modem UARTs
+
+Tony Luck (1):
+      IB/core: Add mitigation for Spectre V1
+
+Vasundhara Volam (2):
+      bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
+      bnxt_en: Suppress HWRM errors for HWRM_NVM_GET_VARIABLE command
+
+Venkat Duvvuru (1):
+      bnxt_en: Use correct src_fid to determine direction of the flow
+
+Vince Weaver (1):
+      perf header: Fix divide by zero error if f_header.attr_size==0
+
+Vincent Chen (2):
+      riscv: Correct the initialized flow of FP register
+      riscv: Make __fstate_clean() work correctly.
+
+Viresh Kumar (1):
+      cpufreq: schedutil: Don't skip freq update when limits change
+
+Wang Xiayang (1):
+      drm/amdgpu: fix a potential information leaking bug
+
+Wei Yongjun (1):
+      RDMA/hns: Fix error return code in hns_roce_v1_rsv_lp_qp()
+
+Wenwen Wang (2):
+      ALSA: hda - Fix a memory leak bug
+      net/mlx4_en: fix a memory leak bug
+
+Will Deacon (1):
+      arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side
+
+Xi Wang (1):
+      RDMA/hns: Fix sg offset non-zero issue
+
+Xin Long (1):
+      sctp: fix the transport error_count check
+
+Yang Shi (3):
+      mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
+      mm: mempolicy: handle vma with unmovable pages mapped correctly in mbind
+      Revert "kmemleak: allow to coexist with fault injection"
+
+Yoshiaki Okamoto (1):
+      USB: serial: option: Add support for ZTE MF871A
+
+Yoshihiro Shimoda (1):
+      usb: gadget: udc: renesas_usb3: Fix sysfs interface of "role"
+
+YueHaibing (7):
+      xen/pciback: remove set but not used variable 'old_state'
+      drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
+      drm/bridge: tc358764: Fix build error
+      ocfs2: remove set but not used variable 'last_hash'
+      Input: psmouse - fix build error of multiple definition
+      bonding: Add vlan tx offload to hw_enc_features
+      team: Add vlan tx offload to hw_enc_features
+
+Yuki Tsunashima (1):
+      ALSA: pcm: fix lost wakeup event scenarios in snd_pcm_drain
+
+zhengbin (2):
+      blk-mq: move cancel of requeue_work to the front of blk_exit_queue
+      sctp: fix memleak in sctp_send_reset_streams
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAl1inmcACgkQ3qZv95d3
+LNzabRAAjqvSCmJchMUM45PSlfkYCRyeCASyBbxDifS5cqjMkNEohxgV/Fel9B9W
+Q8rPpLG+pUtGetRRTi/SPuC8Zd4Wyru27WgBz/JcRI6ZZzYFW9aMMJhIVNF4cthZ
+GaxrXCTXye/sI1gifriO4yrL81shh7byl4TJFeZoR7/50AR8c703DFmkboVBaSHY
+FveMOt5Ic5o50KsapYDOiwgfYiUCGJzydh8e48thLTVwCAa8vXxoA/OrjIH4Exak
+peIjJoZEdvWswZ+CIkTmP8THHn5KzoKmImhHI3BR4/3ai40c4M9glLtin3SYC1I7
+d4VDi8mIpJTFanD63pv7gaIxBUoIQVnXEbc3qMhgegTZzqqp/JxUGghb/j9I/g/G
+LfU3GgUyeAIcXR7nRVcNY+yBzln1yzmLe/rzmXb5bSU2oa3+bUnGzr8wUBTb8BIE
+XXEmamsFPW+FdMGvOeVu6+iPVVE0gw+BH+uW9ILE11H1uXr5BjeZzIb2m6jD9YnY
+0slHXaSU8dLnujx+uAVD0oaJd3bc9iX+qiVXtnC4gtMiR/nNXazfLDTuhPr7j1rR
+urazhJ0FYcTfy7yc2U5WVllBklx+MpnA27tefVrd/NACiJAFVwQ5O0ER8W5S9Z7h
+YesJ0Duym0GPTWna/8IMB31XuwTqsU7+zxiaXa27OOjAIU42WGk=
+=BhSJ
+-----END PGP SIGNATURE-----
