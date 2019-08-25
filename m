@@ -2,165 +2,126 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80315C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D736DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593B72173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csQfjGHj"
+	by mail.kernel.org (Postfix) with ESMTP id 9DC75217F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 18:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfHYS0D (ORCPT
+        id S1728860AbfHYS33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 14:26:03 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53155 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728726AbfHYS0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 14:26:02 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o4so13371163wmh.2;
-        Sun, 25 Aug 2019 11:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zinVPTRrFMWmbFpflRee4MjyqNNUGw02xWqZXy1/69k=;
-        b=csQfjGHjdjnGbhjHhjzMwxabrS1hMS6BHP5atjIfqCe0UGW4wPPbrtwswiFFIcREZZ
-         d0EqHBI6eKyAq7LkddEew2gHfb7kc6VdFglxNVvZEFC8ilhl7lD2RnD2pBrAyauDHJnr
-         YolIBjTCofwDtHHk8wS3k/D82270rcATpYWA8vGale8Mh4pglPsnK+94lmn+CrINXG2z
-         Ga1VzLiul6ieyhb5n556irDCMekBoWXnY9RThjnKR9pJUdxuU4bB0lY1dACrT7waXFjO
-         m66EJ55HIFKLKNkdCzqy341uXtnFTbh94r5AKqMlmbIG7BxmhoKvQzJxcMS9HK4pAMFe
-         q+jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=zinVPTRrFMWmbFpflRee4MjyqNNUGw02xWqZXy1/69k=;
-        b=bnG9lsu7+kxGwt0kfLnfMa1Zacg+ySOovhnGkDKSji6VacSFigM/ARXw8dlB40H1xm
-         1OHFRIr6l5Yjnk+vagMkBvHtQvcrp5rEVHO2xyB4kxyjEms43XThpuiJE1DAMpooP5op
-         HpaHbjJMygLppNhBMQUGU2w8UL4+46tjTS4hunAwVifpV+xYNKjzIHyy8wZEtiFeypsb
-         yKEKR71jtvFsjT/3B3jvUo0HnTpllP6yCKQdrgUFanU5g97DngSdqKWYdWfG0FdZtwVp
-         PsdxrcZw/2k0qqnnp3mC386ArSFtLDGxNh9p+/uJ6DTLhuaYw7GvQA+rxa4jBNWfO+pL
-         ejiQ==
-X-Gm-Message-State: APjAAAXUlVCiC2A4raFZpua7UbnbIUlD4aQSYeXMGmbUvwta6Iw3rWFW
-        dAD4JOcmo1phSrJ5gtgoIsQ=
-X-Google-Smtp-Source: APXvYqyoT+gPy9NIIqEMHJwXvzYdZxId7ZhBTB32X9r2FSRXKkQTVRC2K4EpGRAb3l1AgGUdklypuA==
-X-Received: by 2002:a1c:7d08:: with SMTP id y8mr18308715wmc.50.1566757560333;
-        Sun, 25 Aug 2019 11:26:00 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id t14sm9167100wrv.12.2019.08.25.11.25.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2019 11:25:59 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        Sun, 25 Aug 2019 14:29:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37440 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728828AbfHYS33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 14:29:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E90B9ADAA;
+        Sun, 25 Aug 2019 18:29:27 +0000 (UTC)
+Date:   Sun, 25 Aug 2019 20:29:22 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Pu Wen <puwen@hygon.cn>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/PCI: Add missing log facility and move to use pr_ macros in pcbios.c
-Date:   Sun, 25 Aug 2019 20:25:57 +0200
-Message-Id: <20190825182557.23260-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
+Message-ID: <20190825182922.GC20639@zn.tnic>
+References: <156672618029.19810.8479315461492191933.tglx@nanos.tec.linutronix.de>
+ <156672618029.19810.9732807383797358917.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com>
+ <20190825173000.GB20639@zn.tnic>
+ <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the log facility used to print warnings to be KERN_WARNING
-explicitly, rather than rely on the current (or default) value
-of the MESSAGE_LOGLEVEL_DEFAULT set in Kconfig.  This will make
-all the warnings in the arch/x86/pci/pcbios.c to be printed
-consistently at the same log facility.
+On Sun, Aug 25, 2019 at 10:37:47AM -0700, Linus Torvalds wrote:
+> On Sun, Aug 25, 2019 at 10:30 AM Borislav Petkov <bp@suse.de> wrote:
+> >
+> > Should we do that somewhere in the early boot code by adding a WARN_ON()
+> > or so and see who screams?
+> 
+> It might be a good idea, just to see if it ever happens (again).
+> 
+> It doesn't even have to be early boot. It's probably more important to
+> let the user _know_, than it is to then disable the rdrand
+> instruction.
+> 
+> Particularly since we might as well just do it in general, and in the
+> general case we don't even know how to hide it in cpuid. So maybe just
+> something like "read the rdrand value a few times, make sure it
+> actually changes" at CPU bring-up (both boot and resume)
+> 
+> It sounds like a stupid test, but considering that AMD has had this
+> particular bug now several times over at least three different
+> generations, maybe it's not a stupid test after all.
 
-Replace printk(KERN_<level> ...) with corresponding pr_ macros,
-while adding the missing log facility.
+My lazy, sticky Sunday brain could come up only with this:
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 ---
- arch/x86/pci/pcbios.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
-index 9c97d814125e..0c3673f50bce 100644
---- a/arch/x86/pci/pcbios.c
-+++ b/arch/x86/pci/pcbios.c
-@@ -47,7 +47,7 @@ static inline void set_bios_x(void)
- 	pcibios_enabled = 1;
- 	set_memory_x(PAGE_OFFSET + BIOS_BEGIN, (BIOS_END - BIOS_BEGIN) >> PAGE_SHIFT);
- 	if (__supported_pte_mask & _PAGE_NX)
--		printk(KERN_INFO "PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
-+		pr_info("PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.\n");
- }
+diff --git a/arch/x86/kernel/cpu/rdrand.c b/arch/x86/kernel/cpu/rdrand.c
+index 5c900f9527ff..0130a4f4f836 100644
+--- a/arch/x86/kernel/cpu/rdrand.c
++++ b/arch/x86/kernel/cpu/rdrand.c
+@@ -29,7 +29,8 @@ __setup("nordrand", x86_rdrand_setup);
+ #ifdef CONFIG_ARCH_RANDOM
+ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ {
+-	unsigned long tmp;
++	unsigned int changed = 0;
++	unsigned long tmp, prev;
+ 	int i;
  
- /*
-@@ -111,10 +111,10 @@ static unsigned long __init bios32_service(unsigned long service)
- 		case 0:
- 			return address + entry;
- 		case 0x80:	/* Not present */
--			printk(KERN_WARNING "bios32_service(0x%lx): not present\n", service);
-+			pr_warn("bios32_service(0x%lx): not present\n", service);
- 			return 0;
- 		default: /* Shouldn't happen */
--			printk(KERN_WARNING "bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
-+			pr_warn("bios32_service(0x%lx): returned 0x%x -- BIOS bug!\n",
- 				service, return_code);
- 			return 0;
- 	}
-@@ -163,11 +163,11 @@ static int __init check_pcibios(void)
- 		DBG("PCI: BIOS probe returned s=%02x hw=%02x ver=%02x.%02x l=%02x\n",
- 			status, hw_mech, major_ver, minor_ver, pcibios_last_bus);
- 		if (status || signature != PCI_SIGNATURE) {
--			printk (KERN_ERR "PCI: BIOS BUG #%x[%08x] found\n",
-+			pr_err("PCI: BIOS BUG #%x[%08x] found\n",
- 				status, signature);
- 			return 0;
- 		}
--		printk(KERN_INFO "PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
-+		pr_info("PCI: PCI BIOS revision %x.%02x entry at 0x%lx, last bus=%d\n",
- 			major_ver, minor_ver, pcibios_entry, pcibios_last_bus);
- #ifdef CONFIG_PCI_DIRECT
- 		if (!(hw_mech & PCIBIOS_HW_TYPE1))
-@@ -316,13 +316,13 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
- 		if (sum != 0)
- 			continue;
- 		if (check->fields.revision != 0) {
--			printk("PCI: unsupported BIOS32 revision %d at 0x%p\n",
-+			pr_warn("PCI: unsupported BIOS32 revision %d at 0x%p\n",
- 				check->fields.revision, check);
- 			continue;
- 		}
- 		DBG("PCI: BIOS32 Service Directory structure at 0x%p\n", check);
- 		if (check->fields.entry >= 0x100000) {
--			printk("PCI: BIOS32 entry (0x%p) in high memory, "
-+			pr_warn("PCI: BIOS32 entry (0x%p) in high memory, "
- 					"cannot use.\n", check);
- 			return NULL;
- 		} else {
-@@ -386,7 +386,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- 		: "memory");
- 	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
- 	if (ret & 0xff00)
--		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
-+		pr_err("PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
- 	else if (opt.size) {
- 		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
- 		if (rt) {
-@@ -394,7 +394,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- 			rt->size = opt.size + sizeof(struct irq_routing_table);
- 			rt->exclusive_irqs = map;
- 			memcpy(rt->slots, (void *) page, opt.size);
--			printk(KERN_INFO "PCI: Using BIOS Interrupt Routing Table\n");
-+			pr_info("PCI: Using BIOS Interrupt Routing Table\n");
+ 	if (!cpu_has(c, X86_FEATURE_RDRAND))
+@@ -42,5 +43,24 @@ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ 			return;
  		}
  	}
- 	free_page(page);
--- 
-2.22.1
++
++	/*
++	 * Stupid sanity-check whether RDRAND does *actually* generate
++	 * some at least random-looking data.
++	 */
++	prev = tmp;
++	for (i = 0; i < SANITY_CHECK_LOOPS; i++) {
++		if (rdrand_long(&tmp)) {
++			if (prev != tmp)
++				changed++;
++
++			prev = tmp;
++		}
++	}
++
++	if (!changed)
++		WARN(1,
++"RDRAND gives funky smelling output, might consider not using it by booting with \"nordrand\"");
++
+ }
+ #endif
 
+---
+
+> Who knows what the Chinese CPU's that use the AMD core do? Hygon?
+> Whatever. Did they get the firmware fixes?
+
+Pu Wen?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
