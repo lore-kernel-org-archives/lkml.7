@@ -2,152 +2,125 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B12C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896B9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AAF2080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6703C2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfHYQaf (ORCPT
+        id S1728500AbfHYQhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 12:30:35 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:43027 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbfHYQaf (ORCPT
+        Sun, 25 Aug 2019 12:37:38 -0400
+Received: from smtprelay0097.hostedemail.com ([216.40.44.97]:53761 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726182AbfHYQhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 12:30:35 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 3X9lT3fgRWqEy3ymSwR6mZoLl1PqtNc7RMtkjEPM6qHhPwoSFMxwHQyCe4o1YO8WbbAbjSs+nx
- YJFoO5TEaHl6E46Fs46i0TiHmLvnUpLOZovdNYjwUOH1V7l1vJLWi+1Ummg0apzITBESTrkA7R
- MDOb/OqPwMOOHf4yrdRrdS8bbSYMVZKd0L79NRW7lQ9O+dLsKRk9b3bX8Czfdf+rgHPSlhNCZd
- fBvvUXPfwT5r/ff0zsMZq1vl5rvChSIbeYGNXG9Ao+9FrB+Gj2Q/BxXTJIyDCmxoNia2uZtsAf
- dvI=
-X-IronPort-AV: E=Sophos;i="5.64,429,1559545200"; 
-   d="scan'208";a="47898997"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2019 09:30:26 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 25 Aug 2019 09:30:25 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sun, 25 Aug 2019 09:30:25 -0700
-Date:   Sun, 25 Aug 2019 18:30:25 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <davem@davemloft.net>, <UNGLinuxDriver@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <allan.nielsen@microchip.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH 0/3] Add NETIF_F_HW_BRIDGE feature
-Message-ID: <20190825163023.hkc23lv7b5vvphdb@soft-dev3.microsemi.net>
-References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
- <e47a318c-6446-71cd-660c-8592037d8166@gmail.com>
- <20190824074204.GA15041@nanopsycho.orion>
+        Sun, 25 Aug 2019 12:37:38 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 5AFFB18029122;
+        Sun, 25 Aug 2019 16:37:36 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shock46_80224e1ebd25
+X-Filterd-Recvd-Size: 3578
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 25 Aug 2019 16:37:34 +0000 (UTC)
+Message-ID: <b5bae2981e27d133b61d99b08ee60244bf7aabe3.camel@perches.com>
+Subject: Re: [PATCH] scripts: coccinelle: check for !(un)?likely usage
+From:   Joe Perches <joe@perches.com>
+To:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr
+Cc:     linux-kernel@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>
+Date:   Sun, 25 Aug 2019 09:37:32 -0700
+In-Reply-To: <20190825130536.14683-1-efremov@linux.com>
+References: <20190825130536.14683-1-efremov@linux.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190824074204.GA15041@nanopsycho.orion>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 08/24/2019 09:42, Jiri Pirko wrote:
-> External E-Mail
-> 
-> 
-> Sat, Aug 24, 2019 at 01:25:02AM CEST, f.fainelli@gmail.com wrote:
-> >On 8/22/19 12:07 PM, Horatiu Vultur wrote:
-> >> Current implementation of the SW bridge is setting the interfaces in
-> >> promisc mode when they are added to bridge if learning of the frames is
-> >> enabled.
-> >> In case of Ocelot which has HW capabilities to switch frames, it is not
-> >> needed to set the ports in promisc mode because the HW already capable of
-> >> doing that. Therefore add NETIF_F_HW_BRIDGE feature to indicate that the
-> >> HW has bridge capabilities. Therefore the SW bridge doesn't need to set
-> >> the ports in promisc mode to do the switching.
-> >
-> >Then do not do anything when the ndo_set_rx_mode() for the ocelot
-> >network device is called and indicates that IFF_PROMISC is set and that
-> >your network port is a bridge port member. That is what mlxsw does AFAICT.
+On Sun, 2019-08-25 at 16:05 +0300, Denis Efremov wrote:
+> This patch adds coccinelle script for detecting !likely and !unlikely
+> usage. It's better to use unlikely instead of !likely and vice versa.
 
-Yes, but then if you want to monitor all the traffic on a bridge port
-you will not be able to do that. And this seems to be a limitation.
-This is the case for mlxsw and ocelot(it doesn't implement at all
-promisc mode) and might be others.
+Please explain _why_ is it better in the changelog.
 
-> 
-> Correct.
-> 
-> >
-> >As other pointed out, the Linux bridge implements a software bridge by
-> >default, and because it needs to operate on a wide variety of network
-> >devices, all with different capabilities, the easiest way to make sure
-> >that all management (IGMP, BPDU, etc. ) as well as non-management
-> >traffic can make it to the bridge ports, is to put the network devices
-> >in promiscuous mode.
+btw: there are relatively few uses like this in the kernel.
 
-What if the HW can copy all the management traffic to the SW bridge and
-HW knows to learn and flood frames. Then there is no point to set a
-network port in promisc mode just because it is a bridge port member.
-> >If this is suboptimal for you, you can take
-> >shortcuts in your driver that do not hinder the overall functionality.
+$ git grep -P '!\s*(?:un)?likely\s*\(' | wc -l
+40
 
-If I add this check, I don't see how any other network drivers will be
-affected by this. If a network driver will start to use this then it
-needs to know that the HW should be configure to include CPU in the
-flood mask and to know which addresses can be reached through SW bridge.
+afaict: It may save 2 bytes of x86/64 object code.
 
-> >
-> >> This optimization takes places only if all the interfaces that are part
-> >> of the bridge have this flag and have the same network driver.
-> >> 
-> >> If the bridge interfaces is added in promisc mode then also the ports part
-> >> of the bridge are set in promisc mode.
-> >> 
-> >> Horatiu Vultur (3):
-> >>   net: Add HW_BRIDGE offload feature
-> >>   net: mscc: Use NETIF_F_HW_BRIDGE
-> >>   net: mscc: Implement promisc mode.
-> >> 
-> >>  drivers/net/ethernet/mscc/ocelot.c | 26 ++++++++++++++++++++++++--
-> >>  include/linux/netdev_features.h    |  3 +++
-> >>  net/bridge/br_if.c                 | 29 ++++++++++++++++++++++++++++-
-> >>  net/core/ethtool.c                 |  1 +
-> >>  4 files changed, 56 insertions(+), 3 deletions(-)
-> >> 
-> >
-> >
-> >-- 
-> >Florian
-> 
+For instance:
 
--- 
-/Horatiu
+$ diff -urN kernel/tsacct.lst.old kernel/tsacct.lst.new|less
+--- kernel/tsacct.lst.old       2019-08-25 09:21:39.936570183 -0700
++++ kernel/tsacct.lst.new       2019-08-25 09:22:20.774324886 -0700
+@@ -24,158 +24,153 @@
+   15:  48 89 fb                mov    %rdi,%rbx
+        u64 time, delta;
+ 
+-       if (!likely(tsk->mm))
++       if (unlikely(tsk->mm))
+   18:  4c 8d ab 28 02 00 00    lea    0x228(%rbx),%r13
+   1f:  e8 00 00 00 00          callq  24 <__acct_update_integrals+0x24>
+                        20: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
+   24:  4c 89 ef                mov    %r13,%rdi
+   27:  e8 00 00 00 00          callq  2c <__acct_update_integrals+0x2c>
+                        28: R_X86_64_PLT32      __asan_load8_noabort-0x4
+-  2c:  4c 8b bb 28 02 00 00    mov    0x228(%rbx),%r15
+-  33:  4d 85 ff                test   %r15,%r15
+-  36:  74 34                   je     6c <__acct_update_integrals+0x6c>
++  2c:  48 83 bb 28 02 00 00    cmpq   $0x0,0x228(%rbx)
++  33:  00 
++  34:  75 34                   jne    6a <__acct_update_integrals+0x6a>
+                return;
+
+And here's a possible equivalent checkpatch test.
+---
+ scripts/checkpatch.pl | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 287fe73688f0..364603ad1a47 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6529,6 +6529,24 @@ sub process {
+ 			     "Using $1 should generally have parentheses around the comparison\n" . $herecurr);
+ 		}
+ 
++# !(likely|unlikely)(condition) use should be (unlikely|likely)(condition)
++		if ($perl_version_ok &&
++		    $line =~ /(\!\s*((?:un)?likely))\s*$balanced_parens/) {
++			my $match = $1;
++			my $type =  $2;
++			my $reverse;
++			if ($type eq "likely") {
++				$reverse = "unlikely";
++			} else {
++				$reverse = "likely";
++			}
++			if (WARN("LIKELY_MISUSE",
++				 "Prefer $reverse over $match\n" . $herecurr) &&
++			    $fix) {
++				$fixed[$fixlinenr] =~ s/\Q$match\E\s*\(/$reverse(/;
++			}
++		}
++
+ # whine mightly about in_atomic
+ 		if ($line =~ /\bin_atomic\s*\(/) {
+ 			if ($realfile =~ m@^drivers/@) {
+
+
