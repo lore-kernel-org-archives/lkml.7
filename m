@@ -2,163 +2,111 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6D8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDD92190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D95205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:35:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eWAcLDCT"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="m5vQdDBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfHYBcC (ORCPT
+        id S1728347AbfHYBfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 21:32:02 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:34351 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfHYBcB (ORCPT
+        Sat, 24 Aug 2019 21:35:46 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:54903 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfHYBfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 21:32:01 -0400
-Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x7P1VTtI011335;
-        Sun, 25 Aug 2019 10:31:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x7P1VTtI011335
+        Sat, 24 Aug 2019 21:35:46 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7P1ZYEN023349;
+        Sun, 25 Aug 2019 10:35:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7P1ZYEN023349
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566696690;
-        bh=UySt3IPQMKQvA8Z6xXUcqOfyPtK0Hni6tKUbgs1EZ/I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eWAcLDCT59y58Rfu/1f5RkY99019OS3+Wlfv0VmdeXHVcwlbhs7LJJpzNqi3TdGDw
-         9EA6rclq5AGHFwaD2alKpEUtofXI69ZR7RP/PBjN29NtoaYoa0YlQRTvHpflbyPvln
-         I4HMi8kbXkJljsXilZqbE8doE+GF9h8k3BauVzdr6esn79gaI1khmSXC9x+xqa1ntv
-         cF0TMcx3olVOAsZle6/7OFFYHXxvLVVllOeuO22IosFCbNxsXkZpfnE+YlOCK/itaW
-         rJArTylYRZm0jb/OMbgs6iK6KL2h47D9bxqcjwL+Vs5QSpgjkaqIrg9WiP3mAPX0ew
-         wzTCuzu59R1ng==
-X-Nifty-SrcIP: [126.125.143.222]
+        s=dec2015msa; t=1566696935;
+        bh=OpRvhuRH68ASL9MC0ScI0w+3eBuQHdBQJqkQRbLn2+I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m5vQdDBVBltKGZxBXxjeKQCIfZ5iD3J8weg+6tc33iVqN6OCa7xv9Dl5XLMXmCNwW
+         C/3Osi6b6pTtXtzybqroPLdtVMCUzAlQzr4Ddtgn85MU4oDDerHkuijtmA5NhLuGrO
+         BnkS6Gjs/xI0lakYYdFhxY+W/xad4vVfYTUwrjspuYwJDXf3EyJz6KRe2N2l9B5P4o
+         ElJGGwHMGmQyDr1txv6nPfFXTcUXCNeN2woesAI5IAOJ+ZqzC4WSPKIbuPW665uirF
+         sEYLMGlVwx0M4eteG1LJgIoyMaO94JOFAGEmRtuxEQKR/W2CGJpmZBwvQbjbMI8V+M
+         bgCCjwp+5i4hA==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id b2so3201413uak.3;
+        Sat, 24 Aug 2019 18:35:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAXtUFqcpbwJNyhyMlb26tPNpYxdI0Zmlb4191DZmCWalCaEXUUz
+        A0aEm/iI8CVJCPEIjA60/VW4gYZZ+jiH/KOzo9U=
+X-Google-Smtp-Source: APXvYqw2XfZWHXx4lllQ4mQGMyqo7CKbkbWJ0BX0afI4yxsmkaVVhBsA6J2cIyjgO7AH5sLDthaiJBt1ysGpo05LRvU=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr5972124uao.121.1566696933668;
+ Sat, 24 Aug 2019 18:35:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190819041807.11433-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190819041807.11433-1-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] kbuild: remove clean-dirs syntax
-Date:   Sun, 25 Aug 2019 10:31:27 +0900
-Message-Id: <20190825013128.12831-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+Date:   Sun, 25 Aug 2019 10:34:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS9UoQYsreSSW4EJ4JtQengZ8VQtUO_PWGZC3O9axiT0A@mail.gmail.com>
+Message-ID: <CAK7LNAS9UoQYsreSSW4EJ4JtQengZ8VQtUO_PWGZC3O9axiT0A@mail.gmail.com>
+Subject: Re: [PATCH] .gitignore: ignore modules.order explicitly
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only the difference between clean-files and clean-dirs is the -r
-option passed to the 'rm' command.
+On Mon, Aug 19, 2019 at 1:18 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> The pattern '*.order' was added by commit c6025f4c8bbe ("kbuild: ignore
+> *.order files") to ignore modules.order files.
+>
+> I do not see any other user of the '.order' extension.
+>
+> Ignore 'modules.order' explicitly instead of '*.order'.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-You can always pass -r, and then remove the clean-dirs syntax.
+Applied to linux-kbuild.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
 
- Documentation/kbuild/makefiles.rst | 16 ++++------------
- scripts/Makefile.clean             | 16 ++--------------
- scripts/kconfig/Makefile           |  2 +-
- usr/include/Makefile               |  4 +---
- 4 files changed, 8 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index 68ed20ef37dd..78aa51a6fcd4 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -765,7 +765,8 @@ Files matching the patterns "*.[oas]", "*.ko", plus some additional files
- generated by kbuild are deleted all over the kernel src tree when
- "make clean" is executed.
- 
--Additional files can be specified in kbuild makefiles by use of $(clean-files).
-+Additional files or directories can be specified in kbuild makefiles by use of
-+$(clean-files).
- 
- 	Example::
- 
-@@ -776,17 +777,8 @@ When executing "make clean", the file "crc32table.h" will be deleted.
- Kbuild will assume files to be in the same relative directory as the
- Makefile, except if prefixed with $(objtree).
- 
--To delete a directory hierarchy use:
--
--	Example::
--
--		#scripts/package/Makefile
--		clean-dirs := $(objtree)/debian/
--
--This will delete the directory debian in the toplevel directory, including all
--subdirectories.
--
--To exclude certain files from make clean, use the $(no-clean-files) variable.
-+To exclude certain files or directories from make clean, use the
-+$(no-clean-files) variable.
- 
- Usually kbuild descends down in subdirectories due to "obj-* := dir/",
- but in the architecture makefiles where the kbuild infrastructure
-diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-index 0b80e3207b20..cbfbe13dc87d 100644
---- a/scripts/Makefile.clean
-+++ b/scripts/Makefile.clean
-@@ -52,26 +52,14 @@ __clean-files   := $(wildcard                                               \
- 		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(__clean-files))) \
- 		   $(filter $(objtree)/%, $(__clean-files)))
- 
--# same as clean-files
--
--__clean-dirs    := $(wildcard                                               \
--		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-dirs)))    \
--		   $(filter $(objtree)/%, $(clean-dirs)))
--
- # ==========================================================================
- 
--quiet_cmd_clean    = CLEAN   $(obj)
--      cmd_clean    = rm -f $(__clean-files)
--quiet_cmd_cleandir = CLEAN   $(__clean-dirs)
--      cmd_cleandir = rm -rf $(__clean-dirs)
--
-+quiet_cmd_clean = CLEAN   $(obj)
-+      cmd_clean = rm -rf $(__clean-files)
- 
- __clean: $(subdir-ymn)
- ifneq ($(strip $(__clean-files)),)
- 	+$(call cmd,clean)
--endif
--ifneq ($(strip $(__clean-dirs)),)
--	+$(call cmd,cleandir)
- endif
- 	@:
- 
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index 7656e1137b6b..bed7a5a2fbe9 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -114,7 +114,7 @@ testconfig: $(obj)/conf
- 	$(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
- 	-o cache_dir=$(abspath $(obj)/tests/.cache) \
- 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--capture=no)
--clean-dirs += tests/.cache
-+clean-files += tests/.cache
- 
- # Help text used by make help
- help:
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index 1fb6abe29b2f..05c71ef42f51 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -115,6 +115,4 @@ header-test-y += $(filter-out $(header-test-), \
- 			$(patsubst $(obj)/%,%, $(wildcard \
- 			$(addprefix $(obj)/, *.h */*.h */*/*.h */*/*/*.h))))
- 
--# For GNU Make <= 4.2.1, $(wildcard $(obj)/*/) matches to not only directories
--# but also regular files. Use $(filter %/, ...) just in case.
--clean-dirs += $(patsubst $(obj)/%/,%,$(filter %/, $(wildcard $(obj)/*/)))
-+clean-files += $(filter-out Makefile, $(notdir $(wildcard $(obj)/*)))
+
+> ---
+>
+>  .gitignore | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/.gitignore b/.gitignore
+> index 2030c7a4d2f8..ce2c6348d372 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -34,7 +34,6 @@
+>  *.mod.c
+>  *.o
+>  *.o.*
+> -*.order
+>  *.patch
+>  *.s
+>  *.so
+> @@ -46,6 +45,7 @@
+>  *.xz
+>  Module.symvers
+>  modules.builtin
+> +modules.order
+>
+>  #
+>  # Top-level generic files
+> --
+> 2.17.1
+>
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
