@@ -2,68 +2,83 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3605AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 03:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D7CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 03:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02598217D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 03:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566702909;
-	bh=mPe3odrknBIFfF0lqHZtL9q2YQNnQ+0AuopSqTNkTbM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yhBgm0/u+W/FckfFWulJDubersAUEf+fjDoV9BidgWSvo4hPQ2TFalpk0ZelYdKx6
-	 KrL3/GknKDboHstgWLhvPMM4onT2O4uRgCS0OnW388uTC440q3DF+97YiTKFg6yTX1
-	 EyZQHpVClPAVhtwFnvFJCn+zFftAt/uM1nMkDPh0=
+	by mail.kernel.org (Postfix) with ESMTP id 314F22080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 03:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbfHYDPI (ORCPT
+        id S1728325AbfHYDZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 23:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728270AbfHYDPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 23:15:07 -0400
-Subject: Re: [GIT PULL] dma-mapping fixes for 5.3-rc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566702906;
-        bh=mPe3odrknBIFfF0lqHZtL9q2YQNnQ+0AuopSqTNkTbM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=oR/rkFO644feU+z4crnl3ubSvYZmCexFNEafhkRdDyk6GrkjtnoJhZ0Kx9/LQZnwU
-         qjqw35eo9RcpQjl/iguP523Omqf9wsVDxVqhGF0fzx/UQAFmcgxeLAIEyUwKrJo0MX
-         Uq+SILhGG94Ywy8C93W2Z006GEAAo2TM+RL8XcXY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190824225010.GA18590@infradead.org>
-References: <20190824225010.GA18590@infradead.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190824225010.GA18590@infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
- tags/dma-mapping-5.3-5
-X-PR-Tracked-Commit-Id: 90ae409f9eb3bcaf38688f9ec22375816053a08e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e67095fd2f727c35e510d831c588696f2138a1bb
-Message-Id: <156670290674.4585.269087204039323980.pr-tracker-bot@kernel.org>
-Date:   Sun, 25 Aug 2019 03:15:06 +0000
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+        Sat, 24 Aug 2019 23:25:43 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38571 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727708AbfHYDZm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 23:25:42 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7P3POUv029060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 24 Aug 2019 23:25:25 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 7F19A42049E; Sat, 24 Aug 2019 23:25:24 -0400 (EDT)
+Date:   Sat, 24 Aug 2019 23:25:24 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Guo <guoyang2@huawei.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: Re: [PATCH] ext4: change the type of ext4 cache stats to
+ percpu_counter to improve performance
+Message-ID: <20190825032524.GD5163@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Guo <guoyang2@huawei.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+References: <1566528454-13725-1-git-send-email-zhangshaokun@hisilicon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1566528454-13725-1-git-send-email-zhangshaokun@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 25 Aug 2019 07:50:10 +0900:
+On Fri, Aug 23, 2019 at 10:47:34AM +0800, Shaokun Zhang wrote:
+> From: Yang Guo <guoyang2@huawei.com>
+> 
+> @es_stats_cache_hits and @es_stats_cache_misses are accessed frequently in
+> ext4_es_lookup_extent function, it would influence the ext4 read/write
+> performance in NUMA system.
+> Let's optimize it using percpu_counter, it is profitable for the
+> performance.
+> 
+> The test command is as below:
+> fio -name=randwrite -numjobs=8 -filename=/mnt/test1 -rw=randwrite
+> -ioengine=libaio -direct=1 -iodepth=64 -sync=0 -norandommap -group_reporting
+> -runtime=120 -time_based -bs=4k -size=5G
+> 
+> And the result is better 10% than the initial implement:
+> without the patch，IOPS=197k, BW=770MiB/s (808MB/s)(90.3GiB/120002msec)
+> with the patch,  IOPS=218k, BW=852MiB/s (894MB/s)(99.9GiB/120002msec)
+> 
+> Cc: "Theodore Ts'o" <tytso@mit.edu>
+> Cc: Andreas Dilger <adilger.kernel@dilger.ca>
+> Signed-off-by: Yang Guo <guoyang2@huawei.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.3-5
+Applied with some adjustments so it would apply.  I also changed the patch summary to:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e67095fd2f727c35e510d831c588696f2138a1bb
+    ext4: use percpu_counters for extent_status cache hits/misses
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+    	      		      	  		- Ted
