@@ -3,521 +3,241 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44C7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 12:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAB9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 12:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B18B2173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 12:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F112070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 12:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ExzvFECv"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="TyFCh/Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfHYMRs (ORCPT
+        id S1727130AbfHYMX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 08:17:48 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:38447 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727280AbfHYMRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 08:17:44 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 46GYyC0MrHzMK;
-        Sun, 25 Aug 2019 14:16:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1566735363; bh=gDXuzaQsy05jFmx1JaMN1xelDgVOPOeqv3Tv+dwhC3Y=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=ExzvFECvHk3XkEZHQQAIFjtv+q2HSZhPD8FHfTbLCWyo3NfSuP7OlQo2NPSM/hLZF
-         Qx2+4eVudsYY1BvPTSm9Wi3CDLTRDhqOrWKj0SsQrMYH77li4uZUtwXOFUwa4NHTSN
-         OuIgF3qPoZqJ/70ZOMiPcfNLF/1ydo6tXm0JhKaYY7F8g1H0nXti7SzP0oRnEyiCI5
-         BbMoJXWjlvFC7720ec7IY/dOFTonWSFT1yIrYn/STUQl5p5C9vsQhpOOAIzozEH/c7
-         Ojv+82i9e9bdxZs6RA6H88XtRGrTMfg3nVPtKgFZ7ZYNKTcsAaLIptdvWs3Aseki4X
-         6eAu4O8bgv87A==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.2 at mail
-Date:   Sun, 25 Aug 2019 14:17:38 +0200
-Message-Id: <c82528965635440421f8679a3558e450a1633995.1566734631.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1566734630.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1566734630.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 4/4] [RFT] ASoC: wm8994: use common FLL code
+        Sun, 25 Aug 2019 08:23:57 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:9340 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfHYMX4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 08:23:56 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: VWc84WJLbaUQa2Fuy04wdpDLc/bOQDrQqYlKixvrpW65VcV9/8q/FqYStNO5U2u9BYVNDhU0mx
+ Auw2+++uBWftN/7jvGuKgkyhud21skFiUK6ZBR/HyY2+GJddPSXWmTF7P6JlTmhx3iBgne8wGq
+ 9c6cQ3n9yYdKXfz5xCi257TDHLB6bOOcRCSMZzEWZjsy8Uox8W8P9IJrR1JB8caD83j0zkAv7g
+ gRZmsrCkfTNQeRwZ6Cu4X7JJcP9mwTPsBSIJOHhl/UCowZ7KF7a53aLXMaEm6SSyKMmUpmyjG9
+ tN0=
+X-IronPort-AV: E=Sophos;i="5.64,429,1559545200"; 
+   d="scan'208";a="43599433"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2019 05:23:54 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 25 Aug 2019 05:23:51 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Sun, 25 Aug 2019 05:23:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oQ5xIIKxSnnVCdxzB0JI+IKFt510k6NPxkHa/m8aIOAkmBe4b0zxJmjtwQWpBz9g72w4zAW+d8o4HpPV5VIpMVsuhNVEjavn1J3FqPxEgx4JfIodnPZXt/2uUODem7gUAadbFY8jaS7HWsOrI/VqV+Xi7WeR3S8ud6ffk5OszGVejznxJ+DGmqvk0gQmB9QUqWoWw3FXMOg4pYCwb+H4aCxKpOJavILCkdS8n4c6NurhBhxT4e2oLJ1f4vs2CHcULiUG8mk5xkZ1u0us3EMdGeT5lCrIx2TLULjtnaoA6rYpZ+9h+wEE3yAzxjZkV1LE66iZf9+j/NvgLU1fLoFijA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWyxkvUJqilrNZ5RkcmVRYby34W4BlqmD4jNUBOAgOk=;
+ b=IRVvH5QuBDGZtfr9JHSmxwkw2/X8kC33gjlvGpJi90UTtLRRSTTbwIxv3Jn89OOZuSD/JQ+RMksoSRg7kEK8DEKhlOOazJlmOeMzQhPdHSbI/dzrea6OD1wS9VZl66iAIBDnwqgyMmra88cFIPtu5rLb/ahyNkz9vBfhaH4I8TbenoQ5t1S2KQfnt5FunvfYSwwp3Xm+9lbNzHBdYDB13a8Wbh8Z4gqgC5D99LhaEoPgHTAlUebqIyv9grViOUNRaLghx+KfapBWUpTi2exI+L8D3T4MV1LD7TMhINLZSNhtpQt3U4QDP2OBr8rVtBUt0ufVINQGL3y8JUxFrcxj9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWyxkvUJqilrNZ5RkcmVRYby34W4BlqmD4jNUBOAgOk=;
+ b=TyFCh/CsumZ/8wwVgh3Qq1xgGYhJM6e6yj6pvGGIzYSEMAnE8HsBD5Q8Mu3ySyKmhtrZxHIfwm99YOOEABtPQULqn9ddKUJkKOQosgtAJFimb7lVv2t3I4GcpwLr/w9hMzeCUaPFmNU/Obr9g4xsXehzS3vdZfke22LXqzpx2tI=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3936.namprd11.prod.outlook.com (10.255.180.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Sun, 25 Aug 2019 12:23:46 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2199.021; Sun, 25 Aug 2019
+ 12:23:45 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <boris.brezillon@collabora.com>
+CC:     <marek.vasut@gmail.com>, <vigneshr@ti.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] mtd: spi-nor: Split spi_nor_init_params()
+Thread-Topic: [PATCH v2 4/7] mtd: spi-nor: Split spi_nor_init_params()
+Thread-Index: AQHVWnOOC9h2mNJjWkK/0S4j8FdZtqcLxS8AgAAFwgA=
+Date:   Sun, 25 Aug 2019 12:23:45 +0000
+Message-ID: <78202b39-1c40-dbaa-3ebc-3481ecbe4643@microchip.com>
+References: <20190824120027.14452-1-tudor.ambarus@microchip.com>
+ <20190824120027.14452-5-tudor.ambarus@microchip.com>
+ <20190825140302.21ca2623@collabora.com>
+In-Reply-To: <20190825140302.21ca2623@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR04CA0051.eurprd04.prod.outlook.com
+ (2603:10a6:802:2::22) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [86.127.53.184]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6a333c52-47f9-4cba-833a-08d72957131f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB3936;
+x-ms-traffictypediagnostic: MN2PR11MB3936:
+x-microsoft-antispam-prvs: <MN2PR11MB39364E65A54E446CADC1E719F0A60@MN2PR11MB3936.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01401330D1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(136003)(376002)(346002)(366004)(199004)(189003)(3846002)(6116002)(6436002)(8936002)(81166006)(81156014)(4326008)(36756003)(6246003)(66446008)(229853002)(53936002)(186003)(26005)(14444005)(256004)(76176011)(53546011)(99286004)(52116002)(25786009)(102836004)(6512007)(386003)(6506007)(66476007)(66556008)(8676002)(5660300002)(6486002)(86362001)(14454004)(7736002)(305945005)(446003)(316002)(31696002)(66946007)(64756008)(66066001)(478600001)(31686004)(476003)(54906003)(2616005)(11346002)(486006)(71200400001)(71190400001)(6916009)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3936;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: W3nkZytVppL1FcrjUItMviLncCNUi6Ll2SFP9iZpcoA3ioKJVu2z9tpF00V2ygWZdaJvQs17DgNqlUvxqgFd33CPn/WfUn1b7nucAHSCJOxOCmUXmt39jhMb4q2nAdDeHplo90tF1Rxp4da5v8p2yoOlVTxD2t2C7JVysQjfD5HTjQwrxexf/mOE6/tBKsVftcbTFIDxrp7R7UTyDy53yBngDC8BvMkohkXPkehtciPe4V+MSeqqIpk3YjkXuVmPeT3PFxTcKwgEELLs+qfNhn22N7gYBymF15OWGJEVUJVxnwPBw36ACyVWSH2f0kxm6m2nH2HaorT3jqWS2B4XuVoMHTvm9cHxHAX9DbIDVOXBF7oXVhxoLWZoJCVFF0xjX4cyhRhAFtscvfht2gPoyoil3pPddIigeL3Ec5iix78=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2387C189842A8F479F1ABC599FD15317@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     alsa-devel@alsa-project.org, patches@opensource.cirrus.com
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Piotr Stankiewicz <piotrs@opensource.cirrus.com>,
-        Nariman Poushin <npoushin@opensource.cirrus.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Nikesh Oswal <nikesh@opensource.cirrus.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a333c52-47f9-4cba-833a-08d72957131f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2019 12:23:45.7799
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +jJjxBMDVriFtPxZ8ZIX2t1eAnLUNckBKDB5IPGXZvpWFTsim6twwQfmq/kMVkiGqExxPNqPIUbDWGyKAR37467d1vWC4U6bMkBYoWx84lE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3936
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework FLL handling to use common code.
-This uses polling for now to wait for FLL lock.
-
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- sound/soc/codecs/Kconfig  |   2 +
- sound/soc/codecs/wm8994.c | 281 +++++++++++---------------------------
- sound/soc/codecs/wm8994.h |   4 +-
- 3 files changed, 84 insertions(+), 203 deletions(-)
-
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 1a680023af7d..1ff6290ce18d 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1382,6 +1382,8 @@ config SND_SOC_WM8993
- 
- config SND_SOC_WM8994
- 	tristate
-+	select SND_SOC_WM_FLL
-+	select SND_SOC_WM_FLL_EFS
- 
- config SND_SOC_WM8995
- 	tristate
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index c3d06e8bc54f..d0dbc352303b 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -2030,101 +2030,57 @@ static const struct snd_soc_dapm_route wm8958_intercon[] = {
- 	{ "AIF3ADC Mux", "Mono PCM", "Mono PCM Out Mux" },
- };
- 
--/* The size in bits of the FLL divide multiplied by 10
-- * to allow rounding later */
--#define FIXED_FLL_SIZE ((1 << 16) * 10)
--
--struct fll_div {
--	u16 outdiv;
--	u16 n;
--	u16 k;
--	u16 lambda;
--	u16 clk_ref_div;
--	u16 fll_fratio;
-+static const struct wm_fll_desc wm8994_fll_desc[2] = {
-+	/* FLL1 */
-+	{
-+		.ctl_offset = WM8994_FLL1_CONTROL_1,
-+		.int_offset = WM8994_INTERRUPT_RAW_STATUS_2,
-+		.int_mask = WM8994_IM_FLL1_LOCK_EINT_MASK,
-+		.nco_reg0 = WM8994_FLL1_CONTROL_5,
-+		.frc_nco_shift = 6,
-+		.nco_reg1 = WM8994_FLL1_CONTROL_5,
-+		.frc_nco_val_shift = 7,
-+		.clk_ref_map = { FLL_REF_MCLK, FLL_REF_MCLK2, FLL_REF_FSCLK, FLL_REF_BCLK },
-+	},
-+	/* FLL2 */
-+	{
-+		.ctl_offset = WM8994_FLL2_CONTROL_1,
-+		.int_offset = WM8994_INTERRUPT_RAW_STATUS_2,
-+		.int_mask = WM8994_IM_FLL2_LOCK_EINT_MASK,
-+		.nco_reg0 = WM8994_FLL2_CONTROL_5,
-+		.frc_nco_shift = 6,
-+		.nco_reg1 = WM8994_FLL2_CONTROL_5,
-+		.frc_nco_val_shift = 7,
-+		.clk_ref_map = { FLL_REF_MCLK, FLL_REF_MCLK2, FLL_REF_FSCLK, FLL_REF_BCLK },
-+	},
- };
- 
--static int wm8994_get_fll_config(struct wm8994 *control, struct fll_div *fll,
--				 int freq_in, int freq_out)
--{
--	u64 Kpart;
--	unsigned int K, Ndiv, Nmod, gcd_fll;
--
--	pr_debug("FLL input=%dHz, output=%dHz\n", freq_in, freq_out);
--
--	/* Scale the input frequency down to <= 13.5MHz */
--	fll->clk_ref_div = 0;
--	while (freq_in > 13500000) {
--		fll->clk_ref_div++;
--		freq_in /= 2;
--
--		if (fll->clk_ref_div > 3)
--			return -EINVAL;
--	}
--	pr_debug("CLK_REF_DIV=%d, Fref=%dHz\n", fll->clk_ref_div, freq_in);
--
--	/* Scale the output to give 90MHz<=Fvco<=100MHz */
--	fll->outdiv = 3;
--	while (freq_out * (fll->outdiv + 1) < 90000000) {
--		fll->outdiv++;
--		if (fll->outdiv > 63)
--			return -EINVAL;
--	}
--	freq_out *= fll->outdiv + 1;
--	pr_debug("OUTDIV=%d, Fvco=%dHz\n", fll->outdiv, freq_out);
--
--	if (freq_in > 1000000) {
--		fll->fll_fratio = 0;
--	} else if (freq_in > 256000) {
--		fll->fll_fratio = 1;
--		freq_in *= 2;
--	} else if (freq_in > 128000) {
--		fll->fll_fratio = 2;
--		freq_in *= 4;
--	} else if (freq_in > 64000) {
--		fll->fll_fratio = 3;
--		freq_in *= 8;
--	} else {
--		fll->fll_fratio = 4;
--		freq_in *= 16;
--	}
--	pr_debug("FLL_FRATIO=%d, Fref=%dHz\n", fll->fll_fratio, freq_in);
--
--	/* Now, calculate N.K */
--	Ndiv = freq_out / freq_in;
--
--	fll->n = Ndiv;
--	Nmod = freq_out % freq_in;
--	pr_debug("Nmod=%d\n", Nmod);
--
--	switch (control->type) {
--	case WM8994:
--		/* Calculate fractional part - scale up so we can round. */
--		Kpart = FIXED_FLL_SIZE * (long long)Nmod;
--
--		do_div(Kpart, freq_in);
--
--		K = Kpart & 0xFFFFFFFF;
--
--		if ((K % 10) >= 5)
--			K += 5;
--
--		/* Move down to proper range now rounding is done */
--		fll->k = K / 10;
--		fll->lambda = 0;
--
--		pr_debug("N=%x K=%x\n", fll->n, fll->k);
--		break;
--
--	default:
--		gcd_fll = gcd(freq_out, freq_in);
--
--		fll->k = (freq_out - (freq_in * fll->n)) / gcd_fll;
--		fll->lambda = freq_in / gcd_fll;
--		
--	}
--
--	return 0;
--}
-+static const struct wm_fll_desc wm8958_fll_desc[2] = {
-+	/* FLL1 */
-+	{
-+		.ctl_offset = WM8994_FLL1_CONTROL_1,
-+		.int_offset = WM8994_INTERRUPT_RAW_STATUS_2,
-+		.int_mask = WM8994_IM_FLL1_LOCK_EINT_MASK,
-+		.nco_reg0 = WM8994_FLL1_CONTROL_5,
-+		.frc_nco_shift = 6,
-+		.nco_reg1 = WM8994_FLL1_CONTROL_5,
-+		.frc_nco_val_shift = 7,
-+		.efs_offset = WM8958_FLL1_EFS_1,
-+		.clk_ref_map = { FLL_REF_MCLK, FLL_REF_MCLK2, FLL_REF_FSCLK, FLL_REF_BCLK },
-+	},
-+	/* FLL2 */
-+	{
-+		.ctl_offset = WM8994_FLL2_CONTROL_1,
-+		.int_offset = WM8994_INTERRUPT_RAW_STATUS_2,
-+		.int_mask = WM8994_IM_FLL2_LOCK_EINT_MASK,
-+		.nco_reg0 = WM8994_FLL2_CONTROL_5,
-+		.frc_nco_shift = 6,
-+		.nco_reg1 = WM8994_FLL2_CONTROL_5,
-+		.frc_nco_val_shift = 7,
-+		.efs_offset = WM8958_FLL1_EFS_1,
-+		.clk_ref_map = { FLL_REF_MCLK, FLL_REF_MCLK2, FLL_REF_FSCLK, FLL_REF_BCLK },
-+	},
-+};
- 
- static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 			  unsigned int freq_in, unsigned int freq_out)
-@@ -2132,9 +2088,7 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	struct wm8994_priv *wm8994 = snd_soc_component_get_drvdata(component);
- 	struct wm8994 *control = wm8994->wm8994;
- 	int reg_offset, ret;
--	struct fll_div fll;
- 	u16 reg, clk1, aif_reg, aif_src;
--	unsigned long timeout;
- 	bool was_enabled;
- 
- 	switch (id) {
-@@ -2152,9 +2106,6 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 		return -EINVAL;
- 	}
- 
--	reg = snd_soc_component_read32(component, WM8994_FLL1_CONTROL_1 + reg_offset);
--	was_enabled = reg & WM8994_FLL1_ENA;
--
- 	switch (src) {
- 	case 0:
- 		/* Allow no source specification when stopping */
-@@ -2166,10 +2117,12 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	case WM8994_FLL_SRC_MCLK2:
- 	case WM8994_FLL_SRC_LRCLK:
- 	case WM8994_FLL_SRC_BCLK:
-+		src = wm8994_fll_desc[0].clk_ref_map[src - WM8994_FLL_SRC_MCLK1];
- 		break;
- 	case WM8994_FLL_SRC_INTERNAL:
- 		freq_in = 12000000;
- 		freq_out = 12000000;
-+		src = FLL_REF_OSC;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -2180,18 +2133,6 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	    wm8994->fll[id].in == freq_in && wm8994->fll[id].out == freq_out)
- 		return 0;
- 
--	/* If we're stopping the FLL redo the old config - no
--	 * registers will actually be written but we avoid GCC flow
--	 * analysis bugs spewing warnings.
--	 */
--	if (freq_out)
--		ret = wm8994_get_fll_config(control, &fll, freq_in, freq_out);
--	else
--		ret = wm8994_get_fll_config(control, &fll, wm8994->fll[id].in,
--					    wm8994->fll[id].out);
--	if (ret < 0)
--		return ret;
--
- 	/* Make sure that we're not providing SYSCLK right now */
- 	clk1 = snd_soc_component_read32(component, WM8994_CLOCKING_1);
- 	if (clk1 & WM8994_SYSCLK_SRC)
-@@ -2207,9 +2148,11 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 		return -EBUSY;
- 	}
- 
--	/* We always need to disable the FLL while reconfiguring */
--	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_1 + reg_offset,
--			    WM8994_FLL1_ENA, 0);
-+	was_enabled = wm_fll_is_enabled(&wm8994->fll_hw[id]) > 0;
-+
-+	ret = wm_fll_disable(&wm8994->fll_hw[id]);
-+	if (ret)
-+		return ret;
- 
- 	if (wm8994->fll_byp && src == WM8994_FLL_SRC_BCLK &&
- 	    freq_in == freq_out && freq_out) {
-@@ -2217,46 +2160,21 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 		snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_5 + reg_offset,
- 				    WM8958_FLL1_BYP, WM8958_FLL1_BYP);
- 		goto out;
-+	} else if (wm8994->fll_byp) {
-+		snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_5 + reg_offset,
-+				    WM8958_FLL1_BYP, 0);
- 	}
- 
--	reg = (fll.outdiv << WM8994_FLL1_OUTDIV_SHIFT) |
--		(fll.fll_fratio << WM8994_FLL1_FRATIO_SHIFT);
--	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_2 + reg_offset,
--			    WM8994_FLL1_OUTDIV_MASK |
--			    WM8994_FLL1_FRATIO_MASK, reg);
--
--	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_3 + reg_offset,
--			    WM8994_FLL1_K_MASK, fll.k);
--
--	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_4 + reg_offset,
--			    WM8994_FLL1_N_MASK,
--			    fll.n << WM8994_FLL1_N_SHIFT);
--
--	if (fll.lambda) {
--		snd_soc_component_update_bits(component, WM8958_FLL1_EFS_1 + reg_offset,
--				    WM8958_FLL1_LAMBDA_MASK,
--				    fll.lambda);
--		snd_soc_component_update_bits(component, WM8958_FLL1_EFS_2 + reg_offset,
--				    WM8958_FLL1_EFS_ENA, WM8958_FLL1_EFS_ENA);
--	} else {
--		snd_soc_component_update_bits(component, WM8958_FLL1_EFS_2 + reg_offset,
--				    WM8958_FLL1_EFS_ENA, 0);
--	}
--
--	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_5 + reg_offset,
--			    WM8994_FLL1_FRC_NCO | WM8958_FLL1_BYP |
--			    WM8994_FLL1_REFCLK_DIV_MASK |
--			    WM8994_FLL1_REFCLK_SRC_MASK,
--			    ((src == WM8994_FLL_SRC_INTERNAL)
--			     << WM8994_FLL1_FRC_NCO_SHIFT) |
--			    (fll.clk_ref_div << WM8994_FLL1_REFCLK_DIV_SHIFT) |
--			    (src - 1));
--
--	/* Clear any pending completion from a previous failure */
--	try_wait_for_completion(&wm8994->fll_locked[id]);
--
--	/* Enable (with fractional mode if required) */
- 	if (freq_out) {
-+		wm8994->fll_hw[id].freq_in = freq_in;
-+		ret = wm_fll_set_parent(&wm8994->fll_hw[id], src);
-+		if (!ret)
-+			ret = wm_fll_set_rate(&wm8994->fll_hw[id], freq_out);
-+		if (!ret)
-+			ret = wm_fll_enable(&wm8994->fll_hw[id]);
-+		if (ret < 0)
-+			return ret;
-+
- 		/* Enable VMID if we need it */
- 		if (!was_enabled) {
- 			active_reference(component);
-@@ -2273,27 +2191,6 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 				break;
- 			}
- 		}
--
--		reg = WM8994_FLL1_ENA;
--
--		if (fll.k)
--			reg |= WM8994_FLL1_FRAC;
--		if (src == WM8994_FLL_SRC_INTERNAL)
--			reg |= WM8994_FLL1_OSC_ENA;
--
--		snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_1 + reg_offset,
--				    WM8994_FLL1_ENA | WM8994_FLL1_OSC_ENA |
--				    WM8994_FLL1_FRAC, reg);
--
--		if (wm8994->fll_locked_irq) {
--			timeout = wait_for_completion_timeout(&wm8994->fll_locked[id],
--							      msecs_to_jiffies(10));
--			if (timeout == 0)
--				dev_warn(component->dev,
--					 "Timed out waiting for FLL lock\n");
--		} else {
--			msleep(5);
--		}
- 	} else {
- 		if (was_enabled) {
- 			switch (control->type) {
-@@ -2350,15 +2247,6 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	return 0;
- }
- 
--static irqreturn_t wm8994_fll_locked_irq(int irq, void *data)
--{
--	struct completion *completion = data;
--
--	complete(completion);
--
--	return IRQ_HANDLED;
--}
--
- static int opclk_divs[] = { 10, 20, 30, 40, 55, 60, 80, 120, 160 };
- 
- static int wm8994_set_fll(struct snd_soc_dai *dai, int id, int src,
-@@ -3992,6 +3880,18 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 
- 	snd_soc_component_init_regmap(component, control->regmap);
- 
-+	for (i = 0; i < ARRAY_SIZE(wm8994->fll_hw); ++i) {
-+		wm8994->fll_hw[i].regmap = control->regmap;
-+		if (control->type == WM8994)
-+			wm8994->fll_hw[i].desc = wm8994_fll_desc;
-+		else
-+			wm8994->fll_hw[i].desc = wm8958_fll_desc;
-+
-+		ret = wm_fll_init(&wm8994->fll_hw[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	wm8994->hubs.component = component;
- 
- 	mutex_init(&wm8994->accdet_lock);
-@@ -4013,9 +3913,6 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 
- 	INIT_DELAYED_WORK(&wm8994->mic_complete_work, wm8958_mic_work);
- 
--	for (i = 0; i < ARRAY_SIZE(wm8994->fll_locked); i++)
--		init_completion(&wm8994->fll_locked[i]);
--
- 	wm8994->micdet_irq = control->pdata.micdet_irq;
- 
- 	/* By default use idle_bias_off, will override for WM8994 */
-@@ -4166,16 +4063,6 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 		break;
- 	}
- 
--	wm8994->fll_locked_irq = true;
--	for (i = 0; i < ARRAY_SIZE(wm8994->fll_locked); i++) {
--		ret = wm8994_request_irq(wm8994->wm8994,
--					 WM8994_IRQ_FLL1_LOCK + i,
--					 wm8994_fll_locked_irq, "FLL lock",
--					 &wm8994->fll_locked[i]);
--		if (ret != 0)
--			wm8994->fll_locked_irq = false;
--	}
--
- 	/* Make sure we can read from the GPIOs if they're inputs */
- 	pm_runtime_get_sync(component->dev);
- 
-@@ -4377,9 +4264,6 @@ static int wm8994_component_probe(struct snd_soc_component *component)
- 	wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_MIC1_SHRT, wm8994);
- 	if (wm8994->micdet_irq)
- 		free_irq(wm8994->micdet_irq, wm8994);
--	for (i = 0; i < ARRAY_SIZE(wm8994->fll_locked); i++)
--		wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_FLL1_LOCK + i,
--				&wm8994->fll_locked[i]);
- 	wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_DCS_DONE,
- 			&wm8994->hubs);
- 	wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_FIFOS_ERR, component);
-@@ -4393,11 +4277,6 @@ static void wm8994_component_remove(struct snd_soc_component *component)
- {
- 	struct wm8994_priv *wm8994 = snd_soc_component_get_drvdata(component);
- 	struct wm8994 *control = wm8994->wm8994;
--	int i;
--
--	for (i = 0; i < ARRAY_SIZE(wm8994->fll_locked); i++)
--		wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_FLL1_LOCK + i,
--				&wm8994->fll_locked[i]);
- 
- 	wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_DCS_DONE,
- 			&wm8994->hubs);
-diff --git a/sound/soc/codecs/wm8994.h b/sound/soc/codecs/wm8994.h
-index 1d6f2abe1c11..9c61d95c9053 100644
---- a/sound/soc/codecs/wm8994.h
-+++ b/sound/soc/codecs/wm8994.h
-@@ -13,6 +13,7 @@
- #include <linux/mutex.h>
- 
- #include "wm_hubs.h"
-+#include "wm_fll.h"
- 
- /* Sources for AIF1/2 SYSCLK - use with set_dai_sysclk() */
- #define WM8994_SYSCLK_MCLK1 1
-@@ -80,8 +81,7 @@ struct wm8994_priv {
- 	int aifdiv[2];
- 	int channels[2];
- 	struct wm8994_fll_config fll[2], fll_suspend[2];
--	struct completion fll_locked[2];
--	bool fll_locked_irq;
-+	struct wm_fll_data fll_hw[2];
- 	bool fll_byp;
- 	bool clk_has_run;
- 
--- 
-2.20.1
-
+DQoNCk9uIDA4LzI1LzIwMTkgMDM6MDMgUE0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gRXh0
+ZXJuYWwgRS1NYWlsDQo+IA0KPiANCj4gT24gU2F0LCAyNCBBdWcgMjAxOSAxMjowMDo0MyArMDAw
+MA0KPiA8VHVkb3IuQW1iYXJ1c0BtaWNyb2NoaXAuY29tPiB3cm90ZToNCj4gDQo+PiBGcm9tOiBU
+dWRvciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gQWRkIGZ1
+bmN0aW9ucyB0byBkZWxpbWl0IHdoYXQgdGhlIGNodW5rcyBvZiBjb2RlIGRvOg0KPj4NCj4+IHN0
+YXRpYyB2b2lkIHNwaV9ub3JfaW5pdF9wYXJhbXMoKQ0KPj4gew0KPj4gCXNwaV9ub3JfbGVnYWN5
+X2luaXRfcGFyYW1zKCkNCj4+IAlzcGlfbm9yX21hbnVmYWN0dXJlcl9pbml0X3BhcmFtcygpDQo+
+PiAJc3BpX25vcl9zZmRwX2luaXRfcGFyYW1zKCkNCj4+IH0NCj4+DQo+PiBBZGQgZGVzY3JpcHRp
+b25zIHRvIGFsbCBtZXRob2RzLg0KPj4NCj4+IHNwaV9ub3JfaW5pdF9wYXJhbXMoKSBiZWNvbWVz
+IG9mIHR5cGUgdm9pZCwgYXMgYWxsIGl0cyBjaGlsZHJlbg0KPj4gcmV0dXJuIHZvaWQuDQo+Pg0K
+Pj4gU2lnbmVkLW9mZi1ieTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAu
+Y29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgfCA4MyArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+PiAgMSBmaWxlIGNoYW5n
+ZWQsIDYzIGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3Bp
+LW5vci5jDQo+PiBpbmRleCBjOTUxNGRmZDdkNmQuLjkzNDI0ZjkxNDE1OSAxMDA2NDQNCj4+IC0t
+LSBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jDQo+PiArKysgYi9kcml2ZXJzL210ZC9z
+cGktbm9yL3NwaS1ub3IuYw0KPj4gQEAgLTQxODYsNyArNDE4NiwzNCBAQCBzdGF0aWMgdm9pZCBz
+cGlfbm9yX21hbnVmYWN0dXJlcl9pbml0X3BhcmFtcyhzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPj4g
+IAkJbm9yLT5pbmZvLT5maXh1cHMtPmRlZmF1bHRfaW5pdChub3IpOw0KPj4gIH0NCj4+ICANCj4+
+IC1zdGF0aWMgaW50IHNwaV9ub3JfaW5pdF9wYXJhbXMoc3RydWN0IHNwaV9ub3IgKm5vcikNCj4+
+ICsvKioNCj4+ICsgKiBzcGlfbm9yX3NmZHBfaW5pdF9wYXJhbXMoKSAtIEluaXRpYWxpemUgdGhl
+IGZsYXNoJ3MgcGFyYW1ldGVycyBhbmQgc2V0dGluZ3MNCj4+ICsgKiBiYXNlZCBvbiBKRVNEMjE2
+IFNGRFAgc3RhbmRhcmQuDQo+PiArICogQG5vcjoJcG9pbnRlciB0byBhICdzdHJ1Y3Qgc3BpLW5v
+cicuDQo+PiArICoNCj4+ICsgKiBUaGUgbWV0aG9kIGhhcyBhIHJvbGwtYmFjayBtZWNoYW5pc206
+IGluIGNhc2UgdGhlIFNGRFAgcGFyc2luZyBmYWlscywgdGhlDQo+PiArICogbGVnYWN5IGZsYXNo
+IHBhcmFtZXRlcnMgYW5kIHNldHRpbmdzIHdpbGwgYmUgcmVzdG9yZWQuDQo+PiArICovDQo+PiAr
+c3RhdGljIHZvaWQgc3BpX25vcl9zZmRwX2luaXRfcGFyYW1zKHN0cnVjdCBzcGlfbm9yICpub3Ip
+DQo+PiArew0KPj4gKwlzdHJ1Y3Qgc3BpX25vcl9mbGFzaF9wYXJhbWV0ZXIgc2ZkcF9wYXJhbXM7
+DQo+PiArDQo+PiArCW1lbWNweSgmc2ZkcF9wYXJhbXMsICZub3ItPnBhcmFtcywgc2l6ZW9mKHNm
+ZHBfcGFyYW1zKSk7DQo+PiArDQo+PiArCWlmIChzcGlfbm9yX3BhcnNlX3NmZHAobm9yLCAmc2Zk
+cF9wYXJhbXMpKSB7DQo+PiArCQlub3ItPmFkZHJfd2lkdGggPSAwOw0KPj4gKwkJbm9yLT5mbGFn
+cyAmPSB+U05PUl9GXzRCX09QQ09ERVM7DQo+PiArCX0gZWxzZSB7DQo+PiArCQltZW1jcHkoJm5v
+ci0+cGFyYW1zLCAmc2ZkcF9wYXJhbXMsIHNpemVvZihub3ItPnBhcmFtcykpOw0KPj4gKwl9DQo+
+PiArfQ0KPj4gKw0KPj4gKy8qKg0KPj4gKyAqIHNwaV9ub3JfbGVnYWN5X2luaXRfcGFyYW1zKCkg
+LSBJbml0aWFsaXplIHRoZSBmbGFzaCdzIHBhcmFtZXRlcnMgYW5kIHNldHRpbmdzDQo+PiArICog
+YmFzZWQgb24gbm9yLT5pbmZvIGRhdGEuDQo+PiArICogQG5vcjoJcG9pbnRlciB0byBhICdzdHJ1
+Y3Qgc3BpLW5vcicuDQo+PiArICovDQo+PiArc3RhdGljIHZvaWQgc3BpX25vcl9sZWdhY3lfaW5p
+dF9wYXJhbXMoc3RydWN0IHNwaV9ub3IgKm5vcikNCj4gDQo+IE5pdHBpY2s6IGhtLCBJJ20gbm90
+IGEgYmlnIGZhbiBvZiB0aGUgJ2xlZ2FjeScgdGVybSBoZXJlIGFzIEknbSBub3Qgc3VyZQ0KPiBp
+dCByZWZsZWN0cyB0aGUgcmVhbGl0eS4gSSBndWVzcyB0aGlzIGZ1bmN0aW9uIHdpbGwgc3RheSBh
+cm91bmQsIGFuZA0KPiBldmVuIG5ldyBOT1JzIGFyZSBub3QgZ3VhcmFudGVlZCB0byBwcm92aWRl
+IFNGRFAgdGFibGVzLiBIb3cgYWJvdXQNCj4gc3BpX25vcl9zZXRfZGVmYXVsdF9wYXJhbXMoKSBv
+ciBzcGlfbm9yX2luZm9faW5pdF9wYXJhbXMoKT8NCg0KSSBjYW4gcmVuYW1lIGl0IHRvIHNwaV9u
+b3JfaW5mb19pbml0X3BhcmFtcygpIHRvIGJlIGluIHN5bmMgd2l0aA0KICAgICAgICAgICAgICAg
+ICAgIHNwaV9ub3JfbWFudWZhY3R1cmVyX2luaXRfcGFyYW1zKCkgYW5kDQogICAgICAgICAgICAg
+ICAgICAgc3BpX25vcl9zZmRwX2luaXRfcGFyYW1zKCkNCg0Kb3IgSSBjYW4gcmVuYW1lIGFsbCB0
+bzoNCnNwaV9ub3Jfc2V0X3BhcmFtcygpDQpzcGlfbm9yX3NldF9kZWZhdWx0X3BhcmFtcygpDQpz
+cGlfbm9yX3NldF9tYW51ZmFjdHVyZXJfcGFyYW1zKCkNCnNwaV9ub3Jfc2V0X3NmZHBfcGFyYW1z
+KCkNCg0KQm90aCBhcmUgb2ssIGJ1dCB0aGUgc2Vjb25kIG9wdGlvbiBzZWVtcyBiZXR0ZXIuIFdo
+YXQgd291bGQgeW91IGNob29zZT8NCg0KPiANCj4gVGhhdCdzIGp1c3QgYSBzdWdnZXN0aW9uLCBz
+byBoZXJlIGlzIG15DQo+IA0KPiBSZXZpZXdlZC1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5i
+cmV6aWxsb25AY29sbGFib3JhLmNvbT4NCj4gDQo+IGluIGNhc2UgeW91IHdhbnQgdG8gaWdub3Jl
+IGl0Lg0KPiANCj4+ICB7DQo+PiAgCXN0cnVjdCBzcGlfbm9yX2ZsYXNoX3BhcmFtZXRlciAqcGFy
+YW1zID0gJm5vci0+cGFyYW1zOw0KPj4gIAlzdHJ1Y3Qgc3BpX25vcl9lcmFzZV9tYXAgKm1hcCA9
+ICZwYXJhbXMtPmVyYXNlX21hcDsNCj4+IEBAIC00MjYwLDI1ICs0Mjg3LDQzIEBAIHN0YXRpYyBp
+bnQgc3BpX25vcl9pbml0X3BhcmFtcyhzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPj4gIAlzcGlfbm9y
+X3NldF9lcmFzZV90eXBlKCZtYXAtPmVyYXNlX3R5cGVbaV0sIGluZm8tPnNlY3Rvcl9zaXplLA0K
+Pj4gIAkJCSAgICAgICBTUElOT1JfT1BfU0UpOw0KPj4gIAlzcGlfbm9yX2luaXRfdW5pZm9ybV9l
+cmFzZV9tYXAobWFwLCBlcmFzZV9tYXNrLCBwYXJhbXMtPnNpemUpOw0KPj4gK30NCj4+ICANCj4+
+ICsvKioNCj4+ICsgKiBzcGlfbm9yX2luaXRfcGFyYW1zKCkgLSBJbml0aWFsaXplIHRoZSBmbGFz
+aCdzIHBhcmFtZXRlcnMgYW5kIHNldHRpbmdzLg0KPj4gKyAqIEBub3I6CXBvaW50ZXIgdG8gYSAn
+c3RydWN0IHNwaS1ub3InLg0KPj4gKyAqDQo+PiArICogVGhlIGZsYXNoIHBhcmFtZXRlcnMgYW5k
+IHNldHRpbmdzIGFyZSBpbml0aWFsaXplZCBiYXNlZCBvbiBhIHNlcXVlbmNlIG9mDQo+PiArICog
+Y2FsbHMgdGhhdCBhcmUgb3JkZXJlZCBieSBwcmlvcml0eToNCj4+ICsgKg0KPj4gKyAqIDEvIExl
+Z2FjeSBmbGFzaCBwYXJhbWV0ZXJzIGluaXRpYWxpemF0aW9uLiBUaGUgaW5pdGlhbGl6YXRpb25z
+IGFyZSBkb25lDQo+PiArICogICAgYmFzZWQgb24gbm9yLT5pbmZvIGRhdGE6DQo+PiArICoJCXNw
+aV9ub3JfbGVnYWN5X2luaXRfcGFyYW1zKCkNCj4+ICsgKg0KPj4gKyAqIHdoaWNoIGNhbiBiZSBv
+dmVyd3JpdHRlbiBieToNCj4+ICsgKiAyLyBNYW51ZmFjdHVyZXIgZmxhc2ggcGFyYW1ldGVycyBp
+bml0aWFsaXphdGlvbi4gVGhlIGluaXRpYWxpemF0aW9ucyBhcmUNCj4+ICsgKiAgICBkb25lIGJh
+c2VkIG9uIE1GUiByZWdpc3Rlciwgb3Igd2hlbiB0aGUgZGVjaXNpb25zIGNhbiBub3QgYmUgZG9u
+ZSBzb2xlbHkNCj4+ICsgKiAgICBiYXNlZCBvbiBNRlIsIGJ5IHVzaW5nIHNwZWNpZmljIGZsYXNo
+X2luZm8gdHdlZWtzLCAtPmRlZmF1bHRfaW5pdCgpOg0KPj4gKyAqCQlzcGlfbm9yX21hbnVmYWN0
+dXJlcl9pbml0X3BhcmFtcygpDQo+PiArICoNCj4+ICsgKiB3aGljaCBjYW4gYmUgb3ZlcndyaXR0
+ZW4gYnk6DQo+PiArICogMy8gU0ZEUCBmbGFzaCBwYXJhbWV0ZXJzIGluaXRpYWxpemF0aW9uLiBK
+RVNEMjE2IFNGRFAgaXMgYSBzdGFuZGFyZCBhbmQNCj4+ICsgKiAgICBzaG91bGQgYmUgbW9yZSBh
+Y2N1cmF0ZSB0aGF0IHRoZSBhYm92ZS4NCj4+ICsgKgkJc3BpX25vcl9zZmRwX2luaXRfcGFyYW1z
+KCkNCj4+ICsgKg0KPj4gKyAqICAgIFBsZWFzZSBub3QgdGhhdCB0aGVyZSBpcyBhIC0+cG9zdF9i
+ZnB0KCkgZml4dXAgaG9vayB0aGF0IGNhbiBvdmVyd3JpdGUgdGhlDQo+PiArICogICAgZmxhc2gg
+cGFyYW1ldGVycyBhbmQgc2V0dGluZ3MgaW1lZGlhdGVseSBhZnRlciBwYXJzaW5nIHRoZSBCYXNp
+YyBGbGFzaA0KPj4gKyAqICAgIFBhcmFtZXRlciBUYWJsZS4NCj4+ICsgKi8NCj4+ICtzdGF0aWMg
+dm9pZCBzcGlfbm9yX2luaXRfcGFyYW1zKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+PiArew0KPj4g
+KwlzcGlfbm9yX2xlZ2FjeV9pbml0X3BhcmFtcyhub3IpOw0KPj4gIA0KPj4gIAlzcGlfbm9yX21h
+bnVmYWN0dXJlcl9pbml0X3BhcmFtcyhub3IpOw0KPj4gIA0KPj4gLQlpZiAoKGluZm8tPmZsYWdz
+ICYgKFNQSV9OT1JfRFVBTF9SRUFEIHwgU1BJX05PUl9RVUFEX1JFQUQpKSAmJg0KPj4gLQkgICAg
+IShpbmZvLT5mbGFncyAmIFNQSV9OT1JfU0tJUF9TRkRQKSkgew0KPj4gLQkJc3RydWN0IHNwaV9u
+b3JfZmxhc2hfcGFyYW1ldGVyIHNmZHBfcGFyYW1zOw0KPj4gLQ0KPj4gLQkJbWVtY3B5KCZzZmRw
+X3BhcmFtcywgcGFyYW1zLCBzaXplb2Yoc2ZkcF9wYXJhbXMpKTsNCj4+IC0NCj4+IC0JCWlmIChz
+cGlfbm9yX3BhcnNlX3NmZHAobm9yLCAmc2ZkcF9wYXJhbXMpKSB7DQo+PiAtCQkJbm9yLT5hZGRy
+X3dpZHRoID0gMDsNCj4+IC0JCQlub3ItPmZsYWdzICY9IH5TTk9SX0ZfNEJfT1BDT0RFUzsNCj4+
+IC0JCX0gZWxzZSB7DQo+PiAtCQkJbWVtY3B5KHBhcmFtcywgJnNmZHBfcGFyYW1zLCBzaXplb2Yo
+KnBhcmFtcykpOw0KPj4gLQkJfQ0KPj4gLQl9DQo+PiAtDQo+PiAtCXJldHVybiAwOw0KPj4gKwlp
+ZiAoKG5vci0+aW5mby0+ZmxhZ3MgJiAoU1BJX05PUl9EVUFMX1JFQUQgfCBTUElfTk9SX1FVQURf
+UkVBRCkpICYmDQo+PiArCSAgICAhKG5vci0+aW5mby0+ZmxhZ3MgJiBTUElfTk9SX1NLSVBfU0ZE
+UCkpDQo+PiArCQlzcGlfbm9yX3NmZHBfaW5pdF9wYXJhbXMobm9yKTsNCj4+ICB9DQo+PiAgDQo+
+PiAgc3RhdGljIGludCBzcGlfbm9yX3NlbGVjdF9yZWFkKHN0cnVjdCBzcGlfbm9yICpub3IsDQo+
+PiBAQCAtNDY5MywxMCArNDczOCw4IEBAIGludCBzcGlfbm9yX3NjYW4oc3RydWN0IHNwaV9ub3Ig
+Km5vciwgY29uc3QgY2hhciAqbmFtZSwNCj4+ICAJICAgIG5vci0+aW5mby0+ZmxhZ3MgJiBTUElf
+Tk9SX0hBU19MT0NLKQ0KPj4gIAkJbm9yLT5wYXJhbXMuZGlzYWJsZV9ibG9ja19wcm90ZWN0aW9u
+ID0gc3BpX25vcl9jbGVhcl9zcl9icDsNCj4+ICANCj4+IC0JLyogUGFyc2UgdGhlIFNlcmlhbCBG
+bGFzaCBEaXNjb3ZlcmFibGUgUGFyYW1ldGVycyB0YWJsZS4gKi8NCj4+IC0JcmV0ID0gc3BpX25v
+cl9pbml0X3BhcmFtcyhub3IpOw0KPj4gLQlpZiAocmV0KQ0KPj4gLQkJcmV0dXJuIHJldDsNCj4+
+ICsJLyogSW5pdCBmbGFzaCBwYXJhbWV0ZXJzIGJhc2VkIG9uIGZsYXNoX2luZm8gc3RydWN0IGFu
+ZCBTRkRQICovDQo+PiArCXNwaV9ub3JfaW5pdF9wYXJhbXMobm9yKTsNCj4+ICANCj4+ICAJaWYg
+KCFtdGQtPm5hbWUpDQo+PiAgCQltdGQtPm5hbWUgPSBkZXZfbmFtZShkZXYpOw0KPiANCj4gDQo+
+IA0K
