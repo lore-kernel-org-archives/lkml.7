@@ -2,109 +2,112 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743BBC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681B9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4014A2173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jBo1RDXc"
+	by mail.kernel.org (Postfix) with ESMTP id 43CAD20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfHYVT2 (ORCPT
+        id S1729074AbfHYVTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 17:19:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43903 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbfHYVT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 17:19:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Gp181YlRz9sDB;
-        Mon, 26 Aug 2019 07:19:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566767964;
-        bh=qt4Itlsc6WLieV0IdMhZdJ3KT4pry9RhsobHoCuAOn8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jBo1RDXcsKidmj48UPKdGQB3qFkP8+uygBNZS/LdQsv0gxVlOG9mNucCXghw1m1aS
-         tFrWpMT5l9WSJurAhjr9eu9pdQKN6m4xOh61R0eyMWLbtEISkqhMuvLgnS9Quh96B9
-         ZoYHZiqxG4Byggs9slL0GjCJmX6SVeSos/F6aFMufRDPPMHOWrnz/+EicTJZYiZiMs
-         a0mikOyjYAOuDrU7ivRgvzOkSZVFrt1o/lcRPlqgHfd19Z8qj+H2/QwcG8E16bLe++
-         GlUuVT1o4HAC+GSNu3uhHGw7s+yqbFfpH3vpLLO8vdGqvt0C8q+IwpK67hYnkq0Wb0
-         5oj+XAg0EAEKA==
-Date:   Mon, 26 Aug 2019 07:19:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: linux-next: Fixes tag needs some work in the leds tree
-Message-ID: <20190826071917.44d44598@canb.auug.org.au>
+        Sun, 25 Aug 2019 17:19:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44901 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728944AbfHYVTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 17:19:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e24so13244339ljg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 14:19:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XAGbIDdFga1X2HlsM3DdDuO+5VUileKxN3AsXn36/xY=;
+        b=PdlCHmffCCrSZO/JGd1pD4URjz/3MmNUpLc6+6cifx0wYNMMnIc4ihsxv6wmWfxs+N
+         Zam7b7QA6yeDZtjWyUvyI/kklrcm+HF00dzCnrT6eECoPwiDTIbgZLcbL2M4euUuLSNU
+         01j8zxJ91qhvyobvma2SSYWxHXIdVbEU15arTjN85+6+mfTiCtH5JVm5lfUIZJlS3BHh
+         50ThOoqpoLT44CWYCoiXA0H2ZRgCHdvkmphZ57kkmTcpimARzWFqNmcFltYKjDTr8pXl
+         +KT5I/1k/QuzC5P+seofYK/OEQf9Z/VvqY1l2DjjSG7HdtRwplTu1PIt4a0ElDj2x7BL
+         dm+Q==
+X-Gm-Message-State: APjAAAV2AR/txDOUZ5CqUNg1HM9vcONsSxcwtV+ouRxvzS3x02KolVNt
+        9ODdVE631VCfQJutaMKzngMdwOX4
+X-Google-Smtp-Source: APXvYqy8P4V6TzHzyfGdKLQHZ8Clh8NRX1pSFmfp2r760J2XBalgrBjfT6OhBC7Fdns2DUts2xzEQQ==
+X-Received: by 2002:a2e:875a:: with SMTP id q26mr8656162ljj.107.1566767975775;
+        Sun, 25 Aug 2019 14:19:35 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id f28sm1516386lfp.28.2019.08.25.14.19.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Aug 2019 14:19:35 -0700 (PDT)
+Subject: Re: [PATCH] scripts: coccinelle: check for !(un)?likely usage
+From:   Denis Efremov <efremov@linux.com>
+To:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr
+Cc:     linux-kernel@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>
+References: <20190825130536.14683-1-efremov@linux.com>
+ <b5bae2981e27d133b61d99b08ee60244bf7aabe3.camel@perches.com>
+ <88f6e48e-1230-9488-a973-397f4e6dfbb5@linux.com>
+Message-ID: <25032fea-bda4-a491-def3-05bb5f569875@linux.com>
+Date:   Mon, 26 Aug 2019 00:19:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Hf9sltObuOb.i43PMh5881o";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <88f6e48e-1230-9488-a973-397f4e6dfbb5@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Hf9sltObuOb.i43PMh5881o
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> I think it's incorrect to say so in general. For example, on x86/64:
+> 
+> $ make mrproper
+> $ make allyesconfig
+> $ make && mv vmlinux vmlinux-000
+> $ make coccicheck MODE=patch COCCI=scripts/coccinelle/misc/unlikely.cocci | patch -p1
+> $ make 
+> $ ./scripts/bloat-o-meter ./vmlinux-000 ./vmlinux
+> add/remove: 0/0 grow/shrink: 3/4 up/down: 41/-35 (6)
+> Function                                     old     new   delta
+> dpaa2_io_service_rearm                       357     382     +25
+> intel_pmu_hw_config                         1277    1285      +8
+> get_sigframe.isra.constprop                 1657    1665      +8
+> csum_partial_copy_from_user                  605     603      -2
+> wait_consider_task                          3807    3797     -10
+> __acct_update_integrals                      384     373     -11
+> pipe_to_sendpage                             459     447     -12
+> Total: Before=312759461, After=312759467, chg +0.00%
+> 
+> It definitely influence the way the compiler optimizes the code.  
 
-Hi all,
+Small addition:
 
-In commit
+Results with allyesconfig and KCOV, KASAN, KUBSAN, FTRACE, TRACE_BRANCH_PROFILING,
+PROFILE_ALL_BRANCHES disabled:
+./scripts/bloat-o-meter ./vmlinux-000 ./vmlinux
+add/remove: 0/0 grow/shrink: 2/3 up/down: 22/-22 (0)
+Function                                     old     new   delta
+i40e_xmit_xdp_ring                           457     477     +20
+__acct_update_integrals                      127     129      +2
+csum_partial_copy_from_user                  208     207      -1
+dpaa2_io_service_rearm                       180     177      -3
+wait_consider_task                          1338    1320     -18
 
-  3f5381c2ba60 ("leds: lm3532: Fixes for the driver for stability")
+For defconfig:
+./scripts/bloat-o-meter ./vmlinux-000 ./vmlinux 
+add/remove: 0/0 grow/shrink: 3/1 up/down: 16/-5 (11)
+Function                                     old     new   delta
+do_signal                                   1513    1521      +8
+wait_consider_task                          2151    2157      +6
+__acct_update_integrals                      127     129      +2
+csum_partial_copy_from_user                  223     218      -5
 
-Fixes tag
-
-  Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-In commit
-
-  c4b8354e5341 ("leds: lm3532: Fix brightness control for i2c mode")
-
-Fixes tag
-
-  Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: bc1b8492c764 ("leds: lm3532: Introduce the lm3532 LED driver")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Hf9sltObuOb.i43PMh5881o
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1i+1UACgkQAVBC80lX
-0GzmWgf/TIBObmQGE2Sm5ObgGBUoWqyIojFgGS39XCPtc7aEks9Rhhm1CKjmdbqT
-KWn3XJQgEqDQ3b1FbUYHcUUWKRbuey/z8tMxOKKItHjkNh9AjcFtz7zJv5XoiDmc
-24u9V96R++aAAiLpxSKSRFjGFOMcy+z0w6GOTuog83qWhyK/ka8q0WV+DJiUnZpn
-0Elhd8Miqypy/MV/2W6H9fudz+dUBdiEgYECVEwm24cP9DFBqQteOQ9VUDLgJsQm
-y3aDP+BxlpEj95XDgIZJ8nVih0zPWYpub/shvUOjaXV/reG/fbaBa3XYQRXmkcgi
-BhNzOCxdn0SW4fH0Zy+qbBOUmhSk5g==
-=Infu
------END PGP SIGNATURE-----
-
---Sig_/Hf9sltObuOb.i43PMh5881o--
+Denis
