@@ -1,158 +1,114 @@
-Return-Path: <SRS0=py8C=WU=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6497C3A59E
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 23:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D321C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 00:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB8D214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 24 Aug 2019 23:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD992082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 00:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566691112;
-	bh=M1/H4AHqbV1FG5SmdVNCBOq8Z72AscE8HXdy4tYQpkQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ehmasuZYOeljn4W4Hl8BNQpQDDQXA8HycynVbfTrIxQfKa3BRqznhtAtwR55Lj/U6
-	 jQr8gdhrkt4aBMaznaJTg5XWJ4bwhqV3lzccIegJjD8PtEcEl/2gW1hBchLv9nY4nO
-	 nQacLsj312fO8p9VZW8lP14kGhZbftwnpxRg5EtY=
+	s=default; t=1566691702;
+	bh=2N9Dfvtue7/UaW9AT3W2m/GlFrrjff4ldFX+mK31j9o=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Ijf6nzORtuiSioWmbl4ICUQpRke6mWqA97MX7SS/uTedDlrMMTKY2sC0FGbFmPloD
+	 fuFg/69nRJBWceQples/9vyHpR9yQpa+kE3dKEt05D5R3+5+dkOhXFKIkxuCZ1rBks
+	 +8yco9wQrWHAJ0K6sL//afn+gdtB0y+yjFcH2HOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfHXX6b (ORCPT
+        id S1728304AbfHYAIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 19:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33202 "EHLO mail.kernel.org"
+        Sat, 24 Aug 2019 20:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727708AbfHXX6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 19:58:31 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727879AbfHYAIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 24 Aug 2019 20:08:21 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 952CB2146E;
-        Sat, 24 Aug 2019 23:58:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D10206E0;
+        Sun, 25 Aug 2019 00:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566691110;
-        bh=M1/H4AHqbV1FG5SmdVNCBOq8Z72AscE8HXdy4tYQpkQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VLmmmAQYvM86BVLQ3rx0sIRgOgK8wmNWAuTRLEvk0FKsiaGPjojwAz/OBewTTd3yU
-         g+sz34F3MFg7Om9mm40XY7ji/6KHpCcL1CFvgw7typaRwp66ac+yKY3YA0OsvC2xDN
-         rAXVTmMYQoTcLL71fZknTaaZVJb1irAy0cC3wGuc=
-Date:   Sat, 24 Aug 2019 16:58:29 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
-Message-Id: <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
-In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
-References: <20190824233724.1775-1-uwe@kleine-koenig.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        s=default; t=1566691700;
+        bh=2N9Dfvtue7/UaW9AT3W2m/GlFrrjff4ldFX+mK31j9o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=X0iSHGc1EBzCjxPCO8IU4tN9W76L2HCxx8H7V+8Em/tGj1RUQ75zPEOqjN3un/yGo
+         O7+FJk8vIdcUxVON+h3b1k13TaecYmMti+2rNvNnWHTd9drzCQHxYNCKbk2wcMn2s/
+         0cPBWaUnRu39+au8Y3f7P1aQJRlC+2CHzs+sFIIE=
+Subject: Re: [PATCH 5.2 000/135] 5.2.10-stable review
+To:     Greg KH <greg@kroah.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, shuah <shuah@kernel.org>
+References: <20190822170811.13303-1-sashal@kernel.org>
+ <00216731-a088-7d47-eafb-70409f876bda@kernel.org>
+ <20190824023829.GE9862@kroah.com>
+ <e4d5ba59-8e38-a267-8a14-3c6bc03f77bd@kernel.org>
+ <20190824153348.GA27505@kroah.com>
+ <93850e40-7df9-b5db-bda4-5b4354d2c3f3@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ebc10349-575a-868e-247b-56b84241506a@kernel.org>
+Date:   Sat, 24 Aug 2019 18:08:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <93850e40-7df9-b5db-bda4-5b4354d2c3f3@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/24/19 11:01 AM, shuah wrote:
+> On 8/24/19 9:33 AM, Greg KH wrote:
+>> On Sat, Aug 24, 2019 at 09:21:53AM -0600, shuah wrote:
+>>> On 8/23/19 8:38 PM, Greg KH wrote:
+>>>> On Fri, Aug 23, 2019 at 12:41:03PM -0600, shuah wrote:
+>>>>> On 8/22/19 11:05 AM, Sasha Levin wrote:
+>>>>>>
+>>>>>> This is the start of the stable review cycle for the 5.2.10 release.
+>>>>>> There are 135 patches in this series, all will be posted as a 
+>>>>>> response
+>>>>>> to this one.  If anyone has any issues with these being applied, 
+>>>>>> please
+>>>>>> let me know.
+>>>>>>
+>>>>>> Responses should be made by Sat 24 Aug 2019 05:07:10 PM UTC.
+>>>>>> Anything received after that time might be too late.
+>>>>>>
+>>>>>> The whole patch series can be found in one patch at:
+>>>>>>            
+>>>>>> https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.10-rc1.gz 
+>>>>>>
+>>>>>
+>>>>> I am seeing "Sorry I can't find your kernels". Is this posted?
+>>>>
+>>>> Ah, Sasha didn't generate the patch but it was still listed here, oops.
+>>>> He copied my format and we didn't notice this, sorry about that.
+>>>>
+>>>> As the thread shows, we didn't generate this file this time to see what
+>>>> would happen.  If your test process requires it, we can generate it 
+>>>> as I
+>>>> don't want to break it.
+>>>>
+>>>
+>>> It will make it lot easier for me to have continued support for patch
+>>> generation. My scripts do "wget" to pull the patch and apply.
+>>
+>> Ok, we will get this back and working, sorry about that.
+>>
+> 
+> Great. Thanks for accommodating my workflow.
+> 
 
-(cc printk maintainers).
+Compiled and booted on my test system. No dmesg regressions.
 
-On Sun, 25 Aug 2019 01:37:23 +0200 Uwe Kleine-K=F6nig <uwe@kleine-koenig.or=
-g> wrote:
-
-> 	pr_info("probing failed (%dE)\n", ret);
->=20
-> expands to
->=20
-> 	probing failed (EIO)
->=20
-> if ret holds -EIO (or EIO). This introduces an array of error codes. If
-> the error code is missing, %dE falls back to %d and so prints the plain
-> number.
-
-Huh.  I'm surprised we don't already have this.  Seems that this will
-be applicable in a lot of places?  Although we shouldn't go blindly
-converting everything in sight - that would risk breaking userspace
-which parses kernel strings.
-
-Is it really necessary to handle the positive errnos?  Does much kernel
-code actually do that (apart from kernel code which is buggy)?
-
-> Signed-off-by: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
-> ---
-> Hello
->=20
-> there are many code sites that benefit from this. Just grep for
-> "(%d)" ...
-
-Yup.  This observation shouldn't be below the "^---$" ;) An approximate
-grep|wc would be interesting.
-
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long lo=
-ng num,
->  	return buf;
->  }
-> =20
-> +#define ERRORCODE(x) { .str =3D #x, .err =3D x }
-> +
-> +static const struct {
-> +	const char *str;
-> +	int err;
-> +} errorcodes[] =3D {
-
-It's a bit of a hack, but an array of char*'s and a separate array of
-ushorts would save a bit of space.
-
-> +	ERRORCODE(EPERM),
-> +	ERRORCODE(ENOENT),
-> +	ERRORCODE(ESRCH),
->
-> ...
->
-> +static noinline_for_stack
-
-Why this?  I'm suspecting this will actually increase stack use?
-
-> +char *errstr(char *buf, char *end, unsigned long long num,
-> +	     struct printf_spec spec)
-> +{
-> +	char *errname =3D NULL;
-> +	size_t errnamelen, copy;
-> +	int i;
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(errorcodes); ++i) {
-> +		if (num =3D=3D errorcodes[i].err || num =3D=3D -errorcodes[i].err) {
-> +			errname =3D errorcodes[i].str;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!errname) {
-> +		/* fall back to ordinary number */
-> +		return number(buf, end, num, spec);
-> +	}
-> +
-> +	copy =3D errnamelen =3D strlen(errname);
-> +	if (copy > end - buf)
-> +		copy =3D end - buf;
-> +	buf =3D memcpy(buf, errname, copy);
-> +
-> +	return buf + errnamelen;
-> +}
-
-OK, I guess `errstr' is an OK name for a static function and we can use
-this to add a new strerror() should the need arise.
-
->
-> ...
->
+thanks,
+-- Shuah
