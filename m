@@ -2,140 +2,134 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41A4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 10:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F31CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 10:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA75F2173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 10:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FDC2173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 10:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566730144;
+	bh=EGXjesknDjQ3X9Y1jN4dtN19eOCjf4sdQsdHYvPLCoA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=at74N7ibPn4MVqpv/7QycI7HWpB8IiQNCmATuRq4vfzuxcO8Gay/1qmJzFH+Qdwmk
+	 +uTbPKIN68W7+z3VfFyuiJ2kFnNjkrP3CIxvP0zE6f6l0POPn2RSfRHRz79cBThGL1
+	 v0jWV8kZwMgZTzOeVm37hh1A7Okm8PjCSEiRM++I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfHYKoS (ORCPT
+        id S1727372AbfHYKtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 06:44:18 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:52882 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfHYKoS (ORCPT
+        Sun, 25 Aug 2019 06:49:03 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54543 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbfHYKtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 06:44:18 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: KPowbCFFfu7Y3KlmeQGDPM/RyuZmKwIUCA3+Aqoii0ObaQkphb31QOYaiWau7lTfXeXuuBBC/3
- BWCXEUw2oRbY1EXQq4ArsHGYog9IzfPFzgMUMmxuBC1GaCK0E2TYjpw5zihVfG0AY4fCj6BXhs
- 9x8QtiAg2EuczCeBrAiFfBlxUlaFwXlZeNAXbSfkACVrpiv6aTD1qcsxJUpUF97oteAAbtq82W
- aBQR1k/lUF1O0YGOwkZRw1Ktq7DIy6Z+NJ7oR3WYn1Msc5bBbz1Xgj+stRKzoDAgv/4sseW+T2
- sRg=
-X-IronPort-AV: E=Sophos;i="5.64,429,1559545200"; 
-   d="scan'208";a="46440873"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2019 03:44:16 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 25 Aug 2019 03:44:16 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sun, 25 Aug 2019 03:44:15 -0700
-Date:   Sun, 25 Aug 2019 12:44:15 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-CC:     Andrew Lunn <andrew@lunn.ch>, <roopa@cumulusnetworks.com>,
-        <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <UNGLinuxDriver@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <allan.nielsen@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH 1/3] net: Add HW_BRIDGE offload feature
-Message-ID: <20190825104413.ftnarx46hhym632w@soft-dev3.microsemi.net>
-References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
- <1566500850-6247-2-git-send-email-horatiu.vultur@microchip.com>
- <20190822200817.GD21295@lunn.ch>
- <20190823123929.ta4ikozz7jwkwbo2@soft-dev3.microsemi.net>
- <afde1b82-2e4c-5b93-ff31-83cb80a0f7bd@gmail.com>
+        Sun, 25 Aug 2019 06:49:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so12779059wme.4
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 03:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EuOrk7OFqMZzRP0gnD8pxO4CA4pMLfqEW2VZlPeV5Do=;
+        b=BJxNzxHhkLL9+WFcEOrqDGJ8Aua5n7uIXugDlxRngFZlh60beDCM7q6LbidNMpCQzx
+         jwk92LU75FD7xHeXmOPo1/HKJT7PT0i1e//SkFQ7MmiBCql5Fjcl+IlOWqdxHkbZSm9Q
+         2mGZ3m3kJ7WomzaauNg6kbE6iVQkBNXxINoOtXEAFcYmrbQrXx6rKmgb5McNSrN9KYTr
+         ruzM0y4I5zy0tDIIGz5yZZ7O1/2eRgmj8NE/Wmr46p7ALgZpM8gNhLI9x5PmTRwWAjsA
+         Hk7BfX2ulwmEqv7L9hacXYRg69BMqkgtwMmlmzoPDUeGGZDr+J17PpqIg4B6J3TPNAQj
+         dT1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EuOrk7OFqMZzRP0gnD8pxO4CA4pMLfqEW2VZlPeV5Do=;
+        b=OecWpM86NWn+o9A+F+B8o3OS19+lqyhfvdPw9U/eRXTOuu5IZ18CvPylaupOb+T+Tu
+         i/+XJ4AhE/D5wRGHgcmjB9HdmFR89hwJEJT1sOdIugaGOjac0pKwac8L8lAQfbSislj7
+         hPi3Zv9NxwDLgDSzyXdyivdk1MyjzLWmNS2vBgMxDXi75NfUgwjwVYdAUlUP2VACropu
+         f7ku+6DhGkuQEQJwBfdm2vi8M0LW2ZBzZ3IVTw1/PFsZxgrVAnemU+sBnRO7fYj4+Nf3
+         NbsngJC13kcQSE09gHd8fYUj+GmzqOzZqq5egRiQz1NlK0ZwsbmsHGpknxlzxy/7TppO
+         Yi1A==
+X-Gm-Message-State: APjAAAWRBORbRDwalumQHnlbX5kzGlTQ+88PEyb47VbsmJNJs1bn02Ge
+        1v51BDpvtvf02IXQ9V/VqIaEL8Jv
+X-Google-Smtp-Source: APXvYqyL7eeA2qdDKZoDyAH6Nu/iUfbBhNeJ/hfjMT66OfHp3Yd+vs6QKBLQ1p5jfjF8bE7SlrUy1A==
+X-Received: by 2002:a7b:cf09:: with SMTP id l9mr15200845wmg.20.1566730140613;
+        Sun, 25 Aug 2019 03:49:00 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id m19sm7606361wml.28.2019.08.25.03.48.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 03:49:00 -0700 (PDT)
+Date:   Sun, 25 Aug 2019 12:48:58 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+Message-ID: <20190825104858.GA119494@gmail.com>
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
+ <20190823091636.GA10064@gmail.com>
+ <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
+ <20190824161432.GA25950@gmail.com>
+ <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
+ <20190824202224.GA5286@gmail.com>
+ <ab9ccf3c-6b87-652e-b305-41f2c2d1b2ae@i-love.sakura.ne.jp>
+ <20190825095908.GA116866@gmail.com>
+ <cfc26ac5-b674-5d42-05f8-c978613aaf29@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <afde1b82-2e4c-5b93-ff31-83cb80a0f7bd@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <cfc26ac5-b674-5d42-05f8-c978613aaf29@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 08/23/2019 16:30, Florian Fainelli wrote:
-> External E-Mail
-> 
-> 
-> On 8/23/19 5:39 AM, Horatiu Vultur wrote:
-> > The 08/22/2019 22:08, Andrew Lunn wrote:
-> >> External E-Mail
-> >>
-> >>
-> >>> +/* Determin if the SW bridge can be offloaded to HW. Return true if all
-> >>> + * the interfaces of the bridge have the feature NETIF_F_HW_SWITCHDEV set
-> >>> + * and have the same netdev_ops.
-> >>> + */
-> >>
-> >> Hi Horatiu
-> >>
-> >> Why do you need these restrictions. The HW bridge should be able to
-> >> learn that a destination MAC address can be reached via the SW
-> >> bridge. The software bridge can then forward it out the correct
-> >> interface.
-> >>
-> >> Or are you saying your hardware cannot learn from frames which come
-> >> from the CPU?
-> >>
-> >> 	Andrew
-> >>
-> > Hi Andrew,
-> > 
-> > I do not believe that our HW can learn from frames which comes from the
-> > CPU, at least not in the way they are injected today. But in case of Ocelot
-> > (and the next chip we are working on), we have other issues in mixing with
-> > foreign interfaces which is why we have the check in
-> > ocelot_netdevice_dev_check.
-> > 
-> > More important, as we responded to Nikolay, we properly introduced this
-> > restriction for the wrong reasons.
-> > 
-> > In SW bridge I will remove all these restrictions and only set ports in
-> > promisc mode only if NETIF_F_HW_BRIDGE is not set.
-> > Then in the network driver I can see if a foreign interface is added to
-> > the bridge, and when that happens I can set the port in promisc mode.
-> > Then the frames will be flooded to the SW bridge which eventually will
-> > send to the foreign interface.
-> 
-> Is that really necessary?
-From what I see, it seems to be necessary.
 
-> Is not the skb->fwd_offload_mark as well as
-> the phys_switch_id supposed to tell that information to the bridge already?
-Yes, the bridge is using the fwd_offload_mark to know that it should or
-should not forward the frame. But in case that the network driver knows
-that the SW bridge will not do anything with the frame, then there is no
-point to send the frame to SW bridge just to use CPU cycles for dropping
-the frame.
-> -- 
-> Florian
+* Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
 
--- 
-/Horatiu
+> >  - We should probably separate out a third 'fatal error' variant: for 
+> >    example if copying to user-space generates a page fault, then we 
+> >    clearly should not pretend that all is fine and return a short read 
+> >    even if we made some progress, a -EFAULT is more informative, as we 
+> >    might have corrupted (overran) some user buffer on the failed copy as 
+> >    well, and ran off the end into the first unmapped user area.
+> 
+> Is it possible that copy_from_user() corrupts user buffer in a way that userspace
+> cannot retry when kernel responded with "there was a short write"? It seems that
+> these functions are difficult to return appropriate errors...
+
+In the cleanest implementation I believe should be done is to 
+differentiate between 'kernel side errors' and 'user side errors':
+
+ - 'kernel side errors' are conditions that relate to the layout of 
+   kernel memory: some areas might not be readable, and there might be 
+   cachability restrictions - or the kernel ran out of memory. In this 
+   case it's not user-space's "fault" that they ran into an error and 
+   returning a partial read might improve the whole read process, as 
+   user-space can decide to continue reading at the last offset that was 
+   read - and would also be able to extract all information that can be 
+   extracted.
+
+ - 'user side errors' on the other hand are conditions that are probably 
+   a user-space bug: such as trying to read() too much data into a too 
+   small buffer, running off the end of it and potentially generating a 
+   -EFAULT. In this case the kernel should not return a short read, but 
+   escalate the error immediately - bugs are easier to find the earlier 
+   the condition is reported.
+
+So this is why I think it would make sense to have two error labels: 
+"failure" and "fatal_failure". The "failure" case would return a partial 
+read if possible (and an error if not), the "fatal_failure" would return 
+an error immediately.
+
+This is probably a tad over-engineered, but since you asked ... ;-)
+
+Thanks,
+
+	Ingo
