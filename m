@@ -2,208 +2,161 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAE6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB584C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E2322CF5
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EED2173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="b7+f8EmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfHYN2P (ORCPT
+        id S1728428AbfHYN25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 09:28:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38396 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfHYN2P (ORCPT
+        Sun, 25 Aug 2019 09:28:57 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:20106 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfHYN24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 09:28:15 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 647A0289C85;
-        Sun, 25 Aug 2019 14:28:13 +0100 (BST)
-Date:   Sun, 25 Aug 2019 15:28:10 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     <marek.vasut@gmail.com>, <vigneshr@ti.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] mtd: spi-nor: Move clear_sr_bp() to 'struct
- spi_nor_flash_parameter'
-Message-ID: <20190825152810.6fcac067@collabora.com>
-In-Reply-To: <6485db42-4449-cc9b-8e09-0ad89b259a8b@microchip.com>
-References: <20190823155325.13459-1-tudor.ambarus@microchip.com>
-        <20190823155325.13459-5-tudor.ambarus@microchip.com>
-        <20190825150927.5374b1ea@collabora.com>
-        <6485db42-4449-cc9b-8e09-0ad89b259a8b@microchip.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 25 Aug 2019 09:28:56 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7PDSdou010046;
+        Sun, 25 Aug 2019 22:28:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7PDSdou010046
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566739720;
+        bh=M3TaxD8h5AxdPaHwejIeBEgX0+/Cg4lSUkEdsJeef3A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b7+f8EmK8KBoXQqGYjaNpfyiu4TMwEsKWfJNQIhCUITjRQiMjkKCCL1/Sr5/KNICq
+         pyBN3GNovyRTEDjHf8xbBLC+Opcdy2Rvu4ptDEP3YTOvT+pNizG3GkB6UFA3d3wUs6
+         Im3KK4KI5t+6ntnxxhZh8KXFzli3LBhWBfAYW358F0Y3+/zLtehsK7xub4zSvVkK4O
+         HPCMq4iPbWlosyagT7jDDkaKfm9zDMATdFaE0TXCyEsdTanYMCaHf8tLDdjoC7lQcc
+         Vdc4b9ZKFOhTsn3vKz49FHB89D12OckpAzAlk1yytl/x7e2RJlxF6H/EzR+GcVKHmy
+         2JPdqyJN6MZsg==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: add $(BASH) to run scripts with bash-extension
+Date:   Sun, 25 Aug 2019 22:28:37 +0900
+Message-Id: <20190825132837.13873-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 25 Aug 2019 13:19:57 +0000
-<Tudor.Ambarus@microchip.com> wrote:
+CONFIG_SHELL falls back to sh when bash is not installed on the system,
+but nobody is testing such a case since bash is usually installed.
+That is, shell scripts invoked by CONFIG_SHELL are only tested with
+bash.
 
-> On 08/25/2019 04:09 PM, Boris Brezillon wrote:
-> > On Fri, 23 Aug 2019 15:53:41 +0000
-> > <Tudor.Ambarus@microchip.com> wrote:
-> >   
-> >> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> >>
-> >> All flash parameters and settings should reside inside
-> >> 'struct spi_nor_flash_parameter'. Move clear_sr_bp() from
-> >> 'struct spi_nor' to 'struct spi_nor_flash_parameter'.
-> >>
-> >> Rename clear_sr_bp()/disable_block_protection() to better indicate
-> >> what the function does.
-> >>
-> >> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> >> ---
-> >>  drivers/mtd/spi-nor/spi-nor.c | 47 +++++++++++++++++++++++++++++++++----------
-> >>  include/linux/mtd/spi-nor.h   |  5 ++---
-> >>  2 files changed, 38 insertions(+), 14 deletions(-)
-> >>
-> >> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> >> index 6bd104c29cd9..15b0b1148bf3 100644
-> >> --- a/drivers/mtd/spi-nor/spi-nor.c
-> >> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> >> @@ -4477,20 +4477,45 @@ static int spi_nor_quad_enable(struct spi_nor *nor)
-> >>  	return nor->params.quad_enable(nor);
-> >>  }
-> >>  
-> >> +/**
-> >> + * spi_nor_disable_block_protection() - Disable the write block protection
-> >> + * during power-up.
-> >> + * @nor:                pointer to a 'struct spi_nor'
-> >> + *
-> >> + * Some spi-nor flashes are write protected by default after a power-on reset
-> >> + * cycle, in order to avoid inadvertend writes during power-up. Backward
-> >> + * compatibility imposes to disable the write block protection at power-up
-> >> + * by default.
-> >> + *
-> >> + * Return: 0 on success, -errno otherwise.
-> >> + */
-> >> +static int spi_nor_disable_block_protection(struct spi_nor *nor)
-> >> +{
-> >> +	if (!nor->params.disable_block_protection)
-> >> +		return 0;
-> >> +
-> >> +	/*
-> >> +	 * In case of the legacy quad enable requirements are set, if the
-> >> +	 * configuration register Quad Enable bit is one, only the the
-> >> +	 * Write Status (01h) command with two data bytes may be used to clear
-> >> +	 * the block protection bits.
-> >> +	 */
-> >> +	if (nor->params.quad_enable == spansion_quad_enable)
-> >> +		nor->params.disable_block_protection =
-> >> +			spi_nor_spansion_clear_sr_bp;  
-> > 
-> > Hm, doesn't look right to adjust the function pointer just before
-> > calling it. Can't we move that logic earlier (when doing the
-> > default/manufacturer specific init)? Also, as I said in one of my  
-> 
-> No, we can't move it earlier to ->default_init() because the pointer to
-> quad_enable() function can be modified later on, when parsing SFDP. This should
-> stay here, after the quad_enable() method is known, so after the
-> spi_nor_init_params() call.
-> 
-> 
-> > previous emails, I'd prefer to have this hook moved to
-> > spi_nor_locking_ops and just have a flag to reflect when block
-> > protection can be disabled.  
-> 
-> yes, I agree, will move.
+It makes it difficult to test whether the hashbang #!/bin/sh is real.
+In fact, I saw some patches trying to add bash-extension to #!/bin/sh
+script.
 
-That won't work: ->locking_ops is const, meaning that you can't update
-individual fields (which I consider a good thing). As I see it, the
-locking scheme is a package that describe how to lock/unlock blocks, be
-it individually, by groups or globally. I really hope we can take this
-decision on a per-manufacturer basis, but I fear it might actually be a
-per-chip thing.
+Besides, some shell scripts invoked by CONFIG_SHELL use bash-extension
+and #!/bin/bash is specified as the hashbang, while CONFIG_SHELL may
+not always be set to bash.
 
-> 
-> >   
-> >> +
-> >> +	return nor->params.disable_block_protection(nor);
-> >> +}
-> >> +
-> >>  static int spi_nor_init(struct spi_nor *nor)
-> >>  {
-> >>  	int err;
-> >>  
-> >> -	if (nor->clear_sr_bp) {
-> >> -		if (nor->quad_enable == spansion_quad_enable)
-> >> -			nor->clear_sr_bp = spi_nor_spansion_clear_sr_bp;
-> >> -
-> >> -		err = nor->clear_sr_bp(nor);
-> >> -		if (err) {
-> >> -			dev_err(nor->dev,
-> >> -				"fail to clear block protection bits\n");
-> >> -			return err;
-> >> -		}
-> >> +	err = spi_nor_disable_block_protection(nor);
-> >> +	if (err) {
-> >> +		dev_err(nor->dev,
-> >> +			"fail to unlock the flash at init (err = %d)\n", err);
-> >> +		return err;
-> >>  	}
-> >>  
-> >>  	err = spi_nor_quad_enable(nor);
-> >> @@ -4635,7 +4660,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
-> >>  	    JEDEC_MFR(nor->info) == SNOR_MFR_INTEL ||
-> >>  	    JEDEC_MFR(nor->info) == SNOR_MFR_SST ||
-> >>  	    nor->info->flags & SPI_NOR_HAS_LOCK)
-> >> -		nor->clear_sr_bp = spi_nor_clear_sr_bp;
-> >> +		nor->params.disable_block_protection = spi_nor_clear_sr_bp;
-> >>  
-> >>  	/* Parse the Serial Flash Discoverable Parameters table. */
-> >>  	ret = spi_nor_init_params(nor);
-> >> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> >> index 17787238f0e9..399ac34a529d 100644
-> >> --- a/include/linux/mtd/spi-nor.h
-> >> +++ b/include/linux/mtd/spi-nor.h
-> >> @@ -480,6 +480,7 @@ struct spi_nor;
-> >>   * @page_programs:	page program capabilities ordered by priority: the
-> >>   *                      higher index in the array, the higher priority.
-> >>   * @quad_enable:	enables SPI NOR quad mode.
-> >> + * @disable_block_protection: disables block protection during power-up.
-> >>   */
-> >>  struct spi_nor_flash_parameter {
-> >>  	u64				size;
-> >> @@ -490,6 +491,7 @@ struct spi_nor_flash_parameter {
-> >>  	struct spi_nor_pp_command	page_programs[SNOR_CMD_PP_MAX];
-> >>  
-> >>  	int (*quad_enable)(struct spi_nor *nor);
-> >> +	int (*disable_block_protection)(struct spi_nor *nor);
-> >>  };
-> >>  
-> >>  /**
-> >> @@ -535,8 +537,6 @@ struct flash_info;
-> >>   * @flash_unlock:	[FLASH-SPECIFIC] unlock a region of the SPI NOR
-> >>   * @flash_is_locked:	[FLASH-SPECIFIC] check if a region of the SPI NOR is
-> >>   *			completely locked
-> >> - * @clear_sr_bp:	[FLASH-SPECIFIC] clears the Block Protection Bits from
-> >> - *			the SPI NOR Status Register.
-> >>   * @params:		[FLASH-SPECIFIC] SPI-NOR flash parameters and settings.
-> >>   *                      The structure includes legacy flash parameters and
-> >>   *                      settings that can be overwritten by the spi_nor_fixups
-> >> @@ -578,7 +578,6 @@ struct spi_nor {
-> >>  	int (*flash_lock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
-> >>  	int (*flash_unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
-> >>  	int (*flash_is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
-> >> -	int (*clear_sr_bp)(struct spi_nor *nor);
-> >>  	struct spi_nor_flash_parameter params;
-> >>  
-> >>  	void *priv;  
-> > 
-> >   
+Probably, the right thing to do is to introduce BASH that is bash by
+default, and always set CONFIG_SHELL to sh. Replace $(CONFIG_SHELL)
+with $(BASH) for #!/bin/bash scripts.
+
+If somebody tries to add bash-extension to a #!/bin/sh script, it will
+be caught by somebody because /bin/sh is a symlink to dash on some
+major distributions.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ Makefile             | 11 +++++------
+ kernel/Makefile      |  2 +-
+ scripts/Makefile.lib |  2 +-
+ 3 files changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 3f95d1d04b08..23d8fa6b047b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -404,9 +404,7 @@ KCONFIG_CONFIG	?= .config
+ export KCONFIG_CONFIG
+ 
+ # SHELL used by kbuild
+-CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
+-	  else if [ -x /bin/bash ]; then echo /bin/bash; \
+-	  else echo sh; fi ; fi)
++CONFIG_SHELL := sh
+ 
+ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
+ HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
+@@ -443,6 +441,7 @@ PYTHON		= python
+ PYTHON2		= python2
+ PYTHON3		= python3
+ CHECK		= sparse
++BASH		= bash
+ 
+ CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
+ 		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
+@@ -488,7 +487,7 @@ KBUILD_LDFLAGS :=
+ GCC_PLUGINS_CFLAGS :=
+ CLANG_FLAGS :=
+ 
+-export ARCH SRCARCH CONFIG_SHELL HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
++export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
+ export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
+ export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+@@ -1694,7 +1693,7 @@ clean: $(clean-dirs)
+ # Generate tags for editors
+ # ---------------------------------------------------------------------------
+ quiet_cmd_tags = GEN     $@
+-      cmd_tags = $(CONFIG_SHELL) $(srctree)/scripts/tags.sh $@
++      cmd_tags = $(BASH) $(srctree)/scripts/tags.sh $@
+ 
+ tags TAGS cscope gtags: FORCE
+ 	$(call cmd,tags)
+@@ -1715,7 +1714,7 @@ versioncheck:
+ 		| xargs $(PERL) -w $(srctree)/scripts/checkversion.pl
+ 
+ coccicheck:
+-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
++	$(Q)$(BASH) $(srctree)/scripts/$@
+ 
+ namespacecheck:
+ 	$(PERL) $(srctree)/scripts/namespace.pl
+diff --git a/kernel/Makefile b/kernel/Makefile
+index ef0d95a190b4..4deab893ca83 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -126,7 +126,7 @@ $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+ $(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
+ 
+ quiet_cmd_genikh = CHK     $(obj)/kheaders_data.tar.xz
+-cmd_genikh = $(CONFIG_SHELL) $(srctree)/kernel/gen_kheaders.sh $@
++cmd_genikh = $(BASH) $(srctree)/kernel/gen_kheaders.sh $@
+ $(obj)/kheaders_data.tar.xz: FORCE
+ 	$(call cmd,genikh)
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 888e5c830646..7ab17712ab24 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -364,7 +364,7 @@ UIMAGE_ENTRYADDR ?= $(UIMAGE_LOADADDR)
+ UIMAGE_NAME ?= 'Linux-$(KERNELRELEASE)'
+ 
+ quiet_cmd_uimage = UIMAGE  $@
+-      cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A $(UIMAGE_ARCH) -O linux \
++      cmd_uimage = $(BASH) $(MKIMAGE) -A $(UIMAGE_ARCH) -O linux \
+ 			-C $(UIMAGE_COMPRESSION) $(UIMAGE_OPTS-y) \
+ 			-T $(UIMAGE_TYPE) \
+ 			-a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
+-- 
+2.17.1
 
