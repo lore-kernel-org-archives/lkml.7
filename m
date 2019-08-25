@@ -2,103 +2,112 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B38C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353A3C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FE1206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 16:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8D6206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGoPZDDY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYgRL8yn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfHYQ5w (ORCPT
+        id S1728618AbfHYRAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 12:57:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35519 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbfHYQ5w (ORCPT
+        Sun, 25 Aug 2019 13:00:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52950 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbfHYRAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 12:57:52 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d85so10043578pfd.2
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 09:57:52 -0700 (PDT)
+        Sun, 25 Aug 2019 13:00:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o4so13263898wmh.2;
+        Sun, 25 Aug 2019 10:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hkBxvfWe/1p4w8zyrS1cyny/gLryEipuz5Rr35rTXt4=;
-        b=AGoPZDDYYJqI8XE397Y29qqz+kdsB0g+zqVx3N5J+MIyuRRY1PKF2Y5gI6ZbQTTk2i
-         DozoFC6gp8cOo140Z0xEIjR5HHN6opiPkREyQzl/3qMImyCortFHu6hTTgAisLh50kxr
-         jVzAVHxWZDcsHKNAW3BsySCHivg/Zqop4d27BCmVEzKmKq6ussUme5sIXONLIwSeKK84
-         Vr3TUp961cwwbeSv9oeJxS0+onqf0Tr+/9OgGkqwvibtqoM8/ZBQWz4KUK68GWtAdoNb
-         PmyQRlEU13/ttCQ6Gah0RsdfNPeUR7KZeaNJ0vfXID02RgGVKUqAqxdZczexP1jinxb6
-         onWg==
+        h=from:to:cc:subject:date:message-id;
+        bh=p9k1FKMnIrxG0b37UnbB0s6eICj+7+p6AjxyIjJWcRc=;
+        b=jYgRL8ynDKjcrxuB72XaidT8PNpyXFNlXzDCmWDotk2kMb4z0K3WUpCNiIQvXAz3Mb
+         1vhw9GQPs7fPKXRhkVgoZL/Fw6wBTfaZUfjwRKtOYuaDmhTcgJZuM/T2nMZ9Kz8jtAuB
+         G4H8DHJUuceq/ND5LOwmk9y7RaCa2b1xRrxokYwozUBbBlGdEx0PCyBFDmR1Xf9NFYmL
+         W/jzUHm1hXCgtuWrMiHVeMMBdK2dPUYcFBs49Hl0QKioGt2l2dzLd0P07TIPuoJhmPO4
+         4blw9OHRSiQdQzkHWESe1nfKstCNHFJ4Uug7tYgVU9ZKzSGAZZF4GxIViMBiGAZlEtML
+         MPNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hkBxvfWe/1p4w8zyrS1cyny/gLryEipuz5Rr35rTXt4=;
-        b=oK/NZvwCAHFbu7quAf5k6DHcyuv5lOV11sdMMJSQ43QNnY4SXnkzcyqXFNAe6epD8U
-         O7obRo0HtrYmINXjjPRF1qyE5IqvSvfl3mk2Mwf22T8wewk6V8ndVlrp0q2h88+zdLE5
-         Z2SgRQQzdfAH2K3AXsgogixNTDQAbswUMSuEPOWBHnllo6y8yA3N5gtlCsv8uCUlb4Ru
-         8S4saEknGQb9dPQJ0tQlJmBcabZMT65MkGAwrRbEF+PTTHt3PBhjbUXi0fXf6wcpCA5u
-         qHUs+Rch568NdHJ1fUgr68aCRP+9R246joKlZF/HQktLWMZeTJjDUjqvE+JqTWUYoUFV
-         H2+g==
-X-Gm-Message-State: APjAAAWPsfiLn9sagAR/NGmZUjDFtztBaV+X+8vEfECH3xE7lg9i7DXU
-        Q43nPGPGCy91Rwt84S5Nfg==
-X-Google-Smtp-Source: APXvYqzPmuwZJrP1QQ3ZidGAHYnedvwKvR81Lt++/Zt9ncSMn9RjNdyRkmIFrIg0Q4u+keQA1hzQeQ==
-X-Received: by 2002:a63:3fc9:: with SMTP id m192mr2712650pga.429.1566752271675;
-        Sun, 25 Aug 2019 09:57:51 -0700 (PDT)
-Received: from MarkdeMacBook-Pro.local (114-32-231-59.HINET-IP.hinet.net. [114.32.231.59])
-        by smtp.gmail.com with ESMTPSA id y9sm8865023pfn.152.2019.08.25.09.57.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 25 Aug 2019 09:57:51 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 00:57:47 +0800
-From:   Peikan Tsai <peikantsai@gmail.com>
-To:     jassisinghbrar@gmail.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] mailbox: arm-mhu: Use unsigned int for irq of mhu_link
-Message-ID: <20190825165747.GA72906@MarkdeMacBook-Pro.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=p9k1FKMnIrxG0b37UnbB0s6eICj+7+p6AjxyIjJWcRc=;
+        b=haKIjZ0a+2g7vQO0Wy1bJR0f/yFQ7tQ44wMNFml+63rWmi3Bbc/FQJ7HD7JBST2Ehc
+         zPWbuNKE7vwag286c/rMXuKHR9B77kMgACFHq4ADE3k7ne3ohjL8hRoZCyAgOAavk4mP
+         X46neRLFfnkV+WRCwXVOAEFZT+kobPg+EBVOPs8ugyOfKVCjuzPIbojDIkgierzlWSWk
+         frNBBklYZzwQnJMxt4fUdjtNS88a26RNYV/EQVoO2Ihf5fGNqtxbcyruNY8s3pNwTaUP
+         VKfUC/rLtsK6Kh+UwAw7J59DEqXiEi73irAdvcjMws9o1ohmxZ62t7iyLvke13QWWkdR
+         Z5IQ==
+X-Gm-Message-State: APjAAAVQOA4AEdIJh7+9Wd8yTharNi1dggm6LAV/INkyKAlfyfqMYnVn
+        6ZOjoUUCD+kNJ4U2131eZuo=
+X-Google-Smtp-Source: APXvYqxmgkfJw05/1SCRbDKujNB6+wS972IXRO+F/0tXfiML4NN35FhScA8bV3wnbKd2ExHotWh0aQ==
+X-Received: by 2002:a7b:c195:: with SMTP id y21mr16712674wmi.16.1566752432408;
+        Sun, 25 Aug 2019 10:00:32 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2df7:8200:64bc:6b75:d016:739d])
+        by smtp.gmail.com with ESMTPSA id j10sm17688223wrd.26.2019.08.25.10.00.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 10:00:31 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [RESEND][PATCH v2-resend] MAINTAINERS: fix style in KEYS-TRUSTED entry
+Date:   Sun, 25 Aug 2019 19:00:15 +0200
+Message-Id: <20190825170015.3199-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Mimi Zohar used spaces instead of a tab when adding Jarkko Sakkinen as
+further maintainer to the KEYS-TRUSTED section entry.
 
-Please find attached patch which fixes a warning reported by
-checkpatch.pl in drivers/mailbox/arm_mhu.c.
+In fact, ./scripts/checkpatch.pl -f MAINTAINERS complains:
 
-Fix warning reported by checkpatch.pl:
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-+       unsigned irq;
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #8581: FILE: MAINTAINERS:8581:
+  +M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Signed-off-by: Peikan Tsai <peikantsai@gmail.com>
+The issue was detected when writing a script that parses MAINTAINERS.
+
+Fixes: 34bccd61b139 ("MAINTAINERS: add Jarkko as maintainer for trusted keys")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- drivers/mailbox/arm_mhu.c | 2 +-
+v1: https://lore.kernel.org/patchwork/patch/1040412/
+  - Joe Perches clarified that this is a style defect.
+
+v2: applies cleanly to v5.1-rc4 and next-20190412
+
+v2-resend: applies cleanly to v5.3-rc5 and next-20190823
+
+ MAINTAINERS | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
-index 9da236552bd7..aa5a123e38f9 100644
---- a/drivers/mailbox/arm_mhu.c
-+++ b/drivers/mailbox/arm_mhu.c
-@@ -25,7 +25,7 @@
- #define MHU_CHANS	3
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 43604d6ab96c..6cb9a4927da8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8937,7 +8937,7 @@ F:	security/keys/encrypted-keys/
  
- struct mhu_link {
--	unsigned irq;
-+	unsigned int irq;
- 	void __iomem *tx_reg;
- 	void __iomem *rx_reg;
- };
+ KEYS-TRUSTED
+ M:	James Bottomley <jejb@linux.ibm.com>
+-M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
++M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+ M:	Mimi Zohar <zohar@linux.ibm.com>
+ L:	linux-integrity@vger.kernel.org
+ L:	keyrings@vger.kernel.org
 -- 
-2.13.1
+2.17.1
 
