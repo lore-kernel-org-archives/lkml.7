@@ -2,121 +2,333 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA56C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC4320578
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9316820674
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QtRQGTtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfHYVGm (ORCPT
+        id S1729001AbfHYVK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 17:06:42 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:38267 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfHYVGl (ORCPT
+        Sun, 25 Aug 2019 17:10:27 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37252 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfHYVK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 17:06:41 -0400
-Received: by mail-lf1-f44.google.com with SMTP id f21so5784595lfc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 14:06:40 -0700 (PDT)
+        Sun, 25 Aug 2019 17:10:27 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f17so13424319otq.4;
+        Sun, 25 Aug 2019 14:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e9gjegwnI6OBBah3d2fTdkIhLyzSL2rtGnti5w4uvpo=;
+        b=QtRQGTtUggKslNSNfDajB0M1GmmhHEFREp9oRRy4RMHffFk+XieXygxVW99UIyF4aH
+         0TawtEok8f9IiNmWoU0UU/FwV29q+ZgY5cCi9HTZz06xGz8Ca0oeHWMi0kMUr5B9Qyp8
+         VyK+XkAAujnw2lgTFfMeqRz3bh79miW+yXna21ynB2jMXjci3ZmMEXdvi/hOrKThsY4i
+         YJQC+0ObSHgREASlUScl50LtJEPsm1PP1heAe/grcVmyaPZko14jirabef3nC1S90DBN
+         afl16oGOUZvNaVoi7i2t19eLjWSySULKeNhIpmhHingumGyBa0zsqu9yvuNGoFu4EnLU
+         bP8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ze71kdozTeXZmdb5xg2E70/uVH1FbtMCT0+dhgmaPo4=;
-        b=B7PvI1jsPe3JCmdUb75NNd1QWW2IBTvexvdiEuGxDN4a7ctfocdoDoPRwsZa2U+CtK
-         i6X1efssspE14iQ88S6/s7lZstJLcvbc5IUXeAJOgFu+i/XXedNincLv6NfoVwVm1Ldh
-         T6PqXtQySzwoKuy0znBFBt07fBtuoA7vDELBfPtxXdl9Y8hklIswsv441kuzGPS02Rl9
-         5LD56Qgz71t6EDMguOLzXnideADnzg68zTi19ZAHa0s1NiMUwv0ja9WVPa/ghwECpp3u
-         iMHIECCrbiF0desD4Rcb/+QkQuny0KiJVCkSffKxnMG9PB/1zGl9ZSmmbB7CNK+sNXzL
-         jubQ==
-X-Gm-Message-State: APjAAAXJSMvTLdpTIqZsYZos2hL5R1y4H1Y+drNTqUFjhtszDd8Y1LB8
-        +G9ItnMtbsDHlmgRYwTu/PN65SwN
-X-Google-Smtp-Source: APXvYqzasJjTWfsNjIYLK2ChPJjRnvxbT7HoEarG3rDGObQcy0/wl9MGRQPsGMz/PXEUzipG59+jCA==
-X-Received: by 2002:a19:48c5:: with SMTP id v188mr3826696lfa.69.1566767199754;
-        Sun, 25 Aug 2019 14:06:39 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id z2sm1776716lfh.97.2019.08.25.14.06.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Aug 2019 14:06:39 -0700 (PDT)
-Subject: Re: [PATCH] scripts: coccinelle: check for !(un)?likely usage
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>, cocci@systeme.lip6.fr
-Cc:     linux-kernel@vger.kernel.org
-References: <20190825130536.14683-1-efremov@linux.com>
- <e87c12f2-40ab-69b7-2f55-f1fcc980e784@web.de>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <23dfc168-5ad2-8bd8-0059-091bb814f2e6@linux.com>
-Date:   Mon, 26 Aug 2019 00:06:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e9gjegwnI6OBBah3d2fTdkIhLyzSL2rtGnti5w4uvpo=;
+        b=iTgt+kzdO+CUScNFJrfAYADJJgUkGHVNPy6G8exjB9/Wotkfi0pU/JbyAOC68xU9JP
+         wbUNSzxN8mSAK1ovXViSNZnr+yQGwW3F3ZK9BjjzVNiqxUAXBy6SbrCth6JnBYZN+DeI
+         vI/BH57kc+feK7A+AnsXwDwOfk3DAEy3AZMLj64cvcXKrvouMsIh8ysfOinoWOgQ8syv
+         wkJn8vDFXeBD78fCthuwIMenQfFWGYlKFbyY7IxqglnJdoN9SHxXA0FttqwIPalxrX/0
+         ATo5WxvtHvY+fY5jmH37R4Qwd4cel1Be1E1nsB9HsM9tNff+lfCQvHmzr+74s404E4t4
+         Dpdg==
+X-Gm-Message-State: APjAAAXsa2hhmYxd9r/eXblmgtj2CTIDOE5XQgL+KidwbhAud2fvg+gk
+        5kVOdTV//+M6ToPf09gnTnImd4xIhMv1cOH91IE=
+X-Google-Smtp-Source: APXvYqwTyTMd/9N2zEhcBHPdhl22US+MfcqV8H4IREoHvPCHyE6MzDXNq5wbch6OQvG0gSjRPgPiaN+TMlnSWjkQQNw=
+X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr12211285otj.96.1566767425426;
+ Sun, 25 Aug 2019 14:10:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e87c12f2-40ab-69b7-2f55-f1fcc980e784@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190823090418.17148-1-narmstrong@baylibre.com> <20190823090418.17148-3-narmstrong@baylibre.com>
+In-Reply-To: <20190823090418.17148-3-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sun, 25 Aug 2019 23:10:14 +0200
+Message-ID: <CAFBinCBy-VxfSMPMR0cEDuNg8=UOUVvWfkDi2Tp=QhBZka93aQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] soc: amlogic: Add support for Everything-Else
+ power domains controller
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, ulf.hansson@linaro.org,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Neil,
+
+thank you for this update
+I haven't tried this on the 32-bit SoCs yet, but I am confident that I
+can make it work by "just" adding the SoC specific bits!
+
+On Fri, Aug 23, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[...]
+> +/* AO Offsets */
+> +
+> +#define AO_RTI_GEN_PWR_SLEEP0          (0x3a << 2)
+> +#define AO_RTI_GEN_PWR_ISO0            (0x3b << 2)
+> +
+> +/* HHI Offsets */
+> +
+> +#define HHI_MEM_PD_REG0                        (0x40 << 2)
+> +#define HHI_VPU_MEM_PD_REG0            (0x41 << 2)
+> +#define HHI_VPU_MEM_PD_REG1            (0x42 << 2)
+> +#define HHI_VPU_MEM_PD_REG3            (0x43 << 2)
+> +#define HHI_VPU_MEM_PD_REG4            (0x44 << 2)
+> +#define HHI_AUDIO_MEM_PD_REG0          (0x45 << 2)
+> +#define HHI_NANOQ_MEM_PD_REG0          (0x46 << 2)
+> +#define HHI_NANOQ_MEM_PD_REG1          (0x47 << 2)
+> +#define HHI_VPU_MEM_PD_REG2            (0x4d << 2)
+should we switch to the actual register offsets like we did in the
+clock drivers?
+
+[...]
+> +static struct meson_ee_pwrc_top_domain sm1_pwrc_vpu = SM1_EE_PD(8);
+nit-pick: maybe name it sm1_pwrc_vpu_hdmi as the datasheet states that
+it's for "VPU/HDMI"
+
+[...]
+> +#define VPU_HHI_MEMPD(__reg)                                   \
+> +       { __reg, BIT(8) },                                      \
+> +       { __reg, BIT(9) },                                      \
+> +       { __reg, BIT(10) },                                     \
+> +       { __reg, BIT(11) },                                     \
+> +       { __reg, BIT(12) },                                     \
+> +       { __reg, BIT(13) },                                     \
+> +       { __reg, BIT(14) },                                     \
+> +       { __reg, BIT(15) }
+the Amlogic implementation from buildroot-openlinux-A113-201901 (the
+latest one I have)
+kernel/aml-4.9/drivers/amlogic/media/vout/hdmitx/hdmi_tx_20/hw/hdmi_tx_hw.c
+uses:
+hd_set_reg_bits(P_HHI_MEM_PD_REG0, 0, 8, 8)
+that basically translates to: GENMASK(15, 8) (which means we could
+drop this macro)
+
+the datasheet also states: 15~8 [...] HDMI memory PD (as a single
+8-bit wide register)
+
+[...]
+> +static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
+> +       [PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
+> +                                    pwrc_ee_get_power, 11, 2),
+> +       [PWRC_G12A_ETH_ID] = MEM_PD("ETH", g12a_pwrc_mem_eth),
+> +};
+> +
+> +static struct meson_ee_pwrc_domain_desc sm1_pwrc_domains[] = {
+> +       [PWRC_SM1_VPU_ID]  = VPU_PD("VPU", &sm1_pwrc_vpu, sm1_pwrc_mem_vpu,
+> +                                   pwrc_ee_get_power, 11, 2),
+> +       [PWRC_SM1_NNA_ID]  = TOP_PD("NNA", &sm1_pwrc_nna, sm1_pwrc_mem_nna,
+> +                                   pwrc_ee_get_power),
+> +       [PWRC_SM1_USB_ID]  = TOP_PD("USB", &sm1_pwrc_usb, sm1_pwrc_mem_usb,
+> +                                   pwrc_ee_get_power),
+> +       [PWRC_SM1_PCIE_ID] = TOP_PD("PCI", &sm1_pwrc_pci, sm1_pwrc_mem_pcie,
+> +                                   pwrc_ee_get_power),
+> +       [PWRC_SM1_GE2D_ID] = TOP_PD("GE2D", &sm1_pwrc_ge2d, sm1_pwrc_mem_ge2d,
+> +                                   pwrc_ee_get_power),
+> +       [PWRC_SM1_AUDIO_ID] = MEM_PD("AUDIO", sm1_pwrc_mem_audio),
+> +       [PWRC_SM1_ETH_ID] = MEM_PD("ETH", g12a_pwrc_mem_eth),
+> +};
+my impression: I find this hard to read as it merges the TOP and
+Memory PD domains from above, adding some seemingly random "11, 2" for
+the VPU PD as well as pwrc_ee_get_power for some of the power domains
+personally I like the way we describe clk_regmap because it's easy to
+read (even though it adds a bit of boilerplate). I'm not sure if we
+can make it work here, but this (not compile tested) is what I have in
+mind (I chose two random power domains):
+  [PWRC_SM1_VPU_ID]  = {
+    .name = "VPU",
+    .top_pd = SM1_EE_PD(8),
+    .mem_pds = {
+        VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+        VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+        VPU_MEMPD(HHI_VPU_MEM_PD_REG2),
+        VPU_MEMPD(HHI_VPU_MEM_PD_REG3),
+        { HHI_VPU_MEM_PD_REG4, GENMASK(1, 0) },
+        { HHI_VPU_MEM_PD_REG4, GENMASK(3, 2) },
+        { HHI_VPU_MEM_PD_REG4, GENMASK(5, 4) },
+        { HHI_VPU_MEM_PD_REG4, GENMASK(7, 6) },
+        { HHI_MEM_PD_REG0, GENMASK(15, 8) },
+    },
+    .num_mem_pds = 9,
+    .reset_names_count = 11,
+    .clk_names_count = 2,
+  },
+  [PWRC_SM1_ETH_ID] = {
+    .name = "ETH",
+    .mem_pds = { HHI_MEM_PD_REG0, GENMASK(3, 2) },
+    .num_mem_pds = 1,
+  },
+...
+
+I'd like to get Kevin's feedback on this
+what you have right now is probably good enough for the initial
+version of this driver. I'm bringing this discussion up because we
+will add support for more SoCs to this driver (we migrate GX over to
+it and I want to add 32-bit SoC support, which probably means at least
+Meson8 - assuming they kept the power domains identical between
+Meson8/8b/8m2).
+
+[...]
+> +struct meson_ee_pwrc_domain {
+> +       struct generic_pm_domain base;
+> +       bool enabled;
+> +       struct meson_ee_pwrc *pwrc;
+> +       struct meson_ee_pwrc_domain_desc desc;
+> +       struct clk_bulk_data *clks;
+> +       int num_clks;
+> +       struct reset_control *rstc;
+> +       int num_rstc;
+> +};
+> +
+> +struct meson_ee_pwrc {
+> +       struct regmap *regmap_ao;
+> +       struct regmap *regmap_hhi;
+> +       struct meson_ee_pwrc_domain *domains;
+> +       struct genpd_onecell_data xlate;
+> +};
+(my impressions on this: I was surprised to find more structs down
+here, I expected them to be together with the other structs further
+up)
+
+> +static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain)
+> +{
+> +       u32 reg;
+> +
+> +       regmap_read(pwrc_domain->pwrc->regmap_ao,
+> +                   pwrc_domain->desc.top_pd->sleep_reg, &reg);
+> +
+> +       return (reg & pwrc_domain->desc.top_pd->sleep_mask);
+should this also check for top_pd->iso_* as well as mem_pd->*?
+if the top_pd part was optional we could even use the get_power
+callback for *all* power domains in this driver (right now audio and
+Ethernet don't have any get_power callback)
+
+> +}
+> +
+> +static int meson_ee_pwrc_off(struct generic_pm_domain *domain)
+> +{
+> +       struct meson_ee_pwrc_domain *pwrc_domain =
+> +               container_of(domain, struct meson_ee_pwrc_domain, base);
+> +       int i;
+> +
+> +       if (pwrc_domain->desc.top_pd)
+> +               regmap_update_bits(pwrc_domain->pwrc->regmap_ao,
+> +                                  pwrc_domain->desc.top_pd->sleep_reg,
+> +                                  pwrc_domain->desc.top_pd->sleep_mask,
+> +                                  pwrc_domain->desc.top_pd->sleep_mask);
+> +       udelay(20);
+all four udelay(20) occurrences should probably be usleep_range(20,
+100); (or some other max value), see [0]
+
+[...]
+> +       /*
+> +         * TOFIX: This is a special case for the VPU power domain, which can
+> +        * be enabled previously by the bootloader. In this case the VPU
+nit-pick: the indentation seems to be off here
+
+[...]
+> +static int meson_ee_pwrc_probe(struct platform_device *pdev)
+> +{
+> +       const struct meson_ee_pwrc_domain_data *match;
+> +       struct regmap *regmap_ao, *regmap_hhi;
+> +       struct meson_ee_pwrc *pwrc;
+> +       int i, ret;
+> +
+> +       match = of_device_get_match_data(&pdev->dev);
+> +       if (!match) {
+> +               dev_err(&pdev->dev, "failed to get match data\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
+> +       if (!pwrc)
+> +               return -ENOMEM;
+> +
+> +       pwrc->xlate.domains = devm_kcalloc(&pdev->dev, match->count,
+> +                                          sizeof(*pwrc->xlate.domains),
+> +                                          GFP_KERNEL);
+> +       if (!pwrc->xlate.domains)
+> +               return -ENOMEM;
+> +
+> +       pwrc->domains = devm_kcalloc(&pdev->dev, match->count,
+> +                                    sizeof(*pwrc->domains), GFP_KERNEL);
+> +       if (!pwrc->domains)
+> +               return -ENOMEM;
+> +
+> +       pwrc->xlate.num_domains = match->count;
+> +
+> +       regmap_hhi = syscon_node_to_regmap(of_get_parent(pdev->dev.of_node));
+> +       if (IS_ERR(regmap_hhi)) {
+> +               dev_err(&pdev->dev, "failed to get HHI regmap\n");
+> +               return PTR_ERR(regmap_hhi);
+> +       }
+> +
+> +       regmap_ao = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +                                                   "amlogic,ao-sysctrl");
+> +       if (IS_ERR(regmap_ao)) {
+> +               dev_err(&pdev->dev, "failed to get AO regmap\n");
+> +               return PTR_ERR(regmap_ao);
+> +       }
+> +
+> +       pwrc->regmap_ao = regmap_ao;
+> +       pwrc->regmap_hhi = regmap_hhi;
+> +
+> +       platform_set_drvdata(pdev, pwrc);
+> +
+> +       for (i = 0 ; i < match->count ; ++i) {
+> +               struct meson_ee_pwrc_domain *dom = &pwrc->domains[i];
+> +
+> +               memcpy(&dom->desc, &match->domains[i], sizeof(dom->desc));
+> +
+> +               ret = meson_ee_pwrc_init_domain(pdev, pwrc, dom);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               pwrc->xlate.domains[i] = &dom->base;
+> +       }
+> +
+> +       of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
+return of_genpd_add_provider_onecell(...) to propagate errors (if any)
+
+bonus question: what about the video decoder power domains?
+here is an example from vdec_1_start
+(drivers/staging/media/meson/vdec/vdec_1.c):
+  /* Enable power for VDEC_1 */
+  regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
+                                   GEN_PWR_VDEC_1, 0);
+  usleep_range(10, 20);
+  [...]
+  /* enable VDEC Memories */
+  amvdec_write_dos(core, DOS_MEM_PD_VDEC, 0);
+  /* Remove VDEC1 Isolation */
+  regmap_write(core->regmap_ao, AO_RTI_GEN_PWR_ISO0, 0);
+
+(my point here is that it mixes video decoder "DOS" registers with
+AO_RTI_GEN_PWR registers)
+do we also want to add support for these "DOS" power domains to the
+meson-ee-pwrc driver?
+what about the AO_RTI_GEN_PWR part then - should we keep management
+for the video decoder power domain bits in AO_RTI_GEN_PWR as part of
+the video decoder driver?
 
 
-On 25.08.2019 18:30, Markus Elfring wrote:
->> +(
->> +* !likely(E)
->> +|
->> +* !unlikely(E)
->> +)
-> 
-> Can the following code variant be nicer?
-> 
-> +*! \( likely \| unlikely \) (E)
-> 
-> 
->> +(
->> +-!likely(E)
->> ++unlikely(E)
->> +|
->> +-!unlikely(E)
->> ++likely(E)
->> +)
-> 
-> I would find the following SmPL change specification more succinct.
-> 
-> +(
-> +-!likely
-> ++unlikely
-> +|
-> +-!unlikely
-> ++likely
-> +)(E)
-> 
-> 
->> +coccilib.org.print_todo(p[0], "WARNING use unlikely instead of !likely")
-> …
->> +msg="WARNING: Use unlikely instead of !likely"
->> +coccilib.report.print_report(p[0], msg)
-> 
-> 1. I find such a message construction nicer without the extra variable “msg”.
-> 
-> 2. I recommend to make the provided information unique.
->    * How do you think about to split the SmPL disjunction in the rule “r”
->      for this purpose?
-> 
->    * Should the transformation become clearer?
+Martin
 
-Thank you for the review, I will prepare v2.
 
-> 
-> Regards,
-> Markus
-> 
+[0] https://www.kernel.org/doc/Documentation/timers/timers-howto.rst
