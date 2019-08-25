@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86991C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F1BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE4D21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFD021744
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 04:02:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ay+Hq9I1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNUzb656"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfHYECZ (ORCPT
+        id S1726563AbfHYEC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 00:02:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37502 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfHYECX (ORCPT
+        Sun, 25 Aug 2019 00:02:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40473 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbfHYEC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 00:02:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d16so12691754wme.2;
-        Sat, 24 Aug 2019 21:02:22 -0700 (PDT)
+        Sun, 25 Aug 2019 00:02:26 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c5so12490525wmb.5;
+        Sat, 24 Aug 2019 21:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=E5nNhd18MvwU8IC7GxybIhRsED8y+5jrB7YM1thtsV4=;
-        b=ay+Hq9I1SH/G7X2WBWSkTU5FtlKBlJPSNA7Naj1Cj4ThMxpMKFn0csUhA9ucx26arS
-         EbkmTSYQUxj3zfsdmkVxsRVdFmJX2R74cThGlcbaWLK3QkRFxv5IcBDI9oKaxoUV2s20
-         y5dLzttp22mFpshuwRoKWonptKX5EaMDKgLSJldSR19p4q93vQcFQ+CjGQzGkGrEWhkE
-         c1dTdREt1QTy90HFJoWi3ZTzC62Gaz24VGEhEOU3MlfAzejSjZHqMTFbNzBLmQZ86cMH
-         zNhQE2HEGN2ahhWbsv118AURzWO2dhwi+gFXoky7l55+2ZADU3n8hhjpq19B9Bjs2t1E
-         5Xew==
+        bh=pvW2fAe5qKhI+32AuCLAPIq8InayZWwjBPViLCnooBA=;
+        b=YNUzb656fRAp02e6EEjNCbourwaslTMlBfdnBZy5wc53xGSYuZGIQs7JrIlbea2Ugd
+         JCJaKvCjo33MT3ZkPK7p4hvKqnrDLmPtCkIX1skl3nPAS2pm28ktEL1cGvtLu5gUuCTL
+         SpeCPIfLBsDnp24rwx7ZvHv2QHx+oxy7oKISEvsBR5nq0JXelIrFASyD6L/xW+orfsCs
+         4XjG1JvF5NHvvPv51TgA8lFj0SQSVfAECmw8InYZkiLgWZpoOa9/I8HJGPTU2pJixc0T
+         9F70iMW+nudCwXOtIT40A/Gw2g8ZMiNPfh6W0y7vfwxzsKrJ7mDWdJdmAoC+VrZyYvCV
+         1rIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=E5nNhd18MvwU8IC7GxybIhRsED8y+5jrB7YM1thtsV4=;
-        b=QCWJRlvkk/yqIK3U2ngqVBQqjl00Lf7vZygJ1IzpIwWf1jBd2bPJMtsGoGVivgX4wy
-         5xDAA7ffmuKVbcYn9Ra8zTQMBoga4A+GMHPKTFJjH/zwCBU/zOtxmbjrMYVgwABzjCsp
-         q3jL34ejxCWLAnOU8PqIKowkU38yp7QlrxFXsa92q803JGoCwoAiZ2p6TyFF2pbX+rJt
-         60JqGeY9e3lF6GuchwXjewbGLqJQBd9yeXEvgxGRYE4NxZ6BkBjVoMA/iSHNW4n6Fj8V
-         ZZTKJZ6HDSIvuJZBoD7olfjqEzDbIKyc0j3ElIAFnkvRonDHOJaamCZa5qdkE4g9JAI+
-         SZdw==
-X-Gm-Message-State: APjAAAXnvKZUMvHn54gZwUWPKS84Ba1K9ZjKCAWrN7017bX1/S8e97LJ
-        faGqiTtsGHAi7pbq/tLdUF0=
-X-Google-Smtp-Source: APXvYqwP+cAgov2Lv/Km0Kd45gqctZDqhITi9FE+8G+wJU7Xj+jePJhogxyk7XN3R5IIeLoyr484rg==
-X-Received: by 2002:a7b:c019:: with SMTP id c25mr14337691wmb.116.1566705741664;
-        Sat, 24 Aug 2019 21:02:21 -0700 (PDT)
+        bh=pvW2fAe5qKhI+32AuCLAPIq8InayZWwjBPViLCnooBA=;
+        b=MYvHJYaQekYADocXzlP+SSQ325FLCW6t/EHSTkkxy3yGosS9+jYoLQbKmViF5kZLIr
+         GRuydr0v/W9w+z4C9Dod1FFcAw92fmrPJNMuISUvRHGKmvEw3oi7fAQsxzG0/uOKPL7G
+         GzfBPtx6CWWfP/tx63eKla+LpOA0um6n/GXhgwMFDlp6YWzMrXnLpS6NyTa1jG1BKX6M
+         UEUWRBlBKB3xeZiTsMXEySW6xJjO8Bq0zdC5qWohiaFurHuQoMfY1wzCSXlnBdWOxR88
+         xWait3FiV4ahztiydNUsx6SpMQVy3+YwKb0L0hJCmjGLlPsc11LGuBXPDbMLjsa5Uzay
+         +dow==
+X-Gm-Message-State: APjAAAVrPWzopqINhb6GcKFpUIM4j/Zf8CQtqZihax8lwL9dSp6FiUiF
+        6scT5TD6wK2CzS/Lh2buqb1M2wf4rEsFLw==
+X-Google-Smtp-Source: APXvYqztzIJKlySFmdH9BdFnbtrF+f7KI5MphOF2Nh6m250q3lZ/+sKv+4qCnuRAgmm6p/IffKy0hA==
+X-Received: by 2002:a1c:7914:: with SMTP id l20mr14162802wme.130.1566705743964;
+        Sat, 24 Aug 2019 21:02:23 -0700 (PDT)
 Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id a6sm6820985wmj.15.2019.08.24.21.02.19
+        by smtp.gmail.com with ESMTPSA id a6sm6820985wmj.15.2019.08.24.21.02.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 24 Aug 2019 21:02:21 -0700 (PDT)
+        Sat, 24 Aug 2019 21:02:23 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -63,9 +63,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Chrisitian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 1/7] arm64: dts: meson-g12b-odroid-n2: add rc-odroid keymap
-Date:   Sun, 25 Aug 2019 08:01:22 +0400
-Message-Id: <1566705688-18442-2-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 2/7] arm64: dts: meson-g12a-x96-max: add rc-x96max keymap
+Date:   Sun, 25 Aug 2019 08:01:23 +0400
+Message-Id: <1566705688-18442-3-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
 References: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
@@ -74,25 +74,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add the rc-odroid keymap to the ir node
+add the rc-x96max keymap to the ir node
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 81780ff..35cef76 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -314,6 +314,7 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+index fe4013c..357d7dc 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+@@ -277,6 +277,7 @@
  	status = "okay";
  	pinctrl-0 = <&remote_input_ao_pins>;
  	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-odroid";
++	linux,rc-map-name = "rc-x96max";
  };
  
- /* SD card */
+ &ext_mdio {
 -- 
 2.7.4
 
