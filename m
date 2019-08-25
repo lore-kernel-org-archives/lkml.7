@@ -2,73 +2,106 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03EFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37125C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91689206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0338120578
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 17:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MD7FaYs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfHYRdn (ORCPT
+        id S1728757AbfHYRiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 13:33:43 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:39897 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725971AbfHYRdn (ORCPT
+        Sun, 25 Aug 2019 13:38:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51422 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfHYRiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 13:33:43 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud7.xs4all.net with ESMTPSA
-        id 1wOWi1kpFThuu1wOZix6bZ; Sun, 25 Aug 2019 19:33:41 +0200
-Message-ID: <dd3a1ec7d03888dade78db1e4c45ec1347c0815b.camel@tiscali.nl>
-Subject: Re: Linux 5.2.10
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, akpm@linux-foundation.org
-Cc:     jslaby@suse.cz, lwn@lwn.net
-Date:   Sun, 25 Aug 2019 19:33:36 +0200
-In-Reply-To: <20190825144703.6518-1-sashal@kernel.org>
-References: <20190825144703.6518-1-sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Sun, 25 Aug 2019 13:38:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id k1so13336854wmi.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 10:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nUBff10lsASBE91F8KigCpGgGqpKzg5hEBg0Knu8bCo=;
+        b=MD7FaYs3Po93LP2EVlwniuTCClIUheV1+e4SE7O7U05CgbYG9+0Tz52709kBM7lzGH
+         mdO6l4i12vl6Uzc3njlmgjbXqSUi48C41OEWxQM7AYnVZyfKjjM7t330SvWuyEjtY6s/
+         HVaLCcJeagUKP/q3uIvlgp/5061kmyOMW+BYNmEwWakSOMKT4SaLpCNdlMj81VMzPtXu
+         ZvbzbwbExL2AliXB27sQLxuw2uZGK9qW/Jou+Uhbx6fpCdzQKv/Y948mBTWv46yYHHIc
+         ah8qwouWvGIk6poTnmek2NazZHcOHmbD66wEkjTR8LGbd/v+H9iooFjFEgYVJHKhS2NT
+         NUQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nUBff10lsASBE91F8KigCpGgGqpKzg5hEBg0Knu8bCo=;
+        b=DQObd38kEtiIHZ/uamgcYELjMj+C+KzPo6YWWvOKAKnmX4PeRFWYSflTkunCh2goil
+         kATA4JCAzjKLu2jw543aWM4plZHIa5oRCi1CRvCI4jLCt0biJc9UlkEXecPs8W6yl10+
+         h2VdG9pqJK5h3nUah1yKUpZmjD+4LECdjfzYfDUoo3M5xHni8FLgg9xJtogQDA+jnIl+
+         uglMc+9LL5fXtpbhjbsoWTdyJ9x6wkg3PSFZBvFDlhLMb6lp+txX5ZUf+gARtMAnqwc/
+         cz4N5SIMmKwzCr314GXDj3AIPC4BEliZcflW3DFpH5+ZfNJaWFRYmhPcR5wywrAj7si6
+         B0Fw==
+X-Gm-Message-State: APjAAAWaL/Lq/dCjb3r7HcpLEBXytr5BRcBafAgVODAKzuaVd82yEhGN
+        bFtS1Xpqltit+qNLrepYAbiZXEHA
+X-Google-Smtp-Source: APXvYqzFD5J9xm9Djp2lvUE2tM8UAhKNmIuyggfhQ/wFx0rAGud00RsDQmwjOlIYe3c34/4NTdqvxQ==
+X-Received: by 2002:a1c:760b:: with SMTP id r11mr17569898wmc.41.1566754682714;
+        Sun, 25 Aug 2019 10:38:02 -0700 (PDT)
+Received: from gmail.com (82.159.32.155.dyn.user.ono.com. [82.159.32.155])
+        by smtp.gmail.com with ESMTPSA id o8sm17049994wma.1.2019.08.25.10.38.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 25 Aug 2019 10:38:02 -0700 (PDT)
+Date:   Sun, 25 Aug 2019 19:37:55 +0200
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Robin van der Gracht <robin@protonic.nl>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] auxdisplay for v5.3-rc7
+Message-ID: <20190825173755.GA19827@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfN42HIq+T3e6Uv/dme3AG85mTGT+JGuflqMTtz8RstCz+SUKfVyH8XVdG0FXfkAryY22SyVhHtjulJ79HbQDNe1awwJLteU8Y7LgtSsSPfLXbMgMLpMr
- dgFYqzbuSXKMhe9vwA9WY8kLcI+r58Sko2XPfQ58bIiDF+ZfuwkM8bEXlAYTA8uFwiT6iI2+5h63KEt6VHtL9ZXWb6cDC4zdmHf5ceiYaTroGdeXSgsNZH/v
- crvnRkoCdz1TpplAHdpGY6fWxkBYP/QKf4kmBciEgfCB4saYsEMvTnVliLkleDSQ6GRt3W6W8HiJCXbETaBtPQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: elm/2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha,
+Hi Linus,
 
-Sasha Levin schreef op zo 25-08-2019 om 10:47 [-0400]:
-> I'm announcing the release of the 5.2.10 kernel.
-> 
-> All users of the 5.2 kernel series must upgrade.
-> 
-> The updated 5.2.y git tree can be found at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
-> and can be browsed at the normal kernel.org git web browser:
->         https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+Please pull this cleanup.
 
-v5.2.10 was tagged by sashal@kernel.org but signed by 
-alexander.levin@verizon.com. Perhaps you could use one of gpg2's many options
-to add an
-    aka "Sasha Levin <sashal@kernel.org>"
+Cheers,
+Miguel
 
-line to that key. (I assume "--recv-key" then would have found your key.)
+The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
 
-Or would that be a sin against kernel.org policy, state-of-the-art
-cryptographic practices, or whatever?
+  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
 
-Thanks,
+are available in the Git repository at:
 
+  https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.3-rc7
 
-Paul Bolle
+for you to fetch changes up to a180d023ec7ba0e43b2385876950d9ce7ab618f1:
 
+  auxdisplay: ht16k33: Make ht16k33_fb_fix and ht16k33_fb_var constant (2019-08-20 11:48:54 +0200)
+
+----------------------------------------------------------------
+A minor auxdisplay improvement:
+
+ - ht16k33: Make ht16k33_fb_fix and ht16k33_fb_var constant (Nishka Dasgupta)
+
+----------------------------------------------------------------
+Nishka Dasgupta (1):
+      auxdisplay: ht16k33: Make ht16k33_fb_fix and ht16k33_fb_var constant
+
+ drivers/auxdisplay/ht16k33.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
