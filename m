@@ -2,123 +2,314 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1DAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53F0217D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:41:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8fdl5A8"
+	by mail.kernel.org (Postfix) with ESMTP id 67D682173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfHYFkw (ORCPT
+        id S1726418AbfHYFuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 01:40:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36288 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfHYFkw (ORCPT
+        Sun, 25 Aug 2019 01:50:23 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:49792 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfHYFuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 01:40:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f19so8131106plr.3
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Aug 2019 22:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oFfgVd1HrYudeMH+V4T/rdJ0ZaXATB1kXtOEUXrqdlA=;
-        b=m8fdl5A8fxXULQBbv8DkWxR9lnZiN19xRHyF1cgeSYypSxNVhdNlMol9HGfyjTEt1Z
-         NErtDMu9J9v757HnHofiLvHU1oSaFrIlxB3VzbNbT6UXuq3VUvWGI0BP+aaOSh/f1KWY
-         uaOBA+rJ54B801AC5/cCGpqkuvzenMui0NuCBm+Iw1y+mnhmlzYCC+Wp+ElT1K5hrH1v
-         PYMBNKLM2QiQnH6+y/KSWsjyHgLDVyJS0upAZH4+iT1J2sGJ5NuHI6PoRaYmSrylAPhz
-         W0wlIrAJhAtq6Jl4V1Gmydewmtgg4/3TgMxdcrYHi5jo5jc9BerpmEbSKfassIMPFwTF
-         3L5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oFfgVd1HrYudeMH+V4T/rdJ0ZaXATB1kXtOEUXrqdlA=;
-        b=RzPZQEbmYUJRkRiBC1RRN3F2Y6H3WsdLNImKG0UpnHC1cRCZ4IIL4Yxh4MbE/1uegc
-         Wxse4G2D6pQzZl0cHb+IbFvbppMj2ENwBXnJOTb+sTvhkOq323ajWzsRIeEcFGVv/7VN
-         hOEugt6wWhh1OaIMMEXr9Kr5UB1Sjvlm5XftUyhmrwoo4FdeyRq7uXMsV1cvv5TeGaQg
-         cfH+Q8vLgOQXKFPr6bqjDwflJu5PKRQ/JNvFo/Gls60NBOsNyd6/I+O9gY3FCJfTupcR
-         Px2xUxpT5lehHD479o/KFvX72kW1J+aZgxpyHOWQxipV26VobHl/IkowYUC9sw9bPpsE
-         L6OQ==
-X-Gm-Message-State: APjAAAU/jzFLKrleIgxkNTj9/xm4kN5aDptzjagbGLMSmvW/vSNpn0Nq
-        mT6VpD7a0mpdtVOkS5umNC4=
-X-Google-Smtp-Source: APXvYqycSpOt5WgIzTiPYUlZTknHB+u4aBa9CR62RYRGwaidOo2OVwDD12nanrgdW9DMXKOSU+PJyQ==
-X-Received: by 2002:a17:902:4201:: with SMTP id g1mr13023712pld.300.1566711651684;
-        Sat, 24 Aug 2019 22:40:51 -0700 (PDT)
-Received: from localhost.localdomain (ip-103-85-38-221.syd.xi.com.au. [103.85.38.221])
-        by smtp.gmail.com with ESMTPSA id r75sm9395181pfc.18.2019.08.24.22.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2019 22:40:51 -0700 (PDT)
-From:   Adam Zerella <adam.zerella@gmail.com>
-Cc:     Adam Zerella <adam.zerella@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Sun, 25 Aug 2019 01:50:23 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7P5o6nf033711;
+        Sun, 25 Aug 2019 14:50:06 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
+ Sun, 25 Aug 2019 14:50:06 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7P5nxB4033656
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 25 Aug 2019 14:50:06 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pcmcia/i82092: Refactored dprintk macro for dev_dbg().
-Date:   Sun, 25 Aug 2019 15:35:10 +1000
-Message-Id: <20190825053513.13990-1-adam.zerella@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190823174357.GA8052@kroah.com>
-References: <20190823174357.GA8052@kroah.com>
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
+ <20190823091636.GA10064@gmail.com>
+ <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
+ <20190824161432.GA25950@gmail.com>
+ <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
+ <20190824202224.GA5286@gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <ab9ccf3c-6b87-652e-b305-41f2c2d1b2ae@i-love.sakura.ne.jp>
+Date:   Sun, 25 Aug 2019 14:49:57 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190824202224.GA5286@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As suggested in https://kernelnewbies.org/KernelJanitors/Todo
-this patch replaces the outdated macro of DPRINTK for dev_dbg()
+On 2019/08/25 5:22, Ingo Molnar wrote:
+>> So I'd be willing to try that (and then if somebody reports a
+>> regression we can make it use "fatal_signal_pending()" instead)
+> 
+> Ok, will post a changelogged patch (unless Tetsuo beats me to it?).
 
-To: Dominik Brodowski <linux@dominikbrodowski.net>
-To: Thomas Gleixner <tglx@linutronix.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Adam Zerella <adam.zerella@gmail.com>
-To: linux-kernel@vger.kernel.org
-Signed-off-by: Adam Zerella <adam.zerella@gmail.com>
----
-Changes in v2:
-  - Swap pr_debug() for dev_dbg()
-  - Clarify commit summary message
+Here is a patch. This patch also tries to fix handling of return code when
+partial read/write happened (because we should return bytes processed when
+we return due to -EINTR). But asymmetric between read function and write
+function looks messy. Maybe we should just make /dev/{mem,kmem} killable
+for now, and defer making /dev/{mem,kmem} interruptible till rewrite of
+read/write functions.
 
- drivers/pcmcia/i82092.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/char/mem.c | 89 ++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 50 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-index ec54a2aa5cb8..245d60189375 100644
---- a/drivers/pcmcia/i82092.c
-+++ b/drivers/pcmcia/i82092.c
-@@ -117,9 +117,9 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 		
- 		if (card_present(i)) {
- 			sockets[i].card_state = 3;
--			dprintk(KERN_DEBUG "i82092aa: slot %i is occupied\n",i);
-+			dev_dbg(&dev->dev, "i82092aa: slot %i is occupied\n", i);
- 		} else {
--			dprintk(KERN_DEBUG "i82092aa: slot %i is vacant\n",i);
-+			dev_dbg(&dev->dev, "i82092aa: slot %i is vacant\n", i);
- 		}
- 	}
- 		
-@@ -128,7 +128,7 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 	pci_write_config_byte(dev, 0x50, configbyte); /* PCI Interrupt Routing Register */
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index cb8e653..3c6a3c2 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -108,7 +108,7 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ 	ssize_t read, sz;
+ 	void *ptr;
+ 	char *bounce;
+-	int err;
++	int err = 0;
  
- 	/* Register the interrupt handler */
--	dprintk(KERN_DEBUG "Requesting interrupt %i \n",dev->irq);
-+	dev_dbg(&dev->dev, "Requesting interrupt %i\n", dev->irq);
- 	if ((ret = request_irq(dev->irq, i82092aa_interrupt, IRQF_SHARED, "i82092aa", i82092aa_interrupt))) {
- 		printk(KERN_ERR "i82092aa: Failed to register IRQ %d, aborting\n", dev->irq);
- 		goto err_out_free_res;
+ 	if (p != *ppos)
+ 		return 0;
+@@ -132,8 +132,10 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ #endif
+ 
+ 	bounce = kmalloc(PAGE_SIZE, GFP_KERNEL);
+-	if (!bounce)
+-		return -ENOMEM;
++	if (!bounce) {
++		err = -ENOMEM;
++		goto failed;
++	}
+ 
+ 	while (count > 0) {
+ 		unsigned long remaining;
+@@ -142,7 +144,7 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ 		sz = size_inside_page(p, count);
+ 		cond_resched();
+ 		err = -EINTR;
+-		if (fatal_signal_pending(current))
++		if (signal_pending(current))
+ 			goto failed;
+ 
+ 		err = -EPERM;
+@@ -180,14 +182,11 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ 		count -= sz;
+ 		read += sz;
+ 	}
++failed:
+ 	kfree(bounce);
+ 
+ 	*ppos += read;
+-	return read;
+-
+-failed:
+-	kfree(bounce);
+-	return err;
++	return read ? read : err;
+ }
+ 
+ static ssize_t write_mem(struct file *file, const char __user *buf,
+@@ -197,6 +196,7 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 	ssize_t written, sz;
+ 	unsigned long copied;
+ 	void *ptr;
++	int err = 0;
+ 
+ 	if (p != *ppos)
+ 		return -EFBIG;
+@@ -223,13 +223,16 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 
+ 		sz = size_inside_page(p, count);
+ 		cond_resched();
+-		if (fatal_signal_pending(current))
+-			return -EINTR;
++		err = -EINTR;
++		if (signal_pending(current))
++			break;
+ 
++		err = -EPERM;
+ 		allowed = page_is_allowed(p >> PAGE_SHIFT);
+ 		if (!allowed)
+-			return -EPERM;
++			break;
+ 
++		err = -EFAULT;
+ 		/* Skip actual writing when a page is marked as restricted. */
+ 		if (allowed == 1) {
+ 			/*
+@@ -238,19 +241,14 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 			 * by the kernel or data corruption may occur.
+ 			 */
+ 			ptr = xlate_dev_mem_ptr(p);
+-			if (!ptr) {
+-				if (written)
+-					break;
+-				return -EFAULT;
+-			}
++			if (!ptr)
++				break;
+ 
+ 			copied = copy_from_user(ptr, buf, sz);
+ 			unxlate_dev_mem_ptr(p, ptr);
+ 			if (copied) {
+ 				written += sz - copied;
+-				if (written)
+-					break;
+-				return -EFAULT;
++				break;
+ 			}
+ 		}
+ 
+@@ -261,7 +259,7 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 	}
+ 
+ 	*ppos += written;
+-	return written;
++	return written ? written : err;
+ }
+ 
+ int __weak phys_mem_access_prot_allowed(struct file *file,
+@@ -459,8 +457,10 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
+ 		while (low_count > 0) {
+ 			sz = size_inside_page(p, low_count);
+ 			cond_resched();
+-			if (fatal_signal_pending(current))
+-				return -EINTR;
++			if (signal_pending(current)) {
++				err = -EINTR;
++				goto failed;
++			}
+ 
+ 			/*
+ 			 * On ia64 if a page has been mapped somewhere as
+@@ -468,11 +468,15 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
+ 			 * by the kernel or data corruption may occur
+ 			 */
+ 			kbuf = xlate_dev_kmem_ptr((void *)p);
+-			if (!virt_addr_valid(kbuf))
+-				return -ENXIO;
++			if (!virt_addr_valid(kbuf)) {
++				err = -ENXIO;
++				goto failed;
++			}
+ 
+-			if (copy_to_user(buf, kbuf, sz))
+-				return -EFAULT;
++			if (copy_to_user(buf, kbuf, sz)) {
++				err = -EFAULT;
++				goto failed;
++			}
+ 			buf += sz;
+ 			p += sz;
+ 			read += sz;
+@@ -483,12 +487,14 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
+ 
+ 	if (count > 0) {
+ 		kbuf = (char *)__get_free_page(GFP_KERNEL);
+-		if (!kbuf)
+-			return -ENOMEM;
++		if (!kbuf) {
++			err = -ENOMEM;
++			goto failed;
++		}
+ 		while (count > 0) {
+ 			sz = size_inside_page(p, count);
+ 			cond_resched();
+-			if (fatal_signal_pending(current)) {
++			if (signal_pending(current)) {
+ 				err = -EINTR;
+ 				break;
+ 			}
+@@ -510,6 +516,7 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
++ failed:
+ 	*ppos = p;
+ 	return read ? read : err;
+ }
+@@ -520,6 +527,7 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
+ {
+ 	ssize_t written, sz;
+ 	unsigned long copied;
++	int err = 0;
+ 
+ 	written = 0;
+ #ifdef __ARCH_HAS_NO_PAGE_ZERO_MAPPED
+@@ -539,8 +547,10 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
+ 
+ 		sz = size_inside_page(p, count);
+ 		cond_resched();
+-		if (fatal_signal_pending(current))
+-			return -EINTR;
++		if (signal_pending(current)) {
++			err = -EINTR;
++			break;
++		}
+ 
+ 		/*
+ 		 * On ia64 if a page has been mapped somewhere as uncached, then
+@@ -548,15 +558,16 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
+ 		 * corruption may occur.
+ 		 */
+ 		ptr = xlate_dev_kmem_ptr((void *)p);
+-		if (!virt_addr_valid(ptr))
+-			return -ENXIO;
++		if (!virt_addr_valid(ptr)) {
++			err = -ENXIO;
++			break;
++		}
+ 
+ 		copied = copy_from_user(ptr, buf, sz);
+ 		if (copied) {
+ 			written += sz - copied;
+-			if (written)
+-				break;
+-			return -EFAULT;
++			err = -EFAULT;
++			break;
+ 		}
+ 		buf += sz;
+ 		p += sz;
+@@ -565,7 +576,7 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
+ 	}
+ 
+ 	*ppos += written;
+-	return written;
++	return written ? written : err;
+ }
+ 
+ /*
+@@ -600,7 +611,7 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
+ 			unsigned long n;
+ 
+ 			cond_resched();
+-			if (fatal_signal_pending(current)) {
++			if (signal_pending(current)) {
+ 				err = -EINTR;
+ 				break;
+ 			}
 -- 
-2.20.1
-
+1.8.3.1
