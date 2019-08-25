@@ -2,1052 +2,726 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31CEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F82C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C47720674
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BD220674
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 21:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flameeyes-com.20150623.gappssmtp.com header.i=@flameeyes-com.20150623.gappssmtp.com header.b="D7DigmLC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnPyEA4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbfHYV6u (ORCPT
+        id S1729158AbfHYV72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 17:58:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45582 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729077AbfHYV6u (ORCPT
+        Sun, 25 Aug 2019 17:59:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35544 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbfHYV71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 17:58:50 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so13401733wrj.12
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 14:58:44 -0700 (PDT)
+        Sun, 25 Aug 2019 17:59:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d85so10374255pfd.2
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 14:59:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flameeyes-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UW42jtkGI9ga5NKzOZu2Pn32KJrQje1vsVII5ttdsGQ=;
-        b=D7DigmLCgmnQONj3B7oPzzK1Pu5DaLYbOKIX/Y/jSNRaT7L41+sR81ny4MkhNr1sWL
-         jG/UEDqSD/OMuBTYVsy4brEmppXcywhP9pEZpbm8UaYeqj5U1kr7rNwNFOEPBpPhLRm5
-         ZZAYGDdXl392lsQiBrQLpGBPI7Xa6YXcIr3iNhNIBiJQjjMBz4sGauIItZoB/Hktl3Hu
-         PggHFshOOg6qQZuAXCOWxyFr7cnry58acNU1INp7tV/c0l9SdbIRIOwBpy7mBxSe1Kr+
-         qNmbsE+kT8tas5kBz0eVlFwbNtGYCDwsRfXpaPATK+W7sgHhGor2C6ARcVrat2cNc6BV
-         k2eQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/7sreUlsh0dw1W6JSjnLB6MK6NEZ73Eh0nWdiGROXZ4=;
+        b=PnPyEA4K4kwv41+HlDKpzC/KJhB6j0eredQ4bXN0PhrWNfXPX46MDSj56N1iKV+moJ
+         94Kpd6erivfOa6gW75yASD08w8eBI97wFSviNiqoSsjnAgwf4LxRoefmWNX6mYj9Wwh/
+         9ZwTQZVR78Sk5gjKqyNkvIdUz6glQESLL4Wu+8T7gla+m8IJJZSTKPidslBBdPCOPaWN
+         4RtYEJfbwaD6tTxzLW3IxQ26GXu49vAbjv6P0puiaNJQ2BpLdkOLihWCbBl1vYxpX9nq
+         tjn92fl3J4lkSnj+zeiDN//BhMuIBXTLbAG1MfLFeDMRYZ6619an1EInliB+M9aLFuV6
+         mZpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UW42jtkGI9ga5NKzOZu2Pn32KJrQje1vsVII5ttdsGQ=;
-        b=hBWGMOv3QynM7MxBKb0WQcvNLXPo/5ydeU1RAFMy6zPhYGx3GYVfSIZjaszZAbuWde
-         YSN77BVe5O+QgO6ES1M5EnLweVaA104tfaZE0GEov+oHyskwW79YOlHx9tWn5LkL6s7y
-         Cia3Hq14LZAzL+KxMd5i8Cd5FCW8Xa7nNrMfaSF3wWEQaITTz+yuDRQXKGjWg8OxcqdO
-         htd9aPJT48lPs4DvFbYue/Qu4syQp+S5m6VTq7MOcSB8bg9qVV9s1tU2zkIy48lvwGmn
-         H4yM5kDLfhcBXncgKnufoc7xEDSgqAThUmCLWLG6SmVGIbVbArrZmYo/ih30WDupgZBe
-         GDNQ==
-X-Gm-Message-State: APjAAAW1Fz2I0N27vOlrJHdNsSncpyX6oXHUrKBZihPkjiX5DMzVX5Rr
-        5CfJ+TMQj5KUME3V6Slg63Jwtol6ky+EEA==
-X-Google-Smtp-Source: APXvYqyWKieZNLY5RJOqySyB/umpXTQJR2ChTPpgQImL/+J1tYT3jO47qYTIFwgs3rZgil75E3enLg==
-X-Received: by 2002:adf:dfc5:: with SMTP id q5mr19268332wrn.142.1566770322907;
-        Sun, 25 Aug 2019 14:58:42 -0700 (PDT)
-Received: from localhost ([2a01:4b00:80c6:1000:5b16:35e9:1ce5:7fc9])
-        by smtp.gmail.com with ESMTPSA id q18sm9745339wrw.36.2019.08.25.14.58.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/7sreUlsh0dw1W6JSjnLB6MK6NEZ73Eh0nWdiGROXZ4=;
+        b=CA40BjvgbfLqxur+cPS5TZ1u35OLPkhUDiY8ws5As3Ydkqz0qNr9tEyoRAWogoo8t2
+         +a4AdKDqtDMUf2eGLRVEnfUm7RzTeIpnijZkp+PGaZb2QQNiey7+R7r79qHLW0QFw5AY
+         ks1dxWy89AZt1sb38Qc/rZwvnIia4T7epumnVn7Ih3cd4UP5Ddyh9SERZBeu25LuKwCu
+         4V8MGQR536dPWS49zC+yc+2zm+JCVFTHRvvOJP1/QQNtZwM5yMsod/XksPUx6I65cHh4
+         iTLSvCitw3wOJMRKB9k1is+QXjLckjb2SGZkbMe2gOyRTg9Z2zj3bQtH9ruM1AVsQjVD
+         lzhw==
+X-Gm-Message-State: APjAAAWhHKuvJT42QoAr40dYQG7hXMH9G2re/qvQlvV3WSYNnSNr2U5I
+        zy/r3RWfua22svNKxAt+Taj11slskEc=
+X-Google-Smtp-Source: APXvYqxr9llYHQAPm0Kgxo0eZnVzWveWNg6ZWSrsG8vW3FzyZwU7gK/fi9aYrGgkUY94zrGXV3Pztg==
+X-Received: by 2002:a62:4e09:: with SMTP id c9mr17469167pfb.130.1566770366453;
+        Sun, 25 Aug 2019 14:59:26 -0700 (PDT)
+Received: from Gentoo ([103.231.91.74])
+        by smtp.gmail.com with ESMTPSA id f205sm11680075pfa.161.2019.08.25.14.59.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 25 Aug 2019 14:58:41 -0700 (PDT)
-From:   =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>
-Subject: [PATCH] cdrom: make debug logging rely on pr_debug and debugfs only.
-Date:   Sun, 25 Aug 2019 22:58:33 +0100
-Message-Id: <20190825215833.25817-1-flameeyes@flameeyes.com>
-X-Mailer: git-send-email 2.22.0
+        Sun, 25 Aug 2019 14:59:25 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 03:29:14 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc6
+Message-ID: <20190825215911.GA10238@Gentoo>
+References: <CAHk-=wgAKCTq+t5YnG6HzrF62=rr9H=q3LqokEP0_bQRHLwYNw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgAKCTq+t5YnG6HzrF62=rr9H=q3LqokEP0_bQRHLwYNw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cdrom driver predates debugfs and most of the modern debugging
-facilities, so instead it has been includings a module parameter and an
-ioctl to enable debug messages.
 
-In 2019, debugfs and dynamic debug makes most of that redundant, and even
-confusing when trying to trace things in the dept of the driver.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
----
- drivers/cdrom/cdrom.c | 270 +++++++++++++++++-------------------------
- 1 file changed, 106 insertions(+), 164 deletions(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index ac42ae4651ce..7fc94b5f6556 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -247,24 +247,6 @@
- #define REVISION "Revision: 3.20"
- #define VERSION "Id: cdrom.c 3.20 2003/12/17"
- 
--/* I use an error-log mask to give fine grain control over the type of
--   messages dumped to the system logs.  The available masks include: */
--#define CD_NOTHING      0x0
--#define CD_WARNING	0x1
--#define CD_REG_UNREG	0x2
--#define CD_DO_IOCTL	0x4
--#define CD_OPEN		0x8
--#define CD_CLOSE	0x10
--#define CD_COUNT_TRACKS 0x20
--#define CD_CHANGER	0x40
--#define CD_DVD		0x80
--
--/* Define this to remove _all_ the debugging messages */
--/* #define ERRLOGMASK CD_NOTHING */
--#define ERRLOGMASK CD_WARNING
--/* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
--/* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
--
- #include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
-@@ -286,8 +268,6 @@
- #include <scsi/scsi_common.h>
- #include <scsi/scsi_request.h>
- 
--/* used to tell the module to turn on full debugging messages */
--static bool debug;
- /* default compatibility mode */
- static bool autoclose=1;
- static bool autoeject;
-@@ -296,7 +276,6 @@ static bool lockdoor = 1;
- static bool check_media_type;
- /* automatically restart mrw format */
- static bool mrw_format_restart = 1;
--module_param(debug, bool, 0);
- module_param(autoclose, bool, 0);
- module_param(autoeject, bool, 0);
- module_param(lockdoor, bool, 0);
-@@ -314,20 +293,6 @@ static const char *mrw_format_status[] = {
- 
- static const char *mrw_address_space[] = { "DMA", "GAA" };
- 
--#if (ERRLOGMASK != CD_NOTHING)
--#define cd_dbg(type, fmt, ...)				\
--do {							\
--	if ((ERRLOGMASK & type) || debug == 1)		\
--		pr_debug(fmt, ##__VA_ARGS__);		\
--} while (0)
--#else
--#define cd_dbg(type, fmt, ...)				\
--do {							\
--	if (0 && (ERRLOGMASK & type) || debug == 1)	\
--		pr_debug(fmt, ##__VA_ARGS__);		\
--} while (0)
--#endif
--
- /* The (cdo->capability & ~cdi->mask & CDC_XXX) construct was used in
-    a lot of places. This macro makes the code more clear. */
- #define CDROM_CAN(type) (cdi->ops->capability & ~cdi->mask & (type))
-@@ -591,7 +556,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
- 	static char banner_printed;
- 	const struct cdrom_device_ops *cdo = cdi->ops;
- 
--	cd_dbg(CD_OPEN, "entering register_cdrom\n");
-+	pr_debug("entering register_cdrom\n");
- 
- 	if (cdo->open == NULL || cdo->release == NULL)
- 		return -EINVAL;
-@@ -633,7 +598,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
- 
- 	WARN_ON(!cdo->generic_packet);
- 
--	cd_dbg(CD_REG_UNREG, "drive \"/dev/%s\" registered\n", cdi->name);
-+	pr_debug("drive \"/dev/%s\" registered\n", cdi->name);
- 	mutex_lock(&cdrom_mutex);
- 	list_add(&cdi->list, &cdrom_list);
- 	mutex_unlock(&cdrom_mutex);
-@@ -643,7 +608,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
- 
- void unregister_cdrom(struct cdrom_device_info *cdi)
- {
--	cd_dbg(CD_OPEN, "entering unregister_cdrom\n");
-+	pr_debug("entering unregister_cdrom\n");
- 
- 	mutex_lock(&cdrom_mutex);
- 	list_del(&cdi->list);
-@@ -652,7 +617,7 @@ void unregister_cdrom(struct cdrom_device_info *cdi)
- 	if (cdi->exit)
- 		cdi->exit(cdi);
- 
--	cd_dbg(CD_REG_UNREG, "drive \"/dev/%s\" unregistered\n", cdi->name);
-+	pr_debug("drive \"/dev/%s\" unregistered\n", cdi->name);
- }
- 
- int cdrom_get_media_event(struct cdrom_device_info *cdi,
-@@ -853,7 +818,7 @@ static int cdrom_ram_open_write(struct cdrom_device_info *cdi)
- 	else if (CDF_RWRT == be16_to_cpu(rfd.feature_code))
- 		ret = !rfd.curr;
- 
--	cd_dbg(CD_OPEN, "can open for random write\n");
-+	pr_debug("can open for random write\n");
- 	return ret;
- }
- 
-@@ -943,12 +908,12 @@ static void cdrom_dvd_rw_close_write(struct cdrom_device_info *cdi)
- 	struct packet_command cgc;
- 
- 	if (cdi->mmc3_profile != 0x1a) {
--		cd_dbg(CD_CLOSE, "%s: No DVD+RW\n", cdi->name);
-+		pr_debug("%s: No DVD+RW\n", cdi->name);
- 		return;
- 	}
- 
- 	if (!cdi->media_written) {
--		cd_dbg(CD_CLOSE, "%s: DVD+RW media clean\n", cdi->name);
-+		pr_debug("%s: DVD+RW media clean\n", cdi->name);
- 		return;
- 	}
- 
-@@ -995,7 +960,7 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
- 	tracks->cdi = 0;
- 	tracks->xa = 0;
- 	tracks->error = 0;
--	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
-+	pr_debug("entering cdrom_count_tracks\n");
- 	/* Grab the TOC header so we can see how many tracks there are */
- 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
- 	if (ret) {
-@@ -1023,10 +988,10 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
- 		} else {
- 			tracks->audio++;
- 		}
--		cd_dbg(CD_COUNT_TRACKS, "track %d: format=%d, ctrl=%d\n",
-+		pr_debug("track %d: format=%d, ctrl=%d\n",
- 		       i, entry.cdte_format, entry.cdte_ctrl);
- 	}
--	cd_dbg(CD_COUNT_TRACKS, "disc has %d tracks: %d=audio %d=data %d=Cd-I %d=XA\n",
-+	pr_debug("disc has %d tracks: %d=audio %d=data %d=Cd-I %d=XA\n",
- 	       header.cdth_trk1, tracks->audio, tracks->data,
- 	       tracks->cdi, tracks->xa);
- }
-@@ -1037,21 +1002,21 @@ int open_for_data(struct cdrom_device_info *cdi)
- 	int ret;
- 	const struct cdrom_device_ops *cdo = cdi->ops;
- 	tracktype tracks;
--	cd_dbg(CD_OPEN, "entering open_for_data\n");
-+	pr_debug("entering open_for_data\n");
- 	/* Check if the driver can report drive status.  If it can, we
- 	   can do clever things.  If it can't, well, we at least tried! */
- 	if (cdo->drive_status != NULL) {
- 		ret = cdo->drive_status(cdi, CDSL_CURRENT);
--		cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
-+		pr_debug("drive_status=%d\n", ret);
- 		if (ret == CDS_TRAY_OPEN) {
--			cd_dbg(CD_OPEN, "the tray is open...\n");
-+			pr_debug("the tray is open...\n");
- 			/* can/may i close it? */
- 			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
- 			    cdi->options & CDO_AUTO_CLOSE) {
--				cd_dbg(CD_OPEN, "trying to close the tray\n");
-+				pr_debug("trying to close the tray\n");
- 				ret=cdo->tray_move(cdi,0);
- 				if (ret) {
--					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
-+					pr_debug("bummer. tried to close the tray but failed.\n");
- 					/* Ignore the error from the low
- 					level driver.  We don't care why it
- 					couldn't close the tray.  We only care 
-@@ -1061,19 +1026,19 @@ int open_for_data(struct cdrom_device_info *cdi)
- 					goto clean_up_and_return;
- 				}
- 			} else {
--				cd_dbg(CD_OPEN, "bummer. this drive can't close the tray.\n");
-+				pr_debug("bummer. this drive can't close the tray.\n");
- 				ret=-ENOMEDIUM;
- 				goto clean_up_and_return;
- 			}
- 			/* Ok, the door should be closed now.. Check again */
- 			ret = cdo->drive_status(cdi, CDSL_CURRENT);
- 			if ((ret == CDS_NO_DISC) || (ret==CDS_TRAY_OPEN)) {
--				cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
--				cd_dbg(CD_OPEN, "tray might not contain a medium\n");
-+				pr_debug("bummer. the tray is still not closed.\n");
-+				pr_debug("tray might not contain a medium\n");
- 				ret=-ENOMEDIUM;
- 				goto clean_up_and_return;
- 			}
--			cd_dbg(CD_OPEN, "the tray is now closed\n");
-+			pr_debug("the tray is now closed\n");
- 		}
- 		/* the door should be closed now, check for the disc */
- 		ret = cdo->drive_status(cdi, CDSL_CURRENT);
-@@ -1084,7 +1049,7 @@ int open_for_data(struct cdrom_device_info *cdi)
- 	}
- 	cdrom_count_tracks(cdi, &tracks);
- 	if (tracks.error == CDS_NO_DISC) {
--		cd_dbg(CD_OPEN, "bummer. no disc.\n");
-+		pr_debug("bummer. no disc.\n");
- 		ret=-ENOMEDIUM;
- 		goto clean_up_and_return;
- 	}
-@@ -1094,34 +1059,34 @@ int open_for_data(struct cdrom_device_info *cdi)
- 		if (cdi->options & CDO_CHECK_TYPE) {
- 		    /* give people a warning shot, now that CDO_CHECK_TYPE
- 		       is the default case! */
--		    cd_dbg(CD_OPEN, "bummer. wrong media type.\n");
--		    cd_dbg(CD_WARNING, "pid %d must open device O_NONBLOCK!\n",
-+		    pr_debug("bummer. wrong media type.\n");
-+		    pr_debug("pid %d must open device O_NONBLOCK!\n",
- 			   (unsigned int)task_pid_nr(current));
- 		    ret=-EMEDIUMTYPE;
- 		    goto clean_up_and_return;
- 		}
- 		else {
--		    cd_dbg(CD_OPEN, "wrong media type, but CDO_CHECK_TYPE not set\n");
-+		    pr_debug("wrong media type, but CDO_CHECK_TYPE not set\n");
- 		}
- 	}
- 
--	cd_dbg(CD_OPEN, "all seems well, opening the devicen");
-+	pr_debug("all seems well, opening the devicen");
- 
- 	/* all seems well, we can open the device */
- 	ret = cdo->open(cdi, 0); /* open for data */
--	cd_dbg(CD_OPEN, "opening the device gave me %d\n", ret);
-+	pr_debug("opening the device gave me %d\n", ret);
- 	/* After all this careful checking, we shouldn't have problems
- 	   opening the device, but we don't want the device locked if 
- 	   this somehow fails... */
- 	if (ret) {
--		cd_dbg(CD_OPEN, "open device failed\n");
-+		pr_debug("open device failed\n");
- 		goto clean_up_and_return;
- 	}
- 	if (CDROM_CAN(CDC_LOCK) && (cdi->options & CDO_LOCK)) {
- 			cdo->lock_door(cdi, 1);
--			cd_dbg(CD_OPEN, "door locked\n");
-+			pr_debug("door locked\n");
- 	}
--	cd_dbg(CD_OPEN, "device opened successfully\n");
-+	pr_debug("device opened successfully\n");
- 	return ret;
- 
- 	/* Something failed.  Try to unlock the drive, because some drivers
-@@ -1130,10 +1095,10 @@ int open_for_data(struct cdrom_device_info *cdi)
- 	This ensures that the drive gets unlocked after a mount fails.  This 
- 	is a goto to avoid bloating the driver with redundant code. */ 
- clean_up_and_return:
--	cd_dbg(CD_OPEN, "open failed\n");
-+	pr_debug("open failed\n");
- 	if (CDROM_CAN(CDC_LOCK) && cdi->options & CDO_LOCK) {
- 			cdo->lock_door(cdi, 0);
--			cd_dbg(CD_OPEN, "door unlocked\n");
-+			pr_debug("door unlocked\n");
- 	}
- 	return ret;
- }
-@@ -1151,7 +1116,7 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
- {
- 	int ret;
- 
--	cd_dbg(CD_OPEN, "entering cdrom_open\n");
-+	pr_debug("entering cdrom_open\n");
- 
- 	/* if this was a O_NONBLOCK open and we should honor the flags,
- 	 * do a quick open without drive/disc integrity checks. */
-@@ -1177,13 +1142,13 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
- 	if (ret)
- 		goto err;
- 
--	cd_dbg(CD_OPEN, "Use count for \"/dev/%s\" now %d\n",
-+	pr_debug("Use count for \"/dev/%s\" now %d\n",
- 	       cdi->name, cdi->use_count);
- 	return 0;
- err_release:
- 	if (CDROM_CAN(CDC_LOCK) && cdi->options & CDO_LOCK) {
- 		cdi->ops->lock_door(cdi, 0);
--		cd_dbg(CD_OPEN, "door unlocked\n");
-+		pr_debug("door unlocked\n");
- 	}
- 	cdi->ops->release(cdi);
- err:
-@@ -1199,21 +1164,21 @@ static int check_for_audio_disc(struct cdrom_device_info *cdi,
- {
-         int ret;
- 	tracktype tracks;
--	cd_dbg(CD_OPEN, "entering check_for_audio_disc\n");
-+	pr_debug("entering check_for_audio_disc\n");
- 	if (!(cdi->options & CDO_CHECK_TYPE))
- 		return 0;
- 	if (cdo->drive_status != NULL) {
- 		ret = cdo->drive_status(cdi, CDSL_CURRENT);
--		cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
-+		pr_debug("drive_status=%d\n", ret);
- 		if (ret == CDS_TRAY_OPEN) {
--			cd_dbg(CD_OPEN, "the tray is open...\n");
-+			pr_debug("the tray is open...\n");
- 			/* can/may i close it? */
- 			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
- 			    cdi->options & CDO_AUTO_CLOSE) {
--				cd_dbg(CD_OPEN, "trying to close the tray\n");
-+				pr_debug("trying to close the tray\n");
- 				ret=cdo->tray_move(cdi,0);
- 				if (ret) {
--					cd_dbg(CD_OPEN, "bummer. tried to close tray but failed.\n");
-+					pr_debug("bummer. tried to close tray but failed.\n");
- 					/* Ignore the error from the low
- 					level driver.  We don't care why it
- 					couldn't close the tray.  We only care 
-@@ -1222,20 +1187,20 @@ static int check_for_audio_disc(struct cdrom_device_info *cdi,
- 					return -ENOMEDIUM;
- 				}
- 			} else {
--				cd_dbg(CD_OPEN, "bummer. this driver can't close the tray.\n");
-+				pr_debug("bummer. this driver can't close the tray.\n");
- 				return -ENOMEDIUM;
- 			}
- 			/* Ok, the door should be closed now.. Check again */
- 			ret = cdo->drive_status(cdi, CDSL_CURRENT);
- 			if ((ret == CDS_NO_DISC) || (ret==CDS_TRAY_OPEN)) {
--				cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
-+				pr_debug("bummer. the tray is still not closed.\n");
- 				return -ENOMEDIUM;
- 			}	
- 			if (ret!=CDS_DISC_OK) {
--				cd_dbg(CD_OPEN, "bummer. disc isn't ready.\n");
-+				pr_debug("bummer. disc isn't ready.\n");
- 				return -EIO;
- 			}	
--			cd_dbg(CD_OPEN, "the tray is now closed\n");
-+			pr_debug("the tray is now closed\n");
- 		}	
- 	}
- 	cdrom_count_tracks(cdi, &tracks);
-@@ -1253,18 +1218,18 @@ void cdrom_release(struct cdrom_device_info *cdi, fmode_t mode)
- 	const struct cdrom_device_ops *cdo = cdi->ops;
- 	int opened_for_data;
- 
--	cd_dbg(CD_CLOSE, "entering cdrom_release\n");
-+	pr_debug("entering cdrom_release\n");
- 
- 	if (cdi->use_count > 0)
- 		cdi->use_count--;
- 
- 	if (cdi->use_count == 0) {
--		cd_dbg(CD_CLOSE, "Use count for \"/dev/%s\" now zero\n",
-+		pr_debug("Use count for \"/dev/%s\" now zero\n",
- 		       cdi->name);
- 		cdrom_dvd_rw_close_write(cdi);
- 
- 		if ((cdo->capability & CDC_LOCK) && !cdi->keeplocked) {
--			cd_dbg(CD_CLOSE, "Unlocking door!\n");
-+			pr_debug("Unlocking door!\n");
- 			cdo->lock_door(cdi, 0);
- 		}
- 	}
-@@ -1323,7 +1288,7 @@ static int cdrom_slot_status(struct cdrom_device_info *cdi, int slot)
- 	struct cdrom_changer_info *info;
- 	int ret;
- 
--	cd_dbg(CD_CHANGER, "entering cdrom_slot_status()\n");
-+	pr_debug("entering cdrom_slot_status()\n");
- 	if (cdi->sanyo_slot)
- 		return CDS_NO_INFO;
- 	
-@@ -1353,7 +1318,7 @@ int cdrom_number_of_slots(struct cdrom_device_info *cdi)
- 	int nslots = 1;
- 	struct cdrom_changer_info *info;
- 
--	cd_dbg(CD_CHANGER, "entering cdrom_number_of_slots()\n");
-+	pr_debug("entering cdrom_number_of_slots()\n");
- 	/* cdrom_read_mech_status requires a valid value for capacity: */
- 	cdi->capacity = 0; 
- 
-@@ -1374,7 +1339,7 @@ static int cdrom_load_unload(struct cdrom_device_info *cdi, int slot)
- {
- 	struct packet_command cgc;
- 
--	cd_dbg(CD_CHANGER, "entering cdrom_load_unload()\n");
-+	pr_debug("entering cdrom_load_unload()\n");
- 	if (cdi->sanyo_slot && slot < 0)
- 		return 0;
- 
-@@ -1403,7 +1368,7 @@ static int cdrom_select_disc(struct cdrom_device_info *cdi, int slot)
- 	int curslot;
- 	int ret;
- 
--	cd_dbg(CD_CHANGER, "entering cdrom_select_disc()\n");
-+	pr_debug("entering cdrom_select_disc()\n");
- 	if (!CDROM_CAN(CDC_SELECT_DISC))
- 		return -EDRIVE_CANT_DO_THIS;
- 
-@@ -1648,7 +1613,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 	switch (ai->type) {
- 	/* LU data send */
- 	case DVD_LU_SEND_AGID:
--		cd_dbg(CD_DVD, "entering DVD_LU_SEND_AGID\n");
-+		pr_debug("entering DVD_LU_SEND_AGID\n");
- 		cgc.quiet = 1;
- 		setup_report_key(&cgc, ai->lsa.agid, 0);
- 
-@@ -1660,7 +1625,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 		break;
- 
- 	case DVD_LU_SEND_KEY1:
--		cd_dbg(CD_DVD, "entering DVD_LU_SEND_KEY1\n");
-+		pr_debug("entering DVD_LU_SEND_KEY1\n");
- 		setup_report_key(&cgc, ai->lsk.agid, 2);
- 
- 		if ((ret = cdo->generic_packet(cdi, &cgc)))
-@@ -1671,7 +1636,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 		break;
- 
- 	case DVD_LU_SEND_CHALLENGE:
--		cd_dbg(CD_DVD, "entering DVD_LU_SEND_CHALLENGE\n");
-+		pr_debug("entering DVD_LU_SEND_CHALLENGE\n");
- 		setup_report_key(&cgc, ai->lsc.agid, 1);
- 
- 		if ((ret = cdo->generic_packet(cdi, &cgc)))
-@@ -1683,7 +1648,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 
- 	/* Post-auth key */
- 	case DVD_LU_SEND_TITLE_KEY:
--		cd_dbg(CD_DVD, "entering DVD_LU_SEND_TITLE_KEY\n");
-+		pr_debug("entering DVD_LU_SEND_TITLE_KEY\n");
- 		cgc.quiet = 1;
- 		setup_report_key(&cgc, ai->lstk.agid, 4);
- 		cgc.cmd[5] = ai->lstk.lba;
-@@ -1702,7 +1667,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 		break;
- 
- 	case DVD_LU_SEND_ASF:
--		cd_dbg(CD_DVD, "entering DVD_LU_SEND_ASF\n");
-+		pr_debug("entering DVD_LU_SEND_ASF\n");
- 		setup_report_key(&cgc, ai->lsasf.agid, 5);
- 		
- 		if ((ret = cdo->generic_packet(cdi, &cgc)))
-@@ -1713,7 +1678,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 
- 	/* LU data receive (LU changes state) */
- 	case DVD_HOST_SEND_CHALLENGE:
--		cd_dbg(CD_DVD, "entering DVD_HOST_SEND_CHALLENGE\n");
-+		pr_debug("entering DVD_HOST_SEND_CHALLENGE\n");
- 		setup_send_key(&cgc, ai->hsc.agid, 1);
- 		buf[1] = 0xe;
- 		copy_chal(&buf[4], ai->hsc.chal);
-@@ -1725,7 +1690,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 		break;
- 
- 	case DVD_HOST_SEND_KEY2:
--		cd_dbg(CD_DVD, "entering DVD_HOST_SEND_KEY2\n");
-+		pr_debug("entering DVD_HOST_SEND_KEY2\n");
- 		setup_send_key(&cgc, ai->hsk.agid, 3);
- 		buf[1] = 0xa;
- 		copy_key(&buf[4], ai->hsk.key);
-@@ -1740,7 +1705,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 	/* Misc */
- 	case DVD_INVALIDATE_AGID:
- 		cgc.quiet = 1;
--		cd_dbg(CD_DVD, "entering DVD_INVALIDATE_AGID\n");
-+		pr_debug("entering DVD_INVALIDATE_AGID\n");
- 		setup_report_key(&cgc, ai->lsa.agid, 0x3f);
- 		if ((ret = cdo->generic_packet(cdi, &cgc)))
- 			return ret;
-@@ -1748,7 +1713,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 
- 	/* Get region settings */
- 	case DVD_LU_SEND_RPC_STATE:
--		cd_dbg(CD_DVD, "entering DVD_LU_SEND_RPC_STATE\n");
-+		pr_debug("entering DVD_LU_SEND_RPC_STATE\n");
- 		setup_report_key(&cgc, 0, 8);
- 		memset(&rpc_state, 0, sizeof(rpc_state_t));
- 		cgc.buffer = (char *) &rpc_state;
-@@ -1765,7 +1730,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 
- 	/* Set region settings */
- 	case DVD_HOST_SEND_RPC_STATE:
--		cd_dbg(CD_DVD, "entering DVD_HOST_SEND_RPC_STATE\n");
-+		pr_debug("entering DVD_HOST_SEND_RPC_STATE\n");
- 		setup_send_key(&cgc, 0, 6);
- 		buf[1] = 6;
- 		buf[4] = ai->hrpcs.pdrc;
-@@ -1775,7 +1740,7 @@ static int dvd_do_auth(struct cdrom_device_info *cdi, dvd_authinfo *ai)
- 		break;
- 
- 	default:
--		cd_dbg(CD_WARNING, "Invalid DVD key ioctl (%d)\n", ai->type);
-+		pr_debug("Invalid DVD key ioctl (%d)\n", ai->type);
- 		return -ENOTTY;
- 	}
- 
-@@ -1907,7 +1872,7 @@ static int dvd_read_bca(struct cdrom_device_info *cdi, dvd_struct *s,
- 
- 	s->bca.len = buf[0] << 8 | buf[1];
- 	if (s->bca.len < 12 || s->bca.len > 188) {
--		cd_dbg(CD_WARNING, "Received invalid BCA length (%d)\n",
-+		pr_debug("Received invalid BCA length (%d)\n",
- 		       s->bca.len);
- 		ret = -EIO;
- 		goto out;
-@@ -1944,12 +1909,12 @@ static int dvd_read_manufact(struct cdrom_device_info *cdi, dvd_struct *s,
- 
- 	s->manufact.len = buf[0] << 8 | buf[1];
- 	if (s->manufact.len < 0) {
--		cd_dbg(CD_WARNING, "Received invalid manufacture info length (%d)\n",
-+		pr_debug("Received invalid manufacture info length (%d)\n",
- 		       s->manufact.len);
- 		ret = -EIO;
- 	} else {
- 		if (s->manufact.len > 2048) {
--			cd_dbg(CD_WARNING, "Received invalid manufacture info length (%d): truncating to 2048\n",
-+			pr_debug("Received invalid manufacture info length (%d): truncating to 2048\n",
- 			       s->manufact.len);
- 			s->manufact.len = 2048;
- 		}
-@@ -1981,7 +1946,7 @@ static int dvd_read_struct(struct cdrom_device_info *cdi, dvd_struct *s,
- 		return dvd_read_manufact(cdi, s, cgc);
- 		
- 	default:
--		cd_dbg(CD_WARNING, ": Invalid DVD structure read requested (%d)\n",
-+		pr_debug(": Invalid DVD structure read requested (%d)\n",
- 		       s->type);
- 		return -EINVAL;
- 	}
-@@ -2292,7 +2257,7 @@ static int cdrom_ioctl_multisession(struct cdrom_device_info *cdi,
- 	u8 requested_format;
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROMMULTISESSION\n");
-+	pr_debug("entering CDROMMULTISESSION\n");
- 
- 	if (!(cdi->ops->capability & CDC_MULTI_SESSION))
- 		return -ENOSYS;
-@@ -2314,13 +2279,13 @@ static int cdrom_ioctl_multisession(struct cdrom_device_info *cdi,
- 	if (copy_to_user(argp, &ms_info, sizeof(ms_info)))
- 		return -EFAULT;
- 
--	cd_dbg(CD_DO_IOCTL, "CDROMMULTISESSION successful\n");
-+	pr_debug("CDROMMULTISESSION successful\n");
- 	return 0;
- }
- 
- static int cdrom_ioctl_eject(struct cdrom_device_info *cdi)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROMEJECT\n");
-+	pr_debug("entering CDROMEJECT\n");
- 
- 	if (!CDROM_CAN(CDC_OPEN_TRAY))
- 		return -ENOSYS;
-@@ -2337,7 +2302,7 @@ static int cdrom_ioctl_eject(struct cdrom_device_info *cdi)
- 
- static int cdrom_ioctl_closetray(struct cdrom_device_info *cdi)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROMCLOSETRAY\n");
-+	pr_debug("entering CDROMCLOSETRAY\n");
- 
- 	if (!CDROM_CAN(CDC_CLOSE_TRAY))
- 		return -ENOSYS;
-@@ -2347,7 +2312,7 @@ static int cdrom_ioctl_closetray(struct cdrom_device_info *cdi)
- static int cdrom_ioctl_eject_sw(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROMEJECT_SW\n");
-+	pr_debug("entering CDROMEJECT_SW\n");
- 
- 	if (!CDROM_CAN(CDC_OPEN_TRAY))
- 		return -ENOSYS;
-@@ -2366,7 +2331,7 @@ static int cdrom_ioctl_media_changed(struct cdrom_device_info *cdi,
- 	struct cdrom_changer_info *info;
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_MEDIA_CHANGED\n");
-+	pr_debug("entering CDROM_MEDIA_CHANGED\n");
- 
- 	if (!CDROM_CAN(CDC_MEDIA_CHANGED))
- 		return -ENOSYS;
-@@ -2392,7 +2357,7 @@ static int cdrom_ioctl_media_changed(struct cdrom_device_info *cdi,
- static int cdrom_ioctl_set_options(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_SET_OPTIONS\n");
-+	pr_debug("entering CDROM_SET_OPTIONS\n");
- 
- 	/*
- 	 * Options need to be in sync with capability.
-@@ -2420,7 +2385,7 @@ static int cdrom_ioctl_set_options(struct cdrom_device_info *cdi,
- static int cdrom_ioctl_clear_options(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_CLEAR_OPTIONS\n");
-+	pr_debug("entering CDROM_CLEAR_OPTIONS\n");
- 
- 	cdi->options &= ~(int) arg;
- 	return cdi->options;
-@@ -2429,7 +2394,7 @@ static int cdrom_ioctl_clear_options(struct cdrom_device_info *cdi,
- static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_SELECT_SPEED\n");
-+	pr_debug("entering CDROM_SELECT_SPEED\n");
- 
- 	if (!CDROM_CAN(CDC_SELECT_SPEED))
- 		return -ENOSYS;
-@@ -2439,7 +2404,7 @@ static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
- static int cdrom_ioctl_select_disc(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_SELECT_DISC\n");
-+	pr_debug("entering CDROM_SELECT_DISC\n");
- 
- 	if (!CDROM_CAN(CDC_SELECT_DISC))
- 		return -ENOSYS;
-@@ -2457,14 +2422,14 @@ static int cdrom_ioctl_select_disc(struct cdrom_device_info *cdi,
- 	if (cdi->ops->select_disc)
- 		return cdi->ops->select_disc(cdi, arg);
- 
--	cd_dbg(CD_CHANGER, "Using generic cdrom_select_disc()\n");
-+	pr_debug("Using generic cdrom_select_disc()\n");
- 	return cdrom_select_disc(cdi, arg);
- }
- 
- static int cdrom_ioctl_reset(struct cdrom_device_info *cdi,
- 		struct block_device *bdev)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_RESET\n");
-+	pr_debug("entering CDROM_RESET\n");
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EACCES;
-@@ -2477,7 +2442,7 @@ static int cdrom_ioctl_reset(struct cdrom_device_info *cdi,
- static int cdrom_ioctl_lock_door(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "%socking door\n", arg ? "L" : "Unl");
-+	pr_debug("%socking door\n", arg ? "L" : "Unl");
- 
- 	if (!CDROM_CAN(CDC_LOCK))
- 		return -EDRIVE_CANT_DO_THIS;
-@@ -2493,20 +2458,9 @@ static int cdrom_ioctl_lock_door(struct cdrom_device_info *cdi,
- 	return cdi->ops->lock_door(cdi, arg);
- }
- 
--static int cdrom_ioctl_debug(struct cdrom_device_info *cdi,
--		unsigned long arg)
--{
--	cd_dbg(CD_DO_IOCTL, "%sabling debug\n", arg ? "En" : "Dis");
--
--	if (!capable(CAP_SYS_ADMIN))
--		return -EACCES;
--	debug = arg ? 1 : 0;
--	return debug;
--}
--
- static int cdrom_ioctl_get_capability(struct cdrom_device_info *cdi)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_GET_CAPABILITY\n");
-+	pr_debug("entering CDROM_GET_CAPABILITY\n");
- 	return (cdi->ops->capability & ~cdi->mask);
- }
- 
-@@ -2522,7 +2476,7 @@ static int cdrom_ioctl_get_mcn(struct cdrom_device_info *cdi,
- 	struct cdrom_mcn mcn;
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_GET_MCN\n");
-+	pr_debug("entering CDROM_GET_MCN\n");
- 
- 	if (!(cdi->ops->capability & CDC_MCN))
- 		return -ENOSYS;
-@@ -2532,14 +2486,14 @@ static int cdrom_ioctl_get_mcn(struct cdrom_device_info *cdi,
- 
- 	if (copy_to_user(argp, &mcn, sizeof(mcn)))
- 		return -EFAULT;
--	cd_dbg(CD_DO_IOCTL, "CDROM_GET_MCN successful\n");
-+	pr_debug("CDROM_GET_MCN successful\n");
- 	return 0;
- }
- 
- static int cdrom_ioctl_drive_status(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_DRIVE_STATUS\n");
-+	pr_debug("entering CDROM_DRIVE_STATUS\n");
- 
- 	if (!(cdi->ops->capability & CDC_DRIVE_STATUS))
- 		return -ENOSYS;
-@@ -2572,7 +2526,7 @@ static int cdrom_ioctl_disc_status(struct cdrom_device_info *cdi)
- {
- 	tracktype tracks;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_DISC_STATUS\n");
-+	pr_debug("entering CDROM_DISC_STATUS\n");
- 
- 	cdrom_count_tracks(cdi, &tracks);
- 	if (tracks.error)
-@@ -2594,13 +2548,13 @@ static int cdrom_ioctl_disc_status(struct cdrom_device_info *cdi)
- 		return CDS_DATA_1;
- 	/* Policy mode off */
- 
--	cd_dbg(CD_WARNING, "This disc doesn't have any tracks I recognize!\n");
-+	pr_debug("This disc doesn't have any tracks I recognize!\n");
- 	return CDS_NO_INFO;
- }
- 
- static int cdrom_ioctl_changer_nslots(struct cdrom_device_info *cdi)
- {
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_CHANGER_NSLOTS\n");
-+	pr_debug("entering CDROM_CHANGER_NSLOTS\n");
- 	return cdi->capacity;
- }
- 
-@@ -2611,7 +2565,7 @@ static int cdrom_ioctl_get_subchnl(struct cdrom_device_info *cdi,
- 	u8 requested, back;
- 	int ret;
- 
--	/* cd_dbg(CD_DO_IOCTL,"entering CDROMSUBCHNL\n");*/
-+	/* pr_debug("entering CDROMSUBCHNL\n");*/
- 
- 	if (copy_from_user(&q, argp, sizeof(q)))
- 		return -EFAULT;
-@@ -2631,7 +2585,7 @@ static int cdrom_ioctl_get_subchnl(struct cdrom_device_info *cdi,
- 
- 	if (copy_to_user(argp, &q, sizeof(q)))
- 		return -EFAULT;
--	/* cd_dbg(CD_DO_IOCTL, "CDROMSUBCHNL successful\n"); */
-+	/* pr_debug("CDROMSUBCHNL successful\n"); */
- 	return 0;
- }
- 
-@@ -2641,7 +2595,7 @@ static int cdrom_ioctl_read_tochdr(struct cdrom_device_info *cdi,
- 	struct cdrom_tochdr header;
- 	int ret;
- 
--	/* cd_dbg(CD_DO_IOCTL, "entering CDROMREADTOCHDR\n"); */
-+	/* pr_debug("entering CDROMREADTOCHDR\n"); */
- 
- 	if (copy_from_user(&header, argp, sizeof(header)))
- 		return -EFAULT;
-@@ -2652,7 +2606,7 @@ static int cdrom_ioctl_read_tochdr(struct cdrom_device_info *cdi,
- 
- 	if (copy_to_user(argp, &header, sizeof(header)))
- 		return -EFAULT;
--	/* cd_dbg(CD_DO_IOCTL, "CDROMREADTOCHDR successful\n"); */
-+	/* pr_debug("CDROMREADTOCHDR successful\n"); */
- 	return 0;
- }
- 
-@@ -2663,7 +2617,7 @@ static int cdrom_ioctl_read_tocentry(struct cdrom_device_info *cdi,
- 	u8 requested_format;
- 	int ret;
- 
--	/* cd_dbg(CD_DO_IOCTL, "entering CDROMREADTOCENTRY\n"); */
-+	/* pr_debug("entering CDROMREADTOCENTRY\n"); */
- 
- 	if (copy_from_user(&entry, argp, sizeof(entry)))
- 		return -EFAULT;
-@@ -2680,7 +2634,7 @@ static int cdrom_ioctl_read_tocentry(struct cdrom_device_info *cdi,
- 
- 	if (copy_to_user(argp, &entry, sizeof(entry)))
- 		return -EFAULT;
--	/* cd_dbg(CD_DO_IOCTL, "CDROMREADTOCENTRY successful\n"); */
-+	/* pr_debug("CDROMREADTOCENTRY successful\n"); */
- 	return 0;
- }
- 
-@@ -2689,7 +2643,7 @@ static int cdrom_ioctl_play_msf(struct cdrom_device_info *cdi,
- {
- 	struct cdrom_msf msf;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROMPLAYMSF\n");
-+	pr_debug("entering CDROMPLAYMSF\n");
- 
- 	if (!CDROM_CAN(CDC_PLAY_AUDIO))
- 		return -ENOSYS;
-@@ -2704,7 +2658,7 @@ static int cdrom_ioctl_play_trkind(struct cdrom_device_info *cdi,
- 	struct cdrom_ti ti;
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROMPLAYTRKIND\n");
-+	pr_debug("entering CDROMPLAYTRKIND\n");
- 
- 	if (!CDROM_CAN(CDC_PLAY_AUDIO))
- 		return -ENOSYS;
-@@ -2721,7 +2675,7 @@ static int cdrom_ioctl_volctrl(struct cdrom_device_info *cdi,
- {
- 	struct cdrom_volctrl volume;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROMVOLCTRL\n");
-+	pr_debug("entering CDROMVOLCTRL\n");
- 
- 	if (!CDROM_CAN(CDC_PLAY_AUDIO))
- 		return -ENOSYS;
-@@ -2736,7 +2690,7 @@ static int cdrom_ioctl_volread(struct cdrom_device_info *cdi,
- 	struct cdrom_volctrl volume;
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROMVOLREAD\n");
-+	pr_debug("entering CDROMVOLREAD\n");
- 
- 	if (!CDROM_CAN(CDC_PLAY_AUDIO))
- 		return -ENOSYS;
-@@ -2755,7 +2709,7 @@ static int cdrom_ioctl_audioctl(struct cdrom_device_info *cdi,
- {
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "doing audio ioctl (start/stop/pause/resume)\n");
-+	pr_debug("doing audio ioctl (start/stop/pause/resume)\n");
- 
- 	if (!CDROM_CAN(CDC_PLAY_AUDIO))
- 		return -ENOSYS;
-@@ -3048,7 +3002,7 @@ static noinline int mmc_ioctl_cdrom_subchannel(struct cdrom_device_info *cdi,
- 	sanitize_format(&q.cdsc_reladdr, &q.cdsc_format, requested);
- 	if (copy_to_user((struct cdrom_subchnl __user *)arg, &q, sizeof(q)))
- 		return -EFAULT;
--	/* cd_dbg(CD_DO_IOCTL, "CDROMSUBCHNL successful\n"); */
-+	/* pr_debug("CDROMSUBCHNL successful\n"); */
- 	return 0;
- }
- 
-@@ -3058,7 +3012,7 @@ static noinline int mmc_ioctl_cdrom_play_msf(struct cdrom_device_info *cdi,
- {
- 	const struct cdrom_device_ops *cdo = cdi->ops;
- 	struct cdrom_msf msf;
--	cd_dbg(CD_DO_IOCTL, "entering CDROMPLAYMSF\n");
-+	pr_debug("entering CDROMPLAYMSF\n");
- 	if (copy_from_user(&msf, (struct cdrom_msf __user *)arg, sizeof(msf)))
- 		return -EFAULT;
- 	cgc->cmd[0] = GPCMD_PLAY_AUDIO_MSF;
-@@ -3078,7 +3032,7 @@ static noinline int mmc_ioctl_cdrom_play_blk(struct cdrom_device_info *cdi,
- {
- 	const struct cdrom_device_ops *cdo = cdi->ops;
- 	struct cdrom_blk blk;
--	cd_dbg(CD_DO_IOCTL, "entering CDROMPLAYBLK\n");
-+	pr_debug("entering CDROMPLAYBLK\n");
- 	if (copy_from_user(&blk, (struct cdrom_blk __user *)arg, sizeof(blk)))
- 		return -EFAULT;
- 	cgc->cmd[0] = GPCMD_PLAY_AUDIO_10;
-@@ -3103,7 +3057,7 @@ static noinline int mmc_ioctl_cdrom_volume(struct cdrom_device_info *cdi,
- 	unsigned short offset;
- 	int ret;
- 
--	cd_dbg(CD_DO_IOCTL, "entering CDROMVOLUME\n");
-+	pr_debug("entering CDROMVOLUME\n");
- 
- 	if (copy_from_user(&volctrl, (struct cdrom_volctrl __user *)arg,
- 			   sizeof(volctrl)))
-@@ -3172,7 +3126,7 @@ static noinline int mmc_ioctl_cdrom_start_stop(struct cdrom_device_info *cdi,
- 					       int cmd)
- {
- 	const struct cdrom_device_ops *cdo = cdi->ops;
--	cd_dbg(CD_DO_IOCTL, "entering CDROMSTART/CDROMSTOP\n");
-+	pr_debug("entering CDROMSTART/CDROMSTOP\n");
- 	cgc->cmd[0] = GPCMD_START_STOP_UNIT;
- 	cgc->cmd[1] = 1;
- 	cgc->cmd[4] = (cmd == CDROMSTART) ? 1 : 0;
-@@ -3185,7 +3139,7 @@ static noinline int mmc_ioctl_cdrom_pause_resume(struct cdrom_device_info *cdi,
- 						 int cmd)
- {
- 	const struct cdrom_device_ops *cdo = cdi->ops;
--	cd_dbg(CD_DO_IOCTL, "entering CDROMPAUSE/CDROMRESUME\n");
-+	pr_debug("entering CDROMPAUSE/CDROMRESUME\n");
- 	cgc->cmd[0] = GPCMD_PAUSE_RESUME;
- 	cgc->cmd[8] = (cmd == CDROMRESUME) ? 1 : 0;
- 	cgc->data_direction = CGC_DATA_NONE;
-@@ -3207,7 +3161,7 @@ static noinline int mmc_ioctl_dvd_read_struct(struct cdrom_device_info *cdi,
- 	if (IS_ERR(s))
- 		return PTR_ERR(s);
- 
--	cd_dbg(CD_DO_IOCTL, "entering DVD_READ_STRUCT\n");
-+	pr_debug("entering DVD_READ_STRUCT\n");
- 
- 	ret = dvd_read_struct(cdi, s, cgc);
- 	if (ret)
-@@ -3227,7 +3181,7 @@ static noinline int mmc_ioctl_dvd_auth(struct cdrom_device_info *cdi,
- 	dvd_authinfo ai;
- 	if (!CDROM_CAN(CDC_DVD))
- 		return -ENOSYS;
--	cd_dbg(CD_DO_IOCTL, "entering DVD_AUTH\n");
-+	pr_debug("entering DVD_AUTH\n");
- 	if (copy_from_user(&ai, (dvd_authinfo __user *)arg, sizeof(ai)))
- 		return -EFAULT;
- 	ret = dvd_do_auth(cdi, &ai);
-@@ -3243,7 +3197,7 @@ static noinline int mmc_ioctl_cdrom_next_writable(struct cdrom_device_info *cdi,
- {
- 	int ret;
- 	long next = 0;
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_NEXT_WRITABLE\n");
-+	pr_debug("entering CDROM_NEXT_WRITABLE\n");
- 	ret = cdrom_get_next_writable(cdi, &next);
- 	if (ret)
- 		return ret;
-@@ -3257,7 +3211,7 @@ static noinline int mmc_ioctl_cdrom_last_written(struct cdrom_device_info *cdi,
- {
- 	int ret;
- 	long last = 0;
--	cd_dbg(CD_DO_IOCTL, "entering CDROM_LAST_WRITTEN\n");
-+	pr_debug("entering CDROM_LAST_WRITTEN\n");
- 	ret = cdrom_get_last_written(cdi, &last);
- 	if (ret)
- 		return ret;
-@@ -3352,8 +3306,6 @@ int cdrom_ioctl(struct cdrom_device_info *cdi, struct block_device *bdev,
- 		return cdrom_ioctl_reset(cdi, bdev);
- 	case CDROM_LOCKDOOR:
- 		return cdrom_ioctl_lock_door(cdi, arg);
--	case CDROM_DEBUG:
--		return cdrom_ioctl_debug(cdi, arg);
- 	case CDROM_GET_CAPABILITY:
- 		return cdrom_ioctl_get_capability(cdi);
- 	case CDROM_GET_MCN:
-@@ -3379,7 +3331,7 @@ int cdrom_ioctl(struct cdrom_device_info *cdi, struct block_device *bdev,
- 	}
- 
- 	/*
--	 * Note: most of the cd_dbg() calls are commented out here,
-+	 * Note: most of the pr_debug() calls are commented out here,
- 	 * because they fill up the sys log when CD players poll
- 	 * the drive.
- 	 */
-@@ -3429,7 +3381,6 @@ static struct cdrom_sysctl_settings {
- 	char	info[CDROM_STR_SIZE];	/* general info */
- 	int	autoclose;		/* close tray upon mount, etc */
- 	int	autoeject;		/* eject on umount */
--	int	debug;			/* turn on debugging messages */
- 	int	lock;			/* lock the door on device open */
- 	int	check;			/* check media type */
- } cdrom_sysctl_settings;
-@@ -3609,7 +3560,6 @@ static int cdrom_sysctl_handler(struct ctl_table *ctl, int write,
- 		/* we only care for 1 or 0. */
- 		autoclose        = !!cdrom_sysctl_settings.autoclose;
- 		autoeject        = !!cdrom_sysctl_settings.autoeject;
--		debug	         = !!cdrom_sysctl_settings.debug;
- 		lockdoor         = !!cdrom_sysctl_settings.lock;
- 		check_media_type = !!cdrom_sysctl_settings.check;
- 
-@@ -3645,13 +3595,6 @@ static struct ctl_table cdrom_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= cdrom_sysctl_handler,
- 	},
--	{
--		.procname	= "debug",
--		.data		= &cdrom_sysctl_settings.debug,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= cdrom_sysctl_handler,
--	},
- 	{
- 		.procname	= "lock",
- 		.data		= &cdrom_sysctl_settings.lock,
-@@ -3703,7 +3646,6 @@ static void cdrom_sysctl_register(void)
- 	/* set the defaults */
- 	cdrom_sysctl_settings.autoclose = autoclose;
- 	cdrom_sysctl_settings.autoeject = autoeject;
--	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
- }
--- 
-2.22.0
+Hey Linus,
 
+Thanks, for giving us something to live us with our life and enjoy it
+doing every possible day.
+
+Thank you!
+
+OO, did I mentioned that it helps us to win bread and butter...that's
+bloody important.
+
+Thanks,
+Bhaskar
+
+On 12:10 Sun 25 Aug 2019, Linus Torvalds wrote:
+>Hello everybody out there using Linux -
+>
+>I=E2=80=99m doing a (free) operating system (more than just a hobby) for 4=
+86
+>AT clones and a lot of other hardware. This has been brewing for the
+>last 28 years, and is still not done. I=E2=80=99d like any feedback on any
+>bugs introduced this release (or older bugs too, for that matter).
+>
+>                   Linus
+>
+>PS. Yes, it's 28 years today since that original announcement
+>paraphrased above.  The shortlog below is obviously just for the last
+>week, though.
+>
+>Nothing particularly surprising from the last week - most of the patch
+>is drivers, with networking and rdma being most noticeable, but
+>there's various other things in there too. I wish it was smaller than
+>it is, but it's not _huge_.
+>
+>Bit if things don't calm down during the upcoming week, though, I may
+>have to do an rc8.
+>
+>---
+>
+>Aaron Armstrong Skomra (2):
+>      HID: wacom: add back changes dropped in merge commit
+>      HID: wacom: correct misreported EKR ring values
+>
+>Adrian Hunter (1):
+>      scsi: ufs: Fix NULL pointer dereference in ufshcd_config_vreg_hpm()
+>
+>Alex Deucher (2):
+>      drm/amdgpu/gfx9: update pg_flags after determining if gfx off is pos=
+sible
+>      drm/amdgpu/powerplay: silence a warning in smu_v11_0_setup_pptable
+>
+>Alexandre Courbot (2):
+>      drm/mediatek: use correct device to import PRIME buffers
+>      drm/mediatek: set DMA max segment size
+>
+>Alexei Starovoitov (2):
+>      bpf: fix x64 JIT code generation for jmp to 1st insn
+>      selftests/bpf: tests for jmp to 1st insn
+>
+>Anders Roxell (1):
+>      selftests: net: tcp_fastopen_backup_key.sh: fix shellcheck issue
+>
+>Andre Przywara (1):
+>      KVM: arm/arm64: VGIC: Properly initialise private IRQ affinity
+>
+>Andrea Righi (1):
+>      kprobes: Fix potential deadlock in kprobe_optimizer()
+>
+>Andreas Kemnade (1):
+>      gpio: of: fix Freescale SPI CS quirk handling
+>
+>Andrew Jones (1):
+>      KVM: arm/arm64: Only skip MMIO insn once
+>
+>Andrey Ryabinin (1):
+>      mm/kasan: fix false positive invalid-free reports with
+>CONFIG_KASAN_SW_TAGS=3Dy
+>
+>Andrii Nakryiko (2):
+>      libbpf: fix erroneous multi-closing of BTF FD
+>      libbpf: set BTF FD for prog only when there is supported .BTF.ext da=
+ta
+>
+>Andr=C3=A9 Draszik (1):
+>      net: phy: at803x: stop switching phy delay config needlessly
+>
+>Anton Eidelman (1):
+>      nvme-multipath: fix possible I/O hang when paths are updated
+>
+>Aya Levin (3):
+>      net/mlx5e: Fix false negative indication on tx reporter CQE recovery
+>      net/mlx5e: Fix error flow of CQE recovery on tx reporter
+>      net/mlx5e: Remove redundant check in CQE recovery flow of tx reporter
+>
+>Balakrishna Godavarthi (1):
+>      Bluetooth: btqca: Reset download type to default
+>
+>Bartosz Golaszewski (1):
+>      gpiolib: never report open-drain/source lines as 'input' to user-spa=
+ce
+>
+>Benjamin Tissoires (3):
+>      Revert "HID: logitech-hidpp: add USB PID for a few more supported mi=
+ce"
+>      HID: logitech-hidpp: remove support for the G700 over USB
+>      HID: cp2112: prevent sleeping function called from invalid context
+>
+>Bernard Metzler (3):
+>      RDMA/siw: Fix potential NULL de-ref
+>      RDMA/siw: Fix SGL mapping issues
+>      RDMA/siw: Fix 64/32bit pointer inconsistency
+>
+>Bill Kuzeja (1):
+>      scsi: qla2xxx: Fix gnl.l memory leak on adapter init failure
+>
+>Bjorn Helgaas (1):
+>      Documentation PCI: Fix pciebus-howto.rst filename typo
+>
+>Bryan Gurney (1):
+>      dm dust: use dust block size for badblocklist index
+>
+>Chen-Yu Tsai (1):
+>      net: dsa: Check existence of .port_mdb_add callback before calling it
+>
+>Chris Packham (1):
+>      tipc: initialise addr_trail_end when setting node addresses
+>
+>Christoph Hellwig (4):
+>      xfs: fall back to native ioctls for unhandled compat ones
+>      xfs: compat_ioctl: use compat_ptr()
+>      arm: select the dma-noncoherent symbols for all swiotlb builds
+>      dma-direct: fix zone selection after an unaddressable CMA allocation
+>
+>Claire Chang (1):
+>      Bluetooth: btqca: release_firmware after qca_inject_cmd_complete_eve=
+nt
+>
+>Dan Carpenter (1):
+>      dm zoned: fix potential NULL dereference in dmz_do_reclaim()
+>
+>Daniel Borkmann (2):
+>      sock: make cookie generation global instead of per netns
+>      bpf: sync bpf.h to tools infrastructure
+>
+>Darrick J. Wong (3):
+>      vfs: fix page locking deadlocks when deduping files
+>      xfs: fix reflink source file racing with directio writes
+>      xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to =
+EDQUOT
+>
+>Dave Airlie (1):
+>      drm/mediatek: include dma-mapping header
+>
+>David Ahern (2):
+>      netdevsim: Restore per-network namespace accounting for fib entries
+>      netlink: Fix nlmsg_parse as a wrapper for strict message parsing
+>
+>David Howells (7):
+>      rxrpc: Fix local endpoint refcounting
+>      rxrpc: Don't bother generating maxSkew in the ACK packet
+>      rxrpc: Fix local refcounting
+>      rxrpc: Fix local endpoint replacement
+>      rxrpc: Fix read-after-free in rxrpc_queue_local()
+>      keys: Fix description size
+>      afs: Fix leak in afs_lookup_cell_rcu()
+>
+>David Rientjes (1):
+>      mm, page_alloc: move_freepages should not examine struct page of
+>reserved memory
+>
+>Denis Efremov (2):
+>      MAINTAINERS: PHY LIBRARY: Update files in the record
+>      MAINTAINERS: r8169: Update path to the driver
+>
+>Dexuan Cui (4):
+>      hv_netvsc: Fix a warning of suspicious RCU usage
+>      Drivers: hv: vmbus: Remove the unused "tsc_page" from struct hv_cont=
+ext
+>      Input: hyperv-keyboard: Use in-place iterator API in the channel cal=
+lback
+>      Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
+>
+>Dinh Nguyen (1):
+>      clk: socfpga: stratix10: fix rate caclulationg for cnt_clks
+>
+>Dirk Morris (1):
+>      netfilter: conntrack: Use consistent ct id hash calculation
+>
+>Dmitry Fomichev (7):
+>      scsi: target: tcmu: avoid use-after-free after command timeout
+>      dm kcopyd: always complete failed jobs
+>      dm zoned: improve error handling in reclaim
+>      dm zoned: improve error handling in i/o map code
+>      dm zoned: properly handle backing device failure
+>      dm zoned: add SPDX license identifiers
+>      dm zoned: fix a few typos
+>
+>Eran Ben Elisha (1):
+>      net/mlx5e: Fix compatibility issue with ethtool flash device
+>
+>Eric Dumazet (1):
+>      net/packet: fix race in tpacket_snd()
+>
+>Eric W. Biederman (1):
+>      signal: Allow cifs and drbd to receive their terminating signals
+>
+>Erqi Chen (1):
+>      ceph: clear page dirty before invalidate page
+>
+>Even Xu (1):
+>      HID: intel-ish-hid: ipc: add EHL device id
+>
+>Fabian Henneke (1):
+>      Bluetooth: hidp: Let hidp_send_message return number of queued bytes
+>
+>Florian Westphal (2):
+>      selftests: netfilter: extend flowtable test script for ipsec
+>      netfilter: nf_flow_table: fix offload for flows that are subject to =
+xfrm
+>
+>Fuqian Huang (1):
+>      net: tundra: tsi108: use spin_lock_irqsave instead of
+>spin_lock_irq in IRQ context
+>
+>Guilherme G. Piccoli (1):
+>      nvme: Fix cntlid validation when not using NVMEoF
+>
+>Guillaume Nault (1):
+>      inet: frags: re-introduce skb coalescing for local delivery
+>
+>Gustavo A. R. Silva (10):
+>      dmaengine: fsldma: Mark expected switch fall-through
+>      ARM: riscpc: Mark expected switch fall-through
+>      drm/sun4i: sun6i_mipi_dsi: Mark expected switch fall-through
+>      drm/sun4i: tcon: Mark expected switch fall-through
+>      mtd: sa1100: Mark expected switch fall-through
+>      watchdog: wdt285: Mark expected switch fall-through
+>      power: supply: ab8500_charger: Mark expected switch fall-through
+>      MIPS: Octeon: Mark expected switch fall-through
+>      scsi: libsas: sas_discover: Mark expected switch fall-through
+>      video: fbdev: acornfb: Mark expected switch fall-through
+>
+>Harish Bandi (1):
+>      Bluetooth: hci_qca: Send VS pre shutdown command.
+>
+>He Zhe (2):
+>      nfsd4: Fix kernel crash when reading proc file reply_cache_stats
+>      modules: page-align module section allocations only for arches
+>supporting strict module rwx
+>
+>Heiner Kallweit (1):
+>      net: phy: consider AN_RESTART status when reading link status
+>
+>Henry Burns (3):
+>      mm/z3fold.c: fix race between migration and destruction
+>      mm/zsmalloc.c: migration can leave pages in ZS_EMPTY indefinitely
+>      mm/zsmalloc.c: fix race condition in zs_destroy_pool
+>
+>Huy Nguyen (2):
+>      net/mlx5: Support inner header match criteria for non decap flow act=
+ion
+>      net/mlx5e: Only support tx/rx pause setting for port owner
+>
+>Hyungwoo Yang (1):
+>      platform/chrome: cros_ec_ishtp: fix crash during suspend
+>
+>Ido Kalir (1):
+>      IB/core: Fix NULL pointer dereference when bind QP to counter
+>
+>Ilya Dryomov (1):
+>      libceph: fix PG split vs OSD (re)connect race
+>
+>Imre Deak (1):
+>      drm/i915: Fix HW readout for crtc_clock in HDMI mode
+>
+>Ira Weiny (1):
+>      fs/xfs: Fix return code of xfs_break_leased_layouts()
+>
+>Ivan Khoronzhuk (1):
+>      net: sched: sch_taprio: fix memleak in error path for sched list par=
+se
+>
+>J. Bruce Fields (2):
+>      nfsd: use i_wrlock instead of rcu for nfsdfs i_private
+>      nfsd: initialize i_private before d_add
+>
+>Jacopo Mondi (1):
+>      drm: rcar_lvds: Fix dual link mode operations
+>
+>Jakub Kicinski (4):
+>      net/tls: prevent skb_orphan() from leaking TLS plain text with offlo=
+ad
+>      tools: bpftool: fix error message (prog -> object)
+>      tools: bpftool: add error message on pin failure
+>      net/tls: swap sk_write_space on close
+>
+>James Smart (1):
+>      scsi: lpfc: Mitigate high memory pre-allocation by SCSI-MQ
+>
+>Jason Gerecke (1):
+>      HID: wacom: Correct distance scale for 2nd-gen Intuos devices
+>
+>Jason Gunthorpe (1):
+>      RDMA/mlx5: Fix MR npages calculation for IB_ACCESS_HUGETLB
+>
+>Jason Xing (1):
+>      psi: get poll_work to run when calling poll syscall next time
+>
+>Jeff Layton (1):
+>      ceph: don't try fill file_lock on unsuccessful GETFILELOCK reply
+>
+>Jens Axboe (3):
+>      io_uring: fix potential hang with polled IO
+>      io_uring: don't enter poll loop if we have CQEs pending
+>      io_uring: add need_resched() check in inner poll loop
+>
+>Jessica Yu (1):
+>      modules: always page-align module section allocations
+>
+>Johannes Berg (1):
+>      um: fix time travel mode
+>
+>John Fastabend (1):
+>      net: tls, fix sk_write_space NULL write when tx disabled
+>
+>John Hubbard (1):
+>      x86/boot: Fix boot regression caused by bootparam sanitizing
+>
+>Jonathan Neusch=C3=A4fer (1):
+>      net: nps_enet: Fix function names in doc comments
+>
+>Julian Wiedmann (1):
+>      s390/qeth: serialize cmd reply with concurrent timeout
+>
+>Kaike Wan (5):
+>      IB/hfi1: Drop stale TID RDMA packets
+>      IB/hfi1: Unsafe PSN checking for TID RDMA READ Resp packet
+>      IB/hfi1: Add additional checks when handling TID RDMA READ RESP pack=
+et
+>      IB/hfi1: Add additional checks when handling TID RDMA WRITE DATA pac=
+ket
+>      IB/hfi1: Drop stale TID RDMA packets that cause TIDErr
+>
+>Kenneth Feng (1):
+>      drm/amd/amdgpu: disable MMHUB PG for navi10
+>
+>Kevin Wang (2):
+>      drm/amd/powerplay: fix variable type errors in smu_v11_0_setup_pptab=
+le
+>      drm/amd/powerplay: remove duplicate macro
+>smu_get_uclk_dpm_states in amdgpu_smu.h
+>
+>Kirill A. Shutemov (1):
+>      x86/boot/compressed/64: Fix boot on machines with broken E820 table
+>
+>Leon Romanovsky (2):
+>      RDMA/counters: Properly implement PID checks
+>      RDMA/restrack: Rewrite PID namespace check to be reliable
+>
+>Linus Torvalds (1):
+>      Linux 5.3-rc6
+>
+>Linus Walleij (1):
+>      gpio: Fix irqchip initialization order
+>
+>Liu Song (1):
+>      ubifs: Limit the number of pages in shrink_liability
+>
+>Lowry Li (Arm Technology China) (2):
+>      drm/komeda: Initialize and enable output polling on Komeda
+>      drm/komeda: Adds internal bpp computing for arm afbc only format YU0=
+8 YU10
+>
+>Luis Henriques (4):
+>      libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+>      ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+>      ceph: fix buffer free while holding i_ceph_lock in
+>__ceph_build_xattrs_blob()
+>      ceph: fix buffer free while holding i_ceph_lock in fill_inode()
+>
+>Lyude Paul (2):
+>      PCI: Reset both NVIDIA GPU and HDA in ThinkPad P50 workaround
+>      drm/nouveau: Don't retry infinitely when receiving no data on i2c ov=
+er AUX
+>
+>Manish Chopra (1):
+>      bnx2x: Fix VF's VLAN reconfiguration in reload.
+>
+>Marc Dionne (1):
+>      afs: Fix possible oops in afs_lookup trace event
+>
+>Marcel Holtmann (1):
+>      Bluetooth: Add debug setting for changing minimum encryption key size
+>
+>Marek Szyprowski (1):
+>      clk: samsung: exynos542x: Move MSCL subsystem clocks to its sub-CMU
+>
+>Mario Limonciello (1):
+>      nvme: Add quirk for LiteON CL1 devices running FW 22301111
+>
+>Martin Blumenstingl (1):
+>      clk: Fix potential NULL dereference in clk_fetch_parent_index()
+>
+>Masahiro Yamada (1):
+>      jffs2: Remove C++ style comments from uapi header
+>
+>Matthias Kaehlcke (2):
+>      Bluetooth: btqca: Add a short delay before downloading the NVM
+>      Bluetooth: btqca: Use correct byte format for opcode of injected com=
+mand
+>
+>Maxim Mikityanskiy (2):
+>      net/mlx5e: Use flow keys dissector to parse packets for ARFS
+>      net/mlx5e: Fix a race with XSKICOSQ in XSK wakeup flow
+>
+>Miaohe Lin (1):
+>      KVM: x86: svm: remove redundant assignment of var new_entry
+>
+>Michael Chan (2):
+>      bnxt_en: Fix VNIC clearing logic for 57500 chips.
+>      bnxt_en: Improve RX doorbell sequence.
+>
+>Michael Kelley (1):
+>      genirq: Properly pair kobject_del() with kobject_add()
+>
+>Mihail Atanassov (1):
+>      drm/komeda: Add support for 'memory-region' DT node property
+>
+>Mikulas Patocka (3):
+>      Revert "dm bufio: fix deadlock with loop device"
+>      dm integrity: fix a crash due to BUG_ON in __journal_read_write()
+>      dm table: fix invalid memory accesses with too high sector number
+>
+>Mohamad Heib (1):
+>      net/mlx5e: ethtool, Avoid setting speed to 56GBASE when autoneg off
+>
+>Moni Shoua (4):
+>      IB/mlx5: Consolidate use_umr checks into single function
+>      IB/mlx5: Report and handle ODP support properly
+>      IB/mlx5: Fix MR re-registration flow to use UMR properly
+>      IB/mlx5: Block MR WR if UMR is not possible
+>
+>Nathan Chancellor (1):
+>      net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+>
+>Nicholas Kazlauskas (1):
+>      drm/amd/display: Calculate bpc based on max_requested_bpc
+>
+>Nicolai H=C3=A4hnle (1):
+>      drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
+>
+>Nishka Dasgupta (2):
+>      drm/mediatek: mtk_drm_drv.c: Add of_node_put() before goto
+>      auxdisplay: ht16k33: Make ht16k33_fb_fix and ht16k33_fb_var constant
+>
+>Oleg Nesterov (1):
+>      userfaultfd_release: always remove uffd flags and clear vm_userfault=
+fd_ctx
+>
+>Pablo Neira Ayuso (6):
+>      netfilter: nf_tables: use-after-free in failing rule with bound set
+>      netfilter: nf_flow_table: conntrack picks up expired flows
+>      netfilter: nf_flow_table: teardown flow timeout race
+>      netfilter: nft_flow_offload: skip tcp rst and fin packets
+>      net: sched: use major priority number as hardware priority
+>      netfilter: nf_tables: map basechain priority to hardware priority
+>
+>Paolo Bonzini (7):
+>      MAINTAINERS: change list for KVM/s390
+>      MAINTAINERS: add KVM x86 reviewers
+>      selftests: kvm: do not try running the VM in vmx_set_nested_state_te=
+st
+>      selftests: kvm: provide common function to enable eVMCS
+>      selftests: kvm: fix vmx_set_nested_state_test
+>      selftests: kvm: fix state save/load on processors without XSAVE
+>      Revert "KVM: x86/mmu: Zap only the relevant pages when removing a me=
+mslot"
+>
+>Petr Machata (1):
+>      mlxsw: spectrum_ptp: Keep unmatched entries in a linked list
+>
+>Qian Cai (1):
+>      parisc: fix compilation errrors
+>
+>Radim Krcmar (1):
+>      kvm: x86: skip populating logical dest map if apic is not sw enabled
+>
+>Richard Weinberger (2):
+>      ubifs: Fix double unlock around orphan_delete()
+>      ubifs: Correctly initialize c->min_log_bytes
+>
+>Rocky Liao (1):
+>      Bluetooth: hci_qca: Skip 1 error print in device_want_to_sleep()
+>
+>Roman Gushchin (2):
+>      mm: memcontrol: flush percpu vmstats before releasing memcg
+>      mm: memcontrol: flush percpu vmevents before releasing memcg
+>
+>Roman Mashak (2):
+>      net sched: update skbedit action for batched events operations
+>      tc-testing: updated skbedit action tests with batch create/delete
+>
+>Ross Lagerwall (1):
+>      xen/netback: Reset nr_frags before freeing skb
+>
+>Sean Christopherson (1):
+>      x86/retpoline: Don't clobber RFLAGS during CALL_NOSPEC on i386
+>
+>Sebastian Andrzej Siewior (1):
+>      sched/core: Schedule new worker even if PI-blocked
+>
+>Selvin Xavier (1):
+>      RDMA/bnxt_re: Fix stack-out-of-bounds in bnxt_qplib_rcfw_send_message
+>
+>Somnath Kotur (1):
+>      bnxt_en: Fix to include flow direction in L2 key
+>
+>Song Liu (1):
+>      md: update MAINTAINERS info
+>
+>Stephen Boyd (1):
+>      clk: Fix falling back to legacy parent string matching
+>
+>Stephen Hemminger (3):
+>      docs: admin-guide: remove references to IPX and token-ring
+>      net: docs: replace IPX in tuntap documentation
+>      net: cavium: fix driver name
+>
+>Su Yanjun (1):
+>      perf/x86: Fix typo in comment
+>
+>Sven Eckelmann (2):
+>      batman-adv: Fix netlink dumping of all mcast_flags buckets
+>      batman-adv: Fix deletion of RTR(4|6) mcast list entries
+>
+>Sylwester Nawrocki (2):
+>      clk: samsung: Change signature of exynos5_subcmus_init() function
+>      clk: samsung: exynos5800: Move MAU subsystem clocks to MAU sub-CMU
+>
+>Taehee Yoo (1):
+>      ixgbe: fix possible deadlock in ixgbe_service_task()
+>
+>Takshak Chahande (1):
+>      libbpf : make libbpf_num_possible_cpus function thread safe
+>
+>Tariq Toukan (5):
+>      net/mlx5: crypto, Fix wrong offset in encryption key command
+>      net/mlx5: kTLS, Fix wrong TIS opmod constants
+>      net/mlx5e: kTLS, Fix progress params context WQE layout
+>      net/mlx5e: kTLS, Fix tisn field name
+>      net/mlx5e: kTLS, Fix tisn field placement
+>
+>Tetsuo Handa (1):
+>      nfsd: fix dentry leak upon mkdir failure.
+>
+>Tho Vu (1):
+>      ravb: Fix use-after-free ravb_tstamp_skb
+>
+>Thomas Falcon (2):
+>      ibmveth: Convert multicast list size for little-endian system
+>      ibmvnic: Unmap DMA address of TX descriptor buffers after use
+>
+>Thomas Gleixner (2):
+>      x86/apic: Handle missing global clockevent gracefully
+>      timekeeping/vsyscall: Prevent math overflow in BOOTTIME update
+>
+>Tom Lendacky (1):
+>      x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
+>
+>Tomi Valkeinen (1):
+>      drm/omap: ensure we have a valid dma_mask
+>
+>Tony Luck (1):
+>      x86/cpu: Explain Intel model naming convention
+>
+>Tuong Lien (1):
+>      tipc: fix false detection of retransmit failures
+>
+>Vasundhara Volam (2):
+>      bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
+>      bnxt_en: Suppress HWRM errors for HWRM_NVM_GET_VARIABLE command
+>
+>Venkat Duvvuru (1):
+>      bnxt_en: Use correct src_fid to determine direction of the flow
+>
+>Vitaly Kuznetsov (2):
+>      Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+>      selftests/kvm: make platform_info_test pass on AMD
+>
+>Vlastimil Babka (1):
+>      mm, page_owner: handle THP splits correctly
+>
+>Wei Yongjun (2):
+>      Bluetooth: btusb: Fix error return code in btusb_mtk_setup_firmware()
+>      Bluetooth: hci_qca: Use kfree_skb() instead of kfree()
+>
+>Wenwen Wang (12):
+>      net/mlx4_en: fix a memory leak bug
+>      cxgb4: fix a memory leak bug
+>      liquidio: add cleanup in octeon_setup_iq()
+>      net: myri10ge: fix memory leaks
+>      lan78xx: Fix memory leaks
+>      cx82310_eth: fix a memory leak bug
+>      net: kalmia: fix memory leaks
+>      wimax/i2400m: fix a memory leak bug
+>      IB/mlx4: Fix memory leaks
+>      infiniband: hfi1: fix a memory leak bug
+>      infiniband: hfi1: fix memory leaks
+>      dm raid: add missing cleanup in raid_ctr()
+>
+>Xin Long (1):
+>      sctp: fix the transport error_count check
+>
+>YueHaibing (5):
+>      bonding: Add vlan tx offload to hw_enc_features
+>      net: dsa: sja1105: remove set but not used variables 'tx_vid' and 'r=
+x_vid'
+>      team: Add vlan tx offload to hw_enc_features
+>      gpio: Fix build error of function redefinition
+>      afs: use correct afs_call_type in yfs_fs_store_opaque_acl2
+>
+>ZhangXiaoxu (2):
+>      dm btree: fix order of block initialization in btree_split_beneath
+>      dm space map metadata: fix missing store of apply_bops() return value
+>
+>zhengbin (2):
+>      sctp: fix memleak in sctp_send_reset_streams
+>      RDMA/cma: fix null-ptr-deref Read in cma_cleanup
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1jBKwACgkQsjqdtxFL
+KRWeHQf/R4iMQzSP1j2YSKNiInAY58fiYDYKJgsAvruSiSjt+1w0R/kuWphm18mE
+uvAq49bGWbirIQlMQfjkB+R1RUQsX4xBAyEOuE7/1QWyFQqe1sUswLfwU5aPxs6A
+5XZgzA4aTqvgQr7QYyXvCJ3EzO654L86DEn4TQv8AZKEY7+nBKoZ7qIROeme7Rzc
+p7JJINwcVtJCNey/YlEXejbskk3iR4uL0fNFXLEH/wyI7gC1QvURC3MBcIb03s3F
+LD5pS9D3wOGY924DTbsGGiU9dwdiJ33o0H4hapdFH66TX+L34AHQQ/Q7BiNs8Y1f
+N/dFNUu+esWeG8YaWc55wKp8l/8FhQ==
+=VeE7
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
