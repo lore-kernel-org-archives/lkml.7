@@ -7,83 +7,158 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF8DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6D8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3FE22CED
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDD92190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 01:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bDw0HV/A"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eWAcLDCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfHYBb7 (ORCPT
+        id S1728374AbfHYBcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 24 Aug 2019 21:31:59 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:29100 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfHYBb7 (ORCPT
+        Sat, 24 Aug 2019 21:32:02 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:34351 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbfHYBcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 24 Aug 2019 21:31:59 -0400
+        Sat, 24 Aug 2019 21:32:01 -0400
 Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x7P1Vg4h010677;
-        Sun, 25 Aug 2019 10:31:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x7P1Vg4h010677
+        by conuserg-10.nifty.com with ESMTP id x7P1VTtI011335;
+        Sun, 25 Aug 2019 10:31:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x7P1VTtI011335
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566696702;
-        bh=N5h8iJFDGkxJdkgiGqbdsmMoL3tboI8yMOGmAf/rJKg=;
+        s=dec2015msa; t=1566696690;
+        bh=UySt3IPQMKQvA8Z6xXUcqOfyPtK0Hni6tKUbgs1EZ/I=;
         h=From:To:Cc:Subject:Date:From;
-        b=bDw0HV/AHW/tpP6D4okWfnM7Gnyi9KYS7BS99bdFaEHwJaYm7fD/ArCPxLHdqJz2w
-         CwpD8jYn4l44eyNLGieX59WDsvCNBPld9j9PQ1BrysftLmDjSY1r26dLihH3B7fZgl
-         /7CjSABcBafFHokIiiQ2PjLls50tEfs57W34icqfZU42sze6MrzLDbQqauPoxRN1Gf
-         wE90Gnbwn42gpodNAvmq7QEA1DoKazFRb3a1KiLWGUyaPGxZzDugczwJ/51IuBWNG0
-         nIGhzKujRZzY68I93tLkWEr8qsRLrMO4+B/paNYdTUHU70n9ZGGrfHXPkN1S+40rtY
-         NpGeki2m2ajDg==
+        b=eWAcLDCT59y58Rfu/1f5RkY99019OS3+Wlfv0VmdeXHVcwlbhs7LJJpzNqi3TdGDw
+         9EA6rclq5AGHFwaD2alKpEUtofXI69ZR7RP/PBjN29NtoaYoa0YlQRTvHpflbyPvln
+         I4HMi8kbXkJljsXilZqbE8doE+GF9h8k3BauVzdr6esn79gaI1khmSXC9x+xqa1ntv
+         cF0TMcx3olVOAsZle6/7OFFYHXxvLVVllOeuO22IosFCbNxsXkZpfnE+YlOCK/itaW
+         rJArTylYRZm0jb/OMbgs6iK6KL2h47D9bxqcjwL+Vs5QSpgjkaqIrg9WiP3mAPX0ew
+         wzTCuzu59R1ng==
 X-Nifty-SrcIP: [126.125.143.222]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: clean up subdir-ymn calculation in Makefile.clean
-Date:   Sun, 25 Aug 2019 10:31:39 +0900
-Message-Id: <20190825013139.12913-1-yamada.masahiro@socionext.com>
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kbuild: remove clean-dirs syntax
+Date:   Sun, 25 Aug 2019 10:31:27 +0900
+Message-Id: <20190825013128.12831-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove some variables.
+The only the difference between clean-files and clean-dirs is the -r
+option passed to the 'rm' command.
+
+You can always pass -r, and then remove the clean-dirs syntax.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/Makefile.clean | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ Documentation/kbuild/makefiles.rst | 16 ++++------------
+ scripts/Makefile.clean             | 16 ++--------------
+ scripts/kconfig/Makefile           |  2 +-
+ usr/include/Makefile               |  4 +---
+ 4 files changed, 8 insertions(+), 30 deletions(-)
 
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index 68ed20ef37dd..78aa51a6fcd4 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -765,7 +765,8 @@ Files matching the patterns "*.[oas]", "*.ko", plus some additional files
+ generated by kbuild are deleted all over the kernel src tree when
+ "make clean" is executed.
+ 
+-Additional files can be specified in kbuild makefiles by use of $(clean-files).
++Additional files or directories can be specified in kbuild makefiles by use of
++$(clean-files).
+ 
+ 	Example::
+ 
+@@ -776,17 +777,8 @@ When executing "make clean", the file "crc32table.h" will be deleted.
+ Kbuild will assume files to be in the same relative directory as the
+ Makefile, except if prefixed with $(objtree).
+ 
+-To delete a directory hierarchy use:
+-
+-	Example::
+-
+-		#scripts/package/Makefile
+-		clean-dirs := $(objtree)/debian/
+-
+-This will delete the directory debian in the toplevel directory, including all
+-subdirectories.
+-
+-To exclude certain files from make clean, use the $(no-clean-files) variable.
++To exclude certain files or directories from make clean, use the
++$(no-clean-files) variable.
+ 
+ Usually kbuild descends down in subdirectories due to "obj-* := dir/",
+ but in the architecture makefiles where the kbuild infrastructure
 diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-index fc38a34128d4..e367eb95c5c0 100644
+index 0b80e3207b20..cbfbe13dc87d 100644
 --- a/scripts/Makefile.clean
 +++ b/scripts/Makefile.clean
-@@ -17,17 +17,8 @@ include $(if $(wildcard $(kbuild-dir)/Kbuild), $(kbuild-dir)/Kbuild, $(kbuild-di
- # Figure out what we need to build from the various variables
+@@ -52,26 +52,14 @@ __clean-files   := $(wildcard                                               \
+ 		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(__clean-files))) \
+ 		   $(filter $(objtree)/%, $(__clean-files)))
+ 
+-# same as clean-files
+-
+-__clean-dirs    := $(wildcard                                               \
+-		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-dirs)))    \
+-		   $(filter $(objtree)/%, $(clean-dirs)))
+-
  # ==========================================================================
  
--__subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
--subdir-y	+= $(__subdir-y)
--__subdir-m	:= $(patsubst %/,%,$(filter %/, $(obj-m)))
--subdir-m	+= $(__subdir-m)
--__subdir-	:= $(patsubst %/,%,$(filter %/, $(obj-)))
--subdir-		+= $(__subdir-)
+-quiet_cmd_clean    = CLEAN   $(obj)
+-      cmd_clean    = rm -f $(__clean-files)
+-quiet_cmd_cleandir = CLEAN   $(__clean-dirs)
+-      cmd_cleandir = rm -rf $(__clean-dirs)
 -
--# Subdirectories we need to descend into
--
--subdir-ym	:= $(sort $(subdir-y) $(subdir-m))
--subdir-ymn      := $(sort $(subdir-ym) $(subdir-))
-+subdir-ymn := $(sort $(subdir-y) $(subdir-m) $(subdir-) \
-+		$(patsubst %/,%, $(filter %/, $(obj-y) $(obj-m) $(obj-))))
++quiet_cmd_clean = CLEAN   $(obj)
++      cmd_clean = rm -rf $(__clean-files)
  
- # Add subdir path
+ __clean: $(subdir-ymn)
+ ifneq ($(strip $(__clean-files)),)
+ 	+$(call cmd,clean)
+-endif
+-ifneq ($(strip $(__clean-dirs)),)
+-	+$(call cmd,cleandir)
+ endif
+ 	@:
  
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 7656e1137b6b..bed7a5a2fbe9 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -114,7 +114,7 @@ testconfig: $(obj)/conf
+ 	$(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
+ 	-o cache_dir=$(abspath $(obj)/tests/.cache) \
+ 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--capture=no)
+-clean-dirs += tests/.cache
++clean-files += tests/.cache
+ 
+ # Help text used by make help
+ help:
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 1fb6abe29b2f..05c71ef42f51 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -115,6 +115,4 @@ header-test-y += $(filter-out $(header-test-), \
+ 			$(patsubst $(obj)/%,%, $(wildcard \
+ 			$(addprefix $(obj)/, *.h */*.h */*/*.h */*/*/*.h))))
+ 
+-# For GNU Make <= 4.2.1, $(wildcard $(obj)/*/) matches to not only directories
+-# but also regular files. Use $(filter %/, ...) just in case.
+-clean-dirs += $(patsubst $(obj)/%/,%,$(filter %/, $(wildcard $(obj)/*/)))
++clean-files += $(filter-out Makefile, $(notdir $(wildcard $(obj)/*)))
 -- 
 2.17.1
 
