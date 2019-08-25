@@ -2,177 +2,124 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7E6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA93C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 06:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324272173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566712526;
-	bh=8FnhyEKpggDN3aK+ZfTvFstcWm3nmqWfcrgyRWM7bgc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1N9/z3mLjKLQEPhMBMdOwKYxo58AgFArGv8a0u++ZVz+QwKdsU/Lf2aGhGcAyYgNP
-	 ZLWRDMHnFH/ByKeloWnG/lMb4Nuf92XEGz+GHGajC+QzVIn/COHmBtsfwgzOAXlpWW
-	 ufMvqfFamskEJwkW2O3KxDpBgLklyBM7ZhPaM2+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5306D21848
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 06:01:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRaI5KWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbfHYFzY (ORCPT
+        id S1726264AbfHYGBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 01:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfHYFzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 01:55:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E61D21848;
-        Sun, 25 Aug 2019 05:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566712517;
-        bh=8FnhyEKpggDN3aK+ZfTvFstcWm3nmqWfcrgyRWM7bgc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xdt+hPmlkBtVtaMKDo3trgS5B1o91uybPMx/CjGOyefK3RL7Kq6zYyKh/3K5dmy1C
-         bj5o9X+gsHIbEGFJIO08J1ZgpfpksN3eX3A5ux1lwoCOAZTQtpj2UFnfGIVcAeqWKk
-         5r0agg3F1Raiu21phfpSC8LnRSQ7kvoWlhICyPzk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 9/9] staging: greybus: move es2 to drivers/greybus/
-Date:   Sun, 25 Aug 2019 07:54:29 +0200
-Message-Id: <20190825055429.18547-10-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190825055429.18547-1-gregkh@linuxfoundation.org>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 25 Aug 2019 02:01:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46093 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfHYGBg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 02:01:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so8141733plz.13;
+        Sat, 24 Aug 2019 23:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6ZsZK4p4MXPI3SkwkWUjJCGWv6W/bc6fpGu48AA4hT8=;
+        b=SRaI5KWNYWTd3lexMDNYkbPOGasxLeKLGrGvx5EMB3SLudIjd4zWZRn7/+cstRZRcU
+         EEDF9lq4Gubyd1HrhjHI+KmIEVx/n3A57CUvedeBGgv66Matu+UyJw2xlZPLNSq0Ej7R
+         XYWLD5n2FAFbimVC0T2TrHb+y9A7WWWZIDhnPCZeIwSOnfWBg2wzfxZKeeHrlypTVxr3
+         JdYv++BnVaL7GlmiJfq0TakovfkMg2ks+IkFcg1Wy0k2bgvMrCk1kiOLqOUUDgzpLMIl
+         abjO3bo9mGsekKrf9v2j7KSkon3jF4mSBNY6v3eXAw0ZtF8rtvOqu+vY10FviQJV9cC5
+         GmSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6ZsZK4p4MXPI3SkwkWUjJCGWv6W/bc6fpGu48AA4hT8=;
+        b=hSVqi9UiGLUQ0nAx0l3sOXz27ckwyPA+dR9mGkIi7ANtkBYn1iKBsada/yM4uKZxOQ
+         zASC+dDrr4rpPT2V1nrPC5641QIsCqe4WBiBD56TnBqDt/Ni5zBDackb+/2zDOugpnu6
+         EwwBSBN4Wrds4kopSLIidEuQhtcX8+8ASL4w1GF7u+24kUMFHjJZitiKqoJ0zQiBUpTl
+         Y/aFH3KrJgvPXySVx+gttj8+eKc6ZmT4OGkvUd0kPI2TJHXU69NXPjKFZoiucpdxFNnu
+         0/JVaRy5CXiaqCci0xv+w6WPzbcgkk0C/IVX9SE5LdmEFz2+TcExYSzhSVWjSJEa8oWG
+         5Cwg==
+X-Gm-Message-State: APjAAAXs5ImW7+pRNlGTdu1woBRoqAX2DJiKccm1OgQKB0Ii0N5Kc2mP
+        mfOsK/1caeVhRUXma2YvNPAUWw14
+X-Google-Smtp-Source: APXvYqyokA+ZcoLf6u9diGb4xyTkf6EioYCNE+bVNTu3Y05sg9baz/G131P6XSlj/0F5djzC45WhJg==
+X-Received: by 2002:a17:902:6a:: with SMTP id 97mr12795614pla.5.1566712895427;
+        Sat, 24 Aug 2019 23:01:35 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.17.2])
+        by smtp.gmail.com with ESMTPSA id v67sm12361736pfb.45.2019.08.24.23.01.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 24 Aug 2019 23:01:34 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     leon@kernel.org, dledford@redhat.com, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org, Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
+Date:   Sun, 25 Aug 2019 11:37:27 +0530
+Message-Id: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The es2 Greybus host controller has long been stable, so move it out of
-drivers/staging/ to drivers/greybus/
+First, length passed to mmap is checked explicitly against
+PAGE_SIZE.
 
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Alex Elder <elder@kernel.org>
-Cc: greybus-dev@lists.linaro.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Second, if vma->vm_pgoff is passed as non zero, it would return
+error. It appears like driver is expecting vma->vm_pgoff to
+be passed as 0 always. otherwise throw error (not sure if done
+with a particular purpose). Rather driver could set vma->vm_pgoff
+to 0 irrespective of the value passed to it.
+
+vm_map_pages_zero() has condition to validate incorrect length
+passed to driver and second it can also set vma->vm_pgoff to 0
+before mapping the page to vma.
+
+Hence convert to use vm_map_pages_zero().
+
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
- drivers/greybus/Kconfig              | 16 ++++++++++++++++
- drivers/greybus/Makefile             |  7 +++++++
- drivers/{staging => }/greybus/arpc.h |  0
- drivers/{staging => }/greybus/es2.c  |  2 +-
- drivers/staging/greybus/Kconfig      | 11 -----------
- drivers/staging/greybus/Makefile     |  5 -----
- 6 files changed, 24 insertions(+), 17 deletions(-)
- rename drivers/{staging => }/greybus/arpc.h (100%)
- rename drivers/{staging => }/greybus/es2.c (99%)
+ drivers/infiniband/hw/mlx5/main.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/greybus/Kconfig b/drivers/greybus/Kconfig
-index 158d8893114c..b84fcaf8b105 100644
---- a/drivers/greybus/Kconfig
-+++ b/drivers/greybus/Kconfig
-@@ -14,3 +14,19 @@ menuconfig GREYBUS
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index 0569bca..366211d 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -2071,12 +2071,10 @@ static int mlx5_ib_mmap_clock_info_page(struct mlx5_ib_dev *dev,
+ 					struct vm_area_struct *vma,
+ 					struct mlx5_ib_ucontext *context)
+ {
+-	if ((vma->vm_end - vma->vm_start != PAGE_SIZE) ||
+-	    !(vma->vm_flags & VM_SHARED))
+-		return -EINVAL;
++	struct page *pages;
  
- 	  To compile this code as a module, chose M here: the module
- 	  will be called greybus.ko
-+
-+if GREYBUS
-+
-+config GREYBUS_ES2
-+	tristate "Greybus ES3 USB host controller"
-+	depends on USB
-+	---help---
-+	  Select this option if you have a Toshiba ES3 USB device that
-+	  acts as a Greybus "host controller".  This device is a bridge
-+	  from a USB device to a Unipro network.
-+
-+	  To compile this code as a module, chose M here: the module
-+	  will be called gb-es2.ko
-+
-+endif	# GREYBUS
-+
-diff --git a/drivers/greybus/Makefile b/drivers/greybus/Makefile
-index 03b22616ec7d..9bccdd229aa2 100644
---- a/drivers/greybus/Makefile
-+++ b/drivers/greybus/Makefile
-@@ -17,3 +17,10 @@ obj-$(CONFIG_GREYBUS)		+= greybus.o
+-	if (get_index(vma->vm_pgoff) != MLX5_IB_CLOCK_INFO_V1)
+-		return -EOPNOTSUPP;
++	if (!(vma->vm_flags & VM_SHARED))
++		return -EINVAL;
  
- # needed for trace events
- ccflags-y += -I$(src)
-+
-+# Greybus Host controller drivers
-+gb-es2-y := es2.o
-+
-+obj-$(CONFIG_GREYBUS_ES2)	+= gb-es2.o
-+
-+
-diff --git a/drivers/staging/greybus/arpc.h b/drivers/greybus/arpc.h
-similarity index 100%
-rename from drivers/staging/greybus/arpc.h
-rename to drivers/greybus/arpc.h
-diff --git a/drivers/staging/greybus/es2.c b/drivers/greybus/es2.c
-similarity index 99%
-rename from drivers/staging/greybus/es2.c
-rename to drivers/greybus/es2.c
-index 5b755e76d8a4..366716f11b1a 100644
---- a/drivers/staging/greybus/es2.c
-+++ b/drivers/greybus/es2.c
-@@ -15,7 +15,7 @@
- #include <asm/unaligned.h>
+ 	if (vma->vm_flags & (VM_WRITE | VM_EXEC))
+ 		return -EPERM;
+@@ -2084,9 +2082,9 @@ static int mlx5_ib_mmap_clock_info_page(struct mlx5_ib_dev *dev,
  
- #include "arpc.h"
--#include "../../greybus/greybus_trace.h"
-+#include "greybus_trace.h"
+ 	if (!dev->mdev->clock_info)
+ 		return -EOPNOTSUPP;
++	pages = virt_to_page(dev->mdev->clock_info);
  
+-	return vm_insert_page(vma, vma->vm_start,
+-			      virt_to_page(dev->mdev->clock_info));
++	return vm_map_pages_zero(vma, &pages, 1);
+ }
  
- /* Default timeout for USB vendor requests. */
-diff --git a/drivers/staging/greybus/Kconfig b/drivers/staging/greybus/Kconfig
-index d03c37e1e6e8..d4777f5a8b90 100644
---- a/drivers/staging/greybus/Kconfig
-+++ b/drivers/staging/greybus/Kconfig
-@@ -1,17 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- if GREYBUS
- 
--config GREYBUS_ES2
--	tristate "Greybus ES3 USB host controller"
--	depends on USB
--	---help---
--	  Select this option if you have a Toshiba ES3 USB device that
--	  acts as a Greybus "host controller".  This device is a bridge
--	  from a USB device to a Unipro network.
--
--	  To compile this code as a module, chose M here: the module
--	  will be called gb-es2.ko
--
- config GREYBUS_AUDIO
- 	tristate "Greybus Audio Class driver"
- 	depends on SOUND
-diff --git a/drivers/staging/greybus/Makefile b/drivers/staging/greybus/Makefile
-index d16853399c9a..627e44f2a983 100644
---- a/drivers/staging/greybus/Makefile
-+++ b/drivers/staging/greybus/Makefile
-@@ -2,11 +2,6 @@
- # needed for trace events
- ccflags-y += -I$(src)
- 
--# Greybus Host controller drivers
--gb-es2-y := es2.o
--
--obj-$(CONFIG_GREYBUS_ES2)	+= gb-es2.o
--
- # Greybus class drivers
- gb-bootrom-y		:= bootrom.o
- gb-camera-y		:= camera.o
+ static int uar_mmap(struct mlx5_ib_dev *dev, enum mlx5_ib_mmap_cmd cmd,
 -- 
-2.23.0
+1.9.1
 
