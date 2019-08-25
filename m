@@ -2,150 +2,155 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FFEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A0AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C505217D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2DE2173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 11:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfHYLjv (ORCPT
+        id S1727190AbfHYLrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 07:39:51 -0400
-Received: from mail.ispras.ru ([83.149.199.45]:58050 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbfHYLjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 07:39:51 -0400
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru [188.32.48.208])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 6026D54006B;
-        Sun, 25 Aug 2019 14:39:47 +0300 (MSK)
-Subject: Re: [PATCH v2] lib/memweight.c: open codes bitmap_weight()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     akpm@linux-foundation.org, Akinobu Mita <akinobu.mita@gmail.com>,
-        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <matthew@wil.cx>, dm-devel@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
-        Erdem Tumurov <erdemus@gmail.com>,
-        Vladimir Shelekhov <vshel@iis.nsk.su>
-References: <20190821074200.2203-1-efremov@ispras.ru>
- <20190824100102.1167-1-efremov@ispras.ru>
- <20190825061158.GC28002@bombadil.infradead.org>
-From:   Denis Efremov <efremov@ispras.ru>
-Message-ID: <ba051566-0343-ea75-0484-8852f65a15da@ispras.ru>
-Date:   Sun, 25 Aug 2019 14:39:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 25 Aug 2019 07:47:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37908 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfHYLrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 07:47:09 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 69EE82787E3;
+        Sun, 25 Aug 2019 12:47:07 +0100 (BST)
+Date:   Sun, 25 Aug 2019 13:47:04 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <marek.vasut@gmail.com>, <vigneshr@ti.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/7] mtd: spi_nor: Move manufacturer quad_enable() in
+ ->default_init()
+Message-ID: <20190825134704.677c83d6@collabora.com>
+In-Reply-To: <20190824120027.14452-4-tudor.ambarus@microchip.com>
+References: <20190824120027.14452-1-tudor.ambarus@microchip.com>
+        <20190824120027.14452-4-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190825061158.GC28002@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 24 Aug 2019 12:00:41 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> The goal is to move the quad_enable manufacturer specific init in the
+> nor->manufacturer->fixups->default_init()
+> 
+> The legacy quad_enable() implementation is spansion_quad_enable(),
+> select this method by default.
+> 
+> Set specific manufacturer fixups->default_init() hooks to overwrite
+> the default quad_enable() implementation when needed.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 48 ++++++++++++++++++++++++++-----------------
+>  1 file changed, 29 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 27951e5a01e2..c9514dfd7d6d 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -4150,13 +4150,38 @@ static int spi_nor_parse_sfdp(struct spi_nor *nor,
+>  	return err;
+>  }
+>  
+> +static void macronix_set_default_init(struct spi_nor *nor)
+> +{
+> +	nor->params.quad_enable = macronix_quad_enable;
 
-On 25.08.2019 09:11, Matthew Wilcox wrote:
-> On Sat, Aug 24, 2019 at 01:01:02PM +0300, Denis Efremov wrote:
->> This patch open codes the bitmap_weight() call. The direct
->> invocation of hweight_long() allows to remove the BUG_ON and
->> excessive "longs to bits, bits to longs" conversion.
-> 
-> Honestly, that's not the problem with this function.  Take a look
-> at https://danluu.com/assembly-intrinsics/ for a _benchmarked_
-> set of problems with popcnt.
-> 
->> BUG_ON was required to check that bitmap_weight() will return
->> a correct value, i.e. the computed weight will fit the int type
->> of the return value.
-> 
-> What?  No.  Look at the _arguments_ of bitmap_weight():
-> 
-> static __always_inline int bitmap_weight(const unsigned long *src, unsigned int nbits)
+Since it's now supposed to be the default QE implementation I'd
+recommend renaming the function into default_quad_enable() (this can be
+done in a separate patch).
 
-I'm not sure why it is INT_MAX then? I would expect in case we care only about arguments
-something like:
- 
-BUG_ON(longs >= UINT_MAX / BITS_PER_LONG);
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-> 
->> With this patch memweight() controls the
->> computation directly with size_t type everywhere. Thus, the BUG_ON
->> becomes unnecessary.
-> 
-> Why are you bothering?  How are you allocating half a gigabyte of memory?
-> Why are you calling memweight() on half a gigabyte of memory?
-> 
+> +}
+> +
+> +static void st_micron_set_default_init(struct spi_nor *nor)
+> +{
+> +	nor->params.quad_enable = NULL;
+> +}
+> +
+>  /**
+>   * spi_nor_manufacturer_init_params() - Initialize the flash's parameters and
+> - * settings based on ->default_init() hook.
+> + * settings based on MFR register and ->default_init() hook.
+>   * @nor:	pointer to a 'struct spi-nor'.
+>   */
+>  static void spi_nor_manufacturer_init_params(struct spi_nor *nor)
+>  {
+> +	/* Init flash parameters based on MFR */
+> +	switch (JEDEC_MFR(nor->info)) {
+> +	case SNOR_MFR_MACRONIX:
+> +		macronix_set_default_init(nor);
+> +		break;
+> +
+> +	case SNOR_MFR_ST:
+> +	case SNOR_MFR_MICRON:
+> +		st_micron_set_default_init(nor);
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+>  	if (nor->info->fixups && nor->info->fixups->default_init)
+>  		nor->info->fixups->default_init(nor);
+>  }
+> @@ -4168,6 +4193,9 @@ static int spi_nor_init_params(struct spi_nor *nor)
+>  	const struct flash_info *info = nor->info;
+>  	u8 i, erase_mask;
+>  
+> +	/* Initialize legacy flash parameters and settings. */
+> +	params->quad_enable = spansion_quad_enable;
+> +
+>  	/* Set SPI NOR sizes. */
+>  	params->size = (u64)info->sector_size * info->n_sectors;
+>  	params->page_size = info->page_size;
+> @@ -4233,24 +4261,6 @@ static int spi_nor_init_params(struct spi_nor *nor)
+>  			       SPINOR_OP_SE);
+>  	spi_nor_init_uniform_erase_map(map, erase_mask, params->size);
+>  
+> -	/* Select the procedure to set the Quad Enable bit. */
+> -	if (params->hwcaps.mask & (SNOR_HWCAPS_READ_QUAD |
+> -				   SNOR_HWCAPS_PP_QUAD)) {
+> -		switch (JEDEC_MFR(info)) {
+> -		case SNOR_MFR_MACRONIX:
+> -			params->quad_enable = macronix_quad_enable;
+> -			break;
+> -
+> -		case SNOR_MFR_ST:
+> -		case SNOR_MFR_MICRON:
+> -			break;
+> -
+> -		default:
+> -			/* Kept only for backward compatibility purpose. */
+> -			params->quad_enable = spansion_quad_enable;
+> -			break;
+> -		}
+> -	}
+>  
+>  	spi_nor_manufacturer_init_params(nor);
+>  
 
-No, we don't use such big arrays. However, it's possible to remove BUG_ON and make
-the code more "straight". Why do we need to "artificially" limit this function
-to arrays of a particular size if we can relatively simple omit this restriction?
-
-> 
-> If you really must change anything, I'd rather see this turned into a
-> loop:
-> 
-> 	while (longs) {
-> 		unsigned int nbits;
-> 
-> 		if (longs >= INT_MAX / BITS_PER_LONG)
-> 			nbits = INT_MAX + 1;
-> 		else
-> 			nbits = longs * BITS_PER_LONG;
-> 
-> 		ret += bitmap_weight((unsigned long *)bitmap, sz);
-> 		bytes -= nbits / 8;
-> 		bitmap += nbits / 8;
-> 		longs -= nbits / BITS_PER_LONG;
-> 	}
-> 
-> then we only have to use Dan Luu's optimisation in bitmap_weight()
-> and not in memweight() as well.
-
-I don't know how the implementation of this optimization will look like in it's
-final shape, because of different hardware/compiler issues. It looks there are
-a number of different ways to do it https://arxiv.org/pdf/1611.07612.pdf, 
-http://0x80.pl/articles/sse-popcount.html.
-
-However, if it will be based on popcnt instruction I would expect that
-hweight_long will also contain this intrinsics. Since version 4.9.2
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=62011#c13 GCC knows of the
-false-dependency in popcnt and generates code to handle it
-(e.g. xor https://godbolt.org/z/Q7AW_d) Thus, I would expect that it's
-possible to use popcnt intrinsics in hweight_long that would be natively
-optimized in all loops like "for (...) { res += hweight_long() }" without
-requiring manual unrolling like in builtin_popcnt_unrolled_errata_manual
-example of Dan Luu's optimization.
-
-> 
-> Also, why does the trailer do this:
-> 
->         for (; bytes > 0; bytes--, bitmap++)
->                 ret += hweight8(*bitmap);
-> 
-> instead of calling hweight_long on *bitmap & mask?
-> 
-
-Do you mean something like this?
-
-        longs = bytes;
-        bytes = do_div(longs, sizeof(long));
-        bitmap_long = (const unsigned long *)bitmap;
-        if (longs) {
-                for (; longs > 0; longs--, bitmap_long++)
-                        ret += hweight_long(*bitmap_long);
-        }
-        if (bytes) {
-                ret += hweight_long(*bitmap_long &
-                                   ((0x1 << bytes * BITS_PER_BYTE) - 1));
-        }
-
-The *bitmap_long will lead to buffer overflow here.
-
-Thanks,
-Denis
