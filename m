@@ -2,314 +2,191 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567EEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D682173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C89C21848
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566712506;
+	bh=iFQQ8QesHQ/6dGBjornBDY2YtXJ+3wlgKPrjgvZIzOA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MtQhA8DSFOc8gZsXG4aCw1TTHqU+thFM3LDv6ws5hfvlQVzewznVb+hn6IyztBepc
+	 UWf0e91MRpjgsxDw8Yun1nIUefB0Uj0ohvfLhh3HpAgW2W1t9gN0AGT/w6wusuDlee
+	 deHhNoOTS4AbqmzjKjMTn5GXe+fSc03h1pfyjZZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfHYFuX (ORCPT
+        id S1726540AbfHYFyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 01:50:23 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:49792 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfHYFuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 01:50:23 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7P5o6nf033711;
-        Sun, 25 Aug 2019 14:50:06 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
- Sun, 25 Aug 2019 14:50:06 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7P5nxB4033656
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sun, 25 Aug 2019 14:50:06 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-To:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
- <20190823091636.GA10064@gmail.com>
- <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
- <20190824161432.GA25950@gmail.com>
- <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
- <20190824202224.GA5286@gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <ab9ccf3c-6b87-652e-b305-41f2c2d1b2ae@i-love.sakura.ne.jp>
-Date:   Sun, 25 Aug 2019 14:49:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 25 Aug 2019 01:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbfHYFyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 01:54:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0709C2173E;
+        Sun, 25 Aug 2019 05:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566712490;
+        bh=iFQQ8QesHQ/6dGBjornBDY2YtXJ+3wlgKPrjgvZIzOA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WVa1uq452BmJ0A9K6xB1hS5m4JfVTwbE/D4HLd5rNa8NbbrFx53hD76oxSA7bkEcn
+         pVQRrzYLfwSkpcnxFGmZyJPgFqmBqA+OxlfVHgRumRUYagqIPGK+Y/mVn2yi7v3iSJ
+         LKdqyIyUlRLxQZ58dAm7J1mAGde3CkK8khkrY4VQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        elder@kernel.org, johan@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 0/9] staging: move greybus core out of staging
+Date:   Sun, 25 Aug 2019 07:54:20 +0200
+Message-Id: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190824202224.GA5286@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/08/25 5:22, Ingo Molnar wrote:
->> So I'd be willing to try that (and then if somebody reports a
->> regression we can make it use "fatal_signal_pending()" instead)
-> 
-> Ok, will post a changelogged patch (unless Tetsuo beats me to it?).
+The Greybus code has long been "stable" but was living in the
+drivers/staging/ directory to see if there really was going to be
+devices using this protocol over the long-term.  With the success of
+millions of phones with this hardware and code in it, and the recent
+Google Summer of Code project, and a number of of new devices in the
+works from various companies, it is time to finally move this code out
+of staging into the "real" portion of the kernel so that people know
+they can rely on it.
 
-Here is a patch. This patch also tries to fix handling of return code when
-partial read/write happened (because we should return bytes processed when
-we return due to -EINTR). But asymmetric between read function and write
-function looks messy. Maybe we should just make /dev/{mem,kmem} killable
-for now, and defer making /dev/{mem,kmem} interruptible till rewrite of
-read/write functions.
+This series first does a little bit of checkpatch cleanups for some
+basic remaining issues in the greybus files, and then moves the include
+directory, the greybus core code, and the es2 greybus host controller
+driver into drivers/greybus.
 
- drivers/char/mem.c | 89 ++++++++++++++++++++++++++++++------------------------
- 1 file changed, 50 insertions(+), 39 deletions(-)
+To come after this is the movement of the Documentation entries and a
+number of the module drivers that are stable.
 
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index cb8e653..3c6a3c2 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -108,7 +108,7 @@ static ssize_t read_mem(struct file *file, char __user *buf,
- 	ssize_t read, sz;
- 	void *ptr;
- 	char *bounce;
--	int err;
-+	int err = 0;
- 
- 	if (p != *ppos)
- 		return 0;
-@@ -132,8 +132,10 @@ static ssize_t read_mem(struct file *file, char __user *buf,
- #endif
- 
- 	bounce = kmalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!bounce)
--		return -ENOMEM;
-+	if (!bounce) {
-+		err = -ENOMEM;
-+		goto failed;
-+	}
- 
- 	while (count > 0) {
- 		unsigned long remaining;
-@@ -142,7 +144,7 @@ static ssize_t read_mem(struct file *file, char __user *buf,
- 		sz = size_inside_page(p, count);
- 		cond_resched();
- 		err = -EINTR;
--		if (fatal_signal_pending(current))
-+		if (signal_pending(current))
- 			goto failed;
- 
- 		err = -EPERM;
-@@ -180,14 +182,11 @@ static ssize_t read_mem(struct file *file, char __user *buf,
- 		count -= sz;
- 		read += sz;
- 	}
-+failed:
- 	kfree(bounce);
- 
- 	*ppos += read;
--	return read;
--
--failed:
--	kfree(bounce);
--	return err;
-+	return read ? read : err;
- }
- 
- static ssize_t write_mem(struct file *file, const char __user *buf,
-@@ -197,6 +196,7 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 	ssize_t written, sz;
- 	unsigned long copied;
- 	void *ptr;
-+	int err = 0;
- 
- 	if (p != *ppos)
- 		return -EFBIG;
-@@ -223,13 +223,16 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 
- 		sz = size_inside_page(p, count);
- 		cond_resched();
--		if (fatal_signal_pending(current))
--			return -EINTR;
-+		err = -EINTR;
-+		if (signal_pending(current))
-+			break;
- 
-+		err = -EPERM;
- 		allowed = page_is_allowed(p >> PAGE_SHIFT);
- 		if (!allowed)
--			return -EPERM;
-+			break;
- 
-+		err = -EFAULT;
- 		/* Skip actual writing when a page is marked as restricted. */
- 		if (allowed == 1) {
- 			/*
-@@ -238,19 +241,14 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 			 * by the kernel or data corruption may occur.
- 			 */
- 			ptr = xlate_dev_mem_ptr(p);
--			if (!ptr) {
--				if (written)
--					break;
--				return -EFAULT;
--			}
-+			if (!ptr)
-+				break;
- 
- 			copied = copy_from_user(ptr, buf, sz);
- 			unxlate_dev_mem_ptr(p, ptr);
- 			if (copied) {
- 				written += sz - copied;
--				if (written)
--					break;
--				return -EFAULT;
-+				break;
- 			}
- 		}
- 
-@@ -261,7 +259,7 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 	}
- 
- 	*ppos += written;
--	return written;
-+	return written ? written : err;
- }
- 
- int __weak phys_mem_access_prot_allowed(struct file *file,
-@@ -459,8 +457,10 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
- 		while (low_count > 0) {
- 			sz = size_inside_page(p, low_count);
- 			cond_resched();
--			if (fatal_signal_pending(current))
--				return -EINTR;
-+			if (signal_pending(current)) {
-+				err = -EINTR;
-+				goto failed;
-+			}
- 
- 			/*
- 			 * On ia64 if a page has been mapped somewhere as
-@@ -468,11 +468,15 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
- 			 * by the kernel or data corruption may occur
- 			 */
- 			kbuf = xlate_dev_kmem_ptr((void *)p);
--			if (!virt_addr_valid(kbuf))
--				return -ENXIO;
-+			if (!virt_addr_valid(kbuf)) {
-+				err = -ENXIO;
-+				goto failed;
-+			}
- 
--			if (copy_to_user(buf, kbuf, sz))
--				return -EFAULT;
-+			if (copy_to_user(buf, kbuf, sz)) {
-+				err = -EFAULT;
-+				goto failed;
-+			}
- 			buf += sz;
- 			p += sz;
- 			read += sz;
-@@ -483,12 +487,14 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
- 
- 	if (count > 0) {
- 		kbuf = (char *)__get_free_page(GFP_KERNEL);
--		if (!kbuf)
--			return -ENOMEM;
-+		if (!kbuf) {
-+			err = -ENOMEM;
-+			goto failed;
-+		}
- 		while (count > 0) {
- 			sz = size_inside_page(p, count);
- 			cond_resched();
--			if (fatal_signal_pending(current)) {
-+			if (signal_pending(current)) {
- 				err = -EINTR;
- 				break;
- 			}
-@@ -510,6 +516,7 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
- 		}
- 		free_page((unsigned long)kbuf);
- 	}
-+ failed:
- 	*ppos = p;
- 	return read ? read : err;
- }
-@@ -520,6 +527,7 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
- {
- 	ssize_t written, sz;
- 	unsigned long copied;
-+	int err = 0;
- 
- 	written = 0;
- #ifdef __ARCH_HAS_NO_PAGE_ZERO_MAPPED
-@@ -539,8 +547,10 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
- 
- 		sz = size_inside_page(p, count);
- 		cond_resched();
--		if (fatal_signal_pending(current))
--			return -EINTR;
-+		if (signal_pending(current)) {
-+			err = -EINTR;
-+			break;
-+		}
- 
- 		/*
- 		 * On ia64 if a page has been mapped somewhere as uncached, then
-@@ -548,15 +558,16 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
- 		 * corruption may occur.
- 		 */
- 		ptr = xlate_dev_kmem_ptr((void *)p);
--		if (!virt_addr_valid(ptr))
--			return -ENXIO;
-+		if (!virt_addr_valid(ptr)) {
-+			err = -ENXIO;
-+			break;
-+		}
- 
- 		copied = copy_from_user(ptr, buf, sz);
- 		if (copied) {
- 			written += sz - copied;
--			if (written)
--				break;
--			return -EFAULT;
-+			err = -EFAULT;
-+			break;
- 		}
- 		buf += sz;
- 		p += sz;
-@@ -565,7 +576,7 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
- 	}
- 
- 	*ppos += written;
--	return written;
-+	return written ? written : err;
- }
- 
- /*
-@@ -600,7 +611,7 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
- 			unsigned long n;
- 
- 			cond_resched();
--			if (fatal_signal_pending(current)) {
-+			if (signal_pending(current)) {
- 				err = -EINTR;
- 				break;
- 			}
+Greg Kroah-Hartman (9):
+  staging: greybus: fix up SPDX comment in .h files
+  staging: greybus: remove license "boilerplate"
+  staging: greybus: hd: Fix up some alignment checkpatch issues
+  staging: greybus: manifest: Fix up some alignment checkpatch issues
+  staging: greybus: log: Fix up some alignment checkpatch issues
+  staging: greybus: loopback: Fix up some alignment checkpatch issues
+  staging: greybus: move core include files to include/linux/greybus/
+  staging: greybus: move the greybus core to drivers/greybus
+  staging: greybus: move es2 to drivers/greybus/
+
+ MAINTAINERS                                   |   3 +
+ drivers/Kconfig                               |   2 +
+ drivers/Makefile                              |   1 +
+ drivers/greybus/Kconfig                       |  32 +++++
+ drivers/greybus/Makefile                      |  26 +++++
+ drivers/greybus/arpc.h                        |  63 ++++++++++
+ drivers/{staging => }/greybus/bundle.c        |   2 +-
+ drivers/{staging => }/greybus/connection.c    |   2 +-
+ drivers/{staging => }/greybus/control.c       |   2 +-
+ drivers/{staging => }/greybus/core.c          |   2 +-
+ drivers/{staging => }/greybus/debugfs.c       |   3 +-
+ drivers/{staging => }/greybus/es2.c           |   3 +-
+ drivers/{staging => }/greybus/greybus_trace.h |   2 +-
+ drivers/{staging => }/greybus/hd.c            |  12 +-
+ drivers/{staging => }/greybus/interface.c     |   2 +-
+ drivers/{staging => }/greybus/manifest.c      |  41 ++++---
+ drivers/{staging => }/greybus/module.c        |   2 +-
+ drivers/{staging => }/greybus/operation.c     |   2 +-
+ drivers/{staging => }/greybus/svc.c           |   3 +-
+ drivers/{staging => }/greybus/svc_watchdog.c  |   2 +-
+ .../Documentation/firmware/authenticate.c     |  46 --------
+ .../greybus/Documentation/firmware/firmware.c |  46 --------
+ drivers/staging/greybus/Kconfig               |  27 -----
+ drivers/staging/greybus/Makefile              |  22 ----
+ drivers/staging/greybus/arche-platform.c      |   2 +-
+ drivers/staging/greybus/arpc.h                | 109 ------------------
+ drivers/staging/greybus/audio_apbridgea.c     |   3 +-
+ drivers/staging/greybus/audio_apbridgea.h     |  26 +----
+ drivers/staging/greybus/audio_codec.h         |   4 +-
+ drivers/staging/greybus/audio_gb.c            |   4 +-
+ drivers/staging/greybus/authentication.c      |   3 +-
+ drivers/staging/greybus/bootrom.c             |   2 +-
+ drivers/staging/greybus/camera.c              |   2 +-
+ drivers/staging/greybus/firmware.h            |   4 +-
+ drivers/staging/greybus/fw-core.c             |   2 +-
+ drivers/staging/greybus/fw-download.c         |   2 +-
+ drivers/staging/greybus/fw-management.c       |   2 +-
+ drivers/staging/greybus/gb-camera.h           |   2 +-
+ drivers/staging/greybus/gbphy.c               |   2 +-
+ drivers/staging/greybus/gbphy.h               |   2 +-
+ drivers/staging/greybus/gpio.c                |   2 +-
+ .../staging/greybus/greybus_authentication.h  |  48 +-------
+ drivers/staging/greybus/greybus_firmware.h    |  48 +-------
+ drivers/staging/greybus/hid.c                 |   3 +-
+ drivers/staging/greybus/i2c.c                 |   2 +-
+ drivers/staging/greybus/light.c               |   4 +-
+ drivers/staging/greybus/log.c                 |   9 +-
+ drivers/staging/greybus/loopback.c            |   9 +-
+ drivers/staging/greybus/power_supply.c        |   3 +-
+ drivers/staging/greybus/pwm.c                 |   2 +-
+ drivers/staging/greybus/raw.c                 |   3 +-
+ drivers/staging/greybus/sdio.c                |   2 +-
+ drivers/staging/greybus/spi.c                 |   2 +-
+ drivers/staging/greybus/spilib.c              |   2 +-
+ drivers/staging/greybus/spilib.h              |   2 +-
+ drivers/staging/greybus/tools/loopback_test.c |   2 -
+ drivers/staging/greybus/uart.c                |   2 +-
+ drivers/staging/greybus/usb.c                 |   2 +-
+ drivers/staging/greybus/vibrator.c            |   3 +-
+ .../greybus => include/linux}/greybus.h       |  26 ++---
+ .../linux}/greybus/bundle.h                   |   0
+ .../linux}/greybus/connection.h               |   0
+ .../linux}/greybus/control.h                  |   0
+ .../linux}/greybus/greybus_id.h               |   0
+ .../linux}/greybus/greybus_manifest.h         |   2 +-
+ .../linux}/greybus/greybus_protocols.h        |  48 +-------
+ .../staging => include/linux}/greybus/hd.h    |   2 +-
+ .../linux}/greybus/interface.h                |   2 +-
+ .../linux}/greybus/manifest.h                 |   2 +-
+ .../linux}/greybus/module.h                   |   2 +-
+ .../linux}/greybus/operation.h                |   2 +-
+ .../staging => include/linux}/greybus/svc.h   |   2 +-
+ 72 files changed, 225 insertions(+), 532 deletions(-)
+ create mode 100644 drivers/greybus/Kconfig
+ create mode 100644 drivers/greybus/Makefile
+ create mode 100644 drivers/greybus/arpc.h
+ rename drivers/{staging => }/greybus/bundle.c (99%)
+ rename drivers/{staging => }/greybus/connection.c (99%)
+ rename drivers/{staging => }/greybus/control.c (99%)
+ rename drivers/{staging => }/greybus/core.c (99%)
+ rename drivers/{staging => }/greybus/debugfs.c (94%)
+ rename drivers/{staging => }/greybus/es2.c (99%)
+ rename drivers/{staging => }/greybus/greybus_trace.h (99%)
+ rename drivers/{staging => }/greybus/hd.c (96%)
+ rename drivers/{staging => }/greybus/interface.c (99%)
+ rename drivers/{staging => }/greybus/manifest.c (95%)
+ rename drivers/{staging => }/greybus/module.c (99%)
+ rename drivers/{staging => }/greybus/operation.c (99%)
+ rename drivers/{staging => }/greybus/svc.c (99%)
+ rename drivers/{staging => }/greybus/svc_watchdog.c (99%)
+ delete mode 100644 drivers/staging/greybus/arpc.h
+ rename {drivers/staging/greybus => include/linux}/greybus.h (88%)
+ rename {drivers/staging => include/linux}/greybus/bundle.h (100%)
+ rename {drivers/staging => include/linux}/greybus/connection.h (100%)
+ rename {drivers/staging => include/linux}/greybus/control.h (100%)
+ rename {drivers/staging => include/linux}/greybus/greybus_id.h (100%)
+ rename {drivers/staging => include/linux}/greybus/greybus_manifest.h (99%)
+ rename {drivers/staging => include/linux}/greybus/greybus_protocols.h (96%)
+ rename {drivers/staging => include/linux}/greybus/hd.h (98%)
+ rename {drivers/staging => include/linux}/greybus/interface.h (98%)
+ rename {drivers/staging => include/linux}/greybus/manifest.h (87%)
+ rename {drivers/staging => include/linux}/greybus/module.h (94%)
+ rename {drivers/staging => include/linux}/greybus/operation.h (99%)
+ rename {drivers/staging => include/linux}/greybus/svc.h (98%)
+
 -- 
-1.8.3.1
+2.23.0
+
