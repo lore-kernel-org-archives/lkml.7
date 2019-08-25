@@ -2,186 +2,236 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E764C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501C4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D782070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E99B2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 13:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfHYNM5 (ORCPT
+        id S1728361AbfHYNNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 09:12:57 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:50971 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726772AbfHYNM5 (ORCPT
+        Sun, 25 Aug 2019 09:13:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58574 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725922AbfHYNNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 09:12:57 -0400
-Received: from [IPv6:2001:983:e9a7:1:7020:eb81:fead:d93b] ([IPv6:2001:983:e9a7:1:7020:eb81:fead:d93b])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 1sK9ipzoFzaKO1sKBiCe2A; Sun, 25 Aug 2019 15:12:54 +0200
-Subject: Re: [PATCH v7 5/9] drm: tda998x: use cec_notifier_conn_(un)register
-To:     Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-References: <20190814104520.6001-1-darekm@google.com>
- <20190814104520.6001-6-darekm@google.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <1e7fdf30-3723-857a-68fd-139f396856b7@xs4all.nl>
-Date:   Sun, 25 Aug 2019 15:12:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 25 Aug 2019 09:13:37 -0400
+Received: from ben by shadbolt.decadent.org.uk with local (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1i1sKn-00055E-KC; Sun, 25 Aug 2019 14:13:30 +0100
+Date:   Sun, 25 Aug 2019 14:13:29 +0100
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Message-ID: <20190825131329.naqzd5kwg7mw5d3f@decadent.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190814104520.6001-6-darekm@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfD0fOt9mfrzmV3IgV/uuKEoGzKJP/P6EzDr0kMFNQssoX8s5YNV5+YgUiIvVh6d3LVB8y6IDWaT0wbrf3ehxU1TCvmh0aFbp8L2IqcHC85Us3obOfjj8
- TPWTUsShSvSpqV5RdMUC7o9fMEDFE516SgNflSAMdldChyJ8k5CKL9RbA0mX55Sc7p0cACKjsT7KzH46533qjuwPjm1pCoTIR9k68fI2joJinaFHxIsB3E9m
- NAnij23C3GM+vFOkTEvorGWuykO9t8Ux9iP9tVkpThHhUNI7uBbNtVOZXRZaT/hz+SqrKNoQTYeECMl7IWRuDvM9yWxEUNOF3qEVSwaap4rfD9q2zhNvWV3i
- 3xTHJhf11QsG//0484cEbv9TRhgWOzfYxGH54TSclwlb4HaGWHrzm7m2MG/uax4xKzK3F3RuWrO6jZSc7qrjYD+ab6sTFdXpFNyidhg1nUgbb97QcU+dMOAm
- hpKwQkNQlMNXrT68
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fkxixsfrlh324d26"
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+Subject: [RFC PATCH] tools/perf: pmu-events: Fix reproducibility
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on shadbolt.decadent.org.uk)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
-> Use the new cec_notifier_conn_(un)register() functions to
-> (un)register the notifier for the HDMI connector, and fill
-> in the cec_connector_info.
-> 
-> Changes since v6:
->         - move cec_notifier_conn_unregister to tda998x_bridge_detach,
-> 	- add a mutex protecting accesses to a CEC notifier.
-> Changes since v2:
-> 	- cec_notifier_phys_addr_invalidate where appropriate,
-> 	- don't check for NULL notifier before calling
-> 	cec_notifier_conn_unregister.
-> Changes since v1:
-> 	Add memory barrier to make sure that the notifier
-> 	becomes visible to the irq thread once it is
-> 	fully constructed.
-> 
-> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-> ---
->  drivers/gpu/drm/i2c/tda998x_drv.c | 36 +++++++++++++++++++++----------
->  1 file changed, 25 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-> index 61e042918a7fc..643480415473f 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -82,6 +82,8 @@ struct tda998x_priv {
->  	u8 audio_port_enable[AUDIO_ROUTE_NUM];
->  	struct tda9950_glue cec_glue;
->  	struct gpio_desc *calib;
-> +
-> +	struct mutex cec_notifiy_mutex;
->  	struct cec_notifier *cec_notify;
->  };
->  
-> @@ -805,8 +807,11 @@ static irqreturn_t tda998x_irq_thread(int irq, void *data)
->  				tda998x_edid_delay_start(priv);
->  			} else {
->  				schedule_work(&priv->detect_work);
-> -				cec_notifier_set_phys_addr(priv->cec_notify,
-> -						   CEC_PHYS_ADDR_INVALID);
-> +
-> +				mutex_lock(&priv->cec_notifiy_mutex);
-> +				cec_notifier_phys_addr_invalidate(
-> +						priv->cec_notify);
-> +				mutex_unlock(&priv->cec_notifiy_mutex);
->  			}
->  
->  			handled = true;
-> @@ -1331,6 +1336,8 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
->  				  struct drm_device *drm)
->  {
->  	struct drm_connector *connector = &priv->connector;
-> +	struct cec_connector_info conn_info;
-> +	struct cec_notifier *notifier;
->  	int ret;
->  
->  	connector->interlace_allowed = 1;
-> @@ -1347,6 +1354,16 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
->  	if (ret)
->  		return ret;
->  
-> +	cec_fill_conn_info_from_drm(&conn_info, connector);
-> +
-> +	notifier = cec_notifier_conn_register(priv->cec_glue.parent,
-> +					      NULL, &conn_info);
-> +		return -ENOMEM;
 
-You dropped a 'if (!notifier)' before the return!
+--fkxixsfrlh324d26
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-After adding back this 'if' it worked fine on my BeagleBone Black board,
-so after fixing this you can add my:
+jevents.c uses nftw() to enumerate files and outputs the corresponding
+C structs in the order they are found.  This makes it sensitive to
+directory ordering, so that the perf executable is not reproducible.
 
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To avoid this, store all the files and directories found and then sort
+them by their (relative) path.  (This maintains the parent-first
+ordering that nftw() promises.)  Then apply the existing callbacks to
+them in the sorted order.
 
-tag.
+Don't both storing the stat buffers as we don't need them.
 
-Regards,
+References: https://tests.reproducible-builds.org/debian/dbdtxt/bullseye/i3=
+86/linux_4.19.37-6.diffoscope.txt.gz
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -50,6 +50,12 @@
+ #include "json.h"
+ #include "jevents.h"
+=20
++struct found_file {
++	const char	*fpath;
++	int		typeflag;
++	struct FTW	ftwbuf;
++};
++
+ int verbose;
+ char *prog;
+=20
+@@ -865,6 +871,44 @@ static int get_maxfds(void)
+  * nftw() doesn't let us pass an argument to the processing function,
+  * so use a global variables.
+  */
++static struct found_file *found_files;
++static size_t n_found_files;
++static size_t max_found_files;
++
++static int add_one_file(const char *fpath, const struct stat *sb,
++			int typeflag, struct FTW *ftwbuf)
++{
++	struct found_file *file;
++
++	if (ftwbuf->level =3D=3D 0 || ftwbuf->level > 3)
++		return 0;
++
++	/* Grow array if necessary */
++	if (n_found_files >=3D max_found_files) {
++		if (max_found_files =3D=3D 0)
++			max_found_files =3D 16;
++		else
++			max_found_files *=3D 2;
++		found_files =3D realloc(found_files,
++				      max_found_files * sizeof(*found_files));
++	}
++
++	file =3D &found_files[n_found_files++];
++	file->fpath =3D strdup(fpath);
++	file->typeflag =3D typeflag;
++	file->ftwbuf =3D *ftwbuf;
++
++	return 0;
++}
++
++static int compare_files(const void *left, const void *right)
++{
++	const struct found_file *left_file =3D left;
++	const struct found_file *right_file =3D right;
++
++	return strcmp(left_file->fpath, right_file->fpath);
++}
++
+ static FILE *eventsfp;
+ static char *mapfile;
+=20
+@@ -919,19 +963,19 @@ static int is_json_file(const char *name
+ 	return 0;
+ }
+=20
+-static int preprocess_arch_std_files(const char *fpath, const struct stat =
+*sb,
++static int preprocess_arch_std_files(const char *fpath,
+ 				int typeflag, struct FTW *ftwbuf)
+ {
+ 	int level =3D ftwbuf->level;
+ 	int is_file =3D typeflag =3D=3D FTW_F;
+=20
+ 	if (level =3D=3D 1 && is_file && is_json_file(fpath))
+-		return json_events(fpath, save_arch_std_events, (void *)sb);
++		return json_events(fpath, save_arch_std_events, NULL);
+=20
+ 	return 0;
+ }
+=20
+-static int process_one_file(const char *fpath, const struct stat *sb,
++static int process_one_file(const char *fpath,
+ 			    int typeflag, struct FTW *ftwbuf)
+ {
+ 	char *tblname, *bname;
+@@ -956,9 +1000,9 @@ static int process_one_file(const char *
+ 	} else
+ 		bname =3D (char *) fpath + ftwbuf->base;
+=20
+-	pr_debug("%s %d %7jd %-20s %s\n",
++	pr_debug("%s %d %-20s %s\n",
+ 		 is_file ? "f" : is_dir ? "d" : "x",
+-		 level, sb->st_size, bname, fpath);
++		 level, bname, fpath);
+=20
+ 	/* base dir or too deep */
+ 	if (level =3D=3D 0 || level > 3)
+@@ -1070,6 +1114,7 @@ int main(int argc, char *argv[])
+ 	const char *output_file;
+ 	const char *start_dirname;
+ 	struct stat stbuf;
++	size_t i;
+=20
+ 	prog =3D basename(argv[0]);
+ 	if (argc < 4) {
+@@ -1113,8 +1158,26 @@ int main(int argc, char *argv[])
+ 	 */
+=20
+ 	maxfds =3D get_maxfds();
++	rc =3D nftw(ldirname, add_one_file, maxfds, 0);
++	if (rc < 0) {
++		/* Make build fail */
++		free_arch_std_events();
++		return 1;
++	} else if (rc) {
++		goto empty_map;
++	}
++
++	/* Sort file names to ensure reproduciblity */
++	qsort(found_files, n_found_files, sizeof(*found_files), compare_files);
++
+ 	mapfile =3D NULL;
+-	rc =3D nftw(ldirname, preprocess_arch_std_files, maxfds, 0);
++	for (i =3D 0; i < n_found_files; i++) {
++		rc =3D preprocess_arch_std_files(found_files[i].fpath,
++					       found_files[i].typeflag,
++					       &found_files[i].ftwbuf);
++		if (rc)
++			break;
++	}
+ 	if (rc && verbose) {
+ 		pr_info("%s: Error preprocessing arch standard files %s\n",
+ 			prog, ldirname);
+@@ -1127,7 +1190,13 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	}
+=20
+-	rc =3D nftw(ldirname, process_one_file, maxfds, 0);
++	for (i =3D 0; i < n_found_files; i++) {
++		rc =3D process_one_file(found_files[i].fpath,
++				      found_files[i].typeflag,
++				      &found_files[i].ftwbuf);
++		if (rc)
++			break;
++	}
+ 	if (rc && verbose) {
+ 		pr_info("%s: Error walking file tree %s\n", prog, ldirname);
+ 		goto empty_map;
 
-	Hans
+--fkxixsfrlh324d26
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +	mutex_lock(&priv->cec_notifiy_mutex);
-> +	priv->cec_notify = notifier;
-> +	mutex_unlock(&priv->cec_notifiy_mutex);
-> +
->  	drm_connector_attach_encoder(&priv->connector,
->  				     priv->bridge.encoder);
->  
-> @@ -1366,6 +1383,11 @@ static void tda998x_bridge_detach(struct drm_bridge *bridge)
->  {
->  	struct tda998x_priv *priv = bridge_to_tda998x_priv(bridge);
->  
-> +	mutex_lock(&priv->cec_notifiy_mutex);
-> +	cec_notifier_conn_unregister(priv->cec_notify);
-> +	priv->cec_notify = NULL;
-> +	mutex_unlock(&priv->cec_notifiy_mutex);
-> +
->  	drm_connector_cleanup(&priv->connector);
->  }
->  
-> @@ -1789,9 +1811,6 @@ static void tda998x_destroy(struct device *dev)
->  	cancel_work_sync(&priv->detect_work);
->  
->  	i2c_unregister_device(priv->cec);
-> -
-> -	if (priv->cec_notify)
-> -		cec_notifier_put(priv->cec_notify);
->  }
->  
->  static int tda998x_create(struct device *dev)
-> @@ -1812,6 +1831,7 @@ static int tda998x_create(struct device *dev)
->  	mutex_init(&priv->mutex);	/* protect the page access */
->  	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
->  	mutex_init(&priv->edid_mutex);
-> +	mutex_init(&priv->cec_notifiy_mutex);
->  	INIT_LIST_HEAD(&priv->bridge.list);
->  	init_waitqueue_head(&priv->edid_delay_waitq);
->  	timer_setup(&priv->edid_delay_timer, tda998x_edid_delay_done, 0);
-> @@ -1916,12 +1936,6 @@ static int tda998x_create(struct device *dev)
->  		cec_write(priv, REG_CEC_RXSHPDINTENA, CEC_RXSHPDLEV_HPD);
->  	}
->  
-> -	priv->cec_notify = cec_notifier_get(dev);
-> -	if (!priv->cec_notify) {
-> -		ret = -ENOMEM;
-> -		goto fail;
-> -	}
-> -
->  	priv->cec_glue.parent = dev;
->  	priv->cec_glue.data = priv;
->  	priv->cec_glue.init = tda998x_cec_hook_init;
-> 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1iiXQACgkQ57/I7JWG
+EQlIFhAAhAXf97wBfIFEWREk8shysDdnxwZpkUtnVsFSlOAso9sIip65vRYSR2Y/
+W2WwVQmKWHF7LVN1t9r7pfLxWfzNLfyWzpuhzoKEzR85rZbtSYiSS5DtKm+Bz6cT
+rdwlEKbyhCiFKdVQ5ACIEpHV/K0RtIiKxISRYAHX2IaSCcPFUVLcZOCkY85I3EDc
+TOAQD0M44UwpfESP8awqahJqMhAoYpjPdms9CmrP6RwZGm6GsrS2k4jHY1kIfQbI
+ubvKWijmOpLZbX6oSOqPhGJH/tGIrzknNKg9Lw44W9zYmSfgTeVxUb8LXRatXDgf
+J5m5QkYW8DUH4RrUs6qX1wm4ROIoQhr/5A+cWcotgeneXFweP4ti/G2PK8h9Ad78
+SjGzUoCF1ephyVlJnzTHTQ3jG8GXGo62V7SDylSerj/jjeLbXWx3sXf7ZsczT3Ig
+RbVf2VHU8V/eVDZO1LKekluWzpKJACLkyRU00yoIltbLB89L2/Uxcq2eLB1N8REa
+Ob4pnKgj9WwQzKeS4vPWgH3nRu3YXQrVZONlr1rgpbsicouC13rcYRAyerHCz6EQ
+gLHhNSZcw9wA6DxMQgXvQ7EiQXJ3a2QhP8pdVTDB/sauJsTeS8aaS9OGV1vRfRjt
+V8IYwp+tN6zMwxuodUSM7To+RBVB9jv9s6h4sEWbJoDl0y0eusw=
+=g13I
+-----END PGP SIGNATURE-----
+
+--fkxixsfrlh324d26--
