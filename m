@@ -2,140 +2,102 @@ Return-Path: <SRS0=9baz=WV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F97C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C68C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69842173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:59:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSajX2fi"
+	by mail.kernel.org (Postfix) with ESMTP id 99F0120870
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 19:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566763185;
+	bh=8dab/N+G+Ws2pEvTnFj8a60ZvdFyDvBBE7tGRKz3PG0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bvHjh/k3dLt1atW5TF2M+XoK4X9bgOAj23oOY7KQxbWgbLFBbRcpL/gcc05Gotvfa
+	 Bq0O5qXzLwG4W8leJe5oxGT2DMiCZmFjrcSbaNzOzTAdhkKz7mgncvvwK1LaHn7KXa
+	 ye0dvFnsEVt4FdTVnMy5efNQAH/yzbnSnnwE6OMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbfHYT7N (ORCPT
+        id S1729068AbfHYT7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 15:59:13 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:36597 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfHYT7N (ORCPT
+        Sun, 25 Aug 2019 15:59:44 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36203 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfHYT7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 15:59:13 -0400
-Received: by mail-yb1-f195.google.com with SMTP id m9so6295774ybm.3;
-        Sun, 25 Aug 2019 12:59:12 -0700 (PDT)
+        Sun, 25 Aug 2019 15:59:44 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r5so5190594lfc.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 12:59:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rwdGdHc5KELH58u1BLWdqe0IVwKNlhK1cPic66vQ+zU=;
-        b=bSajX2fiMz0VjXbIV4wnXHBDvSsPaxrH7TFTd2LSonNzwULf8szR+ynQRM5duKSLiZ
-         6u+IW3HboTgjVDEKcLRnzQa8bx+oIxFbncZJaNvGhO2WjoGamaQ0ykejl12qRtdw+xwA
-         r1xQMAGVkEQtHJZBIEH5P86kKBdFifIpN/5XOPQSiMriX2HbIjhjvWwI4XPEax4MGltn
-         y9GtUmNeasaflS7e2dlYmmg5MO+WCPsjMEqmgYdfzVlMaDvPNsOYJ49o368Xq/OdibJq
-         jVKbNQXVGxxEgkpKt5+8b7wIEm+b6i7b6qdSr9eUWrbkAxRbTuSnf2T+4rNxVulHHLgd
-         s5AA==
+         :cc;
+        bh=XVa8anCZ+4vkRzIouGu0LBPnwGXRh/AHZn823ax1V5Q=;
+        b=Y0BTrtMRbnRRY5Pld/ZZQTW8Q67qN5m1j0be9LImGfHgJfaW9aqNlau409QswX02Al
+         K/uZjUY0EJKN19kL81vDzukd+1ZmLD0iZxP0KWabgBmwRmQyB577RVQgWH+AWXcvtPxU
+         sVsOjHD13Ve2I5h5gIEAfi7a57cjr0n/MGDnQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rwdGdHc5KELH58u1BLWdqe0IVwKNlhK1cPic66vQ+zU=;
-        b=f2aUix0Ek9hiLQA2HwFSGHX5ahoMp+yzHtKbCR/mVGSYsCuehAKwJnyl9REo2HW/bi
-         KkV7SsoXqlamZH43e3U2ReqZkzZa8fIGzXRgNz7SKjEM9j9dHSxsXu8ya5Ekawrr8Dwb
-         bkY+D4E1+FrZ8pWYfWTzniUQw9Wj9FDd8rWsLNQ2zehcW7M+Zkdp8y3Qgcq9mFOPMx/s
-         6dSwvx4DatL6MsQKuovwdYIRHin67aUUyCOtx/8p52KMthH0aeglSTPfojYUZHUOcQXB
-         YLdUbKhBA1XWhC+xcngp3nIq2MNH8B81Wk6x4M5ZrMj4P0oiFhqtWT2s6dn4JvvGb6FE
-         P2kg==
-X-Gm-Message-State: APjAAAXz8b2RSjfED8VuXCUE0a9og6D67g16iAnWasd4hS0w8LpSMBjA
-        6kf0j6ige9ImB1lcR1sLi3QJpOwA2qkWZVx1idLoKB7d
-X-Google-Smtp-Source: APXvYqzwvRBFD8dbPT63nz0/dQB3HooyKUWSSED2MN2hPgbFCv35jNh6d0sMzl66Umz9z6f5+8DZoLUyJu3J6cf1iGw=
-X-Received: by 2002:a25:2f56:: with SMTP id v83mr9833100ybv.2.1566763152247;
- Sun, 25 Aug 2019 12:59:12 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=XVa8anCZ+4vkRzIouGu0LBPnwGXRh/AHZn823ax1V5Q=;
+        b=SP1RZU9jcLxT4ZQcOjriNkX0FNaxH3tHnSw5SiU73fPRlDQoSzaA2R1N4WTiwgGAdY
+         C7er/cXMqP79iolDZ4foKGd5G7v+L2MxG5hrjZEdIwRADrl0tDLw97h3WrZRFeTnHj3r
+         gEeOKr+f3rHcqJpByIsbcypSWisxmXtTcIAVg6xg11ygZh0Mm+lF0dry0JdR6w/XwkQH
+         1Jw6sgzNmtsK3s+bGbeWilSGHWiSAij/di/okg+nU4/lR9z5wMSDbpjdGz8eHADK78Si
+         Fut7xSbu73D+qdme0Y3wqV33TNn2Jiahx+ql0YjDiY5EwrFEXWSoGzrWx+s+FJU8frGk
+         GIow==
+X-Gm-Message-State: APjAAAXUamQJE9w/JA7WHX5t8NO9EkYsvReMce9IFg5WFnFtkB4c0J/c
+        WZ7ey1MytVrYMdMOXzXcm2upFUWU6iw=
+X-Google-Smtp-Source: APXvYqxL+q4O7vul+jYLivShOoEHlfca7fXTTRy9MJmqZirtU+53ojpEocpn+WMHA4GoDSGgrtRQpA==
+X-Received: by 2002:ac2:5ec8:: with SMTP id d8mr7424224lfq.183.1566763181943;
+        Sun, 25 Aug 2019 12:59:41 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id 69sm1687112ljj.101.2019.08.25.12.59.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Aug 2019 12:59:41 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id n19so10662872lfe.13
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 12:59:41 -0700 (PDT)
+X-Received: by 2002:ac2:428d:: with SMTP id m13mr8633607lfh.52.1566763180838;
+ Sun, 25 Aug 2019 12:59:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190822133524.6274-1-colin.king@canonical.com>
- <d3c16158-ef89-f5ee-2f67-4357c70e8fe9@lwfinger.net> <31258833-174f-080b-489e-85d3556bd1de@canonical.com>
-In-Reply-To: <31258833-174f-080b-489e-85d3556bd1de@canonical.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Date:   Sun, 25 Aug 2019 21:59:01 +0200
-Message-ID: <CACna6ryAmfhUENTWR33Xfngh_6zJe0EF_JKAxDUXXZPHYevkzA@mail.gmail.com>
-Subject: Re: [PATCH] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <156672618029.19810.8479315461492191933.tglx@nanos.tec.linutronix.de>
+ <156672618029.19810.9732807383797358917.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com>
+ <20190825173000.GB20639@zn.tnic> <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
+ <20190825182922.GC20639@zn.tnic> <CAHk-=wjhyg-MndXHZGRD+ZKMK1UrcghyLH32rqQA=YmcxV7Z0Q@mail.gmail.com>
+ <20190825193218.GD20639@zn.tnic> <CAHk-=wiBqmHTFYJWOehB=k3mC7srsx0DWMCYZ7fMOC0T7v1KHA@mail.gmail.com>
+ <20190825194912.GF20639@zn.tnic>
+In-Reply-To: <20190825194912.GF20639@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 25 Aug 2019 12:59:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
+Message-ID: <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
+Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 at 18:11, Colin Ian King <colin.king@canonical.com> wro=
-te:
-> On 22/08/2019 17:03, Larry Finger wrote:
-> > On 8/22/19 8:35 AM, Colin King wrote:
-> >> From: Colin Ian King <colin.king@canonical.com>
-> >>
-> >> An earlier commit re-worked the setting of the bitmask and is now
-> >> assigning v with some bit flags rather than bitwise or-ing them
-> >> into v, consequently the earlier bit-settings of v are being lost.
-> >> Fix this by replacing an assignment with the bitwise or instead.
-> >>
-> >> Addresses-Coverity: ("Unused value")
-> >> Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
-> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >> ---
-> >>   drivers/bcma/driver_pci.c | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
-> >> index f499a469e66d..d219ee947c07 100644
-> >> --- a/drivers/bcma/driver_pci.c
-> >> +++ b/drivers/bcma/driver_pci.c
-> >> @@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci
-> >> *pc, u16 device, u8 address)
-> >>           v |=3D (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
-> >>       }
-> >>   -    v =3D BCMA_CORE_PCI_MDIODATA_START;
-> >> +    v |=3D BCMA_CORE_PCI_MDIODATA_START;
-> >>       v |=3D BCMA_CORE_PCI_MDIODATA_READ;
-> >>       v |=3D BCMA_CORE_PCI_MDIODATA_TA;
-> >
-> > I'm not sure the "Fixes" attribute is correct.
-> >
-> > The changes for this section in commit 2be25cac8402 are
-> >
-> > -       v =3D (1 << 30); /* Start of Transaction */
-> > -       v |=3D (1 << 28); /* Write Transaction */
-> > -       v |=3D (1 << 17); /* Turnaround */
-> > -       v |=3D (0x1F << 18);
-> > +       v =3D BCMA_CORE_PCI_MDIODATA_START;
-> > +       v |=3D BCMA_CORE_PCI_MDIODATA_WRITE;
-> > +       v |=3D (BCMA_CORE_PCI_MDIODATA_DEV_ADDR <<
-> > +             BCMA_CORE_PCI_MDIODATA_DEVADDR_SHF);
-> > +       v |=3D (BCMA_CORE_PCI_MDIODATA_BLK_ADDR <<
-> > +             BCMA_CORE_PCI_MDIODATA_REGADDR_SHF);
-> > +       v |=3D BCMA_CORE_PCI_MDIODATA_TA;
-> >
-> > Because the code has done quite a bit of work on v just above this
-> > section, I agree that this is likely an error, but that error happened
-> > in an earlier commit. Thus 2be25cac8402 did not introduce the error,
-> > merely copied it.
+On Sun, Aug 25, 2019 at 12:49 PM Borislav Petkov <bp@suse.de> wrote:
 >
-> Ugh, this goes back further. I didn't spot that. I'm less confident of
-> what the correct settings should be now.
->
-> >
-> > Has this change been tested?
->
-> Afraid not, I don't have the H/W.
+> We're really verbose, though. Dunno if we should make this a WARN_ONCE
+> or we say that we really should be very loud with a non-functioning
+> RDRAND...
 
-Please send V2 with updated commit message (Fixes tag) +
-bcma_pcie_mdio_write fixed. I'll try to test it.
+I think WARN_ONCE() is good. It's big enough that it will show up in
+dmesg if anybody looks, and if nobody looks I think distros still have
+logging for things like that, don't they?
 
---=20
-Rafa=C5=82
+Hopefully this never actually triggers in practice, thanks to rdrand
+being turned off on known-bad machines now, and Zen 2 being fixed.
+
+               Linus
