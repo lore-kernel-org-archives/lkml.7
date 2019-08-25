@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED3BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3ECC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70852190F
+	by mail.kernel.org (Postfix) with ESMTP id B23A021848
 	for <linux-kernel@archiver.kernel.org>; Sun, 25 Aug 2019 05:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566712507;
-	bh=6SR9gaVqFwRvUhukFwgkAst5fu/Qlhy9PQMt1ZCkCq0=;
+	s=default; t=1566712506;
+	bh=69Dd3cxMzVXwSlvnkLCJy5vK3Jh0jn9ZRYvTt9nJZmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjlsCpnJORbMEcfXCjjlm77ILnXfrEemoN5AqhVTTtGzSZb7a1sBRG/3/J3cN1c9S
-	 71oNf8Y7ywywO/I4LmnGul9yOxgGGn+zJJyDArr3e8iMYt8cfcyETiEXEtTNPCEmk9
-	 OAt8ofoaLY3GrB8Fh4RYFLbSXAghXc2Q76s6tH1U=
+	b=Dcgb4/KYI7LzZZUizK7XI+8DT1plvLhC+NExzsqfaMX2HQtP/1mbHZgtPVncsficy
+	 MOf3V4QleCqvHzkrju2+xrJcHeE5hgmTq1LhUM0Dog0eqiMSKPIiCZUbkvS7LD2coj
+	 xDBNnfZCCuqLouy/z35s7/huyDDKrb9JCBIYW1wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfHYFzF (ORCPT
+        id S1726933AbfHYFzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 01:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33424 "EHLO mail.kernel.org"
+        Sun, 25 Aug 2019 01:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbfHYFzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 01:55:04 -0400
+        id S1726095AbfHYFzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 01:55:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B6B21848;
-        Sun, 25 Aug 2019 05:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF832173E;
+        Sun, 25 Aug 2019 05:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566712503;
-        bh=6SR9gaVqFwRvUhukFwgkAst5fu/Qlhy9PQMt1ZCkCq0=;
+        s=default; t=1566712501;
+        bh=69Dd3cxMzVXwSlvnkLCJy5vK3Jh0jn9ZRYvTt9nJZmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTzyttXBMaPw8mWA6JcmQOcb8GmlqoiNg4gYZ1r+rDro3NE5sVFica4VxC7SyID27
-         /k2aF6QbcuM4wzhVAHwOcF+VE4jBKeMTsItwQj5jesWSg3lmn+xRhHEivbUqZxGDPy
-         7mO6VarNROPO3bRqBBnMIoS0onRiFTBh1XoiEdk4=
+        b=PeHhQ3uKBQJl05VKSJ90jjNiod2bpoqNFMzwL8aKyT9Nc9eGr6Lx6Qgv6QlVjHUTu
+         6aijPy61FTF569IsxgIyzG7DcxChg7OhewNhjxByR1deb0IudWAUxXCHAiGqNsFX96
+         PUrSrjqfrfGIp1n+wRdc670Cgz+br9WDiX7Hy70A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
         elder@kernel.org, johan@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4/9] staging: greybus: manifest: Fix up some alignment checkpatch issues
-Date:   Sun, 25 Aug 2019 07:54:24 +0200
-Message-Id: <20190825055429.18547-5-gregkh@linuxfoundation.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
+Subject: [PATCH 2/9] staging: greybus: remove license "boilerplate"
+Date:   Sun, 25 Aug 2019 07:54:22 +0200
+Message-Id: <20190825055429.18547-3-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190825055429.18547-1-gregkh@linuxfoundation.org>
 References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
@@ -57,155 +61,431 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some function prototypes do not match the expected alignment formatting
-so fix that up so that checkpatch is happy.
+When the greybus drivers were converted to SPDX identifiers for the
+license text, some license boilerplate was not removed.  Clean this up
+by removing this unneeded text now.
 
 Cc: Johan Hovold <johan@kernel.org>
 Cc: Alex Elder <elder@kernel.org>
+Cc: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc: Mark Greer <mgreer@animalcreek.com>
+Cc: Viresh Kumar <vireshk@kernel.org>
+Cc: "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
 Cc: greybus-dev@lists.linaro.org
 Cc: devel@driverdev.osuosl.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/greybus/manifest.c | 39 +++++++++++++++---------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ .../Documentation/firmware/authenticate.c     | 46 -------------------
+ .../greybus/Documentation/firmware/firmware.c | 46 -------------------
+ drivers/staging/greybus/arpc.h                | 46 -------------------
+ drivers/staging/greybus/audio_apbridgea.h     | 26 +----------
+ .../staging/greybus/greybus_authentication.h  | 46 -------------------
+ drivers/staging/greybus/greybus_firmware.h    | 46 -------------------
+ drivers/staging/greybus/greybus_protocols.h   | 46 -------------------
+ drivers/staging/greybus/tools/loopback_test.c |  2 -
+ 8 files changed, 1 insertion(+), 303 deletions(-)
 
-diff --git a/drivers/staging/greybus/manifest.c b/drivers/staging/greybus/manifest.c
-index 08db49264f2b..4ebbba52b07c 100644
---- a/drivers/staging/greybus/manifest.c
-+++ b/drivers/staging/greybus/manifest.c
-@@ -104,15 +104,15 @@ static int identify_descriptor(struct gb_interface *intf,
- 	size_t expected_size;
+diff --git a/drivers/staging/greybus/Documentation/firmware/authenticate.c b/drivers/staging/greybus/Documentation/firmware/authenticate.c
+index 806e75b7f405..3d2c6f88a138 100644
+--- a/drivers/staging/greybus/Documentation/firmware/authenticate.c
++++ b/drivers/staging/greybus/Documentation/firmware/authenticate.c
+@@ -2,54 +2,8 @@
+ /*
+  * Sample code to test CAP protocol
+  *
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright(c) 2016 Google Inc. All rights reserved.
+  * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License version 2 for more details.
+- *
+- * BSD LICENSE
+- *
+- * Copyright(c) 2016 Google Inc. All rights reserved.
+- * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *  * Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in
+- *    the documentation and/or other materials provided with the
+- *    distribution.
+- *  * Neither the name of Google Inc. or Linaro Ltd. nor the names of
+- *    its contributors may be used to endorse or promote products
+- *    derived from this software without specific prior written
+- *    permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE INC. OR
+- * LINARO LTD. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
- 	if (size < sizeof(*desc_header)) {
--		dev_err(&intf->dev, "manifest too small (%zu < %zu)\n",
--				size, sizeof(*desc_header));
-+		dev_err(&intf->dev, "manifest too small (%zu < %zu)\n", size,
-+			sizeof(*desc_header));
- 		return -EINVAL;		/* Must at least have header */
- 	}
+ #include <stdio.h>
+diff --git a/drivers/staging/greybus/Documentation/firmware/firmware.c b/drivers/staging/greybus/Documentation/firmware/firmware.c
+index 31d9c23e2eeb..765d69faa9cc 100644
+--- a/drivers/staging/greybus/Documentation/firmware/firmware.c
++++ b/drivers/staging/greybus/Documentation/firmware/firmware.c
+@@ -2,54 +2,8 @@
+ /*
+  * Sample code to test firmware-management protocol
+  *
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright(c) 2016 Google Inc. All rights reserved.
+  * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License version 2 for more details.
+- *
+- * BSD LICENSE
+- *
+- * Copyright(c) 2016 Google Inc. All rights reserved.
+- * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *  * Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in
+- *    the documentation and/or other materials provided with the
+- *    distribution.
+- *  * Neither the name of Google Inc. or Linaro Ltd. nor the names of
+- *    its contributors may be used to endorse or promote products
+- *    derived from this software without specific prior written
+- *    permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE INC. OR
+- * LINARO LTD. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
- 	desc_size = le16_to_cpu(desc_header->size);
- 	if (desc_size > size) {
- 		dev_err(&intf->dev, "descriptor too big (%zu > %zu)\n",
--				desc_size, size);
-+			desc_size, size);
- 		return -EINVAL;
- 	}
+ #include <stdio.h>
+diff --git a/drivers/staging/greybus/arpc.h b/drivers/staging/greybus/arpc.h
+index 3dab6375909c..c8b83c5cfa79 100644
+--- a/drivers/staging/greybus/arpc.h
++++ b/drivers/staging/greybus/arpc.h
+@@ -1,53 +1,7 @@
+ /* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright(c) 2016 Google Inc. All rights reserved.
+  * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License version 2 for more details.
+- *
+- * BSD LICENSE
+- *
+- * Copyright(c) 2016 Google Inc. All rights reserved.
+- * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *  * Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in
+- *    the documentation and/or other materials provided with the
+- *    distribution.
+- *  * Neither the name of Google Inc. or Linaro Ltd. nor the names of
+- *    its contributors may be used to endorse or promote products
+- *    derived from this software without specific prior written
+- *    permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE INC. OR
+- * LINARO LTD. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
-@@ -139,22 +139,22 @@ static int identify_descriptor(struct gb_interface *intf,
- 	case GREYBUS_TYPE_INVALID:
- 	default:
- 		dev_err(&intf->dev, "invalid descriptor type (%u)\n",
--				desc_header->type);
-+			desc_header->type);
- 		return -EINVAL;
- 	}
+ #ifndef __ARPC_H
+diff --git a/drivers/staging/greybus/audio_apbridgea.h b/drivers/staging/greybus/audio_apbridgea.h
+index 330fc7a397eb..3f1f4dd2c61a 100644
+--- a/drivers/staging/greybus/audio_apbridgea.h
++++ b/drivers/staging/greybus/audio_apbridgea.h
+@@ -1,30 +1,6 @@
+ /* SPDX-License-Identifier: BSD-3-Clause */
+-/**
++/*
+  * Copyright (c) 2015-2016 Google Inc.
+- * All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions are met:
+- * 1. Redistributions of source code must retain the above copyright notice,
+- * this list of conditions and the following disclaimer.
+- * 2. Redistributions in binary form must reproduce the above copyright notice,
+- * this list of conditions and the following disclaimer in the documentation
+- * and/or other materials provided with the distribution.
+- * 3. Neither the name of the copyright holder nor the names of its
+- * contributors may be used to endorse or promote products derived from this
+- * software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ /*
+  * This is a special protocol for configuring communication over the
+diff --git a/drivers/staging/greybus/greybus_authentication.h b/drivers/staging/greybus/greybus_authentication.h
+index d654760cf175..7edc7295b7ab 100644
+--- a/drivers/staging/greybus/greybus_authentication.h
++++ b/drivers/staging/greybus/greybus_authentication.h
+@@ -2,54 +2,8 @@
+ /*
+  * Greybus Component Authentication User Header
+  *
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright(c) 2016 Google Inc. All rights reserved.
+  * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License version 2 for more details.
+- *
+- * BSD LICENSE
+- *
+- * Copyright(c) 2016 Google Inc. All rights reserved.
+- * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *  * Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in
+- *    the documentation and/or other materials provided with the
+- *    distribution.
+- *  * Neither the name of Google Inc. or Linaro Ltd. nor the names of
+- *    its contributors may be used to endorse or promote products
+- *    derived from this software without specific prior written
+- *    permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE INC. OR
+- * LINARO LTD. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
- 	if (desc_size < expected_size) {
- 		dev_err(&intf->dev, "%s descriptor too small (%zu < %zu)\n",
--				get_descriptor_type_string(desc_header->type),
--				desc_size, expected_size);
-+			get_descriptor_type_string(desc_header->type),
-+			desc_size, expected_size);
- 		return -EINVAL;
- 	}
+ #ifndef __GREYBUS_AUTHENTICATION_USER_H
+diff --git a/drivers/staging/greybus/greybus_firmware.h b/drivers/staging/greybus/greybus_firmware.h
+index 13ef3aa5279e..f68fd5e25321 100644
+--- a/drivers/staging/greybus/greybus_firmware.h
++++ b/drivers/staging/greybus/greybus_firmware.h
+@@ -2,54 +2,8 @@
+ /*
+  * Greybus Firmware Management User Header
+  *
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright(c) 2016 Google Inc. All rights reserved.
+  * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License version 2 for more details.
+- *
+- * BSD LICENSE
+- *
+- * Copyright(c) 2016 Google Inc. All rights reserved.
+- * Copyright(c) 2016 Linaro Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *  * Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in
+- *    the documentation and/or other materials provided with the
+- *    distribution.
+- *  * Neither the name of Google Inc. or Linaro Ltd. nor the names of
+- *    its contributors may be used to endorse or promote products
+- *    derived from this software without specific prior written
+- *    permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE INC. OR
+- * LINARO LTD. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
- 	/* Descriptor bigger than what we expect */
- 	if (desc_size > expected_size) {
- 		dev_warn(&intf->dev, "%s descriptor size mismatch (want %zu got %zu)\n",
--				get_descriptor_type_string(desc_header->type),
--				expected_size, desc_size);
-+			 get_descriptor_type_string(desc_header->type),
-+			 expected_size, desc_size);
- 	}
+ #ifndef __GREYBUS_FIRMWARE_USER_H
+diff --git a/drivers/staging/greybus/greybus_protocols.h b/drivers/staging/greybus/greybus_protocols.h
+index 7d649a7fc4c9..5f34d1effb59 100644
+--- a/drivers/staging/greybus/greybus_protocols.h
++++ b/drivers/staging/greybus/greybus_protocols.h
+@@ -1,53 +1,7 @@
+ /* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+ /*
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright(c) 2014 - 2015 Google Inc. All rights reserved.
+  * Copyright(c) 2014 - 2015 Linaro Ltd. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License version 2 for more details.
+- *
+- * BSD LICENSE
+- *
+- * Copyright(c) 2014 - 2015 Google Inc. All rights reserved.
+- * Copyright(c) 2014 - 2015 Linaro Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *  * Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in
+- *    the documentation and/or other materials provided with the
+- *    distribution.
+- *  * Neither the name of Google Inc. or Linaro Ltd. nor the names of
+- *    its contributors may be used to endorse or promote products
+- *    derived from this software without specific prior written
+- *    permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE INC. OR
+- * LINARO LTD. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
  
- 	descriptor = kzalloc(sizeof(*descriptor), GFP_KERNEL);
-@@ -208,7 +208,7 @@ static char *gb_string_get(struct gb_interface *intf, u8 string_id)
- 
- 	/* Allocate an extra byte so we can guarantee it's NUL-terminated */
- 	string = kmemdup(&desc_string->string, desc_string->length + 1,
--				GFP_KERNEL);
-+			 GFP_KERNEL);
- 	if (!string)
- 		return ERR_PTR(-ENOMEM);
- 	string[desc_string->length] = '\0';
-@@ -264,8 +264,7 @@ static u32 gb_manifest_parse_cports(struct gb_bundle *bundle)
- 			desc_cport = tmp->data;
- 			if (cport_id == le16_to_cpu(desc_cport->id)) {
- 				dev_err(&bundle->dev,
--						"duplicate CPort %u found\n",
--						cport_id);
-+					"duplicate CPort %u found\n", cport_id);
- 				goto exit;
- 			}
- 		}
-@@ -277,7 +276,7 @@ static u32 gb_manifest_parse_cports(struct gb_bundle *bundle)
- 		return 0;
- 
- 	bundle->cport_desc = kcalloc(count, sizeof(*bundle->cport_desc),
--					GFP_KERNEL);
-+				     GFP_KERNEL);
- 	if (!bundle->cport_desc)
- 		goto exit;
- 
-@@ -287,7 +286,7 @@ static u32 gb_manifest_parse_cports(struct gb_bundle *bundle)
- 	list_for_each_entry_safe(desc, next, &list, links) {
- 		desc_cport = desc->data;
- 		memcpy(&bundle->cport_desc[i++], desc_cport,
--				sizeof(*desc_cport));
-+		       sizeof(*desc_cport));
- 
- 		/* Release the cport descriptor */
- 		release_manifest_descriptor(desc);
-@@ -333,9 +332,9 @@ static u32 gb_manifest_parse_bundles(struct gb_interface *intf)
- 		/* Ignore any legacy control bundles */
- 		if (bundle_id == GB_CONTROL_BUNDLE_ID) {
- 			dev_dbg(&intf->dev, "%s - ignoring control bundle\n",
--					__func__);
-+				__func__);
- 			release_cport_descriptors(&intf->manifest_descs,
--								bundle_id);
-+						  bundle_id);
- 			continue;
- 		}
- 
-@@ -468,7 +467,7 @@ bool gb_manifest_parse(struct gb_interface *intf, void *data, size_t size)
- 	/* we have to have at _least_ the manifest header */
- 	if (size < sizeof(*header)) {
- 		dev_err(&intf->dev, "short manifest (%zu < %zu)\n",
--				size, sizeof(*header));
-+			size, sizeof(*header));
- 		return false;
- 	}
- 
-@@ -478,15 +477,15 @@ bool gb_manifest_parse(struct gb_interface *intf, void *data, size_t size)
- 	manifest_size = le16_to_cpu(header->size);
- 	if (manifest_size != size) {
- 		dev_err(&intf->dev, "manifest size mismatch (%zu != %u)\n",
--				size, manifest_size);
-+			size, manifest_size);
- 		return false;
- 	}
- 
- 	/* Validate major/minor number */
- 	if (header->version_major > GREYBUS_VERSION_MAJOR) {
- 		dev_err(&intf->dev, "manifest version too new (%u.%u > %u.%u)\n",
--				header->version_major, header->version_minor,
--				GREYBUS_VERSION_MAJOR, GREYBUS_VERSION_MINOR);
-+			header->version_major, header->version_minor,
-+			GREYBUS_VERSION_MAJOR, GREYBUS_VERSION_MINOR);
- 		return false;
- 	}
- 
-@@ -513,7 +512,7 @@ bool gb_manifest_parse(struct gb_interface *intf, void *data, size_t size)
- 	}
- 	if (found != 1) {
- 		dev_err(&intf->dev, "manifest must have 1 interface descriptor (%u found)\n",
--				found);
-+			found);
- 		result = false;
- 		goto out;
- 	}
+ #ifndef __GREYBUS_PROTOCOLS_H
+diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
+index cebc1d90a180..ba6f905f26fa 100644
+--- a/drivers/staging/greybus/tools/loopback_test.c
++++ b/drivers/staging/greybus/tools/loopback_test.c
+@@ -4,8 +4,6 @@
+  *
+  * Copyright 2015 Google Inc.
+  * Copyright 2015 Linaro Ltd.
+- *
+- * Provided under the three clause BSD license found in the LICENSE file.
+  */
+ #include <errno.h>
+ #include <fcntl.h>
 -- 
 2.23.0
 
