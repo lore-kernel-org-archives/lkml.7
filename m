@@ -2,129 +2,114 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0767FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAABC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE29C20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566834239;
-	bh=IrvkLc5Ov+J/f8CttzyyWurWNwwmFftVjPaVQ+/Erqs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LCVCdLbME2iE7igsVXya9Xyt3+YOD6hNPU05rDTf/4OVgcQBjcRQnhKf6v1OlzY8n
-	 a09pBibBcnvOiDrmTGwQjqXS9HYVFo5hFr7DtKBN0Hx4KPghKI2MVlSzzOIbl7SvW0
-	 J02+vej6R5GDR2L9sxMOvzgmEWyXEQfi6xqZgBfc=
+	by mail.kernel.org (Postfix) with ESMTP id 6FBCA20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWI+S+Un"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbfHZPn6 (ORCPT
+        id S1729448AbfHZPpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfHZPnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:43:06 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A973520874;
-        Mon, 26 Aug 2019 15:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566834185;
-        bh=IrvkLc5Ov+J/f8CttzyyWurWNwwmFftVjPaVQ+/Erqs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IZJ1OOsq+OVzE855bSAuMug6lB/iT8i5Ri6k3jzoxm0k9fjMH806zFUSijzubbxKx
-         LWomNqyfpbzl/CajzHjJWwaZq1q2RieGA+rpC7ChH9xgyUAyuEAZKLEWq+Jmq/KAuC
-         Hb1Pf9685vzxvdY3JJR7i48sLMFOfRvQBREZpqjU=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org,
-        linux@armlinux.org.uk, frowand.list@gmail.com,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, daniel.thompson@linaro.org,
-        linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de
-Subject: [PATCHv5] drivers/amba: add reset control to amba bus probe
-Date:   Mon, 26 Aug 2019 10:42:52 -0500
-Message-Id: <20190826154252.22952-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+        Mon, 26 Aug 2019 11:45:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36690 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbfHZPpd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:45:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id o9so38387236iom.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jQHPYDSQypQ9ChdaeenBRr1dnYZdF3dhaiY40oARyws=;
+        b=oWI+S+Undd77FeJA4VZ5M5AN+kBODItR77545AG+SnXjILnM0T2D7LYqUZBa4AAM3r
+         YxDS1Vu8gvb+8rYx9BS3aFNJPMlKc4cNvOiccadQmg25Lrq/Gwjw7Ijkhote9pIIYdii
+         GyVtC3DR5zXr8W86AyyPBpxAhiVSpZL1mjKWCakUuEP4cmNDHeFlvriLgGexVQuwwOaH
+         Vqn5nHRJJodFgPpp4Na+TxISZKmxm6bm97wBFhl/s97+QKaqjQPV6uJjxY/acT847Lo+
+         PcgMqUPLjjl2JemqjLKkeAs06QEif7XnoYwKc+NBJ9MAxqk8R0LQ7pFSsT1yloAb3FKA
+         9AvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jQHPYDSQypQ9ChdaeenBRr1dnYZdF3dhaiY40oARyws=;
+        b=qwewRqgn4nDZjwVJ7drqeKEtt+5CewRRv5Mwz+X2HygCU5aDLL45zww42kHtDYXF0m
+         BZcgUAM8x/5M671P9dDONPEbqiSt4BDx2TnKzovkBYnBD2nRQ0LnZVogEE/1xmO/zBdX
+         XBUpVFFALLBAUnsOzkOkmWpfoYT7n7iEFzyRTBRcwgAj4kAI5TpWyBXacurPUW594RED
+         74JYXl2wv8Fycqb0ySXqDZGtN0JaI24Rm/4Yw8ATy9Rh0nUGOMHFYCn2vTa/r2NbqBRW
+         kyJAIRDmC4lLMY5xdb8fY3Xgm1JKzKouiNZgOzxBxAWhkacjCqg4F0E+YlfuPEG2zuZX
+         1GPQ==
+X-Gm-Message-State: APjAAAVNsPiqiN4KqilE2Dthn2pnAx4MDDlLMt0253NeTSt8qwYEKX0j
+        pJ4W3WcsrvY4uKI545bfdP6A/pOlne94e7VEtWg=
+X-Google-Smtp-Source: APXvYqyh/Fs6PpfTF8PLCcKVqzPhQwtSK2hTjMhAJkR+FdKaNR48OjFgAitd3+G51RiUpz3J1HJ9/gK45JT8WDUQ4QI=
+X-Received: by 2002:a6b:e90c:: with SMTP id u12mr3026752iof.221.1566834332518;
+ Mon, 26 Aug 2019 08:45:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190825173053.5649-1-lukas.bulwahn@gmail.com> <alpine.DEB.2.21.1908261706460.1939@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908261706460.1939@nanos.tec.linutronix.de>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Mon, 26 Aug 2019 17:45:21 +0200
+Message-ID: <CAKXUXMzZxAY-C3Eqh9OHTrLnkv5Jy3wdYsKVuqA=OpHtkWaZtQ@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2-resend] MAINTAINERS: mark simple firmware
+ interface (SFI) obsolete
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Len Brown <len.brown@intel.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-default. Until recently, the DMA controller was brought out of reset by the
-bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
-that are not used are held in reset and are left to Linux to bring them
-out of reset.
+On Mon, Aug 26, 2019 at 5:12 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Lukas,
+>
+> On Sun, 25 Aug 2019, Lukas Bulwahn wrote:
+>
+> > Len Brown has not been active in this part since around 2010. The recent
+> > activity suggests that Thomas Gleixner and Jiang Lui were maintaining
+> > this part of the kernel sources. Jiang Lui has not been active in the
+> > kernel sources since beginning 2016. So, the maintainer's role seems to
+> > be now with Thomas.
+>
+> Nice try. All I did there was converting the existing code to new
+> interfaces and to use SPDX identifiers. You touched it last, you own it, is
+> not really working.
+>
+> TBH. I have no clue what that is except that it's bitrotting.
+>
+> >  SIMPLE FIRMWARE INTERFACE (SFI)
+> > -M:   Len Brown <lenb@kernel.org>
+> > -L:   sfi-devel@simplefirmware.org
+> > +M:   Thomas Gleixner <tglx@linutronix.de>
+> >  W:   http://simplefirmware.org/
+> > -T:   git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux-sfi-2.6.git
+> > -S:   Supported
+> > +S:   Obsolete
+> >  F:   arch/x86/platform/sfi/
+> >  F:   drivers/sfi/
+> >  F:   include/linux/sfi*.h
+>
+> So why not removing this whole entry. arch/x86/platform/sfi is already
+> covered by x86 and the driver cruft falls back to the people who are used
+> to deal with dead drivers anyway.
+>
 
-Add a mechanism for getting the reset property and de-assert the primecell
-module from reset if found. This is a not a hard fail if the reset properti
-is not present in the device tree node, so the driver will continue to
-probe.
+Patch v3 will follow, where I will simply drop the maintainer. That
+makes clear that nobody is maintaining this obsolete driver and with
+the next clean-up action, somebody looking for obsolete drivers will
+simply move this code into staging or simply delete it for good.
 
-Because there are different variants of the controller that may have
-multiple reset signals, the code will find all reset(s) specified and
-de-assert them.
+Let us indicate that that is the plan by changing it to obsolete and
+remove all maintainers.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v5: use of_reset_control_array_get_optional_shared()
-v4: cleaned up indentation in loop
-    fix up a few checkpatch warnings
-    add Reviewed-by:
-v3: add a reset_control_put()
-    add error handling
-v2: move reset control to bus code
-    find all reset properties and de-assert them
----
- drivers/amba/bus.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 100e798a5c82..f8a7cb74c3cf 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -18,6 +18,7 @@
- #include <linux/limits.h>
- #include <linux/clk/clk-conf.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- 
- #include <asm/irq.h>
- 
-@@ -401,6 +402,24 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 	ret = amba_get_enable_pclk(dev);
- 	if (ret == 0) {
- 		u32 pid, cid;
-+		int count;
-+		struct reset_control *rstc;
-+
-+		/*
-+		 * Find reset control(s) of the amba bus and de-assert them.
-+		 */
-+		count = reset_control_get_count(&dev->dev);
-+		while (count > 0) {
-+			rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
-+			if (IS_ERR(rstc)) {
-+				if (PTR_ERR(rstc) != -EPROBE_DEFER)
-+					dev_err(&dev->dev, "Can't get amba reset!\n");
-+				return PTR_ERR(rstc);
-+			}
-+			reset_control_deassert(rstc);
-+			reset_control_put(rstc);
-+			count--;
-+		}
- 
- 		/*
- 		 * Read pid and cid based on size of resource
--- 
-2.20.0
-
+Lukas
