@@ -2,91 +2,56 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A24AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD0FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C0A23405
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2994823405
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbfHZPao (ORCPT
+        id S1732517AbfHZPbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:30:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36392 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 11:31:34 -0400
+Received: from muru.com ([72.249.23.125]:58674 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729335AbfHZPan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:30:43 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 358043C93;
-        Mon, 26 Aug 2019 15:30:43 +0000 (UTC)
-Received: from trillian.uncooperative.org.com (dhcp-10-20-1-91.bss.redhat.com [10.20.1.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5147A100EBDA;
-        Mon, 26 Aug 2019 15:30:42 +0000 (UTC)
-From:   Peter Jones <pjones@redhat.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Lyude Paul <lyude@redhat.com>, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
-Subject: [PATCH 2/2] efi+tpm: don't traverse an event log with no events
-Date:   Mon, 26 Aug 2019 11:30:28 -0400
-Message-Id: <20190826153028.32639-2-pjones@redhat.com>
-In-Reply-To: <20190826153028.32639-1-pjones@redhat.com>
-References: <20190826153028.32639-1-pjones@redhat.com>
+        id S1728350AbfHZPbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:31:33 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 02D3780AA;
+        Mon, 26 Aug 2019 15:32:02 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 08:31:30 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] bus: ti-sysc: Change return types of functions
+Message-ID: <20190826153130.GV52127@atomide.com>
+References: <20190813114256.GR52127@atomide.com>
+ <20190815054647.32750-1-nishkadg.linux@gmail.com>
+ <cb5483e4-ddec-497c-6355-56d557ad6ca1@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 26 Aug 2019 15:30:43 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb5483e4-ddec-497c-6355-56d557ad6ca1@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there are no entries to put into the final event log, some machines
-will return the template they would have populated anyway.  In this case
-the nr_events field is 0, but the rest of the log is just garbage.
+* Roger Quadros <rogerq@ti.com> [190815 13:03]:
+> On 15/08/2019 08:46, Nishka Dasgupta wrote:
+> > Change return type of functions sysc_check_one_child() and
+> > sysc_check_children() from int to void as neither ever returns an error.
+> > Modify call sites of both functions accordingly.
+> > 
+> > Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> 
+> Acked-by: Roger Quadros <rogerq@ti.com>
 
-This patch stops us from trying to iterate the table with
-__calc_tpm2_event_size() when the number of events in the table is 0.
+Applying into omap-for-v5.4/ti-sysc thanks.
 
-Signed-off-by: Peter Jones <pjones@redhat.com>
-Tested-by: Lyude Paul <lyude@redhat.com>
----
- drivers/firmware/efi/tpm.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 1d3f5ca3eaa..be51ed17c6e 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -75,11 +75,15 @@ int __init efi_tpm_eventlog_init(void)
- 		goto out;
- 	}
- 
--	tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
--					    + sizeof(final_tbl->version)
--					    + sizeof(final_tbl->nr_events),
--					    final_tbl->nr_events,
--					    log_tbl->log);
-+	tbl_size = 0;
-+	if (final_tbl->nr_events != 0) {
-+		void *events = (void *)efi.tpm_final_log
-+				+ sizeof(final_tbl->version)
-+				+ sizeof(final_tbl->nr_events);
-+		tbl_size = tpm2_calc_event_log_size(events,
-+						    final_tbl->nr_events,
-+						    log_tbl->log);
-+	}
- 	memblock_reserve((unsigned long)final_tbl,
- 			 tbl_size + sizeof(*final_tbl));
- 	early_memunmap(final_tbl, sizeof(*final_tbl));
--- 
-2.23.0.rc2
-
+Tony
