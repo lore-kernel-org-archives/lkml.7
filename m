@@ -2,148 +2,93 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA384C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96253C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B32620874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED5720874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732824AbfHZQ34 (ORCPT
+        id S1732868AbfHZQa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:29:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728559AbfHZQ34 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:29:56 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QGOOSs026361;
-        Mon, 26 Aug 2019 12:29:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2umjea1buv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 26 Aug 2019 12:29:45 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7QGRWLI035418;
-        Mon, 26 Aug 2019 12:29:44 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2umjea1bug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 26 Aug 2019 12:29:44 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7QGObQO008923;
-        Mon, 26 Aug 2019 16:29:44 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03dal.us.ibm.com with ESMTP id 2ujvv6schf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 26 Aug 2019 16:29:44 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QGThcW51904928
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 16:29:43 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 263ABB2067;
-        Mon, 26 Aug 2019 16:29:43 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0152FB2064;
-        Mon, 26 Aug 2019 16:29:42 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 26 Aug 2019 16:29:42 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8CFC216C22D8; Mon, 26 Aug 2019 09:29:45 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 09:29:45 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
- indicate involuntary sleep
-Message-ID: <20190826162945.GE28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190821231906.4224-1-swood@redhat.com>
- <20190821231906.4224-3-swood@redhat.com>
- <20190823162024.47t7br6ecfclzgkw@linutronix.de>
- <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
- <20190824031014.GB2731@google.com>
- <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
+        Mon, 26 Aug 2019 12:30:29 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55184 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729951AbfHZQa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:30:29 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 09:30:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="185008288"
+Received: from clevorn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.202])
+  by orsmga006.jf.intel.com with ESMTP; 26 Aug 2019 09:30:22 -0700
+Date:   Mon, 26 Aug 2019 19:30:20 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Peter Jones <pjones@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Lyude Paul <lyude@redhat.com>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] efi+tpm: don't traverse an event log with no events
+Message-ID: <20190826163020.e7sahr3irqwwneey@linux.intel.com>
+References: <20190826153028.32639-1-pjones@redhat.com>
+ <20190826153028.32639-2-pjones@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908260162
+In-Reply-To: <20190826153028.32639-2-pjones@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 05:25:23PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-08-23 23:10:14 [-0400], Joel Fernandes wrote:
-> > On Fri, Aug 23, 2019 at 02:28:46PM -0500, Scott Wood wrote:
-> > > On Fri, 2019-08-23 at 18:20 +0200, Sebastian Andrzej Siewior wrote:
-> > > > 
-> > > > this looks like an ugly hack. This sleeping_lock_inc() is used where we
-> > > > actually hold a sleeping lock and schedule() which is okay. But this
-> > > > would mean we hold a RCU lock and schedule() anyway. Is that okay?
-> > > 
-> > > Perhaps the name should be changed, but the concept is the same -- RT-
-> > > specific sleeping which should be considered involuntary for the purpose of
-> > > debug checks.  Voluntary sleeping is not allowed in an RCU critical section
-> > > because it will break the critical section on certain flavors of RCU, but
-> > > that doesn't apply to the flavor used on RT.  Sleeping for a long time in an
-> > > RCU critical section would also be a bad thing, but that also doesn't apply
-> > > here.
-> > 
-> > I think the name should definitely be changed. At best, it is super confusing to
-> > call it "sleeping_lock" for this scenario. In fact here, you are not even
-> > blocking on a lock.
-> > 
-> > Maybe "sleeping_allowed" or some such.
+On Mon, Aug 26, 2019 at 11:30:28AM -0400, Peter Jones wrote:
+> When there are no entries to put into the final event log, some machines
+> will return the template they would have populated anyway.  In this case
+> the nr_events field is 0, but the rest of the log is just garbage.
 > 
-> The mechanism that is used here may change in future. I just wanted to
-> make sure that from RCU's side it is okay to schedule here.
+> This patch stops us from trying to iterate the table with
+> __calc_tpm2_event_size() when the number of events in the table is 0.
+> 
+> Signed-off-by: Peter Jones <pjones@redhat.com>
+> Tested-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  drivers/firmware/efi/tpm.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+> index 1d3f5ca3eaa..be51ed17c6e 100644
+> --- a/drivers/firmware/efi/tpm.c
+> +++ b/drivers/firmware/efi/tpm.c
+> @@ -75,11 +75,15 @@ int __init efi_tpm_eventlog_init(void)
+>  		goto out;
+>  	}
+>  
+> -	tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
+> -					    + sizeof(final_tbl->version)
+> -					    + sizeof(final_tbl->nr_events),
+> -					    final_tbl->nr_events,
+> -					    log_tbl->log);
+> +	tbl_size = 0;
+> +	if (final_tbl->nr_events != 0) {
+> +		void *events = (void *)efi.tpm_final_log
+> +				+ sizeof(final_tbl->version)
+> +				+ sizeof(final_tbl->nr_events);
+> +		tbl_size = tpm2_calc_event_log_size(events,
+> +						    final_tbl->nr_events,
+> +						    log_tbl->log);
+> +	}
 
-Good point.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-The effect from RCU's viewpoint will be to split any non-rcu_read_lock()
-RCU read-side critical section at this point.  This alrady happens in a
-few places, for example, rcu_note_context_switch() constitutes an RCU
-quiescent state despite being invoked with interrupts disabled (as is
-required!).  The __schedule() function just needs to understand (and does
-understand) that the RCU read-side critical section that would otherwise
-span that call to rcu_node_context_switch() is split in two by that call.
-
-However, if this was instead an rcu_read_lock() critical section within
-a PREEMPT=y kernel, then if a schedule() occured within stop_one_task(),
-RCU would consider that critical section to be preempted.  This means
-that any RCU grace period that is blocked by this RCU read-side critical
-section would remain blocked until stop_one_cpu() resumed, returned,
-and so on until the matching rcu_read_unlock() was reached.  In other
-words, RCU would consider that RCU read-side critical section to span
-the call to stop_one_cpu() even if stop_one_cpu() invoked schedule().
-
-On the other hand, within a PREEMPT=n kernel, the call to schedule()
-would split even an rcu_read_lock() critical section.  Which is why I
-asked earlier if sleeping_lock_inc() and sleeping_lock_dec() are no-ops
-in !PREEMPT_RT_BASE kernels.  We would after all want the usual lockdep
-complaints in that case.
-
-Does that help, or am I missing the point?
-
-							Thanx, Paul
+/Jarkko
