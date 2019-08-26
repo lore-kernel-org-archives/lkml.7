@@ -2,154 +2,88 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFC6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E6FC41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956BB217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566807748;
-	bh=gg8GCKZkgqNgqCvquwJAWk3Wae/scpxmraZjw5clvW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fYrXX1ykHngSdN1Mhv1pXM5ulIAUDuj3MLD5L4b6jBZVcDMqVLxHWPNWAecnW9Ciz
-	 bXpk5lekedSBC7hGuMxxeE/ytAw2LXZkO6DHJBxPwav5GmYikP0d+L+0sPBYDHcIeb
-	 o3w+MpqifYD2Hvm3CxIqJm625DoNXROdVZLNTTos=
+	by mail.kernel.org (Postfix) with ESMTP id BBD3621744
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbfHZIW1 (ORCPT
+        id S1730533AbfHZIYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbfHZIW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:22:26 -0400
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CBC52080C;
-        Mon, 26 Aug 2019 08:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566807746;
-        bh=gg8GCKZkgqNgqCvquwJAWk3Wae/scpxmraZjw5clvW8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t9u4UhI6QYsCahNjwHbQ8ib1MvU0/crUiEuC58xG8VzqNGZLKCfGXUftfcPufy3hm
-         my8OM/cBt4fy015NFns48apfp3qzTgM7BfujGjUV3KFHVU/suhli477EZkdUR1YuDZ
-         TK75VjYcubRhSswuhTJbdkLAAKimGxmaCkQKccRE=
-Date:   Mon, 26 Aug 2019 10:22:20 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Mario Tesi <martepisa@gmail.com>, lorenzo.bianconi83@gmail.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mario.tesi@st.com
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: Fix FIFO diff mask for tagged fifo
-Message-ID: <20190826082220.GA5328@localhost.localdomain>
-References: <1566480139-4015-1-git-send-email-martepisa@gmail.com>
- <20190826091537.66e07ec9@archlinux>
+        Mon, 26 Aug 2019 04:24:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5213 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727798AbfHZIYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:24:32 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AD1C04BAE3479113E447;
+        Mon, 26 Aug 2019 16:24:28 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 26 Aug 2019
+ 16:24:20 +0800
+Subject: Re: [PATCH] ext4: change the type of ext4 cache stats to
+ percpu_counter to improve performance
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>, <linux-ext4@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Yang Guo <guoyang2@huawei.com>,
+        "Andreas Dilger" <adilger.kernel@dilger.ca>
+References: <1566528454-13725-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20190825032524.GD5163@mit.edu> <20190825172803.GA9505@sol.localdomain>
+ <20190826004744.GA27472@mit.edu>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <f0495aa7-8f21-e938-9617-07ac8741acb7@hisilicon.com>
+Date:   Mon, 26 Aug 2019 16:24:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Content-Disposition: inline
-In-Reply-To: <20190826091537.66e07ec9@archlinux>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190826004744.GA27472@mit.edu>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ted,
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019/8/26 8:47, Theodore Y. Ts'o wrote:
+> On Sun, Aug 25, 2019 at 10:28:03AM -0700, Eric Biggers wrote:
+>> This patch is causing the following.  Probably because there's no calls to
+>> percpu_counter_destroy() for the new counters?
+> 
+> Yeah, I noticed this from my test runs last night as well.  It looks
+> like original patch was never tested with CONFIG_HOTPLUG_CPU.
+> 
 
-> On Thu, 22 Aug 2019 15:22:19 +0200
-> Mario Tesi <martepisa@gmail.com> wrote:
->=20
-> > From: mario tesi <mario.tesi@st.com>
-> >=20
-> > 	According to the latest version of datasheet the mask
-> > 	for number of unread sensor data in FIFO_STATUS registers
-> > 	has been extended to 10 bits
-> >=20
-> > 	The devices involved are:
-> > 	 - LSM6DSO
-> > 	 - LSM6DSOX
-> > 	 - ASM330LHH
-> > 	 - LSM6DSR
-> > 	 - ISM330DHCX
-> >=20
-> > Signed-off-by: mario tesi <mario.tesi@st.com>
->=20
-> Seems straight forward and should be side effect free I think.
-> Hence I won't wait for Lorenzo to take a look (though there
-> is still a small window for comments whilst the autobuilders
-> poke at it!)
->=20
-> Applied to the togreg branch of iio.git and pushed out as testing
-> for the autobuilders to take a look.
->=20
-> Thanks,
+Sorry that We may miss it completely, we shall double check it and
+make the proper patch carefully.
 
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> The other problem with this patch is that it initializes
+> es_stats_cache_hits and es_stats_cache_miesses too late.  They will
+> get used when the journal inode is loaded.  This is mostly harmless,
 
->=20
-> Jonathan
->=20
-> > ---
-> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio=
-/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> > index 85824d6..47b77d0 100644
-> > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> > @@ -497,7 +497,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_=
-sensor_settings[] =3D {
-> >  			},
-> >  			.fifo_diff =3D {
-> >  				.addr =3D 0x3a,
-> > -				.mask =3D GENMASK(8, 0),
-> > +				.mask =3D GENMASK(9, 0),
-> >  			},
-> >  			.th_wl =3D 1,
-> >  		},
-> > @@ -623,7 +623,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_=
-sensor_settings[] =3D {
-> >  			},
-> >  			.fifo_diff =3D {
-> >  				.addr =3D 0x3a,
-> > -				.mask =3D GENMASK(8, 0),
-> > +				.mask =3D GENMASK(9, 0),
-> >  			},
-> >  			.th_wl =3D 1,
-> >  		},
-> > @@ -726,7 +726,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_=
-sensor_settings[] =3D {
-> >  			},
-> >  			.fifo_diff =3D {
-> >  				.addr =3D 0x3a,
-> > -				.mask =3D GENMASK(8, 0),
-> > +				.mask =3D GENMASK(9, 0),
-> >  			},
-> >  			.th_wl =3D 1,
-> >  		},
->=20
+I have checked it again, @es_stats_cache_hits and @es_stats_cache_miesses
+have been initialized before the journal inode is loaded, Maybe I miss
+something else?
 
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
+egrep "ext4_es_register_shrinker|ext4_load_journal" fs/ext4/super.c
+4260:   if (ext4_es_register_shrinker(sbi))
+4302:           err = ext4_load_journal(sb, es, journal_devnum);
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Shaokun
 
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXWOWuQAKCRA6cBh0uS2t
-rOxUAP9PeGCm1kbLypWdOkwk9Nx86J99Fvt1iC/qqFEpTv6BUgEA1WuXpNgvVpU/
-VqBWhhSjSfKCPalEUdykSO7e1pSS4Q0=
-=y/uL
------END PGP SIGNATURE-----
+> but it's also wrong.
+> 
+> I've dropped this patch from the ext4 git tree.
+> 
+>      	     	  	     	      - Ted
+> 
+> .
+> 
 
---7JfCtLOvnd9MIVvH--
