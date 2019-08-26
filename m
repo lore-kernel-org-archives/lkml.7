@@ -2,133 +2,96 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FCDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE019C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411A121852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:18:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DD954qxF"
+	by mail.kernel.org (Postfix) with ESMTP id B157920828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733022AbfHZPSw (ORCPT
+        id S1733035AbfHZPU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:18:52 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35648 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfHZPSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:18:51 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h27so6687299lfp.2;
-        Mon, 26 Aug 2019 08:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=50mv38tNDYl/ZA4wnFVjnzU9tnzotrbGWCLUfU9Ss9U=;
-        b=DD954qxFZhSRbJXXAWT8UGI78Qw8ddSTsJ57rK3XJ2/Wkv3WEez0EMD7YmJN/2ZyOa
-         lHwom4XrlZmbf1KZeQLf7asnloWFOOVQf5xcoWVTpcs1szbaGxrmsAO0GkI3d+aVs+tS
-         45DW701tM8vydRxSmqzFNoVGNFbONfoNF0eFihwp/hHhOgmbmtHCvxq0ShKSH9bK4uVZ
-         lWRizjWpZp076tU3UDHdesfEOgSmRxcFr2Q3vf20XLtbKjWauLGo6ia5FwENMqkF2Pnt
-         2si39G/XXBu4K0XjMggmMk0bTE/w5zakucAW0rL5geUPbRtC+zO8WmLsph6xVKz/nJqS
-         Q4Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=50mv38tNDYl/ZA4wnFVjnzU9tnzotrbGWCLUfU9Ss9U=;
-        b=BNGYeCYJITVD83+jG7mSd3INW6ztUPxQJ51tC1NLJWGBQWqUEak0FktvO9aScctb2J
-         U5lqvw8LlHafV/v9TtTUEu2qzwpndmnV0VusBLvGaBZnE63p1nHPztoLyiR+hZqdjgDz
-         Pr40QLj1jrQFLw1PVgHU6bImp1jR+z/8RfOnU8IRbHjkMWwv1xCn6qrdV6rgVUqwU11p
-         0/gX40Xk4+5NaZ7K5voDoKvJ8894PkR/ewIJD27XuzwSG0ht6uAIBcSMTBDnPV/sVFwQ
-         mMG5yROMOFdLFDC5vcB49CdW8xi9mPs+1xjsmNc+xO4aA/FlMZKGcpOY3NqFdoa6pIoQ
-         4UzA==
-X-Gm-Message-State: APjAAAX+/eJ0SHRPRGFqd4aDuS6fpBwDQt0pyhlVJ0txL2n3PxK3Gcxc
-        zCT10huGW0ylvuuEhobbxU4=
-X-Google-Smtp-Source: APXvYqxwBaKVRDZOzhOVbJvIe3ncrV9/xEPeURbvLz9/UhsnEu7vyFngUol6rQSCZMHo+7dD8ZFuQg==
-X-Received: by 2002:a19:674d:: with SMTP id e13mr11176375lfj.176.1566832729324;
-        Mon, 26 Aug 2019 08:18:49 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id m74sm2356165lje.72.2019.08.26.08.18.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 08:18:48 -0700 (PDT)
-Subject: Re: [PATCH] media: staging: tegra-vde: Disable building with
- COMPILE_TEST
-To:     YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, robin.murphy@arm.com,
-        hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <20190826133140.13456-1-yuehaibing@huawei.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <58a8c62c-a45e-77e4-d2cb-99f95b847a73@gmail.com>
-Date:   Mon, 26 Aug 2019 18:18:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190826133140.13456-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 26 Aug 2019 11:20:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45612 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727850AbfHZPUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:20:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DE107B635;
+        Mon, 26 Aug 2019 15:20:52 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 17:20:52 +0200
+Message-ID: <s5hr258j6ln.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
+In-Reply-To: <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+        <20190822192451.5983-3-scott.branden@broadcom.com>
+        <s5hef1crybq.wl-tiwai@suse.de>
+        <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yue,
-
-26.08.2019 16:31, YueHaibing пишет:
-> If COMPILE_TEST is y and IOMMU_SUPPORT is n, selecting TEGRA_VDE
-> to m will set IOMMU_IOVA to m, this fails the building of
-> TEGRA_HOST1X and DRM_TEGRA which is y like this:
+On Fri, 23 Aug 2019 21:44:42 +0200,
+Scott Branden wrote:
 > 
-> drivers/gpu/host1x/cdma.o: In function `host1x_cdma_init':
-> cdma.c:(.text+0x66c): undefined reference to `alloc_iova'
-> cdma.c:(.text+0x698): undefined reference to `__free_iova'
+> Hi Takashi,
 > 
-> drivers/gpu/drm/tegra/drm.o: In function `tegra_drm_unload':
-> drm.c:(.text+0xeb0): undefined reference to `put_iova_domain'
-> drm.c:(.text+0xeb4): undefined reference to `iova_cache_put'
+> Thanks for review.  comments below.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 6b2265975239 ("media: staging: tegra-vde: Fix build error")
-> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/staging/media/tegra-vde/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
-> index ba49ea5..a41d30c 100644
-> --- a/drivers/staging/media/tegra-vde/Kconfig
-> +++ b/drivers/staging/media/tegra-vde/Kconfig
-> @@ -1,9 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  config TEGRA_VDE
->  	tristate "NVIDIA Tegra Video Decoder Engine driver"
-> -	depends on ARCH_TEGRA || COMPILE_TEST
-> +	depends on ARCH_TEGRA
->  	select DMA_SHARED_BUFFER
-> -	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
-> +	select IOMMU_IOVA if IOMMU_SUPPORT
->  	select SRAM
->  	help
->  	    Say Y here to enable support for the NVIDIA Tegra video decoder
-> 
+> On 2019-08-23 3:05 a.m., Takashi Iwai wrote:
+> > On Thu, 22 Aug 2019 21:24:46 +0200,
+> > Scott Branden wrote:
+> >> Add offset to request_firmware_into_buf to allow for portions
+> >> of firmware file to be read into a buffer.  Necessary where firmware
+> >> needs to be loaded in portions from file in memory constrained systems.
+> > AFAIU, this won't work with the fallback user helper, right?
+> Seems to work fine in the fw_run_tests.sh with fallbacks.
 
-What about this variant:
+But how?  You patch doesn't change anything about the fallback loading
+mechanism.  Or, if the expected behavior is to load the whole content
+and then copy a part, what's the merit of this API?
 
-	select IOMMU_IOVA if (IOMMU_SUPPORT && !COMPILE_TEST)
+> > Also it won't work for the compressed firmware files as-is.
+> Although unnecessary, seems to work fine in the fw_run_tests.sh with
+> "both" and "xzonly" options.
 
-which should fix the building and preserve compile-testing.
+This looks also suspicious.  Loading a part of the file from the
+middle and decompression won't work together, from obvious reasons.
 
-It shouldn't matter at all whether IOVA is enabled or not for
-compile-testing of the driver.
+If the test passes, it means that the test itself is more likely
+incorrect, I'm afraid.
+
+
+thanks,
+
+Takashi
