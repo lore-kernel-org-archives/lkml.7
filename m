@@ -6,49 +6,51 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61482C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971BEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC4C22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661352190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XIOGeVHa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RHQ7TPUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfHZGi0 (ORCPT
+        id S1729807AbfHZGiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:38:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54920 "EHLO
+        Mon, 26 Aug 2019 02:38:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54990 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbfHZGi0 (ORCPT
+        with ESMTP id S1729793AbfHZGiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:38:26 -0400
+        Mon, 26 Aug 2019 02:38:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/cTefX4WriggdI6xhCa46FySFPWkgwoZoZ9aeiu49hA=; b=XIOGeVHaCMWHYSZ9wmgjF2NFC
-        PTwXn2qYkGpq+fMW7LX+UATKkUuM5w26sjIMRKCQ8PagJDIdum11NIfubHvureFR7OQRuchBlr7RO
-        6izRKXx55CuysG9Zv7vnhxbHSIkGlKTpbUYdbI4MBXPFrBfDRLMs7aaLNST+loT1uU8Ldkiy1Aznz
-        SSE41Nx1ExYQeiXd1PUydNdlgFgpx2UWyo7/5HFO77VoPQY4mqtltHiiL2ON0qT8QfHs8m+uYu02K
-        hBECoAa+O9qLrIrPwXYPS49s3fWAiT1yUxfG61yCzAQNmP8Y5qUTu5YuvpVnMDogGukC5Ce1T9nFB
-        tDfPs4sMg==;
+         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=RHQ7TPUQR59tg/BoRVnXEPwRY
+        nLPwiOrNwbxoMzs3Mgzmzf9NGb+DdG3i4L+U7ylRKZIqyPQsEKTGXNEAXiZfu/STrpLFU8H5I3D2p
+        n7LtKeWru94XX0bOPOXpBv/+W06na5wnSjwcf6zL/MGx5vhlHxLCOgUplkN+JA08j8s6gguHDFDy8
+        d6FcG1ZSEQGc8fKL+rtc0gVV0al+wXb7voM1kweiFC8Ihj9b1IHYj+Xa20M7zXkCUlzIczttGxfS6
+        LxVG934thx3MW0WD/sagHJBeSyhuKdJm0a+w0COyl2SmyPTGUF4qke8blH8IDaGsQrPHxUJmswqEK
+        hHVaZCKNA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i28du-0007y0-F9; Mon, 26 Aug 2019 06:38:18 +0000
-Date:   Sun, 25 Aug 2019 23:38:18 -0700
+        id 1i28eQ-00080H-Gk; Mon, 26 Aug 2019 06:38:50 +0000
+Date:   Sun, 25 Aug 2019 23:38:50 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     guoren@kernel.org
-Cc:     arnd@arndb.de, hch@infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
-        douzhk@nationalchip.com, Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V2] csky: Fixup 610 vipt cache flush mechanism
-Message-ID: <20190826063818.GA29871@infradead.org>
-References: <1566443122-17540-1-git-send-email-guoren@kernel.org>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, shameerali.kolothum.thodi@huawei.com,
+        alex.williamson@redhat.com, robin.murphy@arm.com, hch@infradead.org
+Subject: Re: [PATCH v3] iommu: revisit iommu_insert_resv_region()
+ implementation
+Message-ID: <20190826063850.GB29871@infradead.org>
+References: <20190821120940.22337-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1566443122-17540-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <20190821120940.22337-1-eric.auger@redhat.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,13 +58,6 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:05:22AM +0800, guoren@kernel.org wrote:
-> From: Guo Ren <ren_guo@c-sky.com>
-> 
-> 610 has vipt aliasing issue, so we need to finish the cache flush
-> apis mentioned in cachetlb.rst to avoid data corruption.
-> 
-> Here is the list of modified apis in the patch:
+Looks good,
 
-Looks sensible to me, although I can't really verify the details.
-You might also want to Cc linux-mm.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
