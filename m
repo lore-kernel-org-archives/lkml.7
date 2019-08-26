@@ -2,101 +2,159 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04354C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307EDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03F72070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A747217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbfHZLI6 (ORCPT
+        id S1731095AbfHZLKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:08:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58332 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730553AbfHZLI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:08:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E9BAEAF23;
-        Mon, 26 Aug 2019 11:08:55 +0000 (UTC)
-Message-ID: <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
-Subject: Re: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune
- dma-direct min mask
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     catalin.marinas@arm.com, wahrenst@gmx.net, marc.zyngier@arm.com,
-        robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, phill@raspberryi.org,
-        f.fainelli@gmail.com, will@kernel.org, eric@anholt.net,
-        mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, frowand.list@gmail.com,
-        m.szyprowski@samsung.com
-Date:   Mon, 26 Aug 2019 13:08:50 +0200
-In-Reply-To: <20190826070633.GB11331@lst.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-         <20190820145821.27214-11-nsaenzjulienne@suse.de>
-         <20190826070633.GB11331@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-RvTUUUche1DA67AZeVhb"
-User-Agent: Evolution 3.32.4 
+        Mon, 26 Aug 2019 07:10:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53016 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729852AbfHZLKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:10:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A7C3A2A09AA;
+        Mon, 26 Aug 2019 11:10:05 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E22F71001958;
+        Mon, 26 Aug 2019 11:10:00 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 13:09:58 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH] KVM: selftests: Detect max PA width from cpuid
+Message-ID: <20190826110958.lyueasf5laypkq2r@kamzik.brq.redhat.com>
+References: <20190826075728.21646-1-peterx@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190826075728.21646-1-peterx@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 26 Aug 2019 11:10:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 26, 2019 at 03:57:28PM +0800, Peter Xu wrote:
+> The dirty_log_test is failing on some old machines like Xeon E3-1220
+> with tripple faults when writting to the tracked memory region:
+> 
+>   Test iterations: 32, interval: 10 (ms)
+>   Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
+>   guest physical test memory offset: 0x7fbffef000
+>   ==== Test Assertion Failure ====
+>   dirty_log_test.c:138: false
+>   pid=6137 tid=6139 - Success
+>      1  0x0000000000401ca1: vcpu_worker at dirty_log_test.c:138
+>      2  0x00007f3dd9e392dd: ?? ??:0
+>      3  0x00007f3dd9b6a132: ?? ??:0
+>   Invalid guest sync status: exit_reason=SHUTDOWN
+> 
+> It's because previously we moved the testing memory region from a
+> static place (1G) to the top of the system's physical address space,
+> meanwhile we stick to 39 bits PA for all the x86_64 machines.  That's
+> not true for machines like Xeon E3-1220 where it only supports 36.
+> 
+> Let's unbreak this test by dynamically detect PA width from CPUID
+> 0x80000008.  Meanwhile, even allow kvm_get_supported_cpuid_index() to
+> fail.  I don't know whether that could be useful because I think
+> 0x80000008 should be there for all x86_64 hosts, but I also think it's
+> not really helpful to assert in the kvm_get_supported_cpuid_index().
+> 
+> Fixes: b442324b581556e
+> CC: Paolo Bonzini <pbonzini@redhat.com>
+> CC: Andrew Jones <drjones@redhat.com>
+> CC: Radim Krčmář <rkrcmar@redhat.com>
+> CC: Thomas Huth <thuth@redhat.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/dirty_log_test.c  | 22 +++++++++++++------
+>  .../selftests/kvm/lib/x86_64/processor.c      |  3 ---
+>  2 files changed, 15 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index ceb52b952637..111592f3a1d7 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -274,18 +274,26 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+>  	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
+>  
+>  #ifdef __x86_64__
+> -	/*
+> -	 * FIXME
+> -	 * The x86_64 kvm selftests framework currently only supports a
+> -	 * single PML4 which restricts the number of physical address
+> -	 * bits we can change to 39.
+> -	 */
+> -	guest_pa_bits = 39;
+> +	{
+> +		struct kvm_cpuid_entry2 *entry;
+> +
+> +		entry = kvm_get_supported_cpuid_entry(0x80000008);
+> +		/*
+> +		 * Supported PA width can be smaller than 52 even if
+> +		 * we're with VM_MODE_P52V48_4K mode.  Fetch it from
 
---=-RvTUUUche1DA67AZeVhb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, 2019-08-26 at 09:06 +0200, Christoph Hellwig wrote:
-> On Tue, Aug 20, 2019 at 04:58:18PM +0200, Nicolas Saenz Julienne wrote:
-> > -	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> > +	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-> >  		arm64_dma_phys_limit =3D max_zone_dma_phys();
-> > +		zone_dma_bits =3D ilog2((arm64_dma_phys_limit - 1) &
-> > GENMASK_ULL(31, 0)) + 1;
->
-Hi Christoph,
-thanks for the rewiews.
-
-> This adds a way too long line.
-
-I know, I couldn't find a way to split the operation without making it even
-harder to read. I'll find a solution.
-
-> I also find the use of GENMASK_ULL
-> horribly obsfucating, but I know that opinion is't shared by everyone.
-
-Don't have any preference so I'll happily change it. Any suggestions? Using=
- the
-explicit 0xffffffffULL seems hard to read, how about SZ_4GB - 1?
+It seems like x86_64 should create modes that actually work, rather than
+always using one named 'P52', but then needing to probe for the actual
+number of supported physical bits. Indeed testing all x86_64 supported
+modes, like aarch64 does, would even make more sense in this test.
 
 
---=-RvTUUUche1DA67AZeVhb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> +		 * the host to update the default value (SDM 4.1.4).
+> +		 */
+> +		if (entry)
+> +			guest_pa_bits = entry->eax & 0xff;
 
------BEGIN PGP SIGNATURE-----
+Are we sure > 39 bits will work with this test framework? I can't
+recall what led me to the FIXME above, other than things not working.
+It seems I was convinced we couldn't have more bits due to how pml4's
+were allocated, but maybe I misinterpreted it.
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1jvcIACgkQlfZmHno8
-x/6y/wf/XTe7dlASMoYApyVt+lL6chBcap2r7MVKOVhCbC1oJQb7UdRyW7MVDO6k
-gwdo2WmXqD3wUwhY5djX0adczLOJye1iGEdrrQfheRqm1rh07um3quT3TzgCSPat
-OuX+vHuNsUE+3GyI+0OoOF0tu/TzOKJjgs4H645cnbuCaXbQFbL94yBctsDTF5hc
-m4Bx+nksz99ddodUnw9CF4Ss5DPwkX23I3h7okwMMjvVuegIPUa9edppw3Za0Kby
-k8b9QGCiMsGcwyq3+uSXTCq4iIU8reLTfvpZmVZ9QugMn8TkjjIQFyWS0HrXt2pz
-r9iNomMe9w20W9Y9jS5Aj8bxByoK+Q==
-=nQ/V
------END PGP SIGNATURE-----
+> +		else
+> +			guest_pa_bits = 32;
+> +	}
+>  #endif
+>  #ifdef __aarch64__
+>  	if (guest_pa_bits != 40)
+>  		type = KVM_VM_TYPE_ARM_IPA_SIZE(guest_pa_bits);
+>  #endif
+> +	printf("Supported guest physical address width: %d\n", guest_pa_bits);
+>  	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
+>  	guest_page_size = (1ul << guest_page_shift);
+>  	/*
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> index 6cb34a0fa200..9de2fd310ac8 100644
+> --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> @@ -760,9 +760,6 @@ kvm_get_supported_cpuid_index(uint32_t function, uint32_t index)
+>  			break;
+>  		}
+>  	}
+> -
+> -	TEST_ASSERT(entry, "Guest CPUID entry not found: (EAX=%x, ECX=%x).",
+> -		    function, index);
+>  	return entry;
+>  }
+>  
+> -- 
+> 2.21.0
+> 
 
---=-RvTUUUche1DA67AZeVhb--
-
+Thanks,
+drew
