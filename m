@@ -2,142 +2,94 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77A8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7014C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FA220874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B420F20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbfHZIB3 (ORCPT
+        id S1730294AbfHZIDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:01:29 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38277 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfHZIB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:01:29 -0400
-X-Originating-IP: 87.18.63.98
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E4E4A1BF209;
-        Mon, 26 Aug 2019 08:01:19 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 10:02:50 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
-Message-ID: <20190826080250.av3z2vunbd2z7hzu@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-9-jacopo+renesas@jmondi.org>
- <CAMuHMdUuWFGSTUcAR2aV6cg4hpfzMs5EQBJTNM+ym2k8Ht-bVA@mail.gmail.com>
+        Mon, 26 Aug 2019 04:03:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48992 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfHZIDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:03:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:03:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
+   d="asc'?scan'208";a="196998739"
+Received: from sjolley-mobl.amr.corp.intel.com ([10.254.178.147])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2019 01:03:34 -0700
+Message-ID: <c2279a78904b581924894b712403299903eacbfc.camel@intel.com>
+Subject: Re: [PATCH] net: intel: Cleanup e1000 - add space between }}
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To:     Forrest Fleming <ffleming@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 26 Aug 2019 01:03:33 -0700
+In-Reply-To: <20190823191421.3318-1-ffleming@gmail.com>
+References: <20190823191421.3318-1-ffleming@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-+SaW8iJuTsbssO2+QFx8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sbblrgvskuirlqsw"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUuWFGSTUcAR2aV6cg4hpfzMs5EQBJTNM+ym2k8Ht-bVA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---sbblrgvskuirlqsw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+--=-+SaW8iJuTsbssO2+QFx8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+On Fri, 2019-08-23 at 19:14 +0000, Forrest Fleming wrote:
+> suggested by checkpatch
+>=20
+> Signed-off-by: Forrest Fleming <ffleming@gmail.com>
+> ---
+>  .../net/ethernet/intel/e1000/e1000_param.c    | 28 +++++++++----------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
 
-On Mon, Aug 26, 2019 at 09:31:02AM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
->
-> On Sun, Aug 25, 2019 at 3:51 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Add a driver for the R-Car Display Unit Color Correction Module.
-> > In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> > to perform image enhancement and color correction.
-> >
-> > Add support for CMM through a driver that supports configuration of
-> > the 1-dimensional LUT table. More advanced CMM feature will be
-> > implemented on top of this basic one.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->
-> Thanks for your patch!
->
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
->
-> > +static const struct of_device_id rcar_cmm_of_table[] = {
-> > +       { .compatible = "renesas,cmm-r8a7795", },
-> > +       { .compatible = "renesas,cmm-r8a7796", },
-> > +       { .compatible = "renesas,cmm-r8a77965", },
-> > +       { .compatible = "renesas,cmm-r8a77990", },
-> > +       { .compatible = "renesas,cmm-r8a77995", },
-> > +       { .compatible = "renesas,rcar-gen3-cmm", },
->
-> As they're all handled the same, you can drop the SoC-specific values
-> from the driver's match table.
->
-> > +       { .compatible = "renesas,rcar-gen2-cmm", },
->
-> Just wondering: has this been tested on R-Car Gen2?
->
+While I do not see an issue with this change, I wonder how important it is
+to make such a change.  Especially since most of the hardware supported by
+this driver is not available for testing.  In addition, this is one
+suggested change by checkpatch.pl that I personally do not agree with.
 
-Not from me :(
-It might not be the smartest move to add a compatible for an un-tested
-chip generation. I dragged the gen2 compatible in along the series as
-it was there in the downstream driver and I assumed BSP has been
-tested there, but since I've not been able to run any test on Gen2
-board I should probably drop it? Any volunteer with a Gen2 board that
-want to run a test?
+This is not a hard NAK, but you have to explain how this change makes the
+code more readable before I consider it.
 
-Thanks
-  j
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
---sbblrgvskuirlqsw
+--=-+SaW8iJuTsbssO2+QFx8
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jkioACgkQcjQGjxah
-Vjz2zA/9GA5pNTNrK1sLbSQr1l5T/m5J1t7HdVRkrl24WFP5Mpjzm1g/Du5cRFPQ
-XtI6YoSrvzWADCbeDldUaIGCQ+1b+EQntwVU3dkkV50FrxiDuZ+4b2+Qco1lTT9W
-5uuWRkc14jpDdIT5bFYB79V4yckKLy54rzRHVgB5uX+KzswQgs26SICnlgecA+9d
-7Dy6Q0gMVfnxrNiCSVrrr637sXfdKaQUAHz+y+X4bJTgQsjcjKD+WU4pqmG4hLs/
-CsY9+FErIXk9yB2EOX7hCP6k6KsX/BHHRGW4uHq/neunFZECfDyI48yC/9qCWtWk
-JjZdAO+ZzPXFB1kjKeyfaunqa1oKhdR2C2traKN5E1i8EkRzTU1HB5CJElFDU5Xf
-OLOKApejqaZKSza693g9cU2Gv0UVO1jJuie2kEnp+5MH9BY+sJFxE47qmmdGeIlZ
-hIZ7X1A67eZD0z9FocQVpfBOLpztswaL3dNzOPw0azxdH4MgcTBoQYSFB/GVJLqS
-Az3r2R1w/kIDaJhmWNFLuPSiFJNdL1Sqrd/SChrQYoYbXGqqFE3O7a1TS+5k1tE+
-ecLmjUPerqRP29vehz8lgipCdirotVmR+kCfGotGMnC6mpcqfR1WyghGLcl/nItc
-H78K5Xu8knqi0kV4ieP0PnIw60OC92IsceQBl3arkkrMkr/ukew=
-=MgVV
+iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl1jklUACgkQ5W/vlVpL
+7c7hHg/+NAXAeuMjDZxOZq/wxvvj915GMyFGhtxIHKvbyYMLDU1m2AMHXzvBamyb
+qhYKGFYjTD5OsbqvHCKaZ4KxjMgiNGxfrDnLD3JPgyrEGKMICpU87Ec49tfRhLo7
+Jj7+IetakkcwLGnNoi2ZeumsfybLvjrtJGZS+QC66QRXqD8TeIuoEDleRDSs9sMp
+6CVb5m0ZGQAbEk0Kpso1CwdoEqQ0LdN27dQbTi8ix5wCcQ1HJnOjBUDvTzsfp2cS
+L5TlNViQ4GhfJkkR2PDsI2Svh1XJd1w4U3PMDRHx4Bu6MajAFcKxGoFgfbizpP5C
+CtGGiCN91RuI87eUfpWvpFsIOM4wm4EULYMSEgPn7TuUBB3CweNafpGJnDmtiqGD
+dj2+AOYtmKoKFbatNBhl9zIEMU76vW54gshX5CaWToCFJeFAqagrgoWdrOM4vWIM
+rMcz/hgTvxU40ad3ZJ0kCcSy+j/JTF8JRG9sBYaymoJnxMCT6jeFI6R9fIhRqMA3
+QEpuEElGSnpvD7Up7z1Sd7oE4wJlLYbAEwZqn/+rwGIk6d0PZmHH3ZixFI/HYemt
+qji8KltUM/QHM0jaXeLiPBq3RJlt/4qs6x8LV9k1zuLRL0GuXQs1Wu1PX2pNDLZU
+jataaHMp0uFKLkWwR2metAyY9mwHKdJgV7pO2/MAb2AKVJF2HqA=
+=pzql
 -----END PGP SIGNATURE-----
 
---sbblrgvskuirlqsw--
+--=-+SaW8iJuTsbssO2+QFx8--
+
