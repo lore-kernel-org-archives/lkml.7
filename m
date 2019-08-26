@@ -2,182 +2,313 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D8FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7E8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063EF20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="al7hkxUI"
+	by mail.kernel.org (Postfix) with ESMTP id D7B8120850
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfHZRBj (ORCPT
+        id S1732819AbfHZRBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:01:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42902 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729007AbfHZRBj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:01:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i30so12165510pfk.9;
-        Mon, 26 Aug 2019 10:01:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ndNg3WtDLIttVFsm3x2TpqdqpBJA/tcuM6+Wyd8nO5o=;
-        b=al7hkxUI5AcCMD3vdbRxiV7dzRTuz5R59XPHfkVukDahhdZAEupSoP3ya+39Vel9Kd
-         hmHdbR9gUUOjHfATwI3pMdvJJFQC1p8o0BUVQI3B11m7aLO4RS8pfWKfjgHu3HOhlNVm
-         AivNQCRN1jm5ONeb0mAjwzfxyt02BfRefujS/yUO7zUhrMcwwzLa6viBrKK5vqo8GsXJ
-         zLTq+Jblam2Im116kC3QoeS+wK9UYmSyn7FZrQ5Ootrn/k2PQRE/lgZIAl+1H4L+/ERl
-         CJfpdrQf3Sd+eCRJoGruMP7BLRb41IlwZJonOxwkePQR3BpQ5DiRYDjo0l6kh4/ivtfO
-         UzRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ndNg3WtDLIttVFsm3x2TpqdqpBJA/tcuM6+Wyd8nO5o=;
-        b=JbCbiAJEPRdeBKFP3GGzML0MwLtk96f2llhYuzLgGb3hQarlhhZfGRTVW9jEJ/USJ6
-         jXxUdPi+lM+QbG8HxWwuGtSbkNKiAPO6rWJO4oJ+ytuZFntTdR0MwjyzHW+Hzbyg5nKE
-         hRSyepUqjnoWm33t+fPUbJKm7rUrw0sNC8GbW5DDYVUbTUZCQnXWA5+jeXK9OhMwIJyv
-         yYbPnsADxEgIpI3DrPKS6QzoUQXsWbSX8tNqZ7nAhoxzDIKyp4VfUXYLzZTM20rF2SWm
-         pxDJMz1XRy+yz6vcXW5blj5q+EUYXlVD0MHNRYs0zSS17l/fuH6RTy86HMPLC0wwUztB
-         yZmQ==
-X-Gm-Message-State: APjAAAUtDAtdo4s26HKoUGe+77ZQb2BezgOmSArwz9bOIu5zfSFut140
-        FYy1ldo3EHpSoIccS++Wf863QHwK
-X-Google-Smtp-Source: APXvYqw45BvcNPkM2qU/bIYb2lxAOedSKJDkoGJ5wgJDpy9SbsKsdDE033BogoZRJGW9Dnm98ph3Ww==
-X-Received: by 2002:aa7:8814:: with SMTP id c20mr20881151pfo.87.1566838898196;
-        Mon, 26 Aug 2019 10:01:38 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g11sm12820660pfh.121.2019.08.26.10.01.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 10:01:37 -0700 (PDT)
-Subject: Re: [PATCH v2 0/3] Add NETIF_F_HW_BR_CAP feature
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, UNGLinuxDriver@microchip.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bridge@lists.linux-foundation.org
-References: <1566807075-775-1-git-send-email-horatiu.vultur@microchip.com>
- <20190826123811.GA13411@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <98230ad4-cf0a-b496-d4de-d3abf77d9741@gmail.com>
-Date:   Mon, 26 Aug 2019 10:01:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 13:01:43 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17344 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729007AbfHZRBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:01:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 10:01:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="182503625"
+Received: from mgross-mobl.amr.corp.intel.com (HELO localhost) ([10.7.198.58])
+  by orsmga003.jf.intel.com with ESMTP; 26 Aug 2019 10:01:40 -0700
+Date:   Mon, 26 Aug 2019 10:01:40 -0700
+From:   mark gross <mgross@linux.intel.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 08/16] sched: Rework pick_next_task() slow-path
+Message-ID: <20190826170140.GF2680@u1904>
+Reply-To: mgross@linux.intel.com
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <aa34d24b36547139248f32a30138791ac6c02bd6.1559129225.git.vpillai@digitalocean.com>
 MIME-Version: 1.0
-In-Reply-To: <20190826123811.GA13411@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa34d24b36547139248f32a30138791ac6c02bd6.1559129225.git.vpillai@digitalocean.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 5:38 AM, Andrew Lunn wrote:
-> On Mon, Aug 26, 2019 at 10:11:12AM +0200, Horatiu Vultur wrote:
->> When a network port is added to a bridge then the port is added in
->> promisc mode. Some HW that has bridge capabilities(can learn, forward,
->> flood etc the frames) they are disabling promisc mode in the network
->> driver when the port is added to the SW bridge.
->>
->> This patch adds the feature NETIF_F_HW_BR_CAP so that the network ports
->> that have this feature will not be set in promisc mode when they are
->> added to a SW bridge.
->>
->> In this way the HW that has bridge capabilities don't need to send all the
->> traffic to the CPU and can also implement the promisc mode and toggle it
->> using the command 'ip link set dev swp promisc on'
+On Wed, May 29, 2019 at 08:36:44PM +0000, Vineeth Remanan Pillai wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Hi Horatiu
+> Avoid the RETRY_TASK case in the pick_next_task() slow path.
 > 
-> I'm still not convinced this is needed. The model is, the hardware is
-> there to accelerate what Linux can do in software. Any peculiarities
-> of the accelerator should be hidden in the driver.  If the accelerator
-> can do its job without needing promisc mode, do that in the driver.
+> By doing the put_prev_task() early, we get the rt/deadline pull done,
+> and by testing rq->nr_running we know if we need newidle_balance().
 > 
-> So you are trying to differentiate between promisc mode because the
-> interface is a member of a bridge, and promisc mode because some
-> application, like pcap, has asked for promisc mode.
+> This then gives a stable state to pick a task from.
 > 
-> dev->promiscuity is a counter. So what you can do it look at its
-> value, and how the interface is being used. If the interface is not a
-> member of a bridge, and the count > 0, enable promisc mode in the
-> accelerator. If the interface is a member of a bridge, and the count >
-> 1, enable promisc mode in the accelerator.
+> Since the fast-path is fair only; it means the other classes will
+> always have pick_next_task(.prev=NULL, .rf=NULL) and we can simplify.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/sched/core.c      | 19 ++++++++++++-------
+>  kernel/sched/deadline.c  | 30 ++----------------------------
+>  kernel/sched/fair.c      |  9 ++++++---
+>  kernel/sched/idle.c      |  4 +++-
+>  kernel/sched/rt.c        | 29 +----------------------------
+>  kernel/sched/sched.h     | 13 ++++++++-----
+>  kernel/sched/stop_task.c |  3 ++-
+>  7 files changed, 34 insertions(+), 73 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 9dfa0c53deb3..b883c70674ba 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3363,7 +3363,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  
+>  		p = fair_sched_class.pick_next_task(rq, prev, rf);
+>  		if (unlikely(p == RETRY_TASK))
+> -			goto again;
+> +			goto restart;
+>  
+>  		/* Assumes fair_sched_class->next == idle_sched_class */
+>  		if (unlikely(!p))
+> @@ -3372,14 +3372,19 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  		return p;
+>  	}
+>  
+> -again:
+> +restart:
+> +	/*
+> +	 * Ensure that we put DL/RT tasks before the pick loop, such that they
+> +	 * can PULL higher prio tasks when we lower the RQ 'priority'.
+> +	 */
+> +	prev->sched_class->put_prev_task(rq, prev, rf);
+> +	if (!rq->nr_running)
+> +		newidle_balance(rq, rf);
+> +
+>  	for_each_class(class) {
+> -		p = class->pick_next_task(rq, prev, rf);
+> -		if (p) {
+> -			if (unlikely(p == RETRY_TASK))
+> -				goto again;
+> +		p = class->pick_next_task(rq, NULL, NULL);
+> +		if (p)
+>  			return p;
+> -		}
+>  	}
+>  
+>  	/* The idle class should always have a runnable task: */
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 45425f971eec..d3904168857a 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1729,39 +1729,13 @@ pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  	struct task_struct *p;
+>  	struct dl_rq *dl_rq;
+>  
+> -	dl_rq = &rq->dl;
+> -
+> -	if (need_pull_dl_task(rq, prev)) {
+> -		/*
+> -		 * This is OK, because current is on_cpu, which avoids it being
+> -		 * picked for load-balance and preemption/IRQs are still
+> -		 * disabled avoiding further scheduler activity on it and we're
+> -		 * being very careful to re-start the picking loop.
+> -		 */
+> -		rq_unpin_lock(rq, rf);
+> -		pull_dl_task(rq);
+> -		rq_repin_lock(rq, rf);
+> -		/*
+> -		 * pull_dl_task() can drop (and re-acquire) rq->lock; this
+> -		 * means a stop task can slip in, in which case we need to
+> -		 * re-start task selection.
+> -		 */
+> -		if (rq->stop && task_on_rq_queued(rq->stop))
+> -			return RETRY_TASK;
+> -	}
+> +	WARN_ON_ONCE(prev || rf);
+should there be a helpful message to go with this warning?
 
-That is an excellent suggestion actually.
+>  
+> -	/*
+> -	 * When prev is DL, we may throttle it in put_prev_task().
+> -	 * So, we update time before we check for dl_nr_running.
+> -	 */
+> -	if (prev->sched_class == &dl_sched_class)
+> -		update_curr_dl(rq);
+> +	dl_rq = &rq->dl;
+>  
+>  	if (unlikely(!dl_rq->dl_nr_running))
+>  		return NULL;
+>  
+> -	put_prev_task(rq, prev);
+> -
+>  	dl_se = pick_next_dl_entity(rq, dl_rq);
+>  	BUG_ON(!dl_se);
+>  
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 8e3eb243fd9f..e65f2dfda77a 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6979,7 +6979,7 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+>  		goto idle;
+>  
+>  #ifdef CONFIG_FAIR_GROUP_SCHED
+> -	if (prev->sched_class != &fair_sched_class)
+> +	if (!prev || prev->sched_class != &fair_sched_class)
+>  		goto simple;
+>  
+>  	/*
+> @@ -7056,8 +7056,8 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+>  	goto done;
+>  simple:
+>  #endif
+> -
+> -	put_prev_task(rq, prev);
+> +	if (prev)
+> +		put_prev_task(rq, prev);
+>  
+>  	do {
+>  		se = pick_next_entity(cfs_rq, NULL);
+> @@ -7085,6 +7085,9 @@ done: __maybe_unused;
+>  	return p;
+>  
+>  idle:
+> +	if (!rf)
+> +		return NULL;
+> +
+>  	new_tasks = newidle_balance(rq, rf);
+>  
+>  	/*
+> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> index 1b65a4c3683e..7ece8e820b5d 100644
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -388,7 +388,9 @@ pick_next_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+>  {
+>  	struct task_struct *next = rq->idle;
+>  
+> -	put_prev_task(rq, prev);
+> +	if (prev)
+> +		put_prev_task(rq, prev);
+> +
+>  	set_next_task_idle(rq, next);
+>  
+>  	return next;
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 51ee87c5a28a..79f2e60516ef 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1554,38 +1554,11 @@ pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  	struct task_struct *p;
+>  	struct rt_rq *rt_rq = &rq->rt;
+>  
+> -	if (need_pull_rt_task(rq, prev)) {
+> -		/*
+> -		 * This is OK, because current is on_cpu, which avoids it being
+> -		 * picked for load-balance and preemption/IRQs are still
+> -		 * disabled avoiding further scheduler activity on it and we're
+> -		 * being very careful to re-start the picking loop.
+> -		 */
+> -		rq_unpin_lock(rq, rf);
+> -		pull_rt_task(rq);
+> -		rq_repin_lock(rq, rf);
+> -		/*
+> -		 * pull_rt_task() can drop (and re-acquire) rq->lock; this
+> -		 * means a dl or stop task can slip in, in which case we need
+> -		 * to re-start task selection.
+> -		 */
+> -		if (unlikely((rq->stop && task_on_rq_queued(rq->stop)) ||
+> -			     rq->dl.dl_nr_running))
+> -			return RETRY_TASK;
+> -	}
+> -
+> -	/*
+> -	 * We may dequeue prev's rt_rq in put_prev_task().
+> -	 * So, we update time before rt_queued check.
+> -	 */
+> -	if (prev->sched_class == &rt_sched_class)
+> -		update_curr_rt(rq);
+> +	WARN_ON_ONCE(prev || rf);
+>  
+>  	if (!rt_rq->rt_queued)
+>  		return NULL;
+>  
+> -	put_prev_task(rq, prev);
+> -
+>  	p = _pick_next_task_rt(rq);
+>  
+>  	set_next_task_rt(rq, p);
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 4cbe2bef92e4..460dd04e76af 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1665,12 +1665,15 @@ struct sched_class {
+>  	void (*check_preempt_curr)(struct rq *rq, struct task_struct *p, int flags);
+>  
+>  	/*
+> -	 * It is the responsibility of the pick_next_task() method that will
+> -	 * return the next task to call put_prev_task() on the @prev task or
+> -	 * something equivalent.
+> +	 * Both @prev and @rf are optional and may be NULL, in which case the
+> +	 * caller must already have invoked put_prev_task(rq, prev, rf).
+>  	 *
+> -	 * May return RETRY_TASK when it finds a higher prio class has runnable
+> -	 * tasks.
+> +	 * Otherwise it is the responsibility of the pick_next_task() to call
+> +	 * put_prev_task() on the @prev task or something equivalent, IFF it
+> +	 * returns a next task.
+> +	 *
+> +	 * In that case (@rf != NULL) it may return RETRY_TASK when it finds a
+> +	 * higher prio class has runnable tasks.
+>  	 */
+>  	struct task_struct * (*pick_next_task)(struct rq *rq,
+>  					       struct task_struct *prev,
+> diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
+> index 8f414018d5e0..7e1cee4e65b2 100644
+> --- a/kernel/sched/stop_task.c
+> +++ b/kernel/sched/stop_task.c
+> @@ -33,10 +33,11 @@ pick_next_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+>  {
+>  	struct task_struct *stop = rq->stop;
+>  
+> +	WARN_ON_ONCE(prev || rf);
+should there be a helpful message to go with this warning?
+--mark
 
-Horatiu, the other issue with your approach here is that the features
-don't propagate to/from lower/upper/real devices, so if e.g.: you have a
-VLAN interface enslaved as a part of the bridge, or a bond, or a tunnel
-interface, the logic won't make us check NETIF_F_HW_BR_CAP because those
-virtual network devices won't inherit it from their real device. I am
-not suggesting you fix this with your patch series, but rather, seek a
-driver local solution.
--- 
-Florian
+> +
+>  	if (!stop || !task_on_rq_queued(stop))
+>  		return NULL;
+>  
+> -	put_prev_task(rq, prev);
+>  	set_next_task_stop(rq, stop);
+>  
+>  	return stop;
+> -- 
+> 2.17.1
+> 
