@@ -2,58 +2,93 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F04FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2356DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601862087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E435120874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566806159;
+	bh=JBrEr6EzAwP4bMTjg36848j8dY230osKaZu1Bx2mMyo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G9oko/9j+XDyb0rzRdmx7ExELQZ8dSe39jhkybwAwwkteTX3toaG5cj+21zn9tByI
+	 hUWimnkUUxtPq1/6alBNAiiyGv4tAcsKSU1WhbVvS3IZBuxlHKlb+pPULSUCVrOcnC
+	 NhsGxNA0H/sGpMUNs7NtDcrmd1/pfi64/D2a2q+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfHZHzx (ORCPT
+        id S1730250AbfHZHz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:55:53 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:52005 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727674AbfHZHzx (ORCPT
+        Mon, 26 Aug 2019 03:55:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43131 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730158AbfHZHz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:55:53 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud8.xs4all.net with ESMTPSA
-        id 29qni4ECMDqPe29qviAvEL; Mon, 26 Aug 2019 09:55:51 +0200
-Message-ID: <bc7a4421b8615732494e1f7253f4c4fe8843c1ca.camel@tiscali.nl>
-Subject: Re: Linux 5.2.10
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, akpm@linux-foundation.org, jslaby@suse.cz,
-        lwn@lwn.net
-Date:   Mon, 26 Aug 2019 09:55:41 +0200
-In-Reply-To: <20190826043401.GC26547@kroah.com>
-References: <20190825144703.6518-1-sashal@kernel.org>
-         <dd3a1ec7d03888dade78db1e4c45ec1347c0815b.camel@tiscali.nl>
-         <20190826043401.GC26547@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 26 Aug 2019 03:55:57 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y8so11421446oih.10;
+        Mon, 26 Aug 2019 00:55:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N4MfQm+LP9efTkdP10QsK3nEtRnfq2pmL5jNgo25EAE=;
+        b=sRdaqmHJwrN2ALdZiEB1B4w7iFtoj5ksE3hufx2wMCqTRxVxpzhePRBKqVpCwchFMi
+         ouZesvq2CS+YYlNtH6gHoBDDPJKDHfUgMUMwQgv/ysRqQHkDts/I4bdp0cl1ICf4sBwS
+         1ZqfVxziiQ95/51oooR76aUn7O9L8Q/VPbQ3nR6//h65+1IJNtFoqbxo9IGVaNTm/FxM
+         TL6m96bQaYzhNayyPlqb5bAOqArudiOv7WYHuVP+KPOaL3F5raOLApDrRkX6sgC5rgiA
+         183zsMg0UGeY35IajZeGjCi34BXL/HbdHMFaW193DAY6QiPh9gBS4LcyYUzaHQuGVRVt
+         SgJw==
+X-Gm-Message-State: APjAAAXHaWm/1Q4LENCRzC9p0ec4lrlh141qRJBSIuFCqXX2Bbn4Kapt
+        PMJ5e3FcmjiosoTOgKNNCI+GJDOm8PrgCiHU2Ovs7A==
+X-Google-Smtp-Source: APXvYqxbk6iAI/XN+ORW2IggxqdNlmUCBx+48XJUX1wD+vXCIx7OcBIP1H2XFrPHwZPqSkcLW//qyvwO6kLSp7TqKQM=
+X-Received: by 2002:aca:cfcb:: with SMTP id f194mr11935335oig.103.1566806156442;
+ Mon, 26 Aug 2019 00:55:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNCRFpFNrDZDVnTeHwqGyboJIt739zLfReiIRtjrR3Sz62MVT2ledFDjxcR2tGdYtkvUgmrA7qqyC/cF/xA5SOTgoPzpS0WzFzV7h9gepJM06DW+fuBz
- 6/qWXnmkDB+u4UJy/pycQ2LHR49BFJjqbWD1cRHqLFZCHL0KeLw+lH5E6mnHmigf2Xbzms7j7sUuw+3zN3YzZ0ZgAPytjBRW3BtXW1NzVUH8Nw5WrGcW2YZ5
- u4TcHTly6BYPck9HvZWiR0pfEV1WXY6hUfKlnOWaPQv5A4l0novbAw8nriw8+6vnNc82d6Os5vVHrh3xJKOdsOYBodry7k4f2xUbR191m2g=
+References: <20190408161240.GA30623@embeddedor> <16370c2e-c5f9-a4cf-02fc-6b5b4ab65e1c@redhat.com>
+ <1c208944-9162-0245-c3bd-016f4274511f@embeddedor.com> <CAJZ5v0jUfLpp_q7ozi33wgJfP7zHmvDh2Srun0KjVZj6Q7NOfw@mail.gmail.com>
+ <52803932-12dc-3ea0-12ef-09b5b317818b@embeddedor.com>
+In-Reply-To: <52803932-12dc-3ea0-12ef-09b5b317818b@embeddedor.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 26 Aug 2019 09:55:42 +0200
+Message-ID: <CAJZ5v0gX1zTiJkCk51FpeywgwD58K46eGdqCcVjLL2zkhAG_wA@mail.gmail.com>
+Subject: Re: [PATCH] tools/power turbostat: fix file descriptor leaks
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH schreef op ma 26-08-2019 om 06:34 [+0200]:
-> It's on that key already, have you refreshed your version of it?
+On Mon, Aug 26, 2019 at 6:25 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> Hi Rafael,
+>
+> On 4/23/19 3:23 AM, Rafael J. Wysocki wrote:
+> > On Mon, Apr 22, 2019 at 5:55 PM Gustavo A. R. Silva
+> > <gustavo@embeddedor.com> wrote:
+> >>
+> >> Hi all,
+> >>
+> >> Friendly ping:
+> >>
+> >> Who can take this?
+> >
+> > I've been waiting for Len to comment on this, let me talk to him offlist.
+> >
+>
+> I just noticed this hasn't been applied.
+>
+> I wonder if you plan to apply it.
 
-I have now. sashal@kernel.org (and another identity) is now on that key.
+Technically, Len Brown is the turbostat maintainer and I have been
+waiting for him to review the patch at least.  Let me talk to Len.
 
-Thanks,
-
-
-Paul Bolle
-
+Thanks!
