@@ -2,181 +2,141 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40856C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ECCC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE0121872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A21520644
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VJF6t0Tx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfHZWot (ORCPT
+        id S1727233AbfHZWpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbfHZWos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:44:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186C020644;
-        Mon, 26 Aug 2019 22:44:46 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 18:44:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Jessica Yu <jeyu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        "John F . Reiser" <jreiser@BitWagon.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: Re: [PATCH 01/11] ftrace: move recordmcount tools to scripts/ftrace
-Message-ID: <20190826184444.09334ae9@gandalf.local.home>
-In-Reply-To: <20190825132330.5015-2-changbin.du@gmail.com>
-References: <20190825132330.5015-1-changbin.du@gmail.com>
-        <20190825132330.5015-2-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 26 Aug 2019 18:45:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57624 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHZWpS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:45:18 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B16ED9A4;
+        Tue, 27 Aug 2019 00:45:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566859515;
+        bh=jloFnCXsdmid7nbWcqBHlxh0WvUy4xChhhtgh6+YJxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VJF6t0Tx3bwckGq77CKAlYUxrp0E3NqRaSv8f3SyeuRnH7OvFoGikOGgBX3pPNEUL
+         idGGwVzob0WjuyilGJgPH0c0cIxKeoe+AqswE8nOmlHv/M76OTP/7oYfh/iE/6CVVR
+         GDkj6bZEOpyqP8OX60WS0U/kp8k4SZhDG7M0frXs=
+Date:   Tue, 27 Aug 2019 01:45:09 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/14] arm64: dts: renesas: r8a7795: Add CMM units
+Message-ID: <20190826224509.GM5031@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-5-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190825135154.11488-5-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 25 Aug 2019 21:23:20 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
+Hi Jacopo,
 
-> Move ftrace tools to its own directory. We will add another tool later.
+Thank you for the patch.
+
+On Sun, Aug 25, 2019 at 03:51:44PM +0200, Jacopo Mondi wrote:
+> Add CMM units to Renesas R-Car H3 device tree and reference them from
+> the Display Unit they are connected to.
 > 
-> Cc: John F. Reiser <jreiser@BitWagon.com>
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> While at it, re-sort the du device node properties to match the ordering
+> found in other SoCs.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Apart from the issue with compatible string as pointed out for patch
+03/14,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  scripts/.gitignore                   |  1 -
->  scripts/Makefile                     |  2 +-
->  scripts/Makefile.build               | 10 +++++-----
->  scripts/ftrace/.gitignore            |  4 ++++
->  scripts/ftrace/Makefile              |  4 ++++
->  scripts/{ => ftrace}/recordmcount.c  |  0
->  scripts/{ => ftrace}/recordmcount.h  |  0
->  scripts/{ => ftrace}/recordmcount.pl |  0
->  8 files changed, 14 insertions(+), 7 deletions(-)
->  create mode 100644 scripts/ftrace/.gitignore
->  create mode 100644 scripts/ftrace/Makefile
->  rename scripts/{ => ftrace}/recordmcount.c (100%)
->  rename scripts/{ => ftrace}/recordmcount.h (100%)
->  rename scripts/{ => ftrace}/recordmcount.pl (100%)
->  mode change 100755 => 100644
-
-Note, we are in the process of merging recordmcount with objtool. It
-would be better to continue from that work.
-
- http://lkml.kernel.org/r/2767f55f4a5fbf30ba0635aed7a9c5ee92ac07dd.1563992889.git.mhelsley@vmware.com
-
--- Steve
-
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 36 +++++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
 > 
-> diff --git a/scripts/.gitignore b/scripts/.gitignore
-> index 17f8cef88fa8..1b5b5d595d80 100644
-> --- a/scripts/.gitignore
-> +++ b/scripts/.gitignore
-> @@ -6,7 +6,6 @@ conmakehash
->  kallsyms
->  pnmtologo
->  unifdef
-> -recordmcount
->  sortextable
->  asn1_compiler
->  extract-cert
-> diff --git a/scripts/Makefile b/scripts/Makefile
-> index 16bcb8087899..d5992def49a8 100644
-> --- a/scripts/Makefile
-> +++ b/scripts/Makefile
-> @@ -14,7 +14,6 @@ hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
->  hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
->  hostprogs-$(CONFIG_LOGO)         += pnmtologo
->  hostprogs-$(CONFIG_VT)           += conmakehash
-> -hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
->  hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
->  hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
->  hostprogs-$(CONFIG_MODULE_SIG)	 += sign-file
-> @@ -34,6 +33,7 @@ hostprogs-y += unifdef
->  subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
->  subdir-$(CONFIG_MODVERSIONS) += genksyms
->  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
-> +subdir-$(CONFIG_FTRACE) += ftrace
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index 95deff66eeb6..21b4069f07e7 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -2909,6 +2909,38 @@
+>  			iommus = <&ipmmu_vi1 10>;
+>  		};
 >  
->  # Let clean descend into subdirs
->  subdir-	+= basic dtc gdb kconfig mod package
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 2f66ed388d1c..67558983c518 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -188,18 +188,18 @@ endif
->  # files, including recordmcount.
->  sub_cmd_record_mcount =					\
->  	if [ $(@) != "scripts/mod/empty.o" ]; then	\
-> -		$(objtree)/scripts/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)";	\
-> +		$(objtree)/scripts/ftrace/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)"; \
->  	fi;
-> -recordmcount_source := $(srctree)/scripts/recordmcount.c \
-> -		    $(srctree)/scripts/recordmcount.h
-> +recordmcount_source := $(srctree)/scripts/ftrace/recordmcount.c \
-> +		       $(srctree)/scripts/ftrace/recordmcount.h
->  else
-> -sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
-> +sub_cmd_record_mcount = perl $(srctree)/scripts/ftrace/recordmcount.pl "$(ARCH)" \
->  	"$(if $(CONFIG_CPU_BIG_ENDIAN),big,little)" \
->  	"$(if $(CONFIG_64BIT),64,32)" \
->  	"$(OBJDUMP)" "$(OBJCOPY)" "$(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS)" \
->  	"$(LD) $(KBUILD_LDFLAGS)" "$(NM)" "$(RM)" "$(MV)" \
->  	"$(if $(part-of-module),1,0)" "$(@)";
-> -recordmcount_source := $(srctree)/scripts/recordmcount.pl
-> +recordmcount_source := $(srctree)/scripts/ftrace/recordmcount.pl
->  endif # BUILD_C_RECORDMCOUNT
->  cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
->  	$(sub_cmd_record_mcount))
-> diff --git a/scripts/ftrace/.gitignore b/scripts/ftrace/.gitignore
-> new file mode 100644
-> index 000000000000..54d582c8faad
-> --- /dev/null
-> +++ b/scripts/ftrace/.gitignore
-> @@ -0,0 +1,4 @@
-> +#
-> +# Generated files
-> +#
-> +recordmcount
-> diff --git a/scripts/ftrace/Makefile b/scripts/ftrace/Makefile
-> new file mode 100644
-> index 000000000000..6797e51473e5
-> --- /dev/null
-> +++ b/scripts/ftrace/Makefile
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> +		cmm0: cmm@fea40000 {
+> +			compatible = "renesas,cmm-r8a7795";
+> +			reg = <0 0xfea40000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 711>;
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			resets = <&cpg 711>;
+> +		};
 > +
-> +hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
-> +always         := $(hostprogs-y)
-> diff --git a/scripts/recordmcount.c b/scripts/ftrace/recordmcount.c
-> similarity index 100%
-> rename from scripts/recordmcount.c
-> rename to scripts/ftrace/recordmcount.c
-> diff --git a/scripts/recordmcount.h b/scripts/ftrace/recordmcount.h
-> similarity index 100%
-> rename from scripts/recordmcount.h
-> rename to scripts/ftrace/recordmcount.h
-> diff --git a/scripts/recordmcount.pl b/scripts/ftrace/recordmcount.pl
-> old mode 100755
-> new mode 100644
-> similarity index 100%
-> rename from scripts/recordmcount.pl
-> rename to scripts/ftrace/recordmcount.pl
+> +		cmm1: cmm@fea50000 {
+> +			compatible = "renesas,cmm-r8a7795";
+> +			reg = <0 0xfea50000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 710>;
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			resets = <&cpg 710>;
+> +		};
+> +
+> +		cmm2: cmm@fea60000 {
+> +			compatible = "renesas,cmm-r8a7795";
+> +			reg = <0 0xfea60000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 709>;
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			resets = <&cpg 709>;
+> +		};
+> +
+> +		cmm3: cmm@fea70000 {
+> +			compatible = "renesas,cmm-r8a7795";
+> +			reg = <0 0xfea70000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 708>;
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			resets = <&cpg 708>;
+> +		};
+> +
+>  		csi20: csi2@fea80000 {
+>  			compatible = "renesas,r8a7795-csi2";
+>  			reg = <0 0xfea80000 0 0x10000>;
+> @@ -3112,9 +3144,11 @@
+>  				 <&cpg CPG_MOD 722>,
+>  				 <&cpg CPG_MOD 721>;
+>  			clock-names = "du.0", "du.1", "du.2", "du.3";
+> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+>  			status = "disabled";
+>  
+> +			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+> +			cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+> +
+>  			ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
 
+-- 
+Regards,
+
+Laurent Pinchart
