@@ -2,83 +2,62 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C80C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7C4217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gFOhk4kp"
+	by mail.kernel.org (Postfix) with ESMTP id B110A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfHZGRE (ORCPT
+        id S1729503AbfHZGUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:17:04 -0400
-Received: from mail-m973.mail.163.com ([123.126.97.3]:49806 "EHLO
-        mail-m973.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfHZGRD (ORCPT
+        Mon, 26 Aug 2019 02:20:05 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58974 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbfHZGUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:17:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=hc63cxkTZpzkFww549
-        eswCcb8sHDad4ko+ngdlX/DXU=; b=gFOhk4kpkWtmEIy15tFo9yi5rkGgrOiySh
-        veoTH5vttZmBN3i+6dN6K321ihoeg6e/CkUdwqbtdpV/aPB5x+55iRluOBW1asnP
-        hw2FVa6oQgMM2ypSqVt5zy2JquH2+vcs+GcnwnnG5LAOMIgx8VK0XrUEHJO6qit1
-        H9YeBN4SY=
-Received: from localhost.localdomain.localdomain (unknown [111.205.43.245])
-        by smtp3 (Coremail) with SMTP id G9xpCgA3zYUneWNd3Yd6Aw--.75S2;
-        Mon, 26 Aug 2019 14:16:07 +0800 (CST)
-From:   Xiaochun Lee <lixiaochun.2888@163.com>
-To:     tony.luck@intel.com, bp@alien8.de
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
-Subject: [PATCH] x86/mce: show the status of cmci_disabled to user
-Date:   Mon, 26 Aug 2019 14:16:04 +0800
-Message-Id: <1566800164-6428-1-git-send-email-lixiaochun.2888@163.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: G9xpCgA3zYUneWNd3Yd6Aw--.75S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZw4UAF4rKw4UWr4UXw17trb_yoWfWrg_Ww
-        1Igr4DCr4fZr9Ivrn7XF4FqryUZw1S9Fs0yw1IyrWYyryjqan8uayFyFZxJrnxW3yFqFW3
-        Ar98JF4Y9w4UZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnbJ57UUUUU==
-X-Originating-IP: [111.205.43.245]
-X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/xtbBZwcdQFetv8-HMwAAsD
+        Mon, 26 Aug 2019 02:20:05 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 363C915249296;
+        Sun, 25 Aug 2019 23:20:04 -0700 (PDT)
+Date:   Sun, 25 Aug 2019 23:20:03 -0700 (PDT)
+Message-Id: <20190825.232003.1145950065287854577.davem@davemloft.net>
+To:     loyou85@gmail.com
+Cc:     edumazet@google.com, dsterba@suse.com, dbanerje@akamai.com,
+        fw@strlen.de, davej@codemonkey.org.uk, tglx@linutronix.de,
+        matwey@sai.msu.ru, sakari.ailus@linux.intel.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xiaojunzhao141@gmail.com
+Subject: Re: [PATCH v2] net: fix skb use after free in netpoll
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1566800020-10007-1-git-send-email-loyou85@gmail.com>
+References: <1566577920-20956-1-git-send-email-loyou85@gmail.com>
+        <1566800020-10007-1-git-send-email-loyou85@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 25 Aug 2019 23:20:04 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochun Lee <lixc17@lenovo.com>
+From: Feng Sun <loyou85@gmail.com>
+Date: Mon, 26 Aug 2019 14:13:40 +0800
 
-When enabled Firmware First mode in UEFI, we need to
-set the cmci_disabled and ignore_ce in mca cfg
-that users can check correct status from
-"/sys/devices/system/machinecheck/machinecheckXXX/cmci_disabled"
+> +static inline bool netpoll_xmit_complete(int rc)
+> +{
+> +	return dev_xmit_complete(rc);
+> +}
 
-Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
----
- arch/x86/kernel/cpu/mce/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+There is no need for this useless indirection, just call dev_xmit_complete()
+staright.
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 743370e..932c701 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1909,6 +1909,8 @@ static void __mce_disable_bank(void *arg)
- 	int bank = *((int *)arg);
- 	__clear_bit(bank, this_cpu_ptr(mce_poll_banks));
- 	cmci_disable_bank(bank);
-+	mca_cfg.cmci_disabled = true;
-+	mca_cfg.ignore_ce = true;
- }
- 
- void mce_disable_bank(int bank)
--- 
-1.8.3.1
-
+Also, even if it was suitable, never use the inline keyword in foo.c files.
