@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BC0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C952DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F9B2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811B52070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="YD9zQWUy"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ufFHivwR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfHZMCY (ORCPT
+        id S1731345AbfHZMC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:02:24 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:20789 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfHZMCY (ORCPT
+        Mon, 26 Aug 2019 08:02:28 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:22434 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfHZMC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:02:24 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+        Mon, 26 Aug 2019 08:02:26 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   Tudor.Ambarus@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="Tudor.Ambarus@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -34,38 +34,38 @@ Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   a:smtpout.microchip.com a:mx1.microchip.iphmx.com
   a:mx2.microchip.iphmx.com include:servers.mcsv.net
   include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: nxYrdt/2KVgtTNqUOOF7AqKX6xSGpalCQlk+/jVd525M3ULohz+rJUTFo1iR66D9YsHQEfLyq1
- KpWw60qHW7ByrPGj7kwGZ1S0371jMrJZZCREsM5nQLrCErX1MEbPCQ04kIVxVsMd8f6vKeVroR
- iNqcQWVWLbYleyKy1O2Sv+n/HjfG5EL22XrEnMin9n32titSQQ0nistlmC2A231JCK7HrZ0un1
- FRFS6QzWdsoRG7ask8paQ2wGIaUGMgSmHbd+WAnZh0ovP6Jm1Up57UueO9sOWhDFIbnh5QDqiR
- drw=
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: hzrNZ8R1HHAJuBi/8L2Flpi+CPEHvrQEBeFCUHnJGFnAEjBSRJz5Xb4vO33RUXlu2r7Zp6Do+u
+ +YdFS4j8iM4Pij9GQPl88eN57JdSjxmSfXjDp9OzEPg6z2u1VtT0hg6WpM7ZivGKkk4nz60ZPd
+ lAxOhW9SnvYMuzL6b1UxQ7BeKwU/RHij2pj+heOjZx/i/ZppDUV0fnOh+Z2Rvobo+SsHT4tNFq
+ ZCaLHr62jHt6WM2yLkcmV21OCvhBQEDibcN/zH7WOjnUpQ9e5ldYkAfgvfXmx2KdPTrD3bQZHH
+ +Xs=
 X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="46587493"
+   d="scan'208";a="44988401"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2019 05:02:23 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2019 05:02:17 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 26 Aug 2019 05:02:22 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 26 Aug 2019 05:02:22 -0700
+ 15.1.1713.5; Mon, 26 Aug 2019 05:02:16 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 26 Aug 2019 05:02:16 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QwHaSwirFpIpMfdITTsD7E7JIsl8gZcuNJ5PBpywVJ7LY/5xzQQt38qKo4TrZG/jpiEeG+dcnlGToFTWSR/ao75IkhCNZLI9i9yjL7Z6BWfPdm5ZGZwZzHYhDH2b05cTrPGNeqQBq2DbcAiayzSKi/JlL5EWw+zFYdgDLQpUXVxLtmpZzFnjoR3t+ba0MAdfzZTSOiu42h1x1M6xJK0nRwprurLnKWG7nwTTe81Vu9UiwKw3RzwFwmE0M6pB1+swfFXLIIy2poURtkH4dP/26rUS6VVC2Oe47DEXPGn4TVcl7cn4nqfvjfXv0jsTOup6iMHZxzcZTaFLiyG+S+bAew==
+ b=OwZPhOa532XE5aS2GSklwgEKyxraWx9aJ4jHNyzA7lQeBm2HQcTYlApuNc+WUPoKa1vlvm4mvYvCH5i6N7vrn4/ETBlIBIIyeHlwc2niE96UO7pb5WCAGY1vscORNgOCsNQMLe1pSavtBKNyn06YZ8of5AlZ5XG635egepq7LKRxrn3TRtiyiwVjOlfx5Mk/tP9HvDL0ApsvlkuAokDS3AOE//6L2TiejFQNuTCS7ipi9Oc5miaTowaMm5OsrLDlYEk1v4rJS6k0NfaYJs0dktuuQMjtaeXWstcWeLVmaD6nMpL8fjLXPJteIUrcVAoJU3qDqTVPadWHrGhOcfVekg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SEa3ZqPuW8cpxsoaY8eDsDepH+bxZ+OldsB82OwGtv8=;
- b=l2KTk9UH3i0b3Ba9zo2y0aNfo1+kQHxhun1/1eDZw1CI+aCEJrSzzs2jN5kA/T4pTX9aSXY32icq8pQghxd26StlkwgOIieCH5RebZwNK+telm3FqseWrn16HTkDzNADvSXk8uo10zo7DCQqf1lEzNQVCarnh0bq/bw2NcRc/1CGw7do8odd9ngT4XTNeRabmJ3crh1JiSA2dkMlnuBdJAVwz/nO3IAlCiz09S+9irpP04GAbTtxMKXDRnR8Kwzmp//xyfhag6iARuhMdjpJnUpUwijhXpSDCxBkq3L1XT2AM6FhC/GKOeNUf5C825y1uLpZ8kupBUmkzZhUklAb9w==
+ bh=6T1YHZWV8TyZgRF10y/o+KIqRMw8GGpK0CyRZfHJ8aM=;
+ b=XLuvRXOULe7l5EkWV0FhSHEanWVji9nyIr8zLPgafH1QBPDCm/mmgmiQNW+9o9gyCr7x5IGyYsoJ12rxkaXOINZ9mZ9boGxcmSBK3DoMKDIMDAFgeR2TunklzEbFDz0o6EALWVe8LCB0gzd6i1UV/Wan0/Bc/BLnFVAB9WpSdb34ZYbQiXeb6Y0YBCk8mstgnArFTeIPNU29aS9SXZO4AdXgWK9SFoNkTzijdKg5y1WmbOi0Sl0mXEI5Zn83Tm80PZ1xtT9G5ubWYVCF1SP8fM+Z/UVwZqaLLtlMUNjAxf2hA6UWLNMbdUED7UxCnQ95EUnV3RH+I45MbDaOsnzUdw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -73,28 +73,27 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SEa3ZqPuW8cpxsoaY8eDsDepH+bxZ+OldsB82OwGtv8=;
- b=YD9zQWUyzYruK5VLjsaJO5P0cRwlsXO3GA684nNPN4A/gBHKOSDSzL6vyLIsGDGG4G1apStFGlrb6CLyr8Odx3obAeJ2BEvbwPPERq5N3NFIao6vZssvEDQDsatia43g8e7embmW8IiulgrHiRClolrIkSGvlbnb4lOREV95dEE=
+ bh=6T1YHZWV8TyZgRF10y/o+KIqRMw8GGpK0CyRZfHJ8aM=;
+ b=ufFHivwReizYAOUm+LhkDAj3bKwngKYWvC08Lzk9qE24gFXCoXI4Q7grxDz1cCOT9Ke1Is+OYxTFIgDyX2OULdkljXqpvyLZRq1UaoH/ljrQGVeBJDe0eitb+IbO5xp1PARpONPqEVxG+Ni+cEQlpHApXFigH7CR7rRAJ9j8gGw=
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
  MN2PR11MB3776.namprd11.prod.outlook.com (20.178.251.156) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Mon, 26 Aug 2019 12:02:22 +0000
+ 15.20.2199.21; Mon, 26 Aug 2019 12:02:15 +0000
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 12:02:21 +0000
+ 12:02:15 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <boris.brezillon@collabora.com>, <marek.vasut@gmail.com>,
         <vigneshr@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
         <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
 CC:     <boris.brezillon@bootlin.com>, <Tudor.Ambarus@microchip.com>
-Subject: [PATCH v3 13/20] mtd: spi-nor: Add a ->convert_addr() method
-Thread-Topic: [PATCH v3 13/20] mtd: spi-nor: Add a ->convert_addr() method
-Thread-Index: AQHVXAYda1fnkG9HI0CF2HvmEZYmhg==
-Date:   Mon, 26 Aug 2019 12:02:21 +0000
-Message-ID: <20190826120206.15025-4-tudor.ambarus@microchip.com>
-References: <20190826120206.15025-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20190826120206.15025-1-tudor.ambarus@microchip.com>
+Subject: [PATCH v3 10/20] mtd: spi-nor: Rework the SPI NOR lock/unlock logic
+Thread-Topic: [PATCH v3 10/20] mtd: spi-nor: Rework the SPI NOR lock/unlock
+ logic
+Thread-Index: AQHVXAYZKF+up2g7dEagJ1VovhwH3w==
+Date:   Mon, 26 Aug 2019 12:02:14 +0000
+Message-ID: <20190826120206.15025-1-tudor.ambarus@microchip.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -106,28 +105,28 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.9.5
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 093e56a0-820c-43ae-45fa-08d72a1d4021
+x-ms-office365-filtering-correlation-id: 7f138044-f79d-42b8-c8c9-08d72a1d3c0e
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB3776;
 x-ms-traffictypediagnostic: MN2PR11MB3776:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB37768849EAFC6EFCBC5AAE43F0A10@MN2PR11MB3776.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <MN2PR11MB3776C7236A2FB4471818A222F0A10@MN2PR11MB3776.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(346002)(136003)(39860400002)(189003)(199004)(81166006)(81156014)(8676002)(1076003)(2201001)(2501003)(14444005)(256004)(26005)(7736002)(99286004)(66066001)(2906002)(54906003)(76176011)(52116002)(316002)(186003)(50226002)(8936002)(66476007)(66556008)(64756008)(66946007)(66446008)(110136005)(53936002)(2616005)(36756003)(25786009)(5660300002)(386003)(305945005)(6506007)(102836004)(3846002)(6116002)(446003)(11346002)(478600001)(4326008)(86362001)(6436002)(6486002)(6512007)(14454004)(71200400001)(71190400001)(107886003)(476003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3776;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(346002)(136003)(39860400002)(189003)(199004)(81166006)(81156014)(8676002)(1076003)(2201001)(2501003)(14444005)(256004)(26005)(7736002)(99286004)(66066001)(2906002)(54906003)(52116002)(316002)(186003)(50226002)(8936002)(66476007)(66556008)(64756008)(66946007)(66446008)(110136005)(53936002)(2616005)(36756003)(25786009)(5660300002)(386003)(305945005)(6506007)(102836004)(3846002)(6116002)(478600001)(4326008)(86362001)(6436002)(6486002)(6512007)(14454004)(71200400001)(71190400001)(107886003)(476003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3776;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jUZY6kLFaa3Y/MrcXT31O1O8ke7VyB5bCK4TFLNV5GT3iqLMFPbgCjn0nIrj4MNG0telFa/uExQTF8rjL+7s737UHoxEEWtGp4YU4cCrce/m9FHokUxpMNEO/bh9V7q6pDw33zH9IXmATc+fY73Q7ZrReK5zdB2A836RHRIRh2QwZMapcVHeqctNvT29UVppNtMYR7NHjuGD+x6TYtXdNueKdnKi4KuvaIRdhBAYemcRuPKEfzFT8szQcjB5KqwcH7jj7OycbLinmL5BY9XZ+EjiJgidhV02q0BEJS2d8G1jz3/ktELYExcTlBMR4wcz1jfLz3hboX6fF6x5KK9kMOSZ1ubOP+guyAk8O2CyIhYGMwm41ZyNCKlko/wEhm+lwBVkkDXdfoGolTHp463eXw==
+x-microsoft-antispam-message-info: KHTjf535K1+zdrP3GQnVp1tqhyBm75QgRrQm2tCprlsjxzi7SqRsBE5N1hdSRrVgmceOPSGyp8k1Orocs+a7AwH7cIUAqR7J3jbB6RfrfKcw5GKsbwjyrqgq0VNYpXv5zrftCDUUK4MVMEenJBXOnTN8D6V8tCguMfIOlWd4HhasuGB5vqC0+xbfO2vJR3AK97KRAm/v49G6ICIK+47hgfkv6k9uPACas0d6ZvcyvL2hhkhXtMvthcT2iEK9hIUO+gFrvBvQGNfioYxInvFh3Kwa9A+AnZE5949wqyAh80eDKfv9WZmiK3J8/iqQjeP79YTUVY5KSaZjiq3J37AIcMFPpiPGcyb4ICGtxRAaaFQ81t9Ux0d7Dp0t2o8+gJJgwAxDxeS4T3pfvd+wURLg3d8idD3Kwa522BJCAEbf7Tw=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 093e56a0-820c-43ae-45fa-08d72a1d4021
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 12:02:21.7933
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f138044-f79d-42b8-c8c9-08d72a1d3c0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 12:02:14.8713
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lyHibv6MwxqNl/O1fZK5VQuWE3smCC+n61HKxlP/y9byUhYFRrzqFe6Almil31+pULV0cYevOtQCVGlyr9oOU8yavtTSN5OwuN97NZ1LW2g=
+X-MS-Exchange-CrossTenant-userprincipalname: TrSxCC7rN/oSSNETsr0qUNznXakielHUdBw/6E+AuHx6beGdKEHCPhDj/pwVm6qamViyjfRDU3xjB77/ZmB3qIcuMpCS4qHx8Jw+Rl0l0tw=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3776
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -136,147 +135,231 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Boris Brezillon <boris.brezillon@bootlin.com>
 
-In order to separate manufacturer quirks from the core we need to get
-rid of all the manufacturer specific flags, like the
-SNOR_F_S3AN_ADDR_DEFAULT one.
+Add the SNOR_F_HAS_LOCK flag and set it when SPI_NOR_HAS_LOCK is set
+in the flash_info entry or when it's a Micron or ST flash.
 
-This can easily be replaced by a ->convert_addr() hook, which when
-implemented will provide the core with an easy way to convert an
-absolute address into something the flash understands.
-
-Right now the only user are the S3AN chips, but other manufacturers
-can implement it if needed.
+Move the locking hooks in a separate struct so that we have just
+one field to update when we change the locking implementation.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+[tudor.ambarus@microchip.com: use ->default_init() hook, introduce
+spi_nor_late_init_params(), set ops in nor->params]
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
-v3: no changes, rebase on previous commits
+v3: no changes, clear_sr_bp() is handled in the last patch of the
+series.
 
- drivers/mtd/spi-nor/spi-nor.c | 24 ++++++++++++++----------
- include/linux/mtd/spi-nor.h   | 17 ++++++++++-------
- 2 files changed, 24 insertions(+), 17 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 50 ++++++++++++++++++++++++++++++++-------=
+----
+ include/linux/mtd/spi-nor.h   | 23 ++++++++++++++------
+ 2 files changed, 53 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index c862a59ce9df..b96a7066a36c 100644
+index 235e82a121a1..3f997797fa9d 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -899,10 +899,9 @@ static void spi_nor_unlock_and_unprep(struct spi_nor *=
-nor, enum spi_nor_ops ops)
-  * Addr can safely be unsigned int, the biggest S3AN device is smaller tha=
-n
-  * 4 MiB.
-  */
--static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int =
-addr)
-+static u32 s3an_convert_addr(struct spi_nor *nor, u32 addr)
- {
--	unsigned int offset;
--	unsigned int page;
-+	u32 offset, page;
-=20
- 	offset =3D addr % nor->page_size;
- 	page =3D addr / nor->page_size;
-@@ -911,6 +910,14 @@ static loff_t spi_nor_s3an_addr_convert(struct spi_nor=
- *nor, unsigned int addr)
- 	return page | offset;
+@@ -1598,6 +1598,12 @@ static int stm_is_locked(struct spi_nor *nor, loff_t=
+ ofs, uint64_t len)
+ 	return stm_is_locked_sr(nor, ofs, len, status);
  }
 =20
-+static u32 spi_nor_convert_addr(struct spi_nor *nor, loff_t addr)
-+{
-+	if (!nor->params.convert_addr)
-+		return addr;
++static const struct spi_nor_locking_ops stm_locking_ops =3D {
++	.lock =3D stm_lock,
++	.unlock =3D stm_unlock,
++	.is_locked =3D stm_is_locked,
++};
 +
-+	return nor->params.convert_addr(nor, addr);
+ static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ {
+ 	struct spi_nor *nor =3D mtd_to_spi_nor(mtd);
+@@ -1607,7 +1613,7 @@ static int spi_nor_lock(struct mtd_info *mtd, loff_t =
+ofs, uint64_t len)
+ 	if (ret)
+ 		return ret;
+=20
+-	ret =3D nor->flash_lock(nor, ofs, len);
++	ret =3D nor->params.locking_ops->lock(nor, ofs, len);
+=20
+ 	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_UNLOCK);
+ 	return ret;
+@@ -1622,7 +1628,7 @@ static int spi_nor_unlock(struct mtd_info *mtd, loff_=
+t ofs, uint64_t len)
+ 	if (ret)
+ 		return ret;
+=20
+-	ret =3D nor->flash_unlock(nor, ofs, len);
++	ret =3D nor->params.locking_ops->unlock(nor, ofs, len);
+=20
+ 	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
+ 	return ret;
+@@ -1637,7 +1643,7 @@ static int spi_nor_is_locked(struct mtd_info *mtd, lo=
+ff_t ofs, uint64_t len)
+ 	if (ret)
+ 		return ret;
+=20
+-	ret =3D nor->flash_is_locked(nor, ofs, len);
++	ret =3D nor->params.locking_ops->is_locked(nor, ofs, len);
+=20
+ 	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
+ 	return ret;
+@@ -4148,6 +4154,7 @@ static void macronix_set_default_init(struct spi_nor =
+*nor)
+=20
+ static void st_micron_set_default_init(struct spi_nor *nor)
+ {
++	nor->flags =3D SNOR_F_HAS_LOCK;
+ 	nor->params.quad_enable =3D NULL;
+ 	nor->params.set_4byte =3D st_micron_set_4byte;
+ }
+@@ -4292,6 +4299,23 @@ static void spi_nor_info_init_params(struct spi_nor =
+*nor)
+ }
+=20
+ /**
++ * spi_nor_late_init_params() - Late initialization of default flash param=
+eters.
++ * @nor:	pointer to a 'struct spi_nor'
++ *
++ * Used to set default flash parameters and settings when the ->default_in=
+it()
++ * hook or the SFDP parser let voids.
++ */
++static void spi_nor_late_init_params(struct spi_nor *nor)
++{
++	/*
++	 * NOR protection support. When locking_ops are not provided, we pick
++	 * the default ones.
++	 */
++	if (nor->flags & SNOR_F_HAS_LOCK && !nor->params.locking_ops)
++		nor->params.locking_ops =3D &stm_locking_ops;
 +}
 +
- /*
-  * Initiate the erasure of a single sector
++/**
+  * spi_nor_init_params() - Initialize the flash's parameters and settings.
+  * @nor:	pointer to a 'struct spi-nor'.
+  *
+@@ -4316,6 +4340,10 @@ static void spi_nor_info_init_params(struct spi_nor =
+*nor)
+  *    Please not that there is a ->post_bfpt() fixup hook that can overwri=
+te the
+  *    flash parameters and settings imediately after parsing the Basic Fla=
+sh
+  *    Parameter Table.
++ *
++ * 4/ Late default flash parameters initialization, used when the
++ * ->default_init() hook or the SFDP parser do not set specific params.
++ *		spi_nor_late_init_params()
   */
-@@ -918,8 +925,7 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u3=
-2 addr)
+ static void spi_nor_init_params(struct spi_nor *nor)
  {
- 	int i;
+@@ -4326,6 +4354,8 @@ static void spi_nor_init_params(struct spi_nor *nor)
+ 	if ((nor->info->flags & (SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)) &&
+ 	    !(nor->info->flags & SPI_NOR_SKIP_SFDP))
+ 		spi_nor_sfdp_init_params(nor);
++
++	spi_nor_late_init_params(nor);
+ }
 =20
--	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
--		addr =3D spi_nor_s3an_addr_convert(nor, addr);
-+	addr =3D spi_nor_convert_addr(nor, addr);
+ static int spi_nor_select_read(struct spi_nor *nor,
+@@ -4707,6 +4737,9 @@ int spi_nor_scan(struct spi_nor *nor, const char *nam=
+e,
+ 	if (info->flags & SPI_S3AN)
+ 		nor->flags |=3D  SNOR_F_READY_XSR_RDY;
 =20
- 	if (nor->erase)
- 		return nor->erase(nor, addr);
-@@ -2535,8 +2541,7 @@ static int spi_nor_read(struct mtd_info *mtd, loff_t =
-from, size_t len,
- 	while (len) {
- 		loff_t addr =3D from;
++	if (info->flags & SPI_NOR_HAS_LOCK)
++		nor->flags |=3D SNOR_F_HAS_LOCK;
++
+ 	/*
+ 	 * Atmel, SST, Intel/Numonyx, and others serial NOR tend to power up
+ 	 * with the software protection bits set.
+@@ -4731,16 +4764,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *na=
+me,
+ 	mtd->_read =3D spi_nor_read;
+ 	mtd->_resume =3D spi_nor_resume;
 =20
--		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
--			addr =3D spi_nor_s3an_addr_convert(nor, addr);
-+		addr =3D spi_nor_convert_addr(nor, addr);
-=20
- 		ret =3D spi_nor_read_data(nor, addr, len, buf);
- 		if (ret =3D=3D 0) {
-@@ -2680,8 +2685,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t=
- to, size_t len,
- 		page_remain =3D min_t(size_t,
- 				    nor->page_size - page_offset, len - i);
-=20
--		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
--			addr =3D spi_nor_s3an_addr_convert(nor, addr);
-+		addr =3D spi_nor_convert_addr(nor, addr);
-=20
- 		write_enable(nor);
- 		ret =3D spi_nor_write_data(nor, addr, page_remain, buf + i);
-@@ -2748,7 +2752,7 @@ static int s3an_nor_scan(struct spi_nor *nor)
- 		nor->mtd.erasesize =3D 8 * nor->page_size;
- 	} else {
- 		/* Flash in Default addressing mode */
--		nor->flags |=3D SNOR_F_S3AN_ADDR_DEFAULT;
-+		nor->params.convert_addr =3D s3an_convert_addr;
- 	}
-=20
- 	return 0;
+-	/* NOR protection support for STmicro/Micron chips and similar */
+-	if (JEDEC_MFR(info) =3D=3D SNOR_MFR_ST ||
+-	    JEDEC_MFR(info) =3D=3D SNOR_MFR_MICRON ||
+-	    info->flags & SPI_NOR_HAS_LOCK) {
+-		nor->flash_lock =3D stm_lock;
+-		nor->flash_unlock =3D stm_unlock;
+-		nor->flash_is_locked =3D stm_is_locked;
+-	}
+-
+-	if (nor->flash_lock && nor->flash_unlock && nor->flash_is_locked) {
++	if (nor->params.locking_ops) {
+ 		mtd->_lock =3D spi_nor_lock;
+ 		mtd->_unlock =3D spi_nor_unlock;
+ 		mtd->_is_locked =3D spi_nor_is_locked;
 diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index ea3bcac54dc2..35aad92a4ff8 100644
+index 7da89dd483cb..ea3bcac54dc2 100644
 --- a/include/linux/mtd/spi-nor.h
 +++ b/include/linux/mtd/spi-nor.h
-@@ -237,13 +237,12 @@ enum spi_nor_option_flags {
- 	SNOR_F_USE_FSR		=3D BIT(0),
- 	SNOR_F_HAS_SR_TB	=3D BIT(1),
- 	SNOR_F_NO_OP_CHIP_ERASE	=3D BIT(2),
--	SNOR_F_S3AN_ADDR_DEFAULT =3D BIT(3),
--	SNOR_F_READY_XSR_RDY	=3D BIT(4),
--	SNOR_F_USE_CLSR		=3D BIT(5),
--	SNOR_F_BROKEN_RESET	=3D BIT(6),
--	SNOR_F_4B_OPCODES	=3D BIT(7),
--	SNOR_F_HAS_4BAIT	=3D BIT(8),
--	SNOR_F_HAS_LOCK		=3D BIT(9),
-+	SNOR_F_READY_XSR_RDY	=3D BIT(3),
-+	SNOR_F_USE_CLSR		=3D BIT(4),
-+	SNOR_F_BROKEN_RESET	=3D BIT(5),
-+	SNOR_F_4B_OPCODES	=3D BIT(6),
-+	SNOR_F_HAS_4BAIT	=3D BIT(7),
-+	SNOR_F_HAS_LOCK		=3D BIT(8),
+@@ -243,6 +243,7 @@ enum spi_nor_option_flags {
+ 	SNOR_F_BROKEN_RESET	=3D BIT(6),
+ 	SNOR_F_4B_OPCODES	=3D BIT(7),
+ 	SNOR_F_HAS_4BAIT	=3D BIT(8),
++	SNOR_F_HAS_LOCK		=3D BIT(9),
  };
 =20
  /**
-@@ -496,6 +495,9 @@ struct spi_nor_locking_ops {
+@@ -466,6 +467,18 @@ enum spi_nor_pp_command_index {
+ struct spi_nor;
+=20
+ /**
++ * struct spi_nor_locking_ops - SPI NOR locking methods
++ * @lock:	lock a region of the SPI NOR.
++ * @unlock:	unlock a region of the SPI NOR.
++ * @is_locked:	check if a region of the SPI NOR is completely locked
++ */
++struct spi_nor_locking_ops {
++	int (*lock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
++	int (*unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
++	int (*is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
++};
++
++/**
+  * struct spi_nor_flash_parameter - SPI NOR flash parameters and settings.
+  * Includes legacy flash parameters and settings that can be overwritten
+  * by the spi_nor_fixups hooks, or dynamically when parsing the JESD216
+@@ -483,6 +496,7 @@ struct spi_nor;
   *                      Table.
   * @quad_enable:	enables SPI NOR quad mode.
   * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
-+ * @convert_addr:	converts an absolute address into something the flash
-+ *                      will understand. Particularly useful when pagesize=
- is
-+ *                      not a power-of-2.
-  * @locking_ops:	SPI NOR locking methods.
++ * @locking_ops:	SPI NOR locking methods.
   */
  struct spi_nor_flash_parameter {
-@@ -510,6 +512,7 @@ struct spi_nor_flash_parameter {
+ 	u64				size;
+@@ -496,6 +510,8 @@ struct spi_nor_flash_parameter {
 =20
  	int (*quad_enable)(struct spi_nor *nor);
  	int (*set_4byte)(struct spi_nor *nor, bool enable);
-+	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
-=20
- 	const struct spi_nor_locking_ops *locking_ops;
++
++	const struct spi_nor_locking_ops *locking_ops;
  };
+=20
+ /**
+@@ -536,10 +552,6 @@ struct flash_info;
+  * @erase:		[DRIVER-SPECIFIC] erase a sector of the SPI NOR
+  *			at the offset @offs; if not provided by the driver,
+  *			spi-nor will send the erase opcode via write_reg()
+- * @flash_lock:		[FLASH-SPECIFIC] lock a region of the SPI NOR
+- * @flash_unlock:	[FLASH-SPECIFIC] unlock a region of the SPI NOR
+- * @flash_is_locked:	[FLASH-SPECIFIC] check if a region of the SPI NOR is
+- *			completely locked
+  * @clear_sr_bp:	[FLASH-SPECIFIC] clears the Block Protection Bits from
+  *			the SPI NOR Status Register.
+  * @params:		[FLASH-SPECIFIC] SPI-NOR flash parameters and settings.
+@@ -579,9 +591,6 @@ struct spi_nor {
+ 			size_t len, const u_char *write_buf);
+ 	int (*erase)(struct spi_nor *nor, loff_t offs);
+=20
+-	int (*flash_lock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+-	int (*flash_unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+-	int (*flash_is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+ 	int (*clear_sr_bp)(struct spi_nor *nor);
+ 	struct spi_nor_flash_parameter params;
+=20
 --=20
 2.9.5
 
