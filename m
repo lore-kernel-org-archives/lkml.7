@@ -2,133 +2,110 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292ADC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A1EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E1B217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12263217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvArNWxv"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="V9QSCvID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbfHZUNN (ORCPT
+        id S2387989AbfHZUNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:13:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47066 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387774AbfHZUNM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:13:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f9so16229170ljc.13;
-        Mon, 26 Aug 2019 13:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Sl2EkWDyyOYJsCb7VCgLmTNEmzRDjZTOMKErAqj8Vo=;
-        b=PvArNWxvHbhGyyPb2ska22IMhpzGSoP+Ot7IzEROgwUTlkFGkZlBH5jB/CITvIjig4
-         6ydLZtH6siJWnFKoMqqsJ1f/bIbhMcM0sZUN8Mvh+9x1tc9Jk/cgRdEPUT3HKJu1C5hm
-         b6FNu/bGAEG3pwQQf/zG+LGq42BjHGe2we5TyThk85eJ22jbBeTvp9PGSRQbV2zx/c8W
-         PU/LVuwNJW2uWr9oCX4yvq68bFbA1KZ3LR0Zc1lOyZA4h5PNLG9cafA6U4vMscfZdA4a
-         Rf+tEIeQ6J19zC5P6peMaFt5otTlOGRx+vLNnZGUzILs4yiG8ath7AIZdslUxvTmABl5
-         IIgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Sl2EkWDyyOYJsCb7VCgLmTNEmzRDjZTOMKErAqj8Vo=;
-        b=Tw3s+BoHTWXAokyFTHe7N1eCExWTMwp679nK+EPGexlqbehDdUmu/qOWyLdLEFMDoo
-         2kDED/yQrz3fT1ztrXeekIHpEQ/XbWVVCZE2INDf4B/9KK0V9Oh+3DwitaF5LRQbn3iL
-         zOL6Q8h4gUlbpJgkZROWEhaGCmmtdPDvfbldRNssNwu4zUcu6BW4HcmCLzGdDEzpgXXs
-         BSj0D15s4J1Q94Rk8m0srWV8tz9dDKEbKKcDV9TtclU/z/zqcccYI7rjxlYuMsHfVJMw
-         IT1IsykADQIkbLvVTUroneraGKODhLoc9bRYMBVtyYuAfYF6pbGZ2JiIDJ6lvV6BiF54
-         U/dQ==
-X-Gm-Message-State: APjAAAWgxFRJs408KZO+qpdDOctUqPGAeK3zGI5tknhTbZAT20ZvbiAj
-        ZpDBNHZwqRFjMqCBZPbD6KFbfDEtM+Oj13VevzY=
-X-Google-Smtp-Source: APXvYqzK7yvu4wIiKj3NQDKKOBqQ4S3XuXUAlg6nbVH3P055CKv5RAB6nl2IYVUejzH9l7IgwEVQIb6sturVnm4n44g=
-X-Received: by 2002:a2e:9a10:: with SMTP id o16mr1730431lji.104.1566850390614;
- Mon, 26 Aug 2019 13:13:10 -0700 (PDT)
+        Mon, 26 Aug 2019 16:13:52 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60700 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732670AbfHZUNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:13:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VazxrIYVBs1CiKh7GDTAYPEjIJ6tVdemFqrwUPFMkWQ=; b=V9QSCvIDBZaUperU1dfYz8IDFV
+        gbNlW2f3BYEVhRHmXfY8ckS4Iw5qISPCM5EETcQ+Xvs+J+5rj3JcweSRnWcrOz3Lu0JzA8atPzoPx
+        hTgzFNikZ1sepptj0OO4CHQRZ91UVKzsYUuVO9fmNt4PU0EU283AS0GwW2JicCsdkIeg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i2LN4-0006l2-5H; Mon, 26 Aug 2019 22:13:46 +0200
+Date:   Mon, 26 Aug 2019 22:13:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Voon Weifeng <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+Subject: Re: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency clk
+ support for EHL & TGL
+Message-ID: <20190826201346.GJ2168@lunn.ch>
+References: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
+ <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
+ <7d43e0c6-6f51-0d71-0af8-89f22b0234f9@gmail.com>
 MIME-Version: 1.0
-References: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com>
- <20190825194354.GC21239@ziepe.ca> <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
- <20190826122055.GA27349@ziepe.ca>
-In-Reply-To: <20190826122055.GA27349@ziepe.ca>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 27 Aug 2019 01:48:57 +0530
-Message-ID: <CAFqt6zbTm7jA692-Ta9c5rxKoJyMUz2UPBpYGGs69wRtU=itpw@mail.gmail.com>
-Subject: Re: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     leon@kernel.org, Doug Ledford <dledford@redhat.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d43e0c6-6f51-0d71-0af8-89f22b0234f9@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 5:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Mon, Aug 26, 2019 at 01:32:09AM +0530, Souptick Joarder wrote:
-> > On Mon, Aug 26, 2019 at 1:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Sun, Aug 25, 2019 at 11:37:27AM +0530, Souptick Joarder wrote:
-> > > > First, length passed to mmap is checked explicitly against
-> > > > PAGE_SIZE.
-> > > >
-> > > > Second, if vma->vm_pgoff is passed as non zero, it would return
-> > > > error. It appears like driver is expecting vma->vm_pgoff to
-> > > > be passed as 0 always.
-> > >
-> > > ? pg_off is not zero
-> >
-> > Sorry, I mean, driver has a check against non zero to return error -EOPNOTSUPP
-> > which means in true scenario driver is expecting vma->vm_pgoff should be passed
-> > as 0.
->
-> get_index is masking vm_pgoff, it is not 0
+On Mon, Aug 26, 2019 at 12:55:31PM -0700, Florian Fainelli wrote:
+> On 8/26/19 6:38 PM, Voon Weifeng wrote:
+> > EHL DW EQOS is running on a 200MHz clock. Setting up stmmac-clk,
+> > ptp clock and ptp_max_adj to 200MHz.
+> > 
+> > Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+> > Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+> > ---
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 21 +++++++++++++++++++++
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c |  3 +++
+> >  include/linux/stmmac.h                           |  1 +
+> >  3 files changed, 25 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > index e969dc9bb9f0..20906287b6d4 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > @@ -9,6 +9,7 @@
+> >    Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> >  *******************************************************************************/
+> >  
+> > +#include <linux/clk-provider.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/dmi.h>
+> >  
+> > @@ -174,6 +175,19 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
+> >  	plat->axi->axi_blen[1] = 8;
+> >  	plat->axi->axi_blen[2] = 16;
+> >  
+> > +	plat->ptp_max_adj = plat->clk_ptp_rate;
+> > +
+> > +	/* Set system clock */
+> > +	plat->stmmac_clk = clk_register_fixed_rate(&pdev->dev,
+> > +						   "stmmac-clk", NULL, 0,
+> > +						   plat->clk_ptp_rate);
+> > +
+> > +	if (IS_ERR(plat->stmmac_clk)) {
+> > +		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
+> > +		plat->stmmac_clk = NULL;
+> 
+> Don't you need to propagate at least EPROBE_DEFER here?
 
-Sorry, I missed this part. Further looking into code,
-in mlx5_ib_mmap(), vma_vm_pgoff is used to get command and
-inside mlx5_ib_mmap_clock_info_page() entire *dev->mdev->clock_info*
-is mapped.
+Hi Florian
 
-Consider that, the below modification will only take care of vma length
-error check inside vm_map_pages_zero() and an extra check for vma
-length is not needed.
+Isn't a fixed rate clock a complete fake. There is no hardware behind
+it. So can it return EPROBE_DEFER?
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c
-b/drivers/infiniband/hw/mlx5/main.c
-index 0569bca..c3e3bfe 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -2071,8 +2071,9 @@ static int mlx5_ib_mmap_clock_info_page(struct
-mlx5_ib_dev *dev,
-                                        struct vm_area_struct *vma,
-                                        struct mlx5_ib_ucontext *context)
- {
--       if ((vma->vm_end - vma->vm_start != PAGE_SIZE) ||
--           !(vma->vm_flags & VM_SHARED))
-+       struct page *pages;
-+
-+       if (!(vma->vm_flags & VM_SHARED))
-                return -EINVAL;
-
-        if (get_index(vma->vm_pgoff) != MLX5_IB_CLOCK_INFO_V1)
-@@ -2084,9 +2085,9 @@ static int mlx5_ib_mmap_clock_info_page(struct
-mlx5_ib_dev *dev,
-
-        if (!dev->mdev->clock_info)
-                return -EOPNOTSUPP;
-+       pages = virt_to_page(dev->mdev->clock_info);
-
--       return vm_insert_page(vma, vma->vm_start,
--                             virt_to_page(dev->mdev->clock_info));
-+       return vm_map_pages_zero(vma, &pages, 1);
- }
-
-If this is fine, I can post it as v2. Otherwise I will drop this patch ?
+    Andrew
