@@ -2,163 +2,104 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D4C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7673C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0660C22CED
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:29:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qb0T8Q8j"
+	by mail.kernel.org (Postfix) with ESMTP id 8EDE72190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566794012;
+	bh=hDYReKEPGspzFUUPfzXNaCQ4GuAxPqI+ynR0ZpkD4Ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TY+oVsn9KMxWidC5jKOtoBlZ6GU1pekcN5xwMdweMA2ULoAaoK1C6UT7sXemlEmOB
+	 ddK35owGw27e5somO8LJHcC2umYxkviyAr4glcix9vn0q+Bo40Z2N/p2WD4beebROX
+	 hqkGg0ABEq0vAS35sBCZWBFcGFMSR2nge460h+NQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfHZE3T (ORCPT
+        id S1729736AbfHZEdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 00:29:19 -0400
-Received: from mail-eopbgr140052.outbound.protection.outlook.com ([40.107.14.52]:52899
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725270AbfHZE3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 00:29:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pe1QXMQabT/quTwcLrHR02LGHa3zj+TDxtzNcMQ9/dsnQB80EFbWI45IdS3be3bk2Dq7/od1e/S8VJL617h/DcwSuRD6YZE9nCT2cb3UYjCO7Frcq3CNcH1oQ6o4YwWdiuz1fBaTZZB2Q/8zLTYiEF4ZgErf41rz7hzlD2BeYlBo6j7vsENkMOxeVuYZ8m8wwXtmACzEQeHBCr6+Jb8Rvpx129qinzjHCr0cGz7beSUVMS3L1SYea14eKnlToAvA6BB1F7AKYUntalxVH/+r0DBSBCzz/tiOc/neDEYHyVKP9Mam8efXett9eJbLjKcZ7GgUAgZKoApVfHt0W3ua3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=unhZxP3dMFJ1p0ucN361bbA9dxauvkBU3W8IKR3+kGM=;
- b=jqIUeYD43dRgYcsUe8ehg9YBNvCtI+YqAq34JVGXAr/Cuz7fZ7651QXVhWbO/PQ2/CF8c5Ho0y96GOXq9ScfpHpt4IImHD8CjFtVdKhGFrLeedNl/5OYMliVk4VMBuh2F77G6XZiykI3qtbz69Ak1GChBNgZ262yyA21dhjTnb5gNFPU7vxjoQ03vNuXgGb3kIa/U1/vb+m2VjRBmGr/JHSm4+KjYt1uskgXPNH/DVg5tRqlxDW+U+QryqrnSSCETdKLj4bmiuT9R5d1Y350wOtaIhCdyFNlPyt64RrUGIaTpquIOu8u7VefGIb3uBRYrgkB9c3TH9YMDRB/o9OhVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=unhZxP3dMFJ1p0ucN361bbA9dxauvkBU3W8IKR3+kGM=;
- b=Qb0T8Q8jP8kyxOCdfTV6siNOU9++rxyWV2uQ8A8cYN/jx+ihX0y4L/BeJEDhd2k5z3c95KWwdFB6IJWAL/GvJeSkVSqSS9/Zq30ei1z0x0QVyBH1xBgSNFDeuSxTMDay+h5aZbzpFKd+Nk3gPkcw4PKkH9nCO4WqzMTekeWSJd4=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4908.eurprd04.prod.outlook.com (20.176.234.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Mon, 26 Aug 2019 04:29:13 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::3cd8:4bcf:8626:4254]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::3cd8:4bcf:8626:4254%3]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 04:29:13 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Nandor Han <nandor.han@vaisala.com>, Leo Li <leoyang.li@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to
- run hwclock -w
-Thread-Topic: [EXT] Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to
- run hwclock -w
-Thread-Index: AQHVU944/chRI20GGkSPTXSrUh+lT6b9aqqAgACCWYCAAAqBgIAANb+AgAb78oCAB7jGEA==
-Date:   Mon, 26 Aug 2019 04:29:13 +0000
-Message-ID: <DB7PR04MB4490614205732E4508B8A8B38FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190816024636.34738-1-biwen.li@nxp.com>
- <20190816080417.GB3545@piout.net>
- <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
- <20190816162825.GE3545@piout.net>
- <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
- <ff198737-acb5-7186-7e14-a1e1cdc0f72c@vaisala.com>
-In-Reply-To: <ff198737-acb5-7186-7e14-a1e1cdc0f72c@vaisala.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bff9d7ed-bfe1-435c-746f-08d729ddf2b3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4908;
-x-ms-traffictypediagnostic: DB7PR04MB4908:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB4908960215A0CEA884409D768FA10@DB7PR04MB4908.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(199004)(189003)(6436002)(110136005)(71190400001)(6246003)(76116006)(8936002)(305945005)(74316002)(7736002)(64756008)(66066001)(66446008)(66556008)(71200400001)(5660300002)(6306002)(316002)(66476007)(7696005)(76176011)(229853002)(256004)(14444005)(86362001)(53936002)(44832011)(4326008)(55016002)(14454004)(33656002)(66946007)(54906003)(81166006)(8676002)(81156014)(9686003)(186003)(26005)(476003)(6116002)(966005)(99286004)(486006)(11346002)(446003)(478600001)(2906002)(6506007)(102836004)(3846002)(52536014)(25786009)(45080400002)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4908;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: R6ymDz1nOJzVbYr5ZYmpFG2b7U6K47OHg2L6yrdxtIEG7DraVfjgd5o47FrKQNqXt9V91IViQuh9FhxVU7Hl01pQrQAaYwo5xph6qyZBSKjaiC1mSWNxLXOaQHw1pli86vhWS9e/rf/OrHKkZbc1sVYaQpcOmbp3tJHwWxE331LVn3ob2RoTZlc+9HjgRpv4vWXTC8BLg9oj5O+35ySZiSo9R45XLFPlrEqHvjTxKWf7QCAG5PalwMrMz5vdDPneCk35WVKwtv+uhm9xUvxm4PybzT+QncqakPFYvtaWLGvXJRjXfYs5X8x8t9X3/2jy45whV7R56Y/CJxrphYlzgIICKK6kAg6fNp21ut/Ia5XXQ0E2mucfQWaThQO6cT9QfhF74Mi/YXWI3aS6RYUc6A7fjzHLlWwYLMMWn6zlFeU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 26 Aug 2019 00:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfHZEdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 00:33:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D9DA2173E;
+        Mon, 26 Aug 2019 04:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566794010;
+        bh=hDYReKEPGspzFUUPfzXNaCQ4GuAxPqI+ynR0ZpkD4Ks=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pklW81/xTOLbHe5ZowzFgNPmnovbhHLSRAbRCjcJUDCLKCaSPaBmWC55jmJ3bCtOG
+         SoUgoclYIW5tnl0FmlarwRKi57TsV+A5/sOK55BNOnMqmlDK7/W2ABy1aF+Tie4jzX
+         Bmxv7yqIBkNssnM5PIg+6033VmGL/FNADap+uQwM=
+Date:   Mon, 26 Aug 2019 06:33:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     =?iso-8859-1?Q?J=F6rg-Volker?= Peetz <jvpeetz@web.de>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Linux 5.2.10
+Message-ID: <20190826043328.GB26547@kroah.com>
+References: <20190825144703.6518-1-sashal@kernel.org>
+ <qju9bd$47qi$1@blaine.gmane.org>
+ <20190825223537.GB5281@sasha-vm>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bff9d7ed-bfe1-435c-746f-08d729ddf2b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 04:29:13.0883
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BImAJl83jcq+CqzXgXjmDTFuvPalnES52nJ7oAwLkg0kNCQOf0FqE4eWxaFbHB8M1h+S/BrUuYPXykg04+4w2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4908
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190825223537.GB5281@sasha-vm>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gT24gOC8xNi8xOSAxMDo0MCBQTSwgTGkgWWFuZyB3cm90ZToNCj4gPiBPbiBGcmksIEF1
-ZyAxNiwgMjAxOSBhdCAxMTozMCBBTSBBbGV4YW5kcmUgQmVsbG9uaQ0KPiA+IDxhbGV4YW5kcmUu
-YmVsbG9uaUBib290bGluLmNvbT4gd3JvdGU6DQo+ID4+DQo+ID4+IE9uIDE2LzA4LzIwMTkgMTA6
-NTA6NDktMDUwMCwgTGkgWWFuZyB3cm90ZToNCj4gPj4+IE9uIEZyaSwgQXVnIDE2LCAyMDE5IGF0
-IDM6MDUgQU0gQWxleGFuZHJlIEJlbGxvbmkNCj4gPj4+IDxhbGV4YW5kcmUuYmVsbG9uaUBib290
-bGluLmNvbT4gd3JvdGU6DQo+ID4+Pj4NCj4gPj4+PiBPbiAxNi8wOC8yMDE5IDEwOjQ2OjM2KzA4
-MDAsIEJpd2VuIExpIHdyb3RlOg0KPiA+Pj4+PiBJc3N1ZToNCj4gPj4+Pj4gICAgICAtICMgaHdj
-bG9jayAtdw0KPiA+Pj4+PiAgICAgICAgaHdjbG9jazogUlRDX1NFVF9USU1FOiBJbnZhbGlkIGFy
-Z3VtZW50DQo+ID4+Pj4+DQo+ID4+Pj4+IFdoeToNCj4gPj4+Pj4gICAgICAtIFJlbGF0aXZlIHBh
-dGNoOg0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91
-cmw9aHR0cHMlM0ElMkYlMkZsa21sLm9yZw0KPiAlMkZsa21sJTJGMjAxOSUyRjQlMkYzJTJGNTUm
-YW1wO2RhdGE9MDIlN0MwMSU3Q2Jpd2VuLmxpJTQwbnhwLg0KPiBjb20lN0NmZjhjZWJjM2YxMDM0
-YWUzZmE5NjA4ZDcyNWZmOWU1ZSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5DQo+IGM1YzMwMTYz
-NSU3QzAlN0MwJTdDNjM3MDE5NjUyMTExOTIzNzM2JmFtcDtzZGF0YT1zcFk2ZTIyWU9rT0YNCj4g
-MyUyQkY3Y3JTTTBNNnhQbU9oZ1VMRHFNWkxRdyUyQkFtZEklM0QmYW1wO3Jlc2VydmVkPTAgLCB0
-aGlzDQo+IHBhdGNoDQo+ID4+Pj4+ICAgICAgICB3aWxsIGFsd2F5cyBjaGVjayBmb3IgdW53cml0
-YWJsZSByZWdpc3RlcnMsIGl0IHdpbGwgY29tcGFyZSByZWcNCj4gPj4+Pj4gICAgICAgIHdpdGgg
-bWF4X3JlZ2lzdGVyIGluIHJlZ21hcF93cml0ZWFibGUuDQo+ID4+Pj4+DQo+ID4+Pj4+ICAgICAg
-LSBJbiBkcml2ZXJzL3J0Yy9ydGMtcGNmODUzNjMuYywgQ1RSTF9TVE9QX0VOIGlzIDB4MmUsIGJ1
-dA0KPiBEVF8xMDBUSFMNCj4gPj4+Pj4gICAgICAgIGlzIDAsIG1heF9yZWdpdGVyIGlzIDB4MmYs
-IHRoZW4gcmVnIHdpbGwgYmUgZXF1YWwgdG8gMHgzMCwNCj4gPj4+Pj4gICAgICAgICcweDMwIDwg
-MHgyZicgaXMgZmFsc2Usc28gcmVnbWFwX3dyaXRlYWJsZSB3aWxsIHJldHVybiBmYWxzZS4NCj4g
-Pj4+Pj4NCj4gPj4+Pj4gICAgICAtIFJvb3QgY2F1c2U6IHRoZSBidWZbXSB3YXMgd3JpdHRlbiB0
-byBhIHdyb25nIHBsYWNlIGluIHRoZSBmaWxlDQo+ID4+Pj4+ICAgICAgICBkcml2ZXJzL3J0Yy9y
-dGMtcGNmODUzNjMuYw0KPiA+Pj4+Pg0KPiA+Pj4+DQo+ID4+Pj4gVGhpcyBpcyBub3QgdHJ1ZSwg
-dGhlIFJUQyB3cmFwcyB0aGUgcmVnaXN0ZXIgYWNjZXNzZXMgcHJvcGVybHkgYW5kDQo+ID4+Pj4g
-dGhpcw0KPiA+Pj4NCj4gPj4+IFRoaXMgcGVyZm9ybWFuY2UgaGFjayBwcm9iYWJseSBkZXNlcnZl
-IHNvbWUgZXhwbGFuYXRpb24gaW4gdGhlIGNvZGUNCj4gPj4+IGNvbW1lbnQuICA6KQ0KPiA+Pj4N
-Cj4gPj4+PiBpcyBwcm9iYWJseSBzb21ldGhpbmcgdGhhdCBzaG91bGQgYmUgaGFuZGxlZCBieSBy
-ZWdtYXBfd3JpdGFibGUuDQo+ID4+Pg0KPiA+Pj4gVGhlIGFkZHJlc3Mgd3JhcHBpbmcgaXMgc3Bl
-Y2lmaWMgdG8gdGhpcyBSVEMgY2hpcC4gIElzIGl0IGFsc28NCj4gPj4+IGNvbW1vbmx5IHVzZWQg
-Ynkgb3RoZXIgSTJDIGRldmljZXM/ICBJJ20gbm90IHN1cmUgaWYgcmVnbWFwX3dyaXRhYmxlDQo+
-ID4+PiBzaG91bGQgaGFuZGxlIHRoZSB3cmFwcGluZyBjYXNlIGlmIGl0IGlzIHRvbyBzcGVjaWFs
-Lg0KPiA+Pj4NCj4gPj4NCj4gPj4gTW9zdCBvZiB0aGUgaTJjIFJUQ3MgZG8gYWRkcmVzcyB3cmFw
-cGluZyB3aGljaCBpcyBzb21ldGltZXMgdGhlIG9ubHkNCj4gPj4gd2F5IHRvIHByb3Blcmx5IHNl
-dCB0aGUgdGltZS4NCj4gPg0KPiA+IEFkZGluZyBNYXJrIGFuZCBOYW5kb3IgdG8gdGhlIGxvb3Au
-DQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IExlbw0KPiA+DQo+IA0KPiBIaSwNCj4gICAgYHJlZ21h
-cGAgcHJvdmlkZXMgY291cGxlIG9mIHdheXMgdG8gdmFsaWRhdGUgdGhlIHJlZ2lzdGVyczoNCj4g
-bWF4X3JlZ2lzdGVyLCBjYWxsYmFjayBmdW5jdGlvbiBhbmQgd3JpdGUgdGFibGUuIEFsbCBvZiB0
-aGVzZSBhcmUgb3B0aW9uYWwsIHNvIGl0DQo+IGdpdmVzIHlvdSB0aGUgZnJlZWRvbSB0byBjdXN0
-b21pemUgaXQgYXMgbmVlZGVkLg0KPiANCj4gSW4gdGhpcyBzaXR1YXRpb24gcHJvYmFibHkgeW91
-IGNvdWxkOg0KPiAgICAxLiBBdm9pZCB1c2luZyB0aGUgd3JhcHBpbmcgZmVhdHVyZSBvZiBwY2Y4
-NTM2MyAoeW91IGNhbiBqdXN0IHByb3ZpZGUNCj4gc2VwYXJhdGUgY2FsbHMgZm9yIHN0b3AsIHJl
-c2V0IGFuZCB0aW1lIGNvbmZndXJhdGlvbikuIEluIHRoaXMgd2F5IHRoZQ0KPiBgbWF4X3JlZ2lz
-dGVyYCB2YWxpZGF0aW9uIG1ldGhvZCB3aWxsIHdvcmsgZmluZS4NClllcywgSSB1c2UgdGhpcyB3
-YXkuIFBhdGggYXMgZm9sbG93czoNClN0b3AgYW5kIHJlc2V0IC0gPiBzZXQgdGltZSA+IHN0b3AN
-Cg0KPiAgICAyLiBSZXBsYWNlIGBtYXhfcmVnaXN0ZXJgIG1ldGhvZCB2YWxpZGF0aW9uIHdpdGgg
-YGNhbGxiYWNrIGZ1bmN0aW9uYA0KPiB2YWxpZGF0aW9uIG1ldGhvZCwgd2VyZSB5b3UgY291bGQg
-bWFrZSB5b3VyIG93biB2YWxpZGF0aW9uLg0KSXQgaXMgbm90IHdvcmssIHNob3cgdGhlIGNvZGUg
-aW4gYXMgZm9sbG93czoNCg0KYm9vbCByZWdtYXBfd3JpdGVhYmxlKHN0cnVjdCByZWdtYXAgKm1h
-cCwgdW5zaWduZWQgaW50IHJlZykNCnsNCiAgICAgICAgaWYgKG1hcC0+bWF4X3JlZ2lzdGVyICYm
-IHJlZyA+IG1hcC0+bWF4X3JlZ2lzdGVyKQ0KICAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsN
-CkNhbGxiYWNrIGZ1bmN0aW9uICh3cml0ZWFibGVfcmVnKSB3aWxsIG5vdCBiZSBjYWxsZWQuDQog
-ICAgICAgIGlmIChtYXAtPndyaXRlYWJsZV9yZWcpDQogICAgICAgICAgICAgICAgcmV0dXJuIG1h
-cC0+d3JpdGVhYmxlX3JlZyhtYXAtPmRldiwgcmVnKTsNCg0KICAgICAgICBpZiAobWFwLT53cl90
-YWJsZSkNCiAgICAgICAgICAgICAgICByZXR1cm4gcmVnbWFwX2NoZWNrX3JhbmdlX3RhYmxlKG1h
-cCwgcmVnLCBtYXAtPndyX3RhYmxlKTsNCg0KICAgICAgICByZXR1cm4gdHJ1ZTsNCn0NCg0KPiAN
-Cj4gDQo+IFJlZ2FyZHMsDQo+ICAgICBOYW5kb3INCj4gDQoNCg==
+On Sun, Aug 25, 2019 at 06:35:38PM -0400, Sasha Levin wrote:
+> Thanks for looking into this!
+> 
+> On Sun, Aug 25, 2019 at 05:26:37PM +0200, Jörg-Volker Peetz wrote:
+> > Where can I find your public gpg key and it's fingerprint?
+> > It's not yet documented on https://www.kernel.org/category/signatures.html .
+> 
+> You're right, I'll send a patch to add my fingerprint as well.
+> 
+> > I'm asking because the "gpg --locate-keys" method does not work for me.
+> 
+> I can confirm this, and this is weird... I see a kernel.org UID on the
+> key, and gpg seems to confirm that as well:
+> 
+> $ gpg --quick-add-uid DEA66FF797772CDC 'Sasha Levin <sashal@kernel.org>'
+> gpg: Such a user ID already exists on this key!
+> 
+> Let me contact kernel.org support to see what I'm doing wrong...
+
+Looks like everything is correct from my end:
+
+$ git tag -v v5.2.10
+object f7d5b3dc4792a5fe0a4d6b8106a8f3eb20c3c24c
+type commit
+tag v5.2.10
+tagger Sasha Levin <sashal@kernel.org> 1566742490 -0400
+
+This is the 5.2.10 stable release
+gpg: Signature made Sun 25 Aug 2019 04:14:50 PM CEST
+gpg:                using RSA key E27E5D8A3403A2EF66873BBCDEA66FF797772CDC
+gpg: Good signature from "Sasha Levin <sashal@kernel.org>" [unknown]
+gpg:                 aka "Sasha Levin <sasha.levin@oracle.com>" [undefined]
+gpg:                 aka "Sasha Levin <alexander.levin@verizon.com>" [unknown]
+gpg:                 aka "Sasha Levin <alexander.levin@microsoft.com>" [unknown]
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: E27E 5D8A 3403 A2EF 6687  3BBC DEA6 6FF7 9777 2CDC
+
+I'll go add yours and Ben's fingerprints to the kernel.org website so
+that others can verify it there.
+
+thanks,
+
+greg k-h
