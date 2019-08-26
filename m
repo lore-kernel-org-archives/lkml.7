@@ -2,90 +2,116 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73CDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CEF206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C61B22CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:58:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwcggUp0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbfHZJ6Q (ORCPT
+        id S1731191AbfHZJ6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:58:16 -0400
-Received: from mga14.intel.com ([192.55.52.115]:49016 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730338AbfHZJ6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:58:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 02:58:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="197019323"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2019 02:58:12 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
-        <uwe@kleine-koenig.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
-In-Reply-To: <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190824233724.1775-1-uwe@kleine-koenig.org> <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
-Date:   Mon, 26 Aug 2019 12:58:11 +0300
-Message-ID: <87o90c9rkc.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 26 Aug 2019 05:58:44 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51777 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730175AbfHZJ6o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:58:44 -0400
+Received: by mail-wm1-f65.google.com with SMTP id k1so14872656wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 02:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AoSobNwrgWG+0xMdeEJoRWL4tyvVfhtrdTcQZJSWFp4=;
+        b=rwcggUp0ra5ExtdNoVbiDmiy4Dt53pQpNoPs0MtFGQAo7WakRCplYCMXCOdOCcoqti
+         E1673MoIg6Zlm9soxPvMIqmcUItrb0Jj8sPrxbTB7t4Jz4Pf+lFMBVDl02HT9QLWw23J
+         xkEt90T+dHcOh38l5gI9UK45g1rw1utnq692Jzkl0vC9b0Mds9GAia+b3v9l1VKAf/6y
+         eh9b0ez79hQRecvrw6tABiLy+uq2wcT5Rj75DGTwZcY0JwdNHdD5icxErkJQEO549fUg
+         2RgRxtjEydyGTv3AIb5GNYEtCFvJkQDrkoVce7t5d+6rIaNVD6qWEHtbSXghauDokrGV
+         JhoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AoSobNwrgWG+0xMdeEJoRWL4tyvVfhtrdTcQZJSWFp4=;
+        b=efmuoNw053PJOjShfQld7SsuosxouyDXWH85PCQIHcS6bcrRAace4LLgw9r8CgB6u8
+         Dr8O/SS966k091K9p0Xpvo2GtrXg3mSPEkYU3OnLuEK54UtCmrdCTUS7xJ01taFvds0I
+         9ZVNLV+IPEhlBUKXbHwrvZrkGeIAMjKTyxtPnb15174mwyBVOi7+55y/ByaDT125LIXj
+         HW3LQuoHjwzXD9PflJpR4+gl2/Dc9b5seYQDXtSeNFRgh3CVUgt+qzamKUUOY/42aozN
+         7iZNTOn++2xpAj6nttW+rvUmzEjNFpNlozoL5Rfzp0vuTa20Ubi3qGmpeLxY0mJ15PBY
+         ZZnw==
+X-Gm-Message-State: APjAAAX9EPNtXsKcAnYHAZ9grEChJh3RcjRxdbyqS28+ccZbQpFcUEEN
+        0ZxEeByWUkzEpb+NSY5KmfE=
+X-Google-Smtp-Source: APXvYqxLWn0nOJw3QcFNjUzjt1itpQYJTgzTtNmSaUiVW/YJLEPS+u/ZdiCopiCpmSdQESeQNyCDbQ==
+X-Received: by 2002:a05:600c:114e:: with SMTP id z14mr19782960wmz.161.1566813521900;
+        Mon, 26 Aug 2019 02:58:41 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a58:8166:7500:a940:180f:b044:ac12])
+        by smtp.gmail.com with ESMTPSA id 24sm11025551wmf.10.2019.08.26.02.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 02:58:41 -0700 (PDT)
+From:   Ilie Halip <ilie.halip@gmail.com>
+To:     clang-built-linux@googlegroups.com
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] bus: imx-weim: remove __init from 2 functions
+Date:   Mon, 26 Aug 2019 12:58:28 +0300
+Message-Id: <20190826095828.8948-1-ilie.halip@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 24 Aug 2019, Andrew Morton <akpm@linux-foundation.org> wrote:
->> --- a/lib/vsprintf.c
->> +++ b/lib/vsprintf.c
->> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long long num,
->>  	return buf;
->>  }
->>  
->> +#define ERRORCODE(x) { .str = #x, .err = x }
->> +
->> +static const struct {
->> +	const char *str;
->> +	int err;
->> +} errorcodes[] = {
->
-> It's a bit of a hack, but an array of char*'s and a separate array of
-> ushorts would save a bit of space.
+A previous commit removed __init from weim_probe(), but this attribute is
+still present for other functions called from it. Thus, these warnings
+are triggered:
+    WARNING: Section mismatch in reference from the function weim_probe() to the function .init.text:imx_weim_gpr_setup()
+    WARNING: Section mismatch in reference from the function weim_probe() to the function .init.text:weim_timing_setup()
 
-Or just
+Remove the __init attribute from these functions as well, since they
+don't seem to be used anywhere else.
 
-#define ERRORCODE(x) [x] = #x
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: clang-built-linux@googlegroups.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/bus/imx-weim.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-static const char * const errorcodes[] = {
-	ERRORCODE(EPERM),
-        ERRORCODE(ENOENT),
-        ...
-};
-
-Saves space, faster lookup, discovers at build time why EWOULDBLOCK
-would always show up as EAGAIN in the logs. We don't have holes to speak
-of in the error codes.
-
-BR,
-Jani.
-
-
+diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+index 79af0c27f5a3..d82e8c00523d 100644
+--- a/drivers/bus/imx-weim.c
++++ b/drivers/bus/imx-weim.c
+@@ -76,7 +76,7 @@ static const struct of_device_id weim_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(of, weim_id_table);
+ 
+-static int __init imx_weim_gpr_setup(struct platform_device *pdev)
++static int imx_weim_gpr_setup(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct property *prop;
+@@ -126,7 +126,7 @@ static int __init imx_weim_gpr_setup(struct platform_device *pdev)
+ }
+ 
+ /* Parse and set the timing for this device. */
+-static int __init weim_timing_setup(struct device *dev,
++static int weim_timing_setup(struct device *dev,
+ 				    struct device_node *np, void __iomem *base,
+ 				    const struct imx_weim_devtype *devtype,
+ 				    struct cs_timing_state *ts)
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.17.1
+
