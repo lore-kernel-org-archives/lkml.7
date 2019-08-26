@@ -2,116 +2,75 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC7CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02633C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352AF206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FD3206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbfHZLPa (ORCPT
+        id S1731177AbfHZLQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:15:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6068 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727123AbfHZLP3 (ORCPT
+        Mon, 26 Aug 2019 07:16:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56148 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727125AbfHZLQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:15:29 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QBA2CK081215
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:15:28 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2umbpfwwjs-1
+        Mon, 26 Aug 2019 07:16:29 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QB92Ii141158
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:16:27 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2umdkut01x-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:15:28 -0400
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:16:27 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 26 Aug 2019 12:15:25 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
+        Mon, 26 Aug 2019 12:16:25 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 26 Aug 2019 12:15:23 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QBFMgg49217738
+        Mon, 26 Aug 2019 12:16:22 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QBGLQg54067414
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 11:15:22 GMT
+        Mon, 26 Aug 2019 11:16:21 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09B7642049;
-        Mon, 26 Aug 2019 11:15:22 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8095B4204D;
+        Mon, 26 Aug 2019 11:16:21 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB91942041;
-        Mon, 26 Aug 2019 11:15:21 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.96.21])
+        by IMSVA (Postfix) with ESMTP id ADB2F4204C;
+        Mon, 26 Aug 2019 11:16:19 +0000 (GMT)
+Received: from [9.85.90.31] (unknown [9.85.90.31])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 26 Aug 2019 11:15:21 +0000 (GMT)
-Subject: Re: [PATCH] MAINTAINERS: change list for KVM/s390
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     frankja@linux.ibm.com
-References: <1565335156-28660-1-git-send-email-pbonzini@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Mon, 26 Aug 2019 13:15:21 +0200
+        Mon, 26 Aug 2019 11:16:19 +0000 (GMT)
+Subject: Re: [PATCH v3] powerpc/fadump: sysfs for fadump memory reservation
+To:     Sourabh Jain <sourabhjain@linux.ibm.com>, mpe@ellerman.id.au
+Cc:     mahesh@linux.vnet.ibm.com, linux-doc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net
+References: <20190810175905.7761-1-sourabhjain@linux.ibm.com>
+ <53311fa4-2cce-1eb6-1aae-0c835e06eb24@linux.ibm.com>
+ <cf4fdb60-438c-bc4e-d759-1fbb27364c50@linux.ibm.com>
+ <f53e4cfe-57cb-d8a6-385a-fa6243940573@linux.ibm.com>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Date:   Mon, 26 Aug 2019 16:46:18 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1565335156-28660-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <f53e4cfe-57cb-d8a6-385a-fa6243940573@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19082611-0008-0000-0000-0000030D7195
+x-cbid: 19082611-0020-0000-0000-0000036415AB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082611-0009-0000-0000-00004A2BA986
-Message-Id: <44d2d6da-e356-6f11-f1cc-125db8b0c94c@de.ibm.com>
+x-cbparentid: 19082611-0021-0000-0000-000021B95D01
+Message-Id: <f8e9cbdd-1926-081d-c8e6-f9d55408fe51@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -126,30 +85,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 09.08.19 09:19, Paolo Bonzini wrote:
-> KVM/s390 does not have a list of its own, and linux-s390 is in the
-> loop anyway thanks to the generic arch/s390 match.  So use the generic
-> KVM list for s390 patches.
+On 26/08/19 4:14 PM, Sourabh Jain wrote:
 > 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> 
+> On 8/26/19 3:46 PM, Sourabh Jain wrote:
+>>
+>>
+>> On 8/26/19 3:29 PM, Hari Bathini wrote:
+>>>
+>>>
+>>> On 10/08/19 11:29 PM, Sourabh Jain wrote:
+>>>> Add a sys interface to allow querying the memory reserved by
+>>>> fadump for saving the crash dump.
+>>>>
+>>>> Add an ABI doc entry for new sysfs interface.
+>>>>    - /sys/kernel/fadump_mem_reserved
+>>>>
+>>>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>>> ---
+>>>> Changelog:
+>>>> v1 -> v2:
+>>>>   - Added ABI doc for new sysfs interface.
+>>>>
+>>>> v2 -> v3:
+>>>>   - Updated the ABI documentation.
+>>>> ---
+>>>>
+>>>>  Documentation/ABI/testing/sysfs-kernel-fadump    |  6 ++++++
+>>>
+>>> Shouldn't this be Documentation/ABI/testing/sysfs-kernel-fadump_mem_reserved?
+> 
+> How about documenting fadump_mem_reserved and other sysfs attributes suggested
+> by you in a single file Documentation/ABI/testing/sysfs-kernel-fadump?
 
-I see its already in next, but consider this acked.
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1aec93695040..6498ebaca2f6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8788,7 +8788,7 @@ M:	Christian Borntraeger <borntraeger@de.ibm.com>
->  M:	Janosch Frank <frankja@linux.ibm.com>
->  R:	David Hildenbrand <david@redhat.com>
->  R:	Cornelia Huck <cohuck@redhat.com>
-> -L:	linux-s390@vger.kernel.org
-> +L:	kvm@vger.kernel.org
->  W:	http://www.ibm.com/developerworks/linux/linux390/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git
->  S:	Supported
-> 
+I wouldn't mind that but please do check if it is breaking a convention..
+
+- Hari
 
