@@ -2,125 +2,126 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC329C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59558C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77853206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="r5VgMcc7"
+	by mail.kernel.org (Postfix) with ESMTP id 2E10C206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566860560;
+	bh=Kcj2u/inTrMinq2o69+tauribZFMww61pR/PjOLwADg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yifT7xozSqfdihjzYwi7BcNGdRXLV4vPcnUf3lq0UgQknfXbP5X1aQKgl7XPKZBDG
+	 nFozXrp2LCJmfHBT96kgdWWNVsHPM/D2hnV84VhU42YuuCSly8O3UqbmlMpeq4lO60
+	 iLlYT+twdXGsZKJ2Fddnig2WXSOb8vDbXK38n2Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfHZXCV (ORCPT
+        id S1727234AbfHZXCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 19:02:21 -0400
-Received: from mail-eopbgr20075.outbound.protection.outlook.com ([40.107.2.75]:64263
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726020AbfHZXCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 19:02:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZjUVT34zh8ToARbJsCx9+8EpXamwJCRvEs24UyiQSxDJ+NXTPdM5hjTyp2VfJZumvey1y73H1ykKeezYtpJ/Xf9b/BLE/1HWi096EzkSwM6Lez/vNEmMi9NLYXEiWrpIpOtahtIgapsqH+dl/kMRjB3aeYB6RJRJzglNaCsctiDV8oEddkDev+01cozra7Mocos4YWKNVGnOvxJwTblerzK2ofcHrDS7h68xfdEKaIhoq18aBgf2XheCOWQya1ePvZrMbBPtLWq1X9MIEgrKU+P5cKfXUu6KYh3XneGCNTh6XUvDqTB+hB3KmDyN7Pfq9YyxX2I1fxcDZh22i5bZzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3nC3HrdtOQs5mK6UlJkek/hVpCqNaxlr5l9Z6f/aOms=;
- b=mojUF7iFPFBkyDJi5i5iEJdK+kXdvwbNQLiug0orcQy5JNcRTKbkOx/xWmSgoW73J6asKSg8o4sG3AOf0UI1CRBN6IJ75b3WuDnC/jQKu3E81wHbY6hbEZrgUxgTTIDi3x8c6l6tQd6+QvowajYauNWASaBv9SOXJcbVsfm99CsG8tshckCg9nX5gub4i27bOFbgtr+eCqdmExg2/5mf8gQ4Mtb4yJ3rSqWoTnTjiPFtEE5OM5Yr0LLA7DKxExdo5tJhcBgZ3RfR0d1OfwS9pKCpt33RTq6IHkUS3AvCV5uuErRUUmeaJ6GndkIoe68h8DDtBK0ET+uSsb/539KM8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3nC3HrdtOQs5mK6UlJkek/hVpCqNaxlr5l9Z6f/aOms=;
- b=r5VgMcc7u1CP6GSkaaIzPcT5rAOhlwkCa4inEa41WK7A1XhagPPnL+/VV/cMI2JLfIeVWjyHwVmo19gmksP9nnz9ohk8Guqj9F3I7UL1iTbHBYEGgKx3UQ8bK/+akvr5J0Kt5wPZ5dmX9OaRqYhFpog7KeNsqd5q7m0kVQ/LTuY=
-Received: from VI1PR05MB3342.eurprd05.prod.outlook.com (10.170.238.143) by
- VI1PR05MB5118.eurprd05.prod.outlook.com (20.178.10.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Mon, 26 Aug 2019 23:02:15 +0000
-Received: from VI1PR05MB3342.eurprd05.prod.outlook.com
- ([fe80::4499:7719:a52f:a63a]) by VI1PR05MB3342.eurprd05.prod.outlook.com
- ([fe80::4499:7719:a52f:a63a%5]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 23:02:15 +0000
-From:   Mark Bloch <markb@mellanox.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Topic: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Index: AQHVXE7B4INmwXGa50S5QC7yiBQtm6cOC/IA
-Date:   Mon, 26 Aug 2019 23:02:15 +0000
-Message-ID: <6601940a-4832-08d2-e0f6-f9ac24758cdc@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
- <20190826204119.54386-3-parav@mellanox.com>
-In-Reply-To: <20190826204119.54386-3-parav@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1401CA0020.namprd14.prod.outlook.com
- (2603:10b6:301:4b::30) To VI1PR05MB3342.eurprd05.prod.outlook.com
- (2603:10a6:802:1d::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=markb@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [208.186.24.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b9841c29-dfb2-41eb-8352-08d72a796fbd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5118;
-x-ms-traffictypediagnostic: VI1PR05MB5118:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB51183D00C6F5A75A1ED48B8CD2A10@VI1PR05MB5118.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(199004)(189003)(31686004)(36756003)(446003)(52116002)(66066001)(71200400001)(256004)(2616005)(476003)(486006)(6116002)(4744005)(3846002)(11346002)(14444005)(6436002)(76176011)(81156014)(81166006)(8936002)(8676002)(25786009)(2501003)(53546011)(6506007)(386003)(2201001)(229853002)(5660300002)(66946007)(316002)(31696002)(305945005)(7736002)(99286004)(2906002)(6512007)(4326008)(26005)(86362001)(55236004)(6486002)(102836004)(14454004)(478600001)(66476007)(186003)(66446008)(53936002)(64756008)(66556008)(6246003)(110136005)(54906003)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5118;H:VI1PR05MB3342.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: K3hrn5OnYy1L4NN36dOP8nSiRtiO6tSk1/Ek/n20zEgYi8BhjZ6GkHPymIJjXOTZ6cX2L/q8OxigUb7YrOsmHWRRW6nDYoXrcvZKJLEjcbG0hD+b2GUQT8JZ2/gso3I1uoyKrlV4sfS8QH0KkK1HmUXxf11gLQ0VTnniNmRMSRsdJt9wG27AfhCtvhaUmG8gJUm7zjAgZeu86XqziKmTyatUOwTMQHsI04njAwjxzH6xLLxQ6+xC4APibmoNSyJxcEfMdL2jdWskhNf+X1Wzj4eT+/C+UAOD7r/AaPLWSAYHAUXSl3fv7pwln4WsNFRa+SzBMscLWOo2+nERDxlO/8N4X3A3sPu02h5bIZOEqmJ6PCvCOKyP7RfPAcWj+qPU4hMIh8ko+Ky9+E4zc9hVEKi4DueA8YrbDcSNrBgKI/Y=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <451034353FBE984B8B8D0F9081EAE8E8@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 26 Aug 2019 19:02:39 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36368 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfHZXCj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 19:02:39 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n1so13475515oic.3;
+        Mon, 26 Aug 2019 16:02:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bM3r1pTqEi+HxfYIg7pyghSTfjbPEtK6ZwhKa2foIGo=;
+        b=kC3UC7M+9P+1dooFAh5AJKnb++IdshXs9nlQCkpNzp/4Ic074hfXCNnQk+apCtoKpC
+         3m8AdfCgvfjxW6x+/R58nDO2SdtV4mneBuGD9KY60izX9/2dxGbKTzK+4te1QxIUng+X
+         lDQFBXUECb4kPFA3LcwQHjiiCttFvX6M6TxwbyHEDzGkg7fsP6UHzgCJMw9pxbmgUaWd
+         wYLsenZWjvNhRoaEecRtnYLqjgwfFSbM/MuqsE0AOP+Jrts+louC2lblW3svVMktcEB9
+         AOgjaiu78PxfHDly7nfzCK4O45MdqoGsOE0xqPZXotHUJUU0L2LjZUmEjvUGuaYO3dFQ
+         azOg==
+X-Gm-Message-State: APjAAAXySUOHzZie1Z4xtyQpD6PTdDVVY+Oxjab215oAZcFzEGrZSstQ
+        xHSoBV2X+2KTIDnMzcpEBfck0a5WOHjkn+MHzX4=
+X-Google-Smtp-Source: APXvYqyEE9Bphe+b0EtIWWcArlEfiuq0bTlSoTYTdzCplUwF1R1TVDG3F4jaGUatIjl6BzqllJ8xB+wssKi1HFAQ1ik=
+X-Received: by 2002:aca:4dd8:: with SMTP id a207mr13516360oib.115.1566860557966;
+ Mon, 26 Aug 2019 16:02:37 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9841c29-dfb2-41eb-8352-08d72a796fbd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 23:02:15.2493
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 64d/qH5O6ITwC3QTLJXvpF48fH5YRuCledCPi52u803l4hS8PTkDo90Vd6sw1D/zXwx8OXzv/U88s47tX1q00w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5118
+References: <20190826223047.13146-1-ahs3@redhat.com>
+In-Reply-To: <20190826223047.13146-1-ahs3@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 27 Aug 2019 01:02:26 +0200
+Message-ID: <CAJZ5v0hXJNa3Z14MQgvNcVF8YxH+M46mMyC5U6vZqrpBZUjOgw@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI / CPPC: do not require the _PSD method when using CPPC
+To:     Al Stone <ahs3@redhat.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDgvMjYvMTkgMTo0MSBQTSwgUGFyYXYgUGFuZGl0IHdyb3RlOg0KPiBNZGV2IGFsaWFz
-IHNob3VsZCBiZSB1bmlxdWUgYW1vbmcgYWxsIHRoZSBtZGV2cywgc28gdGhhdCB3aGVuIHN1Y2gg
-YWxpYXMNCj4gaXMgdXNlZCBieSB0aGUgbWRldiB1c2VycyB0byBkZXJpdmUgb3RoZXIgb2JqZWN0
-cywgdGhlcmUgaXMgbm8NCj4gY29sbGlzaW9uIGluIGEgZ2l2ZW4gc3lzdGVtLg0KPiANCj4gU2ln
-bmVkLW9mZi1ieTogUGFyYXYgUGFuZGl0IDxwYXJhdkBtZWxsYW5veC5jb20+DQo+IC0tLQ0KPiAg
-ZHJpdmVycy92ZmlvL21kZXYvbWRldl9jb3JlLmMgfCA1ICsrKysrDQo+ICAxIGZpbGUgY2hhbmdl
-ZCwgNSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92ZmlvL21kZXYv
-bWRldl9jb3JlLmMgYi9kcml2ZXJzL3ZmaW8vbWRldi9tZGV2X2NvcmUuYw0KPiBpbmRleCBlODI1
-ZmYzOGIwMzcuLjZlYjM3ZjBjNjM2OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy92ZmlvL21kZXYv
-bWRldl9jb3JlLmMNCj4gKysrIGIvZHJpdmVycy92ZmlvL21kZXYvbWRldl9jb3JlLmMNCj4gQEAg
-LTM3NSw2ICszNzUsMTEgQEAgaW50IG1kZXZfZGV2aWNlX2NyZWF0ZShzdHJ1Y3Qga29iamVjdCAq
-a29iaiwgc3RydWN0IGRldmljZSAqZGV2LA0KPiAgCQkJcmV0ID0gLUVFWElTVDsNCj4gIAkJCWdv
-dG8gbWRldl9mYWlsOw0KPiAgCQl9DQo+ICsJCWlmICh0bXAtPmFsaWFzICYmIHN0cmNtcCh0bXAt
-PmFsaWFzLCBhbGlhcykgPT0gMCkgew0KDQphbGlhcyBjYW4gYmUgTlVMTCBoZXJlIG5vPw0KDQo+
-ICsJCQltdXRleF91bmxvY2soJm1kZXZfbGlzdF9sb2NrKTsNCj4gKwkJCXJldCA9IC1FRVhJU1Q7
-DQo+ICsJCQlnb3RvIG1kZXZfZmFpbDsNCj4gKwkJfQ0KPiAgCX0NCj4gIA0KPiAgCW1kZXYgPSBr
-emFsbG9jKHNpemVvZigqbWRldiksIEdGUF9LRVJORUwpOw0KPiANCg0KTWFyaw0K
+On Tue, Aug 27, 2019 at 12:30 AM Al Stone <ahs3@redhat.com> wrote:
+>
+> According to the ACPI 6.3 specification, the _PSD method is optional
+> when using CPPC.  The underlying assumption is that each CPU can change
+> frequency independently from all other CPUs; _PSD is provided to tell
+> the OS that some processors can NOT do that.
+>
+> However, the acpi_get_psd() function returns ENODEV if there is no _PSD
+> method present, or an ACPI error status if an error occurs when evaluating
+> _PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
+> of the specification, and only on Linux.
+>
+> This has forced some firmware writers to provide a dummy _PSD, even though
+> it is irrelevant, but only because Linux requires it; other OSPMs follow
+> the spec.  We really do not want to have OS specific ACPI tables, though.
+>
+> So, correct acpi_get_psd() so that it does not return an error if there
+> is no _PSD method present, but does return a failure when the method can
+> not be executed properly.  This allows _PSD to be optional as it should
+> be.
+>
+> v2:
+>    -- verified simple check for AE_NOT_FOUND was sufficient
+>    -- simplified return status check per Rafael's suggestion
+>
+> Signed-off-by: Al Stone <ahs3@redhat.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> ---
+>  drivers/acpi/cppc_acpi.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+> index 15f103d7532b..7a946f1944ab 100644
+> --- a/drivers/acpi/cppc_acpi.c
+> +++ b/drivers/acpi/cppc_acpi.c
+> @@ -365,10 +365,12 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+>         union acpi_object  *psd = NULL;
+>         struct acpi_psd_package *pdomain;
+>
+> -       status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+> -                       ACPI_TYPE_PACKAGE);
+> -       if (ACPI_FAILURE(status))
+> -               return -ENODEV;
+> +       if (acpi_has_method(handle, "_PSD")) {
+
+This doesn't look necessary any more.
+
+> +               status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
+> +                                                   &buffer, ACPI_TYPE_PACKAGE);
+> +               if (status == AE_NOT_FOUND)     /* _PSD is optional */
+> +                       return 0;
+
+And what about the other possible errors?
+
+> +       }
+>
+>         psd = buffer.pointer;
+>         if (!psd || psd->package.count != 1) {
+> --
+> 2.21.0
+>
