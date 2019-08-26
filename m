@@ -2,95 +2,83 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFCCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55EA12186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FAA20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VcVfNGOi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O5LzO9tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfHZLuY (ORCPT
+        id S1731276AbfHZLvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:50:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42159 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727182AbfHZLuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:50:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46H9L347lPz9sBF;
-        Mon, 26 Aug 2019 21:50:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566820219;
-        bh=XUEOKU/hBQav3jF/6NZurRChk/w8HeLKvoeo2p6vqjo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VcVfNGOicxM42nSBlf1G7gBCMN2dZIoVqDFQY9Z6eBiKZ1+m1tRprpsN+rU2Gj+pa
-         xH4wqkUPEIg6u1dFUSwKxd4oV05/YEtmnaHAST5r0npBW/oWn2K98AWDPs7qzt7pKw
-         zytaXvZZ6x1qDkR3rg6pp6cfaaqsECFMF1MrbKPSyXxilJKSIyOQXvAGMgsoxmBQaK
-         WjGcBHZ9TL7fJ53uEFbqbkotrkxQ87VHMdxT1E7Dg0hUNYxQSGYJUX3paVduq0d90m
-         7r55kuWsrLiri0uWZF8AxfuWI5PijmWVPfxEuwhJVFIi1bGG39RRU9YEqHjIGnKYVE
-         jde7vkSidr0xQ==
-Date:   Mon, 26 Aug 2019 21:50:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: linux-next: build warning after merge of the devfreq tree
-Message-ID: <20190826215017.02ab0d34@canb.auug.org.au>
+        Mon, 26 Aug 2019 07:51:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60724 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfHZLvy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:51:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1TviH4OE9g0ePmo1qrMkYXUOeKWbt5qrTfsr6aQ4WxU=; b=O5LzO9tgN9SeWoWyNekXsB84f
+        z4Ph/BrpqE+paC2R4jl2cl2TzLbtp+2yxI/fOw+MeqKPMnQK4QJX02locG6ZNxYahWDmjweD6nnpg
+        nva5LPAg0YFTr0PZea8YcP/FFVV1VzDZD6JvgezWruy98VHRS+ZkdjTBpAK3iq45ziNpZGN+BQfyS
+        aQYxVxYIk/0VrRqweGa/QpVtUNU4zCDyPzo8JtaUeYsE38Q/BoMXY9yLOwEoeGoA+o4oHh7VfCKDf
+        kZKrL8CCks1psw19Ta4SajwqsffaKQBtg+wngaRH25bXkw9vP0oY6UM4WHCmXkT7MQvhJ118VjupW
+        hmWIo3Yzw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2DXM-0007qP-IW; Mon, 26 Aug 2019 11:51:52 +0000
+Date:   Mon, 26 Aug 2019 04:51:52 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20190826115152.GA21051@infradead.org>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-2-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VHMmzf1GG0=K07MZvmWTM7j";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821175720.25901-2-vgoyal@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VHMmzf1GG0=K07MZvmWTM7j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 21, 2019 at 01:57:02PM -0400, Vivek Goyal wrote:
+> From: Stefan Hajnoczi <stefanha@redhat.com>
+> 
+> Although struct dax_device itself is not tied to a block device, some
+> DAX code assumes there is a block device.  Make block devices optional
+> by allowing bdev to be NULL in commonly used DAX APIs.
+> 
+> When there is no block device:
+>  * Skip the partition offset calculation in bdev_dax_pgoff()
+>  * Skip the blkdev_issue_zeroout() optimization
+> 
+> Note that more block device assumptions remain but I haven't reach those
+> code paths yet.
 
-Hi all,
+I think this should be split into two patches.  For bdev_dax_pgoff
+I'd much rather have the partition offset if there is on in the daxdev
+somehow so that we can get rid of the block device entirely.
 
-After merging the devfreq tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Similarly for dax_range_is_aligned I'd rather have a pure dax way
+to offload zeroing rather than this bdev hack.
 
-drivers/devfreq/governor_passive.c: In function 'devfreq_passive_event_hand=
-ler':
-drivers/devfreq/governor_passive.c:152:17: warning: unused variable 'dev' [=
--Wunused-variable]
-  struct device *dev =3D devfreq->dev.parent;
-                 ^~~
+In the long run I'd really like to make the bdev vs daxdev in iomap a
+union instead of having to carry both around.
 
-Introduced by commit
-
-  0ef7c7cce43f ("PM / devfreq: passive: Use non-devm notifiers")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/VHMmzf1GG0=K07MZvmWTM7j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1jx3kACgkQAVBC80lX
-0GwudQf/WsOaPAzNPEHyh515RqrfXNAnDGq7Zy1jj/RgpogEZ6BSTBylpb2TTMT1
-8TSxuWcgjApGqs18k4Takjau3UTGsw83rY7Ith8us/Dzoo5cZogxQZrPGtUXAXja
-a3xZqREJeWAjIglz/fHtZ0Z999oXw4WGwzOXqa4pd80LQlAj1HAW+gI8PSL00bmi
-eYH8Ukuogs6GnJSoX99LffuG+P9+JBJqBVU3fOfTL4CrS/Pa/4Dcyz07B+NslK1r
-z1t/KALgUnfTXjDFrb7cWOpw1Hysoc4+p4E5lSwygPCIc01q6U4oKcOgg6QzZaWi
-cMzOWYJwQd7KziDokSqKBiPRXKYqyA==
-=WSqm
------END PGP SIGNATURE-----
-
---Sig_/VHMmzf1GG0=K07MZvmWTM7j--
