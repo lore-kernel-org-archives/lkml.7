@@ -2,200 +2,179 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DEDC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1EEC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DEE206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7503A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MnQfzGO2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LCKeDRHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfHZGud (ORCPT
+        id S1729816AbfHZGy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:50:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48507 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbfHZGuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:50:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46H2h15r6Dz9sMr;
-        Mon, 26 Aug 2019 16:50:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566802229;
-        bh=AOqazLvPlGKJ9jojqYakHoX+JU05zoTI2NR0rZ5481A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MnQfzGO2JhTPFx/p8z717C4bzTu8guRo2o+22RIrjvpXgY7gzCw34eMtW/b8SJSM3
-         7NOrx/EtjL4xRwfrK1Z3PCmi4SPOBk0hCuUrdzhbzG0Onnnc8UbrOMC+o8J/avIsRU
-         JZcvdj8aecWfUGbzzIS0zj9sFJdaDrsklUPHfGFkS6/+ljIIQNogCRXsNUHFeASJwL
-         cm7yOUMgbSu2JgY0m9GrFxYkaKSIWVXbYbESvaQZYWYqanzvoa/GlMllKZudX+JeUb
-         vuHL6gW+XvRgtDQKVhXyjkfN7xIRlf9ZrKJW1jKxI0XL2lfczmXG/D0KbRBsbbM1xx
-         HzsN0JCbmuR2A==
-Date:   Mon, 26 Aug 2019 16:50:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: linux-next: manual merge of the gpio-brgl tree with the gpio tree
-Message-ID: <20190826165024.03e6b16a@canb.auug.org.au>
+        Mon, 26 Aug 2019 02:54:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39178 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729522AbfHZGyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 02:54:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i63so14673292wmg.4
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 23:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LH8nuwe3bP13Yh7NeNLMzBxJFkFlumQfww0naVQY/ic=;
+        b=LCKeDRHYsRuEnlvZBnUZvzlNwB9+uBMhgLw2RQRHMk469Bah+ulWs22MJkkPRZMWBq
+         PXd2Nqlthk6llZ1Nlrf/ilqULuN0coVOGycDiu2ktGUfc3Pxq4V515Tf1V+BdifPZnBf
+         a7yr+ohEiAnj4bsTimn9WVAFRkWQ4lFvKMdcS0yzkIJ6pH4lFcS/hDX3+1751Q5dKaqf
+         TFuPAlhXMhrnP5xTxsvYNNPuRsrpW4HoVeXYXSt/3qWpniEpP63uLIQumqO/hiVDF5CA
+         IaRCnNtpR0D7AusVR1jjWFPV+GmisgVxzdNRsEWzgYkZ148Az17Jebj1e2PpqR41m7vB
+         eBzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LH8nuwe3bP13Yh7NeNLMzBxJFkFlumQfww0naVQY/ic=;
+        b=HnvTx79ED8O5H0ZiiCqUQwKjn7v+7esx1onQSmp2GvAdA3iwSfbOC8Bzho+fbfixWE
+         pfwK9CuErSep29qgzjSRkm0SaS6T+6x3KCE7U1NezsRBaEVl8X/p9wtaYa7KmZd8PlHL
+         iKwFLd63mAPC/k/zK72ZITfIuq5weTM4OkiRVN849LFLxgufNLwQr0g85lUGLvnaCjDA
+         JUN1EVDjrD73TWjex2DOpMdAvYImv1wgk2MeZCr04CUmBqpZk38OyflQeF1ABF/4AFFJ
+         zltq/x2KS8LtOd3ANZZ+vVLyzRrtnnrOWLepI6a2k4lc64sLo3HUHohwfZNy31adZKhT
+         cWBA==
+X-Gm-Message-State: APjAAAWpfphi5SUwZXrXoCEBD64kjxg6Dmmq8WKFrgRFRDEfENSKZM/9
+        0RDqPq7ijN6oNV2Vp+h989tLAQ==
+X-Google-Smtp-Source: APXvYqxt1jP0j8SrYkUtzWli7NAQFzABzPzsKaH1f6iL2LCqMpOvb1zMBOdbwIM4e7gPbL/kITthQQ==
+X-Received: by 2002:a7b:c7cb:: with SMTP id z11mr18346191wmk.24.1566802462979;
+        Sun, 25 Aug 2019 23:54:22 -0700 (PDT)
+Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
+        by smtp.gmail.com with ESMTPSA id g26sm11091714wmh.32.2019.08.25.23.54.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Aug 2019 23:54:22 -0700 (PDT)
+Subject: Re: [PATCH v4 00/13] Support CPU frequency scaling on QCS404
+To:     bjorn.andersson@linaro.org, sboyd@kernel.org,
+        david.brown@linaro.org, jassisinghbrar@gmail.com,
+        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org,
+        will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au,
+        heiko@sntech.de, sibis@codeaurora.org,
+        enric.balletbo@collabora.com, jagan@amarulasolutions.com,
+        olof@lixom.net
+Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
+        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
+From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Message-ID: <f34a75d0-c479-267d-b4a1-c2418d4efb22@linaro.org>
+Date:   Mon, 26 Aug 2019 08:54:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cGcOQyJ3z5vjdFXM63RtP3v";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cGcOQyJ3z5vjdFXM63RtP3v
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 7/31/19 22:29, Jorge Ramirez-Ortiz wrote:
+> The following patchset enables CPU frequency scaling support on the
+> QCS404 (with dynamic voltage scaling).
+> 
+> It is important to notice that this functionality will be superseded
+> by Core Power Reduction (CPR), a more accurate form of AVS found on
+> certain Qualcomm SoCs.
+> 
+> Some of the changes required to support CPR do conflict with the
+> configuration required for CPUFreq.
+> 
+> In particular, the following commit for CPR - already merged - will
+> need to be reverted in order to enable CPUFreq.
+> 
+>    Author: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>    Date:   Thu Jul 25 12:41:36 2019 +0200
+>        cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+>     
+> Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
+> in this platform, this PLL provides the clock signal to a CPU
+> core. But in others it might not.
+> 
+> We opted for the minimal ammount of changes without affecting the
+> default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
+> framework and letting the firwmare chose whether to enable or disable
+> the clock at boot. However maybe a DT property and marking the clock
+> as critical would be more appropriate for this PLL. we'd appreciate the
+> maintainer's input on this topic.
+> 
+> v2:
+>    - dts: ms8916: apcs mux/divider: new bindings
+>      (the driver can still support the old bindings)
+> 
+>    - qcs404.dtsi
+>      fix apcs-hfpll definition
+>      fix cpu_opp_table definition
+> 
+>    - GPLL0_AO_OUT operating frequency
+>      define new alpha_pll_fixed_ops to limit the operating frequency
+> 
+> v3:
+>   - qcom-apcs-ipc-mailbox
+>     replace goto to ease readability
+> 
+>   - apcs-msm8916.c
+>     rework patch to use of_clk_parent_fill
+> 
+>   - hfpll.c
+>     add relevant comments to the code
+> 
+>   - qcs404.dtsi
+>     add voltage scaling support
+> 
+> v4:
+>  - squash OPP definition and DVFS enablement in dts
+>    (patches 10 and 13 in previous version)
+>    
+>  - qcom-apcs-ipc-mailbox
+>    replace return condition for readability
+>    
+>  - answer one question on CLK_IGNORE_UNUSED in mailing list
+> 
+> Jorge Ramirez-Ortiz, Niklas Cassel (13):
+>   clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
+>   mbox: qcom: add APCS child device for QCS404
+>   mbox: qcom: replace integer with valid macro
+>   dt-bindings: mailbox: qcom: Add clock-name optional property
+>   clk: qcom: apcs-msm8916: get parent clock names from DT
+>   clk: qcom: hfpll: get parent clock names from DT
+>   clk: qcom: hfpll: register as clock provider
+>   clk: qcom: hfpll: CLK_IGNORE_UNUSED
+>   arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+>   arm64: dts: qcom: qcs404: Add HFPLL node
+>   arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
+>   arm64: dts: qcom: qcs404: Add DVFS support
+>   arm64: defconfig: Enable HFPLL
+> 
+>  .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi          | 43 +++++++++++++++++++
+>  arch/arm64/configs/defconfig                  |  1 +
+>  drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
+>  drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
+>  drivers/clk/qcom/clk-alpha-pll.h              |  1 +
+>  drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
+>  drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 11 +++--
+>  10 files changed, 128 insertions(+), 13 deletions(-)
+> 
 
-Hi all,
+any feedback on this set?
 
-Today's linux-next merge of the gpio-brgl tree got a conflict in:
-
-  include/linux/gpio/driver.h
-
-between commit:
-
-  c7663fa2a663 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h")
-
-from the gpio tree and commit:
-
-  9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-
-from the gpio-brgl tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/gpio/driver.h
-index 8d06a054abc8,f28f534f451a..000000000000
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@@ -20,12 -20,6 +20,8 @@@ struct module
-  enum gpiod_flags;
-  enum gpio_lookup_flags;
- =20
-- #ifdef CONFIG_GPIOLIB
--=20
-- #ifdef CONFIG_GPIOLIB_IRQCHIP
--=20
- +struct gpio_chip;
- +
-  /**
-   * struct gpio_irq_chip - GPIO interrupt controller
-   */
-@@@ -520,38 -443,6 +513,35 @@@ struct bgpio_pdata=20
-  	int ngpio;
-  };
- =20
- +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- +
- +void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
- +					     struct irq_fwspec *fwspec,
- +					     unsigned int parent_hwirq,
- +					     unsigned int parent_type);
- +void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
- +					      struct irq_fwspec *fwspec,
- +					      unsigned int parent_hwirq,
- +					      unsigned int parent_type);
- +
- +#else
- +
- +static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_ch=
-ip *chip,
- +						    struct irq_fwspec *fwspec,
- +						    unsigned int parent_hwirq,
- +						    unsigned int parent_type)
- +{
- +}
- +
- +static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_c=
-hip *chip,
- +						     struct irq_fwspec *fwspec,
- +						     unsigned int parent_hwirq,
- +						     unsigned int parent_type)
- +{
- +}
- +
- +#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
- +
--=20
-- #if IS_ENABLED(CONFIG_GPIO_GENERIC)
--=20
-  int bgpio_init(struct gpio_chip *gc, struct device *dev,
-  	       unsigned long sz, void __iomem *dat, void __iomem *set,
-  	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
-@@@ -720,10 -603,11 +702,15 @@@ void gpiochip_free_own_desc(struct gpio
-  void devprop_gpiochip_set_names(struct gpio_chip *chip,
-  				const struct fwnode_handle *fwnode);
- =20
-+=20
-+ #ifdef CONFIG_GPIOLIB
-+=20
-+ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
-+=20
- +/* lock/unlock as IRQ */
- +int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
- +void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
- +
-  #else /* CONFIG_GPIOLIB */
- =20
-  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *des=
-c)
-@@@ -733,18 -617,6 +720,18 @@@
-  	return ERR_PTR(-ENODEV);
-  }
- =20
- +static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
- +				       unsigned int offset)
- +{
- +	WARN_ON(1);
- +	return -EINVAL;
- +}
- +
- +static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
- +					  unsigned int offset)
- +{
- +	WARN_ON(1);
- +}
-  #endif /* CONFIG_GPIOLIB */
- =20
-- #endif
-+ #endif /* __LINUX_GPIO_DRIVER_H */
-
---Sig_/cGcOQyJ3z5vjdFXM63RtP3v
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1jgTAACgkQAVBC80lX
-0GzH0AgAkKXul0Kfk/5+cqaTMFfDvYCLTetW2+mjG7YjDzZkI8JFmVNRdeXtkvEl
-RnbTLDH/NP11Zzrhrryn4I3v5X7eC+Ryz7Sbn+zoBXeeU2VUSCaQtELFXSMCtRy8
-vuwakiFrrxQ2VD42jmyXDOeuiy27XLsrZCEPXMnVYmTGOe+FmLPqna9kQg2Rngeb
-l8bRBCMemp7sU5clfnJXO734Vt0etibVHtqMRNrI981qYhpjnFJ4U/6tEvx7fN9M
-M7jkGFFL/ZucPISZDfFLqFplScRIxiSYETCIgdcmi58yI0LL16Cf+0uiaMvczpIa
-9tCJyvXMQO6LLtIWhA9jmCJBDJQReA==
-=4XBZ
------END PGP SIGNATURE-----
-
---Sig_/cGcOQyJ3z5vjdFXM63RtP3v--
+TIA
