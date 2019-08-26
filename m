@@ -2,113 +2,123 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D6CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8657EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F9B206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A57121852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kb4WesHD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="if1MFW3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfHZNUc (ORCPT
+        id S1732232AbfHZNU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:20:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50174 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfHZNUc (ORCPT
+        Mon, 26 Aug 2019 09:20:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43901 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfHZNU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:20:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QDImEL124490;
-        Mon, 26 Aug 2019 13:20:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=jg8OGb+FrdnhPvXGD0oYUUIjDrZd0OA9UveLV21eQdk=;
- b=Kb4WesHD3XEj9rSET3ZPcZVa7XfRqOM4ACy0Y3HMavSmOZJK91GpQi5yHGnoroCtdm1C
- beH2YlBok+TCRBGXIAnroPkgj6Eoc+iUTmyv1ByihC2s3tuHy602d8CXDOfRuSeUsJgo
- TPGHCt1I93KNKppj7iyXaRsn3RpE+lFNa9xGysAl0hEIp8ulNrA4bl397RGWHGCq8F6n
- ldxmFpjFBxlgL55+tbltMOnzU8V1GCVb9WyWIsCYyrG54PcRWC6Wrl5qXWZmbAfkWBYk
- Vcnv05arZfK+luTelPmrwN8n7PoroMsnvxBNYrWnemDKLB8bLDJoGoF1P1Xt0A05r+F8 XA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2ujwvq8xje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 13:20:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QDHojf004907;
-        Mon, 26 Aug 2019 13:20:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2ujw6uuqd5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 13:20:23 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7QDKMoG024152;
-        Mon, 26 Aug 2019 13:20:22 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Aug 2019 06:20:21 -0700
-Date:   Mon, 26 Aug 2019 16:20:12 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Deucher <alexander.deucher@amd.com>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Evan Quan <evan.quan@amd.com>, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amd/powerplay: Fix an off by one in
- navi10_get_smu_msg_index()
-Message-ID: <20190826132012.GB6840@mwanda>
+        Mon, 26 Aug 2019 09:20:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k3so10600416pgb.10;
+        Mon, 26 Aug 2019 06:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ke9VgdWxkTDSfhJn5FtwLPXDcQ8jktEKphO56apG3uc=;
+        b=if1MFW3zoOohAGEDXi7RhCiqITLAGw+gPYjDJwgk1onp5AlMt/MlEwygjexmHuKLPN
+         VGs1RUngTz2bQ4tlG7W33WulabOY4NG4rmTlbnCi0aGP+emsJUFzeX9NGVW1CFwK49wk
+         N8zPd3NrylH3Yv8MvHcrT1Lbqb1NOQPm88m+WcpvIbTe8QAiOp3QQHQknsuvSUmHiRfj
+         Ohcgankjj4Kofl0rgJnJckvQ47yIB4ZWpxsnIajo9wKXnBOAua+VpXHLC5uj72cgExuo
+         Dn6/dAcw9RyG+pcf848d2bSnvDFjxswLKpBu1u778y9VU3VkEAtytnC7y+9wn9yrJCYF
+         0oRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ke9VgdWxkTDSfhJn5FtwLPXDcQ8jktEKphO56apG3uc=;
+        b=NXahza3W5KZvLIBJBMSTQEhw8esjNx6M0I//eA81XI95Fgo3nuvlGO9xY8J/sEa9hX
+         Pmzr4/TV+C7IM3Vx9iRNw+u2i69aLwq2G5l38XjGfv28J15GhsJx1vfs/xU3KxxlYVLg
+         6cjVH+iUvpSKq2K3pWHNqoBuNpIbTpL6uqT+gbu1us9ujfaqPW3l9Xixj6QSDRRja5JX
+         ln4cT29i/cEfQDQVlAh+5UjfuAhro7hiqsqnaUnu/9alJ1EEEs8S9YDWnPSlbE6CPxGS
+         +DNgr3SZfY08UutThvm4ZkTCDl8zOHTDBkKcaPrzuD2ZZOUo9AZlNDRcv6bSXiC6Lzdg
+         KuCA==
+X-Gm-Message-State: APjAAAXa9Ye401F56oP0GGQidpe/pIGLExPzAPsy5cZ8vDydBQXS3JpB
+        kxZ8oxVnJ1/FihfjClC+7j3OnWL2
+X-Google-Smtp-Source: APXvYqz8O3Ph5j6/3aVJUbVOGZ18VvJxtXlqGJ7c5xsvLe3qQeKX2ww51740a03oZK0I2qtjyCEi4A==
+X-Received: by 2002:aa7:91d3:: with SMTP id z19mr19969213pfa.135.1566825657669;
+        Mon, 26 Aug 2019 06:20:57 -0700 (PDT)
+Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id u21sm1502386pjn.5.2019.08.26.06.20.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 06:20:56 -0700 (PDT)
+Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without
+ CONFIG_WATCHDOG_CORE
+To:     Yuehaibing <yuehaibing@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     a.zummo@towertech.it, bruno.thomsen@gmail.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190823124553.19364-1-yuehaibing@huawei.com>
+ <20190823140513.GB9844@piout.net>
+ <4b608c55-2541-30cf-ad88-c19a5c0cc84f@huawei.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <01a2b6b2-eb15-1b40-1edc-de122bbdb5a2@roeck-us.net>
+Date:   Mon, 26 Aug 2019 06:20:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9360 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908260145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9360 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908260145
+In-Reply-To: <4b608c55-2541-30cf-ad88-c19a5c0cc84f@huawei.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The navi10_message_map[] array has SMU_MSG_MAX_COUNT elements so the ">"
-has to be changed to ">=" to prevent reading one element beyond the end
-of the array.
+On 8/26/19 1:12 AM, Yuehaibing wrote:
+> 
+> 
+> On 2019/8/23 22:05, Alexandre Belloni wrote:
+>> On 23/08/2019 20:45:53+0800, YueHaibing wrote:
+>>> If WATCHDOG_CORE is not set, build fails:
+>>>
+>>> drivers/rtc/rtc-pcf2127.o: In function `pcf2127_probe.isra.6':
+>>> drivers/rtc/rtc-pcf2127.c:478: undefined reference to `devm_watchdog_register_device'
+>>>
+>>> Add WATCHDOG_CORE Kconfig dependency to fix this.
+>>>
+>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>> Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> ---
+>>>   drivers/rtc/Kconfig | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+>>> index 25af63d..9dce7dc 100644
+>>> --- a/drivers/rtc/Kconfig
+>>> +++ b/drivers/rtc/Kconfig
+>>> @@ -886,6 +886,8 @@ config RTC_DRV_DS3232_HWMON
+>>>   config RTC_DRV_PCF2127
+>>>   	tristate "NXP PCF2127"
+>>>   	depends on RTC_I2C_AND_SPI
+>>> +	depends on WATCHDOG
+>>
+>> Definitively not, I fixed it that way:
+>> +       select WATCHDOG_CORE if WATCHDOG
+> 
+> 
+> No, this still fails while WATCHDOG is not set
+> 
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Correct, there are no dummy functions for watchdog device registration.
+There would have to be conditional code in the driver if the watchdog
+is supposed to be optional.
 
-diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-index d7e25f5113f1..fbecd25f150f 100644
---- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-@@ -213,7 +213,7 @@ static int navi10_get_smu_msg_index(struct smu_context *smc, uint32_t index)
- {
- 	struct smu_11_0_cmn2aisc_mapping mapping;
- 
--	if (index > SMU_MSG_MAX_COUNT)
-+	if (index >= SMU_MSG_MAX_COUNT)
- 		return -EINVAL;
- 
- 	mapping = navi10_message_map[index];
--- 
-2.20.1
-
+Guenter
