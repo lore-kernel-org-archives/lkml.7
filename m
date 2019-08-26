@@ -2,120 +2,121 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F894C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFECC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374802341C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566831718;
-	bh=I6e2z6xG6NNp+2Wpt9kGj+eQ5xIpFiafpE0oAydyqz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pl1+tYrdR3XCJdbk5S62CXU3nmRirieR6Zado8rzFVTXQnMfUiOfkorEKkl40nlRG
-	 HaV+VDutMD45xiKeznn4Ir1xKZdqvvx5XIQ9Xy8Dc93OOh3MQZZXR/B8pN3octHX24
-	 jDPd4vw5z5HCM0EBYnfIQ7vfzZS/fcD9Z94hWgdk=
+	by mail.kernel.org (Postfix) with ESMTP id CB81123407
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfHZPB5 (ORCPT
+        id S1732785AbfHZPCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 11:02:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58382 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfHZPB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:01:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727031AbfHZPCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:02:13 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845CD23407;
-        Mon, 26 Aug 2019 15:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566831716;
-        bh=I6e2z6xG6NNp+2Wpt9kGj+eQ5xIpFiafpE0oAydyqz4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rCskg3zWYS8sUfIN6SpZQxIOcvVswWxnixVypxSGkkK4sWFtFSIsWK8y001UJ3VVq
-         YwDsf8c4gc4K/d7W/i03gofw7+kYrrB1Yv+9KAveARF2SiykU7hsc4ZC9ryTJQzK8K
-         kzHLkzUW39HoCAGUes5rLeWxtjERSq0yjP8ranhY=
-Date:   Mon, 26 Aug 2019 17:01:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nayna <nayna@linux.vnet.ibm.com>
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-Subject: [PATCH] sysfs: add BIN_ATTR_WO() macro
-Message-ID: <20190826150153.GD18418@kroah.com>
-References: <1566825818-9731-1-git-send-email-nayna@linux.ibm.com>
- <1566825818-9731-3-git-send-email-nayna@linux.ibm.com>
- <20190826140131.GA15270@kroah.com>
- <ff9674e1-1b27-783a-38f3-4fd725353186@linux.vnet.ibm.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 27FDB308FBA7;
+        Mon, 26 Aug 2019 15:02:13 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CF5D60BEC;
+        Mon, 26 Aug 2019 15:02:05 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 10:02:03 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Nicolai Stange <nstange@suse.de>
+Cc:     Miroslav Benes <mbenes@suse.cz>, jikos@kernel.org,
+        pmladek@suse.com, joe.lawrence@redhat.com,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+Message-ID: <20190826150203.vg6z3cz54gdt7qs2@treble>
+References: <20190719122840.15353-1-mbenes@suse.cz>
+ <20190719122840.15353-3-mbenes@suse.cz>
+ <20190728200427.dbrojgu7hafphia7@treble>
+ <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
+ <20190814151244.5xoaxib5iya2qjco@treble>
+ <878srgkpmy.fsf@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ff9674e1-1b27-783a-38f3-4fd725353186@linux.vnet.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <878srgkpmy.fsf@suse.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 26 Aug 2019 15:02:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This variant was missing from sysfs.h, I guess no one noticed it before.
+On Mon, Aug 26, 2019 at 03:44:21PM +0200, Nicolai Stange wrote:
+> Josh Poimboeuf <jpoimboe@redhat.com> writes:
+> 
+> > On Wed, Aug 14, 2019 at 01:06:09PM +0200, Miroslav Benes wrote:
+> >> > Really, we should be going in the opposite direction, by creating module
+> >> > dependencies, like all other kernel modules do, ensuring that a module
+> >> > is loaded *before* we patch it.  That would also eliminate this bug.
+> >> 
+> >> Yes, but it is not ideal either with cumulative one-fixes-all patch 
+> >> modules. It would load also modules which are not necessary for a 
+> >> customer and I know that at least some customers care about this. They 
+> >> want to deploy only things which are crucial for their systems.
+> 
+> Security concerns set aside, some of the patched modules might get
+> distributed separately from the main kernel through some sort of
+> kernel-*-extra packages and thus, not be found on some target system
+> at all. Or they might have been blacklisted.
 
-Turns out the powerpc secure variable code can use it, so add it to the
-tree for it, and potentially others to take advantage of, instead of
-open-coding it.
+True.
 
-Reported-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
+> > If you frame the question as "do you want to destabilize the live
+> > patching infrastucture" then the answer might be different.
+> >
+> > We should look at whether it makes sense to destabilize live patching
+> > for everybody, for a small minority of people who care about a small
+> > minority of edge cases.
+> >
+> > Or maybe there's some other solution we haven't thought about, which
+> > fits more in the framework of how kernel modules already work.
+> >
+> >> We could split patch modules as you proposed in the past, but that have 
+> >> issues as well.
+> >
+> > Right, I'm not really crazy about that solution either.
+> >
+> > Here's another idea: per-object patch modules.  Patches to vmlinux are
+> > in a vmlinux patch module.  Patches to kvm.ko are in a kvm patch module.
+> > That would require:
+> >
+> > - Careful management of dependencies between object-specific patches.
+> >   Maybe that just means that exported function ABIs shouldn't change.
+> >
+> > - Some kind of hooking into modprobe to ensure the patch module gets
+> >   loaded with the real one.
+> >
+> > - Changing 'atomic replace' to allow patch modules to be per-object.
+> >
+> 
+> Perhaps I'm misunderstanding, but supporting only per-object livepatch
+> modules would make livepatch creation for something like commit
+> 15fab63e1e57 ("fs: prevent page refcount overflow in pipe_buf_get"),
+> CVE-2019-11487 really cumbersome (see the fuse part)?
 
-I'll queue this up to my tree for 5.4-rc1, but if you want to take this
-in your tree earlier, feel free to do so.
+Just don't change exported interfaces.
 
- include/linux/sysfs.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+In this case you could leave generic_pipe_buf_get() alone and then
+instead add a generic_pipe_buf_get__patched() which is called by the
+patched fuse module.  If you build the fuse-specific livepatch module
+right, it would automatically have a dependency on the vmlinux-specific
+livepatch module.
 
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 965236795750..5420817ed317 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -196,6 +196,12 @@ struct bin_attribute {
- 	.size	= _size,						\
- }
- 
-+#define __BIN_ATTR_WO(_name) {						\
-+	.attr	= { .name = __stringify(_name), .mode = 0200 },		\
-+	.store	= _name##_store,					\
-+	.size	= _size,						\
-+}
-+
- #define __BIN_ATTR_RW(_name, _size)					\
- 	__BIN_ATTR(_name, 0644, _name##_read, _name##_write, _size)
- 
-@@ -208,6 +214,9 @@ struct bin_attribute bin_attr_##_name = __BIN_ATTR(_name, _mode, _read,	\
- #define BIN_ATTR_RO(_name, _size)					\
- struct bin_attribute bin_attr_##_name = __BIN_ATTR_RO(_name, _size)
- 
-+#define BIN_ATTR_WO(_name, _size)					\
-+struct bin_attribute bin_attr_##_name = __BIN_ATTR_WO(_name, _size)
-+
- #define BIN_ATTR_RW(_name, _size)					\
- struct bin_attribute bin_attr_##_name = __BIN_ATTR_RW(_name, _size)
- 
+> I think I've seen similar interdependencies between e.g. kvm.ko <->
+> kvm_intel.ko, but can't find an example right now.
+
 -- 
-2.23.0
-
+Josh
