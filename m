@@ -2,87 +2,132 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A54C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73F2C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA1B206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F092087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfHZI6g (ORCPT
+        id S1730478AbfHZI6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:58:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5214 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729569AbfHZI6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:58:35 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 28C44AA3DF56951A2E70;
-        Mon, 26 Aug 2019 16:58:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 26 Aug 2019
- 16:58:12 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <Jun.Lei@amd.com>, <Dmytro.Laktyushkin@amd.com>,
-        <Bhawanpreet.Lakha@amd.com>, <joshua.aberback@amd.com>,
-        <Wenjing.Liu@amd.com>, <charlene.liu@amd.com>,
-        <martin.leung@amd.com>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/amdgpu/display: fix build error without CONFIG_DRM_AMD_DC_DSC_SUPPORT
-Date:   Mon, 26 Aug 2019 16:57:07 +0800
-Message-ID: <20190826085707.12504-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 26 Aug 2019 04:58:52 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46311 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729854AbfHZI6v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:58:51 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t24so11504471oij.13;
+        Mon, 26 Aug 2019 01:58:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tnEOaWMh9o7a4lsL8t46ApShoBTiXhp9jJWi58Cb5Gc=;
+        b=gNTC26TCRuhPCnmLwV5ci68NVeucexpxmpB1zZ5+bnany2+xp/mtE3YzqxreRpNFxK
+         DdFU21+dZU3gMwdgfNjFzatQOh3il9bMnPF6ZGFXOKfBjL1DdOxA7SUnIFVcFIg28kNC
+         9FzCvHJdW+D6G25inX+wGKdhB6VHtn1O9LCIB06t9B5nymrYZIIgjflUgvzYLASNoo3S
+         RjKUqqWucD0lnA1490FxRzyERKwRG8R0YNe8cE/6zGZ8CdzZErgAtBWBQ4SS1YmRIL4b
+         OfqtA1leb5iWDXKj2g3BExtshV9AO4ObjXVurg05FiqeJsM8vcCkYBualjbq24tZVV3Q
+         PSoA==
+X-Gm-Message-State: APjAAAVDJsd/v1pjsT7NGK35NBnsDdKDQ7nj2NdUREG3SjUT8HhTPGXe
+        IeiVNelAiOktV4RQIehY7WXROxbKveTBNMGOY2A=
+X-Google-Smtp-Source: APXvYqxXAEmTrR0e9s0qceFFoDeOwnHS/Xoq0e/yv+MEHb3J0+ID75RlA2eDMhAg81C5BpolzjElQX/42D45ESS6+Fk=
+X-Received: by 2002:a54:478d:: with SMTP id o13mr11607090oic.54.1566809930697;
+ Mon, 26 Aug 2019 01:58:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
+ <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
+ <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
+ <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
+ <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
+ <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
+ <20190820092451.791c85e5@canb.auug.org.au> <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
+ <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
+ <9d12995c5e7e41fc5d8ba202f76a2cf854183245.camel@perches.com> <CAHk-=wi6bEnBy11HJBbgPsG3-ctE6Zyi2+3cnozjMAafSUBAaQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wi6bEnBy11HJBbgPsG3-ctE6Zyi2+3cnozjMAafSUBAaQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 26 Aug 2019 10:58:39 +0200
+Message-ID: <CAMuHMdVtCKVXNghfrs6RgtSDC08c0eyR-xD6d7mkZuSSPEFY-Q@mail.gmail.com>
+Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
+ Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang)QUILT
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_DRM_AMD_DC_DSC_SUPPORT is not set, build fails:
+Hi Linus,
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c: In function dcn20_hw_sequencer_construct:
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c:2099:28:
- error: dcn20_dsc_pg_control undeclared (first use in this function); did you mean dcn20_dpp_pg_control?
-  dc->hwss.dsc_pg_control = dcn20_dsc_pg_control;
-                            ^~~~~~~~~~~~~~~~~~~~
-                            dcn20_dpp_pg_control
+On Wed, Aug 21, 2019 at 2:41 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Tue, Aug 20, 2019 at 4:37 PM Joe Perches <joe@perches.com> wrote:
+> > > So I'm putting my foot down on yet another broken string copy
+> > > interface from people who do not understand this fundamental issue.
+> >
+> > I think you are mistaken about the stracpy limits as
+> > the only limit is not the source size but the dest.
+> >
+> > Why should the source be size limited?
+>
+> You just proved my point. You don't understand that sources can also
+> be limited, and the limit on a source can be *smaller* than the limit
+> of a destination.
+>
+> Did we learn *NOTHING* from the complete and utter disaster that was strlcpy()?
+>
+> Do you not understand why strlcpy() was unacceptably bad, and why the
+> people who converted strncpy() to it introduced real bugs?
+>
+> The fact is, it's not just the destination that has a size limit. The
+> source often has one too.
+>
+> And no, the source is not always guaranteed to be NUL-terminated, nor
+> is the source buffer guaranteed to be larger than the destination
+> buffer.
+>
+> Now, if you *know* that the source is smaller than the destination
+> size, you can do:
+>
+>     len = strnlen(src, srclen);
+>     memcpy(dst, len);
+>     dst[len] = 0;
+>
+> and that's not wrong, but that works only when
+>
+>  (a) you actually do the above
+>
+>  (b) you have no data races on src (or you at least only require that
+> 'dst' is NUL-terminated, not that 'len' is necessarily the correct
+> length of the result
+>
+>  (c) you actually know as the programmer that yes, the source is
+> definitely smaller than the destination.
+>
+> and honestly, people don't get _any_ of that right.
 
-Use CONFIG_DRM_AMD_DC_DSC_SUPPORT to guard this.
+(d) you know the untouched trailing end of dst[] does not leak data.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 8a31820b1218 ("drm/amd/display: Make init_hw and init_pipes generic for seamless boot")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Anything else we're missing?
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index e146d1d..54d67f6 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -2092,7 +2092,11 @@ void dcn20_hw_sequencer_construct(struct dc *dc)
- 	dc->hwss.enable_power_gating_plane = dcn20_enable_power_gating_plane;
- 	dc->hwss.dpp_pg_control = dcn20_dpp_pg_control;
- 	dc->hwss.hubp_pg_control = dcn20_hubp_pg_control;
-+#ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
- 	dc->hwss.dsc_pg_control = dcn20_dsc_pg_control;
-+#else
-+	dc->hwss.dsc_pg_control = NULL;
-+#endif
- 	dc->hwss.disable_vga = dcn20_disable_vga;
- 
- 	if (IS_FPGA_MAXIMUS_DC(dc->ctx->dce_environment)) {
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
