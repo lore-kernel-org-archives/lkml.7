@@ -2,124 +2,154 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91C1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DEDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF78206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0Qm85v5"
+	by mail.kernel.org (Postfix) with ESMTP id C48B7206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732204AbfHZNNu (ORCPT
+        id S1732215AbfHZNOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:13:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731174AbfHZNNt (ORCPT
+        Mon, 26 Aug 2019 09:14:37 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:49453 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729819AbfHZNOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:13:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=urDTYQxxHpDLHKYV3DkLPJyBgIdOzd8vbZl6Cfapxyc=; b=S0Qm85v5u+mC94Z+1NTp3zLxy
-        RVikWlbB8+mD7D3i6pKW1vaRh6+mpvdmY0hZwt7QeNMOfDK4v1mKu4uLruFJY+80WEeNiclw0bMni
-        VgFWVa4FMxmnuDh4DG/NHs34XNaySiBjcLQotEzPIlKfk98LzJOfOfATotjcOvgRsK0BvJg1vvrY6
-        PC3VQkaRupcuqt52WqBPC5JvmCjmjjLmU1rbYgod7HJ/IZrUNwVg/kxESAnrEZvrP/71g/C/cTVL3
-        KSmHw9glYY9tQdIrKjhRnF9olVe6RlSSQh43S7mnoLe1VnIU+Q8j9tFnodpiFcOU1xeFxRbNIYZHd
-        4Bsb3y2yA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2Eo0-0002Mw-Mf; Mon, 26 Aug 2019 13:13:08 +0000
-Date:   Mon, 26 Aug 2019 06:13:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-Message-ID: <20190826131308.GA15933@bombadil.infradead.org>
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
- <20190809101632.GM5482@bombadil.infradead.org>
- <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
- <20190809135202.GN5482@bombadil.infradead.org>
- <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Mon, 26 Aug 2019 09:14:37 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7QDDWAn075432;
+        Mon, 26 Aug 2019 22:13:32 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
+ Mon, 26 Aug 2019 22:13:32 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
+Received: from ccsecurity.localdomain (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7QDDS22075309
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 26 Aug 2019 22:13:32 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: [PATCH v3] /dev/mem: Bail out upon SIGKILL.
+Date:   Mon, 26 Aug 2019 22:13:25 +0900
+Message-Id: <1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 08:07:13AM +0530, Anshuman Khandual wrote:
-> On 08/09/2019 07:22 PM, Matthew Wilcox wrote:
-> > On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
-> >> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
-> >>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
-> >>>> Should alloc_gigantic_page() be made available as an interface for general
-> >>>> use in the kernel. The test module here uses very similar implementation from
-> >>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
-> >>>> needs to be exported through a header.
-> >>>
-> >>> Why are you allocating memory at all instead of just using some
-> >>> known-to-exist PFNs like I suggested?
-> >>
-> >> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
-> >> Now walking the kernel page table for a known symbol like kernel_init()
-> > 
-> > I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
-> > for a known symbol like kernel_init().
-> > 
-> >> as you had suggested earlier we might encounter page table page entries at PMD
-> >> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
-> >> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
-> >> which create large mappings at those levels but that requirement does not
-> >> exist for page table pages pointing to next level. Is not that correct ? Or
-> >> I am missing something here ?
-> > 
-> > Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
-> > PFN.  It's really not hard.
-> 
-> As Mark pointed out earlier that might end up being just a synthetic PFN
-> which might not even exist on a given system.
+syzbot found that a thread can stall for minutes inside read_mem() or
+write_mem() after that thread was killed by SIGKILL [1]. Reading from
+iomem areas of /dev/mem can be slow, depending on the hardware.
+While reading 2GB at one read() is legal, delaying termination of killed
+thread for minutes is bad. Thus, allow reading/writing /dev/mem and
+/dev/kmem to be preemptible and killable.
 
-And why would that matter?
+  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
+
+Theoretically, reading/writing /dev/mem and /dev/kmem can become
+"interruptible". But this patch chose "killable". Future patch will make
+them "interruptible" so that we can revert to "killable" if some program
+regressed.
+
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+---
+ drivers/char/mem.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index b08dc50..9eb564c 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -97,6 +97,13 @@ void __weak unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ }
+ #endif
+ 
++static inline bool should_stop_iteration(void)
++{
++	if (need_resched())
++		cond_resched();
++	return fatal_signal_pending(current);
++}
++
+ /*
+  * This funcion reads the *physical* memory. The f_pos points directly to the
+  * memory location.
+@@ -175,6 +182,8 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ 		p += sz;
+ 		count -= sz;
+ 		read += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 	kfree(bounce);
+ 
+@@ -251,6 +260,8 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -468,6 +479,10 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
+ 			read += sz;
+ 			low_count -= sz;
+ 			count -= sz;
++			if (should_stop_iteration()) {
++				count = 0;
++				break;
++			}
+ 		}
+ 	}
+ 
+@@ -492,6 +507,8 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
+ 			buf += sz;
+ 			read += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
+@@ -544,6 +561,8 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -595,6 +614,8 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
+ 			buf += sz;
+ 			virtr += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
+-- 
+1.8.3.1
+
