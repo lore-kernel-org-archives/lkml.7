@@ -2,119 +2,95 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA2AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153C3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340EC217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566821809;
-	bh=tXUqhiySfD6lPQAcB630z21XV3dVhvqoXjyurJHZJkc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdcqXaUtbuKq9xjFlC+XA7oipMiE4jeDGyiqJ3+krJMWP5Yt6MjBQHCCtmqTTcjrH
-	 d0D74N7yGRVnsCpHl31X4nE51CW8Nnd9uyD2DVNzxHEDLRexDk8rWqXTsqMix2G9eR
-	 quNuB3JCs9UmbMtlASydG8fYR4hDbZEsSxHryqUw=
+	by mail.kernel.org (Postfix) with ESMTP id DD93E217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbfHZMQs (ORCPT
+        id S1731832AbfHZMQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731774AbfHZMQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:16:46 -0400
-Received: from localhost.localdomain (unknown [122.178.200.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421282184D;
-        Mon, 26 Aug 2019 12:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566821805;
-        bh=tXUqhiySfD6lPQAcB630z21XV3dVhvqoXjyurJHZJkc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1UXCNaH526rfnt/Gnf1co3YeSkueiuxRQl7HqbnsZcc5wutcRJjFkv0tBX0SUfVJ
-         20qsRNy0ogWIc0TKIxHpEyUd0l8zJIemPwp/wu3H69xEpoHhbvysHS4+CWaXXZBPhg
-         fyYHXhAR/tXpnxw6sbXLzEOuEZ8GekDeTwnroTu0=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] clk: qcom: clk-rpmh: Add support for SM8150
-Date:   Mon, 26 Aug 2019 17:44:53 +0530
-Message-Id: <20190826121453.21732-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190826121453.21732-1-vkoul@kernel.org>
-References: <20190826121453.21732-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 26 Aug 2019 08:16:53 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51962 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731810AbfHZMQv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:16:51 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=liangyan.peng@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TaW1GMf_1566821793;
+Received: from localhost(mailfrom:liangyan.peng@linux.alibaba.com fp:SMTPD_---0TaW1GMf_1566821793)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 26 Aug 2019 20:16:41 +0800
+From:   Liangyan <liangyan.peng@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com
+Subject: [PATCH v3] sched/fair: don't assign runtime for throttled cfs_rq
+Date:   Mon, 26 Aug 2019 20:16:33 +0800
+Message-Id: <20190826121633.6538-1-liangyan.peng@linux.alibaba.com>
+X-Mailer: git-send-email 2.14.4.44.g2045bb6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for rpmh clocks found in SM8150
+do_sched_cfs_period_timer() will refill cfs_b runtime and call
+distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
+will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
+attached to this cfs_b can't get runtime and will be throttled.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+We find that one throttled cfs_rq has non-negative
+cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
+in snippet: distribute_cfs_runtime() {
+runtime = -cfs_rq->runtime_remaining + 1; }.
+The runtime here will change to a large number and consume all
+cfs_b->runtime in this cfs_b period.
+
+According to Ben Segall, the throttled cfs_rq can have
+account_cfs_rq_runtime called on it because it is throttled before
+idle_balance, and the idle_balance calls update_rq_clock to add time
+that is accounted to the task.
+
+This commit prevents cfs_rq to be assgined new runtime if it has been
+throttled until that distribute_cfs_runtime is called.
+
+Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- drivers/clk/qcom/clk-rpmh.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ kernel/sched/fair.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 97aa092f5f40..082d0b72fe1e 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -374,6 +374,33 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
- 	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
- };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index bc9cfeaac8bd..500f5db0de0b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4470,6 +4470,8 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ 	if (likely(cfs_rq->runtime_remaining > 0))
+ 		return;
  
-+DEFINE_CLK_RPMH_ARC(sm8150, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 2);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk1, rf_clk1_ao, "rfclka1", 1);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk2, rf_clk2_ao, "rfclka2", 1);
-+DEFINE_CLK_RPMH_VRM(sm8150, rf_clk3, rf_clk3_ao, "rfclka3", 1);
-+
-+static struct clk_hw *sm8150_rpmh_clocks[] = {
-+	[RPMH_CXO_CLK]		= &sm8150_bi_tcxo.hw,
-+	[RPMH_CXO_CLK_A]	= &sm8150_bi_tcxo_ao.hw,
-+	[RPMH_LN_BB_CLK2]	= &sm8150_ln_bb_clk2.hw,
-+	[RPMH_LN_BB_CLK2_A]	= &sm8150_ln_bb_clk2_ao.hw,
-+	[RPMH_LN_BB_CLK3]	= &sm8150_ln_bb_clk3.hw,
-+	[RPMH_LN_BB_CLK3_A]	= &sm8150_ln_bb_clk3_ao.hw,
-+	[RPMH_RF_CLK1]		= &sm8150_rf_clk1.hw,
-+	[RPMH_RF_CLK1_A]	= &sm8150_rf_clk1_ao.hw,
-+	[RPMH_RF_CLK2]		= &sm8150_rf_clk2.hw,
-+	[RPMH_RF_CLK2_A]	= &sm8150_rf_clk2_ao.hw,
-+	[RPMH_RF_CLK3]		= &sm8150_rf_clk3.hw,
-+	[RPMH_RF_CLK3_A]	= &sm8150_rf_clk3_ao.hw,
-+};
-+
-+static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
-+	.clks = sm8150_rpmh_clocks,
-+	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
-+};
-+
- static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
- 					 void *data)
- {
-@@ -453,6 +480,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
++	if (cfs_rq->throttled)
++		return;
+ 	/*
+ 	 * if we're unable to extend our runtime we resched so that the active
+ 	 * hierarchy can be throttled
+@@ -4673,6 +4675,9 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b,
+ 		if (!cfs_rq_throttled(cfs_rq))
+ 			goto next;
  
- static const struct of_device_id clk_rpmh_match_table[] = {
- 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
-+	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
++		/* By the above check, this should never be true */
++		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
++
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+ 		if (runtime > remaining)
+ 			runtime = remaining;
 -- 
-2.20.1
+2.14.4.44.g2045bb6
 
