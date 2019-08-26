@@ -2,142 +2,143 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC81C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AE5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A471C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:38:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjcAQKEn"
+	by mail.kernel.org (Postfix) with ESMTP id 7C7182070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566862995;
+	bh=5TX3sN6ggVjR2lC78XvpMigPOe2ekPP4Nw027KQ221Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IMdOjaH5oOsiarlP9Y3M91dbg9IkN3aLr3AjTaJXZe1k7DaoL2wjsmHv0AMqGnV37
+	 yY+acjVUcf0rs+KzdLeBkqSx1qK92PwFZousq/5xW/tmcOxNaTiNUQ1eZvV+dKcW7b
+	 Lkc9y17uv8PdG6cNYgxPclSPCmN4NpGgwn5WGZMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfHZXif (ORCPT
+        id S1726663AbfHZXnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 19:38:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34093 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfHZXif (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 19:38:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s18so16930047wrn.1;
-        Mon, 26 Aug 2019 16:38:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aM/+n5EN1EUh4pevfHPaY7oT40AfQ2ygXNAKqa7gxvM=;
-        b=VjcAQKEnmARWmtlqIfdWWRrefyW2kprN1qp9qyxEPgHMJ69fEh/BQOqZnapqN3l8t7
-         FPGHU4xS5WR6WSLIRhY+F+NrT6oJbdLZh0sOPJgQ+hjwbSu9h2t/giiF/5NLugi+KHF0
-         3qwzgVZZoXLpDDSnVkN0cNvYBeFjgEia+dXxL+zd3eV9M5caD9fziledp/DLxV+DbtT9
-         tctKLZh/e/UmUQ/bL4KtlnOOSTvvgD2IovEXM0ymgIkRD2l1J9P/AXZkbHintt/VEreF
-         YEpO/tJzi3jztjeh3fkH5WcShnlH1oElgPB+Pxo43zS+x1BK79zWfZrDZEZMCUeLZBCB
-         X5mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aM/+n5EN1EUh4pevfHPaY7oT40AfQ2ygXNAKqa7gxvM=;
-        b=GM6/WLzKATBbp3TpE2IX8vDsdIWbzTVmVNtTgw5PqJuzJ2N0S/5jaBbbtJiwYT/izq
-         aFO8idE8AZAPQE0so5gdnpU0WKWe4sEYIm7ks3gGsadohLUIdwKXoXbpDdeuJ+aEgERu
-         gUxrxe2OVAUMLg55k5+FKpw5VpFx5JpSWoBgUqaOVd/tN5WO/ef1fGGv+fMthjl1KeBI
-         iveAG7u+mOXtgoudXQDxhqNBPEEsokfFhqpDiIyKZVN82HEdqRGvNCJjx0B3ik47FV7o
-         cohxXaBzrfwEBeDwmPV74x92HzBQBE4FNRl9K0M5LjphYBTVPnz3u8pFPlDaQuXktnno
-         joXg==
-X-Gm-Message-State: APjAAAW8A9imv2K2a6e93DzvQL/l5zYTd/L4S7CIJ8R3p8HNP5sDLMRI
-        /SPcNlAxAEJPJcng/7YVSzA=
-X-Google-Smtp-Source: APXvYqxdsftPy9ha8ksZ7+siReD1ahCjl93ZgmjE6632XAAvOJ7UiKiU2HS5SCrygRqvnylzEkr6mg==
-X-Received: by 2002:adf:fe10:: with SMTP id n16mr25904248wrr.92.1566862711681;
-        Mon, 26 Aug 2019 16:38:31 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id q24sm1415669wmc.3.2019.08.26.16.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 16:38:30 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 16:38:29 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Bernard Metzler <BMT@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190826233829.GA36284@archlinux-threadripper>
-References: <20190710174800.34451-1-natechancellor@gmail.com>
- <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
- <20190711081434.GA86557@archlinux-threadripper>
- <20190711133915.GA25807@ziepe.ca>
- <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
- <20190711171808.GF25807@ziepe.ca>
- <20190711173030.GA844@archlinux-threadripper>
- <20190823142427.GD12968@ziepe.ca>
- <20190826153800.GA4752@archlinux-threadripper>
- <20190826154228.GE27349@ziepe.ca>
+        Mon, 26 Aug 2019 19:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbfHZXnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 19:43:14 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854F92070B;
+        Mon, 26 Aug 2019 23:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566862992;
+        bh=5TX3sN6ggVjR2lC78XvpMigPOe2ekPP4Nw027KQ221Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B4ynBZ9J0oCsIxXnHNUHyuc3LzNWvyclukdm3TPnns8mvBlrb3PN3+jb9IIOdJAIj
+         xhP6hQz51Hfd+KWSte/T2prfRsPAxXF7e8eWVWKgmNRzdHKfGjVT671O61796AjPG2
+         1xtUnZPD/pMioiROesuBpxmyZA8lqsvN1V6dAq4s=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] clk: Evict unregistered clks from parent caches
+Date:   Mon, 26 Aug 2019 16:43:11 -0700
+Message-Id: <20190826234311.138147-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826154228.GE27349@ziepe.ca>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 12:42:28PM -0300, Jason Gunthorpe wrote:
-> On Mon, Aug 26, 2019 at 08:38:00AM -0700, Nathan Chancellor wrote:
-> > On Fri, Aug 23, 2019 at 11:24:27AM -0300, Jason Gunthorpe wrote:
-> > > The latest clang-9 packages from apt.llvm.org do seem to build the
-> > > kernel, I get one puzzling warning under RDMA:
-> > > 
-> > > drivers/infiniband/hw/hfi1/platform.o: warning: objtool: tune_serdes()+0x1f4: can't find jump dest instruction at .text+0x118a
-> > 
-> > Any particular config that I should use to easily reproduce this?
-> 
-> Sure, attached. With the clang-9 build for Bionic
+We leave a dangling pointer in each clk_core::parents array that has an
+unregistered clk as a potential parent when that clk_core pointer is
+freed by clk{_hw}_unregister(). It is impossible for the true parent of
+a clk to be set with clk_set_parent() once the dangling pointer is left
+in the cache because we compare parent pointers in
+clk_fetch_parent_index() instead of checking for a matching clk name or
+clk_hw pointer.
 
-This is reproducible with the kernel config attached and a tip of tree
-build of LLVM.
+Before commit ede77858473a ("clk: Remove global clk traversal on fetch
+parent index"), we would check clk_hw pointers, which has a higher
+chance of being the same between registration and unregistration, but it
+can still be allocated and freed by the clk provider. In fact, this has
+been a long standing problem since commit da0f0b2c3ad2 ("clk: Correct
+lookup logic in clk_fetch_parent_index()") where we stopped trying to
+compare clk names and skipped over entries in the cache that weren't
+NULL.
 
-$ make -j$(nproc) CC=clang O=out clean olddefconfig drivers/infiniband/hw/hfi1/platform.o
-...
-  CC      drivers/infiniband/hw/hfi1/platform.o
-drivers/infiniband/hw/hfi1/platform.o: warning: objtool: tune_serdes()+0x1f4: can't find jump dest instruction at .text+0x117a
+There are good (performance) reasons to not do the global tree lookup in
+cases where the cache holds dangling pointers to parents that have been
+unregistered. Let's take the performance hit on the uncommon
+registration path instead. Loop through all the clk_core::parents arrays
+when a clk is unregistered and set the entry to NULL when the parent
+cache entry and clk being unregistered are the same pointer. This will
+fix this problem and avoid the overhead for the "normal" case.
 
-I ran creduce on that file and it spits out:
+Based on a patch by Bjorn Andersson.
 
-a() {
-  char *b = a;
-  switch (b[7] & 240 >> 4) {
-  case 10 ... 11:
-    c();
-  case 0 ... 9:
-  case 12:
-  case 14:
-    d();
-  case 13:
-  case 15:;
-  }
-}
+Fixes: da0f0b2c3ad2 ("clk: Correct lookup logic in clk_fetch_parent_index()")
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/clk.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-to simply reproduce the warning. The original preprocessed file +
-interestingness test are available here:
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index c0990703ce54..f3982bfa39d6 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3737,6 +3737,34 @@ static const struct clk_ops clk_nodrv_ops = {
+ 	.set_parent	= clk_nodrv_set_parent,
+ };
+ 
++static void clk_core_evict_parent_cache_subtree(struct clk_core *root,
++						struct clk_core *target)
++{
++	int i;
++	struct clk_core *child;
++
++	for (i = 0; i < root->num_parents; i++)
++		if (root->parents[i].core == target)
++			root->parents[i].core = NULL;
++
++	hlist_for_each_entry(child, &root->children, child_node)
++		clk_core_evict_parent_cache_subtree(child, target);
++}
++
++/* Remove this clk from all parent caches */
++static void clk_core_evict_parent_cache(struct clk_core *core)
++{
++	struct hlist_head **lists;
++	struct clk_core *root;
++
++	lockdep_assert_held(&prepare_lock);
++
++	for (lists = all_lists; *lists; lists++)
++		hlist_for_each_entry(root, *lists, child_node)
++			clk_core_evict_parent_cache_subtree(root, core);
++
++}
++
+ /**
+  * clk_unregister - unregister a currently registered clock
+  * @clk: clock to unregister
+@@ -3775,6 +3803,8 @@ void clk_unregister(struct clk *clk)
+ 			clk_core_set_parent_nolock(child, NULL);
+ 	}
+ 
++	clk_core_evict_parent_cache(clk->core);
++
+ 	hlist_del_init(&clk->core->child_node);
+ 
+ 	if (clk->core->prepare_count)
+-- 
+Sent by a computer through tubes
 
-https://github.com/nathanchance/creduce-files/tree/4e252c0ca19742c90be1445e6c722a43ae561144/rdma-objtool
-
-Looks like that comes from tune_qsfp, which gets inlined into
-tune_serdes but I am far from an objtool expert so I am not
-really sure what kind of issues I am looking for. Adding Josh
-and Peter for a little more visibility.
-
-Here is the original .o file as well:
-
-https://github.com/nathanchance/creduce-files/raw/4e252c0ca19742c90be1445e6c722a43ae561144/rdma-objtool/platform.o.orig
-
-Cheers,
-Nathan
