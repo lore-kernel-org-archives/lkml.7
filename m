@@ -2,84 +2,96 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1D2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47933C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46CA21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566841437;
-	bh=AQ2xE2ZYvWQ5MvJY7kmxoAtxVwyytPUTv3B91CHwAi8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qopNINJD+tAXD+ncCbskV6/BmWjotgD6xF+YCC7VVAgpV127Ec2u+K7TNh4+3anzL
-	 KHQRR3fnv6iiRP3q5mC/VEtxTfy7QRaL+WPKNt2HZmmH3HJ+ldakp0O+0Ze1ahNmEh
-	 xjJguB/nyxo9KzuEasV4U48bopQUvIYuLUB8zc4o=
+	by mail.kernel.org (Postfix) with ESMTP id 2485F2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VpuWqE51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733289AbfHZRn4 (ORCPT
+        id S2387457AbfHZRoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbfHZRn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:43:56 -0400
-Received: from localhost.localdomain (unknown [122.178.200.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46F0D2184D;
-        Mon, 26 Aug 2019 17:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566841435;
-        bh=AQ2xE2ZYvWQ5MvJY7kmxoAtxVwyytPUTv3B91CHwAi8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EHk1U7j3RQ42AnXWQ/mpxVFDUteIue4O/5Rn77Kvx6vTqRTu3xeVz6JN+9TgmNdk9
-         LnxuMAK9Qi1iC6Ub1vpyL5c2xD4ZLnS28wibybk4ZNwraY4z6SJVr6kNfu3ZB9N8Bj
-         ppVUqKn+5GGsjJVJjvxFHPpOSuoSg4YBQ0TH5eKQ=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: sdm845: Add parent clock for rpmhcc
-Date:   Mon, 26 Aug 2019 23:12:33 +0530
-Message-Id: <20190826174233.21213-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 26 Aug 2019 13:44:44 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41215 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732948AbfHZRoo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:44:44 -0400
+Received: by mail-io1-f67.google.com with SMTP id j5so39308616ioj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 10:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PwvVpT1oUpfrmNJJmsG0tncnKf6cWYXcpRZCvToipU8=;
+        b=VpuWqE51rpFASY2s3XWeOx28q/DN6nmZRMMGHiowJGrKlMQmmqmb75253Jwg58zNNs
+         smSttCxSxJw4s5NoFeoeGZ4P6r5O5317qTF2mVmwBmU/KiqeDl767A2CpIlrdLhVNcVw
+         wEl8hE6WZNfTpBnxSMII3dv+T/bpunyNOmG0M1gDjLadWKlQJcPSbGQjSgH9iCik7kGm
+         vGii4TC8XDKvI8BS2iTYZWLFGkF1+XR7K0JeN2bEb1CeZXcHxvQzrLhStO3XcekVomEs
+         fUBETzqUtLmWN5d7KxQG2Tin0Y/9wYWEq5mKVxFG4U+KkdChsRkW9kTi1sZId52zvdZl
+         pNsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PwvVpT1oUpfrmNJJmsG0tncnKf6cWYXcpRZCvToipU8=;
+        b=U4Q8owX2vFaypeBZ+WcU8iktNrQA6ykkyHc/OUeohhPmFFW5egV0JjeK6dKqPjXfxK
+         Ooc0l0Es0tk2YXnp9rSbAIJpu0dgPZw+zfStOgtm3U+MJbOTXJD6Fj3AT+bqglZYWA8h
+         heMeVKjsgMPKv8d8E0FrQUOVwiDqfcTrf0la/oruwn+DQRCAif+BI6krYQi63NpxCZoX
+         TCHRVkoKWo1Do/ETeGG/ztVSMUqbrzAouPbd8lhDCrNcJuFdqdoJxnxJImh3tJzVL0q+
+         tld4IZcgWYf9NbovZDJRDWSkl0cviFOq1xvtbnxoRP3+ZiUfX4l8w04q1qRBN1tl0G5L
+         fT0w==
+X-Gm-Message-State: APjAAAV7Zo1vaE6Djz9UVlbOOpsyH3nP19+BVVsvIdnawIXOQVLOyqWa
+        CoZo30g9pZTuUezCpOb9fPiZI5Qh+6EDQ8QfHUJQ3w==
+X-Google-Smtp-Source: APXvYqzTkrP6wPdElkAwQ8BNk1dvlidtBN/v9J8swrvxEEGT75u29yQXpPShFLsjxPNKZYU88YmYZkXgkv6JTJTD2Wk=
+X-Received: by 2002:a5e:9404:: with SMTP id q4mr3975008ioj.46.1566841483000;
+ Mon, 26 Aug 2019 10:44:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190826153028.32639-1-pjones@redhat.com> <20190826162823.4mxkwhd7mbtro3zy@linux.intel.com>
+In-Reply-To: <20190826162823.4mxkwhd7mbtro3zy@linux.intel.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 26 Aug 2019 10:44:31 -0700
+Message-ID: <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't mapped.
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Lyude Paul <lyude@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RPM clock controller has parent as xo, so specify that in DT node for
-rpmhcc
+On Mon, Aug 26, 2019 at 9:28 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Mon, Aug 26, 2019 at 11:30:27AM -0400, Peter Jones wrote:
+> > Some machines generate a lot of event log entries.  When we're
+> > iterating over them, the code removes the old mapping and adds a
+> > new one, so once we cross the page boundary we're unmapping the page
+> > with the count on it.  Hilarity ensues.
+> >
+> > This patch keeps the info from the header in local variables so we don't
+> > need to access that page again or keep track of if it's mapped.
+> >
+> > Signed-off-by: Peter Jones <pjones@redhat.com>
+> > Tested-by: Lyude Paul <lyude@redhat.com>
+>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Acked-by: Matthew Garrett <mjg59@google.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 9be6acb0650e..f9153b456125 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3028,6 +3028,8 @@
- 			rpmhcc: clock-controller {
- 				compatible = "qcom,sdm845-rpmh-clk";
- 				#clock-cells = <1>;
-+				clock-names = "xo";
-+				clocks = <&xo_board>;
- 			};
- 
- 			rpmhpd: power-controller {
--- 
-2.20.1
-
+Jarkko, these two should probably go to 5.3 if possible - I
+independently had a report of a system hitting this issue last week
+(Intel apparently put a surprising amount of data in the event logs on
+the NUCs).
