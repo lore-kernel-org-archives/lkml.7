@@ -2,149 +2,150 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851B2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C356C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560A020874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjQlQ2Ex"
+	by mail.kernel.org (Postfix) with ESMTP id 3C7882087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbfHZHxD (ORCPT
+        id S1730265AbfHZHxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:53:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35685 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730066AbfHZHxD (ORCPT
+        Mon, 26 Aug 2019 03:53:32 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34419 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730066AbfHZHxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:53:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n4so10117101pgv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 00:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=efgN+vHmbZbtfSnoe2tJDrmfT0GUhJplIH0aIIOgUwk=;
-        b=tjQlQ2ExrfoO855NFAVsXPV0e4T1NSJLC/o6pniiADGzTexVhfkjnj7HMQKTfDabp9
-         2VrpOmtAMlfxBTcV5oq3/ef4R19zGKjOvrYi28ZeEgTDLMFABrCXbnBl/A3fkl0pCdHY
-         vv4hfU59E5lc5B7WQxqMi2WmlAsIBjDAguGQ1a6wJy4fHD7zvKZMZXdVkmymfrDkwTn5
-         By0P8Yfc2fhDL0KAmp1Y24MU1f0mZgM6u3TJAKVyzOAYzckNWVHBe6KXAeZvyUWH4vOf
-         CnPTqp67rX2vTBJ8bxYsYiY2uLj2Dqk3bcbw6KN8UbgqtndFk9klGKHWdKr1YQmAVjxp
-         iRww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=efgN+vHmbZbtfSnoe2tJDrmfT0GUhJplIH0aIIOgUwk=;
-        b=YE+ehsmMlZJJioSqAkHeJL1QLVl336QGPPpWg2RNw/K2RvnqUN7e2fhFQTmzcfoWmm
-         6un0D+15To44eDxAh6Rv2HhK8SF+ENnLsAtiae+BNV31mjAmEYzXiT0jJvluL11dbY3z
-         DmpNRDKVnIxaFgi76rUzcktjssCOSSMeJRczMbBWJJ3jW5SmZM8xz/Cgd1RGpJXPaqua
-         hK2zpuXrg9BOP2JK3TUNfazUm5wQyqk3Z0OqZ6NhKmYe6rpSQv8PF8/g0ghaQeliyw9T
-         yprFqsCHaPFh/FGv6gFI3pM8sAzjvXb9Nd0tgTVFSUmCl2E1rLz5Yfo4WV+5TKOyoTBQ
-         lRKQ==
-X-Gm-Message-State: APjAAAVk4cqo4P4GFNtIdYoLqKm0XlVuc1JFUluowZ6UFFJtEhxs9Sg9
-        BrnK8o4oaQgbf7gPY4lh1w==
-X-Google-Smtp-Source: APXvYqyxRtF788S9SAurc3XEByUeMhHgAoa/qAhAeLHGf5p/zj9RyDaDK4+HzzxGKEADZkX1N9VkTQ==
-X-Received: by 2002:a63:ff65:: with SMTP id s37mr14929040pgk.102.1566805982049;
-        Mon, 26 Aug 2019 00:53:02 -0700 (PDT)
-Received: from mypc ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id r75sm14966984pfc.18.2019.08.26.00.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 00:53:01 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 15:52:51 +0800
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm/migrate: see hole as invalid source page
-Message-ID: <20190826075251.GA7486@mypc>
-References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
- <1565078411-27082-2-git-send-email-kernelfans@gmail.com>
- <20190815172222.GD30916@redhat.com>
- <20190816150222.GA10855@mypc>
+        Mon, 26 Aug 2019 03:53:31 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 3EAA8FF80B;
+        Mon, 26 Aug 2019 07:53:27 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 09:54:57 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] imx214: Use v4l2_ctrl_new_area helper
+Message-ID: <20190826075457.n2doitmfswywrpy6@uno.localdomain>
+References: <20190823123737.7774-1-ribalda@kernel.org>
+ <20190823123737.7774-7-ribalda@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ag5nue2vs66c2tae"
 Content-Disposition: inline
-In-Reply-To: <20190816150222.GA10855@mypc>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190823123737.7774-7-ribalda@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:02:22PM +0800, Pingfan Liu wrote:
-> On Thu, Aug 15, 2019 at 01:22:22PM -0400, Jerome Glisse wrote:
-> > On Tue, Aug 06, 2019 at 04:00:10PM +0800, Pingfan Liu wrote:
-> > > MIGRATE_PFN_MIGRATE marks a valid pfn, further more, suitable to migrate.
-> > > As for hole, there is no valid pfn, not to mention migration.
-> > > 
-> > > Before this patch, hole has already relied on the following code to be
-> > > filtered out. Hence it is more reasonable to see hole as invalid source
-> > > page.
-> > > migrate_vma_prepare()
-> > > {
-> > > 		struct page *page = migrate_pfn_to_page(migrate->src[i]);
-> > > 
-> > > 		if (!page || (migrate->src[i] & MIGRATE_PFN_MIGRATE))
-> > > 		     \_ this condition
-> > > }
-> > 
-> > NAK you break the API, MIGRATE_PFN_MIGRATE is use for 2 things,
-> > first it allow the collection code to mark entry that can be
-> > migrated, then it use by driver to allow driver to skip migration
-> > for some entry (for whatever reason the driver might have), we
-> > still need to keep the entry and not clear it so that we can
-> > cleanup thing (ie remove migration pte entry).
-> Thanks for your kindly review.
-> 
-> I read the code again. Maybe I miss something. But as my understanding,
-> for hole, there is no pte.
-> As the current code migrate_vma_collect_pmd()
-> {
-> 	if (pmd_none(*pmdp))
-> 		return migrate_vma_collect_hole(start, end, walk);
-> ...
-> 	make_migration_entry()
-> }
-> 
-> We do not install migration entry for hole, then no need to remove
-> migration pte entry.
-> 
-> And on the driver side, there is way to migrate a hole. The driver just
-> skip it by
-> drivers/gpu/drm/nouveau/nouveau_dmem.c: if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
->                                              ^^^^
-> Finally, in migrate_vma_finalize(), for a hole,
-> 		if (!page) {
-> 			if (newpage) {
-> 				unlock_page(newpage);
-> 				put_page(newpage);
-> 			}
-> 			continue;
-> 		}
-> And we do not rely on remove_migration_ptes(page, newpage, false); to
-> restore the orignal pte (and it is impossible).
-> 
-Hello, do you have any comment?
 
-I think most of important, hole does not use the 'MIGRATE_PFN_MIGRATE'
-API. Hole has not pte, and there is no way to 'remove migration pte
-entry'. Further more, we can know the failure on the source side, no
-need to defer it to driver side.
+--ag5nue2vs66c2tae
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-By this way, [3/3] can unify the code.
+Hi Ricardo,
 
-Thanks,
-	Pingfan
+On Fri, Aug 23, 2019 at 02:37:37PM +0200, Ricardo Ribalda Delgado wrote:
+> Instead of creating manually the V4L2_CID_UNIT_CELL_SIZE control, lets
+> use the helper.
+>
+
+I think you should drop 4/7 and use directly the new helper here.
+
+Thanks
+  j
+
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  drivers/media/i2c/imx214.c | 29 ++++++++---------------------
+>  1 file changed, 8 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index cc0a013ba7da..625617d4c81a 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -942,26 +942,6 @@ static int __maybe_unused imx214_resume(struct device *dev)
+>  	return ret;
+>  }
+>
+> -static void unit_size_init(const struct v4l2_ctrl *ctrl, u32 idx,
+> -		     union v4l2_ctrl_ptr ptr)
+> -{
+> -	ptr.p_area->width = 1120;
+> -	ptr.p_area->height = 1120;
+> -}
+> -
+> -static const struct v4l2_ctrl_type_ops unit_size_ops = {
+> -	.init = unit_size_init,
+> -};
+> -
+> -static struct v4l2_ctrl *new_unit_size_ctrl(struct v4l2_ctrl_handler *handler)
+> -{
+> -	static struct v4l2_ctrl_config ctrl = {
+> -		.id = V4L2_CID_UNIT_CELL_SIZE,
+> -		.type_ops = &unit_size_ops,
+> -	};
+> -
+> -	return v4l2_ctrl_new_custom(handler, &ctrl, NULL);
+> -}
+>  static int imx214_probe(struct i2c_client *client)
+>  {
+>  	struct device *dev = &client->dev;
+> @@ -969,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
+>  	static const s64 link_freq[] = {
+>  		IMX214_DEFAULT_LINK_FREQ,
+>  	};
+> +	struct v4l2_area unit_size = {
+> +		.width = 1120,
+> +		.height = 1120,
+> +	};
+>  	int ret;
+>
+>  	ret = imx214_parse_fwnode(dev);
+> @@ -1050,7 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
+>  					     V4L2_CID_EXPOSURE,
+>  					     0, 3184, 1, 0x0c70);
+>
+> -	imx214->unit_size = new_unit_size_ctrl(&imx214->ctrls);
+> +	imx214->unit_size = v4l2_ctrl_new_area(&imx214->ctrls,
+> +					       &imx214_ctrl_ops,
+> +					       V4L2_CID_UNIT_CELL_SIZE,
+> +					       &unit_size);
+>
+>  	ret = imx214->ctrls.error;
+>  	if (ret) {
+> --
+> 2.23.0.rc1
+>
+
+--ag5nue2vs66c2tae
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jkFEACgkQcjQGjxah
+VjxsbA/9F2pksG16C7RtBs2UrBKqiGAbNyG2q2hAISrI+MgxbpdhXD6OY+oEydYj
++KgNoQiTV4ODdokQejJ3YrOCg76QVmSY4Xd+LwkbgJmresPGjq1h8HsmBft854AS
+/FZ2JTEnQoPfb0BxlecHhfgj1lqHO9ePvN8Oe2r91p9kX0cwPS4KPzd4UJZZ/4wX
+0jj+DzDW98jf1rohQtJ9unTrO5UIBubHRAXNGD3z7zHXMEpJto8SVi2Ek9a8gCwN
+Su4Or4Snppr7YBVC4QlkPsxF/lxUcyW0edDdRQtfxDts3BjE5UguG/IMUj8dFsTN
+XbwDRAGUbYYIzNrzx4baXaZ+FSyqk+KbyUqH+s0lAm1ju/thHKMLBuFLXip885Qy
++pOK76vRRjMCIuXP5vCCiIHZplVrxfyOomnTqjw1PsQ4/2ljv4Cz2cRB2pQVJECl
+cAEgdfivU+h4EP2NOh1AR47F880Vde3l0E5YPcSzTJW0QJX5pfJPvuEFBV18RjG8
+96wqHvAL2AjdoecQAcqL71MeYo3iUXH4Ed8B1EBNgT8j94QaSwK1L0Ogb1c6DtOl
+59xh3p+z1yWc1ydZofSJwzyykwnlfeUHqjeG8uYrSZNzbMF0NZr4qEu3pZEp1N0Y
+oAvjCfgcjJ16bvlmZRhNnObLJd4KyJhjYkD7s9bqSWX69TuFeeg=
+=hMhH
+-----END PGP SIGNATURE-----
+
+--ag5nue2vs66c2tae--
