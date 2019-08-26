@@ -2,136 +2,128 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32EBC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBB3C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7510E21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1197F2186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aElc5Gqu"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QViZPMOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfHZUOp (ORCPT
+        id S2388077AbfHZUOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:14:45 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45261 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388018AbfHZUOh (ORCPT
+        Mon, 26 Aug 2019 16:14:49 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41489 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388031AbfHZUOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:14:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v12so13133147oic.12;
-        Mon, 26 Aug 2019 13:14:37 -0700 (PDT)
+        Mon, 26 Aug 2019 16:14:40 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w5so28140350edl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ONmOWKvBkqEH/6EhYi4M9WtYliZ0ZD+WEF16FDwCz2Y=;
-        b=aElc5Gqu7IZBqMgUQlepAcFFQWhg3XUita3Eg48UrKP0LL0M4v2VpLgA0T0riCudaI
-         C/AwEdZxwkUixjJ64yc8WmUom07VWuhXwSis05lPzZiJEQjao0kEClo/Ga3mseYQjgaM
-         GBIs/NxcfrVxnaFmGB3juSONtjL8eNPmXr0LQ1EqdFEye9NqLG3FNslS/39pPNpb6Hxe
-         Cb7xlSLkyd9W2VGPulQC5KERanyiTITn7n6xGZLAcYzZNk/o4b2on8xR5Q5AgydYi52A
-         95ckrj+cWwVuA3H8l4F6K2f4d/O9ozcnAj/RfuZ8Qv5Mh6t0gJrjHxsD+CiZHRvoRBBV
-         f4Yw==
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bUhdeRpbg8gRloy4w33VnXTSeooO5sqpvDT0wx5DMzY=;
+        b=QViZPMOCt4TCBDSlKAVCdrC+U37mohUaGpt7t54fKUAJnII/M30PJe3HVgsMvO32I/
+         JHmsQisAEo+uwv1GVmUHudMfC1x01ExLcWbO28gdRMZiZ/4jYiOIUrGZ6L9+5vRcVnku
+         F9YxwgBgX7xnEA70Wp+hl/fz9/FJFtPM7Z4dQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ONmOWKvBkqEH/6EhYi4M9WtYliZ0ZD+WEF16FDwCz2Y=;
-        b=FaUqC75xx5Lvesm3PbYXcJEvIelZnRNcjVmusiyCUzLfTA4+3myUoN1fRTcLLghBzQ
-         lrmtxEzfKOFG4QxuUVfvKuvmyX91FGop8undXj+6qXzp8Pqbgap8H4maK5Yihmjbb/na
-         yTdI2HUf5oOM9TWsDKJmGih77/49cH41NK3fMUAfCI3tNf8N73Vsi9onibJeTptAaxL4
-         F7Rm63socaZQyyA9Y/9sawVLocLQ0njF1Y/r60MdWY3+tYWCkmCb/hCvRrkIyr55Sose
-         kR4ssyMkLn/SH17WFYyMq3L3v4IHl2Ap2MV6OHrVDjqyhVqLQWUsHbWw5kUtvO0W7ynk
-         +JrQ==
-X-Gm-Message-State: APjAAAXYjLlsBx0na7p5KsMHNdYdnvmldad0gpg8QHnpWSwCgtBGPIST
-        bXH7W10FLYvjM7k1nbrvX38sQnv2LNMQJZoBPyg=
-X-Google-Smtp-Source: APXvYqx+wsqBR7LhuXaoGevhgB1lph1QB9TxB004jttF4vjCHdjjEMk/vm+aspko9Z9DT+mYvMOr4vitH26F4N8l39M=
-X-Received: by 2002:a05:6808:8e2:: with SMTP id d2mr14160818oic.47.1566850476997;
- Mon, 26 Aug 2019 13:14:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
-In-Reply-To: <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bUhdeRpbg8gRloy4w33VnXTSeooO5sqpvDT0wx5DMzY=;
+        b=M4l1Ax+3+DTvfn2bx/o+hTJwZeqqfYhYnDXQBiL/2HFaPJdUdkO/kHvMxn4uNJQtBd
+         dVwnH0EUWXtMGwVeubj1Z+K1goR0NesvkTlnw7dWwflFHFWlj+MwX0CdDCybeLwPTrmc
+         FTJlFzDJRAKjLYO0iNF0kEaa1OS2U2SM/9QtlghRqI/PxrPI6Cfx+pATviqWcHTT9JNu
+         W9w9x1aeVi89FwSUpnu/NzGjoG+++hJka3gKdI/P9wbc3lIPeyKRH8Bz3vD4cIcqMVKK
+         IdTGuU/iA9a+RKdxfIBSvlB0d5EpzJuEFETUsB+Vrvzup78etFSDDBjIJnb3LtLh9UYo
+         h5qw==
+X-Gm-Message-State: APjAAAWHmn5AMTzfuNxLQKbzsrwN6D+8+KMIDKkabOaCkcrEGnInd9p5
+        X5yEkbgPgKL1o5egD77ZiK1QZQxt8MtKoA==
+X-Google-Smtp-Source: APXvYqwQX5rJn4xiT0PzmoOjk8RceDZHB/u+ViHnJA99I4EPasO1Ql6cGV43P/XDRPUyqHKPLLvlzQ==
+X-Received: by 2002:aa7:c552:: with SMTP id s18mr21104247edr.0.1566850478492;
+        Mon, 26 Aug 2019 13:14:38 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id j25sm3000780ejb.49.2019.08.26.13.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 13:14:37 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH 5/5] mm, notifier: annotate with might_sleep()
 Date:   Mon, 26 Aug 2019 22:14:25 +0200
-Message-ID: <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        hch@infradead.org, jingoohan1@gmail.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <20190826201425.17547-6-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
+References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dilip,
+Since mmu notifiers don't exist for more processes, but could block in
+interesting places, add some annotations. This should help make sure
+core mm keeps up its end of the mmu notifier contract.
 
-On Mon, Aug 26, 2019 at 8:42 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-[...]
-> intel_pcie_port structure is having "struct dw_pcie" as mentioned below:
->
-> struct intel_pcie_port {
->         struct dw_pcie          *pci;
->         unsigned int            id; /* Physical RC Index */
->         void __iomem            *app_base;
->         struct gpio_desc        *reset_gpio;
-> [...]
-> };
->
-> Almost all the drivers are following the same way. I don't see any issue in this way.
-> Please help me with more description if you see an issue here.
->
-> struct qcom_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-qcom.c
->
-> struct armada8k_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-armada8k.c
->
-> struct artpec6_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-artpec6.c
->
-> struct kirin_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-kirin.c
->
-> struct spear13xx_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-spear13xx.c
-thank you for this detailed list.
-it seems that I picked the minority of drivers as "reference" where
-it's implemented differently:
+The checks here are outside of all notifier checks because of that.
+They compile away without CONFIG_DEBUG_ATOMIC_SLEEP.
 
-first example: pci-meson
-  struct meson_pcie {
-    struct dw_pcie pci;
-    ...
-  };
+Suggested by Jason.
 
-second example: pcie-tegra194 (only in -next, will be part of v5.4)
-  struct tegra_pcie_dw {
-    ...
-    struct dw_pcie pci;
-    ...
-  };
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: linux-mm@kvack.org
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ include/linux/mmu_notifier.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-so some drivers store a pointer pointer to the dw_pcie struct vs.
-embedding the dw_pcie struct directly.
-as far as I know the result will be equal, except that you don't have
-to use a second devm_kzalloc for struct dw_pcie (and thus reducing
-memory fragmentation).
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index 3f9829a1f32e..8b71813417e7 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -345,6 +345,8 @@ static inline void mmu_notifier_change_pte(struct mm_struct *mm,
+ static inline void
+ mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+ {
++	might_sleep();
++
+ 	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+ 	if (mm_has_notifiers(range->mm)) {
+ 		range->flags |= MMU_NOTIFIER_RANGE_BLOCKABLE;
+@@ -368,6 +370,9 @@ mmu_notifier_invalidate_range_start_nonblock(struct mmu_notifier_range *range)
+ static inline void
+ mmu_notifier_invalidate_range_end(struct mmu_notifier_range *range)
+ {
++	if (mmu_notifier_range_blockable(range))
++		might_sleep();
++
+ 	if (mm_has_notifiers(range->mm))
+ 		__mmu_notifier_invalidate_range_end(range, false);
+ }
+-- 
+2.23.0
 
-
-Martin
