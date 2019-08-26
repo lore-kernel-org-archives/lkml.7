@@ -2,109 +2,182 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41953C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E32F2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oYa8JhBm"
+	by mail.kernel.org (Postfix) with ESMTP id 8C0A72190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfHZFwQ (ORCPT
+        id S1729270AbfHZFzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 01:52:16 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35723 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729222AbfHZFwQ (ORCPT
+        Mon, 26 Aug 2019 01:55:22 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:36676 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725806AbfHZFzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 01:52:16 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n4so9913351pgv.2
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 22:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v1mN+PJ4/u/At+nrZH4p9oYVurqqQgIOn2/0TJTZ3aA=;
-        b=oYa8JhBm8dZps01mGvJJ7EihivLZWL9IVeFOB3bisU4QDF3oAG3c00mNnCybhSTIt8
-         sG/TtLLKPza0FQMNp8SD6tpnTXI83deBkdCptHRO7/s5IBkZAPI/7ji79LPDf1smlYB0
-         aXHhLZZYjvP1ZQCC35CtRudGtTvMRav/m0oz2KWiVvH+YCO/1uL+AqNhHH/kdfO4eK5K
-         WFOyHV47RBI+/nQlOqVl7RkO9GLAiTJyWl/XhDRTeFuU5Gf72QB4tTnLNsaaQsc4fKPL
-         ToLwMH+3IzLKjWo1smfWBhtIEdo3HluCKy2qpiiA+tQT4ZFbc0Ss4SC/oNOXIs+NKbfB
-         PJBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v1mN+PJ4/u/At+nrZH4p9oYVurqqQgIOn2/0TJTZ3aA=;
-        b=noC+EJze3sPjWZclserA3Mo0+uvbOMnRzg7nsEPMfA+VYfleq08CEhJxyfeazkz4yK
-         7Ialsnv9e4/mOKQOODYzNYouIwY5Zz8cCl+SO8pewuKothcRiDxl3kOFj9ATY/nipPQf
-         ocYeY/AiJBNXfmCZuq7s4wb5Gcx82MOW3FkP+fkQbsnznwXiNs+3zSt4Uw52BeLb+lWQ
-         QSGuEqLtXM4JguOWtItYC5LGnAjcstONj+mg8Bjp9TCQiZaCW+vwOn45W6nTK9R1dToH
-         Vp2n9iG8UNaJAmjHwXYDsyUMZRJ0aPt/X15H5q8GDcX5Vl7ZvYyMSgpETUzH99y1nWZK
-         3kLw==
-X-Gm-Message-State: APjAAAUgAH8wf+G8lLm5sxEjQ9Do1FfAt5MblgDNC1SMhbQeN7c7bmyd
-        sir8v8BgpXiftGdSbUmEkcqjJw==
-X-Google-Smtp-Source: APXvYqxLcGMYwSCfKwTksNB+K6eFlbyh6xDK9Gzl4gJ39cyvyk40/8Ba0qvaFGa7EbrwzZQNsOk3Sw==
-X-Received: by 2002:a17:90a:be07:: with SMTP id a7mr18000340pjs.88.1566798735792;
-        Sun, 25 Aug 2019 22:52:15 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id g2sm16208053pfq.88.2019.08.25.22.52.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 25 Aug 2019 22:52:15 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 11:22:13 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org,
-        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 2/9] staging: greybus: remove license "boilerplate"
-Message-ID: <20190826055213.rqzh4hsvg4p3eudp@vireshk-i7>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190825055429.18547-3-gregkh@linuxfoundation.org>
+        Mon, 26 Aug 2019 01:55:21 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1199A43F692;
+        Mon, 26 Aug 2019 15:55:12 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i27yA-0002Rg-EJ; Mon, 26 Aug 2019 15:55:10 +1000
+Date:   Mon, 26 Aug 2019 15:55:10 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190826055510.GL1119@dread.disaster.area>
+References: <20190820115515.GA29246@ziepe.ca>
+ <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190821181343.GH8653@ziepe.ca>
+ <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+ <20190821194810.GI8653@ziepe.ca>
+ <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+ <20190823032345.GG1119@dread.disaster.area>
+ <20190823120428.GA12968@ziepe.ca>
+ <20190824001124.GI1119@dread.disaster.area>
+ <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190825055429.18547-3-gregkh@linuxfoundation.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=l-5HZ6ThFU8XlB48y_YA:9 a=qRlaua0cGjGJrKa9:21
+        a=OEwtXWmnxFRK9C0v:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
-> When the greybus drivers were converted to SPDX identifiers for the
-> license text, some license boilerplate was not removed.  Clean this up
-> by removing this unneeded text now.
+On Fri, Aug 23, 2019 at 10:08:36PM -0700, Ira Weiny wrote:
+> On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
+> > On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
+> > > On Fri, Aug 23, 2019 at 01:23:45PM +1000, Dave Chinner wrote:
+> > > 
+> > > > > But the fact that RDMA, and potentially others, can "pass the
+> > > > > pins" to other processes is something I spent a lot of time trying to work out.
+> > > > 
+> > > > There's nothing in file layout lease architecture that says you
+> > > > can't "pass the pins" to another process.  All the file layout lease
+> > > > requirements say is that if you are going to pass a resource for
+> > > > which the layout lease guarantees access for to another process,
+> > > > then the destination process already have a valid, active layout
+> > > > lease that covers the range of the pins being passed to it via the
+> > > > RDMA handle.
+> > > 
+> > > How would the kernel detect and enforce this? There are many ways to
+> > > pass a FD.
+> > 
+> > AFAIC, that's not really a kernel problem. It's more of an
+> > application design constraint than anything else. i.e. if the app
+> > passes the IB context to another process without a lease, then the
+> > original process is still responsible for recalling the lease and
+> > has to tell that other process to release the IB handle and it's
+> > resources.
+> > 
+> > > IMHO it is wrong to try and create a model where the file lease exists
+> > > independently from the kernel object relying on it. In other words the
+> > > IB MR object itself should hold a reference to the lease it relies
+> > > upon to function properly.
+> > 
+> > That still doesn't work. Leases are not individually trackable or
+> > reference counted objects objects - they are attached to a struct
+> > file bUt, in reality, they are far more restricted than a struct
+> > file.
+> > 
+> > That is, a lease specifically tracks the pid and the _open fd_ it
+> > was obtained for, so it is essentially owned by a specific process
+> > context.  Hence a lease is not able to be passed to a separate
+> > process context and have it still work correctly for lease break
+> > notifications.  i.e. the layout break signal gets delivered to
+> > original process that created the struct file, if it still exists
+> > and has the original fd still open. It does not get sent to the
+> > process that currently holds a reference to the IB context.
+> >
 > 
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: Alex Elder <elder@kernel.org>
-> Cc: Vaibhav Agarwal <vaibhav.sr@gmail.com>
-> Cc: Mark Greer <mgreer@animalcreek.com>
-> Cc: Viresh Kumar <vireshk@kernel.org>
-> Cc: "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
-> Cc: greybus-dev@lists.linaro.org
-> Cc: devel@driverdev.osuosl.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  .../Documentation/firmware/authenticate.c     | 46 -------------------
->  .../greybus/Documentation/firmware/firmware.c | 46 -------------------
->  drivers/staging/greybus/arpc.h                | 46 -------------------
->  drivers/staging/greybus/audio_apbridgea.h     | 26 +----------
->  .../staging/greybus/greybus_authentication.h  | 46 -------------------
->  drivers/staging/greybus/greybus_firmware.h    | 46 -------------------
->  drivers/staging/greybus/greybus_protocols.h   | 46 -------------------
->  drivers/staging/greybus/tools/loopback_test.c |  2 -
->  8 files changed, 1 insertion(+), 303 deletions(-)
+> The fcntl man page says:
+> 
+> "Leases are associated with an open file description (see open(2)).  This means
+> that duplicate file descriptors (created by, for example, fork(2) or dup(2))
+> refer to the same lease, and this lease may be modified or released using any
+> of these descriptors.  Furthermore,  the lease is released by either an
+> explicit F_UNLCK operation on any of these duplicate file descriptors, or when
+> all such file descriptors have been closed."
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Right, the lease is attached to the struct file, so it follows
+where-ever the struct file goes. That doesn't mean it's actually
+useful when the struct file is duplicated and/or passed to another
+process. :/
 
+AFAICT, the problem is that when we take another reference to the
+struct file, or when the struct file is passed to a different
+process, nothing updates the lease or lease state attached to that
+struct file.
+
+> From this I took it that the child process FD would have the lease as well
+> _and_ could release it.  I _assumed_ that applied to SCM_RIGHTS but it does not
+> seem to work the same way as dup() so I'm not so sure.
+
+Sure, that part works because the struct file is passed. It doesn't
+end up with the same fd number in the other process, though.
+
+The issue is that layout leases need to notify userspace when they
+are broken by the kernel, so a lease stores the owner pid/tid in the
+file->f_owner field via __f_setown(). It also keeps a struct fasync
+attached to the file_lock that records the fd that the lease was
+created on.  When a signal needs to be sent to userspace for that
+lease, we call kill_fasync() and that walks the list of fasync
+structures on the lease and calls:
+
+	send_sigio(fown, fa->fa_fd, band);
+
+And it does for every fasync struct attached to a lease. Yes, a
+lease can track multiple fds, but it can only track them in a single
+process context. The moment the struct file is shared with another
+process, the lease is no longer capable of sending notifications to
+all the lease holders.
+
+Yes, you can change the owning process via F_SETOWNER, but that's
+still only a single process context, and you can't change the fd in
+the fasync list. You can add new fd to an existing lease by calling
+F_SETLEASE on the new fd, but you still only have a single process
+owner context for signal delivery.
+
+As such, leases that require callbacks to userspace are currently
+only valid within the process context the lease was taken in.
+Indeed, even closing the fd the lease was taken on without
+F_UNLCKing it first doesn't mean the lease has been torn down if
+there is some other reference to the struct file. That means the
+original lease owner will still get SIGIO delivered to that fd on a
+lease break regardless of whether it is open or not. ANd if we
+implement "layout lease not released within SIGIO response timeout"
+then that process will get killed, despite the fact it may not even
+have a reference to that file anymore.
+
+So, AFAICT, leases that require userspace callbacks only work within
+their original process context while they original fd is still open.
+
+Cheers,
+
+Dave.
 -- 
-viresh
+Dave Chinner
+david@fromorbit.com
