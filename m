@@ -2,94 +2,163 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7014C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80463C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B420F20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C9420874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjLmh1l0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfHZIDf (ORCPT
+        id S1730353AbfHZIDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:03:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:48992 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfHZIDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:03:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:03:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="asc'?scan'208";a="196998739"
-Received: from sjolley-mobl.amr.corp.intel.com ([10.254.178.147])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2019 01:03:34 -0700
-Message-ID: <c2279a78904b581924894b712403299903eacbfc.camel@intel.com>
-Subject: Re: [PATCH] net: intel: Cleanup e1000 - add space between }}
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-To:     Forrest Fleming <ffleming@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 26 Aug 2019 01:03:33 -0700
-In-Reply-To: <20190823191421.3318-1-ffleming@gmail.com>
-References: <20190823191421.3318-1-ffleming@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-+SaW8iJuTsbssO2+QFx8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 26 Aug 2019 04:03:44 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37813 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfHZIDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:03:43 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s14so13370893qkm.4;
+        Mon, 26 Aug 2019 01:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9WmdFRMJa7sCCIgAvCuC7Y0ayc92RRMOTHf0AFVOsB4=;
+        b=hjLmh1l0PH6+OCtiZukj8qCTTPxtcbyQLCoRj3PDuhnLg7LMEKoUv25sj+qHt99CA8
+         /9FAvgY31UpiNH4zmhPFTcLiC1i4mXin976/S46Ls3ct/UINT+pkYhr756uf6b0+mvCT
+         gCYPaoFTk1/+hq9ZN7GzLptaA1C1OqEIVxzNYZhzePyPAdo03jhq5MUrW+lQo7G1y3k2
+         SFVbYHyzm5Sr+j2xVZeeN6vaTy2Mo/kdtrp72LJmXrukKdlR2CH8dCra+z7EgeFWIoWM
+         BFw6opkCP9fkWadA2dDXgOjsKKIgypPknsMYBC2Yqgdc/cSWYNzGJ5hCDe2WLQy3dyOg
+         qxWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9WmdFRMJa7sCCIgAvCuC7Y0ayc92RRMOTHf0AFVOsB4=;
+        b=CaJR+5mM4udKKn4mt06O0joNAiBFBSFwgvDRKEpc7iFCTJj20XdcGk5k5CwVMyFQCK
+         HuUMVoPQYx7SB3HHo/hRHvw6mdyK+kR6j4/cylXxw/16TZaSdITktXZ9fyweSeekvdsO
+         lsRGVa1OtuuZOoRjsEKjT5uJe8AMQfZhrhQQPFxyX9W/ZbTlXmW6Oe/b9//7zbYT1qjy
+         rpA/DjT+AzXv6qF3Gi9k/DmMTCf+dTCihKTg7nzigOPqHh+chnABmqvttTMP54oFvkXL
+         54uAKzP/EeXk1l83kaKmmkqLpBRKLgKt2ToXGYcZcWmDIscHOBj3x63ppKerYVlhPGFX
+         5tlw==
+X-Gm-Message-State: APjAAAVLaTiqbPRD+EWLtfB4BtUg1hQNsSeSX6t2JrCATIEWrcEjHnU/
+        gVfEWNc7ppktYyPclmAIXCcrb7KJC1EJQoRAKvXvLEeXinY=
+X-Google-Smtp-Source: APXvYqzAIrFcrQO5fBz+71rvYvLaxrpVM5bDSjpPpNr3XWFmfg1dE/uBhtyJb3PBjFZdbejw2RPeUafB4LJIAT54Bxc=
+X-Received: by 2002:a05:620a:696:: with SMTP id f22mr15005145qkh.232.1566806622322;
+ Mon, 26 Aug 2019 01:03:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <cover.1566540652.git.han_mao@c-sky.com> <820d80272fc5627b8d00e684663a614470217606.1566540652.git.han_mao@c-sky.com>
+ <CAEbi=3fbe9zbsLyfA=s9gHtAFJrp5Ox0jWoAqcZudQ_xODicgA@mail.gmail.com> <CAJF2gTS80XU=4z-_=N=oGV6GH-+8KXCa74DyhVMcRxJRBq5g4A@mail.gmail.com>
+In-Reply-To: <CAJF2gTS80XU=4z-_=N=oGV6GH-+8KXCa74DyhVMcRxJRBq5g4A@mail.gmail.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Mon, 26 Aug 2019 16:03:07 +0800
+Message-ID: <CAEbi=3dtDy=CMRagVrj0ihtpYqS+4NkK7eYmn6Gn=2bV9khWVg@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] riscv: Add perf callchain support
+To:     Guo Ren <guoren@kernel.org>, greentime.hu@sifive.com
+Cc:     Mao Han <han_mao@c-sky.com>, linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Guo,
 
---=-+SaW8iJuTsbssO2+QFx8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Guo Ren <guoren@kernel.org> =E6=96=BC 2019=E5=B9=B48=E6=9C=8824=E6=97=A5 =
+=E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=888:54=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Please check CONFIG_FRAME_POINTER
+>
+> 1 *frame =3D *((struct stackframe *)frame->fp - 1);
+> This code is origionally from riscv/kernel/stacktrace.c: walk_stackframe
+>
+> In linux/Makefile it'll involve the options for gcc to definitely
+> store ra & prev_fp in fp pointer.
+> ifdef CONFIG_FRAME_POINTER
+> KBUILD_CFLAGS +=3D -fno-omit-frame-pointer -fno-optimize-sibling-calls
+>
+> So --call-graph fp need depends on CONFIG_FRAME_POINTER.
+>
 
-On Fri, 2019-08-23 at 19:14 +0000, Forrest Fleming wrote:
-> suggested by checkpatch
->=20
-> Signed-off-by: Forrest Fleming <ffleming@gmail.com>
-> ---
->  .../net/ethernet/intel/e1000/e1000_param.c    | 28 +++++++++----------
->  1 file changed, 14 insertions(+), 14 deletions(-)
+I am pretty sure CONFIG_FRAME_POINTER is Y
+# zcat /proc/config.gz |grep CONFIG_FRAME_POINTER
+CONFIG_FRAME_POINTER=3Dy
 
-While I do not see an issue with this change, I wonder how important it is
-to make such a change.  Especially since most of the hardware supported by
-this driver is not available for testing.  In addition, this is one
-suggested change by checkpatch.pl that I personally do not agree with.
+This is not going to go wrong every time, the probability of error is
+about one tenth or one quarter. randomly
+There may be some conditions that we have not considered.
 
-This is not a hard NAK, but you have to explain how this change makes the
-code more readable before I consider it.
+I add one more condition to check if it is a valid virtual address and
+it( ./perf record -e cpu-clock --call-graph fp ls) passes 1000 times
+without failure in Unleashed board based on 5.3-rc5.
+Here is my patch. Please have  a look at it. I am not sure if it is a
+good solution.
 
---=-+SaW8iJuTsbssO2+QFx8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+diff --git a/arch/riscv/kernel/perf_callchain.c
+b/arch/riscv/kernel/perf_callchain.c
+index d75d15c13dc7..4717942435df 100644
+--- a/arch/riscv/kernel/perf_callchain.c
++++ b/arch/riscv/kernel/perf_callchain.c
+@@ -18,6 +18,8 @@ static int unwind_frame_kernel(struct stackframe *frame)
+                return -EPERM;
+        if (frame->fp < CONFIG_PAGE_OFFSET)
+                return -EPERM;
++       if (!virt_addr_valid(frame->fp))
++               return -EPERM;
 
------BEGIN PGP SIGNATURE-----
+        *frame =3D *((struct stackframe *)frame->fp - 1);
+        if (__kernel_text_address(frame->ra)) {
 
-iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl1jklUACgkQ5W/vlVpL
-7c7hHg/+NAXAeuMjDZxOZq/wxvvj915GMyFGhtxIHKvbyYMLDU1m2AMHXzvBamyb
-qhYKGFYjTD5OsbqvHCKaZ4KxjMgiNGxfrDnLD3JPgyrEGKMICpU87Ec49tfRhLo7
-Jj7+IetakkcwLGnNoi2ZeumsfybLvjrtJGZS+QC66QRXqD8TeIuoEDleRDSs9sMp
-6CVb5m0ZGQAbEk0Kpso1CwdoEqQ0LdN27dQbTi8ix5wCcQ1HJnOjBUDvTzsfp2cS
-L5TlNViQ4GhfJkkR2PDsI2Svh1XJd1w4U3PMDRHx4Bu6MajAFcKxGoFgfbizpP5C
-CtGGiCN91RuI87eUfpWvpFsIOM4wm4EULYMSEgPn7TuUBB3CweNafpGJnDmtiqGD
-dj2+AOYtmKoKFbatNBhl9zIEMU76vW54gshX5CaWToCFJeFAqagrgoWdrOM4vWIM
-rMcz/hgTvxU40ad3ZJ0kCcSy+j/JTF8JRG9sBYaymoJnxMCT6jeFI6R9fIhRqMA3
-QEpuEElGSnpvD7Up7z1Sd7oE4wJlLYbAEwZqn/+rwGIk6d0PZmHH3ZixFI/HYemt
-qji8KltUM/QHM0jaXeLiPBq3RJlt/4qs6x8LV9k1zuLRL0GuXQs1Wu1PX2pNDLZU
-jataaHMp0uFKLkWwR2metAyY9mwHKdJgV7pO2/MAb2AKVJF2HqA=
-=pzql
------END PGP SIGNATURE-----
+It could catch cases called in this way.
 
---=-+SaW8iJuTsbssO2+QFx8--
+[ 1381.936586] frame->fp=3D:ffffffff00547550
+[ 1382.038542] CPU: 1 PID: 135 Comm: ls Not tainted
+5.3.0-rc5-00003-gb008f6bcd67c-dirty #14
+[ 1382.307440] Call Trace:
+[ 1382.388947] [<ffffffe0002a2d8e>] walk_stackframe+0x0/0x9a
+[ 1382.568053] [<ffffffe0002a2f5a>] show_stack+0x2a/0x34
+[ 1382.735960] [<ffffffe00083dcd6>] dump_stack+0x62/0x7c
+[ 1382.903863] [<ffffffe0002a49e0>] perf_callchain_kernel+0xd8/0x102
+[ 1383.106558] [<ffffffe000340a6e>] get_perf_callchain+0x136/0x1f2
+[ 1383.303128] [<ffffffe00033d480>] perf_callchain+0x52/0x6e
+[ 1383.482553] [<ffffffe00033d50a>] perf_prepare_sample+0x6e/0x476
+[ 1383.679357] [<ffffffe00033d92e>] perf_event_output_forward+0x1c/0x50
+[ 1383.890633] [<ffffffe000338b4c>] __perf_event_overflow+0x6a/0xa4
+[ 1384.090279] [<ffffffe000338c40>] perf_swevent_hrtimer+0xba/0x106
+[ 1384.290094] [<ffffffe0002f307c>] __hrtimer_run_queues+0x84/0x108
+[ 1384.489694] [<ffffffe0002f36b8>] hrtimer_interrupt+0xca/0x1ce
+[ 1384.680974] [<ffffffe00072f572>] riscv_timer_interrupt+0x32/0x3a
+[ 1384.880449] [<ffffffe000854b34>] do_IRQ+0x64/0xbe
+[ 1385.036698] [<ffffffe0002a1c5c>] ret_from_exception+0x0/0xc
 
+[13915.697989] frame->fp=3D:fffffffffffff000
+[13915.799937] CPU: 2 PID: 663 Comm: ls Not tainted
+5.3.0-rc5-00003-gb008f6bcd67c-dirty #14
+[13916.068832] Call Trace:
+[13916.150380] [<ffffffe0002a2d8e>] walk_stackframe+0x0/0x9a
+[13916.329450] [<ffffffe0002a2f5a>] show_stack+0x2a/0x34
+[13916.497360] [<ffffffe00083dcd6>] dump_stack+0x62/0x7c
+[13916.665265] [<ffffffe0002a49e0>] perf_callchain_kernel+0xd8/0x102
+[13916.867949] [<ffffffe000340a6e>] get_perf_callchain+0x136/0x1f2
+[13917.064526] [<ffffffe00033d480>] perf_callchain+0x52/0x6e
+[13917.243950] [<ffffffe00033d50a>] perf_prepare_sample+0x6e/0x476
+[13917.440759] [<ffffffe00033d92e>] perf_event_output_forward+0x1c/0x50
+[13917.652021] [<ffffffe000338b4c>] __perf_event_overflow+0x6a/0xa4
+[13917.851683] [<ffffffe000338c40>] perf_swevent_hrtimer+0xba/0x106
+[13918.051494] [<ffffffe0002f307c>] __hrtimer_run_queues+0x84/0x108
+[13918.251094] [<ffffffe0002f36b8>] hrtimer_interrupt+0xca/0x1ce
+[13918.442379] [<ffffffe00072f572>] riscv_timer_interrupt+0x32/0x3a
+[13918.641840] [<ffffffe000854b34>] do_IRQ+0x64/0xbe
+[13918.798082] [<ffffffe0002a1c5c>] ret_from_exception+0x0/0xc
