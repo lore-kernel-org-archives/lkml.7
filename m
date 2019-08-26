@@ -6,112 +6,146 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77827C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC707C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8C52070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0252070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbfHZMFr (ORCPT
+        id S1731420AbfHZMFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:05:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43554 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726962AbfHZMFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:05:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62E2AAFCC;
-        Mon, 26 Aug 2019 12:05:45 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 14:05:44 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
-Message-ID: <20190826120544.ccbtjkgvk3ao4ak6@pathway.suse.cz>
-References: <20190824233724.1775-1-uwe@kleine-koenig.org>
- <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
- <20190825091442.GA5817@taurus.defre.kleine-koenig.org>
+        Mon, 26 Aug 2019 08:05:55 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:35794 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731225AbfHZMFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:05:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 8A080FB03;
+        Mon, 26 Aug 2019 14:05:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9toa2EE2R_0o; Mon, 26 Aug 2019 14:05:49 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 8F2B949200; Mon, 26 Aug 2019 14:05:48 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 14:05:48 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
+Message-ID: <20190826120548.GA14316@bogon.m.sigxcpu.org>
+References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190825091442.GA5817@taurus.defre.kleine-koenig.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 2019-08-25 11:14:42, Uwe Kleine-König  wrote:
-> Hello Andrew,
+Hi,
+On Wed, Aug 21, 2019 at 01:15:40PM +0300, Robert Chiras wrote:
+> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
+> and 8QXP). Following, are the new features added and fixes from this
+> patch-set:
+
+I've applied this whole series on top of my NWL work and it looks good
+with a DSI panel. Applying the whole series also fixes an issue where
+after unblank the output was sometimes shifted about half a screen width
+to the right (which didn't happen with DCSS). So at least from the parts
+I could test:
+
+  Tested-by: Guido Günther <agx@sigxcpu.org> 
+
+for the whole thing.
+Cheers,
+ -- Guido
 > 
-> On Sat, Aug 24, 2019 at 04:58:29PM -0700, Andrew Morton wrote:
-> > (cc printk maintainers).
+> 1. Add support for drm_bridge
+> On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
+> display connector, where an LCD panel can be attached, but instead it is
+> connected to DSI controller. Since this DSI stands between the display
+> controller (eLCDIF) and the physical connector, the DSI can be implemented
+> as a DRM bridge. So, in order to be able to connect the mxsfb driver to
+> the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
+> driver (the actual driver for the eLCDIF block).
 > 
-> Ah, I wasn't aware there is something like them. Thanks
+> 2. Add support for additional pixel formats
+> Some of the pixel formats needed by Android were not implemented in this
+> driver, but they were actually supported. So, add support for them.
 > 
-> > On Sun, 25 Aug 2019 01:37:23 +0200 Uwe Kleine-König <uwe@kleine-koenig.org> wrote:
-> > 
-> > > 	pr_info("probing failed (%dE)\n", ret);
-> > > 
-> > > expands to
-> > > 
-> > > 	probing failed (EIO)
-> > > 
-> > > if ret holds -EIO (or EIO). This introduces an array of error codes. If
-> > > the error code is missing, %dE falls back to %d and so prints the plain
-> > > number.
-
-What was the motivation for this patch, please?
-
-Did it look like a good idea?
-Did anyone got tired by searching for the error codes many
-times a day?
-Did the idea came from a developer, support, or user, please?
-
-> 	add/remove: 2/0 grow/shrink: 4/2 up/down: 1488/-8 (1480)
-> 	Function                                     old     new   delta
-> 	errorcodes                                     -    1200   +1200
-> 	errstr                                         -     200    +200
-> 	vsnprintf                                    884     960     +76
-> 	set_precision                                148     152      +4
-> 	resource_string                             1380    1384      +4
-> 	flags_string                                 400     404      +4
-> 	num_to_str                                   288     284      -4
-> 	format_decode                               1024    1020      -4
-> 	Total: Before=21686, After=23166, chg +6.82%
+> 3. Add support for horizontal stride
+> Having support for horizontal stride allows the use of eLCDIF with a GPU
+> (for example) that can only output resolution sizes multiple of a power of
+> 8. For example, 1080 is not a power of 16, so in order to support 1920x1080
+> output from GPUs that can produce linear buffers only in sizes multiple to 16,
+> this feature is needed.
 > 
-> But that doesn't seem to include the size increase for all the added
-> strings which seems to be around another 1300 bytes.
-
-This non-trivial increase of the size and the table still
-includes only part of the error codes.
-
-The array is long, created by cpu&paste, the index of each code
-is not obvious.
-
-There are ideas to make the code even more tricky to reduce
-the size, keep it fast.
-
-Both, %dE modifier and the output format (ECODE) is non-standard.
-
-Upper letters gain a lot of attention. But the error code is
-only helper information. Also many error codes are misleading because
-they are used either wrongly or there was no better available.
-
-There is no proof that this approach would be widely acceptable for
-subsystem maintainers. Some might not like mass and "blind" code
-changes. Some might not like the output at all.
-
-I am not persuaded that all this is worth it. Also I do not like
-the non-standard solution.
-
-Best Regards,
-Petr
+> 3. Few minor features and bug-fixing
+> The addition of max-res DT property was actually needed in order to limit
+> the bandwidth usage of the eLCDIF block. This is need on systems where
+> multiple display controllers are presend and the memory bandwidth is not
+> enough to handle all of them at maximum capacity (like it is the case on
+> 8MQ, where there are two display controllers: DCSS and eLCDIF).
+> The rest of the patches are bug-fixes.
+> 
+> v3:
+> - Removed the max-res property patches and added support for
+>   max-memory-bandwidth property, as it is also implemented in other drivers
+> - Removed unnecessary drm_vblank_off in probe
+> 
+> v2:
+> - Collected Tested-by from Guido
+> - Split the first patch, which added more than one feature into relevant
+>   patches, explaining each feature added
+> - Also split the second patch into more patches, to differentiate between
+>   the feature itself (additional pixel formats support) and the cleanup
+>   of the register definitions for a better representation (guido)
+> - Included a patch submitted by Guido, while he was testing my patch-set
+> 
+> Guido Günther (1):
+>   drm/mxsfb: Read bus flags from bridge if present
+> 
+> Mirela Rabulea (1):
+>   drm/mxsfb: Signal mode changed when bpp changed
+> 
+> Robert Chiras (13):
+>   drm/mxsfb: Update mxsfb to support a bridge
+>   drm/mxsfb: Add defines for the rest of registers
+>   drm/mxsfb: Reset vital registers for a proper initialization
+>   drm/mxsfb: Update register definitions using bit manipulation defines
+>   drm/mxsfb: Update mxsfb with additional pixel formats
+>   drm/mxsfb: Fix the vblank events
+>   drm/mxsfb: Add max-memory-bandwidth property for MXSFB
+>   dt-bindings: display: Add max-memory-bandwidth property for mxsfb
+>   drm/mxsfb: Update mxsfb to support LCD reset
+>   drm/mxsfb: Improve the axi clock usage
+>   drm/mxsfb: Clear OUTSTANDING_REQS bits
+>   drm/mxsfb: Add support for horizontal stride
+>   drm/mxsfb: Add support for live pixel format change
+> 
+>  .../devicetree/bindings/display/mxsfb.txt          |   5 +
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 203 +++++++++++++--
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  12 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
+>  6 files changed, 589 insertions(+), 137 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
