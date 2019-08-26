@@ -2,138 +2,133 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643CEC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FCDC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FCD2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411A121852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:18:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2HLiYva"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DD954qxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbfHZPSh (ORCPT
+        id S1733022AbfHZPSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:18:37 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:34967 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfHZPSh (ORCPT
+        Mon, 26 Aug 2019 11:18:52 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35648 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbfHZPSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:18:37 -0400
-Received: by mail-wm1-f43.google.com with SMTP id l2so16277472wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:18:35 -0700 (PDT)
+        Mon, 26 Aug 2019 11:18:51 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h27so6687299lfp.2;
+        Mon, 26 Aug 2019 08:18:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MJqE4e1y1WxXXZ8DFg+jhsnKJrwmmhLs+9XOzxV26SU=;
-        b=N2HLiYvaM4PdUNOO2PtoZPCA6NElehowjRX0j5KIM468l9V2xXANYh5UlnYOU1zOWm
-         LsbN0/D8d8+X879QeHvrtF8UjpDYT5lFnVduz3l2dyQ+ESSSKk1/RiFFl1D7nDBDZqed
-         +1fGV84WqW0Xngi+syiQ9G4Y04eJn1eVKJsmCPqDY9zPEZDdl62X/a0yAL8C2NyqRWFO
-         d78juY3fLRnAxxU5e4FTiXvkG2L0RGE5s+jy4y/nCTKWvKlHqNQ5n3ReNlseSv+qVSZ8
-         iDeR+teCc/0naAMS5u8KveRSqA6MbQOxGbys+mM6H7NHnxYJP4kNcBmMoj5zQN0sARBc
-         WO6w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=50mv38tNDYl/ZA4wnFVjnzU9tnzotrbGWCLUfU9Ss9U=;
+        b=DD954qxFZhSRbJXXAWT8UGI78Qw8ddSTsJ57rK3XJ2/Wkv3WEez0EMD7YmJN/2ZyOa
+         lHwom4XrlZmbf1KZeQLf7asnloWFOOVQf5xcoWVTpcs1szbaGxrmsAO0GkI3d+aVs+tS
+         45DW701tM8vydRxSmqzFNoVGNFbONfoNF0eFihwp/hHhOgmbmtHCvxq0ShKSH9bK4uVZ
+         lWRizjWpZp076tU3UDHdesfEOgSmRxcFr2Q3vf20XLtbKjWauLGo6ia5FwENMqkF2Pnt
+         2si39G/XXBu4K0XjMggmMk0bTE/w5zakucAW0rL5geUPbRtC+zO8WmLsph6xVKz/nJqS
+         Q4Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MJqE4e1y1WxXXZ8DFg+jhsnKJrwmmhLs+9XOzxV26SU=;
-        b=uFuswK+/u9578vxeWNGpjVhFRQYdDW6qIa1SUdtXKOYxw/mGxxrtgbBA7RrIcJRFHU
-         cnEGLjsqJB+LMKejBt/VATDmkgl8nZcsPOzOWe5y00KW4ch9km6a4CtPdIJPH3j9PcJp
-         qUoGh4JfuPwl9fyjb68il4DZ2N9HDb0aP+vEjpSpwK4vb+fjCmkkWdRshhsStseKQm6m
-         j2lAm/lNGvqjRyLBpZNZ1q+Gxo+XHIERxopUi9gp/ahHcH63ce/0N86dLCw/g+YBBQkH
-         1WEiFOrtp/vgCXM7wQyBVAAvXnw6EnD0pUraG03Ql0BFAQ8Dpbc8oOJjaITrRH/4o4D4
-         zHpQ==
-X-Gm-Message-State: APjAAAXsyhmb6faM2KVIrUByfOvyffE5NBwHajOSwvJLt3HoNS7kynN6
-        zkyUEMKS1ubRRZ2erCzFXzSdvgyE7NUS59js+Gg=
-X-Google-Smtp-Source: APXvYqyNb/6xrJ9fWSJ6ROzQi/4V9Sg49C3QASNejc6eEG8PQt6mE/AzgkYX44UEwm3Io3giXr6Ongh6bMh322OAAj0=
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr9960829wmc.67.1566832714319;
- Mon, 26 Aug 2019 08:18:34 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=50mv38tNDYl/ZA4wnFVjnzU9tnzotrbGWCLUfU9Ss9U=;
+        b=BNGYeCYJITVD83+jG7mSd3INW6ztUPxQJ51tC1NLJWGBQWqUEak0FktvO9aScctb2J
+         U5lqvw8LlHafV/v9TtTUEu2qzwpndmnV0VusBLvGaBZnE63p1nHPztoLyiR+hZqdjgDz
+         Pr40QLj1jrQFLw1PVgHU6bImp1jR+z/8RfOnU8IRbHjkMWwv1xCn6qrdV6rgVUqwU11p
+         0/gX40Xk4+5NaZ7K5voDoKvJ8894PkR/ewIJD27XuzwSG0ht6uAIBcSMTBDnPV/sVFwQ
+         mMG5yROMOFdLFDC5vcB49CdW8xi9mPs+1xjsmNc+xO4aA/FlMZKGcpOY3NqFdoa6pIoQ
+         4UzA==
+X-Gm-Message-State: APjAAAX+/eJ0SHRPRGFqd4aDuS6fpBwDQt0pyhlVJ0txL2n3PxK3Gcxc
+        zCT10huGW0ylvuuEhobbxU4=
+X-Google-Smtp-Source: APXvYqxwBaKVRDZOzhOVbJvIe3ncrV9/xEPeURbvLz9/UhsnEu7vyFngUol6rQSCZMHo+7dD8ZFuQg==
+X-Received: by 2002:a19:674d:: with SMTP id e13mr11176375lfj.176.1566832729324;
+        Mon, 26 Aug 2019 08:18:49 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id m74sm2356165lje.72.2019.08.26.08.18.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 08:18:48 -0700 (PDT)
+Subject: Re: [PATCH] media: staging: tegra-vde: Disable building with
+ COMPILE_TEST
+To:     YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, robin.murphy@arm.com,
+        hverkuil-cisco@xs4all.nl
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+References: <20190826133140.13456-1-yuehaibing@huawei.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <58a8c62c-a45e-77e4-d2cb-99f95b847a73@gmail.com>
+Date:   Mon, 26 Aug 2019 18:18:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190826085707.12504-1-yuehaibing@huawei.com> <c324866d-855a-b259-4511-c69491a82c88@amd.com>
-In-Reply-To: <c324866d-855a-b259-4511-c69491a82c88@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 26 Aug 2019 11:18:22 -0400
-Message-ID: <CADnq5_OgDuFm_Huofu6S2O2dyzO42UdZm=cYgRKwH7f4gTCyvg@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amdgpu/display: fix build error without CONFIG_DRM_AMD_DC_DSC_SUPPORT
-To:     Harry Wentland <hwentlan@amd.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>, "Lei, Jun" <Jun.Lei@amd.com>,
-        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
-        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
-        "Aberback, Joshua" <Joshua.Aberback@amd.com>,
-        "Liu, Wenjing" <Wenjing.Liu@amd.com>,
-        "Liu, Charlene" <Charlene.Liu@amd.com>,
-        "Leung, Martin" <Martin.Leung@amd.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190826133140.13456-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 9:22 AM Harry Wentland <hwentlan@amd.com> wrote:
->
->
->
-> On 2019-08-26 4:57 a.m., YueHaibing wrote:
-> > If CONFIG_DRM_AMD_DC_DSC_SUPPORT is not set, build fails:
-> >
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c: In function dcn20_hw_sequencer_construct:
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c:2099:28:
-> >  error: dcn20_dsc_pg_control undeclared (first use in this function); did you mean dcn20_dpp_pg_control?
-> >   dc->hwss.dsc_pg_control = dcn20_dsc_pg_control;
-> >                             ^~~~~~~~~~~~~~~~~~~~
-> >                             dcn20_dpp_pg_control
-> >
-> > Use CONFIG_DRM_AMD_DC_DSC_SUPPORT to guard this.
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: 8a31820b1218 ("drm/amd/display: Make init_hw and init_pipes generic for seamless boot")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->
+Hello Yue,
 
-Applied.  Thanks,
+26.08.2019 16:31, YueHaibing пишет:
+> If COMPILE_TEST is y and IOMMU_SUPPORT is n, selecting TEGRA_VDE
+> to m will set IOMMU_IOVA to m, this fails the building of
+> TEGRA_HOST1X and DRM_TEGRA which is y like this:
+> 
+> drivers/gpu/host1x/cdma.o: In function `host1x_cdma_init':
+> cdma.c:(.text+0x66c): undefined reference to `alloc_iova'
+> cdma.c:(.text+0x698): undefined reference to `__free_iova'
+> 
+> drivers/gpu/drm/tegra/drm.o: In function `tegra_drm_unload':
+> drm.c:(.text+0xeb0): undefined reference to `put_iova_domain'
+> drm.c:(.text+0xeb4): undefined reference to `iova_cache_put'
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 6b2265975239 ("media: staging: tegra-vde: Fix build error")
+> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/staging/media/tegra-vde/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
+> index ba49ea5..a41d30c 100644
+> --- a/drivers/staging/media/tegra-vde/Kconfig
+> +++ b/drivers/staging/media/tegra-vde/Kconfig
+> @@ -1,9 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config TEGRA_VDE
+>  	tristate "NVIDIA Tegra Video Decoder Engine driver"
+> -	depends on ARCH_TEGRA || COMPILE_TEST
+> +	depends on ARCH_TEGRA
+>  	select DMA_SHARED_BUFFER
+> -	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
+> +	select IOMMU_IOVA if IOMMU_SUPPORT
+>  	select SRAM
+>  	help
+>  	    Say Y here to enable support for the NVIDIA Tegra video decoder
+> 
 
-Alex
+What about this variant:
 
-> Harry
->
-> > ---
-> >  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-> > index e146d1d..54d67f6 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-> > @@ -2092,7 +2092,11 @@ void dcn20_hw_sequencer_construct(struct dc *dc)
-> >       dc->hwss.enable_power_gating_plane = dcn20_enable_power_gating_plane;
-> >       dc->hwss.dpp_pg_control = dcn20_dpp_pg_control;
-> >       dc->hwss.hubp_pg_control = dcn20_hubp_pg_control;
-> > +#ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
-> >       dc->hwss.dsc_pg_control = dcn20_dsc_pg_control;
-> > +#else
-> > +     dc->hwss.dsc_pg_control = NULL;
-> > +#endif
-> >       dc->hwss.disable_vga = dcn20_disable_vga;
-> >
-> >       if (IS_FPGA_MAXIMUS_DC(dc->ctx->dce_environment)) {
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+	select IOMMU_IOVA if (IOMMU_SUPPORT && !COMPILE_TEST)
+
+which should fix the building and preserve compile-testing.
+
+It shouldn't matter at all whether IOVA is enabled or not for
+compile-testing of the driver.
