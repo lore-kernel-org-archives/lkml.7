@@ -2,81 +2,95 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79FBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F7020828
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PUHRKgmb"
+	by mail.kernel.org (Postfix) with ESMTP id 4E11C20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732052AbfHZMpF (ORCPT
+        id S1730658AbfHZMqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:45:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41320 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732039AbfHZMpE (ORCPT
+        Mon, 26 Aug 2019 08:46:46 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37885 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfHZMqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:45:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PVVuBwtldaFBMW44tYXfYObvZ+/PW6iyu+ybLE74lwA=; b=PUHRKgmbosYq7btXa2cuF6PMt
-        Df0ENheFKvVqcpG3n3a7iqqHnTnpA0YQ5170Kp+FUjJrpj5vHON50qsFk3v2dOADP1Sufhy8cRh18
-        nZYe6xaBNtsU8cz6pDJwgPsx9Bu+dP5kgxIHZFVkgpRKwUwyku8u2yyNR5dTjwG4rcmu7eavFPdq0
-        eqwg+qjo16uRq0B6el2PmNkDlMQqNqwYkgK8kfyTk46IYY3uGlKX8Q2hWWaD3B++oE9C5ndjsQljZ
-        5aeT3AMsnw7TndkKXXO4XLKJp3F69Syq/6438COKAKrYINPgF3SMvGrzDpRHutobBGG2V3FN312B/
-        O9E19r6HQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2EMi-0005QB-0f; Mon, 26 Aug 2019 12:44:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C96830759B;
-        Mon, 26 Aug 2019 14:44:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BDD4420A71EF4; Mon, 26 Aug 2019 14:44:52 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 14:44:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel-team@fb.com, stable@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Nadav Amit <namit@vmware.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
- set_kernel_text_rw()
-Message-ID: <20190826124452.GS2369@hirez.programming.kicks-ass.net>
-References: <20190823052335.572133-1-songliubraving@fb.com>
- <20190823093637.GH2369@hirez.programming.kicks-ass.net>
- <20190826073308.6e82589d@gandalf.local.home>
+        Mon, 26 Aug 2019 08:46:46 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w67so4006755lff.4;
+        Mon, 26 Aug 2019 05:46:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=o5VxSqANpF3iSDMsKr09QKmtFoHpsPPzjP35Sih9O7k=;
+        b=TZUvwiX/iIDZ88qwz/CJxf+nJvGdZ5VlDEsJHp7XIoQJv39Vxc+77iNAiehQUIFyFZ
+         ZLzuytsIuVb25SwlGuf5ycNKRDy9OkR6ZvyQOqhwINmvLzbsESeHfuveEb4mrcIX1B9l
+         CmG/N1kaWealPPbW0s97pZ5KlhzlwNA4KrpLdm+oMQUlQ5k34RUN0nPiqMaq6VGSVnZ9
+         P1heSdvw2AVQOCUOYW9GRvu8JMY/Sjn8J3l+DlMsq4Y3POh2IB980jWuIr+RzbB7hYRO
+         kYbDcvDOxxqfQc7rq13X4N0N5hLtruLIqq6qkSkig3gs1Sg8CPsawYWmkBsQx4eqtk4C
+         m6Rw==
+X-Gm-Message-State: APjAAAVbPp72/lF9Fo4NYP99nSJU7cn9ujE3B/FLkSb8WxcVkIqLEwKT
+        8AWyhqTgpEVPw4KPMQsWieHuKkDA0tjiMNrDqls=
+X-Google-Smtp-Source: APXvYqwfidbMez6Z9sGyVV6YsB5yeBlso+6tG0ecCalSdCDiOsyFu0JVkpo51uwZeGJBJY388lHn4wmaEjomEr/t5Ho=
+X-Received: by 2002:a19:beca:: with SMTP id o193mr10076386lff.137.1566823604003;
+ Mon, 26 Aug 2019 05:46:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826073308.6e82589d@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190826215017.02ab0d34@canb.auug.org.au>
+In-Reply-To: <20190826215017.02ab0d34@canb.auug.org.au>
+Reply-To: myungjoo.ham@gmail.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+Date:   Mon, 26 Aug 2019 21:46:08 +0900
+Message-ID: <CAJ0PZbRvDMW2EApVJ1aaP4O9P3SQTs6Urysm3g-89NrfvVqP-g@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the devfreq tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 07:33:08AM -0400, Steven Rostedt wrote:
-> Anyway, I believe Nadav has some patches that converts ftrace to use
-> the shadow page modification trick somewhere.
-> 
-> Or we also need the text_poke batch processing (did that get upstream?).
+Thank you for pointing this out!
 
-It did. And I just did that patch; I'll send out in a bit.
+I've added a fix to the tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/log/?h=for-next
+(and shared the patch in a previous reply)
 
-It seems to work, but this is the very first time I've looked at this
-code.
+Rafael, could you please pull the fix from the git repo above?
+
+
+Cheers,
+MyungJoo
+
+On Mon, Aug 26, 2019 at 8:51 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the devfreq tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>
+> drivers/devfreq/governor_passive.c: In function 'devfreq_passive_event_handler':
+> drivers/devfreq/governor_passive.c:152:17: warning: unused variable 'dev' [-Wunused-variable]
+>   struct device *dev = devfreq->dev.parent;
+>                  ^~~
+>
+> Introduced by commit
+>
+>   0ef7c7cce43f ("PM / devfreq: passive: Use non-devm notifiers")
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+MyungJoo Ham, Ph.D.
+S/W Center, Samsung Electronics
