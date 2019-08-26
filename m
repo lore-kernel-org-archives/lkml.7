@@ -2,125 +2,86 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB24C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAD3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D629F21848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:47:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="q77l1vMn"
+	by mail.kernel.org (Postfix) with ESMTP id A285B21848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566859877;
+	bh=VlaZ8ZJr1G7uDtnRByR9cGYYfsoatF5ODaQaZhozhEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VUysxie9BQyXISK42521Milh4mLcJnRkHOdzEEisAmo1jkBzocLr4N0rAIF13rCvF
+	 XO8BnfdYUqTZk3OaNui6+1uQI/C+24aXr6HvYB8XiJnreYcfk+EFiLBTaQrygJ1GUw
+	 8iqRmJpN2qYDG+9AxqOLwwGx8Z04JbMgxiBxUb3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfHZWrm (ORCPT
+        id S1726829AbfHZWvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:47:42 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57756 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHZWrm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:47:42 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CB5519A4;
-        Tue, 27 Aug 2019 00:47:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566859661;
-        bh=5FneaKNOaJ6gc1HCDlkYzgekoyT6FJ9a1i4rQZk/G64=;
+        Mon, 26 Aug 2019 18:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfHZWvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:51:16 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6E37206BB;
+        Mon, 26 Aug 2019 22:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566859875;
+        bh=VlaZ8ZJr1G7uDtnRByR9cGYYfsoatF5ODaQaZhozhEw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q77l1vMnetbiVN/hqkbVVfXAD+kTMJ38mjw6gRt05MANFlmT4HlwoO7DyVGFusuOo
-         xTTzyk7bHrsTC+Fnf1feUNYglDXMosa8Md/TYj9swR4FqYuGkjHQNVES+ggCwfdc/p
-         GYNWhQXH1pKuSu0W++YxwhftImTiWCLQkWGobEWY=
-Date:   Tue, 27 Aug 2019 01:47:34 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/14] arm64: dts: renesas: r8a77995: Add CMM units
-Message-ID: <20190826224734.GP5031@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-8-jacopo+renesas@jmondi.org>
+        b=RRTwsJQP8RGTo8M9ORr7lvtIsQStl6JxjHBxsVaMcjR2ubN709RPFGG6xQ9vcghaT
+         xcDFDeGY1Bu2tAKO6htDlxz5HcEtp4MRs+CV9jwDyjnTQ8q9Io3muBkUv3A3kVTg13
+         /o13BVXEzajJNBDVPerq8XfDmTMJ3Zfevc0Nuvr0=
+Date:   Tue, 27 Aug 2019 00:51:13 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 34/38] posix-cpu-timers: Get rid of 64bit divisions
+Message-ID: <20190826225111.GI14309@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192922.458286860@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190825135154.11488-8-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821192922.458286860@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Sun, Aug 25, 2019 at 03:51:47PM +0200, Jacopo Mondi wrote:
-> Add CMM units to Renesas R-Car D3 device tree and reference them from
-> the Display Unit they are connected to.
+On Wed, Aug 21, 2019 at 09:09:21PM +0200, Thomas Gleixner wrote:
+> Instead of dividing A to match the units of B it's more efficient to
+> multiply B to match the units of A.
 > 
-> While at it, re-sort the du device node properties to match the ordering
-> found in other SoCs.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Apart from the issue with compatible string as pointed out for patch
-03/14,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
+> V2: Fix the dropped update of the expiry cache when the soft limit increased
+> ---
+>  kernel/time/posix-cpu-timers.c |   24 ++++++++++++++----------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> index 183fef86cf7c..b91a20fbbbc6 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> @@ -993,6 +993,22 @@
->  			iommus = <&ipmmu_vi0 9>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,cmm-r8a77995";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,cmm-r8a77995";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
->  		du: display@feb00000 {
->  			compatible = "renesas,du-r8a77995";
->  			reg = <0 0xfeb00000 0 0x40000>;
-> @@ -1003,9 +1019,11 @@
->  			clock-names = "du.0", "du.1";
->  			resets = <&cpg 724>;
->  			reset-names = "du.0";
-> -			vsps = <&vspd0 0>, <&vspd1 0>;
->  			status = "disabled";
->  
-> +			vsps = <&vspd0 0>, <&vspd1 0>;
-> +			cmms = <&cmm0 &cmm1>;
-> +
->  			ports {
->  				#address-cells = <1>;
->  				#size-cells = <0>;
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -798,10 +798,11 @@ static void check_thread_timers(struct t
+>  	 */
+>  	soft = task_rlimit(tsk, RLIMIT_RTTIME);
+>  	if (soft != RLIM_INFINITY) {
+> +		/* Task RT timeout is accounted in jiffies. RTTIME is usec */
+> +		unsigned long rtim = tsk->rt.timeout * (USEC_PER_SEC / HZ);
 
--- 
-Regards,
+jiffies_to_usecs() ?
 
-Laurent Pinchart
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
