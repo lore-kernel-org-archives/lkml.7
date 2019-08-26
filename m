@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBB3C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C86C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1197F2186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C052186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QViZPMOC"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eqf/zxHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388077AbfHZUOt (ORCPT
+        id S2388065AbfHZUOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:14:49 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41489 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388031AbfHZUOk (ORCPT
+        Mon, 26 Aug 2019 16:14:47 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33859 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388022AbfHZUOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:14:40 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w5so28140350edl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:14:39 -0700 (PDT)
+        Mon, 26 Aug 2019 16:14:39 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so28185129edb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bUhdeRpbg8gRloy4w33VnXTSeooO5sqpvDT0wx5DMzY=;
-        b=QViZPMOCt4TCBDSlKAVCdrC+U37mohUaGpt7t54fKUAJnII/M30PJe3HVgsMvO32I/
-         JHmsQisAEo+uwv1GVmUHudMfC1x01ExLcWbO28gdRMZiZ/4jYiOIUrGZ6L9+5vRcVnku
-         F9YxwgBgX7xnEA70Wp+hl/fz9/FJFtPM7Z4dQ=
+        bh=Bew81wZtU1Y0ks/RIjoWK2FqRSw2UObINLTLlREzuuI=;
+        b=eqf/zxHzmkxFzdusChJdtOxtD1T//2StyL+3IeJkwUOueNAgekF2+ClgnH/jmo0xK7
+         qr4GW3Irit/IupsG1Na0ULH20pR7piGumm9IQOHaYtrHyUARGCU3fZukTvNoWL+1YqKl
+         pT4WlAHyRMSIzeLbFjs0YtZDoFJZPwP/EgQ5o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bUhdeRpbg8gRloy4w33VnXTSeooO5sqpvDT0wx5DMzY=;
-        b=M4l1Ax+3+DTvfn2bx/o+hTJwZeqqfYhYnDXQBiL/2HFaPJdUdkO/kHvMxn4uNJQtBd
-         dVwnH0EUWXtMGwVeubj1Z+K1goR0NesvkTlnw7dWwflFHFWlj+MwX0CdDCybeLwPTrmc
-         FTJlFzDJRAKjLYO0iNF0kEaa1OS2U2SM/9QtlghRqI/PxrPI6Cfx+pATviqWcHTT9JNu
-         W9w9x1aeVi89FwSUpnu/NzGjoG+++hJka3gKdI/P9wbc3lIPeyKRH8Bz3vD4cIcqMVKK
-         IdTGuU/iA9a+RKdxfIBSvlB0d5EpzJuEFETUsB+Vrvzup78etFSDDBjIJnb3LtLh9UYo
-         h5qw==
-X-Gm-Message-State: APjAAAWHmn5AMTzfuNxLQKbzsrwN6D+8+KMIDKkabOaCkcrEGnInd9p5
-        X5yEkbgPgKL1o5egD77ZiK1QZQxt8MtKoA==
-X-Google-Smtp-Source: APXvYqwQX5rJn4xiT0PzmoOjk8RceDZHB/u+ViHnJA99I4EPasO1Ql6cGV43P/XDRPUyqHKPLLvlzQ==
-X-Received: by 2002:aa7:c552:: with SMTP id s18mr21104247edr.0.1566850478492;
-        Mon, 26 Aug 2019 13:14:38 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id j25sm3000780ejb.49.2019.08.26.13.14.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=Bew81wZtU1Y0ks/RIjoWK2FqRSw2UObINLTLlREzuuI=;
+        b=oZHuZb3I08VEbm1HlurGe5aFQji7jl0Wx7dlk/KqoC6dZWqL6j+r3p5IuTW9B/i0Pf
+         6MDwyKacVGOtQ30rpTNq0p/W/aoxpYoBjeRnpFJap3wqiwlF3/1jhf+JQNouhQBqR7Kn
+         zNYyg6ZGi5gCtEEXNIILrUtSUV0kCE0OmSaWNIOvDiyblWwMSTI4bTaoULR+8DrXZ8fO
+         twnHUOB2H3ohXUGK0gKZ6oL1sYxz7vwL5qMnDPMPydRa4cyPm78oIbmVtz+FJVemxJLp
+         NMMjEDCzvmlMFvo1YKIDqoCZnzv7VKUtXGfdSpeJHpB9Bsp48A6sjF7E4WWq058T+IIZ
+         CKMQ==
+X-Gm-Message-State: APjAAAXGEZZCegp9BurDrLUa8BoAGIQ2K/qoYYJH6pGPsdVoWrmDnqaE
+        ZFwqqVqxf6mr8/ayuBnyGKmAIhzYzvCqMg==
+X-Google-Smtp-Source: APXvYqw8z9afSvhgONVa7l2XkwoZjbx6t7Y2tVjSzj6EiE5l88NiQj8YRIrJNGWJ+8ua4BQqqD4zVA==
+X-Received: by 2002:a17:907:207a:: with SMTP id qp26mr18160870ejb.12.1566850477119;
         Mon, 26 Aug 2019 13:14:37 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id j25sm3000780ejb.49.2019.08.26.13.14.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 13:14:36 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Linux MM <linux-mm@kvack.org>,
@@ -65,9 +65,9 @@ Cc:     Linux MM <linux-mm@kvack.org>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5/5] mm, notifier: annotate with might_sleep()
-Date:   Mon, 26 Aug 2019 22:14:25 +0200
-Message-Id: <20190826201425.17547-6-daniel.vetter@ffwll.ch>
+Subject: [PATCH 4/5] mm, notifier: Catch sleeping/blocking for !blockable
+Date:   Mon, 26 Aug 2019 22:14:24 +0200
+Message-Id: <20190826201425.17547-5-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
 References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
@@ -79,14 +79,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since mmu notifiers don't exist for more processes, but could block in
-interesting places, add some annotations. This should help make sure
-core mm keeps up its end of the mmu notifier contract.
+We need to make sure implementations don't cheat and don't have a
+possible schedule/blocking point deeply burried where review can't
+catch it.
 
-The checks here are outside of all notifier checks because of that.
-They compile away without CONFIG_DEBUG_ATOMIC_SLEEP.
+I'm not sure whether this is the best way to make sure all the
+might_sleep() callsites trigger, and it's a bit ugly in the code flow.
+But it gets the job done.
 
-Suggested by Jason.
+Inspired by an i915 patch series which did exactly that, because the
+rules haven't been entirely clear to us.
+
+v2: Use the shiny new non_block_start/end annotations instead of
+abusing preempt_disable/enable.
+
+v3: Rebase on top of Glisse's arg rework.
+
+v4: Rebase on top of more Glisse rework.
+
+v5: Also annotate invalidate_range_end in the same style. I hope I got
+Jason's request for this right.
 
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -96,34 +108,47 @@ Cc: "Christian König" <christian.koenig@amd.com>
 Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: linux-mm@kvack.org
+Reviewed-by: Christian König <christian.koenig@amd.com> (v1)
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com> (v4)
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
- include/linux/mmu_notifier.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ mm/mmu_notifier.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-index 3f9829a1f32e..8b71813417e7 100644
---- a/include/linux/mmu_notifier.h
-+++ b/include/linux/mmu_notifier.h
-@@ -345,6 +345,8 @@ static inline void mmu_notifier_change_pte(struct mm_struct *mm,
- static inline void
- mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
- {
-+	might_sleep();
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index 0523555933c9..b17f3fd3779b 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -181,7 +181,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+ 	id = srcu_read_lock(&srcu);
+ 	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
+ 		if (mn->ops->invalidate_range_start) {
+-			int _ret = mn->ops->invalidate_range_start(mn, range);
++			int _ret;
 +
- 	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
- 	if (mm_has_notifiers(range->mm)) {
- 		range->flags |= MMU_NOTIFIER_RANGE_BLOCKABLE;
-@@ -368,6 +370,9 @@ mmu_notifier_invalidate_range_start_nonblock(struct mmu_notifier_range *range)
- static inline void
- mmu_notifier_invalidate_range_end(struct mmu_notifier_range *range)
- {
-+	if (mmu_notifier_range_blockable(range))
-+		might_sleep();
-+
- 	if (mm_has_notifiers(range->mm))
- 		__mmu_notifier_invalidate_range_end(range, false);
- }
++			if (!mmu_notifier_range_blockable(range))
++				non_block_start();
++			_ret = mn->ops->invalidate_range_start(mn, range);
++			if (!mmu_notifier_range_blockable(range))
++				non_block_end();
+ 			if (_ret) {
+ 				pr_info("%pS callback failed with %d in %sblockable context.\n",
+ 					mn->ops->invalidate_range_start, _ret,
+@@ -224,8 +230,13 @@ void __mmu_notifier_invalidate_range_end(struct mmu_notifier_range *range,
+ 			mn->ops->invalidate_range(mn, range->mm,
+ 						  range->start,
+ 						  range->end);
+-		if (mn->ops->invalidate_range_end)
++		if (mn->ops->invalidate_range_end) {
++			if (!mmu_notifier_range_blockable(range))
++				non_block_start();
+ 			mn->ops->invalidate_range_end(mn, range);
++			if (!mmu_notifier_range_blockable(range))
++				non_block_end();
++		}
+ 	}
+ 	srcu_read_unlock(&srcu, id);
+ 	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
 -- 
 2.23.0
 
