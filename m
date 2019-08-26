@@ -2,181 +2,170 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8A9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D89C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CEF20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31B720874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfHZLnq (ORCPT
+        id S1731376AbfHZLqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:43:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52688 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729569AbfHZLnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:43:45 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 107EF368DA;
-        Mon, 26 Aug 2019 11:43:45 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCE6610016E9;
-        Mon, 26 Aug 2019 11:43:41 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 13:43:39 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH] KVM: selftests: Detect max PA width from cpuid
-Message-ID: <20190826114339.4x2wmjwz4dfn3ea5@kamzik.brq.redhat.com>
-References: <20190826075728.21646-1-peterx@redhat.com>
- <20190826110958.lyueasf5laypkq2r@kamzik.brq.redhat.com>
- <20190826112244.GE1785@xz-x1>
+        Mon, 26 Aug 2019 07:46:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39573 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbfHZLqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:46:03 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i2DRS-0000xA-I6; Mon, 26 Aug 2019 13:45:46 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 28A641C0DAE;
+        Mon, 26 Aug 2019 13:45:46 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 11:45:46 -0000
+From:   tip-bot2 for Alexander Shishkin <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/x86/intel/pt: Free up space in a ToPA descriptor
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190821124727.73310-6-alexander.shishkin@linux.intel.com>
+References: <20190821124727.73310-6-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Message-ID: <156681994603.3140.12429762858491080748.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190826112244.GE1785@xz-x1>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 26 Aug 2019 11:43:45 +0000 (UTC)
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 07:22:44PM +0800, Peter Xu wrote:
-> On Mon, Aug 26, 2019 at 01:09:58PM +0200, Andrew Jones wrote:
-> > On Mon, Aug 26, 2019 at 03:57:28PM +0800, Peter Xu wrote:
-> > > The dirty_log_test is failing on some old machines like Xeon E3-1220
-> > > with tripple faults when writting to the tracked memory region:
-> > > 
-> > >   Test iterations: 32, interval: 10 (ms)
-> > >   Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
-> > >   guest physical test memory offset: 0x7fbffef000
-> > >   ==== Test Assertion Failure ====
-> > >   dirty_log_test.c:138: false
-> > >   pid=6137 tid=6139 - Success
-> > >      1  0x0000000000401ca1: vcpu_worker at dirty_log_test.c:138
-> > >      2  0x00007f3dd9e392dd: ?? ??:0
-> > >      3  0x00007f3dd9b6a132: ?? ??:0
-> > >   Invalid guest sync status: exit_reason=SHUTDOWN
-> > > 
-> > > It's because previously we moved the testing memory region from a
-> > > static place (1G) to the top of the system's physical address space,
-> > > meanwhile we stick to 39 bits PA for all the x86_64 machines.  That's
-> > > not true for machines like Xeon E3-1220 where it only supports 36.
-> > > 
-> > > Let's unbreak this test by dynamically detect PA width from CPUID
-> > > 0x80000008.  Meanwhile, even allow kvm_get_supported_cpuid_index() to
-> > > fail.  I don't know whether that could be useful because I think
-> > > 0x80000008 should be there for all x86_64 hosts, but I also think it's
-> > > not really helpful to assert in the kvm_get_supported_cpuid_index().
-> > > 
-> > > Fixes: b442324b581556e
-> > > CC: Paolo Bonzini <pbonzini@redhat.com>
-> > > CC: Andrew Jones <drjones@redhat.com>
-> > > CC: Radim Krčmář <rkrcmar@redhat.com>
-> > > CC: Thomas Huth <thuth@redhat.com>
-> > > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > > ---
-> > >  tools/testing/selftests/kvm/dirty_log_test.c  | 22 +++++++++++++------
-> > >  .../selftests/kvm/lib/x86_64/processor.c      |  3 ---
-> > >  2 files changed, 15 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> > > index ceb52b952637..111592f3a1d7 100644
-> > > --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> > > +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> > > @@ -274,18 +274,26 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> > >  	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
-> > >  
-> > >  #ifdef __x86_64__
-> > > -	/*
-> > > -	 * FIXME
-> > > -	 * The x86_64 kvm selftests framework currently only supports a
-> > > -	 * single PML4 which restricts the number of physical address
-> > > -	 * bits we can change to 39.
-> > > -	 */
-> > > -	guest_pa_bits = 39;
-> > > +	{
-> > > +		struct kvm_cpuid_entry2 *entry;
-> > > +
-> > > +		entry = kvm_get_supported_cpuid_entry(0x80000008);
-> > > +		/*
-> > > +		 * Supported PA width can be smaller than 52 even if
-> > > +		 * we're with VM_MODE_P52V48_4K mode.  Fetch it from
-> > 
-> > It seems like x86_64 should create modes that actually work, rather than
-> > always using one named 'P52', but then needing to probe for the actual
-> > number of supported physical bits. Indeed testing all x86_64 supported
-> > modes, like aarch64 does, would even make more sense in this test.
-> 
-> Should be true.  I'll think it over again...
-> 
-> > 
-> > 
-> > > +		 * the host to update the default value (SDM 4.1.4).
-> > > +		 */
-> > > +		if (entry)
-> > > +			guest_pa_bits = entry->eax & 0xff;
-> > 
-> > Are we sure > 39 bits will work with this test framework? I can't
-> > recall what led me to the FIXME above, other than things not working.
-> > It seems I was convinced we couldn't have more bits due to how pml4's
-> > were allocated, but maybe I misinterpreted it.
-> 
-> As mentioned in the IRC - I think I've got a "success case" of
-> that... :)  Please see below:
-> 
-> virtlab423:~ $ lscpu
-> Architecture:        x86_64
-> CPU op-mode(s):      32-bit, 64-bit
-> Byte Order:          Little Endian
-> CPU(s):              16
-> On-line CPU(s) list: 0-15
-> Thread(s) per core:  1
-> Core(s) per socket:  8
-> Socket(s):           2
-> NUMA node(s):        2
-> Vendor ID:           GenuineIntel
-> CPU family:          6
-> Model:               63
-> Model name:          Intel(R) Xeon(R) CPU E5-2640 v3 @ 2.60GHz
-> Stepping:            2
-> CPU MHz:             2597.168
-> BogoMIPS:            5194.31
-> Virtualization:      VT-x
-> L1d cache:           32K
-> L1i cache:           32K
-> L2 cache:            256K
-> L3 cache:            20480K
-> NUMA node0 CPU(s):   0,2,4,6,8,10,12,14
-> NUMA node1 CPU(s):   1,3,5,7,9,11,13,15
-> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single pti tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm xsaveopt cqm_llc cqm_occup_llc dtherm arat pln pts
-> virtlab423:~ $ ./dirty_log_test 
-> Test iterations: 32, interval: 10 (ms)
-> Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
-> Supported guest physical address width: 46
-> guest physical test memory offset: 0x3fffbffef000
-> Dirtied 216064 pages
-> Total bits checked: dirty (204841), clear (7922119), track_next (60730)
-> 
-> So on above E5-2640 I got PA width==46 and it worked well.  Does this
-> mean that 39bits is not really a PA restriction anywhere?  Actually
-> that also matches with the other fact that if we look into
-> virt_pg_map() it's indeed allocating PML4 entries rather than having
-> only one.
->
+The following commit has been merged into the perf/core branch of tip:
 
-Yup, that looks good to me.
+Commit-ID:     91feca5e2ecc9752894d57c9a72c2645471929c3
+Gitweb:        https://git.kernel.org/tip/91feca5e2ecc9752894d57c9a72c2645471929c3
+Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+AuthorDate:    Wed, 21 Aug 2019 15:47:26 +03:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 26 Aug 2019 12:00:15 +02:00
 
-Thanks,
-drew 
+perf/x86/intel/pt: Free up space in a ToPA descriptor
+
+Currently, we're storing physical address of a ToPA table in its
+descriptor, which is completely unnecessary. Since the descriptor
+and the table itself share the same page, reducing the descriptor
+size leaves more space for the table.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: http://lkml.kernel.org/r/20190821124727.73310-6-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/pt.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 2e3f068..0f38ed3 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -548,14 +548,12 @@ static void pt_config_buffer(void *buf, unsigned int topa_idx,
+ /**
+  * struct topa - ToPA metadata
+  * @list:	linkage to struct pt_buffer's list of tables
+- * @phys:	physical address of this page
+  * @offset:	offset of the first entry in this table in the buffer
+  * @size:	total size of all entries in this table
+  * @last:	index of the last initialized entry in this table
+  */
+ struct topa {
+ 	struct list_head	list;
+-	u64			phys;
+ 	u64			offset;
+ 	size_t			size;
+ 	int			last;
+@@ -589,6 +587,11 @@ static inline struct topa_page *topa_entry_to_page(struct topa_entry *te)
+ 	return (struct topa_page *)((unsigned long)te & PAGE_MASK);
+ }
+ 
++static inline phys_addr_t topa_pfn(struct topa *topa)
++{
++	return PFN_DOWN(virt_to_phys(topa_to_page(topa)));
++}
++
+ /* make -1 stand for the last table entry */
+ #define TOPA_ENTRY(t, i)				\
+ 	((i) == -1					\
+@@ -615,14 +618,13 @@ static struct topa *topa_alloc(int cpu, gfp_t gfp)
+ 
+ 	tp = page_address(p);
+ 	tp->topa.last = 0;
+-	tp->topa.phys = page_to_phys(p);
+ 
+ 	/*
+ 	 * In case of singe-entry ToPA, always put the self-referencing END
+ 	 * link as the 2nd entry in the table
+ 	 */
+ 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries)) {
+-		TOPA_ENTRY(&tp->topa, 1)->base = tp->topa.phys;
++		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p);
+ 		TOPA_ENTRY(&tp->topa, 1)->end = 1;
+ 	}
+ 
+@@ -666,7 +668,7 @@ static void topa_insert_table(struct pt_buffer *buf, struct topa *topa)
+ 
+ 	BUG_ON(last->last != TENTS_PER_PAGE - 1);
+ 
+-	TOPA_ENTRY(last, -1)->base = topa->phys >> TOPA_SHIFT;
++	TOPA_ENTRY(last, -1)->base = topa_pfn(topa);
+ 	TOPA_ENTRY(last, -1)->end = 1;
+ }
+ 
+@@ -739,8 +741,8 @@ static void pt_topa_dump(struct pt_buffer *buf)
+ 		struct topa_page *tp = topa_to_page(topa);
+ 		int i;
+ 
+-		pr_debug("# table @%p (%016Lx), off %llx size %zx\n", tp->table,
+-			 topa->phys, topa->offset, topa->size);
++		pr_debug("# table @%p, off %llx size %zx\n", tp->table,
++			 topa->offset, topa->size);
+ 		for (i = 0; i < TENTS_PER_PAGE; i++) {
+ 			pr_debug("# entry @%p (%lx sz %u %c%c%c) raw=%16llx\n",
+ 				 &tp->table[i],
+@@ -1111,7 +1113,7 @@ static int pt_buffer_init_topa(struct pt_buffer *buf, int cpu,
+ 
+ 	/* link last table to the first one, unless we're double buffering */
+ 	if (intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries)) {
+-		TOPA_ENTRY(buf->last, -1)->base = buf->first->phys >> TOPA_SHIFT;
++		TOPA_ENTRY(buf->last, -1)->base = topa_pfn(buf->first);
+ 		TOPA_ENTRY(buf->last, -1)->end = 1;
+ 	}
+ 
