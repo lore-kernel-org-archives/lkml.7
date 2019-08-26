@@ -2,360 +2,179 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52542C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F642C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BE223407
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30DA20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="JuY1tFJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732802AbfHZPCZ (ORCPT
+        id S1732811AbfHZPFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:02:25 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:55596 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfHZPCZ (ORCPT
+        Mon, 26 Aug 2019 11:05:23 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:25171 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfHZPFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:02:25 -0400
-Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7QF2BpU096737;
-        Tue, 27 Aug 2019 00:02:11 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
- Tue, 27 Aug 2019 00:02:11 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7QF2BIr096733
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 27 Aug 2019 00:02:11 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Rewriting read_kmem()/write_kmem() ?
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAHk-=wjFsF6zmcDaBdpYEvCWiq=x7_NuQWEm=OinZ9TuQd4ZZQ@mail.gmail.com>
- <20190823091636.GA10064@gmail.com>
- <CAHk-=wj=HcHWjrrNRmZ_hxEdBBrvUnPNFCw37EAu8_qJn71saQ@mail.gmail.com>
- <20190824161432.GA25950@gmail.com>
- <CAHk-=whFQNkqPJ5zA1xAyvgtCPLN2C4xeJ181rU3k6bG+2zugg@mail.gmail.com>
- <20190824202224.GA5286@gmail.com>
- <ab9ccf3c-6b87-652e-b305-41f2c2d1b2ae@i-love.sakura.ne.jp>
- <CAHk-=wgR=moYe2Jx8wobx9Vzxj55DGPwU9VEjZ+7gUrVYySMzQ@mail.gmail.com>
- <92919086-0a7e-520d-0465-b9e3051e965a@i-love.sakura.ne.jp>
- <20190826111944.GA39308@gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <acd773b8-89fa-6000-ec43-18815a1ab8c2@i-love.sakura.ne.jp>
-Date:   Tue, 27 Aug 2019 00:02:07 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190826111944.GA39308@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 26 Aug 2019 11:05:23 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: i1sKcEeUhIAn4nMp/9tOKpVnkfTIzCL4FsLV7t31ycmlSDd+REnLCoBMmQBKw22kFl2uyGfefT
+ v8n85Lzwwv/DkNxVywLee76o+A3QEh4QRKZ43oorSc0ZNUjbCcWgvGdtQWaslbWFH+Wo8XO5dc
+ Uqi4hWbMCheSd1uOVSazhVurJT198RmPQ5xlPNUc3DfS4t3CIKcucrkxdylj/qQLnUkK8829oZ
+ JPyunYHC2XaMGENmDJ2yhamDz4bjWq9aN79xwLbcofQGe9kywDjaiFrk2ea79eqmUN1UL0VQnC
+ IPs=
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="45624507"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2019 08:05:22 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 26 Aug 2019 08:05:09 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 26 Aug 2019 08:05:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UMHq+Vg9ut5Fj5k3mOftu37fLbh83Hi9hSyHEpw6bHjTxZaKDFAbxSuzWEEN8Ilx++I02aSbv5tMeQRlB4s/WwfCg1ituG1n0JsICqyhwbkiu1e6l1TK9T0yqCpzc/9qNJkHn68thhLmUtYmYd8solPxi+fUlo25XiHYQfXMC+byiaQiA1LesDQQ55RfahFynCTwO3rlFdSSLHNn/UkMZAALyWRG1GHTwIhhgs4/UJsBPR5Dgf5504NuAE+dTEKR/ECdR3LDx7qW96U3ir8X5ybYng1bMjXB2l5h8HxLHvhU7ZbwjlJ3fhlHIrKQJExgwnjrxTNMuoZNJdGbv8jCAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/OlDYAqsVLFMTdY3Dg0koVIYtCgB1buVFmEATtd668=;
+ b=JVMARLfHQEi6ZolFJeFrW8w00da1tDVEoF039YM0G0tI5Z4cm1ZL5Fvg0G2PKhD3MXZO4BPanmFfO010oiF4PVsjx1tsSaJB31L1r0N2S9HWRgFoEE3nCjKrWz5JGBpR/vTwgi7yMXC/jjiRv632M6RipZ16bkVbCWCqDkUe+t0VRryuYafUnyYcHAzgrScKg1A88TEYg+lKY8FlHzfU3Upi+85DJvNMVfh6ysbpwHabpmR+tBmww3bicNQA0J2WBeLbuayZIQ3fboNOyCJUbTtqcV7RdGrGgoswt8CyiMoWCtcw/OrWV9zQ6Xdb23VlBTq4u4KECaek9C5/9Fr+PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/OlDYAqsVLFMTdY3Dg0koVIYtCgB1buVFmEATtd668=;
+ b=JuY1tFJc9s209NRgX/yrgcmf7PHNC1HuYHx/tG8Rir9AC6310liYbUF751nMnokoU9hVBbeu8YuHXuDEAj6/3DIUT0MmyHNijetjPlI6bMxPFf4i4S2MXWh18RGfV4jLtzd5l6VbMw1HGx90GoyFiCJbgyxJ+hbmlhAQtHuqG2I=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
+ BY5PR11MB4419.namprd11.prod.outlook.com (52.132.254.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Mon, 26 Aug 2019 15:05:06 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::14:24b8:9029:c69]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::14:24b8:9029:c69%7]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
+ 15:05:06 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <mirq-linux@rere.qmqm.pl>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>
+CC:     <alexandre.belloni@bootlin.com>, <arnd@arndb.de>,
+        <3chas3@gmail.com>, <gregkh@linuxfoundation.org>, <perex@perex.cz>,
+        <lgirdwood@gmail.com>, <Ludovic.Desroches@microchip.com>,
+        <broonie@kernel.org>, <mark.rutland@arm.com>,
+        <Nicolas.Ferre@microchip.com>, <robh-dt@kernel.org>,
+        <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source in
+ frame-slave mode
+Thread-Topic: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source
+ in frame-slave mode
+Thread-Index: AQHVWrpMlk4SnjCoTEe8JwCEXpRy8qcNiciA
+Date:   Mon, 26 Aug 2019 15:05:06 +0000
+Message-ID: <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0234.eurprd07.prod.outlook.com
+ (2603:10a6:802:58::37) To BY5PR11MB4497.namprd11.prod.outlook.com
+ (2603:10b6:a03:1cc::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 02398ae9-24ba-4dee-f410-08d72a36c78c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR11MB4419;
+x-ms-traffictypediagnostic: BY5PR11MB4419:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB44199BF24647D97FC3617D7AE7A10@BY5PR11MB4419.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(396003)(39860400002)(346002)(199004)(189003)(229853002)(7736002)(66946007)(66476007)(66556008)(66066001)(256004)(64756008)(66446008)(7416002)(446003)(6486002)(11346002)(186003)(76176011)(52116002)(26005)(305945005)(386003)(6506007)(53546011)(476003)(8936002)(4326008)(81166006)(81156014)(86362001)(2201001)(5660300002)(31696002)(6436002)(25786009)(53936002)(99286004)(6512007)(2906002)(6116002)(3846002)(36756003)(71190400001)(71200400001)(316002)(110136005)(14454004)(54906003)(2501003)(478600001)(8676002)(6246003)(31686004)(2616005)(486006)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4419;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 16TQVWmLnbYw7WyIpqSCt1BP29p8Vx/4ldya0Vy30Gc7c6CWrB16LGzZ05jwoM9zL+0Moa5/7RlsBJeAmrwfed+OcrzLF8zYdqmO53Resly/mz4l+g6PB+ibS8yZTTPs83f2tUivaurRNLA7YUizmFIPW8vxkecfG9L4BhDSPnLK0RMR5+S3xBpo8c15w4PdjvA2SDgIe5wGGiXn6T40G9XJ7VdD4iHt31WkVdphWksf0kI/d+zl/wuv9WFDbwv/FZPIShjd6/GRcmHbBJsWDkdOXR4nfeqox8PHQUoIkKeSwuzpmNsbWtMeSDL8NpPKxJjBkq941mIX/6dxprVuFkJzeG7iqmRmdVKzlTxZXnCnP+mcfFbiDu3uOIz/0pwhHYN346Az8HI/IpCnTAgrbWzbDjJ+vcOdqjnQfjY+Xt0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <51A4D2C1067F1A4EB790CFCDD9CDF311@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02398ae9-24ba-4dee-f410-08d72a36c78c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 15:05:06.4736
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XW/gH/1yp8ZtK1n+/ITrurSSU+2TSMVIaad91Asp1mhdx1SBN+rywz4XMDzA1BYWmUE0oH47tudl61+nTJAW1dRZ8I06Lz0nTcosRuZwegY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4419
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/08/26 20:19, Ingo Molnar wrote:
-> Basically making IO primitives interruptible is the norm and it's a 
-> quality of implementation issue: it's only a historic accident that 
-> /dev/mem read()s aren't.
-> 
-> So let's try and make it interruptible as the #3 patch I sent did - of 
-> course if anything breaks we'll have to undo it. But if we can get away 
-> with then by all means let's do so - even shorter reads can generate 
-> nasty long processing latencies.
-> 
-> Ok?
-
-This is how read_kmem()/write_kmem() could be rewritten (before doing
-s/fatal_signal_pending/signal_pending/ change). Only compile tested.
-Do we want to try this change using several patches?
-
- drivers/char/mem.c | 202 +++++++++++++++++++----------------------------------
- 1 file changed, 73 insertions(+), 129 deletions(-)
-
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 9eb564c..12bca2a 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -430,114 +430,32 @@ static int mmap_kmem(struct file *file, struct vm_area_struct *vma)
- 	return mmap_mem(file, vma);
- }
- 
--/*
-- * This function reads the *virtual* memory as seen by the kernel.
-- */
--static ssize_t read_kmem(struct file *file, char __user *buf,
--			 size_t count, loff_t *ppos)
-+static ssize_t do_copy_kmem(unsigned long p, char __user *buf, size_t count,
-+			    loff_t *ppos, const bool is_write)
- {
--	unsigned long p = *ppos;
--	ssize_t low_count, read, sz;
--	char *kbuf; /* k-addr because vread() takes vmlist_lock rwlock */
--	int err = 0;
--
--	read = 0;
--	if (p < (unsigned long) high_memory) {
--		low_count = count;
--		if (count > (unsigned long)high_memory - p)
--			low_count = (unsigned long)high_memory - p;
-+	ssize_t copied = 0;
-+	ssize_t sz;
- 
- #ifdef __ARCH_HAS_NO_PAGE_ZERO_MAPPED
--		/* we don't have page 0 mapped on sparc and m68k.. */
--		if (p < PAGE_SIZE && low_count > 0) {
--			sz = size_inside_page(p, low_count);
--			if (clear_user(buf, sz))
--				return -EFAULT;
--			buf += sz;
--			p += sz;
--			read += sz;
--			low_count -= sz;
--			count -= sz;
--		}
--#endif
--		while (low_count > 0) {
--			sz = size_inside_page(p, low_count);
--
--			/*
--			 * On ia64 if a page has been mapped somewhere as
--			 * uncached, then it must also be accessed uncached
--			 * by the kernel or data corruption may occur
--			 */
--			kbuf = xlate_dev_kmem_ptr((void *)p);
--			if (!virt_addr_valid(kbuf))
--				return -ENXIO;
--
--			if (copy_to_user(buf, kbuf, sz))
--				return -EFAULT;
--			buf += sz;
--			p += sz;
--			read += sz;
--			low_count -= sz;
--			count -= sz;
--			if (should_stop_iteration()) {
--				count = 0;
--				break;
--			}
--		}
--	}
--
--	if (count > 0) {
--		kbuf = (char *)__get_free_page(GFP_KERNEL);
--		if (!kbuf)
--			return -ENOMEM;
--		while (count > 0) {
--			sz = size_inside_page(p, count);
--			if (!is_vmalloc_or_module_addr((void *)p)) {
--				err = -ENXIO;
--				break;
--			}
--			sz = vread(kbuf, (char *)p, sz);
--			if (!sz)
--				break;
--			if (copy_to_user(buf, kbuf, sz)) {
--				err = -EFAULT;
--				break;
--			}
--			count -= sz;
--			buf += sz;
--			read += sz;
--			p += sz;
--			if (should_stop_iteration())
--				break;
--		}
--		free_page((unsigned long)kbuf);
--	}
--	*ppos = p;
--	return read ? read : err;
--}
--
--
--static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
--				size_t count, loff_t *ppos)
--{
--	ssize_t written, sz;
--	unsigned long copied;
--
--	written = 0;
--#ifdef __ARCH_HAS_NO_PAGE_ZERO_MAPPED
- 	/* we don't have page 0 mapped on sparc and m68k.. */
- 	if (p < PAGE_SIZE) {
- 		sz = size_inside_page(p, count);
--		/* Hmm. Do something? */
-+		if (is_write) {
-+			/* Hmm. Do something? */
-+		} else {
-+			if (clear_user(buf, sz))
-+				return -EFAULT;
-+		}
- 		buf += sz;
- 		p += sz;
- 		count -= sz;
--		written += sz;
-+		copied += sz;
- 	}
- #endif
- 
- 	while (count > 0) {
- 		void *ptr;
-+		unsigned long n;
- 
- 		sz = size_inside_page(p, count);
- 
-@@ -550,78 +468,104 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
- 		if (!virt_addr_valid(ptr))
- 			return -ENXIO;
- 
--		copied = copy_from_user(ptr, buf, sz);
--		if (copied) {
--			written += sz - copied;
--			if (written)
-+		if (is_write)
-+			n = copy_from_user(ptr, buf, sz);
-+		else
-+			n = copy_to_user(buf, buf, sz);
-+		if (n) {
-+			copied += sz - n;
-+			if (copied)
- 				break;
- 			return -EFAULT;
- 		}
- 		buf += sz;
- 		p += sz;
- 		count -= sz;
--		written += sz;
-+		copied += sz;
- 		if (should_stop_iteration())
- 			break;
- 	}
- 
--	*ppos += written;
--	return written;
-+	*ppos += copied;
-+	return copied;
- }
- 
--/*
-- * This function writes to the *virtual* memory as seen by the kernel.
-- */
--static ssize_t write_kmem(struct file *file, const char __user *buf,
--			  size_t count, loff_t *ppos)
-+static ssize_t copy_kmem(char __user *buf, size_t count, loff_t *ppos,
-+			 const bool is_write)
- {
- 	unsigned long p = *ppos;
--	ssize_t wrote = 0;
--	ssize_t virtr = 0;
--	char *kbuf; /* k-addr because vwrite() takes vmlist_lock rwlock */
-+	ssize_t copied = 0;
- 	int err = 0;
- 
- 	if (p < (unsigned long) high_memory) {
--		unsigned long to_write = min_t(unsigned long, count,
--					       (unsigned long)high_memory - p);
--		wrote = do_write_kmem(p, buf, to_write, ppos);
--		if (wrote != to_write)
--			return wrote;
--		p += wrote;
--		buf += wrote;
--		count -= wrote;
-+		unsigned long to_copy = min_t(unsigned long, count,
-+					      (unsigned long)high_memory - p);
-+
-+		copied = do_copy_kmem(p, buf, to_copy, ppos, is_write);
-+		if (copied != to_copy)
-+			return copied;
-+		p += copied;
-+		buf += copied;
-+		count -= copied;
- 	}
- 
- 	if (count > 0) {
--		kbuf = (char *)__get_free_page(GFP_KERNEL);
-+		/* k-addr because vread()/vwrite() takes vmlist_lock rwlock */
-+		char *kbuf = (char *)__get_free_page(GFP_KERNEL);
-+
- 		if (!kbuf)
--			return wrote ? wrote : -ENOMEM;
-+			return copied ? copied : -ENOMEM;
- 		while (count > 0) {
--			unsigned long sz = size_inside_page(p, count);
--			unsigned long n;
-+			ssize_t sz = size_inside_page(p, count);
- 
- 			if (!is_vmalloc_or_module_addr((void *)p)) {
- 				err = -ENXIO;
- 				break;
- 			}
--			n = copy_from_user(kbuf, buf, sz);
--			if (n) {
--				err = -EFAULT;
--				break;
-+			if (is_write) {
-+				if (copy_from_user(kbuf, buf, sz)) {
-+					err = -EFAULT;
-+					break;
-+				}
-+				vwrite(kbuf, (char *)p, sz);
-+			} else {
-+				sz = vread(kbuf, (char *)p, sz);
-+				if (!sz)
-+					break;
-+				if (copy_to_user(buf, kbuf, sz)) {
-+					err = -EFAULT;
-+					break;
-+				}
- 			}
--			vwrite(kbuf, (char *)p, sz);
- 			count -= sz;
- 			buf += sz;
--			virtr += sz;
-+			copied += sz;
- 			p += sz;
- 			if (should_stop_iteration())
- 				break;
- 		}
- 		free_page((unsigned long)kbuf);
- 	}
--
- 	*ppos = p;
--	return virtr + wrote ? : err;
-+	return copied ? copied : err;
-+}
-+
-+/*
-+ * This function reads the *virtual* memory as seen by the kernel.
-+ */
-+static ssize_t read_kmem(struct file *file, char __user *buf,
-+			 size_t count, loff_t *ppos)
-+{
-+	return copy_kmem(buf, count, ppos, false);
-+}
-+
-+/*
-+ * This function writes to the *virtual* memory as seen by the kernel.
-+ */
-+static ssize_t write_kmem(struct file *file, const char __user *buf,
-+			  size_t count, loff_t *ppos)
-+{
-+	return copy_kmem((char __user *) buf, count, ppos, true);
- }
- 
- static ssize_t read_port(struct file *file, char __user *buf,
--- 
-1.8.3.1
-
+T24gMjQuMDguMjAxOSAyMzoyNiwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+IFNTQyBkcml2
+ZXIgYWxsb3dzIG9ubHkgc3luY2hyb25vdXMgVFggYW5kIFJYLiBJbiBzbGF2ZSBtb2RlIGZvciBC
+Q0xLDQo+IGl0IHVzZXMgb25seSBvbmUgb2YgVEsgb3IgUksgcGluLCBidXQgZm9yIExSQ0xLIGl0
+IGNvbmZpZ3VyZWQgc2VwYXJhdGUNCj4gaW5wdXRzIGZyb20gVEYgYW5kIFJGIHBpbnMuIEFsbG93
+IGNvbmZpZ3VyYXRpb24gd2l0aCBjb21tb24gRlMgc2lnbmFsLg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogTWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPg0KPiANCj4gLS0t
+DQo+ICAgdjI6IHVzZSBhbHRlcm5hdGUgRFQgYmluZGluZw0KPiAgICAgICBzcGxpdCBEVCBhbmQg
+ZHJpdmVycy9taXNjIGNoYW5nZXMNCj4gDQo+IC0tLQ0KPiAgIHNvdW5kL3NvYy9hdG1lbC9hdG1l
+bF9zc2NfZGFpLmMgfCAyNiArKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiAgIDEgZmlsZSBj
+aGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL3NvdW5kL3NvYy9hdG1lbC9hdG1lbF9zc2NfZGFpLmMgYi9zb3VuZC9zb2MvYXRtZWwvYXRt
+ZWxfc3NjX2RhaS5jDQo+IGluZGV4IDQ4ZTllZWYzNGMwZi4uMDM1ZDRkYTU4ZjJiIDEwMDY0NA0K
+PiAtLS0gYS9zb3VuZC9zb2MvYXRtZWwvYXRtZWxfc3NjX2RhaS5jDQo+ICsrKyBiL3NvdW5kL3Nv
+Yy9hdG1lbC9hdG1lbF9zc2NfZGFpLmMNCj4gQEAgLTYwNSwxNCArNjA1LDMyIEBAIHN0YXRpYyBp
+bnQgYXRtZWxfc3NjX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVh
+bSwNCj4gICAJCXJldHVybiAtRUlOVkFMOw0KPiAgIAl9DQo+ICAgDQo+IC0JaWYgKCFhdG1lbF9z
+c2NfY2ZzKHNzY19wKSkgew0KPiArCWlmIChhdG1lbF9zc2NfY2ZzKHNzY19wKSkgew0KPiArCQkv
+Kg0KPiArCQkgKiBTU0MgcHJvdmlkZXMgTFJDTEsNCj4gKwkJICoNCj4gKwkJICogQm90aCBURiBh
+bmQgUkYgYXJlIGdlbmVyYXRlZCwgc28gdXNlIHRoZW0gZGlyZWN0bHkuDQo+ICsJCSAqLw0KPiAr
+CQlyY21yIHw9CSAgU1NDX0JGKFJDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KPiArCQl0Y21yIHw9CSAg
+U1NDX0JGKFRDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KDQpIbW0sIGhvdyB3b3VsZCB0aGlzIHdvcmsg
+aWYgY2FwdHVyZSBhbmQgcGxheWJhY2sgc3RhcnQvcnVuIGF0IHRoZSBzYW1lIHRpbWU/DQoNCj4g
+Kwl9IGVsc2Ugew0KPiAgIAkJZnNsZW4gPSBmc2xlbl9leHQgPSAwOw0KPiAgIAkJcmNtcl9wZXJp
+b2QgPSB0Y21yX3BlcmlvZCA9IDA7DQo+ICAgCQlmc19vc3luYyA9IFNTQ19GU09TX05PTkU7DQo+
+IC0JfQ0KPiAgIA0KPiAtCXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwgZnNfZWRnZSk7DQo+
+IC0JdGNtciB8PQkgIFNTQ19CRihUQ01SX1NUQVJULCBmc19lZGdlKTsNCj4gKwkJaWYgKHNzYy0+
+bHJjbGtfZnJvbV90Zl9waW4pIHsNCj4gKwkJCXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwg
+U1NDX1NUQVJUX1RYX1JYKTsNCj4gKwkJCXRjbXIgfD0JICBTU0NfQkYoVENNUl9TVEFSVCwgZnNf
+ZWRnZSk7DQo+ICsJCX0gZWxzZSBpZiAoc3NjLT5scmNsa19mcm9tX3JmX3Bpbikgew0KPiArCQkJ
+LyogYXNzdW1lIFJGIGlzIHRvIGJlIHVzZWQgd2hlbiBSSyBpcyB1c2VkIGFzIEJDTEsgaW5wdXQg
+Ki8NCg0KVGhpcyBjb21tZW50IGlzIG5vdCBsb25nZXIgdHJ1ZS4uLg0KDQo+ICsJCQkvKiBOb3Rl
+OiB3b24ndCB3b3JrIGNvcnJlY3RseSBvbiBTQU1BNUQyIGR1ZSB0byBlcnJhdGEgKi8NCj4gKwkJ
+CXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwgZnNfZWRnZSk7DQo+ICsJCQl0Y21yIHw9CSAg
+U1NDX0JGKFRDTVJfU1RBUlQsIFNTQ19TVEFSVF9UWF9SWCk7DQo+ICsJCX0gZWxzZSB7DQo+ICsJ
+CQlyY21yIHw9CSAgU1NDX0JGKFJDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KPiArCQkJdGNtciB8PQkg
+IFNTQ19CRihUQ01SX1NUQVJULCBmc19lZGdlKTsNCj4gKwkJfQ0KPiArCX0NCj4gICANCj4gICAJ
+aWYgKGF0bWVsX3NzY19jYnMoc3NjX3ApKSB7DQo+ICAgCQkvKg0KPiANCg0KVGhhbmtzIGFuZCBi
+ZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg==
