@@ -2,96 +2,103 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856BCC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74619C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E592173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B22190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566800560;
+	bh=KFNbrZ6qEMsYfgZwnS0s0XTNmO51VafzOnYIKfvEtbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OcZnXq+NSfbOjVYx97RrXS32yyAXq47ZnH+mE5rLOigsYWYepxPvRPmxQf2P/YwYA
+	 3GLKqVyy1LKfTnM9tLd6f8HAM84kp6GdTlvHUdele/tUT+VqvxXwWUG8GlYjNoibQI
+	 nNDPb/h1rrc21jz41MXLJN8dJQVv5a7/zd6Fe7eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfHZGWa (ORCPT
+        id S1729798AbfHZGWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:22:30 -0400
-Received: from dcvr.yhbt.net ([64.71.152.64]:52088 "EHLO dcvr.yhbt.net"
+        Mon, 26 Aug 2019 02:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbfHZGWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:22:30 -0400
-Received: from localhost (dcvr.yhbt.net [127.0.0.1])
-        by dcvr.yhbt.net (Postfix) with ESMTP id D53A21F461;
-        Mon, 26 Aug 2019 06:22:29 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 06:22:29 +0000
-From:   Eric Wong <e@80x24.org>
-To:     Heiher <r@hev.cc>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Why the edge-triggered mode doesn't work for epoll file
- descriptor?
-Message-ID: <20190826062229.pjvumg4ag3qwhji6@whir>
-References: <CAHirt9jesMHB_sXx7PyXTxrzLR=3xw9bHERueNMVkWOUkg6XXQ@mail.gmail.com>
+        id S1729549AbfHZGWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 02:22:39 -0400
+Received: from localhost (unknown [122.178.200.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D38C2173E;
+        Mon, 26 Aug 2019 06:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566800558;
+        bh=KFNbrZ6qEMsYfgZwnS0s0XTNmO51VafzOnYIKfvEtbI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ea522QzFQ9vOTMiawCaZIDJ2Je1TDRwroFiuvoq2mjLR8wwWYxqCu8NpFOybU5DmE
+         ZH5VssvGnAhUotWhzXE8WZ3sOjQPe9RPHsbowXNVYaNvxBrrRImJB/ymhar6dN/tsE
+         IwDCxWCY7ksFGHAavCV2cKCpoGoolsrDxy3wlMaE=
+Date:   Mon, 26 Aug 2019 11:51:27 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
+Message-ID: <20190826062127.GH2672@vkoul-mobl>
+References: <20190822170140.7615-1-vkoul@kernel.org>
+ <20190822170140.7615-3-vkoul@kernel.org>
+ <20190824063115.GW26807@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHirt9jesMHB_sXx7PyXTxrzLR=3xw9bHERueNMVkWOUkg6XXQ@mail.gmail.com>
+In-Reply-To: <20190824063115.GW26807@tuxbook-pro>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiher <r@hev.cc> wrote:
-> Hello,
+On 23-08-19, 23:31, Bjorn Andersson wrote:
+> On Thu 22 Aug 10:01 PDT 2019, Vinod Koul wrote:
 > 
-> I've added a pipe file descriptor (fd1) to an epoll (fd3) with
-> EPOLLOUT in edge-triggered mode, and then added the fd3 to another
-> epoll (fd4) with EPOLLIN in edge-triggered too.
+> > Convert the rpmh clock driver to use the new parent data scheme by
+> > specifying the parent data for board clock.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> > index c3fd632af119..0bced7326a20 100644
+> > --- a/drivers/clk/qcom/clk-rpmh.c
+> > +++ b/drivers/clk/qcom/clk-rpmh.c
+> > @@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
+> >  		.hw.init = &(struct clk_init_data){			\
+> >  			.ops = &clk_rpmh_ops,				\
+> >  			.name = #_name,					\
+> > -			.parent_names = (const char *[]){ "xo_board" },	\
+> > +			.parent_data =  &(const struct clk_parent_data){ \
+> > +					.fw_name = "xo_board",		\
+> > +					.name = "xo_board",		\
 > 
-> Next, waiting for fd4 without timeout. When fd1 to be writable, i
-> think epoll_wait(fd4, ...)  only return once, because all file
-> descriptors are added in edge-triggered mode.
+> Iiuc .name here refers to the global clock namespace and .fw_name refers
+> to the device_node local name space. As such I really prefer this to be:
 > 
-> But, the actual result is returns many and many times until do once
-> eopll_wait(fd3, ...).
-
-It looks like you can trigger a wakeup loop with printf writing
-to the terminal (not a pipe), and that write to the terminal
-triggering the EPOLLOUT wakeup over and over again.
-
-I don't know TTY stuff at all, but I assume it's intended
-for terminals.
-
-You refer to "pipe file descriptor (fd1)", but I can't reproduce
-the error when running your code piped to "tee" and using
-strace to check epoll_wait returns.
-
-"strace ./foo | tee /dev/null" only shows one epoll_wait returning.
-
->     e.events = EPOLLIN | EPOLLET;
->     e.data.u64 = 1;
->     if (epoll_ctl (efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
->         return -3;
+>   .fw_name = "xo",
+>   .name = "xo_board",
 > 
->     e.events = EPOLLOUT | EPOLLET;
->     e.data.u64 = 2;
->     if (epoll_ctl (efd[1], EPOLL_CTL_ADD, 1, &e) < 0)
->         return -4;
+> This ensures the backwards compatibility (when using global lookup),
+> without complicating the node-local naming.
 
-Since epfd[1] is waiting for stdout...
+Sure, while thinking more on this, should we finalize the name as xo or
+cxo, I see latter being also used at few places. It would be great to
+get a name and stick to it for longer time :)
 
->     for (;;) {
->         struct epoll_event events[16];
->         int nfds;
-> 
->         nfds = epoll_wait (efd[0], events, 16, -1);
->         printf ("nfds: %d\n", nfds);
-
-Try outputting your message to stderr instead of stdout:
-
-        fprintf(stderr, "nfds: %d\n", nfds);
-
-And then run your program so stdout and stderr point to
-different files:
-
-	./foo | tee /dev/null
-
-(so stdout becomes a pipe, and stderr remains your terminal)
+-- 
+~Vinod
