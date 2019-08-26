@@ -2,80 +2,106 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E81C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992A4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5842173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707E921852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xVWaQP1+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObJMH1xI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbfHZPNw (ORCPT
+        id S1732955AbfHZPOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:13:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55352 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730379AbfHZPNw (ORCPT
+        Mon, 26 Aug 2019 11:14:40 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43668 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730379AbfHZPOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:13:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Vu7Vxv75qBoSgs/X+s8lo6kYB6U6TM+eQAF9W4hOV64=; b=xVWaQP1+E5yZmxnnvf734leaj
-        zEIzM4iVyRw6XLQTPPZeZPOdd47kGc+Yk4lfjO9tLDkhkUgpAH0oXXpBu8W7cnUI2M8PTFzkL7WSq
-        iAdmlJ/gQ1HosZsAgbutu4dUX9TCaFTUjxRbCN89/XFvgAMHyBans52MJ10zF6M8hqZfRZBdMsYAo
-        ezRwO82mUAqGxiqHfRZWYiKWiux45UCgG8HcyN2OjyQaaS/f7VSDcfTdgonfhwUDuvoqbd9hQAWlA
-        /xfkhuY+X6xGq93wtTPsQsWbmek6/lHFCjlJZ05a4Nzp+20fo/eorQqo7UfrGcv8YMuoMtZSwLi11
-        7quGgNgHQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2Gge-0001rZ-7Y; Mon, 26 Aug 2019 15:13:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 79A983075FE;
-        Mon, 26 Aug 2019 17:13:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EF45E20A71EF1; Mon, 26 Aug 2019 17:13:37 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 17:13:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20190826151337.GW2369@hirez.programming.kicks-ass.net>
-References: <20190826125138.710718863@infradead.org>
- <20190826125519.879543828@infradead.org>
+        Mon, 26 Aug 2019 11:14:40 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h13so26944230edq.10;
+        Mon, 26 Aug 2019 08:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RCDy+7K0fwF6nt7MbSVX8QMpTTG0g3KoAzAmdTsb8DY=;
+        b=ObJMH1xIehE/7oddlecJPARz4qG1rnqBa8UxW+F7d5CbSW9le+05fqM91jvngewFm7
+         IAhywnYGhMJV+QiaU0CiGNlGOQbbbyW6S+pIs3+LjabTbWy6cehK3Q1yeNYSU9ZHMZlX
+         5sxuaVbJnKouPfQRlLo9I1hMCJdZvACLzbC+Tp2z0RYydY1Lr8j5DYqlfQoDp6psvPyw
+         hIPkycJ8dvsDjToArfL3HFvAoW35LpHICPBlqpabSFG5MKfgezZvT4CMjYW4DesFTNx/
+         IFxK1A9l+/Vj90h8Hiwzic/P0mCKWhUuQIgpWmKcMCl+5d+qlai/p8Qpw2ptP+B9bgMt
+         Sw2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=RCDy+7K0fwF6nt7MbSVX8QMpTTG0g3KoAzAmdTsb8DY=;
+        b=VUqv6ZSz4IS77L03KD5FEFBXj4VL1C5Cm/ehQwnDD9okdW8/gGIQYXfssdW30Z2JI7
+         Ix8cEjTqIkxR+1NS24eYX7sbVbYWeDBDGVdiJpag9wMGYs9DfaekL8oB7u3Wb6/y84fT
+         sLg8wdt66ijD4+gMmIjNZTvNITGRJWd66Jpfsfd4ICSxTsLRq0toIRg5mpG/bFx//Uw/
+         gj5a2Oaezj5Yb8E5j9iQkBRf+nZr6nzrJ3ROr8MS/KBJirsAykfmO7TsbvsPdvK0/OUa
+         znjPa1ceIyROBatecbItDGr7+cvMU8RWkOb1Uxyf+nVvPi5s83DuTQfq5h4VzC/Vaxw5
+         hvig==
+X-Gm-Message-State: APjAAAVpTcqIKIEVfr9Y3LKSbbmECNIERCiw9v0IIhdzrtGZdjUVAbEz
+        KruqhYWfsHkUQrUmgQ1sZb8=
+X-Google-Smtp-Source: APXvYqwVjsfeA0fvtl5KyoGIk6txpb1HMvzkepsVRJ8coXd46DZ5CYhwp3DfC0p/YyPArLJg+vm5WQ==
+X-Received: by 2002:a05:6402:1344:: with SMTP id y4mr18841237edw.124.1566832478387;
+        Mon, 26 Aug 2019 08:14:38 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id r16sm2976795eji.71.2019.08.26.08.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 08:14:37 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Move static keyword to the front of declarations in pci-bridge-emul.c
+Date:   Mon, 26 Aug 2019 17:14:36 +0200
+Message-Id: <20190826151436.4672-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826125519.879543828@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 02:51:41PM +0200, Peter Zijlstra wrote:
-> Move ftrace over to using the generic x86 text_poke functions; this
-> avoids having a second/different copy of that code around.
-> 
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Move the static keyword to the front of declarations of
+pci_regs_behavior and pcie_cap_regs_behavior, and resolve
+compiler warning that can be seen when building with
+warnings enabled (W=1).
 
-*sigh*.. one of those days again. I seem to have tested without this
-patch applied.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/pci/pci-bridge-emul.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Let me go fix this.
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 06083b86d4f4..5fd90105510d 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
+ 	u32 rsvd;
+ };
+ 
+-const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
++static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ 	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
+ 	[PCI_COMMAND / 4] = {
+ 		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+@@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ 	},
+ };
+ 
+-const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
++static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 	[PCI_CAP_LIST_ID / 4] = {
+ 		/*
+ 		 * Capability ID, Next Capability Pointer and
+-- 
+2.22.1
+
