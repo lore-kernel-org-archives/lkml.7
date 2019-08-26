@@ -2,99 +2,71 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEC5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4873C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5330321852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566835120;
-	bh=zI3CYpD8KNQIY0e6qwSzW8mfC85uvOJ4APVis8QERpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C2nu7WlwBYJDDMh0DRHDnT8HaF/w6kPISbZCY6Yavnx7BdZrcZSgc6q4tK1/2M0Vf
-	 adX1wn8MVDp3s9JPxpfav5bQbzyq0jx+z0Qw25vHQmuna15JFKf892Ll4q1AmImvDV
-	 HR+Hv2bqun+mMCCm/SCTtg/0wrMVfyKS6vLtIXb4=
+	by mail.kernel.org (Postfix) with ESMTP id 7F55020828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732395AbfHZP6j (ORCPT
+        id S1732237AbfHZP7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:58:39 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38923 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731198AbfHZP6i (ORCPT
+        Mon, 26 Aug 2019 11:59:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40577 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730995AbfHZP7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:58:38 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 125so14425541qkl.6;
-        Mon, 26 Aug 2019 08:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ualaw3vnF7au6b9X5hx4CHQJfw3fBI27o57pEiUgbJo=;
-        b=GnZUYkQ4vVP/v3mu6UxwHdso20ta7Q+KhSdq+8YuwnxdWNjaUmry5GKa9icK1tWcPe
-         i/Pa4V+XigAXejuiA1uK/adIfsd3tDcx7eNQWCvIoM7+QHoz4QqAu7XMNSgL7N8+zqdE
-         Ok9jG1XQ3c//jnZbPEfKOODlmHb3a7fgG1xvkLv2WSTgnTZ0rDXfwKvAOEvY1x+5qNmd
-         pm1xCF4GvRicJfJDbO+EIuu1fTxJrTXW/dSfkGdSesws3Z7Jjp9PFSy+eyS5KifycqKL
-         eHHWeEryOX/9dFa/d+Z/gnxpRShYwQ/t30umzlPd2vtUN8mYXy8+GKymvgk7N/3qzv5V
-         v2Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ualaw3vnF7au6b9X5hx4CHQJfw3fBI27o57pEiUgbJo=;
-        b=e2ySka08Sez80MxvhYdLYkkn7TQ7Y238qZNwmyfcZLP5tbevcNJFFwLEpwE3J0IpiR
-         2DTRiqRnVVLqDTS+1nwGml2rFV/m30iENh1TjweZZ92AW7lo/fktHvhhlz1EGfIQau3p
-         62zN4wTI07M8v5bvtWMJai87Nsz0855WUEH/HG6leaz9y8nVpsyCihUO/xMjEK/IfxWD
-         AzOJXrufBdb8QfLAuDAE5s4c9nFyIW97aZs6pow0u4sX6VpNk3g0kAZWUTDwpC94xgJm
-         wBp0eJnXgpplPGT9KkleSQ/vWX9rmtNCC1++hgrOwpz6TjxP4xF6AnJnT0oQUQ3lKNaY
-         RmaA==
-X-Gm-Message-State: APjAAAWR8ncIxrunHX3oQhLM9DzupYLg0aaHqpJ7ejoxD9oua/rXW++Z
-        kx7e5c7Pk5UtiaA9fMjacl4=
-X-Google-Smtp-Source: APXvYqzk/P1DVpjgy0hFgeWPetp0WfMSK+IUiMif/29MeRJwYBpNW0Jt/njmIG/Lg9zleKegbXPjwA==
-X-Received: by 2002:a37:6290:: with SMTP id w138mr16091986qkb.139.1566835117260;
-        Mon, 26 Aug 2019 08:58:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::d081])
-        by smtp.gmail.com with ESMTPSA id y25sm7676497qkj.35.2019.08.26.08.58.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 08:58:36 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 08:58:34 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
-        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v3 5/5] writeback, memcg: Implement foreign dirty flushing
-Message-ID: <20190826155834.GP2263813@devbig004.ftw2.facebook.com>
-References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
- <20190815195930.GF2263813@devbig004.ftw2.facebook.com>
- <20190821210235.GN2263813@devbig004.ftw2.facebook.com>
- <20190826135452.GF10614@quack2.suse.cz>
+        Mon, 26 Aug 2019 11:59:46 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i2HPD-0000A2-DH; Mon, 26 Aug 2019 17:59:43 +0200
+Date:   Mon, 26 Aug 2019 17:59:43 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190826155943.zvghokdn3iu2sipx@linutronix.de>
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-2-swood@redhat.com>
+ <20190821233358.GU28441@linux.ibm.com>
+ <20190822133955.GA29841@google.com>
+ <d65032399f66ec85731fdcf4f8c6c7af74687fb2.camel@redhat.com>
+ <20190823161740.xhntflxs3vlf3xnu@linutronix.de>
+ <40dd3a7e37ed9b3d03c50221dafc7aa137827ce8.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190826135452.GF10614@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <40dd3a7e37ed9b3d03c50221dafc7aa137827ce8.camel@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Jan.
+On 2019-08-23 14:46:39 [-0500], Scott Wood wrote:
+> > > Before consolidation, RT mapped rcu_read_lock_bh_held() to
+> > > rcu_read_lock_bh() and called rcu_read_lock() from
+> > > rcu_read_lock_bh().  This
+> > > somehow got lost when rebasing on top of 5.0.
+> > 
+> > so now rcu_read_lock_bh_held() is untouched and in_softirq() reports 1.
+> > So the problem is that we never hold RCU but report 1 like we do?
+> 
+> Yes.
 
-On Mon, Aug 26, 2019 at 03:54:52PM +0200, Jan Kara wrote:
-> As I've checked, you should be using get_jiffies_64() to get value of
-> jiffies_64. Also for comparisons of jiffie values, I think you should be
-> using time_after64() and similar functions instead of direct comparisons...
+I understand the part where "rcu_read_lock() becomes part of
+local_bh_disable()". But why do you modify rcu_read_lock_bh_held() and
+rcu_read_lock_bh()? Couldn't they remain as-is?
 
-Yeah, good point.  I always forget that with jiffies_64.  Will post an
-updated series soon.
+> -Scott
 
-Thanks.
-
--- 
-tejun
+Sebastian
