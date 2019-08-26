@@ -2,111 +2,107 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5FAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680E2C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CF02173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4eliHwy"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5802173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbfHZH3x (ORCPT
+        id S1729979AbfHZHbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:29:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36553 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730120AbfHZH3t (ORCPT
+        Mon, 26 Aug 2019 03:31:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41825 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfHZHbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:29:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w2so11236988pfi.3;
-        Mon, 26 Aug 2019 00:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gICdPQsIaTjTwUfJWho+jc+GHx6tokQahaBmVhNvwDM=;
-        b=E4eliHwychozfMNfOj07MuJmETtFDVWMV9iFqTlqVue8NR8AKGqEmncm8GpGsk5s/G
-         UFvrFoFeHbXcdI3bV3xJSjH76wjBxtjgebzaN0CkLDpGgo1A2f6Qgc+jE97TdEwHV8Fy
-         QZAc5gMD9ALm+H2Z59k6R3EpoSJT5eIuangAiRexD3l4btgddD6gl6tOhGkLXTj8D/+k
-         zTi6yn7eQvAg/8cu/exKqvpDj7m7b+sfebWqbtqWnpbnMoszBYO9aiL36GsEMN87VyJ1
-         JTCPEtb5YO2VmXPxhOwZq4pscUy0LTa8XnTeSI6S+3UhdfwRdwsVgos5jBUCdpnmUm5y
-         ZEQg==
+        Mon, 26 Aug 2019 03:31:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o101so14273620ota.8;
+        Mon, 26 Aug 2019 00:31:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gICdPQsIaTjTwUfJWho+jc+GHx6tokQahaBmVhNvwDM=;
-        b=lDyzX338y9JZ+nrhOLKZRET+g+YhcgEEWI83LzLsdU+OkUoEBi0C6d2dddB2UW7SlT
-         WDU3wP90xV8BuuA8ehotmyIxHL/zuSB9ARC2ya60VpJCVbwYkD2qVRMz/BC82GhhfXxs
-         CXGgs3bQEqxcHV+3vGCzCscIMw7qUBtNTnChIg4h207C8wqa+Ksq/mllufvcLrcXC5GC
-         PWEjB4xaiErpUxhg76DzQRN17/TZ41IQtLtt/jVUTrVlUCkSN4IW+hl2Hr4ywdN41yQv
-         08hSOHNDWwRVMwn2V/lV+y2WxxkXEX0KtRRvBev4VT3tj7+neu+GoLpxfL4bVDBfH8KD
-         Ivog==
-X-Gm-Message-State: APjAAAUT4NwsZ28uNKt5jQUgI15GYiG+sQv746DZbASjtpIxsGtUVZZj
-        r+qf2d41LAV+6lAq09aExRs=
-X-Google-Smtp-Source: APXvYqyUshJJ/N7ekbELyD/0XC7quwj1v43OoPlJqRGF0nDUkPg4Z1RHMMRI3kbs6z3a+iD02k6rNg==
-X-Received: by 2002:a17:90a:9f4b:: with SMTP id q11mr18114285pjv.105.1566804589288;
-        Mon, 26 Aug 2019 00:29:49 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id p90sm11195670pjp.7.2019.08.26.00.29.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 00:29:48 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 2/3] serial: sprd: add console_initcall in sprd's uart driver
-Date:   Mon, 26 Aug 2019 15:29:28 +0800
-Message-Id: <20190826072929.7696-3-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190826072929.7696-1-zhang.lyra@gmail.com>
-References: <20190826072929.7696-1-zhang.lyra@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=abhvVaOTv7qdR2buENiROg9GGD/qAIGiemfdRCUDpVc=;
+        b=lqH006BCEkX6+z6YENIn73QMRP3M2lnLTwoxVZdUJQhLWIwR3lUFTQg0VITMb13lTz
+         5N0sl8CnbEQu3kExrW0GSFtxjnTpqZVrhkS0l/wxNLBgDo+oiE6TxQ59Flr/5BdkPbce
+         N/4oI+lRekJRQC9h8Bhgs4ImlkixkSMastqcAfwkUewJYcwLycyQhJ4YYy0S6jttw8Zk
+         1fNPFw+P4hmgrXICLx09pfwTdODktj2bfyMneQlpMJJe0wvn/x1rGzJdQsZ5orhVaJ7T
+         DxmNrqP5U9EB9qlO+msUtVPD6+Nxf/pWPEgTzQG3r0gzlMWHQ6JJeCOLdTQ2Oa7b+dyx
+         9Uxg==
+X-Gm-Message-State: APjAAAWq0MWh+ySDwjezNrXuVYTJ0yX1mCnp5KKHCGT7aKp0S/pxmugg
+        uD9BZAxYtTz2uhOBwrgOa+tJLlx4AkoVXCILCsc=
+X-Google-Smtp-Source: APXvYqwGSUko7fTyH6xUMnz8XMOWCsDcFWz2SrtHpmTycrnO0UU8UJwbJdJqLrNcjjb1kJDssLKXYH7hlHP//EIu2Kk=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr14310466otn.297.1566804673402;
+ Mon, 26 Aug 2019 00:31:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org> <20190825135154.11488-9-jacopo+renesas@jmondi.org>
+In-Reply-To: <20190825135154.11488-9-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 26 Aug 2019 09:31:02 +0200
+Message-ID: <CAMuHMdUuWFGSTUcAR2aV6cg4hpfzMs5EQBJTNM+ym2k8Ht-bVA@mail.gmail.com>
+Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Hi Jacopo,
 
-Use console_initcall to save the console index we selected on the
-command line to sprd_console before probe finished. Thus we can
-make different processes to the uart devices during initialization
-according to whether it is used for console.
+On Sun, Aug 25, 2019 at 3:51 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add a driver for the R-Car Display Unit Color Correction Module.
+> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> to perform image enhancement and color correction.
+>
+> Add support for CMM through a driver that supports configuration of
+> the 1-dimensional LUT table. More advanced CMM feature will be
+> implemented on top of this basic one.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
----
- drivers/tty/serial/sprd_serial.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks for your patch!
 
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-index a3be4e2dd019..aead823c650b 100644
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -1008,6 +1008,13 @@ static struct console sprd_console = {
- 	.data = &sprd_uart_driver,
- };
- 
-+static int __init sprd_serial_console_init(void)
-+{
-+	register_console(&sprd_console);
-+	return 0;
-+}
-+console_initcall(sprd_serial_console_init);
-+
- #define SPRD_CONSOLE	(&sprd_console)
- 
- /* Support for earlycon */
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+
+> +static const struct of_device_id rcar_cmm_of_table[] = {
+> +       { .compatible = "renesas,cmm-r8a7795", },
+> +       { .compatible = "renesas,cmm-r8a7796", },
+> +       { .compatible = "renesas,cmm-r8a77965", },
+> +       { .compatible = "renesas,cmm-r8a77990", },
+> +       { .compatible = "renesas,cmm-r8a77995", },
+> +       { .compatible = "renesas,rcar-gen3-cmm", },
+
+As they're all handled the same, you can drop the SoC-specific values
+from the driver's match table.
+
+> +       { .compatible = "renesas,rcar-gen2-cmm", },
+
+Just wondering: has this been tested on R-Car Gen2?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
