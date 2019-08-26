@@ -2,108 +2,115 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F20C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB64C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295BA22DA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C8A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wrtgv+P5"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="nd0pExQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfHZF1g (ORCPT
+        id S1727866AbfHZFgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 01:27:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36588 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfHZF1f (ORCPT
+        Mon, 26 Aug 2019 01:36:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42470 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfHZFgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 01:27:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g67so14502936wme.1;
-        Sun, 25 Aug 2019 22:27:33 -0700 (PDT)
+        Mon, 26 Aug 2019 01:36:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p3so9857525pgb.9
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 22:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zhSMjbP0Wu5ZMMWkC9ESobPUe2Y7GCnZAY38J4ap/Fg=;
-        b=Wrtgv+P5j+JqrzX4i5a2m0Hf6aY2gVCrX4H2C7/CzDNLSAFsq/LoIOtFetZ7PAh0YC
-         Unvv85fAEzk9ao6NSQoXBEMhJ6i0f3m9/sHauFJ17Y3B6xSemwsNGUtKuchuraU+9DAn
-         GqGXQEv5AptLkXbzdnWa3Nzwp+4LDv3d7SKmYRb8i0gosMezsJZRZmc0HcN7fVgL9kk6
-         5ldBeWlWEF+Y9PcKOwqWfCt+F7Uw0O+zs0r9OAgb8kxggcSGEFGmzb8AUcK1xtbL02lr
-         QCIf7CoaEC6xLB+/AKoZzCy1aoSTV3P0GlJoTHjn+zR97eahAoxn3Cxuo7Ocdw3+2IIT
-         2nuQ==
+        d=fossix-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=KdvhWx5STJQuh3h6H3k/gde8WO2PhkrNqGMLuEz+X7g=;
+        b=nd0pExQXCUmwBnwOJDaiy3haAHBnMxeK18GFfX6DKysRajp/3+t/EoL2ktvKTIPeKU
+         nCXANGDj7C2dqWaS5oxRVTnt87qrrAOD3/ZfUgkLnO3TM3nVDUxwSXJ15/gChK3CYZgw
+         07c304FGDN3hWgwsu5dCg/8wWOVu3wWXJbrxO5GzYIv2cpeaOVceYDIVrYCal/UwpkvP
+         qkeMtnsAUxNidvn8t5zLMF9g29imsJGb4NQ1L4Z5JDFsbYO4hNcQCLMv7sKHp7g2D5FG
+         5ZOLEKcepdqtx6fYiz6z8bbncNalq8Jd3UlCPJLuvYpR278wnvLKJmxnnX1SkpVJG/Iu
+         pJHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zhSMjbP0Wu5ZMMWkC9ESobPUe2Y7GCnZAY38J4ap/Fg=;
-        b=pHF8vzw0Yfv6P/JsOPyN+DKtwWsPmSmQMGKJvf1drOIAAr+GDGNXYnXvXsXdOK+xKk
-         o6Hwy/9sZpoD+ZrzQy6cRYU9+B4KVnzdRDP/GEnPx3enQdAxWIvVJJy5u6oLQKHLYaOU
-         q11gOrwo7Q2o7OHdksWGkgqCyUMS+lfGI9RjVel0BGupkP11xtrMCKRKUlMmV7jcEXf4
-         ubpHgR+t8ZY82jM5PFAP9H53X41tvVNTZU3uSHXUG3I3deJALsi838E+JHXTMhkQHGXs
-         MrH/u7stONWuCx8xArG2pM9ao74BdTCSOZ40qEHsc4r9/1tWvaBtS8DGgJc4r1iReSng
-         JHTw==
-X-Gm-Message-State: APjAAAXrA5qTZQRr6QJDbmEcVCcWJs8H5B3PW+Nr/deDYy60etAvSfwI
-        QkcEU52fNg7bP9GxrS+XSQfUgtHw
-X-Google-Smtp-Source: APXvYqwt/FP7G949MiCl/9GTtZTkNxG2IhYcOlnbipyXfe2PL/fH+6H0ruKcHMUQPWqNlmK9CWHpaQ==
-X-Received: by 2002:a7b:cd0f:: with SMTP id f15mr19733964wmj.86.1566797253000;
-        Sun, 25 Aug 2019 22:27:33 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f04:7c00:711f:ea9c:2f8:2101? (p200300EA8F047C00711FEA9C02F82101.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:711f:ea9c:2f8:2101])
-        by smtp.googlemail.com with ESMTPSA id l15sm9029859wru.56.2019.08.25.22.27.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 25 Aug 2019 22:27:32 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the net-next tree with the net tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190826122726.145f538d@canb.auug.org.au>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <6994fc11-51da-3dc2-c213-09496b657abb@gmail.com>
-Date:   Mon, 26 Aug 2019 07:27:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=KdvhWx5STJQuh3h6H3k/gde8WO2PhkrNqGMLuEz+X7g=;
+        b=DOct9WzprmxHUUM7m9zur63mB7TJsTOmMsOfhkczdyoN8C3xdAlBUU4eUmkafFqsJl
+         Xpg6ShHLG6rfZhqSRuos4R94pzDM4FUlCnZ7dJHsPP5SYvm0NZJj0ol8PGnb8SLGfRui
+         Bfp0J9BA5PF7Ss4/PG4vl9+CoyCAF7ZWTgrflZvNr2t9SW3+oC0274KfuSyfflJ6qp7i
+         nt6ABH3mNLzYhVTniHhxkHH5MDGgK8WfKNnZgePiIsBKpdTx3NiqKrHISWKwOI+NUw/p
+         6cstm+1MQFMPU6V5mhHnp17SFzEmLIIxQARx2/kkcMFViYx9tu2yck6iTR7APOvnspux
+         HCDQ==
+X-Gm-Message-State: APjAAAUOqa+ExWms2jny3pUaOIcjnk2yCp/2BPRvhGKvnNUlOjSH9Sax
+        xPU+BxAI9YGHnlczydLyFRJhXpSl710=
+X-Google-Smtp-Source: APXvYqzLbNe7kZu12nUvr9UjhYpZ1XPkr1S0moFNK89fzJ/s8JVOm7N4kheB0F+Id5psYyLjnP1AQw==
+X-Received: by 2002:a17:90a:cd04:: with SMTP id d4mr16762205pju.70.1566797760058;
+        Sun, 25 Aug 2019 22:36:00 -0700 (PDT)
+Received: from localhost ([129.41.84.71])
+        by smtp.gmail.com with ESMTPSA id a128sm13260907pfb.185.2019.08.25.22.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 22:35:59 -0700 (PDT)
+From:   Santosh Sivaraj <santosh@fossix.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/mm: tell if a bad page fault on data is read or write.
+In-Reply-To: <4f88d7e6fda53b5f80a71040ab400242f6c8cb93.1566400889.git.christophe.leroy@c-s.fr>
+References: <4f88d7e6fda53b5f80a71040ab400242f6c8cb93.1566400889.git.christophe.leroy@c-s.fr>
+Date:   Mon, 26 Aug 2019 11:05:56 +0530
+Message-ID: <87k1b0ij43.fsf@santosiv.in.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190826122726.145f538d@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.08.2019 04:27, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the net-next tree got a conflict in:
-> 
->   drivers/net/ethernet/realtek/r8169_main.c
-> 
-> between commit:
-> 
->   345b93265b3a ("Revert "r8169: remove not needed call to dma_sync_single_for_device"")
-> 
-> from the net tree and commit:
-> 
->   fcd4e60885af ("r8169: improve rtl_rx")
->   d4ed7463d02a ("r8169: fix DMA issue on MIPS platform")
-> 
-> from the net-next tree.
-> 
-> I fixed it up (the latter seems to do the same as the net tree patch) and
-> can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the conflicting
-> tree to minimise any particularly complex conflicts.
-> 
-Due to other changes there have been two versions of the fix, one for net
-and one for net-next. Therefore ignoring the one from net when merging into
-net-next was correct. Thanks!
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+
+> DSISR has a bit to tell if the fault is due to a read or a write.
+>
+> Display it.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+Reviewed-by: Santosh Sivaraj <santosh@fossix.org>
+
+> ---
+>  arch/powerpc/mm/fault.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+> index 8432c281de92..b5047f9b5dec 100644
+> --- a/arch/powerpc/mm/fault.c
+> +++ b/arch/powerpc/mm/fault.c
+> @@ -645,6 +645,7 @@ NOKPROBE_SYMBOL(do_page_fault);
+>  void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+>  {
+>  	const struct exception_table_entry *entry;
+> +	int is_write = page_fault_is_write(regs->dsisr);
+>  
+>  	/* Are we prepared to handle this fault?  */
+>  	if ((entry = search_exception_tables(regs->nip)) != NULL) {
+> @@ -658,9 +659,10 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+>  	case 0x300:
+>  	case 0x380:
+>  	case 0xe00:
+> -		pr_alert("BUG: %s at 0x%08lx\n",
+> +		pr_alert("BUG: %s on %s at 0x%08lx\n",
+>  			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
+> -			 "Unable to handle kernel data access", regs->dar);
+> +			 "Unable to handle kernel data access",
+> +			 is_write ? "write" : "read", regs->dar);
+>  		break;
+>  	case 0x400:
+>  	case 0x480:
+> -- 
+> 2.13.3
