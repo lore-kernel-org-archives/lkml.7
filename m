@@ -2,98 +2,83 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1CFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0822070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC41A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbfHZLzK (ORCPT
+        id S1731118AbfHZLz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:55:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39649 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfHZLzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:55:10 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i2DaU-0001LY-NS; Mon, 26 Aug 2019 13:55:06 +0200
-Date:   Mon, 26 Aug 2019 13:55:05 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-cc:     Sasha Levin <sashal@kernel.org>, lantianyu1986@gmail.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        daniel.lezcano@linaro.org, michael.h.kelley@microsoft.com
-Subject: Re: [PATCH] x86/Hyper-V: Fix build error with
- CONFIG_HYPERV_TSCPAGE=N
-In-Reply-To: <87d0gso0jf.fsf@vitty.brq.redhat.com>
-Message-ID: <alpine.DEB.2.21.1908261354140.1939@nanos.tec.linutronix.de>
-References: <20190822053852.239309-1-Tianyu.Lan@microsoft.com> <87zhk1pp9p.fsf@vitty.brq.redhat.com> <20190824151218.GM1581@sasha-vm> <87d0gso0jf.fsf@vitty.brq.redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 26 Aug 2019 07:55:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5657 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727182AbfHZLz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:55:58 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B26E09BD827BE9E9B2A1;
+        Mon, 26 Aug 2019 19:55:53 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 26 Aug 2019 19:55:44 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <wangzhou1@hisilicon.com>, <liguozhu@hisilicon.com>,
+        <john.garry@huawei.com>, <Jonathan.Cameron@huawei.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next] crypto: hisilicon: select CRYPTO_LIB_DES while compiling SEC driver
+Date:   Mon, 26 Aug 2019 19:59:14 +0800
+Message-ID: <20190826115914.182700-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019, Vitaly Kuznetsov wrote:
-> Sasha Levin <sashal@kernel.org> writes:
-> 
-> > On Thu, Aug 22, 2019 at 10:39:46AM +0200, Vitaly Kuznetsov wrote:
-> >>lantianyu1986@gmail.com writes:
-> >>
-> >>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> >>>
-> >>> Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
-> >>> hv_sched_clock_offset for their sched clock callback and so
-> >>> define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
-> >>
-> >>CONFIG_HYPERV_TSCPAGE is gone after my "x86/hyper-v: enable TSC page
-> >>clocksource on 32bit" patch. Do we still have an issue to fix?
-> >
-> > Yes. Let's get it fixed on older kernels (as such we need to tag this
-> > one for stable). The 32bit TSC patch won't come in before 5.4 anyway.
-> >
-> > Vitaly, does can you ack this patch? It might require you to re-spin
-> > your patch.
-> >
-> 
-> Sure, no problem,
-> 
-> Acked-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> I, however, was under the impression the patch fixes the issue with the
-> newly introduced sched clock:
-> 
-> commit b74e1d61dbc614ff35ef3ad9267c61ed06b09051
-> Author: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> Date:   Wed Aug 14 20:32:16 2019 +0800
-> 
->     clocksource/hyperv: Add Hyper-V specific sched clock function
-> 
-> (and Fixes: tag is missing)
-> 
-> and this is not in mainline as of v5.3-rc6. In tip/timers/core Thomas
-> already picked my "clocksource/drivers/hyperv: Enable TSC page
-> clocksource on 32bit" which also resolves the issue.
+When CRYPTO_DEV_HISI_SEC=y, below compilation error is found after 
+'commit 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")':
 
-No. I folded Sashas fix into the original clocksource patch and then added
-yours on top.
+drivers/crypto/hisilicon/sec/sec_algs.o: In function `sec_alg_skcipher_setkey_des_cbc':
+sec_algs.c:(.text+0x11f0): undefined reference to `des_expand_key'
+drivers/crypto/hisilicon/sec/sec_algs.o: In function `sec_alg_skcipher_setkey_des_ecb':
+sec_algs.c:(.text+0x1390): undefined reference to `des_expand_key'
+make: *** [vmlinux] Error 1
 
-Thanks,
+This because DES library has been moved to lib/crypto in this commit 
+'04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")'.
+Fix this by selecting CRYPTO_LIB_DES in CRYPTO_DEV_HISI_SEC.
 
-	tglx
+Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
+Fixes: 04007b0e6cbb ("crypto: des - split off DES library from generic DES cipher driver")
+Fixes: 894b68d8be4b ("crypto: hisilicon/des - switch to new verification routines")
+
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/crypto/hisilicon/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+index fa8aa06..ebaf91e 100644
+--- a/drivers/crypto/hisilicon/Kconfig
++++ b/drivers/crypto/hisilicon/Kconfig
+@@ -4,6 +4,7 @@ config CRYPTO_DEV_HISI_SEC
+ 	tristate "Support for Hisilicon SEC crypto block cipher accelerator"
+ 	select CRYPTO_BLKCIPHER
+ 	select CRYPTO_ALGAPI
++	select CRYPTO_LIB_DES
+ 	select SG_SPLIT
+ 	depends on ARM64 || COMPILE_TEST
+ 	depends on HAS_IOMEM
+-- 
+2.7.4
+
