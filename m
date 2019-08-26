@@ -2,141 +2,126 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF34C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B791C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D942186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:16:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uyvLe2AQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA5D2186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731346AbfHZKQC (ORCPT
+        id S1731353AbfHZKQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:16:02 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45924 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731306AbfHZKP7 (ORCPT
+        Mon, 26 Aug 2019 06:16:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53926 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727526AbfHZKQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:15:59 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D4EE731B;
-        Mon, 26 Aug 2019 12:15:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566814557;
-        bh=9wZSzYHEKtzlGccYoNBaQM5/r5uiiDKyUx0xfquMNBM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uyvLe2AQoJzdJ3a+hqTNdkz1kiuJHyq90GBzU82SftccR9ETTjypUnKh5WGKh3DPQ
-         XJbEq+4MyWenoNDZWKweCjlylTnbe/CfH6HJr0A80djtxztDj2j1L0XXUnpLLmwDn6
-         pV+EB/Ug5xi0/r8KUu2H5seKFRPZG3xSg3Lu5fyk=
-Date:   Mon, 26 Aug 2019 13:15:50 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Message-ID: <20190826101550.GB5031@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-2-jacopo+renesas@jmondi.org>
- <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
- <20190826075943.h7ivwagape3glym5@uno.localdomain>
+        Mon, 26 Aug 2019 06:16:27 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QA8HLi080391
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 06:16:25 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umbpfv3db-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 06:16:25 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Mon, 26 Aug 2019 11:16:23 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 26 Aug 2019 11:16:20 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QAGJtI42532948
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 26 Aug 2019 10:16:19 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C3DCA4064;
+        Mon, 26 Aug 2019 10:16:19 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 227C8A405C;
+        Mon, 26 Aug 2019 10:16:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.106])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 26 Aug 2019 10:16:17 +0000 (GMT)
+Subject: Re: [PATCH v3] powerpc/fadump: sysfs for fadump memory reservation
+To:     Hari Bathini <hbathini@linux.ibm.com>, mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, mahesh@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        corbet@lwn.net
+References: <20190810175905.7761-1-sourabhjain@linux.ibm.com>
+ <53311fa4-2cce-1eb6-1aae-0c835e06eb24@linux.ibm.com>
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+Date:   Mon, 26 Aug 2019 15:46:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <53311fa4-2cce-1eb6-1aae-0c835e06eb24@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190826075943.h7ivwagape3glym5@uno.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082610-0028-0000-0000-0000039410D5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082610-0029-0000-0000-0000245644F4
+Message-Id: <cf4fdb60-438c-bc4e-d759-1fbb27364c50@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908260112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
 
-On Mon, Aug 26, 2019 at 09:59:43AM +0200, Jacopo Mondi wrote:
-> On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
-> > On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > > Add device tree bindings documentation for the Renesas R-Car Display
-> > > Unit Color Management Module.
-> > >
-> > > CMM is the image enhancement module available on each R-Car DU video
-> > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >
-> > Thanks for your patch!
-> >
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> > > @@ -0,0 +1,33 @@
-> > > +* Renesas R-Car Color Management Module (CMM)
-> > > +
-> > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> > > +
-> > > +Required properties:
-> > > + - compatible: shall be one or more of the following:
-> > > +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
-> > > +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
-> > > +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
-> > > +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
-> > > +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
-> >
-> > Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
+
+On 8/26/19 3:29 PM, Hari Bathini wrote:
 > 
-> I actually copied it from the r-car gpio bindings, and I liked
-> cmm-<soctype> better. If you prefer I can change it though.
 > 
-> > > +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
-> > > +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
-> > > +
-> > > +   When the generic compatible string is specified, the SoC-specific
-> > > +   version corresponding to the platform should be listed first.
-> > > +
-> > > + - reg: the address base and length of the memory area where CMM control
-> > > +   registers are mapped to.
-> > > +
-> > > + - clocks: phandle and clock-specifier pair to the CMM functional clock
-> > > +   supplier.
-> >
-> > Thinking about yaml validation:
-> >
-> > power-domains?
-> > resets?
+> On 10/08/19 11:29 PM, Sourabh Jain wrote:
+>> Add a sys interface to allow querying the memory reserved by
+>> fadump for saving the crash dump.
+>>
+>> Add an ABI doc entry for new sysfs interface.
+>>    - /sys/kernel/fadump_mem_reserved
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> ---
+>> Changelog:
+>> v1 -> v2:
+>>   - Added ABI doc for new sysfs interface.
+>>
+>> v2 -> v3:
+>>   - Updated the ABI documentation.
+>> ---
+>>
+>>  Documentation/ABI/testing/sysfs-kernel-fadump    |  6 ++++++
 > 
-> They should indeed be documented.
+> Shouldn't this be Documentation/ABI/testing/sysfs-kernel-fadump_mem_reserved?
+> 
+>> +++ b/Documentation/ABI/testing/sysfs-kernel-fadump
+>> @@ -0,0 +1,6 @@
+>> +What:		/sys/kernel/fadump_mem_reserved
+>> +Date:		August 2019
+>> +Contact:	linuxppc-dev@lists.ozlabs.org
+>> +Description:	read only
+>> +		Provide information about the amount of memory
+>> +		reserved by fadump to save the crash dump.
+> 
+> Split this up into a separate patch and have ABI documentation for
+> fadump_reserved & fadump_registered as well..
 
-How about converting this binding to yaml alreay ? It should be fairly
-simple.
 
-> > > +Example:
-> > > +--------
-> > > +
-> > > +       cmm0: cmm@fea40000 {
-> > > +               compatible = "renesas,cmm-r8a7796";
-> > > +               reg = <0 0xfea40000 0 0x1000>;
-> > > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> > > +               clocks = <&cpg CPG_MOD 711>;
-> > > +               resets = <&cpg 711>;
-> > > +       };
+Sure. Thanks for review.
 
--- 
-Regards,
 
-Laurent Pinchart
+- Sourabh Jain
+
