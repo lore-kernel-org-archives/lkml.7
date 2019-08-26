@@ -2,88 +2,72 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983F9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCA6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C58F21883
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF4A21881
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566853604;
-	bh=3DrqY7sNydcXOzeHE3ZB6MRQRURHh4+o2OgPnWcR8Fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w7JY36OGNbbojXPbCs3nZXPYYmEm4jMJCnfNFGB/YfmmF4XefQmeKmU+WVQsF8Jr+
-	 beI9oCxbvne/EstCy+mSpGaHt1TMn0+faQzmFFDlowQwAg/qx2HTauSprGdEoRJohO
-	 DelbXB5ufBAyuxrupTOdq9eFBXzautnnnRkqe7ZY=
+	s=default; t=1566853608;
+	bh=vJ5uUohdIc/5pI1u/M25vO7AHh7h8uA742G5yrcV0Fo=;
+	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
+	b=ju/mE03Usl+fqQIseLtBdULUOysaP38/DHzGjfiRdceNR5+zuLrZeeqbzEcoFchm2
+	 MsKSgzS5ChSjHV6DsDsL+yXh8iUh+9TVMqfY/aGBdCQP+n0KS95depiJDYzRrvbaxZ
+	 Ywi6NEHkc65bAsl6bHzZW+VzZZNZ1eoEleb2dxa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfHZVGn (ORCPT
+        id S1727860AbfHZVGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 17:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 17:06:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfHZVGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726380AbfHZVGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 26 Aug 2019 17:06:43 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E51C6217F5;
-        Mon, 26 Aug 2019 21:06:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A873C21881;
+        Mon, 26 Aug 2019 21:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566853602;
-        bh=3DrqY7sNydcXOzeHE3ZB6MRQRURHh4+o2OgPnWcR8Fw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pq/TLFQRhOtP1+wwmPICVqR/oDHmBy8cpion+C/aNthU8xHogf0m0cWo+dud+YygD
-         Ov6ihdZ4ZEBfGeRH6wsx6gJNwSazPmJqKFRVrGXVqMgGIWRd5N2gpBtcn9F18ZMeXf
-         nWs5+RKX1pcuo55hoFS7xwSmrffXXP4AogSKLdOE=
-Date:   Mon, 26 Aug 2019 23:06:39 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 28/38] posix-cpu-timers: Restructure expiry array
-Message-ID: <20190826210639.GC14309@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192921.895254344@linutronix.de>
+        bh=vJ5uUohdIc/5pI1u/M25vO7AHh7h8uA742G5yrcV0Fo=;
+        h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
+        b=BXcFaalVBpVIp5kgqs4OU3EG22zeIPuaxTV+l6NABfRck3//2UC+vOYLpWsP2z2VJ
+         yX4aQivm2AmGzabk0iZf1Wzv9hlylP/FfJxlI9dqAjMqNZlD3oSNWBvJl9J9qmi+cG
+         OsQGG7LOG8cLzSHTdqR5i2gvFZZVO811tLOHNbxw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192921.895254344@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190819222915.56150-1-sboyd@kernel.org>
+References: <20190819222915.56150-1-sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Phil Edworthy <phil.edworthy@renesas.com>
+Subject: Re: [PATCH] clk: Make of_parse_clkspec() return -ENOENT on errors
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 26 Aug 2019 14:06:41 -0700
+Message-Id: <20190826210642.A873C21881@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:09:15PM +0200, Thomas Gleixner wrote:
-> @@ -884,7 +888,7 @@ static void check_process_timers(struct
->  				 struct list_head *firing)
->  {
->  	struct signal_struct *const sig = tsk->signal;
-> -	struct list_head *timers = sig->posix_cputimers.cpu_timers;
-> +	struct posix_cputimer_base *base = sig->posix_cputimers.bases;
->  	u64 utime, ptime, virt_expires, prof_expires;
->  	u64 sum_sched_runtime, sched_expires;
->  	struct task_cputime cputime;
-> @@ -912,9 +916,12 @@ static void check_process_timers(struct
->  	ptime = utime + cputime.stime;
->  	sum_sched_runtime = cputime.sum_exec_runtime;
->  
-> -	prof_expires = check_timers_list(timers, firing, ptime);
-> -	virt_expires = check_timers_list(++timers, firing, utime);
-> -	sched_expires = check_timers_list(++timers, firing, sum_sched_runtime);
-> +	prof_expires = check_timers_list(&base[CPUCLOCK_PROF].cpu_timers,
-> +					 firing, ptime);
-> +	virt_expires = check_timers_list(&base[CPUCLOCK_VIRT].cpu_timers,
-> +					 firing, utime);
-> +	sched_expires = check_timers_list(&base[CLPCLOCK_SCHED].cpu_timers,
+Hrmm.. the subject is misleading. Let me reword it and resend.
 
-                                                ^^
-0-day bot should have warned by now.
+Quoting Stephen Boyd (2019-08-19 15:29:15)
+> The return value of of_parse_clkspec() is peculiar. If the function is
+> called with a NULL argument for 'name' it will return -ENOENT, but if
+> it's called with a non-NULL argument for 'name' it will return -EINVAL.
+> This peculiarity is documented by commit 5c56dfe63b6e ("clk: Add comment
+> about __of_clk_get_by_name() error values").
+>=20
+> Let's further document this function so that it's clear what the return
+> value is and how to use the arguments to parse clk specifiers.
+>=20
+> Cc: Phil Edworthy <phil.edworthy@renesas.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
