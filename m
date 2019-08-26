@@ -2,171 +2,130 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A24C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FFFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA05217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sDMlKJyX"
+	by mail.kernel.org (Postfix) with ESMTP id 18D542184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566858774;
+	bh=DO8QNLLXuCDlnGyxGga2q7nT+2QZpEapg80kfoCUTb0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=TBsA3dSXYUoSu3EGm1dq8mqjd72/5GwMfME1AhsxMQQKBGID0P/EOGc0/Y3Zma6Mv
+	 pX+HTWnvHE1Y7OBvPnZ8bfOtVGX4Z5HPGlQJD8G0y9RvmouCXF9hz0c8gFsjNcehvI
+	 014BBm3hB2NyWBw/hAVHRYuwV8zIfNFWKccM0lBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfHZWcD (ORCPT
+        id S1727087AbfHZWcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:32:03 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45876 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfHZWcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:32:03 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q12so16765309wrj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mI1A+wX9bYBKA3Fb9pFuvw+VEM4d+hn1LaHdgbJf7CA=;
-        b=sDMlKJyXUx969oIY7q6hpscTD3paVErbos+TeIRyDnEqnsdrUS7Zq6BJGLLPoy2Il6
-         bRkP/hbYK3qkMDSsdrWzW/bdfBu9iJH5y3ePq9ASqE87TrVZSL8ERiF3/Gt7aORQ3BWv
-         XNGB+TBuwN3uHt2hQ+nPJI5xFsZ1mpzHnyw7O/YcLGDTdw+hh9F9oeAXId7STKR2zKsn
-         GX/CuNDyy+9tpprqoEXpxQlWRJnhIFE8CssjYEBhZ8FEQTjU9UGlhZUUkhhRueoRLgJm
-         E3/lZ6n06aI3+7tOi2xf7J12YIaLfxExq0Z7J7ydNy5t92P0ecoORbVXmbgARGwlM931
-         Oh2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=mI1A+wX9bYBKA3Fb9pFuvw+VEM4d+hn1LaHdgbJf7CA=;
-        b=hbcj5R6CUylM6VSowfoj4aRwwHsHTCtdc/cgTGbFrJjVhUZEeb0dtEs0u0aOKiPt0P
-         UER+DEV+1cOqlIRqfqIAsak7vEJupRwqXo+p57751ZwPAFIkugwZY1oQZqYijY1a+s9z
-         kzl1N86DJGEgCPFZrdBlz8AoLfNO2pXD7Sg8poSRpdOk6w7TjhpRJywFbV3rTwEctFAb
-         7N+jtRfkIZ+74QFKAW8/BzZ0bEOzlGc0cbt22dCKSI1dnK8qVC1YYpga3WvZvKV3CRx/
-         N43h074+VEh2U5z835kSho5atufWN8uUESLWk4oAZuYDzo8Qr7mx183l4hZgU77DzgO7
-         P1wg==
-X-Gm-Message-State: APjAAAUrXCCV5vDrCSaVvcMCo3Qi1mACWwBX+G76BXYMUgF0w5aHt/f4
-        /MG5/zvvgcQ4w0dqNUy7FZG1+4Y+oLc=
-X-Google-Smtp-Source: APXvYqw7W0pUCwArYhx7LPDid4KdSd+WpIA8rTDBI/gCOvCANfa6Fk7Nd7QrxXrY4PJ/cn65iBZaeQ==
-X-Received: by 2002:a5d:424d:: with SMTP id s13mr25763169wrr.178.1566858719693;
-        Mon, 26 Aug 2019 15:31:59 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab? ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
-        by smtp.googlemail.com with ESMTPSA id f17sm790785wmf.27.2019.08.26.15.31.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 15:31:59 -0700 (PDT)
-Subject: Re: [GIT PULL] timers drivers v5.5
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Magnus Damm <damm+renesas@opensource.se>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
- <alpine.DEB.2.21.1908262257570.1939@nanos.tec.linutronix.de>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
- CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
- zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
- ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
- 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
- YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
- Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
- Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
- heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
- A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
- fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
- mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
- Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
- QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
- uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
- KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
- VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
- Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
- c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
- WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
- xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
- RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
- Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
- F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
- 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
- 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
- /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
- zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
- BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
- EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
- cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
- IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
- 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
- BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
- LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
- a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
- tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
- qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
- iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
- adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
- CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
- 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
-Message-ID: <91ef74e6-5542-424e-fc0e-ebda12bebc8c@linaro.org>
-Date:   Tue, 27 Aug 2019 00:31:57 +0200
+        Mon, 26 Aug 2019 18:32:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfHZWcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:32:52 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B54332080C;
+        Mon, 26 Aug 2019 22:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566858771;
+        bh=DO8QNLLXuCDlnGyxGga2q7nT+2QZpEapg80kfoCUTb0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=owf/BiTUrboc7LN0iyK021tz2vbOV4wCO/YUz67KZiA66ulPnoWUOAlKw45HNADpH
+         73LUycoZ00uIMyPUTgFifB8zSuJ0pRQLAanh4ke9L0NOGF7Jbe1QZ34j/vrqTNguei
+         TmIXCAjavUN4eJvxlI3XfRcD+idUcz1ix7SpI+Zg=
+Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
+To:     Nathan Royce <nroycea+kernel@gmail.com>
+Cc:     Brad Love <brad@nextdimension.cc>, sean@mess.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
+ <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc>
+ <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
+ <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org>
+ <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
+ <CALaQ_hrPZ7LMBvuHnCLayxHoVFi5U0gtxF-33-ehR=phRs3D5A@mail.gmail.com>
+ <94bfd12e-e9d4-1e6a-a18f-742e251f5cd9@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4b3b5bf1-7ca0-2c40-a47f-1fe0cf89a4da@kernel.org>
+Date:   Mon, 26 Aug 2019 16:32:49 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908262257570.1939@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <94bfd12e-e9d4-1e6a-a18f-742e251f5cd9@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/08/2019 22:59, Thomas Gleixner wrote:
-> On Mon, 26 Aug 2019, Daniel Lezcano wrote:
+On 8/20/19 7:56 AM, shuah wrote:
+> On 8/20/19 12:58 AM, Nathan Royce wrote:
+>> While your mention of quirks-table.h certainly had possibilities, I'm
+>> afraid adding the "AU0828_DEVICE(0x05e1, 0x0400, "Hauppauge",
+>> "Woodbury")," entry for my tuner did not make any difference regarding
+>> the "Tuner is busy. Error -19" message.
+>>
+>> I don't know if this means anything, but I see
+>> https://patchwork.kernel.org/patch/97726/ from 2010 which contains
+>> changes for the 0x0400 model. I guess it never got pulled in.
+>>
+>> Really, it's fine for me just to hang back at v5.1 for a year or two
+>> until ATSC 3.0 USB tuners come out at a reasonable price.
+>>
 > 
->> The following changes since commit 08a3c192c93f4359a94bf47971e55b0324b72b8b:
->>
->>   posix-timers: Prepare for PREEMPT_RT (2019-08-01 20:51:25 +0200)
->>
->> are available in the Git repository at:
->>
->>   https://git.linaro.org/people/daniel.lezcano/linux.git tags/timers-v5.5
+> Hi Nathan,
 > 
-> 5.5 - that's for next year's first kernel so I'll put it into the fridge for now.
+> The tuner busy error code is ENODEV. It appears some devices aren't
+> created on your system. Would it be possible for you to send me your
+> config and a complete dmesg.
+> 
+> I am curious if /dev/media0 or /dev/media1 present on your system.
+> Not having this could explain the ENODEV you are seeing.
+> 
 
-Let me cook another tag :)
+Thanks for sending the dmesg and config. The difference between the
+two config is you have CONFIG_MEDIA_CONTROLLER_DVB set in the second
+one. This is expected because this is enabled in 5.2 with the changes
+to share resources.
 
+grep MEDIA_CONTROLLER config5115.txt
+CONFIG_MEDIA_CONTROLLER=y
+# CONFIG_MEDIA_CONTROLLER_DVB is not set
+# CONFIG_MEDIA_CONTROLLER_REQUEST_API is not set
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+grep MEDIA_CONTROLLER config529.txt
+CONFIG_MEDIA_CONTROLLER=y
+CONFIG_MEDIA_CONTROLLER_DVB=y
+# CONFIG_MEDIA_CONTROLLER_REQUEST_API is not set
+CONFIG_SND_USB_AUDIO_USE_MEDIA_CONTROLLER=y
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+A new code path in DVB is enabled in 5.2 compared to 5.1. What we are
+seeing is somehow the DVB media graph is incomplete. When the enable
+source tries to find the media device that corresponds to the fe entity
+it can't find it and hence the -ENODEV you are seeing.
 
+I would be curious to see what happens if you have disable
+CONFIG_MEDIA_CONTROLLER
+
+I think the problem is in dvb media graph creation on your device and
+unfortunately, I don't have the device to debug the problem.
+
+Will you be able run media-ctl --print-dot on your system and send
+me the media graph. You can find media-ctl tool on
+
+https://git.linuxtv.org/v4l-utils.git/
+
+thanks,
+-- Shuah
