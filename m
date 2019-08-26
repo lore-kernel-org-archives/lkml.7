@@ -2,100 +2,123 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD99C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95767C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959022184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fnMzsCTr"
+	by mail.kernel.org (Postfix) with ESMTP id 6D5422184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566822074;
+	bh=Ch6Xj7G1lAJ86IAn5C4lLsB1o+ZvZrAx4p5e3cYLhjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GTzbpI+uaJBUZzn0TPam5Z5VVoPi6tmDKh2SJMGKQqhJYZebiUK/8D49FwWXqt2FS
+	 FZpfPLWCQBvosgGJKNKeDXXhDrjKkfgxpvC6oZ0LB3B0vLmkI1jOMoO3RAD68/Yxqz
+	 26ksTgnYZmLYBFqYWhKArUcMXuPwJALgUE2nrydw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfHZMU6 (ORCPT
+        id S1731974AbfHZMVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:20:58 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36525 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730199AbfHZMU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:20:58 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z4so17619401qtc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 05:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IInbJuct5ufzKNiytsnk+jMIYv1V6eVTEaTj38ohm3M=;
-        b=fnMzsCTram2mN7X12asMshdyTXllFMcSBIdA21KFh1RFEex2/5FeKlO+9rtE32Hfem
-         jNFRntwunRTt9MR1Ovw/7sG8gRUDu02VVxJVeHApVsYUYSL3ColhOVAIONzU/OwgzIsI
-         Cf+dbVDkOq6orHb9v/8o9ozQW9LemkmRD/qs4cgkUG9GO8bMKSsQ5fVmxRZ8QKmTd/UN
-         cMzUj24siEC0zPzjoKcmIhXTIs2pUPmj3ydsCJXBTyle1aaPAglspzS3pqQgQ9jGMdgs
-         V8/0FEQAaqOhMwcD4fjLClL9PYtQeZh0epvkMiiCdtfvZJMAYEZM7IJ41fzr+ZyQcPqf
-         fuvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IInbJuct5ufzKNiytsnk+jMIYv1V6eVTEaTj38ohm3M=;
-        b=U1SksqcYkL85UC0Q7bYSsaedrCJypdfjQx8g/zEH0ImewA39wlB+qpQ4PeUtKznyuT
-         Lz2YVnHhbUwfeBmXM4TkRNGzM/qk1dQipVRC6hnDv7JT16NEbwqMkSjw29aqf6Zx3952
-         63tQ8vCWUf2goG/FlGoL9tjwm2NwazgbxDtH/Iyrd8JzQ0JgpDJinCTIPY3ilnhzncLN
-         hn1B/1QWG2T8yd0wKG1KQ+2OEEcP3vU5CIyDRUEKOQBsYitG8h10NWsEc3/WHxeimVZf
-         EsV4FyEis3CkYpRpU7uRCblBE/H+hNWD3m2ELN6JKHtBgjq1AxriMdv2W9K4nLrATfKu
-         oelA==
-X-Gm-Message-State: APjAAAXPCXJbDc7BEbu4/tEKvks4z0n8cLVAHJ2O1U+vAnmCLNKu8PJF
-        SECHIp0ti7DcZX1hV6AQiVdyMw==
-X-Google-Smtp-Source: APXvYqz+8moKXNMjENzuAiUz9yUTyRo1T98w+98Tx3SfRXc69ey23f/HpA4QXKYMoXk3ry4w8yOQ3g==
-X-Received: by 2002:ac8:73c7:: with SMTP id v7mr14706237qtp.9.1566822056913;
-        Mon, 26 Aug 2019 05:20:56 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-216-168.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.216.168])
-        by smtp.gmail.com with ESMTPSA id q6sm6213402qke.109.2019.08.26.05.20.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 26 Aug 2019 05:20:56 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i2DzT-0007A1-Sv; Mon, 26 Aug 2019 09:20:55 -0300
-Date:   Mon, 26 Aug 2019 09:20:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     leon@kernel.org, Doug Ledford <dledford@redhat.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
-Message-ID: <20190826122055.GA27349@ziepe.ca>
-References: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com>
- <20190825194354.GC21239@ziepe.ca>
- <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
+        Mon, 26 Aug 2019 08:21:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48486 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727234AbfHZMVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:21:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3982BAF03;
+        Mon, 26 Aug 2019 12:21:11 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 14:21:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, penguin-kernel@I-love.SAKURA.ne.jp
+Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
+Message-ID: <20190826122110.GB7659@dhcp22.suse.cz>
+References: <20190822003131.GR1119@dread.disaster.area>
+ <20190822075948.GA31346@infradead.org>
+ <20190822085130.GI2349@hirez.programming.kicks-ass.net>
+ <20190822091057.GK2386@hirez.programming.kicks-ass.net>
+ <20190822101441.GY1119@dread.disaster.area>
+ <ddcdc274-be61-6e40-5a14-a4faa954f090@suse.cz>
+ <20190822120725.GA1119@dread.disaster.area>
+ <ad8037c8-d1af-fb4f-1226-af585df492d3@suse.cz>
+ <20190822131739.GB1119@dread.disaster.area>
+ <db4a1dae-d69a-0df4-4a71-02c2954ecd75@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <db4a1dae-d69a-0df4-4a71-02c2954ecd75@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:32:09AM +0530, Souptick Joarder wrote:
-> On Mon, Aug 26, 2019 at 1:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Sun, Aug 25, 2019 at 11:37:27AM +0530, Souptick Joarder wrote:
-> > > First, length passed to mmap is checked explicitly against
-> > > PAGE_SIZE.
-> > >
-> > > Second, if vma->vm_pgoff is passed as non zero, it would return
-> > > error. It appears like driver is expecting vma->vm_pgoff to
-> > > be passed as 0 always.
-> >
-> > ? pg_off is not zero
+On Thu 22-08-19 16:26:42, Vlastimil Babka wrote:
+> On 8/22/19 3:17 PM, Dave Chinner wrote:
+> > On Thu, Aug 22, 2019 at 02:19:04PM +0200, Vlastimil Babka wrote:
+> >> On 8/22/19 2:07 PM, Dave Chinner wrote:
+> >> > On Thu, Aug 22, 2019 at 01:14:30PM +0200, Vlastimil Babka wrote:
+> >> > 
+> >> > No, the problem is this (using kmalloc as a general term for
+> >> > allocation, whether it be kmalloc, kmem_cache_alloc, alloc_page, etc)
+> >> > 
+> >> >    some random kernel code
+> >> >     kmalloc(GFP_KERNEL)
+> >> >      reclaim
+> >> >      PF_MEMALLOC
+> >> >      shrink_slab
+> >> >       xfs_inode_shrink
+> >> >        XFS_ILOCK
+> >> >         xfs_buf_allocate_memory()
+> >> >          kmalloc(GFP_KERNEL)
+> >> > 
+> >> > And so locks on inodes in reclaim are seen below reclaim. Then
+> >> > somewhere else we have:
+> >> > 
+> >> >    some high level read-only xfs code like readdir
+> >> >     XFS_ILOCK
+> >> >      xfs_buf_allocate_memory()
+> >> >       kmalloc(GFP_KERNEL)
+> >> >        reclaim
+> >> > 
+> >> > And this one throws false positive lockdep warnings because we
+> >> > called into reclaim with XFS_ILOCK held and GFP_KERNEL alloc
+> >> 
+> >> OK, and what exactly makes this positive a false one? Why can't it continue like
+> >> the first example where reclaim leads to another XFS_ILOCK, thus deadlock?
+> > 
+> > Because above reclaim we only have operations being done on
+> > referenced inodes, and below reclaim we only have unreferenced
+> > inodes. We never lock the same inode both above and below reclaim
+> > at the same time.
+> > 
+> > IOWs, an operation above reclaim cannot see, access or lock
+> > unreferenced inodes, except in inode write clustering, and that uses
+> > trylocks so cannot deadlock with reclaim.
+> > 
+> > An operation below reclaim cannot see, access or lock referenced
+> > inodes except during inode write clustering, and that uses trylocks
+> > so cannot deadlock with code above reclaim.
 > 
-> Sorry, I mean, driver has a check against non zero to return error -EOPNOTSUPP
-> which means in true scenario driver is expecting vma->vm_pgoff should be passed
-> as 0.
+> Thanks for elaborating. Perhaps lockdep experts (not me) would know how to
+> express that. If not possible, then replacing GFP_NOFS with __GFP_NOLOCKDEP
+> should indeed suppress the warning, while allowing FS reclaim.
 
-get_index is masking vm_pgoff, it is not 0
+This was certainly my hope to happen when introducing __GFP_NOLOCKDEP.
+I couldn't have done the second step because that requires a deep
+understanding of the code in question which is beyond my capacity. It
+seems we still haven't found a brave soul to start converting GFP_NOFS
+to __GFP_NOLOCKDEP. And it would be really appreciated.
 
-Jason
+Thanks.
+-- 
+Michal Hocko
+SUSE Labs
