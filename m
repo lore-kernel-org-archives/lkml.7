@@ -2,80 +2,128 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EC0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18CEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5F821872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E8721872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566854352;
-	bh=HQwE/fwASOyzPHZ5mxSByd4agEzeg7VBnKqm+VUdbfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WCrba4yZJ7O9ypxHI6XK/9cTY70IxERcgTRSoH/KDJSY71CO68Sy70eiUpxce5hM/
-	 x18wimKCXhIS6k/hSnhEAndgUgyTtx5hin6Q0Soi0J5+dUY2+MOAYK2vyXXha6H5lx
-	 zoZTADX6e2PH7fceTRLGeVCL0YoJWVS5Ypl9FiI4=
+	s=default; t=1566854446;
+	bh=T0JD8qnI+1dYLW2ehX5/L9s6yP8c59bF7QrrvgHwOqk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=V4eFgtCTjnRNcV1satbD6j4KKvFkDROPdLjgA9tNAxbCBhfNPDzZJQw1k7LsxiPwb
+	 WJIZDj9dXgkveF8BrjGG5GX2f49Z3ur+eWpsx3t099xCOui9hoV6gUnc5mx6cJRQew
+	 Wa0P65eEXPLCaMgUJ0uAcVzJiwU7Y2PXV4VlKkYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfHZVTL (ORCPT
+        id S1727899AbfHZVUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 17:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36934 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 17:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfHZVTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 17:19:11 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726760AbfHZVUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 17:20:44 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D595520850;
-        Mon, 26 Aug 2019 21:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F9D620850;
+        Mon, 26 Aug 2019 21:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566854350;
-        bh=HQwE/fwASOyzPHZ5mxSByd4agEzeg7VBnKqm+VUdbfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BUej6MV3sObqsrc4u/mh8qaJiK50izv7MC6rwwGnA+7RX6598tQ2q3dyg8yWCxupv
-         B8Ux7dwiVRIC4hYZ7OqLos9H8iIili4YdVFs9piK+UxH0hf4lT1FiQNoLSPq9IOQR7
-         C61z5NfVV7T1cSUDD7Y86FP0T9axAwaoMfn/aJzY=
-Date:   Mon, 26 Aug 2019 23:19:08 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 30/38] posix-cpu-timers: Respect INFINITY for hard
- RTTIME limit
-Message-ID: <20190826211907.GE14309@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192922.078293002@linutronix.de>
+        s=default; t=1566854443;
+        bh=T0JD8qnI+1dYLW2ehX5/L9s6yP8c59bF7QrrvgHwOqk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WUYTOWgHppyB/BswRdS0DFRR1o3k9ofrSF27KtjH+NIJYMe5zaYJ54v5BbnrNfhdf
+         kMNHH7En6RqGUfnK/ADf8ZI2CNOH4zjBjrGK3bmnRQAyDQ+6wrWwWJ2+8Kz+m4O/pZ
+         jGsewM4Cc5vasiPUe7FruSKOwEmJLXlNg2muIa9Q=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH v2] clk: Document of_parse_clkspec() some more
+Date:   Mon, 26 Aug 2019 14:20:42 -0700
+Message-Id: <20190826212042.48642-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192922.078293002@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:09:17PM +0200, Thomas Gleixner wrote:
-> The RTIME limit expiry code does not check the hard RTTIME limit for
-> INFINITY, i.e. being disabled.  Add it.
-> 
-> While this could be considered an ABI breakage if something would depend on
-> this behaviour. Though it's highly unlikely to have an effect because
-> RLIM_INFINITY is at minimum INT_MAX and the RTTIME limit is in seconds, so
-> the timer would fire after ~68 years.
-> 
-> Adding this obvious correct limit check also allows further consolidation
-> of that code and is a prerequisite for cleaning up the 0 based checks and
-> the rlimit setter code.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+The return value of of_parse_clkspec() is peculiar. If the function is
+called with a NULL argument for 'name' it will return -ENOENT, but if
+it's called with a non-NULL argument for 'name' it will return -EINVAL.
+This peculiarity is documented by commit 5c56dfe63b6e ("clk: Add comment
+about __of_clk_get_by_name() error values").
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Let's further document this function so that it's clear what the return
+value is and how to use the arguments to parse clk specifiers.
+
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/clk.c | 43 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 37 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index c0990703ce54..5c6585eb35d4 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -4316,12 +4316,43 @@ void devm_of_clk_del_provider(struct device *dev)
+ }
+ EXPORT_SYMBOL(devm_of_clk_del_provider);
+ 
+-/*
+- * Beware the return values when np is valid, but no clock provider is found.
+- * If name == NULL, the function returns -ENOENT.
+- * If name != NULL, the function returns -EINVAL. This is because
+- * of_parse_phandle_with_args() is called even if of_property_match_string()
+- * returns an error.
++/**
++ * of_parse_clkspec() - Parse a DT clock specifier for a given device node
++ * @np: device node to parse clock specifier from
++ * @index: index of phandle to parse clock out of. If index < 0, @name is used
++ * @name: clock name to find and parse. If name is NULL, the index is used
++ * @out_args: Result of parsing the clock specifier
++ *
++ * Parses a device node's "clocks" and "clock-names" properties to find the
++ * phandle and cells for the index or name that is desired. The resulting clock
++ * specifier is placed into @out_args, or an errno is returned when there's a
++ * parsing error. The @index argument is ignored if @name is non-NULL.
++ *
++ * Example:
++ *
++ * phandle1: clock-controller@1 {
++ *	#clock-cells = <2>;
++ * }
++ *
++ * phandle2: clock-controller@2 {
++ *	#clock-cells = <1>;
++ * }
++ *
++ * clock-consumer@3 {
++ *	clocks = <&phandle1 1 2 &phandle2 3>;
++ *	clock-names = "name1", "name2";
++ * }
++ *
++ * To get a device_node for `clock-controller@2' node you may call this
++ * function a few different ways:
++ *
++ *   of_parse_clkspec(clock-consumer@3, -1, "name2", &args);
++ *   of_parse_clkspec(clock-consumer@3, 1, NULL, &args);
++ *   of_parse_clkspec(clock-consumer@3, 1, "name2", &args);
++ *
++ * Return: 0 upon successfully parsing the clock specifier. Otherwise, -ENOENT
++ * if @name is NULL or -EINVAL if @name is non-NULL and it can't be found in
++ * the "clock-names" property of @np.
+  */
+ static int of_parse_clkspec(const struct device_node *np, int index,
+ 			    const char *name, struct of_phandle_args *out_args)
+-- 
+Sent by a computer through tubes
+
