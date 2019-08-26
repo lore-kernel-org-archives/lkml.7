@@ -2,82 +2,109 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865DDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30898C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5675F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0881E20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LrSYxPcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732907AbfHZPMT (ORCPT
+        id S1732924AbfHZPNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:12:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40459 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731256AbfHZPMS (ORCPT
+        Mon, 26 Aug 2019 11:13:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34485 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732908AbfHZPNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:12:18 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i2GfF-00079X-KF; Mon, 26 Aug 2019 17:12:13 +0200
-Date:   Mon, 26 Aug 2019 17:12:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-cc:     Len Brown <len.brown@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH v2-resend] MAINTAINERS: mark simple firmware
- interface (SFI) obsolete
-In-Reply-To: <20190825173053.5649-1-lukas.bulwahn@gmail.com>
-Message-ID: <alpine.DEB.2.21.1908261706460.1939@nanos.tec.linutronix.de>
-References: <20190825173053.5649-1-lukas.bulwahn@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 26 Aug 2019 11:13:22 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b24so12018299pfp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j5KxHjXq4wZrRuSjnTO35VtGsy0U6Zm7/urplqoNwEg=;
+        b=LrSYxPcMCE8kKbBcH0Y3Ky8LLQbhHQZMufx9PAeg0KliOgtT46O/2328VxjkC002s0
+         fMFUqT3o78VSV7bCvVraoOlBIzM+/qiB5YjjfsWZg/0MDQ9Tukt7OT68Ak+Hc14VlMvF
+         4WSz87/WMNlIAu77o+bBIo1Vi/Vgxb1pcjEbFcfy8MGu3LFJRUvTg7GiMMF2p/n5zXmm
+         3OVCDL2D5CAWZnrHVicbMxKodku8gEbDG632rr2+ASNo8rlylbBcCHYsOAmF8CmOjLML
+         qYi+Nuu1sU4Nybzy33ueiE7/rQK9yoJ6zRD6dYBZazM4SgLXJo9PqUTfJY8OYzOXJQyg
+         C+0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j5KxHjXq4wZrRuSjnTO35VtGsy0U6Zm7/urplqoNwEg=;
+        b=kumkU5yBxU/mybx9on4u2ADlwVkzE+IMmx4Uv2Wgfe8MX+qkfAKqcjlPKUBOAJ3ddQ
+         WT1Dn9BkYyYAdeBAs1vJfnBnZQKhyLcn+RMPi6Eori8sDN0BL12fS0BAi65kIRJBraEO
+         JTLWL3YMLGOowrHUq2UM9cMloynuDOvpX6tUmJD+LnB2GHF7cBl+1Nh7IONivLGTsayq
+         MxzOENlC8xGyEFkygxe+iWRzZIWsiX9rEP+EsHhKVmWTeQZXTVcDQ/SlEw6HSi4x9yLY
+         uYTU6VaR4uHy/g8ppU6JVGNzqRrFrl1sXsh/qiMoin9sLY4+ZTk7VnmSi60vypDcaE9U
+         LpjA==
+X-Gm-Message-State: APjAAAW3ptAQzzekSS4rXtbLd1PnVfIdmc74TcjLP15uAlUvn01F8G9F
+        cUpK044rBJyl2z1BF3AXUOyZ8Q==
+X-Google-Smtp-Source: APXvYqza9qWjK7AbgQw32FUjQQVrD1ZaaAa3XtLTCQmQ29i1QX33eiFCIhXgsXNEeD+tlhOh+piA+Q==
+X-Received: by 2002:a63:6c46:: with SMTP id h67mr17290709pgc.248.1566832401867;
+        Mon, 26 Aug 2019 08:13:21 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g8sm11351479pgk.1.2019.08.26.08.13.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 08:13:21 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 08:15:12 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH] phy: qcom-qmp: Correct ready status, again
+Message-ID: <20190826151512.GX26807@tuxbook-pro>
+References: <20190806004256.20152-1-bjorn.andersson@linaro.org>
+ <20190806155040.0B54520C01@mail.kernel.org>
+ <57556d09-e2db-dc00-45a9-cbb57da02319@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57556d09-e2db-dc00-45a9-cbb57da02319@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lukas,
+On Tue 20 Aug 17:23 PDT 2019, Kishon Vijay Abraham I wrote:
 
-On Sun, 25 Aug 2019, Lukas Bulwahn wrote:
+> Hi Sasha,
+> 
+> On 06/08/19 9:20 PM, Sasha Levin wrote:
+> > Hi,
+> > 
+> > [This is an automated email]
+> > 
+> > This commit has been processed because it contains a "Fixes:" tag,
+> > fixing commit: 885bd765963b phy: qcom-qmp: Correct READY_STATUS poll break condition.
+> > 
+> > The bot has tested the following trees: v5.2.6.
+> > 
+> > v5.2.6: Failed to apply! Possible dependencies:
+> >     520602640419 ("phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling delay")
+> > 
+> > 
+> > NOTE: The patch will not be queued to stable trees until it is upstream.
+> > 
+> > How should we proceed with this patch?
+> 
+> Merging of this patch got delayed. Bjorn, Is it okay if this patch gets merged
+> in the next merge window and backported to stable releases then?
+> 
 
-> Len Brown has not been active in this part since around 2010. The recent
-> activity suggests that Thomas Gleixner and Jiang Lui were maintaining
-> this part of the kernel sources. Jiang Lui has not been active in the
-> kernel sources since beginning 2016. So, the maintainer's role seems to
-> be now with Thomas.
+That's fine, thanks for picking it up Kishon
 
-Nice try. All I did there was converting the existing code to new
-interfaces and to use SPDX identifiers. You touched it last, you own it, is
-not really working.
-
-TBH. I have no clue what that is except that it's bitrotting.
-
->  SIMPLE FIRMWARE INTERFACE (SFI)
-> -M:	Len Brown <lenb@kernel.org>
-> -L:	sfi-devel@simplefirmware.org
-> +M:	Thomas Gleixner <tglx@linutronix.de>
->  W:	http://simplefirmware.org/
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux-sfi-2.6.git
-> -S:	Supported
-> +S:	Obsolete
->  F:	arch/x86/platform/sfi/
->  F:	drivers/sfi/
->  F:	include/linux/sfi*.h
-
-So why not removing this whole entry. arch/x86/platform/sfi is already
-covered by x86 and the driver cruft falls back to the people who are used
-to deal with dead drivers anyway.
-
-Thanks,
-
-	tglx
+Regards,
+Bjorn
