@@ -2,300 +2,190 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CD4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C151C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453862173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A6B2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="q9KKwFI2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oNztOClg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfHZWk1 (ORCPT
+        id S1727116AbfHZWlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:40:27 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43104 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfHZWk1 (ORCPT
+        Mon, 26 Aug 2019 18:41:42 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37999 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfHZWlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:40:27 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e12so16807690otp.10;
-        Mon, 26 Aug 2019 15:40:25 -0700 (PDT)
+        Mon, 26 Aug 2019 18:41:42 -0400
+Received: by mail-qt1-f194.google.com with SMTP id q64so7898521qtd.5
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:41:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DBtUgp09ILtLJx82v7/9S8a2bPggcu3SBMJmSRWkOWU=;
-        b=q9KKwFI2spBd11DLhVGrnyWQ1itKWiJjNUpvQb1lcigAsiIa+zqXV82lgLULFRFzvY
-         i/A5q06MVmhusfme0Ht+CbyPFuNMSHhcZYLY8I4jksbTYGpNIuOmgXorJ5KIDpiRD80d
-         0zhLZqPjdoEjoVBAOLrpQMonWWoSoNqSpUUzUZBAm8wRtSHcdYw60KPG3ITSWALzqpTQ
-         CEKoNBmEfKEjOnz2LA4YCMClL8//qfoXF7ybS3TZRxu+x2+AyvdmlGx5GAmhZ5KV5AbL
-         1LCSqWmL7gpHIxS6ZfGtcF+QfQvgAeypN9W97aH7Zp97DKtIu6KdXpA6IwBYNPrKjm66
-         Un+w==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sG4TIFhm02SXCt/mIzw0vmCFG0zhNUfYTc9SGIQEZRc=;
+        b=oNztOClgv1LhfUPcvDFL5VDYbHaB2dc6TDeJOBYlZxIGAppfW5p6453WjD8tm1njuH
+         yF8AFMdrDQFKn+3AJaHqBDA9wGEb23VrNMyF/Nl5sw+7O8s0w6zILB4eBplFBbuWgaLy
+         VkjPqfU531IH2r7cV/rFLqxotAS1aUPPNnsSlsmAIiUTqXWMoWt/473aQg/zWj7Fzjm9
+         DOT9ojrDTiSga4WFY2pNm+JHkBI639fP86tPCFidMU80fvVB5iZPKGQyzvSFYODHQTCo
+         3yMpKTFWRk4EWWbCNC0nQuksorfTlISbq+LWMcVGh4UiyPfSMd5Xgbv086eh5ngresAJ
+         56JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DBtUgp09ILtLJx82v7/9S8a2bPggcu3SBMJmSRWkOWU=;
-        b=cdG1TRyBji80fNIZfDEbUJHsQaYRvrlJaHRMH0DaIMAGrlSV6aflYeC9HOa+e1cdvy
-         FFECXjIX1c9abUz0jimiXbOASvra5Qllv2QQ/4MXH4tAHhowBavVc1jIHrCCSm03BI89
-         DnzRFP321ZSNXPESbonG04+/BrZN4U+WgxnTDts03U/8T8Vrzs+MFHxhuSG5X+AlZxbc
-         WyqDMdxQGg/TBgGqhVAr62Qv2KhzfYRu/LuL6kOqanMI0OX+IHHz79o8lALiJI/Ckk8u
-         SCkFaGkOZbyCu+IpsSAlq6N6g2xJN80tQj48jN8TCDu+5DT5TPx5+OLsUVlpJSKieLPH
-         mpDw==
-X-Gm-Message-State: APjAAAVFaW7k6O/fDbhP04d7hXynDowLaTiUTp/rsOUBJ8mLYF99rlhV
-        r1GMEaP+ormfvF6CCcT2OSazklgd/nsIKdgqETE=
-X-Google-Smtp-Source: APXvYqz1tIwsKtjQUBPVQFswHzIWhO2ha2uKXMrM0jPjl6uCPWwQ2ehNr4SbBIrZI0zPPR9GJOgG6djB2Nf93UqVxso=
-X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr16553944otj.96.1566859224972;
- Mon, 26 Aug 2019 15:40:24 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sG4TIFhm02SXCt/mIzw0vmCFG0zhNUfYTc9SGIQEZRc=;
+        b=El2Uqc4E6r8AodIdarfs4vaqa220BoRUlsdDJriAUS3+OK90oqHN8gtHDnleTJ+Dso
+         zhac0MJhpw6qcODuUBToCJ+wX8l0PEQNu4IpXJZ3LWHelglN3jLWG8JMJZefTv70qe9F
+         kOR6U8j7kDP7d0YER9gmRHg0vizcCAORIQBdGNk8ukwDm+cVD+uTpWRuohVcIRvP7VCW
+         BAMIGqzYsel6pW+AHh37IW9eX0DBa1nfsh1ARfPtVoFoO36PcoNoxvpEUfR3EgM2ouNH
+         7QJTAn7AMfzh1H9ASo/p5mTgnXNeAzFQf9ywphii12ckbHQqfmzvN4rGYrWhUEdNSzZB
+         AghQ==
+X-Gm-Message-State: APjAAAUYkCqidsrNqOJUoOhXk85Hokhe4oItFTYSXPHKyAclDZPekzzl
+        d38C0WFJDTUwq/ZowEuwlVZkaR9j
+X-Google-Smtp-Source: APXvYqx6eTmuVnr3ki5RNJAdXa0WqohfFmmvcQVmKNVm0ivOQNBmN594ghwo6Rxi/RyFPrNLoF3noA==
+X-Received: by 2002:a0c:8695:: with SMTP id 21mr18024783qvf.166.1566859300329;
+        Mon, 26 Aug 2019 15:41:40 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id q25sm6692114qkm.30.2019.08.26.15.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 15:41:39 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 095F840916; Mon, 26 Aug 2019 19:41:37 -0300 (-03)
+Date:   Mon, 26 Aug 2019 19:41:36 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 00/12] libperf: Add events to perf/event.h
+Message-ID: <20190826224136.GD21761@kernel.org>
+References: <20190825181752.722-1-jolsa@kernel.org>
+ <20190826160627.GE24801@kernel.org>
+ <20190826161849.GF24801@kernel.org>
+ <20190826165852.GC8926@krava>
+ <20190826221419.GC21761@kernel.org>
 MIME-Version: 1.0
-References: <20190823090418.17148-1-narmstrong@baylibre.com>
- <20190823090418.17148-3-narmstrong@baylibre.com> <CAFBinCBy-VxfSMPMR0cEDuNg8=UOUVvWfkDi2Tp=QhBZka93aQ@mail.gmail.com>
- <f6e7e4de-e1b7-f642-07cb-fa029ff2a883@baylibre.com>
-In-Reply-To: <f6e7e4de-e1b7-f642-07cb-fa029ff2a883@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 27 Aug 2019 00:40:14 +0200
-Message-ID: <CAFBinCDDygiafTwLgqB9BimqrmwxL2=HFQD8cX8CQL23AFZNXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] soc: amlogic: Add support for Everything-Else
- power domains controller
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, ulf.hansson@linaro.org,
-        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826221419.GC21761@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Em Mon, Aug 26, 2019 at 07:14:19PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Aug 26, 2019 at 06:58:52PM +0200, Jiri Olsa escreveu:
+> > On Mon, Aug 26, 2019 at 01:18:49PM -0300, Arnaldo Carvalho de Melo wrote:
+> > 
+> > SNIP
+> > 
+> > > [perfbuilder@490c2c7bdaab ~]$ grep 'printf("lost' /tmp/build/perf/builtin-sched.i
+> > >  printf("lost %" "l" "ll""u" " events on cpu %d\n", event->lost.lost, sample->cpu);
+> > > [perfbuilder@490c2c7bdaab ~]$
+> > > 
+> > > And if we do this on a fedora:30 x86_64:
+> > > 
+> > > $ make -C tools/perf O=/tmp/build/perf /tmp/build/perf/builtin-sched.i
+> > > [acme@quaco perf]$ grep -A4 'printf("lost' /tmp/build/perf/builtin-sched.i
+> > >  printf("lost %" "l" 
+> > > # 2646 "builtin-sched.c" 3 4
+> > >                 "l" "u" 
+> > > # 2646 "builtin-sched.c"
+> > >                          " events on cpu %d\n", event->lost.lost, sample->cpu);
+> > > [acme@quaco perf]$
+> > > 
+> > > I.e. on 32-bit arches we shouldn't add that extra "l", right?
+> > 
+> > hum, I guess we could #ifdef it 64/32 bits
+> 
+> I tried to figure out how to fix this better, but the int-ll64.h versus
+> int-l64.h versus how __u64 is defined got me confused and I ended up
+> with:
+> 
+> #if __WORDSIZE == 64
 
-On Mon, Aug 26, 2019 at 10:10 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 25/08/2019 23:10, Martin Blumenstingl wrote:
-> > Hi Neil,
-> >
-> > thank you for this update
-> > I haven't tried this on the 32-bit SoCs yet, but I am confident that I
-> > can make it work by "just" adding the SoC specific bits!
-> >
-> > On Fri, Aug 23, 2019 at 11:06 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > [...]
-> >> +/* AO Offsets */
-> >> +
-> >> +#define AO_RTI_GEN_PWR_SLEEP0          (0x3a << 2)
-> >> +#define AO_RTI_GEN_PWR_ISO0            (0x3b << 2)
-> >> +
-> >> +/* HHI Offsets */
-> >> +
-> >> +#define HHI_MEM_PD_REG0                        (0x40 << 2)
-> >> +#define HHI_VPU_MEM_PD_REG0            (0x41 << 2)
-> >> +#define HHI_VPU_MEM_PD_REG1            (0x42 << 2)
-> >> +#define HHI_VPU_MEM_PD_REG3            (0x43 << 2)
-> >> +#define HHI_VPU_MEM_PD_REG4            (0x44 << 2)
-> >> +#define HHI_AUDIO_MEM_PD_REG0          (0x45 << 2)
-> >> +#define HHI_NANOQ_MEM_PD_REG0          (0x46 << 2)
-> >> +#define HHI_NANOQ_MEM_PD_REG1          (0x47 << 2)
-> >> +#define HHI_VPU_MEM_PD_REG2            (0x4d << 2)
-> > should we switch to the actual register offsets like we did in the
-> > clock drivers?
->
-> I find it simpler to refer to the numbers in the documentation...
-OK, I have no strong preference here
-for the 32-bit SoCs I will need to use the offsets based on the
-"amlogic,meson8b-pmu", "syscon" [0], so these will be magic anyways
+Make that:
 
-[...]
-> >> +#define VPU_HHI_MEMPD(__reg)                                   \
-> >> +       { __reg, BIT(8) },                                      \
-> >> +       { __reg, BIT(9) },                                      \
-> >> +       { __reg, BIT(10) },                                     \
-> >> +       { __reg, BIT(11) },                                     \
-> >> +       { __reg, BIT(12) },                                     \
-> >> +       { __reg, BIT(13) },                                     \
-> >> +       { __reg, BIT(14) },                                     \
-> >> +       { __reg, BIT(15) }
-> > the Amlogic implementation from buildroot-openlinux-A113-201901 (the
-> > latest one I have)
-> > kernel/aml-4.9/drivers/amlogic/media/vout/hdmitx/hdmi_tx_20/hw/hdmi_tx_hw.c
-> > uses:
-> > hd_set_reg_bits(P_HHI_MEM_PD_REG0, 0, 8, 8)
-> > that basically translates to: GENMASK(15, 8) (which means we could
-> > drop this macro)
-> >
-> > the datasheet also states: 15~8 [...] HDMI memory PD (as a single
-> > 8-bit wide register)
->
-> Yep, but the actual code setting the VPU power domain is in u-boot :
->
-> drivers/vpu/aml_vpu_power_init.c:
-> 108         for (i = 8; i < 16; i++) {
-> 109                 vpu_hiu_setb(HHI_MEM_PD_REG0, 0, i, 1);
-> 110                 udelay(5);
-> 111         }
->
-> the linux code is like never used here, my preference goes to the u-boot code
-> implementation.
-I see, let's keep your implementation then
+#ifdef __LP64__ to build on Alpine/musl libc.
 
-> >
-> > [...]
-> >> +static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
-> >> +       [PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
-> >> +                                    pwrc_ee_get_power, 11, 2),
-> >> +       [PWRC_G12A_ETH_ID] = MEM_PD("ETH", g12a_pwrc_mem_eth),
-> >> +};
-> >> +
-> >> +static struct meson_ee_pwrc_domain_desc sm1_pwrc_domains[] = {
-> >> +       [PWRC_SM1_VPU_ID]  = VPU_PD("VPU", &sm1_pwrc_vpu, sm1_pwrc_mem_vpu,
-> >> +                                   pwrc_ee_get_power, 11, 2),
-> >> +       [PWRC_SM1_NNA_ID]  = TOP_PD("NNA", &sm1_pwrc_nna, sm1_pwrc_mem_nna,
-> >> +                                   pwrc_ee_get_power),
-> >> +       [PWRC_SM1_USB_ID]  = TOP_PD("USB", &sm1_pwrc_usb, sm1_pwrc_mem_usb,
-> >> +                                   pwrc_ee_get_power),
-> >> +       [PWRC_SM1_PCIE_ID] = TOP_PD("PCI", &sm1_pwrc_pci, sm1_pwrc_mem_pcie,
-> >> +                                   pwrc_ee_get_power),
-> >> +       [PWRC_SM1_GE2D_ID] = TOP_PD("GE2D", &sm1_pwrc_ge2d, sm1_pwrc_mem_ge2d,
-> >> +                                   pwrc_ee_get_power),
-> >> +       [PWRC_SM1_AUDIO_ID] = MEM_PD("AUDIO", sm1_pwrc_mem_audio),
-> >> +       [PWRC_SM1_ETH_ID] = MEM_PD("ETH", g12a_pwrc_mem_eth),
-> >> +};
-> > my impression: I find this hard to read as it merges the TOP and
-> > Memory PD domains from above, adding some seemingly random "11, 2" for
-> > the VPU PD as well as pwrc_ee_get_power for some of the power domains
-> > personally I like the way we describe clk_regmap because it's easy to
-> > read (even though it adds a bit of boilerplate). I'm not sure if we
-> > can make it work here, but this (not compile tested) is what I have in
-> > mind (I chose two random power domains):
-> >   [PWRC_SM1_VPU_ID]  = {
-> >     .name = "VPU",
-> >     .top_pd = SM1_EE_PD(8),
-> >     .mem_pds = {
-> >         VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
-> >         VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
-> >         VPU_MEMPD(HHI_VPU_MEM_PD_REG2),
-> >         VPU_MEMPD(HHI_VPU_MEM_PD_REG3),
-> >         { HHI_VPU_MEM_PD_REG4, GENMASK(1, 0) },
-> >         { HHI_VPU_MEM_PD_REG4, GENMASK(3, 2) },
-> >         { HHI_VPU_MEM_PD_REG4, GENMASK(5, 4) },
-> >         { HHI_VPU_MEM_PD_REG4, GENMASK(7, 6) },
-> >         { HHI_MEM_PD_REG0, GENMASK(15, 8) },
-> >     },
-> >     .num_mem_pds = 9,
-> >     .reset_names_count = 11,
-> >     .clk_names_count = 2,
-> >   },
-> >   [PWRC_SM1_ETH_ID] = {
-> >     .name = "ETH",
-> >     .mem_pds = { HHI_MEM_PD_REG0, GENMASK(3, 2) },
-> >     .num_mem_pds = 1,
-> >   },
-> > ...
-> >
-> > I'd like to get Kevin's feedback on this
-> > what you have right now is probably good enough for the initial
-> > version of this driver. I'm bringing this discussion up because we
-> > will add support for more SoCs to this driver (we migrate GX over to
-> > it and I want to add 32-bit SoC support, which probably means at least
-> > Meson8 - assuming they kept the power domains identical between
-> > Meson8/8b/8m2).
->
-> I find it more compact, but nothing is set in stone, you can refactor this as
-> will when adding meson8 support, no problems here.
-OK. if Kevin (or someone else) has feedback on this then I don't have
-to waste time if it turns out that it's not a great idea ;)
+- Arnaldo
 
-> >
-> > [...]
-> >> +struct meson_ee_pwrc_domain {
-> >> +       struct generic_pm_domain base;
-> >> +       bool enabled;
-> >> +       struct meson_ee_pwrc *pwrc;
-> >> +       struct meson_ee_pwrc_domain_desc desc;
-> >> +       struct clk_bulk_data *clks;
-> >> +       int num_clks;
-> >> +       struct reset_control *rstc;
-> >> +       int num_rstc;
-> >> +};
-> >> +
-> >> +struct meson_ee_pwrc {
-> >> +       struct regmap *regmap_ao;
-> >> +       struct regmap *regmap_hhi;
-> >> +       struct meson_ee_pwrc_domain *domains;
-> >> +       struct genpd_onecell_data xlate;
-> >> +};
-> > (my impressions on this: I was surprised to find more structs down
-> > here, I expected them to be together with the other structs further
-> > up)
->
-> These are the "live" structures, opposed to the static structures defining the
-> data and these are allocated and filled a probe time.
-I see, thanks for the explanation
+> /*
+>  * /usr/include/inttypes.h uses just 'lu' for PRIu64, but we end up defining
+>  * __u64 as long long unsigned int, and then -Werror=format= kicks in and
+>  * complains of the mismatched types, so use these two special extra PRI
+>  * macros to overcome that.
+>  */
+> #define PRI_lu64 "l" PRIu64
+> #define PRI_lx64 "l" PRIx64
+> #else
+> #define PRI_lu64 PRIu64
+> #define PRI_lx64 PRIx64
+> #endif
+> 
+> Builds in all the containers I have, 32-bit, 64-bit, old gccs/clangs,
+> new ones, uclibc, musl libc, glibc, etc
+>  
+> > > 
+> > > I bet the build for the mips/mipsel will fail too, lemme see... Yeah,
+> > > both failed:
+> > > 
+> > > 
+> >> [root@quaco ~]# grep -m1 -A6 -- -Werror=format=  dm.log/debian\:experimental-x-mips
+> > > builtin-sched.c:2646:9: error: unknown conversion type character 'l' in format [-Werror=format=]
+> > >   printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample->cpu);
+> > >          ^~~~~~~~
+> > > In file included from builtin-sched.c:31:
+> > > /usr/mips-linux-gnu/include/inttypes.h:47:28: note: format string is defined here
+> > >  #  define __PRI64_PREFIX "ll"
+> > >                             ^
+> > > [root@quaco ~]#
+> > > 
+> > > [root@quaco ~]# grep -m1 -A6 -- -Werror=format=  dm.log/debian\:experimental-x-mipsel
+> > > builtin-sched.c:2646:9: error: unknown conversion type character 'l' in format [-Werror=format=]
+> > >   printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample->cpu);
+> > >          ^~~~~~~~
+> > > In file included from builtin-sched.c:31:
+> > > /usr/mipsel-linux-gnu/include/inttypes.h:47:28: note: format string is defined here
+> > >  #  define __PRI64_PREFIX "ll"
+> > >                             ^
+> > > [root@quaco ~]#
+> > > 
+> > > And also on a uclibc ARC arch container:
+> > > 
+> > > [root@quaco ~]# grep -m1 -A6 -- -Werror=format=  dm.log/fedora\:24-x-ARC-uClibc
+> > > builtin-sched.c:2646:9: error: unknown conversion type character 'l' in format [-Werror=format=]
+> > >   printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample->cpu);
+> > >          ^~~~~~~~
+> > > In file included from builtin-sched.c:31:0:
+> > > /arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux-uclibc/sysroot/usr/include/inttypes.h:47:28: note: format string is defined here
+> > >  #  define __PRI64_PREFIX "ll"
+> > >                             ^
+> > > [root@quaco ~]#
+> > > 
+> > > The _fix_ will come after lunch :)
+> > 
+> > thanks ;-)
+> > 
+> > jirka
+> 
+> -- 
+> 
+> - Arnaldo
 
-> I dislike changing static global data at runtime, this is why I clearly separated both.
-I didn't mean to make them static - the thing that caught my eye was
-that some of the structs are defined at the top of the driver while
-these two are define much further down
-I am used to having all struct definitions in one place
+-- 
 
-> >
-> >> +static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain)
-> >> +{
-> >> +       u32 reg;
-> >> +
-> >> +       regmap_read(pwrc_domain->pwrc->regmap_ao,
-> >> +                   pwrc_domain->desc.top_pd->sleep_reg, &reg);
-> >> +
-> >> +       return (reg & pwrc_domain->desc.top_pd->sleep_mask);
-> > should this also check for top_pd->iso_* as well as mem_pd->*?
-> > if the top_pd part was optional we could even use the get_power
-> > callback for *all* power domains in this driver (right now audio and
-> > Ethernet don't have any get_power callback)
->
-> We could, but how should we handle if one unexpected bit is set ? No idea...
-hmm, I see
-if we need it for other power domains then we can still implement it,
-so it's good for now
-
-[...]
-> > bonus question: what about the video decoder power domains?
-> > here is an example from vdec_1_start
-> > (drivers/staging/media/meson/vdec/vdec_1.c):
-> >   /* Enable power for VDEC_1 */
-> >   regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
-> >                                    GEN_PWR_VDEC_1, 0);
-> >   usleep_range(10, 20);
-> >   [...]
-> >   /* enable VDEC Memories */
-> >   amvdec_write_dos(core, DOS_MEM_PD_VDEC, 0);
-> >   /* Remove VDEC1 Isolation */
-> >   regmap_write(core->regmap_ao, AO_RTI_GEN_PWR_ISO0, 0);
-> >
-> > (my point here is that it mixes video decoder "DOS" registers with
-> > AO_RTI_GEN_PWR registers)
-> > do we also want to add support for these "DOS" power domains to the
-> > meson-ee-pwrc driver?
-> > what about the AO_RTI_GEN_PWR part then - should we keep management
-> > for the video decoder power domain bits in AO_RTI_GEN_PWR as part of
-> > the video decoder driver?
->
-> I left the decoders power domains aside so we can discuss it later on,
-> we should expose multiple power domains, but the driver would need to
-> be changed to support multiple power domains. But will loose the ability
-> to enable/disable each domain at will unless it created a sub-device for
-> each decoder and attaches the domain to to each device and use runtime pm.
->
-> It's simpler to discuss it later on !
-OK - does this mean you and/or Maxime have "discuss decoder power
-domains" on your (long) TODO-list or do you want me to open this
-discussion after this driver is merged?
-
-
-Martin
-
-
-[0] https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+- Arnaldo
