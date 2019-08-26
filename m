@@ -2,115 +2,114 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2982C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56B5C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8624321744
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:31:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMMfpxPT"
+	by mail.kernel.org (Postfix) with ESMTP id 80F322080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfHZIbL (ORCPT
+        id S1730629AbfHZIc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:31:11 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46411 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfHZIbL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:31:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m3so10134354pgv.13;
-        Mon, 26 Aug 2019 01:31:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LwFJoAiBTJqjRbajQHLI63mMomcTvX2ijDqC2auoANI=;
-        b=QMMfpxPT5vT1rQngAn9iZMdqUKlHmYyYnktsza2d98pd8zikPhPfnlSAh+rarm7+eH
-         qQf3AVp/EB1RG2rvrk6M3aj4oC3aEdN4lOgKQbDECdn0qmdXtb6pFoPWlM9VIqgeAkK4
-         U2FSfRp8ugyunHB2xlXHkVmubLQKoUZ6fpuSaBW3BP75MoIblqLoB/PGer2IfszEFzfs
-         MsPJLy+HHeDl9ewwuo63oUI2k/76OTy4SSpgNL51naVuRhCwU6DERCN9zeiYs3y/WNXA
-         XAzIlInxIUevxZIxj42uurg6wTvpfzaQ6X1NxlgQRc1X0iwiZozCbTPsxx4BuAkzp32f
-         c3LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LwFJoAiBTJqjRbajQHLI63mMomcTvX2ijDqC2auoANI=;
-        b=d6etBngfA70JkUV3yQQA+ipTkYULjdgK8q705ulC7kGi0lh3wYtod9inXrEUzYI7O4
-         WHlNLFS7LhIKmAyuuWT8tlLTiGB42ikW4yQ0/BiBB3ObYqZ8SSvl7L7Qld0WtQPhzueZ
-         vIz6/wRSFaP/9jXHXX80Fy81MbM7uE9Z7tD296ATlCYq/yuXnaOylACyQbab1WjOprQk
-         aVJkw41cq+zMnDyPpZYK2mVsFp1FZVEb7uFeGuq3GfIrHQxaih/8f3ZOBCwEg4ougYqg
-         KX309UxoyK8Ei4030lwCT0kge7b9GbVdUTpypBqzXdE9IGrTaa3/VaL4mcIWE+Fy0nNT
-         NPEg==
-X-Gm-Message-State: APjAAAVyJh23FEqtafl9kp1i9DizUPJnriyZMzL0cZuD7omInAYH0sW+
-        B0mtN6uXz1YVx75p5/lEW20=
-X-Google-Smtp-Source: APXvYqyE7y3JGmvt5Q72nOjf1rE9b5kbqIjcGRIfv/7LmiZPcgIvw7svyR5VPw20rzwz5jOfI9Lvdg==
-X-Received: by 2002:a65:5043:: with SMTP id k3mr2175803pgo.406.1566808270917;
-        Mon, 26 Aug 2019 01:31:10 -0700 (PDT)
-Received: from Gentoo ([103.231.91.35])
-        by smtp.gmail.com with ESMTPSA id p20sm9534790pgj.47.2019.08.26.01.31.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 01:31:10 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 14:00:56 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, akpm@linux-foundation.org, jslaby@suse.cz,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Subject: Re: Linux 5.2.10
-Message-ID: <20190826083054.GF31983@Gentoo>
-References: <20190825144703.6518-1-sashal@kernel.org>
- <20190826063834.GD31983@Gentoo>
- <20190826080107.GB30396@kroah.com>
- <20190826082138.GB31262@kroah.com>
+        Mon, 26 Aug 2019 04:32:29 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62823 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729824AbfHZIc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:32:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:32:27 -0700
+X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
+   d="scan'208";a="174137832"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:32:25 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 8C60E203BC;
+        Mon, 26 Aug 2019 11:32:23 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1i2APB-0002K9-2c; Mon, 26 Aug 2019 11:31:13 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 0/5] Support running driver's probe for a device powered off
+Date:   Mon, 26 Aug 2019 11:31:07 +0300
+Message-Id: <20190826083112.8888-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oOB74oR0WcNeq9Zb"
-Content-Disposition: inline
-In-Reply-To: <20190826082138.GB31262@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
---oOB74oR0WcNeq9Zb
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+These patches enable calling (and finishing) a driver's probe function
+without powering on the respective device on busses where the practice is
+to power on the device for probe. While it generally is a driver's job to
+check the that the device is there, there are cases where it might be
+undesirable. (In this case it stems from a combination of hardware design
+and user expectations; see below.) The downside with this change is that
+if there is something wrong with the device, it will only be found at the
+time the device is used. In this case (the camera sensors + EEPROM in a
+sensor) I don't see any tangible harm from that though.
 
-On 10:21 Mon 26 Aug 2019, Greg KH wrote:
->On Mon, Aug 26, 2019 at 10:01:07AM +0200, Greg KH wrote:
->> On Mon, Aug 26, 2019 at 12:08:38PM +0530, Bhaskar Chowdhury wrote:
->>
->> <snip>
->>
->> Due, learn to properly trim emails...
->
->*Dude*
->
->Ugh, email before coffee...
+An indication both from the driver and the firmware is required to allow
+the device's power state to remain off during probe (see the first patch).
 
-ha ha ha ha hah :)
 
---oOB74oR0WcNeq9Zb
-Content-Type: application/pgp-signature; name="signature.asc"
+The use case is such that there is a privacy LED next to an integrated
+user-facing laptop camera, and this LED is there to signal the user that
+the camera is recording a video or capturing images. That LED also happens
+to be wired to one of the power supplies of the camera, so whenever you
+power on the camera, the LED will be lit, whether images are captured from
+the camera --- or not. There's no way to implement this differently
+without additional software control (allowing of which is itself a
+hardware design decision) on most CSI-2-connected camera sensors as they
+simply have no pin to signal the camera streaming state.
 
------BEGIN PGP SIGNATURE-----
+This is also what happens during driver probe: the camera will be powered
+on by the I²C subsystem calling dev_pm_domain_attach() and the device is
+already powered on when the driver's own probe function is called. To the
+user this visible during the boot process as a blink of the privacy LED,
+suggesting that the camera is recording without the user having used an
+application to do that. From the end user's point of view the behaviour is
+not expected and for someone unfamiliar with internal workings of a
+computer surely seems quite suspicious --- even if images are not being
+actually captured.
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1jmLoACgkQsjqdtxFL
-KRUyFwgAyd+hB72P5rmbmbQdasSpAjJqQ0JoPX7CRnwxG7XP/9uO4odlUTUH9RTg
-k5+677oH7sQ+OjR6m1xDA4WUk0e2OvhARvJ+3eiR+EaGTSYqLry6ojkbbph9UShQ
-lmgYRNScEojYqN60ixedj5h2ptWAokYmx+BzzeuSeryxQ4fK3seMqkIUtcFvFlD6
-2vtxNRbppJ2Xe/rolprTHBom4rmy3s11meIwnjY60P7MoUPijOVTKTfUzEUvx07i
-ph3DRjBB3QNmLNTEjKCdcjelooZcI0zvm7D/4N/hyvzMVmOcRt/4lwXXFepqdaOR
-QamXu7zV8K2QNgleBMx8WUEdW1LICQ==
-=FT3m
------END PGP SIGNATURE-----
+since v1:
 
---oOB74oR0WcNeq9Zb--
+- Rename probe_powered_off struct device field as probe_low_power and
+  reflect the similar naming to the patches overall.
+
+- Work with CONFIG_PM disabled, too.
+
+Rajmohan Mani (1):
+  media: i2c: imx319: Support probe while the device is off
+
+Sakari Ailus (4):
+  ACPI: Enable driver and firmware hints to control power at probe time
+  ACPI: Add a convenience function to tell a device is suspended in
+    probe
+  ov5670: Support probe whilst the device is in a low power state
+  at24: Support probing while off
+
+ drivers/acpi/device_pm.c   | 50 ++++++++++++++++++++++++++++++++++++--
+ drivers/media/i2c/imx319.c | 23 +++++++++++-------
+ drivers/media/i2c/ov5670.c | 23 +++++++++++-------
+ drivers/misc/eeprom/at24.c | 31 +++++++++++++++--------
+ include/linux/acpi.h       |  5 ++++
+ include/linux/device.h     |  7 ++++++
+ 6 files changed, 109 insertions(+), 30 deletions(-)
+
+-- 
+2.20.1
+
