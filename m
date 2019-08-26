@@ -2,332 +2,130 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C9CC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB362173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0894F2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:30:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QbqX3+W5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fbroD+uL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfHZG3E (ORCPT
+        id S1729702AbfHZGa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:29:04 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59020 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729175AbfHZG3E (ORCPT
+        Mon, 26 Aug 2019 02:30:29 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34133 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727650AbfHZGa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:29:04 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 464A715249283;
-        Sun, 25 Aug 2019 23:29:03 -0700 (PDT)
-Date:   Sun, 25 Aug 2019 23:29:02 -0700 (PDT)
-Message-Id: <20190825.232902.493461685673378789.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 25 Aug 2019 23:29:03 -0700 (PDT)
+        Mon, 26 Aug 2019 02:30:28 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 35EC9321;
+        Mon, 26 Aug 2019 02:30:27 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 26 Aug 2019 02:30:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=vVTMyUMt6Pj6Ue/YwOdzlubQ7qZ
+        c/n/fXB43Fd8eoqQ=; b=QbqX3+W5w8vIpNDhKYNQpd1JoAxo2tFZAWGcVBBXPS0
+        KEfnh5MVFSh3Nn863+kXnsJjNth/V9jb2+RlYEvTVJu11KRflBTbdhaC7GwZLmaX
+        lNdv66O7P244+ctG7iuwby2QjDTOGeqi92P/mIyHVLgjjOVozS/Kpc4ze9rw55zX
+        AHqAobFwBBvcpBKvULxpqbyOg1wQcNxJFFkl1ulb2cJx8kAXYkqWIWwEUoa7tpaV
+        E+k9TY9ia5RY4CnVpjaBUtMAMFz7aVxfMBopdcd4bQEwoPIvllgd6fQAMqkKtWHS
+        8/0NWuAojWz+ww4H1YR3ia2MX+CxXAgzgkVOP7wYRpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vVTMyU
+        Mt6Pj6Ue/YwOdzlubQ7qZc/n/fXB43Fd8eoqQ=; b=fbroD+uLiAb2674oGIhao/
+        V6yom8Pr0g7I8F2dhx1XVMeJzWznRi/qC1G1y7d7Xi9CTxB3PEll8HPda7tJoXED
+        NiuMO+L/a4we6CNiyx9vp3eytcLMF2uFAJeKQgkXqUyeUG+Rhu0zBmH9zUAF84Lr
+        9Fes00qtFd7bHLqNPve/Mh7cErrUn+l9HfMNM55pCodbYiruulwZCum8BWlw3MQD
+        WfPQtyTsEf6pmP3P0Bw1pNtZ+wWw81k/VYaSBRPcD2+g1nRL/oAdxA3ko+3f0zNP
+        3Grfp3TK+2dEexLV683m/fCtvnYj0McqBbTueB7IgNjz12ZXjYufmBquyOHmL+Ag
+        ==
+X-ME-Sender: <xms:gnxjXYauSuR5J8x3ytpwcQQEe4mc0MWWxrlzLbOC60Qnl6P1XDFIAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehfedguddtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:gnxjXQwztb7sGQ9zoP-1uu2V4Nke3x32lnp1yWQ4PxUY15nkM8B4aQ>
+    <xmx:gnxjXYI-EYIIeG0bnnMzzIY1G_hAaYFlx2nl_AUVkPWHGHwDZ38nYw>
+    <xmx:gnxjXQCELY6SIbmceBLL7JA7z2KBteQx6nzd-0AC3Qez3xynPxFQtw>
+    <xmx:gnxjXa816b8ixi7E5wBJu9Bj1ORTsPN_3NBvewLSrpKHw8L0PuRK1A>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 16303D60066;
+        Mon, 26 Aug 2019 02:30:25 -0400 (EDT)
+Date:   Mon, 26 Aug 2019 08:30:24 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>
+Subject: Re: linux-next: build warning after merge of the staging tree
+Message-ID: <20190826063024.GA1217@kroah.com>
+References: <20190826162432.11100665@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826162432.11100665@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-1) Use 32-bit index for tails calls in s390 bpf JIT, from Ilya Leoshkevich.
-
-2) Fix missed EPOLLOUT events in TCP, from Eric Dumazet.  Same fix for SMC
-   from Jason Baron.
-
-3) ipv6_mc_may_pull() should return 0 for malformed packets, not -EINVAL.
-   From Stefano Brivio.
-
-4) Don't forget to unpin umem xdp pages in error path of
-   xdp_umem_reg().  From Ivan Khoronzhuk.
-
-5) Fix sta object leak in mac80211, from Johannes Berg.
-
-6) Fix regression by not configuring PHYLINK on CPU port of bcm_sf2
-   switches.  From Florian Fainelli.
-
-7) Revert DMA sync removal from r8169 which was causing regressions on some
-   MIPS Loongson platforms.  From Heiner Kallweit.
-
-8) Use after free in flow dissector, from Jakub Sitnicki.
-
-9) Fix NULL derefs of net devices during ICMP processing across collect_md
-   tunnels, from Hangbin Liu.
-
-10) proto_register() memory leaks, from Zhang Lin.
-
-11) Set NLM_F_MULTI flag in multipart netlink messages consistently, from
-    John Fastabend.
-
-Please pull, thanks a lot!
-
-The following changes since commit 06821504fd47a5e5b641aeeb638a0ae10a216ef8:
-
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2019-08-19 10:00:01 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
-
-for you to fetch changes up to f53a7ad189594a112167efaf17ea8d0242b5ac00:
-
-  r8152: Set memory to all 0xFFs on failed reg reads (2019-08-25 19:52:59 -0700)
-
-----------------------------------------------------------------
-Alexander Wetzel (1):
-      cfg80211: Fix Extended Key ID key install checks
-
-Alexei Starovoitov (1):
-      bpf: fix precision tracking in presence of bpf2bpf calls
-
-Alexey Kodanev (1):
-      ipv4: mpls: fix mpls_xmit for iptunnel
-
-Anders Roxell (2):
-      selftests/bpf: add config fragment BPF_JIT
-      selftests/bpf: install files test_xdp_vlan.sh
-
-Andrew Lunn (1):
-      MAINTAINERS: Add phylink keyword to SFF/SFP/SFP+ MODULE SUPPORT
-
-Antoine Tenart (1):
-      net: cpsw: fix NULL pointer exception in the probe error path
-
-Christophe JAILLET (1):
-      Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
-
-Colin Ian King (1):
-      net: ieee802154: remove redundant assignment to rc
-
-Dan Carpenter (1):
-      gve: Copy and paste bug in gve_get_stats()
-
-Daniel Borkmann (1):
-      bpf: fix use after free in prog symbol exposure
-
-David Ahern (1):
-      nexthop: Fix nexthop_num_path for blackhole nexthops
-
-David S. Miller (8):
-      Merge git://git.kernel.org/.../pablo/nf
-      Merge tag 'mac80211-for-davem-2019-08-21' of git://git.kernel.org/.../jberg/mac80211
-      Merge tag 'batadv-net-for-davem-20190821' of git://git.open-mesh.org/linux-merge
-      Merge tag 'wireless-drivers-for-davem-2019-08-21' of git://git.kernel.org/.../kvalo/wireless-drivers
-      Merge git://git.kernel.org/.../bpf/bpf
-      Merge branch 'ieee802154-for-davem-2019-08-24' of git://git.kernel.org/.../sschmidt/wpan
-      Merge branch 'collect_md-mode-dev-null'
-      Merge tag 'mlx5-fixes-2019-08-22' of git://git.kernel.org/.../saeed/linux
-
-Denis Efremov (2):
-      MAINTAINERS: Remove IP MASQUERADING record
-      MAINTAINERS: net_failover: Fix typo in a filepath
-
-Emmanuel Grumbach (1):
-      iwlwifi: pcie: fix the byte count table format for 22560 devices
-
-Eran Ben Elisha (2):
-      net/mlx5e: Add num bytes metadata to WQE info
-      net/mlx5e: Remove ethernet segment from dump WQE
-
-Eric Dumazet (2):
-      batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-      tcp: make sure EPOLLOUT wont be missed
-
-Florian Fainelli (1):
-      net: dsa: bcm_sf2: Do not configure PHYLINK on CPU port
-
-Hangbin Liu (3):
-      ipv6/addrconf: allow adding multicast addr if IFA_F_MCAUTOJOIN is set
-      ipv4/icmp: fix rt dst dev null pointer dereference
-      xfrm/xfrm_policy: fix dst dev null pointer dereference in collect_md mode
-
-Heiner Kallweit (1):
-      Revert "r8169: remove not needed call to dma_sync_single_for_device"
-
-Hodaszi, Robert (1):
-      Revert "cfg80211: fix processing world regdomain when non modular"
-
-Ilan Peer (1):
-      iwlwifi: mvm: Allow multicast data frames only when associated
-
-Ilya Leoshkevich (6):
-      s390/bpf: fix lcgr instruction encoding
-      s390/bpf: use 32-bit index for tail calls
-      selftests/bpf: fix "bind{4, 6} deny specific IP & port" on s390
-      selftests/bpf: fix test_cgroup_storage on s390
-      selftests/bpf: fix test_btf_dump with O=
-      bpf: allow narrow loads of some sk_reuseport_md fields with offset > 0
-
-Ivan Khoronzhuk (1):
-      xdp: unpin xdp umem pages in error path
-
-Jakub Sitnicki (1):
-      flow_dissector: Fix potential use-after-free on BPF_PROG_DETACH
-
-Jason Baron (1):
-      net/smc: make sure EPOLLOUT is raised
-
-Johannes Berg (1):
-      mac80211: fix possible sta leak
-
-John Fastabend (1):
-      net: route dump netlink NLM_F_MULTI flag missing
-
-Julian Wiedmann (1):
-      s390/qeth: reject oversized SNMP requests
-
-Juliana Rodrigueiro (1):
-      netfilter: xt_nfacct: Fix alignment mismatch in xt_nfacct_match_info
-
-Justin.Lee1@Dell.com (1):
-      net/ncsi: Fix the payload copying for the request coming from Netlink
-
-Li RongQing (2):
-      net: fix __ip_mc_inc_group usage
-      net: fix icmp_socket_deliver argument 2 input
-
-Luca Coelho (2):
-      iwlwifi: pcie: don't switch FW to qnj when ax201 is detected
-      iwlwifi: pcie: fix recognition of QuZ devices
-
-Masahiro Yamada (1):
-      netfilter: add include guard to nf_conntrack_h323_types.h
-
-Mike Rapoport (1):
-      trivial: netns: fix typo in 'struct net.passive' description
-
-Moshe Shemesh (2):
-      net/mlx5: Fix crdump chunks print
-      net/mlx5: Fix delay in fw fatal report handling due to fw report
-
-Pablo Neira Ayuso (1):
-      netfilter: nft_flow_offload: missing netlink attribute policy
-
-Prashant Malani (1):
-      r8152: Set memory to all 0xFFs on failed reg reads
-
-Quentin Monnet (1):
-      tools: bpftool: close prog FD before exit on showing a single program
-
-Sabrina Dubroca (1):
-      ipv6: propagate ipv6_add_dev's error returns out of ipv6_find_idev
-
-Stanislaw Gruszka (2):
-      mt76: mt76x0u: do not reset radio on resume
-      rt2x00: clear IV's on start to fix AP mode regression
-
-Stefano Brivio (1):
-      ipv6: Fix return value of ipv6_mc_may_pull() for malformed packets
-
-Terry S. Duncan (1):
-      net/ncsi: Ensure 32-bit boundary for data cksum
-
-Todd Seidelmann (1):
-      netfilter: ebtables: Fix argument order to ADD_COUNTER
-
-Vlad Buslov (1):
-      nfp: flower: verify that block cb is not busy before binding
-
-Wenwen Wang (1):
-      qed: Add cleanup in qed_slowpath_start()
-
-Yangbo Lu (1):
-      ocelot_ace: fix action of trap
-
-Yi-Hung Wei (2):
-      openvswitch: Fix log message in ovs conntrack
-      openvswitch: Fix conntrack cache with timeout
-
-YueHaibing (2):
-      ieee802154: hwsim: Fix error handle path in hwsim_init_module
-      ieee802154: hwsim: unregister hw while hwsim_subscribe_all_others fails
-
-Zhu Yanjun (1):
-      net: rds: add service level support in rds-info
-
-zhanglin (1):
-      sock: fix potential memory leak in proto_register()
-
- MAINTAINERS                                                |  8 ++------
- arch/s390/net/bpf_jit_comp.c                               | 12 +++++++-----
- drivers/atm/Kconfig                                        |  2 +-
- drivers/net/dsa/bcm_sf2.c                                  | 10 ++++++++--
- drivers/net/ethernet/google/gve/gve_main.c                 |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 38 +++++++++++++++++---------------------
- drivers/net/ethernet/mellanox/mlx5/core/health.c           | 22 ++++++++++++----------
- drivers/net/ethernet/mscc/ocelot_ace.c                     |  2 +-
- drivers/net/ethernet/netronome/nfp/flower/offload.c        |  7 +++++++
- drivers/net/ethernet/qlogic/qed/qed_main.c                 |  4 +++-
- drivers/net/ethernet/realtek/r8169_main.c                  |  1 +
- drivers/net/ethernet/ti/cpsw.c                             |  2 +-
- drivers/net/ieee802154/mac802154_hwsim.c                   |  8 +++++---
- drivers/net/usb/r8152.c                                    |  5 ++++-
- drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c          | 33 ++++++++++++++++++++++++++++++---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c          | 10 ++++++++++
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c              | 17 +++++++++++++++++
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c            |  1 +
- drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c          | 20 +++++++++++++-------
- drivers/net/wireless/mediatek/mt76/mt76x0/usb.c            |  8 ++++----
- drivers/net/wireless/ralink/rt2x00/rt2800lib.c             |  9 +++++++++
- drivers/net/wireless/ralink/rt2x00/rt2x00.h                |  1 +
- drivers/net/wireless/ralink/rt2x00/rt2x00dev.c             | 13 ++++++++-----
- drivers/s390/net/qeth_core_main.c                          |  4 ++++
- include/linux/netfilter/nf_conntrack_h323_types.h          |  5 +++++
- include/net/addrconf.h                                     |  2 +-
- include/net/net_namespace.h                                |  2 +-
- include/net/nexthop.h                                      |  6 ------
- include/net/route.h                                        |  2 +-
- include/uapi/linux/netfilter/xt_nfacct.h                   |  5 +++++
- include/uapi/linux/rds.h                                   |  2 ++
- kernel/bpf/syscall.c                                       | 30 ++++++++++++++++++------------
- kernel/bpf/verifier.c                                      |  9 +++++----
- net/batman-adv/netlink.c                                   |  2 +-
- net/bridge/netfilter/ebtables.c                            |  8 ++++----
- net/core/filter.c                                          |  8 ++++----
- net/core/flow_dissector.c                                  |  2 +-
- net/core/sock.c                                            | 31 +++++++++++++++++++++----------
- net/core/stream.c                                          | 16 +++++++++-------
- net/ieee802154/socket.c                                    |  2 +-
- net/ipv4/fib_trie.c                                        |  2 +-
- net/ipv4/icmp.c                                            | 10 ++++++++--
- net/ipv4/igmp.c                                            |  4 ++--
- net/ipv4/route.c                                           | 17 ++++++++++-------
- net/ipv6/addrconf.c                                        | 19 ++++++++++---------
- net/mac80211/cfg.c                                         |  9 +++++----
- net/mpls/mpls_iptunnel.c                                   |  8 ++++----
- net/ncsi/ncsi-cmd.c                                        | 13 ++++++++++---
- net/ncsi/ncsi-rsp.c                                        |  9 ++++++---
- net/netfilter/nft_flow_offload.c                           |  6 ++++++
- net/netfilter/xt_nfacct.c                                  | 36 +++++++++++++++++++++++++-----------
- net/openvswitch/conntrack.c                                | 15 ++++++++++++++-
- net/rds/ib.c                                               | 16 ++++++++++------
- net/rds/ib.h                                               |  1 +
- net/rds/ib_cm.c                                            |  3 +++
- net/rds/rdma_transport.c                                   | 10 ++++++++--
- net/smc/smc_tx.c                                           |  6 ++----
- net/wireless/reg.c                                         |  2 +-
- net/wireless/util.c                                        | 23 ++++++++++++++---------
- net/xdp/xdp_umem.c                                         |  4 +++-
- net/xfrm/xfrm_policy.c                                     |  4 ++--
- tools/bpf/bpftool/prog.c                                   |  4 +++-
- tools/testing/selftests/bpf/Makefile                       |  6 +++++-
- tools/testing/selftests/bpf/config                         |  1 +
- tools/testing/selftests/bpf/test_btf_dump.c                |  7 +++++++
- tools/testing/selftests/bpf/test_cgroup_storage.c          |  6 +++---
- tools/testing/selftests/bpf/test_sock.c                    |  7 +++++--
- 67 files changed, 415 insertions(+), 204 deletions(-)
+On Mon, Aug 26, 2019 at 04:24:32PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the staging tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+> 
+> In file included from include/trace/events/erofs.h:8,
+>                  from <command-line>:
+> include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
+>   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+>                                      ^~~~~~
+> include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
+>   static inline void trace_##name(proto)    \
+>                                   ^~~~~
+> include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
+>   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
+>                         ^~~~~~
+> include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
+>   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+>   ^~~~~~~~~~~~~
+> include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
+>   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+>                       ^~~~~~
+> include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
+>  TRACE_EVENT(erofs_lookup,
+>  ^~~~~~~~~~~
+> include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
+>   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+>   ^~~~~~~~
+> 
+> and moany more like this ...
+> 
+> Introduced by commit
+> 
+>   47e4937a4a7c ("erofs: move erofs out of staging")
+> 
+> (or, at least, exposed by it).  It needs, at least, a "struct dentry;"
+> added to the file.
+
+Odd, why has this never been seen before when the same files were in
+drivers/staging/ and why 0-day isn't reporting this?
+
+Gao, can you send me a patch for this?
+
+thanks,
+
+greg k-h
