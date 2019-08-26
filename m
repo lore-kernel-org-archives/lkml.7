@@ -2,140 +2,149 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89516C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851B2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549DF22CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560A020874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjQlQ2Ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfHZHvW (ORCPT
+        id S1730220AbfHZHxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:51:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34864 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728198AbfHZHvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:51:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 77D43AF11;
-        Mon, 26 Aug 2019 07:51:20 +0000 (UTC)
-Subject: Re: [RFC PATCH v2 1/3] x86/mm/tlb: Change __flush_tlb_one_user
- interface
-To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-References: <20190823225248.15597-1-namit@vmware.com>
- <20190823225248.15597-2-namit@vmware.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <edb3a7e8-8fc6-7a55-37c1-3384a8413427@suse.com>
-Date:   Mon, 26 Aug 2019 09:51:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 03:53:03 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35685 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730066AbfHZHxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 03:53:03 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n4so10117101pgv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 00:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=efgN+vHmbZbtfSnoe2tJDrmfT0GUhJplIH0aIIOgUwk=;
+        b=tjQlQ2ExrfoO855NFAVsXPV0e4T1NSJLC/o6pniiADGzTexVhfkjnj7HMQKTfDabp9
+         2VrpOmtAMlfxBTcV5oq3/ef4R19zGKjOvrYi28ZeEgTDLMFABrCXbnBl/A3fkl0pCdHY
+         vv4hfU59E5lc5B7WQxqMi2WmlAsIBjDAguGQ1a6wJy4fHD7zvKZMZXdVkmymfrDkwTn5
+         By0P8Yfc2fhDL0KAmp1Y24MU1f0mZgM6u3TJAKVyzOAYzckNWVHBe6KXAeZvyUWH4vOf
+         CnPTqp67rX2vTBJ8bxYsYiY2uLj2Dqk3bcbw6KN8UbgqtndFk9klGKHWdKr1YQmAVjxp
+         iRww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=efgN+vHmbZbtfSnoe2tJDrmfT0GUhJplIH0aIIOgUwk=;
+        b=YE+ehsmMlZJJioSqAkHeJL1QLVl336QGPPpWg2RNw/K2RvnqUN7e2fhFQTmzcfoWmm
+         6un0D+15To44eDxAh6Rv2HhK8SF+ENnLsAtiae+BNV31mjAmEYzXiT0jJvluL11dbY3z
+         DmpNRDKVnIxaFgi76rUzcktjssCOSSMeJRczMbBWJJ3jW5SmZM8xz/Cgd1RGpJXPaqua
+         hK2zpuXrg9BOP2JK3TUNfazUm5wQyqk3Z0OqZ6NhKmYe6rpSQv8PF8/g0ghaQeliyw9T
+         yprFqsCHaPFh/FGv6gFI3pM8sAzjvXb9Nd0tgTVFSUmCl2E1rLz5Yfo4WV+5TKOyoTBQ
+         lRKQ==
+X-Gm-Message-State: APjAAAVk4cqo4P4GFNtIdYoLqKm0XlVuc1JFUluowZ6UFFJtEhxs9Sg9
+        BrnK8o4oaQgbf7gPY4lh1w==
+X-Google-Smtp-Source: APXvYqyxRtF788S9SAurc3XEByUeMhHgAoa/qAhAeLHGf5p/zj9RyDaDK4+HzzxGKEADZkX1N9VkTQ==
+X-Received: by 2002:a63:ff65:: with SMTP id s37mr14929040pgk.102.1566805982049;
+        Mon, 26 Aug 2019 00:53:02 -0700 (PDT)
+Received: from mypc ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id r75sm14966984pfc.18.2019.08.26.00.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 00:53:01 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 15:52:51 +0800
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm/migrate: see hole as invalid source page
+Message-ID: <20190826075251.GA7486@mypc>
+References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
+ <1565078411-27082-2-git-send-email-kernelfans@gmail.com>
+ <20190815172222.GD30916@redhat.com>
+ <20190816150222.GA10855@mypc>
 MIME-Version: 1.0
-In-Reply-To: <20190823225248.15597-2-namit@vmware.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816150222.GA10855@mypc>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.08.19 00:52, Nadav Amit wrote:
-> __flush_tlb_one_user() currently flushes a single entry, and flushes it
-> both in the kernel and user page-tables, when PTI is enabled.
+On Fri, Aug 16, 2019 at 11:02:22PM +0800, Pingfan Liu wrote:
+> On Thu, Aug 15, 2019 at 01:22:22PM -0400, Jerome Glisse wrote:
+> > On Tue, Aug 06, 2019 at 04:00:10PM +0800, Pingfan Liu wrote:
+> > > MIGRATE_PFN_MIGRATE marks a valid pfn, further more, suitable to migrate.
+> > > As for hole, there is no valid pfn, not to mention migration.
+> > > 
+> > > Before this patch, hole has already relied on the following code to be
+> > > filtered out. Hence it is more reasonable to see hole as invalid source
+> > > page.
+> > > migrate_vma_prepare()
+> > > {
+> > > 		struct page *page = migrate_pfn_to_page(migrate->src[i]);
+> > > 
+> > > 		if (!page || (migrate->src[i] & MIGRATE_PFN_MIGRATE))
+> > > 		     \_ this condition
+> > > }
+> > 
+> > NAK you break the API, MIGRATE_PFN_MIGRATE is use for 2 things,
+> > first it allow the collection code to mark entry that can be
+> > migrated, then it use by driver to allow driver to skip migration
+> > for some entry (for whatever reason the driver might have), we
+> > still need to keep the entry and not clear it so that we can
+> > cleanup thing (ie remove migration pte entry).
+> Thanks for your kindly review.
 > 
-> Change __flush_tlb_one_user() and related interfaces into
-> __flush_tlb_range() that flushes a range and does not flush the user
-> page-table.
+> I read the code again. Maybe I miss something. But as my understanding,
+> for hole, there is no pte.
+> As the current code migrate_vma_collect_pmd()
+> {
+> 	if (pmd_none(*pmdp))
+> 		return migrate_vma_collect_hole(start, end, walk);
+> ...
+> 	make_migration_entry()
+> }
 > 
-> This refactoring is needed for the next patch, but regardless makes
-> sense and has several advantages. First, only Xen-PV, which does not
-> use PTI, implements the paravirtual interface of flush_tlb_one_user() so
-> nothing is broken by separating the user and kernel page-table flushes,
-> and the interface is more intuitive.
+> We do not install migration entry for hole, then no need to remove
+> migration pte entry.
 > 
-> Second, INVLPG can flush unrelated mappings, and it is also a
-> serializing instruction. It is better to have a tight loop that flushes
-> the entries.
+> And on the driver side, there is way to migrate a hole. The driver just
+> skip it by
+> drivers/gpu/drm/nouveau/nouveau_dmem.c: if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
+>                                              ^^^^
+> Finally, in migrate_vma_finalize(), for a hole,
+> 		if (!page) {
+> 			if (newpage) {
+> 				unlock_page(newpage);
+> 				put_page(newpage);
+> 			}
+> 			continue;
+> 		}
+> And we do not rely on remove_migration_ptes(page, newpage, false); to
+> restore the orignal pte (and it is impossible).
 > 
-> Third, currently __flush_tlb_one_kernel() also flushes the user
-> page-tables, which is not needed. This allows to avoid this redundant
-> flush.
-> 
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> ---
->   arch/x86/include/asm/paravirt.h       |  5 ++--
->   arch/x86/include/asm/paravirt_types.h |  3 ++-
->   arch/x86/include/asm/tlbflush.h       | 24 +++++------------
->   arch/x86/kernel/paravirt.c            |  7 ++---
->   arch/x86/mm/tlb.c                     | 39 ++++++++++++++++++++++-----
->   arch/x86/xen/mmu_pv.c                 | 21 +++++++++------
->   6 files changed, 62 insertions(+), 37 deletions(-)
+Hello, do you have any comment?
 
-...
+I think most of important, hole does not use the 'MIGRATE_PFN_MIGRATE'
+API. Hole has not pte, and there is no way to 'remove migration pte
+entry'. Further more, we can know the failure on the source side, no
+need to defer it to driver side.
 
-> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-> index 48f7c7eb4dbc..ed68657f5e77 100644
-> --- a/arch/x86/xen/mmu_pv.c
-> +++ b/arch/x86/xen/mmu_pv.c
-> @@ -1325,22 +1325,27 @@ static noinline void xen_flush_tlb(void)
->   	preempt_enable();
->   }
->   
-> -static void xen_flush_tlb_one_user(unsigned long addr)
-> +static void xen_flush_tlb_range(unsigned long start, unsigned long end,
-> +				u8 stride_shift)
->   {
->   	struct mmuext_op *op;
->   	struct multicall_space mcs;
-> -
-> -	trace_xen_mmu_flush_tlb_one_user(addr);
-> +	unsigned long addr;
->   
->   	preempt_disable();
->   
->   	mcs = xen_mc_entry(sizeof(*op));
->   	op = mcs.args;
-> -	op->cmd = MMUEXT_INVLPG_LOCAL;
-> -	op->arg1.linear_addr = addr & PAGE_MASK;
-> -	MULTI_mmuext_op(mcs.mc, op, 1, NULL, DOMID_SELF);
->   
-> -	xen_mc_issue(PARAVIRT_LAZY_MMU);
-> +	for (addr = start; addr < end; addr += 1ul << stride_shift) {
-> +		trace_xen_mmu_flush_tlb_one_user(addr);
-> +
-> +		op->cmd = MMUEXT_INVLPG_LOCAL;
-> +		op->arg1.linear_addr = addr & PAGE_MASK;
-> +		MULTI_mmuext_op(mcs.mc, op, 1, NULL, DOMID_SELF);
-> +
-> +		xen_mc_issue(PARAVIRT_LAZY_MMU);
-> +	}
+By this way, [3/3] can unify the code.
 
-For this kind of usage (a loop) you should:
-
-- replace the call of xen_mc_entry() with xen_mc_batch()
-- use xen_extend_mmuext_op() for each loop iteration
-- call xen_mc_issue() after the loop
-
-Additionally I'd like you to replace trace_xen_mmu_flush_tlb_one_user()
-with trace_xen_mmu_flush_tlb_range() taking all three parameters and
-keep it where it was (out of the loop).
-
-The paravirt parts seem to be okay.
-
-
-Juergen
+Thanks,
+	Pingfan
