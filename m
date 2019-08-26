@@ -2,150 +2,221 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC707C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E59C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0252070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95F02186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566821180;
+	bh=pSm3PvDMTIhWrias2jUj42UGA5TFBFdrlS5QO6QgtCQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2MDr0e84BIB1ppsrQRup1He/pl9MoZebMAd4LaM7jEuzSs0xre7R42xKVT6mKOJKc
+	 /4+FKlqVyrFxR2lvZh5/7QQ8EdU9nXG7ZKgWJrktcnKjmcqNHEeL4dYdpJdokx105D
+	 lc/Zod88QSIth8X6e6/HBIN/8Ms8dLq2DyZgv3uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbfHZMFz (ORCPT
+        id S1731546AbfHZMGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:05:55 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:35794 "EHLO honk.sigxcpu.org"
+        Mon, 26 Aug 2019 08:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731225AbfHZMFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:05:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 8A080FB03;
-        Mon, 26 Aug 2019 14:05:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9toa2EE2R_0o; Mon, 26 Aug 2019 14:05:49 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 8F2B949200; Mon, 26 Aug 2019 14:05:48 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 14:05:48 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
-Message-ID: <20190826120548.GA14316@bogon.m.sigxcpu.org>
-References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+        id S1731060AbfHZMGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:06:18 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D3F2187F;
+        Mon, 26 Aug 2019 12:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566821176;
+        bh=pSm3PvDMTIhWrias2jUj42UGA5TFBFdrlS5QO6QgtCQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=io3aMAGY1vLQLpnXBTGGQRmRoMF0Z3ucgOly06j72Whv8rl7xT1KFCYyKmlLidWs3
+         Qit/fL3LL7kfMz6VSYutfHMnEYhIKe+/vtK0zd5YWrozSPVEGU8qnMYwsvvDG/CMl8
+         nKvLGU3h6Se1hrH6oINn9wwihCiN7pzs42pZsyN4=
+Received: by mail-qt1-f176.google.com with SMTP id j15so17486591qtl.13;
+        Mon, 26 Aug 2019 05:06:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAV6TFX+4zvCfT+S2DIM9+B1r8stCY6Gl6bFY2XSL5eN8eX4poZg
+        liVbv00ZOIytea9cknjGnvpzdrMUgPgr7uyOFQ==
+X-Google-Smtp-Source: APXvYqywXvicr53vDpn7Lf7WyzQ+wjP/YIGuHrEhvTUukwIr28KdgsvczQlUyUAExmZ1tGD9jxYqR9nGPsTCyWlJexY=
+X-Received: by 2002:ad4:4050:: with SMTP id r16mr15115021qvp.200.1566821175529;
+ Mon, 26 Aug 2019 05:06:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-7-krzk@kernel.org>
+In-Reply-To: <20190823145356.6341-7-krzk@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 26 Aug 2019 07:06:02 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
+Message-ID: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
+Subject: Re: [RFC 7/9] dt-bindings: rtc: s3c: Convert S3C/Exynos RTC bindings
+ to json-schema
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, notify@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Aug 21, 2019 at 01:15:40PM +0300, Robert Chiras wrote:
-> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
-> and 8QXP). Following, are the new features added and fixes from this
-> patch-set:
+On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Convert Samsung S3C/Exynos Real Time Clock bindings to DT schema format
+> using json-schema.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/rtc/s3c-rtc.txt       | 31 ------
+>  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 95 +++++++++++++++++++
+>  2 files changed, 95 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
 
-I've applied this whole series on top of my NWL work and it looks good
-with a DSI panel. Applying the whole series also fixes an issue where
-after unblank the output was sometimes shifted about half a screen width
-to the right (which didn't happen with DCSS). So at least from the parts
-I could test:
 
-  Tested-by: Guido Günther <agx@sigxcpu.org> 
+> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> new file mode 100644
+> index 000000000000..44b021812a83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/s3c-rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C, S5P and Exynos Real Time Clock controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +# Select also deprecated compatibles (for finding deprecate usage)
+> +select:
+> +  properties:
+> +    compatible:
+> +      items:
+> +        - enum:
+> +            - samsung,s3c2410-rtc
+> +            - samsung,s3c2416-rtc
+> +            - samsung,s3c2443-rtc
+> +            - samsung,s3c6410-rtc
+> +            # Deprecated, use samsung,s3c6410-rtc
+> +            - samsung,exynos3250-rtc
 
-for the whole thing.
-Cheers,
- -- Guido
-> 
-> 1. Add support for drm_bridge
-> On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
-> display connector, where an LCD panel can be attached, but instead it is
-> connected to DSI controller. Since this DSI stands between the display
-> controller (eLCDIF) and the physical connector, the DSI can be implemented
-> as a DRM bridge. So, in order to be able to connect the mxsfb driver to
-> the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
-> driver (the actual driver for the eLCDIF block).
-> 
-> 2. Add support for additional pixel formats
-> Some of the pixel formats needed by Android were not implemented in this
-> driver, but they were actually supported. So, add support for them.
-> 
-> 3. Add support for horizontal stride
-> Having support for horizontal stride allows the use of eLCDIF with a GPU
-> (for example) that can only output resolution sizes multiple of a power of
-> 8. For example, 1080 is not a power of 16, so in order to support 1920x1080
-> output from GPUs that can produce linear buffers only in sizes multiple to 16,
-> this feature is needed.
-> 
-> 3. Few minor features and bug-fixing
-> The addition of max-res DT property was actually needed in order to limit
-> the bandwidth usage of the eLCDIF block. This is need on systems where
-> multiple display controllers are presend and the memory bandwidth is not
-> enough to handle all of them at maximum capacity (like it is the case on
-> 8MQ, where there are two display controllers: DCSS and eLCDIF).
-> The rest of the patches are bug-fixes.
-> 
-> v3:
-> - Removed the max-res property patches and added support for
->   max-memory-bandwidth property, as it is also implemented in other drivers
-> - Removed unnecessary drm_vblank_off in probe
-> 
-> v2:
-> - Collected Tested-by from Guido
-> - Split the first patch, which added more than one feature into relevant
->   patches, explaining each feature added
-> - Also split the second patch into more patches, to differentiate between
->   the feature itself (additional pixel formats support) and the cleanup
->   of the register definitions for a better representation (guido)
-> - Included a patch submitted by Guido, while he was testing my patch-set
-> 
-> Guido Günther (1):
->   drm/mxsfb: Read bus flags from bridge if present
-> 
-> Mirela Rabulea (1):
->   drm/mxsfb: Signal mode changed when bpp changed
-> 
-> Robert Chiras (13):
->   drm/mxsfb: Update mxsfb to support a bridge
->   drm/mxsfb: Add defines for the rest of registers
->   drm/mxsfb: Reset vital registers for a proper initialization
->   drm/mxsfb: Update register definitions using bit manipulation defines
->   drm/mxsfb: Update mxsfb with additional pixel formats
->   drm/mxsfb: Fix the vblank events
->   drm/mxsfb: Add max-memory-bandwidth property for MXSFB
->   dt-bindings: display: Add max-memory-bandwidth property for mxsfb
->   drm/mxsfb: Update mxsfb to support LCD reset
->   drm/mxsfb: Improve the axi clock usage
->   drm/mxsfb: Clear OUTSTANDING_REQS bits
->   drm/mxsfb: Add support for horizontal stride
->   drm/mxsfb: Add support for live pixel format change
-> 
->  .../devicetree/bindings/display/mxsfb.txt          |   5 +
->  drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
->  drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 203 +++++++++++++--
->  drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  12 +-
->  drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
->  drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
->  6 files changed, 589 insertions(+), 137 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+We've come up with a better way of doing this that doesn't need a
+custom 'select'. Add a 'oneOf' to compatible and add another entry:
+
+- const: samsung,exynos3250-rtc
+  deprecated: true
+
+It's not implemented yet in the tool, but we'll keep the compatible
+for 'select' and otherwise drop schema marked deprecated.
+
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+
+You can drop 'items' when there's only 1 entry.
+
+> +          - samsung,s3c2410-rtc
+> +          - samsung,s3c2416-rtc
+> +          - samsung,s3c2443-rtc
+> +          - samsung,s3c6410-rtc
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description:
+> +      Must contain a list of phandle and clock specifier for the rtc
+> +      clock and in the case of a s3c6410 compatible controller, also
+> +      a source clock.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    description:
+> +      Must contain "rtc" and for a s3c6410 compatible controller,
+> +      a "rtc_src" sorted in the same order as the clocks property.
+> +    oneOf:
+> +      - items:
+> +          - const: rtc
+> +      - items:
+> +          # TODO: This can be in any order matching clocks, how to express it?
+
+It shouldn't be in any order. Fix the dts files.
+
+> +          - const: rtc
+> +          - const: rtc_src
+
+You should drop all this and add an else clause below.
+
+> +
+> +  interrupts:
+> +    description:
+> +      Two interrupt numbers to the cpu should be specified. First
+> +      interrupt number is the rtc alarm interrupt and second interrupt number
+> +      is the rtc tick interrupt. The number of cells representing a interrupt
+> +      depends on the parent interrupt controller.
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - samsung,s3c6410-rtc
+> +              - samsung,exynos3250-rtc
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 2
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +          - const: rtc
+> +          - const: rtc_src
+
+Should be indented 2 more spaces.
+
+> +
+> +examples:
+> +  - |
+> +    rtc@10070000 {
+> +      compatible = "samsung,s3c6410-rtc";
+> +      reg = <0x10070000 0x100>;
+> +      interrupts = <0 44 4>, <0 45 4>;
+> +      clocks = <&clock 0>, // CLK_RTC
+> +               <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> +      clock-names = "rtc", "rtc_src";
+> +    };
+> --
+> 2.17.1
+>
