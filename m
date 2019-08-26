@@ -2,105 +2,124 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA55C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6600EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DAA2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y3lG0eRU"
+	by mail.kernel.org (Postfix) with ESMTP id 469162070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbfHZC1b (ORCPT
+        id S1729124AbfHZC3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 22:27:31 -0400
-Received: from ozlabs.org ([203.11.71.1]:50045 "EHLO ozlabs.org"
+        Sun, 25 Aug 2019 22:29:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:52414 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfHZC1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 22:27:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Gwrc1BGSz9s7T;
-        Mon, 26 Aug 2019 12:27:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566786448;
-        bh=SkcK4GaxXaBhZShtVlHm+JpP+EHocs5ZVQOQqSb5eOo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y3lG0eRUwbu/PKZwFHp1QKR2L/U1g+DBRaS4NnWpCGUgE2aDKJ8FXzy/DvHuoNU78
-         w1gdwqzp8NRH2j4py30OCc6oKld08v9YchbxEl5iyiyO2jfv60TV77jhb00sDgSToD
-         rTBC7yR6/asE36SHFDCYrpRsPsstzuCO/XQsA3FJGtOulr7+5phSK8EHL7Ic4wFhNd
-         qlxDUOhWW38NGnMy+5dJfJBQq8ejkEg8rCPMIJHZl+lHECwK6YgC4jUA7MQz0t5kWE
-         feYROcmF0VCcfNM4kGncMZ4apAE7wsFllFsfLGIrwvTnK85dPCUHTWosMjU6PutkPI
-         0wX6qd7WOq2eg==
-Date:   Mon, 26 Aug 2019 12:27:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190826122726.145f538d@canb.auug.org.au>
+        id S1726265AbfHZC3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 22:29:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77760344;
+        Sun, 25 Aug 2019 19:29:42 -0700 (PDT)
+Received: from [10.162.43.136] (p8cg001049571a15.blr.arm.com [10.162.43.136])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EB213F718;
+        Sun, 25 Aug 2019 19:29:32 -0700 (PDT)
+Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
+ table helpers
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
+ <20190809101632.GM5482@bombadil.infradead.org>
+ <20190809114450.GF48423@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <652ae041-2033-1cf8-e559-6dcf85dd2fdd@arm.com>
+Date:   Mon, 26 Aug 2019 07:59:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KMHEud9KGq+l6RTA0YD1dE0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190809114450.GF48423@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KMHEud9KGq+l6RTA0YD1dE0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the net-next tree got a conflict in:
+On 08/09/2019 05:14 PM, Mark Rutland wrote:
+> On Fri, Aug 09, 2019 at 03:16:33AM -0700, Matthew Wilcox wrote:
+>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
+>>> Should alloc_gigantic_page() be made available as an interface for general
+>>> use in the kernel. The test module here uses very similar implementation from
+>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
+>>> needs to be exported through a header.
+>>
+>> Why are you allocating memory at all instead of just using some
+>> known-to-exist PFNs like I suggested?
+> 
+> IIUC the issue is that there aren't necessarily known-to-exist PFNs that
+> are sufficiently aligned -- they may not even exist.
+> 
+> For example, with 64K pages, a PMD covers 512M. The kernel image is
+> (generally) smaller than 512M, and will be mapped at page granularity.
+> In that case, any PMD entry for a kernel symbol address will point to
+> the PTE level table, and that will only necessarily be page-aligned, as
+> any P?D level table is only necessarily page-aligned.
 
-  drivers/net/ethernet/realtek/r8169_main.c
+Right.
 
-between commit:
+> 
+> In the same configuration, you could have less than 512M of total
+> memory, and none of this memory is necessarily aligned to 512M. So
+> beyond the PTE level, I don't think you can guarantee a known-to-exist
+> valid PFN.
+Right a PMD aligned valid PFN might not even exist. This proposed patch
+which attempts to allocate memory chunk with required alignment will just
+fail indicating that such a valid PFN does not exist and hence will skip
+any relevant tests. At present this is done for PUD aligned allocation
+failure but we can similarly skip PMD relevant tests as well if PMD
+aligned memory chunk is not allocated.
 
-  345b93265b3a ("Revert "r8169: remove not needed call to dma_sync_single_f=
-or_device"")
+> 
+> I also believe that synthetic PFNs could fail pfn_valid(), so that might
+> cause us pain too...
 
-from the net tree and commit:
+Agreed. So do we have an agreement that it is better to use allocated
+memory with required alignment for the tests than known-to-exist PFNs ?
 
-  fcd4e60885af ("r8169: improve rtl_rx")
-  d4ed7463d02a ("r8169: fix DMA issue on MIPS platform")
-
-from the net-next tree.
-
-I fixed it up (the latter seems to do the same as the net tree patch) and
-can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KMHEud9KGq+l6RTA0YD1dE0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1jQ44ACgkQAVBC80lX
-0Gy4QggAouAksoVmIVQKwYaVlaR1tpnVdLzoTIDHtr81rrgP7FsdFUnz4BB2g8Sa
-50Wkp92CN8CGbg5pRb4d6eFN9DTQ3dEi13pQXDYIyWAZVUM2ibiGmDmqggcVhQ1G
-l+Q1Z39U/GNTF/spuuquCx/y3k5G7CsnYr8YbRt00Flzus9QaNj4f2p1eFfd0wkd
-miqpPih6QUIprrW0+xXR/UhVUPZ78a01BfVk3PVwDLhlI/utdTZv9vYSw4TD065u
-YonV9nxKQQi5lvuqVoNyioRdLuL3BohqwfFxaXZZ16Gmuh4xlAZQGB21oSJPFMrL
-sZjJbQWcyfbdSMCs04mhtIo0PAafeg==
-=MxTe
------END PGP SIGNATURE-----
-
---Sig_/KMHEud9KGq+l6RTA0YD1dE0--
+- Anshuman
