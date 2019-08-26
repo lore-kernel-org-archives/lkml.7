@@ -2,116 +2,109 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F88FC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E463C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555BC217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225EC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Wd88EIBd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OlnlOwIs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jbv6ev8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfHZGKZ (ORCPT
+        id S1729468AbfHZGMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:10:25 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:32927 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729303AbfHZGKZ (ORCPT
+        Mon, 26 Aug 2019 02:12:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34285 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729437AbfHZGMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:10:25 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 8EFF7305;
-        Mon, 26 Aug 2019 02:10:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 26 Aug 2019 02:10:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=tzTY97xHrbLWJGenhOBbYuRd29p
-        dIE9dwtl03jKpHYQ=; b=Wd88EIBdXEWiIqbHbDz0mZJ2C6rh7kLDWfMWrvRqq/7
-        dNrmBRhfEN+bSUNcuAiQ9C89OKDSh2y7IexZndv8hAXiV/J07MuVefVLskPWM9BF
-        YQ323BYJmO1CDd5/HASTGU6SnYY4/9J3HfUCaJTXdwuLOBVkXv4JPz9r3xI+Nppu
-        caq0cBZ5dlC56+ItcFMUV3hQyxkRZA1KpdLWlzpfTDiv3lz+yaJAjo8WMuGbn1y9
-        bmNiyMUOJUaJqU1vOqObSqKSG37vePXEGcOYSYvYmhhunZbOxZ5SdNvBw2rTNhT1
-        0EBFDvKEEPF2iMS2SiD/+kZVszDpj+rnMsOyTnEo9QA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=tzTY97
-        xHrbLWJGenhOBbYuRd29pdIE9dwtl03jKpHYQ=; b=OlnlOwIse0pIFJUX85+8nm
-        yusOHRTG8prjJAivkdvxIZJg+FmpZ2sE07MNUW830ShElC5Js+ScEiC1UunVcYhm
-        UoixP9PDfvFiQiwQuwcs8gpX8yO1Y0yxl6LUqBC+qHho8WUHsmflvv4i+IElX0sA
-        UKDiSFJHV080EMXr9Eo1loNZNKU67P2cYtH4bSa2ZfAhYoj7PsoE1gzRdQXMgb8V
-        GOshGCagy9dEIxllD+mM4+yUaDSithmjQW390nEZR737q/ULMXG0xvtKrN4D5e2d
-        5LtPH+HF6/H63Gam393JzuGHXh+NCTTMwVZor/sJuZp3mmZgRtlH4KHF/WBr/1kg
-        ==
-X-ME-Sender: <xms:zndjXd-yIVwVWtJG9ferpXwSG2EoLDZZ2Lx3heMRQAhCabR7MR3bhg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehfedguddthecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepuggrrhhinh
-    hgfhhirhgvsggrlhhlrdhnvghtpdhkvghrnhgvlhdrohhrghdpfihikhhiphgvughirgdr
-    ohhrghdpkhgvrhhnvgdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:zndjXS8IQn5soYMZyOdsC5PF2eQZ48IYQA1UXckWrbD2PInvdNXmNQ>
-    <xmx:zndjXcxalQmw-GW414XMNga42bnFBfg4thKySJrcRXsT3upMae2kkw>
-    <xmx:zndjXa5JuDCC4OPIbYW6-7KDkzzEIqJCln8MSEc1_Jw3PpAUpBMe6Q>
-    <xmx:z3djXbxw3F_yj9Vp0LTK-OLfPl82b9-J4aEAxXN-bGHVC2-G3q9Z7w>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0592D8005B;
-        Mon, 26 Aug 2019 02:10:21 -0400 (EDT)
-Date:   Mon, 26 Aug 2019 08:10:19 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     Paul Bolle <pebolle@tiscali.nl>, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        akpm@linux-foundation.org, jslaby@suse.cz,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Subject: Re: Linux 5.2.10
-Message-ID: <20190826061019.GB3688@kroah.com>
-References: <20190825144703.6518-1-sashal@kernel.org>
- <dd3a1ec7d03888dade78db1e4c45ec1347c0815b.camel@tiscali.nl>
- <20190826043401.GC26547@kroah.com>
- <20190826054156.GB31983@Gentoo>
+        Mon, 26 Aug 2019 02:12:00 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d3so9500584plr.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 23:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XXdWl/5I4AMEty6E0BlvbYSkUcbQAuqmZdC08RJD18M=;
+        b=jbv6ev8JlZxB9ZIAPq1Si7oAf6zojp/v8OWLfvQ4/jCafQ1UQnfuAqRp+AqlLywcPD
+         mS4+vCbHJPqIykvI5npb1D3Z3CYRSmGUqEi7NEUjqCnMqbj52dzgvce9FAR+56I3spBc
+         fqjrTuyCJ3QyX3LAdpUvXaPVHo3YsVL8kcR93OXW+3/fdS/UXxjfgAHh41zGgzrOxcGS
+         oisNw05yEEXvrhP4o+frYwGHsTDJg5HIcb4+ATb3TMEauwowyIOAf+1MuCOdYos0tepe
+         mOETzQTPWhZam2MRCO6fB+p2IOzM/sBL2C8j5d/0d2hRaSTZ9XvoRuVJOoQOAZDCu1i5
+         cPQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XXdWl/5I4AMEty6E0BlvbYSkUcbQAuqmZdC08RJD18M=;
+        b=VBL0kkzgT1LlkGnQFD3Zu3NOelgJwPpK21nlWB0dPhdFlYM5eLGj6oSN+4QJeSynkS
+         GShQw4XJgcwFASm34cMlon5IXEnw2QCl/LR72oaGi7hQ7/1ExgCLA5+ATVdxv0YYN/WX
+         meL4owve22QvCLJW+xZ/BXZSljyA2s0gBsvGf9FHUK9EzHiw6cIA1li8GT2Vk0cFrs90
+         ADjMoV41GVZUeQVMtxPZvVqofb1i50y7fbjpsezflI1U9tF8T4CNCz/F/gnsXESJDze6
+         5z3ooEXLAqOMDyKdTPQIkfqAJrHsLcFG2Wmx87iaXRREHuB3WNbuKwXEeTAKAZq9emJI
+         OUwQ==
+X-Gm-Message-State: APjAAAVDiNrZfrrGk72OAHiv5AwQH6iIuk7FijKSCAp9IAtcMxHzWLMC
+        f9+6om8hLPi+6Zv9Sc0P+aNElg==
+X-Google-Smtp-Source: APXvYqzoYUDpRJUFiNoriejK+QdfOyXNvh5rJkI3pY3J+q+ZnVSlsneboHXqF3lobm90wLJVSkLaHA==
+X-Received: by 2002:a17:902:7781:: with SMTP id o1mr17216873pll.205.1566799919996;
+        Sun, 25 Aug 2019 23:11:59 -0700 (PDT)
+Received: from localhost ([122.172.76.219])
+        by smtp.gmail.com with ESMTPSA id t189sm10691274pfd.58.2019.08.25.23.11.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Aug 2019 23:11:59 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 11:41:57 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [greybus-dev] [PATCH 4/9] staging: greybus: manifest: Fix up
+ some alignment checkpatch issues
+Message-ID: <20190826061157.zpvbmbrqhl5krqcg@vireshk-i7>
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+ <20190825055429.18547-5-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826054156.GB31983@Gentoo>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190825055429.18547-5-gregkh@linuxfoundation.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
+> Some function prototypes do not match the expected alignment formatting
+> so fix that up so that checkpatch is happy.
+> 
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Alex Elder <elder@kernel.org>
+> Cc: greybus-dev@lists.linaro.org
+> Cc: devel@driverdev.osuosl.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/staging/greybus/manifest.c | 39 +++++++++++++++---------------
+>  1 file changed, 19 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/manifest.c b/drivers/staging/greybus/manifest.c
+> index 08db49264f2b..4ebbba52b07c 100644
+> --- a/drivers/staging/greybus/manifest.c
+> +++ b/drivers/staging/greybus/manifest.c
+> @@ -104,15 +104,15 @@ static int identify_descriptor(struct gb_interface *intf,
+>  	size_t expected_size;
+>  
+>  	if (size < sizeof(*desc_header)) {
+> -		dev_err(&intf->dev, "manifest too small (%zu < %zu)\n",
+> -				size, sizeof(*desc_header));
+> +		dev_err(&intf->dev, "manifest too small (%zu < %zu)\n", size,
+> +			sizeof(*desc_header));
+>  		return -EINVAL;		/* Must at least have header */
+>  	}
 
-A: http://en.wikipedia.org/wiki/Top_post
-Q: Were do I find info about this thing called top-posting?
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-A: No.
-Q: Should I include quotations after my reply?
-
-http://daringfireball.net/2007/07/on_top
-
-On Mon, Aug 26, 2019 at 11:11:58AM +0530, Bhaskar Chowdhury wrote:
-> Not sure,kerne.org not reflecting the latest number...probably timing
-> difference ....looping Kai in this mail ..
-
-I do not know what you are referring to here.
-
-The front page of kernel.org shows 5.2.10 to me.  I will work today on
-adding Sasha and Ben's gpg signatures to the
-https://www.kernel.org/category/signatures.html page so that people can
-verify them.
-
-thanks,
-
-greg k-h
+-- 
+viresh
