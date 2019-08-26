@@ -2,120 +2,206 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE0CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ECFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BED9217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CG3B73Jc"
+	by mail.kernel.org (Postfix) with ESMTP id 73F96217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:58:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfHZUz6 (ORCPT
+        id S1727176AbfHZU6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:55:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43966 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfHZUzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:55:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so10607414pld.10
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=FghN6Mc40EPJyH60IJRS3NSuxjYJJ6oJa+6cfkHbcEQ=;
-        b=CG3B73JctUodMjIEjMsdzkgftz3Lk7Hw301lt+ChJplNaD4WWljA7Mf07AXYJSksH1
-         zK8iBXNS71J22cYdDCipqCOVcu10jmcRPqdcB4jWsfUDB3moMUaJLamzkZumWqO4cAbv
-         x9nBWiUT7BbCgCsl6xfUyRcRXV8tN/eRY/9eo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=FghN6Mc40EPJyH60IJRS3NSuxjYJJ6oJa+6cfkHbcEQ=;
-        b=Os87Xp7aMQsbttrxc5ZdT2I2SkYt8verJ50jfoh4m0c0vmx1sxiuFRIBIWaRVOJOkk
-         YBTQYZ7EOk7fZwAXqzXpsYW6HpH+KFYX/khatahQ5+Vj18C1be3nqtWCcY2aBKRCQdRU
-         sjDu9dz3aTAx7ke1i15ROqJ2eUCx31rM2wYESNvyVIq2ilWJ5wUgxnPQ9jDzbhhgDdGz
-         lMdtEEjtUn5MkERIjciR+l2mFXPih7FtFyFpfpMnrBkg3WYbs7WkBBAtUZiusMR9C7Ka
-         O2//hZ0qZfbVbY7K0RDUCba2dySZVcto/v7UgCjJY+h0dj4hd9yFF5RqlkzK9wjo7S1z
-         ECQg==
-X-Gm-Message-State: APjAAAUpdURop9OkeHN5VBG3qLZDGZN/uAMfo5040SY/p9kAzYrfFevq
-        K2NaH9oBFDKupWM5t3HQcMNBPA==
-X-Google-Smtp-Source: APXvYqx9XXxGe4Jgq3CTT3CN1lc1lQpUBmkZwGA+hD5RxJH41Dh4HIrKDUhBYRQDSJhlhN27af5CzA==
-X-Received: by 2002:a17:902:a40d:: with SMTP id p13mr20580372plq.92.1566852953013;
-        Mon, 26 Aug 2019 13:55:53 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v184sm11039530pgd.34.2019.08.26.13.55.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 13:55:52 -0700 (PDT)
-Message-ID: <5d644758.1c69fb81.76a4f.cf59@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 26 Aug 2019 16:58:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60510 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725983AbfHZU6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:58:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 49BBA3082B13;
+        Mon, 26 Aug 2019 20:58:35 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78ECA5D9E2;
+        Mon, 26 Aug 2019 20:58:30 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 0B6E922017B; Mon, 26 Aug 2019 16:58:30 -0400 (EDT)
+Date:   Mon, 26 Aug 2019 16:58:29 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 02/19] dax: Pass dax_dev to dax_writeback_mapping_range()
+Message-ID: <20190826205829.GC13860@redhat.com>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-3-vgoyal@redhat.com>
+ <20190826115316.GB21051@infradead.org>
+ <20190826203326.GB13860@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAP245DV=pVF1oK2eFvK=iRng=Qxg=oDLWmHXBWtJH=VMxmmAvQ@mail.gmail.com>
-References: <cover.1564091601.git.amit.kucheria@linaro.org> <534b5017c2210ba8d541c206dace204d6617b4c9.1564091601.git.amit.kucheria@linaro.org> <5d577d77.1c69fb81.b6b07.83e6@mx.google.com> <CAHLCerMpWTVquyM3fYQxz-ZhDvnY276hfnZvZOmjV--cgm53UQ@mail.gmail.com> <5d5ab1e0.1c69fb81.d71db.1ca3@mx.google.com> <CAP245DV=pVF1oK2eFvK=iRng=Qxg=oDLWmHXBWtJH=VMxmmAvQ@mail.gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 04/15] drivers: thermal: tsens: Add debugfs support
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 26 Aug 2019 13:55:51 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826203326.GB13860@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 26 Aug 2019 20:58:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-08-21 05:55:39)
-> On Mon, Aug 19, 2019 at 7:57 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Amit Kucheria (2019-08-19 00:58:23)
-> > > On Sat, Aug 17, 2019 at 9:37 AM Stephen Boyd <swboyd@chromium.org> wr=
-ote:
-> > > > > +
-> > > > > +static void tsens_debug_init(struct platform_device *pdev)
-> > > > > +{
-> > > > > +       struct tsens_priv *priv =3D platform_get_drvdata(pdev);
-> > > > > +       struct dentry *root, *file;
-> > > > > +
-> > > > > +       root =3D debugfs_lookup("tsens", NULL);
-> > > >
-> > > > Does this get created many times? Why doesn't tsens have a pointer =
-to
-> > > > the root saved away somewhere globally?
-> > > >
-> > >
-> > > I guess we could call the statement below to create the root dir and
-> > > save away the pointer. I was trying to avoid #ifdef CONFIG_DEBUG_FS in
-> > > init_common() and instead have all of it in a single function that
-> > > gets called once per instance of the tsens controller.
-> >
-> > Or call this code many times and try to create the tsens node if
-> > !tsens_root exists where the variable is some global.
->=20
-> So I didn't quite understand this statement. The change you're
-> requesting is that the 'root' variable below should be a global?
->=20
-> tsens_probe() will get called twice on platforms with two instances of
-> the controller. So I will need to check some place if the 'tsens' root
-> dir already exists in debugfs, no? That is what I'm doing below.
->=20
+On Mon, Aug 26, 2019 at 04:33:26PM -0400, Vivek Goyal wrote:
+> On Mon, Aug 26, 2019 at 04:53:16AM -0700, Christoph Hellwig wrote:
+> > On Wed, Aug 21, 2019 at 01:57:03PM -0400, Vivek Goyal wrote:
+> > > Right now dax_writeback_mapping_range() is passed a bdev and dax_dev
+> > > is searched from that bdev name.
+> > > 
+> > > virtio-fs does not have a bdev. So pass in dax_dev also to
+> > > dax_writeback_mapping_range(). If dax_dev is passed in, bdev is not
+> > > used otherwise dax_dev is searched using bdev.
+> > 
+> > Please just pass in only the dax_device and get rid of the block device.
+> > The callers should have one at hand easily, e.g. for XFS just call
+> > xfs_find_daxdev_for_inode instead of xfs_find_bdev_for_inode.
+> 
+> Sure. Here is the updated patch.
+> 
+> This patch can probably go upstream independently. If you are fine with
+> the patch, I can post it separately for inclusion.
 
-Yeah. I was suggesting making a global instead of doing the lookup, but
-I guess the lookup is fine and avoids a global variable. It's all
-debugfs so it doesn't really matter. Sorry! Do whatever then.
+Forgot to update function declaration in case of !CONFIG_FS_DAX. Here is
+the updated patch.
 
+Subject: dax: Pass dax_dev instead of bdev to dax_writeback_mapping_range()
+
+As of now dax_writeback_mapping_range() takes "struct block_device" as a
+parameter and dax_dev is searched from bdev name. This also involves taking
+a fresh reference on dax_dev and putting that reference at the end of
+function.
+
+We are developing a new filesystem virtio-fs and using dax to access host
+page cache directly. But there is no block device. IOW, we want to make
+use of dax but want to get rid of this assumption that there is always
+a block device associated with dax_dev.
+
+So pass in "struct dax_device" as parameter instead of bdev.
+
+ext2/ext4/xfs are current users and they already have a reference on
+dax_device. So there is no need to take reference and drop reference to
+dax_device on each call of this function.
+
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ fs/dax.c            |    8 +-------
+ fs/ext2/inode.c     |    5 +++--
+ fs/ext4/inode.c     |    2 +-
+ fs/xfs/xfs_aops.c   |    2 +-
+ include/linux/dax.h |    4 ++--
+ 5 files changed, 8 insertions(+), 13 deletions(-)
+
+Index: rhvgoyal-linux-fuse/fs/dax.c
+===================================================================
+--- rhvgoyal-linux-fuse.orig/fs/dax.c	2019-08-26 16:45:26.093710196 -0400
++++ rhvgoyal-linux-fuse/fs/dax.c	2019-08-26 16:45:29.462710196 -0400
+@@ -936,12 +936,11 @@ static int dax_writeback_one(struct xa_s
+  * on persistent storage prior to completion of the operation.
+  */
+ int dax_writeback_mapping_range(struct address_space *mapping,
+-		struct block_device *bdev, struct writeback_control *wbc)
++		struct dax_device *dax_dev, struct writeback_control *wbc)
+ {
+ 	XA_STATE(xas, &mapping->i_pages, wbc->range_start >> PAGE_SHIFT);
+ 	struct inode *inode = mapping->host;
+ 	pgoff_t end_index = wbc->range_end >> PAGE_SHIFT;
+-	struct dax_device *dax_dev;
+ 	void *entry;
+ 	int ret = 0;
+ 	unsigned int scanned = 0;
+@@ -952,10 +951,6 @@ int dax_writeback_mapping_range(struct a
+ 	if (!mapping->nrexceptional || wbc->sync_mode != WB_SYNC_ALL)
+ 		return 0;
+ 
+-	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
+-	if (!dax_dev)
+-		return -EIO;
+-
+ 	trace_dax_writeback_range(inode, xas.xa_index, end_index);
+ 
+ 	tag_pages_for_writeback(mapping, xas.xa_index, end_index);
+@@ -976,7 +971,6 @@ int dax_writeback_mapping_range(struct a
+ 		xas_lock_irq(&xas);
+ 	}
+ 	xas_unlock_irq(&xas);
+-	put_dax(dax_dev);
+ 	trace_dax_writeback_range_done(inode, xas.xa_index, end_index);
+ 	return ret;
+ }
+Index: rhvgoyal-linux-fuse/include/linux/dax.h
+===================================================================
+--- rhvgoyal-linux-fuse.orig/include/linux/dax.h	2019-08-26 16:45:26.094710196 -0400
++++ rhvgoyal-linux-fuse/include/linux/dax.h	2019-08-26 16:46:08.101710196 -0400
+@@ -141,7 +141,7 @@ static inline void fs_put_dax(struct dax
+ 
+ struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev);
+ int dax_writeback_mapping_range(struct address_space *mapping,
+-		struct block_device *bdev, struct writeback_control *wbc);
++		struct dax_device *dax_dev, struct writeback_control *wbc);
+ 
+ struct page *dax_layout_busy_page(struct address_space *mapping);
+ dax_entry_t dax_lock_page(struct page *page);
+@@ -180,7 +180,7 @@ static inline struct page *dax_layout_bu
+ }
+ 
+ static inline int dax_writeback_mapping_range(struct address_space *mapping,
+-		struct block_device *bdev, struct writeback_control *wbc)
++		struct dax_device *dax_dev, struct writeback_control *wbc)
+ {
+ 	return -EOPNOTSUPP;
+ }
+Index: rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c
+===================================================================
+--- rhvgoyal-linux-fuse.orig/fs/xfs/xfs_aops.c	2019-08-26 16:45:26.094710196 -0400
++++ rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c	2019-08-26 16:45:29.471710196 -0400
+@@ -1120,7 +1120,7 @@ xfs_dax_writepages(
+ {
+ 	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
+ 	return dax_writeback_mapping_range(mapping,
+-			xfs_find_bdev_for_inode(mapping->host), wbc);
++			xfs_find_daxdev_for_inode(mapping->host), wbc);
+ }
+ 
+ STATIC int
+Index: rhvgoyal-linux-fuse/fs/ext4/inode.c
+===================================================================
+--- rhvgoyal-linux-fuse.orig/fs/ext4/inode.c	2019-08-26 16:45:26.093710196 -0400
++++ rhvgoyal-linux-fuse/fs/ext4/inode.c	2019-08-26 16:45:29.475710196 -0400
+@@ -2992,7 +2992,7 @@ static int ext4_dax_writepages(struct ad
+ 	percpu_down_read(&sbi->s_journal_flag_rwsem);
+ 	trace_ext4_writepages(inode, wbc);
+ 
+-	ret = dax_writeback_mapping_range(mapping, inode->i_sb->s_bdev, wbc);
++	ret = dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
+ 	trace_ext4_writepages_result(inode, wbc, ret,
+ 				     nr_to_write - wbc->nr_to_write);
+ 	percpu_up_read(&sbi->s_journal_flag_rwsem);
+Index: rhvgoyal-linux-fuse/fs/ext2/inode.c
+===================================================================
+--- rhvgoyal-linux-fuse.orig/fs/ext2/inode.c	2019-08-26 16:45:26.093710196 -0400
++++ rhvgoyal-linux-fuse/fs/ext2/inode.c	2019-08-26 16:45:29.477710196 -0400
+@@ -957,8 +957,9 @@ ext2_writepages(struct address_space *ma
+ static int
+ ext2_dax_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ {
+-	return dax_writeback_mapping_range(mapping,
+-			mapping->host->i_sb->s_bdev, wbc);
++	struct ext2_sb_info *sbi = EXT2_SB(mapping->host->i_sb);
++
++	return dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
+ }
+ 
+ const struct address_space_operations ext2_aops = {
