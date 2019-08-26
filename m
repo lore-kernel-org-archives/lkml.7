@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535FAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FFAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1748A2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB562184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l6sh4qDy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vFprOVQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbfHZUoq (ORCPT
+        id S1730623AbfHZUos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:44:46 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34162 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbfHZUoo (ORCPT
+        Mon, 26 Aug 2019 16:44:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35520 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730446AbfHZUoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:44:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s18so16621613wrn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:44:42 -0700 (PDT)
+        Mon, 26 Aug 2019 16:44:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k2so16604625wrq.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:44:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fw7X0u9RSVpb9YP6GvJgpnhL1eZP3GnuovkdNKVahNQ=;
-        b=l6sh4qDylt4FBGKZbeZbgdchgf+Ftcthdvk7xzUqt1v1xshu0jydYLG40UO/b9oXc4
-         qsqbemoS4PVcuf0R1a+fcHbHXAJQe9PO5cq8UIcT7hRO8CxZSTmign0nSdfQhUu7fiZs
-         Ms4ELGQ8eo5W1GDUT3mW3f57i3861kIE7zKLLD814esraGpUpxp8a1SNweInJCPEGwy6
-         oD0q5ysgRBsCv1Qtksz98fu14zSZCdrq1hvnkz2RGUf5Oq3tqjIN2Rq4CGqrB20NHFwl
-         UN4pC8rK2b/aqkRqY8aVpzUxULN2VbdJ1xSSPUls0YzvKhNNNg9ogsc4C72ylII9owiF
-         IMXA==
+        bh=E/rktgRZOj4ajpikVv+crFkgra/A+VXyEZXp2OkGiIA=;
+        b=vFprOVQgqZZeaPGJRKWqtJlyJWWYc41QHKy3hDxXhTuDk2oleQKX7dQolHl7/Oxuru
+         5hkxV/8bVU6PBNELYJclSf2uFdJbSDT3kbZdZZFx7oCl8Y2hQ5eX6vS4a0MJkOxOrdj0
+         6WIsVdZZx+C1dr5WnFF16NeyqAi2Oclo02KxSKJ3ShiuCOXP02Y5Vwo91UuO0voT8DZ0
+         rGsFr9zu2P4Qt+H+BlZUhItrQu+SEO/H2H7t0hOKKwc7zY+uxXrBeG/+KopHS5j63Tbf
+         zc6OmQktG7Q6E5Oj5EnTVV3DUm51dcEipqvTf9NuLebRYDVlOwVFKrvblaQz/WTIo58a
+         /36g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Fw7X0u9RSVpb9YP6GvJgpnhL1eZP3GnuovkdNKVahNQ=;
-        b=OsymPg9MNsR8fVUiFytNytZx/ZvawYPKxWuVpBeVGJIou5nW6uPL0dNBHSvmOs2e17
-         d34qn8B2jkPGTb6eVgrmxqBxfQBje9PnJWWJEfT7Uma5ZL0CfhSGtxUPZG9x11K+WbEn
-         tew2QcnllQ06PY2GdIyGS9xAE2FgxTWLHBl7qJBk2UaVQHR7zN1x/6RcY17A4tPJpfBH
-         qzftGMI/qJ0hg0XQgWhLvRtL7PAvxuoxDwoCNlnXIPQoryAD5lDv/UXJmymO6o+hD2RS
-         s6ryFWF8Fqf373/bax7kB3AdG1tLzC2WmsX2SWsjMipR5MZmr1QeTfgDUefr4eCi1RkG
-         2JKw==
-X-Gm-Message-State: APjAAAX5AbDAx4snnmd6a+syejGIrgaBXagI/3RBHxvKf2XN5RBx+Wmy
-        r6pqAHZ7U1aY/aWZTIasZD9Ytg==
-X-Google-Smtp-Source: APXvYqzj79VdjmpatQooDLN5wdRSkNJ6Zpyso4T8UmaJwAtECyLsZt/J81BWLl/nWJE/nyibmLpEWg==
-X-Received: by 2002:a5d:6a45:: with SMTP id t5mr23996401wrw.228.1566852281822;
-        Mon, 26 Aug 2019 13:44:41 -0700 (PDT)
+        bh=E/rktgRZOj4ajpikVv+crFkgra/A+VXyEZXp2OkGiIA=;
+        b=Gx3HMuPdhBh7ZSjimhxba1cuVHA+7mSJsh0sBXy/oYUW5zcyr/tB2KJTuSbQXf3cl/
+         2ioM/te/OcyxeHCzw3b2jeajJde8B1w8g0ifz/nLa3NWPZlWkM1hgZQ/4IeYwU92y6ki
+         gGySlNfBO3xCSGHHiHh+zd0SXwnJM1o01v1wjEuk13NYt7jYSdNAFm5jJM/uHmTSuPg8
+         VmSWstntHxr3BgJ41aLQuX7NORyxbLs7+kIx7/uKoluT3pRYOtW0CBRrjHVe1W5/ps5E
+         c6//SL+STOvGKDiGUA/D+qa4G700BE6FsqyPJdQG+rSLEo2Pr10VTdt9OykeOnYpK1o3
+         HJZg==
+X-Gm-Message-State: APjAAAXQ9hxfDwtj+ohnxKhjn5ma51FOq1nQ0Sdk2vpz/xk9p1bMn0u2
+        oBrnV+man7d4Llrnigpn0mn4cg==
+X-Google-Smtp-Source: APXvYqwrPcj7Q2zz31NQ98L1E4NhW094ay+Ifj4n9fBNDxdH95mhUc+hr94YfFHJaxmEzKz5xIgF/w==
+X-Received: by 2002:adf:9e09:: with SMTP id u9mr24766472wre.169.1566852283910;
+        Mon, 26 Aug 2019 13:44:43 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
-        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.44.40
+        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.44.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 13:44:41 -0700 (PDT)
+        Mon, 26 Aug 2019 13:44:42 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc:     linux-kernel@vger.kernel.org,
         DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
         sunXi SoC support)
-Subject: [PATCH 02/20] dt-bindings: timer: Convert Allwinner A10 Timer to a schema
-Date:   Mon, 26 Aug 2019 22:43:49 +0200
-Message-Id: <20190826204407.17759-2-daniel.lezcano@linaro.org>
+Subject: [PATCH 03/20] dt-bindings: timer: Add missing compatibles
+Date:   Mon, 26 Aug 2019 22:43:50 +0200
+Message-Id: <20190826204407.17759-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190826204407.17759-1-daniel.lezcano@linaro.org>
 References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
@@ -80,77 +80,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The older Allwinner SoCs have a Timer supported in Linux, with a matching
-Device Tree binding.
-
-While the original binding only mentions one interrupt, the timer actually
-has 6 of them.
-
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+Newer Allwinner SoCs have different number of interrupts, let's add
+different compatibles for all of them to deal with this properly.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- .../timer/allwinner,sun4i-a10-timer.yaml      | 76 +++++++++++++++++++
- .../bindings/timer/allwinner,sun4i-timer.txt  | 19 -----
- 2 files changed, 76 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
- delete mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+ .../timer/allwinner,sun4i-a10-timer.yaml      | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-new file mode 100644
-index 000000000000..7292a424092c
---- /dev/null
+index 7292a424092c..20adc1c8e9cc 100644
+--- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
 +++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/allwinner,sun4i-a10-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Timer Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-timer
-+      - allwinner,suniv-f1c100s-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      List of timers interrupts
-+
-+  clocks:
-+    maxItems: 1
-+
-+allOf:
+@@ -14,6 +14,8 @@ properties:
+   compatible:
+     enum:
+       - allwinner,sun4i-a10-timer
++      - allwinner,sun8i-a23-timer
++      - allwinner,sun8i-v3s-timer
+       - allwinner,suniv-f1c100s-timer
+ 
+   reg:
+@@ -39,6 +41,30 @@ allOf:
+           minItems: 6
+           maxItems: 6
+ 
 +  - if:
 +      properties:
 +        compatible:
 +          items:
-+            const: allwinner,sun4i-a10-timer
++            const: allwinner,sun8i-a23-timer
 +
 +    then:
 +      properties:
 +        interrupts:
-+          minItems: 6
-+          maxItems: 6
++          minItems: 2
++          maxItems: 2
 +
 +  - if:
 +      properties:
 +        compatible:
 +          items:
-+            const: allwinner,suniv-f1c100s-timer
++            const: allwinner,sun8i-v3s-timer
 +
 +    then:
 +      properties:
@@ -158,54 +131,9 @@ index 000000000000..7292a424092c
 +          minItems: 3
 +          maxItems: 3
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer {
-+        compatible = "allwinner,sun4i-a10-timer";
-+        reg = <0x01c20c00 0x400>;
-+        interrupts = <22>,
-+                     <23>,
-+                     <24>,
-+                     <25>,
-+                     <67>,
-+                     <68>;
-+        clocks = <&osc>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt b/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
-deleted file mode 100644
-index 3da9d515c03a..000000000000
---- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--Allwinner A1X SoCs Timer Controller
--
--Required properties:
--
--- compatible : should be one of the following:
--              "allwinner,sun4i-a10-timer"
--              "allwinner,suniv-f1c100s-timer"
--- reg : Specifies base physical address and size of the registers.
--- interrupts : The interrupt of the first timer
--- clocks: phandle to the source clock (usually a 24 MHz fixed clock)
--
--Example:
--
--timer {
--	compatible = "allwinner,sun4i-a10-timer";
--	reg = <0x01c20c00 0x400>;
--	interrupts = <22>;
--	clocks = <&osc>;
--};
+   - if:
+       properties:
+         compatible:
 -- 
 2.17.1
 
