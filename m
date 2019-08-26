@@ -2,158 +2,188 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD82EC41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A43A22CF8
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885D122DA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfHZJw7 (ORCPT
+        id S1731144AbfHZJyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:52:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:18290 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfHZJw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:52:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 02:52:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="181327932"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Aug 2019 02:52:57 -0700
-Received: from [10.226.39.22] (ekotax-mobl.gar.corp.intel.com [10.226.39.22])
-        by linux.intel.com (Postfix) with ESMTP id B73805807C5;
-        Mon, 26 Aug 2019 02:52:55 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
- Reset controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
- <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
-Date:   Mon, 26 Aug 2019 17:52:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Mon, 26 Aug 2019 05:54:16 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3977 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730390AbfHZJyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:54:16 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id CCEBAF76ADEB5DBC2E08;
+        Mon, 26 Aug 2019 17:54:14 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 26 Aug 2019 17:54:14 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 26 Aug 2019 17:54:14 +0800
+Date:   Mon, 26 Aug 2019 17:53:28 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>, Chao Yu <yuchao0@huawei.com>
+Subject: Re: linux-next: build warning after merge of the staging tree
+Message-ID: <20190826095328.GA120601@architecture4>
+References: <20190826063024.GA1217@kroah.com>
+ <20190826083733.GA129185@architecture4>
+ <20190826085408.GB129185@architecture4>
+ <20190826094341.GC129185@architecture4>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190826094341.GC129185@architecture4>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Aug 26, 2019 at 05:43:41PM +0800, Gao Xiang wrote:
+> Hi Stephen,
+> 
+> On Mon, Aug 26, 2019 at 04:54:08PM +0800, Gao Xiang wrote:
+> > Hi Stephen,
+> > 
+> > On Mon, Aug 26, 2019 at 04:38:01PM +0800, Gao Xiang wrote:
+> > > Hi Greg,
+> > > 
+> > > On Mon, Aug 26, 2019 at 08:30:24AM +0200, Greg KH wrote:
+> > > > On Mon, Aug 26, 2019 at 04:24:32PM +1000, Stephen Rothwell wrote:
+> > > > > Hi all,
+> > > > > 
+> > > > > After merging the staging tree, today's linux-next build (x86_64
+> > > > > allmodconfig) produced this warning:
+> > > > > 
+> > > > > In file included from include/trace/events/erofs.h:8,
+> > > > >                  from <command-line>:
+> > > > > include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
+> > > > >   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+> > > > >                                      ^~~~~~
+> > > > > include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
+> > > > >   static inline void trace_##name(proto)    \
+> > > > >                                   ^~~~~
+> > > > > include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
+> > > > >   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
+> > > > >                         ^~~~~~
+> > > > > include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
+> > > > >   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> > > > >   ^~~~~~~~~~~~~
+> > > > > include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
+> > > > >   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> > > > >                       ^~~~~~
+> > > > > include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
+> > > > >  TRACE_EVENT(erofs_lookup,
+> > > > >  ^~~~~~~~~~~
+> > > > > include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
+> > > > >   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+> > > > >   ^~~~~~~~
+> > > > > 
+> > > > > and moany more like this ...
+> > 
+> > Could you give me more log about this? I don't know how to reproduce that warning
+> > since I can compile x86-64 kernel image with my configproperly on my PC...
+> > I'm trying allmodconfig now...
+> 
+> I have tested the latest staging-next tree with x86_64 allmodconfig with
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+> the following commands (on my x86-64 PC),
+> 
+>  $ make allmodconfig
+>  $ make -j12
+> 
+> and it compiles successful as below:
+>   LD [M]  sound/usb/hiface/snd-usb-hiface.ko
+>   LD [M]  sound/usb/line6/snd-usb-line6.ko
+>   LD [M]  sound/usb/line6/snd-usb-pod.ko
+>   LD [M]  sound/usb/line6/snd-usb-podhd.ko
+>   LD [M]  sound/usb/line6/snd-usb-toneport.ko
+>   LD [M]  sound/usb/line6/snd-usb-variax.ko
+>   LD [M]  sound/usb/misc/snd-ua101.ko
+>   LD [M]  sound/usb/snd-usb-audio.ko
+>   LD [M]  sound/usb/snd-usbmidi-lib.ko
+>   LD [M]  sound/usb/usx2y/snd-usb-us122l.ko
+>   LD [M]  sound/usb/usx2y/snd-usb-usx2y.ko
+>   LD [M]  sound/x86/snd-hdmi-lpe-audio.ko
+>   LD [M]  sound/xen/snd_xen_front.ko
+>   LD [M]  virt/lib/irqbypass.ko
+> g00380047@architecture4:~/oss/linux-staging$ 
+> 
+> I'm also testing the latest linux-next tree with commit 47e4937a4a7c applied,
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> 
+> and the command is the same (on my x86-64 PC),
+> 
+>  $ make allmodconfig
+>  $ make -j12
+> 
+> it seems all .o in fs/erofs have been generated properly, although the final
+> result hasn't been generated. I will reply the final result later...
 
-On 8/23/2019 8:25 PM, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->> Add YAML schemas for the reset controller on Intel
->> Lightening Mountain (LGM) SoC.
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->> Changes on v2:
->>      Address review comments
->>        Update the compatible property definition
->>        Add description for reset-cells
->>        Add 'additionalProperties: false' property
->>
->>   .../bindings/reset/intel,syscon-reset.yaml         | 53 ++++++++++++++++++++++
->>   1 file changed, 53 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->> new file mode 100644
->> index 000000000000..3403a967190a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->> @@ -0,0 +1,53 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightening Mountain SoC System Reset Controller
->> +
->> +maintainers:
->> +  - Dilip Kota <eswara.kota@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: intel,rcu-lgm
->> +      - const: syscon
->> +
->> +  reg:
->> +    description: Reset controller register base address and size
->> +
->> +  intel,global-reset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    description: Global reset register offset and bit offset.
->> +
->> +  "#reset-cells":
->> +    const: 2
->> +    description: |
->> +      The 1st cell is the register offset.
->> +      The 2nd cell is the bit offset in the register.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - intel,global-reset
->> +  - "#reset-cells"
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    rcu0: reset-controller@00000000 {
->> +        compatible = "intel,rcu-lgm", "syscon";
->> +        reg = <0x000000 0x80000>;
->> +        intel,global-reset = <0x10 30>;
->> +        #reset-cells = <2>;
->> +    };
->> +
->> +    pcie_phy0: pciephy@... {
->> +        ...
-> You need to run 'make dt_binding_check' and fix the warnings. The
-> example has to be buildable and it is not.
+The attempt above compiles successfully as well... And I have tried
+the following commands (Just in case...) and the result turns out
+without any difference...
 
-Sure, i  will correct this pcie_phy0 node. But i didn't get any warnings 
-for make dt_binding_check
+ $ make ARCH=x86_64 allmodconfig
+ $ make ARCH=x86_64 -j16
 
-   CHKDT Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
-DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
-FATAL ERROR: Unknown output format "yaml"
+and I'm so confused now... Hope to get your hints...
 
-Will DTC report about the example node errors? But, DTC is failing with 
-FATAL_ERROR.
-I tried it even after installing libyaml and headers in my local 
-directory and export the path, but no luck.(ref: 
-https://lkml.org/lkml/2018/12/3/951)
-Could you please let me know if i miss anything and help me to proceed 
-further.
+Thanks,
+Gao Xiang
 
-Regards,
-Dilip
->
->> +        /* address offset: 0x10, bit offset: 12 */
->> +        resets = <&rcu0 0x10 12>;
->> +        ...
->> +    };
->> --
->> 2.11.0
->>
+> 
+> Out of curiosity, are there some merge conflicts raised? Or could you give
+> me some hints (code and .config) to reproduce that? since I don't find any
+> potential issue in include/trace/events/erofs.h and fs/erofs/*... I have no
+> idea what happened and how to do next... Thank you very much!
+> 
+> Thanks,
+> Gao Xiang
+> 
+> > 
+> > Thanks,
+> > Gao Xiang
+> > 
+> > > > > 
+> > > > > Introduced by commit
+> > > > > 
+> > > > >   47e4937a4a7c ("erofs: move erofs out of staging")
+> > > > > 
+> > > > > (or, at least, exposed by it).  It needs, at least, a "struct dentry;"
+> > > > > added to the file.
+> > > > 
+> > > > Odd, why has this never been seen before when the same files were in
+> > > > drivers/staging/ and why 0-day isn't reporting this?
+> > > 
+> > > I Think it is weird since it is never failed in staging and kbuild-all 0-day ci
+> > > (my tree and you tree)....
+> > > 
+> > > > 
+> > > > Gao, can you send me a patch for this?
+> > > 
+> > > Got it, I will look into that...
+> > > 
+> > > Thanks,
+> > > Gao Xiang
+> > > 
+> > > > 
+> > > > thanks,
+> > > > 
+> 
