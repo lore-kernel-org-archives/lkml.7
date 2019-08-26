@@ -2,182 +2,84 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51852C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0935C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB94217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6776921872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566856642;
+	bh=D9K92IFV4XsqcixfHYhV/oX9lfC7OT+SzS4AAi8rcJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oU/Nd17xa/uepnNov/yWhd7rwz6w+I12CF9JrtCJ2Oyrdw58ZNTvm4zLqT2iw1Qv+
+	 1VRVztaSh4Dyj8S2Hqv+GGqz7jh8ftY/yqAYfjM/yJAA1zDYORxIojih+1YUbKNN1U
+	 o+M5ytxAVhTzDydgqT9OlH5bAF5MYF7TGMNmHQPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfHZVva (ORCPT
+        id S1726462AbfHZV5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 17:51:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33308 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 17:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbfHZVv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 17:51:29 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726182AbfHZV5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 17:57:21 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EB2243B71F
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 21:51:28 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id z15so18898252qtq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 14:51:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=7c4qKqMTWkLz+rdogljBCIaDURVz1u9UaTlZ6kcFhXI=;
-        b=hiQcCE+q9Q5xkyuyZ+mIavRNyy/4Bqp4NEXkEOIdlYPqKO/u2GaqpI1K2a9uJMDKji
-         5g2hGKHmTuK96JZFtqv12OMks17GPbCSmt0ySkT0T+68eldE/XrWmm3KWAc81GK3w8p3
-         5XG9FgofKqrC2L60lA6+ygE9s9usnM+V3vCgnxDuSH8Drj+iVrgWRKmC5PrPffWbWVO7
-         zvyyjH3mrQI2KcM61mdm+GK/0pe6wA82b3PzgXlEDsTF9TDJo3eqLBKemxX2pWVKxz26
-         aTu6wuNNw91jtuJfsPSdJoaxPYABCOXHcG+W99AnEkpcrLHFtqdNY8VkvPhDOGm1XztB
-         Cx+g==
-X-Gm-Message-State: APjAAAUa1gMGYne7nGPc5pWpWMHOyH/TrDiSpot2XHAAWveab6DjA3hi
-        smXzoFPONSFeFoel9IdIduReAadcIqyam6SEn7193wBp8p2Ao4nmOvhRE7Hbas0jctJlqsevkcP
-        sbpgBHnuXrUcb3Z57kAkN5XxL
-X-Received: by 2002:ac8:3435:: with SMTP id u50mr19481721qtb.310.1566856288258;
-        Mon, 26 Aug 2019 14:51:28 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwBARvIoeY8BGIy+x1QgkncpM4AedhRZJ7eEuv8IqaZIxRiqXtf6O+p8vU4UbABKuVNDzD8ag==
-X-Received: by 2002:ac8:3435:: with SMTP id u50mr19481700qtb.310.1566856287989;
-        Mon, 26 Aug 2019 14:51:27 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id w126sm7524273qkd.68.2019.08.26.14.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 14:51:27 -0700 (PDT)
-Message-ID: <5d44346ecb6ab13d9f01142f33d4ff1029054067.camel@redhat.com>
-Subject: Re: [PATCH 01/26] drm/dp_mst: Move link address dumping into a
- function
-From:   Lyude Paul <lyude@redhat.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 26 Aug 2019 17:51:26 -0400
-In-Reply-To: <20190808195318.GQ7444@phenom.ffwll.local>
-References: <20190718014329.8107-1-lyude@redhat.com>
-         <20190718014329.8107-2-lyude@redhat.com>
-         <20190808195318.GQ7444@phenom.ffwll.local>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 2276920850;
+        Mon, 26 Aug 2019 21:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566856640;
+        bh=D9K92IFV4XsqcixfHYhV/oX9lfC7OT+SzS4AAi8rcJ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XLff1dIe8jDmY1CzJ6Vpbq9DDlJ+/QGJNLEciCOenlUYJMWcXAMLXls/mGMKhz43M
+         8f8TEcR1bnZK3xWCcWNe/wxqReIAOHQ96zz3xNXw0yJgzW1mU9sDvR5IBxOiR/ncFk
+         Tcb9dTv9UejSJPeCXFeI4ZwbWeurQ1DZZwphbHLk=
+Date:   Mon, 26 Aug 2019 23:57:18 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 32/38] posix-cpu-timers: Get rid of zero checks
+Message-ID: <20190826215717.GG14309@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192922.275086128@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821192922.275086128@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-*sigh* finally have some time to go through these reviews
-
-jfyi: I realized after looking over this patch that it's not actually needed -
-I had been planning on using drm_dp_dump_link_address() for other things, but
-ended up deciding to make the final plan to use something that dumps into a
-format that's identical to the one we're using for dumping DOWN requests. IMHO
-though, this patch does make things look nicer so I'll probably keep it.
-
-Assuming I can still count your r-b as valid with a change to the commit
-description?
-
-On Thu, 2019-08-08 at 21:53 +0200, Daniel Vetter wrote:
-> On Wed, Jul 17, 2019 at 09:42:24PM -0400, Lyude Paul wrote:
-> > Since we're about to be calling this from multiple places. Also it makes
-> > things easier to read!
-> > 
-> > Cc: Juston Li <juston.li@intel.com>
-> > Cc: Imre Deak <imre.deak@intel.com>
-> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > Cc: Harry Wentland <hwentlan@amd.com>
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+On Wed, Aug 21, 2019 at 09:09:19PM +0200, Thomas Gleixner wrote:
+> Deactivation of the expiry cache is done by setting all clock caches to
+> 0. That requires to have a check for zero in all places which update the
+> expiry cache:
 > 
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> 	if (cache == 0 || new < cache)
+> 		cache = new;
 > 
-> > ---
-> >  drivers/gpu/drm/drm_dp_mst_topology.c | 35 ++++++++++++++++++---------
-> >  1 file changed, 23 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > index 0984b9a34d55..998081b9b205 100644
-> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > @@ -2013,6 +2013,28 @@ static void drm_dp_queue_down_tx(struct
-> > drm_dp_mst_topology_mgr *mgr,
-> >  	mutex_unlock(&mgr->qlock);
-> >  }
-> >  
-> > +static void
-> > +drm_dp_dump_link_address(struct drm_dp_link_address_ack_reply *reply)
-> > +{
-> > +	struct drm_dp_link_addr_reply_port *port_reply;
-> > +	int i;
-> > +
-> > +	for (i = 0; i < reply->nports; i++) {
-> > +		port_reply = &reply->ports[i];
-> > +		DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev:
-> > %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n",
-> > +			      i,
-> > +			      port_reply->input_port,
-> > +			      port_reply->peer_device_type,
-> > +			      port_reply->port_number,
-> > +			      port_reply->dpcd_revision,
-> > +			      port_reply->mcs,
-> > +			      port_reply->ddps,
-> > +			      port_reply->legacy_device_plug_status,
-> > +			      port_reply->num_sdp_streams,
-> > +			      port_reply->num_sdp_stream_sinks);
-> > +	}
-> > +}
-> > +
-> >  static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
-> >  				     struct drm_dp_mst_branch *mstb)
-> >  {
-> > @@ -2038,18 +2060,7 @@ static void drm_dp_send_link_address(struct
-> > drm_dp_mst_topology_mgr *mgr,
-> >  			DRM_DEBUG_KMS("link address nak received\n");
-> >  		} else {
-> >  			DRM_DEBUG_KMS("link address reply: %d\n", txmsg-
-> > >reply.u.link_addr.nports);
-> > -			for (i = 0; i < txmsg->reply.u.link_addr.nports; i++)
-> > {
-> > -				DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn:
-> > %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n", i,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].input_port,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].peer_device_type,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].port_number,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].dpcd_revision,
-> > -				       txmsg->reply.u.link_addr.ports[i].mcs,
-> > -				       txmsg->reply.u.link_addr.ports[i].ddps,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].legacy_device_plug_status,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].num_sdp_streams,
-> > -				       txmsg-
-> > >reply.u.link_addr.ports[i].num_sdp_stream_sinks);
-> > -			}
-> > +			drm_dp_dump_link_address(&txmsg->reply.u.link_addr);
-> >  
-> >  			drm_dp_check_mstb_guid(mstb, txmsg-
-> > >reply.u.link_addr.guid);
-> >  
-> > -- 
-> > 2.21.0
-> > 
--- 
-Cheers,
-	Lyude Paul
+> Use U64_MAX as the deactivated value, which allows to remove the zero
+> checks when updating the cache and reduces it to the obvious check:
+> 
+> 	if (new < cache)
+> 		cache = new;
+> 
+> This also removes the weird workaround in do_prlimit() which was required
+> to convert a RLIMIT_CPU value of 0 (immediate expiry) to 1 because handing
+> in 0 to the posix CPU timer code would have effectively disarmed it.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
