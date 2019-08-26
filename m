@@ -2,129 +2,136 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77EAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B9C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C816420874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EED20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDltRrG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbfHZPhh (ORCPT
+        id S1733021AbfHZPiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:37:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51520 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731833AbfHZPhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:37:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6A496B0B6;
-        Mon, 26 Aug 2019 15:37:34 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id B158EDA98E; Mon, 26 Aug 2019 17:37:57 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 17:37:57 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v2] btrfs: fix allocation of bitmap pages.
-Message-ID: <20190826153757.GW2752@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Christophe Leroy <christophe.leroy@c-s.fr>, erhard_f@mailbox.org,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr>
+        Mon, 26 Aug 2019 11:38:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37535 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731833AbfHZPiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:38:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d16so16322252wme.2;
+        Mon, 26 Aug 2019 08:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Sh9DJjMgqXE7WeVQf/Tx2s2yKAPE6CjBynjLsZuWR9M=;
+        b=lDltRrG2+uHyKNgvQKaYSjqwL/N3HD3dAh6sDbLjcYDQEFT/ZrEFtRzaZTTtvp4XRJ
+         AfxMz/PEc66hkn/zQXQZ8xVvRLmGTaAYW39jDEfwRUphMZz2xJ28RFlutTzV/Wf3Whmk
+         P4GmHK62zvCO7sGJkjrjago8qVKqe+TjLjakGAJEDJwEdIEL9GVpRRJBjs2OmFQKHYXQ
+         HsSVa5FDVqmqCdCV2sF08sos75Y9VO+ZyXZBWh+7LQbiCoXDuOtf/c8D7JD9f6Hd8Jvn
+         6TYxvd60ti7IblY2XxPPQmvNmlheKmeCCxGypMNMjRhEfYfhPlow0B8hrw1AWQqKOJc3
+         meAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Sh9DJjMgqXE7WeVQf/Tx2s2yKAPE6CjBynjLsZuWR9M=;
+        b=YyU08iXBHTooc2IcAqgUf5f16XrKaE8ZQWURZ+Z3/E7X9FgSGwm92BbAFNVRFriBHw
+         09yG8FOKIpnT3cOI8mq0buSYQs/MQWgyiSLlZkBtAW4LXoIDXfuMiVhZAhHz+dzY9k9E
+         tewE/pXZutRSz07QKzPPx7otQdJukFjpq+s35oYCvBQcu+f0Htrhv3Xe1HMYmogGOWpu
+         K0D14fmZkT2mYcS4PvSyvtuMRCtZ9qsKwb3FU8eZid7htujB+VceO31qmM2D2gmpWZ5W
+         IqEPnBzBQTlYC5zJebUl14xGxMAS82edcMs8L3BCMWsZdSQY69vgSGv4RhoSxMfOMHs1
+         C8VQ==
+X-Gm-Message-State: APjAAAUaTTZLDMPwiHYcK7GENcHKeeNFEGAxMFTgTw76+kDmvQyr4o/o
+        NLUl9hAfDBMPpYr0xsdzNWA=
+X-Google-Smtp-Source: APXvYqxLILlxLVypuvY3dis/5jWnxjA8EZXYa52Wudn0LEl6/LvtxMWr5FAvJ9nF5MzYYs1Zt+w/kQ==
+X-Received: by 2002:a1c:6145:: with SMTP id v66mr23582593wmb.42.1566833882631;
+        Mon, 26 Aug 2019 08:38:02 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id 39sm37272363wrc.45.2019.08.26.08.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 08:38:02 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 08:38:00 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Message-ID: <20190826153800.GA4752@archlinux-threadripper>
+References: <20190710174800.34451-1-natechancellor@gmail.com>
+ <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
+ <20190711081434.GA86557@archlinux-threadripper>
+ <20190711133915.GA25807@ziepe.ca>
+ <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
+ <20190711171808.GF25807@ziepe.ca>
+ <20190711173030.GA844@archlinux-threadripper>
+ <20190823142427.GD12968@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20190823142427.GD12968@ziepe.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 03:05:55PM +0000, Christophe Leroy wrote:
-> Various notifications of type "BUG kmalloc-4096 () : Redzone
-> overwritten" have been observed recently in various parts of
-> the kernel. After some time, it has been made a relation with
-> the use of BTRFS filesystem.
-> 
-> [   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
-> [   22.809971] -----------------------------------------------------------------------------
-> 
-> [   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
-> [   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
-> [   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
-> [   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
-> [   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
-> [   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
-> [   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
-> [   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
-> [   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
-> [   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
-> [   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
-> [   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
-> [   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
-> [   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
-> [   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
-> [   22.814107] 	generic_shutdown_super+0x80/0x110
-> [   22.814250] 	kill_anon_super+0x18/0x30
-> [   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
-> [   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
-> [   22.814841] 	proc_cgroup_show+0xc0/0x248
-> [   22.814967] 	proc_single_show+0x54/0x98
-> [   22.815086] 	seq_read+0x278/0x45c
-> [   22.815190] 	__vfs_read+0x28/0x17c
-> [   22.815289] 	vfs_read+0xa8/0x14c
-> [   22.815381] 	ksys_read+0x50/0x94
-> [   22.815475] 	ret_from_syscall+0x0/0x38
-> 
-> Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead
-> of memcpy") changed the way bitmap blocks are copied. But allthough
-> bitmaps have the size of a page, they were allocated with kzalloc().
-> 
-> Most of the time, kzalloc() allocates aligned blocks of memory, so
-> copy_page() can be used. But when some debug options like SLAB_DEBUG
-> are activated, kzalloc() may return unaligned pointer.
-> 
-> On powerpc, memcpy(), copy_page() and other copying functions use
-> 'dcbz' instruction which provides an entire zeroed cacheline to avoid
-> memory read when the intention is to overwrite a full line. Functions
-> like memcpy() are writen to care about partial cachelines at the start
-> and end of the destination, but copy_page() assumes it gets pages. As
-> pages are naturally cache aligned, copy_page() doesn't care about
-> partial lines. This means that when copy_page() is called with a
-> misaligned pointer, a few leading bytes are zeroed.
-> 
-> To fix it, allocate bitmaps through kmem_cache instead of using kzalloc()
-> The cache pool is created with PAGE_SIZE alignment constraint.
-> 
-> Reported-by: Erhard F. <erhard_f@mailbox.org>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
-> Fixes: 69d2480456d1 ("btrfs: use copy_page for copying pages instead of memcpy")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
-> v2: Using kmem_cache instead of get_zeroed_page() in order to benefit from SLAB debugging features like redzone.
+Hi Jason,
 
-I'll take this version, thanks. Though I'm not happy about the allocator
-behaviour. The kmem cache based fix can be backported independently to
-4.19 regardless of the SL*B fixes.
+On Fri, Aug 23, 2019 at 11:24:27AM -0300, Jason Gunthorpe wrote:
+> On Thu, Jul 11, 2019 at 10:30:30AM -0700, Nathan Chancellor wrote:
+> > On Thu, Jul 11, 2019 at 02:18:08PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, Jul 11, 2019 at 10:16:44AM -0700, Nick Desaulniers wrote:
+> > > > On Thu, Jul 11, 2019 at 6:39 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > > >
+> > > > > On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
+> > > > > > Maybe time to start plumbing Clang into your test flow until it can get
+> > > > > > intergrated with more CI setups? :) It can catch some pretty dodgy
+> > > > > > behavior that GCC doesn't:
+> > > > >
+> > > > > I keep asking how to use clang to build the kernel and last I was told
+> > > > > it still wasn't ready..
+> > > > >
+> > > > > Is it ready now? Is there some flow that will compile with clang
+> > > > > warning free, on any arch? (at least the portion of the kernel I check)
+> > > > 
+> > > > $ make CC=clang ...
+> > > > 
+> > > > Let us know if you find something we haven't already.
+> > > > https://clangbuiltlinux.github.io/
+> > > > https://github.com/ClangBuiltLinux/linux/issues
+> > > 
+> > > What clang version?
+> > > 
+> > > Jason
+> > 
+> > You'll need clang-9 for x86 because of the asm-goto requirement (or a
+> > selective set of reverts for clang-8) but everything else should be
+> > good with clang-8:
+> 
+> The latest clang-9 packages from apt.llvm.org do seem to build the
+> kernel, I get one puzzling warning under RDMA:
+> 
+> drivers/infiniband/hw/hfi1/platform.o: warning: objtool: tune_serdes()+0x1f4: can't find jump dest instruction at .text+0x118a
 
-> +extern struct kmem_cache *btrfs_bitmap_cachep;
+Any particular config that I should use to easily reproduce this?
 
-I've renamed the cache to btrfs_free_space_bitmap_cachep
+> And a BPF one:
+> 
+> kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0xd: sibling call from callable instruction with modified stack frame
 
-Reviewed-by: David Sterba <dsterba@suse.com>
+I think this might be related to this?
+
+https://lore.kernel.org/lkml/cf0273fb-c272-72be-50f9-b25bb7c7f183@windriver.com/
+
+Cheers,
+Nathan
