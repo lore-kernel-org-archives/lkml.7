@@ -2,188 +2,170 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96716C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCD3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7790A206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8219206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="rcCYr7ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732563AbfHZOiH (ORCPT
+        id S1732580AbfHZOiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:38:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34212 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbfHZOiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:38:07 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 600DB30832C0;
-        Mon, 26 Aug 2019 14:38:06 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 473EA4532;
-        Mon, 26 Aug 2019 14:38:06 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id E3D0524F2F;
-        Mon, 26 Aug 2019 14:38:05 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 10:38:05 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Cyril Hrubis <chrubis@suse.cz>, ltp@lists.linux.it,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        alexey kodanev <alexey.kodanev@oracle.com>,
-        the hoang0709 <the_hoang0709@yahoo.com>,
-        trond.myklebust@hammerspace.com
-Message-ID: <203971593.8175020.1566830285708.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CA+G9fYsHpNKFHr=ZukVvj+uMJDyHj2Xwb9bCfzPQyYzMjZ0rCw@mail.gmail.com>
-References: <CA+G9fYtN2tjHZtjtc8isdsD5hF76teeh2-pngUp+uj3WYdj7jA@mail.gmail.com> <20190826104127.GA14729@haruka> <1264279239.8133737.1566817520787.JavaMail.zimbra@redhat.com> <CA+G9fYsHpNKFHr=ZukVvj+uMJDyHj2Xwb9bCfzPQyYzMjZ0rCw@mail.gmail.com>
-Subject: Re: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed
- to run cmd: useradd hsym
+        Mon, 26 Aug 2019 10:38:24 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:58336 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfHZOiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:38:23 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: PMfF54VrtH3fiz8e/6h/l2eKoNyOXmHbW3wz0TwkNe7mREq8agcrKFY1eTgVgVkDimSSfMfTCY
+ Y9UVRNifvjDVGXdDPVRYfjE3WvLfDvn1+8pAUHmj/XQtjUqP4AXxff7c+TuDpvJE/cjrPod8KI
+ chTLQeYUrrNphE6lQ0IEudrLBQtXGj48zJ7qlFZnFf562y0Uw1n/i7GWLginCo/Y4PMxwwXIUL
+ k95Bho32M90sUFEVLKc99Fg/17DHKRA0HlXEyH995uv2ntktOPtn3Yw3LpHRu2kFNsceJm71Ez
+ oZ8=
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="47989836"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2019 07:38:20 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 26 Aug 2019 07:38:20 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 26 Aug 2019 07:38:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BQsQxEB5lol7Yvfzty1PkLdIvCnwWs9zHJ3PllY3tJa4pmmaaLsLaLzucfw2MTmqybntB/quMd3ODMUfiVtmVuD0EyabG4x/Si5Z56I4iJaKr8QFd6cJjDeKueSBxYushWWML8zs4lEkrAJe1VWSZ9W+jj5EkFePif+VMsdv2GfXM12/MRvIu3wH7DHhMJ7kVrCubEVZgrz7H5GyRxbw4sizv6Osp3B0yga9ucfqgULHlVAxzVvVZN8jKzEmCc6CDa6LYioVS/Fm0GEml945JZmLgQS8nbRfH2S6yc2XsnKiY5PTqYAfWAHagNY646g0H3y37sYA7I/mBGDLWrhxrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sZzyNSuA50hOak86zUXS80g6SEbAn8U1kiUn4ZaqSqA=;
+ b=LSnrGkA4fASthg3iV211qekEvnOPufPa23lt0cysSK8IZr4vDycRSaUOkfGQ10edXwkMf/z31hPij15dzW0QvxdaAdvOMZb5AenlMSAH0nIH6RCzCVoFq9q6Has4BKJ3FIbT57bt6+No8Ow1m1Rv0Px2wj02OpTZvU2K/3QyUH8cQoWxCdlKf2Y/FRvRYyYnaZzVCUx78/KHCgnaZeftt3Ux1HzMZldO9nEK41grvRhYvfnwz0yQaRYH0OtenladsOUiNjoZ5oLTjo3I5NgyzTdk3rYzEox+tRWl+BIH6C3iC+WjKC3Zig53cvq1zRrl8G+ZWkRpWLHDySUKOs712g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sZzyNSuA50hOak86zUXS80g6SEbAn8U1kiUn4ZaqSqA=;
+ b=rcCYr7ef6ZzTqs6lipTe0zIrELoSV63uBpkv8P+5VHqFKmie33+Hc/A/au0ImsGD3oCI5w+CEhTNBPESfPgME8QMcC7zZj/9ltDsjycla+6ubYkxME31f8JdWWQdDYYekzYwJxf8d07yzb+piONG/HoziifaspcGxUCorgZ7zwA=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
+ BY5PR11MB4258.namprd11.prod.outlook.com (52.132.254.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Mon, 26 Aug 2019 14:38:17 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::14:24b8:9029:c69]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::14:24b8:9029:c69%7]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
+ 14:38:17 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <mirq-linux@rere.qmqm.pl>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>
+CC:     <alexandre.belloni@bootlin.com>, <arnd@arndb.de>,
+        <3chas3@gmail.com>, <gregkh@linuxfoundation.org>, <perex@perex.cz>,
+        <lgirdwood@gmail.com>, <Ludovic.Desroches@microchip.com>,
+        <broonie@kernel.org>, <mark.rutland@arm.com>,
+        <Nicolas.Ferre@microchip.com>, <robh-dt@kernel.org>,
+        <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/6] misc: atmel-ssc: get LRCLK pin selection from DT
+Thread-Topic: [PATCH v2 5/6] misc: atmel-ssc: get LRCLK pin selection from DT
+Thread-Index: AQHVWrpLsarueKwUH0+T0VGyCb2x16cNgkmA
+Date:   Mon, 26 Aug 2019 14:38:17 +0000
+Message-ID: <5174bac2-294d-177a-b30c-6a7326820bfb@microchip.com>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0149.eurprd08.prod.outlook.com
+ (2603:10a6:800:d5::27) To BY5PR11MB4497.namprd11.prod.outlook.com
+ (2603:10b6:a03:1cc::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9218897d-3dd6-482b-bf8b-08d72a33089f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR11MB4258;
+x-ms-traffictypediagnostic: BY5PR11MB4258:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB42583996DAB09E7F7DC66BCCE7A10@BY5PR11MB4258.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(366004)(396003)(189003)(199004)(4326008)(86362001)(6436002)(2906002)(76176011)(31696002)(486006)(305945005)(71190400001)(71200400001)(2201001)(52116002)(53936002)(110136005)(54906003)(81166006)(25786009)(31686004)(81156014)(446003)(7416002)(478600001)(8676002)(316002)(14454004)(386003)(7736002)(6506007)(66946007)(53546011)(229853002)(66446008)(64756008)(66556008)(6246003)(11346002)(476003)(2501003)(36756003)(102836004)(2616005)(8936002)(186003)(6116002)(3846002)(6512007)(6486002)(5660300002)(99286004)(66066001)(26005)(256004)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4258;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TwcWAC4ZSJIbIgC0LXxPebmZ17u7p4cFmWeiGJrYo0sYHkKkTf8+Co6FeUgpxKmGfIbYk4gizktLksdjbXT44pHfHgMeFrR5wfWNAKNgi912sdl+ghCRoWW/kqFTeaT8FUrKAzr9M07pW4knAc6oeVjkZgwaBQzi7pR4S6wTvEZnHC5b/wNdeeEHPAHOr6DOKRvHV52RqfhXWugmEUYDBuyn2Q9Y/Xlnjnp2xQvPLj60nNfJyoRPBv3s7yp4o2I+5sliyK1KJRNmy8iYofhqeSbi7QEBs0lpCBrYYiKgXKysFc0/SjdrMkTd85/49hJfYnu8+4d9udmMOGEk0HWEBbEVZMrxaDIFBh3n3wxclhmBu3mCjmbtHycja0SOGXVmv7OUHLejy+Iayv1iqZHaIGB+4niLsIg3X7g44vd/9eo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <22A5BB8587FCE34A9D008F56EDF2B7A0@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.205.130, 10.4.195.28]
-Thread-Topic: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed to run cmd: useradd hsym
-Thread-Index: YFeV1UC3LeIsRdovt5+kMdO7I/Bycg==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 26 Aug 2019 14:38:06 +0000 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9218897d-3dd6-482b-bf8b-08d72a33089f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 14:38:17.4968
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZC1Msbx6I5t6X8B1NhNPV4EWBo7rvVqLmy+Db4/YL7x68lrzkoUP5k4+rYWICiYZQ1kYSpEzLf5KuUH5QkykPR5HhUvdnBfmF6FJH8UhuQo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
------ Original Message -----
-> Hi Jan and Cyril,
-> 
-> On Mon, 26 Aug 2019 at 16:35, Jan Stancek <jstancek@redhat.com> wrote:
-> >
-> >
-> >
-> > ----- Original Message -----
-> > > Hi!
-> > > > Do you see this LTP prot_hsymlinks failure on linux next 20190823 on
-> > > > x86_64 and i386 devices?
-> > > >
-> > > > test output log,
-> > > > useradd: failure while writing changes to /etc/passwd
-> > > > useradd: /home/hsym was created, but could not be removed
-> > >
-> > > This looks like an unrelated problem, failure to write to /etc/passwd
-> > > probably means that filesystem is full or some problem happend and how
-> > > is remounted RO.
-> >
-> > In Naresh' example, root is on NFS:
-> >   root=/dev/nfs rw
-> >   nfsroot=10.66.16.123:/var/lib/lava/dispatcher/tmp/886412/extract-nfsrootfs-tyuevoxm,tcp,hard,intr
-> 
-> Right !
-> root is mounted on NFS.
-> 
-> >
-> > 10.66.16.123:/var/lib/lava/dispatcher/tmp/886412/extract-nfsrootfs-tyuevoxm
-> > on / type nfs
-> > (rw,relatime,vers=2,rsize=4096,wsize=4096,namlen=255,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.66.16.123,mountvers=1,mountproto=tcp,local_lock=all,addr=10.66.16.123)
-> > devtmpfs on /dev type devtmpfs
-> > (rw,relatime,size=3977640k,nr_inodes=994410,mode=755)
-> >
-> > Following message repeats couple times in logs:
-> >   NFS: Server wrote zero bytes, expected XXX
-> >
-> > Naresh, can you check if there are any errors on NFS server side?
-> 
-> I have re-tested the failed tests on next-20190822 and all get pass
-> which is also
-> using same NFS server [1] [2].
-
-Thanks, that suggests some client side change between next-20190822 and next-20190823
-might introduced it.
-
-> 
-> > Maybe run NFS cthon against that server with client running next-20190822
-> > and next-20190823.
-> 
-> Thanks for the pointers.
-> I will setup and run NFS cthon on next-20190822 and next-20190823.
-
-I'll try to reproduce too.
-
-> 
-> >
-> > >
-> > > I do not see the kernel messages from this job anywhere at the job
-> > > pages, is it stored somewhere?
-> >
-> > It appears to be mixed in same log file:
-> >   https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190823/testrun/886412/log
-> 
-> For the record the following tests failed on linux -next-20190823 on x86_64
-> and i386. The filesystem is mounted on NFS and tests are using
-> locally mounted hard drive ( with -d /scratch ).
-> 
-> Juno-r2 device filesystem mounted on NFS and did not see these errors
-> and test getting pass on -next-20190823.
-> 
-> These failures are reproducible all time on next-20190823 kernel on x86_64
-> and i386 device with root mounted on NFS [3] [4] [5] [6].
-> 
-> I will git bisect to find out which is bad commit.
-> 
-> prot_hsymlinks: [3]
-> ------------------
-> useradd: failure while writing changes to /etc/passwd
-> useradd: /home/hsym was created, but could not be removed
-> userdel: user 'hsym' does not exist
-> prot_hsymlinks    1  TBROK  :  prot_hsymlinks.c:325: Failed to run
-> cmd: useradd hsym
-> prot_hsymlinks    2  TBROK  :  prot_hsymlinks.c:325: Remaining cases broken
-> prot_hsymlinks    3  TBROK  :  prot_hsymlinks.c:325: Failed to run
-> cmd: userdel -r hsym
-> prot_hsymlinks    4  TBROK  :  tst_sig.c:234: unexpected signal
-> SIGIOT/SIGABRT(6) received (pid = 8324).
-> 
-> logrotate01: [4]
-> -------------
-> compressing log with: /bin/gzip
-> error: error creating temp state file /var/lib/logrotate.status.tmp:
-> Input/output error
-> logrotate01    1  TFAIL  :  ltpapicmd.c:154: Test #1: logrotate
-> command exited with 1 return code. Output:
-> 
-> sem_unlink_2-2: [5]
-> ------------------
-> make[3]: Entering directory
-> '/opt/ltp/testcases/open_posix_testsuite/conformance/interfaces/sem_unlink'
-> cat: write error: Input/output error
-> conformance/interfaces/sem_unlink/sem_unlink_2-2: execution: FAILED
-> 
-> syslog{01 ...10} [6]
-> -------------------
-> cp: failed to close '/etc/syslog.conf.ltpback': Input/output error
-> syslog01    1  TBROK  :  ltpapicmd.c:188: failed to backup /etc/syslog.conf
-> 
-> cp: failed to close '/etc/syslog.conf.ltpback': Input/output error
-> syslog02    1  TBROK  :  ltpapicmd.c:188: failed to backup /etc/syslog.conf
-> 
-> ...
-> cp: failed to close '/etc/syslog.conf.ltpback': Input/output error
-> syslog10    1  TBROK  :  ltpapicmd.c:188: failed to backup /etc/syslog.conf
-> 
-> ref:
-> PASS on 20190222:
-> [1] https://lkft.validation.linaro.org/scheduler/job/890446#L1232
-> [2] https://lkft.validation.linaro.org/scheduler/job/890454
-> 
-> FAILED on 20190823:
-> [3] https://lkft.validation.linaro.org/scheduler/job/890404#L1245
-> [4] https://lkft.validation.linaro.org/scheduler/job/886408#L2544
-> [5] https://lkft.validation.linaro.org/scheduler/job/886409#L3088
-> [6] https://lkft.validation.linaro.org/scheduler/job/890400#L1234
-> 
->  - Naresh
-> 
+T24gMjQuMDguMjAxOSAyMzoyNiwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+IFN0b3JlIExS
+Q0xLIHBpbiBzZWxlY3Rpb24gZm9yIHVzZSBieSBBU29DIERBSSBkcml2ZXIuDQo+IA0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBNaWNoYcWCIE1pcm9zxYJhdyA8bWlycS1saW51eEByZXJlLnFtcW0ucGw+DQoN
+ClJldmlld2VkLWJ5OiBDb2RyaW4gQ2l1Ym90YXJpdSA8Y29kcmluLmNpdWJvdGFyaXVAbWljcm9j
+aGlwLmNvbT4NCg0KVGhhbmtzIGFuZCBiZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg0KPiANCj4gLS0t
+DQo+ICAgIHYyOiBzcGxpdCBmcm9tIEFTb0MgaW1wbGVtZW50YXRpb24NCj4gDQo+IC0tLQ0KPiAg
+IGRyaXZlcnMvbWlzYy9hdG1lbC1zc2MuYyAgfCA5ICsrKysrKysrKw0KPiAgIGluY2x1ZGUvbGlu
+dXgvYXRtZWwtc3NjLmggfCAyICsrDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
+KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2F0bWVsLXNzYy5jIGIvZHJpdmVy
+cy9taXNjL2F0bWVsLXNzYy5jDQo+IGluZGV4IGFiNDE0NGVhMWYxMS4uMTMyMmUyOWJjMzdhIDEw
+MDY0NA0KPiAtLS0gYS9kcml2ZXJzL21pc2MvYXRtZWwtc3NjLmMNCj4gKysrIGIvZHJpdmVycy9t
+aXNjL2F0bWVsLXNzYy5jDQo+IEBAIC0yMTAsNiArMjEwLDE1IEBAIHN0YXRpYyBpbnQgc3NjX3By
+b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCQlzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7DQo+ICAgCQlzc2MtPmNsa19mcm9tX3JrX3BpbiA9
+DQo+ICAgCQkJb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiYXRtZWwsY2xrLWZyb20tcmstcGlu
+Iik7DQo+ICsJCXNzYy0+bHJjbGtfZnJvbV90Zl9waW4gPQ0KPiArCQkJb2ZfcHJvcGVydHlfcmVh
+ZF9ib29sKG5wLCAiYXRtZWwsbHJjbGstZnJvbS10Zi1waW4iKTsNCj4gKwkJc3NjLT5scmNsa19m
+cm9tX3JmX3BpbiA9DQo+ICsJCQlvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJhdG1lbCxscmNs
+ay1mcm9tLXJmLXBpbiIpOw0KPiArDQo+ICsJCWlmIChzc2MtPmxyY2xrX2Zyb21fdGZfcGluICYm
+IHNzYy0+bHJjbGtfZnJvbV9yZl9waW4pIHsNCj4gKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImJv
+dGggTFJDTEsgZnJvbSBSSy9USyBvcHRpb25zIGZvdW5kIGluIERUIG5vZGUiKTsNCj4gKwkJCXJl
+dHVybiAtRUlOVkFMOw0KPiArCQl9DQo+ICAgCX0NCj4gICANCj4gICAJcmVncyA9IHBsYXRmb3Jt
+X2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQo+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L2F0bWVsLXNzYy5oIGIvaW5jbHVkZS9saW51eC9hdG1lbC1zc2MuaA0KPiBp
+bmRleCA2MDkxZDJhYmMxZWIuLmZiZTFjMmZmYWE4MSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9s
+aW51eC9hdG1lbC1zc2MuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2F0bWVsLXNzYy5oDQo+IEBA
+IC0yMSw2ICsyMSw4IEBAIHN0cnVjdCBzc2NfZGV2aWNlIHsNCj4gICAJaW50CQkJdXNlcjsNCj4g
+ICAJaW50CQkJaXJxOw0KPiAgIAlib29sCQkJY2xrX2Zyb21fcmtfcGluOw0KPiArCWJvb2wJCQls
+cmNsa19mcm9tX3RmX3BpbjsNCj4gKwlib29sCQkJbHJjbGtfZnJvbV9yZl9waW47DQo+ICAgCWJv
+b2wJCQlzb3VuZF9kYWk7DQo+ICAgfTsNCj4gICANCj4gDQoNCg==
