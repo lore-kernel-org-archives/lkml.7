@@ -2,123 +2,117 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90E9C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A77C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1682080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:45:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bdX927/h"
+	by mail.kernel.org (Postfix) with ESMTP id 4D8F62080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfHZHpN (ORCPT
+        id S1730296AbfHZHpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:45:13 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52422 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbfHZHpM (ORCPT
+        Mon, 26 Aug 2019 03:45:25 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:51375 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfHZHpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:45:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FqJ6xvyn0LHQ16MKsazT2HhX3KxiVzyDvsY2B23Ctso=; b=bdX927/h7yS5b1qg30jd4ATTN
-        X998dcLFf2XLF3GhMdnEPUlpSbM/iRxAGrhpx+yvAcP6BXLmbwDijPz2wcP/JwkDHBUjSbZxoDB+3
-        YQ57G9VNts3H7N7la3on6VnVzaxdmSveaKRWl58IAtaq38KY9/FnISbhc9828VnPKrpWSuveuwCsf
-        LLkKN5ECiFgMtCQvCGf3g2FcMbmezoDuCh0pBTcRFNTS/Q3Cy+gP7YmApuR0lGoAMiLT59cXHHtB4
-        IueRhEqDIVavy7Y4upqvIZAVIkf6Nx08E5ArJ5fpMQa79c0XUnLbHIWxJnMajZebul2t7vd6teTi+
-        wxeuxTAhA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i29g9-00028n-7H; Mon, 26 Aug 2019 07:44:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4A7803070F4;
-        Mon, 26 Aug 2019 09:44:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A84BA20B33552; Mon, 26 Aug 2019 09:44:37 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 09:44:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 05/11] ftrace: create memcache for hash entries
-Message-ID: <20190826074437.GM2369@hirez.programming.kicks-ass.net>
-References: <20190825132330.5015-1-changbin.du@gmail.com>
- <20190825132330.5015-6-changbin.du@gmail.com>
+        Mon, 26 Aug 2019 03:45:24 -0400
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 49EC320000C;
+        Mon, 26 Aug 2019 07:45:20 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 09:46:51 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] Documentation: Document v4l2_ctrl_new area
+Message-ID: <20190826074651.lzp6ofrrsz64alx5@uno.localdomain>
+References: <20190823123737.7774-1-ribalda@kernel.org>
+ <20190823123737.7774-6-ribalda@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hvngfzjduokv7sbh"
 Content-Disposition: inline
-In-Reply-To: <20190825132330.5015-6-changbin.du@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190823123737.7774-6-ribalda@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 09:23:24PM +0800, Changbin Du wrote:
-> When CONFIG_FTRACE_FUNC_PROTOTYPE is enabled, thousands of
-> ftrace_func_entry instances are created. So create a dedicated
-> memcache to enhance performance.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+
+--hvngfzjduokv7sbh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Ricardo,
+
+On Fri, Aug 23, 2019 at 02:37:36PM +0200, Ricardo Ribalda Delgado wrote:
+> Helper for creating area controls.
+>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+
+With this squashed on 5/7 or separated if we want documentation
+changes to get in separately
+
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+  j
+
 > ---
->  kernel/trace/ftrace.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index a314f0768b2c..cfcb8dad93ea 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -94,6 +94,8 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
->  /* What to set function_trace_op to */
->  static struct ftrace_ops *set_function_trace_op;
->  
-> +struct kmem_cache *hash_entry_cache;
+>  Documentation/media/kapi/v4l2-controls.rst | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/media/kapi/v4l2-controls.rst
+> index ebe2a55908be..656e9428f6a6 100644
+> --- a/Documentation/media/kapi/v4l2-controls.rst
+> +++ b/Documentation/media/kapi/v4l2-controls.rst
+> @@ -149,6 +149,15 @@ Integer menu controls with a driver specific menu can be added by calling
+>  			const struct v4l2_ctrl_ops *ops,
+>  			u32 id, s32 max, s32 def, const s64 *qmenu_int);
+>
+> +Area controls can be added by calling
+> +:c:func:`v4l2_ctrl_new_area`:
 > +
->  static bool ftrace_pids_enabled(struct ftrace_ops *ops)
->  {
->  	struct trace_array *tr;
-> @@ -1169,7 +1171,7 @@ static int add_hash_entry(struct ftrace_hash *hash, unsigned long ip,
->  {
->  	struct ftrace_func_entry *entry;
->  
-> -	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
-> +	entry = kmem_cache_alloc(hash_entry_cache, GFP_KERNEL);
->  	if (!entry)
->  		return -ENOMEM;
->  
-> @@ -6153,6 +6155,15 @@ void __init ftrace_init(void)
->  	if (ret)
->  		goto failed;
->  
-> +	hash_entry_cache = kmem_cache_create("ftrace-hash",
-> +					     sizeof(struct ftrace_func_entry),
-> +					     sizeof(struct ftrace_func_entry),
-> +					     0, NULL);
-> +	if (!hash_entry_cache) {
-> +		pr_err("failed to create ftrace hash entry cache\n");
-> +		goto failed;
-> +	}
+> +.. code-block:: c
+> +
+> +	struct v4l2_ctrl *v4l2_ctrl_new_area(struct v4l2_ctrl_handler *hdl,
+> +			const struct v4l2_ctrl_ops *ops,
+> +			u32 id, const struct v4l2_area *area);
+> +
+>  These functions are typically called right after the
+>  :c:func:`v4l2_ctrl_handler_init`:
+>
+> --
+> 2.23.0.rc1
+>
 
-Wait what; you already have then in the binary image, now you're
-allocating extra memory for each of them?
+--hvngfzjduokv7sbh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Did you look at what ORC does? Is the binary search really not fast
-enough?
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jjmoACgkQcjQGjxah
+VjxNCxAAmluieEHUxnZenyuz4HyrtOEFx3tSgMMvq7J1UImMM0McOWxPv36m2pux
+Vs6yKn/yxGU5WPxwcYRO0oX5UrbZeZtUomYk0Ls9hi4eNbeDx8e/QL0/GPeTB74J
+fUOAXn+w5aOvywm4ujxGroItfWkYfCcem3KCCktOJzPDQOrL6JjyCNcqJCLlrrTJ
+2JOYF/dIp1Ib5TdpJXv8ioApYkXTcX2ni/Jknn8mikn5cTfT49jo6D4EwaUL28YE
+45w46F0xN2gJwLz27RIL9lHIiuVG4/Ii/sEd+uP4wUBn8cNCS2YLTnrzSKHEw2lL
+pxwZmGnR/iv5D8HKlvDwV/9IdHAfBz7QR7CuFGvZq/MKtzKKu6X1VfxQ/iX4nKrC
+DKI9ZRYCYKI0xewiaU163XhiNdIb18Jq2GeheVZMpFHof2gzipsCgY/urxTH4DUR
+DTpiB8DSEQdrkvKOd9WrbgasnmyB5TX0tnNag0FYVoAJ7Z3OgoHNMoglTGMmxZQC
+QwTeXapYZqg9TqXC7SjeG+9PyREpdW9ETLKdNo1bLzdj52fPG0B4es2dUHyWnEYz
+CrcyIeSLjIBSd7waNwGku4kg4PCXWNuHZgLnNhCMIDVEl48H/W+fLpZtm469p+vg
+RfhPrVmfoXGdG1WsJFfhBPgdbQNmZVEcOnnBfyYiMcK8177xyl0=
+=cxJO
+-----END PGP SIGNATURE-----
+
+--hvngfzjduokv7sbh--
