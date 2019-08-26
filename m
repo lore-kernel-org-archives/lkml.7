@@ -2,155 +2,92 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDF0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B44C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63982080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8552184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566841178;
+	bh=vhvUfinBuSpm31ERs791ilat2rMccKc/GvBF87f6fuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ylDKb8JrXZj+d+tAbNjf4oHqVH66+t1Zyk5OSUTT6klbQit1lq1Ou/2nfBtuqRTnj
+	 f1kb1MUhaei6qluBw7YyMBwSi5a5kwJ+N//iSQhbToREFpSgja9gvVWRFaZkRquAwY
+	 xHqLldeukyAIy3PyXqaI2yqwPzob2xGcCNMHDaZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfHZRjc (ORCPT
+        id S2387439AbfHZRjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:39:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54772 "EHLO mga02.intel.com"
+        Mon, 26 Aug 2019 13:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733219AbfHZRjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:39:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 10:39:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="355499141"
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by orsmga005.jf.intel.com with ESMTP; 26 Aug 2019 10:39:13 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency clk support for EHL & TGL
-Date:   Tue, 27 Aug 2019 09:38:11 +0800
-Message-Id: <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
-References: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
+        id S1731986AbfHZRjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:39:35 -0400
+Received: from localhost (unknown [122.178.200.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B4D2080C;
+        Mon, 26 Aug 2019 17:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566841175;
+        bh=vhvUfinBuSpm31ERs791ilat2rMccKc/GvBF87f6fuM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TJ9aMvddrr4mCu9l3R/JGImtMK12IkD2AcSahL1RwBX/J8vH30u2zbXRbrC7YQrQr
+         6LikbONFNnGjjLjsDpgaSqGg+qOg7dLoXZceMYKcbNRxUOoNvYP1PDdDrC+fRKtoUh
+         MtYV36bW8phNflGVDgBMeAEZZ95EbXmqL4saCNDA=
+Date:   Mon, 26 Aug 2019 23:08:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sm8150: Update parent clock for rpmhcc
+Message-ID: <20190826173825.GJ2672@vkoul-mobl>
+References: <20190822170533.8056-1-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822170533.8056-1-vkoul@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EHL DW EQOS is running on a 200MHz clock. Setting up stmmac-clk,
-ptp clock and ptp_max_adj to 200MHz.
+On 22-08-19, 22:35, Vinod Koul wrote:
+> Since rphmcc expects the parent clock name as 'xo_board', update the
+> parent clock name.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 379c40b9a52f..f92c590fd3dc 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -650,7 +650,7 @@
+>  			rpmhcc: clock-controller {
+>  				compatible = "qcom,sm8150-rpmh-clk";
+>  				#clock-cells = <1>;
+> -				clock-names = "xo";
+> +				clock-names = "xo_board";
 
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 21 +++++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c |  3 +++
- include/linux/stmmac.h                           |  1 +
- 3 files changed, 25 insertions(+)
+With the v5 of the rpmh changes we dont need this, so please drop this
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index e969dc9bb9f0..20906287b6d4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -9,6 +9,7 @@
-   Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
- *******************************************************************************/
- 
-+#include <linux/clk-provider.h>
- #include <linux/pci.h>
- #include <linux/dmi.h>
- 
-@@ -174,6 +175,19 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
- 	plat->axi->axi_blen[1] = 8;
- 	plat->axi->axi_blen[2] = 16;
- 
-+	plat->ptp_max_adj = plat->clk_ptp_rate;
-+
-+	/* Set system clock */
-+	plat->stmmac_clk = clk_register_fixed_rate(&pdev->dev,
-+						   "stmmac-clk", NULL, 0,
-+						   plat->clk_ptp_rate);
-+
-+	if (IS_ERR(plat->stmmac_clk)) {
-+		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
-+		plat->stmmac_clk = NULL;
-+	}
-+	clk_prepare_enable(plat->stmmac_clk);
-+
- 	/* Set default value for multicast hash bins */
- 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
- 
-@@ -193,6 +207,7 @@ static int ehl_common_data(struct pci_dev *pdev,
- 
- 	plat->rx_queues_to_use = 8;
- 	plat->tx_queues_to_use = 8;
-+	plat->clk_ptp_rate = 200000000;
- 	ret = intel_mgbe_common_data(pdev, plat);
- 	if (ret)
- 		return ret;
-@@ -233,6 +248,7 @@ static int tgl_common_data(struct pci_dev *pdev,
- 
- 	plat->rx_queues_to_use = 6;
- 	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 200000000;
- 	ret = intel_mgbe_common_data(pdev, plat);
- 	if (ret)
- 		return ret;
-@@ -438,10 +454,15 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
-  */
- static void stmmac_pci_remove(struct pci_dev *pdev)
- {
-+	struct net_device *ndev = dev_get_drvdata(&pdev->dev);
-+	struct stmmac_priv *priv = netdev_priv(ndev);
- 	int i;
- 
- 	stmmac_dvr_remove(&pdev->dev);
- 
-+	if (priv->plat->stmmac_clk)
-+		clk_unregister_fixed_rate(priv->plat->stmmac_clk);
-+
- 	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
- 			continue;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index c48224973a37..173493db038c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -194,6 +194,9 @@ void stmmac_ptp_register(struct stmmac_priv *priv)
- 		priv->pps[i].available = true;
- 	}
- 
-+	if (priv->plat->ptp_max_adj)
-+		stmmac_ptp_clock_ops.max_adj = priv->plat->ptp_max_adj;
-+
- 	stmmac_ptp_clock_ops.n_per_out = priv->dma_cap.pps_out_num;
- 
- 	spin_lock_init(&priv->ptp_lock);
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 5cc6b6faf359..7ad7ae35cf88 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -168,6 +168,7 @@ struct plat_stmmacenet_data {
- 	struct clk *clk_ptp_ref;
- 	unsigned int clk_ptp_rate;
- 	unsigned int clk_ref_rate;
-+	s32 ptp_max_adj;
- 	struct reset_control *stmmac_rst;
- 	struct stmmac_axi *axi;
- 	int has_gmac4;
+>  				clocks = <&xo_board>;
+>  			};
+>  		};
+> -- 
+> 2.20.1
+
 -- 
-1.9.1
-
+~Vinod
