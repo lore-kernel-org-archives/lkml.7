@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D0AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F397EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805132087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2AF2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfHZIcf (ORCPT
+        id S1729921AbfHZIce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:32:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:55345 "EHLO mga06.intel.com"
+        Mon, 26 Aug 2019 04:32:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:42753 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfHZIc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729841AbfHZIc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 26 Aug 2019 04:32:28 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:32:27 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:32:27 -0700
 X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="187527581"
+   d="scan'208";a="263867644"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:32:26 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:32:25 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id B16BF20B4E;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 95CE220B47;
         Mon, 26 Aug 2019 11:32:23 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i2APB-0002KK-7k; Mon, 26 Aug 2019 11:31:13 +0300
+        id 1i2APB-0002KB-3y; Mon, 26 Aug 2019 11:31:13 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     linux-acpi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 4/5] media: i2c: imx319: Support probe while the device is off
-Date:   Mon, 26 Aug 2019 11:31:11 +0300
-Message-Id: <20190826083112.8888-5-sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 1/5] ACPI: Enable driver and firmware hints to control power at probe time
+Date:   Mon, 26 Aug 2019 11:31:08 +0300
+Message-Id: <20190826083112.8888-2-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190826083112.8888-1-sakari.ailus@linux.intel.com>
 References: <20190826083112.8888-1-sakari.ailus@linux.intel.com>
@@ -50,80 +50,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajmohan Mani <rajmohan.mani@intel.com>
+Allow drivers and firmware tell ACPI that there's no need to power on a
+device for probe. This requires both a hint from the firmware as well as
+an indication from a driver to leave the device off.
 
-Tell ACPI device PM code that the driver supports the device being powered
-off when the driver's probe function is entered.
-
-Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/imx319.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/acpi/device_pm.c | 15 +++++++++++++--
+ include/linux/device.h   |  7 +++++++
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/imx319.c b/drivers/media/i2c/imx319.c
-index 17c2e4b41221e..1a01946f4d5bf 100644
---- a/drivers/media/i2c/imx319.c
-+++ b/drivers/media/i2c/imx319.c
-@@ -2424,6 +2424,7 @@ static struct imx319_hwcfg *imx319_get_hwcfg(struct device *dev)
- static int imx319_probe(struct i2c_client *client)
- {
- 	struct imx319 *imx319;
-+	bool low_power;
- 	int ret;
- 	u32 i;
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index f616b16c1f0be..adcdf78ce4de8 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1276,7 +1276,12 @@ static void acpi_dev_pm_detach(struct device *dev, bool power_off)
+ 	if (adev && dev->pm_domain == &acpi_general_pm_domain) {
+ 		dev_pm_domain_set(dev, NULL);
+ 		acpi_remove_pm_notifier(adev);
+-		if (power_off) {
++		if (power_off
++#ifdef CONFIG_PM
++		    && !(dev->driver->probe_low_power &&
++			 device_property_present(dev, "probe-low-power"))
++#endif
++			) {
+ 			/*
+ 			 * If the device's PM QoS resume latency limit or flags
+ 			 * have been exposed to user space, they have to be
+@@ -1324,7 +1329,13 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
  
-@@ -2436,11 +2437,14 @@ static int imx319_probe(struct i2c_client *client)
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&imx319->sd, client, &imx319_subdev_ops);
- 
--	/* Check module identity */
--	ret = imx319_identify_module(imx319);
--	if (ret) {
--		dev_err(&client->dev, "failed to find sensor: %d", ret);
--		goto error_probe;
-+	low_power = acpi_dev_low_power_state_probe(&client->dev);
-+	if (!low_power) {
-+		/* Check module identity */
-+		ret = imx319_identify_module(imx319);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to find sensor: %d", ret);
-+			goto error_probe;
-+		}
+ 	acpi_add_pm_notifier(adev, dev, acpi_pm_notify_work_func);
+ 	dev_pm_domain_set(dev, &acpi_general_pm_domain);
+-	if (power_on) {
++
++	if (power_on
++#ifdef CONFIG_PM
++	    && !(dev->driver->probe_low_power &&
++		 device_property_present(dev, "probe-low-power"))
++#endif
++		) {
+ 		acpi_dev_pm_full_power(adev);
+ 		acpi_device_wakeup_disable(adev);
  	}
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 6717adee33f01..4bc0ea4a3201a 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -248,6 +248,12 @@ enum probe_type {
+  * @owner:	The module owner.
+  * @mod_name:	Used for built-in modules.
+  * @suppress_bind_attrs: Disables bind/unbind via sysfs.
++ * @probe_low_power: The driver supports its probe function being called while
++ *		     the device is in a low power state, independently of the
++ *		     expected behaviour on combination of a given bus and
++ *		     firmware interface etc. The driver is responsible for
++ *		     powering the device on using runtime PM in such case.
++ *		     This configuration has no effect if CONFIG_PM is disabled.
+  * @probe_type:	Type of the probe (synchronous or asynchronous) to use.
+  * @of_match_table: The open firmware table.
+  * @acpi_match_table: The ACPI match table.
+@@ -285,6 +291,7 @@ struct device_driver {
+ 	const char		*mod_name;	/* used for built-in modules */
  
- 	imx319->hwcfg = imx319_get_hwcfg(&client->dev);
-@@ -2493,10 +2497,10 @@ static int imx319_probe(struct i2c_client *client)
- 		goto error_media_entity;
+ 	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
++	bool probe_low_power;
+ 	enum probe_type probe_type;
  
- 	/*
--	 * Device is already turned on by i2c-core with ACPI domain PM.
--	 * Enable runtime PM and turn off the device.
-+	 * Don't set the device's state to active if it's in a low power state.
- 	 */
--	pm_runtime_set_active(&client->dev);
-+	if (!low_power)
-+		pm_runtime_set_active(&client->dev);
- 	pm_runtime_enable(&client->dev);
- 	pm_runtime_idle(&client->dev);
- 
-@@ -2536,7 +2540,7 @@ static const struct dev_pm_ops imx319_pm_ops = {
- };
- 
- static const struct acpi_device_id imx319_acpi_ids[] = {
--	{ "SONY319A" },
-+	{ "SONY319A", },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(acpi, imx319_acpi_ids);
-@@ -2544,6 +2548,7 @@ MODULE_DEVICE_TABLE(acpi, imx319_acpi_ids);
- static struct i2c_driver imx319_i2c_driver = {
- 	.driver = {
- 		.name = "imx319",
-+		.probe_low_power = true,
- 		.pm = &imx319_pm_ops,
- 		.acpi_match_table = ACPI_PTR(imx319_acpi_ids),
- 	},
+ 	const struct of_device_id	*of_match_table;
 -- 
 2.20.1
 
