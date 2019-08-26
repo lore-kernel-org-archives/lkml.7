@@ -2,162 +2,98 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13199C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E956C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26812184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6F72184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="BhBSgTH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbfHZUmq (ORCPT
+        id S1730167AbfHZUnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:42:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56742 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727219AbfHZUmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:42:46 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4532D281D1;
-        Mon, 26 Aug 2019 20:42:45 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-6.gru2.redhat.com [10.97.112.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 962026092D;
-        Mon, 26 Aug 2019 20:42:44 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id DF559105115;
-        Mon, 26 Aug 2019 17:40:57 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x7QKeped025832;
-        Mon, 26 Aug 2019 17:40:51 -0300
-Date:   Mon, 26 Aug 2019 17:40:50 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
- dedicated physical CPUs are available
-Message-ID: <20190826204045.GA24697@amt.cnet>
-References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
- <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
- <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
- <20190803202058.GA9316@amt.cnet>
- <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+        Mon, 26 Aug 2019 16:43:07 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39734 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbfHZUnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:43:06 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x3so13339880lfn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p1NZAj4MoRkEkLRbyMnIKojmRRt6i7vvfvZf586VwIo=;
+        b=BhBSgTH8xbSi4yH5k6ZClji6uofBcvgRFuCrXQ+CfzrGpCHRlBrmOUJoIDPK1Gut9A
+         WeahJGrJaNFNJwh0c/HgVZ5jPoTI/vpzov6ASOuJQEtACsUmt+Beyil6eR8J/Sss3A87
+         OGpnVux86xYACb9VXRrwuzhiAyIqJfCWBBHWywTueMKLM8lD7uDSxeV8QSQ9hDqpCFUd
+         bfkaSEWpK6hDVV0fDEMpS1NHcTuH8tbbhqk/7kWxtF7SXHZ1LpnYNJph7ydAOBf15ESd
+         u7M9Rxl/8fsyV5YrpZ3WWzTS4/AYyQrC5ytQBACXDLrNCEDWRjQOZdMUFw9l8YZq0pXH
+         N87A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p1NZAj4MoRkEkLRbyMnIKojmRRt6i7vvfvZf586VwIo=;
+        b=axneNMGSBRdDPCSg8BVm78U4bzbOFk/KUlYRBkXBwuEbXndRXtbfQmuQmuwconutT6
+         so5UkNC0lolPgar/zh1A4xgPwoWWQOlA2wrnLzaLGmkQ84uX+cwXUAK8cXB/6pndpTrl
+         CwkY0lA87EzjclfPzqlNnp1wnb28EJo+Nlgg4WAr9Wm7UkMYjlKLmus01at6iEQmDj7W
+         p9Jfcdg9bKWNcrrjJZmMBg5SL8fET1zOfbr7uX76lkWkpqZduawPoIVCAtJEbW6MJcSN
+         TBonIVR5hogbBeO/yIanTbyHiZlpsw4LIK/PziQNs8vOnjbMD4U5YL/Ax/9bn4rdUV7I
+         podg==
+X-Gm-Message-State: APjAAAW/a9JcL7TPSgxXxtWP2wsVyhK1LsLKqGJHhmEy0n0V3UsQxVSY
+        9dJP+iVIykO37G0bgUjU1Eg6D5WakiqlSkg2tkEgX/gVDQ==
+X-Google-Smtp-Source: APXvYqw98hCeYYBXk4YZHX6MIRcUUU+QfmECiO74pTKPAWw5m13mQig24osCxIldeAW+pbY5W0hdOp3iRnl5sSj14J4=
+X-Received: by 2002:ac2:4474:: with SMTP id y20mr2537810lfl.31.1566852183926;
+ Mon, 26 Aug 2019 13:43:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 26 Aug 2019 20:42:45 +0000 (UTC)
+References: <4997df37-4a80-5cf5-effc-0a6f040c4528@huawei.com>
+ <CAHC9VhS_DCBRX6kkmiSYBzq+ELN2AYRypRN6vR_J1+JOi2FDvw@mail.gmail.com> <ce8efa9d-f2b6-5adc-0442-c73e632c6903@huawei.com>
+In-Reply-To: <ce8efa9d-f2b6-5adc-0442-c73e632c6903@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 26 Aug 2019 16:42:52 -0400
+Message-ID: <CAHC9VhS8Rq8J9MBUvqNeEO9pQRzx7mT=EfDagw=MQ2oO8jHbyw@mail.gmail.com>
+Subject: Re: [Question] audit_names use after delete in audit_filter_inodes
+To:     Chen Wandun <chenwandun@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-audit@redhat.com,
+        Eric Paris <eparis@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
-> On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+On Thu, Aug 22, 2019 at 3:22 AM Chen Wandun <chenwandun@huawei.com> wrote:
+> On 2019/8/21 23:36, Paul Moore wrote:
+> > On Wed, Aug 21, 2019 at 5:31 AM Chen Wandun <chenwandun@huawei.com> wrote:
+> >>
+> >> Hi,
+> >> Recently, I hit a use after delete in audit_filter_inodes,
 > >
-> > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
-> > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
-> > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
-> > > >> From: Wanpeng Li <wanpengli@tencent.com>
-> > > >>
-> > > >> The downside of guest side polling is that polling is performed even
-> > > >> with other runnable tasks in the host. However, even if poll in kvm
-> > > >> can aware whether or not other runnable tasks in the same pCPU, it
-> > > >> can still incur extra overhead in over-subscribe scenario. Now we can
-> > > >> just enable guest polling when dedicated pCPUs are available.
-> > > >>
-> > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > >
-> > > > Paolo, Marcelo, any comments?
-> > >
-> > > Yes, it's a good idea.
-> > >
-> > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > >
-> > > Paolo
+> > ...
 > >
-> 
-> Hi Marcelo,
-> 
-> Sorry for the late response.
-> 
-> > I think KVM_HINTS_REALTIME is being abused somewhat.
-> > It has no clear meaning and used in different locations
-> > for different purposes.
-> 
-> ================== ============ =================================
-> KVM_HINTS_REALTIME 0                      guest checks this feature bit to
-> 
-> determine that vCPUs are never
-> 
-> preempted for an unlimited time
-
-Unlimited time means infinite time, or unlimited time means 
-10s ? 1s ?
-
-The previous definition was much better IMO: HINTS_DEDICATED.
-
-
-> allowing optimizations
-> ================== ============ =================================
-> 
-> Now it disables pv queued spinlock, 
-
-OK. 
-
-> pv tlb shootdown, 
-
-OK.
-
-> pv sched yield
-
-"The idea is from Xen, when sending a call-function IPI-many to vCPUs,
-yield if any of the IPI target vCPUs was preempted. 17% performance
-increasement of ebizzy benchmark can be observed in an over-subscribe
-environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
-IPI-many since call-function is not easy to be trigged by userspace
-workload)."
-
-This can probably hurt if vcpus are rarely preempted. 
-
-> which are not expected present in vCPUs are never preempted for an
-> unlimited time scenario.
-> 
+> >> the call stack is below:
+> >> [321315.077117] CPU: 6 PID: 8944 Comm: DefSch0100 Tainted: G           OE  ----V-------   3.10.0-327.62.59.83.w75.x86_64 #1
+> >> [321315.077117] Hardware name: OpenStack Foundation OpenStack Nova, BIOS rel-1.8.1-0-g4adadbd-20170107_142945-9_64_246_229 04/01/2014
 > >
-> > For example, i think that using pv queued spinlocks and
-> > haltpoll is a desired scenario, which the patch below disallows.
-> 
-> So even if dedicated pCPU is available, pv queued spinlocks should
-> still be chose if something like vhost-kthreads are used instead of
-> DPDK/vhost-user. 
+> > It looks like this is a vendor kernel and not an upstream kernel, yes?
+>
+> I analysed the upstream kernel about audit, and found there is no significant change
+> in audit_names add/read/delete since v3.10.
 
-Can't you enable the individual features you need for optimizing 
-the overcommitted case? This is how things have been done historically:
-If a new feature is available, you enable it to get the desired
-performance. x2apic, invariant-tsc, cpuidle haltpoll...
+The number of changes in a Linux v3.10 based distro kernel and a
+modern upstream are quite significant, regardless of what you might
+see by comparing a limited number of functions/structs.  I once again
+suggest you contact your distribution provider for support, or move to
+a modern Linux kernel so that upstream can better understand your
+problem.
 
-So in your case: enable pv schedyield, enable pv tlb shootdown.
-
-> kvm adaptive halt-polling will compete with
-> vhost-kthreads, however, poll in guest unaware other runnable tasks in
-> the host which will defeat vhost-kthreads.
-
-It depends on how much work vhost-kthreads needs to do, how successful 
-halt-poll in the guest is, and what improvement halt-polling brings.
-The amount of polling will be reduced to zero if polling 
-is not successful.
-
+-- 
+paul moore
+www.paul-moore.com
