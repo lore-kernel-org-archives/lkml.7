@@ -2,130 +2,119 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FFFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1404FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D542184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566858774;
-	bh=DO8QNLLXuCDlnGyxGga2q7nT+2QZpEapg80kfoCUTb0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=TBsA3dSXYUoSu3EGm1dq8mqjd72/5GwMfME1AhsxMQQKBGID0P/EOGc0/Y3Zma6Mv
-	 pX+HTWnvHE1Y7OBvPnZ8bfOtVGX4Z5HPGlQJD8G0y9RvmouCXF9hz0c8gFsjNcehvI
-	 014BBm3hB2NyWBw/hAVHRYuwV8zIfNFWKccM0lBI=
+	by mail.kernel.org (Postfix) with ESMTP id D4786217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irvfEg+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfHZWcx (ORCPT
+        id S1726787AbfHZWfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfHZWcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:32:52 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B54332080C;
-        Mon, 26 Aug 2019 22:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566858771;
-        bh=DO8QNLLXuCDlnGyxGga2q7nT+2QZpEapg80kfoCUTb0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=owf/BiTUrboc7LN0iyK021tz2vbOV4wCO/YUz67KZiA66ulPnoWUOAlKw45HNADpH
-         73LUycoZ00uIMyPUTgFifB8zSuJ0pRQLAanh4ke9L0NOGF7Jbe1QZ34j/vrqTNguei
-         TmIXCAjavUN4eJvxlI3XfRcD+idUcz1ix7SpI+Zg=
-Subject: Re: Kernel 5.2.8 - au0828 - Tuner Is Busy
-To:     Nathan Royce <nroycea+kernel@gmail.com>
-Cc:     Brad Love <brad@nextdimension.cc>, sean@mess.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <CALaQ_hruPmgnE5yh_MJLLZ_7sPNEnzX8H-WfR=fBvcfEzfG9Fg@mail.gmail.com>
- <e616d881-25e2-c295-2a98-b51c8cbcbc81@nextdimension.cc>
- <CALaQ_hqEZ-kco1esyB4mk0z9Q9Xt1XZsgYKR7gSdF7COERKoOA@mail.gmail.com>
- <eada38a3-258b-52ff-94a7-b8877899267e@kernel.org>
- <da6a1b65-cbe5-4e5e-d61c-43644a23da34@kernel.org>
- <CALaQ_hrPZ7LMBvuHnCLayxHoVFi5U0gtxF-33-ehR=phRs3D5A@mail.gmail.com>
- <94bfd12e-e9d4-1e6a-a18f-742e251f5cd9@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <4b3b5bf1-7ca0-2c40-a47f-1fe0cf89a4da@kernel.org>
-Date:   Mon, 26 Aug 2019 16:32:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 18:35:09 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34772 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfHZWfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:35:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id s21so41524834ioa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TR73dOPLV+Pq/EfAvMPvdl9VXPIGVXlmHtutdowbA8w=;
+        b=irvfEg+oBy3K9i5ph445YDh5/r39NmczOzUV8ARAEH39xs2pKuazZRoL8IZJP565KB
+         GOc/68k8QyEfdgqvdqmMItaEkV1dgxRCAfUZkNHxZkvl/ct2uS7VhGvFTnW+UWomp5u0
+         yQobZ63b6IegbwLLQ8bKDU49irtHmXs5q8J8a79OwT1acMhB+JPQ6dNfEHDzIFXG1jQy
+         inTQiWt+m2Dw2FoBr1U3SZ/bVEWatEX7vus22wc8y/7MF8Zt1Y65+OpffB5hHZFXZZJL
+         mMNcx/fwG3BubuSFgvditqHsYEXMaFQhPXp1TgX0RhrYG40tLkIrSziEej9egv5J833i
+         /EYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TR73dOPLV+Pq/EfAvMPvdl9VXPIGVXlmHtutdowbA8w=;
+        b=foCgTES4JHeHY6lA/I4t0g3jPwPOE+x1KXTOY6ZXTtLnxSqGFL9tvMs5k3mpH1QOjR
+         yVXamiPgOfQhJv3tJhHCGOfKAJarmSrEDOVWNLtgvrv2kJ31M9NjvNhkm1McF6kMU8eO
+         L4ZEpDSnKKO1G2lXZ6RnCz3jPMIYRcZYZYPt+3sx2/bk4pAvn1clriAlnJ61zLqs24Zy
+         ZGcd2OA+PttPw2QpUBYCTdwtQF3mpSj6vloY2fxOvdEEad/x1I5jbYm/DGYBFeAKXPMk
+         xUOvV69c8+5S4tUwP7FT0bmtLxzubaMYHf8jDykOvDi5iX+R/GG622Q8cNw9niUthBSj
+         Ir4w==
+X-Gm-Message-State: APjAAAW4qm8CEi+vtUeFI4lzRUHK1o00/Yk/SJWYxOLQCA+A57vT2yop
+        ORfHQ5xp2Z4NEHbS29bzDO5o9soY4mfwNZYK8B0=
+X-Google-Smtp-Source: APXvYqxHblq6gKSwiBmBchpFPLh6rchETDLBs9SBgl/hgzpq8F2KDv3i9uyZVGR4IejBJ9fgI7IYrCeXxX5X4YjwbF4=
+X-Received: by 2002:a6b:720e:: with SMTP id n14mr22961192ioc.139.1566858907770;
+ Mon, 26 Aug 2019 15:35:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <94bfd12e-e9d4-1e6a-a18f-742e251f5cd9@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190822094657.27483-1-kraxel@redhat.com>
+In-Reply-To: <20190822094657.27483-1-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Mon, 26 Aug 2019 15:34:56 -0700
+Message-ID: <CAPaKu7S_He9RYsxDi0Qco4u=Xnc3FjB5nvFT_Zh+o7pvFzCvRQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/virtio: add plane check
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 7:56 AM, shuah wrote:
-> On 8/20/19 12:58 AM, Nathan Royce wrote:
->> While your mention of quirks-table.h certainly had possibilities, I'm
->> afraid adding the "AU0828_DEVICE(0x05e1, 0x0400, "Hauppauge",
->> "Woodbury")," entry for my tuner did not make any difference regarding
->> the "Tuner is busy. Error -19" message.
->>
->> I don't know if this means anything, but I see
->> https://patchwork.kernel.org/patch/97726/ from 2010 which contains
->> changes for the 0x0400 model. I guess it never got pulled in.
->>
->> Really, it's fine for me just to hang back at v5.1 for a year or two
->> until ATSC 3.0 USB tuners come out at a reasonable price.
->>
-> 
-> Hi Nathan,
-> 
-> The tuner busy error code is ENODEV. It appears some devices aren't
-> created on your system. Would it be possible for you to send me your
-> config and a complete dmesg.
-> 
-> I am curious if /dev/media0 or /dev/media1 present on your system.
-> Not having this could explain the ENODEV you are seeing.
-> 
+On Thu, Aug 22, 2019 at 2:47 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Use drm_atomic_helper_check_plane_state()
+> to sanity check the plane state.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_plane.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> index a492ac3f4a7e..fe5efb2de90d 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> @@ -84,7 +84,22 @@ static const struct drm_plane_funcs virtio_gpu_plane_funcs = {
+>  static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
+>                                          struct drm_plane_state *state)
+>  {
+> -       return 0;
+> +       bool is_cursor = plane->type == DRM_PLANE_TYPE_CURSOR;
+> +       struct drm_crtc_state *crtc_state;
+> +       int ret;
+> +
+> +       if (!state->fb || !state->crtc)
+> +               return 0;
+> +
+> +       crtc_state = drm_atomic_get_crtc_state(state->state, state->crtc);
+> +       if (IS_ERR(crtc_state))
+> +                return PTR_ERR(crtc_state);
+Is drm_atomic_get_new_crtc_state better here?
 
-Thanks for sending the dmesg and config. The difference between the
-two config is you have CONFIG_MEDIA_CONTROLLER_DVB set in the second
-one. This is expected because this is enabled in 5.2 with the changes
-to share resources.
-
-grep MEDIA_CONTROLLER config5115.txt
-CONFIG_MEDIA_CONTROLLER=y
-# CONFIG_MEDIA_CONTROLLER_DVB is not set
-# CONFIG_MEDIA_CONTROLLER_REQUEST_API is not set
-
-grep MEDIA_CONTROLLER config529.txt
-CONFIG_MEDIA_CONTROLLER=y
-CONFIG_MEDIA_CONTROLLER_DVB=y
-# CONFIG_MEDIA_CONTROLLER_REQUEST_API is not set
-CONFIG_SND_USB_AUDIO_USE_MEDIA_CONTROLLER=y
-
-A new code path in DVB is enabled in 5.2 compared to 5.1. What we are
-seeing is somehow the DVB media graph is incomplete. When the enable
-source tries to find the media device that corresponds to the fe entity
-it can't find it and hence the -ENODEV you are seeing.
-
-I would be curious to see what happens if you have disable
-CONFIG_MEDIA_CONTROLLER
-
-I think the problem is in dvb media graph creation on your device and
-unfortunately, I don't have the device to debug the problem.
-
-Will you be able run media-ctl --print-dot on your system and send
-me the media graph. You can find media-ctl tool on
-
-https://git.linuxtv.org/v4l-utils.git/
-
-thanks,
--- Shuah
+> +
+> +       ret = drm_atomic_helper_check_plane_state(state, crtc_state,
+> +                                                 DRM_PLANE_HELPER_NO_SCALING,
+> +                                                 DRM_PLANE_HELPER_NO_SCALING,
+> +                                                 is_cursor, true);
+> +       return ret;
+>  }
+>
+>  static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+> --
+> 2.18.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
