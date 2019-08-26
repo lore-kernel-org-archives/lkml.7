@@ -2,76 +2,249 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66623C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C75DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F522184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377562184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaSlCY4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfHZUkK (ORCPT
+        id S1727487AbfHZUlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:40:10 -0400
-Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:43708
-        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfHZUkJ (ORCPT
+        Mon, 26 Aug 2019 16:41:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37095 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfHZUlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:40:09 -0400
-Received: from list by blaine.gmane.org with local (Exim 4.89)
-        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
-        id 1i2LmZ-000222-Ks
-        for linux-kernel@vger.kernel.org; Mon, 26 Aug 2019 22:40:07 +0200
-X-Injected-Via-Gmane: http://gmane.org/
-To:     linux-kernel@vger.kernel.org
-From:   sbaugh@catern.com
-Subject: Re: [PATCH RESEND v11 7/8] open: openat2(2) syscall
-Date:   Mon, 26 Aug 2019 19:50:50 +0000
-Message-ID: <854l2366zp.fsf@catern.com>
-References: <20190820033406.29796-1-cyphar@cyphar.com>
-        <20190820033406.29796-8-cyphar@cyphar.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-Cancel-Lock: sha1:ym8TD2+JE56rxevrCvTf9T8Ptcg=
-Cc:     linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@ozlabs.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org
+        Mon, 26 Aug 2019 16:41:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z11so16605921wrt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=to:cc:from:subject:openpgp:autocrypt:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=I/Lg/A5kFBhe3BRV2nWQP1rTvdnutEzzbjoUkGqpMbE=;
+        b=KaSlCY4YZ4nEq9CiEoe3wMuVQbHL/Tv6Em+VLxgjCmqDqZCX8brOj9aVHbghymOgvg
+         tGRJhVeVqBfmxubySdR7dju81uO4zcPGgRCE6plnlXXGEbd9xX5U3mi4qx0KhcBudS7Q
+         8e75rTuQge8vZYdiTYgZd5k9bhh2Xds4GIQOEl2yHHIp1w0REBMeLmTkIh7WdjoT9NjV
+         2WXG7Nabk7s4hU1dc6Z7EvIWr5lOUXyBBCu5gmbmYI/+Erkh2WrqwVmsNkAZl2loHgFe
+         lMrdnrK0JcEO7iV8sJAuoldlI5IN0I8HxE9Ab3VjEM0UZKuihjcTmINn5gqqnQh+z2dv
+         vZvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:content-language
+         :content-transfer-encoding;
+        bh=I/Lg/A5kFBhe3BRV2nWQP1rTvdnutEzzbjoUkGqpMbE=;
+        b=Pfj69NHnF0apX6Yf/fx1YbdkgO6HroD0xDxGKgUqOPklmh18F2CJCKSm2y7elfPlTu
+         uZ5YxgWExas4b7RFNkfJXMBctOFxEZwNxEw+u9WbJWca/YPz8SnIgjLEbXCalfeUaRKd
+         7QmA5inj8tvV699/0zfpvkA/oLSyycg6VcB+eVpkohIM3agT19ZfdO5wbG/LF9MVvX4h
+         YjcwHz4roJnx1Yl5exARwNrSh8GwPWlsH+HwYBIIZdeTrsoIZK/2hZguKt8tMjZOE+yU
+         eRciGhTtqYqBjOIcWy3cf8OSsVFx1LC7RuVaHiuielRJywF3AfSddpynbydxe9lZ2+3y
+         ZQyw==
+X-Gm-Message-State: APjAAAVoW37mHerRpBMg8P83Nc3GF8ijG1YLYnoqWOjiAyRpxr3mbTg1
+        Kfy8GNxy+tgLvfc4Y753tVvhpNIVnVM=
+X-Google-Smtp-Source: APXvYqyERStbb2GMh2jXHe/doC59eqKjIKcXj28aSCwtTiMXT1lhFuHK85KVsGANkoeufHXn3nKldA==
+X-Received: by 2002:adf:e5cd:: with SMTP id a13mr23968434wrn.316.1566852076081;
+        Mon, 26 Aug 2019 13:41:16 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab? ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
+        by smtp.googlemail.com with ESMTPSA id u186sm1119255wmu.26.2019.08.26.13.41.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 13:41:15 -0700 (PDT)
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Magnus Damm <damm+renesas@opensource.se>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT PULL] timers drivers v5.5
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
+Date:   Mon, 26 Aug 2019 22:41:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aleksa Sarai <cyphar@cyphar.com> writes:
-> To this end, we introduce the openat2(2) syscall. It provides all of the
-> features of openat(2) through the @how->flags argument, but also
-> also provides a new @how->resolve argument which exposes RESOLVE_* flags
-> that map to our new LOOKUP_* flags. It also eliminates the long-standing
-> ugliness of variadic-open(2) by embedding it in a struct.
+The following changes since commit 08a3c192c93f4359a94bf47971e55b0324b72b8b:
 
-I don't like this usage of a structure in memory to pass arguments that
-would fit in registers. This would be quite inconvenient for me as a
-userspace developer.
+  posix-timers: Prepare for PREEMPT_RT (2019-08-01 20:51:25 +0200)
 
-Others have brought up issues with this: the issue of seccomp, and the
-issue of mismatch between the userspace interface and the kernel
-interface, are the most important for me. I want to add another,
-admittedly somewhat niche, concern.
+are available in the Git repository at:
 
-This interfaces requires a program to allocate memory (even on the
-stack) just to pass arguments to the kernel which could be passed
-without allocating that memory. That makes it more difficult and less
-efficient to use this syscall in any case where memory is not so easily
-allocatable: such as early program startup or assembly, where the stack
-may be limited in size or not even available yet, or when injecting a
-syscall while ptracing.
+  https://git.linaro.org/people/daniel.lezcano/linux.git tags/timers-v5.5
 
-A struct-passing interface was needed for clone, since we ran out of
-registers; but we have not run out of registers yet for openat, so it
-would be nice to avoid this if we can. We can always expand later...
+for you to fetch changes up to befd04abfbe4b933515dddb5659d0744be9dba6a:
+
+  clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
+(2019-08-23 07:38:34 +0200)
+
+----------------------------------------------------------------
+- Remove dev_err() when used with platform_get_irq (Stephen Boyd)
+
+- Add DT binding and new compatible for Allwinner sun4i (Maxime Ripard)
+
+- Register the Atmel tcb clocksource for delays (Alexandre Belloni)
+
+- Add a clock divider for the Freescale imx platforms and new timer node
+  in the DT (Anson Huang)
+
+- Use DIV_ROUND_CLOSEST macro for the Renesas OSTM (Geert Uytterhoeven)
+
+- Fix GENMASK and timer operation for the npcm timer (Avi Fishman)
+
+- Fix timer-of showing an error message when EPROBE_DEFER is
+  returned (Jon Hunter)
+
+- Add new SoC DT binding and match for Renesas timers (Magnus Damm)
+
+----------------------------------------------------------------
+Alexandre Belloni (1):
+      clocksource/drivers/tcb_clksrc: Register delay timer
+
+Anson Huang (3):
+      clocksource/drivers/imx-sysctr: Add internal clock divider handle
+      arm64: dts: imx8mm: Add system counter node
+      arm64: dts: imx8mq: Add system counter node
+
+Avi Fishman (1):
+      clocksource/drivers/npcm: Fix GENMASK and timer operation
+
+Geert Uytterhoeven (1):
+      clocksource/drivers/renesas-ostm: Use DIV_ROUND_CLOSEST() helper
+
+Jon Hunter (2):
+      clocksource/drivers/timer-of: Do not warn on deferred probe
+      clocksource/drivers: Do not warn on probe defer
+
+Magnus Damm (7):
+      dt-bindings: timer: renesas, cmt: Add CMT0234 to sh73a0 and r8a7740
+      dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
+      dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
+      dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
+      dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
+      clocksource/drivers/sh_cmt: r8a7740 and sh73a0 SoC-specific match
+      clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
+
+Maxime Ripard (4):
+      dt-bindings: timer: Convert Allwinner A10 Timer to a schema
+      dt-bindings: timer: Add missing compatibles
+      clocksource: sun4i: Add missing compatibles
+      dt-bindings: timer: Convert Allwinner A13 HSTimer to a schema
+
+Stephen Boyd (1):
+      clocksource: Remove dev_err() usage after platform_get_irq()
+
+ .../bindings/timer/allwinner,sun4i-a10-timer.yaml  | 102
++++++++++++++++++++++
+ .../bindings/timer/allwinner,sun4i-timer.txt       |  19 ----
+ .../bindings/timer/allwinner,sun5i-a13-hstimer.txt |  26 ------
+ .../timer/allwinner,sun5i-a13-hstimer.yaml         |  79 ++++++++++++++++
+ .../devicetree/bindings/timer/renesas,cmt.txt      |  40 ++++----
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi          |   8 ++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi          |   8 ++
+ drivers/clocksource/Kconfig                        |   2 +-
+ drivers/clocksource/em_sti.c                       |   4 +-
+ drivers/clocksource/renesas-ostm.c                 |   2 +-
+ drivers/clocksource/sh_cmt.c                       |  19 +++-
+ drivers/clocksource/sh_tmu.c                       |   5 +-
+ drivers/clocksource/timer-atmel-tcb.c              |  18 ++++
+ drivers/clocksource/timer-imx-sysctr.c             |   5 +
+ drivers/clocksource/timer-npcm7xx.c                |   9 +-
+ drivers/clocksource/timer-of.c                     |   6 +-
+ drivers/clocksource/timer-probe.c                  |   4 +-
+ drivers/clocksource/timer-sun4i.c                  |   4 +
+ 18 files changed, 275 insertions(+), 85 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+ delete mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.txt
+ create mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
