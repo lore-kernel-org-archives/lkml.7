@@ -2,336 +2,100 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D29C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD99C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5C72187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959022184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qI6UsAN/"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fnMzsCTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfHZMUe (ORCPT
+        id S1731955AbfHZMU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:20:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50220 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731850AbfHZMUR (ORCPT
+        Mon, 26 Aug 2019 08:20:58 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36525 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730199AbfHZMU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:20:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5kUQsiS3uD467gtrTClN52przkC4y7zDb6aeiBPxt6c=; b=qI6UsAN/Q2x5oEtT7qd8bYZVoJ
-        UQzcQkWOupYPLgWbN8LwVJD8S3SevnpzjD7BP5Wn5gcS+T2/oVSWQSVleFqnJDtLkWfaj/DEAeWgY
-        5IIciJ7CrKD8eeVo7SgRZR+A11RTts4Zh6hWzi9vjB4pfSnUVwEz52ovKFFTqsAbXWId2pebIK4jm
-        USNlt3Iywysf3K+Zcu/5mR9Ns7CtKYU7Pjts6yeWDuYP+UJ88/GftbgBDpZF5FxeT66CpjbHDxryQ
-        3i9koRVkc7CJcWLhTLOlVJD63fhdT4339L7ejk0eOZBA8lQuVB1E8+5Z6dL02V4xlTiC4+cZJE4jn
-        o7C1/vhQ==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2Dyi-000388-OG; Mon, 26 Aug 2019 12:20:09 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 08/11] swiotlb-xen: simplify cache maintainance
-Date:   Mon, 26 Aug 2019 14:19:41 +0200
-Message-Id: <20190826121944.515-9-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190826121944.515-1-hch@lst.de>
-References: <20190826121944.515-1-hch@lst.de>
+        Mon, 26 Aug 2019 08:20:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z4so17619401qtc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 05:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IInbJuct5ufzKNiytsnk+jMIYv1V6eVTEaTj38ohm3M=;
+        b=fnMzsCTram2mN7X12asMshdyTXllFMcSBIdA21KFh1RFEex2/5FeKlO+9rtE32Hfem
+         jNFRntwunRTt9MR1Ovw/7sG8gRUDu02VVxJVeHApVsYUYSL3ColhOVAIONzU/OwgzIsI
+         Cf+dbVDkOq6orHb9v/8o9ozQW9LemkmRD/qs4cgkUG9GO8bMKSsQ5fVmxRZ8QKmTd/UN
+         cMzUj24siEC0zPzjoKcmIhXTIs2pUPmj3ydsCJXBTyle1aaPAglspzS3pqQgQ9jGMdgs
+         V8/0FEQAaqOhMwcD4fjLClL9PYtQeZh0epvkMiiCdtfvZJMAYEZM7IJ41fzr+ZyQcPqf
+         fuvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IInbJuct5ufzKNiytsnk+jMIYv1V6eVTEaTj38ohm3M=;
+        b=U1SksqcYkL85UC0Q7bYSsaedrCJypdfjQx8g/zEH0ImewA39wlB+qpQ4PeUtKznyuT
+         Lz2YVnHhbUwfeBmXM4TkRNGzM/qk1dQipVRC6hnDv7JT16NEbwqMkSjw29aqf6Zx3952
+         63tQ8vCWUf2goG/FlGoL9tjwm2NwazgbxDtH/Iyrd8JzQ0JgpDJinCTIPY3ilnhzncLN
+         hn1B/1QWG2T8yd0wKG1KQ+2OEEcP3vU5CIyDRUEKOQBsYitG8h10NWsEc3/WHxeimVZf
+         EsV4FyEis3CkYpRpU7uRCblBE/H+hNWD3m2ELN6JKHtBgjq1AxriMdv2W9K4nLrATfKu
+         oelA==
+X-Gm-Message-State: APjAAAXPCXJbDc7BEbu4/tEKvks4z0n8cLVAHJ2O1U+vAnmCLNKu8PJF
+        SECHIp0ti7DcZX1hV6AQiVdyMw==
+X-Google-Smtp-Source: APXvYqz+8moKXNMjENzuAiUz9yUTyRo1T98w+98Tx3SfRXc69ey23f/HpA4QXKYMoXk3ry4w8yOQ3g==
+X-Received: by 2002:ac8:73c7:: with SMTP id v7mr14706237qtp.9.1566822056913;
+        Mon, 26 Aug 2019 05:20:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-216-168.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.216.168])
+        by smtp.gmail.com with ESMTPSA id q6sm6213402qke.109.2019.08.26.05.20.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 26 Aug 2019 05:20:56 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i2DzT-0007A1-Sv; Mon, 26 Aug 2019 09:20:55 -0300
+Date:   Mon, 26 Aug 2019 09:20:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     leon@kernel.org, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] IB/mlx5: Convert to use vm_map_pages_zero()
+Message-ID: <20190826122055.GA27349@ziepe.ca>
+References: <1566713247-23873-1-git-send-email-jrdr.linux@gmail.com>
+ <20190825194354.GC21239@ziepe.ca>
+ <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqt6za5uUSKLMn0E25M1tYG853tpdE-kcoUYHdmby5s4d0JKg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we know we always have the dma-noncoherent.h helpers available
-if we are on an architecture with support for non-coherent devices,
-we can just call them directly, and remove the calls to the dma-direct
-routines, including the fact that we call the dma_direct_map_page
-routines but ignore the value returned from it.  Instead we now have
-Xen wrappers for the arch_sync_dma_for_{device,cpu} helpers that call
-the special Xen versions of those routines for foreign pages.
+On Mon, Aug 26, 2019 at 01:32:09AM +0530, Souptick Joarder wrote:
+> On Mon, Aug 26, 2019 at 1:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Sun, Aug 25, 2019 at 11:37:27AM +0530, Souptick Joarder wrote:
+> > > First, length passed to mmap is checked explicitly against
+> > > PAGE_SIZE.
+> > >
+> > > Second, if vma->vm_pgoff is passed as non zero, it would return
+> > > error. It appears like driver is expecting vma->vm_pgoff to
+> > > be passed as 0 always.
+> >
+> > ? pg_off is not zero
+> 
+> Sorry, I mean, driver has a check against non zero to return error -EOPNOTSUPP
+> which means in true scenario driver is expecting vma->vm_pgoff should be passed
+> as 0.
 
-Note that the new helpers get the physical address passed in addition
-to the dma address to avoid another translation for the local cache
-maintainance.  The pfn_valid checks remain on the dma address as in
-the old code, even if that looks a little funny.
+get_index is masking vm_pgoff, it is not 0
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm/xen/mm.c                        | 64 ++++++----------------
- arch/x86/include/asm/xen/page-coherent.h | 11 ----
- drivers/xen/swiotlb-xen.c                | 20 +++----
- include/xen/arm/page-coherent.h          | 69 ++----------------------
- 4 files changed, 31 insertions(+), 133 deletions(-)
-
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index b7d53415532b..7096652f5a1e 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -61,63 +61,33 @@ static void dma_cache_maint(dma_addr_t handle, size_t size, u32 op)
- 	} while (size);
- }
- 
--static void __xen_dma_page_dev_to_cpu(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir)
-+/*
-+ * Dom0 is mapped 1:1, and while the Linux page can span across multiple Xen
-+ * pages, it is not possible for it to contain a mix of local and foreign Xen
-+ * pages.  Calling pfn_valid on a foreign mfn will always return false, so if
-+ * pfn_valid returns true the pages is local and we can use the native
-+ * dma-direct functions, otherwise we call the Xen specific version.
-+ */
-+void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir)
- {
--	if (dir != DMA_TO_DEVICE)
-+	if (pfn_valid(PFN_DOWN(handle)))
-+		arch_sync_dma_for_cpu(dev, paddr, size, dir);
-+	else if (dir != DMA_TO_DEVICE)
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
- }
- 
--static void __xen_dma_page_cpu_to_dev(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir)
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir)
- {
--	if (dir == DMA_FROM_DEVICE)
-+	if (pfn_valid(PFN_DOWN(handle)))
-+		arch_sync_dma_for_device(dev, paddr, size, dir);
-+	else if (dir == DMA_FROM_DEVICE)
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_INVAL);
- 	else
- 		dma_cache_maint(handle, size, GNTTAB_CACHE_CLEAN);
- }
- 
--void __xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs)
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	if (attrs & DMA_ATTR_SKIP_CPU_SYNC)
--		return;
--
--	__xen_dma_page_cpu_to_dev(hwdev, dev_addr, size, dir);
--}
--
--void __xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir,
--		unsigned long attrs)
--
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	if (attrs & DMA_ATTR_SKIP_CPU_SYNC)
--		return;
--
--	__xen_dma_page_dev_to_cpu(hwdev, handle, size, dir);
--}
--
--void __xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	__xen_dma_page_dev_to_cpu(hwdev, handle, size, dir);
--}
--
--void __xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	if (dev_is_dma_coherent(hwdev))
--		return;
--	__xen_dma_page_cpu_to_dev(hwdev, handle, size, dir);
--}
--
- bool xen_arch_need_swiotlb(struct device *dev,
- 			   phys_addr_t phys,
- 			   dma_addr_t dev_addr)
-diff --git a/arch/x86/include/asm/xen/page-coherent.h b/arch/x86/include/asm/xen/page-coherent.h
-index 8ee33c5edded..c9c8398a31ff 100644
---- a/arch/x86/include/asm/xen/page-coherent.h
-+++ b/arch/x86/include/asm/xen/page-coherent.h
-@@ -2,17 +2,6 @@
- #ifndef _ASM_X86_XEN_PAGE_COHERENT_H
- #define _ASM_X86_XEN_PAGE_COHERENT_H
- 
--#include <asm/page.h>
--#include <linux/dma-mapping.h>
--
--static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs) { }
--
--static inline void xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir,
--		unsigned long attrs) { }
--
- static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
- 		dma_addr_t handle, size_t size, enum dma_data_direction dir) { }
- 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index f9dd4cb6e4b3..a642e284f1e2 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -28,6 +28,7 @@
- 
- #include <linux/memblock.h>
- #include <linux/dma-direct.h>
-+#include <linux/dma-noncoherent.h>
- #include <linux/export.h>
- #include <xen/swiotlb-xen.h>
- #include <xen/page.h>
-@@ -390,6 +391,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
- 	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
- 		return DMA_MAPPING_ERROR;
- 
-+	phys = map;
- 	dev_addr = xen_phys_to_bus(map);
- 
- 	/*
-@@ -401,14 +403,9 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
- 		return DMA_MAPPING_ERROR;
- 	}
- 
--	page = pfn_to_page(map >> PAGE_SHIFT);
--	offset = map & ~PAGE_MASK;
- done:
--	/*
--	 * we are not interested in the dma_addr returned by xen_dma_map_page,
--	 * only in the potential cache flushes executed by the function.
--	 */
--	xen_dma_map_page(dev, page, dev_addr, offset, size, dir, attrs);
-+	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		xen_dma_sync_for_device(dev, dev_addr, phys, size, dir);
- 	return dev_addr;
- }
- 
-@@ -428,7 +425,8 @@ static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
- 
- 	BUG_ON(dir == DMA_NONE);
- 
--	xen_dma_unmap_page(hwdev, dev_addr, size, dir, attrs);
-+	if (!dev_is_dma_coherent(hwdev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		xen_dma_sync_for_cpu(hwdev, dev_addr, paddr, size, dir);
- 
- 	/* NOTE: We use dev_addr here, not paddr! */
- 	if (is_xen_swiotlb_buffer(dev_addr))
-@@ -448,7 +446,8 @@ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
- {
- 	phys_addr_t paddr = xen_bus_to_phys(dma_addr);
- 
--	xen_dma_sync_single_for_cpu(dev, dma_addr, size, dir);
-+	if (!dev_is_dma_coherent(dev))
-+		xen_dma_sync_for_cpu(dev, dma_addr, paddr, size, dir);
- 
- 	if (is_xen_swiotlb_buffer(dma_addr))
- 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
-@@ -463,7 +462,8 @@ xen_swiotlb_sync_single_for_device(struct device *dev, dma_addr_t dma_addr,
- 	if (is_xen_swiotlb_buffer(dma_addr))
- 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_DEVICE);
- 
--	xen_dma_sync_single_for_device(dev, dma_addr, size, dir);
-+	if (!dev_is_dma_coherent(dev))
-+		xen_dma_sync_for_device(dev, dma_addr, paddr, size, dir);
- }
- 
- /*
-diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
-index 07c104dbc21f..635492d41ebe 100644
---- a/include/xen/arm/page-coherent.h
-+++ b/include/xen/arm/page-coherent.h
-@@ -2,70 +2,9 @@
- #ifndef _XEN_ARM_PAGE_COHERENT_H
- #define _XEN_ARM_PAGE_COHERENT_H
- 
--#include <linux/dma-mapping.h>
--#include <asm/page.h>
--
--void __xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs);
--void __xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir,
--		unsigned long attrs);
--void __xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir);
--void __xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir);
--
--static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	unsigned long pfn = PFN_DOWN(handle);
--
--	if (pfn_valid(pfn))
--		dma_direct_sync_single_for_cpu(hwdev, handle, size, dir);
--	else
--		__xen_dma_sync_single_for_cpu(hwdev, handle, size, dir);
--}
--
--static inline void xen_dma_sync_single_for_device(struct device *hwdev,
--		dma_addr_t handle, size_t size, enum dma_data_direction dir)
--{
--	unsigned long pfn = PFN_DOWN(handle);
--	if (pfn_valid(pfn))
--		dma_direct_sync_single_for_device(hwdev, handle, size, dir);
--	else
--		__xen_dma_sync_single_for_device(hwdev, handle, size, dir);
--}
--
--static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
--	     dma_addr_t dev_addr, unsigned long offset, size_t size,
--	     enum dma_data_direction dir, unsigned long attrs)
--{
--	unsigned long pfn = PFN_DOWN(dev_addr);
--
--	/*
--	 * Dom0 is mapped 1:1, and while the Linux page can span across multiple
--	 * Xen pages, it is not possible for it to contain a mix of local and
--	 * foreign Xen pages.  Calling pfn_valid on a foreign mfn will always
--	 * return false, so if pfn_valid returns true the pages is local and we
--	 * can use the native dma-direct functions, otherwise we call the Xen
--	 * specific version.
--	 */
--	if (pfn_valid(pfn))
--		dma_direct_map_page(hwdev, page, offset, size, dir, attrs);
--	else
--		__xen_dma_map_page(hwdev, page, dev_addr, offset, size, dir, attrs);
--}
--
--static inline void xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
--		size_t size, enum dma_data_direction dir, unsigned long attrs)
--{
--	unsigned long pfn = PFN_DOWN(handle);
--
--	if (pfn_valid(pfn))
--		dma_direct_unmap_page(hwdev, handle, size, dir, attrs);
--	else
--		__xen_dma_unmap_page(hwdev, handle, size, dir, attrs);
--}
-+void xen_dma_sync_for_cpu(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
-+void xen_dma_sync_for_device(struct device *dev, dma_addr_t handle,
-+		phys_addr_t paddr, size_t size, enum dma_data_direction dir);
- 
- #endif /* _XEN_ARM_PAGE_COHERENT_H */
--- 
-2.20.1
-
+Jason
