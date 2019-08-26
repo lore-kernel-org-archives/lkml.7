@@ -2,70 +2,135 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA40C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5E3C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2722173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49AC2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DliSNhEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfHZFka (ORCPT
+        id S1729203AbfHZFmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 01:40:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38271 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfHZFka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 01:40:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Aug 2019 22:40:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="355316672"
-Received: from chlopez-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.38.177])
-  by orsmga005.jf.intel.com with ESMTP; 25 Aug 2019 22:40:26 -0700
-Date:   Mon, 26 Aug 2019 08:40:24 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH v2-resend] MAINTAINERS: fix style in KEYS-TRUSTED
- entry
-Message-ID: <20190826054024.fjx3robu464ndvi7@linux.intel.com>
-References: <20190825170015.3199-1-lukas.bulwahn@gmail.com>
+        Mon, 26 Aug 2019 01:42:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42938 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfHZFmN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 01:42:13 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p3so9866895pgb.9;
+        Sun, 25 Aug 2019 22:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LHpOT5PJ300gSASvUTzy+HqNdfPhyWzS2boZy8pqZjM=;
+        b=DliSNhEL24x5j4/FLs380QuOYK/6BCZ4Oi27/6qeazJihR64ZlMNzlitHQfOn6Ooj+
+         ZbXve2POs4o7gvxjVlXXsLEvk/WoX0OUIoa1b0lg01iFIIt3DLrOJirjM1V54dWbKjlG
+         uuPq6GSyMTAxb0o8aFTtrdLB5kxFLcWDISQ74UqUc320aDDi2qYtdT/XzXFZpLuZUH3A
+         jKQp5KBvKPCTt4NC8l6xnHKdky2bqS5tBulste6xWfhdj9EVMCKkw6y0swifGeHxkFZJ
+         WqSEVGPeD+iL7238tUXdXAEBZiyzdgz0WZj52IJ3Y5xj6rcbpAYR23B+9rUxKHhlgAaF
+         7Clw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LHpOT5PJ300gSASvUTzy+HqNdfPhyWzS2boZy8pqZjM=;
+        b=f1HvFf+hxXr/G8eJBVKvVNWWMbTmPKUmfPAv5G91qMyK7oZL/0ld2XDjDRB+IBO+n3
+         Dyee1KKISto74Gk6+aldlrP4a5oJRAMJBtDNKSdY518h5omNeiXMt67t5rtBJV4E3ren
+         rVbTlr9wLbEw7S+IMOhICkNR2zI4mdm+HzhyTvEgSNuMp7uQUOptO7Ux+s8Z3/njMXck
+         E6u/QL+6wNpJVN+3Yl06zSv+zmG5sTOf06Sqp5VFW1iOosA+VOqAFJTA25weGlbhqTIJ
+         4d0B8D4G91gXLbO6/DeN5h/4owQDFZ0i8qzQCHR5J/OCoiwIOq4a5udlh2dmFTJJ1BFX
+         OYgQ==
+X-Gm-Message-State: APjAAAWBGESKGoPVnzWjvjiP8sFx9up9V2zt6TdEiS96IJfgtGy4Pk7/
+        VaF2Pi9ts5E8LFxTxIIYg3Y=
+X-Google-Smtp-Source: APXvYqxxLk7dvE8steWoKmU6uxcpyA322+pTWJ0IxJflLkyYogbCFgb3nolh67radeNPPwr7k2YVNw==
+X-Received: by 2002:a63:4e60:: with SMTP id o32mr15108620pgl.68.1566798132785;
+        Sun, 25 Aug 2019 22:42:12 -0700 (PDT)
+Received: from Gentoo ([103.231.91.35])
+        by smtp.gmail.com with ESMTPSA id i9sm17843064pgo.46.2019.08.25.22.42.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Aug 2019 22:42:12 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 11:11:58 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     Paul Bolle <pebolle@tiscali.nl>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        akpm@linux-foundation.org, jslaby@suse.cz,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Subject: Re: Linux 5.2.10
+Message-ID: <20190826054156.GB31983@Gentoo>
+References: <20190825144703.6518-1-sashal@kernel.org>
+ <dd3a1ec7d03888dade78db1e4c45ec1347c0815b.camel@tiscali.nl>
+ <20190826043401.GC26547@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
 Content-Disposition: inline
-In-Reply-To: <20190825170015.3199-1-lukas.bulwahn@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190826043401.GC26547@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 07:00:15PM +0200, Lukas Bulwahn wrote:
-> Mimi Zohar used spaces instead of a tab when adding Jarkko Sakkinen as
-> further maintainer to the KEYS-TRUSTED section entry.
-> 
-> In fact, ./scripts/checkpatch.pl -f MAINTAINERS complains:
-> 
->   WARNING: MAINTAINERS entries use one tab after TYPE:
->   #8581: FILE: MAINTAINERS:8581:
->   +M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> The issue was detected when writing a script that parses MAINTAINERS.
-> 
-> Fixes: 34bccd61b139 ("MAINTAINERS: add Jarkko as maintainer for trusted keys")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+--eAbsdosE1cNLO4uF
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-/Jarkko
+Not sure,kerne.org not reflecting the latest number...probably timing
+difference ....looping Kai in this mail ..
+
+Thanks,
+Bhaskar
+
+On 06:34 Mon 26 Aug 2019, Greg KH wrote:
+>On Sun, Aug 25, 2019 at 07:33:36PM +0200, Paul Bolle wrote:
+>> Sasha,
+>>
+>> Sasha Levin schreef op zo 25-08-2019 om 10:47 [-0400]:
+>> > I'm announcing the release of the 5.2.10 kernel.
+>> >
+>> > All users of the 5.2 kernel series must upgrade.
+>> >
+>> > The updated 5.2.y git tree can be found at:
+>> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
+>> > and can be browsed at the normal kernel.org git web browser:
+>> >         https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+>>
+>> v5.2.10 was tagged by sashal@kernel.org but signed by
+>> alexander.levin@verizon.com. Perhaps you could use one of gpg2's many options
+>> to add an
+>>     aka "Sasha Levin <sashal@kernel.org>"
+>>
+>> line to that key. (I assume "--recv-key" then would have found your key.)
+>
+>It's on that key already, have you refreshed your version of it?
+>
+>thanks,
+>
+>greg k-h
+
+--eAbsdosE1cNLO4uF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1jcSQACgkQsjqdtxFL
+KRWY3AgAkTIQxqK2dmHzB0d2R5HYXfgmmaFjLno46j1G34IRf87/hZm3MQsDq/ie
+Lza/nMQYCXlB/xfxrTcPfwrmdJk7MflwqYPhddXAVv7ieLkg1ZBqYEboQ9E80e0E
+7K6wWbkMzfFOzqed7W1dQhZ7ev5mzT/uEE0rX9On/OPuF9NXIvymqQXsftPRyYZ7
+LW5i9jahp57yYXUTfj5RBFtOAacbAQrKyBrGN6PeHQJ2ik3khJXz4fZinWIluOnW
+3UsfkjOSIOqCczqwRjjKIZwtZkboXfRrgmODjFqev9SkvMEaFAwh/b0GlJQ21qN7
+eyvhe9HzBMEz94tiPmSseP+2REK+Qg==
+=oDzp
+-----END PGP SIGNATURE-----
+
+--eAbsdosE1cNLO4uF--
