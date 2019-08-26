@@ -2,229 +2,127 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13822C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CE9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8ABD20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DE020828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfHZMnz (ORCPT
+        id S1732009AbfHZMoG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:43:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36166 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730339AbfHZMny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:43:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02FB1307CDEA;
-        Mon, 26 Aug 2019 12:43:54 +0000 (UTC)
-Received: from llong.com (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B53C9100194E;
-        Mon, 26 Aug 2019 12:43:47 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v2] fs/proc/page: Skip uninitialized page when iterating page structures
-Date:   Mon, 26 Aug 2019 08:43:36 -0400
-Message-Id: <20190826124336.8742-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 26 Aug 2019 12:43:54 +0000 (UTC)
+        Mon, 26 Aug 2019 08:44:06 -0400
+Received: from mx0a-00176a03.pphosted.com ([67.231.149.52]:65452 "EHLO
+        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730339AbfHZMoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:44:05 -0400
+X-Greylist: delayed 2407 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Aug 2019 08:44:04 EDT
+Received: from pps.filterd (m0047962.ppops.net [127.0.0.1])
+        by m0047962.ppops.net-00176a03. (8.16.0.42/8.16.0.42) with SMTP id x7QC3qAY043962;
+        Mon, 26 Aug 2019 08:03:57 -0400
+From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Seunghun Han <kkamagui@gmail.com>
+CC:     Peter Huewe <peterhuewe@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Thread-Topic: Re: [PATCH] tpm: tpm_crb: Add an AMD fTPM support feature
+Thread-Index: AQHVW2w9adn8CXNrxUe37sfJUFBZA6cNMu+AgAAc+0A=
+Date:   Mon, 26 Aug 2019 11:58:40 +0000
+Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1BAA7@ALPMBAPA12.e2k.ad.ge.com>
+References: <20190825174019.5977-1-kkamagui@gmail.com>
+ <20190826055903.5um5pfweoszibem3@linux.intel.com>
+In-Reply-To: <20190826055903.5um5pfweoszibem3@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMjEyNDczOTUwXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZDZkMWNlNjUtYzdmOC0xMWU5LThlMmQtYTRjM2YwYjU5OGE2XGFtZS10ZXN0XGQ2ZDFjZTY3LWM3ZjgtMTFlOS04ZTJkLWE0YzNmMGI1OThhNmJvZHkudHh0IiBzej0iMzA0MSIgdD0iMTMyMTEyOTQzMTkxNzE0MTM2IiBoPSIyTzZNYkMxUktqdGtoVXBLd2tES29GVlc4U2c9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+x-originating-ip: [3.159.19.191]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+Subject: [PATCH] tpm: tpm_crb: Add an AMD fTPM support feature
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=827 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908260136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was found that on a dual-socket x86-64 system with nvdimm, reading
-/proc/kpagecount may cause the system to panic:
+> From: linux-integrity-owner@vger.kernel.org <linux-integrity-
+> owner@vger.kernel.org> On Behalf Of Jarkko Sakkinen
+> Sent: Monday, August 26, 2019 1:59 AM
+> To: Seunghun Han <kkamagui@gmail.com>
+> Cc: Peter Huewe <peterhuewe@gmx.de>; Thomas Gleixner
+> <tglx@linutronix.de>; linux-kernel@vger.kernel.org; linux-
+> integrity@vger.kernel.org
+> Subject: EXT: Re: [PATCH] tpm: tpm_crb: Add an AMD fTPM support feature
+> 
+> On Mon, Aug 26, 2019 at 02:40:19AM +0900, Seunghun Han wrote:
+> > I'm Seunghun Han and work at the Affiliated Institute of ETRI. I got
+> > an AMD system which had a Ryzen Threadripper 1950X and MSI mainboard,
+> > and I had a problem with AMD's fTPM. My machine showed an error
+> > message below, and the fTPM didn't work because of it.
+> >
+> > [    5.732084] tpm_crb MSFT0101:00: can't request region for resource
+> >                [mem 0x79b4f000-0x79b4ffff]
+> > [    5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+> >
+> > When I saw the iomem areas and found two TPM CRB regions were in the
+> > ACPI NVS area.  The iomem regions are below.
+> >
+> > 79a39000-79b6afff : ACPI Non-volatile Storage
+> >   79b4b000-79b4bfff : MSFT0101:00
+> >   79b4f000-79b4ffff : MSFT0101:00
+> >
+> > After analyzing this issue, I found out that a busy bit was set to the
+> > ACPI NVS area, and the current Linux kernel allowed nothing to be
+> > assigned in it. I also found that the kernel couldn't calculate the
+> > sizes of command and response buffers correctly when the TPM regions
+> were two or more.
+> >
+> > To support AMD's fTPM, I removed the busy bit from the ACPI NVS area
+> > so that AMD's fTPM regions could be assigned in it. I also fixed the
+> > bug that did not calculate the sizes of command and response buffer
+> correctly.
 
-===================
-[   79.917682] BUG: unable to handle page fault for address: fffffffffffffffe
-[   79.924558] #PF: supervisor read access in kernel mode
-[   79.929696] #PF: error_code(0x0000) - not-present page
-[   79.934834] PGD 87b60d067 P4D 87b60d067 PUD 87b60f067 PMD 0
-[   79.940494] Oops: 0000 [#1] SMP NOPTI
-[   79.944157] CPU: 89 PID: 3455 Comm: cp Not tainted 5.3.0-rc5-test+ #14
-[   79.950682] Hardware name: Dell Inc. PowerEdge R740/07X9K0, BIOS 2.2.11 06/13/2019
-[   79.958246] RIP: 0010:kpagecount_read+0xdb/0x1a0
-[   79.962859] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 f7 48 c1 e7 06 48 03 3d fe da de 00 74 1d 48 8b 57 08 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 75 06 83 7f 30 80 7d 62 31 c0 4c 89 f9 e8 5d c9
-[   79.981603] RSP: 0018:ffffb0d9c950fe70 EFLAGS: 00010202
-[   79.986830] RAX: fffffffffffffffe RBX: ffff8beebe5383c0 RCX: ffffb0d9c950ff00
-[   79.993963] RDX: 0000000000000001 RSI: 00007fd85b29e000 RDI: ffffe77a22000000
-[   80.001095] RBP: 0000000000020000 R08: 0000000000000001 R09: 0000000000000000
-[   80.008226] R10: 0000000000000000 R11: 0000000000000001 R12: 00007fd85b29e000
-[   80.015358] R13: ffffffff893f0480 R14: 0000000000880000 R15: 00007fd85b29e000
-[   80.022491] FS:  00007fd85b312800(0000) GS:ffff8c359fb00000(0000) knlGS:0000000000000000
-[   80.030576] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   80.036321] CR2: fffffffffffffffe CR3: 0000004f54a38001 CR4: 00000000007606e0
-[   80.043455] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   80.050586] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   80.057718] PKRU: 55555554
-[   80.060428] Call Trace:
-[   80.062877]  proc_reg_read+0x39/0x60
-[   80.066459]  vfs_read+0x91/0x140
-[   80.069686]  ksys_read+0x59/0xd0
-[   80.072922]  do_syscall_64+0x59/0x1e0
-[   80.076588]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   80.081637] RIP: 0033:0x7fd85a7f5d75
-===================
+The problem is that the acpi tables are _wrong_ in this and other cases.
+They not only incorrectly report the area as reserved, but also report
+the command and response buffer sizes incorrectly. If you look at
+the addresses for the buffers listed in the crb control area, the sizes
+are correct (4Kbytes).  My patch uses the control area values, and
+everything works. The remaining problem is that if acpi reports the
+area as NVS, then the linux nvs driver will try to use the space.
+I'm looking at how to fix that. I'm not sure, if simply removing
+the busy bit is sufficient.
+Dave
 
-It turns out the panic was caused by the kpagecount_read() function
-hitting an uninitialized page structure at PFN 0x880000 where all its
-fields were set to -1. The compound_head value of -1 will mislead the
-kernel to treat -2 as a pointer to the head page of the compound page
-leading to the crash.
-
-The system have 12 GB of nvdimm ranging from PFN 0x880000-0xb7ffff.
-However, only PFN 0x88c200-0xb7ffff are released by the nvdimm
-driver to the kernel and initialized. IOW, PFN 0x880000-0x88c1ff
-remain uninitialized. Perhaps these 196 MB of nvdimm are reserved for
-internal use.
-
-To fix the panic, we need to find out if a page structure has been
-initialized. This is done now by checking if the PFN is in the range
-of a memory zone assuming that pages in a zone is either correctly
-marked as not present in the mem_section structure or have their page
-structures initialized.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- fs/proc/page.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 65 insertions(+), 3 deletions(-)
-
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index 544d1ee15aee..fee55ad95893 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -21,6 +21,64 @@
- #define KPMMASK (KPMSIZE - 1)
- #define KPMBITS (KPMSIZE * BITS_PER_BYTE)
- 
-+/*
-+ * It is possible a page structure is contained in a mem_section that is
-+ * regarded as valid but the page structure itself is not properly
-+ * initialized. For example, portion of the device memory may be used
-+ * internally by device driver or firmware without being managed by the
-+ * kernel and hence their page structures may not be initialized.
-+ *
-+ * An uninitialized page structure may cause the PFN iteration code
-+ * in this file to panic the system. To safe-guard against this
-+ * possibility, an additional check of the PFN is done to make sure
-+ * that it is in a valid range in one of the memory zones:
-+ *
-+ *	[zone_start_pfn, zone_start_pfn + spanned_pages)
-+ *
-+ * It is possible that some of the PFNs within a zone is not present.
-+ * In this case, it will have to rely on the current mem_section check
-+ * as well as the affected page structures are still properly initialized.
-+ */
-+struct zone_range {
-+	unsigned long pfn_start;
-+	unsigned long pfn_end;
-+};
-+
-+static void find_next_zone_range(struct zone_range *range)
-+{
-+	unsigned long start, end;
-+	pg_data_t *pgdat;
-+	struct zone *zone;
-+	int i;
-+
-+	/*
-+	 * Scan all the zone structures to find the next closest one.
-+	 */
-+	start = end = -1UL;
-+	for (pgdat = first_online_pgdat(); pgdat;
-+	     pgdat = next_online_pgdat(pgdat)) {
-+		for (zone = pgdat->node_zones, i = 0; i < MAX_NR_ZONES;
-+		     zone++, i++) {
-+			if (!zone->spanned_pages)
-+				continue;
-+			if ((zone->zone_start_pfn >= range->pfn_end) &&
-+			    (zone->zone_start_pfn < start)) {
-+				start = zone->zone_start_pfn;
-+				end   = start + zone->spanned_pages;
-+			}
-+		}
-+	}
-+	range->pfn_start = start;
-+	range->pfn_end   = end;
-+}
-+
-+static inline bool pfn_in_zone(unsigned long pfn, struct zone_range *range)
-+{
-+	if (pfn >= range->pfn_end)
-+		find_next_zone_range(range);
-+	return pfn >= range->pfn_start && pfn < range->pfn_end;
-+}
-+
- /* /proc/kpagecount - an array exposing page counts
-  *
-  * Each entry is a u64 representing the corresponding
-@@ -31,6 +89,7 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- {
- 	u64 __user *out = (u64 __user *)buf;
- 	struct page *ppage;
-+	struct zone_range range = { 0, 0 };
- 	unsigned long src = *ppos;
- 	unsigned long pfn;
- 	ssize_t ret = 0;
-@@ -42,10 +101,11 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- 		return -EINVAL;
- 
- 	while (count > 0) {
--		if (pfn_valid(pfn))
-+		if (pfn_valid(pfn) && pfn_in_zone(pfn, &range))
- 			ppage = pfn_to_page(pfn);
- 		else
- 			ppage = NULL;
-+
- 		if (!ppage || PageSlab(ppage) || page_has_type(ppage))
- 			pcount = 0;
- 		else
-@@ -206,6 +266,7 @@ static ssize_t kpageflags_read(struct file *file, char __user *buf,
- {
- 	u64 __user *out = (u64 __user *)buf;
- 	struct page *ppage;
-+	struct zone_range range = { 0, 0 };
- 	unsigned long src = *ppos;
- 	unsigned long pfn;
- 	ssize_t ret = 0;
-@@ -216,7 +277,7 @@ static ssize_t kpageflags_read(struct file *file, char __user *buf,
- 		return -EINVAL;
- 
- 	while (count > 0) {
--		if (pfn_valid(pfn))
-+		if (pfn_valid(pfn) && pfn_in_zone(pfn, &range))
- 			ppage = pfn_to_page(pfn);
- 		else
- 			ppage = NULL;
-@@ -250,6 +311,7 @@ static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
- {
- 	u64 __user *out = (u64 __user *)buf;
- 	struct page *ppage;
-+	struct zone_range range = { 0, 0 };
- 	unsigned long src = *ppos;
- 	unsigned long pfn;
- 	ssize_t ret = 0;
-@@ -261,7 +323,7 @@ static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
- 		return -EINVAL;
- 
- 	while (count > 0) {
--		if (pfn_valid(pfn))
-+		if (pfn_valid(pfn) && pfn_in_zone(pfn, &range))
- 			ppage = pfn_to_page(pfn);
- 		else
- 			ppage = NULL;
--- 
-2.18.1
-
+> >
+> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+> 
+> You need to split this into multiple patches e.g. if you think you've fixed a
+> bug, please write a patch with just the bug fix and nothing else.
+> 
+> For further information, read the section three of
+> 
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+> 
+> I'd also recommend to check out the earlier discussion on ACPI NVS:
+> 
+> https://lore.kernel.org/linux-
+> integrity/BCA04D5D9A3B764C9B7405BBA4D4A3C035EF7BC7@ALPMBAPA12.e
+> 2k.ad.ge.com/
+> 
+> /Jarkko
