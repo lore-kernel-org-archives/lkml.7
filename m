@@ -2,132 +2,131 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73F2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC64C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F092087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7A4206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbfHZI6w (ORCPT
+        id S1730508AbfHZI7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:58:52 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46311 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbfHZI6v (ORCPT
+        Mon, 26 Aug 2019 04:59:24 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:54759 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729802AbfHZI7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:58:51 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t24so11504471oij.13;
-        Mon, 26 Aug 2019 01:58:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tnEOaWMh9o7a4lsL8t46ApShoBTiXhp9jJWi58Cb5Gc=;
-        b=gNTC26TCRuhPCnmLwV5ci68NVeucexpxmpB1zZ5+bnany2+xp/mtE3YzqxreRpNFxK
-         DdFU21+dZU3gMwdgfNjFzatQOh3il9bMnPF6ZGFXOKfBjL1DdOxA7SUnIFVcFIg28kNC
-         9FzCvHJdW+D6G25inX+wGKdhB6VHtn1O9LCIB06t9B5nymrYZIIgjflUgvzYLASNoo3S
-         RjKUqqWucD0lnA1490FxRzyERKwRG8R0YNe8cE/6zGZ8CdzZErgAtBWBQ4SS1YmRIL4b
-         OfqtA1leb5iWDXKj2g3BExtshV9AO4ObjXVurg05FiqeJsM8vcCkYBualjbq24tZVV3Q
-         PSoA==
-X-Gm-Message-State: APjAAAVDJsd/v1pjsT7NGK35NBnsDdKDQ7nj2NdUREG3SjUT8HhTPGXe
-        IeiVNelAiOktV4RQIehY7WXROxbKveTBNMGOY2A=
-X-Google-Smtp-Source: APXvYqxXAEmTrR0e9s0qceFFoDeOwnHS/Xoq0e/yv+MEHb3J0+ID75RlA2eDMhAg81C5BpolzjElQX/42D45ESS6+Fk=
-X-Received: by 2002:a54:478d:: with SMTP id o13mr11607090oic.54.1566809930697;
- Mon, 26 Aug 2019 01:58:50 -0700 (PDT)
+        Mon, 26 Aug 2019 04:59:23 -0400
+Received: from [IPv6:2001:983:e9a7:1:3421:ddcd:2260:77e4] ([IPv6:2001:983:e9a7:1:3421:ddcd:2260:77e4])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 2AqOiuoLSzaKO2AqPiEEbI; Mon, 26 Aug 2019 10:59:21 +0200
+Subject: Re: [PATCH v7 2/9] drm/i915/intel_hdmi: use
+ cec_notifier_conn_(un)register
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+References: <20190814104520.6001-1-darekm@google.com>
+ <20190814104520.6001-3-darekm@google.com>
+ <8d0c6d9b-d321-7e4b-8c06-92b9b816d029@xs4all.nl>
+Message-ID: <a942bff9-bbdc-1983-2847-a25a24512d29@xs4all.nl>
+Date:   Mon, 26 Aug 2019 10:59:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
- <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
- <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
- <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
- <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
- <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
- <20190820092451.791c85e5@canb.auug.org.au> <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
- <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
- <9d12995c5e7e41fc5d8ba202f76a2cf854183245.camel@perches.com> <CAHk-=wi6bEnBy11HJBbgPsG3-ctE6Zyi2+3cnozjMAafSUBAaQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wi6bEnBy11HJBbgPsG3-ctE6Zyi2+3cnozjMAafSUBAaQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 26 Aug 2019 10:58:39 +0200
-Message-ID: <CAMuHMdVtCKVXNghfrs6RgtSDC08c0eyR-xD6d7mkZuSSPEFY-Q@mail.gmail.com>
-Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
- Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang)QUILT
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8d0c6d9b-d321-7e4b-8c06-92b9b816d029@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfP5A+2spB5OfeGKS2BXM/ZP4Q729Q0/F1zD6dmXVBEA2CP23zskH+T/WN7EmqDePC4AeAF8BPM9O7pJ91mqx5ilRHKy7p8/zm5WsK4cCfLHLz8eF8suU
+ cWCLxFkR/a/xxoy31NJLNKUp6FzHE+lqm0fY/TWUR2a8xAWC1iFMwsyd7jbcrLP1dI++QRFWITCz+eK7S9nmhzN0MQvDMPG8MwvrDW0HwCTbQAc2uEYsk++q
+ snOXOkPCMUYf+eODbSD8/aeADUaF1Ibp9Qwr8qk8YDosfKpnGsWB9PRDBy/eANbpPZjdKOydrp7EN13Zn25M9V4CKOgeiwgFwcGajzh9aJSENTFfuNkJ9Orz
+ /ThOFfQFZ4G/gSssHcyQyag2ANI1ws8PVlwBDVbZ99g//xAbnc07jI/Ng92Q/tnche7UBi/LfU/KFiXJZM3CrhB5Bnz/pGW0HYU0yHTmGBav8TX97EL7bBkF
+ o38FWS7VfRY0VAoJyn04XHl1rDmIPXfSYdRvlim3/G/CHazQTz7skjbMOhAELJpTmIfi+wKAt8sX8n2J
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 8/22/19 10:03 AM, Hans Verkuil wrote:
+> Ville or Rodrigo,
+> 
+> Can one of you either merge this patch or Ack it so that I can merge this?
 
-On Wed, Aug 21, 2019 at 2:41 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Tue, Aug 20, 2019 at 4:37 PM Joe Perches <joe@perches.com> wrote:
-> > > So I'm putting my foot down on yet another broken string copy
-> > > interface from people who do not understand this fundamental issue.
-> >
-> > I think you are mistaken about the stracpy limits as
-> > the only limit is not the source size but the dest.
-> >
-> > Why should the source be size limited?
->
-> You just proved my point. You don't understand that sources can also
-> be limited, and the limit on a source can be *smaller* than the limit
-> of a destination.
->
-> Did we learn *NOTHING* from the complete and utter disaster that was strlcpy()?
->
-> Do you not understand why strlcpy() was unacceptably bad, and why the
-> people who converted strncpy() to it introduced real bugs?
->
-> The fact is, it's not just the destination that has a size limit. The
-> source often has one too.
->
-> And no, the source is not always guaranteed to be NUL-terminated, nor
-> is the source buffer guaranteed to be larger than the destination
-> buffer.
->
-> Now, if you *know* that the source is smaller than the destination
-> size, you can do:
->
->     len = strnlen(src, srclen);
->     memcpy(dst, len);
->     dst[len] = 0;
->
-> and that's not wrong, but that works only when
->
->  (a) you actually do the above
->
->  (b) you have no data races on src (or you at least only require that
-> 'dst' is NUL-terminated, not that 'len' is necessarily the correct
-> length of the result
->
->  (c) you actually know as the programmer that yes, the source is
-> definitely smaller than the destination.
->
-> and honestly, people don't get _any_ of that right.
+Ping!
 
-(d) you know the untouched trailing end of dst[] does not leak data.
+Regards,
 
-Anything else we're missing?
+	Hans
 
-Gr{oetje,eeting}s,
+> 
+> Thank you!
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
+>> Use the new cec_notifier_conn_(un)register() functions to
+>> (un)register the notifier for the HDMI connector, and fill in
+>> the cec_connector_info.
+>>
+>> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>> ---
+>>  drivers/gpu/drm/i915/display/intel_hdmi.c | 13 +++++++++----
+>>  1 file changed, 9 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
+>> index b1ca8e5bdb56d..9fcf2c58c29c5 100644
+>> --- a/drivers/gpu/drm/i915/display/intel_hdmi.c
+>> +++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
+>> @@ -2752,8 +2752,9 @@ intel_hdmi_connector_register(struct drm_connector *connector)
+>>  
+>>  static void intel_hdmi_destroy(struct drm_connector *connector)
+>>  {
+>> -	if (intel_attached_hdmi(connector)->cec_notifier)
+>> -		cec_notifier_put(intel_attached_hdmi(connector)->cec_notifier);
+>> +	struct cec_notifier *n = intel_attached_hdmi(connector)->cec_notifier;
+>> +
+>> +	cec_notifier_conn_unregister(n);
+>>  
+>>  	intel_connector_destroy(connector);
+>>  }
+>> @@ -3068,6 +3069,7 @@ void intel_hdmi_init_connector(struct intel_digital_port *intel_dig_port,
+>>  	struct drm_device *dev = intel_encoder->base.dev;
+>>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>>  	enum port port = intel_encoder->port;
+>> +	struct cec_connector_info conn_info;
+>>  
+>>  	DRM_DEBUG_KMS("Adding HDMI connector on port %c\n",
+>>  		      port_name(port));
+>> @@ -3120,8 +3122,11 @@ void intel_hdmi_init_connector(struct intel_digital_port *intel_dig_port,
+>>  		I915_WRITE(PEG_BAND_GAP_DATA, (temp & ~0xf) | 0xd);
+>>  	}
+>>  
+>> -	intel_hdmi->cec_notifier = cec_notifier_get_conn(dev->dev,
+>> -							 port_identifier(port));
+>> +	cec_fill_conn_info_from_drm(&conn_info, connector);
+>> +
+>> +	intel_hdmi->cec_notifier =
+>> +		cec_notifier_conn_register(dev->dev, port_identifier(port),
+>> +					   &conn_info);
+>>  	if (!intel_hdmi->cec_notifier)
+>>  		DRM_DEBUG_KMS("CEC notifier get failed\n");
+>>  }
+>>
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
