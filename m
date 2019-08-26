@@ -2,142 +2,220 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73451C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0C3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5082F206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DC92087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QvjxXF7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbfHZIze (ORCPT
+        id S1730321AbfHZIzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:55:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50684 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfHZIzd (ORCPT
+        Mon, 26 Aug 2019 04:55:41 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46312 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730134AbfHZIzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:55:33 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so14657268wml.0;
-        Mon, 26 Aug 2019 01:55:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NqreR8zfB5JMLrVzLVEfp6bgp/fDdPqAvp15p3JTH08=;
-        b=sZA9QtOdNAsfqX0PwI+jiIyABKAfS5OZ3DqDewxDtsszLflmwpVICei1ay2pBCxwom
-         yeR006O4Li54miPJlDRGChUryRwVwnKLpA73QvOOgXXgJTWP8W7eOvLRGgLEJ+pHQqBr
-         WOBnYwvc43CTaZ56NeD9CxfBJJeIxfDQplPG1jX59tuY149DXbS7PAub8/dKnvA6Gmgm
-         RuUr6cedXPq7U6Eyih3RUIBDB0FD326eqkesN6PFO3HKTeoHmZF27V6YxmLZgCIMfmya
-         sosH8R3LxN4W2fcTc3O2eMM9r3pJg52rMyjNEKI6XXI4T5hU9USALvcMAGfD/M8ZJyCl
-         vCnw==
-X-Gm-Message-State: APjAAAUl5lBYaPrKe6kNPKPA9BXYlORf3hW4zJ2TxXK4zg8hc6PImaDI
-        jqGdUuL3PfwRyTjbmRt8M+E+0IYb
-X-Google-Smtp-Source: APXvYqwsH4H9zIRR2Z8x1NglmJT5tJ7v3de2BgYaGZ81LRPwgagHuR8mxjY5XqePCn7Hqom7fjitiw==
-X-Received: by 2002:a7b:c947:: with SMTP id i7mr20945723wml.77.1566809731531;
-        Mon, 26 Aug 2019 01:55:31 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id g14sm18831366wrb.38.2019.08.26.01.55.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Aug 2019 01:55:31 -0700 (PDT)
-Subject: Re: [PATCH net v2 1/2] Revert "r8152: napi hangup fix after
- disconnect"
-To:     Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org
-Cc:     nic_swsd@realtek.com, linux-kernel@vger.kernel.org
-References: <1394712342-15778-317-Taiwan-albertk@realtek.com>
- <1394712342-15778-318-Taiwan-albertk@realtek.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1f707377-7b61-4ba1-62bf-f275d0360749@suse.cz>
-Date:   Mon, 26 Aug 2019 10:55:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 04:55:39 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190826085537euoutp013a815b2874aaad24efd0f10936c22a53~_bSesIOEy1606616066euoutp01k
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:55:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190826085537euoutp013a815b2874aaad24efd0f10936c22a53~_bSesIOEy1606616066euoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566809737;
+        bh=4/G5wg4DJNiOKBA319u2NGoaV2LPWGLsqRRCL6/5HbQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QvjxXF7zVrmfXunVZqkZ4ls/9lxHpgBFLiopFUbjZzdEcpgvUurcbFNEbEjxmWwTA
+         mK/MtritHyvmnE3JAAd85YS4XiqvZJVtNQ2lC/VtDX5X5PqyOUNTVKZAon/H0mcKha
+         3D2jx8p2t6jZOpNk8ZBMVbKd3Ctz+DTkHbpw5yWo=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190826085536eucas1p1943cfcfb3497665cba5f208d711d68db~_bSd0SaSu2548625486eucas1p15;
+        Mon, 26 Aug 2019 08:55:36 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id BF.79.04374.88E936D5; Mon, 26
+        Aug 2019 09:55:36 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190826085535eucas1p290033f348e272069bffd17dbad137cfe~_bSdA_5zZ0746807468eucas1p2b;
+        Mon, 26 Aug 2019 08:55:35 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190826085535eusmtrp2c82f1e0dd63676a43fb028d6db854908~_bScy0dBl3154031540eusmtrp2F;
+        Mon, 26 Aug 2019 08:55:35 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-14-5d639e88d97b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9C.E7.04117.78E936D5; Mon, 26
+        Aug 2019 09:55:35 +0100 (BST)
+Received: from [106.120.50.63] (unknown [106.120.50.63]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190826085534eusmtip287a9a55fd9201dbd54a99efc6132d4d9~_bScSNjKf2034120341eusmtip2V;
+        Mon, 26 Aug 2019 08:55:34 +0000 (GMT)
+Subject: Re: [PATCH v2 1/2 RESEND] usb: core: phy: add support for PHY
+ calibration
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jochen Sprickerhof <jochen@sprickerhof.de>,
+        Anand Moon <linux.amoon@gmail.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <a380a635-e036-1a18-bc0f-947931f8735c@samsung.com>
+Date:   Mon, 26 Aug 2019 10:55:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1394712342-15778-318-Taiwan-albertk@realtek.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-GB
+In-Reply-To: <20190808094128.27213-2-m.szyprowski@samsung.com>
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe3bv7r1a0+tUPJkUDFQqX1pJ3LTMwmLUh/rQlyzJq17U1Cmb
+        07Qvli/NISa+lK6a4csUy7clpmKLNtDMcr4QmWSaOElxIWhCoZbbxfLb73+e/+F/zuGhMLFF
+        6E0lyTM4hZxNkRDOeFf/r+FAtS4u+kj3RzHTUdUmZPoL50gmr66NYBo2viLGYmknmfHexwRT
+        ZTEKmFp9Aca0dkySTH/tIM7kGSqEEbtlPdopUmYtLSdldX0LApmhuYiQvX7ynJSVdDYjWXvn
+        Ji5bMey/TEU5n4znUpIyOUVweIxz4otPZiJ91PuW2jSD56IlTw2iKKBDoO/OOQ1ypsR0E4KN
+        od9CXqwiGNZOC3ixgmC9vBjTICdHx8KrbVcjgtXqeZwXNgRmYxeyu9zpK/Bswkra2YOOgPqG
+        L4TdhNElGHS+XXKYCFoKGpuGsLOIDod8m8URgdO+MLZhdDR70tehZ4mPFtFuMFg9h9vZacs/
+        22AW2hmjD8BL22OMZy+YnKtxzA30LAnT3cs4P3ckWHP1BM/usDjQSfLsA396thvyEHwbbiF5
+        UYxg/G4V4l1hYB4YFdpvhtEHoa03mC+fgcaiIpI/pQtM2Nz4IVygrOshxpdFoC4U824/0A60
+        /ot9MzKGlSKJdsdq2h3raHeso/2f+xThzciLUylTEzjlMTmXFaRkU5UqeUJQXFqqAW19s6HN
+        gZ/dyLgea0I0hSR7RDGquGixkM1UZqeaEFCYxEOUEsxGi0XxbHYOp0i7oVClcEoT2kfhEi/R
+        7V0z18R0ApvBJXNcOqfYfhVQTt65KH3zYotp0/1Bh8p4NUw+7hOin6/0yDmrqEymCxZO+LHh
+        TRd0/rqlH41lIdLvl9j3h7GQrNrzUnLklNPC8cio4Hwvl5q1wDxXtdD6zjYV+rl+7aj/oqpv
+        lVKNLk4P3hzUF0YsgzqA1N1vOW15FLchMHzwDd0be4+pyKICPEdcJbgykZUewhRK9i8lYCSB
+        YgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xe7rt85JjDaYfkrbYOGM9q8Wxtifs
+        Fs2L17NZLP17j9Hi/PkN7BaXd81hs5hxfh+TxaJlrcwW6zbeYrc4tugki0XzpimsDtweO2fd
+        Zfd4OmEyu8fiPS+ZPDat6mTz2D93DbtH35ZVjB4btvxj8fi8SS6AI0rPpii/tCRVISO/uMRW
+        KdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY/P1w2wFF6UqOg49YGlgfCPa
+        xcjJISFgIvFy7y/WLkYuDiGBpYwS+7r2MkMkZCROTmtghbCFJf5c62KDKHrNKNG4cxpYkbBA
+        iMTqG0/ZQWwRAQeJJUvvgBUxC0xgltj6+yA7RMdRRonP3bPAOtgEDCW63oKM4uTgFbCTaHl7
+        HizOIqAqcenvPrBJogIxEvvObGeHqBGUODnzCQuIzQlU/2jpYbCTmAXMJOZtfsgMYctLbH87
+        B8oWl7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzEC
+        43fbsZ9bdjB2vQs+xCjAwajEw5tQmhwrxJpYVlyZe4hRgoNZSYQ3Rz8xVog3JbGyKrUoP76o
+        NCe1+BCjKdBzE5mlRJPzgaklryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFM
+        HxMHp1QD48L/mfLVgTtm6rpHyXKJB2cUuFxL2ZzREOjrNmuV65vDapYN+Zxtm6f4HoqVK/xp
+        tfrh0t0r36vqvlsaUZryjvUoi7r5FvYvN29uffRPlcPq9XO7qPpoiQpuV+k6f+lffHMuXuXx
+        f6+W8OYvX07lr9U9e5YxVXw9fnajgNX87WE5ntHX3l5tV2Ipzkg01GIuKk4EAKvISLj1AgAA
+X-CMS-MailID: 20190826085535eucas1p290033f348e272069bffd17dbad137cfe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
+References: <20190808094128.27213-1-m.szyprowski@samsung.com>
+        <CGME20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5@eucas1p2.samsung.com>
+        <20190808094128.27213-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26. 08. 19, 10:41, Hayes Wang wrote:
-> This reverts commit 0ee1f4734967af8321ecebaf9c74221ace34f2d5.
-> 
-> This conflicts with commit ffa9fec30ca0 ("r8152: set
-> RTL8152_UNPLUG only for real disconnection").
+Hi Greg
 
-Could you clarify *why* it conflicts? And how is the problem fixed by
-0ee1f473496 avoided now?
+On 2019-08-08 11:41, Marek Szyprowski wrote:
+> Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
+> done after every USB HCD reset. Generic PHY framework has been already
+> extended with phy_calibrate() function in commit 36914111e682 ("drivers:
+> phy: add calibrate method"). This patch adds support for it to generic
+> PHY handling code in USB HCD core.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+Greg: any chance to give it this a try in -next? If not, maybe You can 
+point someone whose review will help?
+
+
 > ---
->  drivers/net/usb/r8152.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index eee0f5007ee3..ad3abe26b51b 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -4021,8 +4021,7 @@ static int rtl8152_close(struct net_device *netdev)
->  #ifdef CONFIG_PM_SLEEP
->  	unregister_pm_notifier(&tp->pm_notifier);
->  #endif
-> -	if (!test_bit(RTL8152_UNPLUG, &tp->flags))
-> -		napi_disable(&tp->napi);
-> +	napi_disable(&tp->napi);
->  	clear_bit(WORK_ENABLE, &tp->flags);
->  	usb_kill_urb(tp->intr_urb);
->  	cancel_delayed_work_sync(&tp->schedule);
-> 
+>   drivers/usb/core/hcd.c |  7 +++++++
+>   drivers/usb/core/phy.c | 21 +++++++++++++++++++++
+>   drivers/usb/core/phy.h |  1 +
+>   3 files changed, 29 insertions(+)
+>
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index 88533938ce19..b89936c1df23 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -2291,6 +2291,9 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+>   	hcd->state = HC_STATE_RESUMING;
+>   	status = hcd->driver->bus_resume(hcd);
+>   	clear_bit(HCD_FLAG_WAKEUP_PENDING, &hcd->flags);
+> +	if (status == 0)
+> +		status = usb_phy_roothub_calibrate(hcd->phy_roothub);
+> +
+>   	if (status == 0) {
+>   		struct usb_device *udev;
+>   		int port1;
+> @@ -2864,6 +2867,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
+>   	}
+>   	hcd->rh_pollable = 1;
+>   
+> +	retval = usb_phy_roothub_calibrate(hcd->phy_roothub);
+> +	if (retval)
+> +		goto err_hcd_driver_setup;
+> +
+>   	/* NOTE: root hub and controller capabilities may not be the same */
+>   	if (device_can_wakeup(hcd->self.controller)
+>   			&& device_can_wakeup(&hcd->self.root_hub->dev))
+> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+> index 7580493b867a..fb1588e7c282 100644
+> --- a/drivers/usb/core/phy.c
+> +++ b/drivers/usb/core/phy.c
+> @@ -151,6 +151,27 @@ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
+>   }
+>   EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
+>   
+> +int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub)
+> +{
+> +	struct usb_phy_roothub *roothub_entry;
+> +	struct list_head *head;
+> +	int err;
+> +
+> +	if (!phy_roothub)
+> +		return 0;
+> +
+> +	head = &phy_roothub->list;
+> +
+> +	list_for_each_entry(roothub_entry, head, list) {
+> +		err = phy_calibrate(roothub_entry->phy);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_phy_roothub_calibrate);
+> +
+>   int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
+>   {
+>   	struct usb_phy_roothub *roothub_entry;
+> diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+> index dad564e2d2d4..20a267cd986b 100644
+> --- a/drivers/usb/core/phy.h
+> +++ b/drivers/usb/core/phy.h
+> @@ -18,6 +18,7 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+>   
+>   int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
+>   			     enum phy_mode mode);
+> +int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub);
+>   int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+>   void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+>   
 
-thanks,
+Best regards
 -- 
-js
-suse labs
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
