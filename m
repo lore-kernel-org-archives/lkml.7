@@ -2,152 +2,156 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A1C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D9CC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705C322D37
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7159922D6D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfHZJQB (ORCPT
+        id S1730712AbfHZJRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:16:01 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56330 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730835AbfHZJQB (ORCPT
+        Mon, 26 Aug 2019 05:17:22 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:7153 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfHZJRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:16:01 -0400
-Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 591d2b0a859a49d1; Mon, 26 Aug 2019 11:15:58 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Tri Vo <trong@android.com>
-Cc:     gregkh@linuxfoundation.org, viresh.kumar@linaro.org,
-        rafael@kernel.org, hridya@google.com, sspatil@google.com,
-        kaleshsingh@google.com, ravisadineni@chromium.org,
-        swboyd@chromium.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v8 0/3] PM / wakeup: Show wakeup sources stats in sysfs
-Date:   Mon, 26 Aug 2019 11:15:58 +0200
-Message-ID: <1676352.3Ka9HrfE86@kreacher>
-In-Reply-To: <20190807014846.143949-1-trong@android.com>
-References: <20190807014846.143949-1-trong@android.com>
+        Mon, 26 Aug 2019 05:17:22 -0400
+IronPort-SDR: keSo3pUeqXFCZW8fIW6SNCibYA8NYiuCD4DNXcAC9RPWbr/LnrjqNVazqQfoPQOKISrd4Hx98N
+ 3OaKAlT+yDBivYslmu6IQ8Ijq2S0yq8DhqOX2KJ7MSpkN9k6JlrkzIe1MskxWU2l8ABxDJsS/v
+ MRSxIIEyCSfh6KOB9AgVEcPon4oL1EYw3voA0SzColcqlXyGWqlBwWwVmn8qezVu9Z2t3ZdW2j
+ SCZq+bmCVZL3Ly9lltMuqTQI31psRkRWha1Mk5xQLUYUIbeqZiho3AACW8bIQtzPKpUknf9Osx
+ FUY=
+X-IronPort-AV: E=Sophos;i="5.64,431,1559509200"; 
+   d="scan'208";a="229615643"
+Subject: Re: [EXT] Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to
+ run hwclock -w
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20190816024636.34738-1-biwen.li@nxp.com>
+ <20190816080417.GB3545@piout.net>
+ <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
+ <20190816162825.GE3545@piout.net>
+ <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+ <ff198737-acb5-7186-7e14-a1e1cdc0f72c@vaisala.com>
+ <DB7PR04MB4490614205732E4508B8A8B38FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
+From:   Nandor Han <nandor.han@vaisala.com>
+Message-ID: <21f417e3-db50-5930-ddc9-eed54f5d5893@vaisala.com>
+Date:   Mon, 26 Aug 2019 12:17:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <DB7PR04MB4490614205732E4508B8A8B38FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 26 Aug 2019 09:17:16.0573 (UTC) FILETIME=[0DE524D0:01D55BEF]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, August 7, 2019 3:48:43 AM CEST Tri Vo wrote:
-> Userspace can use wakeup_sources debugfs node to plot history of suspend
-> blocking wakeup sources over device's boot cycle. This information can
-> then be used (1) for power-specific bug reporting and (2) towards
-> attributing battery consumption to specific processes over a period of
-> time.
-> 
-> However, debugfs doesn't have stable ABI. For this reason, create a
-> 'struct device' to expose wakeup sources statistics in sysfs under
-> /sys/class/wakeup/wakeup<ID>/*.
-> 
-> Patch 1 and 2 do some cleanup to simplify our changes to how wakeup sources are
-> created. Patch 3 implements wakeup sources stats in sysfs.
-> 
-> Tri Vo (3):
->   PM / wakeup: Drop wakeup_source_init(), wakeup_source_prepare()
->   PM / wakeup: Use wakeup_source_register() in wakelock.c
->   PM / wakeup: Show wakeup sources stats in sysfs
-> 
->  Documentation/ABI/testing/sysfs-class-wakeup |  76 +++++++
->  drivers/acpi/device_pm.c                     |   3 +-
->  drivers/base/power/Makefile                  |   2 +-
->  drivers/base/power/power.h                   |   9 +
->  drivers/base/power/wakeup.c                  |  59 +++---
->  drivers/base/power/wakeup_stats.c            | 203 +++++++++++++++++++
->  fs/eventpoll.c                               |   4 +-
->  include/linux/pm_wakeup.h                    |  21 +-
->  kernel/power/autosleep.c                     |   2 +-
->  kernel/power/wakelock.c                      |  32 +--
->  kernel/time/alarmtimer.c                     |   2 +-
->  11 files changed, 358 insertions(+), 55 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-wakeup
->  create mode 100644 drivers/base/power/wakeup_stats.c
-> 
-> v2:
-> - Updated Documentation/ABI/, as per Greg.
-> - Removed locks in attribute functions, as per Greg.
-> - Lifetimes of struct wakelock and struck wakeup_source are now different due to
->   the latter embedding a refcounted kobject. Changed it so that struct wakelock
->   only has a pointer to struct wakeup_source, instead of embedding it.
-> - Added CONFIG_PM_SLEEP_STATS that enables/disables wakeup source statistics in
->   sysfs.
-> 
-> v3:
-> Changes by Greg:
-> - Reworked code to use 'struct device' instead of raw kobjects.
-> - Updated documentation file.
-> - Only link wakeup_stats.o when CONFIG_PM_SLEEP_STATS is enabled.
-> Changes by Tri:
-> - Reverted changes to kernel/power/wakelock.c. 'struct device' hides kobject
->   operations. So no need to handle lifetimes in wakelock.c
-> 
-> v4:
-> - Added 'Co-developed-by:' and 'Tested-by:' fields to commit message.
-> - Moved new documentation to a separate file
->   Documentation/ABI/testing/sysfs-class-wakeup, as per Greg.
-> - Fixed copyright header in drivers/base/power/wakeup_stats.c, as per Greg.
-> 
-> v5:
-> - Removed CONFIG_PM_SLEEP_STATS
-> - Used PTR_ERR_OR_ZERO instead of if(IS_ERR(...)) + PTR_ERR, reported by
->   kbuild test robot <lkp@intel.com>
-> - Stephen reported that a call to device_init_wakeup() and writing 'enabled' to
->   that device's power/wakeup file results in multiple wakeup source being
->   allocated for that device.  Changed device_wakeup_enable() to check if device
->   wakeup was previously enabled.
-> Changes by Stephen:
-> - Changed stats location from /sys/class/wakeup/<name>/* to
->   /sys/class/wakeup/wakeup<ID>/*, where ID is an IDA-allocated integer. This
->   avoids name collisions in /sys/class/wakeup/ directory.
-> - Added a "name" attribute to wakeup sources, and updated documentation.
-> - Device registering the wakeup source is now the parent of the wakeup source.
->   Updated wakeup_source_register()'s signature and its callers accordingly.
-> 
-> v6:
-> - Changed stats location to /sys/class/wakeup/ws<ID>/*
-> - Replaced ida_simple_get()/ida_simple_remove() with ida_alloc()/ida_free() as
->   the former is deprecated.
-> - Reverted changes to device_init_wakeup(). Rafael is preparing a patch to deal
->   with extra wakeup source allocation in a separate patch.
-> 
-> v7:
-> - Removed wakeup_source_init(), wakeup_source_prepare().
-> - Removed duplicate wakeup source creation code from  kernel/power/wakelock.
-> - Moved ID allocation to wakeup source object creation time.
-> - Changed stats location back to /sys/class/wakeup/wakeup<ID>/*
-> - Remove wakeup source device's "power" attributes.
-> 
-> v8:
-> - Updated commit message on patch 1 to indicate change of behavior of
->   wakeup_source_create(), as per Stephen.
-> - Included headers for used symbols, as per Stephen.
-> - Added a function to create wakeup source devices to use
->   device_set_pm_not_required() to skip power management for such devices, as per
->   Stephen.
-> 
-> --
-> 2.22.0.770.g0f2c4a37fd-goog
-> 
+On 8/26/19 7:29 AM, Biwen Li wrote:
+>>
+>> On 8/16/19 10:40 PM, Li Yang wrote:
+>>> On Fri, Aug 16, 2019 at 11:30 AM Alexandre Belloni
+>>> <alexandre.belloni@bootlin.com> wrote:
+>>>>
+>>>> On 16/08/2019 10:50:49-0500, Li Yang wrote:
+>>>>> On Fri, Aug 16, 2019 at 3:05 AM Alexandre Belloni
+>>>>> <alexandre.belloni@bootlin.com> wrote:
+>>>>>>
+>>>>>> On 16/08/2019 10:46:36+0800, Biwen Li wrote:
+>>>>>>> Issue:
+>>>>>>>       - # hwclock -w
+>>>>>>>         hwclock: RTC_SET_TIME: Invalid argument
+>>>>>>>
+>>>>>>> Why:
+>>>>>>>       - Relative patch:
+>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org
+>> %2Flkml%2F2019%2F4%2F3%2F55&amp;data=02%7C01%7Cbiwen.li%40nxp.
+>> com%7Cff8cebc3f1034ae3fa9608d725ff9e5e%7C686ea1d3bc2b4c6fa92cd99
+>> c5c301635%7C0%7C0%7C637019652111923736&amp;sdata=spY6e22YOkOF
+>> 3%2BF7crSM0M6xPmOhgULDqMZLQw%2BAmdI%3D&amp;reserved=0 , this
+>> patch
+>>>>>>>         will always check for unwritable registers, it will compare reg
+>>>>>>>         with max_register in regmap_writeable.
+>>>>>>>
+>>>>>>>       - In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but
+>> DT_100THS
+>>>>>>>         is 0, max_regiter is 0x2f, then reg will be equal to 0x30,
+>>>>>>>         '0x30 < 0x2f' is false,so regmap_writeable will return false.
+>>>>>>>
+>>>>>>>       - Root cause: the buf[] was written to a wrong place in the file
+>>>>>>>         drivers/rtc/rtc-pcf85363.c
+>>>>>>>
+>>>>>>
+>>>>>> This is not true, the RTC wraps the register accesses properly and
+>>>>>> this
+>>>>>
+>>>>> This performance hack probably deserve some explanation in the code
+>>>>> comment.  :)
+>>>>>
+>>>>>> is probably something that should be handled by regmap_writable.
+>>>>>
+>>>>> The address wrapping is specific to this RTC chip.  Is it also
+>>>>> commonly used by other I2C devices?  I'm not sure if regmap_writable
+>>>>> should handle the wrapping case if it is too special.
+>>>>>
+>>>>
+>>>> Most of the i2c RTCs do address wrapping which is sometimes the only
+>>>> way to properly set the time.
+>>>
+>>> Adding Mark and Nandor to the loop.
+>>>
+>>> Regards,
+>>> Leo
+>>>
+>>
+>> Hi,
+>>     `regmap` provides couple of ways to validate the registers:
+>> max_register, callback function and write table. All of these are optional, so it
+>> gives you the freedom to customize it as needed.
+>>
+>> In this situation probably you could:
+>>     1. Avoid using the wrapping feature of pcf85363 (you can just provide
+>> separate calls for stop, reset and time confguration). In this way the
+>> `max_register` validation method will work fine.
+> Yes, I use this way. Path as follows:
+> Stop and reset - > set time > stop
 > 
 
-All three patches applied along with the later fixes from Stephen.
+Some of the concerns regarding this method was that it might not be 
+precise enough. That because you need 2 I2C operations (one for stop and 
+one for time configuration). Not sure about your case if this is a 
+problem or not.
 
-Thanks!
+>>     2. Replace `max_register` method validation with `callback function`
+>> validation method, were you could make your own validation.
+> It is not work, show the code in as follows:
+> 
+> bool regmap_writeable(struct regmap *map, unsigned int reg)
+> {
+>          if (map->max_register && reg > map->max_register)
+>                  return false;
+> Callback function (writeable_reg) will not be called.
+>          if (map->writeable_reg)
+>                  return map->writeable_reg(map->dev, reg);
+
+Hi Li,
+    If you *replace* the `max_register` method with `callback function` 
+it should work. The code above will use every method *if provided*. In 
+other words if `map->max_register` is 0 will go to the next step and 
+check `map->writeable_reg`. Right?
 
 
 
-
+Regards,
+     Nandor
