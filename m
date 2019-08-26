@@ -2,170 +2,125 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D23FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE589C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F9620874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE57206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbfHZIwO (ORCPT
+        id S1729872AbfHZIzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:52:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4367 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726401AbfHZIwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:52:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 01:52:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="379578251"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2019 01:52:11 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Stijn Tintel <stijn@linux-ipv6.be>,
-        Petr Vandrovec <petr@vandrovec.name>
-Subject: [PATCH 1/1] Revert "iommu/vt-d: Avoid duplicated pci dma alias consideration"
-Date:   Mon, 26 Aug 2019 16:50:56 +0800
-Message-Id: <20190826085056.32484-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 26 Aug 2019 04:55:00 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3099 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726189AbfHZIzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:55:00 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id AE4BCC525D72049DB0F0;
+        Mon, 26 Aug 2019 16:54:56 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 26 Aug 2019 16:54:55 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 26 Aug 2019 16:54:55 +0800
+Date:   Mon, 26 Aug 2019 16:54:08 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>, Chao Yu <yuchao0@huawei.com>
+Subject: Re: linux-next: build warning after merge of the staging tree
+Message-ID: <20190826085408.GB129185@architecture4>
+References: <20190826063024.GA1217@kroah.com>
+ <20190826083733.GA129185@architecture4>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190826083733.GA129185@architecture4>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 557529494d79f3f1fadd486dd18d2de0b19be4da.
+Hi Stephen,
 
-Commit 557529494d79f ("iommu/vt-d: Avoid duplicated pci dma alias
-consideration") aimed to address a NULL pointer deference issue
-happened when a thunderbolt device driver returned unexpectedly.
+On Mon, Aug 26, 2019 at 04:38:01PM +0800, Gao Xiang wrote:
+> Hi Greg,
+> 
+> On Mon, Aug 26, 2019 at 08:30:24AM +0200, Greg KH wrote:
+> > On Mon, Aug 26, 2019 at 04:24:32PM +1000, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > After merging the staging tree, today's linux-next build (x86_64
+> > > allmodconfig) produced this warning:
+> > > 
+> > > In file included from include/trace/events/erofs.h:8,
+> > >                  from <command-line>:
+> > > include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
+> > >   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+> > >                                      ^~~~~~
+> > > include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
+> > >   static inline void trace_##name(proto)    \
+> > >                                   ^~~~~
+> > > include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
+> > >   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
+> > >                         ^~~~~~
+> > > include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
+> > >   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> > >   ^~~~~~~~~~~~~
+> > > include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
+> > >   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> > >                       ^~~~~~
+> > > include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
+> > >  TRACE_EVENT(erofs_lookup,
+> > >  ^~~~~~~~~~~
+> > > include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
+> > >   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+> > >   ^~~~~~~~
+> > > 
+> > > and moany more like this ...
 
-Unfortunately, this change breaks a previous pci quirk added by
-commit cc346a4714a59 ("PCI: Add function 1 DMA alias quirk for
-Marvell devices"), as the result, devices like Marvell 88SE9128
-SATA controller doesn't work anymore.
+Could you give me more log about this? I don't know how to reproduce that warning
+since I can compile x86-64 kernel image with my configproperly on my PC...
+I'm trying allmodconfig now...
 
-We will continue to try to find the real culprit mentioned in
-557529494d79f, but for now we should revert it to fix current
-breakage.
+Thanks,
+Gao Xiang
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204627
-Cc: Stijn Tintel <stijn@linux-ipv6.be>
-Cc: Petr Vandrovec <petr@vandrovec.name>
-Reported-by: Stijn Tintel <stijn@linux-ipv6.be>
-Reported-by: Petr Vandrovec <petr@vandrovec.name>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 55 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 53 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 12d094d08c0a..c4e0e4a9ee9e 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -339,6 +339,8 @@ static void domain_exit(struct dmar_domain *domain);
- static void domain_remove_dev_info(struct dmar_domain *domain);
- static void dmar_remove_one_dev_info(struct device *dev);
- static void __dmar_remove_one_dev_info(struct device_domain_info *info);
-+static void domain_context_clear(struct intel_iommu *iommu,
-+				 struct device *dev);
- static int domain_detach_iommu(struct dmar_domain *domain,
- 			       struct intel_iommu *iommu);
- static bool device_is_rmrr_locked(struct device *dev);
-@@ -2105,9 +2107,26 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
- 	return ret;
- }
- 
-+struct domain_context_mapping_data {
-+	struct dmar_domain *domain;
-+	struct intel_iommu *iommu;
-+	struct pasid_table *table;
-+};
-+
-+static int domain_context_mapping_cb(struct pci_dev *pdev,
-+				     u16 alias, void *opaque)
-+{
-+	struct domain_context_mapping_data *data = opaque;
-+
-+	return domain_context_mapping_one(data->domain, data->iommu,
-+					  data->table, PCI_BUS_NUM(alias),
-+					  alias & 0xff);
-+}
-+
- static int
- domain_context_mapping(struct dmar_domain *domain, struct device *dev)
- {
-+	struct domain_context_mapping_data data;
- 	struct pasid_table *table;
- 	struct intel_iommu *iommu;
- 	u8 bus, devfn;
-@@ -2117,7 +2136,17 @@ domain_context_mapping(struct dmar_domain *domain, struct device *dev)
- 		return -ENODEV;
- 
- 	table = intel_pasid_get_table(dev);
--	return domain_context_mapping_one(domain, iommu, table, bus, devfn);
-+
-+	if (!dev_is_pci(dev))
-+		return domain_context_mapping_one(domain, iommu, table,
-+						  bus, devfn);
-+
-+	data.domain = domain;
-+	data.iommu = iommu;
-+	data.table = table;
-+
-+	return pci_for_each_dma_alias(to_pci_dev(dev),
-+				      &domain_context_mapping_cb, &data);
- }
- 
- static int domain_context_mapped_cb(struct pci_dev *pdev,
-@@ -4759,6 +4788,28 @@ int __init intel_iommu_init(void)
- 	return ret;
- }
- 
-+static int domain_context_clear_one_cb(struct pci_dev *pdev, u16 alias, void *opaque)
-+{
-+	struct intel_iommu *iommu = opaque;
-+
-+	domain_context_clear_one(iommu, PCI_BUS_NUM(alias), alias & 0xff);
-+	return 0;
-+}
-+
-+/*
-+ * NB - intel-iommu lacks any sort of reference counting for the users of
-+ * dependent devices.  If multiple endpoints have intersecting dependent
-+ * devices, unbinding the driver from any one of them will possibly leave
-+ * the others unable to operate.
-+ */
-+static void domain_context_clear(struct intel_iommu *iommu, struct device *dev)
-+{
-+	if (!iommu || !dev || !dev_is_pci(dev))
-+		return;
-+
-+	pci_for_each_dma_alias(to_pci_dev(dev), &domain_context_clear_one_cb, iommu);
-+}
-+
- static void __dmar_remove_one_dev_info(struct device_domain_info *info)
- {
- 	struct dmar_domain *domain;
-@@ -4779,7 +4830,7 @@ static void __dmar_remove_one_dev_info(struct device_domain_info *info)
- 					PASID_RID2PASID);
- 
- 		iommu_disable_dev_iotlb(info);
--		domain_context_clear_one(iommu, info->bus, info->devfn);
-+		domain_context_clear(iommu, info->dev);
- 		intel_pasid_free_table(info->dev);
- 	}
- 
--- 
-2.17.1
-
+> > > 
+> > > Introduced by commit
+> > > 
+> > >   47e4937a4a7c ("erofs: move erofs out of staging")
+> > > 
+> > > (or, at least, exposed by it).  It needs, at least, a "struct dentry;"
+> > > added to the file.
+> > 
+> > Odd, why has this never been seen before when the same files were in
+> > drivers/staging/ and why 0-day isn't reporting this?
+> 
+> I Think it is weird since it is never failed in staging and kbuild-all 0-day ci
+> (my tree and you tree)....
+> 
+> > 
+> > Gao, can you send me a patch for this?
+> 
+> Got it, I will look into that...
+> 
+> Thanks,
+> Gao Xiang
+> 
+> > 
+> > thanks,
+> > 
+> > greg k-h
