@@ -2,102 +2,142 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825D6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77A8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D6420874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="N4ZkxriL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jG6F4Rdh"
+	by mail.kernel.org (Postfix) with ESMTP id B6FA220874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbfHZIBN (ORCPT
+        id S1730350AbfHZIB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:01:13 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:57303 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726875AbfHZIBN (ORCPT
+        Mon, 26 Aug 2019 04:01:29 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38277 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfHZIB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:01:13 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id A805C37B;
-        Mon, 26 Aug 2019 04:01:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 26 Aug 2019 04:01:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=6R15M5gpXp6+t5ucxX5BenurBan
-        iwk5iWP/DzbBg5DU=; b=N4ZkxriL+KWtGKhMDq4zY7SZOQMCRHKmbWr7QXeS4ZC
-        7ccTC8mfuqMp0a/reeq66Rw5E30sFntXklfEIWeh+qIh6L4QJcYxiCQ6TAw0bS2e
-        PEuCtAL+QRa9//uKlzL+83G57ZmH26poWUZ6LC/VxVIqThR02SV5dBeEXjf3KLtK
-        iPhYegS2W290c1vwJdCh+I2Oe17lMURl3dM2LB6JW8OQNhGJEGHSKH60VTzjQiaN
-        SRP5UB77MI4Ru/XB4Hb0EkkvwQviHXkltmkawsbl4IBcEQWBFIJkevpFfiLZk/M9
-        X7ZK9bBKibKv3eQSI/cYSI5+sedM7IVCelFhfB7biyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=6R15M5
-        gpXp6+t5ucxX5BenurBaniwk5iWP/DzbBg5DU=; b=jG6F4Rdh+XZIGvPnoktgO8
-        fFRYrtJsdap6E8xiPtwLLuyQy+0vgpJ/7BdSIRSNkh2wLjCnXrzAbaOyNMkaJv4k
-        8WFxWthRG+nuMiDE6Kbdnf1CjenFwAsFMB38I7DA5R+QGUShtJwMopJAXfV5X7UB
-        psioXqXoEFLP1CuRIMgZZnhqwzVGWibVlbo3eLWLMppu+pK843fW+UqJpd3lJikz
-        Nmt5JCfmMmPDQkUaRcWmtkAGEuerMZTRRXohI8YrXMO909vAtcgIJ/OI0gPWVJCy
-        nIuAjGnWgB3IRLD4RToOJ3PE6z7vLL5/Xdlz1pFCf55myFFo+Tr7fc28kv9MFOgw
-        ==
-X-ME-Sender: <xms:xpFjXc4ZFbe6uLo-OA2gTsNCnPaZZqKk_QuozqFWkQd2Ecu06PRnJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehfedguddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvg
-    hlrdhorhhgnecukfhppeekledrvddthedruddvkedrvdegieenucfrrghrrghmpehmrghi
-    lhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:xpFjXVhhblGQG1rhTevfJPff4HgH6zC_ocl8Vu6XbARUqhe3DVlIYA>
-    <xmx:xpFjXS2R7zQZgnIQOrdPPlDuslkxlSOhEJ2ThSUb93BsMytomEf46w>
-    <xmx:xpFjXborEjL1SENQrhNcCt_XcxnYEghJ_uexRgKLCQqZxWZgNpp0iA>
-    <xmx:x5FjXbrKkO73fUaGrV-LxbI-1VebKEomHXdVOnNBEyPUn2q0lfODtg>
-Received: from localhost (unknown [89.205.128.246])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2D32C8005C;
-        Mon, 26 Aug 2019 04:01:09 -0400 (EDT)
-Date:   Mon, 26 Aug 2019 10:01:07 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, akpm@linux-foundation.org, jslaby@suse.cz,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Subject: Re: Linux 5.2.10
-Message-ID: <20190826080107.GB30396@kroah.com>
-References: <20190825144703.6518-1-sashal@kernel.org>
- <20190826063834.GD31983@Gentoo>
+        Mon, 26 Aug 2019 04:01:29 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E4E4A1BF209;
+        Mon, 26 Aug 2019 08:01:19 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 10:02:50 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
+Message-ID: <20190826080250.av3z2vunbd2z7hzu@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-9-jacopo+renesas@jmondi.org>
+ <CAMuHMdUuWFGSTUcAR2aV6cg4hpfzMs5EQBJTNM+ym2k8Ht-bVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sbblrgvskuirlqsw"
 Content-Disposition: inline
-In-Reply-To: <20190826063834.GD31983@Gentoo>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAMuHMdUuWFGSTUcAR2aV6cg4hpfzMs5EQBJTNM+ym2k8Ht-bVA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 12:08:38PM +0530, Bhaskar Chowdhury wrote:
 
-<snip>
+--sbblrgvskuirlqsw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Due, learn to properly trim emails...
+Hi Geert,
 
-> For some unknown reason kernel.org still showing me 5.2.9 ..Please refer
-> to the attached screenshot.
+On Mon, Aug 26, 2019 at 09:31:02AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> On Sun, Aug 25, 2019 at 3:51 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > Add a driver for the R-Car Display Unit Color Correction Module.
+> > In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> > to perform image enhancement and color correction.
+> >
+> > Add support for CMM through a driver that supports configuration of
+> > the 1-dimensional LUT table. More advanced CMM feature will be
+> > implemented on top of this basic one.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+>
+> > +static const struct of_device_id rcar_cmm_of_table[] = {
+> > +       { .compatible = "renesas,cmm-r8a7795", },
+> > +       { .compatible = "renesas,cmm-r8a7796", },
+> > +       { .compatible = "renesas,cmm-r8a77965", },
+> > +       { .compatible = "renesas,cmm-r8a77990", },
+> > +       { .compatible = "renesas,cmm-r8a77995", },
+> > +       { .compatible = "renesas,rcar-gen3-cmm", },
+>
+> As they're all handled the same, you can drop the SoC-specific values
+> from the driver's match table.
+>
+> > +       { .compatible = "renesas,rcar-gen2-cmm", },
+>
+> Just wondering: has this been tested on R-Car Gen2?
+>
 
-What mirror are you hitting here?  There is a way somehow to see that on
-your end, I thought it was at the bottom of the page.
+Not from me :(
+It might not be the smartest move to add a compatible for an un-tested
+chip generation. I dragged the gen2 compatible in along the series as
+it was there in the downstream driver and I assumed BSP has been
+tested there, but since I've not been able to run any test on Gen2
+board I should probably drop it? Any volunteer with a Gen2 board that
+want to run a test?
 
-You are not seeing any of the releases that happened yesterday, which is
-really odd, it's not just a 5.2.10 issue.
+Thanks
+  j
 
-thanks,
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-greg k-h
+--sbblrgvskuirlqsw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jkioACgkQcjQGjxah
+Vjz2zA/9GA5pNTNrK1sLbSQr1l5T/m5J1t7HdVRkrl24WFP5Mpjzm1g/Du5cRFPQ
+XtI6YoSrvzWADCbeDldUaIGCQ+1b+EQntwVU3dkkV50FrxiDuZ+4b2+Qco1lTT9W
+5uuWRkc14jpDdIT5bFYB79V4yckKLy54rzRHVgB5uX+KzswQgs26SICnlgecA+9d
+7Dy6Q0gMVfnxrNiCSVrrr637sXfdKaQUAHz+y+X4bJTgQsjcjKD+WU4pqmG4hLs/
+CsY9+FErIXk9yB2EOX7hCP6k6KsX/BHHRGW4uHq/neunFZECfDyI48yC/9qCWtWk
+JjZdAO+ZzPXFB1kjKeyfaunqa1oKhdR2C2traKN5E1i8EkRzTU1HB5CJElFDU5Xf
+OLOKApejqaZKSza693g9cU2Gv0UVO1jJuie2kEnp+5MH9BY+sJFxE47qmmdGeIlZ
+hIZ7X1A67eZD0z9FocQVpfBOLpztswaL3dNzOPw0azxdH4MgcTBoQYSFB/GVJLqS
+Az3r2R1w/kIDaJhmWNFLuPSiFJNdL1Sqrd/SChrQYoYbXGqqFE3O7a1TS+5k1tE+
+ecLmjUPerqRP29vehz8lgipCdirotVmR+kCfGotGMnC6mpcqfR1WyghGLcl/nItc
+H78K5Xu8knqi0kV4ieP0PnIw60OC92IsceQBl3arkkrMkr/ukew=
+=MgVV
+-----END PGP SIGNATURE-----
+
+--sbblrgvskuirlqsw--
