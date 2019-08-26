@@ -7,77 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889C0C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58085C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591E92184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B36D2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t4oVhmR+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSRwaaQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbfHZUpH (ORCPT
+        id S1731392AbfHZUpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:45:07 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37776 "EHLO
+        Mon, 26 Aug 2019 16:45:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36480 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729700AbfHZUpF (ORCPT
+        with ESMTP id S1731065AbfHZUpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:45:05 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d16so789348wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:45:03 -0700 (PDT)
+        Mon, 26 Aug 2019 16:45:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g67so794874wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=46OI48aknCO8xnHiNKqbTqHhcC3QBVezddPBiW79IL8=;
-        b=t4oVhmR+oEEVFvTBVetR2kz0/3Vk+qOebroB6rEXmXbS3C5c7DmvoLtkR/XNcYPLes
-         zRljos8wGxhV5FMc917+mc3iMPQHHDfyYh755S+nYbyMGDbMYc2jJSUEdkwn7lLlu4lb
-         aqfJlwnYyiBuMcwpF9BrlSQ6XbvFE+X6y1ffhp9fgHrtU0vif8r5YGwd/r9efZYKcL//
-         GTgiIzAieaWGJTQMsho97OqfgtL0BArhkgD+YIpT3WxKEuuW3hKWD4PlFj5QsrM+8sl1
-         BPCxWcg52FcmVNt5sU2eiav3lxk3sjSHs1tw3unGZRUXBEPfRD+jbX8TYcucYmvla/Wm
-         G96w==
+        bh=EJr/EagOWWWCEFoK6Cl8RHdd3bbJGdepYKWoaGBi1+8=;
+        b=uSRwaaQTED8QF+2S4yqgVSoNPgjxT8uTgt9GhpJsDr+8CvcVzeUbCSE0ERTVchio4p
+         QNRdt30i1fpggxajsFk7Voi6prWjddEOIdOxu/GaOqTH1NMqdBXyL9p9OsvjyHBGqz2n
+         ZtmiU15CtLVF/qW8QfOji5RW101rf6lV2hH4P8NlLJAV2uMDR1rvyAsAeS2SV4p1eKD9
+         ByX/kC7XiDxfjEXRYp4lV1pFvei3AOrAjRvNGOYS5+vNSRte8WFE3BWxQNgdYUSObzPd
+         v08kN1XBFh7jYXDKXF1rRiLfgCLVJMRsBl1Gj22oaCtg0kP8zckgIqrdiYBqAj4kZfE3
+         5SOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=46OI48aknCO8xnHiNKqbTqHhcC3QBVezddPBiW79IL8=;
-        b=E6y35vronsrTxbVKfqdSNE3RoHpaR6FrWkZIYJlfGxKCrJBxlPndw8CErrPCRlWjEe
-         GN5hokiTkgGbnFPYw/rP11h90QfZYAXEyZQ8GiurZaSZMxHRix8AcxhxrdKVfot0ISo1
-         Uz16q5Dr8kcQ2wdphJ9gPSAgxCRRRvKJW6vlCqMWbPhM/1ttJgTOsXubBFiyfqjIfpvQ
-         w/3RAQvUdphC9bvNSU7zwOPh8tX3EoZLkX4i4Y9Ms27lN/16tHaRqZjeQp8JmSBzEdX6
-         k5QEBBoEvj4YuRyDHRO7gC4EBsqk3Pa3zcbaBcuNdEy+Xn3qSiZKZ/XeIUgXWrntU6OT
-         fx6w==
-X-Gm-Message-State: APjAAAUfQs7Yr0zLRwlyvM5xfvprsmUQbZ/soTK/CyV/tIBI0BMzUfqy
-        iFeTZ9/jGWtm77WINlidcU+qQw==
-X-Google-Smtp-Source: APXvYqy/MOnLdsZqPivoqO1dTZcmcuw9cOf0HcH7tX9csv0OGT8Z+QaquXD03St2y9wJ6nH2wxfRDg==
-X-Received: by 2002:a7b:c244:: with SMTP id b4mr23459241wmj.125.1566852302984;
-        Mon, 26 Aug 2019 13:45:02 -0700 (PDT)
+        bh=EJr/EagOWWWCEFoK6Cl8RHdd3bbJGdepYKWoaGBi1+8=;
+        b=ada3sQz6Rn7mOpK5YyIU5l7RefuPGLDJ+RGrzQd16/XJ4rNNvUKYOm/QYUtBx9eq9O
+         N+axadk6udbgEEYg5g6D0Sgu3HmEycHXqoXkFs2upWhwbfoi+g/TPunR8igVPXBjPO+5
+         J8TW5aTG5Scu7YpHs7+Gl5A3YqYwEy+R4Chw1WpVUzd57+pydNyYivXgok5TzeR/XDaJ
+         /qcb31e1WUE4KlyhyHPFZbA3IkJ6trpx/KH61NQ3vdILT4kaAaF8dO6CPcSWFXxlLH1o
+         QZS5uJwsLz2R6heRfAFxjrZ3KopLKP/q44tiCXHp2L9GlphQQf3FSokY7FHAdmyyM8WG
+         9p6g==
+X-Gm-Message-State: APjAAAU3tL31kDiyXQ9BhZPjW/JRCDyaQ9q6gjFDwPI+Avnz7xd0LMKY
+        VYy+qzGrhfQTwsOfkrkMw6Juzg==
+X-Google-Smtp-Source: APXvYqwXwSxG80kgpFkYnO+Z1GwvdiIdcVmq6Bkgqse72Bk1nRrZrhz0H9bgN6nDwhLGTu2FJfkc7Q==
+X-Received: by 2002:a1c:ed04:: with SMTP id l4mr24638471wmh.81.1566852306477;
+        Mon, 26 Aug 2019 13:45:06 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
-        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.45.01
+        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.45.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 13:45:02 -0700 (PDT)
+        Mon, 26 Aug 2019 13:45:05 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE)
-Subject: [PATCH 09/20] arm64: dts: imx8mq: Add system counter node
-Date:   Mon, 26 Aug 2019 22:43:56 +0200
-Message-Id: <20190826204407.17759-9-daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        openbmc@lists.ozlabs.org (moderated list:ARM/NUVOTON NPCM ARCHITECTURE)
+Subject: [PATCH 11/20] clocksource/drivers/npcm: Fix GENMASK and timer operation
+Date:   Mon, 26 Aug 2019 22:43:58 +0200
+Message-Id: <20190826204407.17759-11-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190826204407.17759-1-daniel.lezcano@linaro.org>
 References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
@@ -87,36 +76,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Avi Fishman <avifishman70@gmail.com>
 
-Add i.MX8MQ system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+NPCM7XX_Tx_OPER GENMASK bits are wrong, fix them.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hopefully the NPCM7XX_REG_TICR0 register reset value of those bits was 0,
+so it did not cause an issue.
+
+The function npcm7xx_timer_oneshot() reads the register
+NPCM7XX_REG_TCSR0, modifies it and then reads it again overwriting the
+previous changes. Remove the extra read which is pointless.
+
+The function npcm7xx_timer_periodic() is correct but the code writes
+to the NPCM7XX_REG_TICR0 register while it is dealing with the
+NPCM7XX_REG_TCSR0 register, that is confusing. Separate the write to
+the registers in the code for the sake of clarity.
+
+Fixes: 1c00289ecd12 ("clocksource/drivers/npcm: Add NPCM7xx timer driver")
+Signed-off-by: Avi Fishman <avifishman70@gmail.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clocksource/timer-npcm7xx.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808eff87..b4529773af51 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -635,6 +635,14 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x20000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&osc_25m>;
-+				clock-names = "per";
-+			};
- 		};
+diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
+index 8a30da7f083b..9780ffd8010e 100644
+--- a/drivers/clocksource/timer-npcm7xx.c
++++ b/drivers/clocksource/timer-npcm7xx.c
+@@ -32,7 +32,7 @@
+ #define NPCM7XX_Tx_INTEN		BIT(29)
+ #define NPCM7XX_Tx_COUNTEN		BIT(30)
+ #define NPCM7XX_Tx_ONESHOT		0x0
+-#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
++#define NPCM7XX_Tx_OPER			GENMASK(28, 27)
+ #define NPCM7XX_Tx_MIN_PRESCALE		0x1
+ #define NPCM7XX_Tx_TDR_MASK_BITS	24
+ #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
+@@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct clock_event_device *evt)
  
- 		bus@30800000 { /* AIPS3 */
+ 	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+ 	val &= ~NPCM7XX_Tx_OPER;
+-
+-	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+ 	val |= NPCM7XX_START_ONESHOT_Tx;
+ 	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
+ 
+@@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct clock_event_device *evt)
+ 	struct timer_of *to = to_timer_of(evt);
+ 	u32 val;
+ 
++	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
++
+ 	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+ 	val &= ~NPCM7XX_Tx_OPER;
+-
+-	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
+ 	val |= NPCM7XX_START_PERIODIC_Tx;
+-
+ 	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
+ 
+ 	return 0;
 -- 
 2.17.1
 
