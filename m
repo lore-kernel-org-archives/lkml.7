@@ -2,92 +2,85 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B44C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CBFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8552184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566841178;
-	bh=vhvUfinBuSpm31ERs791ilat2rMccKc/GvBF87f6fuM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ylDKb8JrXZj+d+tAbNjf4oHqVH66+t1Zyk5OSUTT6klbQit1lq1Ou/2nfBtuqRTnj
-	 f1kb1MUhaei6qluBw7YyMBwSi5a5kwJ+N//iSQhbToREFpSgja9gvVWRFaZkRquAwY
-	 xHqLldeukyAIy3PyXqaI2yqwPzob2xGcCNMHDaZM=
+	by mail.kernel.org (Postfix) with ESMTP id 8DCA421872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:40:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jUktPM/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387439AbfHZRjh (ORCPT
+        id S1733069AbfHZRkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731986AbfHZRjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:39:35 -0400
-Received: from localhost (unknown [122.178.200.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B4D2080C;
-        Mon, 26 Aug 2019 17:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566841175;
-        bh=vhvUfinBuSpm31ERs791ilat2rMccKc/GvBF87f6fuM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TJ9aMvddrr4mCu9l3R/JGImtMK12IkD2AcSahL1RwBX/J8vH30u2zbXRbrC7YQrQr
-         6LikbONFNnGjjLjsDpgaSqGg+qOg7dLoXZceMYKcbNRxUOoNvYP1PDdDrC+fRKtoUh
-         MtYV36bW8phNflGVDgBMeAEZZ95EbXmqL4saCNDA=
-Date:   Mon, 26 Aug 2019 23:08:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8150: Update parent clock for rpmhcc
-Message-ID: <20190826173825.GJ2672@vkoul-mobl>
-References: <20190822170533.8056-1-vkoul@kernel.org>
+        Mon, 26 Aug 2019 13:40:39 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41182 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731833AbfHZRki (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:40:38 -0400
+Received: by mail-io1-f65.google.com with SMTP id j5so39276876ioj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 10:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=07FbLzlU1Ecz43EkldpfmQ01c+welin2T9Ux9RN+VOA=;
+        b=jUktPM/+OKebsv6P/ehphnW7txXBARqsKU0ruH32PE1OiNAW7yGvUkyq4+ekbKnfoJ
+         18QQJJJ0+ms68LlNYQJyAwMDc0wrtDZn0oZLbAcZGMdhLqJq1DWNt159dVv1RGCYGbZp
+         4Cv8usiDzHIi6fraaFOJtNw2wQAGBDlbgdOs2kD5USWeBiv1vh7d3eDQ/z3VHHDMfcKY
+         kmNp1wOZna+Ll+lQTmfx06KtrFNjR9AdjQ/TmSbd9IHGlY+g1WnWfUOtMSjlYvoNq3ZD
+         ssgcOGtDlKDQBjLxRqnAjffKFcmGA1bDuGNwzkBERb3jVo6YvYKWaqX6j7+NoqjHNg0R
+         i4nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=07FbLzlU1Ecz43EkldpfmQ01c+welin2T9Ux9RN+VOA=;
+        b=RDPu0TtOo5cnBljOZsaXqAfdPp6G5WvmyUOGjUmq6/dSpN6+ELiOqa2CZt6IKWVs3z
+         x6j1rZUDrPVX7E85MvT49rxLXi1ACSs05ARiBTqZfwhcbcr3fAoylS1D0E4omS/quR/7
+         scZ9ku7AgED3nWuFpYPwNfAOpw3YCgN/ojQjdgKegXs55jHQKSHmXIozyzZcOxHVS9jz
+         f2P3sWSLFx2GlX99Y0wbZvRBOFvTsk7KUaoSTxIYGoFmUy0//LvzT64lHUVhepjTBZ7W
+         vfqi8dBl1Inx2yQrF8Oe26ZKsZ/zWgR6YE87TP7AeVsUoxF8W2cVsf7v+vjvToJJRNj1
+         EUNA==
+X-Gm-Message-State: APjAAAWsn7tbT8hRAaKLc8+hIWtR5qCGOMyOb1LDwmQZ/8fVQYCttVo7
+        EUqOJhwGhr9MR88n9KrQmr1412gnLJPTj1qrTaWceSk2fbg=
+X-Google-Smtp-Source: APXvYqww5diAuNUdEkTEcBBDnreTmON4tALCdYa3hUfAPKmUmf9O2eXoldlz14FrKT+I0D8//8NJYLuMJIA0RpfUjGI=
+X-Received: by 2002:a6b:bcc4:: with SMTP id m187mr13841450iof.16.1566841237601;
+ Mon, 26 Aug 2019 10:40:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822170533.8056-1-vkoul@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190826081752.57258-1-kkamagui@gmail.com>
+In-Reply-To: <20190826081752.57258-1-kkamagui@gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 26 Aug 2019 10:40:25 -0700
+Message-ID: <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
+Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
+ supporting AMD's fTPM
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-08-19, 22:35, Vinod Koul wrote:
-> Since rphmcc expects the parent clock name as 'xo_board', update the
-> parent clock name.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 379c40b9a52f..f92c590fd3dc 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -650,7 +650,7 @@
->  			rpmhcc: clock-controller {
->  				compatible = "qcom,sm8150-rpmh-clk";
->  				#clock-cells = <1>;
-> -				clock-names = "xo";
-> +				clock-names = "xo_board";
+On Mon, Aug 26, 2019 at 1:18 AM Seunghun Han <kkamagui@gmail.com> wrote:
+> To support AMD's fTPM, I removed the busy bit from the ACPI NVS area like
+> the reserved area so that AMD's fTPM regions could be assigned in it.
 
-With the v5 of the rpmh changes we dont need this, so please drop this
-
->  				clocks = <&xo_board>;
->  			};
->  		};
-> -- 
-> 2.20.1
-
--- 
-~Vinod
+drivers/acpi/nvs.c saves and restores the contents of NVS regions, and
+if other drivers use these regions without any awareness of this then
+things may break. I'm reluctant to say that just unilaterally marking
+these regions as available is a good thing, but it's clearly what's
+expected by AMD's implementation. One approach would be to have a
+callback into the nvs code to indicate that a certain region should be
+handed off to a driver, which would ensure that we can handle this on
+a case by case basis?
