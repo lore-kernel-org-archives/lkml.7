@@ -2,119 +2,102 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A362C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05336C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1082187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B20217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbfHZNq7 (ORCPT
+        id S1732086AbfHZNso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:46:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44324 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728550AbfHZNq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:46:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4C2D6B038;
-        Mon, 26 Aug 2019 13:46:57 +0000 (UTC)
-Message-ID: <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
-Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     catalin.marinas@arm.com, eric@anholt.net,
-        linux-riscv@lists.infradead.org, frowand.list@gmail.com,
-        m.szyprowski@samsung.com, linux-arch@vger.kernel.org,
-        f.fainelli@gmail.com, will@kernel.org, devicetree@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com,
-        robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, phill@raspberryi.org,
-        mbrugger@suse.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        wahrenst@gmx.net, akpm@linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>
-Date:   Mon, 26 Aug 2019 15:46:52 +0200
-In-Reply-To: <20190826070939.GD11331@lst.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-         <20190820145821.27214-2-nsaenzjulienne@suse.de>
-         <20190826070939.GD11331@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rvg1En4pB30QD7Cei8XS"
-User-Agent: Evolution 3.32.4 
+        Mon, 26 Aug 2019 09:48:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40178 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728550AbfHZNsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:48:43 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2FML-0004bC-7H; Mon, 26 Aug 2019 15:48:37 +0200
+Date:   Mon, 26 Aug 2019 15:48:35 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+cc:     Sebastian Mayr <me@sam.st>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Safonov <dsafonov@virtuozzo.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH] uprobes/x86: fix detection of 32-bit user mode
+In-Reply-To: <alpine.DEB.2.21.1908240218460.1939@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908261548070.1939@nanos.tec.linutronix.de>
+References: <20190728152617.7308-1-me@sam.st> <alpine.DEB.2.21.1908232343470.1939@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908240142000.1939@nanos.tec.linutronix.de> <32D5D6B1-B29E-426E-90B6-48565A3B8F3B@amacapital.net> <alpine.DEB.2.21.1908240200070.1939@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1908240202220.1939@nanos.tec.linutronix.de> <DE4AECCC-AFBE-4DA7-A229-B6B870E06B1D@amacapital.net> <alpine.DEB.2.21.1908240218460.1939@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-25970487-1566827317=:1939"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---=-rvg1En4pB30QD7Cei8XS
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--8323329-25970487-1566827317=:1939
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
-> On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
-> > Some architectures have platform specific DMA addressing limitations.
-> > This will allow for hardware description code to provide the constraint=
-s
-> > in a generic manner, so as for arch code to properly setup it's memory
-> > zones and DMA mask.
->=20
-> I know this just spreads the arm code, but I still kinda hate it.
+On Sat, 24 Aug 2019, Thomas Gleixner wrote:
+> On Fri, 23 Aug 2019, Andy Lutomirski wrote:
+> > > On Aug 23, 2019, at 5:03 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > 
+> > >> On Sat, 24 Aug 2019, Thomas Gleixner wrote:
+> > >> On Fri, 23 Aug 2019, Andy Lutomirski wrote:
+> > >>>> On Aug 23, 2019, at 4:44 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >>>> 
+> > >>>>>> On Sat, 24 Aug 2019, Thomas Gleixner wrote:
+> > >>>>>> On Sun, 28 Jul 2019, Sebastian Mayr wrote:
+> > >>>>>> 
+> > >>>>>> -static inline int sizeof_long(void)
+> > >>>>>> +static inline int sizeof_long(struct pt_regs *regs)
+> > >>>>>> {
+> > >>>>>> -    return in_ia32_syscall() ? 4 : 8;
+> > >>>>> 
+> > >>>>> This wants a comment.
+> > >>>>> 
+> > >>>>>> +    return user_64bit_mode(regs) ? 8 : 4;
+> > >>>> 
+> > >>>> The more simpler one liner is to check
+> > >>>> 
+> > >>>>   test_thread_flag(TIF_IA32)
+> > >>> 
+> > >>> I still want to finish killing TIF_IA32 some day.  Let’s please not add new users.
+> > >> 
+> > >> Well, yes and no. This needs to be backported ....
+> > > 
+> > > And TBH the magic in user_64bit_mode() is not pretty either.
+> > > 
+> > It’s only magic on Xen. I should probably stick a
+> > cpu_feature_enabled(X86_FEATURE_XENPV) in there instead.
+> 
+> For backporting sake I really prefer the TIF version. One usage site more
+> is not the end of the world. We can add the user_64bit_mode() variant from
+> Sebastian on top as a cleanup right away so mainline is clean.
 
-Rob's main concern was finding a way to pass the constraint from HW definit=
-ion
-to arch without widening fdt's architecture specific function surface. I'd =
-say
-it's fair to argue that having a generic mechanism makes sense as it'll now
-traverse multiple archs and subsystems.
+Bah, scratch it. I take the proper one right away.
 
-I get adding globals like this is not very appealing, yet I went with it as=
- it
-was the easier to integrate with arm's code. Any alternative suggestions?
-
-> MAX_DMA_ADDRESS is such an oddly defined concepts.  We have the mm
-> code that uses it to start allocating after the dma zones, but
-> I think that would better be done using a function returning
-> 1 << max(zone_dma_bits, 32) or so.  Then we have about a handful
-> of drivers using it that all seem rather bogus, and one of which
-> I think are usable on arm64.
-
-Is it safe to assume DMA limitations will always be a power of 2? I ask as =
-RPi4
-kinda isn't: ZONE_DMA is 0x3c000000 bytes big, I'm approximating the zone m=
-ask
-to 30 as [0x3c000000 0x3fffffff] isn't defined as memory so it's unlikely t=
-hat
-we=C2=B4ll encounter buffers there. But I don't know how it could affect mm
-initialization code.
-
-This also rules out 'zone_dma_bits' as a mechanism to pass ZONE_DMA's size =
-from
-HW definition code to arch's.
-
-
---=-rvg1En4pB30QD7Cei8XS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1j4swACgkQlfZmHno8
-x/7+5Qf/RG+HHfwkIbvgTeNBR6PGQMv7ZNDSxgeVo0caYiQnN2w01vHWnEXBnsNK
-sj6p2ip+d5CQbSOMO2oVO7qS4+BoOjcdnFTNSLH0uN5coZj6sr8u5N/FFdeb2cI+
-6B9opO7apUCnnuwaBeV5Ocepk1gr4rNoRnrOWmFwnqoc9dBRBuKV4ejcEB43ySw6
-wxwOswOu17wPR3o6969vTlP29cTItzXnrjmlTn+lKyQpR6pOzC0IpU1tmO0KkfHM
-+U0Kypzbtb5Z9uCWvbS42mvT9oV3/El8iqrw1mPxbwRDgwDsBf2awc+fNmnQTsRK
-4pDSxPGJ5wST3O0WUjysQ9u+RJC+Cg==
-=y9Dx
------END PGP SIGNATURE-----
-
---=-rvg1En4pB30QD7Cei8XS--
-
+--8323329-25970487-1566827317=:1939--
