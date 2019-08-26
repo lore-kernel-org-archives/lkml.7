@@ -2,78 +2,84 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787EBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413CAC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473232080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D47F20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566783226;
+	bh=soGnK/XzwmIt6U8KqKjDw3zFvx3AArGytKLbfjxOTk8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YjnZITTxbykA7xXwzBUKPVpNabgPybcxwPfAbYV8TPttZW2oyi+2jccBIbrrSVxuk
+	 M/zu0ezWIB/f0hde8TiqBGD9JLGTL4UQoXVmtNXOvdeCL4XO8J5UA9PQztg9xcQ0gb
+	 gNbdKJQyVkFAC/WGVxi6ScMf9mv1IWytkjKwS0kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfHZB14 (ORCPT
+        id S1726897AbfHZBdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 21:27:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56342 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbfHZB14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 21:27:56 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 77F959007E5A52120171;
-        Mon, 26 Aug 2019 09:27:54 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 26 Aug 2019 09:27:45 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <nbd@openwrt.org>, <john@phrozen.org>, <sean.wang@mediatek.com>,
-        <nelson.chang@mediatek.com>, <davem@davemloft.net>,
-        <matthias.bgg@gmail.com>
-CC:     <kernel-janitors@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH v2 -next] net: mediatek: remove set but not used variable 'status'
-Date:   Mon, 26 Aug 2019 09:31:18 +0800
-Message-ID: <20190826013118.22720-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190824.142158.1506174328495468705.davem@davemloft.net>
-References: <20190824.142158.1506174328495468705.davem@davemloft.net>
+        Sun, 25 Aug 2019 21:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbfHZBdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 21:33:44 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925FF20673;
+        Mon, 26 Aug 2019 01:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566783223;
+        bh=soGnK/XzwmIt6U8KqKjDw3zFvx3AArGytKLbfjxOTk8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=coyATRWN2NkvEkHBvwzhaHowmyOrjxa/CeqeD0fYfoywkc6uCy2X+nTOZDSj6fc2c
+         YZJi4RIAqlL1ZYUHKdlirvbyjBUHoHK0BG7/WDoxz2IEBC12w28e0+T2oS6x71e9Kx
+         PIQj1P/P4h1Xu8d+OWupLOmLU+463V4ZM11CUkc4=
+Date:   Sun, 25 Aug 2019 21:33:42 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH AUTOSEL 5.2 022/123] ASoC: dapm: Fix handling of
+ custom_stop_condition on DAPM graph walks
+Message-ID: <20190826013342.GF5281@sasha-vm>
+References: <20190814021047.14828-1-sashal@kernel.org>
+ <20190814021047.14828-22-sashal@kernel.org>
+ <20190814092052.GB4640@sirena.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190814092052.GB4640@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-drivers/net/ethernet/mediatek/mtk_eth_soc.c: In function mtk_handle_irq:
-drivers/net/ethernet/mediatek/mtk_eth_soc.c:1951:6: warning: variable status set but not used [-Wunused-but-set-variable]
+On Wed, Aug 14, 2019 at 10:20:52AM +0100, Mark Brown wrote:
+>On Tue, Aug 13, 2019 at 10:09:06PM -0400, Sasha Levin wrote:
+>> From: Charles Keepax <ckeepax@opensource.cirrus.com>
+>>
+>> [ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
+>>
+>> DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
+>> list of the widgets connected to a specific front end DAI so it
+>> can search through this list for available back end DAIs. The
+>
+>The DPCM code and its users are rather fragile, if nobody noticed a
+>problem I'd worry about causing some other problem to manifest by
+>disturbing things.
 
-Fixes: 296c9120752b ("net: ethernet: mediatek: Add MT7628/88 SoC support")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v2: change format of 'Fixes' tag.
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 --
- 1 file changed, 2 deletions(-)
+Doesn't this patch imply that someone noticed it?
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 8ddbb8d..bb7d623 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1948,9 +1948,7 @@ static irqreturn_t mtk_handle_irq_tx(int irq, void *_eth)
- static irqreturn_t mtk_handle_irq(int irq, void *_eth)
- {
- 	struct mtk_eth *eth = _eth;
--	u32 status;
- 
--	status = mtk_r32(eth, MTK_PDMA_INT_STATUS);
- 	if (mtk_r32(eth, MTK_PDMA_INT_MASK) & MTK_RX_DONE_INT) {
- 		if (mtk_r32(eth, MTK_PDMA_INT_STATUS) & MTK_RX_DONE_INT)
- 			mtk_handle_irq_rx(irq, _eth);
--- 
-2.7.4
+And if not, it'll just break when folks update their kernel...
 
+If it creates other problems we should address them now rather than
+later.
+
+--
+Thanks,
+Sasha
