@@ -2,118 +2,234 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3874AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEADC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D0C21848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EE021848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732256AbfHZNXj (ORCPT
+        id S1732272AbfHZNYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:23:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33858 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726953AbfHZNXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:23:39 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 086A83DE10F13807F273;
-        Mon, 26 Aug 2019 21:23:34 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 26 Aug
- 2019 21:23:26 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>,
+        Mon, 26 Aug 2019 09:24:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726953AbfHZNYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:24:01 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QDLrBV061515
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 09:23:59 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2umfqpsg0r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 09:23:59 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Mon, 26 Aug 2019 14:23:57 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 26 Aug 2019 14:23:52 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QDNoqY31654366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 26 Aug 2019 13:23:50 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B327742047;
+        Mon, 26 Aug 2019 13:23:50 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3117442042;
+        Mon, 26 Aug 2019 13:23:48 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.199.141])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 26 Aug 2019 13:23:48 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH] erofs: fix compile warnings when moving out include/trace/events/erofs.h
-Date:   Mon, 26 Aug 2019 21:22:34 +0800
-Message-ID: <20190826132234.96939-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v3 0/4] powerpc: expose secure variables to the kernel and userspace 
+Date:   Mon, 26 Aug 2019 09:23:34 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19082613-4275-0000-0000-0000035D89E3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082613-4276-0000-0000-0000386FB754
+Message-Id: <1566825818-9731-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908260145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Stephon reported [1], many compile warnings are raised when
-moving out include/trace/events/erofs.h:
+In order to verify the OS kernel on PowerNV systems, secure boot requires
+X.509 certificates trusted by the platform. These are stored in secure
+variables controlled by OPAL, called OPAL secure variables. In order to
+enable users to manage the keys, the secure variables need to be exposed
+to userspace.
 
-In file included from include/trace/events/erofs.h:8,
-                 from <command-line>:
-include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
-  TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-                                     ^~~~~~
-include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
-  static inline void trace_##name(proto)    \
-                                  ^~~~~
-include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
-  __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
-                        ^~~~~~
-include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
-  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-  ^~~~~~~~~~~~~
-include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
-  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-                      ^~~~~~
-include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
- TRACE_EVENT(erofs_lookup,
- ^~~~~~~~~~~
-include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
-  TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-  ^~~~~~~~
+OPAL provides the runtime services for the kernel to be able to access the
+secure variables[1]. This patchset defines the kernel interface for the
+OPAL APIs. These APIs are used by the hooks, which load these variables
+to the keyring and expose them to the userspace for reading/writing.
 
-That makes me very confused since most original EROFS tracepoint code
-was taken from f2fs, and finally I found
+The previous version[2] of the patchset added support only for the sysfs
+interface. This patch adds two more patches that involves loading of
+the firmware trusted keys to the kernel keyring. This patchset is
+dependent on the base CONFIG PPC_SECURE_BOOT added by ima arch specific
+patches for POWER[3]
 
-commit 43c78d88036e ("kbuild: compile-test kernel headers to ensure they are self-contained")
+Overall, this patchset adds the following support:
 
-It seems these warnings are generated from KERNEL_HEADER_TEST feature and
-ext4/f2fs tracepoint files were in blacklist.
+* expose secure variables to the kernel via OPAL Runtime API interface
+* expose secure variables to the userspace via kernel sysfs interface
+* load kernel verification and revocation keys to .platform and
+.blacklist keyring respectively.
 
-Anyway, let's fix these issues for KERNEL_HEADER_TEST feature instead
-of adding to blacklist...
+The secure variables can be read/written using simple linux utilities
+cat/hexdump.
 
-[1] https://lore.kernel.org/lkml/20190826162432.11100665@canb.auug.org.au/
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
+For example:
+Path to the secure variables is:
+/sys/firmware/secvar/vars
 
-Hi Chao and Greg,
- It seems the root cause reported by Stephen is the following (sorry for
- taking some time...) could you kindly review and merge this patch?
+Each secure variable is listed as directory. 
+$ ls -l
+total 0
+drwxr-xr-x. 2 root root 0 Aug 20 21:20 db
+drwxr-xr-x. 2 root root 0 Aug 20 21:20 KEK
+drwxr-xr-x. 2 root root 0 Aug 20 21:20 PK
 
-Thanks,
-Gao Xiang
+The attributes of each of the secure variables are(for example: PK):
+[PK]$ ls -l
+total 0
+-r--r--r--. 1 root root 32000 Aug 21 08:28 data
+-r--r--r--. 1 root root 65536 Aug 21 08:28 size
+--w-------. 1 root root 32000 Aug 21 08:28 update
 
- include/trace/events/erofs.h | 3 +++
- 1 file changed, 3 insertions(+)
+The "data" is used to read the existing variable value using hexdump. The
+data is stored in ESL format.
+The "update" is used to write a new value using cat. The update is
+to be submitted as AUTH file.
 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index bfb2da9c4eee..d239f39cbc8c 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -6,6 +6,9 @@
- #define _TRACE_EROFS_H
- 
- #include <linux/tracepoint.h>
-+#include <linux/fs.h>
-+
-+struct erofs_map_blocks;
- 
- #define show_dev(dev)		MAJOR(dev), MINOR(dev)
- #define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
+[1] Depends on skiboot OPAL API changes which removes metadata from
+the API. The new version with the changes are going to be posted soon.
+[2] https://lkml.org/lkml/2019/6/13/1644
+[3] https://lkml.org/lkml/2019/8/19/402
+
+Changelog:
+v3:
+* includes Greg's feedbacks:
+ * fixes in Patch 2/4
+   * updates the Documentation.
+   * fixes code feedbacks
+    * adds SYSFS Kconfig dependency for SECVAR_SYSFS
+    * fixes mixed tabs and spaces
+    * removes "name" attribute for each of the variable name based
+    directories
+    * fixes using __ATTR_RO() and __BIN_ATTR_RO() and statics and const
+    * fixes the racing issue by using kobj_type default groups. Also,
+    fixes the kobject leakage.
+    * removes extra print messages
+  * updates patch description for Patch 3/4
+  * removes file name from Patch 4/4 file header comment and removed
+  def_bool y from the LOAD_PPC_KEYS Kconfig
+
+* includes Oliver's feedbacks:
+  * fixes Patch 1/2
+   * moves OPAL API wrappers after opal_nx_proc_init(), fixed the
+   naming, types and removed extern.
+   * fixes spaces
+   * renames get_variable() to get(), get_next_variable() to get_next()
+   and set_variable() to set()
+   * removed get_secvar_ops() and defined secvar_ops as global
+   * fixes consts and statics
+   * removes generic secvar_init() and defined platform specific
+   opal_secar_init()
+   * updates opal_secvar_supported() to check for secvar support even
+   before checking the OPAL APIs support and also fixed the error codes.
+   * addes function that converts OPAL return codes to linux errno
+   * moves secvar check support in the opal_secvar_init() and defined its
+   prototype in opal.h
+  * fixes Patch 2/2
+   * fixes static/const
+   * defines macro for max name size
+   * replaces OPAL error codes with linux errno and also updated error
+   handling
+   * moves secvar support check before creating sysfs kobjects in 
+   secvar_sysfs_init()
+   * fixes spaces  
+
+v2:
+* removes complete efi-sms from the sysfs implementation and is simplified
+* includes Greg's and Oliver's feedbacks:
+ * adds sysfs documentation
+ * moves sysfs code to arch/powerpc
+ * other code related feedbacks.
+* adds two new patches to load keys to .platform and .blacklist keyring.
+These patches are added to this series as they are also dependent on
+OPAL APIs.
+
+Nayna Jain (4):
+  powerpc/powernv: Add OPAL API interface to access secure variable
+  powerpc: expose secure variables to userspace via sysfs
+  x86/efi: move common keyring handler functions to new file
+  powerpc: load firmware trusted keys/hashes into kernel keyring
+
+ Documentation/ABI/testing/sysfs-secvar        |  37 ++++
+ arch/powerpc/Kconfig                          |  10 +
+ arch/powerpc/include/asm/opal-api.h           |   5 +-
+ arch/powerpc/include/asm/opal.h               |   7 +-
+ arch/powerpc/include/asm/powernv.h            |   2 +
+ arch/powerpc/include/asm/secvar.h             |  35 +++
+ arch/powerpc/kernel/Makefile                  |   3 +-
+ arch/powerpc/kernel/secvar-ops.c              |  19 ++
+ arch/powerpc/kernel/secvar-sysfs.c            | 200 ++++++++++++++++++
+ arch/powerpc/platforms/powernv/Kconfig        |   6 +
+ arch/powerpc/platforms/powernv/Makefile       |   1 +
+ arch/powerpc/platforms/powernv/opal-call.c    |   3 +
+ arch/powerpc/platforms/powernv/opal-secvar.c  | 138 ++++++++++++
+ arch/powerpc/platforms/powernv/opal.c         |   5 +
+ security/integrity/Kconfig                    |   8 +
+ security/integrity/Makefile                   |   6 +-
+ .../platform_certs/keyring_handler.c          |  80 +++++++
+ .../platform_certs/keyring_handler.h          |  32 +++
+ .../integrity/platform_certs/load_powerpc.c   |  88 ++++++++
+ security/integrity/platform_certs/load_uefi.c |  67 +-----
+ 20 files changed, 682 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-secvar
+ create mode 100644 arch/powerpc/include/asm/secvar.h
+ create mode 100644 arch/powerpc/kernel/secvar-ops.c
+ create mode 100644 arch/powerpc/kernel/secvar-sysfs.c
+ create mode 100644 arch/powerpc/platforms/powernv/opal-secvar.c
+ create mode 100644 security/integrity/platform_certs/keyring_handler.c
+ create mode 100644 security/integrity/platform_certs/keyring_handler.h
+ create mode 100644 security/integrity/platform_certs/load_powerpc.c
+
 -- 
-2.17.1
+2.20.1
 
