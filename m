@@ -2,177 +2,101 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2082C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C4BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD9822DBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D8E217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/SA7m3n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HZtqhUVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfHZGOT (ORCPT
+        id S1729509AbfHZGOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:14:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43263 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfHZGOS (ORCPT
+        Mon, 26 Aug 2019 02:14:50 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38617 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfHZGOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:14:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 4so9478007pld.10;
-        Sun, 25 Aug 2019 23:14:18 -0700 (PDT)
+        Mon, 26 Aug 2019 02:14:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w11so9022550plp.5
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 23:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1UBHUR9VKG93a22dzMNTFen28F89ObW8ubmlHRRPTIA=;
-        b=H/SA7m3nLvLRLZWZ8rELQCEjBT2HQA/VPtLvwz1tcMFS9SndzXOTTfBgLdDMhAycUV
-         /e5zaVpIMya7tDCGgnVQfNhOktKS44s/+INyAbMOfb7/8xHqZUTE6Ge0hxan6qWZsmVR
-         8T+hXstOZUr1Xr8B65XMjBITn4bq7DR8HcMzmCgl1AzcpKrNK9nMZjEk+YlWETEDB8VS
-         +bW26qiNzt5lSgHXP8TTUXHEXN0A1s+YxZ9+hz/Y4oHnXSaKw+ES0zstJHB2mI13OP2v
-         5vJTNObuM59tn1AhbX82QUR9rhGtMwXiF1OblA1tL2zH28cuMhj28NR7UkiTdNtJImIZ
-         yIaA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DFNKLlML8ZG0U6zSvck4G0suOs1+3RpMULNqnE5vfmE=;
+        b=HZtqhUVgaaWvXSuMadlnQlfTp0nMMEvpsWVtBYe/NNERsuqqMBdf6Z/CIv7esFkvEq
+         VK4itHwOLhgftKByG86oc7HifeQpF5/fpyzukMA2zTvz9xr44gmtJUJDmaufTRocf7+l
+         e78E+Tjqq9wAFfTfNdTXVtqZZvD9scAvIVH7IEHt1zXPuKv03+ockt/3ZDVsGYmJ277N
+         UED8KhWfCWo7WSSvkKWuIK+IMcX/sKn5ohfxdOBYH3JyKTv2iGcV3nHXU/ZTtRUgAniB
+         EJngDM95BxyFQFDehH3Et8Jd06PUX6rsQnT16ZqFUak26ZB/XaWaUUPQMF7d12trj8Ax
+         YwEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1UBHUR9VKG93a22dzMNTFen28F89ObW8ubmlHRRPTIA=;
-        b=N6OhmWPiV/zf9uCFeHqm2OGRA3EZFd1e2gICVANSJ7Bpxjw4wBaN6DK37AG6uyw4zV
-         GNOIWMMrdoydCxx531pZv3uXbwuaD3o+rqaSEi+4lVWKeVr5FAG6leuAmK3nikUC6YnP
-         pazIKXRclRycEXCKZUIUEwFVAk+noUgqSmQr4LEwmcebHieu/jsjKcv+B7ZSpnmoBW/P
-         xe1l5ljvAZynN8s6GFtIIpR+nwO18ZWJEgDKFepN2BhquawL7UAC2O80N5rr18CdkZAx
-         CVMSwRYMfT/5Eju3le/ciq6DVdIqFXcFe+xd9Vp7m+oUAS94QaSv5zVKKSIZwy34NnfL
-         KzaQ==
-X-Gm-Message-State: APjAAAX4fGYfsBDW8CJKraB8D+8Y+xSObtM2FkRoqRmIbeNtpNfv2d12
-        o0S/Zo3AYu3dMDCDPldoyfU=
-X-Google-Smtp-Source: APXvYqyLQHTcj9/MCu87ZFlr8/XqHwJ47fTFw8txT275/c0ODEjtBbQ4C7BwXiYe+6EmRZSgET7tWQ==
-X-Received: by 2002:a17:902:ff05:: with SMTP id f5mr16803465plj.116.1566800057894;
-        Sun, 25 Aug 2019 23:14:17 -0700 (PDT)
-Received: from localhost.localdomain ([139.198.120.21])
-        by smtp.gmail.com with ESMTPSA id s186sm14155837pfb.126.2019.08.25.23.14.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 25 Aug 2019 23:14:16 -0700 (PDT)
-From:   Feng Sun <loyou85@gmail.com>
-To:     davem@davemloft.net
-Cc:     edumazet@google.com, dsterba@suse.com, dbanerje@akamai.com,
-        fw@strlen.de, davej@codemonkey.org.uk, tglx@linutronix.de,
-        matwey@sai.msu.ru, sakari.ailus@linux.intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Feng Sun <loyou85@gmail.com>,
-        Xiaojun Zhao <xiaojunzhao141@gmail.com>
-Subject: [PATCH v2] net: fix skb use after free in netpoll
-Date:   Mon, 26 Aug 2019 14:13:40 +0800
-Message-Id: <1566800020-10007-1-git-send-email-loyou85@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566577920-20956-1-git-send-email-loyou85@gmail.com>
-References: <1566577920-20956-1-git-send-email-loyou85@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DFNKLlML8ZG0U6zSvck4G0suOs1+3RpMULNqnE5vfmE=;
+        b=GLbDCTvdifXV3YGyI7SHau9iZ9a5NBjmr4kc7N5t59B7eguZ5MOnPUf6cb6wrEiueJ
+         OuxNZM+cN7tUFUI4QVeHoQoE5XgVOsuvhGsySfgrrUt7J71A9Ce2YlrjaxJHbuRT8wTJ
+         gsD/bvwdW7Dr6UlmorbtnDgNSC23xng6iixo5E1RvG0RVkaruFLCyKCORcpj/ZQ6EYpH
+         fvy1ABmcsQAJCsMwI9HqJvZUgz5qdXEC40cnF0PEbZHCtFi+UUbp9AiV49fWJAFfKwf+
+         mRptoleWzgmZPL1fGxblaFq/jVdlTT5OrmCmegvqJ0NVT32EZ7Atk3HeWRo5GeNGwKTh
+         IuVQ==
+X-Gm-Message-State: APjAAAWuy19CtJPWLJNomW8TJLYT1BoW6l3eOthEx4XLQIYt01ZGOBjP
+        Cs+y2Eizn7DZjzgakgTDVVgCvQ==
+X-Google-Smtp-Source: APXvYqw3O24kdVqAku1lk9iqySccxlxqBlpdpGlSV0fOUZdZbeox5M+FlskBtNUYqKT8CggkpjYO0w==
+X-Received: by 2002:a17:902:f096:: with SMTP id go22mr17762668plb.58.1566800089617;
+        Sun, 25 Aug 2019 23:14:49 -0700 (PDT)
+Received: from localhost ([122.172.76.219])
+        by smtp.gmail.com with ESMTPSA id h197sm10948152pfe.67.2019.08.25.23.14.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Aug 2019 23:14:48 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 11:44:47 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [greybus-dev] [PATCH 9/9] staging: greybus: move es2 to
+ drivers/greybus/
+Message-ID: <20190826061447.7oynduw2schwrck4@vireshk-i7>
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+ <20190825055429.18547-10-gregkh@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190825055429.18547-10-gregkh@linuxfoundation.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-("tun: return NET_XMIT_DROP for dropped packets"),
-when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-netpoll_send_skb_on_dev will run into following use after free cases:
-1. retry netpoll_start_xmit with freed skb;
-2. queue freed skb in npinfo->txq.
-queue_process will also run into use after free case.
+On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
+> The es2 Greybus host controller has long been stable, so move it out of
+> drivers/staging/ to drivers/greybus/
+> 
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Alex Elder <elder@kernel.org>
+> Cc: greybus-dev@lists.linaro.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/greybus/Kconfig              | 16 ++++++++++++++++
+>  drivers/greybus/Makefile             |  7 +++++++
+>  drivers/{staging => }/greybus/arpc.h |  0
+>  drivers/{staging => }/greybus/es2.c  |  2 +-
+>  drivers/staging/greybus/Kconfig      | 11 -----------
+>  drivers/staging/greybus/Makefile     |  5 -----
+>  6 files changed, 24 insertions(+), 17 deletions(-)
+>  rename drivers/{staging => }/greybus/arpc.h (100%)
+>  rename drivers/{staging => }/greybus/es2.c (99%)
 
-hit netpoll_send_skb_on_dev first case with following kernel log:
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-[  117.864773] kernel BUG at mm/slub.c:306!
-[  117.864773] invalid opcode: 0000 [#1] SMP PTI
-[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
-[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
-[  117.864781] Call Trace:
-[  117.864781]  ? tun_net_xmit+0x21c/0x460
-[  117.864781]  kfree_skbmem+0x4e/0x60
-[  117.864782]  kfree_skb+0x3a/0xa0
-[  117.864782]  tun_net_xmit+0x21c/0x460
-[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
-[  117.864789]  ? skb_clone+0x53/0xd0
-[  117.864790]  ? __skb_clone+0x2e/0x120
-[  117.864790]  deliver_clone+0x37/0x50 [bridge]
-[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
-[  117.864791]  br_flood+0x6c/0x130 [bridge]
-[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
-[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
-[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
-[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
-[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
-[  117.864793]  console_unlock+0x386/0x4e0
-[  117.864793]  vprintk_emit+0x17e/0x280
-[  117.864794]  vprintk_default+0x29/0x50
-[  117.864794]  vprintk_func+0x4c/0xbc
-[  117.864794]  printk+0x58/0x6f
-[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
-[  117.864795]  kthread+0x104/0x140
-[  117.864795]  ? 0xffffffffc05b1000
-[  117.864796]  ? kthread_park+0x80/0x80
-[  117.864796]  ret_from_fork+0x35/0x40
-
-Signed-off-by: Feng Sun <loyou85@gmail.com>
-Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
----
-Changes in v2:
-- change commit and title
-- add netpoll_xmit_complete helper
-- add one more return value check of netpoll_start_xmit
----
- net/core/netpoll.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/net/core/netpoll.c b/net/core/netpoll.c
-index 2cf27da..a3f20e9 100644
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -95,6 +95,11 @@ static int netpoll_start_xmit(struct sk_buff *skb, struct net_device *dev,
- 	return status;
- }
- 
-+static inline bool netpoll_xmit_complete(int rc)
-+{
-+	return dev_xmit_complete(rc);
-+}
-+
- static void queue_process(struct work_struct *work)
- {
- 	struct netpoll_info *npinfo =
-@@ -122,7 +127,7 @@ static void queue_process(struct work_struct *work)
- 		txq = netdev_get_tx_queue(dev, q_index);
- 		HARD_TX_LOCK(dev, txq, smp_processor_id());
- 		if (netif_xmit_frozen_or_stopped(txq) ||
--		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
-+		    !netpoll_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
- 			skb_queue_head(&npinfo->txq, skb);
- 			HARD_TX_UNLOCK(dev, txq);
- 			local_irq_restore(flags);
-@@ -335,7 +340,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
- 
- 				HARD_TX_UNLOCK(dev, txq);
- 
--				if (status == NETDEV_TX_OK)
-+				if (netpoll_xmit_complete(status))
- 					break;
- 
- 			}
-@@ -352,7 +357,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
- 
- 	}
- 
--	if (status != NETDEV_TX_OK) {
-+	if (!netpoll_xmit_complete(status)) {
- 		skb_queue_tail(&npinfo->txq, skb);
- 		schedule_delayed_work(&npinfo->tx_work,0);
- 	}
 -- 
-2.7.4
-
+viresh
