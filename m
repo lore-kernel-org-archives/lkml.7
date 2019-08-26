@@ -2,83 +2,151 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772B3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A976C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D3D20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7802620828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbfHZMoN (ORCPT
+        id S1732038AbfHZMoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:44:13 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43746 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732014AbfHZMoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:44:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h15so14897559ljg.10;
-        Mon, 26 Aug 2019 05:44:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=H5el3F7bX5Q0wB1CJCAA8YW2QBLir4E1kpVMw+lIHdQ=;
-        b=cFSNPenlSEZb7v7Emrnrwgxx8h4cwZIu01+GjaBiQO9kiFDAkXACuKlBvPIdes0FuO
-         LWI+61KSX0iCwYfgvz+TZcJwU76cCIqHdIflj4gTTDTsydS8SlAzqo/jVcfhke7CmZmp
-         4QE4nPjfqejD3mJxqhXT0zyOGFBine+RlhmwC1HIG8JLRyDyHLRYY+MbxEFsC0v/7UeD
-         bDBRvvQJ4KiRcFp5+cMzRcjJCoBK/mMrLd3h/xoCl7NFJD0hHdsKs2slfQzsF5K2NRTJ
-         kANjE+rsPCgihCBkxKBGiWCGYwvTebEnE79TP0mn2FieZp3g8ZWlOCOFqdpwTiK6kcNR
-         kgEg==
-X-Gm-Message-State: APjAAAVl6jBmZzOqEfe8dLIQ70RNroUXNSIqauluF38ieRbVc7EaxxZl
-        sR78MJYEf+GRlXWSb7ajWzmOidCcx9u4ObFPaMHSvg==
-X-Google-Smtp-Source: APXvYqyINLLOvIZUbU+T4n5IZJf97uJ8BBGIIlwQEB9a2MzTCMVp3rm1EuJSxMxuFX8dREI7n0dUpUS6/sSdZm3BkNk=
-X-Received: by 2002:a2e:81ca:: with SMTP id s10mr10536732ljg.181.1566823450464;
- Mon, 26 Aug 2019 05:44:10 -0700 (PDT)
+        Mon, 26 Aug 2019 08:44:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51244 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729976AbfHZMox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:44:53 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 757327BDA0;
+        Mon, 26 Aug 2019 12:44:53 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FF821F8;
+        Mon, 26 Aug 2019 12:44:47 +0000 (UTC)
+Subject: Re: [PATCH] fs/proc/page: Skip uninitialized page when iterating page
+ structures
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20190825163805.3036-1-longman@redhat.com>
+ <201908261216.iW5YJ6gY%lkp@intel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <11f6841e-aba3-8d2c-ec24-7808cb57bd3c@redhat.com>
+Date:   Mon, 26 Aug 2019 08:44:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190826215017.02ab0d34@canb.auug.org.au>
-In-Reply-To: <20190826215017.02ab0d34@canb.auug.org.au>
-Reply-To: myungjoo.ham@gmail.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-Date:   Mon, 26 Aug 2019 21:43:34 +0900
-Message-ID: <CAJ0PZbTEy3U7Ryj8NoVvd2VePbPBM69t-NPNMTzQH3sS3YD6Qw@mail.gmail.com>
-Subject: [PATCH] PM / devfreq: passive: fix compiler warning
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <201908261216.iW5YJ6gY%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 26 Aug 2019 12:44:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent commit of
-PM / devfreq: passive: Use non-devm notifiers
-had incurred compiler warning, "unused variable 'dev'".
+On 8/26/19 12:08 AM, kbuild test robot wrote:
+> Hi Waiman,
+>
+> Thank you for the patch! Yet something to improve:
+>
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3-rc6 next-20190823]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Waiman-Long/fs-proc-page-Skip-uninitialized-page-when-iterating-page-structures/20190826-105836
+> config: x86_64-lkp (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    fs/proc/page.c: In function 'find_next_zone_range':
+>>> fs/proc/page.c:58:2: error: expected ';' before 'for'
+>      for (pgdat = first_online_pgdat(); pgdat;
+>      ^~~
+>    fs/proc/page.c:52:6: warning: unused variable 'i' [-Wunused-variable]
+>      int i;
+>          ^
+>    fs/proc/page.c:51:15: warning: unused variable 'zone' [-Wunused-variable]
+>      struct zone *zone;
+>                   ^~~~
+>    fs/proc/page.c:50:13: warning: unused variable 'pgdat' [-Wunused-variable]
+>      pg_data_t *pgdat;
+>                 ^~~~~
+>    fs/proc/page.c: In function 'pfn_in_zone':
+>>> fs/proc/page.c:79:23: error: 'struct zone_range' has no member named 'start'; did you mean 'pfn_start'?
+>      return pfn >= range->start && pfn < range->end;
+>                           ^~~~~
+>                           pfn_start
+>>> fs/proc/page.c:79:43: error: 'struct zone_range' has no member named 'end'
+>      return pfn >= range->start && pfn < range->end;
+>                                               ^~
+>    fs/proc/page.c:80:1: warning: control reaches end of non-void function [-Wreturn-type]
+>     }
+>     ^
+>
+> vim +58 fs/proc/page.c
+>
+>     46	
+>     47	static void find_next_zone_range(struct zone_range *range)
+>     48	{
+>     49		unsigned long start, end;
+>   > 50		pg_data_t *pgdat;
+>   > 51		struct zone *zone;
+>     52		int i;
+>     53	
+>     54		/*
+>     55		 * Scan all the zone structures to find the next closest one.
+>     56		 */
+>     57		start = end = -1UL
+>   > 58		for (pgdat = first_online_pgdat(); pgdat;
+>     59		     pgdat = next_online_pgdat(pgdat)) {
+>     60			for (zone = pgdat->node_zones, i = 0; i < MAX_NR_ZONES;
+>     61			     zone++, i++) {
+>     62				if (!zone->spanned_pages)
+>     63					continue;
+>     64				if ((zone->zone_start_pfn >= range->pfn_end) &&
+>     65				    (zone->zone_start_pfn < start)) {
+>     66					start = zone->zone_start_pfn;
+>     67					end   = start + zone->spanned_pages;
+>     68				}
+>     69			}
+>     70		}
+>     71		range->pfn_start = start;
+>     72		range->pfn_end   = end;
+>     73	}
+>     74	
+>     75	static inline bool pfn_in_zone(unsigned long pfn, struct zone_range *range)
+>     76	{
+>     77		if (pfn >= range->pfn_end)
+>     78			find_next_zone_range(range);
+>   > 79		return pfn >= range->start && pfn < range->end;
+>     80	}
+>     81	
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
----
- drivers/devfreq/governor_passive.c | 1 -
- 1 file changed, 1 deletion(-)
+Sorry, I have accidentally sent the old version with syntax error out.
+Has posted the right one in v2.
 
-diff --git a/drivers/devfreq/governor_passive.c
-b/drivers/devfreq/governor_passive.c
-index da48547..be6eeab 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -149,7 +149,6 @@ static int devfreq_passive_notifier_call(struct
-notifier_block *nb,
- static int devfreq_passive_event_handler(struct devfreq *devfreq,
-                 unsigned int event, void *data)
- {
--    struct device *dev = devfreq->dev.parent;
-     struct devfreq_passive_data *p_data
-             = (struct devfreq_passive_data *)devfreq->data;
-     struct devfreq *parent = (struct devfreq *)p_data->parent;
--- 
-2.7.4
+Cheers,
+Longman
+
