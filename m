@@ -2,127 +2,82 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65102C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D193DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395DC21848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="W0r/n9YW"
+	by mail.kernel.org (Postfix) with ESMTP id AA92B2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfHZWnr (ORCPT
+        id S1727021AbfHZWol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:43:47 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57602 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfHZWnq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:43:46 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 377B69A4;
-        Tue, 27 Aug 2019 00:43:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566859424;
-        bh=Ft2t79/UsLexer01RGnEmaG21HIbugJ0/z9QPp7bb9s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W0r/n9YWIJ8DBjacOulPrNVKTKOrHwbMRrmXuyZ7wVPKPeguMN2c56SnFbECMnJK+
-         ThGOSPD6e1KQ7YH6RM4XnuSnDF4VJUL8ek6T5qYN3ARpUMenmmHxzSOdtBzVrXbkOy
-         crEPEBGXTUXu6MiHz53Rectj1nGkwUteimstRSzk=
-Date:   Tue, 27 Aug 2019 01:43:37 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Mon, 26 Aug 2019 18:44:41 -0400
+Received: from muru.com ([72.249.23.125]:58782 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbfHZWol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:44:41 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8990B80AA;
+        Mon, 26 Aug 2019 22:45:09 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 15:44:37 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        sre@kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
+        merlijn@wizzup.org, linux-leds@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] arm64: dts: renesas: r8a7796: Add CMM units
-Message-ID: <20190826224337.GL5031@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-4-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
+Message-ID: <20190826224437.GZ52127@atomide.com>
+References: <20190820195307.27590-1-dmurphy@ti.com>
+ <20190826215822.GY52127@atomide.com>
+ <20190826221413.GA19124@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190825135154.11488-4-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190826221413.GA19124@amd>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-Should you squash this with the patches that add CMM units to the other
-SoCs ?
-
-On Sun, Aug 25, 2019 at 03:51:43PM +0200, Jacopo Mondi wrote:
-> Add CMM units to Renesas R-Car M3-W device tree and reference them from
-> the Display Unit they are connected to.
+* Pavel Machek <pavel@ucw.cz> [190826 22:14]:
+> On Mon 2019-08-26 14:58:22, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > * Dan Murphy <dmurphy@ti.com> [190820 19:53]:
+> > > Fix the brightness control for I2C mode.  Instead of
+> > > changing the full scale current register update the ALS target
+> > > register for the appropriate banks.
+> > > 
+> > > In addition clean up some code errors and random misspellings found
+> > > during coding.
+> > > 
+> > > Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
+> > > 
+> > > Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
+> > > Reported-by: Pavel Machek <pavel@ucw.cz>
+> > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > > ---
+> > > 
+> > > v3 - Removed register define updates - https://lore.kernel.org/patchwork/patch/1114542/
+> > 
+> > Looks like starting with this patch in Linux next the LCD on droid4
+> > is so dim it's unreadable even with brightness set to 255. Setting
+> > brightness to 0 does blank it completely though.
+> > 
+> > Did something maybe break with the various patch revisions or are
+> > we now missing some dts patch?
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Maybe missing dts patch. We should provide maximum current the LED can
+> handle... 
 
-Apart from the issue pointed out by Geert,
+Or i2c control is somehow broken and only als control now works?
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 25 ++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> index 3dc9d73f589a..8d78e1f98a23 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> @@ -2613,6 +2613,30 @@
->  			renesas,fcp = <&fcpvi0>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,cmm-r8a7796";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,cmm-r8a7796";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
-> +		cmm2: cmm@fea60000 {
-> +			compatible = "renesas,cmm-r8a7796";
-> +			reg = <0 0xfea60000 0 0x1000>;
-> +			clocks = <&cpg CPG_MOD 709>;
-> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +			resets = <&cpg 709>;
-> +		};
-> +
->  		csi20: csi2@fea80000 {
->  			compatible = "renesas,r8a7796-csi2";
->  			reg = <0 0xfea80000 0 0x10000>;
-> @@ -2766,6 +2790,7 @@
->  			status = "disabled";
->  
->  			vsps = <&vspd0 &vspd1 &vspd2>;
-> +			cmms = <&cmm0 &cmm1 &cmm2>;
->  
->  			ports {
->  				#address-cells = <1>;
-
--- 
 Regards,
 
-Laurent Pinchart
+Tony
+
