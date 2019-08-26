@@ -2,143 +2,91 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D3BC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64A1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E117206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W1ThBxZ2"
+	by mail.kernel.org (Postfix) with ESMTP id B64C1206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566840768;
+	bh=Tf8pgf4qsWMDIu9iASnrH8+/6Md//1BIO+qOMGZ7Sbc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mCKuh7RdXqKYRnvhiSJIrP6Ykp2n06rhJjQ1J42gwdjNmjHumOCPp5NbaWsMUJPCr
+	 p7Fn9411GecchnbhAy2B6QmMyWyaSg07qIQukRj+VbP2Ch9oKAtPdpyb15sLlpfRR1
+	 syHdxdJgMbL/ja5rHNwVFQlKEkkjk6tV36MfEmfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732901AbfHZRbX (ORCPT
+        id S1732966AbfHZRcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:31:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41442 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfHZRbW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:31:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so11018996pgg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 10:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q3xiFZ2HkA5ScIJ98h57XT9QNlYTEuEKJ22ZvSjaM40=;
-        b=W1ThBxZ2ULnw8wV8rQg1L3El9s0wK00VOmaEsGsImpIPXIn1KF9TIXouDdGAS2494U
-         Ln5MsCmf2BCNQBcec2cm0FE4g1R00CGWTiOtLL0C0guajRLNy+eQMRUsPPsYGktFx+4D
-         Yi2HGK7OSwFlwQm2QgQgkWFuW/YkbY7FAEScriQ1rUoziDQLATISbN/yFTOEHO/56cgr
-         AjQoOboGivycl+rixm0sW0HJ4JCqplkDYsx2rs+D99X/qO9K0Ck9PVGglRw4XGNyyxAx
-         zhzYaGIUCbm0qV19s7h/T3wdg10yB5I2p8Dh+6VXBUOQS/AzUhZovRKOHBAV5k9UjPAk
-         aydA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q3xiFZ2HkA5ScIJ98h57XT9QNlYTEuEKJ22ZvSjaM40=;
-        b=QWgrXT+JGwD+JNVbVNqwNZIIWHLy8EqFinakURUG7uzXGMFF1HzAimYZywjjSdgC6T
-         FjovUqTv9zvlRgwlpsqhaT0NYORrC08fHT1Swfa+CTYJdPBGx0y7rneH1HJhk4BTpxmg
-         yKEu7+o4AtkWMn/c12Q1drSdyFObiEP1dcECX8xEpq/Ita98tk1OeHp6xUsGhQ9hsZ2I
-         TjqZhl2/OmfRuVmdIpJWVQ36jS2p1EdLOVrpiDJtNxBXJDzJZYnIY9NXOxR9SeCtgBra
-         TKVU9s+Syei1hCHX2bNvbSP31OfJqf2Zr5U6pJBp44ySmvkOGUHWb6V7YPX2Ar4bHb1B
-         FPbg==
-X-Gm-Message-State: APjAAAUZ9L0IvrEpjYjNfLv1RtiBoN1KonFPBhjzki1miH22w+le/2I2
-        NY/N/MRA46kxDJ2ru9jORxYEIly5Rk0H9jo7eByHPQ==
-X-Google-Smtp-Source: APXvYqwVHgxJShCK/u78N3hHrJbEGajACMI2eyaTo9bILVYml2dMPRUPYBd4Hp9yNcVXJCNqVnOQd2UZpp0sc0R6gpk=
-X-Received: by 2002:a63:60a:: with SMTP id 10mr17262703pgg.381.1566840680814;
- Mon, 26 Aug 2019 10:31:20 -0700 (PDT)
+        Mon, 26 Aug 2019 13:32:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbfHZRcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:32:46 -0400
+Received: from localhost.localdomain (unknown [122.178.200.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E33D206E0;
+        Mon, 26 Aug 2019 17:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566840764;
+        bh=Tf8pgf4qsWMDIu9iASnrH8+/6Md//1BIO+qOMGZ7Sbc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nJhB/azxLgE/hP7ebGUhrP2FxgQdL4F2WPOC3ZwYvpVMeSYG7zrfnXSEqZG0/mRUr
+         PcRbb5AU6ynwb1ub+KiAkPeSv6dWrbgRFhWkreWPCyVqpNkwPSzvkQJzc2GmOlUvUM
+         FQwEJFyXF5Qvev14stfNlEnVNBlrMmqGUjfSn8qo=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/4] clk: qcom: Add support for SM8150 rpmh
+Date:   Mon, 26 Aug 2019 23:01:16 +0530
+Message-Id: <20190826173120.2971-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190729211014.39333-1-ndesaulniers@google.com>
- <alpine.LFD.2.21.1907292302451.16059@eddie.linux-mips.org>
- <CAKwvOd==SCBrj=cZ7Ax5F87+-bPMS9AtGSxp+NWp_+yDCg4R-A@mail.gmail.com>
- <CAKwvOdkXLhEuLiQ_ukE75zEg=Sw5-4BLHHCFqcZ0oyTEX3pWTQ@mail.gmail.com>
- <CAKwvOdmGax-WgXeKEnTq8+Xe0+Z5d2k4_Ad1vw0uOiO2NJ0bkg@mail.gmail.com> <20190824141213.svzmdr3pxdaqssuj@pburton-laptop>
-In-Reply-To: <20190824141213.svzmdr3pxdaqssuj@pburton-laptop>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 26 Aug 2019 10:31:09 -0700
-Message-ID: <CAKwvOdmWS0_5haTdS67Sh0YjrUwfVOhLCwEXCO7vj6X1gXmCqQ@mail.gmail.com>
-Subject: Re: [PATCH] mips: avoid explicit UB in assignment of mips_io_port_base
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "regehr@cs.utah.edu" <regehr@cs.utah.edu>,
-        Philip Reames <listmail@philipreames.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 7:12 AM Paul Burton <paul.burton@mips.com> wrote:
->
-> Hi Nick,
->
-> On Fri, Aug 23, 2019 at 10:16:04AM -0700, Nick Desaulniers wrote:
-> > On Tue, Aug 20, 2019 at 10:15 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > > Hi Paul,
-> > > Bumping this thread; we'd really like to be able to boot test another
-> > > ISA in our CI.  This lone patch is affecting our ability to boot.  Can
-> > > you please pick it up?
-> > > https://lore.kernel.org/lkml/20190729211014.39333-1-ndesaulniers@google.com/
-> >
-> > Hi Paul,
-> > Following up with this link that explains the undefined behavior issue more:
-> > https://wiki.sei.cmu.edu/confluence/display/c/EXP05-C.+Do+not+cast+away+a+const+qualification
-> > Please reconsider accepting this patch.
->
-> Sorry, it's been a crazy few months & I'm currently away awaiting my
-> father's funeral so I'm working through a backlog & catching up on
-> things.
+Add support for rpm clock controller found in SM8150 and while at it update
+the driver to support parent data clock scheme as suggested by Stephen.
 
-That's an extremely tough hand to be dealt.  Got it myself a week
-before I turned 20.  Technically, (spoiler) everyone is eventually
-dealt it; not that that or really anything else can ever truly provide
-solace despite the common refrain "time heals all wounds" (Narrator:
-it doesn't).  Depending on where you are in life it can really really
-destabilize things.  I wrote this blog post
-(https://nickdesaulniers.github.io/blog/2013/04/29/the-persistence-of-memory/)
-that I'm not too proud of at a time I now realize that I was still
-kind of a state of shock (even years later).  I also found it very
-difficult to accept advice from others who didn't share the experience
-of losing a parent.
+Changes since v4:
+ - Fix the .fw_name as xo instead of xo_board (v4 erroneously did for
+   .name)
 
-No one would fault you for asking your co-maintainers to handle more
-maintainer responsibilities for a while.  I hope you can find a friend
-to commiserate with over beers.  I owe you one.
+Changes since v3:
+ - Make clock parent name as xo instead of xo_board
 
->
-> It will be a shame to lose the optimization opportunities const offers
-> us, but it is an ugly hack & so I'm OK with applying this. It's likely
-> to affect older machines more than newer ones (which tend to use less or
-> no I/O port access) so I'm not too worried about the impact, but if we
-> find it matters we can always try the fixmap approach I suggested
-> previously.
->
-> Thanks,
->     Paul
+Changes since v2:
+ - Add reviewed-by from Bjorn
+ - Update the parent name as xo_board
+ - Fix style issue
 
+Changes since v1:
+ - Describe parent clocks for rpmhcc
+ - Add support for parent data scheme for rpmhcc
 
+Vinod Koul (4):
+  dt-bindings: clock: Document the parent clocks
+  clk: qcom: clk-rpmh: Convert to parent data scheme
+  dt-bindings: clock: Document SM8150 rpmh-clock compatible
+  clk: qcom: clk-rpmh: Add support for SM8150
+
+ .../bindings/clock/qcom,rpmh-clk.txt          |  7 +++-
+ drivers/clk/qcom/clk-rpmh.c                   | 38 ++++++++++++++++++-
+ 2 files changed, 42 insertions(+), 3 deletions(-)
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.20.1
+
