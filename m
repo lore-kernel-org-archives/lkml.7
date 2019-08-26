@@ -2,75 +2,160 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306CBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE0120673
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566783360;
-	bh=l94varozL2rWoYilTnPgj/K5CGZap91Eyrr/jIcGZEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BIfGaiwyiqV5g6Ch7EyeSuvVEW/pS9hg9JMkWQQc8p3Znn0BbBKkq1GGtPDnHwqFS
-	 cLpa3fIJEPVCAzzNq9e9NVvNJ/wLNL5Qf1X3B6nfGPBoES1Bj66DCms6qId2t+hZWF
-	 ASlEGBzfdOdnSBxMdUY3a3q+izwpyKEKTtZ9s9TQ=
+	by mail.kernel.org (Postfix) with ESMTP id 075F92070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfHZBf7 (ORCPT
+        id S1726975AbfHZBnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 21:35:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfHZBf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 21:35:59 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89B3020673;
-        Mon, 26 Aug 2019 01:35:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566783358;
-        bh=l94varozL2rWoYilTnPgj/K5CGZap91Eyrr/jIcGZEg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IzEFVFQhEhqX0BlhmQ4joV09hzlOWQQLJjsOfJicwsJO3yf19DfChj023asiqu4I0
-         1neNZuQfh2IX1HWKSLOO6FzIxjdLybZswqe++Cii+Cw5183fzJITfNpPv85zDcW88e
-         3tlISiGzRfa7KzeBbNBsZ9vwp/v+NqZj6m8OS6MM=
-Date:   Sun, 25 Aug 2019 21:35:57 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Muchun Song <smuchun@gmail.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: Re: [PATCH AUTOSEL 5.2 067/123] driver core: Fix use-after-free and
- double free on glue directory
-Message-ID: <20190826013557.GH5281@sasha-vm>
-References: <20190814021047.14828-1-sashal@kernel.org>
- <20190814021047.14828-67-sashal@kernel.org>
- <20190814073608.GA23414@kroah.com>
+        Sun, 25 Aug 2019 21:43:20 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5653 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726406AbfHZBnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 21:43:19 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 726897F4357E6411D154;
+        Mon, 26 Aug 2019 09:43:17 +0800 (CST)
+Received: from [10.177.253.249] (10.177.253.249) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 26 Aug 2019
+ 09:43:11 +0800
+Subject: Re: [Virtio-fs] [PATCH 04/19] virtio: Implement get_shm_region for
+ PCI transport
+To:     Vivek Goyal <vgoyal@redhat.com>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-nvdimm@lists.01.org>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-5-vgoyal@redhat.com>
+CC:     kbuild test robot <lkp@intel.com>, <kvm@vger.kernel.org>,
+        <miklos@szeredi.hu>, <virtio-fs@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>
+From:   piaojun <piaojun@huawei.com>
+Message-ID: <5D63392C.3030404@huawei.com>
+Date:   Mon, 26 Aug 2019 09:43:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190814073608.GA23414@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821175720.25901-5-vgoyal@redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.253.249]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:36:08AM +0200, Greg Kroah-Hartman wrote:
->On Tue, Aug 13, 2019 at 10:09:51PM -0400, Sasha Levin wrote:
->This one needs a bit more time to "soak" in the -rc releases before I
->want to apply it to the stable release.  So if you could drop it from
->all of your autosel queues, that would be great.
->
->I'll queue it up in a few weeks if all goes well with it.
 
-I've dropped it and will ignore it, thanks.
 
---
+On 2019/8/22 1:57, Vivek Goyal wrote:
+> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> 
+> On PCI the shm regions are found using capability entries;
+> find a region by searching for the capability.
+> 
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+>  drivers/virtio/virtio_pci_modern.c | 108 +++++++++++++++++++++++++++++
+>  include/uapi/linux/virtio_pci.h    |  11 ++-
+>  2 files changed, 118 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 7abcc50838b8..1cdedd93f42a 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -443,6 +443,112 @@ static void del_vq(struct virtio_pci_vq_info *info)
+>  	vring_del_virtqueue(vq);
+>  }
+>  
+> +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
+> +                                   u8 required_id,
+> +                                   u8 *bar, u64 *offset, u64 *len)
+> +{
+> +	int pos;
+> +
+> +        for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
+> +             pos > 0;
+> +             pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
+> +		u8 type, cap_len, id;
+> +                u32 tmp32;
+> +                u64 res_offset, res_length;
+> +
+> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         cfg_type),
+> +                                     &type);
+> +                if (type != VIRTIO_PCI_CAP_SHARED_MEMORY_CFG)
+> +                        continue;
+> +
+> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         cap_len),
+> +                                     &cap_len);
+> +		if (cap_len != sizeof(struct virtio_pci_cap64)) {
+> +		        printk(KERN_ERR "%s: shm cap with bad size offset: %d size: %d\n",
+> +                               __func__, pos, cap_len);
+> +                        continue;
+> +                }
+> +
+> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         id),
+> +                                     &id);
+> +                if (id != required_id)
+> +                        continue;
+> +
+> +                /* Type, and ID match, looks good */
+> +                pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         bar),
+> +                                     bar);
+> +
+> +                /* Read the lower 32bit of length and offset */
+> +                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, offset),
+> +                                      &tmp32);
+> +                res_offset = tmp32;
+> +                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, length),
+> +                                      &tmp32);
+> +                res_length = tmp32;
+> +
+> +                /* and now the top half */
+> +                pci_read_config_dword(dev,
+> +                                      pos + offsetof(struct virtio_pci_cap64,
+> +                                                     offset_hi),
+> +                                      &tmp32);
+> +                res_offset |= ((u64)tmp32) << 32;
+> +                pci_read_config_dword(dev,
+> +                                      pos + offsetof(struct virtio_pci_cap64,
+> +                                                     length_hi),
+> +                                      &tmp32);
+> +                res_length |= ((u64)tmp32) << 32;
+> +
+> +                *offset = res_offset;
+> +                *len = res_length;
+> +
+> +                return pos;
+> +        }
+> +        return 0;
+> +}
+> +
+> +static bool vp_get_shm_region(struct virtio_device *vdev,
+> +			      struct virtio_shm_region *region, u8 id)
+> +{
+> +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> +	struct pci_dev *pci_dev = vp_dev->pci_dev;
+> +	u8 bar;
+> +	u64 offset, len;
+> +	phys_addr_t phys_addr;
+> +	size_t bar_len;
+> +	char *bar_name;
+
+'char *bar_name' should be cleaned up to avoid compiling warning. And I
+wonder if you mix tab and blankspace for code indent? Or it's just my
+email display problem?
+
 Thanks,
-Sasha
+Jun
