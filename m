@@ -2,93 +2,65 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2356DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB83C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E435120874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566806159;
-	bh=JBrEr6EzAwP4bMTjg36848j8dY230osKaZu1Bx2mMyo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G9oko/9j+XDyb0rzRdmx7ExELQZ8dSe39jhkybwAwwkteTX3toaG5cj+21zn9tByI
-	 hUWimnkUUxtPq1/6alBNAiiyGv4tAcsKSU1WhbVvS3IZBuxlHKlb+pPULSUCVrOcnC
-	 NhsGxNA0H/sGpMUNs7NtDcrmd1/pfi64/D2a2q+w=
+	by mail.kernel.org (Postfix) with ESMTP id 42CC82087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DjO4a3ki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbfHZHz6 (ORCPT
+        id S1730300AbfHZH4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:55:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43131 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbfHZHz5 (ORCPT
+        Mon, 26 Aug 2019 03:56:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35316 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730158AbfHZH4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:55:57 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y8so11421446oih.10;
-        Mon, 26 Aug 2019 00:55:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N4MfQm+LP9efTkdP10QsK3nEtRnfq2pmL5jNgo25EAE=;
-        b=sRdaqmHJwrN2ALdZiEB1B4w7iFtoj5ksE3hufx2wMCqTRxVxpzhePRBKqVpCwchFMi
-         ouZesvq2CS+YYlNtH6gHoBDDPJKDHfUgMUMwQgv/ysRqQHkDts/I4bdp0cl1ICf4sBwS
-         1ZqfVxziiQ95/51oooR76aUn7O9L8Q/VPbQ3nR6//h65+1IJNtFoqbxo9IGVaNTm/FxM
-         TL6m96bQaYzhNayyPlqb5bAOqArudiOv7WYHuVP+KPOaL3F5raOLApDrRkX6sgC5rgiA
-         183zsMg0UGeY35IajZeGjCi34BXL/HbdHMFaW193DAY6QiPh9gBS4LcyYUzaHQuGVRVt
-         SgJw==
-X-Gm-Message-State: APjAAAXHaWm/1Q4LENCRzC9p0ec4lrlh141qRJBSIuFCqXX2Bbn4Kapt
-        PMJ5e3FcmjiosoTOgKNNCI+GJDOm8PrgCiHU2Ovs7A==
-X-Google-Smtp-Source: APXvYqxbk6iAI/XN+ORW2IggxqdNlmUCBx+48XJUX1wD+vXCIx7OcBIP1H2XFrPHwZPqSkcLW//qyvwO6kLSp7TqKQM=
-X-Received: by 2002:aca:cfcb:: with SMTP id f194mr11935335oig.103.1566806156442;
- Mon, 26 Aug 2019 00:55:56 -0700 (PDT)
+        Mon, 26 Aug 2019 03:56:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9D9DxG9HWmfufr942xdlZ3iywgwGdH94T1xD2+GS2kw=; b=DjO4a3kiB+bYCvPMJSS/aujKo
+        3CBsC0SBDhlnQOnGP6/BTIRA5Yd4gMN2/0W/0v/Zqe9TQaDQVc2wVaRpapU75ZfOg++2PwtbEOkZd
+        SOam3LNZPnxxw+a1mckwwvRbfd8md+swiyLhPVsA/DSkvjSqG/qtOjekDuT9N3syVtHvTZVt1KRNd
+        QNz7KzI/9hpmRLgakWIJXYhD1qN0NaR/bd7iO7R13ud/IrwDtKup4znuFtnMs1fw9He6W0+b8AE1n
+        2UaReBRwShwj7YTNYihR8lOO9frvWFzxhUMt2wucKhBGDN30Zq1PSRMIIXVSzBBiln4GJWEGiBNsD
+        vaAZTPeXA==;
+Received: from [2001:4bb8:180:3f4c:c944:137d:e92e:5fab] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i29r6-0000Mf-K3; Mon, 26 Aug 2019 07:56:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     x86@kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: remove various unused set_memory_* related functions and exports v2
+Date:   Mon, 26 Aug 2019 09:55:53 +0200
+Message-Id: <20190826075558.8125-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190408161240.GA30623@embeddedor> <16370c2e-c5f9-a4cf-02fc-6b5b4ab65e1c@redhat.com>
- <1c208944-9162-0245-c3bd-016f4274511f@embeddedor.com> <CAJZ5v0jUfLpp_q7ozi33wgJfP7zHmvDh2Srun0KjVZj6Q7NOfw@mail.gmail.com>
- <52803932-12dc-3ea0-12ef-09b5b317818b@embeddedor.com>
-In-Reply-To: <52803932-12dc-3ea0-12ef-09b5b317818b@embeddedor.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 26 Aug 2019 09:55:42 +0200
-Message-ID: <CAJZ5v0gX1zTiJkCk51FpeywgwD58K46eGdqCcVjLL2zkhAG_wA@mail.gmail.com>
-Subject: Re: [PATCH] tools/power turbostat: fix file descriptor leaks
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 6:25 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> Hi Rafael,
->
-> On 4/23/19 3:23 AM, Rafael J. Wysocki wrote:
-> > On Mon, Apr 22, 2019 at 5:55 PM Gustavo A. R. Silva
-> > <gustavo@embeddedor.com> wrote:
-> >>
-> >> Hi all,
-> >>
-> >> Friendly ping:
-> >>
-> >> Who can take this?
-> >
-> > I've been waiting for Len to comment on this, let me talk to him offlist.
-> >
->
-> I just noticed this hasn't been applied.
->
-> I wonder if you plan to apply it.
+Hi all,
 
-Technically, Len Brown is the turbostat maintainer and I have been
-waiting for him to review the patch at least.  Let me talk to Len.
+while looking into implementing a DMA memory allocator for PCIe unsnooped
+transactions I've started looking at the set_memory_* and related APIs,
+and it turns out that many of them are unused.  Fix for that below.
 
-Thanks!
+Changes since v2:
+ - dropped the already merged arm64 patch
+ - fix a subject line to not mention the wrong functions
