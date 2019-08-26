@@ -2,182 +2,148 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0A72190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA2221848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 05:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="js6iXP19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfHZFzW (ORCPT
+        id S1729286AbfHZFzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 01:55:22 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:36676 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725806AbfHZFzV (ORCPT
+        Mon, 26 Aug 2019 01:55:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35065 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfHZFzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 01:55:21 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1199A43F692;
-        Mon, 26 Aug 2019 15:55:12 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i27yA-0002Rg-EJ; Mon, 26 Aug 2019 15:55:10 +1000
-Date:   Mon, 26 Aug 2019 15:55:10 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190826055510.GL1119@dread.disaster.area>
-References: <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190821181343.GH8653@ziepe.ca>
- <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
- <20190821194810.GI8653@ziepe.ca>
- <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
- <20190823032345.GG1119@dread.disaster.area>
- <20190823120428.GA12968@ziepe.ca>
- <20190824001124.GI1119@dread.disaster.area>
- <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
+        Mon, 26 Aug 2019 01:55:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d85so11082039pfd.2;
+        Sun, 25 Aug 2019 22:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hqn7EcXGG+na8lq/oAT4dVNK820cThIhQDAa/rVI8KM=;
+        b=js6iXP191VnVvAPboIH1SjuzNrSBHInwhyq0SUwaHfSSk9ih3ZB254bMCIq6hbU0vu
+         uts/87y57ZakARGUUnx0ziBpNYV/bIE2iitnsnaRT/nxBPba+LJpH4JB7aP7LfK+fYp+
+         nK2oDrxCqwYwh2Q3XlI7NiFlCmwlybzFm+tcUGD2uRe8ni5e7LVUiNwugwoVJpblCnve
+         V6PZzoAYfHKJ9aMVMe85omGYTARRJNbBR6hCzat2cHviWZ5v4bbRrHrM9EyTSnVBsRoY
+         I78q4zCnyIZLgvOt0w47svgjgNykRfCl8soRcLV7oAXh2xcKodlOXJREp1qDzM6+S29E
+         cs+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hqn7EcXGG+na8lq/oAT4dVNK820cThIhQDAa/rVI8KM=;
+        b=V1UTlkrbYRlqRnlmZ07OJrj4/SXVbPtBogV7bLUmxH8G/6HNiXrV2HB1cRvXYKXJ6M
+         vk7vKU4omfVmZYMh2WvU7UOSlZ7H94vsDAAjSboGX3GD3D+1csLlv4NiiUAxCXFVL27R
+         PLWZJ5uTH2/T8LByRDQ9t1Uo+bC4wDRRUc0yqfXdm/i9prpTcH0R03FlHojZ6fV4QPmx
+         ALKP1kGrutaY8XQirw2OACSr6q5B5f3OdxVenYLEj0oFT5xh+sD7f6stqACJ3Do5qeMv
+         tQqc7zejrUy6iT5OKS+IEUt2NjurjertoZzPGhbrnxCisnFBO3+RJEGBX6j3yTxPoRvF
+         SRaA==
+X-Gm-Message-State: APjAAAXFhf4rBj4oAXtF27MxGtmEJqmHM7LLXmPjgmQXLU+15LDOmpBY
+        hHkcSMZjwcsoFBFUsQjwenzbvEH+
+X-Google-Smtp-Source: APXvYqzc0qL5b0dNbHgos8Lu/LDjTJreyCc9Y4PksAI5LrgtnVP2Mklhde89CDMFZAQreiks48Xh3Q==
+X-Received: by 2002:a63:2784:: with SMTP id n126mr14423506pgn.92.1566798952201;
+        Sun, 25 Aug 2019 22:55:52 -0700 (PDT)
+Received: from localhost ([110.70.50.154])
+        by smtp.gmail.com with ESMTPSA id p8sm20117664pfq.129.2019.08.25.22.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2019 22:55:51 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 14:55:48 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+Message-ID: <20190826055548.GB26785@jagdpanzerIV>
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
+ <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190824050836.GC1092@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=l-5HZ6ThFU8XlB48y_YA:9 a=qRlaua0cGjGJrKa9:21
-        a=OEwtXWmnxFRK9C0v:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190824165829.7d330367992c62dab87f6652@linux-foundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 10:08:36PM -0700, Ira Weiny wrote:
-> On Sat, Aug 24, 2019 at 10:11:24AM +1000, Dave Chinner wrote:
-> > On Fri, Aug 23, 2019 at 09:04:29AM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Aug 23, 2019 at 01:23:45PM +1000, Dave Chinner wrote:
-> > > 
-> > > > > But the fact that RDMA, and potentially others, can "pass the
-> > > > > pins" to other processes is something I spent a lot of time trying to work out.
-> > > > 
-> > > > There's nothing in file layout lease architecture that says you
-> > > > can't "pass the pins" to another process.  All the file layout lease
-> > > > requirements say is that if you are going to pass a resource for
-> > > > which the layout lease guarantees access for to another process,
-> > > > then the destination process already have a valid, active layout
-> > > > lease that covers the range of the pins being passed to it via the
-> > > > RDMA handle.
-> > > 
-> > > How would the kernel detect and enforce this? There are many ways to
-> > > pass a FD.
-> > 
-> > AFAIC, that's not really a kernel problem. It's more of an
-> > application design constraint than anything else. i.e. if the app
-> > passes the IB context to another process without a lease, then the
-> > original process is still responsible for recalling the lease and
-> > has to tell that other process to release the IB handle and it's
-> > resources.
-> > 
-> > > IMHO it is wrong to try and create a model where the file lease exists
-> > > independently from the kernel object relying on it. In other words the
-> > > IB MR object itself should hold a reference to the lease it relies
-> > > upon to function properly.
-> > 
-> > That still doesn't work. Leases are not individually trackable or
-> > reference counted objects objects - they are attached to a struct
-> > file bUt, in reality, they are far more restricted than a struct
-> > file.
-> > 
-> > That is, a lease specifically tracks the pid and the _open fd_ it
-> > was obtained for, so it is essentially owned by a specific process
-> > context.  Hence a lease is not able to be passed to a separate
-> > process context and have it still work correctly for lease break
-> > notifications.  i.e. the layout break signal gets delivered to
-> > original process that created the struct file, if it still exists
-> > and has the original fd still open. It does not get sent to the
-> > process that currently holds a reference to the IB context.
-> >
+On (08/24/19 16:58), Andrew Morton wrote:
+> On Sun, 25 Aug 2019 01:37:23 +0200 Uwe Kleine-König <uwe@kleine-koenig.org> wrote:
 > 
-> The fcntl man page says:
+> > 	pr_info("probing failed (%dE)\n", ret);
+> > 
+> > expands to
+> > 
+> > 	probing failed (EIO)
+> > 
+> > if ret holds -EIO (or EIO). This introduces an array of error codes. If
+> > the error code is missing, %dE falls back to %d and so prints the plain
+> > number.
 > 
-> "Leases are associated with an open file description (see open(2)).  This means
-> that duplicate file descriptors (created by, for example, fork(2) or dup(2))
-> refer to the same lease, and this lease may be modified or released using any
-> of these descriptors.  Furthermore,  the lease is released by either an
-> explicit F_UNLCK operation on any of these duplicate file descriptors, or when
-> all such file descriptors have been closed."
+> Huh.  I'm surprised we don't already have this.  Seems that this will
+> be applicable in a lot of places?  Although we shouldn't go blindly
+> converting everything in sight - that would risk breaking userspace
+> which parses kernel strings.
+> 
+> Is it really necessary to handle the positive errnos?  Does much kernel
+> code actually do that (apart from kernel code which is buggy)?
 
-Right, the lease is attached to the struct file, so it follows
-where-ever the struct file goes. That doesn't mean it's actually
-useful when the struct file is duplicated and/or passed to another
-process. :/
+Good point.
+POSIX functions on error usually return -1 (negative value) and set errno
+(positive value). Positive errno value can be passed to strerror() or
+strerror_r() that decode that value and return a human readable
+representation. E.g. strerr(9) returns "Bad file descriptor".
 
-AFAICT, the problem is that when we take another reference to the
-struct file, or when the struct file is passed to a different
-process, nothing updates the lease or lease state attached to that
-struct file.
+We don't have errno. Instead, and I may be wrong on this, kernel functions
+are expected to return negative error codes. A very quick grep shows that
+there are, however, patterns like "return positive errno".
+E.g. drivers/xen/xenbus/xenbus_xs.c: get_error()
 
-> From this I took it that the child process FD would have the lease as well
-> _and_ could release it.  I _assumed_ that applied to SCM_RIGHTS but it does not
-> seem to work the same way as dup() so I'm not so sure.
+		return EINVAL;
 
-Sure, that part works because the struct file is passed. It doesn't
-end up with the same fd number in the other process, though.
+But this EINVAL eventually becomes negative
 
-The issue is that layout leases need to notify userspace when they
-are broken by the kernel, so a lease stores the owner pid/tid in the
-file->f_owner field via __f_setown(). It also keeps a struct fasync
-attached to the file_lock that records the fd that the lease was
-created on.  When a signal needs to be sent to userspace for that
-lease, we call kill_fasync() and that walks the list of fasync
-structures on the lease and calls:
+	err = get_error(ret);
+	return ERR_PTR(-err);
+	
+or net/bluetooth/lib.c: bt_to_errno(). But, once again, bt_to_errno()
+return value eventually becomes negative:
 
-	send_sigio(fown, fa->fa_fd, band);
+	err = -bt_to_errno(hdev->req_result);
 
-And it does for every fasync struct attached to a lease. Yes, a
-lease can track multiple fds, but it can only track them in a single
-process context. The moment the struct file is shared with another
-process, the lease is no longer capable of sending notifications to
-all the lease holders.
+So errstr() probably can handle only negative values. And, may be,
+I'd rename errstr() to strerror(); just because there is a well known
+function, which "translates" errnos.
 
-Yes, you can change the owning process via F_SETOWNER, but that's
-still only a single process context, and you can't change the fd in
-the fasync list. You can add new fd to an existing lease by calling
-F_SETLEASE on the new fd, but you still only have a single process
-owner context for signal delivery.
+Unlike strerror(), errstr() just returns a macro name. Example:
+	"Request failed: EJUKEBOX"
 
-As such, leases that require callbacks to userspace are currently
-only valid within the process context the lease was taken in.
-Indeed, even closing the fd the lease was taken on without
-F_UNLCKing it first doesn't mean the lease has been torn down if
-there is some other reference to the struct file. That means the
-original lease owner will still get SIGIO delivered to that fd on a
-lease break regardless of whether it is open or not. ANd if we
-implement "layout lease not released within SIGIO response timeout"
-then that process will get killed, despite the fact it may not even
-have a reference to that file anymore.
+EJUKEBOX does not tell me anything. A quick way to find out what does
+EJUKEBOX stand for is to grep include/linux/errno.h
 
-So, AFAICT, leases that require userspace callbacks only work within
-their original process context while they original fd is still open.
+#define EJUKEBOX  528  /* Request initiated, but will not complete before timeout */
 
-Cheers,
+One still has to grep; either for 528 or for EJUKEBOX. I think that it
+might be simpler, however, to grep for EJUKEBOX, because one can grep
+the source code immediately, while in case of 528 one has to map 528
+to the corresponding macro first and then grep the source code for EJUKEBOX.
+Overall %dE looks interesting.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+	-ss
