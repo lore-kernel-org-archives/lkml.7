@@ -2,134 +2,97 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892F0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6056BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676C32087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A152087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566806364;
+	bh=OG9SJrchwTyiBC/xl+WDAoFEZMQOTDerXnkioTTM3sM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x58lPbfJZ1Z8k2/nngYhqqlmvrzsmTHrbWaU5IE0eJZig2147TVgA5ztY2roAzogm
+	 z/bSlgBjxT00r7vPtO3dFN5lM3WKMgcycRAZ0w83/BtvlU/w8DekTiOJQwmyOXq2Rx
+	 hWNdES/+aF4V8xPTK6bUKCOiO9lvf9iIs6sM81Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfHZH7T (ORCPT
+        id S1730389AbfHZH7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:59:19 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:52027 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730136AbfHZH7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:59:18 -0400
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 44952240008;
-        Mon, 26 Aug 2019 07:59:11 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 10:00:42 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 03/14] arm64: dts: renesas: r8a7796: Add CMM units
-Message-ID: <20190826080042.grvat5ne5dgi44gk@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-4-jacopo+renesas@jmondi.org>
- <CAMuHMdV6_VW-2BYYJ3yNi1i81n2Oeh+Hw+J6ohgqkmjsEjhX+w@mail.gmail.com>
+        Mon, 26 Aug 2019 03:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730136AbfHZH7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 03:59:22 -0400
+Received: from localhost (unknown [89.205.128.246])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24B7F20874;
+        Mon, 26 Aug 2019 07:59:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566806361;
+        bh=OG9SJrchwTyiBC/xl+WDAoFEZMQOTDerXnkioTTM3sM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wiyo61huaB4sjI4sLb9RjnSExn8D+WToxUCMZXwaMWgjaE6DvvmH0G15+xsVeq/tT
+         n1xSuyM6d+iR8Ncv6a4mU5pxce3zVpIaDN6nUud/Z847ifvoHFIv5hGIVStAfrViL7
+         tNmTmbwVNL0PU1BcNb0/cwva3iknwa0+LZCHZW0o=
+Date:   Mon, 26 Aug 2019 09:59:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        James Smart <james.smart@broadcom.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
+ userspace
+Message-ID: <20190826075916.GA30396@kroah.com>
+References: <20190712180211.26333-1-sagi@grimberg.me>
+ <20190712180211.26333-4-sagi@grimberg.me>
+ <20190822002328.GP9511@lst.de>
+ <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
+ <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
+ <20190826065639.GA11036@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="byx4x2dvjzmah7mr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdV6_VW-2BYYJ3yNi1i81n2Oeh+Hw+J6ohgqkmjsEjhX+w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190826065639.GA11036@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---byx4x2dvjzmah7mr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Geert.
-
-On Mon, Aug 26, 2019 at 09:28:56AM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
->
-> On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> =
-wrote:
-> > Add CMM units to Renesas R-Car M3-W device tree and reference them from
-> > the Display Unit they are connected to.
+On Mon, Aug 26, 2019 at 08:56:39AM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 22, 2019 at 12:10:23PM -0700, Sagi Grimberg wrote:
+> >> You are correct that this information can be derived from sysfs, but the
+> >> main reason why we add these here, is because in udev rule we can't
+> >> just go ahead and start looking these up and parsing these..
+> >>
+> >> We could send the discovery aen with NVME_CTRL_NAME and have
+> >> then have systemd run something like:
+> >>
+> >> nvme connect-all -d nvme0 --sysfs
+> >>
+> >> and have nvme-cli retrieve all this stuff from sysfs?
 > >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 25 ++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
+> > Actually that may be a problem.
 > >
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot=
-/dts/renesas/r8a7796.dtsi
-> > index 3dc9d73f589a..8d78e1f98a23 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> > @@ -2613,6 +2613,30 @@
-> >                         renesas,fcp =3D <&fcpvi0>;
-> >                 };
+> > There could be a hypothetical case where after the event was fired
+> > and before it was handled, the discovery controller went away and
+> > came back again with a different controller instance, and the old
+> > instance is now a different discovery controller.
 > >
-> > +               cmm0: cmm@fea40000 {
-> > +                       compatible =3D "renesas,cmm-r8a7796";
->
-> Shouldn't you add "renesas,rcar-gen3-cmm" as a fallback?
+> > This is why we need this information in the event. And we verify this
+> > information in sysfs in nvme-cli.
+> 
+> Well, that must be a usual issue with uevents, right?  Don't we usually
+> have a increasing serial number for that or something?
 
-Should I? Since you have suggested to drop all per-SoC compatibles
-=66rom the driver I guess so...
+Yes we do, userspace should use it to order events.  Does udev not
+handle that properly today?
 
-Thanks
-  j
+thanks,
 
-> (for all CMM nodes in all DT patches)
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
-
---byx4x2dvjzmah7mr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jkaoACgkQcjQGjxah
-Vjxk9BAAua/Lo8u8Uv99rrcKQR/5g54+iAKH8Yl7LE/b4VVrCOQL1ijEnmCnB43X
-SAlM5x4M1cKUU8lNiqrZd79I927wzCXNe/2D1PbKVBKlaz1kzKNxkOdcrbM7ZTiy
-TiHPO9HOXBV+EbSt1aM2XlwPXg7n0evvy4rZxOx8jfY2Qsx4GZyofTJ74I3i7lr4
-K80DSEjpi8nOgMLrrcO/31z1iClDwNH0so6q/6RCXjK0bE3ZzSvDQ8pQYFcvogFr
-NmEwKfzW4yiP5AeLanHGgh9Ck6fdknPmJLp+EL43NxEG5z6TAHRQ4lXRdpbGfh2I
-EgRykocw7PJsWrLTKJ70V8avVo1TWYRQHu8qneT1wBXhEph3ZqB+TLIzlwQWQqjq
-SiePVKKXqQNc+BI7kbyPNPgBvhSsoq4q+Fu5Z4/rjZM15zTyaUT4Xedr2ysS+7Yb
-Qfpw1T2IfSoBmWJU9FnNZeshjKBydVqY7gXtFZ96pLJayerrhfaEAvGMnqTWA7sE
-HYX5obQlYFyXA+IufnePDlR1U8Q2o2x3cmq9/VafYw82Vp0xcedqhZ2ojQHJ4oM3
-cZpiXB7e7FWQ1vAVWIgzjtDyhvbKKqcHDxS88w2niAQHEIbk/jQW2QZsnhgtb9oW
-ulTLyNIK8ZcsM2LKKGHTv9Nhl17IX45GSUf+rogGeAhrosjJ5Ys=
-=oKOX
------END PGP SIGNATURE-----
-
---byx4x2dvjzmah7mr--
+greg k-h
