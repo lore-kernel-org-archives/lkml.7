@@ -2,76 +2,156 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B89C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88A9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B2920828
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A5F217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="erT+ZWsd"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="d8vPUzi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbfHZLYN (ORCPT
+        id S1731013AbfHZLaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:24:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfHZLYN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:24:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8DwO9450VemX1oKvBvGd4hcG4nqyBnqJFEl5Ut7l0NY=; b=erT+ZWsd+i2kH9DSoIo8qqWEB
-        PB0GiCH46bDRkknLboS/M5008pwxgaZxg0/mVeBsowvk4mtXn5SDMljR5fbCL7xbqKG1tbrDtJkKM
-        j1R1iQDLHJItfSaVkGS5T9H7yaReJUONvAPPIabu/6tW5m5KDbUfA2iTw3iC5tQrF5QztH6YGU9pc
-        +bqEMuSFgdUYB0izsishCgi0AI5TahdG0E5Tow8mAIPKOLBuPL7DnGQYOFLaAJIEQG8dUMRoC1b+v
-        NvBpP4KYOK5I/FW+/BgM2WslT7WvgwVJIQKXOhG9RkBVH9JadZ5b/tD09g/5ihkoVjE5JzmvABvdM
-        Z3uv8uYtw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2D6X-0003lk-SL; Mon, 26 Aug 2019 11:24:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AF9D830759B;
-        Mon, 26 Aug 2019 13:23:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D7B6E20B33577; Mon, 26 Aug 2019 13:24:06 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 13:24:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Douglas RAILLARD <douglas.raillard@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        viresh.kumar@linaro.org, mingo@redhat.com
-Subject: Re: [PATCH] sched/cpufreq: Align trace event behavior of fast
- switching
-Message-ID: <20190826112406.GR2369@hirez.programming.kicks-ass.net>
-References: <20190807153340.11516-1-douglas.raillard@arm.com>
- <3316959.EEulJYEQYJ@kreacher>
- <20190826094058.GP2369@hirez.programming.kicks-ass.net>
- <cb75ae16-727e-636b-2b79-4f049259c0aa@arm.com>
+        Mon, 26 Aug 2019 07:30:21 -0400
+Received: from mout.web.de ([212.227.15.14]:50797 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfHZLaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:30:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1566819015;
+        bh=NDDBQeniwvykUYvWAnkiqE0F+AhwDVn7oqY/ssqAmwA=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=d8vPUzi9hNfFBbLR1TzRXPjmasmqcqiEXStLty5tbThvGiaHMse31nJ0J2PVNHkS2
+         aKtY9/mB3uj34pcJporSNQ0XI9H4vf0VugKKa+UIfU8uUSxCcww1vdcG82ShdTBVjz
+         2gEdsi/3aIA5Rk9Y8gQO1RYHpiWpfaz4reJEu+S4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.136.115]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8c2V-1iNC8C3KVP-00wDaB; Mon, 26
+ Aug 2019 13:30:15 +0200
+To:     linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] media: em28xx: Fix exception handling in em28xx_alloc_urbs()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ce8f4240-1d81-87fc-c900-713ddb0bc4f2@web.de>
+Date:   Mon, 26 Aug 2019 13:30:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb75ae16-727e-636b-2b79-4f049259c0aa@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ldhEMwBe/Pg1nGuyVmzq8r5K6PYxFe6XJH/4Ay9hzxpxQ2j0Rt+
+ 1LPGtoOsGHOBOFYCwfSM2FhDn0WQvg3nTvrlS7o195dpOJdTnQEeTKEw6bXYVef9Wbxxvwq
+ qJtcHQBXbRsSi0WjVvatoRwqSEsHWBBCXba01oemD79hXcj+KiMT9l7nSO8XQY5BqY5IDIK
+ zxv2Tq1HSKuaMomZUEYVw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VEfYyOK2bg8=:L5mOlvJhjTXk6NNNzQOlj3
+ ygIZPr0ZNyjR6vWpTNihlM3LjGmef3kCC089nx56kTp1AzNGTEVNBf1J1aUfnk/1YEp0wdlCf
+ QFtkS+r7UA1DEn9BSsB5SY/UorKVm9mu8GubrY4hd5ra9Qh18B42H4Wol9DkEWaHndPooESYU
+ aJAJcDxJangYu9du97xoSWHdSEqN0/tnw2sSY6MADlv38PEF/FDv9VAABUPx4inuyg/K0rL2S
+ 886ohN9WT7+UNvLyttdXCQB2tSmU8TACKTAkHHWMQ7YyYwyl/KWU2FkDVcijZerdqCI3jNiJC
+ Ml7BYBNNc7zmJCdivxf3vE9hhGze2RMDnd14hZMuPLk8nH5VxuoxpY0ew8sbpaxUlShbP72DY
+ efvVSkVrHP3HAY2usubfyUrG3oHsP0nFc02VDwUEcXGuELtOuq/I8o7G5igjisvcnyFt1EECB
+ suJS0VIquOHueSpuKZQJ4v60g6uVziVcrC2vTJnDoX0gbn1S9a5XbWM5hvV0bZcF4su8pBNJ0
+ 3KZNvUakvLQCqwZYyN9aB3+1u8f5DH+ege+uyCZOp4QEXVtNz5Sv1lnxCrL0A/u2DPzYiFhDX
+ n6i8CZcwN2lqj8DCk24yXMlWcI8nXVx2rrFs6AbBgQ1jLkxTOY10MJGxZlBGtIcchGOpE0LuW
+ BfhV9bHSraVQDN2o7x2oCPXWKbqAbVWUfEPliaqsE5cVYTljoV/xPvG3wNHYrTRsQ3V8YKIQm
+ KofQyQjt2AyY16NGJcF9lH74wa7Dw8yA4UEgirul68V7kBaBErHM44pjUiQTxWvHHZtYXxiL4
+ Cc4zDBpglyIRBH2nvcLgmoaVn6C8aM7FtTTGLc/aVlvX6Nv0c2fI4VnSmp1vFTBtHFG0tMr+m
+ gZkGNK+lwSFNYvfoou21GJThyAmIui1TyEqgcvFId8QEgYnwTG0tp0iF1pY8QX9apa+V4bd4a
+ sKDYw/UdxBFj0rNKeAMWkzSHzCrgLOEoOgxfoHJ2VXSYtiu9qyNpjmhzRnQJNEopmnGXF0cc9
+ 5f4KOfMi3QlgPqmPmgfp0sbNf0fSrUAHMD+eKp+wMxPCYDy7OBR1LbIUYNGC7hIDjS+7gRhby
+ COTm9xLMJjT373NwrByv074fSO9Jm1X51cXhD6kV295QSE93UY16EwyBTdcga3ItwbC8lQDe7
+ 06wiw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:51:17AM +0200, Dietmar Eggemann wrote:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 26 Aug 2019 13:14:02 +0200
 
-> Not sure about the extra  'if trace_cpu_frequency_enabled()' but I guess
-> it doesn't hurt.
+A null pointer would be passed to a call of the function "kfree" directly
+after a call of the function "kcalloc" failed at one place.
+Pass the data structure member "urb" instead for which memory
+was allocated before (so that this resource will be properly cleaned up).
 
-Without that you do that for_each_cpu() iteration unconditionally, even
-if the tracepoint is disabled.
+This issue was detected by using the Coccinelle software.
+
+Fixes: d571b592c6206d33731f41aa710fa0f69ac8611b ("media: em28xx: don't use=
+ coherent buffer for DMA transfers")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/media/usb/em28xx/em28xx-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em=
+28xx/em28xx-core.c
+index 2b8c84a5c9a8..e6088b5d1b80 100644
+=2D-- a/drivers/media/usb/em28xx/em28xx-core.c
++++ b/drivers/media/usb/em28xx/em28xx-core.c
+@@ -931,7 +931,7 @@ int em28xx_alloc_urbs(struct em28xx *dev, enum em28xx_=
+mode mode, int xfer_bulk,
+
+ 	usb_bufs->buf =3D kcalloc(num_bufs, sizeof(void *), GFP_KERNEL);
+ 	if (!usb_bufs->buf) {
+-		kfree(usb_bufs->buf);
++		kfree(usb_bufs->urb);
+ 		return -ENOMEM;
+ 	}
+
+=2D-
+2.23.0
+
