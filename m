@@ -2,57 +2,114 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95881C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93791C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744F32173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59184217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566833239;
+	bh=inrgG0lTnLbswrs0VGuNVeaCYHuBPS8kAFlXEXDFxNc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=liuwOWO7jnjAbmG01P2ufLzCrXabmrYlEozqs3N29eE/xsJBu+hezh0yQ5Dd9TOA/
+	 e/P0LJSNLyOVF+0zqglJIPWxMAh3M+FwNr6bbvdMFa/av0/NKyVFZzNrjO7Zuvq3vk
+	 +k6M1P7eU4qToj8uzs4vaqZ70kXm4bYhV3bm/nQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732239AbfHZPZa (ORCPT
+        id S1732271AbfHZP1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:25:30 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:35048 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729035AbfHZPZ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:25:27 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7QFP7hr031359;
-        Tue, 27 Aug 2019 00:25:08 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp);
- Tue, 27 Aug 2019 00:25:07 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7QFP7Ox031353
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 27 Aug 2019 00:25:07 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] ASoC: es8316: limit headphone mixer volume
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Daniel Drake <drake@endlessm.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        David Yang <yangxiaohua@everest-semi.com>,
-        alsa-devel@alsa-project.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-References: <20190824210426.16218-1-katsuhiro@katsuster.net>
- <943932bf-2042-2a69-c705-b8e090e96377@redhat.com>
- <CAD8Lp44_uAC4phZ9NbvM_LKNUoiNUqAnFsq4h-bJiQn6byjzGw@mail.gmail.com>
- <eeee149c-4d9b-8b2e-780b-a41e2c87ec02@redhat.com>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <9574e5f4-e9db-1876-73f7-19a79fb1209e@katsuster.net>
-Date:   Tue, 27 Aug 2019 00:25:07 +0900
+        Mon, 26 Aug 2019 11:27:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728324AbfHZP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:27:18 -0400
+Received: from [192.168.1.17] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BC52173E;
+        Mon, 26 Aug 2019 15:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566833236;
+        bh=inrgG0lTnLbswrs0VGuNVeaCYHuBPS8kAFlXEXDFxNc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=chACUPQIMjaAy/PcwIJN/lpL21BLUIoD1ZsfTWl+1UZOaILNi9pZtBo+LB8OUyc8u
+         mrBJVCHyK1116+jz+zDK/amU0qgh5eIv42cWwJ05qQNYL5PQR/O9ODUdi4jix7RrPt
+         Psi6dGv5lvcTnxGzv8Y0M6mUvLZQVdMBmwx1f0ME=
+Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus
+ probe
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190820145834.7301-1-dinguyen@kernel.org>
+ <20190820145834.7301-2-dinguyen@kernel.org>
+ <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
+ <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
+ <1566809829.3842.4.camel@pengutronix.de>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c080d163-720c-7a15-857a-fc619eb8d048@kernel.org>
+Date:   Mon, 26 Aug 2019 10:27:14 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <eeee149c-4d9b-8b2e-780b-a41e2c87ec02@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1566809829.3842.4.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,89 +117,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Hans, Daniel,
+Hi Philipp,
 
-Thank you for reviewing and comment.
-
-On 2019/08/26 18:09, Hans de Goede wrote:
-> Hi,
+On 8/26/19 3:57 AM, Philipp Zabel wrote:
+> Hi Dinh, Linus,
 > 
-> On 26-08-19 04:53, Daniel Drake wrote:
->> On Mon, Aug 26, 2019 at 1:38 AM Hans de Goede <hdegoede@redhat.com> 
->> wrote:
->>> On 24-08-19 23:04, Katsuhiro Suzuki wrote:
->>>> This patch limits Headphone mixer volume to 4 from 7.
->>>> Because output sound suddenly becomes very loudly with many noise if
->>>> set volume over 4.
+> On Fri, 2019-08-23 at 10:42 -0500, Dinh Nguyen wrote:
 >>
->> That sounds like something that should be limited in UCM.
->>
->>> Higher then 4 not working matches my experience, see this comment from
->>> the UCM file: alsa-lib/src/conf/ucm/codecs/es8316/EnableSeq.conf :
+>> On 8/23/19 4:19 AM, Linus Walleij wrote:
+>>> On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
 >>>
->>> # Set HP mixer vol to -6 dB (4/7) louder does not work
->>> cset "name='Headphone Mixer Volume' 4"
->>
->> What does "does not work" mean more precisely?
+>>>> @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>>>>         ret = amba_get_enable_pclk(dev);
+>>>>         if (ret == 0) {
+>>>>                 u32 pid, cid;
+>>>> +               int count;
+>>>> +               struct reset_control *rstc;
+>>>> +
+>>>> +               /*
+>>>> +                * Find reset control(s) of the amba bus and de-assert them.
+>>>> +                */
+>>>> +               count = reset_control_get_count(&dev->dev);
 > 
-> IIRC garbled sound.
+> The reset_control_get_count() inline stub returns -ENOENT, so the
+> compiler can throw away the complete loop.
 > 
->> I checked the spec, there is indeed something wrong in the kernel 
->> driver here.
->> The db scale is not a simple scale as the kernel source suggests.
->>
->> Instead it is:
->> 0000 – -12dB
->> 0001 – -10.5dB
->> 0010 – -9dB
->> 0011 – -7.5dB
->> 0100 – -6dB
->> 1000 – -4.5dB
->> 1001 – -3dB
->> 1010 – -1.5dB
->> 1011 – 0dB
->>
->> So perhaps we can fix the kernel to follow this table and then use UCM
->> to limit the volume if its too high on a given platform?
+>>>> +               while (count > 0) {
+>>>> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
 > 
-> Yes that sounds like the right thing to do. Katsuhiro can you confirm that
-> using this table allows using the full scale ? note that the full scale now
-> has 9 steps rather then 8.
+> Since resets are looked up with of_reset_control_get, I'd use
+> of_reset_control_get_count() above for consistency. But see below:
 > 
 
-I've finished testing this table on my board (RockPro64).
-Every values work well without garbled sound.
+reset_control_get_count() ultimately calls of_reset_control_get_count()
+and it looks like of_reset_control_get_count() is not exported.
 
-I checked address 0x16 register via /sys/kernel/debug/regmap too.
-The register values and dB (get from alsamixer) are the following if
-I increase headphone volume to max from min.
-
-   reg   dB
-   0x16  scale
-   ------------
-   0x00  -12.00
-   0x11  -10.50
-   0x22  -9.00
-   0x33  -7.50
-   0x44  -6.00
-   0x88  -4.50
-   0x99  -3.00
-   0xaa  -1.50
-   0xbb  0.00
-
-
-And I found other problem, current code is inverted L/R volume.
-It's only in Headphone "mixer" volume. It seems Headphone "master"
-volume works correctly.
-
-I'll fix these problems and send V2 patch set.
-
-
-> Regards,
+>>>> +                       if (IS_ERR(rstc)) {
+>>>> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
+>>>> +                                       ret = -EPROBE_DEFER;
+>>>> +                               else
+>>>> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
+>>>> +                               break;
+>>>> +                       }
+>>>> +                       reset_control_deassert(rstc);
+>>>> +                       reset_control_put(rstc);
+>>>> +                       count--;
+>>>> +               }
 > 
-> Hans
+> It looks like the order of deassertions is irrelevant. If so,
+> You can use of_reset_control_array_get() to simplify this:
 > 
+> +		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
+> +		if (IS_ERR(rstc)) {
+> +			if (PTR_ERR(rstc) != -EPROBE_DEFER)
+> +				dev_err(&dev->dev, "Can't get amba reset!\n");
+> +			return PTR_ERR(rstc);
+> +		}
+> +		reset_control_deassert(rstc);
+> +		reset_control_put(rstc);
 > 
 
-Best Regards,
-Katsuhiro Suzuki
+Thanks for the review! I'll post v5 shortly.
+
+Dinh
