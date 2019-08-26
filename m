@@ -2,112 +2,122 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A3C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDCBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3B420874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA2120874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZVQN0C0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbfHZIiv (ORCPT
+        id S1730395AbfHZIjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:38:51 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3975 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730393AbfHZIiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:38:50 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id BB05F5E0D600CEDCAF88;
-        Mon, 26 Aug 2019 16:38:48 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 26 Aug 2019 16:38:48 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 26 Aug 2019 16:38:48 +0800
-Date:   Mon, 26 Aug 2019 16:38:01 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Greg KH <greg@kroah.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Gao Xiang <hsiangkao@aol.com>
-Subject: Re: linux-next: build warning after merge of the staging tree
-Message-ID: <20190826083733.GA129185@architecture4>
+        Mon, 26 Aug 2019 04:39:54 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:42262 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729523AbfHZIjx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:39:53 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 3B9232E045B;
+        Mon, 26 Aug 2019 11:39:51 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id kPAtGJAWjF-doPiv6Rx;
+        Mon, 26 Aug 2019 11:39:51 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1566808791; bh=Y7ejts7lpiJhlX4+egWDk+iu4dJWOZ7po0kKT0OpMC4=;
+        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
+        b=ZVQN0C0X7bfLpqONhnIcbXCciPSnf0ZQe87EOzqxF7ubpJcjvtoTJmY+Jof+wIqia
+         PEaE9w9ENQcqOpxatGvjD0TmDLw+9EItjqMz8obWXNyoLfUEk2Nq2/ckAr+NthoGs5
+         cCPwE+ZAbNG9qfRqLLqgDRWz23KdHvzmNr8zZToU=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:f558:a2a9:365e:6e19])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id n5aJDOHkZi-doBieEVh;
+        Mon, 26 Aug 2019 11:39:50 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 00/14] per memcg lru_lock
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+ <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
+ <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
+ <b776032e-eabb-64ff-8aee-acc2b3711717@oracle.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <d5256ebf-8314-8c24-a7ed-e170b7d39b61@yandex-team.ru>
+Date:   Mon, 26 Aug 2019 11:39:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190826063024.GA1217@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <b776032e-eabb-64ff-8aee-acc2b3711717@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Mon, Aug 26, 2019 at 08:30:24AM +0200, Greg KH wrote:
-> On Mon, Aug 26, 2019 at 04:24:32PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the staging tree, today's linux-next build (x86_64
-> > allmodconfig) produced this warning:
-> > 
-> > In file included from include/trace/events/erofs.h:8,
-> >                  from <command-line>:
-> > include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
-> >   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-> >                                      ^~~~~~
-> > include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
-> >   static inline void trace_##name(proto)    \
-> >                                   ^~~~~
-> > include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
-> >   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
-> >                         ^~~~~~
-> > include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
-> >   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> >   ^~~~~~~~~~~~~
-> > include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
-> >   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> >                       ^~~~~~
-> > include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
-> >  TRACE_EVENT(erofs_lookup,
-> >  ^~~~~~~~~~~
-> > include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
-> >   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-> >   ^~~~~~~~
-> > 
-> > and moany more like this ...
-> > 
-> > Introduced by commit
-> > 
-> >   47e4937a4a7c ("erofs: move erofs out of staging")
-> > 
-> > (or, at least, exposed by it).  It needs, at least, a "struct dentry;"
-> > added to the file.
+On 22/08/2019 18.20, Daniel Jordan wrote:
+> On 8/22/19 7:56 AM, Alex Shi wrote:
+>> 在 2019/8/22 上午2:00, Daniel Jordan 写道:
+>>>    https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice>
+>>> It's also synthetic but it stresses lru_lock more than just anon alloc/free.  It hits the page activate path, which is where we see this 
+>>> lock in our database, and if enough memory is configured lru_lock also gets stressed during reclaim, similar to [1].
+>>
+>> Thanks for the sharing, this patchset can not help the [1] case, since it's just relief the per container lock contention now.
 > 
-> Odd, why has this never been seen before when the same files were in
-> drivers/staging/ and why 0-day isn't reporting this?
-
-I Think it is weird since it is never failed in staging and kbuild-all 0-day ci
-(my tree and you tree)....
-
+> I should've been clearer.  [1] is meant as an example of someone suffering from lru_lock during reclaim.  Wouldn't your series help 
+> per-memcg reclaim?
 > 
-> Gao, can you send me a patch for this?
-
-Got it, I will look into that...
-
-Thanks,
-Gao Xiang
-
+>> Yes, readtwice case could be more sensitive for this lru_lock changes in containers. I may try to use it in container with some tuning. 
+>> But anyway, aim9 is also pretty good to show the problem and solutions. :)
+>>>
+>>> It'd be better though, as Michal suggests, to use the real workload that's causing problems.  Where are you seeing contention?
+>>
+>> We repeatly create or delete a lot of different containers according to servers load/usage, so normal workload could cause lots of pages 
+>> alloc/remove. 
 > 
-> thanks,
+> I think numbers from that scenario would help your case.
 > 
-> greg k-h
+>> aim9 could reflect part of scenarios. I don't know the DB scenario yet.
+> 
+> We see it during DB shutdown when each DB process frees its memory (zap_pte_range -> mark_page_accessed).  But that's a different thing, 
+> clearly Not This Series.
+> 
+>>>> With this patch series, lruvec->lru_lock show no contentions
+>>>>           &(&lruvec->lru_l...          8          0               0       0               0               0
+>>>>
+>>>> and aim9 page_test/brk_test performance increased 5%~50%.
+>>>
+>>> Where does the 50% number come in?  The numbers below seem to only show ~4% boost.
+>>After splitting lru-locks present per-cpu page-vectors works no so well
+because they mixes pages from different cgroups.
+
+pagevec_lru_move_fn and friends need better implementation:
+either sorting pages or splitting vectores in per-lruvec basis.
+>> the Setddev/CoeffVar case has about 50% performance increase. one of container's mmtests result as following:
+>>
+>> Stddev    page_test      245.15 (   0.00%)      189.29 (  22.79%)
+>> Stddev    brk_test      1258.60 (   0.00%)      629.16 (  50.01%)
+>> CoeffVar  page_test        0.71 (   0.00%)        0.53 (  26.05%)
+>> CoeffVar  brk_test         1.32 (   0.00%)        0.64 (  51.14%)
+> 
+> Aha.  50% decrease in stdev.
+> 
+
+After splitting lru-locks present per-cpu page-vectors works
+no so well because they mix pages from different cgroups.
+
+pagevec_lru_move_fn and friends need better implementation:
+either sorting pages or splitting vectores in per-lruvec basis.
