@@ -2,91 +2,85 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8532C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA561C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D3F20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD7E20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566831415;
+	bh=75uu4LHQOMkB6SQjTkZ45jR3ZFWTX8T0IVq1Jeh9hZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OH4KWAmSLxZEXfZX09t6Db/CPxVZ1mNv6B0UqSJ3jO8ruhn3PjUMGxwgnB/QCy47x
+	 VKgYr0TOg6x+YTJppaXzf8JHiXbo8kFBuaMkRAqFzbSLEAIpjjjLUrsTcZJr4onIw/
+	 NRJxRtHSZUAP7sFbx3Mn9jee69rkgojwc+e+IyPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732724AbfHZOzp (ORCPT
+        id S1732747AbfHZO4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:55:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40396 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732396AbfHZOzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:55:45 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2GPD-0006fM-2n; Mon, 26 Aug 2019 16:55:39 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9DF6A1C0DAE;
-        Mon, 26 Aug 2019 16:55:38 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 14:55:38 -0000
-From:   tip-bot2 for Jisheng Zhang <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/ftrace: Remove mcount() declaration
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <r20190826170150.10f101ba@xhacker.debian>
-References: <r20190826170150.10f101ba@xhacker.debian>
+        Mon, 26 Aug 2019 10:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732730AbfHZO4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:56:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA6D20679;
+        Mon, 26 Aug 2019 14:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566831413;
+        bh=75uu4LHQOMkB6SQjTkZ45jR3ZFWTX8T0IVq1Jeh9hZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hI6R1DsK6O9kXqrCtP6Z/9qTWWX1nw0Wq22PQvdtMbBzqRNYXHDACjoVnzEWvZKCu
+         PWmsUmD4BmI1nTX302UJo7UKWNH/fkeMIQWHmygWiw8YB3Y5ZlS02gPSSpRX7e9BFo
+         MbEw1em1+y5xHCVDszSOTeXbV0TVd8gGNKtMvbpU=
+Date:   Mon, 26 Aug 2019 16:56:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nayna Jain <nayna@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH v3 2/4] powerpc: expose secure variables to userspace via
+ sysfs
+Message-ID: <20190826145649.GA27342@kroah.com>
+References: <1566825818-9731-1-git-send-email-nayna@linux.ibm.com>
+ <1566825818-9731-3-git-send-email-nayna@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <156683133842.27179.1192016492760771777.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1566825818-9731-3-git-send-email-nayna@linux.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Mon, Aug 26, 2019 at 09:23:36AM -0400, Nayna Jain wrote:
+> +static struct kobj_attribute size_attr = __ATTR_RO(size);
 
-Commit-ID:     248d327ed7b6d3ebda2ac7b38482a306108bcd3e
-Gitweb:        https://git.kernel.org/tip/248d327ed7b6d3ebda2ac7b38482a306108bcd3e
-Author:        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-AuthorDate:    Mon, 26 Aug 2019 09:13:12 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 26 Aug 2019 16:51:04 +02:00
+Wait, why not just normal ATTR_RO()?
 
-x86/ftrace: Remove mcount() declaration
+> +static struct bin_attribute data_attr = __BIN_ATTR_RO(data, VARIABLE_MAX_SIZE);
 
-Commit 562e14f72292 ("ftrace/x86: Remove mcount support") removed the
-support for mcount, but forgot to remove the mcount() declaration.
+And BIN_ATTR_RO() here?
 
-Clean it up.
+Do those not work for you somehow?
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r20190826170150.10f101ba@xhacker.debian
----
- arch/x86/include/asm/ftrace.h | 1 -
- 1 file changed, 1 deletion(-)
+thanks,
 
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 287f1f7..c38a666 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -16,7 +16,6 @@
- #define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- 
- #ifndef __ASSEMBLY__
--extern void mcount(void);
- extern atomic_t modifying_ftrace_code;
- extern void __fentry__(void);
- 
+greg k-h
