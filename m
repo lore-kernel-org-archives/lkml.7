@@ -1,104 +1,219 @@
-Return-Path: <SRS0=/DUJ=WW=accountupdate.com=info@kernel.org>
+Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_MESSAGE,MIME_HTML_ONLY,PDS_FROM_NAME_TO_DOMAIN,SPF_HELO_NONE,SPF_PASS,
-	TO_IN_SUBJ autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33372C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:12:51 +0000 (UTC)
-X-Greylist: delayed 28347 seconds by postgrey-1.34 at mail.kernel.org; Mon, 26 Aug 2019 10:12:50 UTC
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D675621852
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=accountupdate.com
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=info@accountupdate.com
-Received: from accountupdate.com (unknown [23.81.246.41])
-	by mail.kernel.org (Postfix) with ESMTP id D675621852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:12:50 +0000 (UTC)
-From: archiver.kernel.org  <info@accountupdate.com>
-To: linux-kernel@archiver.kernel.org
-Subject: Verify your account linux-kernel@archiver.kernel.org
-Date: 26 Aug 2019 03:12:50 -0700
-Message-ID: <20190826031250.24B72B4D050FBC62@accountupdate.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9B0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:13:32 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 883EA2186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="V2kDrxIw"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730576AbfHZKNb (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 26 Aug 2019 06:13:31 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46426 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730469AbfHZKNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:13:31 -0400
+Received: by mail-lf1-f66.google.com with SMTP id n19so11810590lfe.13
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 03:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t5IFyVt9ycUTswozYtX7dDQi6y3j9+8f5c65D6FhaJk=;
+        b=V2kDrxIwe3zBsUdenFJteBOLthl93Ehz+6GkRgF8H67aCPc6C4NT6avkNNDp2rA9vB
+         q8hjjP7wJE+alfVoFDtR03iPo3a1VZ96woLncoAgaLqYQWF2kCNFc0yPd2wWOT3AxmXq
+         8t/dP0va+AY6rAeI9PlV7NUMYU9dUZSNJMeGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t5IFyVt9ycUTswozYtX7dDQi6y3j9+8f5c65D6FhaJk=;
+        b=jslPNrSBNYdPZQW6jsNmHeOBg3ahW8u+YTuVG9RrmDELxNQa6r8XhAr9OSHVGNdK9E
+         eq/VDjGnVLM6W5wV8Ioxr4RBfZPgK5rLuIv8pC9KTu6eOv6qvRmidUY+oo82d3/f2Gv+
+         CHezdyfkKvkWNU/zdq8Ren/AciFFMI5dyAlGAVnxAIazd1of2Wnm/VUt9NZhZ092dcwb
+         hGKzwYcyYvYojX6H9rFHwwVIPacwiblLKek2Qts/hjU4L1zofyoasfjuSrLUkURS6aNt
+         fU0vjkMFGfs8PKigiSKYzLdKGDOKKU2vBpUab6q9odd/hRRQz8p73w3E9AwWmXxvy1nX
+         e1hQ==
+X-Gm-Message-State: APjAAAW8COSFun4rp6vUiZSN9Fuae0K4lftqYKe6XSGKMNQGW/28N9RV
+        NFcKwMEekrm/6cxNMlqnghDvvw==
+X-Google-Smtp-Source: APXvYqwT5Lvtv0r+bFYvEOW2LjCvYtNI9bYRgtzeC1tRpJDtm/RJUlStouFMu+qIBYaMc1hxPS7l9w==
+X-Received: by 2002:a19:2d19:: with SMTP id k25mr1777488lfj.76.1566814408505;
+        Mon, 26 Aug 2019 03:13:28 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id n2sm2026320lfl.62.2019.08.26.03.13.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 03:13:27 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <ff5d3756-7fac-84ed-ba1e-ff0a4ece32be@rasmusvillemoes.dk>
+Date:   Mon, 26 Aug 2019 12:13:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-List-Id: <linux-kernel.vger.kernel.org>
+In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.=
-w3.org/TR/html4/loose.dtd">
+On 25/08/2019 01.37, Uwe Kleine-König wrote:
+> 	pr_info("probing failed (%dE)\n", ret);
+> 
+> expands to
+> 
+> 	probing failed (EIO)
+> 
+> if ret holds -EIO (or EIO). This introduces an array of error codes. If
+> the error code is missing, %dE falls back to %d and so prints the plain
+> number.
+> 
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+> ---
+> Hello
+> 
+> there are many code sites that benefit from this. Just grep for
+> "(%d)" ...
+> 
+> As an example the follow up patch converts a printk to use this new
+> format escape.
+> 
+> Best regards
+> Uwe
+> 
+>  Documentation/core-api/printk-formats.rst |   3 +
+>  lib/vsprintf.c                            | 193 +++++++++++++++++++++-
+>  2 files changed, 195 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index c6224d039bcb..81002414f956 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -35,6 +35,9 @@ Integer types
+>  		u64			%llu or %llx
+>  
+>  
+> +To print the name that corresponds to an integer error constant, use %dE and
+> +pass the int.
+> +
+>  If <type> is dependent on a config option for its size (e.g., sector_t,
+>  blkcnt_t) or is architecture-dependent for its size (e.g., tcflag_t), use a
+>  format specifier of its largest possible type and explicitly cast to it.
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b0967cf17137..672eab8dab84 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long long num,
+>  	return buf;
+>  }
+>  
+> +#define ERRORCODE(x) { .str = #x, .err = x }
+> +
+> +static const struct {
+> +	const char *str;
+> +	int err;
+> +} errorcodes[] = {
+> +	ERRORCODE(EPERM),
+...
+> +	ERRORCODE(ERECALLCONFLICT),
+> +};
+> +
+> +static noinline_for_stack
+> +char *errstr(char *buf, char *end, unsigned long long num,
+> +	     struct printf_spec spec)
+> +{
+> +	char *errname = NULL;
+> +	size_t errnamelen, copy;
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(errorcodes); ++i) {
+> +		if (num == errorcodes[i].err || num == -errorcodes[i].err) {
+> +			errname = errorcodes[i].str;
+> +			break;
+> +		}
+> +	}
 
-<HTML><HEAD>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.10570.1001"></HEAD>
-<body style=3D"MARGIN: 0.5em">
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial"><SPAN style=3D"FONT-=
-SIZE: large; FONT-FAMILY: georgia, palatino, serif">
-<STRONG><SPAN style=3D"COLOR: rgb(12,14,243)" color=3D"#0c0ef3" size=3D"4">=
-<FONT size=3D5>archiver.kernel.org</FONT></SPAN></STRONG></SPAN></DIV>
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial"><FONT size=3D5><BR><=
-/FONT></DIV>
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial"><SPAN style=3D"FONT-=
-FAMILY: georgia, palatino, serif">
-<A style=3D"COLOR: rgb(17,85,204)" href=3D"http://enjoyplay.cn/" target=3D_=
-blank data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttp://enjoypl=
-ay.cn&amp;source=3Dgmail&amp;ust=3D1566158611563000&amp;usg=3DAFQjCNEMix0Qd=
-YYK5AKI0rCCB4_ypmpVCA">archiver.kernel.org</A><SPAN>&nbsp;</SPAN>has preven=
-ted the delivery of new emails to your inbox as of&nbsp;Aug 25, 2019 due to=
- exceeded mailbox quota.</SPAN></DIV>
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial"><SPAN style=3D"FONT-=
-FAMILY: georgia, palatino, serif"></SPAN>&nbsp;</DIV>
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial">
-<A style=3D"COLOR: rgb(17,85,204)" href=3D"https://graciouslash.com/cgi/ind=
-ex.php?rmail=3Dlinux-kernel@archiver.kernel.org" rel=3D"noopener noreferrer=
-" target=3D_blank data-saferedirecturl=3D"https://www.google.com/url?q=3Dht=
-tps://realsantavisit.com/up/index.php?email%3Drocy@enjoyplay.cn&amp;source=
-=3Dgmail&amp;ust=3D1566158611563000&amp;usg=3DAFQjCNG0nctc6-cT3yZZuOPHjso6a=
-pmV5g">Verify linux-kernel@archiver.kernel.org</A></DIV>
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial"><SPAN style=3D"FONT-=
-FAMILY: georgia, palatino, serif"></SPAN>&nbsp;</DIV>
-<DIV style=3D"FONT-SIZE: 13px; FONT-FAMILY: monospace; WHITE-SPACE: normal;=
- WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(0,0,=
-0); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACK=
-GROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: n=
-ormal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-deco=
-ration-style: initial; text-decoration-color: initial"><BR></DIV>
-<DIV style=3D"FONT-FAMILY: monospace; WHITE-SPACE: normal; WORD-SPACING: 0p=
-x; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(34,34,34); FONT-STYLE=
-: normal; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKGROUND-COLOR: =
-rgb(255,255,255); TEXT-INDENT: 0px; font-variant-ligatures: normal; font-va=
-riant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration-style: =
-initial; text-decoration-color: initial"><SPAN style=3D"FONT-FAMILY: georgi=
-a, palatino, serif"><FONT color=3D#0b5394 size=3D1>
-&copy; 2019&nbsp;archiver.kernel.org Corporation. All rights reserved. | Ac=
-ceptable Use Policy | Privacy Notice</FONT></SPAN></DIV></BODY></HTML>
+Not sure I'm a fan of iterating this array. Yes, the errno values are a
+bit sparse, but maybe one could use a dense array with O(1) lookup for
+those < 128 and then have an exceptional table like yours for the rest.
+But if you do keep this whole array thing, please do as Andrew suggested
+and compact it somewhat (4 bytes per entry plus the storage for the
+strings themselves is enough, see e.g. e1f0bce3), and put EINVAL and
+other common things near the start (at least EINVAL is a lot more common
+than ENOEXEC).
+
+> +	if (!errname) {
+> +		/* fall back to ordinary number */
+> +		return number(buf, end, num, spec);
+> +	}
+> +
+> +	copy = errnamelen = strlen(errname);
+> +	if (copy > end - buf)
+> +		copy = end - buf;
+> +	buf = memcpy(buf, errname, copy);
+
+This is buggy, AFAICT. buf may be beyond end (that's the convention), so
+end-buf (which is a ptrdiff_t, which is probably a signed type, but it
+gets converted to a size_t when compared to copy) can be a huge number,
+so copy>end-buf is false.
+
+Please just use the string() helper that gets used for printing other
+fixed strings (as well as %s input).
+
+And add tests to lib/test_printf.c, that would catch this sort of thing
+immediately.
+
+> +	return buf + errnamelen;
+> +}
+> +
+>  static noinline_for_stack
+>  char *special_hex_number(char *buf, char *end, unsigned long long num, int size)
+>  {
+> @@ -2566,7 +2752,12 @@ int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
+>  				num = va_arg(args, unsigned int);
+>  			}
+>  
+> -			str = number(str, end, num, spec);
+> +			if (spec.type == FORMAT_TYPE_INT && *fmt == 'E') {
+> +				fmt++;
+> +				str = errstr(str, end, num, spec);
+
+drivers/staging/speakup/speakup_bns.c has a %dE, have you checked
+whether you're breaking that one? It's hard to grep for all the
+variations, %-0*.5dE is also legal and would be caught here.
+
+This has previously been suggested as a %p extension, and I think users
+would just as often have an ERR_PTR() as a plain int or long. Since we
+already have %p[alphanumeric] as a special kernel thing, why not do
+that? It's more convenient to convert from ints/longs to error pointers
+
+  pr_err("Uh-oh: %pE", ERR_PTR(ret));
+
+than the other way around
+
+  pr_err("Uh-oh: %dE", PTR_ERR(p)); // oops, must be %ldE
+
+Kernel size impact? Have you considered making it possible to opt-out
+and have %dE just mean %d?
+
+Rasmus
