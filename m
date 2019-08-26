@@ -2,313 +2,168 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A91C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3EBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFD821872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566819487;
-	bh=pPU7Oq6YBXwlfSpisXUSN7O/E9G4jOkzVz+PI2hUrds=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cOogGPxne0EXjXHmLsDveEo1bBvZGyodcYn5iVfN6XdH1dF5ZooIa7dpCBOMGB/0Z
-	 FnDZMxWp8EKEitAvpo5CU1ro+7/670HtFW3d74xjSzFLYJihH0O9IQaz19xCq3YdiS
-	 3TqafRuzh7JJ+6rZcrJnQXIBqfCElzeJDquValOA=
+	by mail.kernel.org (Postfix) with ESMTP id 4A3112184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfHZLiG (ORCPT
+        id S1731212AbfHZLjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:38:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55196 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 07:39:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59258 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfHZLiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:38:05 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        id S1727095AbfHZLjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:39:19 -0400
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E0521883;
-        Mon, 26 Aug 2019 11:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566819483;
-        bh=pPU7Oq6YBXwlfSpisXUSN7O/E9G4jOkzVz+PI2hUrds=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YVVkeqCGrG3RnXOr6Gj+t4zHOIB+BlcZI5yyr6HPo3yZJzIqmToqczkqCm9j4iU5m
-         lBHTgRoC7bhbhO9gFftmcJJYi0hmi5yEgD2avu6Q2AMUK5XXsvxVRGd496PE3SUSY+
-         hh+ONrjTKnrsJmIEt3wP6wh030ihBpf+X0tIGFCI=
-Received: by mail-qk1-f172.google.com with SMTP id m2so13678915qkd.10;
-        Mon, 26 Aug 2019 04:38:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAUKTnPpmx2Neb0m5LulH+y9z3rlPwpo9MkBv/fAgbXHvLknWkKn
-        4lCVwXYB+e9FFfyHwtkMCaHDY16TAuazzoQTbQ==
-X-Google-Smtp-Source: APXvYqxFdFrhr6QC432iXohr425U9ALeyY0/jK/ZTob9D6kmp205upnoTXJdzQJK7UQEdHEAqtMAyO/qvMbS4UVFyYM=
-X-Received: by 2002:a37:4941:: with SMTP id w62mr14495060qka.119.1566819482797;
- Mon, 26 Aug 2019 04:38:02 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63ADD4E832
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:39:18 +0000 (UTC)
+Received: by mail-pg1-f199.google.com with SMTP id 141so9608037pgh.12
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 04:39:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xi5x79hFcxVshjNra8X/6yxiKOk5j429Zw+E71UlIRs=;
+        b=tOqENtjpKd9xRw53oJ88vPCEjj0t8FJm0At2+QR4wE5D6gGuNAM/6GWshHVrCOGvVK
+         t0XbR8niO4P5lAek8QNEVVeakXJ3z2JuQGnFNkdDLj2s4GDdnS4xCk+DgjQm9gxTZMtr
+         EjSKctqbp5KrBDfw8ZPlGz2NGTg0biYlyUoCyilFiwSZjFL1Y9kuySqKJHoJjT3BEPiz
+         x3a7v2fouTGhmRwpYfmA9YpUsiK6Y8UzSnUDG0B/itvZM1TlC55Bee2HfLDyRRXRSjDb
+         WuwTE7UmN4smMbwJGZMNg2IR01Aqq0rOdtghIk5KSoR9AJZhXA0H/ZnUJQgBk+gMFSe3
+         oKCA==
+X-Gm-Message-State: APjAAAUYUbPLx87IT5GtsscZWlXOArZSIobkZ5+wusp3dgyDyd7mnRPj
+        0B5DABV4NSAe6S1XOixHoYERLHgAPOe3xWWoeT/xHXPlbkcWebJD5kbCYGST0S/hmPYU/9kLexa
+        SZ5ZiaJlfYbfLghVcCr7MqUTZ
+X-Received: by 2002:a65:5003:: with SMTP id f3mr2180990pgo.335.1566819557537;
+        Mon, 26 Aug 2019 04:39:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz8UUxwImp6F3psFCfM17KUyoCunFKDyrpd+862wZzI1oZZjpROWc+Oy4tLZiZXb9sjtb2Tzw==
+X-Received: by 2002:a65:5003:: with SMTP id f3mr2180971pgo.335.1566819557254;
+        Mon, 26 Aug 2019 04:39:17 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id o4sm35214817pje.28.2019.08.26.04.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 04:39:16 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 19:39:06 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: selftests: Detect max PA width from cpuid
+Message-ID: <20190826113906.GF1785@xz-x1>
+References: <20190826075728.21646-1-peterx@redhat.com>
+ <874l24nxik.fsf@vitty.brq.redhat.com>
+ <20190826104757.GD1785@xz-x1>
 MIME-Version: 1.0
-References: <20190823145356.6341-1-krzk@kernel.org>
-In-Reply-To: <20190823145356.6341-1-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 26 Aug 2019 06:37:50 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+5MpPSjRtFp-xf8P0rBuArMFbum7yadcHNBQz_N=Ergg@mail.gmail.com>
-Message-ID: <CAL_Jsq+5MpPSjRtFp-xf8P0rBuArMFbum7yadcHNBQz_N=Ergg@mail.gmail.com>
-Subject: Re: [RFC 1/9] dt-bindings: arm: samsung: Convert Samsung board/soc
- bindings to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, notify@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190826104757.GD1785@xz-x1>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert Samsung S5P and Exynos SoC bindings to DT schema format using
-> json-schema.  This is purely conversion of already documented bindings
-> so it does not cover all of DTS in the Linux kernel (few S5P/Exynos and
-> all S3C are missing).
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> If the schema looks sensible, I will continue on converting other
-> SoC and driver bindings and later adding missing schemas (S3C
-> SoCs).
+On Mon, Aug 26, 2019 at 06:47:57PM +0800, Peter Xu wrote:
+> On Mon, Aug 26, 2019 at 10:25:55AM +0200, Vitaly Kuznetsov wrote:
+> > Peter Xu <peterx@redhat.com> writes:
+> > 
+> > > The dirty_log_test is failing on some old machines like Xeon E3-1220
+> > > with tripple faults when writting to the tracked memory region:
+> > 
+> > s,writting,writing,
+> > 
+> > >
+> > >   Test iterations: 32, interval: 10 (ms)
+> > >   Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
+> > >   guest physical test memory offset: 0x7fbffef000
+> > >   ==== Test Assertion Failure ====
+> > >   dirty_log_test.c:138: false
+> > >   pid=6137 tid=6139 - Success
+> > >      1  0x0000000000401ca1: vcpu_worker at dirty_log_test.c:138
+> > >      2  0x00007f3dd9e392dd: ?? ??:0
+> > >      3  0x00007f3dd9b6a132: ?? ??:0
+> > >   Invalid guest sync status: exit_reason=SHUTDOWN
+> > >
+> > 
+> > This patch breaks on my AMD machine with
+> > 
+> > # cpuid -1 -l 0x80000008
+> > CPU:
+> >    Physical Address and Linear Address Size (0x80000008/eax):
+> >       maximum physical address bits         = 0x30 (48)
+> >       maximum linear (virtual) address bits = 0x30 (48)
+> >       maximum guest physical address bits   = 0x0 (0)
+> > 
+> > 
+> > Pre-patch:
+> > 
+> > # ./dirty_log_test 
+> > Test iterations: 32, interval: 10 (ms)
+> > Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
+> > guest physical test memory offset: 0x7fbffef000
+> > Dirtied 139264 pages
+> > Total bits checked: dirty (135251), clear (7991709), track_next (29789)
+> > 
+> > Post-patch:
+> > 
+> > # ./dirty_log_test 
+> > Test iterations: 32, interval: 10 (ms)
+> > Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
+> > Supported guest physical address width: 48
+> > guest physical test memory offset: 0xffffbffef000
+> > ==== Test Assertion Failure ====
+> >   dirty_log_test.c:141: false
+> >   pid=77983 tid=77985 - Success
+> >      1	0x0000000000401d12: vcpu_worker at dirty_log_test.c:138
+> >      2	0x00007f636374358d: ?? ??:0
+> >      3	0x00007f63636726a2: ?? ??:0
+> >   Invalid guest sync status: exit_reason=SHUTDOWN
+> 
+> Vitaly,
+> 
+> Are you using shadow paging?  If so, could you try NPT=off?
 
-Looks pretty good.
+Sorry, it should be s/shadow paging/NPT/...
 
-> ---
->  .../bindings/arm/samsung/samsung-boards.txt   |  83 --------
->  .../bindings/arm/samsung/samsung-boards.yaml  | 188 ++++++++++++++++++
->  2 files changed, 188 insertions(+), 83 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
+[root@hp-dl385g10-10 peter]# ./dirty_log_test 
+Test iterations: 32, interval: 10 (ms)
+Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
+Supported guest physical address width: 48
+guest physical test memory offset: 0xffffbffef000
+==== Test Assertion Failure ====
+  dirty_log_test.c:138: false
+  pid=5433 tid=5436 - Success
+     1  0x0000000000401cc1: vcpu_worker at dirty_log_test.c:138
+     2  0x00007f18977992dd: ?? ??:0
+     3  0x00007f18974ca132: ?? ??:0
+  Invalid guest sync status: exit_reason=SHUTDOWN
 
+[root@hp-dl385g10-10 peter]# modprobe -r kvm_amd
+[root@hp-dl385g10-10 peter]# modprobe kvm_amd npt=0
+[root@hp-dl385g10-10 peter]# ./dirty_log_test 
+Test iterations: 32, interval: 10 (ms)
+Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
+Supported guest physical address width: 48
+guest physical test memory offset: 0xffffbffef000
+Dirtied 102400 pages
+Total bits checked: dirty (99021), clear (8027939), track_next (23425)
 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-> new file mode 100644
-> index 000000000000..e963fd70c436
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-> @@ -0,0 +1,188 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/samsung/samsung-boards.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos and S5P SoC based boards
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: S5PV210 based Aries boards
-> +        items:
-> +          - enum:
-> +              - samsung,fascinate4g             # Samsung Galaxy S Fascinate 4G (SGH-T959P)
-> +              - samsung,galaxys                 # Samsung Galaxy S (i9000)
-> +          - const: samsung,aries
-> +          - const: samsung,s5pv210
-> +
-> +      - description: Exynos3250 based boards
-> +        items:
-> +          - enum:
-> +              - samsung,monk                    # Samsung Simband
-> +              - samsung,rinato                  # Samsung Gear2
-> +          - const: samsung,exynos3250
-> +          - const: samsung,exynos3
-> +
-> +      - description: Samsung ARTIK5 boards
-> +        items:
-> +          - enum:
-> +              - samsung,artik5-eval             # Samsung ARTIK5 eval board
-> +          - const: samsung,artik5               # Samsung ARTIK5 module
-> +          - const: samsung,exynos3250
-> +          - const: samsung,exynos3
-> +
-> +      - description: Exynos4210 based boards
-> +        items:
-> +          - enum:
-> +              - insignal,origen                 # Insignal Origen
-> +              - samsung,smdkv310                # Samsung SMDKV310 eval
-> +              - samsung,trats                   # Samsung Tizen Reference
-> +              - samsung,universal_c210          # Samsung C210
-> +          - const: samsung,exynos4210
-> +          - const: samsung,exynos4
-> +
-> +      - description: Exynos4412 based boards
-> +        items:
-> +          - enum:
-> +              - friendlyarm,tiny4412            # FriendlyARM TINY4412
-> +              - hardkernel,odroid-u3            # Hardkernel Odroid U3
-> +              - hardkernel,odroid-x             # Hardkernel Odroid X
-> +              - hardkernel,odroid-x2            # Hardkernel Odroid X2
-> +              - insignal,origen4412             # Insignal Origen
-> +              - samsung,smdk4412                # Samsung SMDK4412 eval
-> +              - topeet,itop4412-elite           # TOPEET Elite base
-> +          - const: samsung,exynos4412
-> +          - const: samsung,exynos4
-> +
-> +      - description: Samsung Midas family boards
-> +        items:
-> +          - enum:
-> +              - samsung,i9300                   # Samsung GT-I9300
-> +              - samsung,i9305                   # Samsung GT-I9305
-> +              - samsung,n710x                   # Samsung GT-N7100/GT-N7105
-> +              - samsung,trats2                  # Samsung Tizen Reference
-> +          - const: samsung,midas
-> +          - const: samsung,exynos4412
-> +          - const: samsung,exynos4
-> +
-> +      - description: Exynos5250 based boards
-> +        items:
-> +          - enum:
-> +              - google,snow-rev5                # Google Snow Rev 5+
-> +              - google,spring                   # Google Spring
-> +              - insignal,arndale                # Insignal Arndale
-> +              - samsung,smdk5250                # Samsung SMDK5250 eval
-> +          - const: samsung,exynos5250
-> +          - const: samsung,exynos5
-> +
-> +      - description: Google Snow Boards (Rev 4+)
-> +        items:
-> +          - enum:
-> +              - google,snow-rev4
+> 
+> I finally found a AMD host and I also found that it's passing with
+> shadow MMU mode which is strange.  If so I would suspect it's a real
+> bug in AMD NTP path but I'd like to see whether it's also happening on
+> your side.
+> 
+> Thanks,
 
-const here as I wouldn't expect this list to grow.
-
-> +          - const: google,snow
-> +          - const: samsung,exynos5250
-> +          - const: samsung,exynos5
-> +
-> +      - description: Exynos5260 based boards
-> +        items:
-> +          - enum:
-> +              - samsung,xyref5260               # Samsung Xyref5260 eval
-> +          - const: samsung,exynos5260
-> +          - const: samsung,exynos5
-> +
-> +      - description: Exynos5410 based boards
-> +        items:
-> +          - enum:
-> +              - hardkernel,odroid-xu            # Hardkernel Odroid XU
-> +              - samsung,smdk5410                # Samsung SMDK5410 eval
-> +          - const: samsung,exynos5410
-> +          - const: samsung,exynos5
-> +
-> +      - description: Exynos5420 based boards
-> +        items:
-> +          - enum:
-> +              - insignal,arndale-octa           # Insignal Arndale Octa
-> +              - samsung,smdk5420                # Samsung SMDK5420 eval
-> +          - const: samsung,exynos5420
-> +          - const: samsung,exynos5
-> +
-> +      - description: Google Peach Pit Boards (Rev 6+)
-> +        items:
-> +          - enum:
-> +              - google,pit-rev16
-
-const
-
-> +          - const: google,pit-rev15
-> +          - const: google,pit-rev14
-> +          - const: google,pit-rev13
-> +          - const: google,pit-rev12
-> +          - const: google,pit-rev11
-> +          - const: google,pit-rev10
-> +          - const: google,pit-rev9
-> +          - const: google,pit-rev8
-> +          - const: google,pit-rev7
-> +          - const: google,pit-rev6
-> +          - const: google,pit
-> +          - const: google,peach
-> +          - const: samsung,exynos5420
-> +          - const: samsung,exynos5
-> +
-> +      - description: Exynos5800 based boards
-> +        items:
-> +          - enum:
-> +              - hardkernel,odroid-xu3           # Hardkernel Odroid XU3
-> +              - hardkernel,odroid-xu3-lite      # Hardkernel Odroid XU3 Lite
-> +              - hardkernel,odroid-xu4           # Hardkernel Odroid XU4
-> +              - hardkernel,odroid-hc1           # Hardkernel Odroid HC1
-> +          - const: samsung,exynos5800
-> +          - const: samsung,exynos5
-> +
-> +      - description: Google Peach Pi Boards (Rev 10+)
-> +        items:
-> +          - enum:
-> +              - google,pi-rev16
-> +          - const: google,pi-rev15
-> +          - const: google,pi-rev14
-> +          - const: google,pi-rev13
-> +          - const: google,pi-rev12
-> +          - const: google,pi-rev11
-> +          - const: google,pi-rev10
-> +          - const: google,pi
-> +          - const: google,peach
-> +          - const: samsung,exynos5800
-> +          - const: samsung,exynos5
-> +
-> +      - description: Exynos5433 based boards
-> +        items:
-> +          - enum:
-> +              - samsung,tm2                     # Samsung TM2
-> +              - samsung,tm2e                    # Samsung TM2E
-> +          - const: samsung,exynos5433
-> +
-> +  firmware:
-
-This should be moved to its own file.
-
-> +    type: object
-> +    description:
-> +      node specifying presence and type of secure firmware
-> +    properties:
-> +      compatible:
-> +        enum:
-> +         - samsung,secure-firmware
-> +      reg:
-> +        description:
-> +          address of non-secure SYSRAM used for communication with firmware
-> +        maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    firmware@203f000 {
-> +      compatible = "samsung,secure-firmware";
-> +      reg = <0x0203F000 0x1000>;
-> +    };
-> --
-> 2.17.1
->
+-- 
+Peter Xu
