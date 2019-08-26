@@ -2,80 +2,124 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B38AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98448C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1803020874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAF820874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbfHZIl5 (ORCPT
+        id S1730786AbfHZImG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:41:57 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:37399 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729523AbfHZIlx (ORCPT
+        Mon, 26 Aug 2019 04:42:06 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:22408 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729614AbfHZImF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:41:53 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7Q8fmde000329, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7Q8fmde000329
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 26 Aug 2019 16:41:48 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Mon, 26 Aug 2019
- 16:41:46 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <jslaby@suse.cz>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net v2 2/2] r8152: remove calling netif_napi_del
-Date:   Mon, 26 Aug 2019 16:41:16 +0800
-Message-ID: <1394712342-15778-319-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-317-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-317-Taiwan-albertk@realtek.com>
+        Mon, 26 Aug 2019 04:42:05 -0400
+Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7Q8fk0Z012652;
+        Mon, 26 Aug 2019 17:41:46 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp);
+ Mon, 26 Aug 2019 17:41:46 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7Q8fj9d012648
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Mon, 26 Aug 2019 17:41:45 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] ASoC: es8316: limit headphone mixer volume
+To:     Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        David Yang <yangxiaohua@everest-semi.com>,
+        alsa-devel@alsa-project.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <20190824210426.16218-1-katsuhiro@katsuster.net>
+ <943932bf-2042-2a69-c705-b8e090e96377@redhat.com>
+ <CAD8Lp44_uAC4phZ9NbvM_LKNUoiNUqAnFsq4h-bJiQn6byjzGw@mail.gmail.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <f3096961-6b26-1ccf-47f2-978ae3648031@katsuster.net>
+Date:   Mon, 26 Aug 2019 17:41:45 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+In-Reply-To: <CAD8Lp44_uAC4phZ9NbvM_LKNUoiNUqAnFsq4h-bJiQn6byjzGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary use of netif_napi_del. This also avoids to call
-napi_disable() after netif_napi_del().
+Hello Daniel,
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 2 --
- 1 file changed, 2 deletions(-)
+On 2019/08/26 11:53, Daniel Drake wrote:
+> On Mon, Aug 26, 2019 at 1:38 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 24-08-19 23:04, Katsuhiro Suzuki wrote:
+>>> This patch limits Headphone mixer volume to 4 from 7.
+>>> Because output sound suddenly becomes very loudly with many noise if
+>>> set volume over 4.
+> 
+> That sounds like something that should be limited in UCM.
+> 
+>> Higher then 4 not working matches my experience, see this comment from
+>> the UCM file: alsa-lib/src/conf/ucm/codecs/es8316/EnableSeq.conf :
+>>
+>> # Set HP mixer vol to -6 dB (4/7) louder does not work
+>> cset "name='Headphone Mixer Volume' 4"
+> 
+> What does "does not work" mean more precisely?
+> 
+> I checked the spec, there is indeed something wrong in the kernel driver here.
+> The db scale is not a simple scale as the kernel source suggests.
+> 
+> Instead it is:
+> 0000 – -12dB
+> 0001 – -10.5dB
+> 0010 – -9dB
+> 0011 – -7.5dB
+> 0100 – -6dB
+> 1000 – -4.5dB
+> 1001 – -3dB
+> 1010 – -1.5dB
+> 1011 – 0dB
+> 
+ > So perhaps we can fix the kernel to follow this table and then use UCM
+ > to limit the volume if its too high on a given platform?
+ >
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index ad3abe26b51b..04137ac373b0 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -5352,7 +5352,6 @@ static int rtl8152_probe(struct usb_interface *intf,
- 	return 0;
- 
- out1:
--	netif_napi_del(&tp->napi);
- 	usb_set_intfdata(intf, NULL);
- out:
- 	free_netdev(netdev);
-@@ -5367,7 +5366,6 @@ static void rtl8152_disconnect(struct usb_interface *intf)
- 	if (tp) {
- 		rtl_set_unplug(tp);
- 
--		netif_napi_del(&tp->napi);
- 		unregister_netdev(tp->netdev);
- 		cancel_delayed_work_sync(&tp->hw_phy_work);
- 		tp->rtl_ops.unload(tp);
--- 
-2.21.0
+Thank you very important information. So you mean value 5, 6, 7 are
+illegal settings for ES8316. Correct codes are
 
+static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
+	0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
+	8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
+);
+
+and...
+
+	SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+		       0, 4, 15, 0, hpmixer_gain_tlv),
+
+Is my understanding correct? If so I'll test it on my board
+(RockPro64) and re-send patch.
+
+BTW, do you know how to get ES8316 I2C registers spec?
+I want to see it for understanding current code, but I cannot find...
+
+
+> Thanks
+> Daniel
+> 
+> 
+
+Best Regards,
+Katsuhiro Suzuki
