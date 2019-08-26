@@ -2,106 +2,317 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CD7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B59C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678422173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHBCEhI8"
+	by mail.kernel.org (Postfix) with ESMTP id 04E172168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566789564;
+	bh=2hqvqjb4JRbv59jAzcU+dKYGR+NXhgzGBeJ3dWiVhdU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b0Bvv99KCPzVQDLjdRVrLdQiDmHSEGixG+mSxVtmFY/l4xBjqb9zNL1Ubo4orVQll
+	 dmLN3HN0nGVxuxNCBDxjwwH6yOdReboFOFKUrpiaRQ/uG7b/tXk0GWF+Vg6QuFakF0
+	 M6+w//iksL7+InpQhZJhTuOzwhpum63QNtJN7XkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfHZDTP (ORCPT
+        id S1729727AbfHZDTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:19:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44827 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbfHZDS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:18:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so9659679pgl.11;
-        Sun, 25 Aug 2019 20:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6BeSiLacM+7Sf7qkApv2ILwpaNC8CAg80TkB/80zAMU=;
-        b=dHBCEhI8bkVnrMwYo7YJ8PhlPCqUep6tSWtsOokJAMP4et4c8vM9f4Dj7egMNymU04
-         CbeglpMLTmFGPV8yTEtHABw0nYZyw5HyA9y/LVok6uypta0JKZr+1eWykALD+BMUKO+H
-         yh0an2x03stI7vwMoW1Q6kFl1RtFUZby53sS9ToXE4A1ZATgZXDT5UsVBumyeU2TjnEG
-         tH8y1dzSy6yRTYFPnaxlpLzLIdqUiyyOX/oGD7h2A2IsuDp4z4aQUBiPCU5618yKPVuH
-         lRSyKLlGeZsHntBXRwHTX+2oKsuMZSSmX1vpleu1pK4jFhQTH9oOhBPbujAuJ6YUXam3
-         H7hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6BeSiLacM+7Sf7qkApv2ILwpaNC8CAg80TkB/80zAMU=;
-        b=QUv3hiixYmqhX/V+iyJBHX5lZ2QkvSlkM+WARVBIrL8TZDFiRqgZh4xyDfNiEXzYxh
-         GSC6rergR8C77Vc0IUGo6lkRkHRpjVVkSZj8DJCfq8NSTgTVXO70+HclRx2UV7JScKAO
-         ncP0Hc5YZLWt7kYHDUYJZgzKRcA9wRM00B2iBs/aS2AmrqjNEfoYDNk2ZLnfcQS723bj
-         zN5rkXzigwvoLINRQLBH4sMtNLAidPwSLpZn/zWuGA4PK2VF456xQieC4QNdZa5K/pfv
-         s7cznpVY66yms46cmgfObGzUgWs9s7LUXvfSkWoUZcZxWB8Vc9DlJ9g04N3Fs9MmH8CC
-         /iVA==
-X-Gm-Message-State: APjAAAUEFG3wVA3M7swfgKHnYM6uwPotXODZOZ407x+LK4k7VjoPloIw
-        9CkUgvbdsar8AqbqFPMe13IF+2yE
-X-Google-Smtp-Source: APXvYqyrpOKfW/bqg6wcyNH+zve0gIXtYwD7oQT38XJCZ43UVMLJyAqS3R3Khc7CGWfEXdmnhaDeqA==
-X-Received: by 2002:a62:cd45:: with SMTP id o66mr1430131pfg.112.1566789538833;
-        Sun, 25 Aug 2019 20:18:58 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id y23sm12565905pfr.86.2019.08.25.20.18.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2019 20:18:58 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 3/5] mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN
-Date:   Mon, 26 Aug 2019 11:18:28 +0800
-Message-Id: <20190826031830.30931-4-zhang.lyra@gmail.com>
+        Sun, 25 Aug 2019 23:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729437AbfHZDTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 23:19:19 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D93F62070B;
+        Mon, 26 Aug 2019 03:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566789558;
+        bh=2hqvqjb4JRbv59jAzcU+dKYGR+NXhgzGBeJ3dWiVhdU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sv3Fvm/tvtHGU71iCv0m7liX43HCg8VeHCygpsU35XNGDMcGKWwzDKrdw0yE++5e9
+         4zMTqUPTQEVCGxT8rerpMrq4uDWrQflAwvew7Hfec2BvYNDOU8449nhhOMEIJMLIof
+         lpS7xvOCoO9y4pwtelBgIa7XhQD2W53kVMkXZ8jE=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v3 18/19] tracing/boot: Add function-graph tracer options
+Date:   Mon, 26 Aug 2019 12:19:11 +0900
+Message-Id: <156678955140.21459.9556721429972023089.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190826031830.30931-1-zhang.lyra@gmail.com>
-References: <20190826031830.30931-1-zhang.lyra@gmail.com>
+In-Reply-To: <156678933823.21459.4100380582025186209.stgit@devnote2>
+References: <156678933823.21459.4100380582025186209.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Add following function-graph tracer related options
 
-The bit of PRESET_VAL_ENABLE in HOST_CONTROL2 register is reserved on
-sprd's sd host controller, set quirk2 to disable configuring this.
+ - ftrace.fgraph.filters = FILTER[, FILTER2...];
+   Add fgraph tracing function filters.
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+ - ftrace.fgraph.notraces = FILTER[, FILTER2...];
+   Add fgraph non tracing function filters.
+
+ - ftrace.fgraph.max_depth = MAX_DEPTH;
+   Set MAX_DEPTH to maximum depth of fgraph tracer.
+
+Note that these properties are available on ftrace global node
+only, because these filters are globally applied.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- drivers/mmc/host/sdhci-sprd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c     |   85 +++++++++++++++++++++++++++++----------------
+ kernel/trace/trace_boot.c |   71 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 126 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 90cb2af91159..27d0b57f3f89 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -510,7 +510,8 @@ static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
- static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
- 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
--		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT,
-+		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
-+		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops = &sdhci_sprd_ops,
- };
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index eca34503f178..e016ce12e60a 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1241,7 +1241,7 @@ static void clear_ftrace_mod_list(struct list_head *head)
+ 	mutex_unlock(&ftrace_lock);
+ }
  
--- 
-2.20.1
+-static void free_ftrace_hash(struct ftrace_hash *hash)
++void free_ftrace_hash(struct ftrace_hash *hash)
+ {
+ 	if (!hash || hash == EMPTY_HASH)
+ 		return;
+@@ -4897,7 +4897,7 @@ __setup("ftrace_filter=", set_ftrace_filter);
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ static char ftrace_graph_buf[FTRACE_FILTER_SIZE] __initdata;
+ static char ftrace_graph_notrace_buf[FTRACE_FILTER_SIZE] __initdata;
+-static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
++int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
+ 
+ static int __init set_graph_function(char *str)
+ {
+@@ -5226,6 +5226,26 @@ __ftrace_graph_open(struct inode *inode, struct file *file,
+ 	return ret;
+ }
+ 
++struct ftrace_hash *ftrace_graph_copy_hash(bool enable)
++{
++	struct ftrace_hash *hash;
++
++	mutex_lock(&graph_lock);
++
++	if (enable)
++		hash = rcu_dereference_protected(ftrace_graph_hash,
++					lockdep_is_held(&graph_lock));
++	else
++		hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++					lockdep_is_held(&graph_lock));
++
++	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, hash);
++
++	mutex_unlock(&graph_lock);
++
++	return hash;
++}
++
+ static int
+ ftrace_graph_open(struct inode *inode, struct file *file)
+ {
+@@ -5282,11 +5302,40 @@ ftrace_graph_notrace_open(struct inode *inode, struct file *file)
+ 	return ret;
+ }
+ 
++int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable)
++{
++	struct ftrace_hash *old_hash, *new_hash;
++
++	new_hash = __ftrace_hash_move(hash);
++	if (!new_hash)
++		return -ENOMEM;
++
++	mutex_lock(&graph_lock);
++
++	if (enable) {
++		old_hash = rcu_dereference_protected(ftrace_graph_hash,
++				lockdep_is_held(&graph_lock));
++		rcu_assign_pointer(ftrace_graph_hash, new_hash);
++	} else {
++		old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++				lockdep_is_held(&graph_lock));
++		rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
++	}
++
++	mutex_unlock(&graph_lock);
++
++	/* Wait till all users are no longer using the old hash */
++	synchronize_rcu();
++
++	free_ftrace_hash(old_hash);
++
++	return 0;
++}
++
+ static int
+ ftrace_graph_release(struct inode *inode, struct file *file)
+ {
+ 	struct ftrace_graph_data *fgd;
+-	struct ftrace_hash *old_hash, *new_hash;
+ 	struct trace_parser *parser;
+ 	int ret = 0;
+ 
+@@ -5311,41 +5360,17 @@ ftrace_graph_release(struct inode *inode, struct file *file)
+ 
+ 		trace_parser_put(parser);
+ 
+-		new_hash = __ftrace_hash_move(fgd->new_hash);
+-		if (!new_hash) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
+-
+-		mutex_lock(&graph_lock);
+-
+-		if (fgd->type == GRAPH_FILTER_FUNCTION) {
+-			old_hash = rcu_dereference_protected(ftrace_graph_hash,
+-					lockdep_is_held(&graph_lock));
+-			rcu_assign_pointer(ftrace_graph_hash, new_hash);
+-		} else {
+-			old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+-					lockdep_is_held(&graph_lock));
+-			rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
+-		}
+-
+-		mutex_unlock(&graph_lock);
+-
+-		/* Wait till all users are no longer using the old hash */
+-		synchronize_rcu();
+-
+-		free_ftrace_hash(old_hash);
++		ret = ftrace_graph_apply_hash(fgd->new_hash,
++					fgd->type == GRAPH_FILTER_FUNCTION);
+ 	}
+ 
+- out:
+ 	free_ftrace_hash(fgd->new_hash);
+ 	kfree(fgd);
+ 
+ 	return ret;
+ }
+ 
+-static int
+-ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
++int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
+ {
+ 	struct ftrace_glob func_g;
+ 	struct dyn_ftrace *rec;
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 942ca8d3fcc8..b32688032d36 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -72,6 +72,75 @@ trace_boot_set_instance_options(struct trace_array *tr, struct skc_node *node)
+ 	}
+ }
+ 
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++extern unsigned int fgraph_max_depth;
++extern struct ftrace_hash *ftrace_graph_copy_hash(bool enable);
++extern int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
++extern int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable);
++extern void free_ftrace_hash(struct ftrace_hash *hash);
++
++static void __init
++trace_boot_set_fgraph_filter(struct skc_node *node, const char *option,
++			     bool enable)
++{
++	struct ftrace_hash *hash;
++	struct skc_node *anode;
++	const char *p;
++	char *q;
++	int err;
++	bool updated = false;
++
++	hash = ftrace_graph_copy_hash(enable);
++	if (!hash) {
++		pr_err("Failed to copy fgraph hash\n");
++		return;
++	}
++	skc_node_for_each_array_value(node, option, anode, p) {
++		q = kstrdup(p, GFP_KERNEL);
++		if (!q)
++			goto free_hash;
++		err = ftrace_graph_set_hash(hash, q);
++		kfree(q);
++		if (err)
++			pr_err("Failed to add %s: %s\n", option, p);
++		else
++			updated = true;
++	}
++	if (!updated)
++		goto free_hash;
++
++	if (ftrace_graph_apply_hash(hash, enable) < 0)
++		pr_err("Failed to apply new fgraph hash\n");
++	else {
++		/* If succeeded to apply new hash, old hash is released */
++		return;
++	}
++
++free_hash:
++	free_ftrace_hash(hash);
++}
++
++static void __init
++trace_boot_set_fgraph_options(struct skc_node *node)
++{
++	const char *p;
++	unsigned long v;
++
++	node = skc_node_find_child(node, "fgraph");
++	if (!node)
++		return;
++
++	trace_boot_set_fgraph_filter(node, "filters", true);
++	trace_boot_set_fgraph_filter(node, "notraces", false);
++
++	p = skc_node_find_value(node, "max_depth", NULL);
++	if (p && *p != '\0' && !kstrtoul(p, 0, &v))
++		fgraph_max_depth = (unsigned int)v;
++}
++#else
++#define trace_boot_set_fgraph_options(node)	do {} while (0)
++#endif
++
+ static void __init
+ trace_boot_set_global_options(struct trace_array *tr, struct skc_node *node)
+ {
+@@ -98,6 +167,8 @@ trace_boot_set_global_options(struct trace_array *tr, struct skc_node *node)
+ 	if (skc_node_find_value(node, "alloc_snapshot", NULL))
+ 		if (tracing_alloc_snapshot() < 0)
+ 			pr_err("Failed to allocate snapshot buffer\n");
++
++	trace_boot_set_fgraph_options(node);
+ }
+ 
+ #ifdef CONFIG_EVENT_TRACING
 
