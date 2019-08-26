@@ -2,112 +2,65 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7672DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3DAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4641A20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oOsWkVyy"
+	by mail.kernel.org (Postfix) with ESMTP id 7E8A821872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfHZOqy (ORCPT
+        id S1732589AbfHZOrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:46:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39772 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729105AbfHZOqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:46:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t16so15608781wra.6
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lKqFlQ5uAweiWoy5Q0NBtlqDIxAoWdFqAZ3hE0aWMrA=;
-        b=oOsWkVyy0OVNO3GEWtL9KUlBPcNQ8EXb5NCLaRrryxI86WLE7itY1IhCRJ//gMudtE
-         MI6ag1jiTbVVcDqAqXe22G5Ebaq5BNPFjs6B3Wib8wz4iLstk/g8GUietWVUDOVMtFLD
-         B72moJ69pMr5bro4U1czlxVb8JfS6SU1/pnwUeOux5P8jlS5AmQgmodOo1MfubsAtRFd
-         6thkrxpAUURZh4j5Bx+8fONziNmU3yKSV12jDFNhld88vr6ZzSyAwVmUIXXrkmddsp89
-         B3dw+IJyZkAPVaiO4vKQIwopRI6ZxW7dUD8oDdsLLhWbf2C5s+AV7/4TTATXNxBIP2Vf
-         RzRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lKqFlQ5uAweiWoy5Q0NBtlqDIxAoWdFqAZ3hE0aWMrA=;
-        b=nTSLW29WWABVa9+061mh8oVMAkJxpb2R7Jvk/L8vi7RF65D1DwDYdiE5YwobjM08Xq
-         xFiI2cgor74HqK8GZhYC6o4QxqYhlJ73C9h8BSVRZUP2MYrttAqw4pW7VTXmCQOzzmcX
-         MaRpuu+YCxrTAuOtL7B+G5Qdds0b/QjgWsJv/9yfL4XN4u9K6c5C2Z1LkTqsU7usAQeb
-         Ywlgo7seEEBBP7CAErXKJga71vHslC4Qwrxh3kiXdunj/FwzVIo/dcmkYsENpLtiH511
-         uSGrIeGdEY6YoPyQVRreXyX+ZRkY0YHW5BKSlV6e/PQZaXLGtLxxjVzqeQv3xyVzlj7O
-         AEmw==
-X-Gm-Message-State: APjAAAXeycaS9NullarQ8yyl5r2CvdoNboz57ckSprQpbD2GzfPplJuM
-        XF9gWAPqVgQyh3brj4mjtKKKbNio07alMw==
-X-Google-Smtp-Source: APXvYqzj8GflBpfqyAQoqHVpAUfVZVDf2xgGir3LWPo8zTibAZW8llY0SCOEuBpqNLk+uWaJWp10ZQ==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr21617046wrp.176.1566830811145;
-        Mon, 26 Aug 2019 07:46:51 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e9sm12984595wrm.43.2019.08.26.07.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 07:46:50 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/meson: vclk: use the correct G12A frac max value
-Date:   Mon, 26 Aug 2019 16:46:47 +0200
-Message-Id: <20190826144647.17302-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 26 Aug 2019 10:47:13 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:54602 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729605AbfHZOrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:47:13 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7QEhAvv010516
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Mon, 26 Aug 2019 07:43:21 -0700
+Received: from [128.224.162.221] (128.224.162.221) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 26 Aug
+ 2019 07:43:00 -0700
+From:   He Zhe <zhe.he@windriver.com>
+To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <ndesaulniers@google.com>,
+        <miguel.ojeda.sandonis@gmail.com>, <luc.vanoostenryck@gmail.com>,
+        <schwidefsky@de.ibm.com>, <gregkh@linuxfoundation.org>,
+        <mst@redhat.com>, <gor@linux.ibm.com>, <andreyknvl@google.com>,
+        <jpoimboe@redhat.com>, <liuxiaozhou@bytedance.com>,
+        <yamada.masahiro@socionext.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        He Zhe <Zhe.He@windriver.com>
+Subject: kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call
+ without frame pointer save/setup
+Message-ID: <cf0273fb-c272-72be-50f9-b25bb7c7f183@windriver.com>
+Date:   Mon, 26 Aug 2019 22:42:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [128.224.162.221]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calculating the HDMI PLL settings for a DMT mode PHY frequency,
-use the correct max fractional PLL value for G12A VPU.
+Hi All,
 
-With this fix, we can finally setup the 1024x76-60 mode.
+Since 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()"),
+We have got the following warning,
+kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call without frame pointer save/setup
 
-Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/gpu/drm/meson/meson_vclk.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+If reverting the above commit, we will get the following warning,
+kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x8b9: sibling call from callable instruction with modified stack frame
+if CONFIG_RETPOLINE=n, and no warning if CONFIG_RETPOLINE=y
 
-diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
-index ac491a781952..f690793ae2d5 100644
---- a/drivers/gpu/drm/meson/meson_vclk.c
-+++ b/drivers/gpu/drm/meson/meson_vclk.c
-@@ -638,13 +638,18 @@ static bool meson_hdmi_pll_validate_params(struct meson_drm *priv,
- 		if (frac >= HDMI_FRAC_MAX_GXBB)
- 			return false;
- 	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
--		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
--		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
-+		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
- 		/* Empiric supported min/max dividers */
- 		if (m < 106 || m > 247)
- 			return false;
- 		if (frac >= HDMI_FRAC_MAX_GXL)
- 			return false;
-+	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
-+		/* Empiric supported min/max dividers */
-+		if (m < 106 || m > 247)
-+			return false;
-+		if (frac >= HDMI_FRAC_MAX_G12A)
-+			return false;
- 	}
- 
- 	return true;
--- 
-2.22.0
 
+Zhe
