@@ -2,161 +2,163 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E9AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824272190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566793755;
-	bh=EQP40mviagoanbkf4TmOFcFWN9aA6tPpZUAKg/ROjCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rfOrJWQ+DJJiJ22+K11Q7ZTLzw7t+XMdmO1i7AN8ODoI25SDJ3rKIKavXHwS9H1AW
-	 sdHMELT9TiiUuzOosL3ZXvIqbgv/WABRlmldL8PqMgm0wHGZGv5Icz65Nrk3bDp31t
-	 62mLaR2RWva7S2rXIRglCxboieOJOFWcGUWxVfQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 0660C22CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qb0T8Q8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbfHZE3O (ORCPT
+        id S1729734AbfHZE3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 00:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbfHZE3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 00:29:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983C62173E;
-        Mon, 26 Aug 2019 04:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566793753;
-        bh=EQP40mviagoanbkf4TmOFcFWN9aA6tPpZUAKg/ROjCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NIs8t17yyjsbbIibwB+K02pUYQzsJk6jGL8BVROx9lG4gVQjJIjTcZ6QtocWM0nwC
-         H/ex1aWHhkwrpImxcXmlx4dhsGC2yQmWXKUrLCxHuA6UFqX1eXUrxAt6l5xjpL39dr
-         ET9eiJLj/9UjLW8101iJrFygcQHOe7gyLtK6+pew=
-Date:   Mon, 26 Aug 2019 06:29:10 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kenneth Lee <liguozhu@hisilicon.com>
-Cc:     zhangfei <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH 2/2] uacce: add uacce module
-Message-ID: <20190826042910.GA26547@kroah.com>
-References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
- <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
- <20190815141351.GD23267@kroah.com>
- <6daab785-a8f9-684e-eb71-7a81604d3bb0@linaro.org>
- <20190820165947.GC3736@kroah.com>
- <5d5cf0fc.1c69fb81.ec57f.b853SMTPIN_ADDED_BROKEN@mx.google.com>
- <20190821091709.GA22914@kroah.com>
- <b88abb8d-50a9-b29e-d3e5-96cc585ecac4@linaro.org>
- <20190821160542.GA14760@kroah.com>
- <20190826041042.GB27955@Turing-Arch-b>
+        Mon, 26 Aug 2019 00:29:19 -0400
+Received: from mail-eopbgr140052.outbound.protection.outlook.com ([40.107.14.52]:52899
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725270AbfHZE3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 00:29:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pe1QXMQabT/quTwcLrHR02LGHa3zj+TDxtzNcMQ9/dsnQB80EFbWI45IdS3be3bk2Dq7/od1e/S8VJL617h/DcwSuRD6YZE9nCT2cb3UYjCO7Frcq3CNcH1oQ6o4YwWdiuz1fBaTZZB2Q/8zLTYiEF4ZgErf41rz7hzlD2BeYlBo6j7vsENkMOxeVuYZ8m8wwXtmACzEQeHBCr6+Jb8Rvpx129qinzjHCr0cGz7beSUVMS3L1SYea14eKnlToAvA6BB1F7AKYUntalxVH/+r0DBSBCzz/tiOc/neDEYHyVKP9Mam8efXett9eJbLjKcZ7GgUAgZKoApVfHt0W3ua3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=unhZxP3dMFJ1p0ucN361bbA9dxauvkBU3W8IKR3+kGM=;
+ b=jqIUeYD43dRgYcsUe8ehg9YBNvCtI+YqAq34JVGXAr/Cuz7fZ7651QXVhWbO/PQ2/CF8c5Ho0y96GOXq9ScfpHpt4IImHD8CjFtVdKhGFrLeedNl/5OYMliVk4VMBuh2F77G6XZiykI3qtbz69Ak1GChBNgZ262yyA21dhjTnb5gNFPU7vxjoQ03vNuXgGb3kIa/U1/vb+m2VjRBmGr/JHSm4+KjYt1uskgXPNH/DVg5tRqlxDW+U+QryqrnSSCETdKLj4bmiuT9R5d1Y350wOtaIhCdyFNlPyt64RrUGIaTpquIOu8u7VefGIb3uBRYrgkB9c3TH9YMDRB/o9OhVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=unhZxP3dMFJ1p0ucN361bbA9dxauvkBU3W8IKR3+kGM=;
+ b=Qb0T8Q8jP8kyxOCdfTV6siNOU9++rxyWV2uQ8A8cYN/jx+ihX0y4L/BeJEDhd2k5z3c95KWwdFB6IJWAL/GvJeSkVSqSS9/Zq30ei1z0x0QVyBH1xBgSNFDeuSxTMDay+h5aZbzpFKd+Nk3gPkcw4PKkH9nCO4WqzMTekeWSJd4=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4908.eurprd04.prod.outlook.com (20.176.234.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Mon, 26 Aug 2019 04:29:13 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254%3]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
+ 04:29:13 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Nandor Han <nandor.han@vaisala.com>, Leo Li <leoyang.li@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to
+ run hwclock -w
+Thread-Topic: [EXT] Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to
+ run hwclock -w
+Thread-Index: AQHVU944/chRI20GGkSPTXSrUh+lT6b9aqqAgACCWYCAAAqBgIAANb+AgAb78oCAB7jGEA==
+Date:   Mon, 26 Aug 2019 04:29:13 +0000
+Message-ID: <DB7PR04MB4490614205732E4508B8A8B38FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190816024636.34738-1-biwen.li@nxp.com>
+ <20190816080417.GB3545@piout.net>
+ <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
+ <20190816162825.GE3545@piout.net>
+ <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+ <ff198737-acb5-7186-7e14-a1e1cdc0f72c@vaisala.com>
+In-Reply-To: <ff198737-acb5-7186-7e14-a1e1cdc0f72c@vaisala.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bff9d7ed-bfe1-435c-746f-08d729ddf2b3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4908;
+x-ms-traffictypediagnostic: DB7PR04MB4908:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4908960215A0CEA884409D768FA10@DB7PR04MB4908.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(199004)(189003)(6436002)(110136005)(71190400001)(6246003)(76116006)(8936002)(305945005)(74316002)(7736002)(64756008)(66066001)(66446008)(66556008)(71200400001)(5660300002)(6306002)(316002)(66476007)(7696005)(76176011)(229853002)(256004)(14444005)(86362001)(53936002)(44832011)(4326008)(55016002)(14454004)(33656002)(66946007)(54906003)(81166006)(8676002)(81156014)(9686003)(186003)(26005)(476003)(6116002)(966005)(99286004)(486006)(11346002)(446003)(478600001)(2906002)(6506007)(102836004)(3846002)(52536014)(25786009)(45080400002)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4908;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: R6ymDz1nOJzVbYr5ZYmpFG2b7U6K47OHg2L6yrdxtIEG7DraVfjgd5o47FrKQNqXt9V91IViQuh9FhxVU7Hl01pQrQAaYwo5xph6qyZBSKjaiC1mSWNxLXOaQHw1pli86vhWS9e/rf/OrHKkZbc1sVYaQpcOmbp3tJHwWxE331LVn3ob2RoTZlc+9HjgRpv4vWXTC8BLg9oj5O+35ySZiSo9R45XLFPlrEqHvjTxKWf7QCAG5PalwMrMz5vdDPneCk35WVKwtv+uhm9xUvxm4PybzT+QncqakPFYvtaWLGvXJRjXfYs5X8x8t9X3/2jy45whV7R56Y/CJxrphYlzgIICKK6kAg6fNp21ut/Ia5XXQ0E2mucfQWaThQO6cT9QfhF74Mi/YXWI3aS6RYUc6A7fjzHLlWwYLMMWn6zlFeU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190826041042.GB27955@Turing-Arch-b>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bff9d7ed-bfe1-435c-746f-08d729ddf2b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 04:29:13.0883
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BImAJl83jcq+CqzXgXjmDTFuvPalnES52nJ7oAwLkg0kNCQOf0FqE4eWxaFbHB8M1h+S/BrUuYPXykg04+4w2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4908
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 12:10:42PM +0800, Kenneth Lee wrote:
-> On Wed, Aug 21, 2019 at 09:05:42AM -0700, Greg Kroah-Hartman wrote:
-> > Date: Wed, 21 Aug 2019 09:05:42 -0700
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > To: zhangfei <zhangfei.gao@linaro.org>
-> > CC: Arnd Bergmann <arnd@arndb.de>, linux-accelerators@lists.ozlabs.org,
-> >  linux-kernel@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>, Zaibo
-> >  Xu <xuzaibo@huawei.com>, Zhou Wang <wangzhou1@hisilicon.com>
-> > Subject: Re: [PATCH 2/2] uacce: add uacce module
-> > User-Agent: Mutt/1.12.1 (2019-06-15)
-> > Message-ID: <20190821160542.GA14760@kroah.com>
-> > 
-> > On Wed, Aug 21, 2019 at 10:30:22PM +0800, zhangfei wrote:
-> > > 
-> > > 
-> > > On 2019/8/21 下午5:17, Greg Kroah-Hartman wrote:
-> > > > On Wed, Aug 21, 2019 at 03:21:18PM +0800, zhangfei.gao@foxmail.com wrote:
-> > > > > Hi, Greg
-> > > > > 
-> > > > > On 2019/8/21 上午12:59, Greg Kroah-Hartman wrote:
-> > > > > > On Tue, Aug 20, 2019 at 09:08:55PM +0800, zhangfei wrote:
-> > > > > > > On 2019/8/15 下午10:13, Greg Kroah-Hartman wrote:
-> > > > > > > > On Wed, Aug 14, 2019 at 05:34:25PM +0800, Zhangfei Gao wrote:
-> > > > > > > > > +int uacce_register(struct uacce *uacce)
-> > > > > > > > > +{
-> > > > > > > > > +	int ret;
-> > > > > > > > > +
-> > > > > > > > > +	if (!uacce->pdev) {
-> > > > > > > > > +		pr_debug("uacce parent device not set\n");
-> > > > > > > > > +		return -ENODEV;
-> > > > > > > > > +	}
-> > > > > > > > > +
-> > > > > > > > > +	if (uacce->flags & UACCE_DEV_NOIOMMU) {
-> > > > > > > > > +		add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
-> > > > > > > > > +		dev_warn(uacce->pdev,
-> > > > > > > > > +			 "Register to noiommu mode, which export kernel data to user space and may vulnerable to attack");
-> > > > > > > > > +	}
-> > > > > > > > THat is odd, why even offer this feature then if it is a major issue?
-> > > > > > > UACCE_DEV_NOIOMMU maybe confusing here.
-> > > > > > > 
-> > > > > > > In this mode, app use ioctl to get dma_handle from dma_alloc_coherent.
-> > > > > > That's odd, why not use the other default apis to do that?
-> > > > > > 
-> > > > > > > It does not matter iommu is enabled or not.
-> > > > > > > In case iommu is disabled, it maybe dangerous to kernel, so we added warning here, is it required?
-> > > > > > You should use the other documentated apis for this, don't create your
-> > > > > > own.
-> > > > > I am sorry, not understand here.
-> > > > > Do you mean there is a standard ioctl or standard api in user space, it can
-> > > > > get dma_handle from dma_alloc_coherent from kernel?
-> > > > There should be a standard way to get such a handle from userspace
-> > > > today.  Isn't that what the ion interface does?  DRM also does this, as
-> > > > does UIO I think.
-> > > Thanks Greg,
-> > > Still not find it, will do more search.
-> > > But this may introduce dependency in our lib, like depend on ion?
-> > > > Do you have a spec somewhere that shows exactly what you are trying to
-> > > > do here, along with example userspace code?  It's hard to determine it
-> > > > given you only have one "half" of the code here and no users of the apis
-> > > > you are creating.
-> > > > 
-> > > The purpose is doing dma in user space.
-> > 
-> > Oh no, please no.  Are you _SURE_ you want to do this?
-> > 
-> > Again, look at how ION does this and how the DMAbuff stuff is replacing
-> > it.  Use that api please instead, otherwise you will get it wrong and we
-> > don't want to duplicate efforts.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Dear Greg. I wrote a blog to explain the intention of WarpDrive here:
-> https://zhuanlan.zhihu.com/p/79680889.
-
-Putting that information into the changelog and kernel documentation is
-a much better idea than putting it there.
-
-> Sharing data is not our intention, Sharing address is. NOIOMMU mode is just a
-> temporary solution to let some hardware which does not care the security issue
-> to try WarpDrive for the first step. Some user do not care this much in embedded
-> scenario. We saw VFIO use the same model so we also want to make a try. If you
-> insist this is risky, we can remove it.
-
-Why not just use vfio then?
-
-And yes, for now, please remove it, if you are not requiring it.
-
-thanks,
-
-greg k-h
+PiANCj4gT24gOC8xNi8xOSAxMDo0MCBQTSwgTGkgWWFuZyB3cm90ZToNCj4gPiBPbiBGcmksIEF1
+ZyAxNiwgMjAxOSBhdCAxMTozMCBBTSBBbGV4YW5kcmUgQmVsbG9uaQ0KPiA+IDxhbGV4YW5kcmUu
+YmVsbG9uaUBib290bGluLmNvbT4gd3JvdGU6DQo+ID4+DQo+ID4+IE9uIDE2LzA4LzIwMTkgMTA6
+NTA6NDktMDUwMCwgTGkgWWFuZyB3cm90ZToNCj4gPj4+IE9uIEZyaSwgQXVnIDE2LCAyMDE5IGF0
+IDM6MDUgQU0gQWxleGFuZHJlIEJlbGxvbmkNCj4gPj4+IDxhbGV4YW5kcmUuYmVsbG9uaUBib290
+bGluLmNvbT4gd3JvdGU6DQo+ID4+Pj4NCj4gPj4+PiBPbiAxNi8wOC8yMDE5IDEwOjQ2OjM2KzA4
+MDAsIEJpd2VuIExpIHdyb3RlOg0KPiA+Pj4+PiBJc3N1ZToNCj4gPj4+Pj4gICAgICAtICMgaHdj
+bG9jayAtdw0KPiA+Pj4+PiAgICAgICAgaHdjbG9jazogUlRDX1NFVF9USU1FOiBJbnZhbGlkIGFy
+Z3VtZW50DQo+ID4+Pj4+DQo+ID4+Pj4+IFdoeToNCj4gPj4+Pj4gICAgICAtIFJlbGF0aXZlIHBh
+dGNoOg0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91
+cmw9aHR0cHMlM0ElMkYlMkZsa21sLm9yZw0KPiAlMkZsa21sJTJGMjAxOSUyRjQlMkYzJTJGNTUm
+YW1wO2RhdGE9MDIlN0MwMSU3Q2Jpd2VuLmxpJTQwbnhwLg0KPiBjb20lN0NmZjhjZWJjM2YxMDM0
+YWUzZmE5NjA4ZDcyNWZmOWU1ZSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5DQo+IGM1YzMwMTYz
+NSU3QzAlN0MwJTdDNjM3MDE5NjUyMTExOTIzNzM2JmFtcDtzZGF0YT1zcFk2ZTIyWU9rT0YNCj4g
+MyUyQkY3Y3JTTTBNNnhQbU9oZ1VMRHFNWkxRdyUyQkFtZEklM0QmYW1wO3Jlc2VydmVkPTAgLCB0
+aGlzDQo+IHBhdGNoDQo+ID4+Pj4+ICAgICAgICB3aWxsIGFsd2F5cyBjaGVjayBmb3IgdW53cml0
+YWJsZSByZWdpc3RlcnMsIGl0IHdpbGwgY29tcGFyZSByZWcNCj4gPj4+Pj4gICAgICAgIHdpdGgg
+bWF4X3JlZ2lzdGVyIGluIHJlZ21hcF93cml0ZWFibGUuDQo+ID4+Pj4+DQo+ID4+Pj4+ICAgICAg
+LSBJbiBkcml2ZXJzL3J0Yy9ydGMtcGNmODUzNjMuYywgQ1RSTF9TVE9QX0VOIGlzIDB4MmUsIGJ1
+dA0KPiBEVF8xMDBUSFMNCj4gPj4+Pj4gICAgICAgIGlzIDAsIG1heF9yZWdpdGVyIGlzIDB4MmYs
+IHRoZW4gcmVnIHdpbGwgYmUgZXF1YWwgdG8gMHgzMCwNCj4gPj4+Pj4gICAgICAgICcweDMwIDwg
+MHgyZicgaXMgZmFsc2Usc28gcmVnbWFwX3dyaXRlYWJsZSB3aWxsIHJldHVybiBmYWxzZS4NCj4g
+Pj4+Pj4NCj4gPj4+Pj4gICAgICAtIFJvb3QgY2F1c2U6IHRoZSBidWZbXSB3YXMgd3JpdHRlbiB0
+byBhIHdyb25nIHBsYWNlIGluIHRoZSBmaWxlDQo+ID4+Pj4+ICAgICAgICBkcml2ZXJzL3J0Yy9y
+dGMtcGNmODUzNjMuYw0KPiA+Pj4+Pg0KPiA+Pj4+DQo+ID4+Pj4gVGhpcyBpcyBub3QgdHJ1ZSwg
+dGhlIFJUQyB3cmFwcyB0aGUgcmVnaXN0ZXIgYWNjZXNzZXMgcHJvcGVybHkgYW5kDQo+ID4+Pj4g
+dGhpcw0KPiA+Pj4NCj4gPj4+IFRoaXMgcGVyZm9ybWFuY2UgaGFjayBwcm9iYWJseSBkZXNlcnZl
+IHNvbWUgZXhwbGFuYXRpb24gaW4gdGhlIGNvZGUNCj4gPj4+IGNvbW1lbnQuICA6KQ0KPiA+Pj4N
+Cj4gPj4+PiBpcyBwcm9iYWJseSBzb21ldGhpbmcgdGhhdCBzaG91bGQgYmUgaGFuZGxlZCBieSBy
+ZWdtYXBfd3JpdGFibGUuDQo+ID4+Pg0KPiA+Pj4gVGhlIGFkZHJlc3Mgd3JhcHBpbmcgaXMgc3Bl
+Y2lmaWMgdG8gdGhpcyBSVEMgY2hpcC4gIElzIGl0IGFsc28NCj4gPj4+IGNvbW1vbmx5IHVzZWQg
+Ynkgb3RoZXIgSTJDIGRldmljZXM/ICBJJ20gbm90IHN1cmUgaWYgcmVnbWFwX3dyaXRhYmxlDQo+
+ID4+PiBzaG91bGQgaGFuZGxlIHRoZSB3cmFwcGluZyBjYXNlIGlmIGl0IGlzIHRvbyBzcGVjaWFs
+Lg0KPiA+Pj4NCj4gPj4NCj4gPj4gTW9zdCBvZiB0aGUgaTJjIFJUQ3MgZG8gYWRkcmVzcyB3cmFw
+cGluZyB3aGljaCBpcyBzb21ldGltZXMgdGhlIG9ubHkNCj4gPj4gd2F5IHRvIHByb3Blcmx5IHNl
+dCB0aGUgdGltZS4NCj4gPg0KPiA+IEFkZGluZyBNYXJrIGFuZCBOYW5kb3IgdG8gdGhlIGxvb3Au
+DQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IExlbw0KPiA+DQo+IA0KPiBIaSwNCj4gICAgYHJlZ21h
+cGAgcHJvdmlkZXMgY291cGxlIG9mIHdheXMgdG8gdmFsaWRhdGUgdGhlIHJlZ2lzdGVyczoNCj4g
+bWF4X3JlZ2lzdGVyLCBjYWxsYmFjayBmdW5jdGlvbiBhbmQgd3JpdGUgdGFibGUuIEFsbCBvZiB0
+aGVzZSBhcmUgb3B0aW9uYWwsIHNvIGl0DQo+IGdpdmVzIHlvdSB0aGUgZnJlZWRvbSB0byBjdXN0
+b21pemUgaXQgYXMgbmVlZGVkLg0KPiANCj4gSW4gdGhpcyBzaXR1YXRpb24gcHJvYmFibHkgeW91
+IGNvdWxkOg0KPiAgICAxLiBBdm9pZCB1c2luZyB0aGUgd3JhcHBpbmcgZmVhdHVyZSBvZiBwY2Y4
+NTM2MyAoeW91IGNhbiBqdXN0IHByb3ZpZGUNCj4gc2VwYXJhdGUgY2FsbHMgZm9yIHN0b3AsIHJl
+c2V0IGFuZCB0aW1lIGNvbmZndXJhdGlvbikuIEluIHRoaXMgd2F5IHRoZQ0KPiBgbWF4X3JlZ2lz
+dGVyYCB2YWxpZGF0aW9uIG1ldGhvZCB3aWxsIHdvcmsgZmluZS4NClllcywgSSB1c2UgdGhpcyB3
+YXkuIFBhdGggYXMgZm9sbG93czoNClN0b3AgYW5kIHJlc2V0IC0gPiBzZXQgdGltZSA+IHN0b3AN
+Cg0KPiAgICAyLiBSZXBsYWNlIGBtYXhfcmVnaXN0ZXJgIG1ldGhvZCB2YWxpZGF0aW9uIHdpdGgg
+YGNhbGxiYWNrIGZ1bmN0aW9uYA0KPiB2YWxpZGF0aW9uIG1ldGhvZCwgd2VyZSB5b3UgY291bGQg
+bWFrZSB5b3VyIG93biB2YWxpZGF0aW9uLg0KSXQgaXMgbm90IHdvcmssIHNob3cgdGhlIGNvZGUg
+aW4gYXMgZm9sbG93czoNCg0KYm9vbCByZWdtYXBfd3JpdGVhYmxlKHN0cnVjdCByZWdtYXAgKm1h
+cCwgdW5zaWduZWQgaW50IHJlZykNCnsNCiAgICAgICAgaWYgKG1hcC0+bWF4X3JlZ2lzdGVyICYm
+IHJlZyA+IG1hcC0+bWF4X3JlZ2lzdGVyKQ0KICAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsN
+CkNhbGxiYWNrIGZ1bmN0aW9uICh3cml0ZWFibGVfcmVnKSB3aWxsIG5vdCBiZSBjYWxsZWQuDQog
+ICAgICAgIGlmIChtYXAtPndyaXRlYWJsZV9yZWcpDQogICAgICAgICAgICAgICAgcmV0dXJuIG1h
+cC0+d3JpdGVhYmxlX3JlZyhtYXAtPmRldiwgcmVnKTsNCg0KICAgICAgICBpZiAobWFwLT53cl90
+YWJsZSkNCiAgICAgICAgICAgICAgICByZXR1cm4gcmVnbWFwX2NoZWNrX3JhbmdlX3RhYmxlKG1h
+cCwgcmVnLCBtYXAtPndyX3RhYmxlKTsNCg0KICAgICAgICByZXR1cm4gdHJ1ZTsNCn0NCg0KPiAN
+Cj4gDQo+IFJlZ2FyZHMsDQo+ICAgICBOYW5kb3INCj4gDQoNCg==
