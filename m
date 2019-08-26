@@ -2,75 +2,108 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D880C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97088C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CD920815
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCA420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfHZCsP (ORCPT
+        id S1729352AbfHZCtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 22:48:15 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:57936 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfHZCsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 22:48:14 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A82AB14DDDEC1;
-        Sun, 25 Aug 2019 19:48:13 -0700 (PDT)
-Date:   Sun, 25 Aug 2019 19:48:11 -0700 (PDT)
-Message-Id: <20190825.194811.1923451232916556610.davem@davemloft.net>
-To:     loyou85@gmail.com
-Cc:     edumazet@google.com, dsterba@suse.com, dbanerje@akamai.com,
-        fw@strlen.de, davej@codemonkey.org.uk, tglx@linutronix.de,
-        matwey@sai.msu.ru, sakari.ailus@linux.intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xiaojunzhao141@gmail.com
-Subject: Re: [PATCH] net: fix skb use after free in netpoll_send_skb_on_dev
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1566577920-20956-1-git-send-email-loyou85@gmail.com>
-References: <1566577920-20956-1-git-send-email-loyou85@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sun, 25 Aug 2019 22:49:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5656 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726215AbfHZCtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 22:49:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 45245C848C1EB97499E1;
+        Mon, 26 Aug 2019 10:49:08 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 26 Aug 2019
+ 10:49:00 +0800
+Subject: Re: [PATCH -next] iio: st_sensors: Fix build error
+To:     Jonathan Cameron <jic23@kernel.org>
+References: <20190823121852.75108-1-yuehaibing@huawei.com>
+ <20190825185936.0b31cde6@archlinux>
+CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <denis.ciocca@st.com>, <Jonathan.Cameron@huawei.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <0ce7f63c-2c62-aec4-d952-02bf696fd6b6@huawei.com>
+Date:   Mon, 26 Aug 2019 10:48:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190825185936.0b31cde6@archlinux>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 25 Aug 2019 19:48:14 -0700 (PDT)
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Sun <loyou85@gmail.com>
-Date: Sat, 24 Aug 2019 00:32:00 +0800
+On 2019/8/26 1:59, Jonathan Cameron wrote:
+> On Fri, 23 Aug 2019 20:18:52 +0800
+> YueHaibing <yuehaibing@huawei.com> wrote:
+> 
+>> IIO_ST_SENSORS_CORE select IIO_ST_SENSORS_I2C
+>> unconditionally, if REGMAP_I2C is not set, build fails
+>>
+>> drivers/iio/common/st_sensors/st_sensors_i2c.o: In function `st_sensors_i2c_configure':
+>> st_sensors_i2c.c:(.text+0x58): undefined reference to `__devm_regmap_init_i2c'
+>>
+>> This patch selects REGMAP_I2C to fix it.
+>> IIO_ST_SENSORS_SPI is similar to SPI issue.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 062809ef7733 ("iio: make st_sensors drivers use regmap")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Hi,
+> 
+> Thanks,  I've fixed up the inconsistent ordering below.
 
-> After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
-> ("tun: return NET_XMIT_DROP for dropped packets"),
-> when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
-> netpoll_send_skb_on_dev will run into two use after free cases:
+Oh, thanks!
 
-I don't know what to do here.
-
-Really, the intention of the design is that the only valid
-->ndo_start_xmit() values are those with macro names fitting the
-pattern NETDEV_TX_*, which means only NETDEV_TX_OK and NETDEV_TX_BUSY
-are valid.
-
-NET_XMIT_* values are for qdisc ->enqueue() methods.
-
-Note, particularly, that when ->ndo_start_xmit() values are propagated
-through ->enqueue() calls they get masked out with NET_XMIT_MASK.
-
-However, I see that most of the code doing enqueueing and invocation
-of ->ndo_start_xmit() use the dev_xmit_complete() helper to check this
-condition.
-
-So probably that is what netpoll should be using as well.
+> 
+> Applied to the togreg branch of iio.git and pushed out as
+> testing for the autobuilders to play with it.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>  drivers/iio/common/st_sensors/Kconfig | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/iio/common/st_sensors/Kconfig b/drivers/iio/common/st_sensors/Kconfig
+>> index 91b98e1..16d973f 100644
+>> --- a/drivers/iio/common/st_sensors/Kconfig
+>> +++ b/drivers/iio/common/st_sensors/Kconfig
+>> @@ -5,8 +5,10 @@
+>>  
+>>  config IIO_ST_SENSORS_I2C
+>>  	tristate
+>> +	select REGMAP_I2C
+>>  
+>>  config IIO_ST_SENSORS_SPI
+>> +	select REGMAP_SPI
+> 
+> Inconsistent with the previous.
+> 
+>>  	tristate
+>>  
+>>  config IIO_ST_SENSORS_CORE
+> 
+> 
+> .
+> 
 
