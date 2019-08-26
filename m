@@ -2,199 +2,164 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28CAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74419C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C426120828
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498C8217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566818608;
+	bh=P3wzm05rklhbN75hOLq/WjiIzXuCt+spUv+QP+9z/pY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LDIHkaouDYE0TAYImsQBvmlhlP6PXcltDwyS3fVo7T7aBahqr4iBBzbdfCPulP9RT
+	 3wB1ortkH5XHAjixp8BVhYQ0/S2c2j4PFSdpIuuka/mfZ9CJBZBxlnTkwDebztbsu5
+	 vuA8kMl0YjV9jDf/QtNHLG8UuOqDRc4ko/Lo+iZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfHZLW5 (ORCPT
+        id S1731125AbfHZLX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:22:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38922 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 07:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfHZLW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:22:57 -0400
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+        id S1730205AbfHZLX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:23:27 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 859CA85537
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:22:56 +0000 (UTC)
-Received: by mail-pg1-f200.google.com with SMTP id 141so9587998pgh.12
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 04:22:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Q7zhErdr3zhXTAX3q0cF2SWaKy8PRaJ11xDeRV5rY7A=;
-        b=OeVilpRK2fm40VT1RbUqYWislyUPLYd3mlS9IQGCCgsBuVNqEFgecMTcl6xgxYyMma
-         h8RZ1PNK7ojWtPvYKtlrxaOdUQlQB8KrEG/Ayzg84EnOb5pWlM9fIe0fqr7woA031xbX
-         84ugGYrbRM8ObJYjuEwY0/syiDp0E8FkEMjl9XEgiWyhEWTY6dMpq058QoP5FN3Vd4Jw
-         mT3PZ1DcVyVB8Ws6PiYe1ZbydmoJG5cKL6SJIzj4EFF3J4T2wH2o5I6QlFNXNxbaAXMS
-         KuNYpQWoSVIpWjG58e/XAfYzze1+oGxK26dw4MmJ6dsCGS4aRzBwtTKKXBNMLISDoM4U
-         203A==
-X-Gm-Message-State: APjAAAWaTXvuGLjaeynzmVLjwPtqAJ2l2vz3eBwNpAO01fVsahS+k3xR
-        JBPk7Ln77SZN3F16kPZkzWKvbdkoEMyS6pSrdNUasyANzMpvAKPkTNDU6KoCf9JKGha2aWYWroR
-        3OjJ0e0M3ee+R5f63v4ZroS7J
-X-Received: by 2002:a63:3805:: with SMTP id f5mr15815884pga.272.1566818575952;
-        Mon, 26 Aug 2019 04:22:55 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwMX+p5IaRGSs2L/aHxh7gwyKZJayxi7Y7zFuvX0f/Yk5rH0vZZArHzlXVYl8NrsWhnHBvJtQ==
-X-Received: by 2002:a63:3805:: with SMTP id f5mr15815858pga.272.1566818575581;
-        Mon, 26 Aug 2019 04:22:55 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x12sm3132579pjt.32.2019.08.26.04.22.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 04:22:54 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 19:22:44 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH] KVM: selftests: Detect max PA width from cpuid
-Message-ID: <20190826112244.GE1785@xz-x1>
-References: <20190826075728.21646-1-peterx@redhat.com>
- <20190826110958.lyueasf5laypkq2r@kamzik.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BF3CD2184D;
+        Mon, 26 Aug 2019 11:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566818605;
+        bh=P3wzm05rklhbN75hOLq/WjiIzXuCt+spUv+QP+9z/pY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KZ/IXMGCWMKpcHykahvq3T4l3sFQfMa8VXXkcMIc1V0EdMsIi6H3N/Nxk3sWReVXj
+         F+evKbO/9my8qHMCwzXi0wx8pMEvzfclLSpYCr6frOnERtQ0+6y9vj2YGeKul9B1cy
+         O7+dNc4sGLRDvy+5L5i3UgZlTBIILJfaNbyc+tVc=
+Received: by mail-qt1-f182.google.com with SMTP id q64so5760030qtd.5;
+        Mon, 26 Aug 2019 04:23:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAWDDjxMK72X66ExWkVFaCUJmRLVkcWcjGPtdg1vGyPnvbPDCKwj
+        ltbQ7wyiw8r3VHuDSYhy0ZJJeYcv5/1uU1WD0A==
+X-Google-Smtp-Source: APXvYqwG9J6og3J0xjCmmC/WIHvxWBq981aqz9OEYjrmYbfV8U+mQ+VvoKo6ppCXc5KSsAQCvNacYiV0++dI2LrnDxQ=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr16841292qto.224.1566818604932;
+ Mon, 26 Aug 2019 04:23:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190826110958.lyueasf5laypkq2r@kamzik.brq.redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+ <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com> <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
+In-Reply-To: <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 26 Aug 2019 06:23:13 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
+Message-ID: <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
+ Reset controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:09:58PM +0200, Andrew Jones wrote:
-> On Mon, Aug 26, 2019 at 03:57:28PM +0800, Peter Xu wrote:
-> > The dirty_log_test is failing on some old machines like Xeon E3-1220
-> > with tripple faults when writting to the tracked memory region:
-> > 
-> >   Test iterations: 32, interval: 10 (ms)
-> >   Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
-> >   guest physical test memory offset: 0x7fbffef000
-> >   ==== Test Assertion Failure ====
-> >   dirty_log_test.c:138: false
-> >   pid=6137 tid=6139 - Success
-> >      1  0x0000000000401ca1: vcpu_worker at dirty_log_test.c:138
-> >      2  0x00007f3dd9e392dd: ?? ??:0
-> >      3  0x00007f3dd9b6a132: ?? ??:0
-> >   Invalid guest sync status: exit_reason=SHUTDOWN
-> > 
-> > It's because previously we moved the testing memory region from a
-> > static place (1G) to the top of the system's physical address space,
-> > meanwhile we stick to 39 bits PA for all the x86_64 machines.  That's
-> > not true for machines like Xeon E3-1220 where it only supports 36.
-> > 
-> > Let's unbreak this test by dynamically detect PA width from CPUID
-> > 0x80000008.  Meanwhile, even allow kvm_get_supported_cpuid_index() to
-> > fail.  I don't know whether that could be useful because I think
-> > 0x80000008 should be there for all x86_64 hosts, but I also think it's
-> > not really helpful to assert in the kvm_get_supported_cpuid_index().
-> > 
-> > Fixes: b442324b581556e
-> > CC: Paolo Bonzini <pbonzini@redhat.com>
-> > CC: Andrew Jones <drjones@redhat.com>
-> > CC: Radim Krčmář <rkrcmar@redhat.com>
-> > CC: Thomas Huth <thuth@redhat.com>
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  tools/testing/selftests/kvm/dirty_log_test.c  | 22 +++++++++++++------
-> >  .../selftests/kvm/lib/x86_64/processor.c      |  3 ---
-> >  2 files changed, 15 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> > index ceb52b952637..111592f3a1d7 100644
-> > --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> > +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> > @@ -274,18 +274,26 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> >  	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
-> >  
-> >  #ifdef __x86_64__
-> > -	/*
-> > -	 * FIXME
-> > -	 * The x86_64 kvm selftests framework currently only supports a
-> > -	 * single PML4 which restricts the number of physical address
-> > -	 * bits we can change to 39.
-> > -	 */
-> > -	guest_pa_bits = 39;
-> > +	{
-> > +		struct kvm_cpuid_entry2 *entry;
-> > +
-> > +		entry = kvm_get_supported_cpuid_entry(0x80000008);
-> > +		/*
-> > +		 * Supported PA width can be smaller than 52 even if
-> > +		 * we're with VM_MODE_P52V48_4K mode.  Fetch it from
-> 
-> It seems like x86_64 should create modes that actually work, rather than
-> always using one named 'P52', but then needing to probe for the actual
-> number of supported physical bits. Indeed testing all x86_64 supported
-> modes, like aarch64 does, would even make more sense in this test.
+On Mon, Aug 26, 2019 at 4:52 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+> On 8/23/2019 8:25 PM, Rob Herring wrote:
+> > On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+> >> Add YAML schemas for the reset controller on Intel
+> >> Lightening Mountain (LGM) SoC.
+> >>
+> >> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> >> ---
+> >> Changes on v2:
+> >>      Address review comments
+> >>        Update the compatible property definition
+> >>        Add description for reset-cells
+> >>        Add 'additionalProperties: false' property
+> >>
+> >>   .../bindings/reset/intel,syscon-reset.yaml         | 53 ++++++++++++++++++++++
+> >>   1 file changed, 53 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >> new file mode 100644
+> >> index 000000000000..3403a967190a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >> @@ -0,0 +1,53 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Intel Lightening Mountain SoC System Reset Controller
+> >> +
+> >> +maintainers:
+> >> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: intel,rcu-lgm
+> >> +      - const: syscon
+> >> +
+> >> +  reg:
+> >> +    description: Reset controller register base address and size
+> >> +
+> >> +  intel,global-reset:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >> +    description: Global reset register offset and bit offset.
+> >> +
+> >> +  "#reset-cells":
+> >> +    const: 2
+> >> +    description: |
+> >> +      The 1st cell is the register offset.
+> >> +      The 2nd cell is the bit offset in the register.
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - intel,global-reset
+> >> +  - "#reset-cells"
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    rcu0: reset-controller@00000000 {
+> >> +        compatible = "intel,rcu-lgm", "syscon";
+> >> +        reg = <0x000000 0x80000>;
+> >> +        intel,global-reset = <0x10 30>;
+> >> +        #reset-cells = <2>;
+> >> +    };
+> >> +
+> >> +    pcie_phy0: pciephy@... {
+> >> +        ...
+> > You need to run 'make dt_binding_check' and fix the warnings. The
+> > example has to be buildable and it is not.
+>
+> Sure, i  will correct this pcie_phy0 node. But i didn't get any warnings
+> for make dt_binding_check
+>
+>    CHKDT Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+> FATAL ERROR: Unknown output format "yaml"
+>
+> Will DTC report about the example node errors? But, DTC is failing with
+> FATAL_ERROR.
+> I tried it even after installing libyaml and headers in my local
+> directory and export the path, but no luck.(ref:
+> https://lkml.org/lkml/2018/12/3/951)
+> Could you please let me know if i miss anything and help me to proceed
+> further.
 
-Should be true.  I'll think it over again...
+See Documentation/devicetree/writing-schema.md
 
-> 
-> 
-> > +		 * the host to update the default value (SDM 4.1.4).
-> > +		 */
-> > +		if (entry)
-> > +			guest_pa_bits = entry->eax & 0xff;
-> 
-> Are we sure > 39 bits will work with this test framework? I can't
-> recall what led me to the FIXME above, other than things not working.
-> It seems I was convinced we couldn't have more bits due to how pml4's
-> were allocated, but maybe I misinterpreted it.
-
-As mentioned in the IRC - I think I've got a "success case" of
-that... :)  Please see below:
-
-virtlab423:~ $ lscpu
-Architecture:        x86_64
-CPU op-mode(s):      32-bit, 64-bit
-Byte Order:          Little Endian
-CPU(s):              16
-On-line CPU(s) list: 0-15
-Thread(s) per core:  1
-Core(s) per socket:  8
-Socket(s):           2
-NUMA node(s):        2
-Vendor ID:           GenuineIntel
-CPU family:          6
-Model:               63
-Model name:          Intel(R) Xeon(R) CPU E5-2640 v3 @ 2.60GHz
-Stepping:            2
-CPU MHz:             2597.168
-BogoMIPS:            5194.31
-Virtualization:      VT-x
-L1d cache:           32K
-L1i cache:           32K
-L2 cache:            256K
-L3 cache:            20480K
-NUMA node0 CPU(s):   0,2,4,6,8,10,12,14
-NUMA node1 CPU(s):   1,3,5,7,9,11,13,15
-Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single pti tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm xsaveopt cqm_llc cqm_occup_llc dtherm arat pln pts
-virtlab423:~ $ ./dirty_log_test 
-Test iterations: 32, interval: 10 (ms)
-Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
-Supported guest physical address width: 46
-guest physical test memory offset: 0x3fffbffef000
-Dirtied 216064 pages
-Total bits checked: dirty (204841), clear (7922119), track_next (60730)
-
-So on above E5-2640 I got PA width==46 and it worked well.  Does this
-mean that 39bits is not really a PA restriction anywhere?  Actually
-that also matches with the other fact that if we look into
-virt_pg_map() it's indeed allocating PML4 entries rather than having
-only one.
-
-Thanks,
-
--- 
-Peter Xu
+Rob
