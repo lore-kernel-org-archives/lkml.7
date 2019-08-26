@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A367C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4522168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F962173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566789501;
-	bh=dx782LyP2EgLfV+vRh1Ur2mO8lwlNqwkIa/BZqJBJxE=;
+	s=default; t=1566789512;
+	bh=P7oPsfV6A0jtk+MZWB9QHUi0b3uNU8xu4OT8knJjVa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ym/e7N80vvi5C29nE+eLiJoQPi591cC4FfYXClmK4gb8mEK3FGgk8u2zS8UqGCj0i
-	 Nk/KmW+jJy60bjgCtQ3nNIHTRAUl9Zb7TLTDZ9axTqUGo1QjXxdStUm3d6BSqpmpOL
-	 shNmsmohkw1x6V0l5MtOHWhdmSDuJs94lvvvyB1g=
+	b=TWKW25ywb21Ofh1kUVvT/5onoJF6QkknKHE1alVluQ1xrtYg1AZzSzvY1Z1rjjs31
+	 mtUTCR+mDZjRtr7OgbwxAwQvxcTWIhWR+EWVGMR4Gz+wnyRLSH6Nd7Z8SM2dAeHWhg
+	 vS/AUifym0dOk+qoL9Q8A8npTg/fskxalvnqWepM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbfHZDSU (ORCPT
+        id S1729590AbfHZDSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        Sun, 25 Aug 2019 23:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbfHZDST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:18:19 -0400
+        id S1726434AbfHZDSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 23:18:31 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C504B20578;
-        Mon, 26 Aug 2019 03:18:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C25A2070B;
+        Mon, 26 Aug 2019 03:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566789498;
-        bh=dx782LyP2EgLfV+vRh1Ur2mO8lwlNqwkIa/BZqJBJxE=;
+        s=default; t=1566789510;
+        bh=P7oPsfV6A0jtk+MZWB9QHUi0b3uNU8xu4OT8knJjVa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXcpyIqNs+T7m7w0pBY+ECIHhxlP6ylvuzP4iG4jpOUQVJyIvN3uQpkz3gl7+3ibD
-         3W/EoJYHOpKcpMcL8fryRKU8Wbg18qgGsXzJyJOQXevZdI0nMgaqrAke8zRe8xkanA
-         e0MSCBLjfx77GdTD0i2oM2whk3FjlZpoFW1U5Kas=
+        b=1K7Herj2qVxuRZLdPAV/Cv9TvLbxJbtCpuG0CWOHV0lL3dB+sSx4aZJtbypAx7O9g
+         VOTCVwzOmNcB1vLQP/IvyW1uOZIMqZCre7rRHOzGNMa0xcWmf0fOY/VBUAk4BbAqX1
+         4NZcjANnRUM+4zIKKwzJbDo6p9wpVEISMhcFmhqM=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Frank Rowand <frowand.list@gmail.com>
@@ -55,9 +55,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 13/19] tracing/boot Add kprobe event support
-Date:   Mon, 26 Aug 2019 12:18:12 +0900
-Message-Id: <156678949243.21459.7280617203512175739.stgit@devnote2>
+Subject: [RFC PATCH v3 14/19] tracing/boot: Add synthetic event support
+Date:   Mon, 26 Aug 2019 12:18:24 +0900
+Message-Id: <156678950390.21459.4719180337950500537.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156678933823.21459.4100380582025186209.stgit@devnote2>
 References: <156678933823.21459.4100380582025186209.stgit@devnote2>
@@ -70,77 +70,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add kprobe event support on event node. If the group name of event
-is "kprobes", boottime trace defines new probe event according
-to "probes" values.
+Add synthetic event node support. The synthetic event is a kind of
+event node, but the group name is "synthetic".
 
- - ftrace.event.kprobes.EVENT.probes = PROBE[, PROBE2...];
-   Defines new kprobe event based on PROBEs. It is able to define
-   multiple probes on one event, but those must have same type of
-   arguments.
+ - ftrace.event.synthetic.EVENT.fields = FIELD[, FIELD2...];
+   Defines new synthetic event with FIELDs. Each field should be
+   "type varname".
 
-For example,
-
- ftrace.events.kprobes.myevent {
-	probes = "vfs_read $arg1 $arg2";
-	enable;
- }
-
-This will add kprobes:myevent on vfs_read with the 1st and the 2nd
-arguments.
+The synthetic node requires "fields" string arraies, which defines
+the fields as same as tracing/synth_events interface.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_boot.c   |   46 +++++++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace_kprobe.c |    5 +++++
- 2 files changed, 51 insertions(+)
+ kernel/trace/trace_boot.c        |   47 ++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_events_hist.c |    5 ++++
+ 2 files changed, 52 insertions(+)
 
 diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index cfd628c16761..40c89c7ceee0 100644
+index 40c89c7ceee0..2e9fddff660f 100644
 --- a/kernel/trace/trace_boot.c
 +++ b/kernel/trace/trace_boot.c
-@@ -100,6 +100,48 @@ trace_boot_enable_events(struct trace_array *tr, struct skc_node *node)
- 	}
+@@ -142,6 +142,50 @@ trace_boot_add_kprobe_event(struct skc_node *node, const char *event)
  }
+ #endif
  
-+#ifdef CONFIG_KPROBE_EVENTS
-+extern int trace_kprobe_run_command(const char *command);
++#ifdef CONFIG_HIST_TRIGGERS
++extern int synth_event_run_command(const char *command);
 +
 +static int __init
-+trace_boot_add_kprobe_event(struct skc_node *node, const char *event)
++trace_boot_add_synth_event(struct skc_node *node, const char *event)
 +{
 +	struct skc_node *anode;
-+	char buf[MAX_BUF_LEN];
-+	const char *val;
-+	char *p;
-+	int len;
++	char buf[MAX_BUF_LEN], *q;
++	const char *p;
++	int len, delta, ret;
 +
-+	len = snprintf(buf, ARRAY_SIZE(buf) - 1, "p:kprobes/%s ", event);
-+	if (len >= ARRAY_SIZE(buf)) {
++	len = ARRAY_SIZE(buf);
++	delta = snprintf(buf, len, "%s", event);
++	if (delta >= len) {
 +		pr_err("Event name is too long: %s\n", event);
 +		return -E2BIG;
 +	}
-+	p = buf + len;
-+	len = ARRAY_SIZE(buf) - len;
++	len -= delta; q = buf + delta;
 +
-+	skc_node_for_each_array_value(node, "probes", anode, val) {
-+		if (strlcpy(p, val, len) >= len) {
-+			pr_err("Probe definition is too long: %s\n", val);
++	skc_node_for_each_array_value(node, "fields", anode, p) {
++		delta = snprintf(q, len, " %s;", p);
++		if (delta >= len) {
++			pr_err("fields string is too long: %s\n", p);
 +			return -E2BIG;
 +		}
-+		if (trace_kprobe_run_command(buf) < 0) {
-+			pr_err("Failed to add probe: %s\n", buf);
-+			return -EINVAL;
-+		}
++		len -= delta; q += delta;
 +	}
 +
-+	return 0;
++	ret = synth_event_run_command(buf);
++	if (ret < 0)
++		pr_err("Failed to add synthetic event: %s\n", buf);
++
++
++	return ret;
 +}
 +#else
 +static inline int __init
-+trace_boot_add_kprobe_event(struct skc_node *node, const char *event)
++trace_boot_add_synth_event(struct skc_node *node, const char *event)
 +{
-+	pr_err("Kprobe event is not supported.\n");
++	pr_err("Synthetic event is not supported.\n");
 +	return -ENOTSUPP;
 +}
 +#endif
@@ -148,31 +141,30 @@ index cfd628c16761..40c89c7ceee0 100644
  static void __init
  trace_boot_init_one_event(struct trace_array *tr, struct skc_node *gnode,
  			  struct skc_node *enode)
-@@ -112,6 +154,10 @@ trace_boot_init_one_event(struct trace_array *tr, struct skc_node *gnode,
- 	group = skc_node_get_data(gnode);
- 	event = skc_node_get_data(enode);
- 
-+	if (!strcmp(group, "kprobes"))
-+		if (trace_boot_add_kprobe_event(enode, event) < 0)
+@@ -157,6 +201,9 @@ trace_boot_init_one_event(struct trace_array *tr, struct skc_node *gnode,
+ 	if (!strcmp(group, "kprobes"))
+ 		if (trace_boot_add_kprobe_event(enode, event) < 0)
+ 			return;
++	if (!strcmp(group, "synthetic"))
++		if (trace_boot_add_synth_event(enode, event) < 0)
 +			return;
-+
+ 
  	mutex_lock(&event_mutex);
  	file = find_event_file(tr, group, event);
- 	if (!file) {
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 5135c07b6557..03ce60928c18 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -728,6 +728,11 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index db973928e580..e7f5d0a353e2 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1343,6 +1343,11 @@ static int create_or_delete_synth_event(int argc, char **argv)
  	return ret == -ECANCELED ? -EINVAL : ret;
  }
  
-+int trace_kprobe_run_command(const char *command)
++int synth_event_run_command(const char *command)
 +{
-+	return trace_run_command(command, create_or_delete_trace_kprobe);
++	return trace_run_command(command, create_or_delete_synth_event);
 +}
 +
- static int trace_kprobe_release(struct dyn_event *ev)
+ static int synth_event_create(int argc, const char **argv)
  {
- 	struct trace_kprobe *tk = to_trace_kprobe(ev);
+ 	const char *name = argv[0];
 
