@@ -2,106 +2,97 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992A4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E75C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707E921852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C98220828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObJMH1xI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK4bcaUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732955AbfHZPOk (ORCPT
+        id S1732224AbfHZPPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:14:40 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43668 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730379AbfHZPOk (ORCPT
+        Mon, 26 Aug 2019 11:15:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46229 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728732AbfHZPPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:14:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h13so26944230edq.10;
-        Mon, 26 Aug 2019 08:14:39 -0700 (PDT)
+        Mon, 26 Aug 2019 11:15:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so15696650wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RCDy+7K0fwF6nt7MbSVX8QMpTTG0g3KoAzAmdTsb8DY=;
-        b=ObJMH1xIehE/7oddlecJPARz4qG1rnqBa8UxW+F7d5CbSW9le+05fqM91jvngewFm7
-         IAhywnYGhMJV+QiaU0CiGNlGOQbbbyW6S+pIs3+LjabTbWy6cehK3Q1yeNYSU9ZHMZlX
-         5sxuaVbJnKouPfQRlLo9I1hMCJdZvACLzbC+Tp2z0RYydY1Lr8j5DYqlfQoDp6psvPyw
-         hIPkycJ8dvsDjToArfL3HFvAoW35LpHICPBlqpabSFG5MKfgezZvT4CMjYW4DesFTNx/
-         IFxK1A9l+/Vj90h8Hiwzic/P0mCKWhUuQIgpWmKcMCl+5d+qlai/p8Qpw2ptP+B9bgMt
-         Sw2A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QMc8BlFNPwhPMkitaQqYoQoxo4FLyEe7KvlKmz3CRSU=;
+        b=IK4bcaUHJxVr5f3+1q9aB477uA6/aGYXg37x+81Y2Ak4Z8NyC7YCHsbt6yXQmMRud5
+         i4zPn0V+BRuBq86WtDn8g+Nvs5B+H1wZtQDFornWtxRuA31nQoT1DOrnv/drN8BFcsrk
+         FJoOjzqrHy//7LYX7NIAs3k8sOf0efOfawx/9mEy/CwbSfKSFFHIeGw93iKJcxVme968
+         COPsmMb+yLY8CD3R/L9DErB31NsaryHOwpsQdq1+0ZpUxSNGLp4w2WO9aHSHVgkte3Wo
+         LrqsEcJF9vLUcY7Mm+T5E8Lfc0B6iFC6+HrF+aAl+rNhFwcfarXz3JDzGZxpna9ZKkWd
+         okAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=RCDy+7K0fwF6nt7MbSVX8QMpTTG0g3KoAzAmdTsb8DY=;
-        b=VUqv6ZSz4IS77L03KD5FEFBXj4VL1C5Cm/ehQwnDD9okdW8/gGIQYXfssdW30Z2JI7
-         Ix8cEjTqIkxR+1NS24eYX7sbVbYWeDBDGVdiJpag9wMGYs9DfaekL8oB7u3Wb6/y84fT
-         sLg8wdt66ijD4+gMmIjNZTvNITGRJWd66Jpfsfd4ICSxTsLRq0toIRg5mpG/bFx//Uw/
-         gj5a2Oaezj5Yb8E5j9iQkBRf+nZr6nzrJ3ROr8MS/KBJirsAykfmO7TsbvsPdvK0/OUa
-         znjPa1ceIyROBatecbItDGr7+cvMU8RWkOb1Uxyf+nVvPi5s83DuTQfq5h4VzC/Vaxw5
-         hvig==
-X-Gm-Message-State: APjAAAVpTcqIKIEVfr9Y3LKSbbmECNIERCiw9v0IIhdzrtGZdjUVAbEz
-        KruqhYWfsHkUQrUmgQ1sZb8=
-X-Google-Smtp-Source: APXvYqwVjsfeA0fvtl5KyoGIk6txpb1HMvzkepsVRJ8coXd46DZ5CYhwp3DfC0p/YyPArLJg+vm5WQ==
-X-Received: by 2002:a05:6402:1344:: with SMTP id y4mr18841237edw.124.1566832478387;
-        Mon, 26 Aug 2019 08:14:38 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id r16sm2976795eji.71.2019.08.26.08.14.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QMc8BlFNPwhPMkitaQqYoQoxo4FLyEe7KvlKmz3CRSU=;
+        b=TMguOMr6hTMqym2lRTgktRrFylbdn0NQufESPKiHKSW91AWyD1FvkyGlvWow3GUkid
+         rW8952Oapy1GjFoIgcjBU5L3HMPSz8bN8M/yxkyUIp++4wSW8WU6IsuwNHwZdfJ4RI+X
+         rc1l3r19NiUcNOoCAporFjTnIjUWqtI1GGzIupHmr8YMi/odeZnoguFhvJnUYQfae+ok
+         EzaqvvW4hHfpcRstbrfIizxTHQm5xHLWD18Kn4fnOEjeFy+iKj291/SlQM7TnL29N33R
+         t+zOuMmqoXf7U0EUZkd4SjlDBgM3aC7i/tDLOlbtuIM4t90pUQ+pf2JjU3Rv2ambLDIC
+         devQ==
+X-Gm-Message-State: APjAAAWjxJsu4rVE+0t7nlAXZ1NGNaQWzrgPXcV+Y07Ai6hxJV9eSqEZ
+        Zoa/3Fffn0vek7Y3QoBUt4E=
+X-Google-Smtp-Source: APXvYqx50jWkW+jSQ4r//xNkXNJqtoB1M5J0Csu13FzO88J5ru1KMzVr7A6FyWGpl9iGrChq1LngwQ==
+X-Received: by 2002:a5d:4205:: with SMTP id n5mr22982928wrq.52.1566832530322;
+        Mon, 26 Aug 2019 08:15:30 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id s64sm25344990wmf.16.2019.08.26.08.15.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 08:14:37 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Move static keyword to the front of declarations in pci-bridge-emul.c
-Date:   Mon, 26 Aug 2019 17:14:36 +0200
-Message-Id: <20190826151436.4672-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Mon, 26 Aug 2019 08:15:29 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 08:15:28 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ilie Halip <ilie.halip@gmail.com>
+Cc:     clang-built-linux@googlegroups.com,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: imx-weim: remove __init from 2 functions
+Message-ID: <20190826151528.GA91444@archlinux-threadripper>
+References: <20190826095828.8948-1-ilie.halip@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826095828.8948-1-ilie.halip@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declarations of
-pci_regs_behavior and pcie_cap_regs_behavior, and resolve
-compiler warning that can be seen when building with
-warnings enabled (W=1).
+On Mon, Aug 26, 2019 at 12:58:28PM +0300, Ilie Halip wrote:
+> A previous commit removed __init from weim_probe(), but this attribute is
+> still present for other functions called from it. Thus, these warnings
+> are triggered:
+>     WARNING: Section mismatch in reference from the function weim_probe() to the function .init.text:imx_weim_gpr_setup()
+>     WARNING: Section mismatch in reference from the function weim_probe() to the function .init.text:weim_timing_setup()
+> 
+> Remove the __init attribute from these functions as well, since they
+> don't seem to be used anywhere else.
+> 
+> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: clang-built-linux@googlegroups.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/pci/pci-bridge-emul.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 06083b86d4f4..5fd90105510d 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
- 	u32 rsvd;
- };
- 
--const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-+static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- 	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
- 	[PCI_COMMAND / 4] = {
- 		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-@@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- 	},
- };
- 
--const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-+static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 	[PCI_CAP_LIST_ID / 4] = {
- 		/*
- 		 * Capability ID, Next Capability Pointer and
--- 
-2.22.1
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
