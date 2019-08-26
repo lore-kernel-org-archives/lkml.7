@@ -2,113 +2,100 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC71C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA114C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395D22087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865D8206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbfHZHXv convert rfc822-to-8bit (ORCPT
+        id S1729957AbfHZHX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:23:51 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39473 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729832AbfHZHXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:23:50 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id AB25360002;
-        Mon, 26 Aug 2019 07:23:45 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 09:23:44 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        juliensu@mxic.com.tw, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, richard@nod.at, tglx@linutronix.de,
-        vigneshr@ti.com
-Subject: Re: [PATCH] Add support for Macronix NAND randomizer
-Message-ID: <20190826092344.7b23ede1@xps13>
-In-Reply-To: <OFF725800E.8B26D2E9-ON48258462.000B94B2-48258462.000FCB85@mxic.com.tw>
-References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190824130329.68f310aa@xps13>
-        <OFF725800E.8B26D2E9-ON48258462.000B94B2-48258462.000FCB85@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 26 Aug 2019 03:23:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56282 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729832AbfHZHX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 03:23:58 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7BE717735DF38CEF0012;
+        Mon, 26 Aug 2019 15:23:54 +0800 (CST)
+Received: from szxyal004123181.china.huawei.com (10.65.65.77) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 26 Aug 2019 15:23:51 +0800
+From:   Dongxu Liu <liudongxu3@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: Adding parameter detection in __ethtool_get_link_ksettings.
+Date:   Mon, 26 Aug 2019 15:23:32 +0800
+Message-ID: <20190826072332.14736-1-liudongxu3@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.65.65.77]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+The __ethtool_get_link_ksettings symbol will be exported,
+and external users may use an illegal address.
+We should check the parameters before using them,
+otherwise the system will crash.
 
-masonccyang@mxic.com.tw wrote on Mon, 26 Aug 2019 10:52:31 +0800:
+[ 8980.991134] BUG: unable to handle kernel NULL pointer dereference at           (null)
+[ 8980.993049] IP: [<ffffffff8155aca7>] __ethtool_get_link_ksettings+0x27/0x140
+[ 8980.994285] PGD 0
+[ 8980.995013] Oops: 0000 [#1] SMP
+[ 8980.995896] Modules linked in: sch_ingress ...
+[ 8981.013220] CPU: 3 PID: 25174 Comm: kworker/3:3 Tainted: G           O   ----V-------   3.10.0-327.36.58.4.x86_64 #1
+[ 8981.017667] Workqueue: events linkwatch_event
+[ 8981.018652] task: ffff8800a8348000 ti: ffff8800b045c000 task.ti: ffff8800b045c000
+[ 8981.020418] RIP: 0010:[<ffffffff8155aca7>]  [<ffffffff8155aca7>] __ethtool_get_link_ksettings+0x27/0x140
+[ 8981.022383] RSP: 0018:ffff8800b045fc88  EFLAGS: 00010202
+[ 8981.023453] RAX: 0000000000000000 RBX: ffff8800b045fcac RCX: 0000000000000000
+[ 8981.024726] RDX: ffff8800b658f600 RSI: ffff8800b045fcac RDI: ffff8802296e0000
+[ 8981.026000] RBP: ffff8800b045fc98 R08: 0000000000000000 R09: 0000000000000001
+[ 8981.027273] R10: 00000000000073e0 R11: 0000082b0cc8adea R12: ffff8802296e0000
+[ 8981.028561] R13: ffff8800b566e8c0 R14: ffff8800b658f600 R15: ffff8800b566e000
+[ 8981.029841] FS:  0000000000000000(0000) GS:ffff88023ed80000(0000) knlGS:0000000000000000
+[ 8981.031715] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 8981.032845] CR2: 0000000000000000 CR3: 00000000b39a9000 CR4: 00000000003407e0
+[ 8981.034137] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 8981.035427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 8981.036702] Stack:
+[ 8981.037406]  ffff8800b658f600 0000000000009c40 ffff8800b045fce8 ffffffffa047a71d
+[ 8981.039238]  000000000000004d ffff8800b045fcc8 ffff8800b045fd28 ffffffff815cb198
+[ 8981.041070]  ffff8800b045fcd8 ffffffff810807e6 00000000e8212951 0000000000000001
+[ 8981.042910] Call Trace:
+[ 8981.043660]  [<ffffffffa047a71d>] bond_update_speed_duplex+0x3d/0x90 [bonding]
+[ 8981.045424]  [<ffffffff815cb198>] ? inetdev_event+0x38/0x530
+[ 8981.046554]  [<ffffffff810807e6>] ? put_online_cpus+0x56/0x80
+[ 8981.047688]  [<ffffffffa0480d67>] bond_netdev_event+0x137/0x360 [bonding]
+...
 
-> Hi Miquel,
-> > 
-> > Mason Yang <masonccyang@mxic.com.tw> wrote on Tue, 20 Aug 2019 13:53:48
-> > +0800:
-> >   
-> > > Macronix NANDs support randomizer operation for user data scrambled,
-> > > which can be enabled with a SET_FEATURE.
-> > > 
-> > > User data written to the NAND device without randomizer is still   
-> readable
-> > > after randomizer function enabled.
-> > > The penalty of randomizer are NOP = 1 instead of NOP = 4 and more time   
-> period
-> > 
-> > please don't use 'NOP' here, use 'subpage accesses' instead, otherwise
-> > people might not understand what it means while it has a real impact.
-> >   
-> 
-> okay, understood. 
-> will fix it by next submitting.
-> 
-> > > is needed in program operation and entering deep power-down mode.
-> > > i.e., tPROG 300us to 340us(randomizer enabled)
-> > > 
-> > > If subpage write not available with hardware ECC, for example,
-> > > NAND chip options NAND_NO_SUBPAGE_WRITE be set in driver and
-> > > randomizer function is recommended for high-reliability.
-> > > Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-> > > to see if this high-reliability function is supported.
-> > >   
-> > 
-> > You did not flagged this patch as a v2 and forgot about the changelog.  
-> 
-> will fix, thank you.
-> 
-> > You did not listen to our comments in the last version neither. I was
-> > open to a solution with a specific DT property for warned users but I
-> > don't see it coming.  
-> 
-> Sorry I missed the previous version of "read-retry and randomizer support" 
-> patch. 
-> Specific DT property is a good method to control it.
-> 
-> For more high-reliability concern, randomizer is recommended to enable by 
-> default,
-> but sub-page write is not allowed when randomizer is enabled.
-> 
-> Since most of HW ECC did not support sub-page write and we think driver to 
-> check
-> chip options flags is another simple and good way to enable randomizer.
+Signed-off-by: Dongxu Liu <liudongxu3@huawei.com>
+---
+ net/core/ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Sorry but this is wrong. Several controllers and NAND chips support
-subpages. And changing now the behavior with such chips would entirely
-break the concerned setups (see Boris answer about UBI complaining if
-the subpage size changes).
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index 6288e69..9a50b64 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -545,6 +545,8 @@ int __ethtool_get_link_ksettings(struct net_device *dev,
+ {
+ 	ASSERT_RTNL();
+ 
++	if (!dev || !dev->ethtool_ops)
++		return -EOPNOTSUPP;
+ 	if (!dev->ethtool_ops->get_link_ksettings)
+ 		return -EOPNOTSUPP;
+ 
+-- 
+2.12.3
 
-Thanks,
-Miquèl
+
