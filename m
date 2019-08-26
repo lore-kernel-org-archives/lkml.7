@@ -2,136 +2,99 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD63C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F413C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593CC217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0A521872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="g+9gji3q"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cbEzOJC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbfHZKCa (ORCPT
+        id S1731221AbfHZKEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:02:30 -0400
-Received: from mail-eopbgr760049.outbound.protection.outlook.com ([40.107.76.49]:13919
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726669AbfHZKC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:02:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AydWuuczw65STyoW5dHAsOC6khDUeW3GZac/5i1zY4rDMsycer48vHyLheo8eiuVnygc836oNVpM8qsWZj9iLBnsFgXJUTV0YDcd2TtfyOG1OVDXj4nc3aXCtD11gdKPaZhj0k3xovYEQJlAaVzkrq8oPz3NuuQg9nrdpAj8t6ze8n0oy8de4Fv3aBrqm1IGfTHeo3vYB5+V+nT/QsIGUVeMQNfMLEELuxXn7M2ZnBQ/1HUDvzsURE2giRLhjvRbJHH3ZNs//AHr2kPcB9BeEXArdvwJZzNv7j2bn3+v6p87+KrFx4wZ7CtujsvY8MztwHxX1GDL7fTUa2JOydn1/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ccqz7W9lHpMSEfVMqMuvBMBPZov8vGKI3pvRoOSrANo=;
- b=CSUx2HJ5zqlkv24p1ZwzR3/u8p+9p7+xfrBHU5nx0to3CepkQ6tO3PcYE1DE+jvEBVzRKM3hCofCR0AzrK4oHe9ohQcBH2yl/3hzYJngHSFBFOmuxaINziR7SqKNQCTvwXg+dBrnvdiyijof5HxqFyqv/py5/9uhKLs1f4NhKQa/+65dvmEnISNioHqvD02Qsot/2wEMTL01jIvXf3DfWGAh8LjXwSHW9apBvC3A+0Nq+48DBfjiJg+FRhSv1lM1I9bPpv+R5r44gp7AKjcbb9FNjTMl5n5gDRwDgKxKFlh6AUFC3qo/7cRefamTk1Jv/Yh3y19SNdNozbZ7CE5CJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ccqz7W9lHpMSEfVMqMuvBMBPZov8vGKI3pvRoOSrANo=;
- b=g+9gji3qVFMUZlqWBHzisbWAbUgNC6aLW0AlG6DWZdmHa1mLCL1DNHd82CnL5dp0J3ORI846aSJ73GO6m5X0aWOPlDjJ7rJxbAbJpaiCLNvpj6TEbLrElda0+wEcRP2miTE6b7rkdFLa95UUGPuVzBfov0cYiNYAf3vgm9T2iiU=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB4135.namprd03.prod.outlook.com (20.177.184.96) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Mon, 26 Aug 2019 10:02:27 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::b050:60f8:d275:e9f4]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::b050:60f8:d275:e9f4%7]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 10:02:27 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] hwmon: (as370-hwmon) Add DT bindings for Synaptics AS370
- PVT
-Thread-Topic: [PATCH 2/2] hwmon: (as370-hwmon) Add DT bindings for Synaptics
- AS370 PVT
-Thread-Index: AQHVW/VdbV2LB6M7uUCh+nMeq42XPA==
-Date:   Mon, 26 Aug 2019 10:02:27 +0000
-Message-ID: <20190826175113.74be0368@xhacker.debian>
-References: <20190826174942.2b28ff05@xhacker.debian>
-In-Reply-To: <20190826174942.2b28ff05@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYXPR01CA0058.jpnprd01.prod.outlook.com
- (2603:1096:403:a::28) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 843419ce-c95d-4272-2969-08d72a0c7fd4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4135;
-x-ms-traffictypediagnostic: BYAPR03MB4135:
-x-microsoft-antispam-prvs: <BYAPR03MB4135276277929292F33A774BEDA10@BYAPR03MB4135.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(136003)(396003)(346002)(199004)(189003)(386003)(2906002)(186003)(25786009)(6506007)(50226002)(4326008)(53936002)(102836004)(26005)(305945005)(6512007)(446003)(9686003)(11346002)(8936002)(14454004)(66066001)(66446008)(478600001)(99286004)(7736002)(6486002)(81156014)(76176011)(6436002)(64756008)(81166006)(66556008)(54906003)(5660300002)(86362001)(486006)(8676002)(256004)(4744005)(3846002)(6116002)(66946007)(71190400001)(71200400001)(110136005)(66476007)(1076003)(52116002)(476003)(316002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4135;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nVfvPwtdyg6nySqzn9bz/STT0yCHeZ3As9IyuCgIq+NXDkOE2z58ZV9HpjaazefK2mvaT/zcHicEVfM0bZz/ocqMAqn3q0nPvrCzfjYxf/221hgfl0JT+vP+3Yezffvj+IOjrb5EdN729fwPnaxrbMHYl3wNlNhsJLS1NM1brptK6IOpvHSPk+chgcEi4ltlwJ2qnZKPcSeNxPRswil17Wpj0T6Y2xN676YjrQ23vS6vg/cKfuCVpmfyA5+39mGikDDYdw7mFfPuvPhcqvqLNJjRURciDEwW7x+6qXe3QnYQSCusoyjrRFGVuHy0/Pe3rm5zKK47yo7o8kQHdJuqXw6qGoR9AFNYZgNGRTgkOHiBnKA2xhsEitCPRBNKboxVb6oSqLZ2lseli2lomBR2bxa1ft6/GXYW3dls9LRYKy0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <252215FE06C11B46B99BDE304DC6DA60@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 26 Aug 2019 06:04:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57664 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbfHZKEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:04:22 -0400
+Received: from zn.tnic (p200300EC2F0657001DC81C8A8210CD6A.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5700:1dc8:1c8a:8210:cd6a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B8FF1EC06E5;
+        Mon, 26 Aug 2019 12:04:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566813860;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PhiC8W2Bp0/CZk1KvtGBJlF7S2eVkxQY28iWckK8/Qs=;
+        b=cbEzOJC2eLGvaleGPI2raXMtCwMPMsI+BM2a6DMBCnu25xI4r33+y+P1mb5pbIa1dROuid
+        v9+YEhJAktBWXmjc3elvS40KWjnI0W9p9O1qdUvofGVKdJ1HPGh+yCqJdEr+VmkHvSafWg
+        QFLlalbaMXjdL1uYGvSOVt+4pRa8Zjs=
+Date:   Mon, 26 Aug 2019 12:04:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Xiaochun Lee <lixiaochun.2888@163.com>
+Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
+Subject: Re: [PATCH] x86/mce: show the status of cmci_disabled to user
+Message-ID: <20190826100416.GC27636@zn.tnic>
+References: <1566800164-6428-1-git-send-email-lixiaochun.2888@163.com>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 843419ce-c95d-4272-2969-08d72a0c7fd4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 10:02:27.1847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JxbR/YSUN+Ba2mwJm7l80FaKJ54iD6Q3+KgAyv24eO3wUKl5HdPFRSW+uxlG+3+/rD07QyrJ1aHDN0D6wz36iA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4135
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1566800164-6428-1-git-send-email-lixiaochun.2888@163.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree bindings for Synaptics AS370 PVT sensors.
+On Mon, Aug 26, 2019 at 02:16:04PM +0800, Xiaochun Lee wrote:
+> From: Xiaochun Lee <lixc17@lenovo.com>
+> 
+> When enabled Firmware First mode in UEFI, we need to
+> set the cmci_disabled and ignore_ce in mca cfg
+> that users can check correct status from
+> "/sys/devices/system/machinecheck/machinecheckXXX/cmci_disabled"
+> 
+> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+> ---
+>  arch/x86/kernel/cpu/mce/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 743370e..932c701 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1909,6 +1909,8 @@ static void __mce_disable_bank(void *arg)
+>  	int bank = *((int *)arg);
+>  	__clear_bit(bank, this_cpu_ptr(mce_poll_banks));
+>  	cmci_disable_bank(bank);
+> +	mca_cfg.cmci_disabled = true;
+> +	mca_cfg.ignore_ce = true;
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- Documentation/devicetree/bindings/hwmon/as370.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/as370.txt
+That's the global switch which gets written here for every bank. But
+you want to disable it per bank, not globally because the list of banks
+arch_apei_enable_cmcff() receives might not be all banks in the system
+which are in FF mode.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/as370.txt b/Documentat=
-ion/devicetree/bindings/hwmon/as370.txt
-new file mode 100644
-index 000000000000..d102fe765124
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/as370.txt
-@@ -0,0 +1,11 @@
-+Bindings for Synaptics AS370 PVT sensors
-+
-+Required properties:
-+- compatible : "syna,as370-hwmon"
-+- reg        : address and length of the register set.
-+
-+Example:
-+	hwmon@ea0810 {
-+		compatible =3D "syna,as370-hwmon";
-+		reg =3D <0xea0810 0xc>;
-+	};
---=20
-2.23.0.rc1
+Then, writing
+/sys/devices/system/machinecheck/machinecheckXXX/cmci_disabled from a
+different CPU and for a different bank reenables cmci again so you need
+to think of a better way how to address the per-bank thing and then to
+make it non-modifiable in FF mode so that it cannot be reenabled from
+sysfs again.
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
