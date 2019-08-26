@@ -2,143 +2,142 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF1EC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22883C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422C520850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BFE20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="T7tkSC51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbfHZSJS (ORCPT
+        id S2387738AbfHZSJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:09:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40900 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbfHZSJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:09:16 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2JQU-0003AI-N4; Mon, 26 Aug 2019 20:09:10 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F1271C0DAE;
-        Mon, 26 Aug 2019 20:09:10 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 18:09:10 -0000
-From:   tip-bot2 for Bandan Das <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/apic: Do not initialize LDR and DFR for bigsmp
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Bandan Das <bsd@redhat.com>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190826101513.5080-2-bsd@redhat.com>
-References: <20190826101513.5080-2-bsd@redhat.com>
+        Mon, 26 Aug 2019 14:09:46 -0400
+Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:64606
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730228AbfHZSJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 14:09:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U5dIh3Fl+mOCroP3/RVqLquYBThvKEO3WLt2LpTjqDmXj0RglPTFSlReduzVnGgCxh78w3k4qCyVo2nKRtjIMBnMbLSzTI1z6drldObKdgXdAfufOmRCS0TnvsYVhI3PSk8sE/kEalEUKkPHLeCJEms0QupnXPl8QEGAWTdIFEuMwu8vvw3q8RjDq4l50dDTQ0mSqFfI2Djv0q8WWWYpVQv9/dAj8fhr3k683IjdlyCW9sUOCa/dHJgxOGes9BJjO9GiMm7EuISLq/Nyt/mAIBWpRjD8P4Sqb7NsN18FrySIonR3GPG/b6D+v4VTxZBeazFS/dvIz6JwsKTjv2OXLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FGRChx0m+eJzl7dhyV88O00JmWNdWjyEK7YCMGleaCY=;
+ b=i4uFUHHZnqy20vQNh6jzlKfudxNobLjkTAQqXaYqr7YY1GWTbZHeGCHpNw726M4p9lOTGJNMlULVA30BY+rCdyej6WGbaVZcLKsqJ+UJksddYUvSMoU7ClWQO9g8Vs2e7P2Izpm4+sjcGI3wQMGjyNpd/iczhSF7PHfmCN1r72TWqJ0bbQdR7rJWzN0zgBt/2VYDKxVRBXRdbfImF4QeUwhN/wbfoFVmZOdR6mNITDlHcwuIOBP1pUdwD7JK5ZyfmLNEMLormF4+EvRpUKivUIKw/mFutghdvzIqodJoUgRRvsfw65vcfx9u0POSLwLYeNtNl6CRhqPkBBNGwMqwtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FGRChx0m+eJzl7dhyV88O00JmWNdWjyEK7YCMGleaCY=;
+ b=T7tkSC51J467IklLMNl+7HvJN9yBLFC6diuldOdNJ/CelHnOfe8RFlgiEsDgMqsUr+BG3G+cRa6QxpfCBMgJxL7CYn48zzjQXCHfItYdFOHORxaI0k76lt7AM5rpoOPoKjixOdOJzhN/LuYQNWCglayFfaosIG4xmL45ZysFBdc=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6269.eurprd05.prod.outlook.com (20.177.49.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Mon, 26 Aug 2019 18:09:42 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2199.020; Mon, 26 Aug 2019
+ 18:09:42 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] mm/hmm: hmm_range_fault() NULL pointer bug
+Thread-Topic: [PATCH 1/2] mm/hmm: hmm_range_fault() NULL pointer bug
+Thread-Index: AQHVWgCoFJcsFk0T0kqUlq3r7T9NpacK5SEAgALXogCAAAITgA==
+Date:   Mon, 26 Aug 2019 18:09:42 +0000
+Message-ID: <20190826180937.GI27031@mellanox.com>
+References: <20190823221753.2514-1-rcampbell@nvidia.com>
+ <20190823221753.2514-2-rcampbell@nvidia.com> <20190824223754.GA21891@lst.de>
+ <e2ecc1a7-0d2f-5957-e6cb-b3c86c085d80@nvidia.com>
+In-Reply-To: <e2ecc1a7-0d2f-5957-e6cb-b3c86c085d80@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTXPR0101CA0037.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::14) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.167.216.168]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a43b3676-6b61-4b08-c38d-08d72a509191
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB6269;
+x-ms-traffictypediagnostic: VI1PR05MB6269:
+x-microsoft-antispam-prvs: <VI1PR05MB626915FD045BAC4A7B16A0EACFA10@VI1PR05MB6269.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(189003)(199004)(386003)(54906003)(102836004)(66946007)(53546011)(6506007)(53936002)(6512007)(3846002)(52116002)(316002)(6116002)(66476007)(66556008)(64756008)(66446008)(71190400001)(256004)(14454004)(26005)(1076003)(66066001)(6436002)(36756003)(8676002)(25786009)(4326008)(305945005)(5660300002)(186003)(86362001)(7736002)(71200400001)(76176011)(33656002)(2906002)(6486002)(8936002)(6916009)(99286004)(486006)(476003)(478600001)(11346002)(2616005)(81156014)(229853002)(446003)(6246003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6269;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xJx5kMvdEmdL4l/EBzz1xBnKWwCJiReAExlcCqgUJAGowwln5DyiNlB1cL4Qw3vRobHskkqQz1rPpnBWJLYSEfe/pGWwQUE0lypDfu9JoCa+umkBfHKaZbXLd1cKn6UfEYj8bc6yQapdfXad+IEC4j7/xVVU8H1M7QRS8wE4SYaMWJl5KeZGbXmiO5XdXpdvHY7iwOB9IYeX624tc9lA8qLDolI5KM4g9sa9AM6B4Jq2Zcr1mREic8FDMdIAR/zKqa7WhbUaET99PLwgzv2BFrw589cwg+F58MteOtUa/5PqNl4f/CRJEFHmWVkutW64QtE0fSCC1AkTkdMj7Ut/VONhtOhbVoil+g2FzFm8UDkmNUD4PRceBTowaNkGM8mM+3doPWXNKnY0hNyVUnIN55b6NEzJcy5FlTVLYFoWpvY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <13598A34FD89014892271F429ACE899D@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Message-ID: <156684295014.23432.15591194830180888887.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a43b3676-6b61-4b08-c38d-08d72a509191
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 18:09:42.5922
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ms67caVPI1xL6QIPQ45f408XuFjZVGN4eZ4NOTmxeOOExwJwjOf8QSMGJGkPmcWZxQk+IWGtouBhXrhcvjIaMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6269
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Mon, Aug 26, 2019 at 11:02:12AM -0700, Ralph Campbell wrote:
+>=20
+> On 8/24/19 3:37 PM, Christoph Hellwig wrote:
+> > On Fri, Aug 23, 2019 at 03:17:52PM -0700, Ralph Campbell wrote:
+> > > Although hmm_range_fault() calls find_vma() to make sure that a vma e=
+xists
+> > > before calling walk_page_range(), hmm_vma_walk_hole() can still be ca=
+lled
+> > > with walk->vma =3D=3D NULL if the start and end address are not conta=
+ined
+> > > within the vma range.
+> >=20
+> > Should we convert to walk_vma_range instead?  Or keep walk_page_range
+> > but drop searching the vma ourselves?
+> >=20
+> > Except for that the patch looks good to me:
+> >=20
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >=20
+>=20
+> I think keeping the call to walk_page_range() makes sense.
+> Jason is hoping to be able to snapshot a range with & without vmas
+> and have the pfns[] filled with empty/valid entries as appropriate.
+>=20
+> I plan to repost my patch changing hmm_range_fault() to use
+> walk.test_walk which will remove the call to find_vma().
+> Jason had some concerns about testing it so that's why I have
+> been working on some HMM self tests before resending it.
 
-Commit-ID:     bae3a8d3308ee69a7dbdf145911b18dfda8ade0d
-Gitweb:        https://git.kernel.org/tip/bae3a8d3308ee69a7dbdf145911b18dfda8ade0d
-Author:        Bandan Das <bsd@redhat.com>
-AuthorDate:    Mon, 26 Aug 2019 06:15:12 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 26 Aug 2019 20:00:56 +02:00
+I'm really excited to see tests for hmm_range_fault()!
 
-x86/apic: Do not initialize LDR and DFR for bigsmp
+Did you find this bug with the tests??
 
-Legacy apic init uses bigsmp for smp systems with 8 and more CPUs. The
-bigsmp APIC implementation uses physical destination mode, but it
-nevertheless initializes LDR and DFR. The LDR even ends up incorrectly with
-multiple bit being set.
-
-This does not cause a functional problem because LDR and DFR are ignored
-when physical destination mode is active, but it triggered a problem on a
-32-bit KVM guest which jumps into a kdump kernel.
-
-The multiple bits set unearthed a bug in the KVM APIC implementation. The
-code which creates the logical destination map for VCPUs ignores the
-disabled state of the APIC and ends up overwriting an existing valid entry
-and as a result, APIC calibration hangs in the guest during kdump
-initialization.
-
-Remove the bogus LDR/DFR initialization.
-
-This is not intended to work around the KVM APIC bug. The LDR/DFR
-ininitalization is wrong on its own.
-
-The issue goes back into the pre git history. The fixes tag is the commit
-in the bitkeeper import which introduced bigsmp support in 2003.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-
-Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-2-bsd@redhat.com
-
-
----
- arch/x86/kernel/apic/bigsmp_32.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/bigsmp_32.c b/arch/x86/kernel/apic/bigsmp_32.c
-index afee386..caedd8d 100644
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ b/arch/x86/kernel/apic/bigsmp_32.c
-@@ -38,32 +38,12 @@ static int bigsmp_early_logical_apicid(int cpu)
- 	return early_per_cpu(x86_cpu_to_apicid, cpu);
- }
- 
--static inline unsigned long calculate_ldr(int cpu)
--{
--	unsigned long val, id;
--
--	val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
--	id = per_cpu(x86_bios_cpu_apicid, cpu);
--	val |= SET_APIC_LOGICAL_ID(id);
--
--	return val;
--}
--
- /*
-- * Set up the logical destination ID.
-- *
-- * Intel recommends to set DFR, LDR and TPR before enabling
-- * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
-- * document number 292116).  So here it goes...
-+ * bigsmp enables physical destination mode
-+ * and doesn't use LDR and DFR
-  */
- static void bigsmp_init_apic_ldr(void)
- {
--	unsigned long val;
--	int cpu = smp_processor_id();
--
--	apic_write(APIC_DFR, APIC_DFR_FLAT);
--	val = calculate_ldr(cpu);
--	apic_write(APIC_LDR, val);
- }
- 
- static void bigsmp_setup_apic_routing(void)
+Jason
