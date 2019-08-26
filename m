@@ -2,73 +2,119 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF7EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A362C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4936206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n1fDxlrw"
+	by mail.kernel.org (Postfix) with ESMTP id 5C1082187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfHZNqE (ORCPT
+        id S1732107AbfHZNq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:46:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35260 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731297AbfHZNqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:46:00 -0400
-Received: from zn.tnic (p200300EC2F065700581748F40A194E01.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5700:5817:48f4:a19:4e01])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D73D41EC06E5;
-        Mon, 26 Aug 2019 15:45:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566827159;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lgs2L33oPizjEeeKNyH9/KUqXdBMNE9/ly1C3kW/Vak=;
-        b=n1fDxlrw1KX43iWYmv9XDDWpsDK3N+sX5Xcw8tmQEtcngWfO5I0d2oNFq4YMelGFZSwE8f
-        LJWI8JxQ9krSctlFt5IyG6nbfEXjTG2UFU0+vaTLt536/U2VwddBoGq0p+75JgZmnsx++5
-        pYOT4z2YJpFgm91B6SsnXxxpdiBBaVk=
-Date:   Mon, 26 Aug 2019 15:45:54 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        konrad.wilk@oracle.com, patrick.colp@oracle.com,
-        kanth.ghatraju@oracle.com, Jon.Grimm@amd.com,
-        Thomas.Lendacky@amd.com
-Subject: Re: [PATCH 2/2] x86/microcode/intel: Issue the revision updated
- message only on the BSP
-Message-ID: <20190826134554.GF27636@zn.tnic>
-References: <1566506627-16536-1-git-send-email-mihai.carabas@oracle.com>
- <1566506627-16536-2-git-send-email-mihai.carabas@oracle.com>
- <20190824085156.GA16813@zn.tnic>
- <20190824085341.GC16813@zn.tnic>
- <d737fed1-541b-d0ba-c5cb-629da114d22a@oracle.com>
+        Mon, 26 Aug 2019 09:46:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44324 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728550AbfHZNq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:46:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4C2D6B038;
+        Mon, 26 Aug 2019 13:46:57 +0000 (UTC)
+Message-ID: <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     catalin.marinas@arm.com, eric@anholt.net,
+        linux-riscv@lists.infradead.org, frowand.list@gmail.com,
+        m.szyprowski@samsung.com, linux-arch@vger.kernel.org,
+        f.fainelli@gmail.com, will@kernel.org, devicetree@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com,
+        robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, phill@raspberryi.org,
+        mbrugger@suse.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        wahrenst@gmx.net, akpm@linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>
+Date:   Mon, 26 Aug 2019 15:46:52 +0200
+In-Reply-To: <20190826070939.GD11331@lst.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+         <20190820145821.27214-2-nsaenzjulienne@suse.de>
+         <20190826070939.GD11331@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-rvg1En4pB30QD7Cei8XS"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d737fed1-541b-d0ba-c5cb-629da114d22a@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 09:34:01AM -0400, Boris Ostrovsky wrote:
-> AMD too?
 
-We're not doing this output shortening on AMD at all. As before,
-non-ugly patches are welcome. :)
+--=-rvg1En4pB30QD7Cei8XS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Regards/Gruss,
-    Boris.
+On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
+> On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
+> > Some architectures have platform specific DMA addressing limitations.
+> > This will allow for hardware description code to provide the constraint=
+s
+> > in a generic manner, so as for arch code to properly setup it's memory
+> > zones and DMA mask.
+>=20
+> I know this just spreads the arm code, but I still kinda hate it.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Rob's main concern was finding a way to pass the constraint from HW definit=
+ion
+to arch without widening fdt's architecture specific function surface. I'd =
+say
+it's fair to argue that having a generic mechanism makes sense as it'll now
+traverse multiple archs and subsystems.
+
+I get adding globals like this is not very appealing, yet I went with it as=
+ it
+was the easier to integrate with arm's code. Any alternative suggestions?
+
+> MAX_DMA_ADDRESS is such an oddly defined concepts.  We have the mm
+> code that uses it to start allocating after the dma zones, but
+> I think that would better be done using a function returning
+> 1 << max(zone_dma_bits, 32) or so.  Then we have about a handful
+> of drivers using it that all seem rather bogus, and one of which
+> I think are usable on arm64.
+
+Is it safe to assume DMA limitations will always be a power of 2? I ask as =
+RPi4
+kinda isn't: ZONE_DMA is 0x3c000000 bytes big, I'm approximating the zone m=
+ask
+to 30 as [0x3c000000 0x3fffffff] isn't defined as memory so it's unlikely t=
+hat
+we=C2=B4ll encounter buffers there. But I don't know how it could affect mm
+initialization code.
+
+This also rules out 'zone_dma_bits' as a mechanism to pass ZONE_DMA's size =
+from
+HW definition code to arch's.
+
+
+--=-rvg1En4pB30QD7Cei8XS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1j4swACgkQlfZmHno8
+x/7+5Qf/RG+HHfwkIbvgTeNBR6PGQMv7ZNDSxgeVo0caYiQnN2w01vHWnEXBnsNK
+sj6p2ip+d5CQbSOMO2oVO7qS4+BoOjcdnFTNSLH0uN5coZj6sr8u5N/FFdeb2cI+
+6B9opO7apUCnnuwaBeV5Ocepk1gr4rNoRnrOWmFwnqoc9dBRBuKV4ejcEB43ySw6
+wxwOswOu17wPR3o6969vTlP29cTItzXnrjmlTn+lKyQpR6pOzC0IpU1tmO0KkfHM
++U0Kypzbtb5Z9uCWvbS42mvT9oV3/El8iqrw1mPxbwRDgwDsBf2awc+fNmnQTsRK
+4pDSxPGJ5wST3O0WUjysQ9u+RJC+Cg==
+=y9Dx
+-----END PGP SIGNATURE-----
+
+--=-rvg1En4pB30QD7Cei8XS--
+
