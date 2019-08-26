@@ -2,141 +2,154 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04928C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 00:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76011C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 00:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ED22080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 00:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C82C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 00:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="RR6KEkaI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiglPNpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfHZAqz (ORCPT
+        id S1728961AbfHZAsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 20:46:55 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56228 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfHZAqz (ORCPT
+        Sun, 25 Aug 2019 20:48:10 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44753 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfHZAsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 20:46:55 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CB7D5886BF;
-        Mon, 26 Aug 2019 12:46:49 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1566780409;
-        bh=TJtgfincaDm7qrXJ9SAhuUGk4llEldCBcfwenl5GlMg=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=RR6KEkaIPTqCUFwleHO3gMGa6wW6vS5+Xqri6JSyfCB3ZgvHOry2WcSVcpdEOUhGj
-         35khK/zY/UdYbcOK03beeIQPUzwgs+6htHqytIX/4/xdY+GjxC/mbqAk01csGFcRQ5
-         gnsAPALDwRSf+8uN75j7XmSqTc+zlBOwqDtTFs1Y6zqNNrD8aGqG5haZS5LnhwLeaV
-         w3ZnIjvglFBLRnQdzbL9iJp8zU7dV1AIQ8+9MLbLad11qzD+nWbQ5RX2FTMTKTwcrK
-         LWqlvt1jqKSC7Ojk/exAm5x1RQ23DqOrpcYrf8AFxaO4QwnL8BYF/emjLmbclqHFrb
-         Aj3u90gshrcQQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d632bf80000>; Mon, 26 Aug 2019 12:46:48 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Mon, 26 Aug 2019 12:46:44 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 26 Aug 2019 12:46:44 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregory.clement@free-electrons.com" 
-        <gregory.clement@free-electrons.com>,
-        "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "patches@armlinux.org.uk" <patches@armlinux.org.uk>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Thread-Topic: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Thread-Index: AQHVOGTGof7sJp7iK06MfTI7WDVk4qcIBgyAgAABHQCABA5YgA==
-Date:   Mon, 26 Aug 2019 00:46:44 +0000
-Message-ID: <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-         <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
-         <20190823104621.GY13294@shell.armlinux.org.uk>
-         <20190823105020.GZ13294@shell.armlinux.org.uk>
-In-Reply-To: <20190823105020.GZ13294@shell.armlinux.org.uk>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EA9848220D51A84EA5A0DD1FA608AE4E@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 25 Aug 2019 20:48:09 -0400
+Received: by mail-io1-f67.google.com with SMTP id j4so24831977iog.11;
+        Sun, 25 Aug 2019 17:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W/51w5j8xEcYmqOnM2KI7Id/pY4RG7FnEXZK5a9W5RA=;
+        b=jiglPNpgKm4E5mpddxqvqDxY+bWhiTdGIiXT9uvxVz1duakfoA0qsNe5RK29mA6Dcp
+         kg+Wk9tznXQsM40KYC2TtpmG4f9oxaGSqH/PMDRfN6WLlY4IXrKLYga69MPDT1rcbU6s
+         JHwnkbxQiMHJTwzPvpaBKebn9G5xjknuQunqMDbIW5TIFb6CpTWl1NKGwpA1dY92vlqE
+         mGRkyznLTonRN/FzEbyM50uXHAW5ifkHfp2LHlf52/ypSZXw0P25Q62Q56Rgglfv7tgT
+         Tpdp15TuTcucREXfQLHhvQtiYaW0/sNb2oZYwk4jXp6GVtG0atQ99PLhoZPfve7XCAqk
+         UwYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W/51w5j8xEcYmqOnM2KI7Id/pY4RG7FnEXZK5a9W5RA=;
+        b=sNTmYi1sFzWWB9TBhvr3/NXfYQ+nCsoFCUepSGRCwvCHvEXG+Lx6lFHWggc0Fwn2Yb
+         nzvzs3T7ffLxBqGn0DR89OKOyJ78URtAEHDbsf5YKHGZOg648KRnnpoi2co9oSedDFgR
+         LYwJLlb882fh1MAYTs8WXHikr6qRyhsGcqgu/B9zgA71al/PELfheMgy2P21roOIezxg
+         KOGFellgLhIaCMZG0gQeCPTxqwYvsWoLN0wLBUBN4RqvG0KeHHdMLiagUEQ0C2XHtEqU
+         dM/p4D1qa3L5vYsqODHN6pVdbu5wUNnUBUiJQp2E+vkSKTdReBUvxGp+O6hg6w5Ge3Iy
+         Jc2g==
+X-Gm-Message-State: APjAAAVy6B8Qvt9dPF0Rly7CO4xfixWiXq7EBCcGyjI/le1zB0X7Ek4q
+        KcWk+RZ5heyb9W35stsIe9OCws4pLgBNbcH9r90=
+X-Google-Smtp-Source: APXvYqzXg9gVX/qKg0t2MCc7SoktEu+oMdiepBTfW0tBZwwwg2umaYojE9DZsKHbmvFwfWsBZdWs0TnBY8SLScsRhs4=
+X-Received: by 2002:a02:29ca:: with SMTP id p193mr15275350jap.88.1566780488682;
+ Sun, 25 Aug 2019 17:48:08 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190823121535.76296-1-yuehaibing@huawei.com>
+In-Reply-To: <20190823121535.76296-1-yuehaibing@huawei.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sun, 25 Aug 2019 19:47:57 -0500
+Message-ID: <CAH2r5mt0T=4qw9tuvX-QO7Lh2A_gzWPhLMyou4ZJNDJgmFXEsA@mail.gmail.com>
+Subject: Re: [PATCH -next] cifs: remove set but not used variables
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUnVzc2VsbCwNCg0KT24gRnJpLCAyMDE5LTA4LTIzIGF0IDExOjUwICswMTAwLCBSdXNzZWxs
-IEtpbmcgLSBBUk0gTGludXggYWRtaW4NCndyb3RlOg0KPiBPbiBGcmksIEF1ZyAyMywgMjAxOSBh
-dCAxMTo0NjoyMUFNICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgNCj4gYWRtaW4gd3Jv
-dGU6DQo+ID4gT24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMDM6NDg6NTdQTSArMTIwMCwgQ2hyaXMg
-UGFja2hhbSB3cm90ZToNCj4gPiA+IEZyb206IEphbiBMdWViYmUgPGpsdUBwZW5ndXRyb25peC5k
-ZT4NCj4gPiA+IA0KPiA+ID4gVGhlIG1hY3JvIG5hbWUgaXMgdG9vIGdlbmVyaWMsIHNvIGFkZCBh
-IEFVUk9SQV8gcHJlZml4Lg0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKYW4gTHVlYmJl
-IDxqbHVAcGVuZ3V0cm9uaXguZGU+DQo+ID4gPiBSZXZpZXdlZC1ieTogR3JlZ29yeSBDTEVNRU5U
-IDxncmVnb3J5LmNsZW1lbnRAZnJlZS1lbGVjdHJvbnMuY29tPg0KPiA+ID4gU2lnbmVkLW9mZi1i
-eTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+
-ID4gLS0tDQo+ID4gPiAgYXJjaC9hcm0vaW5jbHVkZS9hc20vaGFyZHdhcmUvY2FjaGUtYXVyb3Jh
-LWwyLmggfCAyICstDQo+ID4gDQo+ID4gSSBjYW4ndCBhcHBseSB0aGlzIHNlcmllcyAtIHRoaXMg
-ZmlsZSBkb2VzIG5vdCBleGlzdCBpbiBteSB0cmVlLA0KPiA+IGFuZA0KPiA+IGZyb20gd2hhdCBn
-aXQgdGVsbHMgbWUsIGl0IG5ldmVyIGhhcyBleGlzdGVkLiAgTWF5YmUgaXQncyBpbg0KPiA+IHNv
-bWVvbmUNCj4gPiBlbHNlcyB0cmVlPw0KPiANCj4gSSB0aGluayB0aGUgZmlsZSBpcyBpbiBteSB0
-cmVlLCBqdXN0IGFzIGFyY2gvYXJtL21tL2NhY2hlLWF1cm9yYS1sMi5oDQo+IHdoaWNoIGlzIHdo
-ZXJlIGl0IGhhcyBiZWVuIHNpbmNlIGl0IHdhcyBvcmlnaW5hbGx5IHN1Ym1pdHRlZCBpbiAyMDEy
-Lg0KPiANCg0KU29ycnkgdGhlcmUgaXMgYSBtaXNzaW5nIHBhdGNoIHRoYXQgbW92ZXMgaXQgbmV4
-dCB0byB0aGUNCmhhcmR3YXJlL2NhY2hlLSouaC4gSSBjYW4gc2VuZCB0aGUgbWlzc2luZyBwYXRj
-aCBvciBJIGNhbiByZS1zZW5kIHRoZQ0Kd2hvbGUgc2VyaWVzLiBJZiBJIGRvIHNlbmQgdGhlIHdo
-b2xlIHNlcmllcyBkbyB5b3Ugd2FudCBtZSB0byByZWJhc2UgaXQNCmFnYWluc3QgYSBwYXJ0aWN1
-bGFyIHRhZy90cmVlPw0KDQo+ID4gDQo+ID4gPiAgYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jICAg
-ICAgICAgICAgICAgICAgICAgICAgfCA0ICsrLS0NCj4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDMg
-aW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWF1cm9yYS1sMi5oDQo+ID4gPiBi
-L2FyY2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWF1cm9yYS1sMi5oDQo+ID4gPiBp
-bmRleCBjODYxMjQ3Njk4MzEuLmRjNWM0NzllYzRjMyAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gv
-YXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWF1cm9yYS1sMi5oDQo+ID4gPiArKysgYi9h
-cmNoL2FybS9pbmNsdWRlL2FzbS9oYXJkd2FyZS9jYWNoZS1hdXJvcmEtbDIuaA0KPiA+ID4gQEAg
-LTQxLDcgKzQxLDcgQEANCj4gPiA+ICAjZGVmaW5lIEFVUk9SQV9BQ1JfRk9SQ0VfV1JJVEVfVEhS
-T19QT0xJQ1kJXA0KPiA+ID4gIAkoMiA8PCBBVVJPUkFfQUNSX0ZPUkNFX1dSSVRFX1BPTElDWV9P
-RkZTRVQpDQo+ID4gPiAgDQo+ID4gPiAtI2RlZmluZSBNQVhfUkFOR0VfU0laRQkJMTAyNA0KPiA+
-ID4gKyNkZWZpbmUgQVVST1JBX01BWF9SQU5HRV9TSVpFCTEwMjQNCj4gPiA+ICANCj4gPiA+ICAj
-ZGVmaW5lIEFVUk9SQV9XQVlfU0laRV9TSElGVAkyDQo+ID4gPiAgDQo+ID4gPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jIGIvYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jDQo+
-ID4gPiBpbmRleCA0MjhkMDg3MTgxMDcuLjgzYjczM2ExZjFlNiAxMDA2NDQNCj4gPiA+IC0tLSBh
-L2FyY2gvYXJtL21tL2NhY2hlLWwyeDAuYw0KPiA+ID4gKysrIGIvYXJjaC9hcm0vbW0vY2FjaGUt
-bDJ4MC5jDQo+ID4gPiBAQCAtMTM1Miw4ICsxMzUyLDggQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcN
-Cj4gPiA+IGF1cm9yYV9yYW5nZV9lbmQodW5zaWduZWQgbG9uZyBzdGFydCwgdW5zaWduZWQgbG9u
-ZyBlbmQpDQo+ID4gPiAgCSAqIHNpbmNlIGNhY2hlIHJhbmdlIG9wZXJhdGlvbnMgc3RhbGwgdGhl
-IENQVSBwaXBlbGluZQ0KPiA+ID4gIAkgKiB1bnRpbCBjb21wbGV0aW9uLg0KPiA+ID4gIAkgKi8N
-Cj4gPiA+IC0JaWYgKGVuZCA+IHN0YXJ0ICsgTUFYX1JBTkdFX1NJWkUpDQo+ID4gPiAtCQllbmQg
-PSBzdGFydCArIE1BWF9SQU5HRV9TSVpFOw0KPiA+ID4gKwlpZiAoZW5kID4gc3RhcnQgKyBBVVJP
-UkFfTUFYX1JBTkdFX1NJWkUpDQo+ID4gPiArCQllbmQgPSBzdGFydCArIEFVUk9SQV9NQVhfUkFO
-R0VfU0laRTsNCj4gPiA+ICANCj4gPiA+ICAJLyoNCj4gPiA+ICAJICogQ2FjaGUgcmFuZ2Ugb3Bl
-cmF0aW9ucyBjYW4ndCBzdHJhZGRsZSBhIHBhZ2UgYm91bmRhcnkuDQo+ID4gPiAtLSANCj4gPiA+
-IDIuMjIuMA0KPiA+ID4gDQo+ID4gPiANCj4gPiANCj4gPiAtLSANCj4gPiBSTUsncyBQYXRjaCBz
-eXN0ZW06IGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hlcy8NCj4g
-PiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lIGluIHN1YnVyYmlhOiBzeW5jIGF0IDEy
-LjFNYnBzIGRvd24NCj4gPiA2MjJrYnBzIHVwDQo+ID4gQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5u
-ZXQ6IDExLjlNYnBzIGRvd24gNTAwa2JwcyB1cA0KPiANCj4gDQo=
+merged into cifs-2.6.git for-next
+
+On Fri, Aug 23, 2019 at 6:11 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> fs/cifs/file.c: In function cifs_lock:
+> fs/cifs/file.c:1696:24: warning: variable cinode set but not used [-Wunused-but-set-variable]
+> fs/cifs/file.c: In function cifs_write:
+> fs/cifs/file.c:1765:23: warning: variable cifs_sb set but not used [-Wunused-but-set-variable]
+> fs/cifs/file.c: In function collect_uncached_read_data:
+> fs/cifs/file.c:3578:20: warning: variable tcon set but not used [-Wunused-but-set-variable]
+>
+> 'cinode' is never used since introduced by
+> commit 03776f4516bc ("CIFS: Simplify byte range locking code")
+> 'cifs_sb' is not used since commit cb7e9eabb2b5 ("CIFS: Use
+> multicredits for SMB 2.1/3 writes").
+> 'tcon' is not used since commit d26e2903fc10 ("smb3: fix bytes_read statistics")
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  fs/cifs/file.c | 7 -------
+>  1 file changed, 7 deletions(-)
+>
+> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+> index ab07ae8..f16f6d2 100644
+> --- a/fs/cifs/file.c
+> +++ b/fs/cifs/file.c
+> @@ -1693,7 +1693,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+>         bool posix_lck = false;
+>         struct cifs_sb_info *cifs_sb;
+>         struct cifs_tcon *tcon;
+> -       struct cifsInodeInfo *cinode;
+>         struct cifsFileInfo *cfile;
+>         __u32 type;
+>
+> @@ -1710,7 +1709,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+>         cifs_read_flock(flock, &type, &lock, &unlock, &wait_flag,
+>                         tcon->ses->server);
+>         cifs_sb = CIFS_FILE_SB(file);
+> -       cinode = CIFS_I(file_inode(file));
+>
+>         if (cap_unix(tcon->ses) &&
+>             (CIFS_UNIX_FCNTL_CAP & le64_to_cpu(tcon->fsUnixInfo.Capability)) &&
+> @@ -1762,7 +1760,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
+>         int rc = 0;
+>         unsigned int bytes_written = 0;
+>         unsigned int total_written;
+> -       struct cifs_sb_info *cifs_sb;
+>         struct cifs_tcon *tcon;
+>         struct TCP_Server_Info *server;
+>         unsigned int xid;
+> @@ -1770,8 +1767,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
+>         struct cifsInodeInfo *cifsi = CIFS_I(d_inode(dentry));
+>         struct cifs_io_parms io_parms;
+>
+> -       cifs_sb = CIFS_SB(dentry->d_sb);
+> -
+>         cifs_dbg(FYI, "write %zd bytes to offset %lld of %pd\n",
+>                  write_size, *offset, dentry);
+>
+> @@ -3575,10 +3570,8 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx)
+>         struct cifs_readdata *rdata, *tmp;
+>         struct iov_iter *to = &ctx->iter;
+>         struct cifs_sb_info *cifs_sb;
+> -       struct cifs_tcon *tcon;
+>         int rc;
+>
+> -       tcon = tlink_tcon(ctx->cfile->tlink);
+>         cifs_sb = CIFS_SB(ctx->cfile->dentry->d_sb);
+>
+>         mutex_lock(&ctx->aio_mutex);
+> --
+> 2.7.4
+>
+>
+
+
+-- 
+Thanks,
+
+Steve
