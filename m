@@ -2,158 +2,101 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A9CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04354C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A697E217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="D0kUVJqh"
+	by mail.kernel.org (Postfix) with ESMTP id C03F72070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbfHZLFc (ORCPT
+        id S1731084AbfHZLI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:05:32 -0400
-Received: from mail-eopbgr790095.outbound.protection.outlook.com ([40.107.79.95]:51920
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        Mon, 26 Aug 2019 07:08:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58332 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730553AbfHZLFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:05:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zlidj6bOniJbeJ/ayBzkE+MHRHWcxmBhUhKj00DdzCHNhx3e/731yh9obDV3lcOblQ9CGX6LhGD1dYOfwZbOXJLEA0WIg2JJRIk53myDlpQiQFnVCXR0OcODCSPD36JehZzvf59dC+Q3R2DGGjwaNXeC372hubKipwo53yh6P90IXSrLE9HY2+tu3hPIiI0vx25vof8WwLDG03V/xe9LJdIE272fDxESgsphHl4INmDaxFqBmbF/B5U4WytVk16ZDsW4r3MFuOcTpodXe//8V1/jZFjRUX46p1UG7Uwq2WPV+6j97VGQ4u0s1GJHCVZsv4H9xI/80X85SjM5RuDMHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LV6E4wKRNp0KMjYgzDRBS4vAMOr+ucXkCtTAyF3qDho=;
- b=YFeFGlvpr0Y4ZUQHPjSwbHrpABMtSpQOZIDFEH0OrDltzjgGVGK1DPW1NC0ljYM1jSXAyHjdgBxClH5E54n08xBeRyF8pPfh4k3CRsipbWUNp1fpC/6YgszCkgHhaPfDaM9CyWl85vVgabOxtlydgMvekBYK41wUQQo06BqWsnUyHtx5lKh6TLBZlz86solLNEjZ2iCBu2g9vfklbMEz8AGhr32QiEWn8a52JaPuYJU02gHr4Pm+nd1DKl8Os6xqQ6OGLsrWqCYDAtxOgERcV57U0+lR1TS1sqJ1MJmEwW6rO1AivX15WsyOlJMYg8HPleFZmN0rv2NRPriAMEccaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LV6E4wKRNp0KMjYgzDRBS4vAMOr+ucXkCtTAyF3qDho=;
- b=D0kUVJqhLQ5bEF+7O7cJ+XNbwhFXYv1+IeVd4NnStND5Ja7VMERtgEnTWqGgUVPGb6VRTlF/0pgvos6CjGm2bdDhngaPkyHOJkJ52o3p/XkR5cO4at7tcYtFMcVqhYvgsehutQ1Gj6ABbH74oko/1lwfo27mxrhJTA0MYHfxt54=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1469.namprd22.prod.outlook.com (10.174.170.142) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Mon, 26 Aug 2019 11:05:29 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2199.021; Mon, 26 Aug
- 2019 11:05:29 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v6 08/57] MIPS: Remove dev_err() usage after
-  platform_get_irq()
-Thread-Topic: [PATCH v6 08/57] MIPS: Remove dev_err() usage after
-  platform_get_irq()
-Thread-Index: AQHVW/4rkpqoUHHwWUC2lGsBFJJaWQ==
-Date:   Mon, 26 Aug 2019 11:05:29 +0000
-Message-ID: <MWHPR2201MB12777F732F56751B7306F664C1A10@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190730181557.90391-9-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-9-swboyd@chromium.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0101.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::17) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [79.77.158.32]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1dde2aa3-552d-4068-2dc0-08d72a154e18
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1469;
-x-ms-traffictypediagnostic: MWHPR2201MB1469:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB1469DEDAD9A6C12BFCC431B2C1A10@MWHPR2201MB1469.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(39840400004)(366004)(199004)(189003)(478600001)(966005)(5660300002)(14454004)(2906002)(229853002)(6436002)(74316002)(6306002)(9686003)(55016002)(4744005)(25786009)(54906003)(6246003)(53936002)(66946007)(52536014)(7736002)(3846002)(6116002)(4326008)(66446008)(64756008)(66556008)(66476007)(305945005)(316002)(256004)(71190400001)(71200400001)(486006)(44832011)(8676002)(81156014)(81166006)(8936002)(66066001)(186003)(102836004)(99286004)(386003)(6916009)(6506007)(476003)(26005)(11346002)(446003)(42882007)(7696005)(52116002)(76176011)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1469;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cl6yqXucgvdqCkyvs8tMf2Hscmb8tfPZBsCTnXGnvIHnx8m4/jPlUKOXBe/dbEzXSkJMNcj/2eDLRc/DLIasC10sCbkNlYrMkqN0qSzv+G8PeE6XyFgL0AnvWwEDmbbJPFlar71xf3X8JLpdybbRtfUkzAnT74sxPFppQPz0Tg2bxWLKzItwausHGhwnOvCKExLr+fdo/JVOsCoXhcvoWO9SHnBHakP0PsW3ZUITwv8iomEcapNBmhya2HM/hHs9uiNVuWWP/7pvk8pQ+It1cuz/UELxEmAumlnmw2HB0C0npEtXNvFD5ap3+03kYaScKRdAhjdsZCWCl/7tm/AUEahL3cN3/4/NCyTsScUjudDe+HgpQnXrdz0svZaKFU9eBBLIBrzzr/QsS5YH9tnvhfMbtCPUmDK6x2NeVXUAZHI=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1730553AbfHZLI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:08:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E9BAEAF23;
+        Mon, 26 Aug 2019 11:08:55 +0000 (UTC)
+Message-ID: <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
+Subject: Re: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune
+ dma-direct min mask
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     catalin.marinas@arm.com, wahrenst@gmx.net, marc.zyngier@arm.com,
+        robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, phill@raspberryi.org,
+        f.fainelli@gmail.com, will@kernel.org, eric@anholt.net,
+        mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, frowand.list@gmail.com,
+        m.szyprowski@samsung.com
+Date:   Mon, 26 Aug 2019 13:08:50 +0200
+In-Reply-To: <20190826070633.GB11331@lst.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+         <20190820145821.27214-11-nsaenzjulienne@suse.de>
+         <20190826070633.GB11331@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-RvTUUUche1DA67AZeVhb"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1dde2aa3-552d-4068-2dc0-08d72a154e18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 11:05:29.2230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8A4qZPHh1kp615nDc5elJY5T4DaEJLPW8ygLyyajByIPfx/X+wHlr3Yy3J8vFt4oO3wqpde8Etr2TZaHzvnWbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1469
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
->=20
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
->=20
-> ret =3D
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
->=20
-> if ( \( ret < 0 \| ret <=3D 0 \) )
-> {
-> (
-> -if (ret !=3D -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->=20
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
+--=-RvTUUUche1DA67AZeVhb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Applied to mips-next.
+On Mon, 2019-08-26 at 09:06 +0200, Christoph Hellwig wrote:
+> On Tue, Aug 20, 2019 at 04:58:18PM +0200, Nicolas Saenz Julienne wrote:
+> > -	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> > +	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+> >  		arm64_dma_phys_limit =3D max_zone_dma_phys();
+> > +		zone_dma_bits =3D ilog2((arm64_dma_phys_limit - 1) &
+> > GENMASK_ULL(31, 0)) + 1;
+>
+Hi Christoph,
+thanks for the rewiews.
 
-> commit 322e577b02ab
-> https://git.kernel.org/mips/c/322e577b02ab
->=20
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
+> This adds a way too long line.
 
-Thanks,
-    Paul
+I know, I couldn't find a way to split the operation without making it even
+harder to read. I'll find a solution.
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+> I also find the use of GENMASK_ULL
+> horribly obsfucating, but I know that opinion is't shared by everyone.
+
+Don't have any preference so I'll happily change it. Any suggestions? Using=
+ the
+explicit 0xffffffffULL seems hard to read, how about SZ_4GB - 1?
+
+
+--=-RvTUUUche1DA67AZeVhb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1jvcIACgkQlfZmHno8
+x/6y/wf/XTe7dlASMoYApyVt+lL6chBcap2r7MVKOVhCbC1oJQb7UdRyW7MVDO6k
+gwdo2WmXqD3wUwhY5djX0adczLOJye1iGEdrrQfheRqm1rh07um3quT3TzgCSPat
+OuX+vHuNsUE+3GyI+0OoOF0tu/TzOKJjgs4H645cnbuCaXbQFbL94yBctsDTF5hc
+m4Bx+nksz99ddodUnw9CF4Ss5DPwkX23I3h7okwMMjvVuegIPUa9edppw3Za0Kby
+k8b9QGCiMsGcwyq3+uSXTCq4iIU8reLTfvpZmVZ9QugMn8TkjjIQFyWS0HrXt2pz
+r9iNomMe9w20W9Y9jS5Aj8bxByoK+Q==
+=nQ/V
+-----END PGP SIGNATURE-----
+
+--=-RvTUUUche1DA67AZeVhb--
+
