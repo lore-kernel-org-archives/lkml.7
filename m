@@ -2,80 +2,125 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34C0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9005C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CB620644
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD71221848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KejAmg73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfHZWq7 (ORCPT
+        id S1727379AbfHZWrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:46:59 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:36240 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHZWq6 (ORCPT
+        Mon, 26 Aug 2019 18:47:09 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57722 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfHZWrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:46:58 -0400
-Received: from [10.91.6.157] (unknown [167.220.2.157])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D15B720B7186;
-        Mon, 26 Aug 2019 15:46:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D15B720B7186
-Subject: Re: [PATCH v12 00/11] Appended signatures support for IMA appraisal
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-References: <20190628021934.4260-1-bauerman@linux.ibm.com>
-From:   Jordan Hand <jorhand@linux.microsoft.com>
-Message-ID: <9682b5d0-1634-2dd0-2cbb-eb1fa8ba7423@linux.microsoft.com>
-Date:   Mon, 26 Aug 2019 15:46:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 18:47:09 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C0A919A4;
+        Tue, 27 Aug 2019 00:47:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566859628;
+        bh=UUfrMgBcWe0PKFIoCXq3mC/9UVbL71FyAHdWiQRpF64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KejAmg73izjKvQsJrXSnRlITStbYl7R6rIBji0QZt1ndhM472zrPT4sA8F9YbI/Xn
+         GhhkI+Q/tsivPppRR4gNOtCYMmIK+7JaPcqOk01rX17aRcXuIgoplruJ2uMKVBFurR
+         VDCArjoYyOxl8W1yVZ7T6309yfSI18RK99APnRIo=
+Date:   Tue, 27 Aug 2019 01:47:01 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/14] arm64: dts: renesas: r8a77990: Add CMM units
+Message-ID: <20190826224701.GO5031@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-7-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <20190628021934.4260-1-bauerman@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190825135154.11488-7-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/19 7:19 PM, Thiago Jung Bauermann wrote:
-> On the OpenPOWER platform, secure boot and trusted boot are being
-> implemented using IMA for taking measurements and verifying signatures.
-> Since the kernel image on Power servers is an ELF binary, kernels are
-> signed using the scripts/sign-file tool and thus use the same signature
-> format as signed kernel modules.
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Sun, Aug 25, 2019 at 03:51:46PM +0200, Jacopo Mondi wrote:
+> Add CMM units to Renesas R-Car E3 device tree and reference them from
+> the Display Unit they are connected to.
 > 
-> This patch series adds support in IMA for verifying those signatures.
-> It adds flexibility to OpenPOWER secure boot, because it allows it to boot
-> kernels with the signature appended to them as well as kernels where the
-> signature is stored in the IMA extended attribute.
+> While at it, re-sort the du device node properties to match the ordering
+> found in other SoCs.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-I know this is pretty late, but I just wanted to let you know that I
-tested this patch set on x86_64 with QEMU.
+Apart from the issue with compatible string as pointed out for patch
+03/14,
 
-That is, I enrolled a key to _ima keyring, signed my kernel and modules
-with appended signatures (with scripts/sign-file), set the IMA policy to
-appraise and measure my kernel and modules. Also tested kexec appraisal.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-You can add my tested-by if you'd like.
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77990.dtsi | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> index 455954c3d98e..89ebe6f565af 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> @@ -1727,6 +1727,22 @@
+>  			iommus = <&ipmmu_vi0 9>;
+>  		};
+>  
+> +		cmm0: cmm@fea40000 {
+> +			compatible = "renesas,cmm-r8a77990";
+> +			reg = <0 0xfea40000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 711>;
+> +			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
+> +			resets = <&cpg 711>;
+> +		};
+> +
+> +		cmm1: cmm@fea50000 {
+> +			compatible = "renesas,cmm-r8a77990";
+> +			reg = <0 0xfea50000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 710>;
+> +			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
+> +			resets = <&cpg 710>;
+> +		};
+> +
+>  		csi40: csi2@feaa0000 {
+>  			compatible = "renesas,r8a77990-csi2";
+>  			reg = <0 0xfeaa0000 0 0x10000>;
+> @@ -1768,9 +1784,11 @@
+>  			clock-names = "du.0", "du.1";
+>  			resets = <&cpg 724>;
+>  			reset-names = "du.0";
+> -			vsps = <&vspd0 0>, <&vspd1 0>;
+>  			status = "disabled";
+>  
+> +			vsps = <&vspd0 0>, <&vspd1 0>;
+> +			cmms = <&cmm0 &cmm1>;
+> +
+>  			ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
 
--Jordan
+-- 
+Regards,
+
+Laurent Pinchart
