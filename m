@@ -2,102 +2,97 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484ECC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F899C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EC4206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BID66P7i"
+	by mail.kernel.org (Postfix) with ESMTP id E09E9206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbfHZQqe (ORCPT
+        id S1733124AbfHZQri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:46:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40674 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733123AbfHZQqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:46:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c3so15979504wrd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 09:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NEmCczScxOjFfK/GsZ795dKDEuO/wf3t9hNmpIlsOQI=;
-        b=BID66P7itQJ4yzTshEIGtAkG0upK9NrN2v/H5HGmn2LXb3nRYWGysQQJy5GzkKi2Ww
-         WNiK+LKqgnRqiDXKI6r/L1duC7cuRDAryXvD2RjGgdBOoXZypangAWFW2vZ55LF9/VLc
-         4If9ZuuZGAqArMiM49ae7lw1IcWdjFGFR8RCYPnl3SXbcmHEgIj8kMq/2Li1RDGWTz+q
-         DpTtYHlxBqHyKRzIVhI+x3HtHvwHnp2TTkqE+5U5XnGEAY6OY0Yxu4I5EAXvkR2MBEiX
-         dIrPcqbgaC/ADd9ITbSrT2WOiPfY9m8btcyS4kxBQjhgR+/RqZbmf7KphKMQOYvMWjqI
-         5lhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NEmCczScxOjFfK/GsZ795dKDEuO/wf3t9hNmpIlsOQI=;
-        b=t43vpgVW2v5ny3ZPv3JqDk0AeYme1m8KYA/SK5bE1e5ftVNdudVCtSpDkEtwJV/gB/
-         ntnN/+bbOQO72jhwelOwAV7mG7/hWGUmqRx1vn1CtjvcDjbKxR89QT9guXltH48XVLm8
-         r5sD7+aCShnorlBww5DPUDtfs3+PBKDspwOQmX0mtAmvgM/UXaHQ9laNRTluj6jw818q
-         14HPd1jUkU82kK17ShV7G18oOtG1al8HWB+ONpeY6i3uJ2+f2DgIcXzd+s+CzX0jL5J6
-         +0dqb9Xg0CzXSL+bfcepgsryJ7XTQGc8eNeUPD3e2wz0Swc7J2nX3wghS0f4tf4cIdlj
-         iwQA==
-X-Gm-Message-State: APjAAAWFoy1VXI0jjcLmIMbhvVvvJ/+wvP2Y7P3kwarYUs4UCEeR2Dd/
-        QyBc4YjnHjhT+jEAl82dA408wQ==
-X-Google-Smtp-Source: APXvYqxf5ydx1zKi75IMmBCsndAtfgevLo3Rematxh30e+AFNnfRuUZ6qNl1huKC6S6s/k53vqnR9Q==
-X-Received: by 2002:a05:6000:1186:: with SMTP id g6mr24328520wrx.17.1566837989922;
-        Mon, 26 Aug 2019 09:46:29 -0700 (PDT)
-Received: from localhost.localdomain (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id 5sm18768wmg.42.2019.08.26.09.46.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 26 Aug 2019 09:46:29 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, jassisinghbrar@gmail.com,
-        agross@kernel.org
-Cc:     niklas.cassel@linaro.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] mbox: qcom: replace integer with valid macro
-Date:   Mon, 26 Aug 2019 18:46:25 +0200
-Message-Id: <20190826164625.6744-2-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190826164625.6744-1-jorge.ramirez-ortiz@linaro.org>
-References: <20190826164625.6744-1-jorge.ramirez-ortiz@linaro.org>
+        Mon, 26 Aug 2019 12:47:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41200 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728922AbfHZQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:47:37 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8B990281D1;
+        Mon, 26 Aug 2019 16:47:37 +0000 (UTC)
+Received: from krava (ovpn-204-96.brq.redhat.com [10.40.204.96])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 50C3F194BB;
+        Mon, 26 Aug 2019 16:47:35 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 18:47:34 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 00/12] libperf: Add events to perf/event.h
+Message-ID: <20190826164734.GE17554@krava>
+References: <20190825181752.722-1-jolsa@kernel.org>
+ <20190826154138.GD24801@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826154138.GD24801@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 26 Aug 2019 16:47:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the correct macro when registering the platform device.
+On Mon, Aug 26, 2019 at 12:41:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, Aug 25, 2019 at 08:17:40PM +0200, Jiri Olsa escreveu:
+> > hi,
+> > as a preparation for sampling libperf interface, moving event
+> > definitions into the library header. Moving just the kernel 
+> > non-AUX events now.
+> > 
+> > In order to keep libperf simple, we switch 'u64/u32/u16/u8'
+> > types used events to their generic '__u*' versions.
+> > 
+> > Perf added 'u*' types mainly to ease up printing __u64 values
+> > as stated in the linux/types.h comment:
+> > 
+> >   /*
+> >    * We define u64 as uint64_t for every architecture
+> >    * so that we can print it with "%"PRIx64 without getting warnings.
+> >    *
+> >    * typedef __u64 u64;
+> >    * typedef __s64 s64;
+> >    */
+> > 
+> > Adding and using new PRI_lu64 and PRI_lx64 macros to be used for
+> > that.  Using extra '_' to ease up the reading and differentiate
+> > them from standard PRI*64 macros.
+> 
+> I think we should take advantage of this moment to rename those structs
+> to have the 'perf_record_' prefix on them, I guess we could even remove
+> the _event from them, i.e.:
+> 
+> 'struct mmap_event' becomes 'perf_record_mmap', as it is the description
+> for the PERF_RECORD_MMAP meta-data event, are you ok with that?
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+hum, not sure about loosing the '_event' here, but we are
+not public yet, so we can always change back ;-) I do like
+it'd follow the enum name
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 76e1ad433b3f..dc198802bdf7 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -96,7 +96,8 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 
- 		apcs->clk = platform_device_register_data(&pdev->dev,
- 							  "qcom-apcs-msm8916-clk",
--							  -1, NULL, 0);
-+							  PLATFORM_DEVID_NONE,
-+							  NULL, 0);
- 		if (IS_ERR(apcs->clk))
- 			dev_err(&pdev->dev, "failed to register APCS clk\n");
- 	}
--- 
-2.22.0
+> I can go ahead and do it myself, updating each patch on this series to
+> do that.
 
+sure, I thought we'd do it later, but feel free to do it,
+maybe in separate changes?
+
+thanks,
+jirka
