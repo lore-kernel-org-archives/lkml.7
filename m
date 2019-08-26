@@ -2,137 +2,115 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD507C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558E6C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80113206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A32B206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rchSLhS3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="el/xIRmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732153AbfHZNLE (ORCPT
+        id S1732201AbfHZNLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:11:04 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38242 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731526AbfHZNLE (ORCPT
+        Mon, 26 Aug 2019 09:11:11 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36274 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731526AbfHZNLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:11:04 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so26445933edo.5;
-        Mon, 26 Aug 2019 06:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eOkLkN7smSq0ns/S0LMZmqF1Dy+3J7PTJleOy2NTrNQ=;
-        b=rchSLhS3jEcWGALrvZS9lg42bPsK+L4jmE1ofythOxOBFt7Knwin/H0gKk5aRQuMqV
-         sMjx6Gng5zvInucUI+Os13OMlYXLtmWfaUPakz6Z2BMP8OrRt+P+mnqKucmGjCumX1WV
-         f2H6RxTohS0XkJThfe5T3FSYC9FmzWltRieYOjQSQ7nvVWcqkx9nmBLJ+srikJlGrdct
-         DHLoaF6wbuuCOrjORLwQG56Z+SU2Ua6Xynon+2CfT1CioS14peeajnB0XJVrr66r/EmL
-         1k2QS54FRjqtfCg1SpgSnVOmxY0OZsVNi2e9+Ow+gOZFCJLTy1AF1X2ESTkxR/L3meL/
-         /BnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eOkLkN7smSq0ns/S0LMZmqF1Dy+3J7PTJleOy2NTrNQ=;
-        b=qJHagZL9F7QZWfvGEDvPp7RcChorCfl/B/KPC8HYizyaRvnFf1vUElFlibCiHte7lW
-         ZiJh4R+m9aT6NAAzjAP7ojYiS6OqtdN4asWe2b4Oks7cdO1sil8g1Kellz92QCZA66M6
-         uUaGs8DkV0T9QnUhQElR/X3xymao38drSHMrKlMI3c5pylTqq/Vutt6u1dJpQJGNFOYk
-         2YahMT8st+gGF8iXp8c5saPcYECd6msUDm24wfLRppLEXcX5lsrRqWhwONHXYEwAYlFx
-         qO7yC3Aoc9iTsgS1QPbUoNETYpjAv+rjDtKAbhvGg8GhJto+MsVVEk9u6oCDvtzssxuY
-         xUSA==
-X-Gm-Message-State: APjAAAVbon+AtouMLqItjUTG0Ia92+geTxjFygT910OwiR2peL6KPcXK
-        S3xL1MfapVMC2qB4fp3DbsjKzdShNxy9BcB6aw0=
-X-Google-Smtp-Source: APXvYqzVG/D+nD3b6ZSB8+NOgE1MImyQOAkmB/HnjzZUVCfTlt4Y95bver8du7USLt/XYwZBHYH/6rWKoRxCKOxxu5c=
-X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr16385256ejb.90.1566825062311;
- Mon, 26 Aug 2019 06:11:02 -0700 (PDT)
+        Mon, 26 Aug 2019 09:11:10 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7QDB31c068390;
+        Mon, 26 Aug 2019 08:11:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566825063;
+        bh=RFJRbu+lxvwQh27lC/rFrMFalHNlwSB8srZD2/w+1pQ=;
+        h=From:To:CC:Subject:Date;
+        b=el/xIRmMPOU9+sL7bDO5L85iz4ZwR6PFox0Js0EehNAkDd5VF6MF8tI5kZSAtGWGW
+         ppPy1ximQvJn2F6QjIjQxLF2WmbFEC76YDZ0fDaeoaZHyhaUHLBciNomQ+SlSyaZgJ
+         LwyXi9fxBb1gRliYeFTCCGJMqwrXOp5osgvuYZrg=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7QDB2Vk075712
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 26 Aug 2019 08:11:03 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 26
+ Aug 2019 08:11:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 26 Aug 2019 08:11:01 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7QDAx7T084458;
+        Mon, 26 Aug 2019 08:11:00 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <balbi@kernel.org>
+CC:     <jianqiang.tang@intel.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] usb: dwc3: don't set gadget->is_otg flag
+Date:   Mon, 26 Aug 2019 16:10:58 +0300
+Message-ID: <20190826131058.17393-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-6-olteanv@gmail.com>
-In-Reply-To: <20190822211514.19288-6-olteanv@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 26 Aug 2019 16:10:51 +0300
-Message-ID: <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
- poll mode
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+This reverts
+commit 6a4290cc28be1 ("usb: dwc3: gadget: set the OTG flag in dwc3 gadget driver.")
 
-On Fri, 23 Aug 2019 at 00:15, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Connected to the LS1021A DSPI is the SJA1105 DSA switch. This
-> constitutes 4 of the 6 Ethernet ports on this board.
->
-> As the SJA1105 is a PTP switch, constant disciplining of its PTP clock
-> is necessary, and that translates into a lot of SPI I/O even when
-> otherwise idle.
->
-> Switching to using the DSPI in poll mode has several distinct
-> benefits:
->
-> - With interrupts, the DSPI driver in TCFQ mode raises an IRQ after each
->   transmitted byte. There is more time wasted for the "waitq" event than
->   for actual I/O. And the DSPI IRQ count is by far the largest in
->   /proc/interrupts on this board (larger than Ethernet). I should
->   mention that due to various LS1021A errata, other operating modes than
->   TCFQ are not available.
->
-> - The SPI I/O time is both lower, and more consistently so. For a TSN
->   switch it is important that all SPI transfers take a deterministic
->   time to complete.
->   Reading the PTP clock is an important example.
->   Egressing through the switch requires some setup in advance (an SPI
->   write command). Without this patch, that operation required a
->   --tx_timestamp_timeout 50 (ms), now it can be done with
->   --tx_timestamp_timeout 10.
->   Yet another example is reconstructing timestamps, which has a hard
->   deadline because the PTP timestamping counter wraps around in 0.135
->   seconds. Combined with other I/O needed for that to happen, there is
->   a real risk that the deadline is not always met.
->
-> See drivers/net/dsa/sja1105/ for more info about the above.
->
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> ---
->  arch/arm/boot/dts/ls1021a-tsn.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-> index 5b7689094b70..1c09cfc766af 100644
-> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
-> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> @@ -33,6 +33,7 @@
->  };
->
->  &dspi0 {
-> +       /delete-property/ interrupts;
->         bus-num = <0>;
->         status = "okay";
->
-> --
-> 2.17.1
->
+We don't yet support any of the OTG mechanisms (HNP/SRP/ADP)
+and are not setting gadget->otg_caps, so don't set gadget->is_otg
+flag.
 
-I noticed you skipped applying this patch, and I'm not sure that Shawn
-will review it/take it.
-Do you have a better suggestion how I can achieve putting the DSPI
-driver in poll mode for this board? A Kconfig option maybe?
+If we do then we end up publishing a OTG1.0 descriptor in
+the gadget descriptor which causes device enumeration to fail
+if we are connected to a host with CONFIG_USB_OTG enabled.
 
-Regards,
--Vladimir
+Host side log without this patch
+
+[   96.720453] usb 1-1: new high-speed USB device number 2 using xhci-hcd
+[   96.901391] usb 1-1: Dual-Role OTG device on non-HNP port
+[   96.907552] usb 1-1: set a_alt_hnp_support failed: -32
+[   97.060447] usb 1-1: new high-speed USB device number 3 using xhci-hcd
+[   97.241378] usb 1-1: Dual-Role OTG device on non-HNP port
+[   97.247536] usb 1-1: set a_alt_hnp_support failed: -32
+[   97.253606] usb usb1-port1: attempt power cycle
+[   97.960449] usb 1-1: new high-speed USB device number 4 using xhci-hcd
+[   98.141383] usb 1-1: Dual-Role OTG device on non-HNP port
+[   98.147540] usb 1-1: set a_alt_hnp_support failed: -32
+[   98.300453] usb 1-1: new high-speed USB device number 5 using xhci-hcd
+[   98.481391] usb 1-1: Dual-Role OTG device on non-HNP port
+[   98.487545] usb 1-1: set a_alt_hnp_support failed: -32
+[   98.493532] usb usb1-port1: unable to enumerate USB device
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ drivers/usb/dwc3/gadget.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 173f5329d3d9..48213421e9e9 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3318,7 +3318,6 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 	dwc->gadget.speed		= USB_SPEED_UNKNOWN;
+ 	dwc->gadget.sg_supported	= true;
+ 	dwc->gadget.name		= "dwc3-gadget";
+-	dwc->gadget.is_otg		= dwc->dr_mode == USB_DR_MODE_OTG;
+ 	dwc->gadget.lpm_capable		= true;
+ 
+ 	/*
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
