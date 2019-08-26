@@ -2,172 +2,176 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57015C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B56C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2011D21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EE82186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eu2OwW0g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iHLRmy83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733011AbfHZSkE (ORCPT
+        id S2387804AbfHZSk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:40:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45358 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbfHZSkD (ORCPT
+        Mon, 26 Aug 2019 14:40:29 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40169 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733066AbfHZSk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:40:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TlbGGRimIFoER4Eoe8SUJFAjtoU3fH+8C5wgGkgKTdw=; b=Eu2OwW0gMcAlJpcyiOiLAVAtB
-        V0pHfL2R1/VkV0VqpkeNwzr7alqEzwLxaEgpcnK52dUj3Vebv/ZvrMVJ5ThNyPxqv7IF0oU8SakBh
-        R9em8SXLkW7bvHFtfqDjU5klSJaMLS5vaS7Q7xgHWMgmCKWsn0n4BeCKY9o+tpzPrAlRAB8OysNdO
-        P8BabzHViAuY3RJdHX38u27ilCT218FDi0niw/0/FsNoc2hPF2ZL/PKZnAMc6VKFVUq6SF0jkLHuI
-        +40feB4E7LQvl2vF7HtQQZwkQiT8Ns7+8cAMYBUgpWosmxkv8oOcCv/7ZgxOJbG6+45C0nqRPdHui
-        lCuuq2B/Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2JuH-0007kj-0w; Mon, 26 Aug 2019 18:39:57 +0000
-Date:   Mon, 26 Aug 2019 11:39:56 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Denis Efremov <efremov@ispras.ru>
-Cc:     akpm@linux-foundation.org, Akinobu Mita <akinobu.mita@gmail.com>,
-        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <matthew@wil.cx>, dm-devel@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
-        Erdem Tumurov <erdemus@gmail.com>,
-        Vladimir Shelekhov <vshel@iis.nsk.su>
-Subject: Re: [PATCH v2] lib/memweight.c: open codes bitmap_weight()
-Message-ID: <20190826183956.GF15933@bombadil.infradead.org>
-References: <20190821074200.2203-1-efremov@ispras.ru>
- <20190824100102.1167-1-efremov@ispras.ru>
- <20190825061158.GC28002@bombadil.infradead.org>
- <ba051566-0343-ea75-0484-8852f65a15da@ispras.ru>
+        Mon, 26 Aug 2019 14:40:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w16so12345135pfn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gE1OVEAWKHQhDwouDO91V7FO5qVME/7zCx/3FBXHSZk=;
+        b=iHLRmy83Qh/p9LbuUBxdD6a9xsOVFx52yFT/VSdS5bYLKvnQKWn8R26IzhKUYyUUHY
+         5XfLdmX9sUo8BwLnULGhQ8hPS1/wVFq60CA52ZVb+gxmf7qAyHLbII8DAR1gZf6e+RFv
+         Z0OPvABOBpNlXTpqlMM04R3IV6d3lTks84UNA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gE1OVEAWKHQhDwouDO91V7FO5qVME/7zCx/3FBXHSZk=;
+        b=H/J6bE3zqrloktVHeihhrlPVdJ/xYhWaL1fxXgcBW50e3Z7WnlHA6JjO5xyzpdzU1d
+         VOnT8rjeXvIkuFsFWys4c5xLV/esi1nv3Kms3e0hHxgCKH+U4dG9VyUt/kqbr9kU6mPp
+         7WmSZIBiMDF5r372QN5wm1TWNu+KzUnanfSy7IvnbTYvZ3SRD2S+gEEaXWhTHa1Q3zmk
+         QFp+JqSSJ7CHhqBm3kHuIgFEaRHjiVQQdildYxHEW4KnCOjetM7J0BpMuJ/bIkF4TfNI
+         EUTFKOZQS+igbUIdGtgh9e69/8ocMxMHByWpPGFAmkjBT1AXCLvVLyUcwQOMzi3OjmY8
+         1jvg==
+X-Gm-Message-State: APjAAAXKmBX8dfPE2wg8+c0d20o3Iz1ZM3YKTvAEKXoilA80NApRmtHn
+        NyVZ5IXdE0lIYPQix5JKbpiyB9NZc0E=
+X-Google-Smtp-Source: APXvYqy/61mnelOYZqH66edtReAy67Lrv4AJm5LFatYuQwX+QC3lAp+ORo3BGQKU3FygBHhHRqzVDg==
+X-Received: by 2002:a17:90a:2ec3:: with SMTP id h3mr2105770pjs.121.1566844827554;
+        Mon, 26 Aug 2019 11:40:27 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id ck8sm175050pjb.25.2019.08.26.11.40.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Aug 2019 11:40:26 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 11:40:20 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Doug Anderson <dianders@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
+ for RTL8211E
+Message-ID: <20190826184020.GA70797@google.com>
+References: <20190813191147.19936-1-mka@chromium.org>
+ <20190813191147.19936-5-mka@chromium.org>
+ <20190816201342.GB1646@bug>
+ <20190816212728.GW250418@google.com>
+ <31dc724d-77ba-3400-6abe-4cf2e3c2a20a@gmail.com>
+ <CAD=FV=WvWjcVX1YNxKsi_TmJP6vdBZ==bYOVGs2VjUqVhEjpuA@mail.gmail.com>
+ <f1fd7aba-b36f-8cc4-9ed7-9977c0912b9d@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ba051566-0343-ea75-0484-8852f65a15da@ispras.ru>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <f1fd7aba-b36f-8cc4-9ed7-9977c0912b9d@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 02:39:47PM +0300, Denis Efremov wrote:
-> On 25.08.2019 09:11, Matthew Wilcox wrote:
-> > On Sat, Aug 24, 2019 at 01:01:02PM +0300, Denis Efremov wrote:
-> >> This patch open codes the bitmap_weight() call. The direct
-> >> invocation of hweight_long() allows to remove the BUG_ON and
-> >> excessive "longs to bits, bits to longs" conversion.
+On Fri, Aug 23, 2019 at 12:58:09PM -0700, Florian Fainelli wrote:
+> On 8/16/19 3:39 PM, Doug Anderson wrote:
+> > Hi,
 > > 
-> > Honestly, that's not the problem with this function.  Take a look
-> > at https://danluu.com/assembly-intrinsics/ for a _benchmarked_
-> > set of problems with popcnt.
+> > On Fri, Aug 16, 2019 at 3:12 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>
+> >> On 8/16/19 2:27 PM, Matthias Kaehlcke wrote:
+> >>> On Fri, Aug 16, 2019 at 10:13:42PM +0200, Pavel Machek wrote:
+> >>>> On Tue 2019-08-13 12:11:47, Matthias Kaehlcke wrote:
+> >>>>> Add a .config_led hook which is called by the PHY core when
+> >>>>> configuration data for a PHY LED is available. Each LED can be
+> >>>>> configured to be solid 'off, solid 'on' for certain (or all)
+> >>>>> link speeds or to blink on RX/TX activity.
+> >>>>>
+> >>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> >>>>
+> >>>> THis really needs to go through the LED subsystem,
+> >>>
+> >>> Sorry, I used what get_maintainers.pl threw at me, I should have
+> >>> manually cc-ed the LED list.
+> >>>
+> >>>> and use the same userland interfaces as the rest of the system.
+> >>>
+> >>> With the PHY maintainers we discussed to define a binding that is
+> >>> compatible with that of the LED one, to have the option to integrate
+> >>> it with the LED subsystem later. The integration itself is beyond the
+> >>> scope of this patchset.
+> >>>
+> >>> The PHY LED configuration is a low priority for the project I'm
+> >>> working on. I wanted to make an attempt to upstream it and spent
+> >>> already significantly more time on it than planned, if integration
+> >>> with the LED framework now is a requirement please consider this
+> >>> series abandonded.
+> >>
+> >> While I have an appreciation for how hard it can be to work in a
+> >> corporate environment while doing upstream first and working with
+> >> virtually unbounded goals (in time or scope) due to maintainers and
+> >> reviewers, that kind of statement can hinder your ability to establish
+> >> trust with peers in the community as it can be read as take it or leave it.
 > > 
-> >> BUG_ON was required to check that bitmap_weight() will return
-> >> a correct value, i.e. the computed weight will fit the int type
-> >> of the return value.
+> > You think so?  I feel like Matthias is simply expressing the reality
+> > of the situation here and I'd rather see a statement like this posted
+> > than the series just silently dropped.  Communication is good.
 > > 
-> > What?  No.  Look at the _arguments_ of bitmap_weight():
+> > In general on Chrome OS we don't spent lots of time tweaking with
+> > Ethernet and even less time tweaking with Ethernet on ARM boards where
+> > you might need a binding like this, so it's pretty hard to justify up
+> > the management chain spending massive amounts of resources on it.  In
+> > this case we have two existing ARM boards which we're trying to uprev
+> > from 3.14 to 4.19 which were tweaking the Ethernet driver in some
+> > downstream code.  We thought it would be nice to try to come up with a
+> > solution that could land upstream, which is usually what we try to do
+> > in these cases.
 > > 
-> > static __always_inline int bitmap_weight(const unsigned long *src, unsigned int nbits)
+> > Normally if there is some major architecture needed that can't fit in
+> > the scope of a project, we would do a downstream solution for the
+> > project and then fork off the task (maybe by a different Engineer or a
+> > contractor) to get a solution that can land upstream.  ...but in this
+> > case it seems hard to justify because it's unlikely we would need it
+> > again anytime remotely soon.
+> > 
+> > So I guess the alternatives to what Matthias did would have been:
+> > 
+> > A) Don't even try to upstream.  Seems worse.  At least this way
+> > there's something a future person can start from and the discussion is
+> > rolling.
+> > 
+> > B) Keep spending tons of time on something even though management
+> > doesn't want him to.  Seems worse.
+> > 
+> > C) Spend his nights and weekends working on this.  Seems worse.
+> > 
+> > D) Silently stop working on it without saying "I'm going to stop".  Seems worse.
+> > 
+> > ...unless you have a brilliant "E)" I think what Matthias did here is
+> > exactly right.
 > 
-> I'm not sure why it is INT_MAX then? I would expect in case we care only about arguments
-> something like:
->  
-> BUG_ON(longs >= UINT_MAX / BITS_PER_LONG);
-
-People aren't always terribly consistent with INT_MAX vs UINT_MAX.
-Also, bitmap_weight() should arguably return an unisnged int (it can't
-legitimately return a negative value).
-
-> >> With this patch memweight() controls the
-> >> computation directly with size_t type everywhere. Thus, the BUG_ON
-> >> becomes unnecessary.
-> > 
-> > Why are you bothering?  How are you allocating half a gigabyte of memory?
-> > Why are you calling memweight() on half a gigabyte of memory?
-> > 
+> I must apologize for making that statement since it was not fair to
+> Matthias, and he has been clear about how much time he can spend on that
+> specific, please accept my apologies for that.
 > 
-> No, we don't use such big arrays. However, it's possible to remove BUG_ON and make
-> the code more "straight". Why do we need to "artificially" limit this function
-> to arrays of a particular size if we can relatively simple omit this restriction?
+> Having had many recent encounters with various people not driving
+> projects to completion lately (not specifically within Linux), it looks
+> like I am overly sensitive about flagging words and patch status that
+> may fall within that lexicon. The choice of word is what triggered me.
 
-You're not making a great case for changing the implementation of
-memweight() here ...
+No worries, I understand that it can be frustrating if you repeatedly
+experience that projects remain unfinished.
 
-> I don't know how the implementation of this optimization will look like in it's
-> final shape, because of different hardware/compiler issues. It looks there are
-> a number of different ways to do it https://arxiv.org/pdf/1611.07612.pdf, 
-> http://0x80.pl/articles/sse-popcount.html.
-
-The problem with using XMM registers is that they have to be saved/restored.
-Not to mention the thermal issues caused by heavy usage of AVX instructions.
-
-> However, if it will be based on popcnt instruction I would expect that
-> hweight_long will also contain this intrinsics. Since version 4.9.2
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=62011#c13 GCC knows of the
-> false-dependency in popcnt and generates code to handle it
-
-Ah!  Glad to see GCC knows about this problem and has worked around it.
-
-> (e.g. xor https://godbolt.org/z/Q7AW_d) Thus, I would expect that it's
-> possible to use popcnt intrinsics in hweight_long that would be natively
-> optimized in all loops like "for (...) { res += hweight_long() }" without
-> requiring manual unrolling like in builtin_popcnt_unrolled_errata_manual
-> example of Dan Luu's optimization.
-
-That might be expecting rather more from our compiler than is reasonable ...
-
-> > 
-> > Also, why does the trailer do this:
-> > 
-> >         for (; bytes > 0; bytes--, bitmap++)
-> >                 ret += hweight8(*bitmap);
-> > 
-> > instead of calling hweight_long on *bitmap & mask?
-> > 
-> 
-> Do you mean something like this?
-> 
->         longs = bytes;
->         bytes = do_div(longs, sizeof(long));
->         bitmap_long = (const unsigned long *)bitmap;
->         if (longs) {
->                 for (; longs > 0; longs--, bitmap_long++)
->                         ret += hweight_long(*bitmap_long);
->         }
->         if (bytes) {
->                 ret += hweight_long(*bitmap_long &
->                                    ((0x1 << bytes * BITS_PER_BYTE) - 1));
->         }
-> 
-> The *bitmap_long will lead to buffer overflow here.
-
-No it won't.  The CPU will access more bytes than the `bytes' argument
-would seem to imply -- but it's going to have fetched that entire
-cacheline anyway.  It might confuse a very strict bounds checking library,
-but usually those just check you're not accessing outside your object,
-which is going to be a multiple of 'sizeof(long)' anyway.
-
-If we do something like this, we'll need to use an 'inverse' of that mask
-on big-endian machines.  ie something more like:
-
-	if (bytes) {
-		unsigned long mask;
-		if (_BIG_ENDIAN)
-			mask = ~0UL >> (bytes * 8);
-		else
-			mask = ~0UL << (bytes * 8);
-		ret += hweight_long(*bitmap_long & ~mask);
-	}
-
-Also we need a memweight() test to be sure we didn't get that wrong.
+Hopefully this series can be revived eventually when somebody finds
+the time to work on the integration with the LED framework.
