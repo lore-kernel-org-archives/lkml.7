@@ -2,59 +2,59 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A7DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889C0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762672186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591E92184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eNvJTE4R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t4oVhmR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfHZUpC (ORCPT
+        id S1731236AbfHZUpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:45:02 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54653 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731058AbfHZUpA (ORCPT
+        Mon, 26 Aug 2019 16:45:07 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37776 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729700AbfHZUpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:45:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so787889wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:44:58 -0700 (PDT)
+        Mon, 26 Aug 2019 16:45:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d16so789348wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EeoSOO9P8rB2c6o2qSam9CM8ucP9QSVXMBjzLutJqVA=;
-        b=eNvJTE4RS20+765BWxr4qe19suSF23z2UcHRM3AOrys6MDLHN7seyrjTkBXKualyDL
-         H4H+5KMRmxeb55kiRpo3D3K0OiWg3SDSjn18KIQM+qfWDAp7wy0uj4mNxbI/e5b/yRsw
-         a67FEb7F11WCDa2Z45OSKrK6/KXYUDWuRi89/1FNCNNT1lpgYmLedf+iqNuHe0iCpRki
-         Dy2wDRxRpAaX//+99l5cHV9hXbHxB+ObDivOuFF20d5li47VVi1/Ioup+ZLLWgfZvi4d
-         XCpnpvhFWSh8PlP418NyLf3wfdgaWNR/PD+8Q926I5s0OgB9c8REYkvA0AXDAwWc/0wB
-         FLxA==
+        bh=46OI48aknCO8xnHiNKqbTqHhcC3QBVezddPBiW79IL8=;
+        b=t4oVhmR+oEEVFvTBVetR2kz0/3Vk+qOebroB6rEXmXbS3C5c7DmvoLtkR/XNcYPLes
+         zRljos8wGxhV5FMc917+mc3iMPQHHDfyYh755S+nYbyMGDbMYc2jJSUEdkwn7lLlu4lb
+         aqfJlwnYyiBuMcwpF9BrlSQ6XbvFE+X6y1ffhp9fgHrtU0vif8r5YGwd/r9efZYKcL//
+         GTgiIzAieaWGJTQMsho97OqfgtL0BArhkgD+YIpT3WxKEuuW3hKWD4PlFj5QsrM+8sl1
+         BPCxWcg52FcmVNt5sU2eiav3lxk3sjSHs1tw3unGZRUXBEPfRD+jbX8TYcucYmvla/Wm
+         G96w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EeoSOO9P8rB2c6o2qSam9CM8ucP9QSVXMBjzLutJqVA=;
-        b=fJeLV0zzWWMJC78jUKqVfvd55CnlxhKGA2cxekJwjR9ZB2ApoWHvcdJ0gK3hYXEb47
-         33b0iSgzUCVpvSb/gikpOvqWeJEhxaXd6dX7GhGPHBFHusstGHn87/vp0TVeEz39p0YD
-         lWjnyTSQbZQTP1scpTmeFNE6CmQhbu9ma9Nj3MWsJYavoQVeLu5sSlZBVRuLH+rrbMwO
-         vZ6cqg42da6TEE2jbHWQRYzLeZZ11VUL/wwOgFcOLBOBCE2Z8p8AjrZUE10MbuUyo3Ev
-         y9Cvd0wsPhQnCzuGRarY/+4ZHT4iB0yn7vWzSmYCl7zmdId599qTNYiq04ley7Qh3LsS
-         Hk9A==
-X-Gm-Message-State: APjAAAXUuy0iiG0lOgmDMgpY2eq7kX4WX4tqDJh1pvOBFugvNemNdyrj
-        WBitSPVDBwSkjLqf3nDA4hPDQQ==
-X-Google-Smtp-Source: APXvYqzCaQcqfRjUVEK6f/KlqGWwQzrm1CEta8su/KPZxHXkcmAMWTMFnEyazerSjVJpd+RLtVBDFg==
-X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr22665714wmf.160.1566852297896;
-        Mon, 26 Aug 2019 13:44:57 -0700 (PDT)
+        bh=46OI48aknCO8xnHiNKqbTqHhcC3QBVezddPBiW79IL8=;
+        b=E6y35vronsrTxbVKfqdSNE3RoHpaR6FrWkZIYJlfGxKCrJBxlPndw8CErrPCRlWjEe
+         GN5hokiTkgGbnFPYw/rP11h90QfZYAXEyZQ8GiurZaSZMxHRix8AcxhxrdKVfot0ISo1
+         Uz16q5Dr8kcQ2wdphJ9gPSAgxCRRRvKJW6vlCqMWbPhM/1ttJgTOsXubBFiyfqjIfpvQ
+         w/3RAQvUdphC9bvNSU7zwOPh8tX3EoZLkX4i4Y9Ms27lN/16tHaRqZjeQp8JmSBzEdX6
+         k5QEBBoEvj4YuRyDHRO7gC4EBsqk3Pa3zcbaBcuNdEy+Xn3qSiZKZ/XeIUgXWrntU6OT
+         fx6w==
+X-Gm-Message-State: APjAAAUfQs7Yr0zLRwlyvM5xfvprsmUQbZ/soTK/CyV/tIBI0BMzUfqy
+        iFeTZ9/jGWtm77WINlidcU+qQw==
+X-Google-Smtp-Source: APXvYqy/MOnLdsZqPivoqO1dTZcmcuw9cOf0HcH7tX9csv0OGT8Z+QaquXD03St2y9wJ6nH2wxfRDg==
+X-Received: by 2002:a7b:c244:: with SMTP id b4mr23459241wmj.125.1566852302984;
+        Mon, 26 Aug 2019 13:45:02 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
-        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.44.56
+        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 13:44:57 -0700 (PDT)
+        Mon, 26 Aug 2019 13:45:02 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
@@ -65,16 +65,19 @@ Cc:     linux-kernel@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
         / MXC ARM ARCHITECTURE)
-Subject: [PATCH 08/20] arm64: dts: imx8mm: Add system counter node
-Date:   Mon, 26 Aug 2019 22:43:55 +0200
-Message-Id: <20190826204407.17759-8-daniel.lezcano@linaro.org>
+Subject: [PATCH 09/20] arm64: dts: imx8mq: Add system counter node
+Date:   Mon, 26 Aug 2019 22:43:56 +0200
+Message-Id: <20190826204407.17759-9-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190826204407.17759-1-daniel.lezcano@linaro.org>
 References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
@@ -86,20 +89,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
+Add i.MX8MQ system counter node to enable timer-imx-sysctr
 broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 232a7412755a..89ef22a8f81e 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -510,6 +510,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d09b808eff87..b4529773af51 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -635,6 +635,14 @@
  				#pwm-cells = <2>;
  				status = "disabled";
  			};
@@ -108,12 +111,12 @@ index 232a7412755a..89ef22a8f81e 100644
 +				compatible = "nxp,sysctr-timer";
 +				reg = <0x306a0000 0x20000>;
 +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&osc_24m>;
++				clocks = <&osc_25m>;
 +				clock-names = "per";
 +			};
  		};
  
- 		aips3: bus@30800000 {
+ 		bus@30800000 { /* AIPS3 */
 -- 
 2.17.1
 
