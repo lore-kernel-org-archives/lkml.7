@@ -2,105 +2,124 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0BEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D279206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBBC206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="k+L8HgGt"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DcqgXxue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfHZDGj (ORCPT
+        id S1729420AbfHZDGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:06:39 -0400
-Received: from gateway20.websitewelcome.com ([192.185.47.18]:34942 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729179AbfHZDGj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:06:39 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 5A3EC400C6E11
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 21:01:45 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 25L3imnqbiQer25L3i6nqx; Sun, 25 Aug 2019 22:06:37 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Nhx5OiP7r0dYpbGQdFUd0gr/5YT1Ihavje6uRy4hWMQ=; b=k+L8HgGtHnF9vb85fjf0bIhaJn
-        4kLqVLiQtaUzgqgNobmb1ASxxWaChh7tMtQw/FPmX3uCLbhJmdn+huWyqQkRx9Yqd12R89xTe0kSW
-        Dy1Y9bxs4JWgQ3L3B865+CqSPt8sFZ8OaHtH5tIB+w3Jh618d5sPoM8CPB+4XSis/CURwp+BrVLBA
-        1sw2OEjFpOK8UWnJoNYxx5KxxENle5dDrH8oT9NjrpVQEbxigar/jEMF+uZudqwQeHmsvEI7sGZvO
-        i4Kxrlm1jSN5+1bcp1GzKsggsdhMIHn6eU2vrEurQd55dIbwlqk6DC5bPrfLw1Q8xB3EG6Z1JSXnO
-        bwGmxJAA==;
-Received: from [189.152.216.116] (port=45992 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i25L2-003wZG-0L; Sun, 25 Aug 2019 22:06:36 -0500
-Date:   Sun, 25 Aug 2019 22:06:34 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Henry Burns <henryburns@google.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] mm/z3fold.c: fix lock/unlock imbalance in z3fold_page_isolate
-Message-ID: <20190826030634.GA4379@embeddedor>
+        Sun, 25 Aug 2019 23:06:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:41625 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729403AbfHZDGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 23:06:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Gxjq6nJQz9s7T;
+        Mon, 26 Aug 2019 13:06:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566788801;
+        bh=ao4+tkZSNPxGhHnop5/uB0c25lKvBwr4pgEKllddgAQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DcqgXxue3U+qpniOSwRvKEcQjSkM2i+VPn8GRJ0jY2ra05YOru62S7WOrCnR8ejY8
+         rVIdjuHyTCJiqazmPLx7jSI3QWIx8DGgtAK3rAp9qLyRSyVSyGLhXz1QO5vCL1qHcV
+         hyptsAtmzvpKInJOjaxKw5f030CTZhTFdXyYUvaRqEd/2gpKa8Up9ptEfUJXDottn1
+         ItGK/tSsRHVLRoSYV4ncesgPGUcC8CkYDMzRnktZ7cvYw67n70kZfAs2nydzHWt/n/
+         rKZQ+aDBZyRrepbiWC+mfkjXJoYEwQocKMNKc+zskyTMVTtIwPoqEDsszkXKT7X8ME
+         2vgVpq0rIhpNg==
+Date:   Mon, 26 Aug 2019 13:06:37 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        Ayan kumar halder <ayan.halder@arm.com>,
+        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: linux-next: manual merge of the drm tree with the drm-misc-fixes
+ tree
+Message-ID: <20190826130637.176f6208@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i25L2-003wZG-0L
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.216.116]:45992
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="Sig_/wydur/h7UBhnu/l7f8Ha7ul";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix lock/unlock imbalance by unlocking *zhdr* before return.
+--Sig_/wydur/h7UBhnu/l7f8Ha7ul
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Addresses-Coverity-ID: 1452811 ("Missing unlock")
-Fixes: d776aaa9895e ("mm/z3fold.c: fix race between migration and destruction")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- mm/z3fold.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi all,
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index e31cd9bd4ed5..75b7962439ff 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -1406,6 +1406,7 @@ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
- 				 * should freak out.
- 				 */
- 				WARN(1, "Z3fold is experiencing kref problems\n");
-+				z3fold_page_unlock(zhdr);
- 				return false;
- 			}
- 			z3fold_page_unlock(zhdr);
--- 
-2.23.0
+Today's linux-next merge of the drm tree got a conflict in:
 
+  drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+
+between commit:
+
+  51a44a28eefd ("drm/komeda: Add missing of_node_get() call")
+
+from the drm-misc-fixes tree and commit:
+
+  8965ad8433ea ("drm/komeda: Enable dual-link support")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+index 9d4d5075cc64,1ff7f4b2c620..000000000000
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+@@@ -127,7 -128,8 +129,8 @@@ static int komeda_parse_pipe_dt(struct=20
+  	pipe->of_output_port =3D
+  		of_graph_get_port_by_id(np, KOMEDA_OF_PORT_OUTPUT);
+ =20
++ 	pipe->dual_link =3D pipe->of_output_links[0] && pipe->of_output_links[1];
+ -	pipe->of_node =3D np;
+ +	pipe->of_node =3D of_node_get(np);
+ =20
+  	return 0;
+  }
+
+--Sig_/wydur/h7UBhnu/l7f8Ha7ul
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1jTL0ACgkQAVBC80lX
+0Gxv3Qf/UZODeNlf0Cg6Pp21C0lTRqUfi6nfMnY9tk8fimcVVU7XczrGHYCdq9lh
+2cix95QOpooh3Rr8edxYyYMnXNpP4l+Tt0yXFr1a7VGIX+mjZv35aY8Rw55L0WLC
+ja+YF6MBfyXQMaSxee3XRsqX3bHrnqwX5P84at39Q5+gHoGaqm4HPbGB9dslfYIX
+FG/D1pXucobj7tuKBDufUQcFcdmAvgt9uXqeveQ5mSAMToqtBM8d6F29lEan8A6H
+tzPQdiowwIb16nRya/Qu7IVW/I4QwJLwp5ykDPp9foeSGM7YWKejUXUroOkNt0V2
+C0m6H2culOjxXPqbSRq1efBeyIXpEQ==
+=mbfu
+-----END PGP SIGNATURE-----
+
+--Sig_/wydur/h7UBhnu/l7f8Ha7ul--
