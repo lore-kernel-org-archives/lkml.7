@@ -2,168 +2,173 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8981DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B1EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E88221872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CD52184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:44:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg5LfXDw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fvJVE2Ds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbfHZUof (ORCPT
+        id S1730418AbfHZUol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:44:35 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46807 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfHZUoe (ORCPT
+        Mon, 26 Aug 2019 16:44:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46128 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfHZUol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:44:34 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m3so11268189pgv.13
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:44:34 -0700 (PDT)
+        Mon, 26 Aug 2019 16:44:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so16584957wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1Fse6KfUwQK5pIfL54PeFWHLZR7X3tE0GyhbPlYXq/0=;
-        b=eg5LfXDwuRDQSPuSCfWN0+tMFtzeJMtHuaG+vg7hSeaFFi8e6uT5NZjXWhEbElNCIm
-         wQoMIFey3azHElIyf1v5hUZ8vDABYzU0+csFOrfao1YDcNwxazAuK1ne8XoZr9BVu+jC
-         LK+ArB2snj9xb9Da862ypDop4sCG1nfUpVXRUfq9hiLj6M8s8El4KfzHP+btClnTEOSE
-         3dy3vZa8fUTD55e2BSnv4dafcrYUcmNbQOlkfWdDZ5fwKh/BtoLeNmowCU8q+zk2Zy+q
-         e6/7InzJiwBJ4Prto1OonGBcGRd4aK6orEwmlsMPg63DcMIVNIkI0PA8DflKwjE4DAoK
-         /w1g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Qsyqwo/7IzN3JSHEHiK8TRXncaQG6D+RLJ1heXtDIs0=;
+        b=fvJVE2DsN4hPUHTHlqLGnsV7U//T7wLenuDI4BZlpfMSSPF2NCpNCccfjhg05pUtkU
+         LQQla8rZQUNfdu4RAUa+pwxR8yx7gINvMIwo41b8ADw2XKkcrLE1iqs3GUu7WinwFvyp
+         ZE4l8/40dTHBGLLhXBfPnKQiqxhLAU6L06RG96VU2nMXsBYAe0oixZpa6XVmVL9yd8pT
+         fx+Unu+WbbMScX5dMW3CLn86cWmU6cpxxkfWaJhn3PdftvmB11+QjCYu61WtNCl5jsvZ
+         3KRyXDIwtkFFI/0AiBT6nM+AWVZugqplcI8aeRpGgNkUB8jJpmnBr7Ul/PIsQhaB3Xgs
+         BmgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1Fse6KfUwQK5pIfL54PeFWHLZR7X3tE0GyhbPlYXq/0=;
-        b=MziWe7TFV0xn/XUI2/KQ5HifQHZ/xkf/ja1sp+hsxzmjJTM2ctZXiE9bX9CPT1BZsl
-         m8oNqJaGvTr4VcnP73uSVPm1nwfQSBsWmT+1Zg+5lkiOrX4LMhvgdQNBOuRiPyEbXrTI
-         vJ9jo9wGvsUCu6k5E9Are5bMWiz+gpBwBPW8Xdn3gxM20NZUWClv8jwKM4Fz0GoxmK0S
-         xOxxhFCxo37j2tVTHLUuL7TclIgwaa/knCSAkcFcIX6XVNbmZf8ouTYhLDMzx0DtjUBW
-         W8CNZrfGJjnKHynRBHz9iCadxJBCYLgmGq0cvZa+IGWZngeELVNltiGm4dxEjISUT6IG
-         JtQQ==
-X-Gm-Message-State: APjAAAXIycMzNBr3iQobtXl1oqDXp0mRGklg+fn1Q+ODM74U7zJnms9R
-        fGFZxnQ9YDqP2wr4woGcxMem60Kr
-X-Google-Smtp-Source: APXvYqyqg1Cr8t/t/2dwRRT3RJlOMKVgUhiN1s9LLhrk6lpZXH2sa5lk2BO1JqnXcc2rDF58x1Q6mQ==
-X-Received: by 2002:a63:9d8a:: with SMTP id i132mr7952728pgd.410.1566852273588;
-        Mon, 26 Aug 2019 13:44:33 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id u7sm11140563pgr.94.2019.08.26.13.44.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 13:44:33 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 02:14:20 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Khalid Aziz <khalid.aziz@oracle.com>, akpm@linux-foundation.org,
-        vbabka@suse.cz, mgorman@techsingularity.net,
-        dan.j.williams@intel.com, osalvador@suse.de,
-        richard.weiyang@gmail.com, hannes@cmpxchg.org,
-        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
-        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
-Message-ID: <20190826204420.GA16800@bharath12345-Inspiron-5559>
-References: <20190813014012.30232-1-khalid.aziz@oracle.com>
- <20190813140553.GK17933@dhcp22.suse.cz>
- <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
- <20190814085831.GS17933@dhcp22.suse.cz>
- <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
- <20190815170215.GQ9477@dhcp22.suse.cz>
- <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
- <20190821140632.GI3111@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821140632.GI3111@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Qsyqwo/7IzN3JSHEHiK8TRXncaQG6D+RLJ1heXtDIs0=;
+        b=FwEuEBWFAKYbaRQVHjEwbT4kJNRoF09gqJrBn8o1gCKPWvAl7dx29eBDBJSusvQK2V
+         XDp/K3uXduJVflbnLJb0wBquP/QdeqIvTtQYNd9+Hav0fuM107XNvOsHg3yDTuArY0Us
+         FrO+Tpu5TJNlHJ/rg9wmBbuRYUP0yYI9/U1VTbSXJYvthScqb7nzrL+yUAwVb0B9nlXe
+         sTaR9xAI1sgMCYqQuon53F4e8VPTch0Gd+gVP0uxX4wpatlXY21SXDWjHqKlaHcK/NrC
+         843bE4Kc2uzixJlmBjtCD6EWM0dE2GoaKroc0iFjFOZelMx/11BbQXNmUK1qBZVMCQl9
+         mBhQ==
+X-Gm-Message-State: APjAAAUn9GHhblHqymqAZcWMM1c2l5YamYgtFso/u8z4XYFyeu73WeS/
+        qJODXEypMQCgZ0v4HDu1OWYmeKOtWCg=
+X-Google-Smtp-Source: APXvYqzbVln4ACLylQBnLOO0yt13MtqhiboJ90eMdpG02kbo38scjAEIVFi5TMZuvZcD29JuP7AQEw==
+X-Received: by 2002:a5d:4cc5:: with SMTP id c5mr23365381wrt.278.1566852279372;
+        Mon, 26 Aug 2019 13:44:39 -0700 (PDT)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
+        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 13:44:38 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 01/20] clocksource: Remove dev_err() usage after platform_get_irq()
+Date:   Mon, 26 Aug 2019 22:43:48 +0200
+Message-Id: <20190826204407.17759-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
+References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+From: Stephen Boyd <swboyd@chromium.org>
 
-Here are some of my thoughts,
-On Wed, Aug 21, 2019 at 04:06:32PM +0200, Michal Hocko wrote:
-> On Thu 15-08-19 14:51:04, Khalid Aziz wrote:
-> > Hi Michal,
-> > 
-> > The smarts for tuning these knobs can be implemented in userspace and
-> > more knobs added to allow for what is missing today, but we get back to
-> > the same issue as before. That does nothing to make kernel self-tuning
-> > and adds possibly even more knobs to userspace. Something so fundamental
-> > to kernel memory management as making free pages available when they are
-> > needed really should be taken care of in the kernel itself. Moving it to
-> > userspace just means the kernel is hobbled unless one installs and tunes
-> > a userspace package correctly.
-> 
-> From my past experience the existing autotunig works mostly ok for a
-> vast variety of workloads. A more clever tuning is possible and people
-> are doing that already. Especially for cases when the machine is heavily
-> overcommited. There are different ways to achieve that. Your new
-> in-kernel auto tuning would have to be tested on a large variety of
-> workloads to be proven and riskless. So I am quite skeptical to be
-> honest.
-Could you give some references to such works regarding tuning the kernel? 
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
 
-Essentially, Our idea here is to foresee potential memory exhaustion.
-This foreseeing is done by observing the workload, observing the memory
-usage of the workload. Based on this observations, we make a prediction
-whether or not memory exhaustion could occur. If memory exhaustion
-occurs, we reclaim some more memory. kswapd stops reclaim when
-hwmark is reached. hwmark is usually set to a fairly low percentage of
-total memory, in my system for zone Normal hwmark is 13% of total pages.
-So there is scope for reclaiming more pages to make sure system does not
-suffer from a lack of pages. 
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
 
-Since we are "predicting", there could be mistakes in our prediction.
-The question is how bad are the mistakes? How much does a wrong
-prediction cost? 
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
 
-A right prediction would be a win. We rightfully predict that there could be
-exhaustion, this would lead to us reclaiming more memory(than hwmark)/compacting
-memory beforehand(unlike kcompactd which does it on demand).
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
 
-A wrong prediction on the other hand can be categorized into 2
-situations: 
-(i) We foresee memory exhaustion but there is no memory exhaustion in
-the future. In this case, we would be reclaiming more memory for not a lot
-of use. This situation is not entirely bad but we definitly waste a few
-clock cycles.
-(ii) We don't foresee memory exhaustion but there is memory exhaustion
-in the future. This is a bad case where we may end up going into direct
-compaction/reclaim. But it could be the case that the memory exhaustion
-is far in the future and even though we didnt see it, kswapd could have
-reclaimed that memory or drop_cache occured.
+While we're here, remove braces on if statements that only have one
+statement (manually).
 
-How often we hit wrong predictions of type (ii) would really determine our
-efficiency. 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/em_sti.c | 4 +---
+ drivers/clocksource/sh_cmt.c | 5 +----
+ drivers/clocksource/sh_tmu.c | 5 +----
+ 3 files changed, 3 insertions(+), 11 deletions(-)
 
-Coming to your situation of provisioning vms. A situation where our work
-will come to good is when there is a cloud burst. When the demand for
-vms is super high, our algorithm could adapt to the increase in demand
-for these vms and reclaim more memory/compact more memory to reduce
-allocation stalls and improve performance.
-> Therefore I would really focus on discussing whether we have sufficient
-> APIs to tune the kernel to do the right thing when needed. That requires
-> to identify gaps in that area. 
-One thing that comes to my mind is based on the issue Khalid mentioned
-earlier on how his desktop took more than 30secs to boot up because of
-the caches using up a lot of memory.
-Rather than allowing any unused memory to be the page cache, would it be
-a good idea to fix a size for the caches and elastically change the size
-based on the workload?
+diff --git a/drivers/clocksource/em_sti.c b/drivers/clocksource/em_sti.c
+index 8e12b11e81b0..9039df4f90e2 100644
+--- a/drivers/clocksource/em_sti.c
++++ b/drivers/clocksource/em_sti.c
+@@ -291,10 +291,8 @@ static int em_sti_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, p);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get irq\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	/* map memory, let base point to the STI instance */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index 55d3e03f2cd4..f6424b61e212 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -776,11 +776,8 @@ static int sh_cmt_register_clockevent(struct sh_cmt_channel *ch,
+ 	int ret;
+ 
+ 	irq = platform_get_irq(ch->cmt->pdev, ch->index);
+-	if (irq < 0) {
+-		dev_err(&ch->cmt->pdev->dev, "ch%u: failed to get irq\n",
+-			ch->index);
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	ret = request_irq(irq, sh_cmt_interrupt,
+ 			  IRQF_TIMER | IRQF_IRQPOLL | IRQF_NOBALANCING,
+diff --git a/drivers/clocksource/sh_tmu.c b/drivers/clocksource/sh_tmu.c
+index 49f1c805fc95..8c4f3753b36e 100644
+--- a/drivers/clocksource/sh_tmu.c
++++ b/drivers/clocksource/sh_tmu.c
+@@ -462,11 +462,8 @@ static int sh_tmu_channel_setup(struct sh_tmu_channel *ch, unsigned int index,
+ 		ch->base = tmu->mapbase + 8 + ch->index * 12;
+ 
+ 	ch->irq = platform_get_irq(tmu->pdev, index);
+-	if (ch->irq < 0) {
+-		dev_err(&tmu->pdev->dev, "ch%u: failed to get irq\n",
+-			ch->index);
++	if (ch->irq < 0)
+ 		return ch->irq;
+-	}
+ 
+ 	ch->cs_enabled = false;
+ 	ch->enable_count = 0;
+-- 
+2.17.1
 
-Thank you
-Bharath
-
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
