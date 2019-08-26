@@ -2,144 +2,91 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B18DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B56C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA382184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A39421852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbfHZLco (ORCPT
+        id S1731461AbfHZLdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:32:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59660 "EHLO mga11.intel.com"
+        Mon, 26 Aug 2019 07:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbfHZLcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:32:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 04:32:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="355401973"
-Received: from dcondura-mobl.ger.corp.intel.com (HELO localhost) ([10.249.37.53])
-  by orsmga005.jf.intel.com with ESMTP; 26 Aug 2019 04:32:40 -0700
-Date:   Mon, 26 Aug 2019 14:32:39 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Seunghun Han <kkamagui@gmail.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: tpm_crb: Fix an improper buffer size calculation bug
-Message-ID: <20190826113239.2tliwil35gsqap54@linux.intel.com>
-References: <20190826074400.54794-1-kkamagui@gmail.com>
+        id S1727017AbfHZLdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:33:12 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42DD9217F5;
+        Mon, 26 Aug 2019 11:33:10 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 07:33:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com, stable@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Nadav Amit <namit@vmware.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
+ set_kernel_text_rw()
+Message-ID: <20190826073308.6e82589d@gandalf.local.home>
+In-Reply-To: <20190823093637.GH2369@hirez.programming.kicks-ass.net>
+References: <20190823052335.572133-1-songliubraving@fb.com>
+        <20190823093637.GH2369@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826074400.54794-1-kkamagui@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:44:00PM +0900, Seunghun Han wrote:
-> I'm Seunghun Han and work at the Affiliated Institute of ETRI. I found
+On Fri, 23 Aug 2019 11:36:37 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-You can drop the first sentence from the commit message. The SoB below
-is sufficient.
-
-> a bug related to improper buffer size calculation in crb_fixup_cmd_size
-> function.
-
-The purpose is to cap to the ACPI region when we partially overlap to
-workaround BIOS's reporting corrupted ACPI tables so that we don't get
-failure from devm_ioremap().
-
-The only funky thing in that function is that it lets through a buffer
-that is fully outside the ACPI region. There actually exists hardware
-with this configuration.
-
-> When the TPM CRB regions are two or more, the crb_map_io function calls
-> crb_fixup_cmd_size twice to calculate command buffer size and response
-> buffer size. The purpose of crb_fixup_cmd_size function is to trust
-> the ACPI region information.
-
-This is not true. The driver deals with only one ACPI region ATM.
-
-> However, the function compares only io_res argument with start and size
-> arguments.  It means the io_res argument is one of command buffer and
-> response buffer regions. It also means the other region is not calculated
-> correctly by the function because io_res argument doesn't cover all TPM
-> CRB regions.
-
-The driver gets command and response buffer metrics from the TPM2 ACPI
-table, not from the ACPI region.
-
-> To fix this bug, I change crb_check_resource function for storing all TPB
-> CRB regions to a list and use the list to calculate command buffer size
-> and response buffer size correctly.
-
-This cannot be categorized as a bug. It is simply as new type of hardware.
-Can you explain in detail what type of hardware are you using?
-
-> ---
->  drivers/char/tpm/tpm_crb.c | 50 ++++++++++++++++++++++++++------------
->  1 file changed, 34 insertions(+), 16 deletions(-)
+> On Thu, Aug 22, 2019 at 10:23:35PM -0700, Song Liu wrote:
+> > As 4k pages check was removed from cpa [1], set_kernel_text_rw() leads to
+> > split_large_page() for all kernel text pages. This means a single kprobe
+> > will put all kernel text in 4k pages:
+> > 
+> >   root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
+> >   0xffffffff81000000-0xffffffff82400000     20M  ro    PSE      x  pmd
+> > 
+> >   root@ ~# echo ONE_KPROBE >> /sys/kernel/debug/tracing/kprobe_events
+> >   root@ ~# echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+> > 
+> >   root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
+> >   0xffffffff81000000-0xffffffff82400000     20M  ro             x  pte
+> > 
+> > To fix this issue, introduce CPA_FLIP_TEXT_RW to bypass "Text RO" check
+> > in static_protections().
+> > 
+> > Two helper functions set_text_rw() and set_text_ro() are added to flip
+> > _PAGE_RW bit for kernel text.
+> > 
+> > [1] commit 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")  
 > 
-> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> index e59f1f91d7f3..b0e94e02e5eb 100644
-> --- a/drivers/char/tpm/tpm_crb.c
-> +++ b/drivers/char/tpm/tpm_crb.c
-> @@ -442,6 +442,9 @@ static int crb_check_resource(struct acpi_resource *ares, void *data)
->  	    acpi_dev_resource_address_space(ares, &win)) {
->  		*io_res = *res;
->  		io_res->name = NULL;
-> +
-> +		/* Add this TPM CRB resource to the list */
-> +		return 0;
->  	}
->  
->  	return 1;
-> @@ -471,20 +474,30 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
->   * region vs the registers. Trust the ACPI region. Such broken systems
->   * probably cannot send large TPM commands since the buffer will be truncated.
->   */
-> -static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
-> +static u64 crb_fixup_cmd_size(struct device *dev, struct list_head *resources,
->  			      u64 start, u64 size)
+> ARGH; so this is because ftrace flips the whole kernel range to RW and
+> back for giggles? I'm thinking _that_ is a bug, it's a clear W^X
+> violation.
 
-With a quick spin w/o knowing the details of the hardware I'm dealing
-with it you should probably reduce the fixup function as
+Since ftrace did this way before text_poke existed and way before
+anybody cared (back in 2007), it's not really a bug.
 
-static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
-			      u64 start, u64 size)
-{
-	if (start + size - 1 <= io_res->end)
-		 return size;
+Anyway, I believe Nadav has some patches that converts ftrace to use
+the shadow page modification trick somewhere.
 
-	dev_err(dev,
-		 FW_BUG "ACPI region does not cover the entire command/response buffer. %pr vs %llx %llx\n",
-		 io_res, start, size);
+Or we also need the text_poke batch processing (did that get upstream?).
 
-	return io_res->end - start + 1;
-}
+Mapping in 40,000 pages one at a time is noticeable from a human stand
+point.
 
-Then call this inside the loop.
-
-Looking at your change it does not make much sense to me.
-
-There is a weird asymmetry in it:
-
-1. The code loops through all found ACPI regions when looking for
-   intersections with the command and response buffers.
-2. The devm_ioremap() is done only to the last seen ACPI region. Why the
-   multiple regions matter for fixup's but not in this case?
-
-/Jarkko
+-- Steve
