@@ -2,123 +2,141 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8637C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2737C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7A52173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slhUxvnh"
+	by mail.kernel.org (Postfix) with ESMTP id 78ADD2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:19:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566789552;
+	bh=w3J2cJs2crg8gGwITUaTLh45R8avn+V3leFR9667rmA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KcNwbBOgCmFfgXGxo7ZoI3xgz8L69nQQZnX+tNJS2zkPdXp4pHuhkxE1uiPI2ezXR
+	 WdQKICAvrKdjlRU0rfyN3qKfuNukAFUAs3dOia+x9xw/HnUSsjNRCCRQ5o95ZQM67C
+	 0ee6znYpJVGyHntXCXyjcsoKz4mIPcfs2J7Rem+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfHZDTH (ORCPT
+        id S1729537AbfHZDTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:19:07 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34608 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbfHZDTG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 23:19:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729518AbfHZDTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 25 Aug 2019 23:19:06 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so9682388pgc.1;
-        Sun, 25 Aug 2019 20:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vrKXb1c+fhWL6XvI6Q8/QhED1MUXcVFYoSihiJAZjTw=;
-        b=slhUxvnhGpV6q597AQTrd/fdto0uqCVHTUkFdHIuxFjXjGw31s9GinpL1xDyvEM9KD
-         ALUyg1Aruz9FyXfUSWbiINUptanxSXIg2ONksosjrl+TPEHh/nPOGP4QGSIYmFUKw5im
-         e5IrhSYWlfawHlB8PvZeAlfZ9T15ue6Y1oR0TkcOKHzOcPAMK7VOYXxUqtfVMm4vtQbC
-         BTtUQjDSn7ziAsWJISuPlckXsFOhrSkcEA4sKL24HSL4q+LHNcZamXsOttEEyAAoK9Y0
-         pTTqfSmD4svCfaKnT5dLKS9hoSTNoqVfvX9EKEed+Ywmpckg8p767hZHL1X5HwM8mvm0
-         2iAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vrKXb1c+fhWL6XvI6Q8/QhED1MUXcVFYoSihiJAZjTw=;
-        b=JhrEH2AU3XiVakWiUzx0LaTkPMysFpLPEQiD0FglfnJP+2AkQN3lT+XFw8c0aloTIZ
-         CW7SBFguo5scgEBqp+eLGGOI/Av6wklXyJT1KbOfFGY/D7lJBSlW/mtyZotXyA3TSoT/
-         x/j6YeMRuULhB/mDsxPiX056IofRtUbZBtb/OucgezNMMqoNqfcRo0yLxLz16mDu5768
-         rFX+ejUffy6UmmjH93L2hdnebgIn66PLKNTEjKSkMtjPgDZkR1dbSp9s0PEKJv7Ng18Q
-         q01gg9FL52VTMV694/Slap0TvSN2hX5YTPmXjjDgn0s2Olr0j7HhpPhdXn+7eXL/+wsr
-         NGZA==
-X-Gm-Message-State: APjAAAURCBdh+ij88GlJR8kpY8fThRUbD2Ef8FHwuo/rMZLtbfxEQwaf
-        iWaD719zGY9KHvwrjs3nCRZUKU/J
-X-Google-Smtp-Source: APXvYqxFQi3ogEq2PItJyW2uQWyx/dSjwssauzEKVYeY3WomX4VlQwGScvONgZlEs6bzn6o3LPPb6A==
-X-Received: by 2002:a65:4546:: with SMTP id x6mr14195563pgr.266.1566789545234;
-        Sun, 25 Aug 2019 20:19:05 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id y23sm12565905pfr.86.2019.08.25.20.19.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2019 20:19:04 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 5/5] mmc: sdhci-sprd: clear the UHS-I modes read from registers
-Date:   Mon, 26 Aug 2019 11:18:30 +0800
-Message-Id: <20190826031830.30931-6-zhang.lyra@gmail.com>
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC48C2168B;
+        Mon, 26 Aug 2019 03:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566789546;
+        bh=w3J2cJs2crg8gGwITUaTLh45R8avn+V3leFR9667rmA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GNnd1gLuTIZqShGN9uAV4YnJ3H+rZCzocE2nuMiFOKrJwxxQ6+v2qHmYsFOIaIsww
+         fRmxeKW8QimVp1MS8N/nLqSCiS8J3kjlcA4Q85UJK1MDH28zkCdveUv19BZdS6VHqi
+         Ao9hsnDFsd1dyEiRMZ48inf+a8z2tGiL0iVXBOBw=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v3 17/19] tracing/boot: Add function tracer filter options
+Date:   Mon, 26 Aug 2019 12:18:59 +0900
+Message-Id: <156678953942.21459.2531310402301118028.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190826031830.30931-1-zhang.lyra@gmail.com>
-References: <20190826031830.30931-1-zhang.lyra@gmail.com>
+In-Reply-To: <156678933823.21459.4100380582025186209.stgit@devnote2>
+References: <156678933823.21459.4100380582025186209.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Add below function-tracer filter options to boottime tracer.
 
-sprd's sd host controller supports SDR50/SDR104/DDR50 though, the UHS-I
-mode used by the specific card can be selected via devicetree only.
+ - ftrace.[instance.INSTANCE.]ftrace.filters
+   This will take an array of tracing function filter rules
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+ - ftrace.[instance.INSTANCE.]ftrace.notraces
+   This will take an array of NON-tracing function filter rules
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- drivers/mmc/host/sdhci-sprd.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ kernel/trace/trace_boot.c |   40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 1fecf055682c..d3c3e95676f0 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -509,7 +509,8 @@ static void sdhci_sprd_phy_param_parse(struct sdhci_sprd_host *sprd_host,
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 755a2040aebf..942ca8d3fcc8 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -276,11 +276,51 @@ trace_boot_init_events(struct trace_array *tr, struct skc_node *node)
+ #define trace_boot_init_events(tr, node) do {} while (0)
+ #endif
  
- static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
-+		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
-+		  SDHCI_QUIRK_MISSING_CAPS,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
- 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
- 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-@@ -614,6 +615,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 
- 	sdhci_enable_v4_mode(host);
- 
-+	/*
-+	 * Supply the existing CAPS, but clear the UHS-I modes. This
-+	 * will allow these modes to be specified only by device
-+	 * tree properties through mmc_of_parse().
-+	 */
-+	host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-+	host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
-+	host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_SDR104 |
-+			 SDHCI_SUPPORT_DDR50);
++#ifdef CONFIG_FUNCTION_TRACER
++extern bool ftrace_filter_param __initdata;
++extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
++			     int len, int reset);
++extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
++			      int len, int reset);
++static void __init
++trace_boot_set_ftrace_filter(struct trace_array *tr, struct skc_node *node)
++{
++	struct skc_node *anode;
++	const char *p;
++	char *q;
 +
- 	ret = sdhci_setup_host(host);
- 	if (ret)
- 		goto pm_runtime_disable;
--- 
-2.20.1
++	skc_node_for_each_array_value(node, "ftrace.filters", anode, p) {
++		q = kstrdup(p, GFP_KERNEL);
++		if (!q)
++			return;
++		if (ftrace_set_filter(tr->ops, q, strlen(q), 0) < 0)
++			pr_err("Failed to add %s to ftrace filter\n", p);
++		else
++			ftrace_filter_param = true;
++		kfree(q);
++	}
++	skc_node_for_each_array_value(node, "ftrace.notraces", anode, p) {
++		q = kstrdup(p, GFP_KERNEL);
++		if (!q)
++			return;
++		if (ftrace_set_notrace(tr->ops, q, strlen(q), 0) < 0)
++			pr_err("Failed to add %s to ftrace filter\n", p);
++		else
++			ftrace_filter_param = true;
++		kfree(q);
++	}
++}
++#else
++#define trace_boot_set_ftrace_filter(tr, node) do {} while (0)
++#endif
++
+ static void __init
+ trace_boot_enable_tracer(struct trace_array *tr, struct skc_node *node)
+ {
+ 	const char *p;
+ 
++	trace_boot_set_ftrace_filter(tr, node);
++
+ 	p = skc_node_find_value(node, "tracer", NULL);
+ 	if (p && *p != '\0') {
+ 		if (tracing_set_tracer(tr, p) < 0)
 
