@@ -2,193 +2,276 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B8CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F2DC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDA22070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEE42080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:51:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DzEGTxia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfHZXsF (ORCPT
+        id S1726820AbfHZXvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 19:48:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34906 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfHZXsE (ORCPT
+        Mon, 26 Aug 2019 19:51:37 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57968 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfHZXvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 19:48:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn20so10806204plb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 16:48:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=zd7cywiAkoUWcRfVHCpRZTgeWdfgqowuSFCwN1bZj2Y=;
-        b=rDPMTnN3JBIxI/HF+j6s4oCVb9Tav6gpqVsa5Vau8X7SfJ/GL9KZpdAAj8j2c4NBL2
-         YjJUf4SFMwxVI3cvXYqyl02gupM45QrNbdjQuz9wboY7K2Y9xTI1F/rOnVUrwm+BWMRf
-         5lPwcLHtmqSNkzv9lQMvlXaZpPomWCb/jZBsP86jBG8BtJdgZRUmDKKK5kc6G8cFMHur
-         rNrY7zZqvx6O/gHRAgKbvioebN20z0MQb39evPfa9m5i0zmms9krTfqAPqHRhUjJAidT
-         ZmvxlpaHueJFvH5SQn0xYWyDRVABmOiChOyUJ3agbXHf8pk/aGRtLRNNifE28TNdBwPv
-         NwXA==
-X-Gm-Message-State: APjAAAWdFi7cixpZbINOZf2AdjYZV0UXKu4jXYTFgKgYaYY6QOWXq8CV
-        jicdReO/HtlQTYsw3nYdLEijqg==
-X-Google-Smtp-Source: APXvYqwyXgUsc5NoBh5QUb4SDP9eiKr+6nVJJzX04PkAKM0NdwIJMpxpTcIRtFf4265JDbAiP0IQAA==
-X-Received: by 2002:a17:902:bb96:: with SMTP id m22mr9391336pls.158.1566863283326;
-        Mon, 26 Aug 2019 16:48:03 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id r75sm18127613pfc.18.2019.08.26.16.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 16:48:02 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 16:48:02 -0700 (PDT)
-X-Google-Original-Date: Mon, 26 Aug 2019 16:44:31 PDT (-0700)
-Subject:     Re: [PATCH v2 1/5] RISC-V: Remove per cpu clocksource
-In-Reply-To: <089a5ee46759074af391c50f5e9d28344b429de4.camel@wdc.com>
-CC:     daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Anup Patel <Anup.Patel@wdc.com>,
-        Greg KH <gregkh@linuxfoundation.org>, info@metux.net,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        aou@eecs.berkeley.edu, allison@lohutok.net, johan@kernel.org,
-        alexios.zavras@intel.com, tglx@linutronix.de,
-        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-6a5026a2-d727-4c08-969d-712b303903df@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 26 Aug 2019 19:51:37 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6C24931B;
+        Tue, 27 Aug 2019 01:51:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566863494;
+        bh=KAoJOlguJgneJ1W0kiDeZWlGMWs1ZHBoCrZC0DVvQmc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DzEGTxiaCweQaLjUzrbYWeoaBSC5kS+xcBsY6TTz6BwaAgLGLtZ4nK7B5ZYtF/Sfw
+         hZf3ZZDtqxpjYajgdMuDIXMdtmH9RbOHcvpqHN1GNsOlFXWqx3l6bGFDA4Y/NS9eRP
+         G7C4PypU2TmPN7Zp7D6d4TldwqXddmvSLoCR9954=
+Date:   Tue, 27 Aug 2019 02:51:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/14] drm: rcar-du: kms: Collect CMM instances
+Message-ID: <20190826235127.GA5274@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-11-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190825135154.11488-11-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 11:55:14 PDT (-0700), Atish Patra wrote:
-> On Fri, 2019-08-16 at 17:09 +0200, Daniel Lezcano wrote:
->> On 31/07/2019 03:24, Atish Patra wrote:
->> > There is only one clocksource in RISC-V. The boot cpu initializes
->> > that clocksource. No need to keep a percpu data structure.
->> 
->> That is not what is stated in the initial patch [1].
->> 
->> Can you clarify that ?
->> 
-> 
-> I think what I meant to say was "There is only one clocksource used in
-> RISC-V Linux" as it is guranteed that all the timers across all the
-> harts are synchronized within one tick of each other [2]. 
-> Apologies for not being verbose here.
-> 
-> However, reading the privilege specification(1.12-draft) 
-> 
-> Section. 3.1.10 states that 
-> 
-> "Accurate real-time clocks (RTCs) are relatively expensive to provide
-> (requiring a crystal or MEMS oscillator) and have to run even when the
-> rest of system is powered down, and so there is usually only one in a
-> system located in a different frequency/voltage domain from the
-> processors. Hence, the RTC must be shared by all the harts in a system"
-> 
-> This is different from the commit text in [1].
-> 
-> Perhaps I misunderstood something. @Palmer ?
+Hi Jacopo,
 
-This is one of those places the ISA has drifted around a bit: in the user ISA 
-there is a time CSR, and CSRs are all per-hart state so logically there is a 
-timer per hart.  We used to actually build systems this way (with an SOC agent 
-what would actively increment each CSR whenever the RTC fired), but it ended up 
-being impractical for a bunch of reasons.  There was never a way to actually 
-write these time CSRs from supervisor mode, but machine-mode software could 
-write them so it would have been possible to build system that had different 
-time values on different harts.
+Thank you for the patch.
 
-As a result we ended up with per-CPU timers in Linux, but they never actually 
-worked correctly: there's a bunch of per-CPU state in the driver, but nothing 
-to actually enforce that timer reads go to the correct hart.  For example, get 
-the time on hart 0 you'd have to IPI over to that hart, do a local CSR read, 
-and then IPI the time back.  As a result the per-CPU state never really made 
-any sense, but it kind of just hung around because it worked fine on the 
-systems we were building (which always had time synced up anyway) and was 
-closer to what the spec allowed -- we didn't IPI over because time was always 
-synchronized on systems that actually existed and the IPIs are super slow, but 
-the scaffolding stuck around.
-
-As part of cleaning up the privileged ISA for ratification we decided to 
-mandate that the time CSRs on every hart are always within a single tick of 
-each other, effectively mandating a single time across the system.  This was 
-partially motivated by Linux, but mostly by a new approach we were taking to 
-the hypervisor specification -- rather than a hypervisor mode, we decided to 
-just extend supervisor mode to support fast nested virtualization, which means 
-we now have "htimedelta" (a per-hart timer offset) rather than per-hart timers.  
-This is more efficient because the per-state stays constant so we don't need to 
-actively tick it, and since it makes the per-hart time state unnecessary we 
-decided to drop that extra state.
-
-The change to global time on RISC-V systems rendered the per-CPU timers 
-defunct, but since they weren't really doing anything they just stuck around.  
-The cleanup seems perfectly reasonable to me, modulo the issue I've pointed out 
-below...
-
+On Sun, Aug 25, 2019 at 03:51:50PM +0200, Jacopo Mondi wrote:
+> Implement device tree parsing to collect the available CMM instances
+> described by the 'cmms' property. Associate CMMs with CRTCs and store a
+> mask of active CMMs in the DU group for later enablement.
 > 
+> Enforce the suspend/resume ordering of DU and CMM by creating a
+> stateless device link between the two to make sure the CMM supplier
+> device suspends after and resumes before the DU consumer.
 > 
-> [2] 
-> https://elixir.bootlin.com/linux/v5.3-rc4/source/drivers/clocksource/timer-riscv.c#L44
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  |  6 +++
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.h  |  2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.h   |  3 ++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.h |  2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c   | 63 +++++++++++++++++++++++++
+>  5 files changed, 76 insertions(+)
 > 
->> Thanks
->> 
->>   -- Daniel
->> 
->> [1] https://lkml.org/lkml/2018/8/4/51
->> 
->> 
->> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> > ---
->> >  drivers/clocksource/timer-riscv.c | 6 ++----
->> >  1 file changed, 2 insertions(+), 4 deletions(-)
->> > 
->> > diff --git a/drivers/clocksource/timer-riscv.c
->> > b/drivers/clocksource/timer-riscv.c
->> > index 5e6038fbf115..09e031176bc6 100644
->> > --- a/drivers/clocksource/timer-riscv.c
->> > +++ b/drivers/clocksource/timer-riscv.c
->> > @@ -55,7 +55,7 @@ static u64 riscv_sched_clock(void)
->> >  	return get_cycles64();
->> >  }
->> >  
->> > -static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
->> > +static struct clocksource riscv_clocksource = {
->> >  	.name		= "riscv_clocksource",
->> >  	.rating		= 300,
->> >  	.mask		= CLOCKSOURCE_MASK(64),
->> > @@ -92,7 +92,6 @@ void riscv_timer_interrupt(void)
->> >  static int __init riscv_timer_init_dt(struct device_node *n)
->> >  {
->> >  	int cpuid, hartid, error;
->> > -	struct clocksource *cs;
->> >  
->> >  	hartid = riscv_of_processor_hartid(n);
->> >  	if (hartid < 0) {
->> > @@ -112,8 +111,7 @@ static int __init riscv_timer_init_dt(struct
->> > device_node *n)
->> >  
->> >  	pr_info("%s: Registering clocksource cpuid [%d] hartid [%d]\n",
->> >  	       __func__, cpuid, hartid);
->> > -	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
->> > -	error = clocksource_register_hz(cs, riscv_timebase);
->> > +	error = clocksource_register_hz(&riscv_clocksource,
->> > riscv_timebase);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 2da46e3dc4ae..23f1d6cc1719 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -1194,6 +1194,12 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	/* CMM might be disabled for this CRTC. */
+> +	if (rcdu->cmms[swindex]) {
+> +		rcrtc->cmm = rcdu->cmms[swindex];
+> +		rgrp->cmms_mask |= BIT(hwindex % 2);
+> +	}
+> +
+>  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
+>  
+>  	/* Start with vertical blanking interrupt reporting disabled. */
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> index 3b7fc668996f..5f2940c42225 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> @@ -39,6 +39,7 @@ struct rcar_du_vsp;
+>   * @vblank_wait: wait queue used to signal vertical blanking
+>   * @vblank_count: number of vertical blanking interrupts to wait for
+>   * @group: CRTC group this CRTC belongs to
+> + * @cmm: CMM associated with this CRTC
+>   * @vsp: VSP feeding video to this CRTC
+>   * @vsp_pipe: index of the VSP pipeline feeding video to this CRTC
+>   * @writeback: the writeback connector
+> @@ -64,6 +65,7 @@ struct rcar_du_crtc {
+>  	unsigned int vblank_count;
+>  
+>  	struct rcar_du_group *group;
+> +	struct platform_device *cmm;
+>  	struct rcar_du_vsp *vsp;
+>  	unsigned int vsp_pipe;
+>  
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> index a00dccc447aa..300ec60ba31b 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> @@ -13,6 +13,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/wait.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_group.h"
+>  #include "rcar_du_vsp.h"
+> @@ -70,6 +71,7 @@ struct rcar_du_device_info {
+>  
+>  #define RCAR_DU_MAX_CRTCS		4
+>  #define RCAR_DU_MAX_GROUPS		DIV_ROUND_UP(RCAR_DU_MAX_CRTCS, 2)
+> +#define RCAR_DU_MAX_CMMS		4
 
-Someone's client has mangled the patches, but I think there's an issue here: 
-we're still calling the init code for every "riscv" DT entry, but there's now 
-only a single "struct clocksource".  This will result in a single clocksource 
-being initialized multiple times, which I assume is an issue.
+Maybe alphabetically sorted ?
 
->> >  	if (error) {
->> >  		pr_err("RISCV timer register failed [%d] for cpu =
->> > [%d]\n",
->> >  		       error, cpuid);
->> > 
->> 
->> 
-> 
+>  #define RCAR_DU_MAX_VSPS		4
+>  
+>  struct rcar_du_device {
+> @@ -86,6 +88,7 @@ struct rcar_du_device {
+>  	struct rcar_du_encoder *encoders[RCAR_DU_OUTPUT_MAX];
+>  
+>  	struct rcar_du_group groups[RCAR_DU_MAX_GROUPS];
+> +	struct platform_device *cmms[RCAR_DU_MAX_CMMS];
+
+As there's one CMM per CRTC, should we use RCAR_DU_MAX_CRTCS here ? It's
+not very useful to have two different macros that are required to have
+the same value :-)
+
+>  	struct rcar_du_vsp vsps[RCAR_DU_MAX_VSPS];
+>  
+>  	struct {
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> index 87950c1f6a52..e9906609c635 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> @@ -22,6 +22,7 @@ struct rcar_du_device;
+>   * @mmio_offset: registers offset in the device memory map
+>   * @index: group index
+>   * @channels_mask: bitmask of populated DU channels in this group
+> + * @cmms_mask: bitmask of available CMMs in this group
+>   * @num_crtcs: number of CRTCs in this group (1 or 2)
+>   * @use_count: number of users of the group (rcar_du_group_(get|put))
+>   * @used_crtcs: number of CRTCs currently in use
+> @@ -37,6 +38,7 @@ struct rcar_du_group {
+>  	unsigned int index;
+>  
+>  	unsigned int channels_mask;
+> +	unsigned int cmms_mask;
+>  	unsigned int num_crtcs;
+>  	unsigned int use_count;
+>  	unsigned int used_crtcs;
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> index 2dc9caee8767..61ca1d3c379a 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> @@ -17,7 +17,9 @@
+>  #include <drm/drm_probe_helper.h>
+>  #include <drm/drm_vblank.h>
+>  
+> +#include <linux/device.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/wait.h>
+>  
+>  #include "rcar_du_crtc.h"
+> @@ -614,6 +616,62 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+>  	return ret;
+>  }
+>  
+> +static int rcar_du_cmm_init(struct rcar_du_device *rcdu)
+> +{
+> +	const struct device_node *np = rcdu->dev->of_node;
+> +	unsigned int i;
+> +	int cells;
+> +
+> +	cells = of_property_count_u32_elems(np, "cmms");
+> +	if (cells == -EINVAL)
+> +		return 0;
+> +
+> +	if (cells > RCAR_DU_MAX_CMMS || cells > rcdu->num_crtcs) {
+
+And if we remove RCAR_DU_MAX_CMMS as proposed above, I would just remove
+the first part of the condition, as rcdu->num_crtcs is guaranteed to be
+<= RCAR_DU_MAX_CRTCS.
+
+With this addressed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +		dev_err(rcdu->dev,
+> +			"Invalid number of entries in 'cmms' property\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < cells; ++i) {
+> +		struct platform_device *pdev;
+> +		struct device_link *link;
+> +		struct device_node *cmm;
+> +
+> +		cmm = of_parse_phandle(np, "cmms", i);
+> +		if (IS_ERR(cmm)) {
+> +			dev_err(rcdu->dev, "Failed to parse 'cmms' property\n");
+> +			return PTR_ERR(cmm);
+> +		}
+> +
+> +		if (!of_device_is_available(cmm)) {
+> +			/* It's fine to have a phandle to a non-enabled CMM. */
+> +			of_node_put(cmm);
+> +			continue;
+> +		}
+> +
+> +		pdev = of_find_device_by_node(cmm);
+> +		if (IS_ERR(pdev)) {
+> +			dev_err(rcdu->dev, "No device found for CMM%u\n", i);
+> +			of_node_put(cmm);
+> +			return PTR_ERR(pdev);
+> +		}
+> +
+> +		of_node_put(cmm);
+> +
+> +		link = device_link_add(rcdu->dev, &pdev->dev,
+> +				       DL_FLAG_STATELESS);
+> +		if (!link) {
+> +			dev_err(rcdu->dev,
+> +				"Failed to create device link to CMM%u\n", i);
+> +			return -EINVAL;
+> +		}
+> +
+> +		rcdu->cmms[i] = pdev;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int rcar_du_modeset_init(struct rcar_du_device *rcdu)
+>  {
+>  	static const unsigned int mmio_offsets[] = {
+> @@ -704,6 +762,11 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
+>  			return ret;
+>  	}
+>  
+> +	/* Initialize the Color Management Modules. */
+> +	ret = rcar_du_cmm_init(rcdu);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Create the CRTCs. */
+>  	for (swindex = 0, hwindex = 0; swindex < rcdu->num_crtcs; ++hwindex) {
+>  		struct rcar_du_group *rgrp;
+
+-- 
+Regards,
+
+Laurent Pinchart
