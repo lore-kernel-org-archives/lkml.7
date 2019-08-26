@@ -2,254 +2,97 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC9BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29F821872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FE7217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pb7accaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732715AbfHZOsp (ORCPT
+        id S1732719AbfHZOte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:48:45 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30329 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732622AbfHZOsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:48:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 07:48:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="184981267"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.84])
-  by orsmga006.jf.intel.com with ESMTP; 26 Aug 2019 07:48:19 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [RESEND PATCH V3 4/8] perf/x86/intel: Support per thread RDPMC TopDown metrics
-Date:   Mon, 26 Aug 2019 07:47:36 -0700
-Message-Id: <20190826144740.10163-5-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190826144740.10163-1-kan.liang@linux.intel.com>
-References: <20190826144740.10163-1-kan.liang@linux.intel.com>
+        Mon, 26 Aug 2019 10:49:34 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:6071 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730499AbfHZOte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:49:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566830973; x=1598366973;
+  h=from:subject:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=cV++afZdVCdnVK5vWMAnee3Y5NbvfdxEOLMY1xSyQuY=;
+  b=pb7accaBtgIRuxawZzQCai/79IvcvKtrFjHRGE55GL3ui3rUt4/5qtoK
+   3NaWSWCfs9oaXplx1eEqCQyNNoN/40hzZR9F+puksbMC0SxY0IF5yeddf
+   GoWe1XZqsydcaGT7b0QLdytck/z9l1AN9I/X34LFkF+RLEQnbksegBJuY
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.64,433,1559520000"; 
+   d="scan'208";a="697550575"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 Aug 2019 14:49:17 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 364B3A2027;
+        Mon, 26 Aug 2019 14:49:16 +0000 (UTC)
+Received: from EX13D08UEE003.ant.amazon.com (10.43.62.118) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 26 Aug 2019 14:49:15 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D08UEE003.ant.amazon.com (10.43.62.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 26 Aug 2019 14:49:15 +0000
+Received: from [10.107.3.18] (10.107.3.18) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Mon, 26 Aug 2019 14:49:12 +0000
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
+ EDAC
+To:     Rob Herring <robh@kernel.org>
+CC:     <mark.rutland@arm.com>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
+        <paulmck@linux.ibm.com>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
+        <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+References: <20190805143911.12185-1-hhhawa@amazon.com>
+ <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
+Message-ID: <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
+Date:   Mon, 26 Aug 2019 17:49:11 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190821191704.GA32425@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-With Icelake CPUs, the TopDown metrics are directly available as fixed
-counters and do not require generic counters, which make it possible to
-measure TopDown per thread/process instead of only per core.
 
-The metrics and slots values have to be saved/restored during context
-switching.
-The saved values are also used as previous values to calculate the
-delta.
+On 8/21/2019 10:17 PM, Rob Herring wrote:
+> Why is this even in DT? AFAICT, this is all just CortexA57 core features
+> (i.e. nothing Amazon specific). The core type and the ECC capabilities
+> are discoverable.
 
-The PERF_METRICS MSR value will be returned if RDPMC metrics events.
+Added to the DT in order to easily enable/disable the driver. You are 
+correct that they are CortexA57 core features and nothing Amazon 
+specific, but it's IMPLEMENTATION DEFINED, meaning that in different 
+cortex revisions (e.g. A57) the register bitmap may change. Because of 
+that we added an Amazon compatible which corresponds to the specific 
+core we are using.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/core.c       |   5 +-
- arch/x86/events/intel/core.c | 102 ++++++++++++++++++++++++++++-------
- include/linux/perf_event.h   |   3 ++
- 3 files changed, 91 insertions(+), 19 deletions(-)
+Thanks,
+Hanna
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 1ae23db5c2d7..77573fa379dc 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2150,7 +2150,10 @@ static int x86_pmu_event_idx(struct perf_event *event)
- 	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
- 		return 0;
- 
--	if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
-+	/* Return PERF_METRICS MSR value for metrics event */
-+	if (is_metric_idx(idx))
-+		idx = 1 << 29;
-+	else if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
- 		idx -= INTEL_PMC_IDX_FIXED;
- 		idx |= 1 << 30;
- 	}
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 616313d7f3d7..9dc24cebb68c 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2253,6 +2253,11 @@ static int icl_set_topdown_event_period(struct perf_event *event)
- 		local64_set(&hwc->period_left, 0);
- 	}
- 
-+	if ((hwc->saved_slots) && is_first_topdown_event_in_group(event)) {
-+		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, hwc->saved_slots);
-+		wrmsrl(MSR_PERF_METRICS, hwc->saved_metric);
-+	}
-+
- 	perf_event_update_userpage(event);
- 
- 	return 0;
-@@ -2271,7 +2276,7 @@ static u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
- 	return  mul_u64_u32_div(slots, val, 0xff);
- }
- 
--static void __icl_update_topdown_event(struct perf_event *event,
-+static u64 icl_get_topdown_value(struct perf_event *event,
- 				       u64 slots, u64 metrics)
- {
- 	int idx = event->hw.idx;
-@@ -2282,7 +2287,50 @@ static void __icl_update_topdown_event(struct perf_event *event,
- 	else
- 		delta = slots;
- 
--	local64_add(delta, &event->count);
-+	return delta;
-+}
-+
-+static void __icl_update_topdown_event(struct perf_event *event,
-+				       u64 slots, u64 metrics,
-+				       u64 last_slots, u64 last_metrics)
-+{
-+	u64 delta, last = 0;
-+
-+	delta = icl_get_topdown_value(event, slots, metrics);
-+	if (last_slots)
-+		last = icl_get_topdown_value(event, last_slots, last_metrics);
-+
-+	/*
-+	 * The 8bit integer percentage of metric may be not accurate,
-+	 * especially when the changes is very small.
-+	 * For example, if only a few bad_spec happens, the percentage
-+	 * may be reduced from 1% to 0%. If so, the bad_spec event value
-+	 * will be 0 which is definitely less than the last value.
-+	 * Avoid update event->count for this case.
-+	 */
-+	if (delta > last) {
-+		delta -= last;
-+		local64_add(delta, &event->count);
-+	}
-+}
-+
-+static void update_saved_topdown_regs(struct perf_event *event,
-+				      u64 slots, u64 metrics)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct perf_event *other;
-+	int idx;
-+
-+	event->hw.saved_slots = slots;
-+	event->hw.saved_metric = metrics;
-+
-+	for_each_set_bit(idx, cpuc->active_mask, INTEL_PMC_IDX_TD_BE_BOUND + 1) {
-+		if (!is_topdown_idx(idx))
-+			continue;
-+		other = cpuc->events[idx];
-+		other->hw.saved_slots = slots;
-+		other->hw.saved_metric = metrics;
-+	}
- }
- 
- /*
-@@ -2294,6 +2342,7 @@ static u64 icl_update_topdown_event(struct perf_event *event)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_event *other;
- 	u64 slots, metrics;
-+	bool reset = true;
- 	int idx;
- 
- 	/*
-@@ -2315,26 +2364,46 @@ static u64 icl_update_topdown_event(struct perf_event *event)
- 		if (!is_topdown_idx(idx))
- 			continue;
- 		other = cpuc->events[idx];
--		__icl_update_topdown_event(other, slots, metrics);
-+		__icl_update_topdown_event(other, slots, metrics,
-+					   event ? event->hw.saved_slots : 0,
-+					   event ? event->hw.saved_metric : 0);
- 	}
- 
- 	/*
- 	 * Check and update this event, which may have been cleared
- 	 * in active_mask e.g. x86_pmu_stop()
- 	 */
--	if (event && !test_bit(event->hw.idx, cpuc->active_mask))
--		__icl_update_topdown_event(event, slots, metrics);
-+	if (event && !test_bit(event->hw.idx, cpuc->active_mask)) {
-+		__icl_update_topdown_event(event, slots, metrics,
-+					   event->hw.saved_slots,
-+					   event->hw.saved_metric);
- 
--	/*
--	 * To avoid the known issues as below, the PERF_METRICS and
--	 * Fixed counter 3 are reset for each read.
--	 * - The 8bit metrics ratio values lose precision when the
--	 *   measurement period gets longer.
--	 * - The PERF_METRICS may report wrong value if its delta was
--	 *   less than 1/255 of Fixed counter 3.
--	 */
--	wrmsrl(MSR_PERF_METRICS, 0);
--	wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
-+		/*
-+		 * In x86_pmu_stop(), the event is cleared in active_mask first,
-+		 * then drain the delta, which indicates context switch for
-+		 * counting.
-+		 * Save metric and slots for context switch.
-+		 * Don't need to reset the PERF_METRICS and Fixed counter 3.
-+		 * Because the values will be restored in next schedule in.
-+		 */
-+		update_saved_topdown_regs(event, slots, metrics);
-+		reset = false;
-+	}
-+
-+	if (reset) {
-+		/*
-+		 * To avoid the known issues as below, the PERF_METRICS and
-+		 * Fixed counter 3 are reset for each read.
-+		 * - The 8bit metrics ratio values lose precision when the
-+		 *   measurement period gets longer.
-+		 * - The PERF_METRICS may report wrong value if its delta was
-+		 *   less than 1/255 of Fixed counter 3.
-+		 */
-+		wrmsrl(MSR_PERF_METRICS, 0);
-+		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
-+		if (event)
-+			update_saved_topdown_regs(event, 0, 0);
-+	}
- 
- 	return slots;
- }
-@@ -3516,9 +3585,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 			event->attr.config1 = event->hw.config &
- 					      X86_ALL_EVENT_FLAGS;
- 			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
--
--			if (is_metric_event(event))
--				event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
- 		}
- 	}
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e8ad3c590a23..f1cd57a5fa55 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -133,6 +133,9 @@ struct hw_perf_event {
- 
- 			struct hw_perf_event_extra extra_reg;
- 			struct hw_perf_event_extra branch_reg;
-+
-+			u64		saved_slots;
-+			u64		saved_metric;
- 		};
- 		struct { /* software */
- 			struct hrtimer	hrtimer;
--- 
-2.17.1
-
+> 
+> Rob
