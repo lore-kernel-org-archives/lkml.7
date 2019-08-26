@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A3EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BEBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B2021872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D7421883
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="DY6w3wqt"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="wHGe7hy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732082AbfHZThL (ORCPT
+        id S2387761AbfHZThE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:37:11 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:7750 "EHLO
+        Mon, 26 Aug 2019 15:37:04 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:6220 "EHLO
         smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387734AbfHZThA (ORCPT
+        with ESMTP id S2387575AbfHZTgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:37:00 -0400
+        Mon, 26 Aug 2019 15:36:55 -0400
 Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 7209742C3FA;
-        Mon, 26 Aug 2019 12:37:43 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id C533D42A6BF;
+        Mon, 26 Aug 2019 12:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1566848263;
-        bh=P6qcBeZLPJpeVxQ8zSOSXiPxmRjanZu8toPXO61DwXc=;
+        s=Arista-A; t=1566848259;
+        bh=h2sZyqcU0eX97/uelkpgrKWTnzRbI03aVBmior+xgOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=DY6w3wqt1y2vmlcj7hh99UzRuze5GxzrPhVe5S8cdFJX9U0SjwndBAk1vjneLxhzw
-         QJKwNxpg5rqRBisyx3mTsVP1f4FqIW39Kk6wm9aKJe090AjZrhq9C7rXDBuMDt1ury
-         LgqC6RNuM8KJWuT7m0KSSbnagy7btMmK0Cc5WJcldRZApECszFyfBDVyd5Znorv4KN
-         ImJ14c8qnjoZs4/N3gmjvqrL8IbA3mlBLbKzDODpEVgw1zZ9CHF2VwCYkZXyLWIsPR
-         N1InihTRrLuXSQtfUC73d+6zYuk7h6uwAADSg7BzpRJ+jCDcQOnBsdI+CLb6NeCPyH
-         0zaV2M/JEvx6g==
+        b=wHGe7hy/DIuiWjiR3jyAwomGbapxVPLXLBJMOCQ+86Yx1nqjoY76NhD+ERUHwp/qy
+         1Qx+Qs5JZcW5fG3rmyyBTTfveOaiNKOFiMmOJCn/980Mf346b/ZsIZi0I2vxzOQgga
+         o0dyN8DferNHUydSZKssrcE7EhQdr52BaRXx9PcYwPkM6oiNSGn/O7lPjrKuwBUjtd
+         ayMxh5W80KVCPMFKx8t0MK8mQYMNmbXaiPsWuGvOgqpMvwj6/OlR9OGtW2Y1EmdyqT
+         /9izHprAIBQVCbC5OqFmB1vU7dpsnB01aOL3/BFb75kr3ZB5mm+gQ/W/mEjwJg5nlZ
+         ZTWmrv8qaxh9w==
 Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 5B91542C3E7;
-        Mon, 26 Aug 2019 12:37:43 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id BC62742A6B7;
+        Mon, 26 Aug 2019 12:37:39 -0700 (PDT)
 From:   Edward Chron <echron@arista.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
@@ -47,11 +47,10 @@ Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, colona@arista.com,
-        Edward Chron <echron@arista.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH 10/10] mm/oom_debug: Add Enhanced Process Print Information
-Date:   Mon, 26 Aug 2019 12:36:38 -0700
-Message-Id: <20190826193638.6638-11-echron@arista.com>
+        Edward Chron <echron@arista.com>
+Subject: [PATCH 06/10] mm/oom_debug: Add Select Vmalloc Entries Print
+Date:   Mon, 26 Aug 2019 12:36:34 -0700
+Message-Id: <20190826193638.6638-7-echron@arista.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190826193638.6638-1-echron@arista.com>
 References: <20190826193638.6638-1-echron@arista.com>
@@ -62,445 +61,256 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add OOM Debug code that prints additional detailed information about
-users processes that were considered for OOM killing for any print
-selected processes. The information is displayed for each user process
-that OOM prints in the output.
+Add OOM Debug code to allow select vmalloc entries to be printed output
+at the time of an OOM event. Listing some portion of the larger vmalloc
+entries has proven useful in tracking memory usage during an OOM event
+so the root cause of the event can be determined.
 
-This supplemental per user process information is very helpful for
-determing how process memory is used to allow OOM event root cause
-identifcation that might not otherwise be possible.
+Configuring this OOM Debug Option (DEBUG_OOM_VMALLOC_SELECT_PRINT)
+------------------------------------------------------------------
+To configure this option it needs to be selected in the OOM Debugging
+configure menu. The kernel configuration entry can be found in the
+config at: Kernel hacking, Memory Debugging, OOM Debugging with the
+DEBUG_OOM_VMALLOC_SELECT_PRINT config entry that configures this option.
 
-Configuring Enhanced Process Print Information
-----------------------------------------------
-The DEBUG_OOM_ENHANCED_PROCESS_PRINT is the config entry defined for
-this OOM Debug option.  This option is dependent on the OOM Debug
-option DEBUG_OOM_SELECT_PROCESS which adds code to allow processes
-that are considered for OOM kill to be selectively printed, only
-printing processes that use a specified minimum amount of memory.
-
-The kernel configuration entry for this option can be found in the
-config file at: Kernel hacking, Memory Debugging, Debug OOM,
-Debug OOM Process Selection, Debug OOM Enhanced Process Print.
-Both Debug OOM Process Selection and Debug OOM Enhanced Process Print
-entries must be selected.
+Two dynamic OOM debug settings for this option: enable, tenthpercent
+--------------------------------------------------------------------
+The oom debugfs base directory is found at: /sys/kernel/debug/oom.
+The oom debugfs for this option is: vmalloc_select_print_
+and for select options there are two files, the enable file and
+the tenthpercent file are the debugfs files.
 
 Dynamic disable or re-enable this OOM Debug option
 --------------------------------------------------
 This option may be disabled or re-enabled using the debugfs entry for
-this OOM debug option. The debugfs file to enable this entry is found at:
-/sys/kernel/debug/oom/process_enhanced_print_enabled where the enabled
+this OOM debug option. The debugfs file to enable this entry is found
+at: /sys/kernel/debug/oom/vmalloc_select_print_enabled where the enabled
 file's value determines whether the facility is enabled or disabled.
 A value of 1 is enabled (default) and a value of 0 is disabled.
 
-Content and format of process record and Task state headers
+Specifying the minimum entry size (0-1000) in the tenthpercent file
+-------------------------------------------------------------------
+Also for DEBUG_OOM_VMALLOC_SELECT_PRINT the number of vmalloc entries
+printed can be adjusted. By default if the DEBUG_OOM_VMALLOC_SELECT_PRINT
+config option is enabled only entries that use 1% or more of memory are
+printed. This can be adjusted to be entries as small as 0% of memory
+or as large as 100% of memory in which case only a summary line is
+printed, as no vmalloc entry could possibly use 100% of memory.
+Adjustments are made through the debugfs file found at:
+/sys/kernel/debug/oom/vmalloc_select_print_tenthpercent
+Entry values that are valid are 0 through 1000 which represent memory
+usage of 0% of memory to 100% of memory. Only entries that are using
+at least one page of memory are printed even if the minimum entry
+size is specified as 0, zero page entries have no memory assigned.
+
+Content of Vmalloc entry records and Vmalloc summary record
 -----------------------------------------------------------
-Each OOM process entry printed include memory information about the
-process. Memory usage is specified in KiB for memory values instead of
-pages. Each entry includes the following fields:
-pid, ppid, ruid, euid, tgid, State (S), the oom_score_adjust (Adjust),
-task comm value (name), and also memory values (all in KB): VmemKiB,
-MaxRssKiB, CurRssKiB, PteKiB, SwapKiB, socket pages (SockKiB), LibKiB,
-TextPgKiB, HeapPgKiB, StackKiB, FileKiB and shared memory (ShmemKiB).
-Counts of page reads (ReadPgs) and page faults (FaultPgs) are included.
+The output is vmalloc entry information output limited such that only
+entries equal to or larger than the minimum size are printed.
+Unused vmallocs (no pages assigned to the vmalloc) are never printed.
+The vmalloc entry information includes:
+  - Size (in bytes)
+  - pages (Number pages in use)
+  - Caller Information to identify the request
+
+Additional output consists of summary information that is printed
+at the end of the output. This summary information includes:
+  - Number of Vmalloc entries examined
+  - Number of Vmalloc entries printed
+  - minimum entry size for selection
 
 Sample Output
 -------------
-OOM Process select print headers and line of process enhanced output:
+Output produced consists of one line of output for each vmalloc entry
+that is equal to or larger than the minimum entry size specified
+by the percent_totalpages_print_limit (0% to 100.0%) followed by
+one line of summary output. There is also a section header output
+line and a summary line that are printed.
 
-Aug  6 09:37:21 egc103 kernel: Tasks state (memory values in KiB):
-Aug  6 09:37:21 egc103 kernel: [  pid  ]    ppid    ruid    euid
-    tgid S  utimeSec  stimeSec   VmemKiB MaxRssKiB CurRssKiB
-    PteKiB   SwapKiB   SockKiB     LibKiB   TextKiB   HeapKiB
-  StackKiB   FileKiB  ShmemKiB   ReadPgs  FaultPgs   LockKiB
- PinnedKiB Adjust name
+Sample Vmalloc entries section header:
 
-Aug  6 09:37:21 egc103 kernel: [   7707]    7553   10383   10383
-    7707 S     0.132     0.350   1056804   1054040   1052796
-      2092         0         0       1944       684   1052860
-       136         4         0         0         0         0
-         0   1000 oomprocs
+Aug 19 19:27:01 coronado kernel: Vmalloc Info:
+
+Sample per entry selected print line output:
+
+Jul 22 20:16:09 yoursystem kernel: Vmalloc size=2625536 pages=640
+ caller=__do_sys_swapon+0x78e/0x1130
+
+Sample summary print line output:
+
+Jul 22 19:03:26 yoursystem kernel: Summary: Vmalloc entries examined:1070
+ printed:989 minsize:0kB
 
 
 Signed-off-by: Edward Chron <echron@arista.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
 ---
- mm/Kconfig.debug    |  23 +++++
- mm/oom_kill.c       |  23 ++++-
- mm/oom_kill_debug.c | 236 ++++++++++++++++++++++++++++++++++++++++++++
- mm/oom_kill_debug.h |   5 +
- 4 files changed, 285 insertions(+), 2 deletions(-)
+ include/linux/vmalloc.h | 12 ++++++++++++
+ mm/Kconfig.debug        | 28 +++++++++++++++++++++++++++
+ mm/oom_kill_debug.c     | 21 ++++++++++++++++++++
+ mm/vmalloc.c            | 43 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 104 insertions(+)
 
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 9b21d0047710..09e3257fc382 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -227,4 +227,16 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
+ int register_vmap_purge_notifier(struct notifier_block *nb);
+ int unregister_vmap_purge_notifier(struct notifier_block *nb);
+ 
++#ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
++/**
++ * Routine used to print select vmalloc entries on an OOM event so we
++ * can identify sizeable entries that may have a significant effect on
++ * kernel memory utilization. Output goes to dmesg along with all the OOM
++ * related messages when the config option DEBUG_OOM_VMALLOC_SELECT_PRINT
++ * is set to yes. The Option may be dyanmically enabled or disabled and
++ * the selection size is also dynamically configureable.
++ */
++extern void vmallocinfo_oom_print(unsigned long min_kb);
++#endif /* CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT */
++
+ #endif /* _LINUX_VMALLOC_H */
 diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-index 4414e46f72c6..2bc843727968 100644
+index c7d53ca95d32..ea3465343286 100644
 --- a/mm/Kconfig.debug
 +++ b/mm/Kconfig.debug
-@@ -320,3 +320,26 @@ config DEBUG_OOM_PROCESS_SELECT_PRINT
+@@ -219,3 +219,31 @@ config DEBUG_OOM_SLAB_SELECT_PRINT
  	  print limit value of 10 or 1% of memory.
  
  	  If unsure, say N.
 +
-+config DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+	bool "Debug OOM Enhanced Process Print"
-+	depends on DEBUG_OOM_PROCESS_SELECT_PRINT
++config DEBUG_OOM_VMALLOC_SELECT_PRINT
++	bool "Debug OOM Select Vmallocs Print"
++	depends on DEBUG_OOM
 +	help
-+	  Each OOM process entry printed include memory information about
-+	  the process. Memory usage is specified in KiB (KB) for memory
-+	  values, not pages. Each entry includes the following fields:
-+	  pid, ppid, ruid, euid, tgid, State (S), utime in seconds,
-+	  stime in seconds, the number of read pages (ReadPgs), number of
-+	  page faults (FaultPgs), the number of lock pages (LockPgs), the
-+	  oom_score_adjust value (Adjust), memory percentage used (MemPct),
-+	  oom_score (Score), task comm value (name), and also memory values
-+	  (all in KB): VmemKiB, MaxRssKiB, CurRssKiB, PteKiB, SwapKiB,
-+	  socket pages (SockKiB), LibKiB, TextPgKiB, HeapPgKiB, StackKiB,
-+	  FileKiB and shared memory pages (ShmemKiB).
++	  When enabled, allows the number of vmalloc entries printed
++	  to be print rate limited based on the amount of memory the
++	  vmalloc entry is consuming.
 +
 +	  If the option is configured it is enabled/disabled by setting
 +	  the value of the file entry in the debugfs OOM interface at:
-+	  /sys/kernel/debug/oom/process_enhanced_print_enabled
++	  /sys/kernel/debug/oom/vmalloc_select_print_enabled
 +	  A value of 1 is enabled (default) and a value of 0 is disabled.
 +
-+	  If unsure, say N.
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index cbea289c6345..cf37caea9c5c 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -417,6 +417,13 @@ static int dump_task(struct task_struct *p, void *arg)
- 	}
- #endif
- 
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+	if (oom_kill_debug_enhanced_process_print_enabled()) {
-+		dump_task_prt(task, rsspgs, swappgs, pgtbl);
-+		task_unlock(task);
-+		return 1;
-+	}
-+#endif
- 	pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
- 		task->pid, from_kuid(&init_user_ns, task_uid(task)),
- 		task->tgid, task->mm->total_vm, rsspgs, pgtbl, swappgs,
-@@ -426,6 +433,19 @@ static int dump_task(struct task_struct *p, void *arg)
- 	return 1;
- }
- 
-+static void dump_tasks_headers(void)
-+{
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+	if (oom_kill_debug_enhanced_process_print_enabled()) {
-+		pr_info("Tasks state (memory values in KiB):\n");
-+		pr_info("[  pid  ]    ppid    ruid    euid    tgid S  utimeSec  stimeSec   VmemKiB MaxRssKiB CurRssKiB    PteKiB   SwapKiB   SockKiB     LibKiB   TextKiB   HeapKiB  StackKiB   FileKiB  ShmemKiB     ReadPgs    FaultPgs   LockKiB PinnedKiB Adjust name\n");
-+		return;
-+	}
-+#endif
-+	pr_info("Tasks state (memory values in pages):\n");
-+	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-+}
++	  When enabled entries are print limited by the amount of memory
++	  they consume. The setting value defines the minimum memory
++	  size consumed and are represented in tenths of a percent.
++	  Values supported are 0 to 1000 where 0 allows all entries to be
++	  printed, 1 would allow entries using 0.1% or more to be printed,
++	  10 would allow entries using 1% or more of memory to be printed.
 +
- #define K(x) ((x) << (PAGE_SHIFT-10))
- 
- /**
-@@ -443,8 +463,7 @@ static void dump_tasks(struct oom_control *oc)
- 	u32 total = 0;
- 	u32 prted = 0;
- 
--	pr_info("Tasks state (memory values in pages):\n");
--	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-+	dump_tasks_headers();
- 
- #ifdef CONFIG_DEBUG_OOM_PROCESS_SELECT_PRINT
- 	oc->minpgs = oom_kill_debug_min_task_pages(oc->totalpages);
++	  If configured and enabled the rate limiting memory percentage
++	  is specified by setting a value in the debugfs OOM interface at:
++	  /sys/kernel/debug/oom/vmalloc_select_print_tenthpercent
++	  If configured the default settings are set to enabled and
++	  print limit value of 10 or 1% of memory.
++
++	  If unsure, say N.
 diff --git a/mm/oom_kill_debug.c b/mm/oom_kill_debug.c
-index ad937b3d59f3..467f7add4397 100644
+index 2b5245e1134d..d5e37f8508e6 100644
 --- a/mm/oom_kill_debug.c
 +++ b/mm/oom_kill_debug.c
-@@ -171,6 +171,12 @@
- #ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
- #include <linux/vmalloc.h>
+@@ -168,6 +168,9 @@
+ #ifdef CONFIG_DEBUG_OOM_SLAB_SELECT_PRINT
+ #include "slab.h"
  #endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+#include <linux/fdtable.h>
-+#include <linux/net.h>
-+#include <net/sock.h>
-+#include <linux/sched/cputime.h>
++#ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
++#include <linux/vmalloc.h>
 +#endif
  
  #define OOMD_MAX_FNAME 48
  #define OOMD_MAX_OPTNAME 32
-@@ -250,6 +256,12 @@ static struct oom_debug_option oom_debug_options_table[] = {
- 		.option_name	= "slab_enhanced_print_",
- 		.support_tpercent = false,
+@@ -223,6 +226,12 @@ static struct oom_debug_option oom_debug_options_table[] = {
+ 		.option_name	= "slab_select_print_",
+ 		.support_tpercent = true,
  	},
 +#endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
++#ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
 +	{
-+		.option_name	= "process_enhanced_print_",
-+		.support_tpercent = false,
++		.option_name	= "vmalloc_select_print_",
++		.support_tpercent = true,
 +	},
  #endif
  	{}
  };
-@@ -282,6 +294,9 @@ enum oom_debug_options_index {
+@@ -243,6 +252,9 @@ enum oom_debug_options_index {
  #endif
- #ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
- 	ENHANCED_SLAB_STATE,
+ #ifdef CONFIG_DEBUG_OOM_SLAB_SELECT_PRINT
+ 	SELECT_SLABS_STATE,
 +#endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+	ENHANCED_PROCESS_STATE,
++#ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
++	SELECT_VMALLOC_STATE,
  #endif
  	OUT_OF_BOUNDS
  };
-@@ -365,6 +380,12 @@ bool oom_kill_debug_enhanced_slab_print_information_enabled(void)
- 	return oom_kill_debug_enabled(ENHANCED_SLAB_STATE);
- }
+@@ -431,6 +443,15 @@ u32 oom_kill_debug_oom_event_is(void)
+ 		neightbl_print_stats("nd_tbl", &nd_tbl);
  #endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+bool oom_kill_debug_enhanced_process_print_enabled(void)
-+{
-+	return oom_kill_debug_enabled(ENHANCED_PROCESS_STATE);
-+}
-+#endif
  
- #ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
- /*
-@@ -513,6 +534,221 @@ u32 oom_kill_debug_oom_event_is(void)
- 	return oom_kill_debug_oom_events;
++#ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
++	if (oom_kill_debug_enabled(SELECT_VMALLOC_STATE)) {
++		u16 ptenth = oom_kill_debug_tenthpercent(SELECT_VMALLOC_STATE);
++		unsigned long minkb = (K(totalram_pages()) * ptenth) / 1000;
++
++		vmallocinfo_oom_print(minkb);
++	}
++#endif
++
+ #ifdef CONFIG_DEBUG_OOM_TASKS_SUMMARY
+ 	if (oom_kill_debug_enabled(TASKS_STATE))
+ 		oom_kill_debug_tasks_summary_print();
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 7ba11e12a11f..2cdc0f0cd0af 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3523,4 +3523,47 @@ static int __init proc_vmalloc_init(void)
  }
+ module_init(proc_vmalloc_init);
  
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
++#ifdef CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT
++#define K(x) ((x) << (PAGE_SHIFT-10))
 +/*
-+ *  Account for socket(s) buffer memory in use by a task.
-+ *  A task may have one or more sockets consuming socket buffer space.
-+ *  Account for how much socket space each task has in use.
++ * Routine used to print select vmalloc entries on an OOM condition so
++ * we can identify sizeable entries that may have a significant effect on
++ * kernel memory utilization. Output goes to dmesg along with all the OOM
++ * related messages when the config option DEBUG_OOM_VMALLOC_SELECT_PRINT
++ * is set to yes. Both enable / disable and size selection value are
++ * dynamically configurable.
 + */
-+static unsigned long account_for_socket_buffers(struct task_struct *task,
-+						char *incomplete)
++void vmallocinfo_oom_print(unsigned long min_kb)
 +{
-+	unsigned long sockpgs = 0;
-+	struct files_struct *files = task->files;
-+	struct fdtable *fdt;
-+	struct file **fds;
-+	int openfilecount;
-+	struct inode *inode;
-+	struct socket *sock;
-+	struct sock *sk;
-+	unsigned long bytes;
-+	int fdtsize;
-+	int i;
++	struct vmap_area *vap;
++	struct vm_struct *vsp;
++	u_int32_t entries = 0;
++	u_int32_t printed = 0;
 +
-+	/* Just to make sure the fds don't get closed */
-+	atomic_inc(&files->count);
-+	/* Make a best effort, but no reason to get hung up here */
-+	if (!spin_trylock(&files->file_lock)) {
-+		*incomplete = '*';
-+		atomic_dec(&files->count);
-+		return 0;
++	if (!spin_trylock(&vmap_area_lock)) {
++		pr_info("Vmalloc Info: Skipped, vmap_area_lock not available\n");
++		return;
 +	}
 +
-+	rcu_read_lock();
-+	fdt = files_fdtable(files);
-+	fdtsize = fdt->max_fds;
-+	/* Determine how many words we need to check for open files */
-+	for (i = fdtsize / BITS_PER_LONG; i > 0; ) {
-+		if (fdt->open_fds[--i])
-+			break;
-+	}
-+	openfilecount = (i + 1) * BITS_PER_LONG;  // Check each fd in the word
-+	fds = fdt->fd;
-+	for (i = openfilecount; i != 0; i--) {
-+		struct file *fp = *fds++;
-+
-+		if (fp) {
-+			/* Any continue case doesn't need to be counted */
-+			if (fp->f_path.dentry == NULL)
-+				continue;
-+			inode = fp->f_path.dentry->d_inode;
-+			if (inode == NULL || !S_ISSOCK(inode->i_mode))
-+				continue;
-+			sock = fp->private_data;
-+			if (sock == NULL)
-+				continue;
-+			sk = sock->sk;
-+			if (sk == NULL)
-+				continue;
-+			bytes = roundup(sk->sk_rcvbuf, PAGE_SIZE);
-+			sockpgs = bytes / PAGE_SIZE;
-+			bytes = roundup(sk->sk_sndbuf, PAGE_SIZE);
-+			sockpgs += bytes / PAGE_SIZE;
++	pr_info("Vmalloc Info:\n");
++	list_for_each_entry(vap, &vmap_area_list, list) {
++		if (!(vap->flags & VM_VM_AREA))
++			continue;
++		++entries;
++		vsp = vap->vm;
++		if ((vsp->nr_pages > 0) && (K(vsp->nr_pages) >= min_kb)) {
++			pr_info("vmalloc size=%ld pages=%d caller=%pS\n",
++				vsp->size, vsp->nr_pages, vsp->caller);
++			++printed;
 +		}
 +	}
-+	rcu_read_unlock();
 +
-+	spin_unlock(&files->file_lock);
-+	/* We're done looking at the fds */
-+	atomic_dec(&files->count);
++	spin_unlock(&vmap_area_lock);
 +
-+	return sockpgs;
++	pr_info("Summary: Vmalloc entries examined:%u printed:%u minsize:%lukB\n",
++		entries, printed, min_kb);
 +}
++EXPORT_SYMBOL(vmallocinfo_oom_print);
++#endif /* CONFIG_DEBUG_OOM_VMALLOC_SELECT_PRINT */
 +
-+static u64 power10(u32 index)
-+{
-+	static u64 pwr10[11] = {1, 10, 100, 1000, 10000, 100000, 1000000,
-+				10000000, 100000000, 1000000000,
-+				10000000000};
-+
-+	return pwr10[index];
-+}
-+
-+static u32 num_digits(u64 num)
-+{
-+	u32 i;
-+
-+	for (i = 1; i < 11; ++i) {
-+		if (power10(i) > num)
-+			return i;
-+	}
-+	return i;
-+}
-+
-+static void digits_and_fraction(u64 num, u32 *p_digits, u32 *p_frac, u32 chars)
-+{
-+	*p_digits = num_digits(num);
-+	// Allow for decimal place for fractional output
-+	if (chars - 1 > *p_digits)
-+		*p_frac = chars - 1 - *p_digits;
-+	else
-+		*p_frac = 0;
-+}
-+
-+#define MAX_NUM_FIELD_SIZE	10
-+/*
-+ * Format timespec into seconds and possibly fraction, must fit in 9 bytes.
-+ * Linux kernel doesn't support floating point so format as best we can.
-+ * With 9 digits in seconds convers 31.7 years and where we can we provide
-+ * fractions of a second up to miliseconds.
-+ */
-+static void timespec_format(u64 nsecs_time, char *p_time, size_t time_size)
-+{
-+	struct timespec64 tspec = ns_to_timespec64(nsecs_time);
-+	u32 digits, fracs, bytes, min;
-+	u64 fraction;
-+
-+	digits_and_fraction(tspec.tv_sec, &digits, &fracs, time_size);
-+
-+	bytes = sprintf(p_time, "%llu", tspec.tv_sec);
-+
-+	if (fracs > 0) {
-+		u32 frsize = num_digits(tspec.tv_nsec);
-+
-+		p_time += bytes;
-+		if (frsize >= 3) {
-+			if (fracs >= 3)
-+				min = frsize - 3;
-+			else if (fracs >= 2)
-+				min = frsize - 2;
-+			else
-+				min = frsize - 1;
-+		} else if (frsize >= 2) {
-+			if (fracs >= 2)
-+				min = frsize - 2;
-+			else
-+				min = frsize - 1;
-+		} else {
-+			min = frsize - 1;
-+		}
-+		fraction = tspec.tv_nsec / power10(min);
-+		sprintf(p_time, ".%llu", fraction);
-+	}
-+}
-+
-+/*
-+ * Format utime, stime in seconds and possibly fractions, must fit in 9 bytes.
-+ */
-+static void time_format(struct task_struct *task, char *p_utime, char *p_stime)
-+{
-+	size_t num_size = MAX_NUM_FIELD_SIZE;
-+	u64 utime, stime;
-+
-+	task_cputime_adjusted(task, &utime, &stime);
-+	memset(p_utime, 0, num_size);
-+	timespec_format(utime, p_utime, num_size - 1);
-+	memset(p_stime, 0, num_size);
-+	timespec_format(stime, p_stime, num_size - 1);
-+}
-+
-+/* task_index_to_char kernel function is missing options so use this */
-+#define TASK_STATE_TO_CHAR_STR "RSDTtZXxKWP"
-+static const char task_to_char[] = TASK_STATE_TO_CHAR_STR;
-+static const char get_task_state(struct task_struct *p_task, ulong state)
-+{
-+	int bit = state ? __ffs(state) + 1 : 0;
-+
-+	if (p_task->tgid == 0)
-+		return 'I';
-+	return bit < sizeof(task_to_char) - 1 ? task_to_char[bit] : '?';
-+}
-+
-+/*
-+ * Code that prints the information about the specified task.
-+ * Assumes task lock is held at entry.
-+ */
-+void dump_task_prt(struct task_struct *task,
-+		   unsigned long rsspg, unsigned long swappg,
-+		   unsigned long pgtbl)
-+{
-+	char c_utime[MAX_NUM_FIELD_SIZE], c_stime[MAX_NUM_FIELD_SIZE];
-+	unsigned long vmkb, sockkb, text, maxrsspg, pgtblpg;
-+	unsigned long libkb, textkb, pgtblkb;
-+	struct mm_struct *mm;
-+	char incomp = ' ';
-+	kuid_t ruid, euid;
-+	char tstate;
-+
-+	mm = task->mm;
-+	maxrsspg = rsspg;
-+	pgtblpg = pgtbl >> PAGE_SHIFT;
-+	ruid = __task_cred(task)->uid;
-+	euid = __task_cred(task)->euid;
-+	vmkb = K(mm->total_vm);
-+	if (maxrsspg < mm->hiwater_rss)
-+		maxrsspg = mm->hiwater_rss;
-+	sockkb = K(account_for_socket_buffers(task, &incomp));
-+	text = (PAGE_ALIGN(mm->end_code) -
-+		 (mm->start_code & PAGE_MASK));
-+	text = min(text, mm->exec_vm << PAGE_SHIFT);
-+	textkb = text >> 10;
-+	libkb = ((mm->exec_vm << PAGE_SHIFT) - text) >> 10;
-+	pgtblkb = pgtbl >> 10;
-+	tstate = get_task_state(task, task->state);
-+	time_format(task, c_utime, c_stime);
-+
-+	pr_info("[%7d] %7d %7d %7d %7d %c %9s %9s %9lu %9lu %9lu %9lu %9ld %9lu%c %9lu %9lu %9lu %9lu %9lu %9lu %11lu %11lu %9lu %9llu  %5hd %s\n",
-+		task->pid, task_ppid_nr(task), ruid.val, euid.val, task->tgid,
-+		tstate, c_utime, c_stime, vmkb, K(maxrsspg), K(rsspg), pgtblkb,
-+		K(swappg), sockkb, incomp, libkb, textkb, K(mm->data_vm),
-+		K(mm->stack_vm), K(get_mm_counter(mm, MM_FILEPAGES)),
-+		K(get_mm_counter(mm, MM_SHMEMPAGES)), task->signal->cmaj_flt,
-+		task->signal->cmin_flt,
-+		K(mm->locked_vm), K((u64)atomic64_read(&mm->pinned_vm)),
-+		task->signal->oom_score_adj, task->comm);
-+}
-+#endif /* CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT */
-+
- static void __init oom_debug_init(void)
- {
- 	/* Ensure we have a debugfs oom root directory */
-diff --git a/mm/oom_kill_debug.h b/mm/oom_kill_debug.h
-index a39bc275980e..faebb4c6097c 100644
---- a/mm/oom_kill_debug.h
-+++ b/mm/oom_kill_debug.h
-@@ -9,6 +9,11 @@
- #ifndef __MM_OOM_KILL_DEBUG_H__
- #define __MM_OOM_KILL_DEBUG_H__
- 
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_PROCESS_PRINT
-+extern bool oom_kill_debug_enhanced_process_print_enabled(void);
-+extern void dump_task_prt(struct task_struct *task, unsigned long rsspg,
-+			  unsigned long swappg, unsigned long pgtbl);
-+#endif
- #ifdef CONFIG_DEBUG_OOM_PROCESS_SELECT_PRINT
- extern unsigned long oom_kill_debug_min_task_pages(unsigned long totalpages);
  #endif
 -- 
 2.20.1
