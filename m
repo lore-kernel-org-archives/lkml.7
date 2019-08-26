@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862D8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5094B21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB7022CBB
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="AC2mQsdx"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="1IEjogex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387826AbfHZThT (ORCPT
+        id S2387621AbfHZTgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:37:19 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:7181 "EHLO
+        Mon, 26 Aug 2019 15:36:55 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:2700 "EHLO
         smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387642AbfHZTg5 (ORCPT
+        with ESMTP id S2387417AbfHZTgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:36:57 -0400
+        Mon, 26 Aug 2019 15:36:51 -0400
 Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 5E13742AD87;
-        Mon, 26 Aug 2019 12:37:42 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 931FE42A6BB;
+        Mon, 26 Aug 2019 12:37:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1566848262;
-        bh=S20mDshN1pQo1L5f/8CHlF5oa1OC9f9U27DdEARsaQI=;
+        s=Arista-A; t=1566848255;
+        bh=geOwB3duci2zbNvoXfDx+5+x5VtXw6E+x8+dOFZDgKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=AC2mQsdxK20pXBdi7vi5PCecc9RYN4oOlFGvTkCysETcJf9ul2jN0qzWMmtk57jBV
-         EYOe0yHI4Ks8lgXaxJpjf3M+Nhnz62keHqaPZ7+eNt9mvloqCX5o4gBuVICazqRrr1
-         iwcwYJuMp6p2WNQCxlELS7uWVjpIerF2+BZRTk2n+njNWpN1cJVe1V9KaxXxhJe9nN
-         SpCUQJZRAs6EDgfDozYmda8dLh7Mc8UzME1IA30hLdMhgMw9TTS4PO7VfJXRgzk+di
-         cOPK1sOpPucvWI5TqKQ0zuWsy4so2a4eai6Jhqq5OyPbAGmA4kPT2BP6akJX3dvPSt
-         iDmhfQRzibLUw==
+        b=1IEjogexzuQCB3SP38md7Eq7OAtVIB9hqKIwzdhXq9OKGIHvWKGuRq1zmfcN7hdXv
+         fPd7SXHgFSThKuZJr8a5ZvI8CZib+v+FLCIf1jki8OhLBtTVx/ytVRHydiqzEaPagh
+         JPZXB4AOFk4EUCpl73dyFdgL2f8/acMUXaPoGgYh99S7RPizNVGNqNcD82fpBjgmca
+         flazzOdVEDUXatpff0Du/hlvWUAogblxYEhvPR1WAgw69bV/xHozqclJwsUctRMTH8
+         4pRu4ak3SRjysHQc1ZDP3Z1ZnImD5ycT13vKdxOJltNyRZ12aXw0jyWapP9IW4qwY+
+         ArpNl8dESBAlg==
 Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 4D3ED42C3CA;
-        Mon, 26 Aug 2019 12:37:42 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 8537F42A6B7;
+        Mon, 26 Aug 2019 12:37:35 -0700 (PDT)
 From:   Edward Chron <echron@arista.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
@@ -48,9 +48,9 @@ Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
         Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, colona@arista.com,
         Edward Chron <echron@arista.com>
-Subject: [PATCH 09/10] mm/oom_debug: Add Enhanced Slab Print Information
-Date:   Mon, 26 Aug 2019 12:36:37 -0700
-Message-Id: <20190826193638.6638-10-echron@arista.com>
+Subject: [PATCH 02/10] mm/oom_debug: Add System State Summary
+Date:   Mon, 26 Aug 2019 12:36:30 -0700
+Message-Id: <20190826193638.6638-3-echron@arista.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190826193638.6638-1-echron@arista.com>
 References: <20190826193638.6638-1-echron@arista.com>
@@ -61,196 +61,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add OOM Debug code that prints additional detailed information about each
-slab entry that has been selected for printing. The information is
-displayed for each slab enrty selected for print. The extra information
-is helpful for root cause identification and problem analysis.
+When selected, prints the number of CPUs online at the time of the OOM
+event. Also prints nodename, domainname, machine type, kernel release
+and version, system uptime, total memory and swap size. Produces a
+single line of output holding this information.
 
-Configuring Enhanced Process Print Information
-----------------------------------------------
-The Kernel configuration option that defines this option is
-DEBUG_OOM_ENHANCED_SLAB_PRINT. This additional code is dependent on the
-OOM Debug option DEBUG_OOM_SLAB_SELECT_PRINT which adds code to allow
-processes that are considered for OOM kill to be selectively printed,
-only printing processes that use a specified minimum amount of memory.
+This information is useful to help determine the state the system was
+in when the event was triggered which is helpful for debugging,
+performance measurements and security issues.
 
-The kernel configuration entry for this option can be found in the
-config file at: Kernel hacking, Memory Debugging, Debug OOM,
-Debug OOM Process Selection, Debug OOM Enhanced Process Print.
-Both Debug OOM Process Selection and Debug OOM Enhanced Process Print
-entries must be selected.
+Configuring this Debug Option (DEBUG_OOM_SYSTEM_STATE)
+------------------------------------------------------
+To enable the option it needs to be configured in the OOM Debugging
+configure menu. The kernel configuration entry can be found in the
+config at: Kernel hacking, Memory Debugging, OOM Debugging the
+DEBUG_OOM_SYSTEM_STATE config entry.
 
 Dynamic disable or re-enable this OOM Debug option
 --------------------------------------------------
-This option may be disabled or re-enabled using the debugfs entry for
-this OOM debug option. The debugfs file to enable this entry is found at:
-/sys/kernel/debug/oom/process_enhanced_print_enabled where the enabled
+The oom debugfs base directory is found at: /sys/kernel/debug/oom.
+The oom debugfs for this option is: system_state_summary_
+and the file for this option is the enable file.
+
+This option may be disabled or re-enabled using the debugfs enable file
+for this OOM debug option. The debugfs file to enable this entry is found
+at: /sys/kernel/debug/oom/system_state_summary_enabled where the enabled
 file's value determines whether the facility is enabled or disabled.
-A value of 1 is enabled (default) and a value of 0 is disabled.
+A value of 1 is enabled and a value of 0 is disabled.
 When configured the default setting is set to enabled.
 
-Content and format of slab entry messages
------------------------------------------
-In addition to the Used and Total space (in KiB) fields that are
-displayed by the standard Linux OOM slab reporting code the enhanced
-entries include: active objects, total objects, object and align size
-(both in bytes), objects per slab, pages per slab, active slabs,
-total slabs and the slab name (located at the end, easier to read).
+Content and format of System State Summary Output
+-------------------------------------------------
+  One line of output that includes:
+  - Uptime (days, hour, minutes, seconds)
+  - Number CPUs
+  - Machine Type
+  - Node name
+  - Domain name
+  - Kernel Release
+  - Kernel Version
 
-Sample Output
+Sample Output:
 -------------
-Sample oom report message header and output slab entry message:
+Sample System State Summary message:
 
-Aug 13 18:52:47 mysrvr kernel:   UsedKiB   TotalKiB  ActiveObj   TotalObj
- ObjSize AlignSize Objs/Slab Pgs/Slab ActiveSlab  TotalSlab Slab_Name
+Jul 27 10:56:46 yoursystem kernel: System Uptime:0 days 00:17:27
+ CPUs:4 Machine:x86_64 Node:yoursystem Domain:localdomain
+ Kernel Release:5.3.0-rc2+ Version: #49 SMP Mon Jul 27 10:35:32 PDT 2019
 
-Aug 13 18:52:47 mysrvr kernel:       403        412       1613       1648
-     224       256        16        1        103        103 skbuff_head..
 
 Signed-off-by: Edward Chron <echron@arista.com>
 ---
- mm/Kconfig.debug    | 15 +++++++++++++++
- mm/oom_kill_debug.c | 15 +++++++++++++++
- mm/oom_kill_debug.h |  3 +++
- mm/slab_common.c    | 29 +++++++++++++++++++++++++++++
- 4 files changed, 62 insertions(+)
+ mm/Kconfig.debug    | 15 +++++++++
+ mm/oom_kill_debug.c | 81 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 96 insertions(+)
 
 diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-index 68873e26afe1..4414e46f72c6 100644
+index 5610da5fa614..dbe599b67a3b 100644
 --- a/mm/Kconfig.debug
 +++ b/mm/Kconfig.debug
-@@ -244,6 +244,21 @@ config DEBUG_OOM_SLAB_SELECT_ALWAYS_PRINT
+@@ -132,3 +132,18 @@ config DEBUG_OOM
+ 	  option is a prerequisite for selecting any OOM debugging options.
  
- 	  If unsure, say N.
- 
-+config DEBUG_OOM_ENHANCED_SLAB_PRINT
-+	bool "Debug OOM Enhanced Slab Print"
-+	depends on DEBUG_OOM_SLAB_SELECT_PRINT
-+	help
-+	  Each OOM slab entry printed includes slab entry information
-+	  about it's memory usage. Memory usage is specified in KiB (KB)
-+	  and includes the following fields:
+ 	  If unsure, say N
 +
-+	  If the option is configured it is enabled/disabled by setting
-+	  the value of the file entry in the debugfs OOM interface at:
-+	  /sys/kernel/debug/oom/process_enhanced_print_enabled
++config DEBUG_OOM_SYSTEM_STATE
++	bool "Debug OOM System State"
++	depends on DEBUG_OOM
++	help
++	  When enabled, provides one line of output on an oom event to
++	  document the state of the system when the oom event occurred.
++	  Prints: uptime, # threads, # processes, system memory size in KiB
++	  and swap space size in KiB, nodename, domainname, machine type,
++	  kernel release and version. If configured it is enabled/disabled
++	  by setting the enabled file entry in the debugfs OOM interface
++	  at: /sys/kernel/debug/oom/system_state_summary_enabled
 +	  A value of 1 is enabled (default) and a value of 0 is disabled.
 +
 +	  If unsure, say N.
-+
- config DEBUG_OOM_VMALLOC_SELECT_PRINT
- 	bool "Debug OOM Select Vmallocs Print"
- 	depends on DEBUG_OOM
 diff --git a/mm/oom_kill_debug.c b/mm/oom_kill_debug.c
-index 13f1d1c25a67..ad937b3d59f3 100644
+index af07e662c808..6eeaad86fca8 100644
 --- a/mm/oom_kill_debug.c
 +++ b/mm/oom_kill_debug.c
-@@ -244,6 +244,12 @@ static struct oom_debug_option oom_debug_options_table[] = {
- 		.option_name	= "slab_select_always_print_",
- 		.support_tpercent = false,
- 	},
+@@ -144,6 +144,14 @@
+ #include <linux/sysfs.h>
+ #include "oom_kill_debug.h"
+ 
++#ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
++#include <linux/cpumask.h>
++#include <linux/mm.h>
++#include <linux/swap.h>
++#include <linux/utsname.h>
++#include <linux/sched/stat.h>
 +#endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
++
+ #define OOMD_MAX_FNAME 48
+ #define OOMD_MAX_OPTNAME 32
+ 
+@@ -169,11 +177,20 @@ struct oom_debug_option {
+ 
+ /* Table of oom debug options, new options need to be added here */
+ static struct oom_debug_option oom_debug_options_table[] = {
++#ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
 +	{
-+		.option_name	= "slab_enhanced_print_",
++		.option_name	= "system_state_summary_",
 +		.support_tpercent = false,
 +	},
- #endif
++#endif
  	{}
  };
-@@ -273,6 +279,9 @@ enum oom_debug_options_index {
- #endif
- #ifdef CONFIG_DEBUG_OOM_SLAB_SELECT_ALWAYS_PRINT
- 	SLAB_ALWAYS_STATE,
+ 
+ /* Option index by name for order one-lookup, add new options entry here */
+ enum oom_debug_options_index {
++#ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
++	SYSTEM_STATE,
 +#endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+	ENHANCED_SLAB_STATE,
- #endif
  	OUT_OF_BOUNDS
  };
-@@ -350,6 +359,12 @@ bool oom_kill_debug_select_slabs_always_print_enabled(void)
- 	return oom_kill_debug_enabled(SLAB_ALWAYS_STATE);
+ 
+@@ -244,10 +261,74 @@ u32 oom_kill_debug_oom_event(void)
+ 	return oom_kill_debug_oom_events;
  }
- #endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+bool oom_kill_debug_enhanced_slab_print_information_enabled(void)
+ 
++#ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
++/*
++ * oom_kill_debug_system_summary_prt - provides one line of output to document
++ *                      some of the system state at the time of an oom event.
++ *                      Output line includes: uptime, # threads, # processes,
++ *                      system memory size in KiB and swap space size in KiB,
++ *                      nodename, domainname, machine type, kernel release
++ *                      and version.
++ */
++static void oom_kill_debug_system_summary_prt(void)
 +{
-+	return oom_kill_debug_enabled(ENHANCED_SLAB_STATE);
++	struct new_utsname *p_uts;
++	char domainname[256];
++	unsigned long upsecs;
++	unsigned short hours;
++	struct timespec64 tp;
++	unsigned short days;
++	unsigned short mins;
++	unsigned short secs;
++	char nodename[256];
++	size_t nodesize;
++	char *p_wend;
++	long uptime;
++	int procs;
++
++	p_uts = utsname();
++
++	memset(nodename, 0, sizeof(nodename));
++	memset(domainname, 0, sizeof(domainname));
++
++	p_wend = strchr(p_uts->nodename, '.');
++	if (p_wend != NULL) {
++		nodesize = p_wend - p_uts->nodename;
++		++p_wend;
++		strncpy(nodename, p_uts->nodename, nodesize);
++		strcpy(domainname, p_wend);
++	} else {
++		strcpy(nodename, p_uts->nodename);
++		strcpy(domainname, "(none)");
++	}
++
++	procs = nr_processes();
++
++	ktime_get_boottime_ts64(&tp);
++	uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
++
++	days = uptime / 86400;
++	upsecs = uptime - (days * 86400);
++	hours = upsecs / 3600;
++	upsecs = upsecs - (hours * 3600);
++	mins = upsecs / 60;
++	secs = upsecs - (mins * 60);
++
++	pr_info("System Uptime:%hu days %02hu:%02hu:%02hu CPUs:%u Machine:%s Node:%s Domain:%s Kernel Release:%s Version:%s\n",
++		days, hours, mins, secs, num_online_cpus(), p_uts->machine,
++		nodename, domainname, p_uts->release, p_uts->version);
 +}
-+#endif
++#endif /* CONFIG_DEBUG_OOM_SYSTEM_STATE */
++
+ u32 oom_kill_debug_oom_event_is(void)
+ {
+ 	++oom_kill_debug_oom_events;
  
- #ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
- /*
-diff --git a/mm/oom_kill_debug.h b/mm/oom_kill_debug.h
-index bce740573063..a39bc275980e 100644
---- a/mm/oom_kill_debug.h
-+++ b/mm/oom_kill_debug.h
-@@ -18,6 +18,9 @@ extern bool oom_kill_debug_unreclaimable_slabs_print(void);
- #ifdef CONFIG_DEBUG_OOM_SLAB_SELECT_ALWAYS_PRINT
- extern bool oom_kill_debug_select_slabs_always_print_enabled(void);
- #endif
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+extern bool oom_kill_debug_enhanced_slab_print_information_enabled(void);
-+#endif
- 
- extern u32 oom_kill_debug_oom_event_is(void);
- extern u32 oom_kill_debug_event(void);
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 9ddc95040b60..c6e17e5c6c9d 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -28,6 +28,10 @@
- 
- #include "slab.h"
- 
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+#include "oom_kill_debug.h"
++#ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
++	if (oom_kill_debug_enabled(SYSTEM_STATE))
++		oom_kill_debug_system_summary_prt();
 +#endif
 +
- enum slab_state slab_state;
- LIST_HEAD(slab_caches);
- DEFINE_MUTEX(slab_mutex);
-@@ -1450,15 +1454,40 @@ void dump_unreclaimable_slab(void)
- 	mutex_unlock(&slab_mutex);
+ 	return oom_kill_debug_oom_events;
  }
  
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+static void oom_debug_slab_enhanced_print(struct slabinfo *psi,
-+					  struct kmem_cache *pkc)
-+{
-+	pr_info("%10lu %10lu %10lu %10lu %9u %9u %9u %8u %10lu %10lu %s\n",
-+		(psi->active_objs * pkc->size) / 1024,
-+		(psi->num_objs * pkc->size) / 1024, psi->active_objs,
-+		psi->num_objs, pkc->object_size, pkc->size,
-+		psi->objects_per_slab, (1 << psi->cache_order),
-+		psi->active_slabs, psi->num_slabs, cache_name(pkc));
-+}
-+#endif
-+
- #ifdef CONFIG_DEBUG_OOM_SLAB_SELECT_PRINT
- static void oom_debug_slab_header_print(void)
- {
- 	pr_info("Unreclaimable slab info:\n");
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+	if (oom_kill_debug_enhanced_slab_print_information_enabled()) {
-+		pr_info("   UsedKiB   TotalKiB  ActiveObj   TotalObj   ObjSize AlignSize Objs/Slab Pgs/Slab ActiveSlab  TotalSlab Slab_Name");
-+		return;
-+	}
-+#endif
- 	pr_info("Name                      Used          Total\n");
- }
- 
- static void oom_debug_slab_print(struct slabinfo *psi, struct kmem_cache *pkc)
- {
-+#ifdef CONFIG_DEBUG_OOM_ENHANCED_SLAB_PRINT
-+	if (oom_kill_debug_enhanced_slab_print_information_enabled()) {
-+		oom_debug_slab_enhanced_print(psi, pkc);
-+		return;
-+	}
-+#endif
- 	pr_info("%-17s %10luKB %10luKB\n", cache_name(pkc),
- 		(psi->active_objs * pkc->size) / 1024,
- 		(psi->num_objs * pkc->size) / 1024);
 -- 
 2.20.1
 
