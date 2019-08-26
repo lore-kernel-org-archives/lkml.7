@@ -2,151 +2,119 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1E1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CAFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A78C2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566784006;
-	bh=908BLhrgzStt5JDtjKRzMzwSXV0hF3UqbD2KRQCs5ek=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TuGlzlb4xmQ+4CcarBQCn4tG+c5U4mPo3wDq8VE3OPNTQQyLcUu0Zds9Hj8lNzySE
-	 74mO0NXfT236vckVB8QVRxYRcQOzocEFVHV5NzaVxUOfRwZmhzr3AGwiMNIMPdcZVK
-	 tw0QdQl42ljBcHNYpzS9irqUt15DmSKvXS3Kc1GU=
+	by mail.kernel.org (Postfix) with ESMTP id 9DC2320815
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 01:56:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qEUlffBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfHZBqp (ORCPT
+        id S1728994AbfHZB4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 21:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfHZBqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 21:46:44 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE1E2070B;
-        Mon, 26 Aug 2019 01:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566784003;
-        bh=908BLhrgzStt5JDtjKRzMzwSXV0hF3UqbD2KRQCs5ek=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xIyWsTaFBaHCVXBD8nVIEpvVc1vypGIzIlsL9pjv4GAgOUNgm4QlBkc2ky9JBHABE
-         ChipW5u2tAxSdSekDn88oFnVTTCm2h8ldOUr5hpPgAqt28xezoQIGfh/kofHUN7gLy
-         GY4fSQQa4cAzmB64Yzh9oZUU+bxscLVNP8X00HyY=
-Date:   Mon, 26 Aug 2019 10:46:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] kallsyms: Don't let kallsyms_lookup_size_offset() fail
- on retrieving the first symbol
-Message-Id: <20190826104638.9098e6fe940ffe19d24959a2@kernel.org>
-In-Reply-To: <20190824131231.26399-1-maz@kernel.org>
-References: <20190824131231.26399-1-maz@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 25 Aug 2019 21:56:55 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:22272 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfHZB4z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 21:56:55 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x7Q1uoqm018930
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 10:56:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x7Q1uoqm018930
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566784611;
+        bh=Xw+wxYvXUGE3fRV+Doiiivavq+mUL1vvPgjRzYtJ358=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qEUlffBnvbyTRi4uQhlTUH+vofgwb9EaW33590XA9MrcgGTzxogl/oHgBozFk3o+y
+         dDlDvn619VpEhOGIcZgbOvezBV8e15WgO5j2bPZ28u3/T/xFnG5AOVo5mk810x4yEM
+         hPG3ps/8mTkGsS7Ausrg+7oLoD7S3YiOiXO29Td/QYtpKKwu+Fhng5kKhl2oZkwM4/
+         iRmVXEldM/JCjJ6jK5WNJnJvlxl15g04T9dnVvHJx23jf8JpaPIChkW9rW3jLhmaqd
+         J1gED6X+yT42OJUiAqwnDzEYTGFglAWCWfTMtLWmwVP/gFZuJtP31z/wrkRKZiYIg7
+         QgLFwkXGrp+gA==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id y7so5179222uae.10
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 18:56:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAUE+TLfuN11oCZIqzhNwSbxxJUlv4nvSBqGD5pbsqvnlPQ3ICeg
+        PpKWf01ZZQ7YlsYEM8AsUk9UeCY35knmhq9Bgn8=
+X-Google-Smtp-Source: APXvYqzdRMKAVamOOE+1e4sp/Bzd54Y2ifvgVrHPozgaBDgPJcD9G9g8zSB4pXJdG2r6CZRzYRRos2G+z4U8cxBoK20=
+X-Received: by 2002:ab0:4261:: with SMTP id i88mr7473666uai.95.1566784610044;
+ Sun, 25 Aug 2019 18:56:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-3-nicoleotsuka@gmail.com>
+ <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com> <20190823221103.GA3604@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190823221103.GA3604@Asurada-Nvidia.nvidia.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 26 Aug 2019 10:56:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARrCviBr5j=2Lridh+MfbN1CFPU51cbpKDxNG6XKeQgdw@mail.gmail.com>
+Message-ID: <CAK7LNARrCviBr5j=2Lridh+MfbN1CFPU51cbpKDxNG6XKeQgdw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for
+ single pages
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thierry Reding <treding@nvidia.com>,
+        Kees Cook <keescook@chromium.org>, iamjoonsoo.kim@lge.com,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 24 Aug 2019 14:12:31 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+Hi Nicolin,
 
-> An arm64 kernel configured with
-> 
->   CONFIG_KPROBES=y
->   CONFIG_KALLSYMS=y
->   # CONFIG_KALLSYMS_ALL is not set
->   CONFIG_KALLSYMS_BASE_RELATIVE=y
-> 
-> reports the following kprobe failure:
-> 
->   [    0.032677] kprobes: failed to populate blacklist: -22
->   [    0.033376] Please take care of using kprobes.
-> 
-> It appears that kprobe fails to retrieve the symbol at address
-> 0xffff000010081000, despite this symbol being in System.map:
-> 
->   ffff000010081000 T __exception_text_start
-> 
-> This symbol is part of the first group of aliases in the
-> kallsyms_offsets array (symbol names generated using ugly hacks in
-> scripts/kallsyms.c):
-> 
->   kallsyms_offsets:
->           .long   0x1000 // do_undefinstr
->           .long   0x1000 // efi_header_end
->           .long   0x1000 // _stext
->           .long   0x1000 // __exception_text_start
->           .long   0x12b0 // do_cp15instr
-> 
-> Looking at the implementation of get_symbol_pos(), it returns the
-> lowest index for aliasing symbols. In this case, it return 0.
-> 
-> But kallsyms_lookup_size_offset() considers 0 as a failure, which
-> is obviously wrong (there is definitely a valid symbol living there).
-> In turn, the kprobe blacklisting stops abruptly, hence the original
-> error.
-> 
-> A CONFIG_KALLSYMS_ALL kernel wouldn't fail as there is always
-> some random symbols at the beginning of this array, which are never
-> looked up via kallsyms_lookup_size_offset.
-> 
-> Fix it by considering that get_symbol_pos() is always successful
-> (which is consistent with the other uses of this function).
+On Sat, Aug 24, 2019 at 7:10 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Fri, Aug 23, 2019 at 09:49:46PM +0900, Masahiro Yamada wrote:
 
-Thank you for fixing this issue!
-This looks good to me :)
+> >
+> > Reverting this commit fixed the problem.
+>
+> We are having another problem with the new API and Christoph
+> submitted a patch at: https://lkml.org/lkml/2019/8/20/86
+>
+> Would it be possible for you to test to see if it can fix?
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Thank you,
+It is included in 5.3-rc6
 
-> 
-> Fixes: ffc5089196446 ("[PATCH] Create kallsyms_lookup_size_offset()")
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  kernel/kallsyms.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> index 95a260f9214b..136ce049c4ad 100644
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -263,8 +263,10 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
->  {
->  	char namebuf[KSYM_NAME_LEN];
->  
-> -	if (is_ksym_addr(addr))
-> -		return !!get_symbol_pos(addr, symbolsize, offset);
-> +	if (is_ksym_addr(addr)) {
-> +		get_symbol_pos(addr, symbolsize, offset);
-> +		return 1;
-> +	}
->  	return !!module_address_lookup(addr, symbolsize, offset, NULL, namebuf) ||
->  	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
->  }
-> -- 
-> 2.20.1
-> 
+I tested 5.3-rc6 in on my board,
+but I still see the same DMA fauilure.
+
+
+Masahiro
+
+
+
+
+
+> We can revert my fallback change after all, if Christoph's
+> patch doesn't work for you either.
+>
+> Thanks
+> Nicolin
+
 
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Best Regards
+Masahiro Yamada
