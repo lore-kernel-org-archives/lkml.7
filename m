@@ -2,64 +2,168 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4FBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693C0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8292C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B79A206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:46:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AFZuZhXC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJkbIxy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfHZGoe (ORCPT
+        id S1729676AbfHZGqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:44:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57188 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729419AbfHZGod (ORCPT
+        Mon, 26 Aug 2019 02:46:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40641 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfHZGqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:44:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DSOVCOtncdhSuwUFuuj7nkqf3ww3WZ07yPPFdcJFhCI=; b=AFZuZhXCe4CpdaKK5l+KfMIXs
-        SreA8IMJa8zQu7oPRxiXGd6ciRD4dHsjYn9k1dluRUW0m7YHewR1YKG8ee6GTh4m6qnVAlj9Ou358
-        E1M+BI/zvh/Izyc54KDulq+OSnOE4qK5OOtjo5UvPfYw1wLKAgkPpDM7n/k64U3FRF5rVZNkp4yTA
-        xOnwB5Q9SacWYd5aATRGjU5Nxu67xWYUJxJKD1/eCUixRotDvN+oop/4dISyNNFB/9yxAsermdInM
-        J0apa93a4n2/7M+i41uBKLgCBimxx+5Pw8CHQd9HbHWchRHSJDadrnthueVmH/HVA0lhgsmduomku
-        OMJF5tCsQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i28ju-0001Il-6l; Mon, 26 Aug 2019 06:44:30 +0000
-Date:   Sun, 25 Aug 2019 23:44:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] RISC-V: Fix FIXMAP area corruption on RV32 systems
-Message-ID: <20190826064430.GD29871@infradead.org>
-References: <20190819051345.81097-1-anup.patel@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819051345.81097-1-anup.patel@wdc.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 26 Aug 2019 02:46:47 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w16so11155152pfn.7;
+        Sun, 25 Aug 2019 23:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2vA3heResnG5vt68ph7pxPA3D8xS2Q1JgmsfcGTRFL4=;
+        b=lJkbIxy2Wot9gYOWfwEFzY+K4W1Rs4+WvM+PeBmUvHJexXNNHsyEtQ5Yn1Gk5XfMEQ
+         o833wfifzriZGDRFLSaMum4XbAVUp7qpjiMgvRSoA96ooVra7uojQJmP7fg2tFJ26+88
+         iEBxcLgYRRuu+VhVqKJ/N0N9UPqTIEMs1Yv57iQWJqNCfqwoftqlRhBeUoqLyqgaL2YM
+         28rV9R7AfBo8D0vGhaU4myIh0h0TaPFt56hzZwv7kDyQdifFHCO4YtXg1dPbMMkY9R8q
+         VC+v/LF389M2r0/loS2bui6CIOnMPn8TIh1IjVB56Jyq0dT1Q4lsx5zPWHCT2DAmhFSl
+         +m2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2vA3heResnG5vt68ph7pxPA3D8xS2Q1JgmsfcGTRFL4=;
+        b=XfRkHo1bwYLSVxpRAayf8Se0SxCvaQSJju3EDypBNI1EYSk9zfYeeHPwyITfVrcGX3
+         saLyZEs6ZohSfzfkTfQkLZpT6XIIPUWQrzuUWn6L9ibfUhYq5ELbmcN1LhxgER6DE9Y7
+         Fr3SD0hCoMOI8BFHk3OtBwWrWO2fTuwG79hNMyEgBWCvX+o9KbZPeFxGz6+X756W6w0j
+         2fi/8ymIGG8jwSvQ5GeWUePi91fVPq/2N4v/dWwvZT30jUzuFwdG0D/ZAcviD9elJN94
+         I1cj3E8sKGDX7fqMAtaX/wfG50l11E5Nanqyq/ibkGtE6ohOwhoG1Cn6PdKm/cHpLcCz
+         q1Xw==
+X-Gm-Message-State: APjAAAV235wRGPUpVOZjjUCUNGoIUWBSFJ7pDyy6a5P46Gqg6tPesP35
+        jHEh3EkBhfZ0QDZwwvRRF54=
+X-Google-Smtp-Source: APXvYqz6b0rc+XsFLPRYzJtdbm4nAK7c/KmGjkCeYQsPBAR0XNEXPma1xE+It2qVWIs6wo/uDlj+0g==
+X-Received: by 2002:a63:6904:: with SMTP id e4mr14827260pgc.321.1566802006616;
+        Sun, 25 Aug 2019 23:46:46 -0700 (PDT)
+Received: from localhost.localdomain ([139.198.120.21])
+        by smtp.gmail.com with ESMTPSA id j11sm2361512pfa.113.2019.08.25.23.46.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 25 Aug 2019 23:46:45 -0700 (PDT)
+From:   Feng Sun <loyou85@gmail.com>
+To:     davem@davemloft.net
+Cc:     edumazet@google.com, dsterba@suse.com, dbanerje@akamai.com,
+        fw@strlen.de, davej@codemonkey.org.uk, tglx@linutronix.de,
+        matwey@sai.msu.ru, sakari.ailus@linux.intel.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Feng Sun <loyou85@gmail.com>,
+        Xiaojun Zhao <xiaojunzhao141@gmail.com>
+Subject: [PATCH v3] net: fix skb use after free in netpoll
+Date:   Mon, 26 Aug 2019 14:46:04 +0800
+Message-Id: <1566801964-14691-1-git-send-email-loyou85@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20190825.232003.1145950065287854577.davem@davemloft.net>
+References: <20190825.232003.1145950065287854577.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Palmer, Paul - are you going to pick this up?  Seems like we've just
-missed -rc6.
+After commit baeababb5b85d5c4e6c917efe2a1504179438d3b
+("tun: return NET_XMIT_DROP for dropped packets"),
+when tun_net_xmit drop packets, it will free skb and return NET_XMIT_DROP,
+netpoll_send_skb_on_dev will run into following use after free cases:
+1. retry netpoll_start_xmit with freed skb;
+2. queue freed skb in npinfo->txq.
+queue_process will also run into use after free case.
+
+hit netpoll_send_skb_on_dev first case with following kernel log:
+
+[  117.864773] kernel BUG at mm/slub.c:306!
+[  117.864773] invalid opcode: 0000 [#1] SMP PTI
+[  117.864774] CPU: 3 PID: 2627 Comm: loop_printmsg Kdump: loaded Tainted: P           OE     5.3.0-050300rc5-generic #201908182231
+[  117.864775] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[  117.864775] RIP: 0010:kmem_cache_free+0x28d/0x2b0
+[  117.864781] Call Trace:
+[  117.864781]  ? tun_net_xmit+0x21c/0x460
+[  117.864781]  kfree_skbmem+0x4e/0x60
+[  117.864782]  kfree_skb+0x3a/0xa0
+[  117.864782]  tun_net_xmit+0x21c/0x460
+[  117.864782]  netpoll_start_xmit+0x11d/0x1b0
+[  117.864788]  netpoll_send_skb_on_dev+0x1b8/0x200
+[  117.864789]  __br_forward+0x1b9/0x1e0 [bridge]
+[  117.864789]  ? skb_clone+0x53/0xd0
+[  117.864790]  ? __skb_clone+0x2e/0x120
+[  117.864790]  deliver_clone+0x37/0x50 [bridge]
+[  117.864790]  maybe_deliver+0x89/0xc0 [bridge]
+[  117.864791]  br_flood+0x6c/0x130 [bridge]
+[  117.864791]  br_dev_xmit+0x315/0x3c0 [bridge]
+[  117.864792]  netpoll_start_xmit+0x11d/0x1b0
+[  117.864792]  netpoll_send_skb_on_dev+0x1b8/0x200
+[  117.864792]  netpoll_send_udp+0x2c6/0x3e8
+[  117.864793]  write_msg+0xd9/0xf0 [netconsole]
+[  117.864793]  console_unlock+0x386/0x4e0
+[  117.864793]  vprintk_emit+0x17e/0x280
+[  117.864794]  vprintk_default+0x29/0x50
+[  117.864794]  vprintk_func+0x4c/0xbc
+[  117.864794]  printk+0x58/0x6f
+[  117.864795]  loop_fun+0x24/0x41 [printmsg_loop]
+[  117.864795]  kthread+0x104/0x140
+[  117.864795]  ? 0xffffffffc05b1000
+[  117.864796]  ? kthread_park+0x80/0x80
+[  117.864796]  ret_from_fork+0x35/0x40
+
+Signed-off-by: Feng Sun <loyou85@gmail.com>
+Signed-off-by: Xiaojun Zhao <xiaojunzhao141@gmail.com>
+---
+Changes in v3:
+- use dev_xmit_complete directly
+
+Changes in v2:
+- change commit and title
+- add netpoll_xmit_complete helper
+- add one more return value check of netpoll_start_xmit
+---
+ net/core/netpoll.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/net/core/netpoll.c b/net/core/netpoll.c
+index 2cf27da..849380a6 100644
+--- a/net/core/netpoll.c
++++ b/net/core/netpoll.c
+@@ -122,7 +122,7 @@ static void queue_process(struct work_struct *work)
+ 		txq = netdev_get_tx_queue(dev, q_index);
+ 		HARD_TX_LOCK(dev, txq, smp_processor_id());
+ 		if (netif_xmit_frozen_or_stopped(txq) ||
+-		    netpoll_start_xmit(skb, dev, txq) != NETDEV_TX_OK) {
++		    !dev_xmit_complete(netpoll_start_xmit(skb, dev, txq))) {
+ 			skb_queue_head(&npinfo->txq, skb);
+ 			HARD_TX_UNLOCK(dev, txq);
+ 			local_irq_restore(flags);
+@@ -335,7 +335,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
+ 
+ 				HARD_TX_UNLOCK(dev, txq);
+ 
+-				if (status == NETDEV_TX_OK)
++				if (dev_xmit_complete(status))
+ 					break;
+ 
+ 			}
+@@ -352,7 +352,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
+ 
+ 	}
+ 
+-	if (status != NETDEV_TX_OK) {
++	if (!dev_xmit_complete(status)) {
+ 		skb_queue_tail(&npinfo->txq, skb);
+ 		schedule_delayed_work(&npinfo->tx_work,0);
+ 	}
+-- 
+2.7.4
+
