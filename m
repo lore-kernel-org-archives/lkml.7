@@ -2,91 +2,158 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E829BC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A9CC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D5320874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A697E217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:05:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="D0kUVJqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbfHZLFV (ORCPT
+        id S1731054AbfHZLFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:05:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35350 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbfHZLFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:05:21 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C6363082E55;
-        Mon, 26 Aug 2019 11:05:21 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2DB465D704;
-        Mon, 26 Aug 2019 11:05:21 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 170284A460;
-        Mon, 26 Aug 2019 11:05:21 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 07:05:20 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Cyril Hrubis <chrubis@suse.cz>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     ltp@lists.linux.it,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        alexey kodanev <alexey.kodanev@oracle.com>,
-        the hoang0709 <the_hoang0709@yahoo.com>
-Message-ID: <1264279239.8133737.1566817520787.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190826104127.GA14729@haruka>
-References: <CA+G9fYtN2tjHZtjtc8isdsD5hF76teeh2-pngUp+uj3WYdj7jA@mail.gmail.com> <20190826104127.GA14729@haruka>
-Subject: Re: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed
- to run cmd: useradd hsym
+        Mon, 26 Aug 2019 07:05:32 -0400
+Received: from mail-eopbgr790095.outbound.protection.outlook.com ([40.107.79.95]:51920
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730553AbfHZLFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:05:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zlidj6bOniJbeJ/ayBzkE+MHRHWcxmBhUhKj00DdzCHNhx3e/731yh9obDV3lcOblQ9CGX6LhGD1dYOfwZbOXJLEA0WIg2JJRIk53myDlpQiQFnVCXR0OcODCSPD36JehZzvf59dC+Q3R2DGGjwaNXeC372hubKipwo53yh6P90IXSrLE9HY2+tu3hPIiI0vx25vof8WwLDG03V/xe9LJdIE272fDxESgsphHl4INmDaxFqBmbF/B5U4WytVk16ZDsW4r3MFuOcTpodXe//8V1/jZFjRUX46p1UG7Uwq2WPV+6j97VGQ4u0s1GJHCVZsv4H9xI/80X85SjM5RuDMHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LV6E4wKRNp0KMjYgzDRBS4vAMOr+ucXkCtTAyF3qDho=;
+ b=YFeFGlvpr0Y4ZUQHPjSwbHrpABMtSpQOZIDFEH0OrDltzjgGVGK1DPW1NC0ljYM1jSXAyHjdgBxClH5E54n08xBeRyF8pPfh4k3CRsipbWUNp1fpC/6YgszCkgHhaPfDaM9CyWl85vVgabOxtlydgMvekBYK41wUQQo06BqWsnUyHtx5lKh6TLBZlz86solLNEjZ2iCBu2g9vfklbMEz8AGhr32QiEWn8a52JaPuYJU02gHr4Pm+nd1DKl8Os6xqQ6OGLsrWqCYDAtxOgERcV57U0+lR1TS1sqJ1MJmEwW6rO1AivX15WsyOlJMYg8HPleFZmN0rv2NRPriAMEccaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LV6E4wKRNp0KMjYgzDRBS4vAMOr+ucXkCtTAyF3qDho=;
+ b=D0kUVJqhLQ5bEF+7O7cJ+XNbwhFXYv1+IeVd4NnStND5Ja7VMERtgEnTWqGgUVPGb6VRTlF/0pgvos6CjGm2bdDhngaPkyHOJkJ52o3p/XkR5cO4at7tcYtFMcVqhYvgsehutQ1Gj6ABbH74oko/1lwfo27mxrhJTA0MYHfxt54=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1469.namprd22.prod.outlook.com (10.174.170.142) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Mon, 26 Aug 2019 11:05:29 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2199.021; Mon, 26 Aug
+ 2019 11:05:29 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v6 08/57] MIPS: Remove dev_err() usage after
+  platform_get_irq()
+Thread-Topic: [PATCH v6 08/57] MIPS: Remove dev_err() usage after
+  platform_get_irq()
+Thread-Index: AQHVW/4rkpqoUHHwWUC2lGsBFJJaWQ==
+Date:   Mon, 26 Aug 2019 11:05:29 +0000
+Message-ID: <MWHPR2201MB12777F732F56751B7306F664C1A10@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190730181557.90391-9-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-9-swboyd@chromium.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0101.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:c::17) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [79.77.158.32]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1dde2aa3-552d-4068-2dc0-08d72a154e18
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1469;
+x-ms-traffictypediagnostic: MWHPR2201MB1469:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB1469DEDAD9A6C12BFCC431B2C1A10@MWHPR2201MB1469.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(39840400004)(366004)(199004)(189003)(478600001)(966005)(5660300002)(14454004)(2906002)(229853002)(6436002)(74316002)(6306002)(9686003)(55016002)(4744005)(25786009)(54906003)(6246003)(53936002)(66946007)(52536014)(7736002)(3846002)(6116002)(4326008)(66446008)(64756008)(66556008)(66476007)(305945005)(316002)(256004)(71190400001)(71200400001)(486006)(44832011)(8676002)(81156014)(81166006)(8936002)(66066001)(186003)(102836004)(99286004)(386003)(6916009)(6506007)(476003)(26005)(11346002)(446003)(42882007)(7696005)(52116002)(76176011)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1469;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cl6yqXucgvdqCkyvs8tMf2Hscmb8tfPZBsCTnXGnvIHnx8m4/jPlUKOXBe/dbEzXSkJMNcj/2eDLRc/DLIasC10sCbkNlYrMkqN0qSzv+G8PeE6XyFgL0AnvWwEDmbbJPFlar71xf3X8JLpdybbRtfUkzAnT74sxPFppQPz0Tg2bxWLKzItwausHGhwnOvCKExLr+fdo/JVOsCoXhcvoWO9SHnBHakP0PsW3ZUITwv8iomEcapNBmhya2HM/hHs9uiNVuWWP/7pvk8pQ+It1cuz/UELxEmAumlnmw2HB0C0npEtXNvFD5ap3+03kYaScKRdAhjdsZCWCl/7tm/AUEahL3cN3/4/NCyTsScUjudDe+HgpQnXrdz0svZaKFU9eBBLIBrzzr/QsS5YH9tnvhfMbtCPUmDK6x2NeVXUAZHI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.205.130, 10.4.195.19]
-Thread-Topic: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed to run cmd: useradd hsym
-Thread-Index: RPWG8U5fZVqaDFrtv/g7lFBKoEVaLw==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 26 Aug 2019 11:05:21 +0000 (UTC)
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1dde2aa3-552d-4068-2dc0-08d72a154e18
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 11:05:29.2230
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8A4qZPHh1kp615nDc5elJY5T4DaEJLPW8ygLyyajByIPfx/X+wHlr3Yy3J8vFt4oO3wqpde8Etr2TZaHzvnWbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1469
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>=20
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>=20
+> ret =3D
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>=20
+> if ( \( ret < 0 \| ret <=3D 0 \) )
+> {
+> (
+> -if (ret !=3D -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>=20
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
 
------ Original Message -----
-> Hi!
-> > Do you see this LTP prot_hsymlinks failure on linux next 20190823 on
-> > x86_64 and i386 devices?
-> > 
-> > test output log,
-> > useradd: failure while writing changes to /etc/passwd
-> > useradd: /home/hsym was created, but could not be removed
-> 
-> This looks like an unrelated problem, failure to write to /etc/passwd
-> probably means that filesystem is full or some problem happend and how
-> is remounted RO.
+Applied to mips-next.
 
-In Naresh' example, root is on NFS:
-  root=/dev/nfs rw nfsroot=10.66.16.123:/var/lib/lava/dispatcher/tmp/886412/extract-nfsrootfs-tyuevoxm,tcp,hard,intr
+> commit 322e577b02ab
+> https://git.kernel.org/mips/c/322e577b02ab
+>=20
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
 
-10.66.16.123:/var/lib/lava/dispatcher/tmp/886412/extract-nfsrootfs-tyuevoxm on / type nfs (rw,relatime,vers=2,rsize=4096,wsize=4096,namlen=255,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.66.16.123,mountvers=1,mountproto=tcp,local_lock=all,addr=10.66.16.123)
-devtmpfs on /dev type devtmpfs (rw,relatime,size=3977640k,nr_inodes=994410,mode=755)
+Thanks,
+    Paul
 
-Following message repeats couple times in logs:
-  NFS: Server wrote zero bytes, expected XXX
-
-Naresh, can you check if there are any errors on NFS server side?
-Maybe run NFS cthon against that server with client running next-20190822 and next-20190823.
-
-> 
-> I do not see the kernel messages from this job anywhere at the job
-> pages, is it stored somewhere?
-
-It appears to be mixed in same log file:
-  https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190823/testrun/886412/log
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
