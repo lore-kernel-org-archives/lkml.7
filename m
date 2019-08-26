@@ -2,206 +2,160 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ECFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FB3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F96217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDF2217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfHZU6g (ORCPT
+        id S1727285AbfHZU7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:58:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60510 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 16:59:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:48543 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbfHZU6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:58:36 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49BBA3082B13;
-        Mon, 26 Aug 2019 20:58:35 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78ECA5D9E2;
-        Mon, 26 Aug 2019 20:58:30 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 0B6E922017B; Mon, 26 Aug 2019 16:58:30 -0400 (EDT)
-Date:   Mon, 26 Aug 2019 16:58:29 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 02/19] dax: Pass dax_dev to dax_writeback_mapping_range()
-Message-ID: <20190826205829.GC13860@redhat.com>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
- <20190821175720.25901-3-vgoyal@redhat.com>
- <20190826115316.GB21051@infradead.org>
- <20190826203326.GB13860@redhat.com>
+        id S1725983AbfHZU7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:59:04 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 13:59:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="182563708"
+Received: from mgross-mobl.amr.corp.intel.com (HELO localhost) ([10.7.198.58])
+  by orsmga003.jf.intel.com with ESMTP; 26 Aug 2019 13:59:03 -0700
+Date:   Mon, 26 Aug 2019 13:59:03 -0700
+From:   mark gross <mgross@linux.intel.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 11/16] sched: Basic tracking of matching tasks
+Message-ID: <20190826205903.GH2680@u1904>
+Reply-To: mgross@linux.intel.com
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <d74f10401c5d220265a5918de0de13a8986d59a2.1559129225.git.vpillai@digitalocean.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826203326.GB13860@redhat.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 26 Aug 2019 20:58:35 +0000 (UTC)
+In-Reply-To: <d74f10401c5d220265a5918de0de13a8986d59a2.1559129225.git.vpillai@digitalocean.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:33:26PM -0400, Vivek Goyal wrote:
-> On Mon, Aug 26, 2019 at 04:53:16AM -0700, Christoph Hellwig wrote:
-> > On Wed, Aug 21, 2019 at 01:57:03PM -0400, Vivek Goyal wrote:
-> > > Right now dax_writeback_mapping_range() is passed a bdev and dax_dev
-> > > is searched from that bdev name.
-> > > 
-> > > virtio-fs does not have a bdev. So pass in dax_dev also to
-> > > dax_writeback_mapping_range(). If dax_dev is passed in, bdev is not
-> > > used otherwise dax_dev is searched using bdev.
-> > 
-> > Please just pass in only the dax_device and get rid of the block device.
-> > The callers should have one at hand easily, e.g. for XFS just call
-> > xfs_find_daxdev_for_inode instead of xfs_find_bdev_for_inode.
+On Wed, May 29, 2019 at 08:36:47PM +0000, Vineeth Remanan Pillai wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Sure. Here is the updated patch.
+> Introduce task_struct::core_cookie as an opaque identifier for core
+> scheduling. When enabled; core scheduling will only allow matching
+> task to be on the core; where idle matches everything.
 > 
-> This patch can probably go upstream independently. If you are fine with
-> the patch, I can post it separately for inclusion.
+> When task_struct::core_cookie is set (and core scheduling is enabled)
+> these tasks are indexed in a second RB-tree, first on cookie value
+> then on scheduling function, such that matching task selection always
+> finds the most elegible match.
+> 
+> NOTE: *shudder* at the overhead...
+> 
+> NOTE: *sigh*, a 3rd copy of the scheduling function; the alternative
+> is per class tracking of cookies and that just duplicates a lot of
+> stuff for no raisin (the 2nd copy lives in the rt-mutex PI code).
+ s/raisen/reason
 
-Forgot to update function declaration in case of !CONFIG_FS_DAX. Here is
-the updated patch.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
+> Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
+> ---
+> 
+> Changes in v3
+> -------------
+> - Refactored priority comparison code
+> - Fixed a comparison logic issue in sched_core_find
+>   - Aaron Lu
+> 
+> Changes in v2
+> -------------
+> - Improves the priority comparison logic between processes in
+>   different cpus.
+>   - Peter Zijlstra
+>   - Aaron Lu
+> 
+> ---
+>  include/linux/sched.h |   8 ++-
+>  kernel/sched/core.c   | 146 ++++++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/fair.c   |  46 -------------
+>  kernel/sched/sched.h  |  55 ++++++++++++++++
+>  4 files changed, 208 insertions(+), 47 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 1549584a1538..a4b39a28236f 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -636,10 +636,16 @@ struct task_struct {
+>  	const struct sched_class	*sched_class;
+>  	struct sched_entity		se;
+>  	struct sched_rt_entity		rt;
+> +	struct sched_dl_entity		dl;
+> +
+> +#ifdef CONFIG_SCHED_CORE
+> +	struct rb_node			core_node;
+> +	unsigned long			core_cookie;
+> +#endif
+> +
+>  #ifdef CONFIG_CGROUP_SCHED
+>  	struct task_group		*sched_task_group;
+>  #endif
+> -	struct sched_dl_entity		dl;
+>  
+>  #ifdef CONFIG_PREEMPT_NOTIFIERS
+>  	/* List of struct preempt_notifier: */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index b1ce33f9b106..112d70f2b1e5 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -64,6 +64,141 @@ int sysctl_sched_rt_runtime = 950000;
+>  
+>  DEFINE_STATIC_KEY_FALSE(__sched_core_enabled);
+>  
+> +/* kernel prio, less is more */
+> +static inline int __task_prio(struct task_struct *p)
+> +{
+> +	if (p->sched_class == &stop_sched_class) /* trumps deadline */
+> +		return -2;
+> +
+> +	if (rt_prio(p->prio)) /* includes deadline */
+> +		return p->prio; /* [-1, 99] */
+> +
+> +	if (p->sched_class == &idle_sched_class)
+> +		return MAX_RT_PRIO + NICE_WIDTH; /* 140 */
+> +
+> +	return MAX_RT_PRIO + MAX_NICE; /* 120, squash fair */
+> +}
+> +
+> +/*
+> + * l(a,b)
+> + * le(a,b) := !l(b,a)
+> + * g(a,b)  := l(b,a)
+> + * ge(a,b) := !l(a,b)
+why does this truth table comment exist?
+maybe inline comments at the confusing inequalities would be better.
+--mark
 
-Subject: dax: Pass dax_dev instead of bdev to dax_writeback_mapping_range()
 
-As of now dax_writeback_mapping_range() takes "struct block_device" as a
-parameter and dax_dev is searched from bdev name. This also involves taking
-a fresh reference on dax_dev and putting that reference at the end of
-function.
-
-We are developing a new filesystem virtio-fs and using dax to access host
-page cache directly. But there is no block device. IOW, we want to make
-use of dax but want to get rid of this assumption that there is always
-a block device associated with dax_dev.
-
-So pass in "struct dax_device" as parameter instead of bdev.
-
-ext2/ext4/xfs are current users and they already have a reference on
-dax_device. So there is no need to take reference and drop reference to
-dax_device on each call of this function.
-
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/dax.c            |    8 +-------
- fs/ext2/inode.c     |    5 +++--
- fs/ext4/inode.c     |    2 +-
- fs/xfs/xfs_aops.c   |    2 +-
- include/linux/dax.h |    4 ++--
- 5 files changed, 8 insertions(+), 13 deletions(-)
-
-Index: rhvgoyal-linux-fuse/fs/dax.c
-===================================================================
---- rhvgoyal-linux-fuse.orig/fs/dax.c	2019-08-26 16:45:26.093710196 -0400
-+++ rhvgoyal-linux-fuse/fs/dax.c	2019-08-26 16:45:29.462710196 -0400
-@@ -936,12 +936,11 @@ static int dax_writeback_one(struct xa_s
-  * on persistent storage prior to completion of the operation.
-  */
- int dax_writeback_mapping_range(struct address_space *mapping,
--		struct block_device *bdev, struct writeback_control *wbc)
-+		struct dax_device *dax_dev, struct writeback_control *wbc)
- {
- 	XA_STATE(xas, &mapping->i_pages, wbc->range_start >> PAGE_SHIFT);
- 	struct inode *inode = mapping->host;
- 	pgoff_t end_index = wbc->range_end >> PAGE_SHIFT;
--	struct dax_device *dax_dev;
- 	void *entry;
- 	int ret = 0;
- 	unsigned int scanned = 0;
-@@ -952,10 +951,6 @@ int dax_writeback_mapping_range(struct a
- 	if (!mapping->nrexceptional || wbc->sync_mode != WB_SYNC_ALL)
- 		return 0;
- 
--	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
--	if (!dax_dev)
--		return -EIO;
--
- 	trace_dax_writeback_range(inode, xas.xa_index, end_index);
- 
- 	tag_pages_for_writeback(mapping, xas.xa_index, end_index);
-@@ -976,7 +971,6 @@ int dax_writeback_mapping_range(struct a
- 		xas_lock_irq(&xas);
- 	}
- 	xas_unlock_irq(&xas);
--	put_dax(dax_dev);
- 	trace_dax_writeback_range_done(inode, xas.xa_index, end_index);
- 	return ret;
- }
-Index: rhvgoyal-linux-fuse/include/linux/dax.h
-===================================================================
---- rhvgoyal-linux-fuse.orig/include/linux/dax.h	2019-08-26 16:45:26.094710196 -0400
-+++ rhvgoyal-linux-fuse/include/linux/dax.h	2019-08-26 16:46:08.101710196 -0400
-@@ -141,7 +141,7 @@ static inline void fs_put_dax(struct dax
- 
- struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev);
- int dax_writeback_mapping_range(struct address_space *mapping,
--		struct block_device *bdev, struct writeback_control *wbc);
-+		struct dax_device *dax_dev, struct writeback_control *wbc);
- 
- struct page *dax_layout_busy_page(struct address_space *mapping);
- dax_entry_t dax_lock_page(struct page *page);
-@@ -180,7 +180,7 @@ static inline struct page *dax_layout_bu
- }
- 
- static inline int dax_writeback_mapping_range(struct address_space *mapping,
--		struct block_device *bdev, struct writeback_control *wbc)
-+		struct dax_device *dax_dev, struct writeback_control *wbc)
- {
- 	return -EOPNOTSUPP;
- }
-Index: rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c
-===================================================================
---- rhvgoyal-linux-fuse.orig/fs/xfs/xfs_aops.c	2019-08-26 16:45:26.094710196 -0400
-+++ rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c	2019-08-26 16:45:29.471710196 -0400
-@@ -1120,7 +1120,7 @@ xfs_dax_writepages(
- {
- 	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
- 	return dax_writeback_mapping_range(mapping,
--			xfs_find_bdev_for_inode(mapping->host), wbc);
-+			xfs_find_daxdev_for_inode(mapping->host), wbc);
- }
- 
- STATIC int
-Index: rhvgoyal-linux-fuse/fs/ext4/inode.c
-===================================================================
---- rhvgoyal-linux-fuse.orig/fs/ext4/inode.c	2019-08-26 16:45:26.093710196 -0400
-+++ rhvgoyal-linux-fuse/fs/ext4/inode.c	2019-08-26 16:45:29.475710196 -0400
-@@ -2992,7 +2992,7 @@ static int ext4_dax_writepages(struct ad
- 	percpu_down_read(&sbi->s_journal_flag_rwsem);
- 	trace_ext4_writepages(inode, wbc);
- 
--	ret = dax_writeback_mapping_range(mapping, inode->i_sb->s_bdev, wbc);
-+	ret = dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
- 	trace_ext4_writepages_result(inode, wbc, ret,
- 				     nr_to_write - wbc->nr_to_write);
- 	percpu_up_read(&sbi->s_journal_flag_rwsem);
-Index: rhvgoyal-linux-fuse/fs/ext2/inode.c
-===================================================================
---- rhvgoyal-linux-fuse.orig/fs/ext2/inode.c	2019-08-26 16:45:26.093710196 -0400
-+++ rhvgoyal-linux-fuse/fs/ext2/inode.c	2019-08-26 16:45:29.477710196 -0400
-@@ -957,8 +957,9 @@ ext2_writepages(struct address_space *ma
- static int
- ext2_dax_writepages(struct address_space *mapping, struct writeback_control *wbc)
- {
--	return dax_writeback_mapping_range(mapping,
--			mapping->host->i_sb->s_bdev, wbc);
-+	struct ext2_sb_info *sbi = EXT2_SB(mapping->host->i_sb);
-+
-+	return dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
- }
- 
- const struct address_space_operations ext2_aops = {
