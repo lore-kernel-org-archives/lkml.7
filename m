@@ -2,99 +2,170 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B2DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C33C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D992080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B19C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:31:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qcf4jWj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfHZWaz (ORCPT
+        id S1726916AbfHZWbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:30:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39374 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfHZWaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:30:55 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33325300C22F;
-        Mon, 26 Aug 2019 22:30:55 +0000 (UTC)
-Received: from masetto.com (ovpn-116-56.phx2.redhat.com [10.3.116.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A9655C1B2;
-        Mon, 26 Aug 2019 22:30:52 +0000 (UTC)
-From:   Al Stone <ahs3@redhat.com>
-To:     linux-acpi@vger.kernel.org
-Cc:     Al Stone <ahs3@redhat.com>, linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Subject: [PATCH v2] ACPI / CPPC: do not require the _PSD method when using CPPC
-Date:   Mon, 26 Aug 2019 16:30:47 -0600
-Message-Id: <20190826223047.13146-1-ahs3@redhat.com>
+        Mon, 26 Aug 2019 18:31:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39820 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfHZWbu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:31:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y200so5040422pfb.6;
+        Mon, 26 Aug 2019 15:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wDOgLMb8j2sdaAKql8tXOUtFPhJRo3axs/+JxOuD364=;
+        b=Qcf4jWj3RHbfP7ilJsGmBgeYUobrxm2EnzTktsCGhesgxA/x7yAB1vHwXbGN4zQw1p
+         kvw2Oj3cait6ZKir6T0WKvRsVs9jBQP7MwlPArcEIJ/F9HO/otgApA0W6vDtJuEBdluW
+         I/UalVUGetgubV19dT5KQ8MUojlvwe0DiXV07gAdvYt3UppF8fX4s57fMoD2dWY8VPpi
+         B4jTPA3bUZOHjaziGKnuF4+6Y32uYIKDMjT9eSf1AGEBXFVtg30bK9jBWhxVFpYSLRCn
+         UZm1R3HyvY7Yx8gOkETs7M7B0AJib27KMGcUhbLLENNhoyJWQYj42qtxvCw9OL8Lf5+4
+         Fzlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wDOgLMb8j2sdaAKql8tXOUtFPhJRo3axs/+JxOuD364=;
+        b=gGGt4ZLdEW7aEKnkZGKB7qnd4aWQdlUiexETGEPLruAgokyvEOupg4W1HGa/9FeIue
+         lYMqs/27qmvATyAz9lEq6pzMoxqJleAgtxDQcSTCCbiiyX+ZSTvSQafesx7Fu5+TzjTD
+         ZxOsvOF+/5C4now2sYGGvZbU+wEADVrEXRNj+WVu/wNgZTe0w8RizoWqOpUagUMz+wIb
+         uNQaM4UbwwXXJolqwFaTfDMmz2D7gfow8mrIlXLLO66kFZ37Z3Hjn+d88MH5mi+XVn+W
+         HWjtbVYX8a7Ra1flNiJ06tgNubklJclCL0NZvom/+5L8NsXFU6Y2nOANXBY3TdktjgYl
+         TETg==
+X-Gm-Message-State: APjAAAVu8eXedLvE6qtKz2+lX3zjjKdFQm1PFOucqDQ+YAdl/cPsmKZ+
+        TQOQvOA0SnrHFMX3+s6OqQs=
+X-Google-Smtp-Source: APXvYqytitC5AGbR2uaChtUFk9SeXhHdRm7KC5HclM/1dbtSm944b1w410FR9NdqnDa30EfGd4ibxw==
+X-Received: by 2002:a63:c008:: with SMTP id h8mr18947256pgg.427.1566858709555;
+        Mon, 26 Aug 2019 15:31:49 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id ev3sm1075940pjb.3.2019.08.26.15.31.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 15:31:48 -0700 (PDT)
+Subject: Re: [PATCH v1 net-next] net: stmmac: Add support for MDIO interrupts
+To:     Andrew Lunn <andrew@lunn.ch>, Voon Weifeng <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+References: <1566870320-9825-1-git-send-email-weifeng.voon@intel.com>
+ <20190826184719.GF2168@lunn.ch>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <cac5aba0-b47b-00c6-f99b-64c6b385308a@gmail.com>
+Date:   Mon, 26 Aug 2019 15:31:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190826184719.GF2168@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 26 Aug 2019 22:30:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+On 8/26/19 11:47 AM, Andrew Lunn wrote:
+> On Tue, Aug 27, 2019 at 09:45:20AM +0800, Voon Weifeng wrote:
+>> From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
+>>
+>> DW EQoS v5.xx controllers added capability for interrupt generation
+>> when MDIO interface is done (GMII Busy bit is cleared).
+>> This patch adds support for this interrupt on supported HW to avoid
+>> polling on GMII Busy bit.
+>>
+>> stmmac_mdio_read() & stmmac_mdio_write() will sleep until wake_up() is
+>> called by the interrupt handler.
+> 
+> Hi Voon
+> 
+> I _think_ there are some order of operation issues here. The mdiobus
+> is registered in the probe function. As soon as of_mdiobus_register()
+> is called, the MDIO bus must work. At that point MDIO read/writes can
+> start to happen.
+> 
+> As far as i can see, the interrupt handler is only requested in
+> stmmac_open(). So it seems like any MDIO operations after probe, but
+> before open are going to fail?
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
-
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
-
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
-
-v2:
-   -- verified simple check for AE_NOT_FOUND was sufficient
-   -- simplified return status check per Rafael's suggestion
-
-Signed-off-by: Al Stone <ahs3@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
----
- drivers/acpi/cppc_acpi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 15f103d7532b..7a946f1944ab 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -365,10 +365,12 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
- 
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
--	if (ACPI_FAILURE(status))
--		return -ENODEV;
-+	if (acpi_has_method(handle, "_PSD")) {
-+		status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+						    &buffer, ACPI_TYPE_PACKAGE);
-+		if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+			return 0;
-+	}
- 
- 	psd = buffer.pointer;
- 	if (!psd || psd->package.count != 1) {
+AFAIR, wait_event_timeout() will continue to busy loop and wait until
+the timeout, but not return an error because the polled condition was
+true, at least that is my recollection from having the same issue with
+the bcmgenet driver before it was moved to connecting to the PHY in the
+ndo_open() function.
 -- 
-2.21.0
-
+Florian
