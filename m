@@ -6,103 +6,83 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB122C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E35C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8AD2187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959BE21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbfHZKKl (ORCPT
+        id S1731332AbfHZKKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:10:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35466 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 06:10:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46914 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730193AbfHZKKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:10:40 -0400
+        id S1731306AbfHZKKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:10:42 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F05FD307D915;
-        Mon, 26 Aug 2019 10:10:39 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 72397300BEB0;
+        Mon, 26 Aug 2019 10:10:42 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-116-227.ams2.redhat.com [10.36.116.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 24EC5608C1;
-        Mon, 26 Aug 2019 10:10:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E1C560920;
+        Mon, 26 Aug 2019 10:10:40 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v2 4/6] mm/memory_hotplug: Cleanup __remove_pages()
-Date:   Mon, 26 Aug 2019 12:10:10 +0200
-Message-Id: <20190826101012.10575-5-david@redhat.com>
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Arun KS <arunks@codeaurora.org>
+Subject: [PATCH v2 5/6] mm: Introduce for_each_zone_nid()
+Date:   Mon, 26 Aug 2019 12:10:11 +0200
+Message-Id: <20190826101012.10575-6-david@redhat.com>
 In-Reply-To: <20190826101012.10575-1-david@redhat.com>
 References: <20190826101012.10575-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 26 Aug 2019 10:10:40 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 26 Aug 2019 10:10:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's drop the basically unused section stuff and simplify.
-
-Also, let's use a shorter variant to calculate the number of pages to
-the next section boundary.
+Allow to iterate all zones belonging to a nid.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Arun KS <arunks@codeaurora.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/memory_hotplug.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ include/linux/mmzone.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 27f0457b7512..e88c96cf9d77 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -545,8 +545,9 @@ static void __remove_section(unsigned long pfn, unsigned long nr_pages,
- void __remove_pages(struct zone *zone, unsigned long pfn,
- 		    unsigned long nr_pages, struct vmem_altmap *altmap)
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 8b5f758942a2..71f2b9b55069 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -1004,6 +1004,11 @@ extern struct zone *next_zone(struct zone *zone);
+ 			; /* do nothing */		\
+ 		else
+ 
++#define for_each_zone_nid(zone, nid)			\
++	for (zone = (NODE_DATA(nid))->node_zones;	\
++	     zone && zone_to_nid(zone) == nid;		\
++	     zone = next_zone(zone))
++
+ static inline struct zone *zonelist_zone(struct zoneref *zoneref)
  {
-+	const unsigned long end_pfn = pfn + nr_pages;
-+	unsigned long cur_nr_pages;
- 	unsigned long map_offset = 0;
--	unsigned long nr, start_sec, end_sec;
- 
- 	if (check_pfn_span(pfn, nr_pages, "remove"))
- 		return;
-@@ -558,17 +559,11 @@ void __remove_pages(struct zone *zone, unsigned long pfn,
- 		if (zone_intersects(zone, pfn, nr_pages))
- 			clear_zone_contiguous(zone);
- 
--	start_sec = pfn_to_section_nr(pfn);
--	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
--	for (nr = start_sec; nr <= end_sec; nr++) {
--		unsigned long pfns;
--
-+	for (; pfn < end_pfn; pfn += cur_nr_pages) {
- 		cond_resched();
--		pfns = min(nr_pages, PAGES_PER_SECTION
--				- (pfn & ~PAGE_SECTION_MASK));
--		__remove_section(pfn, pfns, map_offset, altmap);
--		pfn += pfns;
--		nr_pages -= pfns;
-+		/* Select all remaining pages up to the next section boundary */
-+		cur_nr_pages = min(end_pfn - pfn, -(pfn | PAGE_SECTION_MASK));
-+		__remove_section(pfn, cur_nr_pages, map_offset, altmap);
- 		map_offset = 0;
- 	}
- 
+ 	return zoneref->zone;
 -- 
 2.21.0
 
