@@ -2,132 +2,79 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80EAC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB4C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A932173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8B7217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CkN4Km85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732528AbfHZOgX (ORCPT
+        id S1732542AbfHZOhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:36:23 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:60845 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbfHZOgX (ORCPT
+        Mon, 26 Aug 2019 10:37:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42598 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfHZOhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:36:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TaX0fOW_1566830174;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TaX0fOW_1566830174)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 26 Aug 2019 22:36:16 +0800
-Subject: Re: [PATCH 00/14] per memcg lru_lock
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Shakeel Butt <shakeelb@google.com>,
-        Yu Zhao <yuzhao@google.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Matthew Wilcox <willy@infradead.org>
-References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
- <20190820104532.GP3111@dhcp22.suse.cz>
- <CALvZod7-dL90jwd2pywpaD8NfUByVU9Y809+RfvJABGdRASYUg@mail.gmail.com>
- <alpine.LSU.2.11.1908201038260.1286@eggly.anvils>
- <e9ac9c8c-15c1-8365-5c39-285c6d7b07a6@linux.alibaba.com>
- <alpine.LSU.2.11.1908231736001.16920@eggly.anvils>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <507fd148-37e1-23f9-ebb3-9a29f5ee51ac@linux.alibaba.com>
-Date:   Mon, 26 Aug 2019 22:35:54 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Mon, 26 Aug 2019 10:37:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9L6x3bv3OAx/rNyKIGAjoq8IovFuRmRoE4HKzlVac30=; b=CkN4Km85hK6pSp0jpT8G5RAj/
+        h+hJGzLQumvjJ3l14xFuBFt96F3L0owPEaUT3Sq34R239hUaS7ZJZK0TJqCZqdQisWzqWbVm06DKD
+        5UgFdt3xeT6I/t77fic667mkohIiHLObFG2ZgnoH+BntEfs5w6SIX7kBrGJizT2t4JUAN49aW1PmO
+        xazoi0avOSqvVXWs+mQYInrFYHEkdEoChNorbJXNT+ODj9tkm4lqPEH51xPl8BbXRGutHYpW1euur
+        ZPsMWWRLNOhrh/rtmm48SN2Hi2ug+02qlaIpKBNi/6BiOKl1ErsqKJ1dRnY2XCIw0B7ol64FUl/nL
+        V/cj+Rv5g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2G70-0001ZE-1m; Mon, 26 Aug 2019 14:36:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 23D7C3070F4;
+        Mon, 26 Aug 2019 16:36:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9B84C20A6A641; Mon, 26 Aug 2019 16:36:47 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 16:36:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/3] x86/alternatives: Move tp_vec
+Message-ID: <20190826143647.GV2369@hirez.programming.kicks-ass.net>
+References: <20190826125138.710718863@infradead.org>
+ <20190826125519.798115791@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1908231736001.16920@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826125519.798115791@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 26, 2019 at 02:51:40PM +0200, Peter Zijlstra wrote:
 
+> +#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_loc))
+> +extern struct text_poke_loc tp_vec[TP_VEC_MAX];
+> +extern int tp_vec_nr;
 
-在 2019/8/24 上午9:59, Hugh Dickins 写道:
-> On Wed, 21 Aug 2019, Alex Shi wrote:
->> 在 2019/8/21 上午2:24, Hugh Dickins 写道:
->>> I'll set aside what I'm doing, and switch to rebasing ours to v5.3-rc
->>> and/or mmotm.  Then compare with what Alex has, to see if there's any
->>> good reason to prefer one to the other: if no good reason to prefer ours,
->>> I doubt we shall bother to repost, but just use it as basis for helping
->>> to review or improve Alex's.
->>
->> For your review, my patchset are pretty straight and simple.
->> It just use per lruvec lru_lock to replace necessary pgdat lru_lock.
->> just this.  We could talk more after I back to work. :)
-> 
-> Sorry to be bearer of bad news, Alex, but when you said "straight and
-> simple", I feared that your patchset would turn out to be fundamentally
-> too simple.
-> 
-> And that is so. I have only to see the
-> 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> line in isolate_migratepages_block() in mm/compaction.c, and check
-> that mem_cgroup_page_lruvec() is little changed in mm/mempolicy.c.
-> 
-> The central problem with per-memcg lru_lock is that you do not know
-> for sure what lock to take (which memcg a page belongs to) until you
-> have taken the expected lock, and then checked whether page->memcg
-> is still the same - backing out and trying again if not.
-> 
-> Fix that central problem, and you end up with a more complicated
-> patchset, much like ours.  It's true that when ours was first developed,
-> the memcg situation was more complicated in several ways, and perhaps
-> some aspects of our patchset could be simplified now (though I've not
-> identified any).  Johannes in particular has done a great deal of
-> simplifying work in memcg over the last few years, but there are still
-> situations in which a page's memcg can change (move_charge_at_immigrate
-> and swapin readahead spring to mind - or perhaps the latter is only an
-> issue when MEMCG_SWAP is not enabled, I forget; and I often wonder if
-> reparenting will be brought back one day).
-> 
-> I did not review your patchset in detail, and wasn't able to get very
-> far in testing it.  At first I was put off by set_task_reclaim_state
-> warnings from mm/vmscan.c, but those turned out to be in v5.3-rc5
-> itself, not from your patchset or mine (but I've not yet investigated
-> what's responsible for them).  Within a minute of starting swapping
-> load, kcompactd compact_lock_irqsave() in isolate_migratepages_block()
-> would deadlock, and I did not get further.  (Though I did also notice
-> that booting the CONFIG_MEMCG=y kernel with "cgroup_disable=memory"
-> froze in booting - tiresomely, one has to keep both the memcg and
-> no-memcg locking to cope with that case, and I guess you had not.)
-> 
-> Rather than duplicating effort, I would advise you to give our patchset
-> a try, and if it works for you, help towards getting that one merged:
-> but of course, it's up to you.
+FWIW, that currently results in a batch size of 128, but I've not
+noticed any delay in flipping ftrace on and off on the commandline.
 
-Thanks a lot for all infos and reminders! Yes, the page->memcg change would be a problem. I will studying your patchset and try to merge them.
-
-> 
-> I've attached a tarfile of it rebased to v5.3-rc5: I do not want to
-> spam the list with patches yet, because I do not have any stats or
-> argument in support of the series, as Andrew asked for years ago and
-> Michal asks again now.  But aside from that I consider it ready, and
-> will let Shakeel take it over from here, while I get back to what I
-> diverted from (but of course I'll try to answer questions on it).
-> 
-I will trying to look into them. Thanks for your kindly offer. :)
-
-Thanks!
-Alex
+Growing that buffer really shouldn't be a problem, but I'm thinking we'd
+want solid performance numbers to justify it.
