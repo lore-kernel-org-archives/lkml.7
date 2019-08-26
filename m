@@ -2,123 +2,138 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B29FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A234C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7834C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67ABB2186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566826083;
+	bh=VjxUxDnVuRk1DSTLUCljhelqYMjetMiX0Jgtit+/pPg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pamU/2RS3dFDIn6oqVMkyRaRtm6QcXy6nCcG25fZSb1/EJFlz0EEXtgsLlZ/H6ywE
+	 uTnBn3IHDsdbIwEG6Z0NNN6LoK+8MrxYtRccPMoktIiQV9mbjOUaDjYB4hnW5jhFAG
+	 pate/AJfKQ5RrAZWiNqAiRkK1hG7wUMVLzIxwUts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfHZN14 (ORCPT
+        id S1731154AbfHZN2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:27:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38178 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727253AbfHZN14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:27:56 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D51777CE6EC814E9F398;
-        Mon, 26 Aug 2019 21:27:52 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 26 Aug
- 2019 21:27:42 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH RESEND] erofs: fix compile warnings when moving out include/trace/events/erofs.h
-Date:   Mon, 26 Aug 2019 21:26:53 +0800
-Message-ID: <20190826132653.100731-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190826132234.96939-1-gaoxiang25@huawei.com>
-References: <20190826132234.96939-1-gaoxiang25@huawei.com>
+        Mon, 26 Aug 2019 09:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729937AbfHZN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:28:02 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F203121872;
+        Mon, 26 Aug 2019 13:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566826081;
+        bh=VjxUxDnVuRk1DSTLUCljhelqYMjetMiX0Jgtit+/pPg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eAitVO3YoyuYVrg7Km4FZM80GaTZmMfF8XtM3rxdRoM6HhgSMSp2F9PG0ox13+4Cy
+         3fjRHYFpb+2S9sIgjempVLcUAjTm/MvWf1sYpH72WDCqbDiRgxekXMPhys7WQGW4Ln
+         XZUZxUL3UphvQDnUcW5hAb9oFOzsOY2T2DRowQ2Q=
+Received: by mail-qt1-f171.google.com with SMTP id y26so17842245qto.4;
+        Mon, 26 Aug 2019 06:28:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAUrgrlGqxFau6Fykf+oqttbW9HsDb+GPMxsLjdi9MP4BrloV/Wg
+        gi2+fB35edzSPmXhNP0pyLW23d+8QuGaLN1yUw==
+X-Google-Smtp-Source: APXvYqyW4dx7oo0NyfH+v5v1S1mxW/IB4r3yTuAklXjRgYFmYC3NHSt4KOPNnz1iCNqEuKQUONG7lWxDvV5wx6aOu1E=
+X-Received: by 2002:aed:24f4:: with SMTP id u49mr17690228qtc.110.1566826080079;
+ Mon, 26 Aug 2019 06:28:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+References: <156678933823.21459.4100380582025186209.stgit@devnote2> <156678934990.21459.10847677747264952252.stgit@devnote2>
+In-Reply-To: <156678934990.21459.10847677747264952252.stgit@devnote2>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 26 Aug 2019 08:27:48 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+Pm4D_fm+iG9UfGSObx2fSXshZuMW4QKwGePbg4RUEjA@mail.gmail.com>
+Message-ID: <CAL_Jsq+Pm4D_fm+iG9UfGSObx2fSXshZuMW4QKwGePbg4RUEjA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 01/19] skc: Add supplemental kernel cmdline support
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Stephon reported [1], many compile warnings are raised when
-moving out include/trace/events/erofs.h:
+On Sun, Aug 25, 2019 at 10:15 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Supplemental kernel command line (SKC) allows admin to pass a
+> tree-structured supplemental kernel commandline file (SKC file)
+> when boot up kernel. This expands the kernel command line in
+> efficient way.
+>
+> SKC file will contain some key-value commands, e.g.
+>
+> key.word = value1;
+> another.key.word = value2;
+>
+> It can fold same keys with braces, also you can write array
+> data. For example,
+>
+> key {
+>    word1 {
+>       setting1 = data;
+>       setting2;
+>    }
+>    word2.array = "val1", "val2";
+> }
 
-In file included from include/trace/events/erofs.h:8,
-                 from <command-line>:
-include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
-  TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-                                     ^~~~~~
-include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
-  static inline void trace_##name(proto)    \
-                                  ^~~~~
-include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
-  __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
-                        ^~~~~~
-include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
-  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-  ^~~~~~~~~~~~~
-include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
-  DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-                      ^~~~~~
-include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
- TRACE_EVENT(erofs_lookup,
- ^~~~~~~~~~~
-include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
-  TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-  ^~~~~~~~
+Why invent a custom file format? You could use YAML (or JSON):
 
-That makes me very confused since most original EROFS tracepoint code
-was taken from f2fs, and finally I found
+key:
+ word1:
+  setting1: data
+  setting2: true
+ word2:
+  - val1
+  - val2
 
-commit 43c78d88036e ("kbuild: compile-test kernel headers to ensure they are self-contained")
 
-It seems these warnings are generated from KERNEL_HEADER_TEST feature and
-ext4/f2fs tracepoint files were in blacklist.
+That would allow you to define a schema for defined options and can
+easily be manipulated with python (or any language with dictionaries
+and lists). That does imply adding a YAML parser to the kernel which
+I'm not sure is a great idea. There is a C parser lib, but working
+with YAML in C is not that great compared to python.
 
-Anyway, let's fix these issues for KERNEL_HEADER_TEST feature instead
-of adding to blacklist...
+Another option would be using the DTS format, but as a separate file.
+That's not unprecedented as u-boot FIT image is a DTB. Then the kernel
+already has the parser. And you could still have schema now.
 
-[1] https://lore.kernel.org/lkml/20190826162432.11100665@canb.auug.org.au/
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
+A new interface will take a lot of bootloader work to make it easy to
+use given the user has to manually load some file in the bootloader
+and know a good address to load it to. Between that and rebuilding the
+kernel with the configuration, I'd pick rebuilding the kernel. Perhaps
+this version will highlight that the original proposal was not so bad.
 
-[RESEND] Cc Stephen as well. no change at all...
 
-Hi Chao and Greg,
- It seems the root cause reported by Stephen is the following (sorry for
- taking some time...) could you kindly review and merge this patch?
+Another thought, maybe you could process the configuration file that's
+in a readable/editable format into a flat representation that could
+simply be added to the kernel command line:
 
-Thanks,
-Gao Xiang
+key.word1.setting1=data key.word1.setting2 key.word2=val1,val2
 
- include/trace/events/erofs.h | 3 +++
- 1 file changed, 3 insertions(+)
+That would then use an existing interface and probably simplify the
+kernel parsing.
 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index bfb2da9c4eee..d239f39cbc8c 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -6,6 +6,9 @@
- #define _TRACE_EROFS_H
- 
- #include <linux/tracepoint.h>
-+#include <linux/fs.h>
-+
-+struct erofs_map_blocks;
- 
- #define show_dev(dev)		MAJOR(dev), MINOR(dev)
- #define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
--- 
-2.17.1
-
+Rob
