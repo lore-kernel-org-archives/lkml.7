@@ -2,92 +2,215 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A6DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808B5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62AB2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566805433;
-	bh=M+hTegmHDZh+05dXP2akiotTvv2BNnDxEdumsrM6JZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bZ5cxu1nBYYZI/1XavAbCcDqsDZSFsYy816Nqw0OCcSprvetcF97EP2uiXGoSjLxP
-	 8vHgFTA9bPb4H/WFgvuyq+X7IldYSdYkK1hZqlAD3mO+ra2ogJQdYiNNTCzwgaer1x
-	 CUumRpB72a574g2oLmKpK4+EyKLrKx+Fmej3eBEE=
+	by mail.kernel.org (Postfix) with ESMTP id 4E39D2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:44:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyyULK8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfHZHnw (ORCPT
+        id S1730227AbfHZHoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:43:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59628 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728198AbfHZHnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:43:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ED493AE79;
-        Mon, 26 Aug 2019 07:43:50 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 09:43:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Message-ID: <20190826074350.GE7538@dhcp22.suse.cz>
-References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190822080434.GF12785@dhcp22.suse.cz>
- <9e4ba38e-0670-7292-ab3a-38af391598ec@linux.alibaba.com>
+        Mon, 26 Aug 2019 03:44:13 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39331 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfHZHoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 03:44:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so10076640pgi.6;
+        Mon, 26 Aug 2019 00:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=585IXWVt6xNyJ0Q/dtfIKZTuL2RaY57uYTI+DFMs4EQ=;
+        b=jyyULK8dc03cP+jhSF7f9NSi9ySYQ5nedZb3+BIccmvvcz2zt34jKLse1fdlTYO7GM
+         9BbiqSvvr8l7x80mMYJH+rmN2Wo+cwIYOPBqzerlS1ncG1ww+Od/198O9ffx14viIrjV
+         R7LV7KucDgtqBBy+WOZ1G8atRI6pOS+72aSLplk7gYyMPU4YrakiwCszV7xue18U4SLH
+         css20hSeKRPAcpkMs3n7kQUT7YF9RbvRTM+QpAB5fwH+SzTUCGH/2EuuIdC/saYUPz+9
+         xG9Oj4QhYH1LJ8d0MxxeL5qpTFEmn5SFoHYrMdTsixU29ms9POQtdm0XWwksAEsjgKx9
+         Rumg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=585IXWVt6xNyJ0Q/dtfIKZTuL2RaY57uYTI+DFMs4EQ=;
+        b=d745aHVhnk3wKXHikleqHb6iheEV6FpoRlpV134vhBao7ZnpFUcQ9E7WKDDREE2fV4
+         K+k/Z2ZkTsG3gP8Y0kll4sI7Pkm0gWn3R2vqJ3DrdeBTZfdxTq/s6qJc6fw0ih0kP79M
+         j+XwuwzHmaxz1jSgF57+7nlvYG2tnCWwFchKAzLLifToqhbCsDx8EpurXe0O7qQB5JiL
+         hVQZmObQTSdg6OG5i+jj/wfbekL7ByGfRq/CUNzxLrVakIeAEB6UATqZAd2X8xgyqeYP
+         OYDWbqxjHl0Swx7eyneiBnl7XtezhS3IJej7Z4JFnJ4ABiF/TWespZ0z1rnA+GINTKnn
+         DMeA==
+X-Gm-Message-State: APjAAAXoemAzyVeeP14KB/ih63OYnlpqUcYaEcmYNFkQN7RVPq64ojR+
+        e/u7+gqnJFGc4MpUfYakL54=
+X-Google-Smtp-Source: APXvYqxOs1ABJL68Zmg3CdnBarmtBpxNBoCXyNOYp2NusIeT+oonQgf1bsZ0u7Vjqua5Ps/gVmikHg==
+X-Received: by 2002:a17:90b:289:: with SMTP id az9mr18853832pjb.5.1566805451474;
+        Mon, 26 Aug 2019 00:44:11 -0700 (PDT)
+Received: from localhost.localdomain ([175.203.71.146])
+        by smtp.googlemail.com with ESMTPSA id h17sm12144510pfo.24.2019.08.26.00.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 00:44:10 -0700 (PDT)
+From:   Seunghun Han <kkamagui@gmail.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        linux-integrity@vger.kernel.org (open list:TPM DEVICE DRIVER),
+        linux-kernel@vger.kernel.org, Seunghun Han <kkamagui@gmail.com>
+Subject: [PATCH] tpm: tpm_crb: Fix an improper buffer size calculation bug
+Date:   Mon, 26 Aug 2019 16:44:00 +0900
+Message-Id: <20190826074400.54794-1-kkamagui@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e4ba38e-0670-7292-ab3a-38af391598ec@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 22-08-19 08:33:40, Yang Shi wrote:
-> 
-> 
-> On 8/22/19 1:04 AM, Michal Hocko wrote:
-> > On Thu 22-08-19 01:55:25, Yang Shi wrote:
-[...]
-> > > And, they seems very common with the common workloads when THP is
-> > > enabled.  A simple run with MariaDB test of mmtest with THP enabled as
-> > > always shows it could generate over fifteen thousand deferred split THPs
-> > > (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
-> > > It looks worth accounting in MemAvailable.
-> > OK, this makes sense. But your above numbers are really worrying.
-> > Accumulating such a large amount of pages that are likely not going to
-> > be used is really bad. They are essentially blocking any higher order
-> > allocations and also push the system towards more memory pressure.
-> 
-> That is accumulated number, during the running of the test, some of them
-> were freed by shrinker already. IOW, it should not reach that much at any
-> given time.
+I'm Seunghun Han and work at the Affiliated Institute of ETRI. I found
+a bug related to improper buffer size calculation in crb_fixup_cmd_size
+function.
 
-Then the above description is highly misleading. What is the actual
-number of lingering THPs that wait for the memory pressure in the peak?
+When the TPM CRB regions are two or more, the crb_map_io function calls
+crb_fixup_cmd_size twice to calculate command buffer size and response
+buffer size. The purpose of crb_fixup_cmd_size function is to trust
+the ACPI region information.
+
+However, the function compares only io_res argument with start and size
+arguments.  It means the io_res argument is one of command buffer and
+response buffer regions. It also means the other region is not calculated
+correctly by the function because io_res argument doesn't cover all TPM
+CRB regions.
+
+To fix this bug, I change crb_check_resource function for storing all TPB
+CRB regions to a list and use the list to calculate command buffer size
+and response buffer size correctly.
+
+Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+---
+ drivers/char/tpm/tpm_crb.c | 50 ++++++++++++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index e59f1f91d7f3..b0e94e02e5eb 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -442,6 +442,9 @@ static int crb_check_resource(struct acpi_resource *ares, void *data)
+ 	    acpi_dev_resource_address_space(ares, &win)) {
+ 		*io_res = *res;
+ 		io_res->name = NULL;
++
++		/* Add this TPM CRB resource to the list */
++		return 0;
+ 	}
  
-> > IIUC deferred splitting is mostly a workaround for nasty locking issues
-> > during splitting, right? This is not really an optimization to cache
-> > THPs for reuse or something like that. What is the reason this is not
-> > done from a worker context? At least THPs which would be freed
-> > completely sound like a good candidate for kworker tear down, no?
-> 
-> Yes, deferred split THP was introduced to avoid locking issues according to
-> the document. Memcg awareness would help to trigger the shrinker more often.
-> 
-> I think it could be done in a worker context, but when to trigger to worker
-> is a subtle problem.
-
-Why? What is the problem to trigger it after unmap of a batch worth of
-THPs?
+ 	return 1;
+@@ -471,20 +474,30 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+  * region vs the registers. Trust the ACPI region. Such broken systems
+  * probably cannot send large TPM commands since the buffer will be truncated.
+  */
+-static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
++static u64 crb_fixup_cmd_size(struct device *dev, struct list_head *resources,
+ 			      u64 start, u64 size)
+ {
+-	if (io_res->start > start || io_res->end < start)
+-		return size;
++	struct resource_entry *pos;
++	struct resource *cur_res;
++
++	/* Check all TPM CRB resources with the start and size values */
++	resource_list_for_each_entry(pos, resources) {
++		cur_res = pos->res;
++
++		if (cur_res->start > start || cur_res->end < start)
++			continue;
+ 
+-	if (start + size - 1 <= io_res->end)
+-		return size;
++		if (start + size - 1 <= cur_res->end)
++			return size;
+ 
+-	dev_err(dev,
+-		FW_BUG "ACPI region does not cover the entire command/response buffer. %pr vs %llx %llx\n",
+-		io_res, start, size);
++		dev_err(dev,
++			FW_BUG "ACPI region does not cover the entire command/response buffer. %pr vs %llx %llx\n",
++			cur_res, start, size);
++
++		return cur_res->end - start + 1;
++	}
+ 
+-	return io_res->end - start + 1;
++	return size;
+ }
+ 
+ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+@@ -506,16 +519,18 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 				     &io_res);
+ 	if (ret < 0)
+ 		return ret;
+-	acpi_dev_free_resource_list(&resources);
+ 
+ 	if (resource_type(&io_res) != IORESOURCE_MEM) {
+ 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto out_early;
+ 	}
+ 
+ 	priv->iobase = devm_ioremap_resource(dev, &io_res);
+-	if (IS_ERR(priv->iobase))
+-		return PTR_ERR(priv->iobase);
++	if (IS_ERR(priv->iobase)) {
++		ret = PTR_ERR(priv->iobase);
++		goto out_early;
++	}
+ 
+ 	/* The ACPI IO region starts at the head area and continues to include
+ 	 * the control area, as one nice sane region except for some older
+@@ -532,7 +547,7 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	ret = __crb_request_locality(dev, priv, 0);
+ 	if (ret)
+-		return ret;
++		goto out_early;
+ 
+ 	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
+ 				   sizeof(struct crb_regs_tail));
+@@ -552,7 +567,7 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+ 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+ 	cmd_pa = ((u64)pa_high << 32) | pa_low;
+-	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
++	cmd_size = crb_fixup_cmd_size(dev, &resources, cmd_pa,
+ 				      ioread32(&priv->regs_t->ctrl_cmd_size));
+ 
+ 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+@@ -566,7 +581,7 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+ 	rsp_pa = le64_to_cpu(__rsp_pa);
+-	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
++	rsp_size = crb_fixup_cmd_size(dev, &resources, rsp_pa,
+ 				      ioread32(&priv->regs_t->ctrl_rsp_size));
+ 
+ 	if (cmd_pa != rsp_pa) {
+@@ -596,6 +611,9 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	__crb_relinquish_locality(dev, priv, 0);
+ 
++out_early:
++	acpi_dev_free_resource_list(&resources);
++
+ 	return ret;
+ }
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
