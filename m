@@ -2,89 +2,166 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9D4C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495A4C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5822B20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E5D20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aZd6f2fv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbfHZJW7 (ORCPT
+        id S1730922AbfHZJXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:22:59 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45663 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729753AbfHZJW7 (ORCPT
+        Mon, 26 Aug 2019 05:23:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbfHZJXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:22:59 -0400
-Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 5f4a13a5f27ca4dc; Mon, 26 Aug 2019 11:22:56 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
-        <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: Print driver name if cpufreq_suspend() fails
-Date:   Mon, 26 Aug 2019 11:22:56 +0200
-Message-ID: <9030003.WlOONWmqy1@kreacher>
-In-Reply-To: <b534e21b-af00-bbec-2a53-0c3bda8c8ce9@gmail.com>
-References: <20190821231632.29133-1-f.fainelli@gmail.com> <20190822024221.wt7mx2zrm3fetnjp@vireshk-i7> <b534e21b-af00-bbec-2a53-0c3bda8c8ce9@gmail.com>
+        Mon, 26 Aug 2019 05:23:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2KBUYcIEMh8CbI2PPoE5kOoIKtOGa1DHFxKeskY4Qlk=; b=aZd6f2fvSGtnTzhxj37lD+Gdd
+        feaLc4us57oYUJCpRf63+PtXp2xoF+FsBuCKvxUA8q7t+RXVGH6KWS+75mPQnH39rHMiFNGewlQzY
+        u6Kq1C4ysxWRUTbnm/SrJt4VpgJHSHy5sNzOdyCnSCVAx6dBftJQ+fN7K0ntkcTLgE2Kc7qIA5dpc
+        ZsBa9RgPe886KK58t75r8hhXisol3nilmufWhLyY+mt3wi8yUxmc5VlVIeIoEOZp/ojdGRSwuuNGt
+        CZiQYyH7P/jB6CDfKjVOpZiElQyFtkjLjhBhXpJkYAyB8d3M7rf0lEUJZ3vEs33VaGxS/k8hm4Iix
+        plKHNfhxA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2BDL-0005j9-6Z; Mon, 26 Aug 2019 09:23:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03BA8301FF9;
+        Mon, 26 Aug 2019 11:22:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3F8602022F842; Mon, 26 Aug 2019 11:23:00 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 11:23:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "sbsiddha@gmail.com" <sbsiddha@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
+ set_kernel_text_rw()
+Message-ID: <20190826092300.GN2369@hirez.programming.kicks-ass.net>
+References: <20190823052335.572133-1-songliubraving@fb.com>
+ <20190823093637.GH2369@hirez.programming.kicks-ass.net>
+ <164D1F08-80F7-4E13-94FC-78F33B3E299F@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164D1F08-80F7-4E13-94FC-78F33B3E299F@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, August 22, 2019 6:21:20 PM CEST Florian Fainelli wrote:
-> On 8/21/19 7:42 PM, Viresh Kumar wrote:
-> > On 21-08-19, 16:16, Florian Fainelli wrote:
-> >> Instead of printing the policy, which is incidentally a kernel pointer,
-> >> so with limited interest, print the cpufreq driver name that failed to
-> >> be suspend, which is more useful for debugging.
-> >>
-> >> Fixes: 2f0aea936360 ("cpufreq: suspend governors on system suspend/hibernate")
-> > 
-> > I will drop this tag as this isn't a bug really.
+On Mon, Aug 26, 2019 at 04:40:23AM +0000, Song Liu wrote:
+> Cc: Steven Rostedt and Suresh Siddha
 > 
-> Indeed, that was a bit too trigger happy on my side. Thanks!
-
-Applied without the Fixes tag, thanks!
-
-> > 
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >>  drivers/cpufreq/cpufreq.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> >> index c28ebf2810f1..330d789f81fc 100644
-> >> --- a/drivers/cpufreq/cpufreq.c
-> >> +++ b/drivers/cpufreq/cpufreq.c
-> >> @@ -1807,8 +1807,8 @@ void cpufreq_suspend(void)
-> >>  		}
-> >>  
-> >>  		if (cpufreq_driver->suspend && cpufreq_driver->suspend(policy))
-> >> -			pr_err("%s: Failed to suspend driver: %p\n", __func__,
-> >> -				policy);
-> >> +			pr_err("%s: Failed to suspend driver: %s\n", __func__,
-> >> +				cpufreq_driver->name);
-> >>  	}
-> >>  
-> >>  suspend:
-> > 
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
+> Hi Peter, 
 > 
+> > On Aug 23, 2019, at 2:36 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > On Thu, Aug 22, 2019 at 10:23:35PM -0700, Song Liu wrote:
+> >> As 4k pages check was removed from cpa [1], set_kernel_text_rw() leads to
+> >> split_large_page() for all kernel text pages. This means a single kprobe
+> >> will put all kernel text in 4k pages:
+> >> 
+> >>  root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
+> >>  0xffffffff81000000-0xffffffff82400000     20M  ro    PSE      x  pmd
+> >> 
+> >>  root@ ~# echo ONE_KPROBE >> /sys/kernel/debug/tracing/kprobe_events
+> >>  root@ ~# echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+> >> 
+> >>  root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
+> >>  0xffffffff81000000-0xffffffff82400000     20M  ro             x  pte
+> >> 
+> >> To fix this issue, introduce CPA_FLIP_TEXT_RW to bypass "Text RO" check
+> >> in static_protections().
+> >> 
+> >> Two helper functions set_text_rw() and set_text_ro() are added to flip
+> >> _PAGE_RW bit for kernel text.
+> >> 
+> >> [1] commit 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
+> > 
+> > ARGH; so this is because ftrace flips the whole kernel range to RW and
+> > back for giggles? I'm thinking _that_ is a bug, it's a clear W^X
+> > violation.
 > 
+> Thanks for your comments. Yes, it is related to ftrace, as we have
+> CONFIG_KPROBES_ON_FTRACE. However, after digging around, I am not sure
+> what is the expected behavior.
+
+It changed recently; that is we got a lot more strict wrt W^X mappings.
+IIRC ftrace is the only known violator of W^X at this time.
+
+> Kernel text region has two mappings to it. For x86_64 and four-level 
+> page table, there are: 
 > 
+> 	1. kernel identity mapping, from 0xffff888000100000; 
+> 	2. kernel text mapping, from 0xffffffff81000000, 
 
+Right; AFAICT this is so that kernel text fits in s32 immediates.
 
+> Per comments in arch/x86/mm/init_64.c:set_kernel_text_rw():
+> 
+>         /*
+>          * Make the kernel identity mapping for text RW. Kernel text
+>          * mapping will always be RO. Refer to the comment in
+>          * static_protections() in pageattr.c
+>          */
+> 	set_memory_rw(start, (end - start) >> PAGE_SHIFT);
 
+So only the high mapping is ever executable; the identity map should not
+be. Both should be RO.
 
+> kprobe (with CONFIG_KPROBES_ON_FTRACE) should work on kernel identity
+> mapping. 
+
+Please provide more information; kprobes shouldn't be touching either
+mapping. That is, afaict kprobes uses text_poke() which uses a temporary
+mapping (in 'userspace' even) to alias the high text mapping.
+
+I'm also not sure how it would then result in any 4k text maps. Yes the
+alias is 4k, but it should not affect the actual high text map in any
+way.
+
+kprobes also allocates executable slots, but it does that in the module
+range (afaict), so that, again, should not affect the high text mapping.
+
+> We found with 5.2 kernel (no CONFIG_PAGE_TABLE_ISOLATION, w/ 
+> CONFIG_KPROBES_ON_FTRACE), a single kprobe will split _all_ PMDs in 
+> kernel text mapping into pte-mapped pages. This increases iTLB 
+> miss rate from about 300 per million instructions to about 700 per
+> million instructions (for the application I test with). 
+> 
+> Per bisect, we found this behavior happens after commit 585948f4f695 
+> ("x86/mm/cpa: Avoid the 4k pages check completely"). That's why I 
+> proposed this PATCH to fix/workaround this issue. However, per
+> Peter's comment and my study of the code, this doesn't seem the 
+> real problem or the only here. 
+> 
+> I also tested that the PMD split issue doesn't happen w/o 
+> CONFIG_KPROBES_ON_FTRACE. 
+
+Right, because then ftrace doesn't flip the whole kernel map writable;
+which it _really_ should stop doing anyway.
+
+But I'm still wondering what causes that first 4k split...
