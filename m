@@ -2,76 +2,80 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E21C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D70C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651F02070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038BC2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfmZE7Uf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="erZ8mhBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733210AbfHZSwL (ORCPT
+        id S2387472AbfHZSyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:52:11 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:40427 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfHZSwL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:52:11 -0400
-Received: by mail-pl1-f202.google.com with SMTP id k7so1097154plt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=f13wn2v3HTWLW79B2qFqNfxBA9vXXjNlnyblgswdq/E=;
-        b=bfmZE7Uf1xNK78UufCnnG87LZS9m7cHd1LRQUTgSX4t1YttJJSQNzi3p93vCxe06t6
-         l00juMEHKARjQyGo2vyvuxvJHkds8eC5FP5YGXqW+64X4/T/kfzRqfH+u77bxE0WVg0Y
-         MozDokfGxp/B7yoUO6goIxvixoWQYk6g/nYYbuEeu82L+uJnPGRT+0i28/YCQAQyXuzW
-         CNSZMPeDkigzmEfwJfNqaMAbCATcFEDvzQnonAmyAstW1Jo09TS7feX8QuZ0rwtPxAWz
-         Ex6y5/XLNKFp2sCQWqiT0Ain+OGSZccgXThs0vaj7qMLKj0vN9EU+Ij2d5H7GLbHGPT3
-         sHvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=f13wn2v3HTWLW79B2qFqNfxBA9vXXjNlnyblgswdq/E=;
-        b=GQ0+xiSDvVPnybM8u/cvj/Km7+24g7UsEqpf8aEP56wPrTtirxH9sKq4fwOB7iFI/4
-         OKCs+FZkpJUpAtkkNW7ytHJtqklPRREhj7SF9x6q2Tp7qM4SpInHVAZ74G2SxemyBuOV
-         4uE7Sb3IBr/aQoFJiF+2ulo5sLi/75/smIbG3aTtonLhWoVtd4G2yGY9Wu9lKyrgMEmm
-         9qOQ3iY96W2TOkDY5ZVIgj9cA5Aghei1rshpQzH0zxA2E0JgROdkhe0s4WDloLqnQVyx
-         5Zx7zbI7t1dIVLodzN1L1SrDjcJHYZfeLJv+gKA9K/wCqHdwqH/9Ehq5sewVgvWrL2N3
-         SN6A==
-X-Gm-Message-State: APjAAAXwynvEqRafWp9paRFc53FOhM4dXB4CUJ39a5lGSmpMUdUr/SIB
-        0pfn+SN/Td5ynimJFSsesr6HU+alpQ==
-X-Google-Smtp-Source: APXvYqxofBxaAILlefFytt3O0sJSZvx4y5z2QEpvVJn6P3QTOD4bxfISMK9z35l56sFzEoUKmV+9pyuRX0U=
-X-Received: by 2002:a63:e213:: with SMTP id q19mr17542135pgh.180.1566845529981;
- Mon, 26 Aug 2019 11:52:09 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 11:52:06 -0700
-In-Reply-To: <CANLsYkxC-4UZcVKoTQiJ2PsDxwuriFoAwqdbM39EC1G3nwwAHg@mail.gmail.com>
-Message-Id: <20190826185206.105863-1-yabinc@google.com>
-Mime-Version: 1.0
-References: <CANLsYkxC-4UZcVKoTQiJ2PsDxwuriFoAwqdbM39EC1G3nwwAHg@mail.gmail.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: Re: [PATCH 0/2] coresight: Add barrier packet when moving offset forward
-From:   Yabin Cui <yabinc@google.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>, leo.yan@linaro.org
-Cc:     mike.leach@arm.com, alexander.shishkin@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 26 Aug 2019 14:54:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60540 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbfHZSyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 14:54:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=kMg9jo2+aYpxinBPCrA/TYwqW4S7g/A5UlAFqVagOUQ=; b=erZ8mhBubPFIsVncmO3w8aNL9C
+        gMrNs54KZCvWdnlFzAoUCXAHWwEjQD/W641MZwGGJ9Q1c1Dv7Mws7xEav867mwI7CVSXrlQgeaqZR
+        kEVzsGlKb7jfke5duLuKGPYlub3KK1QrZbwqwO1hgl41tLqC8viu5Gx6jA+5pJvCzJdg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i2K8A-0006Av-Tr; Mon, 26 Aug 2019 20:54:18 +0200
+Date:   Mon, 26 Aug 2019 20:54:18 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Voon Weifeng <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+Subject: Re: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
+ cover PHY that only talks C45
+Message-ID: <20190826185418.GG2168@lunn.ch>
+References: <1566870769-9967-1-git-send-email-weifeng.voon@intel.com>
+ <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Can I add your Tested-by ?
+On Mon, Aug 26, 2019 at 11:27:53AM -0700, Florian Fainelli wrote:
+> On 8/26/19 6:52 PM, Voon Weifeng wrote:
+> > From: Ong Boon Leong <boon.leong.ong@intel.com>
+> > 
+> > Make mdiobus_scan() to try harder to look for any PHY that only talks C45.
+> If you are not using Device Tree or ACPI, and you are letting the MDIO
+> bus be scanned, it sounds like there should be a way for you to provide
+> a hint as to which addresses should be scanned (that's
+> mii_bus::phy_mask) and possibly enhance that with a mask of possible C45
+> devices?
 
-Yes. I just sent a tested-by reply, but not sure if it works. I am not very familar
-with linux kernel review system.
+Yes, i don't like this unconditional c45 scanning. A lot of MDIO bus
+drivers don't look for the MII_ADDR_C45. They are going to do a C22
+transfer, and maybe not mask out the MII_ADDR_C45 from reg, causing an
+invalid register write. Bad things can then happen.
+
+With DT and ACPI, we have an explicit indication that C45 should be
+used, so we know on this platform C45 is safe to use. We need
+something similar when not using DT or ACPI.
+
+	  Andrew
