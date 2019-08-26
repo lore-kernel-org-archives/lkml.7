@@ -2,99 +2,93 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F413C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663AFC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0A521872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cbEzOJC2"
+	by mail.kernel.org (Postfix) with ESMTP id 3D6C32187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfHZKEW (ORCPT
+        id S1731246AbfHZKE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:04:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57664 "EHLO mail.skyhub.de"
+        Mon, 26 Aug 2019 06:04:29 -0400
+Received: from mga05.intel.com ([192.55.52.43]:9528 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbfHZKEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:04:22 -0400
-Received: from zn.tnic (p200300EC2F0657001DC81C8A8210CD6A.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5700:1dc8:1c8a:8210:cd6a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B8FF1EC06E5;
-        Mon, 26 Aug 2019 12:04:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566813860;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=PhiC8W2Bp0/CZk1KvtGBJlF7S2eVkxQY28iWckK8/Qs=;
-        b=cbEzOJC2eLGvaleGPI2raXMtCwMPMsI+BM2a6DMBCnu25xI4r33+y+P1mb5pbIa1dROuid
-        v9+YEhJAktBWXmjc3elvS40KWjnI0W9p9O1qdUvofGVKdJ1HPGh+yCqJdEr+VmkHvSafWg
-        QFLlalbaMXjdL1uYGvSOVt+4pRa8Zjs=
-Date:   Mon, 26 Aug 2019 12:04:16 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Xiaochun Lee <lixiaochun.2888@163.com>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
-Subject: Re: [PATCH] x86/mce: show the status of cmci_disabled to user
-Message-ID: <20190826100416.GC27636@zn.tnic>
-References: <1566800164-6428-1-git-send-email-lixiaochun.2888@163.com>
+        id S1731224AbfHZKE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:04:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 03:04:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
+   d="scan'208";a="197020346"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2019 03:04:25 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
+        <uwe@kleine-koenig.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+In-Reply-To: <87o90c9rkc.fsf@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190824233724.1775-1-uwe@kleine-koenig.org> <20190824165829.7d330367992c62dab87f6652@linux-foundation.org> <87o90c9rkc.fsf@intel.com>
+Date:   Mon, 26 Aug 2019 13:04:24 +0300
+Message-ID: <87lfvg9r9z.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1566800164-6428-1-git-send-email-lixiaochun.2888@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 02:16:04PM +0800, Xiaochun Lee wrote:
-> From: Xiaochun Lee <lixc17@lenovo.com>
-> 
-> When enabled Firmware First mode in UEFI, we need to
-> set the cmci_disabled and ignore_ce in mca cfg
-> that users can check correct status from
-> "/sys/devices/system/machinecheck/machinecheckXXX/cmci_disabled"
-> 
-> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
-> ---
->  arch/x86/kernel/cpu/mce/core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 743370e..932c701 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1909,6 +1909,8 @@ static void __mce_disable_bank(void *arg)
->  	int bank = *((int *)arg);
->  	__clear_bit(bank, this_cpu_ptr(mce_poll_banks));
->  	cmci_disable_bank(bank);
-> +	mca_cfg.cmci_disabled = true;
-> +	mca_cfg.ignore_ce = true;
+On Mon, 26 Aug 2019, Jani Nikula <jani.nikula@linux.intel.com> wrote:
+> On Sat, 24 Aug 2019, Andrew Morton <akpm@linux-foundation.org> wrote:
+>>> --- a/lib/vsprintf.c
+>>> +++ b/lib/vsprintf.c
+>>> @@ -533,6 +533,192 @@ char *number(char *buf, char *end, unsigned long long num,
+>>>  	return buf;
+>>>  }
+>>>  
+>>> +#define ERRORCODE(x) { .str = #x, .err = x }
+>>> +
+>>> +static const struct {
+>>> +	const char *str;
+>>> +	int err;
+>>> +} errorcodes[] = {
+>>
+>> It's a bit of a hack, but an array of char*'s and a separate array of
+>> ushorts would save a bit of space.
+>
+> Or just
+>
+> #define ERRORCODE(x) [x] = #x
+>
+> static const char * const errorcodes[] = {
+> 	ERRORCODE(EPERM),
+>         ERRORCODE(ENOENT),
+>         ...
+> };
+>
+> Saves space, faster lookup, discovers at build time why EWOULDBLOCK
+> would always show up as EAGAIN in the logs. We don't have holes to speak
+> of in the error codes.
 
-That's the global switch which gets written here for every bank. But
-you want to disable it per bank, not globally because the list of banks
-arch_apei_enable_cmcff() receives might not be all banks in the system
-which are in FF mode.
+Meh, failed to notice the range ERESTARTSYS..ERECALLCONFLICT. Other than
+that, it's nicer. ;)
 
-Then, writing
-/sys/devices/system/machinecheck/machinecheckXXX/cmci_disabled from a
-different CPU and for a different bank reenables cmci again so you need
-to think of a better way how to address the per-bank thing and then to
-make it non-modifiable in FF mode so that it cannot be reenabled from
-sysfs again.
-
-Thx.
+BR,
+Jani.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Jani Nikula, Intel Open Source Graphics Center
