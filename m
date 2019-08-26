@@ -2,206 +2,130 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675B8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D255C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A9D21883
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C6221872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="SkUBMpm0"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="AFu1dOTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfHZThY (ORCPT
+        id S1731692AbfHZTlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:37:24 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:60727 "EHLO
-        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfHZTgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:36:52 -0400
-Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 8E35842A6BC;
-        Mon, 26 Aug 2019 12:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1566848256;
-        bh=V/mOhY7XhS1f/Jh8Iiul8CdPIyA7jYqIKAUZG/uvnLY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=SkUBMpm0614z4oh4Ou9RV1ZU4w8JPkL5Ew0hBhOK7lcaxxLe9Xd4qD5/Rz/ZiWcY6
-         uq4GUTStXzVIAr+hAAqjXhFaAZAJip064kT3YHQz8mI1sXmMB1okUll8is5jtiUM0w
-         8/WmdCPVtmgix0tSpJWQubuSF4D+ug99DItgnVD9dK26z8dHDPC627LWZukaHmgiWq
-         Ngfw11gQ12y0SEp1SjpTY8DpuOyQm2MbD8jpv5PFw3xtgFMToxXkb1x9DoQRkDlKyg
-         19FmT5ae959jy/s+yLPIFzxD3I+URuSO6ThZFZDMZw8UUz4rUqdK/HaJ/w+3IPktPa
-         hd8EImz/dnIpg==
-Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 8168442A6B7;
-        Mon, 26 Aug 2019 12:37:36 -0700 (PDT)
-From:   Edward Chron <echron@arista.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com,
-        Edward Chron <echron@arista.com>
-Subject: [PATCH 03/10] mm/oom_debug: Add Tasks Summary
-Date:   Mon, 26 Aug 2019 12:36:31 -0700
-Message-Id: <20190826193638.6638-4-echron@arista.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190826193638.6638-1-echron@arista.com>
-References: <20190826193638.6638-1-echron@arista.com>
+        Mon, 26 Aug 2019 15:41:46 -0400
+Received: from mail-eopbgr790042.outbound.protection.outlook.com ([40.107.79.42]:21899
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728560AbfHZTlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 15:41:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gAGeWL0rJqCWqf4FQhAaeQlpplI5pi7M4yVGiKuzyLL0n+gz6G4mkQQNTTdr3lv9H5X0/ECnbe3ejCKzRyKoArrn1ePf+0d+BPUbJL3DjwMMG99j/jKeOFOGrJf07KmYekE6JM+iDJiLgzTWs5F/m6Lpsjo77ziCH6XlmDla4mcsz/pWG2N0FbN4w6TGdFT4QPe41gUiaMQI3UL9ZScfwypLCzheNk7RpyT34cawYWVhVRgZlLAB7TTG2+Hq33FS+ehwSV1qF+MtiivCYuFoZPUNVP3Yc94dTz1ndTSjyxiyQ7poX6uNq0VcpTOcJiMTeaNvXRkj4nghw1ee2CZvtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dcnv/k2VXrmmXKgR/ELur1uwOaMdlbflHKoIUEoux7A=;
+ b=Cd5gSbZD26hEq9l5H71YYeCSpCsjcEXdmxbzHAjivWTFiAFiF1iIsOvEdHpaDOwYZl5fB2X6P3KTWow2BZ8wLINfXoszgdLGlSSd/GFEDr8KANtR0gCtgC720NsInOtWjGA9x/6eYXwJh/FEutZXKb7hwI4shdvIdokMdjevapDshnYRwseXmfereL1y4p6aaGeXUpwfd+wjP36jvJnOAFmbjFWRbfZbItkOLMYRBPeYjZvFnc1x+2phKt/inK1sfQCghhcloS58zbPRZgUqQMkKkFWSYYA3/ZdpF3ImZY9rNCchntb0o9nvathwQlKTX0skBsvH/PYN7iBmLiiJ1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dcnv/k2VXrmmXKgR/ELur1uwOaMdlbflHKoIUEoux7A=;
+ b=AFu1dOTev0zDHIAqkDxuApK8+ui1EYa4PSV0xJGjK/Xpy9775Toq8hKRK8XHU83+uzvaNizTyuhceMA3WAfrcTv7japaLSrB1CvhozdL1yohhiA6GsCbqD7dacDHBJVO92MW+NxfnShtI+dW7/D/vcGjstnBXMApqhP/zOYQa7s=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3996.namprd12.prod.outlook.com (10.255.175.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Mon, 26 Aug 2019 19:41:40 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::e95a:d3ee:e6a0:2825]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::e95a:d3ee:e6a0:2825%7]) with mapi id 15.20.2178.023; Mon, 26 Aug 2019
+ 19:41:40 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     Alexander Graf <graf@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+Subject: Re: [PATCH v2 04/15] kvm: x86: Add per-VM APICv state debugfs
+Thread-Topic: [PATCH v2 04/15] kvm: x86: Add per-VM APICv state debugfs
+Thread-Index: AQHVU4YAxicok8C98kOOsiSZW3JVFacCQeaAgAujmoA=
+Date:   Mon, 26 Aug 2019 19:41:39 +0000
+Message-ID: <049c0f98-bd89-ee3c-7869-92972f2d7c31@amd.com>
+References: <1565886293-115836-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1565886293-115836-5-git-send-email-suravee.suthikulpanit@amd.com>
+ <a48080a5-7ece-280d-2c1f-9d3f4c273a8d@amazon.com>
+In-Reply-To: <a48080a5-7ece-280d-2c1f-9d3f4c273a8d@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [165.204.77.1]
+x-clientproxiedby: SN4PR0501CA0006.namprd05.prod.outlook.com
+ (2603:10b6:803:40::19) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db8ee638-1864-4246-837e-08d72a5d6a34
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3996;
+x-ms-traffictypediagnostic: DM6PR12MB3996:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB3996C315EB4186C283BAA223F3A10@DM6PR12MB3996.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(199004)(189003)(316002)(446003)(4744005)(6246003)(478600001)(6512007)(31686004)(2906002)(71190400001)(229853002)(54906003)(3846002)(6116002)(58126008)(71200400001)(2616005)(110136005)(11346002)(8676002)(52116002)(81166006)(102836004)(7736002)(8936002)(25786009)(476003)(2501003)(305945005)(26005)(76176011)(256004)(81156014)(53546011)(99286004)(186003)(386003)(6506007)(36756003)(66446008)(64756008)(66556008)(66476007)(4326008)(66946007)(5660300002)(31696002)(65956001)(6486002)(65806001)(66066001)(86362001)(6436002)(486006)(2201001)(14454004)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3996;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: znSL0n9PpkUGzIXE/7JfPNbDajV/u/KeOJLdKBpFwjw0DkwS1dTe4pLRPxlAywWz37nOssiV3THi9SQLXQNCH4seGy6Bd8wR0JXofBdPVHJJSCdR2aIc0EsJuDPKQcb/Z8RjssrbDHU6a3VQQCl+0TT2U2yEJySasvr5xhEcdih7OyEdDbl1mEevXEeUUy++jwT1V7ppXTv1Vv30+p6QThnFpRoZ9iQt9SEPDs37L3MgJvh1upSw2juhEGbQbeUsbIqXodb7XV1CMY8ksxENdaOUkdhnQUkQJEZ0keL359dnI4BVH91D2+9KSrLNzCO4HB67WvTenXuHnfBnbsO3er4m9SSGdnWB8t5hUVLFWIyOBcN/OcWzLXYj0WE1UD+hJyekIfT/U5xksDngkYUuV4zhcToNPQQfT5KUAO5HHAk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <15F64B81694D4044B92A946DBD1BCD3D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db8ee638-1864-4246-837e-08d72a5d6a34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 19:41:40.5082
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r7k6sjMrTGRORM1xSH8k4rWltmPhox8BDgD2CyfFi4bnEmK3ALzZiYwjA5wt9dFJ1VASeKJ43QflIHxCUwh1CA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3996
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds config option and code to support printing a Process / Thread Summary
-of process / thread activity when an OOM event occurs. The information
-provided includes the number of process and threads active, the number
-of oom eligible and oom ineligible tasks, the total number of forks
-that have happened since the system booted and the number of runnable
-and I/O blocked processes. All values are at the time of the OOM event.
-
-Configuring this Debug Option (DEBUG_OOM_TASKS_SUMMARY)
--------------------------------------------------------
-To get the tasks information summary this option must be configured.
-The Tasks Summary option uses the CONFIG_DEBUG_OOM_TASKS_SUMMARY
-kernel config option which is found in the kernel config under the entry:
-Kernel hacking, Memory Debugging, OOM Debugging entry. The config option
-to select is: DEBUG_OOM_TASKS_SUMMARY.
-
-Dynamic disable or re-enable this OOM Debug option
---------------------------------------------------
-The oom debugfs base directory is found at: /sys/kernel/debug/oom.
-The oom debugfs for this option is: tasks_summary_
-and there is just one file for this option, the enable file.
-
-The option may be disabled or re-enabled using the debugfs entry for
-this OOM debug option. The debugfs file to enable this option is found at:
-/sys/kernel/debug/oom/tasks_summary_enabled
-The option's enabled file value determines whether the facility is enabled
-or disabled. A value of 1 is enabled (default) and a value of 0 is
-disabled. When configured the default setting is set to enabled.
-
-Content and format of Tasks Summary Output
-------------------------------------------
-One line of output that includes:
-  - Number of Threads
-  - Number of processes
-  - Forks since boot
-  - Processes that are runnable
-  - Processes that are in iowait
-
-Sample Output:
--------------
-Sample Tasks Summary message output:
-
-Aug 13 18:52:48 yoursystem kernel: Threads: 492 Processes: 248
- forks_since_boot: 7786 procs_runable: 4 procs_iowait: 0
-
-
-Signed-off-by: Edward Chron <echron@arista.com>
----
- mm/Kconfig.debug    | 16 ++++++++++++++++
- mm/oom_kill_debug.c | 27 +++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
-
-diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-index dbe599b67a3b..fcbc5f9aa146 100644
---- a/mm/Kconfig.debug
-+++ b/mm/Kconfig.debug
-@@ -147,3 +147,19 @@ config DEBUG_OOM_SYSTEM_STATE
- 	  A value of 1 is enabled (default) and a value of 0 is disabled.
- 
- 	  If unsure, say N.
-+
-+config DEBUG_OOM_TASKS_SUMMARY
-+	bool "Debug OOM System Tasks Summary"
-+	depends on DEBUG_OOM
-+	help
-+	  When enabled, provides a kernel process/thread summary recording
-+	  the system's process/thread activity at the time an OOM event.
-+	  The number of processes and of threads, the number of runnable
-+	  and I/O blocked threads, the number of forks since boot and the
-+	  number of oom eligible and oom ineligble tasks are provided in
-+	  the output. If configured it is enabled/disabled by setting the
-+	  enabled file entry in the debugfs OOM interface at:
-+	  /sys/kernel/debug/oom/tasks_summary_enabled
-+	  A value of 1 is enabled (default) and a value of 0 is disabled.
-+
-+	  If unsure, say N.
-diff --git a/mm/oom_kill_debug.c b/mm/oom_kill_debug.c
-index 6eeaad86fca8..395b3307f822 100644
---- a/mm/oom_kill_debug.c
-+++ b/mm/oom_kill_debug.c
-@@ -152,6 +152,10 @@
- #include <linux/sched/stat.h>
- #endif
- 
-+#ifdef CONFIG_DEBUG_OOM_TASKS_SUMMARY
-+#include <linux/sched/stat.h>
-+#endif
-+
- #define OOMD_MAX_FNAME 48
- #define OOMD_MAX_OPTNAME 32
- 
-@@ -182,6 +186,12 @@ static struct oom_debug_option oom_debug_options_table[] = {
- 		.option_name	= "system_state_summary_",
- 		.support_tpercent = false,
- 	},
-+#endif
-+#ifdef CONFIG_DEBUG_OOM_TASKS_SUMMARY
-+	{
-+		.option_name	= "tasks_summary_",
-+		.support_tpercent = false,
-+	},
- #endif
- 	{}
- };
-@@ -190,6 +200,9 @@ static struct oom_debug_option oom_debug_options_table[] = {
- enum oom_debug_options_index {
- #ifdef CONFIG_DEBUG_OOM_SYSTEM_STATE
- 	SYSTEM_STATE,
-+#endif
-+#ifdef CONFIG_DEBUG_OOM_TASKS_SUMMARY
-+	TASKS_STATE,
- #endif
- 	OUT_OF_BOUNDS
- };
-@@ -320,6 +333,15 @@ static void oom_kill_debug_system_summary_prt(void)
- }
- #endif /* CONFIG_DEBUG_OOM_SYSTEM_STATE */
- 
-+#ifdef CONFIG_DEBUG_OOM_TASKS_SUMMARY
-+static void oom_kill_debug_tasks_summary_print(void)
-+{
-+	pr_info("Threads:%d Processes:%d forks_since_boot:%lu procs_runable:%lu procs_iowait:%lu\n",
-+		nr_threads, nr_processes(),
-+		total_forks, nr_running(), nr_iowait());
-+}
-+#endif /* CONFIG_DEBUG_OOM_TASKS_SUMMARY */
-+
- u32 oom_kill_debug_oom_event_is(void)
- {
- 	++oom_kill_debug_oom_events;
-@@ -329,6 +351,11 @@ u32 oom_kill_debug_oom_event_is(void)
- 		oom_kill_debug_system_summary_prt();
- #endif
- 
-+#ifdef CONFIG_DEBUG_OOM_TASKS_SUMMARY
-+	if (oom_kill_debug_enabled(TASKS_STATE))
-+		oom_kill_debug_tasks_summary_print();
-+#endif
-+
- 	return oom_kill_debug_oom_events;
- }
- 
--- 
-2.20.1
-
+QWxleCwNCg0KT24gOC8xOS8yMDE5IDQ6NTcgQU0sIEFsZXhhbmRlciBHcmFmIHdyb3RlOg0KPiAN
+Cj4gDQo+IE9uIDE1LjA4LjE5IDE4OjI1LCBTdXRoaWt1bHBhbml0LCBTdXJhdmVlIHdyb3RlOg0K
+Pj4gQ3VycmVudGx5LCB0aGVyZSBpcyBubyB3YXkgdG8gdGVsbCB3aGV0aGVyIEFQSUN2IGlzIGFj
+dGl2ZQ0KPj4gb24gYSBwYXJ0aWN1bGFyIFZNLiBUaGlzIG9mdGVuIGNhdXNlIGNvbmZ1c2lvbiBz
+aW5jZSBBUElDdg0KPj4gY2FuIGJlIGRlYWN0aXZhdGVkIGF0IHJ1bnRpbWUuDQo+Pg0KPj4gSW50
+cm9kdWNlIGEgZGVidWdmcyBlbnRyeSB0byByZXBvcnQgQVBJQ3Ygc3RhdGUgb2YgYSBWTS4NCj4+
+IFRoaXMgY3JlYXRlcyBhIHJlYWQtb25seSBmaWxlOg0KPj4NCj4+IMKgwqDCoCAvc3lzL2tlcm5l
+bC9kZWJ1Zy9rdm0vNzA4NjAtMTQvYXBpY3Ytc3RhdGUNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBT
+dXJhdmVlIFN1dGhpa3VscGFuaXQgPHN1cmF2ZWUuc3V0aGlrdWxwYW5pdEBhbWQuY29tPg0KPiAN
+Cj4gU2hvdWxkbid0IHRoaXMgZmlyc3QgYW5kIGZvcmVtb3N0IGJlIGEgVk0gaW9jdGwgc28gdGhh
+dCB1c2VyIHNwYWNlIGNhbiBpbnF1aXJlIGl0cyBvd24gc3RhdGU/DQo+IA0KPiANCj4gQWxleA0K
+DQpJIGludHJvZHVjZSB0aGlzIG1haW5seSBmb3IgZGVidWdnaW5nIHNpbWlsYXIgdG8gaG93IEtW
+TSBpcyBjdXJyZW50bHkgcHJvdmlkZXMNCnNvbWUgcGVyLVZDUFUgaW5mb3JtYXRpb246DQoNCiAg
+ICAgL3N5cy9rZXJuZWwvZGVidWcva3ZtLzE1OTU3LTE0L3ZjcHUwLw0KICAgICAgICAgbGFwaWNf
+dGltZXJfYWR2YW5jZV9ucw0KICAgICAgICAgdHNjLW9mZnNldA0KICAgICAgICAgdHNjLXNjYWxp
+bmctcmF0aW8NCiAgICAgICAgIHRzYy1zY2FsaW5nLXJhdGlvLWZyYWMtYml0cw0KDQpJJ20gbm90
+IHN1cmUgaWYgdGhpcyBuZWVkcyB0byBiZSBWTSBpb2N0bCBhdCB0aGlzIHBvaW50LiBJZiB0aGlz
+IGluZm9ybWF0aW9uIGlzDQp1c2VmdWwgZm9yIHVzZXItc3BhY2UgdG9vbCB0byBpbnF1aXJlIHZp
+YSBpb2N0bCwgd2UgY2FuIGFsc28gcHJvdmlkZSBpdC4NCg0KVGhhbmtzLA0KU3VyYXZlZQ0K
