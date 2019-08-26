@@ -2,309 +2,113 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06C7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC71C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B842820874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="FAgv1IhJ"
+	by mail.kernel.org (Postfix) with ESMTP id 395D22087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfHZHVx (ORCPT
+        id S1729944AbfHZHXv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:21:53 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:41272 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbfHZHVx (ORCPT
+        Mon, 26 Aug 2019 03:23:51 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39473 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729832AbfHZHXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:21:53 -0400
-Received: by mail-vk1-f193.google.com with SMTP id w20so3744702vkd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 00:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q//x/B+FcM5+mJKULk/MG/UlK4qdLpiW5WdWmOLmU7s=;
-        b=FAgv1IhJFDubdW4a8IRMDFF7CJnLICrSzCXNV2KIDokUkWTZPW64toOYjmqCftxUAk
-         TKJp6jam2Q1Vfiq7TG4EpHv+eTbbQ2f1CGRJ+DSRzVj6789Ku6ZzK5LWdbwxI46ox0SS
-         ZWRlWw2cGfpTZog2t3WNNMjk5+i+6jdEpR8tY4/DzmulesZcwdxgfs9L8iRfBu3D6+z9
-         e9fG/Od0+6fJrQQtBvojIbFiP8DBP62UQElQ3LtF8MBQU3SRcwVgWaRk16x1yvUX9SyD
-         8f1pKdOaKRAYVhA9lfcgar53ApGcNfN5v2Em8CUnTiYmwMqy6lbssyuInVqWV6VpclJX
-         kY2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q//x/B+FcM5+mJKULk/MG/UlK4qdLpiW5WdWmOLmU7s=;
-        b=kjeLkCh4XIow69786uBx+C6Qq8YNqz0nTit919brOihjqzmhv7rzRYrvU33dQTJOPM
-         tdX0XgPMQchyv21xhn9g1lPpi8KneAA8L6LYNjnSCsHa3Yn4zYy4/usULVDOBSgL1LJO
-         hCRUVgIELfyPv92yBTTH2E4g2Kg63h3MbzIPt9fMokxptJs0+bLfroaO1PdxBcGAlnlJ
-         wiwWdunrGP9TD+HN4x1mkBM6YEXt0w7kCfnWlxs7qAJU7/2AYR8fX/WTunhh3uV6YCDL
-         FIIgfZvvMMzX6o+5lRajmPPLxyWPXpZxt03W9ZQmGrEk3Tda/H2rqaEoslki5h+jewwa
-         op3g==
-X-Gm-Message-State: APjAAAWEg6PBBN1AoFHzkIdtPiFTHHS/Tai2S9rFp0H9kkf8xReEjJjb
-        Q9r1kMbf/SzxdUh6igoWgn44dwgg0fxx/LMW4WSuJg==
-X-Google-Smtp-Source: APXvYqznGccIjmJXFqVoPf9Q3Qu8ITqUYkyxxABcNsL+ixapg2DtVic3eVRnXspFOdEfJxm4mPn4tcv1H+dhSfQTLgg=
-X-Received: by 2002:ac5:c7b5:: with SMTP id d21mr5608482vkn.56.1566804111572;
- Mon, 26 Aug 2019 00:21:51 -0700 (PDT)
+        Mon, 26 Aug 2019 03:23:50 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id AB25360002;
+        Mon, 26 Aug 2019 07:23:45 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 09:23:44 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        juliensu@mxic.com.tw, kstewart@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at, tglx@linutronix.de,
+        vigneshr@ti.com
+Subject: Re: [PATCH] Add support for Macronix NAND randomizer
+Message-ID: <20190826092344.7b23ede1@xps13>
+In-Reply-To: <OFF725800E.8B26D2E9-ON48258462.000B94B2-48258462.000FCB85@mxic.com.tw>
+References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw>
+        <20190824130329.68f310aa@xps13>
+        <OFF725800E.8B26D2E9-ON48258462.000B94B2-48258462.000FCB85@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAPpJ_edU68X-Ki+J61qfws+1-=zv54bcak9tzkMX=CkDS5mOMA@mail.gmail.com>
- <20190820045934.24841-1-jian-hong@endlessm.com> <F7CD281DE3E379468C6D07993EA72F84D18A5786@RTITMBSVM04.realtek.com.tw>
-In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D18A5786@RTITMBSVM04.realtek.com.tw>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 26 Aug 2019 15:21:15 +0800
-Message-ID: <CAPpJ_edXoHhR++pn9gwbi==wHQXW4y2Z5-_KajdcpMQp-FqQXw@mail.gmail.com>
-Subject: Re: [PATCH v3] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-To:     Tony Chuang <yhchuang@realtek.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8821=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:16=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> > From: Jian-Hong Pan [mailto:jian-hong@endlessm.com]
-> >
-> > There is a mass of jobs between spin lock and unlock in the hardware
-> > IRQ which will occupy much time originally. To make system work more
-> > efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-> > reduce the time in hardware IRQ.
-> >
-> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> > ---
-> > v2:
-> >  Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
-> >  rtw_pci_interrupt_handler. Because the interrupts are already disabled
-> >  in the hardware interrupt handler.
-> >
-> > v3:
-> >  Extend the spin lock protecting area for the TX path in
-> >  rtw_pci_interrupt_threadfn by Realtek's suggestion
-> >
-> >  drivers/net/wireless/realtek/rtw88/pci.c | 33 +++++++++++++++++++-----
-> >  1 file changed, 27 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> > b/drivers/net/wireless/realtek/rtw88/pci.c
-> > index 00ef229552d5..a8c17a01f318 100644
-> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> > @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int =
-irq,
-> > void *dev)
-> >  {
-> >       struct rtw_dev *rtwdev =3D dev;
-> >       struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
-> > -     u32 irq_status[4];
-> >
-> >       spin_lock(&rtwpci->irq_lock);
-> >       if (!rtwpci->irq_enabled)
-> >               goto out;
-> >
-> > +     /* disable RTW PCI interrupt to avoid more interrupts before the =
-end of
-> > +      * thread function
-> > +      */
-> > +     rtw_pci_disable_interrupt(rtwdev, rtwpci);
-> > +out:
-> > +     spin_unlock(&rtwpci->irq_lock);
-> > +
-> > +     return IRQ_WAKE_THREAD;
-> > +}
-> > +
-> > +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-> > +{
-> > +     struct rtw_dev *rtwdev =3D dev;
-> > +     struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
-> > +     unsigned long flags;
-> > +     u32 irq_status[4];
-> > +
-> > +     spin_lock_irqsave(&rtwpci->irq_lock, flags);
-> >       rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
-> >
-> >       if (irq_status[0] & IMR_MGNTDOK)
-> > @@ -891,8 +908,10 @@ static irqreturn_t rtw_pci_interrupt_handler(int i=
-rq,
-> > void *dev)
-> >       if (irq_status[0] & IMR_ROK)
-> >               rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
-> >
-> > -out:
-> > -     spin_unlock(&rtwpci->irq_lock);
-> > +     /* all of the jobs for this interrupt have been done */
-> > +     if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
-> > +             rtw_pci_enable_interrupt(rtwdev, rtwpci);
->
-> I've applied this patch and tested it.
-> But I failed to connect to AP, it seems that the
-> scan_result is empty. And when I failed to connect
-> to the AP, I found that the IMR is not enabled.
-> I guess the check bypass the interrupt enable function.
->
-> And I also found that *without MSI*, the driver is
-> able to connect to the AP. Could you please verify
-> this patch again with MSI interrupt enabled and
-> send a v4?
->
-> You can find my MSI patch on
-> https://patchwork.kernel.org/patch/11081539/
+Hi Mason,
 
-I have just sent v4 patch.  Also tested the modified MSI patch like below:
-The WiFi works fine on ASUS X512DK (including MSI enabled).
+masonccyang@mxic.com.tw wrote on Mon, 26 Aug 2019 10:52:31 +0800:
 
-Jian-Hong Pan
+> Hi Miquel,
+> > 
+> > Mason Yang <masonccyang@mxic.com.tw> wrote on Tue, 20 Aug 2019 13:53:48
+> > +0800:
+> >   
+> > > Macronix NANDs support randomizer operation for user data scrambled,
+> > > which can be enabled with a SET_FEATURE.
+> > > 
+> > > User data written to the NAND device without randomizer is still   
+> readable
+> > > after randomizer function enabled.
+> > > The penalty of randomizer are NOP = 1 instead of NOP = 4 and more time   
+> period
+> > 
+> > please don't use 'NOP' here, use 'subpage accesses' instead, otherwise
+> > people might not understand what it means while it has a real impact.
+> >   
+> 
+> okay, understood. 
+> will fix it by next submitting.
+> 
+> > > is needed in program operation and entering deep power-down mode.
+> > > i.e., tPROG 300us to 340us(randomizer enabled)
+> > > 
+> > > If subpage write not available with hardware ECC, for example,
+> > > NAND chip options NAND_NO_SUBPAGE_WRITE be set in driver and
+> > > randomizer function is recommended for high-reliability.
+> > > Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
+> > > to see if this high-reliability function is supported.
+> > >   
+> > 
+> > You did not flagged this patch as a v2 and forgot about the changelog.  
+> 
+> will fix, thank you.
+> 
+> > You did not listen to our comments in the last version neither. I was
+> > open to a solution with a specific DT property for warned users but I
+> > don't see it coming.  
+> 
+> Sorry I missed the previous version of "read-retry and randomizer support" 
+> patch. 
+> Specific DT property is a good method to control it.
+> 
+> For more high-reliability concern, randomizer is recommended to enable by 
+> default,
+> but sub-page write is not allowed when randomizer is enabled.
+> 
+> Since most of HW ECC did not support sub-page write and we think driver to 
+> check
+> chip options flags is another simple and good way to enable randomizer.
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-b/drivers/net/wireless/realtek/rtw88/pci.c
-index 955dd6c6fb57..d18f5aae1585 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -11,6 +11,10 @@
- #include "fw.h"
- #include "debug.h"
+Sorry but this is wrong. Several controllers and NAND chips support
+subpages. And changing now the behavior with such chips would entirely
+break the concerned setups (see Boris answer about UBI complaining if
+the subpage size changes).
 
-+static bool rtw_disable_msi;
-+module_param_named(disable_msi, rtw_disable_msi, bool, 0644);
-+MODULE_PARM_DESC(disable_msi, "Set Y to disable MSI interrupt support");
-+
- static u32 rtw_pci_tx_queue_idx_addr[] =3D {
-     [RTW_TX_QUEUE_BK]    =3D RTK_PCI_TXBD_IDX_BKQ,
-     [RTW_TX_QUEUE_BE]    =3D RTK_PCI_TXBD_IDX_BEQ,
-@@ -1116,6 +1120,48 @@ static struct rtw_hci_ops rtw_pci_ops =3D {
-     .write_data_h2c =3D rtw_pci_write_data_h2c,
- };
-
-+static int rtw_pci_request_irq(struct rtw_dev *rtwdev, struct pci_dev *pde=
-v)
-+{
-+    struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
-+    int ret;
-+
-+    if (!rtw_disable_msi) {
-+        ret =3D pci_enable_msi(pdev);
-+        if (ret) {
-+            rtw_warn(rtwdev, "failed to enable msi %d, using legacy irq\n"=
-,
-+                 ret);
-+        } else {
-+            rtw_warn(rtwdev, "pci msi enabled\n");
-+            rtwpci->msi_enabled =3D true;
-+        }
-+    }
-+
-+    ret =3D devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-+                    rtw_pci_interrupt_handler,
-+                    rtw_pci_interrupt_threadfn,
-+                    IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-+    if (ret) {
-+        rtw_err(rtwdev, "failed to request irq %d\n", ret);
-+        if (rtwpci->msi_enabled) {
-+            pci_disable_msi(pdev);
-+            rtwpci->msi_enabled =3D false;
-+        }
-+    }
-+
-+    return ret;
-+}
-+
-+static void rtw_pci_free_irq(struct rtw_dev *rtwdev, struct pci_dev *pdev)
-+{
-+    struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
-+
-+    devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
-+    if (rtwpci->msi_enabled) {
-+        pci_disable_msi(pdev);
-+        rtwpci->msi_enabled =3D false;
-+    }
-+}
-+
- static int rtw_pci_probe(struct pci_dev *pdev,
-              const struct pci_device_id *id)
- {
-@@ -1170,10 +1216,7 @@ static int rtw_pci_probe(struct pci_dev *pdev,
-         goto err_destroy_pci;
-     }
-
--    ret =3D devm_request_threaded_irq(rtwdev->dev, pdev->irq,
--                    rtw_pci_interrupt_handler,
--                    rtw_pci_interrupt_threadfn,
--                    IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-+    ret =3D rtw_pci_request_irq(rtwdev, pdev);
-     if (ret) {
-         ieee80211_unregister_hw(hw);
-         goto err_destroy_pci;
-@@ -1212,7 +1255,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
-     rtw_pci_disable_interrupt(rtwdev, rtwpci);
-     rtw_pci_destroy(rtwdev, pdev);
-     rtw_pci_declaim(rtwdev, pdev);
--    devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
-+    rtw_pci_free_irq(rtwdev, pdev);
-     rtw_core_deinit(rtwdev);
-     ieee80211_free_hw(hw);
- }
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.h
-b/drivers/net/wireless/realtek/rtw88/pci.h
-index 87824a4caba9..a8e369c5eaca 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.h
-+++ b/drivers/net/wireless/realtek/rtw88/pci.h
-@@ -186,6 +186,7 @@ struct rtw_pci {
-     spinlock_t irq_lock;
-     u32 irq_mask[4];
-     bool irq_enabled;
-+    bool msi_enabled;
-
-     u16 rx_tag;
-     struct rtw_pci_tx_ring tx_rings[RTK_MAX_TX_QUEUE_NUM];
-
-
-> > +     spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-> >
-> >       return IRQ_HANDLED;
-> >  }
-> > @@ -1152,8 +1171,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
-> >               goto err_destroy_pci;
-> >       }
-> >
-> > -     ret =3D request_irq(pdev->irq, &rtw_pci_interrupt_handler,
-> > -                       IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-> > +     ret =3D devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-> > +                                     rtw_pci_interrupt_handler,
-> > +                                     rtw_pci_interrupt_threadfn,
-> > +                                     IRQF_SHARED, KBUILD_MODNAME, rtwd=
-ev);
-> >       if (ret) {
-> >               ieee80211_unregister_hw(hw);
-> >               goto err_destroy_pci;
-> > @@ -1192,7 +1213,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
-> >       rtw_pci_disable_interrupt(rtwdev, rtwpci);
-> >       rtw_pci_destroy(rtwdev, pdev);
-> >       rtw_pci_declaim(rtwdev, pdev);
-> > -     free_irq(rtwpci->pdev->irq, rtwdev);
-> > +     devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
-> >       rtw_core_deinit(rtwdev);
-> >       ieee80211_free_hw(hw);
-> >  }
-> > --
->
->
-> NACK
-> Need to verify it with MSI https://patchwork.kernel.org/patch/11081539/
-> And hope v4 could fix it.
->
-> Yan-Hsuan
->
+Thanks,
+Miquèl
