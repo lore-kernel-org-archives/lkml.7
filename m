@@ -2,133 +2,107 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE4DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B6C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AA52186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EED2186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:18:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jWs+/c0l"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ZDzBaEHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733003AbfHZUO7 (ORCPT
+        id S2387490AbfHZUSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:14:59 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44235 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732670AbfHZUOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:14:36 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a21so28152545edt.11
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=43MMkU2nAs7jtnMnw+TAIk5AMkJWGIqIB3w6SHg2dOA=;
-        b=jWs+/c0l0gQqLqnonUguMXmcEgRnSUc9uFPRnBjVNs1Nfg/BKnOJH3T6iKhSC9eb6q
-         dpAfCEkDXZ40OJ02lIV0O9i7OYhqlEmJrKDApByW1yfFG3TBOGtD29nnDadAmOX0w/3a
-         ohtG4NM02aYnLMkZ4fScN1kWA5UKzPn2mVZA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=43MMkU2nAs7jtnMnw+TAIk5AMkJWGIqIB3w6SHg2dOA=;
-        b=RpoTu2+Nt+TItN7ERd2EdI2joAkobYi76cNXHFpb/5zpE2PERIUVDpDQrJ1zW1kw/8
-         saRxl8XqfuRixDlxWa2kbh15rNrHmYg+4ytcnwTbqCtML5IlX684429oMjK4JdNAgEgQ
-         OXa+vgJWKHiSIylFWitW7J9Qs5UUDRg+Bao4KU3mn3jPxf6bfkFzgUSvaEH3CfJ3hR6t
-         dLn+rzVGE4hNTVFiDS/1cOKfQdI8+j167KJ9FtAbjfOkNTZZ2C5+HzlAzfi6kn8WSwIv
-         KL5Xg2mo4K6+X/aTGtmWcLudz6SeTVVv13lw+GkZJRo5Beek1NQ6wNbjxzRkuScbdIW5
-         1sXg==
-X-Gm-Message-State: APjAAAUAuKqeFfm65QQziHOUWK/x+PhX7jSMK9DeUL5nfYEF+oqa/hfp
-        r5tX1GEruZbAeh9RerLorL/f2m4xsa3XYA==
-X-Google-Smtp-Source: APXvYqz1alL5dlGwBBuOouoL2tngfggzrmMx20gafiZ6V+aQeNinylzwLOpzJO1HhOF4TDXl6u3nsA==
-X-Received: by 2002:a50:d0cc:: with SMTP id g12mr19859322edf.201.1566850474445;
-        Mon, 26 Aug 2019 13:14:34 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id j25sm3000780ejb.49.2019.08.26.13.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 13:14:33 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 2/5] mm, notifier: Prime lockdep
-Date:   Mon, 26 Aug 2019 22:14:22 +0200
-Message-Id: <20190826201425.17547-3-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
-References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
+        Mon, 26 Aug 2019 16:18:47 -0400
+Received: from mail-eopbgr140082.outbound.protection.outlook.com ([40.107.14.82]:27874
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729144AbfHZUSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:18:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XsAwmh43uCS27MQ18KLfIZ4coBcAuuwJP7SwlLK2JPEIOQAo6frZJNB+IYUS4Ldu6F0dTp4IzSGi7bMpDIeSsURgJB3QY8323RQHXr6xxYAkSIz+Gxd9awuyikuhhs5XMUidvzuJ9QJqBPB9o/8fzMxpuxNte8Z/T7UmJZs+NY+Xb3cYc7nFdQSI1YOOAsbzjJFMVCTUDRlPzoSo6gJsGVoxNElr9y3r4sl84F+/3E8mLkodG1h5FnHkdSdKvZZcE+i0aulNuHH+kXUka3G7dkdtZtY0jn9Y+Zt+b5OIDn8fFBBzoTgmZlrf1bDQ6rXwHHGNZpK6u5cBCNnXIplXPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=htM6yOe02qdDxP4e6/9WlBeq0RxH8gOR9o57K28N5xw=;
+ b=jyBXKp++KWIe9zeLJDwktbgwdOl9pWaXPEOTndF6HkL6P3ucWwU1vtErQTawmmseOvegvHTi7cQYwQFTGeKV0OzAVb/ynOu4Pn+PZ2hkPcOeDtKK28T13GcR+iAgHytQRwh6aVO1ZevZfoUQSVFg4VQNx7+TV2A/1aVKLhZBVP0sgRRTdNAilwIPD1AYfEXTIJDQO9zG0X7MJDqbFJfJPewj4SChbJRU3lFuPyTzua1IzMXdDZfyYMfoRM03MHxoqhZaHgdOx8K962a842zc0bva87vj2mLUq48cYEBFp56io0PB//hI4bPFF4qCtDP2Oxw8/Nmj5ZTNDwvAZqAAUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=htM6yOe02qdDxP4e6/9WlBeq0RxH8gOR9o57K28N5xw=;
+ b=ZDzBaEHMqdcSwfZliTRiN4rTw9Jck92KcX0MQp41jkzTOnxaNMRyMBdD44aEk9aAp1z/PQsyN2qFSpmUpHeUcCM1a1i0OhMluGBdt17c5jWV8CDM62SVvJVjdCJ99CBEE4o8QK9ySj6yKVw2thCMJGv4R8rpG2LU99z35cMx3b4=
+Received: from HE1PR0501MB2763.eurprd05.prod.outlook.com (10.172.125.17) by
+ HE1PR0501MB2425.eurprd05.prod.outlook.com (10.168.124.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Mon, 26 Aug 2019 20:18:41 +0000
+Received: from HE1PR0501MB2763.eurprd05.prod.outlook.com
+ ([fe80::a561:bcc6:10ab:d06a]) by HE1PR0501MB2763.eurprd05.prod.outlook.com
+ ([fe80::a561:bcc6:10ab:d06a%10]) with mapi id 15.20.2178.023; Mon, 26 Aug
+ 2019 20:18:41 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "cai@lca.pw" <cai@lca.pw>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     Eran Ben Elisha <eranbe@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Feras Daoud <ferasda@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        Moshe Shemesh <moshe@mellanox.com>
+Subject: Re: [PATCH] net/mlx5: fix a -Wstringop-truncation warning
+Thread-Topic: [PATCH] net/mlx5: fix a -Wstringop-truncation warning
+Thread-Index: AQHVWezn79S9mYXS9UOCwXmOlPmrCacJTW+AgASVnIA=
+Date:   Mon, 26 Aug 2019 20:18:41 +0000
+Message-ID: <9eb82b4de408d5f969c1df069d6b4c76a83e9ed7.camel@mellanox.com>
+References: <1566590183-9898-1-git-send-email-cai@lca.pw>
+         <20190823.151809.442664848668672070.davem@davemloft.net>
+In-Reply-To: <20190823.151809.442664848668672070.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 84ea3c80-3204-465b-c8bb-08d72a629691
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:HE1PR0501MB2425;
+x-ms-traffictypediagnostic: HE1PR0501MB2425:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HE1PR0501MB24252E8C06BC887F839FB5BCBEA10@HE1PR0501MB2425.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(136003)(366004)(376002)(199004)(189003)(229853002)(91956017)(76116006)(6116002)(305945005)(3846002)(2906002)(107886003)(66066001)(53936002)(7736002)(478600001)(6246003)(76176011)(256004)(446003)(11346002)(186003)(36756003)(486006)(2501003)(86362001)(476003)(2616005)(26005)(316002)(6486002)(118296001)(99286004)(558084003)(110136005)(58126008)(6506007)(102836004)(71190400001)(71200400001)(54906003)(4326008)(6436002)(81166006)(81156014)(64756008)(8936002)(66946007)(66476007)(66556008)(66446008)(6512007)(25786009)(8676002)(5660300002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0501MB2425;H:HE1PR0501MB2763.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 14ALgps/fQKXDLF+Q3x397LOHhIosqD/OfEKwxzCNqgmYeWWaFcXYrzT8oYBlax22PNfBfixb3eNYp9qQ+FyGitMZ3RzhULr9VHvH2kRflV09AjOJE8rGZKvWnAozvVClE5nMMfMNuLgi5+f5VQ/MXdvRfuqTUIb+AyG3sHTds3WIStEpyd2TeNaMQhOBdxr3/MNgXFnpChQxIzg6tbwMjcTrPRZc2Pbyjqw37gaFjiDsYtnXgfK14z/KYmPOODkLb0L5W8ouVrKRS/+wpfxO/C3vDYWE/LzWk3w8xMnaUXBh2X1Z/K9IfUXPQXjnBHtq5IT/p+hz8ZCO2umOaRqkWNrMq+ZJjv4JeAaf75iGyvOeJZk4D59y0LEVJxD8/mDS3x3GyK6DFhEd1q/QLBlF1+XunKpMXcjDUR15YExGb0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9460794B6C09694DA4274ABE5DE23ACF@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84ea3c80-3204-465b-c8bb-08d72a629691
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 20:18:41.6373
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sVrrw5JTfOLS0/J0pouPgwYMTjVByRxEW0EL7nq4H5MzChdOZHj6qat/Pnvu72H3TbAo3NVV6EAXyUWicFCL0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0501MB2425
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to teach lockdep that mmu notifiers can be called from direct
-reclaim paths, since on many CI systems load might never reach that
-level (e.g. when just running fuzzer or small functional tests).
-
-Motivated by a discussion with Jason.
-
-I've put the annotation into mmu_notifier_register since only when we
-have mmu notifiers registered is there any point in teaching lockdep
-about them. Also, we already have a kmalloc(, GFP_KERNEL), so this is
-safe.
-
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: linux-mm@kvack.org
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
- mm/mmu_notifier.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index d48d3b2abd68..0523555933c9 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -259,6 +259,13 @@ int __mmu_notifier_register(struct mmu_notifier *mn, struct mm_struct *mm)
- 	lockdep_assert_held_write(&mm->mmap_sem);
- 	BUG_ON(atomic_read(&mm->mm_users) <= 0);
- 
-+	if (IS_ENABLED(CONFIG_LOCKDEP)) {
-+		fs_reclaim_acquire(GFP_KERNEL);
-+		lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
-+		lock_map_release(&__mmu_notifier_invalidate_range_start_map);
-+		fs_reclaim_release(GFP_KERNEL);
-+	}
-+
- 	mn->mm = mm;
- 	mn->users = 1;
- 
--- 
-2.23.0
-
+T24gRnJpLCAyMDE5LTA4LTIzIGF0IDE1OjE4IC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
+IFNhZWVkLCBJIGFzc3VtZSBJJ2xsIGdldCB0aGlzIGZyb20geW91Lg0KDQpZZXMsIGkgd2lsbCBo
+YW5kbGUgaXQuDQo=
