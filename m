@@ -2,83 +2,101 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06316C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC0EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5E321848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566848743;
-	bh=7RD5XolL/SS4b+duqXLuyVNGAaFxlEUknxNCP2rhDfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rs1J23MGgOR0Ak2G4VewlDvqWNocTTOI9PsZObiEpVuUro35ARPh1d+p4ohibtPZv
-	 a7BD5tlpp/NEGuDtUytVdKC2NOHtSpsYwpJSgoWRpzXHj2WT04m0ncoTVq/w28zJDK
-	 w96P2Dq/XngfDVnJRBxbwUKtksZkv903QaXd+2K4=
+	by mail.kernel.org (Postfix) with ESMTP id 6AC3E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l7sJH1ky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732351AbfHZTpm (ORCPT
+        id S1732443AbfHZTqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728560AbfHZTpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:45:42 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46FD32070B;
-        Mon, 26 Aug 2019 19:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566848741;
-        bh=7RD5XolL/SS4b+duqXLuyVNGAaFxlEUknxNCP2rhDfg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nG5B3s6F/L/TFvxmSOER1Qhv1UiZev0ARW+kJ1yUXhdfLVKPXxLRP2AiI35+baXFj
-         h50uYV4gUkR2UVYNyzU2FpEkZf1NqmoQAEBpWy7kUrB6WyF2xkmPsgcvmqPLxPhWxi
-         QtRtw64pBqTD2OQcSiFtEQKs/ZC7njNP0unkw3Ls=
-Date:   Mon, 26 Aug 2019 21:45:39 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V3 28/38] posix-cpu-timers: Restructure expiry array
-Message-ID: <20190826194538.GB14309@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192921.895254344@linutronix.de>
- <20190826163204.GA14309@lenoir>
- <alpine.DEB.2.21.1908262014260.1939@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1908262021140.1939@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908262021140.1939@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 26 Aug 2019 15:46:08 -0400
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:35092 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728560AbfHZTqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 15:46:07 -0400
+Received: by mail-pl1-f171.google.com with SMTP id gn20so10527766plb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 12:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qMpP0MgShBQ+Pe6ISqup2rRvNK7sBJVKGzHYTIV6ZnQ=;
+        b=l7sJH1kyE+MeklaUOVqk93JQJS9lLUqeyPcIRpMyDtZH/3DmYcsR0RnqkmB7II5YO8
+         wH03/UzYjG6K4m6cqKgTSSiytDQYWC8mccd5QCYgy8iUu6+NousnkGzzTY0Of6b0VSAD
+         QYxaCA6obMGor10rrTVZkM3j2LR5GCMQk12d7318PdYf1o8f0s7TuNsi9VT4xeQFqEz7
+         GaocepPIhJlSy3Axc1UEoz6Lc4CH0JZMyrIbXJTT0p28lwWmTLZCpwjsZemCITHlpjmc
+         Y4pRXdqpWcNuRzF6Vjm8Iy62PazNgwdRwUVpTcy41YBJpBQMdyr9dQBHP5Uhh9M9zZsr
+         iAHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qMpP0MgShBQ+Pe6ISqup2rRvNK7sBJVKGzHYTIV6ZnQ=;
+        b=ca6HOolb1U3kDqyf+8tSM7XFNTZynfvGQ0X9pbF+XXmBK+ErxWWg/JD8ED+JfCbuTr
+         8BZMo02D5h/is2ID0rpomYjnL++rNP4MhWEeNhBVHBLTHBAa+Kpoe4y9Czypb08PF9t3
+         e3GDQcFNI8CkpHUxXSa4dMj/iOYNP7H7ww+iVsdlkPE+/PCXYQ7GR2Ruio1aA+rzNj8b
+         85n8vPQzEuS5a9IX/c4jvHzi8cb3W1Z7gQRId2fMiJQw5bkWl52AHk6wKF9dQs2Af8eV
+         gGsRlsuEe+yjLmytoOc3Ryqa7EmVkz0kwNZZQffSEWj6ms7DsUBCPnsJNP1BO/LrWPnL
+         ia7Q==
+X-Gm-Message-State: APjAAAUvqZfHrsm0n0aFdPconrVFD3x0NamH/Aoyi/KhIjg7LRNQQScn
+        +Hf/rrrR0SgkMANQQCST1/tQsc6oHpE=
+X-Google-Smtp-Source: APXvYqwJgW9p5d6lqmBLWSOn0KbFlJ2MZBxLif5mU5pNMrb/4c+qlzMdTjm39DN9LeG62T1DKxyQ0g==
+X-Received: by 2002:a17:902:166:: with SMTP id 93mr20949583plb.195.1566848767073;
+        Mon, 26 Aug 2019 12:46:07 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id c35sm13214789pgl.72.2019.08.26.12.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 12:46:06 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     suzuki.poulose@arm.com, leo.yan@linaro.org, mike.leach@arm.com
+Cc:     yabinc@google.com, alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] coresight: Add barrier packet when moving offset forward 
+Date:   Mon, 26 Aug 2019 13:46:02 -0600
+Message-Id: <20190826194605.3791-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 08:22:24PM +0200, Thomas Gleixner wrote:
-> Now that the abused struct task_cputime is gone, it's more natural to
-> bundle the expiry cache and the list head of each clock into a struct and
-> have an array of those structs.
-> 
-> Follow the hrtimer naming convention of 'bases' and rename the expiry cache
-> to 'nextevt' and adapt all usage sites.
-> 
-> Generates also better code .text size shrinks by 80 bytes.
-> 
-> Suggested-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V2: New patch
-> V3: Address review feedback from Frederic
+This set builds on top of an original patch by Yabin Cui[1] that deals with
+cases where the ETR buffer it bigger than the space available in the perf
+ring buffer.  The work herein complements Yabin's by inserting barrier
+packets after the head of the memory buffer has been moved forward in order
+for the trace decoder to still synchronise with the trace stream.  
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Applies cleanly to the coresight next branch.
+
+Thanks,
+Mathieu
+
+[1]. https://lkml.org/lkml/2019/8/14/1336
+
+New to V2:
+- Added Yabin's Tested-by.
+- Addressed Leo's comment about extending the solution to the sysfs
+  interface.
+- Split the work in 3 patches rather than 2.
+
+Mathieu Poirier (3):
+  coresight: tmc: Make memory width mask computation into a function
+  coresight: tmc-etr: Decouple buffer sync and barrier packet insertion
+  coresight: tmc-etr: Add barrier packets when moving offset forward
+
+ .../hwtracing/coresight/coresight-tmc-etf.c   | 23 +--------
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 47 ++++++++++++++-----
+ drivers/hwtracing/coresight/coresight-tmc.c   | 28 +++++++++++
+ drivers/hwtracing/coresight/coresight-tmc.h   |  1 +
+ 4 files changed, 67 insertions(+), 32 deletions(-)
+
+-- 
+2.17.1
+
