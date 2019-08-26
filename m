@@ -2,115 +2,155 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF3CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9016C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F4521848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE90A2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:27:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fJdRdtay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfHZEQN (ORCPT
+        id S1729672AbfHZE1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 00:16:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34590 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726150AbfHZEQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 00:16:13 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 46C9D5B8E7D3174811CD;
-        Mon, 26 Aug 2019 12:16:12 +0800 (CST)
-Received: from localhost (10.67.212.75) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 26 Aug
- 2019 12:16:10 +0800
-Date:   Mon, 26 Aug 2019 12:14:04 +0800
-From:   Kenneth Lee <liguozhu@hisilicon.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        <linux-accelerators@lists.ozlabs.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/2] A General Accelerator Framework, WarpDrive
-Message-ID: <20190826041404.GC27955@Turing-Arch-b>
-References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
- <20190815170424.GA30916@redhat.com>
+        Mon, 26 Aug 2019 00:27:08 -0400
+Received: from gateway36.websitewelcome.com ([50.116.125.2]:13067 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727385AbfHZE1H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 00:27:07 -0400
+X-Greylist: delayed 1414 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Aug 2019 00:27:06 EDT
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id A8DEE400C72BD
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 22:29:15 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 26E8i2mEP2PzO26E8i1Jth; Sun, 25 Aug 2019 23:03:32 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=d1ENaJIIxICI3Y94ODLKOpp6XpDSffYeorJkzd4ek6s=; b=fJdRdtaytUN2Dp/EN+wooFbAok
+        8m5O1g+et5hjdmHjl51SkwfiAEM4vFpEVpWqWhxVwqIsuyS/Ou2KADV+kc+advMURUoI/Vy5TFwmc
+        7sOkduMb7/aWMQeDk7CUHUxu8qDTSc05rL+H6mWABdSkMIedA8PoQiqnfdB21uROeE9m8U0CBmc9D
+        nxzAt92qBvEeHe8Wuk4MqtVEbvqOCuGGhEEvm4QC6hdEAtjUXpgSniUdZB0Zt0vVTWsBCp0fX9ePi
+        brHaPslixRN2qgBkDJZ24uN/5vjh2ewDuLu8f//aChCJSndwTvL/kEiP/t3+8qCu0oS82ATbec6y8
+        f4Cx5NjQ==;
+Received: from [189.152.216.116] (port=53546 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i26E7-004Lh0-Qk; Sun, 25 Aug 2019 23:03:31 -0500
+Subject: Re: [PATCH] tools/power turbostat: fix file descriptor leaks
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Prarit Bhargava <prarit@redhat.com>, Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190408161240.GA30623@embeddedor>
+ <16370c2e-c5f9-a4cf-02fc-6b5b4ab65e1c@redhat.com>
+ <1c208944-9162-0245-c3bd-016f4274511f@embeddedor.com>
+ <CAJZ5v0jUfLpp_q7ozi33wgJfP7zHmvDh2Srun0KjVZj6Q7NOfw@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <52803932-12dc-3ea0-12ef-09b5b317818b@embeddedor.com>
+Date:   Sun, 25 Aug 2019 23:03:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190815170424.GA30916@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAJZ5v0jUfLpp_q7ozi33wgJfP7zHmvDh2Srun0KjVZj6Q7NOfw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i26E7-004Lh0-Qk
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:53546
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 01:04:24PM -0400, Jerome Glisse wrote:
-> Date: Thu, 15 Aug 2019 13:04:24 -0400
-> From: Jerome Glisse <jglisse@redhat.com>
-> To: Zhangfei Gao <zhangfei.gao@linaro.org>
-> CC: linux-accelerators@lists.ozlabs.org, Greg Kroah-Hartman
->  <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Arnd Bergmann
->  <arnd@arndb.de>
-> Subject: Re: [PATCH 0/2] A General Accelerator Framework, WarpDrive
-> User-Agent: Mutt/1.11.3 (2019-02-01)
-> Message-ID: <20190815170424.GA30916@redhat.com>
-> 
-> On Wed, Aug 14, 2019 at 05:34:23PM +0800, Zhangfei Gao wrote:
-> > *WarpDrive* is a general accelerator framework for the user application to
-> > access the hardware without going through the kernel in data path.
-> > 
-> > WarpDrive is the name for the whole framework. The component in kernel
-> > is called uacce, meaning "Unified/User-space-access-intended Accelerator
-> > Framework". It makes use of the capability of IOMMU to maintain a
-> > unified virtual address space between the hardware and the process.
-> > 
-> > WarpDrive is intended to be used with Jean Philippe Brucker's SVA
-> > patchset[1], which enables IO side page fault and PASID support. 
-> > We have keep verifying with Jean's sva/current [2]
-> > We also keep verifying with Eric's SMMUv3 Nested Stage patch [3]
-> > 
-> > This series and related zip & qm driver as well as dummy driver for qemu test:
-> > https://github.com/Linaro/linux-kernel-warpdrive/tree/5.3-rc1-warpdrive-v1
-> > zip driver already been upstreamed.
-> > zip supporting uacce will be the next step.
-> > 
-> > The library and user application:
-> > https://github.com/Linaro/warpdrive/tree/wdprd-v1-current
-> 
-> Do we want a new framework ? I think that is the first question that
-> should be answer here. Accelerator are in many forms and so far they
-> never have been enough commonality to create a framework, even GPUs
-> with the drm is an example of that, drm only offer share framework
-> for the modesetting part of the GPU (as thankfully monitor connector
-> are not specific to GPU brands :))
-> 
-> FPGA is another example the only common code expose to userspace is
-> about bitstream management AFAIK.
-> 
-> I would argue that a framework should only be created once there is
-> enough devices with same userspace API. Meanwhile you can provide
-> in kernel helper that allow driver to expose same API. If after a
-> while we have enough device driver which all use that same in kernel
-> helpers API then it will a good time to introduce a new framework.
-> Meanwhile this will allow individual device driver to tinker with
-> their API and maybe get to something useful to more devices in the
-> end.
-> 
-> Note that what i propose also allow userspace code sharing for all
-> driver that use the same in kernel helper.
-> 
-> Cheers,
-> Jérôme
+Hi Rafael,
 
-Hi, Jerome, I explain the idea here: https://zhuanlan.zhihu.com/p/79680889. We
-think this is a comment requirement for eveybody. Hope this can help the
-discussion. Thanks
+On 4/23/19 3:23 AM, Rafael J. Wysocki wrote:
+> On Mon, Apr 22, 2019 at 5:55 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> Hi all,
+>>
+>> Friendly ping:
+>>
+>> Who can take this?
+> 
+> I've been waiting for Len to comment on this, let me talk to him offlist.
+> 
 
--- 
-			-Kenneth(Hisilicon)
+I just noticed this hasn't been applied.
 
+I wonder if you plan to apply it.
+
+Thanks
+--
+Gustavo
