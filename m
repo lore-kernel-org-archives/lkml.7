@@ -2,119 +2,149 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1404FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0687BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4786217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC020217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irvfEg+o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4Yj/mgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfHZWfJ (ORCPT
+        id S1727077AbfHZWfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:35:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34772 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfHZWfI (ORCPT
+        Mon, 26 Aug 2019 18:35:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47046 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfHZWfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:35:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id s21so41524834ioa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:35:08 -0700 (PDT)
+        Mon, 26 Aug 2019 18:35:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q139so12702763pfc.13;
+        Mon, 26 Aug 2019 15:35:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TR73dOPLV+Pq/EfAvMPvdl9VXPIGVXlmHtutdowbA8w=;
-        b=irvfEg+oBy3K9i5ph445YDh5/r39NmczOzUV8ARAEH39xs2pKuazZRoL8IZJP565KB
-         GOc/68k8QyEfdgqvdqmMItaEkV1dgxRCAfUZkNHxZkvl/ct2uS7VhGvFTnW+UWomp5u0
-         yQobZ63b6IegbwLLQ8bKDU49irtHmXs5q8J8a79OwT1acMhB+JPQ6dNfEHDzIFXG1jQy
-         inTQiWt+m2Dw2FoBr1U3SZ/bVEWatEX7vus22wc8y/7MF8Zt1Y65+OpffB5hHZFXZZJL
-         mMNcx/fwG3BubuSFgvditqHsYEXMaFQhPXp1TgX0RhrYG40tLkIrSziEej9egv5J833i
-         /EYQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZTtLxIEFBiFvvirLNk7rJCpHyKJsG3UuT12vwumOc6c=;
+        b=V4Yj/mgKIET0UoJp2BRwZVUfM8V2AmczCU0x1SnvT/ZOx56IgJ9BD2GVGSi/vhq8VT
+         fCApXRmB4ctSw9Qja4Kg0K+GcJl8Q6DdxLSq+q61/ftTv9i5CG6gwcSj3xiWeRzQ1qWl
+         KifPe7A7QjANncPafKhoJI2VCx5usWEIbMg0ZGE/I7ZdFFUTesd1FXWT2Q07SZVnGF/Y
+         1IDGhaTKkYwZyw0MpgLx9S1ru+lG8BGfGNGS/7INVWaXjpxI9Pp2t+OVu436nKa8238G
+         oNqZKQK8uVFD/nAamPO86nU17D7TwmRoXDUF53i42+GF5eIES6p9m9cXmSCrdSiQLsco
+         z2KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TR73dOPLV+Pq/EfAvMPvdl9VXPIGVXlmHtutdowbA8w=;
-        b=foCgTES4JHeHY6lA/I4t0g3jPwPOE+x1KXTOY6ZXTtLnxSqGFL9tvMs5k3mpH1QOjR
-         yVXamiPgOfQhJv3tJhHCGOfKAJarmSrEDOVWNLtgvrv2kJ31M9NjvNhkm1McF6kMU8eO
-         L4ZEpDSnKKO1G2lXZ6RnCz3jPMIYRcZYZYPt+3sx2/bk4pAvn1clriAlnJ61zLqs24Zy
-         ZGcd2OA+PttPw2QpUBYCTdwtQF3mpSj6vloY2fxOvdEEad/x1I5jbYm/DGYBFeAKXPMk
-         xUOvV69c8+5S4tUwP7FT0bmtLxzubaMYHf8jDykOvDi5iX+R/GG622Q8cNw9niUthBSj
-         Ir4w==
-X-Gm-Message-State: APjAAAW4qm8CEi+vtUeFI4lzRUHK1o00/Yk/SJWYxOLQCA+A57vT2yop
-        ORfHQ5xp2Z4NEHbS29bzDO5o9soY4mfwNZYK8B0=
-X-Google-Smtp-Source: APXvYqxHblq6gKSwiBmBchpFPLh6rchETDLBs9SBgl/hgzpq8F2KDv3i9uyZVGR4IejBJ9fgI7IYrCeXxX5X4YjwbF4=
-X-Received: by 2002:a6b:720e:: with SMTP id n14mr22961192ioc.139.1566858907770;
- Mon, 26 Aug 2019 15:35:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZTtLxIEFBiFvvirLNk7rJCpHyKJsG3UuT12vwumOc6c=;
+        b=nXa7cdpQs4fAp0JQDqNhFW1/q5a1TOcaz1dPML6uxVxHd1GNxBnbyYXxFltgXqLs8E
+         LB5dVjllsKU5VN7t++oz4YZqsMfSoZICG4svurMf0rQ7XXlnb+DSaY5BzAcFGmnRRO/m
+         NElHBqm5bd0c4VVkgPBLEaYzi0RZqSIGM6gKSzGeFcGXpma1QMTOkDa60sQRw+VltEgy
+         ICHm9/yJ3e2J9/rph73YAq6ogsE417i6JDQw3f1YJEjULTxJVkza4gwUtPuc6zcB4st8
+         oW6wHjWmtTrYUDOkUfxc76IMzI3yMy01PDQ8NWQw0J94TDdiuw5unKjG9AJ0pOjuKn2M
+         NWWg==
+X-Gm-Message-State: APjAAAVa9R3ukcXSwynRhgouykVnCBGMKrkMQ9xuJulfitjOQRzwv8c3
+        13QHs/dUORMXGyBlbYYJbz0=
+X-Google-Smtp-Source: APXvYqx9fB2zz3reQwDJm1c/UTcOst3U1UlmTMEEGuwoeB+hHpMqnGwoyiFnFyuGEv6PeBIfrwI1hg==
+X-Received: by 2002:a65:62d7:: with SMTP id m23mr18488160pgv.358.1566858912811;
+        Mon, 26 Aug 2019 15:35:12 -0700 (PDT)
+Received: from mail.google.com ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id s5sm474687pjo.26.2019.08.26.15.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 15:35:12 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 06:35:02 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 05/11] ftrace: create memcache for hash entries
+Message-ID: <20190826223501.ymj3g4ftrf5eqhzq@mail.google.com>
+References: <20190825132330.5015-1-changbin.du@gmail.com>
+ <20190825132330.5015-6-changbin.du@gmail.com>
+ <20190826074437.GM2369@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190822094657.27483-1-kraxel@redhat.com>
-In-Reply-To: <20190822094657.27483-1-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Mon, 26 Aug 2019 15:34:56 -0700
-Message-ID: <CAPaKu7S_He9RYsxDi0Qco4u=Xnc3FjB5nvFT_Zh+o7pvFzCvRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/virtio: add plane check
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826074437.GM2369@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 2:47 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Mon, Aug 26, 2019 at 09:44:37AM +0200, Peter Zijlstra wrote:
+> On Sun, Aug 25, 2019 at 09:23:24PM +0800, Changbin Du wrote:
+> > When CONFIG_FTRACE_FUNC_PROTOTYPE is enabled, thousands of
+> > ftrace_func_entry instances are created. So create a dedicated
+> > memcache to enhance performance.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  kernel/trace/ftrace.c | 17 ++++++++++++++++-
+> >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index a314f0768b2c..cfcb8dad93ea 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -94,6 +94,8 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
+> >  /* What to set function_trace_op to */
+> >  static struct ftrace_ops *set_function_trace_op;
+> >  
+> > +struct kmem_cache *hash_entry_cache;
+> > +
+> >  static bool ftrace_pids_enabled(struct ftrace_ops *ops)
+> >  {
+> >  	struct trace_array *tr;
+> > @@ -1169,7 +1171,7 @@ static int add_hash_entry(struct ftrace_hash *hash, unsigned long ip,
+> >  {
+> >  	struct ftrace_func_entry *entry;
+> >  
+> > -	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+> > +	entry = kmem_cache_alloc(hash_entry_cache, GFP_KERNEL);
+> >  	if (!entry)
+> >  		return -ENOMEM;
+> >  
+> > @@ -6153,6 +6155,15 @@ void __init ftrace_init(void)
+> >  	if (ret)
+> >  		goto failed;
+> >  
+> > +	hash_entry_cache = kmem_cache_create("ftrace-hash",
+> > +					     sizeof(struct ftrace_func_entry),
+> > +					     sizeof(struct ftrace_func_entry),
+> > +					     0, NULL);
+> > +	if (!hash_entry_cache) {
+> > +		pr_err("failed to create ftrace hash entry cache\n");
+> > +		goto failed;
+> > +	}
+> 
+> Wait what; you already have then in the binary image, now you're
+> allocating extra memory for each of them?
 >
-> Use drm_atomic_helper_check_plane_state()
-> to sanity check the plane state.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_plane.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> index a492ac3f4a7e..fe5efb2de90d 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> @@ -84,7 +84,22 @@ static const struct drm_plane_funcs virtio_gpu_plane_funcs = {
->  static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
->                                          struct drm_plane_state *state)
->  {
-> -       return 0;
-> +       bool is_cursor = plane->type == DRM_PLANE_TYPE_CURSOR;
-> +       struct drm_crtc_state *crtc_state;
-> +       int ret;
-> +
-> +       if (!state->fb || !state->crtc)
-> +               return 0;
-> +
-> +       crtc_state = drm_atomic_get_crtc_state(state->state, state->crtc);
-> +       if (IS_ERR(crtc_state))
-> +                return PTR_ERR(crtc_state);
-Is drm_atomic_get_new_crtc_state better here?
+No, here we only allocate ftrace hash entries. The prototype data is not copied.
+The entry->priv points to prototype data in binary.
 
-> +
-> +       ret = drm_atomic_helper_check_plane_state(state, crtc_state,
-> +                                                 DRM_PLANE_HELPER_NO_SCALING,
-> +                                                 DRM_PLANE_HELPER_NO_SCALING,
-> +                                                 is_cursor, true);
-> +       return ret;
->  }
->
->  static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
-> --
-> 2.18.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Did you look at what ORC does? Is the binary search really not fast
+> enough?
+For ftrace, binary search is not enough. Just like the hash tables
+(ftrace_graph_notrace_hash, ftrace_graph_hash) we already have which is used to
+filter traced functions.
+
+
+-- 
+Cheers,
+Changbin Du
