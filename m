@@ -2,221 +2,116 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E59C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6832BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95F02186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2DA2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566821180;
-	bh=pSm3PvDMTIhWrias2jUj42UGA5TFBFdrlS5QO6QgtCQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2MDr0e84BIB1ppsrQRup1He/pl9MoZebMAd4LaM7jEuzSs0xre7R42xKVT6mKOJKc
-	 /4+FKlqVyrFxR2lvZh5/7QQ8EdU9nXG7ZKgWJrktcnKjmcqNHEeL4dYdpJdokx105D
-	 lc/Zod88QSIth8X6e6/HBIN/8Ms8dLq2DyZgv3uM=
+	s=default; t=1566821194;
+	bh=ZXqKUrKoc3XvWsVOR9tThsSaHUCIG5VakBqZox5EhWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JRpYcVNme4w024eK2guIzags6nK4FJKHXggcBGxtejrXOTKmisSCfCxF1bM3GCsAn
+	 tGpVTDj34iZGHkYvjbe0KpZ/duaoJiMuctICynYSj+1Er6W75l6NRsZQynP9DqRPap
+	 FsoywMesSGNXgWQb4wNlIe3FJXph01sC/FfZhvz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbfHZMGS (ORCPT
+        id S1731579AbfHZMGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbfHZMGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:06:18 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D3F2187F;
-        Mon, 26 Aug 2019 12:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566821176;
-        bh=pSm3PvDMTIhWrias2jUj42UGA5TFBFdrlS5QO6QgtCQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=io3aMAGY1vLQLpnXBTGGQRmRoMF0Z3ucgOly06j72Whv8rl7xT1KFCYyKmlLidWs3
-         Qit/fL3LL7kfMz6VSYutfHMnEYhIKe+/vtK0zd5YWrozSPVEGU8qnMYwsvvDG/CMl8
-         nKvLGU3h6Se1hrH6oINn9wwihCiN7pzs42pZsyN4=
-Received: by mail-qt1-f176.google.com with SMTP id j15so17486591qtl.13;
-        Mon, 26 Aug 2019 05:06:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAV6TFX+4zvCfT+S2DIM9+B1r8stCY6Gl6bFY2XSL5eN8eX4poZg
-        liVbv00ZOIytea9cknjGnvpzdrMUgPgr7uyOFQ==
-X-Google-Smtp-Source: APXvYqywXvicr53vDpn7Lf7WyzQ+wjP/YIGuHrEhvTUukwIr28KdgsvczQlUyUAExmZ1tGD9jxYqR9nGPsTCyWlJexY=
-X-Received: by 2002:ad4:4050:: with SMTP id r16mr15115021qvp.200.1566821175529;
- Mon, 26 Aug 2019 05:06:15 -0700 (PDT)
+        Mon, 26 Aug 2019 08:06:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43858 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726945AbfHZMGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:06:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ED07DAFCC;
+        Mon, 26 Aug 2019 12:06:31 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 14:06:30 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH] mm: drop mark_page_access from the unmap path
+Message-ID: <20190826120630.GI7538@dhcp22.suse.cz>
+References: <20190730123935.GB184615@google.com>
+ <20190730125751.GS9330@dhcp22.suse.cz>
+ <20190731054447.GB155569@google.com>
+ <20190731072101.GX9330@dhcp22.suse.cz>
+ <20190806105509.GA94582@google.com>
+ <20190809124305.GQ18351@dhcp22.suse.cz>
+ <20190809183424.GA22347@cmpxchg.org>
+ <20190812080947.GA5117@dhcp22.suse.cz>
+ <20190812150725.GA3684@cmpxchg.org>
+ <20190813105143.GG17933@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-7-krzk@kernel.org>
-In-Reply-To: <20190823145356.6341-7-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 26 Aug 2019 07:06:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
-Message-ID: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
-Subject: Re: [RFC 7/9] dt-bindings: rtc: s3c: Convert S3C/Exynos RTC bindings
- to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, notify@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813105143.GG17933@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert Samsung S3C/Exynos Real Time Clock bindings to DT schema format
-> using json-schema.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  .../devicetree/bindings/rtc/s3c-rtc.txt       | 31 ------
->  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 95 +++++++++++++++++++
->  2 files changed, 95 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+On Tue 13-08-19 12:51:43, Michal Hocko wrote:
+> On Mon 12-08-19 11:07:25, Johannes Weiner wrote:
+> > On Mon, Aug 12, 2019 at 10:09:47AM +0200, Michal Hocko wrote:
+[...]
+> > > > Maybe the refaults will be fine - but latency expectations around
+> > > > mapped page cache certainly are a lot higher than unmapped cache.
+> > > >
+> > > > So I'm a bit reluctant about this patch. If Minchan can be happy with
+> > > > the lock batching, I'd prefer that.
+> > > 
+> > > Yes, it seems that the regular lock drop&relock helps in Minchan's case
+> > > but this is a kind of change that might have other subtle side effects.
+> > > E.g. will-it-scale has noticed a regression [1], likely because the
+> > > critical section is shorter and the overal throughput of the operation
+> > > decreases. Now, the w-i-s is an artificial benchmark so I wouldn't lose
+> > > much sleep over it normally but we have already seen real regressions
+> > > when the locking pattern has changed in the past so I would by a bit
+> > > cautious.
+> > 
+> > I'm much more concerned about fundamentally changing the aging policy
+> > of mapped page cache then about the lock breaking scheme. With locking
+> > we worry about CPU effects; with aging we worry about additional IO.
+> 
+> But the later is observable and debuggable little bit easier IMHO.
+> People are quite used to watch for major faults from my experience
+> as that is an easy metric to compare.
+>  
+> > > As I've said, this RFC is mostly to open a discussion. I would really
+> > > like to weigh the overhead of mark_page_accessed and potential scenario
+> > > when refaults would be visible in practice. I can imagine that a short
+> > > lived statically linked applications have higher chance of being the
+> > > only user unlike libraries which are often being mapped via several
+> > > ptes. But the main problem to evaluate this is that there are many other
+> > > external factors to trigger the worst case.
+> > 
+> > We can discuss the pros and cons, but ultimately we simply need to
+> > test it against real workloads to see if changing the promotion rules
+> > regresses the amount of paging we do in practice.
+> 
+> Agreed. Do you see other option than to try it out and revert if we see
+> regressions? We would get a workload description which would be helpful
+> for future regression testing when touching this area. We can start
+> slower and keep it in linux-next for a release cycle to catch any
+> fallouts early.
+> 
+> Thoughts?
 
+ping...
 
-> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> new file mode 100644
-> index 000000000000..44b021812a83
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rtc/s3c-rtc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung S3C, S5P and Exynos Real Time Clock controller
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +# Select also deprecated compatibles (for finding deprecate usage)
-> +select:
-> +  properties:
-> +    compatible:
-> +      items:
-> +        - enum:
-> +            - samsung,s3c2410-rtc
-> +            - samsung,s3c2416-rtc
-> +            - samsung,s3c2443-rtc
-> +            - samsung,s3c6410-rtc
-> +            # Deprecated, use samsung,s3c6410-rtc
-> +            - samsung,exynos3250-rtc
-
-We've come up with a better way of doing this that doesn't need a
-custom 'select'. Add a 'oneOf' to compatible and add another entry:
-
-- const: samsung,exynos3250-rtc
-  deprecated: true
-
-It's not implemented yet in the tool, but we'll keep the compatible
-for 'select' and otherwise drop schema marked deprecated.
-
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-
-You can drop 'items' when there's only 1 entry.
-
-> +          - samsung,s3c2410-rtc
-> +          - samsung,s3c2416-rtc
-> +          - samsung,s3c2443-rtc
-> +          - samsung,s3c6410-rtc
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description:
-> +      Must contain a list of phandle and clock specifier for the rtc
-> +      clock and in the case of a s3c6410 compatible controller, also
-> +      a source clock.
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    description:
-> +      Must contain "rtc" and for a s3c6410 compatible controller,
-> +      a "rtc_src" sorted in the same order as the clocks property.
-> +    oneOf:
-> +      - items:
-> +          - const: rtc
-> +      - items:
-> +          # TODO: This can be in any order matching clocks, how to express it?
-
-It shouldn't be in any order. Fix the dts files.
-
-> +          - const: rtc
-> +          - const: rtc_src
-
-You should drop all this and add an else clause below.
-
-> +
-> +  interrupts:
-> +    description:
-> +      Two interrupt numbers to the cpu should be specified. First
-> +      interrupt number is the rtc alarm interrupt and second interrupt number
-> +      is the rtc tick interrupt. The number of cells representing a interrupt
-> +      depends on the parent interrupt controller.
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - samsung,s3c6410-rtc
-> +              - samsung,exynos3250-rtc
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 2
-> +        clock-names:
-> +          items:
-> +          - const: rtc
-> +          - const: rtc_src
-
-Should be indented 2 more spaces.
-
-> +
-> +examples:
-> +  - |
-> +    rtc@10070000 {
-> +      compatible = "samsung,s3c6410-rtc";
-> +      reg = <0x10070000 0x100>;
-> +      interrupts = <0 44 4>, <0 45 4>;
-> +      clocks = <&clock 0>, // CLK_RTC
-> +               <&s2mps11_osc 0>; // S2MPS11_CLK_AP
-> +      clock-names = "rtc", "rtc_src";
-> +    };
-> --
-> 2.17.1
->
+-- 
+Michal Hocko
+SUSE Labs
