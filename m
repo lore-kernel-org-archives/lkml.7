@@ -2,257 +2,164 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585D9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8018C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1098021848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE092173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qf8GWX0a"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XvRR+Yjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfHZWir (ORCPT
+        id S1727041AbfHZWi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:38:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33693 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfHZWiq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:38:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u16so16831013wrr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SaIBmj1syIhbIo3y0DHYvDjfeP8VfIt7/4u6ebKA9hE=;
-        b=qf8GWX0azpP5W9wmjsXsvDZrIM7ZBxNUy7tCzn+PQzZ10r4izIgThuc6VT0QnWcm6M
-         zjrmMMTn9kJF9HHdcOzXtPRIN0giEANC1gVg9JJkbV76zCgMcBfWzSfKglFJjVBb2Wpu
-         fd/6kOiMxzo6isqbtY8hUzzNA7h9F+MDJC1CprHIf9YFBXnL7wkzsT0eFuo01g92YnN5
-         2charSD1JaTDWr9la4F2RIiHSci8z1wg0W2ANH0+TIhbTaSTZoc/9EsEv/3HXx4BFqu9
-         OEy5mILXfCrIgfvMXYroRQYf8ZLKyqMqyCNAr5souRRlqiWqYOtDUaq38yxQ6RwQGb+q
-         RDhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=SaIBmj1syIhbIo3y0DHYvDjfeP8VfIt7/4u6ebKA9hE=;
-        b=OiZbURpWpypa9ebJHk+vibPJg509FHbpkGYE3QxSxM6+qOwdMVjMZ+HGWe7R5jUhS7
-         F+ooLNwUh7lWIpxLt85nFiPj+kmszMfSZ7hScdkmXXzDTvxOLCX8Av1D2bgmh9SHuD4L
-         54ZcXEp78bdzDFNsgYFN9MJwBzCXIUb6m41o140U0cF75+uGzoLqgIDC3QOvdu3RUAG1
-         l8bYTfmodQF+VTpsE2h/kO+5J7hr2y9wVooSJXt2N4+E67IN0s/ybZwgHF6F+KtBCVyw
-         kLVOlkHzAT+E2XY6L/VCYk41L7TO2o1CmUuRTNBSfxLxUMRcGWzVi6k4mnfYLADCeBSz
-         40HQ==
-X-Gm-Message-State: APjAAAUgGlOlCaHqstVAgalof8BYufQC51F0VTjnYoOvTxd4Hq7092vX
-        hyGMARWNSPZPdF6hkrmDpUwn0UDxdEk=
-X-Google-Smtp-Source: APXvYqxblZTUxm+ADPBGH+nFTO9lPKBMkIX9xeYFsGruga4P+tIPzTp2+nJNr4f+BDHWiI4MT2o6vA==
-X-Received: by 2002:adf:dd88:: with SMTP id x8mr26507496wrl.331.1566859122727;
-        Mon, 26 Aug 2019 15:38:42 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab? ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
-        by smtp.googlemail.com with ESMTPSA id t13sm14908638wrr.0.2019.08.26.15.38.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 15:38:42 -0700 (PDT)
-Subject: [GIT PULL] timers drivers v5.4
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Magnus Damm <damm+renesas@opensource.se>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
- <alpine.DEB.2.21.1908262257570.1939@nanos.tec.linutronix.de>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <417e2196-964a-3f22-4497-dcc7f7b7204d@linaro.org>
-Date:   Tue, 27 Aug 2019 00:38:40 +0200
+        Mon, 26 Aug 2019 18:38:59 -0400
+Received: from mout.gmx.net ([212.227.15.18]:38547 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbfHZWi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:38:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566859062;
+        bh=Pj4uAQaXeIdkvaCK98IbRx1uvJ/X01xMarlBi5RxG2U=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=XvRR+Yjrj/lxPKk9HoTw93NPc2fxEA57GnjWJuC9bbXUlad8hyT40BS7HHIy8tWJf
+         HKhXHa5+08OHFjwRDtYFkVp0gn+1SjXZVa56LhxNDbkvaFA5/1SjLkQmHLLevfod3w
+         5gqrRzYlgA3oUOBtXpspo13yWY+5lQ1efwYudJbU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.179.28] ([217.238.204.231]) by mail.gmx.com (mrgmx002
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MaZWz-1hnB5L0pIX-00K8b7; Tue, 27
+ Aug 2019 00:37:42 +0200
+Subject: Re: [PATCH RESEND 0/8] Fix mmap base in bottom-up mmap
+To:     Alexandre Ghiti <alex@ghiti.fr>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org
+References: <20190620050328.8942-1-alex@ghiti.fr>
+ <abc7ed75-0f51-7f21-5a74-d389f968ee55@ghiti.fr>
+From:   Helge Deller <deller@gmx.de>
+Message-ID: <9639ebd4-7dcb-0ea5-e0a6-adb8eaecd92a@gmx.de>
+Date:   Tue, 27 Aug 2019 00:37:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908262257570.1939@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <abc7ed75-0f51-7f21-5a74-d389f968ee55@ghiti.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RU5C0dBXjxrRCewq0WWznMGgYJRZJCVSduSK741vTuSXvO8YQ3k
+ e4ipIkY98zehrL5bn2+bhdKDyYEyZ8Bp5SzGjyBxqCZTsoVramKj/Vyd4ck1V830ylao4wf
+ HP5VvjUpOf3gI4uCw2J6OcIgqDuwqloj8mNLmpjVrXYZLCwcKWdSIESQi0IEfnXZU5JrW6G
+ PPkeHq2ID2V1aVdIp6hwg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nmHZZR9ejPA=:6g+P4z9PhbuHnBsl9sJG2S
+ uDi9RYwCeGIVcZqCxIaHucXHxXbjrudoYGeoAyPxVpstqJQo8WuyBl2Hrvls9JACsOzymJNCw
+ w/AIWUbhS/u2qeDxhCRXF02AHMtN9ow3mtXsGkokAMy3bn1uADS6jsL2EljpHaaNcuzvOZj0v
+ Mka7C7Q9/gdCzdH1Q4yjdYcRbngXG0cInx4ZLV5iVc/zV22NhhDKn4ej4pgRQn0tCVmGySf5C
+ e30/0aXJ0UoNiTKdMW8C6ufzot97nveLD/3ZsMg/BMvE4s++vXW1ijXywqZfSzwcLZZ2/fMj2
+ wtQ9GJ6gOcE90isSkkf2ArTg6SwKx4j/FPifhrcllWWS3ipnH8DtIXRqpIlrWFmtYiN4/4bRB
+ VczuL3X8K7zAXhV1p4vcaHk+3O0E7ROTbfhyK2hb3NF4V9QpZO6EQXin43qZVjRON9bgjIfBR
+ ei+6kjD2/QCuSBnTLO5D9iGMHlzNkxKwrYHdR5YGQTYlV8jgPn3KQNsFav2wliy11yv2S5QvC
+ yO6YWQD4qVm8D5oRRn432HEZRbC7qbSWks0bh1pYWJzrVCkhLl65T8FREjDMvthMVywRsA51C
+ qg617CLdN6zj4FWE47uOyksFOZNJcVljV+eRTIe1yLfLmvFyPNmFsmpyBB2EKPFQ+kgQJyhpq
+ 9ShHmboWZZHKmUxWXN4vt6aPh18o0bPn0LMDk47AhE2ToOsyB2pnoouKh4i3VaV7Li35sqp3H
+ 4rdAE7v9XfaNN9zRXsVP/6q0WBxEsIzRD+heKik/MWEFRd2OzhxuBsk7doDF1szy2gRlrYCLT
+ 1hfvsJQ0r7+00rVnAhjqcAxsXYcoCl3ivj9tj8NDTPw1L+839wNrJoecI9R+2NSTzxyNOgb1X
+ zLxiBeV9WuKyc3S3YPDDoiEpcSYmWDeIS5fy5vxzjWuRQA/0v/1av/OQ884NBMFW9SqR1T+gm
+ +wLUbBR+5ZMDiywLqM7iBON8XtkeUcy5353UqmJ386dSM8clEmUd8rgey4tVffUWnNp7WPaoB
+ zZP1g5eY4MN1Gt6frFhILK0drlKfqxHb0Uvi8rKmKT6LpyHp+zmbM500hqT0oP88Qhfx4Evpn
+ TfnKClj9EdnErvSOmCvB+3ArYDFuwiWP9x9LQ79XKf3uReDC+OC+N0coj4IPoAESrdjWpZWzc
+ 1PsgKx/NTOXIyGmKTnJzPfsJXFQ9tK7lrDyVBrTvWDNqjVzQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26.08.19 09:34, Alexandre Ghiti wrote:
+> On 6/20/19 7:03 AM, Alexandre Ghiti wrote:
+>> This series fixes the fallback of the top-down mmap: in case of
+>> failure, a bottom-up scheme can be tried as a last resort between
+>> the top-down mmap base and the stack, hoping for a large unused stack
+>> limit.
+>>
+>> Lots of architectures and even mm code start this fallback
+>> at TASK_UNMAPPED_BASE, which is useless since the top-down scheme
+>> already failed on the whole address space: instead, simply use
+>> mmap_base.
+>>
+>> Along the way, it allows to get rid of of mmap_legacy_base and
+>> mmap_compat_legacy_base from mm_struct.
+>>
+>> Note that arm and mips already implement this behaviour.
+>>
+>> Alexandre Ghiti (8):
+>> =C2=A0=C2=A0 s390: Start fallback of top-down mmap at mm->mmap_base
+>> =C2=A0=C2=A0 sh: Start fallback of top-down mmap at mm->mmap_base
+>> =C2=A0=C2=A0 sparc: Start fallback of top-down mmap at mm->mmap_base
+>> =C2=A0=C2=A0 x86, hugetlbpage: Start fallback of top-down mmap at mm->m=
+map_base
+>> =C2=A0=C2=A0 mm: Start fallback top-down mmap at mm->mmap_base
+>> =C2=A0=C2=A0 parisc: Use mmap_base, not mmap_legacy_base, as low_limit =
+for
+>> =C2=A0=C2=A0=C2=A0=C2=A0 bottom-up mmap
+>> =C2=A0=C2=A0 x86: Use mmap_*base, not mmap_*legacy_base, as low_limit f=
+or bottom-up
+>> =C2=A0=C2=A0=C2=A0=C2=A0 mmap
+>> =C2=A0=C2=A0 mm: Remove mmap_legacy_base and mmap_compat_legacy_code fi=
+elds from
+>> =C2=A0=C2=A0=C2=A0=C2=A0 mm_struct
+>>
+>> =C2=A0 arch/parisc/kernel/sys_parisc.c=C2=A0 |=C2=A0 8 +++-----
+>> =C2=A0 arch/s390/mm/mmap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+>> =C2=A0 arch/sh/mm/mmap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+>> =C2=A0 arch/sparc/kernel/sys_sparc_64.c |=C2=A0 2 +-
+>> =C2=A0 arch/sparc/mm/hugetlbpage.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 2 +-
+>> =C2=A0 arch/x86/include/asm/elf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 2 +-
+>> =C2=A0 arch/x86/kernel/sys_x86_64.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +=
++--
+>> =C2=A0 arch/x86/mm/hugetlbpage.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 7 ++++---
+>> =C2=A0 arch/x86/mm/mmap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 20 +++++++++-----------
+>> =C2=A0 include/linux/mm_types.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 2 --
+>> =C2=A0 mm/debug.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 4 ++--
+>> =C2=A0 mm/mmap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0 2 +-
+>> =C2=A0 12 files changed, 26 insertions(+), 31 deletions(-)
+>>
+>
+> Any thoughts about that series ? As said before, this is just a preparat=
+ory patchset in order to
+> merge x86 mmap top down code with the generic version.
 
-Hi Thomas,
+I just tested your patch series successfully on the parisc
+architeture. You may add:
 
-The following changes since commit 3e2d94535adb2df15f3907e4b4c7cd8a5a4c2b5a:
+Tested-by: Helge Deller <deller@gmx.de> # parisc
 
-  clocksource/drivers/hyperv: Enable TSC page clocksource on 32bit
-(2019-08-23 16:59:54 +0200)
-
-are available in the Git repository at:
-
-  https://git.linaro.org/people/daniel.lezcano/linux.git tags/timers-v5.4
-
-for you to fetch changes up to 19d608458f4f3bb3a1f89bd7e4814c3fd30dbec7:
-
-  clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
-(2019-08-27 00:31:39 +0200)
-
-----------------------------------------------------------------
-- Remove dev_err() when used with platform_get_irq (Stephen Boyd)
-
-- Add DT binding and new compatible for Allwinner sun4i (Maxime Ripard)
-
-- Register the Atmel tcb clocksource for delays (Alexandre Belloni)
-
-- Add a clock divider for the Freescale imx platforms and new timer node
-  in the DT (Anson Huang)
-
-- Use DIV_ROUND_CLOSEST macro for the Renesas OSTM (Geert Uytterhoeven)
-
-- Fix GENMASK and timer operation for the npcm timer (Avi Fishman)
-
-- Fix timer-of showing an error message when EPROBE_DEFER is
-  returned (Jon Hunter)
-
-- Add new SoC DT binding and match for Renesas timers (Magnus Damm)
-
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      clocksource/drivers/tcb_clksrc: Register delay timer
-
-Anson Huang (3):
-      clocksource/drivers/imx-sysctr: Add internal clock divider handle
-      arm64: dts: imx8mm: Add system counter node
-      arm64: dts: imx8mq: Add system counter node
-
-Avi Fishman (1):
-      clocksource/drivers/npcm: Fix GENMASK and timer operation
-
-Geert Uytterhoeven (1):
-      clocksource/drivers/renesas-ostm: Use DIV_ROUND_CLOSEST() helper
-
-Jon Hunter (2):
-      clocksource/drivers/timer-of: Do not warn on deferred probe
-      clocksource/drivers: Do not warn on probe defer
-
-Magnus Damm (7):
-      dt-bindings: timer: renesas, cmt: Add CMT0234 to sh73a0 and r8a7740
-      dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
-      dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
-      dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
-      dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
-      clocksource/drivers/sh_cmt: r8a7740 and sh73a0 SoC-specific match
-      clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
-
-Maxime Ripard (4):
-      dt-bindings: timer: Convert Allwinner A10 Timer to a schema
-      dt-bindings: timer: Add missing compatibles
-      clocksource: sun4i: Add missing compatibles
-      dt-bindings: timer: Convert Allwinner A13 HSTimer to a schema
-
-Stephen Boyd (1):
-      clocksource: Remove dev_err() usage after platform_get_irq()
-
- .../bindings/timer/allwinner,sun4i-a10-timer.yaml  | 102
-+++++++++++++++++++++
- .../bindings/timer/allwinner,sun4i-timer.txt       |  19 ----
- .../bindings/timer/allwinner,sun5i-a13-hstimer.txt |  26 ------
- .../timer/allwinner,sun5i-a13-hstimer.yaml         |  79 ++++++++++++++++
- .../devicetree/bindings/timer/renesas,cmt.txt      |  40 ++++----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi          |   8 ++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi          |   8 ++
- drivers/clocksource/Kconfig                        |   2 +-
- drivers/clocksource/em_sti.c                       |   4 +-
- drivers/clocksource/renesas-ostm.c                 |   2 +-
- drivers/clocksource/sh_cmt.c                       |  19 +++-
- drivers/clocksource/sh_tmu.c                       |   5 +-
- drivers/clocksource/timer-atmel-tcb.c              |  18 ++++
- drivers/clocksource/timer-imx-sysctr.c             |   5 +
- drivers/clocksource/timer-npcm7xx.c                |   9 +-
- drivers/clocksource/timer-of.c                     |   6 +-
- drivers/clocksource/timer-probe.c                  |   4 +-
- drivers/clocksource/timer-sun4i.c                  |   4 +
- 18 files changed, 275 insertions(+), 85 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
- delete mode 100644
-Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
- delete mode 100644
-Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.txt
- create mode 100644
-Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Thanks!
+Helge
