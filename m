@@ -2,136 +2,174 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B9C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67970C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EED20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:38:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDltRrG2"
+	by mail.kernel.org (Postfix) with ESMTP id 4037D20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733021AbfHZPiF (ORCPT
+        id S1733042AbfHZPiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:38:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37535 "EHLO
+        Mon, 26 Aug 2019 11:38:46 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40108 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731833AbfHZPiE (ORCPT
+        with ESMTP id S1729289AbfHZPip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:38:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id d16so16322252wme.2;
-        Mon, 26 Aug 2019 08:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Sh9DJjMgqXE7WeVQf/Tx2s2yKAPE6CjBynjLsZuWR9M=;
-        b=lDltRrG2+uHyKNgvQKaYSjqwL/N3HD3dAh6sDbLjcYDQEFT/ZrEFtRzaZTTtvp4XRJ
-         AfxMz/PEc66hkn/zQXQZ8xVvRLmGTaAYW39jDEfwRUphMZz2xJ28RFlutTzV/Wf3Whmk
-         P4GmHK62zvCO7sGJkjrjago8qVKqe+TjLjakGAJEDJwEdIEL9GVpRRJBjs2OmFQKHYXQ
-         HsSVa5FDVqmqCdCV2sF08sos75Y9VO+ZyXZBWh+7LQbiCoXDuOtf/c8D7JD9f6Hd8Jvn
-         6TYxvd60ti7IblY2XxPPQmvNmlheKmeCCxGypMNMjRhEfYfhPlow0B8hrw1AWQqKOJc3
-         meAQ==
+        Mon, 26 Aug 2019 11:38:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c5so16125017wmb.5;
+        Mon, 26 Aug 2019 08:38:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sh9DJjMgqXE7WeVQf/Tx2s2yKAPE6CjBynjLsZuWR9M=;
-        b=YyU08iXBHTooc2IcAqgUf5f16XrKaE8ZQWURZ+Z3/E7X9FgSGwm92BbAFNVRFriBHw
-         09yG8FOKIpnT3cOI8mq0buSYQs/MQWgyiSLlZkBtAW4LXoIDXfuMiVhZAhHz+dzY9k9E
-         tewE/pXZutRSz07QKzPPx7otQdJukFjpq+s35oYCvBQcu+f0Htrhv3Xe1HMYmogGOWpu
-         K0D14fmZkT2mYcS4PvSyvtuMRCtZ9qsKwb3FU8eZid7htujB+VceO31qmM2D2gmpWZ5W
-         IqEPnBzBQTlYC5zJebUl14xGxMAS82edcMs8L3BCMWsZdSQY69vgSGv4RhoSxMfOMHs1
-         C8VQ==
-X-Gm-Message-State: APjAAAUaTTZLDMPwiHYcK7GENcHKeeNFEGAxMFTgTw76+kDmvQyr4o/o
-        NLUl9hAfDBMPpYr0xsdzNWA=
-X-Google-Smtp-Source: APXvYqxLILlxLVypuvY3dis/5jWnxjA8EZXYa52Wudn0LEl6/LvtxMWr5FAvJ9nF5MzYYs1Zt+w/kQ==
-X-Received: by 2002:a1c:6145:: with SMTP id v66mr23582593wmb.42.1566833882631;
-        Mon, 26 Aug 2019 08:38:02 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id 39sm37272363wrc.45.2019.08.26.08.38.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5/JN6uYb6Ltt98oMBprPmMJCQ9NUBW/kztrckS3ANvk=;
+        b=C/Yo0orMvf4IG+QJOrsWt5xIUrf2v5jD0UxUCH13cZem3LihB8dGWppH+rfWbFSiZ0
+         z1g0kXp7SG/fVNyipsTD4JrDQZFyAGHyZEdpbJjFBotomzyYdDa03LdOmwXtoIfD+uv1
+         5+diKPHgnIp9msnR/9Q+nIsgU+gI8ozZ/lroQcGzUhkEg+pG1WDP6PnT8lFvhtL4yymE
+         8+BFejpg34mBL+nSrNpspuFxCburY+yz6wvRE6VB0bLFcROnEWDd1E5OBMHrRbrDZrF8
+         y05nixQlUstkmWn9fR2lzW7staLaTtlFzwTb8avWkObcV8j9SjcubFnsV+ai1q/VSZJd
+         rNIQ==
+X-Gm-Message-State: APjAAAW+Em/HG+uRPOc6wE1GkbpgLk1Fh2ANxVWhk4itrwqB66pYTdcW
+        ivOWpVDx2dGEEA4xFmcpoO7bt7uzfZM=
+X-Google-Smtp-Source: APXvYqz6k0m1OCGHUiJ4OnGEKQyzGpm4tnivwPcoBNTuZ+jjYF+s+0PdhAXAhI1A6chPPoWGfmhDAw==
+X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr23715323wmj.25.1566833923520;
+        Mon, 26 Aug 2019 08:38:43 -0700 (PDT)
+Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id z8sm11580798wru.13.2019.08.26.08.38.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 08:38:02 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 08:38:00 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Bernard Metzler <BMT@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190826153800.GA4752@archlinux-threadripper>
-References: <20190710174800.34451-1-natechancellor@gmail.com>
- <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
- <20190711081434.GA86557@archlinux-threadripper>
- <20190711133915.GA25807@ziepe.ca>
- <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
- <20190711171808.GF25807@ziepe.ca>
- <20190711173030.GA844@archlinux-threadripper>
- <20190823142427.GD12968@ziepe.ca>
+        Mon, 26 Aug 2019 08:38:42 -0700 (PDT)
+From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Ilya Ledvich <ilya@compulab.co.il>,
+        Igor Grinberg <grinberg@compulab.co.il>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 01/12] ARM: dts: imx7d: cl-som-imx7 imx7d-sbc-imx7: move USB
+Date:   Mon, 26 Aug 2019 16:37:49 +0100
+Message-Id: <20190826153800.35400-1-git@andred.net>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190823142427.GD12968@ziepe.ca>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+Whether and which USB port is enabled and how they
+are powered is a function of the carrier board, not
+of the SoM. Different carrier boards can have different
+ports enabled / wired up, and power them differently;
+so this should really move into the respective DTS.
 
-On Fri, Aug 23, 2019 at 11:24:27AM -0300, Jason Gunthorpe wrote:
-> On Thu, Jul 11, 2019 at 10:30:30AM -0700, Nathan Chancellor wrote:
-> > On Thu, Jul 11, 2019 at 02:18:08PM -0300, Jason Gunthorpe wrote:
-> > > On Thu, Jul 11, 2019 at 10:16:44AM -0700, Nick Desaulniers wrote:
-> > > > On Thu, Jul 11, 2019 at 6:39 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > >
-> > > > > On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
-> > > > > > Maybe time to start plumbing Clang into your test flow until it can get
-> > > > > > intergrated with more CI setups? :) It can catch some pretty dodgy
-> > > > > > behavior that GCC doesn't:
-> > > > >
-> > > > > I keep asking how to use clang to build the kernel and last I was told
-> > > > > it still wasn't ready..
-> > > > >
-> > > > > Is it ready now? Is there some flow that will compile with clang
-> > > > > warning free, on any arch? (at least the portion of the kernel I check)
-> > > > 
-> > > > $ make CC=clang ...
-> > > > 
-> > > > Let us know if you find something we haven't already.
-> > > > https://clangbuiltlinux.github.io/
-> > > > https://github.com/ClangBuiltLinux/linux/issues
-> > > 
-> > > What clang version?
-> > > 
-> > > Jason
-> > 
-> > You'll need clang-9 for x86 because of the asm-goto requirement (or a
-> > selective set of reverts for clang-8) but everything else should be
-> > good with clang-8:
-> 
-> The latest clang-9 packages from apt.llvm.org do seem to build the
-> kernel, I get one puzzling warning under RDMA:
-> 
-> drivers/infiniband/hw/hfi1/platform.o: warning: objtool: tune_serdes()+0x1f4: can't find jump dest instruction at .text+0x118a
+Do so and update the USB power supply to reflect
+the actual situation on the sbc-imx7 carrier board.
 
-Any particular config that I should use to easily reproduce this?
+Signed-off-by: André Draszik <git@andred.net>
+Cc: Ilya Ledvich <ilya@compulab.co.il>
+Cc: Igor Grinberg <grinberg@compulab.co.il>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 24 ------------------------
+ arch/arm/boot/dts/imx7d-sbc-imx7.dts    | 13 +++++++++++++
+ 2 files changed, 13 insertions(+), 24 deletions(-)
 
-> And a BPF one:
-> 
-> kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0xd: sibling call from callable instruction with modified stack frame
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+index 62d5e9a4a781..6f7e85cf0c28 100644
+--- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -22,15 +22,6 @@
+ 		device_type = "memory";
+ 		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
+ 	};
+-
+-	reg_usb_otg1_vbus: regulator-vbus {
+-		compatible = "regulator-fixed";
+-		regulator-name = "usb_otg1_vbus";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+-		enable-active-high;
+-	};
+ };
+ 
+ &cpu0 {
+@@ -193,13 +184,6 @@
+ 	status = "okay";
+ };
+ 
+-&usbotg1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_usbotg1>;
+-	vbus-supply = <&reg_usb_otg1_vbus>;
+-	status = "okay";
+-};
+-
+ &usdhc3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+@@ -278,11 +262,3 @@
+ 		>;
+ 	};
+ };
+-
+-&iomuxc_lpsr {
+-	pinctrl_usbotg1: usbotg1grp {
+-		fsl,pins = <
+-			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
+-		>;
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+index f8a868552707..aab646903de3 100644
+--- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+@@ -15,6 +15,14 @@
+ / {
+ 	model = "CompuLab SBC-iMX7";
+ 	compatible = "compulab,sbc-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
++
++	reg_usb_vbus: regulator-usb-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
+ };
+ 
+ &usdhc1 {
+@@ -26,6 +34,11 @@
+ 	status = "okay";
+ };
+ 
++&&usbotg1 {
++	vbus-supply = <&reg_usb_vbus>;
++	status = "okay";
++};
++
+ &iomuxc {
+ 	pinctrl_usdhc1: usdhc1grp {
+ 		fsl,pins = <
+-- 
+2.23.0.rc1
 
-I think this might be related to this?
-
-https://lore.kernel.org/lkml/cf0273fb-c272-72be-50f9-b25bb7c7f183@windriver.com/
-
-Cheers,
-Nathan
