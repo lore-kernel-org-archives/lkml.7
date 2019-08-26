@@ -2,195 +2,119 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A963BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283D4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B8E20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:50:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HWMFq+cz"
+	by mail.kernel.org (Postfix) with ESMTP id F417C21848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566838226;
+	bh=/JWCSqfQ4tLkHWbblH7A3gEnEXo0rRv/7eaJXLeukvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rmS1+smv8/mtOzAQ0ni1X0SSj5IwKZOTWyAZl7Bp4LpEBuTnXOEEXJ0sWaA+2SMKh
+	 uFk8rIedf8aZvAO2y/AyYcZOYB+zVTA/TfrQqVkVZc7mwr0CcXiQPYqMOzazTzqWWh
+	 BR6bql9av7bF1JS3HiPqvAd1Gj2rGle1mw/5Dl8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733299AbfHZQuC (ORCPT
+        id S1733307AbfHZQuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:50:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43332 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731578AbfHZQuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:50:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y8so15979441wrn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 09:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9O3VW3qz3WP/gvDFs/gxnhqdNJMrlfVE1S3aHZOLj9E=;
-        b=HWMFq+cz5DqcHZUfi0dmj3bx0hOg0UV25W7l6S656MlMQyKPXIcSUcrnzpLxkluIYh
-         OilnzePPW1Z6DjubzBLxs+3jW5nIc9WdTQnLjS5oJbRRdZK4303IVNDj1be+qElbZe0q
-         /pNOrM/MTeU3voPjffFv9+Zxh3dQEQX2NObtrbLh+9D13NA7qeiD+R6xCNOBYXKJ6XzY
-         ku73gyCf5EyxKwaH9e8nWcfrNquMFyPD9L7dsLYjorOlWRMX6dZE+KPXOIQDq4QP+mO+
-         R0UjhUAdcM79vu43aHBTs4bUFjC70Do/BKPxrxiLHzADeTtwg9KEvzGRTSooxslorgVu
-         SZ5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9O3VW3qz3WP/gvDFs/gxnhqdNJMrlfVE1S3aHZOLj9E=;
-        b=adanF1KHYE6u4RfJuz3W/gi824jJRqqCvH35IVFFKC+ryHa8pleUKvnyMRrHM8UPme
-         P/p6mwfnwwZCIc4Bsu43uAtTkiWSQp8tzAL9uLtFEFH3bw6b9K4F6PIrM3YHSLw/eGE3
-         0Lz+uHsrMyKdt7dYxgoZwGrQpo/J3hAert9kdXLtxmGnQEhOvO699VgF/R5ry35qc1h1
-         9diuP1FHtAQJN/U0wuvZMjFaIWJ6kAEnLWJcZcalqFR7D9uk9dm08+LNTv06ygCriRd6
-         JntRBlhH9ZYP03CghdOfwSZZhtHG9WDbJGtEs/5kts0npIkMa1XgGfjDNgJJHBSCLiD0
-         YbHw==
-X-Gm-Message-State: APjAAAVDU02+VDIWXVst6+grTUxVyfzpr3pxmXP09/O+VKAF9dFuJOyH
-        AyMUFz1C/vzJW46R+GTLYMfIVA==
-X-Google-Smtp-Source: APXvYqzZyta820DGKYuXk323AK7pGPLNWaOkL+Aei8zaUqk5nIuD17ybsHumS8O17dakMKqBLy73gw==
-X-Received: by 2002:adf:90e7:: with SMTP id i94mr22117449wri.224.1566838199090;
-        Mon, 26 Aug 2019 09:49:59 -0700 (PDT)
-Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id j20sm32590323wre.65.2019.08.26.09.49.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 09:49:58 -0700 (PDT)
-Subject: Re: [PATCH v4 00/13] Support CPU frequency scaling on QCS404
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-To:     bjorn.andersson@linaro.org, sboyd@kernel.org,
-        david.brown@linaro.org, jassisinghbrar@gmail.com,
-        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org,
-        will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au,
-        heiko@sntech.de, sibis@codeaurora.org,
-        enric.balletbo@collabora.com, jagan@amarulasolutions.com,
-        olof@lixom.net
-Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
-        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
- <f34a75d0-c479-267d-b4a1-c2418d4efb22@linaro.org>
-Message-ID: <0098ab9d-9abc-ac9d-5f36-67ad7cbc4f9c@linaro.org>
-Date:   Mon, 26 Aug 2019 18:49:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 26 Aug 2019 12:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729338AbfHZQuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:50:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8115420850;
+        Mon, 26 Aug 2019 16:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566838224;
+        bh=/JWCSqfQ4tLkHWbblH7A3gEnEXo0rRv/7eaJXLeukvg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cch9Lkn060b3M5FmvtgVjdEu4sANIukuEaOsZW26nUjq2HQapBYq+Lq5Gz3ePW+yE
+         R11lIuSM3MdvIDMwXgn1YKD38sgh5DhwgH/GD8aReh8qV2Jq3RFmW0FSslu6OJEGuv
+         V1w9lMprNWO+JqHsnsGBcFfzYceoq0Fo4Qpnw5Jo=
+Date:   Mon, 26 Aug 2019 18:50:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org, stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc: Allow flush_(inval_)dcache_range to work
+ across ranges >4GB
+Message-ID: <20190826165021.GB9305@kroah.com>
+References: <20190821001929.4253-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <f34a75d0-c479-267d-b4a1-c2418d4efb22@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821001929.4253-1-alastair@au1.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 08:54, Jorge Ramirez wrote:
-> On 7/31/19 22:29, Jorge Ramirez-Ortiz wrote:
->> The following patchset enables CPU frequency scaling support on the
->> QCS404 (with dynamic voltage scaling).
->>
->> It is important to notice that this functionality will be superseded
->> by Core Power Reduction (CPR), a more accurate form of AVS found on
->> certain Qualcomm SoCs.
->>
->> Some of the changes required to support CPR do conflict with the
->> configuration required for CPUFreq.
->>
->> In particular, the following commit for CPR - already merged - will
->> need to be reverted in order to enable CPUFreq.
->>
->>    Author: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->>    Date:   Thu Jul 25 12:41:36 2019 +0200
->>        cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
->>     
->> Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
->> in this platform, this PLL provides the clock signal to a CPU
->> core. But in others it might not.
->>
->> We opted for the minimal ammount of changes without affecting the
->> default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
->> framework and letting the firwmare chose whether to enable or disable
->> the clock at boot. However maybe a DT property and marking the clock
->> as critical would be more appropriate for this PLL. we'd appreciate the
->> maintainer's input on this topic.
->>
->> v2:
->>    - dts: ms8916: apcs mux/divider: new bindings
->>      (the driver can still support the old bindings)
->>
->>    - qcs404.dtsi
->>      fix apcs-hfpll definition
->>      fix cpu_opp_table definition
->>
->>    - GPLL0_AO_OUT operating frequency
->>      define new alpha_pll_fixed_ops to limit the operating frequency
->>
->> v3:
->>   - qcom-apcs-ipc-mailbox
->>     replace goto to ease readability
->>
->>   - apcs-msm8916.c
->>     rework patch to use of_clk_parent_fill
->>
->>   - hfpll.c
->>     add relevant comments to the code
->>
->>   - qcs404.dtsi
->>     add voltage scaling support
->>
->> v4:
->>  - squash OPP definition and DVFS enablement in dts
->>    (patches 10 and 13 in previous version)
->>    
->>  - qcom-apcs-ipc-mailbox
->>    replace return condition for readability
->>    
->>  - answer one question on CLK_IGNORE_UNUSED in mailing list
->>
->> Jorge Ramirez-Ortiz, Niklas Cassel (13):
->>   clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
->>   mbox: qcom: add APCS child device for QCS404
->>   mbox: qcom: replace integer with valid macro
->>   dt-bindings: mailbox: qcom: Add clock-name optional property
->>   clk: qcom: apcs-msm8916: get parent clock names from DT
->>   clk: qcom: hfpll: get parent clock names from DT
->>   clk: qcom: hfpll: register as clock provider
->>   clk: qcom: hfpll: CLK_IGNORE_UNUSED
->>   arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
->>   arm64: dts: qcom: qcs404: Add HFPLL node
->>   arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
->>   arm64: dts: qcom: qcs404: Add DVFS support
->>   arm64: defconfig: Enable HFPLL
->>
->>  .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
->>  arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
->>  arch/arm64/boot/dts/qcom/qcs404.dtsi          | 43 +++++++++++++++++++
->>  arch/arm64/configs/defconfig                  |  1 +
->>  drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
->>  drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
->>  drivers/clk/qcom/clk-alpha-pll.h              |  1 +
->>  drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
->>  drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
->>  drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 11 +++--
->>  10 files changed, 128 insertions(+), 13 deletions(-)
->>
+On Wed, Aug 21, 2019 at 10:19:27AM +1000, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> any feedback on this set?
+> The upstream commit:
+> 22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+> has a similar effect, but since it is a rewrite of the assembler to C, is
+> too invasive for stable. This patch is a minimal fix to address the issue in
+> assembler.
 > 
-> TIA
+> This patch applies cleanly to v5.2, v4.19 & v4.14.
 > 
+> When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+> off the upper 32 bits, so we would incorrectly flush a range smaller
+> than intended.
+> 
+> This patch replaces the 32 bit shifts with 64 bit ones, so that
+> the full size is accounted for.
+> 
+> Changelog:
+> v2
+>   - Add related upstream commit
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  arch/powerpc/kernel/misc_64.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+> index 1ad4089dd110..d4d096f80f4b 100644
+> --- a/arch/powerpc/kernel/misc_64.S
+> +++ b/arch/powerpc/kernel/misc_64.S
+> @@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
+>  	subf	r8,r6,r4		/* compute length */
+>  	add	r8,r8,r5		/* ensure we get enough */
+>  	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+> -	srw.	r8,r8,r9		/* compute line count */
+> +	srd.	r8,r8,r9		/* compute line count */
+>  	beqlr				/* nothing to do? */
+>  	mtctr	r8
+>  0:	dcbst	0,r6
+> @@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
+>  	subf	r8,r6,r4		/* compute length */
+>  	add	r8,r8,r5		/* ensure we get enough */
+>  	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+> -	srw.	r8,r8,r9		/* compute line count */
+> +	srd.	r8,r8,r9		/* compute line count */
+>  	beqlr				/* nothing to do? */
+>  	sync
+>  	isync
 
-trying to ease the maintainers task, I have resent the series split in
-three individual sets:
+I need an ack from the powerpc maintainer(s) before I can take this.
 
-- device tree
-- clk
-- mbox
+thanks,
 
-for full functionality obviously all of them are required
-
-please let me know if there is anything else I can do.
-
+greg k-h
