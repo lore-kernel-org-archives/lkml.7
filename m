@@ -2,111 +2,124 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00A2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D6FC41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81AF222D6D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566812798;
-	bh=nzPxJJoVZQWfnWhnchm+tFSlQxcNe6Q5yoB5jvZAjXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JPkuxcP2mZf9IVS4fX6QRzuRJjhWPQSInaxvE7aWNkgjytxcNvhhYfUjQjnKFpf5X
-	 xUlkjUqLKIl7SBu5XXiQkvMpJ3tKLruvtLRZKP5zC7nUkYlakmL8AgmVr6Yjx3+UsX
-	 pHNBhaVKo2pRfGDxTIhLLPWK69MSETO42dtGgyLk=
+	by mail.kernel.org (Postfix) with ESMTP id 2DF3A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJBPUqON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbfHZJqh (ORCPT
+        id S1731042AbfHZJra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:46:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43100 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfHZJqg (ORCPT
+        Mon, 26 Aug 2019 05:47:30 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:39251 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729922AbfHZJr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:46:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y8so14613928wrn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 02:46:35 -0700 (PDT)
+        Mon, 26 Aug 2019 05:47:29 -0400
+Received: by mail-lj1-f182.google.com with SMTP id x4so14447031ljj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 02:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EtvI0xSRTbvxcXYic0FI92pUdW0pAG1dUcejVq6p/a0=;
-        b=nMMgdW90B6mREM94Wnjb6J/NtiEXMgnCYkqIsTeG8ZVxudQTCRimYMKKjeA41Qbx+z
-         NDyTrVRAruJz8uSRiw4ZpZ2xLlCBIqC9f8cWCdI5uWC2FUeYqS/78HqGWVjaW+m0zLyB
-         teFfK1hIIYuBs8tjfSAXhYU7bigkvugQdPVj1dv41vHylKJ/0h6JpjfWvH8RVcREukUA
-         JC+Z0x/SFT9ZuCa8+at17UEo5ygDsJZR1BSULMOM1nCokd9L6TkfwX27OuFXZr272Bvc
-         x6sILs7fWGk3OIk//SSSWd17sJehPm5x6XqMtfTSTRDhqwjsHCRj/rZcorvKHzmz87na
-         Ctew==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=V4wnC1IESTIvccJjycijXVomS8LY+xe0wyWh2XpadOM=;
+        b=EJBPUqONNfST5dbaQN3WVBVLSK2FdlYkAB3W+e5L2SPL1yrC0uMz2eYkryWWZFfKJx
+         08KLHFLhiH6aUXuNCi2XiBqdXUESKNpaEAp3JOe9FJByq6vEQRNTugAAGzAXRQws+4RI
+         mU8/1T+qXoo6124lsJ2bXZtfB291e6OwieCYwon/dWML3a0lWiEH+DY4St+h21vjGzYl
+         ZgVzO+mgaFdBpLwsMuDmzhmf2fai/bBOMnH5b2PDVPExkoq2rajppnLJ4WBwoLlK27f0
+         dZGhouppmrP7Y8wZj6W1gBhXG34408H7o/gLZ9jfsS1pfU3ME6pXrT+//Fp6H25+xBbq
+         +n0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EtvI0xSRTbvxcXYic0FI92pUdW0pAG1dUcejVq6p/a0=;
-        b=CugjLfRlETneFvVE0TUKaA9rxELZVgVHY9qOig9jucOWq8/ZOb50S9u46bqTx1SpNo
-         uZzd1RUFtXJBKV2wP4RUoXd9tn0hLoykyAXabHxfjnCzQVV7wQRO38x1Q0MV/c1YVJZU
-         IbxBQd2wWjgQjtQiXeXu/RAYFrkIIchK9NMXkTPsOefziBCGC7OfOr6YhFpuoBlBOPXM
-         DB1Z7PtdDRloxqvn7W7JiOSFzuBzRumV37HRJgccY954d1Xl7yxb4JsOEAF/LzkhMLzU
-         /Bb2oQTHhb9hZ+c1/j9zYAyNof9ZpFkHp+CSVp1EXJ9qU/8+vrt9NY2a8kD/6eeUux+g
-         liJA==
-X-Gm-Message-State: APjAAAWusufya1OQGhx8qYa3PqvosbR3zTRv/YR9e55fzbiI7OuaV0Cc
-        EbXgZqjZwDrtl34Fo/I5r+A=
-X-Google-Smtp-Source: APXvYqwO6eMiQmbEfkWXa6AlEtTLxRUvX6V8tlSua2Fm7tbdYa00tX8CJiZANRnipEKZVd3CuLsJfA==
-X-Received: by 2002:a5d:4101:: with SMTP id l1mr22205654wrp.202.1566812794994;
-        Mon, 26 Aug 2019 02:46:34 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 2sm15457478wmz.16.2019.08.26.02.46.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 02:46:34 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 11:46:32 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH 4/5] x86/intel: Aggregate microserver naming
-Message-ID: <20190826094632.GA65121@gmail.com>
-References: <20190822102306.109718810@infradead.org>
- <20190822102411.337145504@infradead.org>
- <20190826092750.GA56543@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=V4wnC1IESTIvccJjycijXVomS8LY+xe0wyWh2XpadOM=;
+        b=uggRYVBoRxQOgj1BLr/WUm9HNTzRu+B9HmRUT/aSGY1reAWUEtJKQQc+lpDyCt+b/5
+         WGygljrvgEOF1f1uNFyHZkEf7Azi4WFmjnj/xxpGAJLMaZxY3OOLX3b7SeXcwkDGApTj
+         X3nn/B5JcukyB7cKqralykyKb1lB2C5MvNfSmm3n69kHNmijaxzNF89U+x5nx/Yu+tyc
+         +rajIh5TitHcspRHBD9bTNz2MefamtO74iuQZl2ytZhBJblnrKJmYIShTj/EcTTECzZl
+         P5g3MFtVta8VgOfa/AQt9FMgD0zH8aaSWpZYER2ltKXYW3IwoJuh3hEL9Z1lNcMJIRTu
+         ynrQ==
+X-Gm-Message-State: APjAAAW0CnTEAFi3jQkRQZ8Tv1yB7rDWtoJrd6SZGg20OIe6bf1pttE4
+        ai7WGWxlirq/rOId+zvZqxUxZCDhZaZmWJ3Fp57wBPGOswI=
+X-Google-Smtp-Source: APXvYqymkztdlCAHqJp6WG1YtlxHoUjq6nFfsqaRgdYCw2b5Y7d3wdgrnYU4I272qiRDH+DdWgFa1C71lRg4iAGcgcw=
+X-Received: by 2002:a2e:f19:: with SMTP id 25mr9882288ljp.149.1566812847394;
+ Mon, 26 Aug 2019 02:47:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826092750.GA56543@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 26 Aug 2019 15:17:16 +0530
+Message-ID: <CA+G9fYtN2tjHZtjtc8isdsD5hF76teeh2-pngUp+uj3WYdj7jA@mail.gmail.com>
+Subject: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed to run
+ cmd: useradd hsym
+To:     ltp@lists.linux.it,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        alexey.kodanev@oracle.com, the_hoang0709@yahoo.com
+Cc:     Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Do you see this LTP prot_hsymlinks failure on linux next 20190823 on
+x86_64 and i386 devices?
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+test output log,
+useradd: failure while writing changes to /etc/passwd
+useradd: /home/hsym was created, but could not be removed
+userdel: user 'hsym' does not exist
+prot_hsymlinks    1  TBROK  :  prot_hsymlinks.c:325: Failed to run
+cmd: useradd hsym
+prot_hsymlinks    2  TBROK  :  prot_hsymlinks.c:325: Remaining cases broken
+prot_hsymlinks    3  TBROK  :  prot_hsymlinks.c:325: Failed to run
+cmd: userdel -r hsym
+prot_hsymlinks    4  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
+prot_hsymlinks    5  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
+prot_hsymlinks    6  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
+prot_hsymlinks    7  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
+prot_hsymlinks    8  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
+prot_hsymlinks    9  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
+prot_hsymlinks   10  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid = 8324).
 
->  arch/x86/kernel/cpu/common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Full test log,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190823/testrun/886412/log
 
-Plus this too:
+Linux version:
+Linux version 5.3.0-rc5-next-20190823 (oe-user@oe-host) (gcc version
+7.3.0 (GCC)) #1 SMP Fri Aug 23 09:35:54 UTC 2019
 
----
- drivers/edac/sb_edac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+steps to reproduce:
+   cd /opt/ltp
+   ./runltp -s prot_hsymlinks
 
-diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-index 37746b045e18..f743502ca9b7 100644
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -3429,7 +3429,7 @@ static const struct x86_cpu_id sbridge_cpuids[] = {
- 	INTEL_CPU_FAM6(IVYBRIDGE_X,	  pci_dev_descr_ibridge_table),
- 	INTEL_CPU_FAM6(HASWELL_X,	  pci_dev_descr_haswell_table),
- 	INTEL_CPU_FAM6(BROADWELL_X,	  pci_dev_descr_broadwell_table),
--	INTEL_CPU_FAM6(BROADWELL_XEON_D,  pci_dev_descr_broadwell_table),
-+	INTEL_CPU_FAM6(BROADWELL_D,	  pci_dev_descr_broadwell_table),
- 	INTEL_CPU_FAM6(XEON_PHI_KNL,	  pci_dev_descr_knl_table),
- 	INTEL_CPU_FAM6(XEON_PHI_KNM,	  pci_dev_descr_knl_table),
- 	{ }
+metadata:
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 9733a7c62c66722bcfdb1a6fe4d35c497312d59a
+  git describe: next-20190823
+  make_kernelversion: 5.3.0-rc5
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/591/config
+  build-location:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/591
+  toolchain: x86_64-linaro-linux 7.%
+  series: lkft
+  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-syscalls-tests__version: '20190517'
 
+Best regards
+Naresh Kamboju
