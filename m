@@ -2,100 +2,86 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7369FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FEBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4209C2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E802173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbfHZQTd (ORCPT
+        id S1732709AbfHZQUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:19:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:53657 "EHLO mga09.intel.com"
+        Mon, 26 Aug 2019 12:20:25 -0400
+Received: from muru.com ([72.249.23.125]:58680 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731762AbfHZQTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:19:33 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 09:19:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="355476615"
-Received: from mgross-mobl.amr.corp.intel.com (HELO localhost) ([10.7.198.58])
-  by orsmga005.jf.intel.com with ESMTP; 26 Aug 2019 09:19:31 -0700
-Date:   Mon, 26 Aug 2019 09:19:31 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 01/16] stop_machine: Fix stop_cpus_in_progress
- ordering
-Message-ID: <20190826161929.GB2680@u1904>
-Reply-To: mgross@linux.intel.com
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <0fd8fd4b99b9b9aa88d8b2dff897f7fd0d88f72c.1559129225.git.vpillai@digitalocean.com>
+        id S1731965AbfHZQUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:20:25 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6611780AA;
+        Mon, 26 Aug 2019 16:20:53 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 09:20:21 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: omap2: move platform-specific asm-offset.h to
+ arch/arm/mach-omap2
+Message-ID: <20190826162021.GW52127@atomide.com>
+References: <20190823025808.11875-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0fd8fd4b99b9b9aa88d8b2dff897f7fd0d88f72c.1559129225.git.vpillai@digitalocean.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190823025808.11875-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:36:37PM +0000, Vineeth Remanan Pillai wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
+* Masahiro Yamada <yamada.masahiro@socionext.com> [190822 19:59]:
+> <generated/ti-pm-asm-offsets.h> is only generated and included by
+> arch/arm/mach-omap2/, so it does not need to reside in the globally
+> visible include/generated/.
 > 
-> Make sure the entire for loop has stop_cpus_in_progress set.
-It is not clear how this commit comment matches the change.  Please explain
-how adding 2 barrier's makes sure stop_cpus_in_progress is set for the entier
-for loop.
+> I renamed it to arch/arm/mach-omap2/pm-asm-offsets.h since the prefix
+> 'ti-' is just redundant in mach-omap2/.
+> 
+> My main motivation of this change is to avoid the race condition for
+> the parallel build (-j) when CONFIG_IKHEADERS is enabled.
+> 
+> When it is enabled, all the headers under include/ are archived into
+> kernel/kheaders_data.tar.xz and exposed in the sysfs.
+> 
+> In the parallel build, we have no idea in which order files are built.
+> 
+>  - If ti-pm-asm-offsets.h is built before kheaders_data.tar.xz,
+>    the header will be included in the archive. Probably nobody will
+>    use it, but it is harmless except that it will increase the archive
+>    size needlessly.
+> 
+>  - If kheaders_data.tar.xz is built before ti-pm-asm-offsets.h,
+>    the header will not be included in the archive. However, in the next
+>    build, the archive will be re-generated to include the newly-found
+>    ti-pm-asm-offsets.h. This is not nice from the build system point
+>    of view.
+> 
+>  - If ti-pm-asm-offsets.h and kheaders_data.tar.xz are built at the
+>    same time, the corrupted header might be included in the archive,
+>    which does not look nice either.
+> 
+> This commit fixes the race.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Tested-by: Keerthy <j-keerthy@ti.com>
 
---mark
+Applying into omap-for-v5.4/soc thanks. The commit is on top of
+v5.3-rc1 so it can be merged into other branches if needed after
+it's been sitting in Linux next for few days with no issues.
 
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/stop_machine.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-> index 067cb83f37ea..583119e0c51c 100644
-> --- a/kernel/stop_machine.c
-> +++ b/kernel/stop_machine.c
-> @@ -375,6 +375,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
->  	 */
->  	preempt_disable();
->  	stop_cpus_in_progress = true;
-> +	barrier();
->  	for_each_cpu(cpu, cpumask) {
->  		work = &per_cpu(cpu_stopper.stop_work, cpu);
->  		work->fn = fn;
-> @@ -383,6 +384,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
->  		if (cpu_stop_queue_work(cpu, work))
->  			queued = true;
->  	}
-> +	barrier();
->  	stop_cpus_in_progress = false;
->  	preempt_enable();
->  
-> -- 
-> 2.17.1
-> 
+Regards,
+
+Tony
