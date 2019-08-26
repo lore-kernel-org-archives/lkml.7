@@ -2,151 +2,124 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC54C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61805C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DDB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3932F206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t134rvZI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVUbd+Mg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbfHZIRB (ORCPT
+        id S1729992AbfHZISP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:17:01 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42451 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfHZIRA (ORCPT
+        Mon, 26 Aug 2019 04:18:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46021 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfHZISO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:17:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b16so14361505wrq.9;
-        Mon, 26 Aug 2019 01:16:59 -0700 (PDT)
+        Mon, 26 Aug 2019 04:18:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w26so11286583pfq.12;
+        Mon, 26 Aug 2019 01:18:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=74z3xC3VYXkmWGZRy7p/H1mcXDigxEXrzEQ/VRALV90=;
-        b=t134rvZIqCmnE4kK/Anpve2nGoJbmL0iesSXud7v4ukoFsEU24csoNqYbD5s4SsFir
-         4f7E5kJmjCIFLnhPRU+woyVShN4NrouLLpEUHhT44Xh5hShzrB1kimL0i1cUsMb4BHbB
-         +nEkuY0r7dJZ03VdwDkfXX6tTU+T/LcVrazD0eeFNcIWIx01ccxsnEq2oLlyF3vwYvS+
-         ZZpJxpTlYJLXDXWpyp9hbjpgKfs33nPJWjbcSE7LMrV2V0CKkbB9mnEWaRLrYiEz7fY5
-         EgBnvWrGethXwXfFZASM4VLO66RwZC/wJuy1Wx5HZjmS6+KW176zjRdVAF98Sv/jljHP
-         eZMg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jW9bYxQJkfLp7wpntwTOmna5SElP56fVw11ZQunJKcU=;
+        b=rVUbd+MgVjA21mEQTHpwbKMSZHc2/kO9U5V5cgA37bDYREawnyGZwrtA1p/5p67eTu
+         mR1IFCEtmnbHI0An6b/iJVtgU73tWAb0WK6Pg3tk64/TUmfGmrQm2pGCAOqpI7dvpEOh
+         q02SWQ3ZbTdagNUJRdSPoDgFm1x3bcdvp5NpBCtKkET/5PF0CPo4gSMdyYkNoSMsJFcP
+         NyxyTRI4G7bATv8OcEtBp3nG0Of5kjJXpxpAq8lFdVXu/ka0Ff9lKULbG0wP9eIWcD8f
+         ibI0HojOmbB16bpAEBYn7yB6CCvizQjA37BP19FALKHIUOcRJH64WqWteH7CzgyLBNVs
+         Lvgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=74z3xC3VYXkmWGZRy7p/H1mcXDigxEXrzEQ/VRALV90=;
-        b=rSzEoz6kCh2jIMmDI6KqBnPSyg0PHNfziphUZmA2SOr9HfRhEVQDl4Nu1/gAk4D4Wx
-         0lsWTL+KgTo6RqpIjLVyK2KraC92+JLrdlIO9t3u/7uOMJfayg0glf4nRAhOv3f1wy2c
-         gfaswvoLTYspqL/cDSKpT1Dnvu2PezUye+RMZpupV/QT/99gqcK6xKODmYDSNDOM5R3l
-         IioXB51+H1/fiuv2wjz9MmPOSCPX+aVLnzWH6BKgixsjcT5KZV5TGajWzYXDRSb9y5tP
-         npRgkHYpx436jVis4GVBeL+sWf4rOG2lJ74ybo+V8cPzOwqy/A37sRoWriHGwWCdXyNu
-         tWfA==
-X-Gm-Message-State: APjAAAW/MxxHxKVmZe1H3SgfjW66fP/DtVUNzWLhVE7nWgyI58M1KMUC
-        a0HGxms3HEr26l/v3OXMRWhIZhtD
-X-Google-Smtp-Source: APXvYqzT7TpOrHR1CFu32oOsdZKish5+16FKx5Gd0NcsENim33I574EURNQLyIKUAfie7c48Rv2Htg==
-X-Received: by 2002:adf:e708:: with SMTP id c8mr21024163wrm.25.1566807418720;
-        Mon, 26 Aug 2019 01:16:58 -0700 (PDT)
-Received: from [192.168.8.147] (220.171.185.81.rev.sfr.net. [81.185.171.220])
-        by smtp.gmail.com with ESMTPSA id 5sm9505091wmg.42.2019.08.26.01.16.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 01:16:58 -0700 (PDT)
-Subject: Re: [PATCH] net: Adding parameter detection in
- __ethtool_get_link_ksettings.
-To:     Dongxu Liu <liudongxu3@huawei.com>, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190826072332.14736-1-liudongxu3@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <aa0a372e-a169-7d78-0782-505cbdab8f90@gmail.com>
-Date:   Mon, 26 Aug 2019 10:16:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=jW9bYxQJkfLp7wpntwTOmna5SElP56fVw11ZQunJKcU=;
+        b=cni5NqflZvfem8Xc++Bu95ACjXQbY2kqhECdsXfAP4+c3vqK76DzpdedzJgPNK7JDu
+         dlIe9ZlXLKAcQinjbKHQCq7bqa2oBA3n80yfvnx5bXVSTdpMn5HIfYxfO4VRv7MIkIhV
+         s37sHsYhdT2QoLsAZSvudd1hqfFY5JcYLSKpJg3OWlP+JzbicI72xbx2552F2uJNa8QG
+         718DvTNAz1OOkg2ER6nkrblxkkQhezkxWUUizJT/67ZkceM5L+MDJMHCjiLqZvfoogBa
+         pfu5bEVWX51dFUNj+TCHgTNIcLmqtslxxQtMN8KK0UQ0a+hLpuFg6WX2l2KmwAqRFDBM
+         RS1g==
+X-Gm-Message-State: APjAAAWZXlrzRaZs5EaitFFMLH7aAkkSe++A6odKpMmXgtVAHxlcWpdm
+        LMvuxt1ZzWSCu7iEua/xsag=
+X-Google-Smtp-Source: APXvYqwxdLeOUYG5cZxpQGxAmNPAJfgixOy2fRyJ+WwV1oe/0sRqak7qEwUxR3bq214I8IQIYO6Yuw==
+X-Received: by 2002:aa7:8a47:: with SMTP id n7mr2473370pfa.182.1566807493764;
+        Mon, 26 Aug 2019 01:18:13 -0700 (PDT)
+Received: from localhost.localdomain ([175.203.71.146])
+        by smtp.googlemail.com with ESMTPSA id f7sm10407976pfd.43.2019.08.26.01.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 01:18:13 -0700 (PDT)
+From:   Seunghun Han <kkamagui@gmail.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     mjg59@srcf.ucam.org, Peter Huewe <peterhuewe@gmx.de>,
+        linux-integrity@vger.kernel.org (open list:TPM DEVICE DRIVER),
+        linux-kernel@vger.kernel.org, Seunghun Han <kkamagui@gmail.com>
+Subject: [PATCH] x86: tpm: Remove a busy bit of the NVS area for supporting AMD's fTPM
+Date:   Mon, 26 Aug 2019 17:17:52 +0900
+Message-Id: <20190826081752.57258-1-kkamagui@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190826072332.14736-1-liudongxu3@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I'm Seunghun Han and work at the Affiliated Institute of ETRI. I got
+an AMD system which had a Ryzen Threadripper 1950X and MSI mainboard, and
+I had a problem with AMD's fTPM. My machine showed an error message below,
+and the fTPM didn't work because of it.
 
+[  5.732084] tpm_crb MSFT0101:00: can't request region for resource
+             [mem 0x79b4f000-0x79b4ffff]
+[  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
 
-On 8/26/19 9:23 AM, Dongxu Liu wrote:
-> The __ethtool_get_link_ksettings symbol will be exported,
-> and external users may use an illegal address.
-> We should check the parameters before using them,
-> otherwise the system will crash.
-> 
-> [ 8980.991134] BUG: unable to handle kernel NULL pointer dereference at           (null)
-> [ 8980.993049] IP: [<ffffffff8155aca7>] __ethtool_get_link_ksettings+0x27/0x140
-> [ 8980.994285] PGD 0
-> [ 8980.995013] Oops: 0000 [#1] SMP
-> [ 8980.995896] Modules linked in: sch_ingress ...
-> [ 8981.013220] CPU: 3 PID: 25174 Comm: kworker/3:3 Tainted: G           O   ----V-------   3.10.0-327.36.58.4.x86_64 #1
-> [ 8981.017667] Workqueue: events linkwatch_event
-> [ 8981.018652] task: ffff8800a8348000 ti: ffff8800b045c000 task.ti: ffff8800b045c000
-> [ 8981.020418] RIP: 0010:[<ffffffff8155aca7>]  [<ffffffff8155aca7>] __ethtool_get_link_ksettings+0x27/0x140
-> [ 8981.022383] RSP: 0018:ffff8800b045fc88  EFLAGS: 00010202
-> [ 8981.023453] RAX: 0000000000000000 RBX: ffff8800b045fcac RCX: 0000000000000000
-> [ 8981.024726] RDX: ffff8800b658f600 RSI: ffff8800b045fcac RDI: ffff8802296e0000
-> [ 8981.026000] RBP: ffff8800b045fc98 R08: 0000000000000000 R09: 0000000000000001
-> [ 8981.027273] R10: 00000000000073e0 R11: 0000082b0cc8adea R12: ffff8802296e0000
-> [ 8981.028561] R13: ffff8800b566e8c0 R14: ffff8800b658f600 R15: ffff8800b566e000
-> [ 8981.029841] FS:  0000000000000000(0000) GS:ffff88023ed80000(0000) knlGS:0000000000000000
-> [ 8981.031715] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 8981.032845] CR2: 0000000000000000 CR3: 00000000b39a9000 CR4: 00000000003407e0
-> [ 8981.034137] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [ 8981.035427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [ 8981.036702] Stack:
-> [ 8981.037406]  ffff8800b658f600 0000000000009c40 ffff8800b045fce8 ffffffffa047a71d
-> [ 8981.039238]  000000000000004d ffff8800b045fcc8 ffff8800b045fd28 ffffffff815cb198
-> [ 8981.041070]  ffff8800b045fcd8 ffffffff810807e6 00000000e8212951 0000000000000001
-> [ 8981.042910] Call Trace:
-> [ 8981.043660]  [<ffffffffa047a71d>] bond_update_speed_duplex+0x3d/0x90 [bonding]
-> [ 8981.045424]  [<ffffffff815cb198>] ? inetdev_event+0x38/0x530
-> [ 8981.046554]  [<ffffffff810807e6>] ? put_online_cpus+0x56/0x80
-> [ 8981.047688]  [<ffffffffa0480d67>] bond_netdev_event+0x137/0x360 [bonding]
-> ...
-> 
-> Signed-off-by: Dongxu Liu <liudongxu3@huawei.com>
-> ---
->  net/core/ethtool.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> index 6288e69..9a50b64 100644
-> --- a/net/core/ethtool.c
-> +++ b/net/core/ethtool.c
-> @@ -545,6 +545,8 @@ int __ethtool_get_link_ksettings(struct net_device *dev,
->  {
->  	ASSERT_RTNL();
->  
-> +	if (!dev || !dev->ethtool_ops)
-> +		return -EOPNOTSUPP;
+When I saw the e820 map and iomem, I found two fTPM regions were in
+the ACPI NVS area. The regions are below.
 
-I do not believe dev can possibly be NULL at this point.
+79a39000-79b6afff : ACPI Non-volatile Storage
+  79b4b000-79b4bfff : MSFT0101:00
+  79b4f000-79b4ffff : MSFT0101:00
 
->  	if (!dev->ethtool_ops->get_link_ksettings)
->  		return -EOPNOTSUPP;
->  
-> 
+After analyzing this issue, I found out that a busy bit was set to
+the ACPI NVS area, and the Linux kernel didn't allow the TPM CRB driver
+to assign CRB regions in it.
 
-I tried to find an appropriate Fixes: tag.
+To support AMD's fTPM, I removed the busy bit from the ACPI NVS area like
+the reserved area so that AMD's fTPM regions could be assigned in it.
 
-It seems this particular bug was added either by
+Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+---
+ arch/x86/kernel/e820.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Fixes: 9856909c2abb ("net: bonding: use __ethtool_get_ksettings")
-
-or generically in :
-
-Fixes: 3f1ac7a700d0 ("net: ethtool: add new ETHTOOL_xLINKSETTINGS API")
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 7da2bcd2b8eb..0d721df8900e 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1085,11 +1085,12 @@ static bool __init do_mark_busy(enum e820_type type, struct resource *res)
+ 	case E820_TYPE_RESERVED:
+ 	case E820_TYPE_PRAM:
+ 	case E820_TYPE_PMEM:
++	/* AMD's fTPM regions are in the ACPI NVS area */
++	case E820_TYPE_NVS:
+ 		return false;
+ 	case E820_TYPE_RESERVED_KERN:
+ 	case E820_TYPE_RAM:
+ 	case E820_TYPE_ACPI:
+-	case E820_TYPE_NVS:
+ 	case E820_TYPE_UNUSABLE:
+ 	default:
+ 		return true;
+-- 
+2.21.0
 
