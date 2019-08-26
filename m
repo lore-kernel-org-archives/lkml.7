@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E62C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DE9C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14DDE20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D0720578
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfHZJII (ORCPT
+        id S1730663AbfHZJJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:08:08 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57730 "EHLO
+        Mon, 26 Aug 2019 05:09:02 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50884 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730398AbfHZJII (ORCPT
+        with ESMTP id S1730398AbfHZJJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:08:08 -0400
+        Mon, 26 Aug 2019 05:09:02 -0400
 Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id d8ba70a02171e7a4; Mon, 26 Aug 2019 11:08:06 +0200
+ id 3eeff57f6b629e63; Mon, 26 Aug 2019 11:09:00 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Len Brown <lenb@kernel.org>,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ACPI/PCI: Remove surplus parentheses from a return statement
-Date:   Mon, 26 Aug 2019 11:08:05 +0200
-Message-ID: <7668317.L8HZQqbgEq@kreacher>
-In-Reply-To: <20190819135324.29504-1-kw@linux.com>
-References: <20190819135324.29504-1-kw@linux.com>
+Subject: Re: [PATCH -next] ACPI: SBS: remove unused variable 'SMBUS_PEC'
+Date:   Mon, 26 Aug 2019 11:08:59 +0200
+Message-ID: <174115399.5Pdya9bJQt@kreacher>
+In-Reply-To: <20190822144346.12028-1-yuehaibing@huawei.com>
+References: <20190822144346.12028-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -41,41 +40,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, August 19, 2019 3:53:24 PM CEST Krzysztof Wilczynski wrote:
-> Remove unnecessary parentheses enclosing the value in a return
-> statement in the drivers/acpi/pci_link.c.
+On Thursday, August 22, 2019 4:43:46 PM CEST YueHaibing wrote:
+> drivers/acpi/sbshc.h:18:17: warning:
+>  SMBUS_PEC defined but not used [-Wunused-const-variable=]
 > 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> SMBUS_PEC is never used since introduction in
+> commit 91087dfa51a2 ("ACPI: SBS: Split host
+> controller (ACPI0001) from SBS driver (ACPI0002)"),
+> so just remove it.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/acpi/pci_link.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/acpi/sbshc.h | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index db11f7771ef1..00a6da2121be 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -661,7 +661,7 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
->  	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
->  			  "Link %s is referenced\n",
->  			  acpi_device_bid(link->device)));
-> -	return (link->irq.active);
-> +	return link->irq.active;
->  }
+> diff --git a/drivers/acpi/sbshc.h b/drivers/acpi/sbshc.h
+> index 06372a3..c3522bb 100644
+> --- a/drivers/acpi/sbshc.h
+> +++ b/drivers/acpi/sbshc.h
+> @@ -15,8 +15,6 @@ enum acpi_smb_protocol {
+>  	SMBUS_BLOCK_PROCESS_CALL = 0xd,
+>  };
 >  
->  /*
-> @@ -712,7 +712,7 @@ int acpi_pci_link_free_irq(acpi_handle handle)
->  		acpi_evaluate_object(link->device->handle, "_DIS", NULL, NULL);
->  
->  	mutex_unlock(&acpi_link_lock);
-> -	return (link->irq.active);
-> +	return link->irq.active;
->  }
->  
->  /* --------------------------------------------------------------------------
+> -static const u8 SMBUS_PEC = 0x80;
+> -
+>  enum acpi_sbs_device_addr {
+>  	ACPI_SBS_CHARGER = 0x9,
+>  	ACPI_SBS_MANAGER = 0xa,
 > 
 
 Applied, thanks!
-
 
 
 
