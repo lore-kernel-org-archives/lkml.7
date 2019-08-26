@@ -2,85 +2,80 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BEDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148CAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CA521872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566855716;
-	bh=E5K9lnKrRzdVRyjayweCBoAWKKLWCWmwI1ZXdq/wbQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m9MCbtnyJtmvbIGKebQ6M7CY+rcFdz8zCCfJhWbcDCMhFaYtTsMJcDMOgdIDiR+Zp
-	 1+KeZbEulfJaGUPJJ65x/ZgEKjPx/c2OEjTUhEjMEb7MVVupZVKJvtSuRi2MXxeh2H
-	 +lNcUn2BAQwGs0Qo3usbKTrob+ICL22lDvFJQ2q4=
+	by mail.kernel.org (Postfix) with ESMTP id E4406217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfHZVlz (ORCPT
+        id S1726816AbfHZVq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 17:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbfHZVly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 17:41:54 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98202217F5;
-        Mon, 26 Aug 2019 21:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566855714;
-        bh=E5K9lnKrRzdVRyjayweCBoAWKKLWCWmwI1ZXdq/wbQc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ghC7AwZcI2nNQBmrTq0dJxOSGYWrNe/A+OTDoPCeyzMhB4mLEqngfhKFqV/EU3zh3
-         vWd3cHffZtlgNo5PbtcvQya/GokLs5wWRS3Uv6gj7+nX+gkRNijhhep74J3CqMRVst
-         PbMCuKSujXwa3fL80vx9xnolhmX4L2prYCB++CpU=
-Date:   Mon, 26 Aug 2019 23:41:51 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mon, 26 Aug 2019 17:46:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41337 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHZVqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 17:46:25 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2Moh-00063e-FC; Mon, 26 Aug 2019 23:46:23 +0200
+Date:   Mon, 26 Aug 2019 23:46:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         John Stultz <john.stultz@linaro.org>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [patch V2 31/38] rlimit: Rewrite non-sensical RLIMIT_CPU comment
-Message-ID: <20190826214151.GF14309@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192922.185511287@linutronix.de>
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 28/38] posix-cpu-timers: Restructure expiry array
+In-Reply-To: <20190826210639.GC14309@lenoir>
+Message-ID: <alpine.DEB.2.21.1908262345430.1939@nanos.tec.linutronix.de>
+References: <20190821190847.665673890@linutronix.de> <20190821192921.895254344@linutronix.de> <20190826210639.GC14309@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192922.185511287@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:09:18PM +0200, Thomas Gleixner wrote:
-> The comment above the function which arms RLIMIT_CPU in the posix CPU timer
-> code makes no sense at all. It claims that the kernel does not return an
-> error code when it rejected the attempt to set RLIMIT_CPU. That's clearly
-> bogus as the code does an error check and the rlimit is only set and
-> activated when the permission checks are ok. In case of a rejection an
-> appropriate error code is returned.
+On Mon, 26 Aug 2019, Frederic Weisbecker wrote:
+> On Wed, Aug 21, 2019 at 09:09:15PM +0200, Thomas Gleixner wrote:
+> > @@ -884,7 +888,7 @@ static void check_process_timers(struct
+> >  				 struct list_head *firing)
+> >  {
+> >  	struct signal_struct *const sig = tsk->signal;
+> > -	struct list_head *timers = sig->posix_cputimers.cpu_timers;
+> > +	struct posix_cputimer_base *base = sig->posix_cputimers.bases;
+> >  	u64 utime, ptime, virt_expires, prof_expires;
+> >  	u64 sum_sched_runtime, sched_expires;
+> >  	struct task_cputime cputime;
+> > @@ -912,9 +916,12 @@ static void check_process_timers(struct
+> >  	ptime = utime + cputime.stime;
+> >  	sum_sched_runtime = cputime.sum_exec_runtime;
+> >  
+> > -	prof_expires = check_timers_list(timers, firing, ptime);
+> > -	virt_expires = check_timers_list(++timers, firing, utime);
+> > -	sched_expires = check_timers_list(++timers, firing, sum_sched_runtime);
+> > +	prof_expires = check_timers_list(&base[CPUCLOCK_PROF].cpu_timers,
+> > +					 firing, ptime);
+> > +	virt_expires = check_timers_list(&base[CPUCLOCK_VIRT].cpu_timers,
+> > +					 firing, utime);
+> > +	sched_expires = check_timers_list(&base[CLPCLOCK_SCHED].cpu_timers,
 > 
-> This is a historical and outdated comment which got dragged along even when
-> the rlimit handling code was rewritten.
-> 
-> Replace it with an explanation why the setup function is not called when
-> the rlimit value is RLIM_INFINITY and how the 'disarming' is handled.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
+>                                                 ^^
+> 0-day bot should have warned by now.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+It didn't but my own testing found it and I fixed it locally already
+
