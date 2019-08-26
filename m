@@ -2,137 +2,380 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DX_TEXT_01,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121D4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B518C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC09E20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A62C217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="DR/TKeJF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJZKzqyl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387633AbfHZUIa (ORCPT
+        id S2387748AbfHZUMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:08:30 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:24215 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731657AbfHZUI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:08:29 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46HNNq2jq9z9v77Z;
-        Mon, 26 Aug 2019 22:08:27 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=DR/TKeJF; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 8QQW6YTC9plx; Mon, 26 Aug 2019 22:08:27 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46HNNq1Qr4z9v77Y;
-        Mon, 26 Aug 2019 22:08:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566850107; bh=pzWzILPxMyKOA9y6iRNb3YNvFsFY3QJWvZHmkH55InM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DR/TKeJFIZ2zFnQt0K+Kd5HRxKtCFXYE6wfuC661krDwU79ca9L7agaNiiT6Ee0rS
-         AdNW5gGyiSFiHeb1cMVZ6HGp58DLprwlLV3S78xiyj3rGjj1oAJm87NyUxvz1yuwUw
-         WZg6G9wrZOXqv0W825akEKDADsIYTYNbaUImFgl0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4D4BB8B7F2;
-        Mon, 26 Aug 2019 22:08:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id U09PT5UgfaFZ; Mon, 26 Aug 2019 22:08:27 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 981A88B7E1;
-        Mon, 26 Aug 2019 22:08:26 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc: Allow flush_(inval_)dcache_range to work
- across ranges >4GB
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-References: <20190821001929.4253-1-alastair@au1.ibm.com>
- <20190826165021.GB9305@kroah.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <bae6de93-f135-68c5-9118-a0732e6de301@c-s.fr>
-Date:   Mon, 26 Aug 2019 22:08:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 16:12:39 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35273 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729777AbfHZUMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:12:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l14so16307067lje.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EkSa8I3EjzWT4qDMRwq9SJtHrnK2UMPfSG4QRztacug=;
+        b=TJZKzqyliKXPiDrlGt6pW0gVr/gk+mwIU+cAefPOSmJpKEGeJmVJF7DPOGmN0/gNVU
+         +1emXGTJMcjp7+PKi41aig8zZT4EHjCwjCmklP5oOn/OZQxg5ITvwDzP5qZ6KAVMVE6L
+         ff+7wsC/F3tVSiTsa/ZHONuWh23Wxf3Q/A/QLEBaWUuEhfLGSAmJHkI/Rd66VGU6HgeS
+         h89Ubgrwxpon0wlUTxkFmDYsosVuFufFUHgT3xIu2gnSRY5BUOZ/hT4wzayxN9iYbvCr
+         midUIUz2xo2eKikbyLrduyJSJBXEP/GnRvxjPbPlQQ+H9F+XE0oL7hVNo7ZlBtwsglud
+         DTnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EkSa8I3EjzWT4qDMRwq9SJtHrnK2UMPfSG4QRztacug=;
+        b=GOTrYUxOAt3g9bWX0M0NG48k9O/Q9btOelPFAn5O4tXtoGYvBEn1zG6l7c1rPtyXoU
+         1MkMAlY9y7KgOrZrrU+8LAhoEeNfqdQOAMEFl1EuTrtzAtcMZ89SaJu2uFJj430KPgnl
+         marjq6cduOdbQpjsO9Q/g0HMjAFHcrdmQ+hbs4phClnnAWwzoovTrjlmRXllY7h9a8G3
+         WVLQj+pTBRAKfL9hRAKLVhq5bPYgSp78bsxwDNbIO/zVlIrGBso9ci36l5YwU3NUdTjx
+         oFYGjtnrqrS7j4dEAVinZzmYLqLBVPYito8mO565Mit+Q95kY3KR/t6+ta4F4nulT2Zd
+         EjvA==
+X-Gm-Message-State: APjAAAWkJtixuTxce5KnH2mZwXFP94mELpGXsd06R5GyEurWx15lLqnv
+        6NK99wRo1zXvDiLXG2fa6IxGLOU0qakYb5IH1meMiQ==
+X-Google-Smtp-Source: APXvYqzj9wsXSY1DvSbUdbI1kDQ8Za++niAr1XEVNHfTDwpHEH3zTU3cmcuEufj8z+Fx3jjhLmwvz2ZGSfnkW+hg0EI=
+X-Received: by 2002:a2e:429c:: with SMTP id h28mr11379631ljf.7.1566850355705;
+ Mon, 26 Aug 2019 13:12:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190826165021.GB9305@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190823081316.28478-1-thomas_os@shipmail.org> <20190823081316.28478-4-thomas_os@shipmail.org>
+In-Reply-To: <20190823081316.28478-4-thomas_os@shipmail.org>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Tue, 27 Aug 2019 06:12:23 +1000
+Message-ID: <CAPM=9txEHSv8M4Q7A38JQpUoQJjess5vvwkXbJmk=0XgNhEJ9g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm/vmwgfx: Update the backdoor call with support
+ for new instructions
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        pv-drivers@vmware.com, "the arch/x86 maintainers" <x86@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux-graphics-maintainer <linux-graphics-maintainer@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Acked-by: Dave Airlie <airlied@redhat.com>
 
+(for merging via x86 trees).
 
-Le 26/08/2019 à 18:50, Greg Kroah-Hartman a écrit :
-> On Wed, Aug 21, 2019 at 10:19:27AM +1000, Alastair D'Silva wrote:
->> From: Alastair D'Silva <alastair@d-silva.org>
->>
->> The upstream commit:
->> 22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
->> has a similar effect, but since it is a rewrite of the assembler to C, is
->> too invasive for stable. This patch is a minimal fix to address the issue in
->> assembler.
->>
->> This patch applies cleanly to v5.2, v4.19 & v4.14.
->>
->> When calling flush_(inval_)dcache_range with a size >4GB, we were masking
->> off the upper 32 bits, so we would incorrectly flush a range smaller
->> than intended.
->>
->> This patch replaces the 32 bit shifts with 64 bit ones, so that
->> the full size is accounted for.
->>
->> Changelog:
->> v2
->>    - Add related upstream commit
->>
->> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
->> ---
->>   arch/powerpc/kernel/misc_64.S | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
->> index 1ad4089dd110..d4d096f80f4b 100644
->> --- a/arch/powerpc/kernel/misc_64.S
->> +++ b/arch/powerpc/kernel/misc_64.S
->> @@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
->>   	subf	r8,r6,r4		/* compute length */
->>   	add	r8,r8,r5		/* ensure we get enough */
->>   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
->> -	srw.	r8,r8,r9		/* compute line count */
->> +	srd.	r8,r8,r9		/* compute line count */
->>   	beqlr				/* nothing to do? */
->>   	mtctr	r8
->>   0:	dcbst	0,r6
->> @@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
->>   	subf	r8,r6,r4		/* compute length */
->>   	add	r8,r8,r5		/* ensure we get enough */
->>   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
->> -	srw.	r8,r8,r9		/* compute line count */
->> +	srd.	r8,r8,r9		/* compute line count */
->>   	beqlr				/* nothing to do? */
->>   	sync
->>   	isync
-> 
-> I need an ack from the powerpc maintainer(s) before I can take this.
+Dave.
 
-I think you already got an ack (on v1). See 
-https://patchwork.ozlabs.org/patch/1147403/#2239663
-
-Christophe
+On Fri, 23 Aug 2019 at 18:13, Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+>
+> Use the definition provided by include/asm/vmware.h
+>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: <x86@kernel.org>
+> Cc: <dri-devel@lists.freedesktop.org>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Reviewed-by: Doug Covelli <dcovelli@vmware.com>
+> ---
+>  drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 21 +++++++++--------
+>  drivers/gpu/drm/vmwgfx/vmwgfx_msg.h | 35 +++++++++++++++--------------
+>  2 files changed, 28 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx=
+/vmwgfx_msg.c
+> index 81a86c3b77bc..1281e52898ee 100644
+> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+> @@ -45,8 +45,6 @@
+>  #define RETRIES                 3
+>
+>  #define VMW_HYPERVISOR_MAGIC    0x564D5868
+> -#define VMW_HYPERVISOR_PORT     0x5658
+> -#define VMW_HYPERVISOR_HB_PORT  0x5659
+>
+>  #define VMW_PORT_CMD_MSG        30
+>  #define VMW_PORT_CMD_HB_MSG     0
+> @@ -92,7 +90,7 @@ static int vmw_open_channel(struct rpc_channel *channel=
+, unsigned int protocol)
+>
+>         VMW_PORT(VMW_PORT_CMD_OPEN_CHANNEL,
+>                 (protocol | GUESTMSG_FLAG_COOKIE), si, di,
+> -               VMW_HYPERVISOR_PORT,
+> +               0,
+>                 VMW_HYPERVISOR_MAGIC,
+>                 eax, ebx, ecx, edx, si, di);
+>
+> @@ -125,7 +123,7 @@ static int vmw_close_channel(struct rpc_channel *chan=
+nel)
+>
+>         VMW_PORT(VMW_PORT_CMD_CLOSE_CHANNEL,
+>                 0, si, di,
+> -               (VMW_HYPERVISOR_PORT | (channel->channel_id << 16)),
+> +               channel->channel_id << 16,
+>                 VMW_HYPERVISOR_MAGIC,
+>                 eax, ebx, ecx, edx, si, di);
+>
+> @@ -159,7 +157,8 @@ static unsigned long vmw_port_hb_out(struct rpc_chann=
+el *channel,
+>                 VMW_PORT_HB_OUT(
+>                         (MESSAGE_STATUS_SUCCESS << 16) | VMW_PORT_CMD_HB_=
+MSG,
+>                         msg_len, si, di,
+> -                       VMW_HYPERVISOR_HB_PORT | (channel->channel_id << =
+16),
+> +                       VMWARE_HYPERVISOR_HB | (channel->channel_id << 16=
+) |
+> +                       VMWARE_HYPERVISOR_OUT,
+>                         VMW_HYPERVISOR_MAGIC, bp,
+>                         eax, ebx, ecx, edx, si, di);
+>
+> @@ -180,7 +179,7 @@ static unsigned long vmw_port_hb_out(struct rpc_chann=
+el *channel,
+>
+>                 VMW_PORT(VMW_PORT_CMD_MSG | (MSG_TYPE_SENDPAYLOAD << 16),
+>                          word, si, di,
+> -                        VMW_HYPERVISOR_PORT | (channel->channel_id << 16=
+),
+> +                        channel->channel_id << 16,
+>                          VMW_HYPERVISOR_MAGIC,
+>                          eax, ebx, ecx, edx, si, di);
+>         }
+> @@ -212,7 +211,7 @@ static unsigned long vmw_port_hb_in(struct rpc_channe=
+l *channel, char *reply,
+>                 VMW_PORT_HB_IN(
+>                         (MESSAGE_STATUS_SUCCESS << 16) | VMW_PORT_CMD_HB_=
+MSG,
+>                         reply_len, si, di,
+> -                       VMW_HYPERVISOR_HB_PORT | (channel->channel_id << =
+16),
+> +                       VMWARE_HYPERVISOR_HB | (channel->channel_id << 16=
+),
+>                         VMW_HYPERVISOR_MAGIC, bp,
+>                         eax, ebx, ecx, edx, si, di);
+>
+> @@ -229,7 +228,7 @@ static unsigned long vmw_port_hb_in(struct rpc_channe=
+l *channel, char *reply,
+>
+>                 VMW_PORT(VMW_PORT_CMD_MSG | (MSG_TYPE_RECVPAYLOAD << 16),
+>                          MESSAGE_STATUS_SUCCESS, si, di,
+> -                        VMW_HYPERVISOR_PORT | (channel->channel_id << 16=
+),
+> +                        channel->channel_id << 16,
+>                          VMW_HYPERVISOR_MAGIC,
+>                          eax, ebx, ecx, edx, si, di);
+>
+> @@ -268,7 +267,7 @@ static int vmw_send_msg(struct rpc_channel *channel, =
+const char *msg)
+>
+>                 VMW_PORT(VMW_PORT_CMD_SENDSIZE,
+>                         msg_len, si, di,
+> -                       VMW_HYPERVISOR_PORT | (channel->channel_id << 16)=
+,
+> +                       channel->channel_id << 16,
+>                         VMW_HYPERVISOR_MAGIC,
+>                         eax, ebx, ecx, edx, si, di);
+>
+> @@ -326,7 +325,7 @@ static int vmw_recv_msg(struct rpc_channel *channel, =
+void **msg,
+>
+>                 VMW_PORT(VMW_PORT_CMD_RECVSIZE,
+>                         0, si, di,
+> -                       (VMW_HYPERVISOR_PORT | (channel->channel_id << 16=
+)),
+> +                       channel->channel_id << 16,
+>                         VMW_HYPERVISOR_MAGIC,
+>                         eax, ebx, ecx, edx, si, di);
+>
+> @@ -370,7 +369,7 @@ static int vmw_recv_msg(struct rpc_channel *channel, =
+void **msg,
+>
+>                 VMW_PORT(VMW_PORT_CMD_RECVSTATUS,
+>                         MESSAGE_STATUS_SUCCESS, si, di,
+> -                       (VMW_HYPERVISOR_PORT | (channel->channel_id << 16=
+)),
+> +                       channel->channel_id << 16,
+>                         VMW_HYPERVISOR_MAGIC,
+>                         eax, ebx, ecx, edx, si, di);
+>
+> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.h b/drivers/gpu/drm/vmwgfx=
+/vmwgfx_msg.h
+> index 4907e50fb20a..f685c7071dec 100644
+> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.h
+> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.h
+> @@ -32,6 +32,7 @@
+>  #ifndef _VMWGFX_MSG_H
+>  #define _VMWGFX_MSG_H
+>
+> +#include <asm/vmware.h>
+>
+>  /**
+>   * Hypervisor-specific bi-directional communication channel.  Should nev=
+er
+> @@ -44,7 +45,7 @@
+>   * @in_ebx: [IN] Message Len, through EBX
+>   * @in_si: [IN] Input argument through SI, set to 0 if not used
+>   * @in_di: [IN] Input argument through DI, set ot 0 if not used
+> - * @port_num: [IN] port number + [channel id]
+> + * @flags: [IN] hypercall flags + [channel id]
+>   * @magic: [IN] hypervisor magic value
+>   * @eax: [OUT] value of EAX register
+>   * @ebx: [OUT] e.g. status from an HB message status command
+> @@ -54,10 +55,10 @@
+>   * @di:  [OUT]
+>   */
+>  #define VMW_PORT(cmd, in_ebx, in_si, in_di,    \
+> -                port_num, magic,               \
+> +                flags, magic,          \
+>                  eax, ebx, ecx, edx, si, di)    \
+>  ({                                             \
+> -       asm volatile ("inl %%dx, %%eax;" :      \
+> +       asm volatile (VMWARE_HYPERCALL :        \
+>                 "=3Da"(eax),                      \
+>                 "=3Db"(ebx),                      \
+>                 "=3Dc"(ecx),                      \
+> @@ -67,7 +68,7 @@
+>                 "a"(magic),                     \
+>                 "b"(in_ebx),                    \
+>                 "c"(cmd),                       \
+> -               "d"(port_num),                  \
+> +               "d"(flags),                     \
+>                 "S"(in_si),                     \
+>                 "D"(in_di) :                    \
+>                 "memory");                      \
+> @@ -85,7 +86,7 @@
+>   * @in_ecx: [IN] Message Len, through ECX
+>   * @in_si: [IN] Input argument through SI, set to 0 if not used
+>   * @in_di: [IN] Input argument through DI, set to 0 if not used
+> - * @port_num: [IN] port number + [channel id]
+> + * @flags: [IN] hypercall flags + [channel id]
+>   * @magic: [IN] hypervisor magic value
+>   * @bp:  [IN]
+>   * @eax: [OUT] value of EAX register
+> @@ -98,12 +99,12 @@
+>  #ifdef __x86_64__
+>
+>  #define VMW_PORT_HB_OUT(cmd, in_ecx, in_si, in_di,     \
+> -                       port_num, magic, bp,            \
+> +                       flags, magic, bp,               \
+>                         eax, ebx, ecx, edx, si, di)     \
+>  ({                                                     \
+>         asm volatile ("push %%rbp;"                     \
+>                 "mov %12, %%rbp;"                       \
+> -               "rep outsb;"                            \
+> +               VMWARE_HYPERCALL_HB_OUT                 \
+>                 "pop %%rbp;" :                          \
+>                 "=3Da"(eax),                              \
+>                 "=3Db"(ebx),                              \
+> @@ -114,7 +115,7 @@
+>                 "a"(magic),                             \
+>                 "b"(cmd),                               \
+>                 "c"(in_ecx),                            \
+> -               "d"(port_num),                          \
+> +               "d"(flags),                             \
+>                 "S"(in_si),                             \
+>                 "D"(in_di),                             \
+>                 "r"(bp) :                               \
+> @@ -123,12 +124,12 @@
+>
+>
+>  #define VMW_PORT_HB_IN(cmd, in_ecx, in_si, in_di,      \
+> -                      port_num, magic, bp,             \
+> +                      flags, magic, bp,                \
+>                        eax, ebx, ecx, edx, si, di)      \
+>  ({                                                     \
+>         asm volatile ("push %%rbp;"                     \
+>                 "mov %12, %%rbp;"                       \
+> -               "rep insb;"                             \
+> +               VMWARE_HYPERCALL_HB_IN                  \
+>                 "pop %%rbp" :                           \
+>                 "=3Da"(eax),                              \
+>                 "=3Db"(ebx),                              \
+> @@ -139,7 +140,7 @@
+>                 "a"(magic),                             \
+>                 "b"(cmd),                               \
+>                 "c"(in_ecx),                            \
+> -               "d"(port_num),                          \
+> +               "d"(flags),                             \
+>                 "S"(in_si),                             \
+>                 "D"(in_di),                             \
+>                 "r"(bp) :                               \
+> @@ -157,13 +158,13 @@
+>   * just pushed it.
+>   */
+>  #define VMW_PORT_HB_OUT(cmd, in_ecx, in_si, in_di,     \
+> -                       port_num, magic, bp,            \
+> +                       flags, magic, bp,               \
+>                         eax, ebx, ecx, edx, si, di)     \
+>  ({                                                     \
+>         asm volatile ("push %12;"                       \
+>                 "push %%ebp;"                           \
+>                 "mov 0x04(%%esp), %%ebp;"               \
+> -               "rep outsb;"                            \
+> +               VMWARE_HYPERCALL_HB_OUT                 \
+>                 "pop %%ebp;"                            \
+>                 "add $0x04, %%esp;" :                   \
+>                 "=3Da"(eax),                              \
+> @@ -175,7 +176,7 @@
+>                 "a"(magic),                             \
+>                 "b"(cmd),                               \
+>                 "c"(in_ecx),                            \
+> -               "d"(port_num),                          \
+> +               "d"(flags),                             \
+>                 "S"(in_si),                             \
+>                 "D"(in_di),                             \
+>                 "m"(bp) :                               \
+> @@ -184,13 +185,13 @@
+>
+>
+>  #define VMW_PORT_HB_IN(cmd, in_ecx, in_si, in_di,      \
+> -                      port_num, magic, bp,             \
+> +                      flags, magic, bp,                \
+>                        eax, ebx, ecx, edx, si, di)      \
+>  ({                                                     \
+>         asm volatile ("push %12;"                       \
+>                 "push %%ebp;"                           \
+>                 "mov 0x04(%%esp), %%ebp;"               \
+> -               "rep insb;"                             \
+> +               VMWARE_HYPERCALL_HB_IN                  \
+>                 "pop %%ebp;"                            \
+>                 "add $0x04, %%esp;" :                   \
+>                 "=3Da"(eax),                              \
+> @@ -202,7 +203,7 @@
+>                 "a"(magic),                             \
+>                 "b"(cmd),                               \
+>                 "c"(in_ecx),                            \
+> -               "d"(port_num),                          \
+> +               "d"(flags),                             \
+>                 "S"(in_si),                             \
+>                 "D"(in_di),                             \
+>                 "m"(bp) :                               \
+> --
+> 2.20.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
