@@ -2,214 +2,131 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BB7C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C44C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB93020578
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEAD2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:13:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY5IgOtK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbfHZJL7 (ORCPT
+        id S1730782AbfHZJNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:11:59 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44814 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730670AbfHZJL6 (ORCPT
+        Mon, 26 Aug 2019 05:13:00 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:38415 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730749AbfHZJNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:11:58 -0400
-Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 774bfcd347dd994c; Mon, 26 Aug 2019 11:11:25 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] PM: QoS: Get rid of unused flags
-Date:   Mon, 26 Aug 2019 11:11:24 +0200
-Message-ID: <2564741.zVmb8Zpms3@kreacher>
-In-Reply-To: <e9e7bc3be3b51e68ae1a0f934c3724bd86f5f9af.1562854650.git.amit.kucheria@linaro.org>
-References: <cover.1562854650.git.amit.kucheria@linaro.org> <e9e7bc3be3b51e68ae1a0f934c3724bd86f5f9af.1562854650.git.amit.kucheria@linaro.org>
+        Mon, 26 Aug 2019 05:13:00 -0400
+Received: by mail-yb1-f193.google.com with SMTP id j199so6719389ybg.5;
+        Mon, 26 Aug 2019 02:12:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D4Cy8L8bB4Jw3AVIBtSZIHp5FVOMiVRH7OYkAYvDcFU=;
+        b=aY5IgOtK9Y1R0OVqpRVN6dp+Avd/R10BQdvyge27urqxHRphjhah8kdbGiU+/65d7j
+         FzV5/i49fIHpyG58qKvFJFBI9FVJ/W54YjryVbP4uis4fAArB0y8KKD1YKEXn8nXkp+/
+         tzwq1336zUqIXYsAYMi21Q+4yVEkEVW1GATqrNYze4o/MIFSNV1RdNgJvxL+rmgYJGKX
+         kZFBwBbBkWL9ias0Bwx5YaoBf01CFqGkQEGSwLSnSY7Dm7w6f388e+twPef6mz5UG9nt
+         vYbhS3XPOnS1UwschchfLuav7pthlV2k0QH3GicagEx+v+q5F18vmkRFve7s1R2ULqqf
+         7xkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D4Cy8L8bB4Jw3AVIBtSZIHp5FVOMiVRH7OYkAYvDcFU=;
+        b=BxS9N17/1N+hnEbKSMOouTuU6ZSuBJ97atZMktnoR3tReqvTSXXxDQ4aDDZSqeh7lf
+         jEDh/LQo5rSbQF0MK8dGEDqgN0emYt6OF6aUYwv/n5U5fTgfU0LbcDfL8Vze3nQU/VMg
+         wwbbT0nhlsm1J8iI34Uz3xFAAA7L4WpSFqVHbkK6ba7tr4bmwikswrTi/BHni2uSsaoQ
+         6NSHmX0JyR9pO81O/XYGcMVKCLj0rEVNI5ezY2a/2DtN/7jdJ4ku9eEpkazytzgr+Eb+
+         PX/dRQl0q7avZ+uR3/a0cuFBdz3SD8K9bHVoyT27Jf7cIFCb5cG5hcCU6wZmlu/jFOGH
+         08Xw==
+X-Gm-Message-State: APjAAAV3LchGw762u2w2AL5RM1dNyiSSpTjVUngBnXJEGTqKEDtOx9EA
+        qZZwFCR8MhfHK84ElyFYaM/p55ZJiFkiDC4LgHM=
+X-Google-Smtp-Source: APXvYqymIcX9MTQRTDDVMra8V0dV9qxpC9rLOcIlKQ/lbNeKTzSREvV6LnuDB4Nbwyt2d0IntiEF2yHdZhoxvHDISPc=
+X-Received: by 2002:a25:d751:: with SMTP id o78mr13265833ybg.101.1566810778665;
+ Mon, 26 Aug 2019 02:12:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190825174019.5977-1-kkamagui@gmail.com> <20190826055903.5um5pfweoszibem3@linux.intel.com>
+In-Reply-To: <20190826055903.5um5pfweoszibem3@linux.intel.com>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Mon, 26 Aug 2019 18:12:47 +0900
+Message-ID: <CAHjaAcQ5ArtrGzKsPRasFfTmdE59cYWLVbOT4pMHhgJZ_fXUcQ@mail.gmail.com>
+Subject: Re: [PATCH] tpm: tpm_crb: Add an AMD fTPM support feature
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, Matthew Garrett <mjg59@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 11, 2019 4:21:25 PM CEST Amit Kucheria wrote:
-> The network_latency and network_throughput flags for PM-QoS have not
-> found much use in drivers or in userspace since they were introduced.
-> 
-> Commit 4a733ef1bea7 ("mac80211: remove PM-QoS listener") removed the
-> only user PM_QOS_NETWORK_LATENCY in the kernel a while ago and there
-> don't seem to be any userspace tools using the character device files
-> either.
-> 
-> PM_QOS_MEMORY_BANDWIDTH was never even added to the trace events.
-> 
-> Remove all the flags except cpu_dma_latency.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
-> Changes from v1:
-> - Rebased on linux-next to deal with .rst conversion of docs
-> 
-> I've looked around for use of /dev/network_throughput and
-> /dev/network_bandwidth) and not found any userspace programs that seem to
-> use this currently. So this shouldn't be breaking our ABI contract with
-> userspace.
-> 
-> 
->  Documentation/power/pm_qos_interface.rst |  5 +--
->  include/linux/pm_qos.h                   |  6 ---
->  include/trace/events/power.h             |  8 +---
->  kernel/power/qos.c                       | 48 ------------------------
->  4 files changed, 4 insertions(+), 63 deletions(-)
-> 
-> diff --git a/Documentation/power/pm_qos_interface.rst b/Documentation/power/pm_qos_interface.rst
-> index 945fc6d760c9..a00d607107ec 100644
-> --- a/Documentation/power/pm_qos_interface.rst
-> +++ b/Documentation/power/pm_qos_interface.rst
-> @@ -7,8 +7,7 @@ performance expectations by drivers, subsystems and user space applications on
->  one of the parameters.
->  
->  Two different PM QoS frameworks are available:
-> -1. PM QoS classes for cpu_dma_latency, network_latency, network_throughput,
-> -memory_bandwidth.
-> +1. PM QoS classes for cpu_dma_latency
->  2. the per-device PM QoS framework provides the API to manage the per-device latency
->  constraints and PM QoS flags.
->  
-> @@ -79,7 +78,7 @@ cleanup of a process, the interface requires the process to register its
->  parameter requests in the following way:
->  
->  To register the default pm_qos target for the specific parameter, the process
-> -must open one of /dev/[cpu_dma_latency, network_latency, network_throughput]
-> +must open /dev/cpu_dma_latency
->  
->  As long as the device node is held open that process has a registered
->  request on the parameter.
-> diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
-> index 6ea1ae373d77..2a3c237b1910 100644
-> --- a/include/linux/pm_qos.h
-> +++ b/include/linux/pm_qos.h
-> @@ -13,9 +13,6 @@
->  enum {
->  	PM_QOS_RESERVED = 0,
->  	PM_QOS_CPU_DMA_LATENCY,
-> -	PM_QOS_NETWORK_LATENCY,
-> -	PM_QOS_NETWORK_THROUGHPUT,
-> -	PM_QOS_MEMORY_BANDWIDTH,
->  
->  	/* insert new class ID */
->  	PM_QOS_NUM_CLASSES,
-> @@ -33,9 +30,6 @@ enum pm_qos_flags_status {
->  #define PM_QOS_LATENCY_ANY_NS	((s64)PM_QOS_LATENCY_ANY * NSEC_PER_USEC)
->  
->  #define PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE	(2000 * USEC_PER_SEC)
-> -#define PM_QOS_NETWORK_LAT_DEFAULT_VALUE	(2000 * USEC_PER_SEC)
-> -#define PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE	0
-> -#define PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE	0
->  #define PM_QOS_RESUME_LATENCY_DEFAULT_VALUE	PM_QOS_LATENCY_ANY
->  #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT	PM_QOS_LATENCY_ANY
->  #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT_NS	PM_QOS_LATENCY_ANY_NS
-> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-> index f7aece721aed..7457e238e1b7 100644
-> --- a/include/trace/events/power.h
-> +++ b/include/trace/events/power.h
-> @@ -379,9 +379,7 @@ DECLARE_EVENT_CLASS(pm_qos_request,
->  
->  	TP_printk("pm_qos_class=%s value=%d",
->  		  __print_symbolic(__entry->pm_qos_class,
-> -			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" },
-> -			{ PM_QOS_NETWORK_LATENCY,	"NETWORK_LATENCY" },
-> -			{ PM_QOS_NETWORK_THROUGHPUT,	"NETWORK_THROUGHPUT" }),
-> +			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" }),
->  		  __entry->value)
->  );
->  
-> @@ -426,9 +424,7 @@ TRACE_EVENT(pm_qos_update_request_timeout,
->  
->  	TP_printk("pm_qos_class=%s value=%d, timeout_us=%ld",
->  		  __print_symbolic(__entry->pm_qos_class,
-> -			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" },
-> -			{ PM_QOS_NETWORK_LATENCY,	"NETWORK_LATENCY" },
-> -			{ PM_QOS_NETWORK_THROUGHPUT,	"NETWORK_THROUGHPUT" }),
-> +			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" }),
->  		  __entry->value, __entry->timeout_us)
->  );
->  
-> diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-> index 33e3febaba53..9568a2fe7c11 100644
-> --- a/kernel/power/qos.c
-> +++ b/kernel/power/qos.c
-> @@ -78,57 +78,9 @@ static struct pm_qos_object cpu_dma_pm_qos = {
->  	.name = "cpu_dma_latency",
->  };
->  
-> -static BLOCKING_NOTIFIER_HEAD(network_lat_notifier);
-> -static struct pm_qos_constraints network_lat_constraints = {
-> -	.list = PLIST_HEAD_INIT(network_lat_constraints.list),
-> -	.target_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-> -	.default_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-> -	.no_constraint_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-> -	.type = PM_QOS_MIN,
-> -	.notifiers = &network_lat_notifier,
-> -};
-> -static struct pm_qos_object network_lat_pm_qos = {
-> -	.constraints = &network_lat_constraints,
-> -	.name = "network_latency",
-> -};
-> -
-> -
-> -static BLOCKING_NOTIFIER_HEAD(network_throughput_notifier);
-> -static struct pm_qos_constraints network_tput_constraints = {
-> -	.list = PLIST_HEAD_INIT(network_tput_constraints.list),
-> -	.target_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-> -	.default_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-> -	.no_constraint_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-> -	.type = PM_QOS_MAX,
-> -	.notifiers = &network_throughput_notifier,
-> -};
-> -static struct pm_qos_object network_throughput_pm_qos = {
-> -	.constraints = &network_tput_constraints,
-> -	.name = "network_throughput",
-> -};
-> -
-> -
-> -static BLOCKING_NOTIFIER_HEAD(memory_bandwidth_notifier);
-> -static struct pm_qos_constraints memory_bw_constraints = {
-> -	.list = PLIST_HEAD_INIT(memory_bw_constraints.list),
-> -	.target_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
-> -	.default_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
-> -	.no_constraint_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
-> -	.type = PM_QOS_SUM,
-> -	.notifiers = &memory_bandwidth_notifier,
-> -};
-> -static struct pm_qos_object memory_bandwidth_pm_qos = {
-> -	.constraints = &memory_bw_constraints,
-> -	.name = "memory_bandwidth",
-> -};
-> -
-> -
->  static struct pm_qos_object *pm_qos_array[] = {
->  	&null_pm_qos,
->  	&cpu_dma_pm_qos,
-> -	&network_lat_pm_qos,
-> -	&network_throughput_pm_qos,
-> -	&memory_bandwidth_pm_qos,
->  };
->  
->  static ssize_t pm_qos_power_write(struct file *filp, const char __user *buf,
-> 
+>
+> On Mon, Aug 26, 2019 at 02:40:19AM +0900, Seunghun Han wrote:
+> > I'm Seunghun Han and work at the Affiliated Institute of ETRI. I got an AMD
+> > system which had a Ryzen Threadripper 1950X and MSI mainboard, and I had
+> > a problem with AMD's fTPM. My machine showed an error message below, and
+> > the fTPM didn't work because of it.
+> >
+> > [    5.732084] tpm_crb MSFT0101:00: can't request region for resource
+> >                [mem 0x79b4f000-0x79b4ffff]
+> > [    5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+> >
+> > When I saw the iomem areas and found two TPM CRB regions were in the ACPI
+> > NVS area.  The iomem regions are below.
+> >
+> > 79a39000-79b6afff : ACPI Non-volatile Storage
+> >   79b4b000-79b4bfff : MSFT0101:00
+> >   79b4f000-79b4ffff : MSFT0101:00
+> >
+> > After analyzing this issue, I found out that a busy bit was set to the ACPI
+> > NVS area, and the current Linux kernel allowed nothing to be assigned in
+> > it. I also found that the kernel couldn't calculate the sizes of command
+> > and response buffers correctly when the TPM regions were two or more.
+> >
+> > To support AMD's fTPM, I removed the busy bit from the ACPI NVS area
+> > so that AMD's fTPM regions could be assigned in it. I also fixed the bug
+> > that did not calculate the sizes of command and response buffer correctly.
+> >
+> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+>
+> You need to split this into multiple patches e.g. if you think you've
+> fixed a bug, please write a patch with just the bug fix and nothing
+> else.
+>
+> For further information, read the section three of
+>
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+>
+> I'd also recommend to check out the earlier discussion on ACPI NVS:
+>
+> https://lore.kernel.org/linux-integrity/BCA04D5D9A3B764C9B7405BBA4D4A3C035EF7BC7@ALPMBAPA12.e2k.ad.ge.com/
+>
+> /Jarkko
 
-Applied, thanks!
+Thank you for your advice. I have made two separated patches on your advice.
+Please check these patches, https://lkml.org/lkml/2019/8/26/125 and
+https://lkml.org/lkml/2019/8/26/163.
 
+In my opinion, the last link you gave me had two problems with AMD's
+fTPM. One problem was the ACPI NVS area was set to the busy area, and
+TPM regions of the ACPI table were in it. Therefore, TPM CRB driver
+couldn't allocate command and response buffers in it because ACPI NVS
+area was busy. The other problem was buffer size calculation bugs.
+Because of it, TPM CRB driver requested larger than the size ACPI
+table described. So, TPM CRB driver also couldn't map command and
+response buffers even though the reserved area was not busy.
 
+It seems that my separated patches could handle those two problems and
+enable AMD's fTPM in any case.
 
-
+Seunghun
