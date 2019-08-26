@@ -2,134 +2,71 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F49C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895B2C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5693E2186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2D62186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbfHZKOl (ORCPT
+        id S1730788AbfHZKPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:14:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46996 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726497AbfHZKOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:14:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C8830AD09;
-        Mon, 26 Aug 2019 10:14:38 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4BE381E3FE3; Mon, 26 Aug 2019 12:14:38 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 12:14:38 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     " Steven J. Magnani " <steve.magnani@digidescorp.com>
-Cc:     Jan Kara <jack@suse.com>,
-        "Steven J . Magnani" <steve@digidescorp.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] udf: augment owner permissions on new inodes
-Message-ID: <20190826101438.GC10614@quack2.suse.cz>
-References: <20190819142707.18070-1-steve@digidescorp.com>
+        Mon, 26 Aug 2019 06:15:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56480 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbfHZKPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:15:49 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C84B530832C8;
+        Mon, 26 Aug 2019 10:15:49 +0000 (UTC)
+Received: from gigantic.usersys.redhat.com (helium.bos.redhat.com [10.18.17.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3304A608C1;
+        Mon, 26 Aug 2019 10:15:49 +0000 (UTC)
+From:   Bandan Das <bsd@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] x86/apic: reset LDR in clear_local_APIC
+Date:   Mon, 26 Aug 2019 06:15:11 -0400
+Message-Id: <20190826101513.5080-1-bsd@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819142707.18070-1-steve@digidescorp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 26 Aug 2019 10:15:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 19-08-19 09:27:07,  Steven J. Magnani  wrote:
-> Windows presents files created within Linux as read-only, even when
-> permissions in Linux indicate the file should be writable.
-> 
-> 
-> UDF defines a slightly different set of basic file permissions than Linux.
-> Specifically, UDF has "delete" and "change attribute" permissions for each
-> access class (user/group/other). Linux has no equivalents for these.
-> 
-> When the Linux UDF driver creates a file (or directory), no UDF delete or
-> change attribute permissions are granted. The lack of delete permission
-> appears to cause Windows to mark an item read-only when its permissions
-> otherwise indicate that it should be read-write.
-> 
-> Fix this by granting UDF delete and change attribute permissions
-> to the owner when creating a new inode.
-> 
-> Reported by: Ty Young
-> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
+v2:
+   1/2: clear out the bogus initialization in bigsmp_init_apic_ldr
+   2/2: reword commit message as suggested by Thomas
+v1 posted at https://lkml.org/lkml/2019/8/14/1
 
-Thanks for the patch! The behavior for CHATTR and DELETE permissions is
-defined by UDF specification in 3.3.3.3 section. From that I'd say that we
-should set CHATTR for user on creation and otherwise leave it untouched
-(which is what you seem to be doing). For DELETE permission we should set
-it to match WRITE permission (needs handling on file create in in
-udf_setattr() when changing file permissions). Can you please fixup the
-DELETE permission behavior?
+On a 32 bit RHEL6 guest with greater than 8 cpus, the
+kdump kernel hangs when calibrating apic. This happens
+because when apic initializes bigsmp, it also initializes LDR
+even though it probably wouldn't be used.
 
-								Honza
+When booting into kdump, KVM apic incorrectly reads the stale LDR
+values from the guest while building the logical destination map
+even for inactive vcpus. While KVM apic can be fixed to ignore apics
+that haven't been enabled, a simple guest only change can be to
+just clear out the LDR.
 
-> ---
-> --- a/fs/udf/udf_i.h	2019-08-14 07:24:05.029508342 -0500
-> +++ b/fs/udf/udf_i.h	2019-08-19 08:55:37.797394177 -0500
-> @@ -38,6 +38,7 @@ struct udf_inode_info {
->  	__u32			i_next_alloc_block;
->  	__u32			i_next_alloc_goal;
->  	__u32			i_checkpoint;
-> +	__u32			i_extraPerms;
->  	unsigned		i_alloc_type : 3;
->  	unsigned		i_efe : 1;	/* extendedFileEntry */
->  	unsigned		i_use : 1;	/* unallocSpaceEntry */
-> --- a/fs/udf/ialloc.c	2019-08-14 07:24:05.029508342 -0500
-> +++ b/fs/udf/ialloc.c	2019-08-19 08:33:08.992422457 -0500
-> @@ -118,6 +118,7 @@ struct inode *udf_new_inode(struct inode
->  	iinfo->i_lenAlloc = 0;
->  	iinfo->i_use = 0;
->  	iinfo->i_checkpoint = 1;
-> +	iinfo->i_extraPerms = FE_PERM_U_DELETE | FE_PERM_U_CHATTR;
->  	if (UDF_QUERY_FLAG(inode->i_sb, UDF_FLAG_USE_AD_IN_ICB))
->  		iinfo->i_alloc_type = ICBTAG_FLAG_AD_IN_ICB;
->  	else if (UDF_QUERY_FLAG(inode->i_sb, UDF_FLAG_USE_SHORT_AD))
-> --- a/fs/udf/inode.c	2019-08-14 07:24:05.029508342 -0500
-> +++ b/fs/udf/inode.c	2019-08-19 08:42:46.537530051 -0500
-> @@ -45,6 +45,10 @@
->  
->  #define EXTENT_MERGE_SIZE 5
->  
-> +#define FE_MAPPED_PERMS	(FE_PERM_U_READ | FE_PERM_U_WRITE | FE_PERM_U_EXEC | \
-> +			 FE_PERM_G_READ | FE_PERM_G_WRITE | FE_PERM_G_EXEC | \
-> +			 FE_PERM_O_READ | FE_PERM_O_WRITE | FE_PERM_O_EXEC)
-> +
->  static umode_t udf_convert_permissions(struct fileEntry *);
->  static int udf_update_inode(struct inode *, int);
->  static int udf_sync_inode(struct inode *inode);
-> @@ -1458,6 +1462,8 @@ reread:
->  	else
->  		inode->i_mode = udf_convert_permissions(fe);
->  	inode->i_mode &= ~sbi->s_umask;
-> +	iinfo->i_extraPerms = le32_to_cpu(fe->permissions) & ~FE_MAPPED_PERMS;
-> +
->  	read_unlock(&sbi->s_cred_lock);
->  
->  	link_count = le16_to_cpu(fe->fileLinkCount);
-> @@ -1691,10 +1697,7 @@ static int udf_update_inode(struct inode
->  		   ((inode->i_mode & 0070) << 2) |
->  		   ((inode->i_mode & 0700) << 4);
->  
-> -	udfperms |= (le32_to_cpu(fe->permissions) &
-> -		    (FE_PERM_O_DELETE | FE_PERM_O_CHATTR |
-> -		     FE_PERM_G_DELETE | FE_PERM_G_CHATTR |
-> -		     FE_PERM_U_DELETE | FE_PERM_U_CHATTR));
-> +	udfperms |= iinfo->i_extraPerms;
->  	fe->permissions = cpu_to_le32(udfperms);
->  
->  	if (S_ISDIR(inode->i_mode) && inode->i_nlink > 0)
-> 
+Bandan Das (2):
+  x86/apic: Do not initialize LDR and DFR for bigsmp
+  x86/apic: include the LDR when clearing out apic registers
+
+ arch/x86/kernel/apic/apic.c      |  4 ++++
+ arch/x86/kernel/apic/bigsmp_32.c | 24 ++----------------------
+ 2 files changed, 6 insertions(+), 22 deletions(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
