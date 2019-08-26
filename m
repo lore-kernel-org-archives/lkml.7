@@ -2,145 +2,129 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9569DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58882C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571B722BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VveozXkx"
+	by mail.kernel.org (Postfix) with ESMTP id 2F1ED217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfHZDvj (ORCPT
+        id S1726285AbfHZEBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:51:39 -0400
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:64131
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727086AbfHZDvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:51:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UauIugfyws2+vRr31GnlfyFI3ElVKO1bBWxRCpIoHrKgl7/eQQnYgHujx2wv9PZ/kLvg3aG6l4/3rqYW9S7FJXMLfFxKZ+H5IJbUixTbVOYES5s6LtYxp6L2E5TmB7PMYDLKn46KOqGQAjNysdkZN3EGCtZauwVTCQjF5ClCSyWzFna5Sr5jvn4jJ5vAELSzIg+cfpAKQMKzJIo0AY9/l0FrPMJrrI6F7RYzDopsNJIIRcERD7J++TdPZPvSAgW+ga7G1I5epU8ddQ+YE7AbH02P8xF4CKgExQUWyMwnyrKb13lnBrcnKhBovgOuPw/IXD1x5+qyYcazZ5YG3BeiCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ek6wvCAJrwG1V7CeeehOPF7bqNQlAPNFnDrKQqRLseY=;
- b=m6Nv+0OyQ+pUfxdOiH3bwRj7xM6diKbWkTTeeEzdQQbu0px+gOPnM63McflO/8Wpg3gKH2jao5CnZmDq2vR+zNnJBqSX3iIGjXizIjBI7xmTchaT6ee5BUrgu04kNjZXsQDUGLUmcy+C0XoJLZ1yYKOlHlqV/hA2knJvn+OhCPL7Qhg8AP3hxWvfCY1z+Nx3zUgLy1b/wpKwsLEDuqUYpsZLOlodW8H/r/glW+nYPZuFs5rx4Bdtk+g3j/3glJLI7PSAPJXFzfejdQy76EDnyFScEdIkWDUkLVDXuX9B4mvXnPNutrO6AvkEt8isSK1cr3WS+wgaxLu4YcSflZLsnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ek6wvCAJrwG1V7CeeehOPF7bqNQlAPNFnDrKQqRLseY=;
- b=VveozXkxkfas4wcP3X5y7c09mjj1mUpHkBbyMI+7t5eeSaNMGXF7bPVeg/qktx/+m5Hx7CU6WleH8Lv8DIBGNaB+zxsvGuovThLBcT9s9zwBJ0/2GQPX9gbo3nTV3H3JOetXAOGcKkkZu9SCRKTdFoyJEVrUOxVwCXt209i3ajA=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3012.eurprd04.prod.outlook.com (10.175.230.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Mon, 26 Aug 2019 03:51:34 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::1ce8:464b:3edf:4043%7]) with mapi id 15.20.2178.023; Mon, 26 Aug 2019
- 03:51:34 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: RE: [PATCH v4 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Thread-Topic: [PATCH v4 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Thread-Index: AQHVWY3s6uRWml0OaEOV4KW/xSS6MKcIxFWAgAQK8oA=
-Date:   Mon, 26 Aug 2019 03:51:34 +0000
-Message-ID: <AM5PR04MB3299C9DB7F9F21F6362ADDB2F5A10@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190823082643.10903-1-xiaowei.bao@nxp.com>
- <20190823140447.GA19283@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190823140447.GA19283@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 01c55c48-67f6-4d3f-4749-08d729d8b03a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3012;
-x-ms-traffictypediagnostic: AM5PR04MB3012:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB30126086D09A8168E430083AF5A10@AM5PR04MB3012.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(396003)(136003)(39860400002)(13464003)(189003)(199004)(2906002)(81156014)(81166006)(25786009)(54906003)(52536014)(229853002)(7736002)(76116006)(64756008)(66446008)(7416002)(66556008)(6436002)(5660300002)(99286004)(66946007)(26005)(102836004)(305945005)(186003)(76176011)(7696005)(53546011)(6506007)(11346002)(476003)(486006)(44832011)(66066001)(256004)(446003)(6116002)(55016002)(14454004)(6246003)(33656002)(71200400001)(9686003)(3846002)(86362001)(74316002)(6916009)(4326008)(8676002)(8936002)(478600001)(71190400001)(53936002)(316002)(66476007)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3012;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VAkr6Wn6QFPXAFPSFd08qroilTJ8aGE/qMuW7EDoWEMfHx0iaNNuLBk9bixgoVrTR9j9dmDyWu3LqW88CI7yGdYGq6lqv7nT9CFi/9Hu3vLD+jPIl1SuuRTeqyLK9YL0SfwNbeZDAG9oHc2wmtMkZk38M7l0ZkEFK6SHQSuoXuSDUs3cc1zGrne7Ty5L9MFGVof6ouR0AIcFdxdK8F9DOk78OkHxZCVYWR2i/0DZ6gHga8zWRunaQbjW/IEk8AHEaz7TeSBLi+cJf48B/rLsTdB4nqWbLVW6KRPrUAj+UpQsg77lib0Se0OkC/DWg2bCJ2Chq4M+pzRVhLfA1T/rjL4V8r4WLoBkqZ5qxKDuur3CpfOu2aZhvrHCrAlpz2kA8pTGY3upT3xxu3yOIziNquFLjPGejsbRJc3d48GgyQ4=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 26 Aug 2019 00:01:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15516 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfHZEBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 00:01:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Aug 2019 21:01:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
+   d="scan'208";a="379508788"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Aug 2019 21:01:07 -0700
+Received: from [10.226.39.5] (leichuan-mobl.gar.corp.intel.com [10.226.39.5])
+        by linux.intel.com (Postfix) with ESMTP id C8AAE580444;
+        Sun, 25 Aug 2019 21:01:05 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        eswara.kota@linux.intel.com
+Cc:     cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
+        qi-ming.wu@intel.com, robh@kernel.org, hauke@hauke-m.de
+References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
+ <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
+From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Message-ID: <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com>
+Date:   Mon, 26 Aug 2019 12:01:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01c55c48-67f6-4d3f-4749-08d729d8b03a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 03:51:34.1269
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zK/APWX+TSLGYBLmK81MuGSuiLJIJ5ccdx7fkZ9pkz3z8GVR5l9IB9yl9E2hx9klZDBYIg8eDVZ3de8GuGxrtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3012
+In-Reply-To: <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjIzyNUgMjI6
-MDUNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtk
-dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsg
-TGVvDQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5A
-bnhwLmNvbT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5nIDxy
-b3kuemFuZ0BueHAuY29tPjsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmc7IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47DQo+IGJoZWxnYWFzQGdv
-b2dsZS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAxLzNdIGR0LWJpbmRpbmdzOiBwY2k6
-IGxheWVyc2NhcGUtcGNpOiBhZGQgY29tcGF0aWJsZQ0KPiBzdHJpbmdzICJmc2wsbHMxMDI4YS1w
-Y2llIg0KPiANCj4gT24gRnJpLCBBdWcgMjMsIDIwMTkgYXQgMDQ6MjY6NDFQTSArMDgwMCwgWGlh
-b3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHRoZSBQQ0llIGNvbXBhdGlibGUgc3RyaW5nIGZvciBM
-UzEwMjhBDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9A
-bnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBu
-eHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
-PiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2MzoNCj4gPiAgLSBObyBj
-aGFuZ2UuDQo+ID4gdjQ6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0IHwgMSArDQo+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50
-eHQNCj4gPiBpbmRleCBlMjBjZWFhLi45OWEzODZlIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50
-eHQNCj4gPiBAQCAtMjEsNiArMjEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAg
-ICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPiA+ICAgICAgICAgICJmc2wsbHMxMDQzYS1wY2llIg0K
-PiA+ICAgICAgICAgICJmc2wsbHMxMDEyYS1wY2llIg0KPiA+ICsgICAgICAgICJmc2wsbHMxMDI4
-YS1wY2llIg0KPiA+ICAgIEVQIG1vZGU6DQo+ID4gIAkiZnNsLGxzMTA0NmEtcGNpZS1lcCIsICJm
-c2wsbHMtcGNpZS1lcCINCj4gPiAgLSByZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9m
-IHRoZSBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxvY2tzLg0KPiANCj4gVGhpcyBzZXJpZXMg
-ZG9lcyBub3QgYXBwbHkgdG8gdjUuMy1yYzEsIHdoYXQgaXMgaXQgYmFzZWQgb24gPw0KDQp0aGVz
-ZSBzZXQgcGF0Y2hlcyBiYXNlIG9uIHY1LjMtcmMzLCB0aGFua3MuDQoNCj4gDQo+IExvcmVuem8N
-Cg==
+Hi Martin,
+
+Thanks for your comment.
+
+On 8/25/2019 5:11 AM, Martin Blumenstingl wrote:
+> Hi Dilip,
+>
+>> Add driver for the reset controller present on Intel
+>> Lightening Mountain (LGM) SoC for performing reset
+>> management of the devices present on the SoC. Driver also
+>> registers a reset handler to peform the entire device reset.
+> [...]
+>> +static const struct of_device_id intel_reset_match[] = {
+>> +	{ .compatible = "intel,rcu-lgm" },
+>> +	{}
+>> +};
+> how is this IP block differnet from the one used in many Lantiq SoCs?
+> there is already an upstream driver for the RCU IP block on the Lantiq
+> SoCs: drivers/reset/reset-lantiq.c
+>
+> some background:
+> Lantiq was started as a spinoff from Infineon in 2009. Intel then
+> acquired Lantiq in 2015. source: [0]
+> Intel is re-using some of the IP blocks from the MIPS Lantiq SoCs
+> (Intel even has some own MIPS SoCs as part of the Lantiq acquisition,
+> typically used for PON/GPON/ADSL/VDSL capable network devices).
+> Thus I think it is likely that the new "Lightening Mountain" SoCs use
+> an updated version of the Lantiq RCU IP.
+
+I would not say there is a fundamental difference since reset is a 
+really simple
+
+stuff from all reset drivers.  However, it did have some difference
+
+from existing reset-lantiq.c since SoC becomes more and more complex.
+
+1. reset-lantiq.c use index instead of register offset + bit position.
+
+index reset is good for a small system (< 64). However, it will become very
+
+difficult to use if you have  > 100 reset. So we use register offset + 
+bit position
+
+2. reset-lantiq.c does not support device restart which is part of the 
+reset in
+
+old lantiq SoC. It moved this part into arch/mips/lantiq directory.
+
+3. reset-lantiqc reset callback doesn't implement what hardware implemented
+
+function. In old SoCs, some bits in the same register can be hardware 
+reset clear.
+
+It just call assert + assert. For these SoCs, we should only call 
+assert, hardware
+
+will auto deassert.
+
+4. Code not optimized and intel internal review not assessed.
+
+Based on the above findings, I would suggest reset-lantiq.c to move to 
+reset-intel-syscon.c
+
+What is your opinion?
+
+
+Chuanhua
+
+>
+>
+> Martin
+>
+>
+> [0] https://wikidevi.com/wiki/Lantiq
