@@ -2,176 +2,151 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B56C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E99C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EE82186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3177C206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iHLRmy83"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AeTxTVZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387804AbfHZSk3 (ORCPT
+        id S1733252AbfHZSqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:40:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40169 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733066AbfHZSk2 (ORCPT
+        Mon, 26 Aug 2019 14:46:25 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41902 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfHZSqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:40:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w16so12345135pfn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:40:27 -0700 (PDT)
+        Mon, 26 Aug 2019 14:46:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so11129915pgg.8;
+        Mon, 26 Aug 2019 11:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=gE1OVEAWKHQhDwouDO91V7FO5qVME/7zCx/3FBXHSZk=;
-        b=iHLRmy83Qh/p9LbuUBxdD6a9xsOVFx52yFT/VSdS5bYLKvnQKWn8R26IzhKUYyUUHY
-         5XfLdmX9sUo8BwLnULGhQ8hPS1/wVFq60CA52ZVb+gxmf7qAyHLbII8DAR1gZf6e+RFv
-         Z0OPvABOBpNlXTpqlMM04R3IV6d3lTks84UNA=
+        bh=/6h3pVn0Q7rW+oRgZfpi1qEbYbkTX7W5Kewm+Qyfumw=;
+        b=AeTxTVZ62rRO8X3V6FctFGEAySquHBvu1vt4AzP5iJ4UFcE8xRlgNj8PpfMsoTgswX
+         FHg229JAhwsvhyADqTB7tYYUXkSEOMni+ybhqQGf2d2OG/6b/ILfF6iMrHMqaU3LI4m7
+         eym2zV+Ax1tk7vLrp+KFIQIlDBxYfdWWOJ/wy4PMqSjoSXRtLm/ozS6zq6Z3xOOKevMy
+         SxYW6U80JSQiHOv0KurdN3EOg+k0aKZZRl5pQWZYTLpPwPJk7Kl9AtJ3v8QisxqxuRK7
+         2+b25vcptpoDAsJlnOHAbfdnEVQi8g3FtiP+TleAgnf1lZ4RoF3CaMzgwjW3pf65l/HJ
+         7Ilw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gE1OVEAWKHQhDwouDO91V7FO5qVME/7zCx/3FBXHSZk=;
-        b=H/J6bE3zqrloktVHeihhrlPVdJ/xYhWaL1fxXgcBW50e3Z7WnlHA6JjO5xyzpdzU1d
-         VOnT8rjeXvIkuFsFWys4c5xLV/esi1nv3Kms3e0hHxgCKH+U4dG9VyUt/kqbr9kU6mPp
-         7WmSZIBiMDF5r372QN5wm1TWNu+KzUnanfSy7IvnbTYvZ3SRD2S+gEEaXWhTHa1Q3zmk
-         QFp+JqSSJ7CHhqBm3kHuIgFEaRHjiVQQdildYxHEW4KnCOjetM7J0BpMuJ/bIkF4TfNI
-         EUTFKOZQS+igbUIdGtgh9e69/8ocMxMHByWpPGFAmkjBT1AXCLvVLyUcwQOMzi3OjmY8
-         1jvg==
-X-Gm-Message-State: APjAAAXKmBX8dfPE2wg8+c0d20o3Iz1ZM3YKTvAEKXoilA80NApRmtHn
-        NyVZ5IXdE0lIYPQix5JKbpiyB9NZc0E=
-X-Google-Smtp-Source: APXvYqy/61mnelOYZqH66edtReAy67Lrv4AJm5LFatYuQwX+QC3lAp+ORo3BGQKU3FygBHhHRqzVDg==
-X-Received: by 2002:a17:90a:2ec3:: with SMTP id h3mr2105770pjs.121.1566844827554;
-        Mon, 26 Aug 2019 11:40:27 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id ck8sm175050pjb.25.2019.08.26.11.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Aug 2019 11:40:26 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 11:40:20 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Doug Anderson <dianders@chromium.org>, Pavel Machek <pavel@ucw.cz>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Message-ID: <20190826184020.GA70797@google.com>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190816201342.GB1646@bug>
- <20190816212728.GW250418@google.com>
- <31dc724d-77ba-3400-6abe-4cf2e3c2a20a@gmail.com>
- <CAD=FV=WvWjcVX1YNxKsi_TmJP6vdBZ==bYOVGs2VjUqVhEjpuA@mail.gmail.com>
- <f1fd7aba-b36f-8cc4-9ed7-9977c0912b9d@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/6h3pVn0Q7rW+oRgZfpi1qEbYbkTX7W5Kewm+Qyfumw=;
+        b=qLp3Ote21aZte+KNF6PjTlvFWjUDToydxNAvaUuqtjBEKgMVBhw+a2s/KzBfAbRHOB
+         b/s4zg4decAariUzLzmji8UtpsZbxgal4kfboGDkphU84WltMEakdMPFOvZ4de9sR9yx
+         WJgVQ5QLvNUlJad4hqxejJN3m89lzdelW81UmjV7CVMtg6Y4Ljoii6Uv8O9kDqr880aL
+         mognXPvPJDRJcmZurcFG1CbpS2IoEcsLHwiLZdlR6Zld6YRTie0nCrGekBEpgpNtIs99
+         BvtpVyI1Z9BjsPjy2K3zmd544kifK5mlSMXxQvhxyJ8+IpJwmJxPjYZn9VVzO+AysQhC
+         ldeQ==
+X-Gm-Message-State: APjAAAW8Es4uZBlAEtfmVBO0aJorFFmimXvSmZrlnJQ8lScN6qM8e/6f
+        CvIfcCz6JB7TBf4lXLj2ZnM=
+X-Google-Smtp-Source: APXvYqx4xVStJ6UDhAdc84ocj+lkuY4bLCG22gzHZVdSGsdeB8tzLodPzcaMTD8v148+0jEI8oIePQ==
+X-Received: by 2002:a62:1cd1:: with SMTP id c200mr5417663pfc.174.1566845184715;
+        Mon, 26 Aug 2019 11:46:24 -0700 (PDT)
+Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id 14sm12264699pfy.40.2019.08.26.11.46.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 11:46:23 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 11:46:22 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc:     Yuehaibing <yuehaibing@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        a.zummo@towertech.it, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without
+ CONFIG_WATCHDOG_CORE
+Message-ID: <20190826184622.GA7766@roeck-us.net>
+References: <20190823124553.19364-1-yuehaibing@huawei.com>
+ <20190823140513.GB9844@piout.net>
+ <4b608c55-2541-30cf-ad88-c19a5c0cc84f@huawei.com>
+ <01a2b6b2-eb15-1b40-1edc-de122bbdb5a2@roeck-us.net>
+ <CAH+2xPDw3ZWcH_g=Ui6u4Bzw2ii3EBnwGT0QuBseu1z+FgS9LA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f1fd7aba-b36f-8cc4-9ed7-9977c0912b9d@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAH+2xPDw3ZWcH_g=Ui6u4Bzw2ii3EBnwGT0QuBseu1z+FgS9LA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 12:58:09PM -0700, Florian Fainelli wrote:
-> On 8/16/19 3:39 PM, Doug Anderson wrote:
-> > Hi,
-> > 
-> > On Fri, Aug 16, 2019 at 3:12 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> On 8/16/19 2:27 PM, Matthias Kaehlcke wrote:
-> >>> On Fri, Aug 16, 2019 at 10:13:42PM +0200, Pavel Machek wrote:
-> >>>> On Tue 2019-08-13 12:11:47, Matthias Kaehlcke wrote:
-> >>>>> Add a .config_led hook which is called by the PHY core when
-> >>>>> configuration data for a PHY LED is available. Each LED can be
-> >>>>> configured to be solid 'off, solid 'on' for certain (or all)
-> >>>>> link speeds or to blink on RX/TX activity.
-> >>>>>
-> >>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >>>>
-> >>>> THis really needs to go through the LED subsystem,
-> >>>
-> >>> Sorry, I used what get_maintainers.pl threw at me, I should have
-> >>> manually cc-ed the LED list.
-> >>>
-> >>>> and use the same userland interfaces as the rest of the system.
-> >>>
-> >>> With the PHY maintainers we discussed to define a binding that is
-> >>> compatible with that of the LED one, to have the option to integrate
-> >>> it with the LED subsystem later. The integration itself is beyond the
-> >>> scope of this patchset.
-> >>>
-> >>> The PHY LED configuration is a low priority for the project I'm
-> >>> working on. I wanted to make an attempt to upstream it and spent
-> >>> already significantly more time on it than planned, if integration
-> >>> with the LED framework now is a requirement please consider this
-> >>> series abandonded.
-> >>
-> >> While I have an appreciation for how hard it can be to work in a
-> >> corporate environment while doing upstream first and working with
-> >> virtually unbounded goals (in time or scope) due to maintainers and
-> >> reviewers, that kind of statement can hinder your ability to establish
-> >> trust with peers in the community as it can be read as take it or leave it.
-> > 
-> > You think so?  I feel like Matthias is simply expressing the reality
-> > of the situation here and I'd rather see a statement like this posted
-> > than the series just silently dropped.  Communication is good.
-> > 
-> > In general on Chrome OS we don't spent lots of time tweaking with
-> > Ethernet and even less time tweaking with Ethernet on ARM boards where
-> > you might need a binding like this, so it's pretty hard to justify up
-> > the management chain spending massive amounts of resources on it.  In
-> > this case we have two existing ARM boards which we're trying to uprev
-> > from 3.14 to 4.19 which were tweaking the Ethernet driver in some
-> > downstream code.  We thought it would be nice to try to come up with a
-> > solution that could land upstream, which is usually what we try to do
-> > in these cases.
-> > 
-> > Normally if there is some major architecture needed that can't fit in
-> > the scope of a project, we would do a downstream solution for the
-> > project and then fork off the task (maybe by a different Engineer or a
-> > contractor) to get a solution that can land upstream.  ...but in this
-> > case it seems hard to justify because it's unlikely we would need it
-> > again anytime remotely soon.
-> > 
-> > So I guess the alternatives to what Matthias did would have been:
-> > 
-> > A) Don't even try to upstream.  Seems worse.  At least this way
-> > there's something a future person can start from and the discussion is
-> > rolling.
-> > 
-> > B) Keep spending tons of time on something even though management
-> > doesn't want him to.  Seems worse.
-> > 
-> > C) Spend his nights and weekends working on this.  Seems worse.
-> > 
-> > D) Silently stop working on it without saying "I'm going to stop".  Seems worse.
-> > 
-> > ...unless you have a brilliant "E)" I think what Matthias did here is
-> > exactly right.
+On Mon, Aug 26, 2019 at 08:13:35PM +0200, Bruno Thomsen wrote:
+> Den man. 26. aug. 2019 kl. 15.20 skrev Guenter Roeck <linux@roeck-us.net>:
+> >
+> > On 8/26/19 1:12 AM, Yuehaibing wrote:
+> > >
+> > >
+> > > On 2019/8/23 22:05, Alexandre Belloni wrote:
+> > >> On 23/08/2019 20:45:53+0800, YueHaibing wrote:
+> > >>> If WATCHDOG_CORE is not set, build fails:
+> > >>>
+> > >>> drivers/rtc/rtc-pcf2127.o: In function `pcf2127_probe.isra.6':
+> > >>> drivers/rtc/rtc-pcf2127.c:478: undefined reference to `devm_watchdog_register_device'
+> > >>>
+> > >>> Add WATCHDOG_CORE Kconfig dependency to fix this.
+> > >>>
+> > >>> Reported-by: Hulk Robot <hulkci@huawei.com>
+> > >>> Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
+> > >>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > >>> ---
+> > >>>   drivers/rtc/Kconfig | 2 ++
+> > >>>   1 file changed, 2 insertions(+)
+> > >>>
+> > >>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > >>> index 25af63d..9dce7dc 100644
+> > >>> --- a/drivers/rtc/Kconfig
+> > >>> +++ b/drivers/rtc/Kconfig
+> > >>> @@ -886,6 +886,8 @@ config RTC_DRV_DS3232_HWMON
+> > >>>   config RTC_DRV_PCF2127
+> > >>>     tristate "NXP PCF2127"
+> > >>>     depends on RTC_I2C_AND_SPI
+> > >>> +   depends on WATCHDOG
+> > >>
+> > >> Definitively not, I fixed it that way:
+> > >> +       select WATCHDOG_CORE if WATCHDOG
+> > >
+> > >
+> > > No, this still fails while WATCHDOG is not set
+> > >
+> >
+> > Correct, there are no dummy functions for watchdog device registration.
+> > There would have to be conditional code in the driver if the watchdog
+> > is supposed to be optional.
 > 
-> I must apologize for making that statement since it was not fair to
-> Matthias, and he has been clear about how much time he can spend on that
-> specific, please accept my apologies for that.
+> Hi
 > 
-> Having had many recent encounters with various people not driving
-> projects to completion lately (not specifically within Linux), it looks
-> like I am overly sensitive about flagging words and patch status that
-> may fall within that lexicon. The choice of word is what triggered me.
+> During review of version 1, there was a wish for the watchdog feature not
+> to be hidden behind Kconfig option, e.g. RTC_DRV_PCF2127_WDT, as
+> it would not result in a much bigger driver.
+> 
+> I did not add any other selects/depends on in Kconfig as
+> RTC_DRV_DS1374_WDT and RTC_DRV_M41T80_WDT options
+> does not select WATCHDOG_CORE and/or WATCHDOG either.
 
-No worries, I understand that it can be frustrating if you repeatedly
-experience that projects remain unfinished.
+Those drivers do not use the watchdog core but re-implement its
+functionality. RTC_DRV_M41T80_WDT was written before the watchdog
+core existed, so this is understandable. You would have to ask the
+author of RTC_DRV_DS1374_WDT support why it doesn't use the
+watchdog core but re-implements it.
 
-Hopefully this series can be revived eventually when somebody finds
-the time to work on the integration with the LED framework.
+> DS1374 and M41T80 does not seem to check on any other
+> WATCHDOG defines other then their _WDT Kconfig.
+> 
+> I can create a patch that hides the watchdog code if WATCHDOG
+> define is not set, if that's the right way?
+> 
+
+That is for you and the rtc maintainer to decide.
+
+Guenter
