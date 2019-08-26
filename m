@@ -2,204 +2,137 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E136DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD507C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE14206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80113206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rchSLhS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbfHZNIu (ORCPT
+        id S1732153AbfHZNLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:08:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33634 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731174AbfHZNIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:08:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0C3CAC2E;
-        Mon, 26 Aug 2019 13:08:47 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: core: add nvmem_device_find
-Date:   Mon, 26 Aug 2019 15:08:28 +0200
-Message-Id: <20190826130829.21073-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
+        Mon, 26 Aug 2019 09:11:04 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38242 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731526AbfHZNLE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:11:04 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so26445933edo.5;
+        Mon, 26 Aug 2019 06:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eOkLkN7smSq0ns/S0LMZmqF1Dy+3J7PTJleOy2NTrNQ=;
+        b=rchSLhS3jEcWGALrvZS9lg42bPsK+L4jmE1ofythOxOBFt7Knwin/H0gKk5aRQuMqV
+         sMjx6Gng5zvInucUI+Os13OMlYXLtmWfaUPakz6Z2BMP8OrRt+P+mnqKucmGjCumX1WV
+         f2H6RxTohS0XkJThfe5T3FSYC9FmzWltRieYOjQSQ7nvVWcqkx9nmBLJ+srikJlGrdct
+         DHLoaF6wbuuCOrjORLwQG56Z+SU2Ua6Xynon+2CfT1CioS14peeajnB0XJVrr66r/EmL
+         1k2QS54FRjqtfCg1SpgSnVOmxY0OZsVNi2e9+Ow+gOZFCJLTy1AF1X2ESTkxR/L3meL/
+         /BnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eOkLkN7smSq0ns/S0LMZmqF1Dy+3J7PTJleOy2NTrNQ=;
+        b=qJHagZL9F7QZWfvGEDvPp7RcChorCfl/B/KPC8HYizyaRvnFf1vUElFlibCiHte7lW
+         ZiJh4R+m9aT6NAAzjAP7ojYiS6OqtdN4asWe2b4Oks7cdO1sil8g1Kellz92QCZA66M6
+         uUaGs8DkV0T9QnUhQElR/X3xymao38drSHMrKlMI3c5pylTqq/Vutt6u1dJpQJGNFOYk
+         2YahMT8st+gGF8iXp8c5saPcYECd6msUDm24wfLRppLEXcX5lsrRqWhwONHXYEwAYlFx
+         qO7yC3Aoc9iTsgS1QPbUoNETYpjAv+rjDtKAbhvGg8GhJto+MsVVEk9u6oCDvtzssxuY
+         xUSA==
+X-Gm-Message-State: APjAAAVbon+AtouMLqItjUTG0Ia92+geTxjFygT910OwiR2peL6KPcXK
+        S3xL1MfapVMC2qB4fp3DbsjKzdShNxy9BcB6aw0=
+X-Google-Smtp-Source: APXvYqzVG/D+nD3b6ZSB8+NOgE1MImyQOAkmB/HnjzZUVCfTlt4Y95bver8du7USLt/XYwZBHYH/6rWKoRxCKOxxu5c=
+X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr16385256ejb.90.1566825062311;
+ Mon, 26 Aug 2019 06:11:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-6-olteanv@gmail.com>
+In-Reply-To: <20190822211514.19288-6-olteanv@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 26 Aug 2019 16:10:51 +0300
+Message-ID: <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
+ poll mode
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvmem_device_find provides a way to search for nvmem devices with
-the help of a match function simlair to bus_find_device.
+Hi Mark,
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- Documentation/driver-api/nvmem.rst |  2 ++
- drivers/nvmem/core.c               | 61 +++++++++++++++++---------------------
- include/linux/nvmem-consumer.h     |  9 ++++++
- 3 files changed, 38 insertions(+), 34 deletions(-)
+On Fri, 23 Aug 2019 at 00:15, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> Connected to the LS1021A DSPI is the SJA1105 DSA switch. This
+> constitutes 4 of the 6 Ethernet ports on this board.
+>
+> As the SJA1105 is a PTP switch, constant disciplining of its PTP clock
+> is necessary, and that translates into a lot of SPI I/O even when
+> otherwise idle.
+>
+> Switching to using the DSPI in poll mode has several distinct
+> benefits:
+>
+> - With interrupts, the DSPI driver in TCFQ mode raises an IRQ after each
+>   transmitted byte. There is more time wasted for the "waitq" event than
+>   for actual I/O. And the DSPI IRQ count is by far the largest in
+>   /proc/interrupts on this board (larger than Ethernet). I should
+>   mention that due to various LS1021A errata, other operating modes than
+>   TCFQ are not available.
+>
+> - The SPI I/O time is both lower, and more consistently so. For a TSN
+>   switch it is important that all SPI transfers take a deterministic
+>   time to complete.
+>   Reading the PTP clock is an important example.
+>   Egressing through the switch requires some setup in advance (an SPI
+>   write command). Without this patch, that operation required a
+>   --tx_timestamp_timeout 50 (ms), now it can be done with
+>   --tx_timestamp_timeout 10.
+>   Yet another example is reconstructing timestamps, which has a hard
+>   deadline because the PTP timestamping counter wraps around in 0.135
+>   seconds. Combined with other I/O needed for that to happen, there is
+>   a real risk that the deadline is not always met.
+>
+> See drivers/net/dsa/sja1105/ for more info about the above.
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> ---
+>  arch/arm/boot/dts/ls1021a-tsn.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+> index 5b7689094b70..1c09cfc766af 100644
+> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
+> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+> @@ -33,6 +33,7 @@
+>  };
+>
+>  &dspi0 {
+> +       /delete-property/ interrupts;
+>         bus-num = <0>;
+>         status = "okay";
+>
+> --
+> 2.17.1
+>
 
-diff --git a/Documentation/driver-api/nvmem.rst b/Documentation/driver-api/nvmem.rst
-index d9d958d5c824..287e86819640 100644
---- a/Documentation/driver-api/nvmem.rst
-+++ b/Documentation/driver-api/nvmem.rst
-@@ -129,6 +129,8 @@ To facilitate such consumers NVMEM framework provides below apis::
-   struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
-   struct nvmem_device *devm_nvmem_device_get(struct device *dev,
- 					   const char *name);
-+  struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data));
-   void nvmem_device_put(struct nvmem_device *nvmem);
-   int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
- 		      size_t bytes, void *buf);
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 057d1ff87d5d..9f1ee9c766ec 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -76,33 +76,6 @@ static struct bus_type nvmem_bus_type = {
- 	.name		= "nvmem",
- };
- 
--static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
--{
--	struct device *d;
--
--	if (!nvmem_np)
--		return NULL;
--
--	d = bus_find_device_by_of_node(&nvmem_bus_type, nvmem_np);
--
--	if (!d)
--		return NULL;
--
--	return to_nvmem_device(d);
--}
--
--static struct nvmem_device *nvmem_find(const char *name)
--{
--	struct device *d;
--
--	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
--
--	if (!d)
--		return NULL;
--
--	return to_nvmem_device(d);
--}
--
- static void nvmem_cell_drop(struct nvmem_cell *cell)
- {
- 	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_CELL_REMOVE, cell);
-@@ -532,13 +505,16 @@ int devm_nvmem_unregister(struct device *dev, struct nvmem_device *nvmem)
- }
- EXPORT_SYMBOL(devm_nvmem_unregister);
- 
--static struct nvmem_device *__nvmem_device_get(struct device_node *np,
--					       const char *nvmem_name)
-+static struct nvmem_device *__nvmem_device_get(void *data,
-+			int (*match)(struct device *dev, const void *data))
- {
- 	struct nvmem_device *nvmem = NULL;
-+	struct device *dev;
- 
- 	mutex_lock(&nvmem_mutex);
--	nvmem = np ? of_nvmem_find(np) : nvmem_find(nvmem_name);
-+	dev = bus_find_device(&nvmem_bus_type, NULL, data, match);
-+	if (dev)
-+		nvmem = to_nvmem_device(dev);
- 	mutex_unlock(&nvmem_mutex);
- 	if (!nvmem)
- 		return ERR_PTR(-EPROBE_DEFER);
-@@ -587,7 +563,7 @@ struct nvmem_device *of_nvmem_device_get(struct device_node *np, const char *id)
- 	if (!nvmem_np)
- 		return ERR_PTR(-ENOENT);
- 
--	return __nvmem_device_get(nvmem_np, NULL);
-+	return __nvmem_device_get(nvmem_np, device_match_of_node);
- }
- EXPORT_SYMBOL_GPL(of_nvmem_device_get);
- #endif
-@@ -613,10 +589,26 @@ struct nvmem_device *nvmem_device_get(struct device *dev, const char *dev_name)
- 
- 	}
- 
--	return __nvmem_device_get(NULL, dev_name);
-+	return __nvmem_device_get((void *)dev_name, device_match_name);
- }
- EXPORT_SYMBOL_GPL(nvmem_device_get);
- 
-+/**
-+ * nvmem_device_find() - Find nvmem device with matching function
-+ *
-+ * @data: Data to pass to match function
-+ * @match: Callback function to check device
-+ *
-+ * Return: ERR_PTR() on error or a valid pointer to a struct nvmem_device
-+ * on success.
-+ */
-+struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data))
-+{
-+	return __nvmem_device_get(data, match);
-+}
-+EXPORT_SYMBOL_GPL(nvmem_device_find);
-+
- static int devm_nvmem_device_match(struct device *dev, void *res, void *data)
- {
- 	struct nvmem_device **nvmem = res;
-@@ -710,7 +702,8 @@ nvmem_cell_get_from_lookup(struct device *dev, const char *con_id)
- 		if ((strcmp(lookup->dev_id, dev_id) == 0) &&
- 		    (strcmp(lookup->con_id, con_id) == 0)) {
- 			/* This is the right entry. */
--			nvmem = __nvmem_device_get(NULL, lookup->nvmem_name);
-+			nvmem = __nvmem_device_get((void *)lookup->nvmem_name,
-+						   device_match_name);
- 			if (IS_ERR(nvmem)) {
- 				/* Provider may not be registered yet. */
- 				cell = ERR_CAST(nvmem);
-@@ -780,7 +773,7 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
- 	if (!nvmem_np)
- 		return ERR_PTR(-EINVAL);
- 
--	nvmem = __nvmem_device_get(nvmem_np, NULL);
-+	nvmem = __nvmem_device_get(nvmem_np, device_match_of_node);
- 	of_node_put(nvmem_np);
- 	if (IS_ERR(nvmem))
- 		return ERR_CAST(nvmem);
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 8f8be5b00060..02dc4aa992b2 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -89,6 +89,9 @@ void nvmem_del_cell_lookups(struct nvmem_cell_lookup *entries,
- int nvmem_register_notifier(struct notifier_block *nb);
- int nvmem_unregister_notifier(struct notifier_block *nb);
- 
-+struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data));
-+
- #else
- 
- static inline struct nvmem_cell *nvmem_cell_get(struct device *dev,
-@@ -204,6 +207,12 @@ static inline int nvmem_unregister_notifier(struct notifier_block *nb)
- 	return -EOPNOTSUPP;
- }
- 
-+static inline struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data))
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_NVMEM */
- 
- #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
--- 
-2.13.7
+I noticed you skipped applying this patch, and I'm not sure that Shawn
+will review it/take it.
+Do you have a better suggestion how I can achieve putting the DSPI
+driver in poll mode for this board? A Kconfig option maybe?
 
+Regards,
+-Vladimir
