@@ -2,109 +2,74 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED8C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269AFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA7C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AERbP4Rz"
+	by mail.kernel.org (Postfix) with ESMTP id E71BF21848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566860404;
+	bh=9HU752brhPDitF+fXtIax2+34bksF89mk8XaaI0hlHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QlVPFAocthCTY7H8jtvu3XVlCBbrMIkmi3FE+P+PO9rDIc+Xv31gDRNwyKR+TfxBt
+	 ISQzg0Z1wZ0/iSI4U85i7GL0oEg40LIXa6YpTxZ9LGMO6/AmusM9IU1ZVJi2mnGjpB
+	 OnWleYv8uhf6+12FgfEWNn7sCyVpZS/gL+18agIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfHZW5w (ORCPT
+        id S1727014AbfHZXAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:57:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35561 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfHZW5v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:57:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d85so12779480pfd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xA1R9dD2TutV2Z170ahV4G14Z1OgTzuJeruk3z7eV2c=;
-        b=AERbP4Rztk3SN5GtGKXtX3TrZ3m/fScubto0XvP+6FDz7VMVU42cAXy6NC3pczw2bc
-         Gwxkpv1s0w69sq4xkWimuKQLIT+DUYruxRwHOVqU8Pqd7P5EpsPGoCEGJchwJ2MUVgEw
-         UPr6LTjpKdJYBCt3d81empjWYPFoCDP7TInHRL9WzZcBx+p4f82RulMm5fIBPu0leQlp
-         TCJajvb8StSXaK8V136MGkMNIhdzdQvoG3y4157iLyd7IQKR75LcVeQz3bsfeD8N15kx
-         CaSDRuOoUl7fNQWbXkKzDPA0yuQelVrDAHr0nEPpM5alelZU1mWOAZvT6b3nAbmuc6iH
-         af1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xA1R9dD2TutV2Z170ahV4G14Z1OgTzuJeruk3z7eV2c=;
-        b=lsv6Di/zpDU59wESEgIDLdYProOdjsCUpsh1qBGycHRyUPCe1IG/cxqHsGE8os7QwB
-         LuzsXTxbAAvuvJCcxg3bWNcgFLnczOLx8+pKFulotBsNerFt/MZqP3uYVO6wYF4Sj0E+
-         a//V0KFyIfrW7ZudKTIZLoTf3jFN3+2TypazDsNiSPUQzhRQwlwp/+B1v0t3to/h+4Q8
-         d/VqsYh8G3puoQSOFi+9mjqWCXPBSD87p7ac8TnYoBMzNBgEyBI2fcurnd2CP/YywngR
-         6RQy4PQ2DPE02jF+UWih4S2wqNzHTXS+J6xIg6delr2a+VmFw7VhM62p1ezelKNu4N/G
-         qVsQ==
-X-Gm-Message-State: APjAAAUOFIsPN7Q4/ENQRYuNlQXuV4z/hARB1gmeq2PQhFcYGYw6Ai5j
-        CHEZWDgbXgzPCHEPfdwz7cYQRCpuiaCuX/94g+qb1A==
-X-Google-Smtp-Source: APXvYqwsVh+pvKpidVTgJBtumnmGK6qLp5RvX6P4qW6oQbh5YH03k6WRn6z+v36x1ZDdGAdycHp/gkbUV9RaoXI2BK0=
-X-Received: by 2002:a17:90a:c20f:: with SMTP id e15mr21969838pjt.123.1566860270396;
- Mon, 26 Aug 2019 15:57:50 -0700 (PDT)
+        Mon, 26 Aug 2019 19:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbfHZXAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 19:00:02 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDF1206BA;
+        Mon, 26 Aug 2019 23:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566860401;
+        bh=9HU752brhPDitF+fXtIax2+34bksF89mk8XaaI0hlHw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qI5rkvRNL0XsTCijI2EoyZ5UlQ7WhyXvi2hWlmKVaXHMu5zQGIufp1ZMQsbJSqA4K
+         rYdoqGs5TfHRO0nJJsuZvQ2HyLwjIk7Kah7ZaAbUu3SuvGPEdzMulvFhdkJ5/6AegO
+         ++AtuW8Zhaul63bQhEx2+OqdpgfjUV1NchzNwtfU=
+Date:   Tue, 27 Aug 2019 00:59:59 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 35/38] posix-cpu-timers: Remove pointless comparisons
+Message-ID: <20190826225958.GJ14309@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192922.548747613@linutronix.de>
 MIME-Version: 1.0
-References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 26 Aug 2019 15:57:39 -0700
-Message-ID: <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
-Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821192922.548747613@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 2:22 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> I'm looking into a linkage failure for one of our device kernels, and
-> it seems that genksyms isn't producing a hash value correctly for
-> aggregate definitions that contain __attribute__s like
-> __attribute__((packed)).
->
-> Example:
-> $ echo 'struct foo { int bar; };' | ./scripts/genksyms/genksyms -d
-> Defn for struct foo == <struct foo { int bar ; } >
-> Hash table occupancy 1/4096 = 0.000244141
-> $ echo 'struct __attribute__((packed)) foo { int bar; };' |
-> ./scripts/genksyms/genksyms -d
-> Hash table occupancy 0/4096 = 0
->
-> I assume the __attribute__ part isn't being parsed correctly (looks
-> like genksyms is a lex/yacc based C parser).
->
-> The issue we have in our out of tree driver (*sadface*) is basically a
-> EXPORT_SYMBOL'd function whose signature contains a packed struct.
->
-> Theoretically, there should be nothing wrong with exporting a function
-> that requires packed structs, and this is just a bug in the lex/yacc
-> based parser, right?  I assume that not having CONFIG_MODVERSIONS
-> coverage of packed structs in particular could lead to potentially
-> not-fun bugs?  Or is using packed structs in exported function symbols
-> with CONFIG_MODVERSIONS forbidden in some documentation somewhere I
-> missed?
+On Wed, Aug 21, 2019 at 09:09:22PM +0200, Thomas Gleixner wrote:
+> The soft RLIMIT expiry code checks whether the soft limit is greater than
+> the hard limit. That's pointless because if the soft RLIMIT is greater than
+> the hard RLIMIT then that code cannot be reached as the hard RLIMIT check
+> is before that and already killed the process.
+> 
+> Remove it.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Ah, looks like I'm late to the party:
-https://lwn.net/Articles/707520/
--- 
-Thanks,
-~Nick Desaulniers
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
