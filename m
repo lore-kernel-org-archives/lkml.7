@@ -2,117 +2,396 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237EFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC50C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE75520850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iRJskzvc"
+	by mail.kernel.org (Postfix) with ESMTP id 0C5BD2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387802AbfHZSVy (ORCPT
+        id S2387815AbfHZSWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:21:54 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14863 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733311AbfHZSVy (ORCPT
+        Mon, 26 Aug 2019 14:22:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40924 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729274AbfHZSWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:21:54 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6423430000>; Mon, 26 Aug 2019 11:21:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 26 Aug 2019 11:21:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 26 Aug 2019 11:21:53 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 26 Aug
- 2019 18:21:49 +0000
-Subject: Re: [PATCH 1/2] mm/hmm: hmm_range_fault() NULL pointer bug
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190823221753.2514-1-rcampbell@nvidia.com>
- <20190823221753.2514-2-rcampbell@nvidia.com> <20190824223754.GA21891@lst.de>
- <e2ecc1a7-0d2f-5957-e6cb-b3c86c085d80@nvidia.com>
- <20190826180937.GI27031@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <9351886a-34b4-4d6f-95b0-d25007a38e61@nvidia.com>
-Date:   Mon, 26 Aug 2019 11:21:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 26 Aug 2019 14:22:31 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2JdI-0003N6-Qy; Mon, 26 Aug 2019 20:22:25 +0200
+Date:   Mon, 26 Aug 2019 20:22:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [patch V3 28/38] posix-cpu-timers: Restructure expiry array
+In-Reply-To: <alpine.DEB.2.21.1908262014260.1939@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908262021140.1939@nanos.tec.linutronix.de>
+References: <20190821190847.665673890@linutronix.de> <20190821192921.895254344@linutronix.de> <20190826163204.GA14309@lenoir> <alpine.DEB.2.21.1908262014260.1939@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190826180937.GI27031@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566843715; bh=SGzNXU9OUMJ4sxgAgwF2vBiAW3WFDK29f9kkvuUtX/U=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=iRJskzvc2xmRxSFweduukFPXuLO46IayfypAROJ04qHuHouqTkdxRWJBjEvfWz26t
-         nH11/K1bIcpCtfQ3PCzTwQ7OjiV89AbFCKVp2GG/u7oavfNQjSfTIN9Ay9sY6QisRX
-         Lw8C5CzNnDbqQDuqVHy8esNTkALJED132k9sS3BGQHah1iO+M08Lear0RteTgH3Plb
-         +ypJuyFZ7wu0/IIAGodcN57KhvsrhSSHhMSpq1VtFDlL1oWxG7Yp0WVpo+rUHAmyWi
-         mHRx0pP0zK6O9mcrC5LbmewxrhxFYmw5xcF/RjJ6Svoenp5d4wFxOGfjSn8PYeN7b2
-         yZgNdr/Pbptmw==
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now that the abused struct task_cputime is gone, it's more natural to
+bundle the expiry cache and the list head of each clock into a struct and
+have an array of those structs.
 
-On 8/26/19 11:09 AM, Jason Gunthorpe wrote:
-> On Mon, Aug 26, 2019 at 11:02:12AM -0700, Ralph Campbell wrote:
->>
->> On 8/24/19 3:37 PM, Christoph Hellwig wrote:
->>> On Fri, Aug 23, 2019 at 03:17:52PM -0700, Ralph Campbell wrote:
->>>> Although hmm_range_fault() calls find_vma() to make sure that a vma exists
->>>> before calling walk_page_range(), hmm_vma_walk_hole() can still be called
->>>> with walk->vma == NULL if the start and end address are not contained
->>>> within the vma range.
->>>
->>> Should we convert to walk_vma_range instead?  Or keep walk_page_range
->>> but drop searching the vma ourselves?
->>>
->>> Except for that the patch looks good to me:
->>>
->>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>>
->>
->> I think keeping the call to walk_page_range() makes sense.
->> Jason is hoping to be able to snapshot a range with & without vmas
->> and have the pfns[] filled with empty/valid entries as appropriate.
->>
->> I plan to repost my patch changing hmm_range_fault() to use
->> walk.test_walk which will remove the call to find_vma().
->> Jason had some concerns about testing it so that's why I have
->> been working on some HMM self tests before resending it.
-> 
-> I'm really excited to see tests for hmm_range_fault()!
-> 
-> Did you find this bug with the tests??
-> 
-> Jason
-> 
+Follow the hrtimer naming convention of 'bases' and rename the expiry cache
+to 'nextevt' and adapt all usage sites.
 
-Yes, I found both bugs with the tests.
-I started with Jerome's hmm_dummy driver and user level test code.
-Hopefully I can send it out this week.
+Generates also better code .text size shrinks by 80 bytes.
+
+Suggested-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+V2: New patch
+V3: Address review feedback from Frederic
+---
+ include/linux/posix-timers.h   |   41 ++++++++++------
+ kernel/time/posix-cpu-timers.c |  105 +++++++++++++++++++++--------------------
+ 2 files changed, 83 insertions(+), 63 deletions(-)
+
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -63,24 +63,33 @@ static inline int clockid_to_fd(const cl
+ }
+ 
+ #ifdef CONFIG_POSIX_TIMERS
++
+ /**
+- * posix_cputimers - Container for posix CPU timer related data
+- * @expiries:		Earliest-expiration cache array based
++ * posix_cputimer_base - Container per posix CPU clock
++ * @nextevt:		Earliest-expiration cache
+  * @cpu_timers:		List heads to queue posix CPU timers
++ */
++struct posix_cputimer_base {
++	u64			nextevt;
++	struct list_head	cpu_timers;
++};
++
++/**
++ * posix_cputimers - Container for posix CPU timer related data
++ * @bases:		Base container for posix CPU clocks
+  *
+  * Used in task_struct and signal_struct
+  */
+ struct posix_cputimers {
+-	u64			expiries[CPUCLOCK_MAX];
+-	struct list_head	cpu_timers[CPUCLOCK_MAX];
++	struct posix_cputimer_base	bases[CPUCLOCK_MAX];
+ };
+ 
+ static inline void posix_cputimers_init(struct posix_cputimers *pct)
+ {
+-	memset(&pct->expiries, 0, sizeof(pct->expiries));
+-	INIT_LIST_HEAD(&pct->cpu_timers[0]);
+-	INIT_LIST_HEAD(&pct->cpu_timers[1]);
+-	INIT_LIST_HEAD(&pct->cpu_timers[2]);
++	memset(pct->bases, 0, sizeof(pct->bases));
++	INIT_LIST_HEAD(&pct->bases[0].cpu_timers);
++	INIT_LIST_HEAD(&pct->bases[1].cpu_timers);
++	INIT_LIST_HEAD(&pct->bases[2].cpu_timers);
+ }
+ 
+ void posix_cputimers_group_init(struct posix_cputimers *pct, u64 cpu_limit);
+@@ -88,19 +97,23 @@ void posix_cputimers_group_init(struct p
+ static inline void posix_cputimers_rt_watchdog(struct posix_cputimers *pct,
+ 					       u64 runtime)
+ {
+-	pct->expiries[CPUCLOCK_SCHED] = runtime;
++	pct->bases[CPUCLOCK_SCHED].nextevt = runtime;
+ }
+ 
+ /* Init task static initializer */
+-#define INIT_CPU_TIMERLISTS(c)	{					\
+-	LIST_HEAD_INIT(c.cpu_timers[0]),				\
+-	LIST_HEAD_INIT(c.cpu_timers[1]),				\
+-	LIST_HEAD_INIT(c.cpu_timers[2]),				\
++#define INIT_CPU_TIMERBASE(b) {						\
++	.cpu_timers = LIST_HEAD_INIT(b.cpu_timers),			\
++}
++
++#define INIT_CPU_TIMERBASES(b) {					\
++	INIT_CPU_TIMERBASE(b[0]),					\
++	INIT_CPU_TIMERBASE(b[1]),					\
++	INIT_CPU_TIMERBASE(b[2]),					\
+ }
+ 
+ #define INIT_CPU_TIMERS(s)						\
+ 	.posix_cputimers = {						\
+-		.cpu_timers = INIT_CPU_TIMERLISTS(s.posix_cputimers),	\
++		.bases = INIT_CPU_TIMERBASES(s.posix_cputimers.bases),	\
+ 	},
+ #else
+ struct posix_cputimers { };
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -24,13 +24,13 @@ void posix_cputimers_group_init(struct p
+ {
+ 	posix_cputimers_init(pct);
+ 	if (cpu_limit != RLIM_INFINITY)
+-		pct->expiries[CPUCLOCK_PROF] = cpu_limit * NSEC_PER_SEC;
++		pct->bases[CPUCLOCK_PROF].nextevt = cpu_limit * NSEC_PER_SEC;
+ }
+ 
+ /*
+  * Called after updating RLIMIT_CPU to run cpu timer and update
+- * tsk->signal->posix_cputimers.expiries expiration cache if
+- * necessary. Needs siglock protection since other code may update
++ * tsk->signal->posix_cputimers.bases[clock].nextevt expiration cache if
++ * necessary. Needs siglock protection since other code may update the
+  * expiration cache as well.
+  */
+ void update_rlimit_cpu(struct task_struct *task, unsigned long rlim_new)
+@@ -122,9 +122,11 @@ static void bump_cpu_timer(struct k_itim
+ 	}
+ }
+ 
+-static inline bool expiry_cache_is_zero(const u64 *ec)
++static inline bool expiry_cache_is_zero(const struct posix_cputimers *pct)
+ {
+-	return !(ec[CPUCLOCK_PROF] | ec[CPUCLOCK_VIRT] | ec[CPUCLOCK_SCHED]);
++	return !(pct->bases[CPUCLOCK_PROF].nextevt |
++		 pct->bases[CPUCLOCK_VIRT].nextevt |
++		 pct->bases[CPUCLOCK_SCHED].nextevt);
+ }
+ 
+ static int
+@@ -432,9 +434,9 @@ static void cleanup_timers_list(struct l
+  */
+ static void cleanup_timers(struct posix_cputimers *pct)
+ {
+-	cleanup_timers_list(&pct->cpu_timers[CPUCLOCK_PROF]);
+-	cleanup_timers_list(&pct->cpu_timers[CPUCLOCK_VIRT]);
+-	cleanup_timers_list(&pct->cpu_timers[CPUCLOCK_SCHED]);
++	cleanup_timers_list(&pct->bases[CPUCLOCK_PROF].cpu_timers);
++	cleanup_timers_list(&pct->bases[CPUCLOCK_VIRT].cpu_timers);
++	cleanup_timers_list(&pct->bases[CPUCLOCK_SCHED].cpu_timers);
+ }
+ 
+ /*
+@@ -464,21 +466,19 @@ static void arm_timer(struct k_itimer *t
+ {
+ 	struct cpu_timer_list *const nt = &timer->it.cpu;
+ 	int clkidx = CPUCLOCK_WHICH(timer->it_clock);
+-	u64 *cpuexp, newexp = timer->it.cpu.expires;
+ 	struct task_struct *p = timer->it.cpu.task;
++	u64 newexp = timer->it.cpu.expires;
++	struct posix_cputimer_base *base;
+ 	struct list_head *head, *listpos;
+ 	struct cpu_timer_list *next;
+ 
+-	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
+-		head = p->posix_cputimers.cpu_timers + clkidx;
+-		cpuexp = p->posix_cputimers.expiries + clkidx;
+-	} else {
+-		head = p->signal->posix_cputimers.cpu_timers + clkidx;
+-		cpuexp = p->signal->posix_cputimers.expiries + clkidx;
+-	}
++	if (CPUCLOCK_PERTHREAD(timer->it_clock))
++		base = p->posix_cputimers.bases + clkidx;
++	else
++		base = p->signal->posix_cputimers.bases + clkidx;
+ 
+-	listpos = head;
+-	list_for_each_entry(next, head, entry) {
++	listpos = head = &base->cpu_timers;
++	list_for_each_entry(next,head, entry) {
+ 		if (nt->expires < next->expires)
+ 			break;
+ 		listpos = &next->entry;
+@@ -494,8 +494,8 @@ static void arm_timer(struct k_itimer *t
+ 	 * for process timers we share expiration cache with itimers
+ 	 * and RLIMIT_CPU and for thread timers with RLIMIT_RTTIME.
+ 	 */
+-	if (expires_gt(*cpuexp, newexp))
+-		*cpuexp = newexp;
++	if (expires_gt(base->nextevt, newexp))
++		base->nextevt = newexp;
+ 
+ 	if (CPUCLOCK_PERTHREAD(timer->it_clock))
+ 		tick_dep_set_task(p, TICK_DEP_BIT_POSIX_TIMER);
+@@ -783,9 +783,9 @@ static inline void check_dl_overrun(stru
+ static void check_thread_timers(struct task_struct *tsk,
+ 				struct list_head *firing)
+ {
+-	struct list_head *timers = tsk->posix_cputimers.cpu_timers;
+-	u64 stime, utime, *expires = tsk->posix_cputimers.expiries;
++	struct posix_cputimer_base *base = tsk->posix_cputimers.bases;
+ 	unsigned long soft;
++	u64 stime, utime;
+ 
+ 	if (dl_task(tsk))
+ 		check_dl_overrun(tsk);
+@@ -794,14 +794,18 @@ static void check_thread_timers(struct t
+ 	 * If the expiry cache is zero, then there are no active per thread
+ 	 * CPU timers.
+ 	 */
+-	if (expiry_cache_is_zero(tsk->posix_cputimers.expiries))
++	if (expiry_cache_is_zero(&tsk->posix_cputimers))
+ 		return;
+ 
+ 	task_cputime(tsk, &utime, &stime);
+ 
+-	*expires++ = check_timers_list(timers, firing, utime + stime);
+-	*expires++ = check_timers_list(++timers, firing, utime);
+-	*expires = check_timers_list(++timers, firing, tsk->se.sum_exec_runtime);
++	base->nextevt = check_timers_list(&base->cpu_timers, firing,
++					  utime + stime);
++	base++;
++	base->nextevt = check_timers_list(&base->cpu_timers, firing, utime);
++	base++;
++	base->nextevt = check_timers_list(&base->cpu_timers, firing,
++					  tsk->se.sum_exec_runtime);
+ 
+ 	/*
+ 	 * Check for the special case thread timers.
+@@ -840,7 +844,7 @@ static void check_thread_timers(struct t
+ 		}
+ 	}
+ 
+-	if (expiry_cache_is_zero(tsk->posix_cputimers.expiries))
++	if (expiry_cache_is_zero(&tsk->posix_cputimers))
+ 		tick_dep_clear_task(tsk, TICK_DEP_BIT_POSIX_TIMER);
+ }
+ 
+@@ -884,7 +888,7 @@ static void check_process_timers(struct
+ 				 struct list_head *firing)
+ {
+ 	struct signal_struct *const sig = tsk->signal;
+-	struct list_head *timers = sig->posix_cputimers.cpu_timers;
++	struct posix_cputimer_base *base = sig->posix_cputimers.bases;
+ 	u64 utime, ptime, virt_expires, prof_expires;
+ 	u64 sum_sched_runtime, sched_expires;
+ 	struct task_cputime cputime;
+@@ -912,9 +916,12 @@ static void check_process_timers(struct
+ 	ptime = utime + cputime.stime;
+ 	sum_sched_runtime = cputime.sum_exec_runtime;
+ 
+-	prof_expires = check_timers_list(timers, firing, ptime);
+-	virt_expires = check_timers_list(++timers, firing, utime);
+-	sched_expires = check_timers_list(++timers, firing, sum_sched_runtime);
++	prof_expires = check_timers_list(&base[CPUCLOCK_PROF].cpu_timers,
++					 firing, ptime);
++	virt_expires = check_timers_list(&base[CPUCLOCK_VIRT].cpu_timers,
++					 firing, utime);
++	sched_expires = check_timers_list(&base[CPUCLOCK_SCHED].cpu_timers,
++					  firing, sum_sched_runtime);
+ 
+ 	/*
+ 	 * Check for the special case process timers.
+@@ -959,11 +966,11 @@ static void check_process_timers(struct
+ 			prof_expires = x;
+ 	}
+ 
+-	sig->posix_cputimers.expiries[CPUCLOCK_PROF] = prof_expires;
+-	sig->posix_cputimers.expiries[CPUCLOCK_VIRT] = virt_expires;
+-	sig->posix_cputimers.expiries[CPUCLOCK_SCHED] = sched_expires;
++	base[CPUCLOCK_PROF].nextevt = prof_expires;
++	base[CPUCLOCK_VIRT].nextevt = virt_expires;
++	base[CPUCLOCK_SCHED].nextevt = sched_expires;
+ 
+-	if (expiry_cache_is_zero(sig->posix_cputimers.expiries))
++	if (expiry_cache_is_zero(&sig->posix_cputimers))
+ 		stop_process_timers(sig);
+ 
+ 	sig->cputimer.checking_timer = false;
+@@ -1028,20 +1035,21 @@ static void posix_cpu_timer_rearm(struct
+ }
+ 
+ /**
+- * task_cputimers_expired - Compare two task_cputime entities.
++ * task_cputimers_expired - Check whether posix CPU timers are expired
+  *
+  * @samples:	Array of current samples for the CPUCLOCK clocks
+- * @expiries:	Array of expiry values for the CPUCLOCK clocks
++ * @pct:	Pointer to a posix_cputimers container
+  *
+- * Returns true if any mmember of @samples is greater than the corresponding
+- * member of @expiries if that member is non zero. False otherwise
++ * Returns true if any member of @samples is greater than the corresponding
++ * member of @pct->bases[CLK].nextevt. False otherwise
+  */
+-static inline bool task_cputimers_expired(const u64 *sample, const u64 *expiries)
++static inline bool
++task_cputimers_expired(const u64 *sample, struct posix_cputimers *pct)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < CPUCLOCK_MAX; i++) {
+-		if (expiries[i] && sample[i] >= expiries[i])
++		if (pct->bases[i].nextevt && sample[i] >= pct->bases[i].nextevt)
+ 			return true;
+ 	}
+ 	return false;
+@@ -1059,14 +1067,13 @@ static inline bool task_cputimers_expire
+  */
+ static inline bool fastpath_timer_check(struct task_struct *tsk)
+ {
+-	u64 *expiries = tsk->posix_cputimers.expiries;
+ 	struct signal_struct *sig;
+ 
+-	if (!expiry_cache_is_zero(expiries)) {
++	if (!expiry_cache_is_zero(&tsk->posix_cputimers)) {
+ 		u64 samples[CPUCLOCK_MAX];
+ 
+ 		task_sample_cputime(tsk, samples);
+-		if (task_cputimers_expired(samples, expiries))
++		if (task_cputimers_expired(samples, &tsk->posix_cputimers))
+ 			return true;
+ 	}
+ 
+@@ -1092,8 +1099,7 @@ static inline bool fastpath_timer_check(
+ 		proc_sample_cputime_atomic(&sig->cputimer.cputime_atomic,
+ 					   samples);
+ 
+-		if (task_cputimers_expired(samples,
+-					   sig->posix_cputimers.expiries))
++		if (task_cputimers_expired(samples, &sig->posix_cputimers))
+ 			return true;
+ 	}
+ 
+@@ -1176,11 +1182,12 @@ void run_posix_cpu_timers(void)
+ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clkid,
+ 			   u64 *newval, u64 *oldval)
+ {
+-	u64 now, *expiry = tsk->signal->posix_cputimers.expiries + clkid;
++	u64 now, *nextevt;
+ 
+ 	if (WARN_ON_ONCE(clkid >= CPUCLOCK_SCHED))
+ 		return;
+ 
++	nextevt = &tsk->signal->posix_cputimers.bases[clkid].nextevt;
+ 	now = cpu_clock_sample_group(clkid, tsk, true);
+ 
+ 	if (oldval) {
+@@ -1207,8 +1214,8 @@ void set_process_cpu_timer(struct task_s
+ 	 * Update expiration cache if this is the earliest timer. CPUCLOCK_PROF
+ 	 * expiry cache is also used by RLIMIT_CPU!.
+ 	 */
+-	if (expires_gt(*expiry, *newval))
+-		*expiry = *newval;
++	if (expires_gt(*nextevt, *newval))
++		*nextevt = *newval;
+ 
+ 	tick_dep_set_signal(tsk->signal, TICK_DEP_BIT_POSIX_TIMER);
+ }
