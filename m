@@ -7,38 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF20C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8924DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5872221881
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6686721881
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbfHZWxT (ORCPT
+        id S1728626AbfHZWxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:53:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41466 "EHLO
+        Mon, 26 Aug 2019 18:53:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41469 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfHZWwY (ORCPT
+        with ESMTP id S1726539AbfHZWwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 26 Aug 2019 18:52:24 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2NqQ-0006mg-54; Tue, 27 Aug 2019 00:52:14 +0200
+        id 1i2NqN-0006ln-5R; Tue, 27 Aug 2019 00:52:11 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A609F1C0DDF;
-        Tue, 27 Aug 2019 00:52:12 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 22:52:12 -0000
-From:   tip-bot2 for Alexandre Belloni <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE5631C0DD7;
+        Tue, 27 Aug 2019 00:52:10 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 22:52:10 -0000
+From:   tip-bot2 for Maxime Ripard <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/tcb_clksrc: Register delay timer
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Subject: [tip: timers/core] dt-bindings: timer: Convert Allwinner A10 Timer to
+ a schema
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156685993261.1297.1431848765931294560.tip-bot2@tip-bot2>
+Message-ID: <156685993061.1282.7365267831454567798.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,91 +57,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     1ce861cec03c79a68bae81a7e039edae46b2c493
-Gitweb:        https://git.kernel.org/tip/1ce861cec03c79a68bae81a7e039edae46b2c493
-Author:        Alexandre Belloni <alexandre.belloni@bootlin.com>
-AuthorDate:    Tue, 13 Aug 2019 15:30:50 +02:00
+Commit-ID:     a08bda2d27f271aacc92b75f4f260d3136cf6f58
+Gitweb:        https://git.kernel.org/tip/a08bda2d27f271aacc92b75f4f260d3136cf6f58
+Author:        Maxime Ripard <maxime.ripard@bootlin.com>
+AuthorDate:    Mon, 22 Jul 2019 10:12:19 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Tue, 27 Aug 2019 00:31:39 +02:00
 
-clocksource/drivers/tcb_clksrc: Register delay timer
+dt-bindings: timer: Convert Allwinner A10 Timer to a schema
 
-Implement and register delay timer to allow get_cycles() to work properly.
+The older Allwinner SoCs have a Timer supported in Linux, with a matching
+Device Tree binding.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+While the original binding only mentions one interrupt, the timer actually
+has 6 of them.
+
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/Kconfig           |  2 +-
- drivers/clocksource/timer-atmel-tcb.c | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt      | 19 +------------------
+ 2 files changed, 76 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5e9317d..a642c23 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -429,7 +429,7 @@ config ATMEL_ST
- 
- config ATMEL_TCB_CLKSRC
- 	bool "Atmel TC Block timer driver" if COMPILE_TEST
--	depends on HAS_IOMEM
-+	depends on ARM && HAS_IOMEM
- 	select TIMER_OF if OF
- 	help
- 	  Support for Timer Counter Blocks on Atmel SoCs.
-diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index 6ed31f9..7427b07 100644
---- a/drivers/clocksource/timer-atmel-tcb.c
-+++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -6,6 +6,7 @@
- #include <linux/irq.h>
- 
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/ioport.h>
- #include <linux/io.h>
-@@ -125,6 +126,18 @@ static u64 notrace tc_sched_clock_read32(void)
- 	return tc_get_cycles32(&clksrc);
- }
- 
-+static struct delay_timer tc_delay_timer;
+diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+new file mode 100644
+index 0000000..7292a42
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/allwinner,sun4i-a10-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static unsigned long tc_delay_timer_read(void)
-+{
-+	return tc_get_cycles(&clksrc);
-+}
++title: Allwinner A10 Timer Device Tree Bindings
 +
-+static unsigned long notrace tc_delay_timer_read32(void)
-+{
-+	return tc_get_cycles32(&clksrc);
-+}
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- 
- struct tc_clkevt_device {
-@@ -432,6 +445,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		/* setup ony channel 0 */
- 		tcb_setup_single_chan(&tc, best_divisor_idx);
- 		tc_sched_clock = tc_sched_clock_read32;
-+		tc_delay_timer.read_current_timer = tc_delay_timer_read32;
- 	} else {
- 		/* we have three clocks no matter what the
- 		 * underlying platform supports.
-@@ -444,6 +458,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		/* setup both channel 0 & 1 */
- 		tcb_setup_dual_chan(&tc, best_divisor_idx);
- 		tc_sched_clock = tc_sched_clock_read;
-+		tc_delay_timer.read_current_timer = tc_delay_timer_read;
- 	}
- 
- 	/* and away we go! */
-@@ -458,6 +473,9 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 
- 	sched_clock_register(tc_sched_clock, 32, divided_rate);
- 
-+	tc_delay_timer.freq = divided_rate;
-+	register_current_timer_delay(&tc_delay_timer);
++properties:
++  compatible:
++    enum:
++      - allwinner,sun4i-a10-timer
++      - allwinner,suniv-f1c100s-timer
 +
- 	return 0;
- 
- err_unregister_clksrc:
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      List of timers interrupts
++
++  clocks:
++    maxItems: 1
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          items:
++            const: allwinner,sun4i-a10-timer
++
++    then:
++      properties:
++        interrupts:
++          minItems: 6
++          maxItems: 6
++
++  - if:
++      properties:
++        compatible:
++          items:
++            const: allwinner,suniv-f1c100s-timer
++
++    then:
++      properties:
++        interrupts:
++          minItems: 3
++          maxItems: 3
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    timer {
++        compatible = "allwinner,sun4i-a10-timer";
++        reg = <0x01c20c00 0x400>;
++        interrupts = <22>,
++                     <23>,
++                     <24>,
++                     <25>,
++                     <67>,
++                     <68>;
++        clocks = <&osc>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt b/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+deleted file mode 100644
+index 3da9d51..0000000
+--- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-Allwinner A1X SoCs Timer Controller
+-
+-Required properties:
+-
+-- compatible : should be one of the following:
+-              "allwinner,sun4i-a10-timer"
+-              "allwinner,suniv-f1c100s-timer"
+-- reg : Specifies base physical address and size of the registers.
+-- interrupts : The interrupt of the first timer
+-- clocks: phandle to the source clock (usually a 24 MHz fixed clock)
+-
+-Example:
+-
+-timer {
+-	compatible = "allwinner,sun4i-a10-timer";
+-	reg = <0x01c20c00 0x400>;
+-	interrupts = <22>;
+-	clocks = <&osc>;
+-};
