@@ -2,75 +2,74 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9509CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549D3C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774812342D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B322186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbfHZTan (ORCPT
+        id S1733200AbfHZTd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:30:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57594 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 15:33:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:34418 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbfHZTan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:30:43 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2C22B8D5B99;
-        Mon, 26 Aug 2019 19:30:43 +0000 (UTC)
-Received: from llong.com (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45EE0600C8;
-        Mon, 26 Aug 2019 19:30:39 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if !X86_BUG_L1TF
-Date:   Mon, 26 Aug 2019 15:30:23 -0400
-Message-Id: <20190826193023.23293-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Mon, 26 Aug 2019 19:30:43 +0000 (UTC)
+        id S1729780AbfHZTd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 15:33:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AA0C337;
+        Mon, 26 Aug 2019 12:33:27 -0700 (PDT)
+Received: from [10.37.9.91] (unknown [10.37.9.91])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3822F3F246;
+        Mon, 26 Aug 2019 12:33:25 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/7] Unify SMP stop generic logic to common code
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mark.rutland@arm.com, peterz@infradead.org,
+        catalin.marinas@arm.com, takahiro.akashi@linaro.org,
+        james.morse@arm.com, hidehiro.kawai.ez@hitachi.com,
+        tglx@linutronix.de, will@kernel.org, dave.martin@arm.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190823115720.605-1-cristian.marussi@arm.com>
+ <20190826153401.GB9591@infradead.org>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <2b4a744c-ea20-00e6-828f-7be125326792@arm.com>
+Date:   Mon, 26 Aug 2019 20:33:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190826153401.GB9591@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The l1tf_vmx_mitigation is only set to VMENTER_L1D_FLUSH_NOT_REQUIRED
-when the ARCH_CAPABILITIES MSR indicates that L1D flush is not required.
-However, if the CPU is not affected by L1TF, l1tf_vmx_mitigation will
-still be set to VMENTER_L1D_FLUSH_AUTO. This is certainly not the best
-option for a !X86_BUG_L1TF CPU.
+Hi Christoph
 
-So force l1tf_vmx_mitigation to VMENTER_L1D_FLUSH_NOT_REQUIRED to make it
-more explicit in case users are checking the vmentry_l1d_flush parameter.
+thanks for the review.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 8/26/19 4:34 PM, Christoph Hellwig wrote:
+> On Fri, Aug 23, 2019 at 12:57:13PM +0100, Cristian Marussi wrote:
+>> An architecture willing to rely on this SMP common logic has to define its
+>> own helpers and set CONFIG_ARCH_USE_COMMON_SMP_STOP=y.
+>> The series wire this up for arm64.
+>>
+>> Behaviour is not changed for architectures not adopting this new common
+>> logic.
+> 
+> Seens like this common code only covers arm64.  I think we should
+> generally have at least two users for common code.
+> 
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 42ed3faa6af8..a00ce3d6bbfd 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7896,6 +7896,8 @@ static int __init vmx_init(void)
- 			vmx_exit();
- 			return r;
- 		}
-+	} else {
-+		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
- 	}
- 
- #ifdef CONFIG_KEXEC_CORE
--- 
-2.18.1
+Yes absolutely, but this RFC was an attempt at first to explore if this
+approach was deemed sensible upstream or not, so I wired up only arm64 for now.
 
+Thanks
+
+Cristian
