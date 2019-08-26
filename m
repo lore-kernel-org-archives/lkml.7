@@ -2,70 +2,129 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485F1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77EAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133E0217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UqypIqh2"
+	by mail.kernel.org (Postfix) with ESMTP id C816420874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbfHZPeF (ORCPT
+        id S1732569AbfHZPhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:34:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57672 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbfHZPeE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:34:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gZm47CCL06ybTiP0j0dAUiXrO053lQFsUW6pDmole3U=; b=UqypIqh27pmKxahyd/0HFg4Cv
-        n2pfzS8CIpKBqOvjlsL+BytTAwLBa7XX4Te99ClELPy+d6q/sRzkJE+9nxQNh2J+hpOfPAVlL6gbS
-        ODK1jdLTWrIR1+90tvC+hWF10IqiXcWn1WwxoRuLQGTtb7SKjO3MpYRC8ykny/BM2dyVx57MuPD92
-        uweHAZeaM8hj+vpVpTvjrYFG7Y9xq/HrUJXXh1Zpx7w1t90DFPoQy3T1HZpAYWSjXdIV/InCHD61Q
-        ULT09gMcukaJ+YSgmQ1sP3tY2piDlndjgODjYT+BmGb0OoztGdv0ejl5MAserwJL6DNbB9oxxZCpX
-        FpZ4hrrYA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2H0L-0000VW-Qf; Mon, 26 Aug 2019 15:34:01 +0000
-Date:   Mon, 26 Aug 2019 08:34:01 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mark.rutland@arm.com, peterz@infradead.org,
-        catalin.marinas@arm.com, takahiro.akashi@linaro.org,
-        james.morse@arm.com, hidehiro.kawai.ez@hitachi.com,
-        tglx@linutronix.de, will@kernel.org, dave.martin@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 0/7] Unify SMP stop generic logic to common code
-Message-ID: <20190826153401.GB9591@infradead.org>
-References: <20190823115720.605-1-cristian.marussi@arm.com>
+        Mon, 26 Aug 2019 11:37:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51520 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731833AbfHZPhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:37:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6A496B0B6;
+        Mon, 26 Aug 2019 15:37:34 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id B158EDA98E; Mon, 26 Aug 2019 17:37:57 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 17:37:57 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: fix allocation of bitmap pages.
+Message-ID: <20190826153757.GW2752@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Christophe Leroy <christophe.leroy@c-s.fr>, erhard_f@mailbox.org,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+References: <c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190823115720.605-1-cristian.marussi@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 12:57:13PM +0100, Cristian Marussi wrote:
-> An architecture willing to rely on this SMP common logic has to define its
-> own helpers and set CONFIG_ARCH_USE_COMMON_SMP_STOP=y.
-> The series wire this up for arm64.
+On Wed, Aug 21, 2019 at 03:05:55PM +0000, Christophe Leroy wrote:
+> Various notifications of type "BUG kmalloc-4096 () : Redzone
+> overwritten" have been observed recently in various parts of
+> the kernel. After some time, it has been made a relation with
+> the use of BTRFS filesystem.
 > 
-> Behaviour is not changed for architectures not adopting this new common
-> logic.
+> [   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
+> [   22.809971] -----------------------------------------------------------------------------
+> 
+> [   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
+> [   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
+> [   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
+> [   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
+> [   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
+> [   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
+> [   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
+> [   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
+> [   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
+> [   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
+> [   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
+> [   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
+> [   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
+> [   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
+> [   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
+> [   22.814107] 	generic_shutdown_super+0x80/0x110
+> [   22.814250] 	kill_anon_super+0x18/0x30
+> [   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
+> [   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
+> [   22.814841] 	proc_cgroup_show+0xc0/0x248
+> [   22.814967] 	proc_single_show+0x54/0x98
+> [   22.815086] 	seq_read+0x278/0x45c
+> [   22.815190] 	__vfs_read+0x28/0x17c
+> [   22.815289] 	vfs_read+0xa8/0x14c
+> [   22.815381] 	ksys_read+0x50/0x94
+> [   22.815475] 	ret_from_syscall+0x0/0x38
+> 
+> Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead
+> of memcpy") changed the way bitmap blocks are copied. But allthough
+> bitmaps have the size of a page, they were allocated with kzalloc().
+> 
+> Most of the time, kzalloc() allocates aligned blocks of memory, so
+> copy_page() can be used. But when some debug options like SLAB_DEBUG
+> are activated, kzalloc() may return unaligned pointer.
+> 
+> On powerpc, memcpy(), copy_page() and other copying functions use
+> 'dcbz' instruction which provides an entire zeroed cacheline to avoid
+> memory read when the intention is to overwrite a full line. Functions
+> like memcpy() are writen to care about partial cachelines at the start
+> and end of the destination, but copy_page() assumes it gets pages. As
+> pages are naturally cache aligned, copy_page() doesn't care about
+> partial lines. This means that when copy_page() is called with a
+> misaligned pointer, a few leading bytes are zeroed.
+> 
+> To fix it, allocate bitmaps through kmem_cache instead of using kzalloc()
+> The cache pool is created with PAGE_SIZE alignment constraint.
+> 
+> Reported-by: Erhard F. <erhard_f@mailbox.org>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
+> Fixes: 69d2480456d1 ("btrfs: use copy_page for copying pages instead of memcpy")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+> v2: Using kmem_cache instead of get_zeroed_page() in order to benefit from SLAB debugging features like redzone.
 
-Seens like this common code only covers arm64.  I think we should
-generally have at least two users for common code.
+I'll take this version, thanks. Though I'm not happy about the allocator
+behaviour. The kmem cache based fix can be backported independently to
+4.19 regardless of the SL*B fixes.
+
+> +extern struct kmem_cache *btrfs_bitmap_cachep;
+
+I've renamed the cache to btrfs_free_space_bitmap_cachep
+
+Reviewed-by: David Sterba <dsterba@suse.com>
