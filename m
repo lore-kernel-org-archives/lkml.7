@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5357C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E71C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE67F206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B7E206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfHZWwe (ORCPT
+        id S1726635AbfHZWwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:52:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41522 "EHLO
+        Mon, 26 Aug 2019 18:52:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41520 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfHZWwb (ORCPT
+        with ESMTP id S1727519AbfHZWwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 26 Aug 2019 18:52:31 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2Nqa-0006oU-C0; Tue, 27 Aug 2019 00:52:24 +0200
+        id 1i2NqY-0006qf-Ne; Tue, 27 Aug 2019 00:52:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6F50B1C07BA;
-        Tue, 27 Aug 2019 00:52:17 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 22:52:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 126171C0DDE;
+        Tue, 27 Aug 2019 00:52:20 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 22:52:20 -0000
 From:   tip-bot2 for Magnus Damm <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] dt-bindings: timer: renesas, cmt: Update CMT1 on
- sh73a0 and r8a7740
+Subject: [tip: timers/core] clocksource/drivers/sh_cmt: Document "cmt-48" as
+ deprecated
 Cc:     Magnus Damm <damm+renesas@opensource.se>,
-        Rob Herring <robh@kernel.org>,
         Simon Horman <horms+renesas@verge.net.au>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156685993735.1327.12111403337185938414.tip-bot2@tip-bot2>
+Message-ID: <156685994001.1342.8063596857526317450.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,60 +58,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     81b604c39997de91f4b2912f803074c85045fe36
-Gitweb:        https://git.kernel.org/tip/81b604c39997de91f4b2912f803074c85045fe36
+Commit-ID:     19d608458f4f3bb3a1f89bd7e4814c3fd30dbec7
+Gitweb:        https://git.kernel.org/tip/19d608458f4f3bb3a1f89bd7e4814c3fd30dbec7
 Author:        Magnus Damm <damm+renesas@opensource.se>
-AuthorDate:    Tue, 20 Aug 2019 21:35:14 +09:00
+AuthorDate:    Tue, 20 Aug 2019 21:36:07 +09:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Tue, 27 Aug 2019 00:31:39 +02:00
 
-dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
+clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
 
-This patch reworks the DT binding documentation for the 6-channel
-48-bit CMTs known as CMT1 on r8a7740 and sh73a0.
+Update the CMT driver to mark "renesas,cmt-48" as deprecated.
 
-After the update the same style of DT binding as the rest of the upstream
-SoCs will now also be used by r8a7740 and sh73a0. The DT binding "cmt-48"
-is removed from the DT binding documentation, however software support for
-this deprecated binding will still remain in the CMT driver for some time.
+Instead of documenting a theoretical hardware device based on current software
+support level, define DT bindings top-down based on available data sheet
+information and make use of part numbers in the DT compat string.
+
+In case of the only in-tree users r8a7740 and sh73a0 the compat strings
+"renesas,r8a7740-cmt1" and "renesas,sh73a0-cmt1" may be used instead.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 10 +-------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/clocksource/sh_cmt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index 45840d4..a297fca 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -12,17 +12,10 @@ datasheets.
- Required Properties:
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index abf5e78..ef773db 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -918,7 +918,11 @@ static const struct platform_device_id sh_cmt_id_table[] = {
+ MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
  
-   - compatible: must contain one or more of the following:
--    - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
--		(CMT1)
--    - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
--		(CMT1)
--    - "renesas,cmt-48" for all non-second generation 48-bit CMT
--		(CMT1 on sh73a0 and r8a7740)
--		This is a fallback for the above renesas,cmt-48-* entries.
--
-     - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
-     - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
-     - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
-+    - "renesas,r8a7740-cmt1" for the 48-bit CMT1 device included in r8a7740.
-     - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
-     - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
-     - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
-@@ -59,6 +52,7 @@ Required Properties:
-     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
-     - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
-     - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-+    - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
-     - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-     - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
-     - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
+ static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
+-	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
++	{
++		/* deprecated, preserved for backward compatibility */
++		.compatible = "renesas,cmt-48",
++		.data = &sh_cmt_info[SH_CMT_48BIT]
++	},
+ 	{
+ 		/* deprecated, preserved for backward compatibility */
+ 		.compatible = "renesas,cmt-48-gen2",
