@@ -2,71 +2,99 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2854C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B2DC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980E9217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566858568;
-	bh=1w9GIDlEJWDjZ63L7+0XjSR5Dgi5qyM5Pw3adISnHyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JP2QjC7zXVw032JaCXNd7ecoy+HZPynZsy/+hYuq+63Z1Y0kmLE75SCmF3lYQvRI1
-	 UKaOe1KM1GFzWPzaRWUhoH7ZrgakukkUi34IOWpFUrSjJY1KQmtPGVv+FyfiIOkyv9
-	 6NgIL+iVj5BoWvNr9pyib24qKuVWjYoENC8NyP8Y=
+	by mail.kernel.org (Postfix) with ESMTP id A3D992080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfHZW31 (ORCPT
+        id S1726702AbfHZWaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56308 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 18:30:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39374 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbfHZW31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:29:27 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726281AbfHZWaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:30:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2BE2080C;
-        Mon, 26 Aug 2019 22:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566858566;
-        bh=1w9GIDlEJWDjZ63L7+0XjSR5Dgi5qyM5Pw3adISnHyU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jP9UlAgPwJKcSQuFRNrlaRF+Rjh3AfBin6g9GqEkK8NeRxdEzCQdkbPUGGyTBmKzf
-         8i2YVvG4EYqovDIPwcLBFNje771A6ca8fPf3VaQrN4zPTvoHicdq3Dz+LfzpB5S4OB
-         mrb+AXxGxSY/YXCLc1Oh+pxjK4+C0rpKSzDIZQIM=
-Date:   Tue, 27 Aug 2019 00:29:24 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 33/38] posix-cpu-timers: Consolidate timer expiry
- further
-Message-ID: <20190826222923.GH14309@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192922.365469982@linutronix.de>
+        by mx1.redhat.com (Postfix) with ESMTPS id 33325300C22F;
+        Mon, 26 Aug 2019 22:30:55 +0000 (UTC)
+Received: from masetto.com (ovpn-116-56.phx2.redhat.com [10.3.116.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A9655C1B2;
+        Mon, 26 Aug 2019 22:30:52 +0000 (UTC)
+From:   Al Stone <ahs3@redhat.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     Al Stone <ahs3@redhat.com>, linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Subject: [PATCH v2] ACPI / CPPC: do not require the _PSD method when using CPPC
+Date:   Mon, 26 Aug 2019 16:30:47 -0600
+Message-Id: <20190826223047.13146-1-ahs3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192922.365469982@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 26 Aug 2019 22:30:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:09:20PM +0200, Thomas Gleixner wrote:
-> With the array based samples and expiry cache, the expiry function can use
-> a loop to collect timers from the clock specific lists.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+According to the ACPI 6.3 specification, the _PSD method is optional
+when using CPPC.  The underlying assumption is that each CPU can change
+frequency independently from all other CPUs; _PSD is provided to tell
+the OS that some processors can NOT do that.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+However, the acpi_get_psd() function returns ENODEV if there is no _PSD
+method present, or an ACPI error status if an error occurs when evaluating
+_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
+of the specification, and only on Linux.
+
+This has forced some firmware writers to provide a dummy _PSD, even though
+it is irrelevant, but only because Linux requires it; other OSPMs follow
+the spec.  We really do not want to have OS specific ACPI tables, though.
+
+So, correct acpi_get_psd() so that it does not return an error if there
+is no _PSD method present, but does return a failure when the method can
+not be executed properly.  This allows _PSD to be optional as it should
+be.
+
+v2:
+   -- verified simple check for AE_NOT_FOUND was sufficient
+   -- simplified return status check per Rafael's suggestion
+
+Signed-off-by: Al Stone <ahs3@redhat.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+---
+ drivers/acpi/cppc_acpi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index 15f103d7532b..7a946f1944ab 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -365,10 +365,12 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+ 	union acpi_object  *psd = NULL;
+ 	struct acpi_psd_package *pdomain;
+ 
+-	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+-			ACPI_TYPE_PACKAGE);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
++	if (acpi_has_method(handle, "_PSD")) {
++		status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
++						    &buffer, ACPI_TYPE_PACKAGE);
++		if (status == AE_NOT_FOUND)	/* _PSD is optional */
++			return 0;
++	}
+ 
+ 	psd = buffer.pointer;
+ 	if (!psd || psd->package.count != 1) {
+-- 
+2.21.0
+
