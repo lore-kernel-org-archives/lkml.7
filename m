@@ -2,123 +2,151 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8657EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85750C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A57121852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2C821848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="if1MFW3z"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XGweLESf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbfHZNU6 (ORCPT
+        id S1732240AbfHZNWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:20:58 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43901 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfHZNU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:20:58 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k3so10600416pgb.10;
-        Mon, 26 Aug 2019 06:20:58 -0700 (PDT)
+        Mon, 26 Aug 2019 09:22:17 -0400
+Received: from mail-eopbgr680041.outbound.protection.outlook.com ([40.107.68.41]:44663
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726953AbfHZNWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:22:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bMLQICC2IsZHBtB73Zoa4ZrNGH3UeXB4O6XJFpBydeltOxch8HiV9L42nsXhKT6TXcFtPkRmREdz3o+Bb78xv4seLbxmWS4kzOkz3mIunEoDcydaKvyPhiY6ZV1NjZcoC29/rTIL1m8WCpee0Akg74m9q83i3cAmOx2+04ZqgAlck2SKj0YPz2aqVLmLIwMlKrlu1SN5+aJYuIK/9iAVnA3CG1vFNYkv9OeDmnqeJ88/zqvy7ieP7M2Ain8/Y+sqhluexSz/Cyf5z39fPSsD6eeWzuo+PfgQcugN62FL3n+4pn0aayTY1XebTVG8c+nqHvF9BLeMa6wo3r/MFnceIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OW+hppeN4TOEPdCDc+/373AtM3UmEJ0/Xci/6MlGCZ4=;
+ b=RHQNhan0CitXhPDEVk15qk3vFV8YAUnJjLKq6XGEDHyqYXRkPBHXFQJwOPnqUeXS6AvdfimaLQHai1J+7tXdIKYaZWMciMg/l+DAN5jI9JdMUUepqLPtZF5p6SBZtZrgVHAvKMTYGUuqBNP58o5xg80aJstfMnXTOzPWGokMJC+MIs+mto6LXV+W0v79ooxzl9FQLGuLttJcNYOYkB7CroXVEdSNIdXwjX2q22AWD451ATl0QLAfte1gkV54Iac7bSaU2X9LzRYcixus1yuhC3vaiNsZvIiBIrbGuEEfFDuSTeuWK2zeySeBxQci5L/cEwx3rP37gNTyyULZpxSxrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ke9VgdWxkTDSfhJn5FtwLPXDcQ8jktEKphO56apG3uc=;
-        b=if1MFW3zoOohAGEDXi7RhCiqITLAGw+gPYjDJwgk1onp5AlMt/MlEwygjexmHuKLPN
-         VGs1RUngTz2bQ4tlG7W33WulabOY4NG4rmTlbnCi0aGP+emsJUFzeX9NGVW1CFwK49wk
-         N8zPd3NrylH3Yv8MvHcrT1Lbqb1NOQPm88m+WcpvIbTe8QAiOp3QQHQknsuvSUmHiRfj
-         Ohcgankjj4Kofl0rgJnJckvQ47yIB4ZWpxsnIajo9wKXnBOAua+VpXHLC5uj72cgExuo
-         Dn6/dAcw9RyG+pcf848d2bSnvDFjxswLKpBu1u778y9VU3VkEAtytnC7y+9wn9yrJCYF
-         0oRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ke9VgdWxkTDSfhJn5FtwLPXDcQ8jktEKphO56apG3uc=;
-        b=NXahza3W5KZvLIBJBMSTQEhw8esjNx6M0I//eA81XI95Fgo3nuvlGO9xY8J/sEa9hX
-         Pmzr4/TV+C7IM3Vx9iRNw+u2i69aLwq2G5l38XjGfv28J15GhsJx1vfs/xU3KxxlYVLg
-         6cjVH+iUvpSKq2K3pWHNqoBuNpIbTpL6uqT+gbu1us9ujfaqPW3l9Xixj6QSDRRja5JX
-         ln4cT29i/cEfQDQVlAh+5UjfuAhro7hiqsqnaUnu/9alJ1EEEs8S9YDWnPSlbE6CPxGS
-         +DNgr3SZfY08UutThvm4ZkTCDl8zOHTDBkKcaPrzuD2ZZOUo9AZlNDRcv6bSXiC6Lzdg
-         KuCA==
-X-Gm-Message-State: APjAAAXa9Ye401F56oP0GGQidpe/pIGLExPzAPsy5cZ8vDydBQXS3JpB
-        kxZ8oxVnJ1/FihfjClC+7j3OnWL2
-X-Google-Smtp-Source: APXvYqz8O3Ph5j6/3aVJUbVOGZ18VvJxtXlqGJ7c5xsvLe3qQeKX2ww51740a03oZK0I2qtjyCEi4A==
-X-Received: by 2002:aa7:91d3:: with SMTP id z19mr19969213pfa.135.1566825657669;
-        Mon, 26 Aug 2019 06:20:57 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id u21sm1502386pjn.5.2019.08.26.06.20.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 06:20:56 -0700 (PDT)
-Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without
- CONFIG_WATCHDOG_CORE
-To:     Yuehaibing <yuehaibing@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     a.zummo@towertech.it, bruno.thomsen@gmail.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190823124553.19364-1-yuehaibing@huawei.com>
- <20190823140513.GB9844@piout.net>
- <4b608c55-2541-30cf-ad88-c19a5c0cc84f@huawei.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <01a2b6b2-eb15-1b40-1edc-de122bbdb5a2@roeck-us.net>
-Date:   Mon, 26 Aug 2019 06:20:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <4b608c55-2541-30cf-ad88-c19a5c0cc84f@huawei.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OW+hppeN4TOEPdCDc+/373AtM3UmEJ0/Xci/6MlGCZ4=;
+ b=XGweLESflDxOZK27HuH+0gYie230KrIZEep6gJmdZ53dM6vXyLNL/0znODuhpTRFJdrs/MC0lWzczNKw1oHwPUqjf3dgTFxV5AFBT4nKNmvvmIoGGj9FouUuY5/BLrB84pi53YL4ihiZjMYl1bwcoHlDWxGMmRlAE4w4KoGvP8o=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB2535.namprd12.prod.outlook.com (10.172.121.143) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Mon, 26 Aug 2019 13:22:09 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::540f:1eae:7e3a:c6b2]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::540f:1eae:7e3a:c6b2%5]) with mapi id 15.20.2178.023; Mon, 26 Aug 2019
+ 13:22:08 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>, "Lei, Jun" <Jun.Lei@amd.com>,
+        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Aberback, Joshua" <Joshua.Aberback@amd.com>,
+        "Liu, Wenjing" <Wenjing.Liu@amd.com>,
+        "Liu, Charlene" <Charlene.Liu@amd.com>,
+        "Leung, Martin" <Martin.Leung@amd.com>
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] drm/amdgpu/display: fix build error without
+ CONFIG_DRM_AMD_DC_DSC_SUPPORT
+Thread-Topic: [PATCH -next] drm/amdgpu/display: fix build error without
+ CONFIG_DRM_AMD_DC_DSC_SUPPORT
+Thread-Index: AQHVW+xuznY/rti1OkK4HAc915o+JqcNaqoA
+Date:   Mon, 26 Aug 2019 13:22:08 +0000
+Message-ID: <c324866d-855a-b259-4511-c69491a82c88@amd.com>
+References: <20190826085707.12504-1-yuehaibing@huawei.com>
+In-Reply-To: <20190826085707.12504-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.250]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: YTXPR0101CA0057.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::34) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fdd061e2-8f00-4564-2bea-08d72a286557
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB2535;
+x-ms-traffictypediagnostic: CY4PR1201MB2535:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB25358136B50F21FDF46465798CA10@CY4PR1201MB2535.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1303;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(39860400002)(136003)(396003)(189003)(199004)(66446008)(66476007)(64756008)(6436002)(65956001)(65806001)(66946007)(66066001)(31696002)(2201001)(66556008)(31686004)(36756003)(14454004)(305945005)(7736002)(8936002)(8676002)(81156014)(81166006)(2501003)(386003)(6506007)(53546011)(26005)(446003)(6486002)(76176011)(102836004)(6636002)(52116002)(99286004)(11346002)(478600001)(186003)(476003)(2616005)(486006)(3846002)(6116002)(2906002)(53936002)(6512007)(256004)(5660300002)(54906003)(110136005)(71200400001)(316002)(4326008)(71190400001)(6246003)(25786009)(58126008)(229853002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2535;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MZ/8O0v9P7rZJ1n4IXRu5oDTNZ3ILKUUIwPuZ3pQfZxIxGtYRtgsvwMk2v0fVwRm/MXP7lhztVF+JmFJYhs4dFn9n4OxPR327XFBGUZRP/t68wV179VSpG5MN1YrmwyQi3onTCR4LlGh1uq/Y7iORQXDNVVvF97EraV5UbqW8CtMnXnky8/GXO/bF2p3t1gLRUKTHU8tayS3hO6/oTgZAgKJX4qA94J3j5LbJNLmFL0cxPKFSesbXB/NIIjYI4bgAKUnK3cSvO2A8LMr1jTmyM221OfIVdaz/ZXm5FvV57BYoAAUDXbLK9RY1JwUFJWTIthnnLSjMJkZJVr0c18pga8AzkGcT36B5kKQR3uq72sozdNpvuhpFid/YhriFJjjWJYUdIYddo/amPekWHYiqt30N7C07y0qw1hI4Q7UHro=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6A5CA012EB161B4E94AFA974BBD924A7@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdd061e2-8f00-4564-2bea-08d72a286557
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 13:22:08.7792
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HUK/8rH14KwRTcyhskqKGeuTjksXswyM/emoGdUe82LeQ7bFrmw/7LFypwB+ODuswm5prpPm9/4SY7priJmEcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2535
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 1:12 AM, Yuehaibing wrote:
-> 
-> 
-> On 2019/8/23 22:05, Alexandre Belloni wrote:
->> On 23/08/2019 20:45:53+0800, YueHaibing wrote:
->>> If WATCHDOG_CORE is not set, build fails:
->>>
->>> drivers/rtc/rtc-pcf2127.o: In function `pcf2127_probe.isra.6':
->>> drivers/rtc/rtc-pcf2127.c:478: undefined reference to `devm_watchdog_register_device'
->>>
->>> Add WATCHDOG_CORE Kconfig dependency to fix this.
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>> ---
->>>   drivers/rtc/Kconfig | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
->>> index 25af63d..9dce7dc 100644
->>> --- a/drivers/rtc/Kconfig
->>> +++ b/drivers/rtc/Kconfig
->>> @@ -886,6 +886,8 @@ config RTC_DRV_DS3232_HWMON
->>>   config RTC_DRV_PCF2127
->>>   	tristate "NXP PCF2127"
->>>   	depends on RTC_I2C_AND_SPI
->>> +	depends on WATCHDOG
->>
->> Definitively not, I fixed it that way:
->> +       select WATCHDOG_CORE if WATCHDOG
-> 
-> 
-> No, this still fails while WATCHDOG is not set
-> 
-
-Correct, there are no dummy functions for watchdog device registration.
-There would have to be conditional code in the driver if the watchdog
-is supposed to be optional.
-
-Guenter
+DQoNCk9uIDIwMTktMDgtMjYgNDo1NyBhLm0uLCBZdWVIYWliaW5nIHdyb3RlOg0KPiBJZiBDT05G
+SUdfRFJNX0FNRF9EQ19EU0NfU1VQUE9SVCBpcyBub3Qgc2V0LCBidWlsZCBmYWlsczoNCj4gDQo+
+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1Ly4uL2Rpc3BsYXkvZGMvZGNuMjAvZGNuMjBfaHdz
+ZXEuYzogSW4gZnVuY3Rpb24gZGNuMjBfaHdfc2VxdWVuY2VyX2NvbnN0cnVjdDoNCj4gZHJpdmVy
+cy9ncHUvZHJtL2FtZC9hbWRncHUvLi4vZGlzcGxheS9kYy9kY24yMC9kY24yMF9od3NlcS5jOjIw
+OTk6Mjg6DQo+ICBlcnJvcjogZGNuMjBfZHNjX3BnX2NvbnRyb2wgdW5kZWNsYXJlZCAoZmlyc3Qg
+dXNlIGluIHRoaXMgZnVuY3Rpb24pOyBkaWQgeW91IG1lYW4gZGNuMjBfZHBwX3BnX2NvbnRyb2w/
+DQo+ICAgZGMtPmh3c3MuZHNjX3BnX2NvbnRyb2wgPSBkY24yMF9kc2NfcGdfY29udHJvbDsNCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBkY24yMF9kcHBfcGdfY29udHJvbA0KPiANCj4gVXNlIENP
+TkZJR19EUk1fQU1EX0RDX0RTQ19TVVBQT1JUIHRvIGd1YXJkIHRoaXMuDQo+IA0KPiBSZXBvcnRl
+ZC1ieTogSHVsayBSb2JvdCA8aHVsa2NpQGh1YXdlaS5jb20+DQo+IEZpeGVzOiA4YTMxODIwYjEy
+MTggKCJkcm0vYW1kL2Rpc3BsYXk6IE1ha2UgaW5pdF9odyBhbmQgaW5pdF9waXBlcyBnZW5lcmlj
+IGZvciBzZWFtbGVzcyBib290IikNCj4gU2lnbmVkLW9mZi1ieTogWXVlSGFpYmluZyA8eXVlaGFp
+YmluZ0BodWF3ZWkuY29tPg0KDQpSZXZpZXdlZC1ieTogSGFycnkgV2VudGxhbmQgPGhhcnJ5Lndl
+bnRsYW5kQGFtZC5jb20+DQoNCkhhcnJ5DQoNCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vYW1k
+L2Rpc3BsYXkvZGMvZGNuMjAvZGNuMjBfaHdzZXEuYyB8IDQgKysrKw0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9h
+bWQvZGlzcGxheS9kYy9kY24yMC9kY24yMF9od3NlcS5jIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9k
+aXNwbGF5L2RjL2RjbjIwL2RjbjIwX2h3c2VxLmMNCj4gaW5kZXggZTE0NmQxZC4uNTRkNjdmNiAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2RjbjIwL2RjbjIw
+X2h3c2VxLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2RjbjIwL2Rj
+bjIwX2h3c2VxLmMNCj4gQEAgLTIwOTIsNyArMjA5MiwxMSBAQCB2b2lkIGRjbjIwX2h3X3NlcXVl
+bmNlcl9jb25zdHJ1Y3Qoc3RydWN0IGRjICpkYykNCj4gIAlkYy0+aHdzcy5lbmFibGVfcG93ZXJf
+Z2F0aW5nX3BsYW5lID0gZGNuMjBfZW5hYmxlX3Bvd2VyX2dhdGluZ19wbGFuZTsNCj4gIAlkYy0+
+aHdzcy5kcHBfcGdfY29udHJvbCA9IGRjbjIwX2RwcF9wZ19jb250cm9sOw0KPiAgCWRjLT5od3Nz
+Lmh1YnBfcGdfY29udHJvbCA9IGRjbjIwX2h1YnBfcGdfY29udHJvbDsNCj4gKyNpZmRlZiBDT05G
+SUdfRFJNX0FNRF9EQ19EU0NfU1VQUE9SVA0KPiAgCWRjLT5od3NzLmRzY19wZ19jb250cm9sID0g
+ZGNuMjBfZHNjX3BnX2NvbnRyb2w7DQo+ICsjZWxzZQ0KPiArCWRjLT5od3NzLmRzY19wZ19jb250
+cm9sID0gTlVMTDsNCj4gKyNlbmRpZg0KPiAgCWRjLT5od3NzLmRpc2FibGVfdmdhID0gZGNuMjBf
+ZGlzYWJsZV92Z2E7DQo+ICANCj4gIAlpZiAoSVNfRlBHQV9NQVhJTVVTX0RDKGRjLT5jdHgtPmRj
+ZV9lbnZpcm9ubWVudCkpIHsNCj4gDQo=
