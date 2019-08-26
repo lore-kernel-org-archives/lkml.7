@@ -2,68 +2,96 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A07C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77381C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6ED21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:35:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uxOVl9R6"
+	by mail.kernel.org (Postfix) with ESMTP id 54519217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbfHZLf2 (ORCPT
+        id S1731083AbfHZLg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:35:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54582 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729813AbfHZLf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:35:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aenK8euu943bliEDeJFfs0W3RyIf+T+BCmMxBssGwPM=; b=uxOVl9R6OEU74LUqPOVcmHjSO
-        1vQI3HafvvCoFjegccH3y1ZSTxBkWVzevJr84P3xFtXruTep0+qtdi8VqhdVOV7CFXdkyUsrsWfF6
-        H/zUcpS0hcioTzQXaWuSuWgOV7YBLUkLkKZ5iaKQvxStyV+T7wsDwZ6ATwhdY5469ykkqO9mi3t0/
-        Y/6/19uaEYqe5SVTrNQ+/IoESnCIFZ/Sy8+7bJ0lOa/l4uTeaXYQklMiVjtTBa8czMK8/voeoc8I0
-        yPmv9SqCOPALIxKQXkITp0TgdPn3prw2eaA7FKoX+rdsTcvrpBUoj8L3JCGWWI7lQgBxK/bRVpkaB
-        BWKSuS1pg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2DHS-0001v4-Ev; Mon, 26 Aug 2019 11:35:26 +0000
-Date:   Mon, 26 Aug 2019 04:35:26 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
-Message-ID: <20190826113526.GA23425@infradead.org>
-References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
+        Mon, 26 Aug 2019 07:36:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:19550 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729852AbfHZLg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:36:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 04:36:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="174181712"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2019 04:36:57 -0700
+Received: from [10.125.252.173] (abudanko-mobl.ccr.corp.intel.com [10.125.252.173])
+        by linux.intel.com (Postfix) with ESMTP id D579A580375;
+        Mon, 26 Aug 2019 04:36:49 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: BoF on LPC 2019 : Linux Perf advancements for compute intensive and
+ server systems
+To:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jonatan Corbet <corbet@lwn.net>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Organization: Intel Corp.
+Message-ID: <43216530-4410-6cc4-aa4a-51fa7e7c1b0c@linux.intel.com>
+Date:   Mon, 26 Aug 2019 14:36:48 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821092658.32764-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:26:58PM +0900, Masahiro Yamada wrote:
-> Use the standard obj-y form to specify the sub-directories under
-> arch/riscv/. No functional change intended.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Do you have a document what the grand scheme here is?  Less of the magic
-in arch/$(ARCH)/Makefile sounds like a good idea, but unless we have
-a very specific split between the kbuild makefile and various override
-I fear just splitting things up into two files doesn't really help much.
+Hi,
+
+There is a BoF session scheduled on Linux Plumbers Conference 2019 event.
+If you plan attend the event feel free to join and discuss about the BoF 
+topic and beyond:
+
+Linux Perf advancements for compute intensive and server systems:
+
+"Modern server and compute intensive systems are naturally built around 
+ several top performance CPUs with large amount of cores and equipped 
+ by shared memory that spans a number of NUMA domains. Compute intensive 
+ workloads usually implement highly parallel CPU bound cyclic codes 
+ performing mathematics calculations that reference data located in 
+ the shared memory. Performance observability and profiling of these 
+ workloads on such systems have unique characteristics and impose specific 
+ requirements on software performance tools. The requirements include 
+ tools CPU scalability, coping with high rate and volume of collected 
+ performance data as well as NUMA awareness. In order to fulfill that 
+ requirements a number of extensions have been implemented in Linux Perf 
+ tool that are currently a part of the Linux kernel source tree 
+ [1], [2], [3], [4]"
+
+Best regards,
+Alexey
+
+[1] https://marc.info/?l=linux-kernel&m=154149439404555&w=2
+[2] https://marc.info/?l=linux-kernel&m=154817912621465&w=2
+[3] https://marc.info/?l=linux-kernel&m=155293062518459&w=2
+[4] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
