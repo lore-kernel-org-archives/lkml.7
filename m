@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42F3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21255C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B352070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66DE21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566789440;
-	bh=pZzkhwcBJfs0QtEtXuJLrkB89zQzll96XuQ1G/Is+0g=;
+	s=default; t=1566789453;
+	bh=FEs3TMM0ZYwBf3dusmpCVE/U5ogVTBo5jlcOMzlVOu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBvJVn+1p25WkARpoEIR5v10CWXEWjdszuXPQ+6kERob05rAZFLqir3rwH8R89TVy
-	 cyNGF8GjGh+KMJwU2WH9u1dcuuSZBHpFwWTt600RjFEHW0c7hIaWzA14vleuqKuaXv
-	 32iKCPFckhUqs0wQlFh1De9nEBPAnKcv7QsHHqzc=
+	b=iJhzKEXofNmzmPymyaFJoNtv3C5wV0KGTWfadA6PIRa5faqYvuo44RMM+rnpBLeQF
+	 RVL+Op9oDohrte+j8b1gnxv9P/ZG5VxrzxRWfddEIrXZX+X6T43nJkOxHx/LcEgxi2
+	 0G7V6sUvtE4FjA256ukAw8Ylc5yLEiw8KpseXbIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfHZDRU (ORCPT
+        id S1729554AbfHZDRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
+        Sun, 25 Aug 2019 23:17:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbfHZDRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:17:19 -0400
+        id S1726434AbfHZDRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 23:17:31 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36342173E;
-        Mon, 26 Aug 2019 03:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D77822070B;
+        Mon, 26 Aug 2019 03:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566789438;
-        bh=pZzkhwcBJfs0QtEtXuJLrkB89zQzll96XuQ1G/Is+0g=;
+        s=default; t=1566789451;
+        bh=FEs3TMM0ZYwBf3dusmpCVE/U5ogVTBo5jlcOMzlVOu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1q6ynV4eXb20bwoW+OZ+DkHDdintCvMuzhPd8biapLRfC/+ps+VIQwFXQK6TrjZD
-         dKlWQppXhMlmJMSGpi7bgbKhwKC8sEVFdBJDBhk4ceZ7QchgXh3nEITBxhtqnONxm7
-         vcOG40PwdgVdbpTMkyzhU5rGKEIKzbiw4BrhBFR4=
+        b=P41uJw4iE7hZ+m44x3YjIMRFxcJ++9sqqHDpeKMVvJWSF9iiZmumFg6D183qYHE8Y
+         7Uu/k4e4N6U76zbJ0wzPx74ARm8hLSjGLsBGAq0DxzkLcFxHwb6bg+4w69oWLUCw5f
+         6eZTcvH6z9Zoxsr6lxc15DnXLOHpMrWGzWHLQhZE=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Frank Rowand <frowand.list@gmail.com>
@@ -55,9 +55,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 08/19] tracing: kprobes: Register to dynevent earlier stage
-Date:   Mon, 26 Aug 2019 12:17:12 +0900
-Message-Id: <156678943243.21459.6275766489688267737.stgit@devnote2>
+Subject: [RFC PATCH v3 09/19] tracing: Accept different type for synthetic event fields
+Date:   Mon, 26 Aug 2019 12:17:24 +0900
+Message-Id: <156678944420.21459.11193086089601225256.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156678933823.21459.4100380582025186209.stgit@devnote2>
 References: <156678933823.21459.4100380582025186209.stgit@devnote2>
@@ -70,51 +70,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register kprobe event to dynevent in subsys_initcall level.
-This will allow kernel to register new kprobe events in
-fs_initcall level via trace_run_command.
+Make the synthetic event accepts a different type field to record.
+However, the size and signed flag must be same.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_kprobe.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ kernel/trace/trace_events_hist.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 6c5145525f90..5135c07b6557 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1484,11 +1484,12 @@ static __init void setup_boot_kprobe_events(void)
- 	enable_boot_kprobe_events();
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index ca6b0dff60c5..a7f447195143 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -4063,8 +4063,11 @@ static int check_synth_field(struct synth_event *event,
+ 
+ 	field = event->fields[field_pos];
+ 
+-	if (strcmp(field->type, hist_field->type) != 0)
+-		return -EINVAL;
++	if (strcmp(field->type, hist_field->type) != 0) {
++		if (field->size != hist_field->size ||
++		    field->is_signed != hist_field->is_signed)
++			return -EINVAL;
++	}
+ 
+ 	return 0;
  }
- 
--/* Make a tracefs interface for controlling probe points */
--static __init int init_kprobe_trace(void)
-+/*
-+ * Register dynevent at subsys_initcall. This allows kernel to setup kprobe
-+ * events in fs_initcall without tracefs.
-+ */
-+static __init int init_kprobe_trace_early(void)
- {
--	struct dentry *d_tracer;
--	struct dentry *entry;
- 	int ret;
- 
- 	ret = dyn_event_register(&trace_kprobe_ops);
-@@ -1498,6 +1499,16 @@ static __init int init_kprobe_trace(void)
- 	if (register_module_notifier(&trace_kprobe_module_nb))
- 		return -EINVAL;
- 
-+	return 0;
-+}
-+subsys_initcall(init_kprobe_trace_early);
-+
-+/* Make a tracefs interface for controlling probe points */
-+static __init int init_kprobe_trace(void)
-+{
-+	struct dentry *d_tracer;
-+	struct dentry *entry;
-+
- 	d_tracer = tracing_init_dentry();
- 	if (IS_ERR(d_tracer))
- 		return 0;
 
