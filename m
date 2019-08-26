@@ -2,82 +2,121 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7735C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64193C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C22A2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381ED204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Y6cQ437A";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MAW8POA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfHZX4t (ORCPT
+        id S1727437AbfHZX5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 19:56:49 -0400
-Received: from cnc.isely.net ([75.149.91.89]:51513 "EHLO cnc.isely.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbfHZX4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 19:56:49 -0400
-Received: from lochley (lochley-lan.isely.net [::ffff:192.168.23.74])
-  (AUTH: PLAIN isely, TLS: TLSv1/SSLv3,256bits,DHE-RSA-AES256-GCM-SHA384)
-  by cnc.isely.net with ESMTPSA; Mon, 26 Aug 2019 18:56:47 -0500
-  id 0000000000142089.000000005D6471BF.00006FA1
-Date:   Mon, 26 Aug 2019 18:56:47 -0500 (CDT)
-From:   isely@isely.net
-To:     Yizhuo <yzhai003@ucr.edu>
-cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Isely <isely@isely.net>
-Subject: Re: [PATCH] [media] pvrusb2: qctrl.flag will be uninitlaized if
- cx2341x_ctrl_query() returns error code
-In-Reply-To: <20190826235528.9923-1-yzhai003@ucr.edu>
-Message-ID: <alpine.DEB.2.20.1908261856340.22242@lochley.isely.net>
-References: <20190826235528.9923-1-yzhai003@ucr.edu>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Mon, 26 Aug 2019 19:57:47 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:59803 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726020AbfHZX5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 19:57:46 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 01DEA3CB0;
+        Mon, 26 Aug 2019 19:57:46 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Mon, 26 Aug 2019 19:57:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=XME7TZm7cj23/QLbq4OVXeIVehmG6Kj
+        rwVjJRtju3yU=; b=Y6cQ437A8Ha+5sMISr5HPLDDUBGIXZGsj1+W8orSgA+stbB
+        N6MVEEoXQl6B6fp4atWu3Oq6lpm06RBHKxVHgCuB+rQu2M0ZG1ZZNohGEtD/Vxwq
+        lGht1LDPtUHknaJXvkN2VNYPU7ua2NC1LFBWNjuJwkqJGARJjQrL46KjHAad8RPM
+        fdMpUJmNm36qFMPjZ9KKWb+MZeOf5ycRkWAxrgJa2WQvt0I2rHG+PuigTJLaSRK6
+        lmPlL7l5kB2QjYcyoRHTis0cyo5OsJCdWo+Rkq9hfsk5gXx90ONp60x49vkCuA8Y
+        /4znYi7TWepBXZtezyzLhYRlkn/hsgGRSJzODLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=XME7TZ
+        m7cj23/QLbq4OVXeIVehmG6KjrwVjJRtju3yU=; b=MAW8POA4VYmSqQDxi9ne09
+        FvO8QIzWrk0VH53/UO7gGZvikmkY2ot2SOodhhNQjluNNZ9Y3sP92CvgLWsQbPiO
+        LcU+2no4uTMqJGx+5AkuxEKAQy5PBVIe1/NFUjdHrso1f9zGpD42QlMAaqYfEDwJ
+        HseiIxMzENi3CMwL2LIRL7+J8i7nMVC+MIgeMH80KFcDX9TBBXdM9No1SYH6xlSC
+        4WTVBbsbngHlh3niChfWJzeZkX2X0FDKKte2tbvPhPae/oPm418DJibQb/0hNfPd
+        u+JgFsM3NdrVwmpPfGbZ49by0JWB7KPJBTJYp6SkvDg8qhq/vgQAM/0LWE/d4asw
+        ==
+X-ME-Sender: <xms:93FkXZyTfM9gce3i09PhNxeK-Vitwb5shQUh0jQkqC8ikS8QV72Ydw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehhedgfedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:93FkXZaSNOM0ClCzMJM1cIjEANP8sMQ3vGeSgUato47e1v6mlPzLFg>
+    <xmx:93FkXaxCkrZHNh3HyyMgrYSzokyfvUw-MZvVlWlst8Ri9_ROzb2ZUA>
+    <xmx:93FkXSGLg2_V89JgCAYaDmhJYlylJ8v8rYEZH5ee-pmGLAj1TbLmRw>
+    <xmx:-XFkXSXqk18oyb9Hz3459qfh9zxfAOV5T12ZjJBLlEmSOsHQgRQdWw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id A3882E00AD; Mon, 26 Aug 2019 19:57:43 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-139-g73fcb67-fmstable-20190826v1
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Message-Id: <f33aa4b8-6d06-4226-8859-ce21a4b8728b@www.fastmail.com>
+In-Reply-To: <20190826104636.19324-5-i.mikhaylov@yadro.com>
+References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+ <20190826104636.19324-5-i.mikhaylov@yadro.com>
+Date:   Tue, 27 Aug 2019 09:27:44 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Ivan Mikhaylov" <i.mikhaylov@yadro.com>,
+        "Guenter Roeck" <linux@roeck-us.net>,
+        "Wim Van Sebroeck" <wim@linux-watchdog.org>
+Cc:     "Joel Stanley" <joel@jms.id.au>, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Alexander Amelkin" <a.amelkin@yadro.com>,
+        openbmc@lists.ozlabs.org, "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_4/4]_dt-bindings/watchdog:_Add_access=5Fcs0_opti?=
+ =?UTF-8?Q?on_for_alt-boot?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Acked-by: Mike Isely <isely@pobox.com>
 
-On Mon, 26 Aug 2019, Yizhuo wrote:
-
-> Inside function ctrl_cx2341x_getv4lflags(), qctrl.flag
-> will be uninitlaized if cx2341x_ctrl_query() returns -EINVAL.
-> However, it will be used in the later if statement, which is
-> potentially unsafe.
+On Mon, 26 Aug 2019, at 20:17, Ivan Mikhaylov wrote:
+> The option for the ast2400/2500 to get access to CS0 at runtime.
 > 
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 > ---
->  drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> index ad5b25b89699..66a34fb9e6b2 100644
-> --- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> +++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> @@ -790,7 +790,7 @@ static int ctrl_cx2341x_set(struct pvr2_ctrl *cptr,int m,int v)
+> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt 
+> b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> index c5077a1f5cb3..023a9b578df6 100644
+> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> @@ -34,6 +34,13 @@ Optional properties:
+>                  engine is responsible for this.
 >  
->  static unsigned int ctrl_cx2341x_getv4lflags(struct pvr2_ctrl *cptr)
->  {
-> -	struct v4l2_queryctrl qctrl;
-> +	struct v4l2_queryctrl qctrl = {};
->  	struct pvr2_ctl_info *info;
->  	qctrl.id = cptr->info->v4l_id;
->  	cx2341x_ctrl_query(&cptr->hdw->enc_ctl_state,&qctrl);
-> 
+>   - aspeed,alt-boot:    If property is present then boot from alternate 
+> block.
+> +                       At alternate side 'access_cs0' sysfs file 
+> provides:
 
--- 
+Why are we talking about sysfs in the devicetree binding? This patch
+doesn't seem right to me.
 
-Mike Isely
-isely @ isely (dot) net
-PGP: 03 54 43 4D 75 E5 CC 92 71 16 01 E2 B5 F5 C1 E8
+Also if we're not supporting the aspeed,alt-boot property we should
+probably document it as deprecated rather than making it disappear,
+unless you're going to fix the systems that are using it.
+
+Andrew
