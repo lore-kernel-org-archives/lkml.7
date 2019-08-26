@@ -6,114 +6,70 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AEDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6168A21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2836B20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbfHZOFs (ORCPT
+        id S1732247AbfHZOGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:05:48 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:47992 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730914AbfHZOFs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:05:48 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8BCBD634C87;
-        Mon, 26 Aug 2019 17:05:36 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1i2Fcm-0000Q9-D9; Mon, 26 Aug 2019 17:05:36 +0300
-Date:   Mon, 26 Aug 2019 17:05:36 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Stu Hsieh <stu.hsieh@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: Re: [PATCH v4 01/14] dt-bindings: Add binding for MT2712 MIPI-CSI2
-Message-ID: <20190826140536.GE826@valkosipuli.retiisi.org.uk>
-References: <1559643115-15124-1-git-send-email-stu.hsieh@mediatek.com>
- <1559643115-15124-2-git-send-email-stu.hsieh@mediatek.com>
- <1560134057.28527.5.camel@mtksdaap41>
- <CAHD77H=vuPi2Rj4Mw-CQ2=UYX7YnS8w8FpUk0QTVxNUVLWKbJg@mail.gmail.com>
- <1560153073.31854.6.camel@mtksdaap41>
- <CAAFQd5DDE-L7mW8sTXVYOTLZ8yi3+X6Q3O73fJ61e1aUoeddgg@mail.gmail.com>
+        Mon, 26 Aug 2019 10:06:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6819 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728355AbfHZOGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:06:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 07:06:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
+   d="scan'208";a="174218747"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2019 07:06:51 -0700
+Date:   Mon, 26 Aug 2019 07:06:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>
+Subject: Re: [PATCH] KVM: x86: Don't update RIP or do single-step on faulting
+ emulation
+Message-ID: <20190826140651.GA19381@linux.intel.com>
+References: <20190823205544.24052-1-sean.j.christopherson@intel.com>
+ <CALCETrXFRAmgqyxtsknpnQaMtVU-hqMRPYR=4Q5JtBgNGxuSGQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAFQd5DDE-L7mW8sTXVYOTLZ8yi3+X6Q3O73fJ61e1aUoeddgg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALCETrXFRAmgqyxtsknpnQaMtVU-hqMRPYR=4Q5JtBgNGxuSGQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:58:02PM +0900, Tomasz Figa wrote:
-> On Mon, Jun 10, 2019 at 4:51 PM CK Hu <ck.hu@mediatek.com> wrote:
+On Fri, Aug 23, 2019 at 03:46:20PM -0700, Andy Lutomirski wrote:
+> On Fri, Aug 23, 2019 at 1:55 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
 > >
-> > Hi, Tomasz:
+> > Don't advance RIP or inject a single-step #DB if emulation signals a
+> > fault.  This logic applies to all state updates that are conditional on
+> > clean retirement of the emulation instruction, e.g. updating RFLAGS was
+> > previously handled by commit 38827dbd3fb85 ("KVM: x86: Do not update
+> > EFLAGS on faulting emulation").
 > >
-> > On Mon, 2019-06-10 at 12:32 +0900, Tomasz Figa wrote:
-> > > Hi CK, Stu,
-> > >
-> > > On Mon, Jun 10, 2019 at 11:34 AM CK Hu <ck.hu@mediatek.com> wrote:
-> > > >
-> > > > Hi, Stu:
-> > > >
-> > > > "mediatek,mt2712-mipicsi" and "mediatek,mt2712-mipicsi-common" have many
-> > > > common part with "mediatek,mt8183-seninf", and I've a discussion in [1],
-> > > > so I would like these two to be merged together.
-> > > >
-> > > > [1] https://patchwork.kernel.org/patch/10979131/
-> > > >
-> > >
-> > > Thanks CK for spotting this.
-> > >
-> > > I also noticed that the driver in fact handles two hardware blocks at
-> > > the same time - SenInf and CamSV. Unless the architecture is very
-> > > different from MT8183, I'd suggest splitting it.
-> > >
-> > > On a general note, the MT8183 SenInf driver has received several
-> > > rounds of review comments already, but I couldn't find any comments
-> > > posted for this one.
-> > >
-> > > Given the two aspects above and also based on my quick look at code
-> > > added by this series, I'd recommend adding MT2712 support on top of
-> > > the MT8183 series.
-> >
-> > In [1], "mediatek,mt8183-seninf" use one device to control multiple csi
-> > instance, so it duplicate many register definition. In [2], one
-> > "mediatek,mt2712-mipicsi" device control one csi instance, so there are
-> > multiple device and the register definition does not duplicate.
+> > Not advancing RIP is likely a nop, i.e. ctxt->eip isn't updated with
+> > ctxt->_eip until emulation "retires" anyways.  Skipping #DB injection
+> > fixes a bug reported by Andy Lutomirski where a #UD on SYSCALL due to
+> > invalid state with RFLAGS.RF=1 would loop indefinitely due to emulation
 > 
-> I guess we didn't catch that in the review yet. It should be fixed.
-> 
-> > You
-> > recommend adding MT2712 support on top of the MT8183 series, do you mean
-> > that "mediatek,mt2712-mipicsi" should use one device to control multiple
-> > csi instance and duplicate the register setting?
-> 
-> There are some aspects of MT8183 series that are done better than the
-> MT2712 series, but apparently there are also some better aspects in
-> MT2712. We should take the best aspects of both series. :)
+> EFLAGS.TF=1
 
-Stu: Are the two devices similar enough or not; does this look like a
-feasible approach to you?
-
--- 
-Sakari Ailus
+It's always some mundane detail...
