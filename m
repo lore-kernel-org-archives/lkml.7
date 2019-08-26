@@ -2,282 +2,148 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB62DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEABBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CE5206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBE0206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfHZJAQ (ORCPT
+        id S1730375AbfHZJBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:00:16 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:46535 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729802AbfHZJAP (ORCPT
+        Mon, 26 Aug 2019 05:01:14 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:12076 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfHZJBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:00:15 -0400
-Received: from [IPv6:2001:983:e9a7:1:3421:ddcd:2260:77e4] ([IPv6:2001:983:e9a7:1:3421:ddcd:2260:77e4])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 2ArCiuofrzaKO2ArDiEEqR; Mon, 26 Aug 2019 11:00:12 +0200
-Subject: Re: [PATCH v7 1/9] drm_dp_cec: add connector info support.
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-To:     Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Thomas Lim <Thomas.Lim@amd.com>,
-        David Airlie <airlied@linux.ie>, nouveau@lists.freedesktop.org,
-        David Francis <David.Francis@amd.com>,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        "Jerry (Fangzhi) Zuo" <Jerry.Zuo@amd.com>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sean Paul <sean@poorly.run>, Anthony Koo <Anthony.Koo@amd.com>,
-        intel-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20190814104520.6001-1-darekm@google.com>
- <20190814104520.6001-2-darekm@google.com>
- <38cda4f5-3299-2bd4-65f5-9a0f948902c6@xs4all.nl>
-Message-ID: <9762df98-af9c-101e-ebbd-1f1bc40d8be9@xs4all.nl>
-Date:   Mon, 26 Aug 2019 11:00:10 +0200
+        Mon, 26 Aug 2019 05:01:14 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7Q90vqv017977;
+        Mon, 26 Aug 2019 18:00:57 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Mon, 26 Aug 2019 18:00:57 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7Q90unj017961
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Mon, 26 Aug 2019 18:00:56 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] ASoC: es8316: limit headphone mixer volume
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        David Yang <yangxiaohua@everest-semi.com>,
+        alsa-devel@alsa-project.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <20190824210426.16218-1-katsuhiro@katsuster.net>
+ <943932bf-2042-2a69-c705-b8e090e96377@redhat.com>
+ <CAD8Lp44_uAC4phZ9NbvM_LKNUoiNUqAnFsq4h-bJiQn6byjzGw@mail.gmail.com>
+ <f3096961-6b26-1ccf-47f2-978ae3648031@katsuster.net>
+Message-ID: <bf9bebb7-9c6d-3a56-d144-3466cd00d5eb@katsuster.net>
+Date:   Mon, 26 Aug 2019 18:00:56 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <38cda4f5-3299-2bd4-65f5-9a0f948902c6@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <f3096961-6b26-1ccf-47f2-978ae3648031@katsuster.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAzBdsNLgei65c7on5zLQ5dchv/l6vv+3RZYY+XmvmYyXsyM613t0EkGVJjilx705KohNRcaViIo9Pnao1TAZ8YAi0LbUFDHA921qjZwYHqHpFJ1xPBM
- VvZVXCANDmHfoQXee47MIrqBnDtlgduScufV0F4mw1u0C8qb9tPhfkolLBcMaMJfw8I30YaMQdNYo+ce3F9aqmvpqOWakYS8nVa+Ptw3WuyAfVSf59/4jI65
- KBUTz3pMw12Qc61d4FYcg2Xe7K69/tim/NhuQazd6wllYopNPtspmaOkGdiG8cE0xswxcYXXKWoCRfFn0Gg/BVHn9zcTnJu4je4LxnDIILdr/EhhrlhHhdWl
- L5Thu54l/8POCEa/ug7bvMqpUOgVSPzkt9r7mNUrydGTARxxwcdMs5y3XJOiiEySf9gcPSfIbJZNspYf9qNfEVTUbQdUiCsUpV/hM9TrmrCokHhdScjmWQax
- F6jzy59NwzPRgpzNkHuZruPXbGtUX90ywD1P150jz/CaexalZTgMVVmDMRcFWtclmRmd0qjpQwSkRBHy3sCPMZvdo7GQHGN4z/IB7Ql1Bt4eAZKbP/oyLmYF
- KZct2B3J62DaMhXdSlSpjlva2b3cTt7Xdx+p+oYQR3oj1K+A4xpKGC1Vhn738PbcQQK2nDHoxniSxLKNW66o5kpE4PghwHZMKZrtvp0LFOGz0RHbnStGxmGT
- JiCbh+PqhoVHYepCQQ9bJFhccr6MpxPmA2Y5r4PfrAd6qZZMHmmsh9Xixpx5V9LvFRX0AbWd9mg7uH0AwfFrv6CMR034gvn2vcez0p9z7vfWl5xuNCjZQwub
- bTbP6BwDesnY7IP9SGzMVOscfrmbHn0kSKU+kqy0zsvkpOVd5bmP38I9nmhbIX4BKx6/GSGpOifE6eS0rSbJPTe7H/bTNrpy0x7McHB9dhcu6kUiEda0AXLP
- Mdkb6DPJOdEVl7m0pLvq1Bik8XjFakTT4Kt9FoNZsdpL8FKi8+Xe6WcXtnNPJQNgRjzJ1c8fQ7eVEySsJuP7xGD0VYk=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 10:08 AM, Hans Verkuil wrote:
-> Alex, Ville/Rodrigo, Ben,
-> 
-> Can you (hopefully) Ack this patch so that I can merge it?
+Hello,
 
-Ping!
+Oops... I got mistake,
 
-Regards,
+ >      SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+ >                 0, 4, 15, 0, hpmixer_gain_tlv),
 
-	Hans
+is wrong,
 
+ >      SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+ >                 0, 4, 11, 0, hpmixer_gain_tlv),
+
+is correct.
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+On 2019/08/26 17:41, Katsuhiro Suzuki wrote:
+> Hello Daniel,
 > 
-> Thank you!
-> 
-> 	Hans
-> 
-> On 8/14/19 12:44 PM, Dariusz Marcinkiewicz wrote:
->> Pass the connector info to the CEC adapter. This makes it possible
->> to associate the CEC adapter with the corresponding drm connector.
+> On 2019/08/26 11:53, Daniel Drake wrote:
+>> On Mon, Aug 26, 2019 at 1:38 AM Hans de Goede <hdegoede@redhat.com> 
+>> wrote:
+>>> On 24-08-19 23:04, Katsuhiro Suzuki wrote:
+>>>> This patch limits Headphone mixer volume to 4 from 7.
+>>>> Because output sound suddenly becomes very loudly with many noise if
+>>>> set volume over 4.
 >>
->> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
->> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->> ---
->>  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  2 +-
->>  drivers/gpu/drm/drm_dp_cec.c                  | 25 ++++++++++++-------
->>  drivers/gpu/drm/i915/display/intel_dp.c       |  4 +--
->>  drivers/gpu/drm/nouveau/nouveau_connector.c   |  3 +--
->>  include/drm/drm_dp_helper.h                   | 17 ++++++-------
->>  5 files changed, 27 insertions(+), 24 deletions(-)
+>> That sounds like something that should be limited in UCM.
 >>
->> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
->> index 16218a202b591..5ec14efd4d8cb 100644
->> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
->> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
->> @@ -416,7 +416,7 @@ void amdgpu_dm_initialize_dp_connector(struct amdgpu_display_manager *dm,
->>  
->>  	drm_dp_aux_register(&aconnector->dm_dp_aux.aux);
->>  	drm_dp_cec_register_connector(&aconnector->dm_dp_aux.aux,
->> -				      aconnector->base.name, dm->adev->dev);
->> +				      &aconnector->base);
->>  	aconnector->mst_mgr.cbs = &dm_mst_cbs;
->>  	drm_dp_mst_topology_mgr_init(
->>  		&aconnector->mst_mgr,
->> diff --git a/drivers/gpu/drm/drm_dp_cec.c b/drivers/gpu/drm/drm_dp_cec.c
->> index b15cee85b702b..b457c16c3a8bb 100644
->> --- a/drivers/gpu/drm/drm_dp_cec.c
->> +++ b/drivers/gpu/drm/drm_dp_cec.c
->> @@ -8,7 +8,9 @@
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/slab.h>
->> +#include <drm/drm_connector.h>
->>  #include <drm/drm_dp_helper.h>
->> +#include <drm/drmP.h>
->>  #include <media/cec.h>
->>  
->>  /*
->> @@ -295,7 +297,10 @@ static void drm_dp_cec_unregister_work(struct work_struct *work)
->>   */
->>  void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
->>  {
->> -	u32 cec_caps = CEC_CAP_DEFAULTS | CEC_CAP_NEEDS_HPD;
->> +	struct drm_connector *connector = aux->cec.connector;
->> +	u32 cec_caps = CEC_CAP_DEFAULTS | CEC_CAP_NEEDS_HPD |
->> +		       CEC_CAP_CONNECTOR_INFO;
->> +	struct cec_connector_info conn_info;
->>  	unsigned int num_las = 1;
->>  	u8 cap;
->>  
->> @@ -344,13 +349,17 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
->>  
->>  	/* Create a new adapter */
->>  	aux->cec.adap = cec_allocate_adapter(&drm_dp_cec_adap_ops,
->> -					     aux, aux->cec.name, cec_caps,
->> +					     aux, connector->name, cec_caps,
->>  					     num_las);
->>  	if (IS_ERR(aux->cec.adap)) {
->>  		aux->cec.adap = NULL;
->>  		goto unlock;
->>  	}
->> -	if (cec_register_adapter(aux->cec.adap, aux->cec.parent)) {
->> +
->> +	cec_fill_conn_info_from_drm(&conn_info, connector);
->> +	cec_s_conn_info(aux->cec.adap, &conn_info);
->> +
->> +	if (cec_register_adapter(aux->cec.adap, connector->dev->dev)) {
->>  		cec_delete_adapter(aux->cec.adap);
->>  		aux->cec.adap = NULL;
->>  	} else {
->> @@ -406,22 +415,20 @@ EXPORT_SYMBOL(drm_dp_cec_unset_edid);
->>  /**
->>   * drm_dp_cec_register_connector() - register a new connector
->>   * @aux: DisplayPort AUX channel
->> - * @name: name of the CEC device
->> - * @parent: parent device
->> + * @connector: drm connector
->>   *
->>   * A new connector was registered with associated CEC adapter name and
->>   * CEC adapter parent device. After registering the name and parent
->>   * drm_dp_cec_set_edid() is called to check if the connector supports
->>   * CEC and to register a CEC adapter if that is the case.
->>   */
->> -void drm_dp_cec_register_connector(struct drm_dp_aux *aux, const char *name,
->> -				   struct device *parent)
->> +void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
->> +				   struct drm_connector *connector)
->>  {
->>  	WARN_ON(aux->cec.adap);
->>  	if (WARN_ON(!aux->transfer))
->>  		return;
->> -	aux->cec.name = name;
->> -	aux->cec.parent = parent;
->> +	aux->cec.connector = connector;
->>  	INIT_DELAYED_WORK(&aux->cec.unregister_work,
->>  			  drm_dp_cec_unregister_work);
->>  }
->> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
->> index 1092499115760..de2486fe7bf2d 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dp.c
->> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
->> @@ -5497,7 +5497,6 @@ static int
->>  intel_dp_connector_register(struct drm_connector *connector)
->>  {
->>  	struct intel_dp *intel_dp = intel_attached_dp(connector);
->> -	struct drm_device *dev = connector->dev;
->>  	int ret;
->>  
->>  	ret = intel_connector_register(connector);
->> @@ -5512,8 +5511,7 @@ intel_dp_connector_register(struct drm_connector *connector)
->>  	intel_dp->aux.dev = connector->kdev;
->>  	ret = drm_dp_aux_register(&intel_dp->aux);
->>  	if (!ret)
->> -		drm_dp_cec_register_connector(&intel_dp->aux,
->> -					      connector->name, dev->dev);
->> +		drm_dp_cec_register_connector(&intel_dp->aux, connector);
->>  	return ret;
->>  }
->>  
->> diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
->> index 330d7d29a6e34..8aa703347eb54 100644
->> --- a/drivers/gpu/drm/nouveau/nouveau_connector.c
->> +++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
->> @@ -1416,8 +1416,7 @@ nouveau_connector_create(struct drm_device *dev,
->>  	switch (type) {
->>  	case DRM_MODE_CONNECTOR_DisplayPort:
->>  	case DRM_MODE_CONNECTOR_eDP:
->> -		drm_dp_cec_register_connector(&nv_connector->aux,
->> -					      connector->name, dev->dev);
->> +		drm_dp_cec_register_connector(&nv_connector->aux, connector);
->>  		break;
->>  	}
->>  
->> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
->> index 8364502f92cfe..7972b925a952b 100644
->> --- a/include/drm/drm_dp_helper.h
->> +++ b/include/drm/drm_dp_helper.h
->> @@ -1230,20 +1230,19 @@ struct drm_dp_aux_msg {
->>  
->>  struct cec_adapter;
->>  struct edid;
->> +struct drm_connector;
->>  
->>  /**
->>   * struct drm_dp_aux_cec - DisplayPort CEC-Tunneling-over-AUX
->>   * @lock: mutex protecting this struct
->>   * @adap: the CEC adapter for CEC-Tunneling-over-AUX support.
->> - * @name: name of the CEC adapter
->> - * @parent: parent device of the CEC adapter
->> + * @connector: the connector this CEC adapter is associated with
->>   * @unregister_work: unregister the CEC adapter
->>   */
->>  struct drm_dp_aux_cec {
->>  	struct mutex lock;
->>  	struct cec_adapter *adap;
->> -	const char *name;
->> -	struct device *parent;
->> +	struct drm_connector *connector;
->>  	struct delayed_work unregister_work;
->>  };
->>  
->> @@ -1451,8 +1450,8 @@ drm_dp_has_quirk(const struct drm_dp_desc *desc, enum drm_dp_quirk quirk)
->>  
->>  #ifdef CONFIG_DRM_DP_CEC
->>  void drm_dp_cec_irq(struct drm_dp_aux *aux);
->> -void drm_dp_cec_register_connector(struct drm_dp_aux *aux, const char *name,
->> -				   struct device *parent);
->> +void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
->> +				   struct drm_connector *connector);
->>  void drm_dp_cec_unregister_connector(struct drm_dp_aux *aux);
->>  void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid);
->>  void drm_dp_cec_unset_edid(struct drm_dp_aux *aux);
->> @@ -1461,9 +1460,9 @@ static inline void drm_dp_cec_irq(struct drm_dp_aux *aux)
->>  {
->>  }
->>  
->> -static inline void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
->> -						 const char *name,
->> -						 struct device *parent)
->> +static inline void
->> +drm_dp_cec_register_connector(struct drm_dp_aux *aux,
->> +			      struct drm_connector *connector)
->>  {
->>  }
->>  
+>>> Higher then 4 not working matches my experience, see this comment from
+>>> the UCM file: alsa-lib/src/conf/ucm/codecs/es8316/EnableSeq.conf :
+>>>
+>>> # Set HP mixer vol to -6 dB (4/7) louder does not work
+>>> cset "name='Headphone Mixer Volume' 4"
+>>
+>> What does "does not work" mean more precisely?
+>>
+>> I checked the spec, there is indeed something wrong in the kernel 
+>> driver here.
+>> The db scale is not a simple scale as the kernel source suggests.
+>>
+>> Instead it is:
+>> 0000 – -12dB
+>> 0001 – -10.5dB
+>> 0010 – -9dB
+>> 0011 – -7.5dB
+>> 0100 – -6dB
+>> 1000 – -4.5dB
+>> 1001 – -3dB
+>> 1010 – -1.5dB
+>> 1011 – 0dB
+>>
+>  > So perhaps we can fix the kernel to follow this table and then use UCM
+>  > to limit the volume if its too high on a given platform?
+>  >
+> 
+> Thank you very important information. So you mean value 5, 6, 7 are
+> illegal settings for ES8316. Correct codes are
+> 
+> static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
+>      0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
+>      8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
+> );
+> 
+> and...
+> 
+>      SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+>                 0, 4, 15, 0, hpmixer_gain_tlv),
+> 
+> Is my understanding correct? If so I'll test it on my board
+> (RockPro64) and re-send patch.
+> 
+> BTW, do you know how to get ES8316 I2C registers spec?
+> I want to see it for understanding current code, but I cannot find...
+> 
+> 
+>> Thanks
+>> Daniel
+>>
 >>
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Best Regards,
+> Katsuhiro Suzuki
 > 
 
