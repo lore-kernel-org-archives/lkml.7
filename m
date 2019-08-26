@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DATE_IN_PAST_24_48,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641CBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE6EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3092F2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E004A2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566935511;
-	bh=db2S4iGorTcFzIDAzTQITxRAM1L1aLxFQOCnkzPd1IM=;
+	s=default; t=1566935515;
+	bh=g52voPW02KMWFb+PZtEu9ej0gFuj3OTjw9uqyojV+XY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=L68G5cRw+nIUDIFykXUAfckEWkKK7+x1vcjF+omQDIIBr8VNKevU0LT+YrNM6dFG7
-	 dVOHPWYLBeh8N6euEcEDFmpkXir4dWol/eBW70jfozeIW6eyR9p2Q5RgCDvlkJPVks
-	 VPodE0rFYmlRdLxJj97mAgIjYx2E/zsFsVbDriOc=
+	b=E4crvM+DITtJU4LeI+9xPyjcysWQV0U2c9j34lzd9+WyazxghzjcwXj255h9/CRMU
+	 LAgaSVyJeuCXgydzGbPIzfiSzx+RRmysIAP8BUPEHkcEjo3YnZhKPtvBCv7XgYD9tr
+	 dK7/rmgTCs3NCI2sFWkP2hlae1BhdCmEnd8L976I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfH0Tvu (ORCPT
+        id S1731268AbfH0Tvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36870 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 15:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfH0Tvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:51:49 -0400
+        id S1731213AbfH0Tvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 15:51:52 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 513BB21881;
-        Tue, 27 Aug 2019 19:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE6A21883;
+        Tue, 27 Aug 2019 19:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566935508;
-        bh=db2S4iGorTcFzIDAzTQITxRAM1L1aLxFQOCnkzPd1IM=;
+        s=default; t=1566935511;
+        bh=g52voPW02KMWFb+PZtEu9ej0gFuj3OTjw9uqyojV+XY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e58aV6PkwJLPQesj9HJf32vH9e27wmCyN4yxC2vyPoK+A7+05geux22P9/0tx8Og2
-         P2TDEjrBFm6Y3qEJrsWLaao+q6qrOWGJgvOESMLxBEo0Zw++x/5hUa8TDJT4532vJ7
-         sHKQC8IA4XdONOFE0SvvgdaLBwkrfK/z3vcCh8lA=
-Date:   Mon, 26 Aug 2019 09:10:52 +0100
+        b=JzcQkBhDsuIik60i9vJOkPTv0iZwsczXDRslodZfjr01XJpp4Rjvy1Wo7kYURCXtb
+         kPnCjAv10xUIKIJSUwARqn4fQ8csA+0zoh1lTrpvuzrMyCdfF8ICubUandW+uJEKcS
+         DuGQjzPlB8kS3nBm7qKM+rwt9DhFQYMR3VC7/H7E=
+Date:   Mon, 26 Aug 2019 09:13:49 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Martin Kepplinger <martin.kepplinger@puri.sm>
 Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v5 1/4] iio: imu: st_lsm6dsx: introduce update_fifo
- function pointer
-Message-ID: <20190826091052.771e96c6@archlinux>
-In-Reply-To: <20190821132520.28225-2-martin.kepplinger@puri.sm>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] iio: imu: st_lsm6dsx: add support for accel/gyro
+ unit of lsm9sd1
+Message-ID: <20190826091349.6a464baa@archlinux>
+In-Reply-To: <20190821132520.28225-4-martin.kepplinger@puri.sm>
 References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
-        <20190821132520.28225-2-martin.kepplinger@puri.sm>
+        <20190821132520.28225-4-martin.kepplinger@puri.sm>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -61,158 +61,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 15:25:17 +0200
+On Wed, 21 Aug 2019 15:25:19 +0200
 Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
 
-> From: Lorenzo Bianconi <lorenzo@kernel.org>
+> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
+> supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
+> on the bus.
 > 
-> Introduce update_fifo routine pointer in st_lsm6dsx_fifo_ops data
-> structure since we will need a different update FIFO configuration
-> callback adding support for lsm6ds0/lsm9ds1 imu device
+> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
 > 
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> Treat it just like the LSM6* devices and, despite it's name, hook it up
+> to the st_lsm6dsx driver, using it's basic functionality.
+> 
+> accelerometer and gyroscope are not independently clocked. It runs at the gyro
+> frequencies if both are enabled, see chapter 7.12 of the datasheet.
+> We could have handled this as a single IIO device but we have split
+> it up to be more consistent with the other more flexible devices.
+> 
+> Despite supporting and testing the LSM9DS1, we call the gyro channels
+> iio_chan_spec struct "st_lsm6ds0_gyro_channels" because the register
+> description is equal. This suggests that supporting LSM6DS0 should be
+> trivial to do.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+Typo in the patch title that I've fixed up.  After a bit of thought
+I've added postfix -imu but only in minimal number of places.
+
+I've not bothered with the internal defines as within the driver at least
+it's obvious which part we are talking about.
+
+imu isn't the perfect name but having both -gyroaccel or something similar
+is also not great.  We still have time to change this if people feel
+strongly about it.
+
+Applied to the togreg branch of iio.git and pushed out as testing.
 
 Thanks,
 
 Jonathan
 
+
 > ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  4 ++++
->  .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    | 19 +++++++++++++++----
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  |  6 ++++++
->  3 files changed, 25 insertions(+), 4 deletions(-)
+>  drivers/iio/imu/st_lsm6dsx/Kconfig           |  2 +-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 87 ++++++++++++++++++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |  5 ++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |  5 ++
+>  5 files changed, 100 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> index 939058b27746..77aa0e77212d 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -12,7 +12,7 @@ config IIO_ST_LSM6DSX
+>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+>  	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
+> -	  ism330dhcx
+> +	  ism330dhcx and the accelerometer/gyroscope of lsm9ds1.
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called st_lsm6dsx.
 > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> index 4e8e67ae1632..055e52dec36a 100644
+> index 090b7bd3c5b0..196e344301f6 100644
 > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
 > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -75,6 +75,7 @@ struct st_lsm6dsx_reg {
->  	u8 mask;
+> @@ -24,6 +24,7 @@
+>  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
+>  #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
+>  #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
+> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
+>  
+>  enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DS3_ID,
+> @@ -37,6 +38,7 @@ enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DSR_ID,
+>  	ST_LSM6DS3TRC_ID,
+>  	ST_ISM330DHCX_ID,
+> +	ST_LSM9DS1_ID,
+>  	ST_LSM6DSX_MAX_ID,
 >  };
 >  
-> +struct st_lsm6dsx_sensor;
->  struct st_lsm6dsx_hw;
->  
->  struct st_lsm6dsx_odr {
-> @@ -101,12 +102,14 @@ struct st_lsm6dsx_fs_table_entry {
->  
->  /**
->   * struct st_lsm6dsx_fifo_ops - ST IMU FIFO settings
-> + * @update_fifo: Update FIFO configuration callback.
->   * @read_fifo: Read FIFO callback.
->   * @fifo_th: FIFO threshold register info (addr + mask).
->   * @fifo_diff: FIFO diff status register info (addr + mask).
->   * @th_wl: FIFO threshold word length.
->   */
->  struct st_lsm6dsx_fifo_ops {
-> +	int (*update_fifo)(struct st_lsm6dsx_sensor *sensor, bool enable);
->  	int (*read_fifo)(struct st_lsm6dsx_hw *hw);
->  	struct {
->  		u8 addr;
-> @@ -327,6 +330,7 @@ int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw);
->  int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val);
->  int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
->  				u16 watermark);
-> +int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable);
->  int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
->  int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
->  			     enum st_lsm6dsx_fifo_mode fifo_mode);
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> index 2c03a5b80f80..b0f3da1976e4 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> @@ -602,9 +602,8 @@ int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw)
->  	return err;
->  }
->  
-> -static int st_lsm6dsx_update_fifo(struct iio_dev *iio_dev, bool enable)
-> +int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable)
->  {
-> -	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
->  	struct st_lsm6dsx_hw *hw = sensor->hw;
->  	int err;
->  
-> @@ -676,12 +675,24 @@ static irqreturn_t st_lsm6dsx_handler_thread(int irq, void *private)
->  
->  static int st_lsm6dsx_buffer_preenable(struct iio_dev *iio_dev)
->  {
-> -	return st_lsm6dsx_update_fifo(iio_dev, true);
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
-> +	struct st_lsm6dsx_hw *hw = sensor->hw;
-> +
-> +	if (!hw->settings->fifo_ops.update_fifo)
-> +		return -ENOTSUPP;
-> +
-> +	return hw->settings->fifo_ops.update_fifo(sensor, true);
->  }
->  
->  static int st_lsm6dsx_buffer_postdisable(struct iio_dev *iio_dev)
->  {
-> -	return st_lsm6dsx_update_fifo(iio_dev, false);
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
-> +	struct st_lsm6dsx_hw *hw = sensor->hw;
-> +
-> +	if (!hw->settings->fifo_ops.update_fifo)
-> +		return -ENOTSUPP;
-> +
-> +	return hw->settings->fifo_ops.update_fifo(sensor, false);
->  }
->  
->  static const struct iio_buffer_setup_ops st_lsm6dsx_buffer_ops = {
 > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 85824d6739ee..0aa93b45d772 100644
+> index 1b46d9dc2089..ad839ccf871c 100644
 > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
 > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -154,6 +154,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  			},
->  		},
->  		.fifo_ops = {
-> +			.update_fifo = st_lsm6dsx_update_fifo,
->  			.read_fifo = st_lsm6dsx_read_fifo,
->  			.fifo_th = {
->  				.addr = 0x06,
-> @@ -262,6 +263,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  			},
->  		},
->  		.fifo_ops = {
-> +			.update_fifo = st_lsm6dsx_update_fifo,
->  			.read_fifo = st_lsm6dsx_read_fifo,
->  			.fifo_th = {
->  				.addr = 0x06,
-> @@ -379,6 +381,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  			},
->  		},
->  		.fifo_ops = {
-> +			.update_fifo = st_lsm6dsx_update_fifo,
->  			.read_fifo = st_lsm6dsx_read_fifo,
->  			.fifo_th = {
->  				.addr = 0x06,
-> @@ -490,6 +493,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  			},
->  		},
->  		.fifo_ops = {
-> +			.update_fifo = st_lsm6dsx_update_fifo,
->  			.read_fifo = st_lsm6dsx_read_tagged_fifo,
->  			.fifo_th = {
->  				.addr = 0x07,
-> @@ -616,6 +620,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  			},
->  		},
->  		.fifo_ops = {
-> +			.update_fifo = st_lsm6dsx_update_fifo,
->  			.read_fifo = st_lsm6dsx_read_tagged_fifo,
->  			.fifo_th = {
->  				.addr = 0x07,
-> @@ -719,6 +724,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->  			},
->  		},
->  		.fifo_ops = {
-> +			.update_fifo = st_lsm6dsx_update_fifo,
->  			.read_fifo = st_lsm6dsx_read_tagged_fifo,
->  			.fifo_th = {
->  				.addr = 0x07,
+> @@ -10,6 +10,8 @@
+>   * +-125/+-245/+-500/+-1000/+-2000 dps
+>   * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
+>   * allowing dynamic batching of sensor data.
+> + * LSM9DSx series is similar but includes an additional magnetometer, handled
+> + * by a different driver.
+>   *
+>   * Supported sensors:
+>   * - LSM6DS3:
+> @@ -30,6 +32,13 @@
+>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+>   *   - FIFO size: 3KB
+>   *
+> + * - LSM9DS1:
+> + *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
+> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
+> + *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
+> + *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
+> + *   - FIFO size: 32
+> + *
+>   * Copyright 2016 STMicroelectronics Inc.
+>   *
+>   * Lorenzo Bianconi <lorenzo.bianconi@st.com>
+> @@ -70,7 +79,85 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
+>  	IIO_CHAN_SOFT_TIMESTAMP(3),
+>  };
+>  
+> +static const struct iio_chan_spec st_lsm6ds0_gyro_channels[] = {
+> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x18, IIO_MOD_X, 0),
+> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1a, IIO_MOD_Y, 1),
+> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1c, IIO_MOD_Z, 2),
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+>  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+> +	{
+> +		.wai = 0x68,
+> +		.int1_addr = 0x0c,
+> +		.int2_addr = 0x0d,
+> +		.reset_addr = 0x22,
+> +		.max_fifo_size = 32,
+> +		.id = {
+> +			{
+> +				.hw_id = ST_LSM9DS1_ID,
+> +				.name = ST_LSM9DS1_DEV_NAME,
+> +			},
+> +		},
+> +		.channels = {
+> +			[ST_LSM6DSX_ID_ACC] = {
+> +				.chan = st_lsm6dsx_acc_channels,
+> +				.len = ARRAY_SIZE(st_lsm6dsx_acc_channels),
+> +			},
+> +			[ST_LSM6DSX_ID_GYRO] = {
+> +				.chan = st_lsm6ds0_gyro_channels,
+> +				.len = ARRAY_SIZE(st_lsm6ds0_gyro_channels),
+> +			},
+> +		},
+> +		.odr_table = {
+> +			[ST_LSM6DSX_ID_ACC] = {
+> +				.reg = {
+> +					.addr = 0x20,
+> +					.mask = GENMASK(7, 5),
+> +				},
+> +				.odr_avl[0] = {  10, 0x01 },
+> +				.odr_avl[1] = {  50, 0x02 },
+> +				.odr_avl[2] = { 119, 0x03 },
+> +				.odr_avl[3] = { 238, 0x04 },
+> +				.odr_avl[4] = { 476, 0x05 },
+> +				.odr_avl[5] = { 952, 0x06 },
+> +			},
+> +			[ST_LSM6DSX_ID_GYRO] = {
+> +				.reg = {
+> +					.addr = 0x10,
+> +					.mask = GENMASK(7, 5),
+> +				},
+> +				.odr_avl[0] = {  15, 0x01 },
+> +				.odr_avl[1] = {  60, 0x02 },
+> +				.odr_avl[2] = { 119, 0x03 },
+> +				.odr_avl[3] = { 238, 0x04 },
+> +				.odr_avl[4] = { 476, 0x05 },
+> +				.odr_avl[5] = { 952, 0x06 },
+> +			},
+> +		},
+> +		.fs_table = {
+> +			[ST_LSM6DSX_ID_ACC] = {
+> +				.reg = {
+> +					.addr = 0x20,
+> +					.mask = GENMASK(4, 3),
+> +				},
+> +				.fs_avl[0] = {  599, 0x0 },
+> +				.fs_avl[1] = { 1197, 0x2 },
+> +				.fs_avl[2] = { 2394, 0x3 },
+> +				.fs_avl[3] = { 4788, 0x1 },
+> +			},
+> +			[ST_LSM6DSX_ID_GYRO] = {
+> +				.reg = {
+> +					.addr = 0x10,
+> +					.mask = GENMASK(4, 3),
+> +				},
+> +				.fs_avl[0] = { IIO_DEGREE_TO_RAD(245), 0x0 },
+> +				.fs_avl[1] = { IIO_DEGREE_TO_RAD(500), 0x1 },
+> +				.fs_avl[2] = { IIO_DEGREE_TO_RAD(0), 0x2 },
+> +				.fs_avl[3] = { IIO_DEGREE_TO_RAD(2000), 0x3 },
+> +			},
+> +		},
+> +	},
+>  	{
+>  		.wai = 0x69,
+>  		.int1_addr = 0x0d,
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> index 15c6aa5b6caa..2f1b30ff083b 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> @@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
+>  		.compatible = "st,ism330dhcx",
+>  		.data = (void *)ST_ISM330DHCX_ID,
+>  	},
+> +	{
+> +		.compatible = "st,lsm9ds1",
+> +		.data = (void *)ST_LSM9DS1_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+> @@ -99,6 +103,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
+>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
+>  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
+>  	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
+> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> index a8430ee11310..421ce704f346 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> @@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
+>  		.compatible = "st,ism330dhcx",
+>  		.data = (void *)ST_ISM330DHCX_ID,
+>  	},
+> +	{
+> +		.compatible = "st,lsm9ds1",
+> +		.data = (void *)ST_LSM9DS1_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+> @@ -99,6 +103,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
+>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
+>  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
+>  	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
+> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
 
