@@ -2,73 +2,131 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DECC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CE4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBD820874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2E0206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EWmh8RR8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aLr5JbFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732900AbfHZRYb (ORCPT
+        id S1732600AbfHZRas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:24:31 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:36099 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732246AbfHZRYa (ORCPT
+        Mon, 26 Aug 2019 13:30:48 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2877 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729245AbfHZRar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:24:30 -0400
-Received: by mail-pf1-f201.google.com with SMTP id p16so12650739pfn.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 10:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=nz19iB6O7MD55VWpcgtLqqSkXdFYuq6nGyq7F/0WrIk=;
-        b=EWmh8RR8TDwyvtQH6+KLLSHkQrRuB4UlNmweuso9obCiyoej1nB4CsoTQ8ADQqL1HV
-         qdai+6aGzNpS9cEcAn0Uub4Cm66DhYjBLbVpECqAQqp8NFpEbu8CLmRPu7jdg23OnNpR
-         b3qmaoeJu5+h1qEUw6FtZVzM/RSkiE330HFPTmfS8lqY0v5hhJaDPn4oE1XztD2LrKM8
-         BoLqBLgbU085dcK12Ao85oVrKw/PRiWJhPFLY+E0PyF2VNIbdjh9jPXFl23FS48BY1wN
-         kw4tJtfhSpohqWhXMzZb5rABj6FxCLHtC+MrmCg8QqI1UCuf/tUen0Hmg1Gr7+JaWFyq
-         UjEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=nz19iB6O7MD55VWpcgtLqqSkXdFYuq6nGyq7F/0WrIk=;
-        b=SITSCV4vE2II9z3AuDUqgSiAxAIp32U5wKBE3ozeCjN/iMP/czacyd2bPaKK7LvUJ6
-         A88ZJ9lZn/ra1aYnldKp3Q/qOmLjcz04JIIdeklUt96jmKafJgmYoHErg2Q8CTjqi8U0
-         aXgbhu65qkDTKPyk7qdPf+HH2RT2d2u+MR1lrPunjYS/qdeQ4+LLs2sEN+5lrTLxGMP9
-         ru6a5TmLQ6sGNsvT18lrBcnkYZkjqP2g+zCrjQowH3xQd15aOWMMMzkJma5afZazKGkZ
-         xcrN8hVhmbm0p2kxAPPkOWyQWW5/yef5Mh1RCQSDc6cYp97bCN23BR0oOFyuWKvbbUpL
-         fcFQ==
-X-Gm-Message-State: APjAAAXNXSr15XphXq8q0gm9bJ9PnCgGWUxKXMgmt/Y9MytSW9c4O8w+
-        KvpELakcRpBvmuF6uC7Ii7Ffo0WjjQ==
-X-Google-Smtp-Source: APXvYqz3hJNx1G6AXJVADXu73yv3MG81S0NwoASrbtOhTIu6INd15Z5sFydiOV6AWzxHYwDjNMk27EcZ/Tc=
-X-Received: by 2002:a63:9e54:: with SMTP id r20mr2511425pgo.64.1566840268953;
- Mon, 26 Aug 2019 10:24:28 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 10:24:24 -0700
-In-Reply-To: <20190822220915.8876-3-mathieu.poirier@linaro.org>
-Message-Id: <20190826172424.61777-1-yabinc@google.com>
-Mime-Version: 1.0
-References: <20190822220915.8876-3-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: Re: [PATCH 2/2] coresight: Add barrier packet when moving offset forward
-From:   Yabin Cui <yabinc@google.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>, leo.yan@linaro.org
-Cc:     mike.leach@arm.com, alexander.shishkin@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 26 Aug 2019 13:30:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6417480002>; Mon, 26 Aug 2019 10:30:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 26 Aug 2019 10:30:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 26 Aug 2019 10:30:47 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 26 Aug
+ 2019 17:30:46 +0000
+Subject: Re: [PATCH] mm/migrate: initialize pud_entry in migrate_vma()
+To:     Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190719233225.12243-1-rcampbell@nvidia.com>
+ <0d639edf-9f96-c170-4920-d64c2891d35d@suse.cz>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <dcadcd98-e9b4-2b4e-8a9f-5a1ef0ece0d5@nvidia.com>
+Date:   Mon, 26 Aug 2019 10:30:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <0d639edf-9f96-c170-4920-d64c2891d35d@suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566840648; bh=wgJD6Csy/s6yr4UYxieJmYbxqUj/d5mbZ6ONdDZ3WhI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=aLr5JbFymgRG9vRzfe1Hbp8+2BZTFtY3t76OzLIP/HV/mKdZMv0dk32Dopf8kv8Mf
+         I+2RnPrashuxzsKe5d1FnGYg2LOfele0EkIwTR2oO3orHb0fHC8RLRhxknZ1d0e+b3
+         f/2Wvm2zEzppEMeE2AXrz/MKsv40syocN2kkWTJzszN7ZVL6rfKoWD9/eOBb2i2GSL
+         JPnrXWl+DT0LO9nYpoKT7pbyVgtEH+5HcMl5VwDXY3V89x4IyZC/HDyVGnNxWVHqu/
+         YBuiO2c9y0J7uyZPIzSGUTdodU/os6UGzZXKG3UGaQ7asTj3p4P1KUFOUlX2M+EveK
+         ED/Jpu20djarQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested-by: Yabin Cui <yabinc@google.com>
+
+On 8/26/19 8:11 AM, Vlastimil Babka wrote:
+> On 7/20/19 1:32 AM, Ralph Campbell wrote:
+>> When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
+>> migrate_vma_collect() which initializes a struct mm_walk but
+>> didn't initialize mm_walk.pud_entry. (Found by code inspection)
+>> Use a C structure initialization to make sure it is set to NULL.
+>>
+>> Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use w=
+ith
+>> device memory")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>=20
+> So this bug can manifest by some garbage address on stack being called, r=
+ight? I
+> wonder, how comes it didn't actually happen yet?
+
+Right.
+Probably because HMM isn't widely being used in production yet.
+
+>=20
+>> ---
+>>   mm/migrate.c | 17 +++++++----------
+>>   1 file changed, 7 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 515718392b24..a42858d8e00b 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -2340,16 +2340,13 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+>>   static void migrate_vma_collect(struct migrate_vma *migrate)
+>>   {
+>>   	struct mmu_notifier_range range;
+>> -	struct mm_walk mm_walk;
+>> -
+>> -	mm_walk.pmd_entry =3D migrate_vma_collect_pmd;
+>> -	mm_walk.pte_entry =3D NULL;
+>> -	mm_walk.pte_hole =3D migrate_vma_collect_hole;
+>> -	mm_walk.hugetlb_entry =3D NULL;
+>> -	mm_walk.test_walk =3D NULL;
+>> -	mm_walk.vma =3D migrate->vma;
+>> -	mm_walk.mm =3D migrate->vma->vm_mm;
+>> -	mm_walk.private =3D migrate;
+>> +	struct mm_walk mm_walk =3D {
+>> +		.pmd_entry =3D migrate_vma_collect_pmd,
+>> +		.pte_hole =3D migrate_vma_collect_hole,
+>> +		.vma =3D migrate->vma,
+>> +		.mm =3D migrate->vma->vm_mm,
+>> +		.private =3D migrate,
+>> +	};
+>>  =20
+>>   	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm_walk.mm=
+,
+>>   				migrate->start,
+>>
+>=20
