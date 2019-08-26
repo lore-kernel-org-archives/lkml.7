@@ -2,101 +2,81 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0F2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE443C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C7E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BEC206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfHZJCP (ORCPT
+        id S1730547AbfHZJFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:02:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:53580 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbfHZJCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:02:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 02:01:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
-   d="scan'208";a="191670664"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 26 Aug 2019 02:01:37 -0700
-Received: from [10.226.38.59] (rtanwar-mobl.gar.corp.intel.com [10.226.38.59])
-        by linux.intel.com (Postfix) with ESMTP id AB14D580444;
-        Mon, 26 Aug 2019 02:01:32 -0700 (PDT)
-Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, alan@linux.intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
- <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
- <20190822090208.GJ30120@smile.fi.intel.com>
- <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
- <20190822130429.GN30120@smile.fi.intel.com>
- <a6717e97-01cf-771c-8467-be5946528dd0@linux.intel.com>
- <20190823125604.GS30120@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <1628049a-e7f7-6f07-db9d-ef716b5a95df@linux.intel.com>
-Date:   Mon, 26 Aug 2019 17:01:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 26 Aug 2019 05:05:04 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41121 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfHZJFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:05:04 -0400
+Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 3ebf26800505d6b8; Mon, 26 Aug 2019 11:05:02 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Keith Busch <keith.busch@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 3/3] acpi/hmat: Skip publishing target info for nodes with no online memory
+Date:   Mon, 26 Aug 2019 11:05:02 +0200
+Message-ID: <1922204.kTHyOg1r71@kreacher>
+In-Reply-To: <CAJZ5v0hCkibcbiYdPmBXdnDHZbGP2q0uNRi01oU0NMz5o3WwGA@mail.gmail.com>
+References: <20190805142706.22520-1-keith.busch@intel.com> <20190805142706.22520-4-keith.busch@intel.com> <CAJZ5v0hCkibcbiYdPmBXdnDHZbGP2q0uNRi01oU0NMz5o3WwGA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190823125604.GS30120@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Monday, August 12, 2019 10:59:58 AM CEST Rafael J. Wysocki wrote:
+> On Mon, Aug 5, 2019 at 4:30 PM Keith Busch <keith.busch@intel.com> wrote:
+> >
+> > From: Dan Williams <dan.j.williams@intel.com>
+> >
+> > There are multiple scenarios where the HMAT may contain information
+> > about proximity domains that are not currently online. Rather than fail
+> > to report any HMAT data just elide those offline domains.
+> >
+> > If and when those domains are later onlined they can be added to the
+> > HMEM reporting at that point.
+> >
+> > This was found while testing EFI_MEMORY_SP support which reserves
+> > "specific purpose" memory from the general allocation pool. If that
+> > reservation results in an empty numa-node then the node is not marked
+> > online leading a spurious:
+> >
+> >     "acpi/hmat: Ignoring HMAT: Invalid table"
+> >
+> > ...result for HMAT parsing.
+> >
+> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Reviewed-by: Keith Busch <keith.busch@intel.com>
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> When you send somebody else's patches, you should sign them off as a
+> rule, but since you sent this one with your own R-by, I converted that
+> to a S-o-b.
+> 
 
-Hi Andy,
+And all patches in the series have been applied.
 
-On 23/8/2019 8:56 PM, Andy Shevchenko wrote:
->>>> get_wallclock() and set_wallclock() are function pointers of platform_ops
->>>>
->>>> which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
->>>>
->>>> at init time. Since adding a new platform to override these functions is
->>>>
->>>> discouraged, so the only way is to modify RTC get/set functions.
->>> Shouldn't it be platform agnostic code?
->>> So, my point is, instead of hacking two functions, perhaps better to avoid them
->>> at all.
->> Sorry, i could not understand your point. The changes are platform
->>
->> agnostic i.e. it doesn't break existing use cases. Are you recommending
->>
->> to add a new platform and make changes there ?
-> Nope, I propose to do something like
->
-> void __init foo()
-> {
-> 	if (platform has RTC)
-> 		return;
->
-> 	set_wallclock = noop;
-> 	get_wallclock = noop;
-> }
+Thanks!
 
-Thanks. I will work out a V2 patch as per your suggestion
 
-and send out for review again.
 
-Regards,
-
-Rahul
 
