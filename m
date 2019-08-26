@@ -2,112 +2,162 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B902C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13199C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49ED02184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26812184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfHZUle (ORCPT
+        id S1729599AbfHZUmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:41:34 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:37886 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727754AbfHZUle (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:41:34 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 26 Aug 2019 23:41:27 +0300
-Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x7QKfPDO021168;
-        Mon, 26 Aug 2019 23:41:26 +0300
-From:   Parav Pandit <parav@mellanox.com>
-To:     alex.williamson@redhat.com, jiri@mellanox.com,
-        kwankhede@nvidia.com, cohuck@redhat.com, davem@davemloft.net
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Parav Pandit <parav@mellanox.com>
-Subject: [PATCH 0/4] Introduce variable length mdev alias
-Date:   Mon, 26 Aug 2019 15:41:15 -0500
-Message-Id: <20190826204119.54386-1-parav@mellanox.com>
-X-Mailer: git-send-email 2.19.2
+        Mon, 26 Aug 2019 16:42:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56742 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727219AbfHZUmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 16:42:46 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4532D281D1;
+        Mon, 26 Aug 2019 20:42:45 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-6.gru2.redhat.com [10.97.112.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 962026092D;
+        Mon, 26 Aug 2019 20:42:44 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id DF559105115;
+        Mon, 26 Aug 2019 17:40:57 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x7QKeped025832;
+        Mon, 26 Aug 2019 17:40:51 -0300
+Date:   Mon, 26 Aug 2019 17:40:50 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when
+ dedicated physical CPUs are available
+Message-ID: <20190826204045.GA24697@amt.cnet>
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
+ <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet>
+ <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 26 Aug 2019 20:42:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To have consistent naming for the netdevice of a mdev and to have
-consistent naming of the devlink port [1] of a mdev, which is formed using
-phys_port_name of the devlink port, current UUID is not usable because
-UUID is too long.
+On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
+> On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> >
+> > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> > > >> From: Wanpeng Li <wanpengli@tencent.com>
+> > > >>
+> > > >> The downside of guest side polling is that polling is performed even
+> > > >> with other runnable tasks in the host. However, even if poll in kvm
+> > > >> can aware whether or not other runnable tasks in the same pCPU, it
+> > > >> can still incur extra overhead in over-subscribe scenario. Now we can
+> > > >> just enable guest polling when dedicated pCPUs are available.
+> > > >>
+> > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > >> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > >
+> > > > Paolo, Marcelo, any comments?
+> > >
+> > > Yes, it's a good idea.
+> > >
+> > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > >
+> > > Paolo
+> >
+> 
+> Hi Marcelo,
+> 
+> Sorry for the late response.
+> 
+> > I think KVM_HINTS_REALTIME is being abused somewhat.
+> > It has no clear meaning and used in different locations
+> > for different purposes.
+> 
+> ================== ============ =================================
+> KVM_HINTS_REALTIME 0                      guest checks this feature bit to
+> 
+> determine that vCPUs are never
+> 
+> preempted for an unlimited time
 
-UUID in string format is 36-characters long and in binary 128-bit.
-Both formats are not able to fit within 15 characters limit of netdev
-name.
+Unlimited time means infinite time, or unlimited time means 
+10s ? 1s ?
 
-It is desired to have mdev device naming consistent using UUID.
-So that widely used user space framework such as ovs [2] can make use
-of mdev representor in similar way as PCIe SR-IOV VF and PF representors.
+The previous definition was much better IMO: HINTS_DEDICATED.
 
-Hence,
-(a) mdev alias is created which is derived using sha1 from the mdev name.
-(b) Vendor driver describes how long an alias should be for the child mdev
-created for a given parent.
-(c) Mdev aliases are unique at system level.
-(d) alias is created optionally whenever parent requested.
-This ensures that non networking mdev parents can function without alias
-creation overhead.
 
-This design is discussed at [3].
+> allowing optimizations
+> ================== ============ =================================
+> 
+> Now it disables pv queued spinlock, 
 
-An example systemd/udev extension will have,
+OK. 
 
-1. netdev name created using mdev alias available in sysfs.
+> pv tlb shootdown, 
 
-mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-mdev 12 character alias=cd5b146a80a5
+OK.
 
-netdev name of this mdev = enmcd5b146a80a5
-Here en = Ethernet link
-m = mediated device
+> pv sched yield
 
-2. devlink port phys_port_name created using mdev alias.
-devlink phys_port_name=pcd5b146a80a5
+"The idea is from Xen, when sending a call-function IPI-many to vCPUs,
+yield if any of the IPI target vCPUs was preempted. 17% performance
+increasement of ebizzy benchmark can be observed in an over-subscribe
+environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
+IPI-many since call-function is not easy to be trigged by userspace
+workload)."
 
-This patchset enables mdev core to maintain unique alias for a mdev.
+This can probably hurt if vcpus are rarely preempted. 
 
-Patch-1 Introduces mdev alias using sha1.
-Patch-2 Ensures that mdev alias is unique in a system.
-Patch-3 Exposes mdev alias in a sysfs hirerchy.
-Patch-4 Extends mtty driver to optionally provide alias generation.
-This also enables to test UUID based sha1 collision and trigger
-error handling for duplicate sha1 results.
+> which are not expected present in vCPUs are never preempted for an
+> unlimited time scenario.
+> 
+> >
+> > For example, i think that using pv queued spinlocks and
+> > haltpoll is a desired scenario, which the patch below disallows.
+> 
+> So even if dedicated pCPU is available, pv queued spinlocks should
+> still be chose if something like vhost-kthreads are used instead of
+> DPDK/vhost-user. 
 
-In future when networking driver wants to use mdev alias, mdev_alias()
-API will be added to derive devlink port name.
+Can't you enable the individual features you need for optimizing 
+the overcommitted case? This is how things have been done historically:
+If a new feature is available, you enable it to get the desired
+performance. x2apic, invariant-tsc, cpuidle haltpoll...
 
-[1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
-[2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
-[3] https://patchwork.kernel.org/cover/11084231/
+So in your case: enable pv schedyield, enable pv tlb shootdown.
 
-Parav Pandit (4):
-  mdev: Introduce sha1 based mdev alias
-  mdev: Make mdev alias unique among all mdevs
-  mdev: Expose mdev alias in sysfs tree
-  mtty: Optionally support mtty alias
+> kvm adaptive halt-polling will compete with
+> vhost-kthreads, however, poll in guest unaware other runnable tasks in
+> the host which will defeat vhost-kthreads.
 
- drivers/vfio/mdev/mdev_core.c    | 103 ++++++++++++++++++++++++++++++-
- drivers/vfio/mdev/mdev_private.h |   5 +-
- drivers/vfio/mdev/mdev_sysfs.c   |  26 ++++++--
- include/linux/mdev.h             |   4 ++
- samples/vfio-mdev/mtty.c         |  10 +++
- 5 files changed, 139 insertions(+), 9 deletions(-)
-
--- 
-2.19.2
+It depends on how much work vhost-kthreads needs to do, how successful 
+halt-poll in the guest is, and what improvement halt-polling brings.
+The amount of polling will be reduced to zero if polling 
+is not successful.
 
