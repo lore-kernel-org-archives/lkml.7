@@ -2,279 +2,90 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C1DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C72EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA96206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BE8206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 11:17:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsw9Nmnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731261AbfHZLQr (ORCPT
+        id S1731302AbfHZLRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 07:16:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60106 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731178AbfHZLQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 07:16:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A3E48AC64;
-        Mon, 26 Aug 2019 11:16:42 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for kmalloc(power-of-two)
-Date:   Mon, 26 Aug 2019 13:16:27 +0200
-Message-Id: <20190826111627.7505-3-vbabka@suse.cz>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190826111627.7505-1-vbabka@suse.cz>
-References: <20190826111627.7505-1-vbabka@suse.cz>
+        Mon, 26 Aug 2019 07:17:00 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38649 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731286AbfHZLQ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 07:16:56 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c12so600398lfh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 04:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BoFNGyhD/IpzgrNu/s4nyMOqx8vjiMZXotZwnxN0fmQ=;
+        b=zsw9Nmnuox1dtcDek+VxNObd5JtV9AetPOXXNqU5QQAGc/yFDb721tTak0xA/y8yjr
+         xanBopG8k/irYaRWOGZhFV2Czdtd8AClacur10EiFlexX0Ctwvd06HjML60yPoh7+f5m
+         vywc5WoZKgTSX9lnv9kmRrWjoi/0ro0ift3DHfj5xDcNXiIqmoIQr5Ybyd280tQ+ZOsc
+         kU8A44nndrz7I64UTBZVKNTb5R13C+0YjVX/KeMaUMevL0DpP7nv9DQokfIQLddQSRpn
+         wcQbb7W1H5gnosf0fdBGQezB8WjDmAv8bl+x6LPG1WO4iwmwMin1I+fLwqWicY38+x1w
+         6PMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BoFNGyhD/IpzgrNu/s4nyMOqx8vjiMZXotZwnxN0fmQ=;
+        b=px0Odlk4Y07gAEgEEiuKUXCuFZJY20lhgs/0CnwPMwFhYeRam4WNkHbMY8fChnbblV
+         tsZTrn/mnWwMABWrUQXV2CpTknKvSdupT9O0ibVj56ig3+JgaBqzYxTgheGct0UCZlwT
+         KbNuDom/0N5yU0sofIC5yx+doLpMF/eG3IiWlc1BnLWBSBscOGUEWPHW4pc1CKuQ1qR9
+         5Gw52wcE04RMfVy7PShCv1kgf8v0AkeqFvLrmNhzTGfVI8dyNUDYx5LT07ee9EjxjVMZ
+         b7ecLZqPoVnrmWTnFszJF+A/nEWyvPyV9ZlQTjm4kP4GOvOvCkART3AMZRv0UJg/4Vsa
+         GerA==
+X-Gm-Message-State: APjAAAWWH9SPPHwtJLjbV3xiBqH14ITstOmFuckNVs7ZY3o7D9KkiNJX
+        SMtUuiYlF5ICzhnTXgDI/+2Nc1aCw4g/9ag+mA4I4w==
+X-Google-Smtp-Source: APXvYqwq+n3IWbnz++AwYjY5hi9PwQS3DsryoTO85Roujdt6TlsqwVJGaCILrK7a/BuelN2HGE61Fz7GYYwHWJZ3XhQ=
+X-Received: by 2002:a19:ed11:: with SMTP id y17mr10463633lfy.141.1566818213972;
+ Mon, 26 Aug 2019 04:16:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190826210252.20ca44ba@canb.auug.org.au>
+In-Reply-To: <20190826210252.20ca44ba@canb.auug.org.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 26 Aug 2019 13:16:42 +0200
+Message-ID: <CACRpkdbfe+az-Cgymd0Y+-m1MqvdSNb-H1XO0923cQ7RwEWanA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the pinctrl tree with the gpio tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In most configurations, kmalloc() happens to return naturally aligned (i.e.
-aligned to the block size itself) blocks for power of two sizes. That means
-some kmalloc() users might unknowingly rely on that alignment, until stuff
-breaks when the kernel is built with e.g.  CONFIG_SLUB_DEBUG or CONFIG_SLOB,
-and blocks stop being aligned. Then developers have to devise workaround such
-as own kmem caches with specified alignment [1], which is not always practical,
-as recently evidenced in [2].
+On Mon, Aug 26, 2019 at 1:03 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-The topic has been discussed at LSF/MM 2019 [3]. Adding a 'kmalloc_aligned()'
-variant would not help with code unknowingly relying on the implicit alignment.
-For slab implementations it would either require creating more kmalloc caches,
-or allocate a larger size and only give back part of it. That would be
-wasteful, especially with a generic alignment parameter (in contrast with a
-fixed alignment to size).
+> Today's linux-next merge of the pinctrl tree got a conflict in:
+>
+>   drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>
+> between commit:
+>
+>   82357f82ec69 ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
+>
+> from the gpio tree and commit:
+>
+>   e38a9a437fb9 ("pinctrl: bcm2835: Add support for BCM2711 pull-up functionality")
+>
+> from the pinctrl tree.
 
-Ideally we should provide to mm users what they need without difficult
-workarounds or own reimplementations, so let's make the kmalloc() alignment to
-size explicitly guaranteed for power-of-two sizes under all configurations.
-What this means for the three available allocators?
+Ah that's so unnecessary. I will take the patch out of the GPIO
+tree and put it into the pinctrl tree instead, thanks for noticing!
 
-* SLAB object layout happens to be mostly unchanged by the patch. The
-  implicitly provided alignment could be compromised with CONFIG_DEBUG_SLAB due
-  to redzoning, however SLAB disables redzoning for caches with alignment
-  larger than unsigned long long. Practically on at least x86 this includes
-  kmalloc caches as they use cache line alignment, which is larger than that.
-  Still, this patch ensures alignment on all arches and cache sizes.
-
-* SLUB layout is also unchanged unless redzoning is enabled through
-  CONFIG_SLUB_DEBUG and boot parameter for the particular kmalloc cache. With
-  this patch, explicit alignment is guaranteed with redzoning as well. This
-  will result in more memory being wasted, but that should be acceptable in a
-  debugging scenario.
-
-* SLOB has no implicit alignment so this patch adds it explicitly for
-  kmalloc(). The potential downside is increased fragmentation. While
-  pathological allocation scenarios are certainly possible, in my testing,
-  after booting a x86_64 kernel+userspace with virtme, around 16MB memory
-  was consumed by slab pages both before and after the patch, with difference
-  in the noise.
-
-[1] https://lore.kernel.org/linux-btrfs/c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr/
-[2] https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/
-[3] https://lwn.net/Articles/787740/
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- Documentation/core-api/memory-allocation.rst |  4 ++
- include/linux/slab.h                         |  4 ++
- mm/slab_common.c                             | 11 ++++-
- mm/slob.c                                    | 42 +++++++++++++++-----
- 4 files changed, 49 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/core-api/memory-allocation.rst b/Documentation/core-api/memory-allocation.rst
-index 7744aa3bf2e0..27c54854b508 100644
---- a/Documentation/core-api/memory-allocation.rst
-+++ b/Documentation/core-api/memory-allocation.rst
-@@ -98,6 +98,10 @@ limited. The actual limit depends on the hardware and the kernel
- configuration, but it is a good practice to use `kmalloc` for objects
- smaller than page size.
- 
-+The address of a chunk allocated with `kmalloc` is aligned to at least
-+ARCH_KMALLOC_MINALIGN bytes. For sizes of power of two bytes, the
-+alignment is also guaranteed to be at least to the respective size.
-+
- For large allocations you can use :c:func:`vmalloc` and
- :c:func:`vzalloc`, or directly request pages from the page
- allocator. The memory allocated by `vmalloc` and related functions is
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 56c9c7eed34e..0d4c26395785 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -493,6 +493,10 @@ static __always_inline void *kmalloc_large(size_t size, gfp_t flags)
-  * kmalloc is the normal method of allocating memory
-  * for objects smaller than page size in the kernel.
-  *
-+ * The allocated object address is aligned to at least ARCH_KMALLOC_MINALIGN
-+ * bytes. For @size of power of two bytes, the alignment is also guaranteed
-+ * to be at least to the size.
-+ *
-  * The @flags argument may be one of the GFP flags defined at
-  * include/linux/gfp.h and described at
-  * :ref:`Documentation/core-api/mm-api.rst <mm-api-gfp-flags>`
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 929c02a90fba..b9ba93ad5c7f 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -993,10 +993,19 @@ void __init create_boot_cache(struct kmem_cache *s, const char *name,
- 		unsigned int useroffset, unsigned int usersize)
- {
- 	int err;
-+	unsigned int align = ARCH_KMALLOC_MINALIGN;
- 
- 	s->name = name;
- 	s->size = s->object_size = size;
--	s->align = calculate_alignment(flags, ARCH_KMALLOC_MINALIGN, size);
-+
-+	/*
-+	 * For power of two sizes, guarantee natural alignment for kmalloc
-+	 * caches, regardless of SL*B debugging options.
-+	 */
-+	if (is_power_of_2(size))
-+		align = max(align, size);
-+	s->align = calculate_alignment(flags, align, size);
-+
- 	s->useroffset = useroffset;
- 	s->usersize = usersize;
- 
-diff --git a/mm/slob.c b/mm/slob.c
-index 3dcde9cf2b17..07a39047aa54 100644
---- a/mm/slob.c
-+++ b/mm/slob.c
-@@ -224,6 +224,7 @@ static void slob_free_pages(void *b, int order)
-  * @sp: Page to look in.
-  * @size: Size of the allocation.
-  * @align: Allocation alignment.
-+ * @align_offset: Offset in the allocated block that will be aligned.
-  * @page_removed_from_list: Return parameter.
-  *
-  * Tries to find a chunk of memory at least @size bytes big within @page.
-@@ -234,7 +235,7 @@ static void slob_free_pages(void *b, int order)
-  *         true (set to false otherwise).
-  */
- static void *slob_page_alloc(struct page *sp, size_t size, int align,
--			     bool *page_removed_from_list)
-+			      int align_offset, bool *page_removed_from_list)
- {
- 	slob_t *prev, *cur, *aligned = NULL;
- 	int delta = 0, units = SLOB_UNITS(size);
-@@ -243,8 +244,17 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align,
- 	for (prev = NULL, cur = sp->freelist; ; prev = cur, cur = slob_next(cur)) {
- 		slobidx_t avail = slob_units(cur);
- 
-+		/*
-+		 * 'aligned' will hold the address of the slob block so that the
-+		 * address 'aligned'+'align_offset' is aligned according to the
-+		 * 'align' parameter. This is for kmalloc() which prepends the
-+		 * allocated block with its size, so that the block itself is
-+		 * aligned when needed.
-+		 */
- 		if (align) {
--			aligned = (slob_t *)ALIGN((unsigned long)cur, align);
-+			aligned = (slob_t *)
-+				(ALIGN((unsigned long)cur + align_offset, align)
-+				 - align_offset);
- 			delta = aligned - cur;
- 		}
- 		if (avail >= units + delta) { /* room enough? */
-@@ -288,7 +298,8 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align,
- /*
-  * slob_alloc: entry point into the slob allocator.
-  */
--static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
-+static void *slob_alloc(size_t size, gfp_t gfp, int align, int node,
-+							int align_offset)
- {
- 	struct page *sp;
- 	struct list_head *slob_list;
-@@ -319,7 +330,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- 		if (sp->units < SLOB_UNITS(size))
- 			continue;
- 
--		b = slob_page_alloc(sp, size, align, &page_removed_from_list);
-+		b = slob_page_alloc(sp, size, align, align_offset, &page_removed_from_list);
- 		if (!b)
- 			continue;
- 
-@@ -356,7 +367,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- 		INIT_LIST_HEAD(&sp->slab_list);
- 		set_slob(b, SLOB_UNITS(PAGE_SIZE), b + SLOB_UNITS(PAGE_SIZE));
- 		set_slob_page_free(sp, slob_list);
--		b = slob_page_alloc(sp, size, align, &_unused);
-+		b = slob_page_alloc(sp, size, align, align_offset, &_unused);
- 		BUG_ON(!b);
- 		spin_unlock_irqrestore(&slob_lock, flags);
- 	}
-@@ -458,7 +469,7 @@ static __always_inline void *
- __do_kmalloc_node(size_t size, gfp_t gfp, int node, unsigned long caller)
- {
- 	unsigned int *m;
--	int align = max_t(size_t, ARCH_KMALLOC_MINALIGN, ARCH_SLAB_MINALIGN);
-+	int minalign = max_t(size_t, ARCH_KMALLOC_MINALIGN, ARCH_SLAB_MINALIGN);
- 	void *ret;
- 
- 	gfp &= gfp_allowed_mask;
-@@ -466,19 +477,28 @@ __do_kmalloc_node(size_t size, gfp_t gfp, int node, unsigned long caller)
- 	fs_reclaim_acquire(gfp);
- 	fs_reclaim_release(gfp);
- 
--	if (size < PAGE_SIZE - align) {
-+	if (size < PAGE_SIZE - minalign) {
-+		int align = minalign;
-+
-+		/*
-+		 * For power of two sizes, guarantee natural alignment for
-+		 * kmalloc()'d objects.
-+		 */
-+		if (is_power_of_2(size))
-+			align = max(minalign, (int) size);
-+
- 		if (!size)
- 			return ZERO_SIZE_PTR;
- 
--		m = slob_alloc(size + align, gfp, align, node);
-+		m = slob_alloc(size + minalign, gfp, align, node, minalign);
- 
- 		if (!m)
- 			return NULL;
- 		*m = size;
--		ret = (void *)m + align;
-+		ret = (void *)m + minalign;
- 
- 		trace_kmalloc_node(caller, ret,
--				   size, size + align, gfp, node);
-+				   size, size + minalign, gfp, node);
- 	} else {
- 		unsigned int order = get_order(size);
- 
-@@ -579,7 +599,7 @@ static void *slob_alloc_node(struct kmem_cache *c, gfp_t flags, int node)
- 	fs_reclaim_release(flags);
- 
- 	if (c->size < PAGE_SIZE) {
--		b = slob_alloc(c->size, flags, c->align, node);
-+		b = slob_alloc(c->size, flags, c->align, node, 0);
- 		trace_kmem_cache_alloc_node(_RET_IP_, b, c->object_size,
- 					    SLOB_UNITS(c->size) * SLOB_UNIT,
- 					    flags, node);
--- 
-2.22.1
-
+Yours,
+Linus Walleij
