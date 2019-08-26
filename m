@@ -2,131 +2,112 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F6EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7672DC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C8F20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4641A20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NqWSZ27f"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oOsWkVyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732527AbfHZOpr (ORCPT
+        id S1729598AbfHZOqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:45:47 -0400
-Received: from mail-eopbgr30062.outbound.protection.outlook.com ([40.107.3.62]:51326
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731186AbfHZOpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:45:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Buxn2QG81vpY/FXll3QGUAicNOySJXSElWH3ZRqWD17toJL3aIcWnUXlOL1qknJnYVsh1SR6TWB5F2Hzy79R60hOHc8Webq+pHOesJGQjVCfDqMiVmz5tK1Dg4kpLXzkXbUn4bzAQxHiFjDWg8VVjCv2AnYV3ifF1pWtNZYNDpmFnW5fOAV/5SdgeXcN8RUboy0udbXzp3WS8/L8M4jbncLGRdOCvHDyTGv+tuX7naxQAjfPogRha8SD50Cny71S9b7juMM366qWatG8kU5jgMfGtlJGl/PP1KvSbm/OhTWsRgjLyLZrp3BwHIdrzOWtp1UVpDR1rYQVWKHrk09/CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bg44byClphCiUQr60zpMaGt8vFEHLaNwrwl9FbWvHtU=;
- b=mtSYezYLy4UAq4uprFERq6d92ybFiQQvWzsuERvUoq5ek/vJ1B1T5PVswx3LGf6s7ebmwh2W+WOYewtpZORMxAu9kwgXcJIbY8ejORh2jH1VOFsp5MtykRROj+dLPAOXrY1XTvzC47JifRslsQMu9BXywMSIF5KDQB/zx4hMwAHWgWghSNeNbeFmvft7crfnqIukjE9w7WQ4RafD5WZX1vs4bchjn1aIw4QorqfyV2aDsAbDXniphp1f8IWa45cM4xEteKUkF+aSguEc+e37sY1FQiVqlkF1M54OffidoAgs/1P/1sVzidP9hwH4JaLCfEcs4UG9bbMNTQgyAH4xCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bg44byClphCiUQr60zpMaGt8vFEHLaNwrwl9FbWvHtU=;
- b=NqWSZ27fqM5Tg50tHzY6SrJCr1OdxgfShOezVDlriYwsk7zUY1AHNDHRjlaEnqwvftHyqwZ9G2Tgi03i4G+2X9mpAN/oIEiW9XDFP/t3eDPvbxY0DrH0rmeD0xcF04viIYTPsdofwwEl2WK+Q2Flib2TCIvUHZIKfVSuRpyqM1Y=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB5920.eurprd04.prod.outlook.com (20.178.205.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Mon, 26 Aug 2019 14:45:40 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::c5e8:90f8:da97:947e]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::c5e8:90f8:da97:947e%3]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 14:45:40 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Thread-Index: AQHVRn7UNdyaJx5tOE6OrvzyFWKCoA==
-Date:   Mon, 26 Aug 2019 14:45:40 +0000
-Message-ID: <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47938838-ec7c-4734-d552-08d72a3410b0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5920;
-x-ms-traffictypediagnostic: VI1PR04MB5920:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5920BA96346B2E7E954763FFEEA10@VI1PR04MB5920.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(486006)(476003)(44832011)(229853002)(316002)(6506007)(53546011)(14454004)(76176011)(99286004)(7696005)(54906003)(110136005)(8936002)(478600001)(102836004)(4326008)(25786009)(6246003)(26005)(446003)(66066001)(8676002)(53936002)(81166006)(81156014)(55016002)(9686003)(7416002)(33656002)(6116002)(3846002)(6436002)(74316002)(186003)(86362001)(305945005)(7736002)(2906002)(91956017)(64756008)(52536014)(66446008)(5660300002)(66574012)(76116006)(71190400001)(4744005)(14444005)(71200400001)(256004)(66946007)(66556008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5920;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Q3gZqQGW1IqOtO/nyHuhZ9fJEamu1fq9qNEThjtXwkiT2Hlk+6jPgJ3b2AkBM8KTtNRtJ3txMsPMqIGCJmcHYIQlRNCPGHzEGl/wph5ZqrfAAw7JMe5rQ25b/uSR+QfOvNkt29LWvh/UZsAyafu7aOJ/cRvcBIzCfLSCGnefH7vad8Z7SnbqLqDxsFcLEoG+n8thsZ96N95nrbkVCzGumjOu/mTofRRPNQIviAu3eELwTItUHLPbBcVFzlY7fqNLtaVpc/1OSzvsKv/sTJOKlIVShSh1s9mMjU4yen8Tc9QMpnOesULloRngkLjajmHMiMWImOn6jMqZUB43hA6saaJoJsoCjlg45F+HlqRJrX41hRyIaExlaXH2WHcKWSwtcgEbGj1fzgWzVVoqTszcwoPuFWRy6rNqv5T0rXVjWyc=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 26 Aug 2019 10:46:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39772 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729105AbfHZOqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:46:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t16so15608781wra.6
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lKqFlQ5uAweiWoy5Q0NBtlqDIxAoWdFqAZ3hE0aWMrA=;
+        b=oOsWkVyy0OVNO3GEWtL9KUlBPcNQ8EXb5NCLaRrryxI86WLE7itY1IhCRJ//gMudtE
+         MI6ag1jiTbVVcDqAqXe22G5Ebaq5BNPFjs6B3Wib8wz4iLstk/g8GUietWVUDOVMtFLD
+         B72moJ69pMr5bro4U1czlxVb8JfS6SU1/pnwUeOux5P8jlS5AmQgmodOo1MfubsAtRFd
+         6thkrxpAUURZh4j5Bx+8fONziNmU3yKSV12jDFNhld88vr6ZzSyAwVmUIXXrkmddsp89
+         B3dw+IJyZkAPVaiO4vKQIwopRI6ZxW7dUD8oDdsLLhWbf2C5s+AV7/4TTATXNxBIP2Vf
+         RzRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lKqFlQ5uAweiWoy5Q0NBtlqDIxAoWdFqAZ3hE0aWMrA=;
+        b=nTSLW29WWABVa9+061mh8oVMAkJxpb2R7Jvk/L8vi7RF65D1DwDYdiE5YwobjM08Xq
+         xFiI2cgor74HqK8GZhYC6o4QxqYhlJ73C9h8BSVRZUP2MYrttAqw4pW7VTXmCQOzzmcX
+         MaRpuu+YCxrTAuOtL7B+G5Qdds0b/QjgWsJv/9yfL4XN4u9K6c5C2Z1LkTqsU7usAQeb
+         Ywlgo7seEEBBP7CAErXKJga71vHslC4Qwrxh3kiXdunj/FwzVIo/dcmkYsENpLtiH511
+         uSGrIeGdEY6YoPyQVRreXyX+ZRkY0YHW5BKSlV6e/PQZaXLGtLxxjVzqeQv3xyVzlj7O
+         AEmw==
+X-Gm-Message-State: APjAAAXeycaS9NullarQ8yyl5r2CvdoNboz57ckSprQpbD2GzfPplJuM
+        XF9gWAPqVgQyh3brj4mjtKKKbNio07alMw==
+X-Google-Smtp-Source: APXvYqzj8GflBpfqyAQoqHVpAUfVZVDf2xgGir3LWPo8zTibAZW8llY0SCOEuBpqNLk+uWaJWp10ZQ==
+X-Received: by 2002:a5d:408c:: with SMTP id o12mr21617046wrp.176.1566830811145;
+        Mon, 26 Aug 2019 07:46:51 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e9sm12984595wrm.43.2019.08.26.07.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 07:46:50 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/meson: vclk: use the correct G12A frac max value
+Date:   Mon, 26 Aug 2019 16:46:47 +0200
+Message-Id: <20190826144647.17302-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47938838-ec7c-4734-d552-08d72a3410b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 14:45:40.1203
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tKaj00hjkeUWlXl5iMlRmFwSRu3JClmuBYC7cNjAwU0QwPtYy4VEcVK90JHgkf9VHivHm2UsCPszxMfOJtHeQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5920
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/2019 5:31 AM, Anson.Huang@nxp.com wrote:=0A=
-> From: Anson Huang <Anson.Huang@nxp.com>=0A=
-> =0A=
-> Some platforms like i.MX8MQ has clock control for this module,=0A=
-> need to add clock operations to make sure the driver is working=0A=
-> properly.=0A=
-> =0A=
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
-> Reviewed-by: Guido G=FCnther <agx@sigxcpu.org>=0A=
-=0A=
-This series looks good, do you think it can be merged in time for v5.4? =0A=
-Today was v5.3-rc6.=0A=
-=0A=
-In an earlier series the CLK_IS_CRITICAL flags was removed from the TMU =0A=
-clock so if the thermal driver doesn't explicitly enable it the system =0A=
-will hang on probe. This is what happens in linux-next right now!=0A=
-=0A=
-Unless this patches is merged soon we'll end up with a 5.4-rc1 that =0A=
-doesn't boot on imx8mq. An easy fix would be to drop/revert commit =0A=
-951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for =0A=
-IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.=0A=
-=0A=
-Merging patches out-of-order when they have hard (boot-breaking) =0A=
-dependencies also breaks bisect.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+When calculating the HDMI PLL settings for a DMT mode PHY frequency,
+use the correct max fractional PLL value for G12A VPU.
+
+With this fix, we can finally setup the 1024x76-60 mode.
+
+Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/meson/meson_vclk.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+index ac491a781952..f690793ae2d5 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.c
++++ b/drivers/gpu/drm/meson/meson_vclk.c
+@@ -638,13 +638,18 @@ static bool meson_hdmi_pll_validate_params(struct meson_drm *priv,
+ 		if (frac >= HDMI_FRAC_MAX_GXBB)
+ 			return false;
+ 	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
+-		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
+-		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
++		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
+ 		/* Empiric supported min/max dividers */
+ 		if (m < 106 || m > 247)
+ 			return false;
+ 		if (frac >= HDMI_FRAC_MAX_GXL)
+ 			return false;
++	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
++		/* Empiric supported min/max dividers */
++		if (m < 106 || m > 247)
++			return false;
++		if (frac >= HDMI_FRAC_MAX_G12A)
++			return false;
+ 	}
+ 
+ 	return true;
+-- 
+2.22.0
+
