@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5A9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81360C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE86A20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE9620874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733142AbfHZPjD (ORCPT
+        id S1733163AbfHZPjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:39:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35956 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbfHZPiv (ORCPT
+        Mon, 26 Aug 2019 11:39:14 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38961 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733087AbfHZPi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:38:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r3so15790010wrt.3;
-        Mon, 26 Aug 2019 08:38:50 -0700 (PDT)
+        Mon, 26 Aug 2019 11:38:56 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i63so16320514wmg.4;
+        Mon, 26 Aug 2019 08:38:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sdNLZLbUZjioU3Z4lRpuQbaNIysXdv9lDzhe4Q5gJwU=;
-        b=CfCocCWMwTszwFAeiQHIpRu1PjqDEExNjixAjIeiZZ1uRRMQEl0xka9egM+Kqw+5zf
-         UdDuDXIDMT8ky3fgkh23UbAwnHxUvL2CiGjZaqBuTvFXcx9AG/Eq01MR4b1STngL33NE
-         M79+zZdSkChVCgv9FM8JjPJCbJkW9vOMxfmInaOjw2aG94F/yYQcjyWloNJYVbWR/lGZ
-         8/DA5oy3irqO+ETOp4/PtvSdAcKeAS49y7TfHA4qvMwLAFjj7pPTL1kj8djgI6jnw9k1
-         qMMPrDTlmz1KCtsAtgMdZH7cjOCpP1RCoXq9w7wk9COxTc/5cbujVE4Pxsq0bfbLNsRP
-         CsKA==
-X-Gm-Message-State: APjAAAVkt7DmxK2TIg2QMIHRqkDrLHiMLRMZ/QPhZ+lvnz7h4qy2MP7C
-        5yaRnOvo5F7/w1OfAuVLErPhwvRLtwc=
-X-Google-Smtp-Source: APXvYqyupufwIm7Jbil3XGdUZ6YsobfUaIlznuBm6oZ9/FZv+zEyI9GMPHplQrpOf0n27DVXhf+4PA==
-X-Received: by 2002:adf:fd8b:: with SMTP id d11mr22079526wrr.300.1566833929706;
-        Mon, 26 Aug 2019 08:38:49 -0700 (PDT)
+        bh=I8BhmUjvRpuRsDLc+hCNgR+cjfG8z1wM6d0LK3Ong3c=;
+        b=ujutz5n60DDR+Ja7QgzXOPqffrYJm1TMiCw10+Za6jldR78ngKUPwME01zFsen/MM+
+         aFbOPBcTBYPNWsfwhys71YPvGnm4xRIzJXrKUZT9lWUD+bXZGRWd+Hurzai+e2egs5BZ
+         zfb0yXjApiCB70FgwdwVsaqSyR//as78pBCBoMdniJswFYqBT4Ya/QOcYpb3aXn5V6Fj
+         5ytvzAS3EO9pdv1vZsl6YXQ9DpzhwPeQvFeq+5Wy7eS8D+88OKGXpuSYetSskA8j/bGH
+         x3nGiUfK46THcZ3FcVOGWFUZrXZOVMkbVoCT7+j3DMlUkPhbjvzzDf1J2TwvZND0tSGF
+         QMcg==
+X-Gm-Message-State: APjAAAX3DPPomImZLeuCo84253A8VcgE3RW970mVKW/5fk6DsNad9vKG
+        V/4Nr5LsGXoszndZJ4C/w/qVC/1fk+A=
+X-Google-Smtp-Source: APXvYqwMD/2qo0xGpO8j5/o0mKPTDWKJ+yk4XONGvPSsZuutCz0ekSIirvu1/zzmTBZWPbnKFZS1pw==
+X-Received: by 2002:a1c:4005:: with SMTP id n5mr22328274wma.166.1566833933541;
+        Mon, 26 Aug 2019 08:38:53 -0700 (PDT)
 Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id z8sm11580798wru.13.2019.08.26.08.38.48
+        by smtp.gmail.com with ESMTPSA id z8sm11580798wru.13.2019.08.26.08.38.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 08:38:49 -0700 (PDT)
+        Mon, 26 Aug 2019 08:38:53 -0700 (PDT)
 From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
@@ -55,9 +55,9 @@ Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 07/12] ARM: dts: imx7d: cl-som-imx7: add/enable SPI flash on spi1
-Date:   Mon, 26 Aug 2019 16:37:55 +0100
-Message-Id: <20190826153800.35400-7-git@andred.net>
+Subject: [PATCH 11/12] ARM: dts: imx7d: cl-som-imx7: add WiLink Bluetooth support
+Date:   Mon, 26 Aug 2019 16:37:59 +0100
+Message-Id: <20190826153800.35400-11-git@andred.net>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190826153800.35400-1-git@andred.net>
 References: <20190826153800.35400-1-git@andred.net>
@@ -69,8 +69,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add/enable SPI flash on spi1 using the default vendor's
-partition layout as per downstream kernel
+add / enable TI's WiLink8 Bluetooth module on UART3.
 
 Signed-off-by: André Draszik <git@andred.net>
 Cc: Ilya Ledvich <ilya@compulab.co.il>
@@ -85,72 +84,51 @@ Cc: NXP Linux Team <linux-imx@nxp.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 45 +++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index ca3c5d95d6c3..d4637a8ca223 100644
+index 4cb36decef3d..08fb43f7ae1d 100644
 --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
 +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -28,6 +28,36 @@
- 	cpu-supply = <&sw1a_reg>;
+@@ -250,6 +250,21 @@
+ 	status = "okay";
  };
  
-+&ecspi1 {
++&uart3 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1_cs>;
-+	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
++	pinctrl-0 = <&pinctrl_uart3>;
++	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	uart-has-rtscts;
 +	status = "okay";
 +
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "uboot";
-+			reg = <0x0 0xc0000>;
-+		};
-+
-+		partition@c0000 {
-+			label = "uboot environment";
-+			reg = <0xc0000 0x40000>;
-+		};
-+
-+		partition@100000 {
-+			label = "splash";
-+			reg = <0x100000 0x100000>;
-+		};
++	bluetooth {
++		compatible = "ti,wl1835-st";
++		enable-gpios = <&pca9555 1 GPIO_ACTIVE_HIGH>;
++		max-speed = <3000000>;
 +	};
 +};
 +
- &fec1 {
+ &usdhc2 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1phy>;
-@@ -214,6 +244,21 @@
- };
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+@@ -351,6 +366,15 @@
+ 		>;
+ 	};
  
- &iomuxc {
-+	pinctrl_ecspi1: ecspi1grp {
++	pinctrl_uart3: uart3grp {
 +		fsl,pins = <
-+			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI		0xf
-+			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO		0xf
-+			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK		0xf
++			MX7D_PAD_UART3_TX_DATA__UART3_DCE_TX	0x79
++			MX7D_PAD_UART3_RX_DATA__UART3_DCE_RX	0x79
++			MX7D_PAD_UART3_CTS_B__UART3_DCE_CTS	0x79
++			MX7D_PAD_UART3_RTS_B__UART3_DCE_RTS	0x79
 +		>;
 +	};
 +
-+	pinctrl_ecspi1_cs: ecspi1_cs_grp {
-+		fsl,pins = <
-+			/* SPI flash chipselect */
-+			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19			0x34
-+		>;
-+	};
-+
- 	pinctrl_enet1: enet1grp {
+ 	pinctrl_usdhc2: usdhc2grp {
  		fsl,pins = <
- 			MX7D_PAD_SD2_CD_B__ENET1_MDIO			0x30
+ 			MX7D_PAD_SD2_CMD__SD2_CMD		0x59
 -- 
 2.23.0.rc1
 
