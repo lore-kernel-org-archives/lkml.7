@@ -2,192 +2,158 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B53AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632D422DA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjRaJmdD"
+	by mail.kernel.org (Postfix) with ESMTP id 0A43A22CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfHZJvs (ORCPT
+        id S1731128AbfHZJw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:51:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40344 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfHZJvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:51:48 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c5so14987329wmb.5;
-        Mon, 26 Aug 2019 02:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bdmKhVsf2XwxhKkj21KNp57P6t/lfQgh9WrNnl0h77Q=;
-        b=pjRaJmdDhBq6nrZeEPzuRis8Uk9Kz4zPHfrfq0xCRFIJorlN6KPMu6gpYzYcrN/Lxg
-         bkk9FyFsaRb9RjNKLFPWjbUe/vvucGzLSWvkOLgh225dTGlezgAk3JjgTCYQRCMUait2
-         F62atwh0b3M3sjEYNkGLu9DZHnhhKzD4GeZspT6pkR9uGwm9KdFu/KAuOu04GMIeVsI0
-         WKbRby1S8wbq2kaG70eV71THRo/5dPmbAhDNSHAdEEGGeQ0RVWjhy6T8jVa1cjGmnVDC
-         WadyLhobcN45osbOAitpxZpfbvzRnhhX6Ky2NUdAXqtCtH7IuFJ+f52UH4KiU8GDv0Vk
-         AKAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=bdmKhVsf2XwxhKkj21KNp57P6t/lfQgh9WrNnl0h77Q=;
-        b=VVOX2/V/QvInb156bwB2ZM3E//j5wAV9TLrrzgbz/kF5GHtnF6pPhSHzZpQr2ArF6K
-         EprUSEtvIHnOuDGBuJfudXsT90TBBekVzsP0iJ4PqCyZionPZeHQ0EwXjloZolOmB805
-         C7Pho/0bg+V0mZaGaiw0dim7UXVFAt5/HrgH54umDSu9hAzuHvLlwenwDyimNr4RP+hf
-         1hVWLcO1dc6KRuNqUHV6CkI/ozRCnvev2nPypek0Iivkv6BZfO9OanhZP8w4AqplSBKq
-         dgB6bs8kCbb3rLSnkZmXNt1brfpWGY25nPExOkA2tB1fTnwIq0tYMmmGpiTwe588oUF6
-         j3wQ==
-X-Gm-Message-State: APjAAAXE1ek8+0/DX8EHch1/RSe45/wh2e/zWhfB/7vl0k9IgAfySUlc
-        T32ajMfqRyywqDmITSi8040=
-X-Google-Smtp-Source: APXvYqyfSXYCXi59//fK6HqOrzjSVNVIFBBxyHN7H9vziw7LDfK15wJcF/6Ao7CJ8feIDd5iU66a3A==
-X-Received: by 2002:a1c:f103:: with SMTP id p3mr19846034wmh.18.1566813105790;
-        Mon, 26 Aug 2019 02:51:45 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id a17sm6121113wmm.47.2019.08.26.02.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 02:51:44 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Scott Murray <scott@spiteful.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] PCI: hotplug: Remove surplus return from a void function
-Date:   Mon, 26 Aug 2019 11:51:43 +0200
-Message-Id: <20190826095143.21353-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Mon, 26 Aug 2019 05:52:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18290 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbfHZJw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:52:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 02:52:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,431,1559545200"; 
+   d="scan'208";a="181327932"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Aug 2019 02:52:57 -0700
+Received: from [10.226.39.22] (ekotax-mobl.gar.corp.intel.com [10.226.39.22])
+        by linux.intel.com (Postfix) with ESMTP id B73805807C5;
+        Mon, 26 Aug 2019 02:52:55 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
+ Reset controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+ <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
+Date:   Mon, 26 Aug 2019 17:52:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary empty return statement at the end of a void
-function in the following:
+Hi Rob,
 
-  - drivers/pci/hotplug/cpci_hotplug_core.c: cleanup_slots()
-  - drivers/pci/hotplug/cpqphp_core.c: pci_print_IRQ_route()
-  - drivers/pci/hotplug/cpqphp_ctrl.c: cpqhp_pushbutton_thread()
-  - drivers/pci/hotplug/cpqphp_ctrl.c: interrupt_event_handler()
-  - drivers/pci/hotplug/cpqphp_nvram.h: compaq_nvram_init()
-  - drivers/pci/hotplug/rpadlpar_core.c: rpadlpar_io_init()
-  - drivers/pci/hotplug/rpaphp_core.c: cleanup_slots()
+On 8/23/2019 8:25 PM, Rob Herring wrote:
+> On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>> Add YAML schemas for the reset controller on Intel
+>> Lightening Mountain (LGM) SoC.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>> Changes on v2:
+>>      Address review comments
+>>        Update the compatible property definition
+>>        Add description for reset-cells
+>>        Add 'additionalProperties: false' property
+>>
+>>   .../bindings/reset/intel,syscon-reset.yaml         | 53 ++++++++++++++++++++++
+>>   1 file changed, 53 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>> new file mode 100644
+>> index 000000000000..3403a967190a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>> @@ -0,0 +1,53 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel Lightening Mountain SoC System Reset Controller
+>> +
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: intel,rcu-lgm
+>> +      - const: syscon
+>> +
+>> +  reg:
+>> +    description: Reset controller register base address and size
+>> +
+>> +  intel,global-reset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    description: Global reset register offset and bit offset.
+>> +
+>> +  "#reset-cells":
+>> +    const: 2
+>> +    description: |
+>> +      The 1st cell is the register offset.
+>> +      The 2nd cell is the bit offset in the register.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - intel,global-reset
+>> +  - "#reset-cells"
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    rcu0: reset-controller@00000000 {
+>> +        compatible = "intel,rcu-lgm", "syscon";
+>> +        reg = <0x000000 0x80000>;
+>> +        intel,global-reset = <0x10 30>;
+>> +        #reset-cells = <2>;
+>> +    };
+>> +
+>> +    pcie_phy0: pciephy@... {
+>> +        ...
+> You need to run 'make dt_binding_check' and fix the warnings. The
+> example has to be buildable and it is not.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
- drivers/pci/hotplug/cpqphp_core.c       | 1 -
- drivers/pci/hotplug/cpqphp_ctrl.c       | 4 ----
- drivers/pci/hotplug/cpqphp_nvram.h      | 5 +----
- drivers/pci/hotplug/rpadlpar_core.c     | 1 -
- drivers/pci/hotplug/rpaphp_core.c       | 1 -
- 6 files changed, 1 insertion(+), 12 deletions(-)
+Sure, i  will correct this pcie_phy0 node. But i didn't get any warnings 
+for make dt_binding_check
 
-diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-index 603eadf3d965..d0559d2faf50 100644
---- a/drivers/pci/hotplug/cpci_hotplug_core.c
-+++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-@@ -563,7 +563,6 @@ cleanup_slots(void)
- 	}
- cleanup_null:
- 	up_write(&list_rwsem);
--	return;
- }
- 
- int
-diff --git a/drivers/pci/hotplug/cpqphp_core.c b/drivers/pci/hotplug/cpqphp_core.c
-index 16bbb183695a..b8aacb41a83c 100644
---- a/drivers/pci/hotplug/cpqphp_core.c
-+++ b/drivers/pci/hotplug/cpqphp_core.c
-@@ -173,7 +173,6 @@ static void pci_print_IRQ_route(void)
- 		dbg("%d %d %d %d\n", tbus, tdevice >> 3, tdevice & 0x7, tslot);
- 
- 	}
--	return;
- }
- 
- 
-diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
-index b7f4e1f099d9..68de958a9be8 100644
---- a/drivers/pci/hotplug/cpqphp_ctrl.c
-+++ b/drivers/pci/hotplug/cpqphp_ctrl.c
-@@ -1872,8 +1872,6 @@ static void interrupt_event_handler(struct controller *ctrl)
- 			}
- 		}		/* End of FOR loop */
- 	}
--
--	return;
- }
- 
- 
-@@ -1943,8 +1941,6 @@ void cpqhp_pushbutton_thread(struct timer_list *t)
- 
- 		p_slot->state = STATIC_STATE;
- 	}
--
--	return;
- }
- 
- 
-diff --git a/drivers/pci/hotplug/cpqphp_nvram.h b/drivers/pci/hotplug/cpqphp_nvram.h
-index 918ff8dbfe62..70e879b6a23f 100644
---- a/drivers/pci/hotplug/cpqphp_nvram.h
-+++ b/drivers/pci/hotplug/cpqphp_nvram.h
-@@ -16,10 +16,7 @@
- 
- #ifndef CONFIG_HOTPLUG_PCI_COMPAQ_NVRAM
- 
--static inline void compaq_nvram_init(void __iomem *rom_start)
--{
--	return;
--}
-+static inline void compaq_nvram_init(void __iomem *rom_start) { }
- 
- static inline int compaq_nvram_load(void __iomem *rom_start, struct controller *ctrl)
- {
-diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-index 182f9e3443ee..977946e4e613 100644
---- a/drivers/pci/hotplug/rpadlpar_core.c
-+++ b/drivers/pci/hotplug/rpadlpar_core.c
-@@ -473,7 +473,6 @@ int __init rpadlpar_io_init(void)
- void rpadlpar_io_exit(void)
- {
- 	dlpar_sysfs_exit();
--	return;
- }
- 
- module_init(rpadlpar_io_init);
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index c3899ee1db99..18627bb21e9e 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -408,7 +408,6 @@ static void __exit cleanup_slots(void)
- 		pci_hp_deregister(&slot->hotplug_slot);
- 		dealloc_slot_struct(slot);
- 	}
--	return;
- }
- 
- static int __init rpaphp_init(void)
--- 
-2.22.1
+   CHKDT Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+FATAL ERROR: Unknown output format "yaml"
 
+Will DTC report about the example node errors? But, DTC is failing with 
+FATAL_ERROR.
+I tried it even after installing libyaml and headers in my local 
+directory and export the path, but no luck.(ref: 
+https://lkml.org/lkml/2018/12/3/951)
+Could you please let me know if i miss anything and help me to proceed 
+further.
+
+Regards,
+Dilip
+>
+>> +        /* address offset: 0x10, bit offset: 12 */
+>> +        resets = <&rcu0 0x10 12>;
+>> +        ...
+>> +    };
+>> --
+>> 2.11.0
+>>
