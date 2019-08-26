@@ -2,63 +2,63 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546D7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1894C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3056321872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA12421872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uRBh9irE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfFABVr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387617AbfHZSEA (ORCPT
+        id S2387630AbfHZSFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:04:00 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40510 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730951AbfHZSD7 (ORCPT
+        Mon, 26 Aug 2019 14:05:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34483 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732707AbfHZSFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:03:59 -0400
-Received: by mail-io1-f65.google.com with SMTP id t6so39510752ios.7
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:03:59 -0700 (PDT)
+        Mon, 26 Aug 2019 14:05:22 -0400
+Received: by mail-io1-f68.google.com with SMTP id s21so39573444ioa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 11:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BrIqYBjOEoC2bEbTCnzekyDA0blqp/IM4h4nsnqYLQk=;
-        b=uRBh9irELtf92IyXVnLTglOyGQ4/MJOkPqXqH/jUizR2Jrwwqfp+wGCFtXZD1pqs9S
-         XGGTmvQeGAbpxH+iDO9kY4VP1gBLqEOrmWoAn+xtFp2nOQDJrueDyApHBEIm3A0CGLXm
-         Xq1AWEXZ8W/Qsxv83RqAdhHcyBNQ+Hze5By1EXjaPz2xBw69iMFaVVmRVzhqM6P1K1kr
-         YvP/773r9Uex2OCTeLzABxc5w7iFpHN34Yih8jlDKSIEx6zbLqw/vSUwA45ZZ6YDvzL6
-         hZ8rRHbcP0DhtLlIjSLR4c9mxrgPPAOxRlmYwQPQxl1dlPii0r8QxsV6QSaWP5VMQ9zd
-         tcdQ==
+        bh=xErunZPuJorD94l/vc7ENj6uuFr7usZrxrb/oaGw5eQ=;
+        b=IfFABVr/1KfuRZB6p1y3WOunsyErFqxPhnXEOJrvwyDMOpnxu1fcWFb+OuGgHaLwY8
+         P4QRB/Crm8ezMc8G4RzbPnMRC8hvlvj68jeVc1TMsvmrr/6W0zCHdu8wtEC9ReP+xPID
+         +wFqzAUUHx4WZwrW4HxwQAKyKZ8uE1ZxNQE2eaS0XH9V0oNaEcwcjALuFQV3v+baB3Wy
+         r2MLOlynILeLaeGT/NnJjBAm5tu9XUgMSYRadJvCkBBEQuWPNuaE+WMj7ylKNr8rkMm3
+         mntJ2PgJ05bGqQFpe1hc+NvWiEsSw91U/pt1ZaPV2w5IiJOnX0RRBIqHDmruFJtSKrY2
+         dvvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BrIqYBjOEoC2bEbTCnzekyDA0blqp/IM4h4nsnqYLQk=;
-        b=lLgf9kxEsXDnVWTpEwH19ObqjUn6xtm07CdNa9/uOqkcc7AMByuQ7tcFSesLhiERkc
-         r8YaG5LcdecEBDsjyCuqWIw1qV8CM6rPcnkJJq1w5FY6udw5GYCqDo/buW/APiN1taL3
-         B8X7y0GLR/bitbd23UCp6A7f0EhiE+9L5AfppVGj6Z8XmHT4KA+5cSdTDhuDOhpnswBc
-         Bf8AP7sbYMECi2J40CUUPiyEghb28EFXXFqlObdHKa3kSroZsW05SgJcXkeABXYz27dk
-         e47u+9Df3VRuxzXBkT3OP9OpwH19zXwWLYO+OuouaSQx/WaE2w7gu6AESoNBkjuKKktX
-         oWeQ==
-X-Gm-Message-State: APjAAAVjbhu21xilf7C4kVDdVmuEtsmCRh7NSB7FGnFDmmcegf2XMrHz
-        zosg03AUuwNcxSAGyRpByQnZSKCv2Bl1MGiN8Do=
-X-Google-Smtp-Source: APXvYqwduCOXAxDpvIg+uSvC8pVPEHkDcYIa7NUf4UkUZ1qwyIlKwOW6cVVfOJAOWE4Xk9NaAauKgSCdZcYU18uCHVc=
-X-Received: by 2002:a5e:8a48:: with SMTP id o8mr9330137iom.287.1566842638954;
- Mon, 26 Aug 2019 11:03:58 -0700 (PDT)
+        bh=xErunZPuJorD94l/vc7ENj6uuFr7usZrxrb/oaGw5eQ=;
+        b=I/bkMaHARnmDkZNo0ET8KHtFbt6igAcXpMZXjmeEw0H6jwpbBAaXy+KiHYom/KSHrD
+         V5qlPlQz5sYi7yxeidTOvp5ADEQXwFPo2ut0rtXbhWdmJ5HZHopWBB1xJyfb+0rJtFf2
+         xV+w110IyI4dtiTFgucFv4tVk9aXiR3tyr73j2owm0SpdnAvxh/rwB1aZWeq3hOPxylY
+         oCfBYP6KdZee84JDrFA3pNonKQfBbDpgMEnY/Ur9DQhda3fm+iiKFKncPcZMkOjnP/p1
+         l6nUDz2mDFMBD6JHgAr3tyr8JIanKpcoNAUpB/0meXgkkXtU/xWNUUNEj2Rfy9bmDL5o
+         Ov4w==
+X-Gm-Message-State: APjAAAVMqk8zM1tZJAipkVAaJUsxEtfMKcNkwjysi3XIOW7X+plszZI+
+        BqNwkimNGdFuWMRKVlP2tSB/YKno/P9Op4FafAE=
+X-Google-Smtp-Source: APXvYqw0YR2dFpgRDEYpOGIx9y+J6vXPTCqZruvnSxh0xULxLyWz6aaBXEf5EATJxms/V5T0eV7N7QEL3tgnqQNZEwY=
+X-Received: by 2002:a5e:8e08:: with SMTP id a8mr18337621ion.94.1566842721537;
+ Mon, 26 Aug 2019 11:05:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190820031952.14804-1-andrew.smirnov@gmail.com> <20190824191148.GD16308@X250.getinternet.no>
-In-Reply-To: <20190824191148.GD16308@X250.getinternet.no>
+References: <20190820031301.11172-1-andrew.smirnov@gmail.com> <20190824190903.GC16308@X250.getinternet.no>
+In-Reply-To: <20190824190903.GC16308@X250.getinternet.no>
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 26 Aug 2019 11:03:47 -0700
-Message-ID: <CAHQ1cqGy_Cyw2rdC9hGvvr+2ke+KGy2ZExNfeJL9MW5oH9efTQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Drop redundant I2C properties
+Date:   Mon, 26 Aug 2019 11:05:10 -0700
+Message-ID: <CAHQ1cqENuDQ6OKHiP-ecxOHrjTHN1_Gf6DqrAwAq6W3PBE6Ggw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-scu4-aib: Drop "rs485-rts-delay" property
 To:     Shawn Guo <shawnguo@kernel.org>
 Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Chris Healy <cphealy@gmail.com>,
@@ -70,39 +70,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 12:12 PM Shawn Guo <shawnguo@kernel.org> wrote:
+On Sat, Aug 24, 2019 at 12:09 PM Shawn Guo <shawnguo@kernel.org> wrote:
 >
-> On Mon, Aug 19, 2019 at 08:19:52PM -0700, Andrey Smirnov wrote:
-> > Drop redundant I2C properties that are already specified in
-> > vf610-zii-dev.dtsi
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Fabio Estevam <festevam@gmail.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 10 ----------
-> >  1 file changed, 10 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-> > index 48086c5e8549..e500911ce0a5 100644
-> > --- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-> > +++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-> > @@ -323,11 +323,6 @@
-> >  };
-> >
-> >  &i2c0 {
-> > -     clock-frequency = <100000>;
-> > -     pinctrl-names = "default";
-> > -     pinctrl-0 = <&pinctrl_i2c0>;
+> On Mon, Aug 19, 2019 at 08:13:01PM -0700, Andrey Smirnov wrote:
+> > LPUART driver does not support specifying "rs485-rts-delay"
+> > property. Drop it.
 >
-> pinctrl for i2c0 is not same as what vf610-zii-dev.dtsi has.
+> If so, we need to fix bindings/serial/fsl-lpuart.txt in the meantime?
+>
 
-The only difference I can see is in pinctrl-names so I am assuming
-that's what you mean. Not configuring I2C recovery on Rev B board was
-not intentional. I'll update commit log in v2.
+Yeah, good point. Will submit a separate patch for that.
 
 Thanks,
 Andrey Smirnov
