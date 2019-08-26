@@ -2,149 +2,273 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0687BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315C5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC020217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:35:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4Yj/mgK"
+	by mail.kernel.org (Postfix) with ESMTP id 028E4217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfHZWfO (ORCPT
+        id S1726605AbfHZWgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:35:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:47046 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfHZWfN (ORCPT
+        Mon, 26 Aug 2019 18:36:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41402 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfHZWge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:35:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q139so12702763pfc.13;
-        Mon, 26 Aug 2019 15:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZTtLxIEFBiFvvirLNk7rJCpHyKJsG3UuT12vwumOc6c=;
-        b=V4Yj/mgKIET0UoJp2BRwZVUfM8V2AmczCU0x1SnvT/ZOx56IgJ9BD2GVGSi/vhq8VT
-         fCApXRmB4ctSw9Qja4Kg0K+GcJl8Q6DdxLSq+q61/ftTv9i5CG6gwcSj3xiWeRzQ1qWl
-         KifPe7A7QjANncPafKhoJI2VCx5usWEIbMg0ZGE/I7ZdFFUTesd1FXWT2Q07SZVnGF/Y
-         1IDGhaTKkYwZyw0MpgLx9S1ru+lG8BGfGNGS/7INVWaXjpxI9Pp2t+OVu436nKa8238G
-         oNqZKQK8uVFD/nAamPO86nU17D7TwmRoXDUF53i42+GF5eIES6p9m9cXmSCrdSiQLsco
-         z2KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZTtLxIEFBiFvvirLNk7rJCpHyKJsG3UuT12vwumOc6c=;
-        b=nXa7cdpQs4fAp0JQDqNhFW1/q5a1TOcaz1dPML6uxVxHd1GNxBnbyYXxFltgXqLs8E
-         LB5dVjllsKU5VN7t++oz4YZqsMfSoZICG4svurMf0rQ7XXlnb+DSaY5BzAcFGmnRRO/m
-         NElHBqm5bd0c4VVkgPBLEaYzi0RZqSIGM6gKSzGeFcGXpma1QMTOkDa60sQRw+VltEgy
-         ICHm9/yJ3e2J9/rph73YAq6ogsE417i6JDQw3f1YJEjULTxJVkza4gwUtPuc6zcB4st8
-         oW6wHjWmtTrYUDOkUfxc76IMzI3yMy01PDQ8NWQw0J94TDdiuw5unKjG9AJ0pOjuKn2M
-         NWWg==
-X-Gm-Message-State: APjAAAVa9R3ukcXSwynRhgouykVnCBGMKrkMQ9xuJulfitjOQRzwv8c3
-        13QHs/dUORMXGyBlbYYJbz0=
-X-Google-Smtp-Source: APXvYqx9fB2zz3reQwDJm1c/UTcOst3U1UlmTMEEGuwoeB+hHpMqnGwoyiFnFyuGEv6PeBIfrwI1hg==
-X-Received: by 2002:a65:62d7:: with SMTP id m23mr18488160pgv.358.1566858912811;
-        Mon, 26 Aug 2019 15:35:12 -0700 (PDT)
-Received: from mail.google.com ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id s5sm474687pjo.26.2019.08.26.15.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 15:35:12 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 06:35:02 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
+        Mon, 26 Aug 2019 18:36:34 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1i2Nb2-0006c8-Uo; Tue, 27 Aug 2019 00:36:21 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 05/11] ftrace: create memcache for hash entries
-Message-ID: <20190826223501.ymj3g4ftrf5eqhzq@mail.google.com>
-References: <20190825132330.5015-1-changbin.du@gmail.com>
- <20190825132330.5015-6-changbin.du@gmail.com>
- <20190826074437.GM2369@hirez.programming.kicks-ass.net>
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: numlist_push() barriers Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190807222634.1723-2-john.ogness@linutronix.de>
+        <20190823092109.doduc36avylm5cds@pathway.suse.cz>
+Date:   Tue, 27 Aug 2019 00:36:18 +0200
+In-Reply-To: <20190823092109.doduc36avylm5cds@pathway.suse.cz> (Petr Mladek's
+        message of "Fri, 23 Aug 2019 11:21:09 +0200")
+Message-ID: <878srfo8pp.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826074437.GM2369@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 09:44:37AM +0200, Peter Zijlstra wrote:
-> On Sun, Aug 25, 2019 at 09:23:24PM +0800, Changbin Du wrote:
-> > When CONFIG_FTRACE_FUNC_PROTOTYPE is enabled, thousands of
-> > ftrace_func_entry instances are created. So create a dedicated
-> > memcache to enhance performance.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  kernel/trace/ftrace.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index a314f0768b2c..cfcb8dad93ea 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -94,6 +94,8 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
-> >  /* What to set function_trace_op to */
-> >  static struct ftrace_ops *set_function_trace_op;
-> >  
-> > +struct kmem_cache *hash_entry_cache;
-> > +
-> >  static bool ftrace_pids_enabled(struct ftrace_ops *ops)
-> >  {
-> >  	struct trace_array *tr;
-> > @@ -1169,7 +1171,7 @@ static int add_hash_entry(struct ftrace_hash *hash, unsigned long ip,
-> >  {
-> >  	struct ftrace_func_entry *entry;
-> >  
-> > -	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
-> > +	entry = kmem_cache_alloc(hash_entry_cache, GFP_KERNEL);
-> >  	if (!entry)
-> >  		return -ENOMEM;
-> >  
-> > @@ -6153,6 +6155,15 @@ void __init ftrace_init(void)
-> >  	if (ret)
-> >  		goto failed;
-> >  
-> > +	hash_entry_cache = kmem_cache_create("ftrace-hash",
-> > +					     sizeof(struct ftrace_func_entry),
-> > +					     sizeof(struct ftrace_func_entry),
-> > +					     0, NULL);
-> > +	if (!hash_entry_cache) {
-> > +		pr_err("failed to create ftrace hash entry cache\n");
-> > +		goto failed;
-> > +	}
-> 
-> Wait what; you already have then in the binary image, now you're
-> allocating extra memory for each of them?
+Hi Petr,
+
+AndreaP responded with some explanation (and great links!) on the topic
+of READ_ONCE. But I feel like your comments about the WRITE_ONCE were
+not addressed. I address that (and your other comments) below...
+
+On 2019-08-23, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/numlist.c
+>> +/**
+>> + * numlist_push() - Add a node to the list and assign it a sequence number.
+>> + *
+>> + * @nl: The numbered list to push to.
+>> + *
+>> + * @n:  A node to push to the numbered list.
+>> + *      The node must not already be part of a list.
+>> + *
+>> + * @id: The ID of the node.
+>> + *
+>> + * A node is added in two steps: The first step is to make this node the
+>> + * head, which causes a following push to add to this node. The second step is
+>> + * to update @next_id of the former head node to point to this one, which
+>> + * makes this node visible to any task that sees the former head node.
+>> + */
+>> +void numlist_push(struct numlist *nl, struct nl_node *n, unsigned long id)
+>> +{
+>> +	unsigned long head_id;
+>> +	unsigned long seq;
+>> +	unsigned long r;
+>> +
+>> +	/*
+>> +	 * bA:
+>> +	 *
+>> +	 * Setup the node to be a list terminator: next_id == id.
+>> +	 */
+>> +	WRITE_ONCE(n->next_id, id);
 >
-No, here we only allocate ftrace hash entries. The prototype data is not copied.
-The entry->priv points to prototype data in binary.
+> Do we need WRITE_ONCE() here?
+> Both "n" and "id" are given as parameters and do not change.
+> The assigment must be done before "id" is set as nl->head_id.
+> The ordering is enforced by cmpxchg_release().
 
-> Did you look at what ORC does? Is the binary search really not fast
-> enough?
-For ftrace, binary search is not enough. Just like the hash tables
-(ftrace_graph_notrace_hash, ftrace_graph_hash) we already have which is used to
-filter traced functions.
+The cmpxchg_release() ensures that if the node is visible to writers,
+then the finalized assignment is also visible. And the store_release()
+ensures that if the previous node is visible to any readers, then the
+finalized assignment is also visible. In the reader case, if any readers
+happen to be sitting on the node, numlist_read() will fail because the
+ID was updated when the node was popped. So for all these cases any
+compiler optimizations leading to that assigment (tearing, speculation,
+etc) should be irrelevant. Therefore, IMO the WRITE_ONCE() is not
+needed.
 
+Since all of this is lockless, I used WRITE_ONCE() whenever touching
+shared variables. I must admit the decision may be motivated primarily
+by fear of compiler optimizations. Although "documenting lockless shared
+variable access" did play a role as well.
 
--- 
-Cheers,
-Changbin Du
+I will replace the WRITE_ONCE with an assignment.
+
+>> +
+>> +	/* bB: #1 */
+>> +	head_id = atomic_long_read(&nl->head_id);
+>> +
+>> +	for (;;) {
+>> +		/* bC: */
+>> +		while (!numlist_read(nl, head_id, &seq, NULL)) {
+>> +			/*
+>> +			 * @head_id is invalid. Try again with an
+>> +			 * updated value.
+>> +			 */
+>> +
+>> +			cpu_relax();
+>
+> I have got very confused by this. cpu_relax() suggests that this
+> cycle is busy waiting until a particular node becomes valid.
+> My first though was that it must cause deadlock in NMI when
+> the interrupted code is supposed to make the node valid.
+>
+> But it is the other way. The head is always valid when it is
+> added to the list. It might become invalid when another CPU
+> moves the head and the old one gets reused.
+>
+> Anyway, I do not see any reason for cpu_relax() here.
+
+You are correct. The cpu_relax() should not be there. But there is still
+an issue that this could spin hard if the head was recycled and this CPU
+does not yet see the new head value.
+
+To handle that, and in preparation for my next version, I'm now using a
+read_acquire() to load the ID in the node() callback (matching the
+set_release() in assign_desc()). This ensures that if numlist_read()
+fails, the new head will be visible.
+
+> Also the entire cycle would deserve a comment to avoid this mistake.
+> For example:
+>
+> 		/*
+> 		 * bC: Read seq from current head. Repeat with new
+> 		 * head when it has changed and the old one got reused.
+> 		 */
+
+Agreed.
+
+>> +
+>> +			/* bB: #2 */
+>> +			head_id = atomic_long_read(&nl->head_id);
+>> +		}
+>> +
+>> +		/*
+>> +		 * bD:
+>> +		 *
+>> +		 * Set @seq to +1 of @seq from the previous head.
+>> +		 *
+>> +		 * Memory barrier involvement:
+>> +		 *
+>> +		 * If bB reads from bE, then bC->aA reads from bD.
+>> +		 *
+>> +		 * Relies on:
+>> +		 *
+>> +		 * RELEASE from bD to bE
+>> +		 *    matching
+>> +		 * ADDRESS DEP. from bB to bC->aA
+>> +		 */
+>> +		WRITE_ONCE(n->seq, seq + 1);
+>
+> Do we really need WRITE_ONCE() here? 
+> It is the same problem as with setting n->next_id above.
+
+For the same reasons as the other WRITE_ONCE, I will replace the
+WRITE_ONCE with an assignment.
+
+>> +
+>> +		/*
+>> +		 * bE:
+>> +		 *
+>> +		 * This store_release() guarantees that @seq and @next are
+>> +		 * stored before the node with @id is visible to any popping
+>> +		 * writers. It pairs with the address dependency between @id
+>> +		 * and @seq/@next provided by numlist_read(). See bD and bF
+>> +		 * for details.
+>> +		 */
+>> +		r = atomic_long_cmpxchg_release(&nl->head_id, head_id, id);
+>> +		if (r == head_id)
+>> +			break;
+>> +
+>> +		/* bB: #3 */
+>> +		head_id = r;
+>> +	}
+>> +
+>> +	n = nl->node(head_id, nl->node_arg);
+>> +
+>> +	/*
+>> +	 * The old head (which is still the list terminator), cannot be
+>> +	 * removed because the list will always have at least one node.
+>> +	 * Therefore @n must be non-NULL.
+>> +	 */
+>
+> Please, move this comment above the nl->node() call. Both locations
+> makes sense. I just see it as an important note for the call and thus
+> is should be above. Also it will be better separated from the below
+> comments for the _release() barrier.
+
+OK.
+
+>> +	/*
+>> +	 * bF: the STORE part for @next_id
+>> +	 *
+>> +	 * Set @next_id of the previous head to @id.
+>> +	 *
+>> +	 * Memory barrier involvement:
+>> +	 *
+>> +	 * If bB reads from bE, then bF overwrites bA.
+>> +	 *
+>> +	 * Relies on:
+>> +	 *
+>> +	 * RELEASE from bA to bE
+>> +	 *    matching
+>> +	 * ADDRESS DEP. from bB to bF
+>> +	 */
+>> +	/*
+>> +	 * bG: the RELEASE part for @next_id
+>> +	 *
+>> +	 * This _release() guarantees that a reader will see the updates to
+>> +	 * this node's @seq/@next_id if the reader saw the @next_id of the
+>> +	 * previous node in the list. It pairs with the address dependency
+>> +	 * between @id and @seq/@next provided by numlist_read().
+>> +	 *
+>> +	 * Memory barrier involvement:
+>> +	 *
+>> +	 * If aB reads from bG, then aA' reads from bD, where aA' is in
+>> +	 * numlist_read() to read the node ID from bG.
+>> +	 * If aB reads from bG, then aB' reads from bA, where aB' is in
+>> +	 * numlist_read() to read the node ID from bG.
+>> +	 *
+>> +	 * Relies on:
+>> +	 *
+>> +	 * RELEASE from bG to bD
+>> +	 *    matching
+>> +	 * ADDRESS DEP. from aB to aA'
+>> +	 *
+>> +	 * RELEASE from bG to bA
+>> +	 *    matching
+>> +	 * ADDRESS DEP. from aB to aB'
+>> +	 */
+>> +	smp_store_release(&n->next_id, id);
+>
+> Sigh, I see this line one screen below the previous command thanks
+> to the extensive comments. Well, bF comment looks redundant.
+
+Yes, it is a lot, but bF and bG are commenting on different things. bF
+is the explanation that the _writer_ will overwrite the previous node's
+terminating value with the ID of the new node. bG is the explanation
+that if the _reader_ reads a non-terminating @next_id value, then the
+initialization of @seq and @next_id for that next node will be visible.
+
+Both of these points are key to the numlist implementation because they
+guarantee the complete and correct linking of the list for all nodes
+pushed.
+
+John Ogness
