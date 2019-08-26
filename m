@@ -2,157 +2,185 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78247C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BF0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C16621848
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29A52184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WVwg3TwB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKlY29d3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732932AbfHZTqT (ORCPT
+        id S1732999AbfHZTzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:46:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45628 "EHLO
+        Mon, 26 Aug 2019 15:55:38 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41632 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732534AbfHZTqK (ORCPT
+        with ESMTP id S1727504AbfHZTzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:46:10 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w26so12430282pfq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 12:46:10 -0700 (PDT)
+        Mon, 26 Aug 2019 15:55:38 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 196so12468438pfz.8;
+        Mon, 26 Aug 2019 12:55:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CW9u0WKr9dqfCIpHqZBfiXSJtaw0A8YWyqVfALCj0kc=;
-        b=WVwg3TwB0HpCikLZzH4a+tShwPXLCBRYuErCCrsm3tcP1adv5q72ZruqU3zHKVzD8S
-         ByNPKX2v//T5qp3BdgQ1ilHmdKngKaYYomssiom/RZ8AIO29teRGAa1I9JvNlTD+Hpsp
-         rfdfUVWOgRnOjQPbEdezmgfoI/+XmvA+wM52R4VihFTMcy8K+b5zNa+SryKqtyOiee0m
-         /Tj0ZExjxZJ22hU5spBS3j2rj3SmA+SyJkUS48DJ2qard1Am+ONfatSUK8VofbA25GMY
-         WV6FslRPJt0RFG1IPb6U1r4TeGBcJVHsVQVZ80mdcw7mw0QS82Gj7ZxsmCAZwEMowVaH
-         MoGw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Sa8QUQJyPndXFqk0cRsIFkBXF6tFTWtH9N/e+YtaB0I=;
+        b=VKlY29d3xiAKWYqvFGxILI8IS0gzRAjGTc76xuGX7gtSMUSDWzDqieHc0kZyJLqBPA
+         tpz3DEAdKwUFiLMFTPfvBrh5BwDEIC3Peo3SW/GiKg1y46ToWvwFxa8GX95ESpERtlgI
+         XLwea0SI2jp4AExF598LgCo+YjT/UsOO4gFb2pwx+aq2qXsanNF8qgLuZl20YTBMFnrR
+         YF8oFFCAPC1g3cMtIcivk69gVcAOUiz7oRbFQL0UdfPfu+QsT2GIvSa5FulePuaqt+Hv
+         9TvCVL5HK7xm6/owx8UoewRm1gHfVogdulWVfeGjMd8o2ya36ILm/TdiIRdai1KEmNcW
+         iX0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CW9u0WKr9dqfCIpHqZBfiXSJtaw0A8YWyqVfALCj0kc=;
-        b=qvfm49T8E67fylyGRqZRmyVnNYQ5EvYCHCkI2mrcIk9zxpuky8q4QvHQ24VjvOVkrQ
-         44vTs91DSdyW4MzkLGBycM4PysHHm9kem/8R52aFypczw4Wwz6H6OhuGMWh6N+Bq4aYd
-         NYEHtOP8+EhKkMWpINl6f93g3OTiZ3DjDjkGsj/KKDmnWIBSnT8g1eaDq4dIxxqqT+y2
-         FtNXRi5Woi+tVG/KZkfUSbg7gvY9g2CtrXlqceWeqv5XdmC5tlo+TDqY6hFO2s2BKPCD
-         DmmAcA9EElON1cQsjHViV+Ux5uG2sIMfJRmgbBEPNcjRnJHWuL7pm+YfELFh1Au+diaa
-         6KqA==
-X-Gm-Message-State: APjAAAUknMfPDegdfS84x2d0oPXv9OmU6YSodSVjAjFfcogVh7iH2zy/
-        NnaPdswIJifLlV3ejLYdTQ0mJw==
-X-Google-Smtp-Source: APXvYqy1mvElBIxSMcteaEt74lmxuEQ926hHKQgX9L8nPzxDIVTjKn/u3jKSSZSkxZ0hbk581HsHSQ==
-X-Received: by 2002:a63:fe52:: with SMTP id x18mr18744105pgj.344.1566848770082;
-        Mon, 26 Aug 2019 12:46:10 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id c35sm13214789pgl.72.2019.08.26.12.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 12:46:09 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     suzuki.poulose@arm.com, leo.yan@linaro.org, mike.leach@arm.com
-Cc:     yabinc@google.com, alexander.shishkin@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] coresight: tmc-etr: Add barrier packets when moving offset forward
-Date:   Mon, 26 Aug 2019 13:46:05 -0600
-Message-Id: <20190826194605.3791-4-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190826194605.3791-1-mathieu.poirier@linaro.org>
-References: <20190826194605.3791-1-mathieu.poirier@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Sa8QUQJyPndXFqk0cRsIFkBXF6tFTWtH9N/e+YtaB0I=;
+        b=KFz2LxJVpypNvhwXrfFYSsMTxZ3m+I+67/WDeNXbh8GLMne6wINhgW/EyBSK0y/CGe
+         RU//GEfdUe5D0An3zUDzaTJ6CPpH+4nTV8KpS6LWfVOM8/NqzbVzh0U+oIAl15lxOAaZ
+         AgPOL3oHIvAuHEsYKWcjUdelEBRmNajYBMFfAjlKtcabDZMkblnNOq7IjS0asWLOd6I9
+         RgDYaGNJwKkrR9TWFC44cmUKJqlBqvCMMq0RjunSqKDJMVDTfzrp6SwYv4Lg2WYbSIh2
+         m4abXnbJIV5z0i3mcB3ysTXWzLyWJQeSeEFIo8IP37uRvfDyFHDnukzMitq1mee4YMqz
+         GFwQ==
+X-Gm-Message-State: APjAAAW1ayulYFgDnVp9jc8vpg3gs1qTvt+QU9BuEz0oAqeGZNgHe5WH
+        2BV8+JFMSMT4bcsXhd2wuKM=
+X-Google-Smtp-Source: APXvYqyUaxt1n1NBhFcRkmMIVJGElcvXQrIsMoQSz94/P7uWjOW/fX6XUY62aqtz1cBc6bEQhcFDCw==
+X-Received: by 2002:a63:7a06:: with SMTP id v6mr18253469pgc.115.1566849337072;
+        Mon, 26 Aug 2019 12:55:37 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id z24sm15415765pfr.51.2019.08.26.12.55.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 12:55:36 -0700 (PDT)
+Subject: Re: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency clk
+ support for EHL & TGL
+To:     Voon Weifeng <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+References: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
+ <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <7d43e0c6-6f51-0d71-0af8-89f22b0234f9@gmail.com>
+Date:   Mon, 26 Aug 2019 12:55:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds barrier packets in the trace stream when the offset in the
-data buffer needs to be moved forward.  Otherwise the decoder isn't aware
-of the break in the stream and can't synchronise itself with the trace
-data.
+On 8/26/19 6:38 PM, Voon Weifeng wrote:
+> EHL DW EQOS is running on a 200MHz clock. Setting up stmmac-clk,
+> ptp clock and ptp_max_adj to 200MHz.
+> 
+> Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+> Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 21 +++++++++++++++++++++
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c |  3 +++
+>  include/linux/stmmac.h                           |  1 +
+>  3 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> index e969dc9bb9f0..20906287b6d4 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> @@ -9,6 +9,7 @@
+>    Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>  *******************************************************************************/
+>  
+> +#include <linux/clk-provider.h>
+>  #include <linux/pci.h>
+>  #include <linux/dmi.h>
+>  
+> @@ -174,6 +175,19 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
+>  	plat->axi->axi_blen[1] = 8;
+>  	plat->axi->axi_blen[2] = 16;
+>  
+> +	plat->ptp_max_adj = plat->clk_ptp_rate;
+> +
+> +	/* Set system clock */
+> +	plat->stmmac_clk = clk_register_fixed_rate(&pdev->dev,
+> +						   "stmmac-clk", NULL, 0,
+> +						   plat->clk_ptp_rate);
+> +
+> +	if (IS_ERR(plat->stmmac_clk)) {
+> +		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
+> +		plat->stmmac_clk = NULL;
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Yabin Cui <yabinc@google.com>
----
- .../hwtracing/coresight/coresight-tmc-etr.c   | 29 +++++++++++++++----
- 1 file changed, 24 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index bae47272de98..625882bc8b08 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -1418,10 +1418,11 @@ static void tmc_free_etr_buffer(void *config)
-  * buffer to the perf ring buffer.
-  */
- static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
-+				     unsigned long src_offset,
- 				     unsigned long to_copy)
- {
- 	long bytes;
--	long pg_idx, pg_offset, src_offset;
-+	long pg_idx, pg_offset;
- 	unsigned long head = etr_perf->head;
- 	char **dst_pages, *src_buf;
- 	struct etr_buf *etr_buf = etr_perf->etr_buf;
-@@ -1430,7 +1431,6 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
- 	pg_idx = head >> PAGE_SHIFT;
- 	pg_offset = head & (PAGE_SIZE - 1);
- 	dst_pages = (char **)etr_perf->pages;
--	src_offset = etr_buf->offset + etr_buf->len - to_copy;
- 
- 	while (to_copy > 0) {
- 		/*
-@@ -1478,7 +1478,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 		      void *config)
- {
- 	bool lost = false;
--	unsigned long flags, size = 0;
-+	unsigned long flags, offset, size = 0;
- 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 	struct etr_perf_buffer *etr_perf = config;
- 	struct etr_buf *etr_buf = etr_perf->etr_buf;
-@@ -1506,16 +1506,35 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 
- 	lost = etr_buf->full;
-+	offset = etr_buf->offset;
- 	size = etr_buf->len;
-+
-+	/*
-+	 * The ETR buffer may be bigger than the space available in the
-+	 * perf ring buffer (handle->size).  If so advance the offset so that we
-+	 * get the latest trace data.  In snapshot mode none of that matters
-+	 * since we are expected to clobber stale data in favour of the latest
-+	 * traces.
-+	 */
- 	if (!etr_perf->snapshot && size > handle->size) {
--		size = handle->size;
-+		u32 mask = tmc_get_memwidth_mask(drvdata);
-+
-+		/*
-+		 * Make sure the new size is aligned in accordance with the
-+		 * requirement explained in function tmc_get_memwidth_mask().
-+		 */
-+		size = handle->size & mask;
-+		offset = etr_buf->offset + etr_buf->len - size;
-+
-+		if (offset >= etr_buf->size)
-+			offset -= etr_buf->size;
- 		lost = true;
- 	}
- 
- 	/* Insert barrier packets at the beginning, if there was an overflow */
- 	if (lost)
- 		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
--	tmc_etr_sync_perf_buffer(etr_perf, size);
-+	tmc_etr_sync_perf_buffer(etr_perf, offset, size);
- 
- 	/*
- 	 * In snapshot mode we simply increment the head by the number of byte
+Don't you need to propagate at least EPROBE_DEFER here?
 -- 
-2.17.1
-
+Florian
