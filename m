@@ -2,498 +2,195 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D19BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A457C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C7B21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6515E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VcxgIC8M"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AhtZPSac";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="TlbDVYRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732837AbfHZPHK (ORCPT
+        id S1732843AbfHZPJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:07:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48518 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730826AbfHZPHJ (ORCPT
+        Mon, 26 Aug 2019 11:09:43 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5342 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730995AbfHZPJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:07:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RPqKPzaEEcJy5R1UqFTMhSXKJI3Vmmv8DkikNGnTSWU=; b=VcxgIC8Mh9aziOM1IbQEWyb6I
-        mO6vxZXmzVhQVsSGjE92YUaX1kCy498Ff6ChPJSnGhPWSthqc+qp2T0kzU4Py+Y2VOC4d/Nm7b+yE
-        byvT4G6ORzem64Os4w+chBDxeqkq8Uc1JJBo/rZ0Vy9bA0L3Y0wxLrQTDQGcby9wDjtg0G5X0i5dK
-        i7nRnNy250w+BpZlAWE0qmS7VbAh7zs21kAlpLqQKDo27NEac8Heu/RI5Z8iwDKpjb/X/0M/yqA3P
-        NPW+cXTFnKCrmrhrsXZajZ2bAdxdLbanvEZf9oP/fnihrek03kOZkQmWw7P81eBcuvDj0AL7BGKmg
-        2REeRP2Ew==;
-Received: from [2001:4bb8:180:3f4c:863:2ead:e9d4:da9f] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2GaA-00066Z-Ec; Mon, 26 Aug 2019 15:06:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org
-Cc:     bhelgaas@google.com, dwmw2@infradead.org, joro@8bytes.org,
-        keith.busch@intel.com, jonathan.derrick@intel.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] vmd: Stop overriding dma_map_ops
-Date:   Mon, 26 Aug 2019 17:06:52 +0200
-Message-Id: <20190826150652.10316-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 26 Aug 2019 11:09:42 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7QEoge2021842;
+        Mon, 26 Aug 2019 08:08:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=E9gLohgp+44EL1sJIgx684fogNDAXGwjtAE5greLQUk=;
+ b=AhtZPSaceaDn+NePQq6CNmP+2Og3PfpyBGQG+RDKYQsWlVMC/EM4xftCo3kH3OKacFqp
+ eiOcIB4o8PiOq/hBo6uJcQX0254NjyfZtHs61Ro3lBNLExJoJuUa22odLpV+s19Knuf8
+ tMiPx3gtSC7xSSIbr8MjOhJ66OOrPphB4mM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ukmwdmhmf-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 26 Aug 2019 08:08:48 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 26 Aug 2019 08:08:47 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 26 Aug 2019 08:08:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T4rC90ZQJpdHORUvK+LcFrmAWpOOKUNDeKJY6wIXf11SJz81UOgOsy8uGevEGZvzAN3Aq10kSWV5IXuiqWyuqidkvF5yC+znUw47b7CawwXsJ2GuNg4pgqIhgJYVSobR98tbtieC6cMvtS6FydtTvWHP2EGYSQlJRdt7LSBmuuBiRyJHZgSwcZrdzxrIije7Yw7763bRTBq6dw340WxSYDXnXucCfTvutE1Z9adf165mgphzHIdhkgSpS5U36ZaSZ6+dnR8jRV/ib8cZXUI0wfL0Gfj4KZ8npzjAHAg9rFiCcu/Bjkku5BprspvCH6PCeQYcpfRFQuSyu9Sa0WiUpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E9gLohgp+44EL1sJIgx684fogNDAXGwjtAE5greLQUk=;
+ b=Z93lo2wFMcL4ia+6f4RRQf0x5iv8ecmxvqCq9AXy6EjoU1IXTfRgB+OeCP8j6bXKUwTu53DOA4so7T1VYhpXYVSbAPYGj0uolNfAwAI1SyR9+fsbRg9vnfyDyEC39sGAC9Fog4mfIgCn/kDdC1gw1klwIKewlGnAAdS8GdPyGyyUh+dnooDhVKPUXlzVNJzeHvw295DZ2T0XrdIRF3loEJ4ojUJvXuGF5ZzyysQ34B545Egi9pN2/jgypajE7xPD9uCSzU8f4JgM1K0Qd7xhXMkvtu/65seAosCFZd7Tjmieof1fh+VI1twbBebJfNXzteFRABcfJHBCdcQ9IBRxgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E9gLohgp+44EL1sJIgx684fogNDAXGwjtAE5greLQUk=;
+ b=TlbDVYRdZYViEQO5uLnpov9fbnnxnpWlWQ12xmhmShKa6PLbf9YatEjv8+x8+WpNisluC50ibpPTFhFkCjExONp79AZH5NKQ55PYGl/bXjQuIZ8LHYNzw/7hHsnq3NtyfSYzp6kP4pAjZTwlDx7B+VXNPO7N2d/E7PS0F1STk4E=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1536.namprd15.prod.outlook.com (10.173.233.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Mon, 26 Aug 2019 15:08:46 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::45ee:bc50:acfa:60a5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::45ee:bc50:acfa:60a5%3]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
+ 15:08:46 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        "sbsiddha@gmail.com" <sbsiddha@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
+ set_kernel_text_rw()
+Thread-Topic: [PATCH] x86/mm: Do not split_large_page() for
+ set_kernel_text_rw()
+Thread-Index: AQHVWXL45hcGbMxBFEmxITCR8fhmlKcIeZ6AgARkOQCAAE74AIAAYJqA
+Date:   Mon, 26 Aug 2019 15:08:45 +0000
+Message-ID: <0A94F7AA-7ECE-4363-B960-41F644CFE942@fb.com>
+References: <20190823052335.572133-1-songliubraving@fb.com>
+ <20190823093637.GH2369@hirez.programming.kicks-ass.net>
+ <164D1F08-80F7-4E13-94FC-78F33B3E299F@fb.com>
+ <20190826092300.GN2369@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190826092300.GN2369@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::7fd4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6b54e8fd-50dd-4050-27a0-08d72a374ac1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1536;
+x-ms-traffictypediagnostic: MWHPR15MB1536:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB153626214FB065B39E7F91FDB3A10@MWHPR15MB1536.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(366004)(376002)(346002)(189003)(199004)(8936002)(76176011)(81166006)(81156014)(8676002)(7736002)(36756003)(2906002)(6116002)(305945005)(86362001)(66446008)(64756008)(6486002)(2616005)(6916009)(50226002)(76116006)(229853002)(66556008)(66946007)(6436002)(46003)(71190400001)(71200400001)(57306001)(478600001)(186003)(14454004)(66476007)(14444005)(256004)(54906003)(33656002)(6512007)(53546011)(6506007)(99286004)(446003)(102836004)(5660300002)(4326008)(53936002)(316002)(476003)(6246003)(486006)(11346002)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1536;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 92gs5wxDamNmmcF/tm3tO+xCps87zZ0l7VCNA7CELPxM+LJVr28ps1xZuMSOrHMQV6GpgXLcsPoXGD+PmZxjoLdTx3nydN1/6sJlLLxkzcvrYChrnp3JOHPIVqCr3JdaEBApEYsvCqK1wiu2OzwhOMnxOAXiG40inqKg/idCwBq7Cxngk4amV31Ch50AUEpsxNql2/I2IcGyU+bG/4cRvW4nocp3YrXZpc2GLCmSrai4fuo3o7psIYxNeBwVpF8nKpaq0cB+r+AXyPA8EDurTxlULuGvPokzgVu2YleOZMC/a65qatnzHtqQB5nyuyztbRkb2/vkOdrdspwMJ303HU0HciXa2Z2pK3yFakC87rpqSA7D2L+aH3aLwQuaK+fk7//HzpzBbecncREBE+F2JttvxA+NY/YBXtxTEe65n2Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <544B2A942A90EF4A8BFB49C5319B6FFC@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b54e8fd-50dd-4050-27a0-08d72a374ac1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 15:08:45.9935
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CdJWB4hsMqn+CxTrqafmUBWNfkk6CWqeZe6c8GCQv9GbbewVBl9+Iby4CavHr0y13wpqo9Lsvhw5CIQIDmsFrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1536
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-26_08:2019-08-26,2019-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ impostorscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 bulkscore=0
+ lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1906280000 definitions=main-1908260157
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With a little tweak to the intel-iommu code we should be able to work
-around the VMD mess for the requester IDs without having to create giant
-amounts of boilerplate DMA ops wrapping code.  The other advantage of
-this scheme is that we can respect the real DMA masks for the actual
-devices, and I bet it will only be a matter of time until we'll see the
-first DMA challeneged NVMe devices.
 
-The only downside is that we can't offer vmd as a module given that
-intel-iommu calls into it.  But the driver only has about 700 lines
-of code, so this should not be a major issue.
 
-This also removes the leftover bits of the X86_DEV_DMA_OPS dma_map_ops
-registry.
+> On Aug 26, 2019, at 2:23 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> So only the high mapping is ever executable; the identity map should not
+> be. Both should be RO.
+>=20
+>> kprobe (with CONFIG_KPROBES_ON_FTRACE) should work on kernel identity
+>> mapping.=20
+>=20
+> Please provide more information; kprobes shouldn't be touching either
+> mapping. That is, afaict kprobes uses text_poke() which uses a temporary
+> mapping (in 'userspace' even) to alias the high text mapping.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/Kconfig               |   3 -
- arch/x86/include/asm/device.h  |  10 ---
- arch/x86/include/asm/pci.h     |   2 +
- arch/x86/pci/common.c          |  38 ---------
- drivers/iommu/intel-iommu.c    |  33 +++++---
- drivers/pci/controller/Kconfig |   6 +-
- drivers/pci/controller/vmd.c   | 139 +--------------------------------
- 7 files changed, 27 insertions(+), 204 deletions(-)
+kprobe without CONFIG_KPROBES_ON_FTRACE uses text_poke(). But kprobe with
+CONFIG_KPROBES_ON_FTRACE uses another path. The split happens with
+set_kernel_text_rw() -> ... -> __change_page_attr() -> split_large_page().
+The split is introduced by commit 585948f4f695. do_split in=20
+__change_page_attr() becomes true after commit 585948f4f695. This patch=20
+tries to fix/workaround this part.=20
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 222855cc0158..35597dae38b7 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2905,9 +2905,6 @@ config HAVE_ATOMIC_IOMAP
- 	def_bool y
- 	depends on X86_32
- 
--config X86_DEV_DMA_OPS
--	bool
--
- source "drivers/firmware/Kconfig"
- 
- source "arch/x86/kvm/Kconfig"
-diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-index a8f6c809d9b1..3e6c75a6d070 100644
---- a/arch/x86/include/asm/device.h
-+++ b/arch/x86/include/asm/device.h
-@@ -11,16 +11,6 @@ struct dev_archdata {
- #endif
- };
- 
--#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
--struct dma_domain {
--	struct list_head node;
--	const struct dma_map_ops *dma_ops;
--	int domain_nr;
--};
--void add_dma_domain(struct dma_domain *domain);
--void del_dma_domain(struct dma_domain *domain);
--#endif
--
- struct pdev_archdata {
- };
- 
-diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-index e662f987dfa2..f740246ea812 100644
---- a/arch/x86/include/asm/pci.h
-+++ b/arch/x86/include/asm/pci.h
-@@ -73,6 +73,8 @@ static inline bool is_vmd(struct pci_bus *bus)
- #endif
- }
- 
-+struct device *to_vmd_dev(struct device *dev);
-+
- /* Can be used to override the logic in pci_scan_bus for skipping
-    already-configured bus numbers - to be used for buggy BIOSes
-    or architectures with incomplete PCI setup by the loader */
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 9acab6ac28f5..d2ac803b6c00 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -625,43 +625,6 @@ unsigned int pcibios_assign_all_busses(void)
- 	return (pci_probe & PCI_ASSIGN_ALL_BUSSES) ? 1 : 0;
- }
- 
--#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
--static LIST_HEAD(dma_domain_list);
--static DEFINE_SPINLOCK(dma_domain_list_lock);
--
--void add_dma_domain(struct dma_domain *domain)
--{
--	spin_lock(&dma_domain_list_lock);
--	list_add(&domain->node, &dma_domain_list);
--	spin_unlock(&dma_domain_list_lock);
--}
--EXPORT_SYMBOL_GPL(add_dma_domain);
--
--void del_dma_domain(struct dma_domain *domain)
--{
--	spin_lock(&dma_domain_list_lock);
--	list_del(&domain->node);
--	spin_unlock(&dma_domain_list_lock);
--}
--EXPORT_SYMBOL_GPL(del_dma_domain);
--
--static void set_dma_domain_ops(struct pci_dev *pdev)
--{
--	struct dma_domain *domain;
--
--	spin_lock(&dma_domain_list_lock);
--	list_for_each_entry(domain, &dma_domain_list, node) {
--		if (pci_domain_nr(pdev->bus) == domain->domain_nr) {
--			pdev->dev.dma_ops = domain->dma_ops;
--			break;
--		}
--	}
--	spin_unlock(&dma_domain_list_lock);
--}
--#else
--static void set_dma_domain_ops(struct pci_dev *pdev) {}
--#endif
--
- static void set_dev_domain_options(struct pci_dev *pdev)
- {
- 	if (is_vmd(pdev->bus))
-@@ -697,7 +660,6 @@ int pcibios_add_device(struct pci_dev *dev)
- 		pa_data = data->next;
- 		memunmap(data);
- 	}
--	set_dma_domain_ops(dev);
- 	set_dev_domain_options(dev);
- 	return 0;
- }
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 12d094d08c0a..e8e876605d6a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3416,9 +3416,14 @@ static struct dmar_domain *get_private_domain_for_dev(struct device *dev)
- 	return domain;
- }
- 
--/* Check if the dev needs to go through non-identity map and unmap process.*/
--static bool iommu_need_mapping(struct device *dev)
-+/*
-+ * Check if the dev needs to go through non-identity map and unmap process.
-+ * Also where needed replace dev with the actual device used for the mapping
-+ * process.
-+ */
-+static bool iommu_need_mapping(struct device **devp)
- {
-+	struct device *dev = *devp;
- 	int ret;
- 
- 	if (iommu_dummy(dev))
-@@ -3456,6 +3461,14 @@ static bool iommu_need_mapping(struct device *dev)
- 		dev_info(dev, "32bit DMA uses non-identity mapping\n");
- 	}
- 
-+	/*
-+	 * For VMD we need to use the VMD devices for mapping requests instead
-+	 * of the actual device to get the proper PCIe requester ID.
-+	 */
-+#ifdef CONFIG_VMD
-+	if (dev_is_pci(dev) && is_vmd(to_pci_dev(dev)->bus))
-+		*devp = to_vmd_dev(dev);
-+#endif
- 	return true;
- }
- 
-@@ -3520,7 +3533,7 @@ static dma_addr_t intel_map_page(struct device *dev, struct page *page,
- 				 enum dma_data_direction dir,
- 				 unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
-+	if (iommu_need_mapping(&dev))
- 		return __intel_map_single(dev, page_to_phys(page) + offset,
- 				size, dir, *dev->dma_mask);
- 	return dma_direct_map_page(dev, page, offset, size, dir, attrs);
-@@ -3530,7 +3543,7 @@ static dma_addr_t intel_map_resource(struct device *dev, phys_addr_t phys_addr,
- 				     size_t size, enum dma_data_direction dir,
- 				     unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
-+	if (iommu_need_mapping(&dev))
- 		return __intel_map_single(dev, phys_addr, size, dir,
- 				*dev->dma_mask);
- 	return dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
-@@ -3585,7 +3598,7 @@ static void intel_unmap_page(struct device *dev, dma_addr_t dev_addr,
- 			     size_t size, enum dma_data_direction dir,
- 			     unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
-+	if (iommu_need_mapping(&dev))
- 		intel_unmap(dev, dev_addr, size);
- 	else
- 		dma_direct_unmap_page(dev, dev_addr, size, dir, attrs);
-@@ -3594,7 +3607,7 @@ static void intel_unmap_page(struct device *dev, dma_addr_t dev_addr,
- static void intel_unmap_resource(struct device *dev, dma_addr_t dev_addr,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
-+	if (iommu_need_mapping(&dev))
- 		intel_unmap(dev, dev_addr, size);
- }
- 
-@@ -3605,7 +3618,7 @@ static void *intel_alloc_coherent(struct device *dev, size_t size,
- 	struct page *page = NULL;
- 	int order;
- 
--	if (!iommu_need_mapping(dev))
-+	if (!iommu_need_mapping(&dev))
- 		return dma_direct_alloc(dev, size, dma_handle, flags, attrs);
- 
- 	size = PAGE_ALIGN(size);
-@@ -3641,7 +3654,7 @@ static void intel_free_coherent(struct device *dev, size_t size, void *vaddr,
- 	int order;
- 	struct page *page = virt_to_page(vaddr);
- 
--	if (!iommu_need_mapping(dev))
-+	if (!iommu_need_mapping(&dev))
- 		return dma_direct_free(dev, size, vaddr, dma_handle, attrs);
- 
- 	size = PAGE_ALIGN(size);
-@@ -3661,7 +3674,7 @@ static void intel_unmap_sg(struct device *dev, struct scatterlist *sglist,
- 	struct scatterlist *sg;
- 	int i;
- 
--	if (!iommu_need_mapping(dev))
-+	if (!iommu_need_mapping(&dev))
- 		return dma_direct_unmap_sg(dev, sglist, nelems, dir, attrs);
- 
- 	for_each_sg(sglist, sg, nelems, i) {
-@@ -3685,7 +3698,7 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
- 	struct intel_iommu *iommu;
- 
- 	BUG_ON(dir == DMA_NONE);
--	if (!iommu_need_mapping(dev))
-+	if (!iommu_need_mapping(&dev))
- 		return dma_direct_map_sg(dev, sglist, nelems, dir, attrs);
- 
- 	domain = find_domain(dev);
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index fe9f9f13ce11..a3a140c7abaf 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -267,8 +267,7 @@ config PCIE_TANGO_SMP8759
- 
- config VMD
- 	depends on PCI_MSI && X86_64 && SRCU
--	select X86_DEV_DMA_OPS
--	tristate "Intel Volume Management Device Driver"
-+	bool "Intel Volume Management Device Driver"
- 	---help---
- 	  Adds support for the Intel Volume Management Device (VMD). VMD is a
- 	  secondary PCI host bridge that allows PCI Express root ports,
-@@ -278,8 +277,5 @@ config VMD
- 	  single domain. If you know your system provides one of these and
- 	  has devices attached to it, say Y; if you are not sure, say N.
- 
--	  To compile this driver as a module, choose M here: the
--	  module will be called vmd.
--
- source "drivers/pci/controller/dwc/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 4575e0c6dc4b..45c471c48756 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -94,9 +94,6 @@ struct vmd_dev {
- 	struct resource		resources[3];
- 	struct irq_domain	*irq_domain;
- 	struct pci_bus		*bus;
--
--	struct dma_map_ops	dma_ops;
--	struct dma_domain	dma_domain;
- };
- 
- static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
-@@ -296,7 +293,7 @@ static struct msi_domain_info vmd_msi_domain_info = {
-  * VMD domain need to be mapped for the VMD, not the device requiring
-  * the mapping.
-  */
--static struct device *to_vmd_dev(struct device *dev)
-+struct device *to_vmd_dev(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct vmd_dev *vmd = vmd_from_bus(pdev->bus);
-@@ -304,138 +301,6 @@ static struct device *to_vmd_dev(struct device *dev)
- 	return &vmd->dev->dev;
- }
- 
--static void *vmd_alloc(struct device *dev, size_t size, dma_addr_t *addr,
--		       gfp_t flag, unsigned long attrs)
--{
--	return dma_alloc_attrs(to_vmd_dev(dev), size, addr, flag, attrs);
--}
--
--static void vmd_free(struct device *dev, size_t size, void *vaddr,
--		     dma_addr_t addr, unsigned long attrs)
--{
--	return dma_free_attrs(to_vmd_dev(dev), size, vaddr, addr, attrs);
--}
--
--static int vmd_mmap(struct device *dev, struct vm_area_struct *vma,
--		    void *cpu_addr, dma_addr_t addr, size_t size,
--		    unsigned long attrs)
--{
--	return dma_mmap_attrs(to_vmd_dev(dev), vma, cpu_addr, addr, size,
--			attrs);
--}
--
--static int vmd_get_sgtable(struct device *dev, struct sg_table *sgt,
--			   void *cpu_addr, dma_addr_t addr, size_t size,
--			   unsigned long attrs)
--{
--	return dma_get_sgtable_attrs(to_vmd_dev(dev), sgt, cpu_addr, addr, size,
--			attrs);
--}
--
--static dma_addr_t vmd_map_page(struct device *dev, struct page *page,
--			       unsigned long offset, size_t size,
--			       enum dma_data_direction dir,
--			       unsigned long attrs)
--{
--	return dma_map_page_attrs(to_vmd_dev(dev), page, offset, size, dir,
--			attrs);
--}
--
--static void vmd_unmap_page(struct device *dev, dma_addr_t addr, size_t size,
--			   enum dma_data_direction dir, unsigned long attrs)
--{
--	dma_unmap_page_attrs(to_vmd_dev(dev), addr, size, dir, attrs);
--}
--
--static int vmd_map_sg(struct device *dev, struct scatterlist *sg, int nents,
--		      enum dma_data_direction dir, unsigned long attrs)
--{
--	return dma_map_sg_attrs(to_vmd_dev(dev), sg, nents, dir, attrs);
--}
--
--static void vmd_unmap_sg(struct device *dev, struct scatterlist *sg, int nents,
--			 enum dma_data_direction dir, unsigned long attrs)
--{
--	dma_unmap_sg_attrs(to_vmd_dev(dev), sg, nents, dir, attrs);
--}
--
--static void vmd_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
--				    size_t size, enum dma_data_direction dir)
--{
--	dma_sync_single_for_cpu(to_vmd_dev(dev), addr, size, dir);
--}
--
--static void vmd_sync_single_for_device(struct device *dev, dma_addr_t addr,
--				       size_t size, enum dma_data_direction dir)
--{
--	dma_sync_single_for_device(to_vmd_dev(dev), addr, size, dir);
--}
--
--static void vmd_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
--				int nents, enum dma_data_direction dir)
--{
--	dma_sync_sg_for_cpu(to_vmd_dev(dev), sg, nents, dir);
--}
--
--static void vmd_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
--				   int nents, enum dma_data_direction dir)
--{
--	dma_sync_sg_for_device(to_vmd_dev(dev), sg, nents, dir);
--}
--
--static int vmd_dma_supported(struct device *dev, u64 mask)
--{
--	return dma_supported(to_vmd_dev(dev), mask);
--}
--
--static u64 vmd_get_required_mask(struct device *dev)
--{
--	return dma_get_required_mask(to_vmd_dev(dev));
--}
--
--static void vmd_teardown_dma_ops(struct vmd_dev *vmd)
--{
--	struct dma_domain *domain = &vmd->dma_domain;
--
--	if (get_dma_ops(&vmd->dev->dev))
--		del_dma_domain(domain);
--}
--
--#define ASSIGN_VMD_DMA_OPS(source, dest, fn)	\
--	do {					\
--		if (source->fn)			\
--			dest->fn = vmd_##fn;	\
--	} while (0)
--
--static void vmd_setup_dma_ops(struct vmd_dev *vmd)
--{
--	const struct dma_map_ops *source = get_dma_ops(&vmd->dev->dev);
--	struct dma_map_ops *dest = &vmd->dma_ops;
--	struct dma_domain *domain = &vmd->dma_domain;
--
--	domain->domain_nr = vmd->sysdata.domain;
--	domain->dma_ops = dest;
--
--	if (!source)
--		return;
--	ASSIGN_VMD_DMA_OPS(source, dest, alloc);
--	ASSIGN_VMD_DMA_OPS(source, dest, free);
--	ASSIGN_VMD_DMA_OPS(source, dest, mmap);
--	ASSIGN_VMD_DMA_OPS(source, dest, get_sgtable);
--	ASSIGN_VMD_DMA_OPS(source, dest, map_page);
--	ASSIGN_VMD_DMA_OPS(source, dest, unmap_page);
--	ASSIGN_VMD_DMA_OPS(source, dest, map_sg);
--	ASSIGN_VMD_DMA_OPS(source, dest, unmap_sg);
--	ASSIGN_VMD_DMA_OPS(source, dest, sync_single_for_cpu);
--	ASSIGN_VMD_DMA_OPS(source, dest, sync_single_for_device);
--	ASSIGN_VMD_DMA_OPS(source, dest, sync_sg_for_cpu);
--	ASSIGN_VMD_DMA_OPS(source, dest, sync_sg_for_device);
--	ASSIGN_VMD_DMA_OPS(source, dest, dma_supported);
--	ASSIGN_VMD_DMA_OPS(source, dest, get_required_mask);
--	add_dma_domain(domain);
--}
--#undef ASSIGN_VMD_DMA_OPS
--
- static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
- 				  unsigned int devfn, int reg, int len)
- {
-@@ -690,7 +555,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	}
- 
- 	vmd_attach_resources(vmd);
--	vmd_setup_dma_ops(vmd);
- 	dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
- 
- 	pci_scan_child_bus(vmd->bus);
-@@ -805,7 +669,6 @@ static void vmd_remove(struct pci_dev *dev)
- 	pci_stop_root_bus(vmd->bus);
- 	pci_remove_root_bus(vmd->bus);
- 	vmd_cleanup_srcu(vmd);
--	vmd_teardown_dma_ops(vmd);
- 	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
- }
--- 
-2.20.1
+>=20
+> I'm also not sure how it would then result in any 4k text maps. Yes the
+> alias is 4k, but it should not affect the actual high text map in any
+> way.
+
+I am confused by the alias logic. set_kernel_text_rw() makes the high map
+rw, and split the PMD in the high map.=20
+
+>=20
+> kprobes also allocates executable slots, but it does that in the module
+> range (afaict), so that, again, should not affect the high text mapping.
+>=20
+>> We found with 5.2 kernel (no CONFIG_PAGE_TABLE_ISOLATION, w/=20
+>> CONFIG_KPROBES_ON_FTRACE), a single kprobe will split _all_ PMDs in=20
+>> kernel text mapping into pte-mapped pages. This increases iTLB=20
+>> miss rate from about 300 per million instructions to about 700 per
+>> million instructions (for the application I test with).=20
+>>=20
+>> Per bisect, we found this behavior happens after commit 585948f4f695=20
+>> ("x86/mm/cpa: Avoid the 4k pages check completely"). That's why I=20
+>> proposed this PATCH to fix/workaround this issue. However, per
+>> Peter's comment and my study of the code, this doesn't seem the=20
+>> real problem or the only here.=20
+>>=20
+>> I also tested that the PMD split issue doesn't happen w/o=20
+>> CONFIG_KPROBES_ON_FTRACE.=20
+>=20
+> Right, because then ftrace doesn't flip the whole kernel map writable;
+> which it _really_ should stop doing anyway.
+>=20
+> But I'm still wondering what causes that first 4k split...
+
+Please see above.=20
+
+Thanks,
+Song
 
