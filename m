@@ -2,152 +2,336 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F031C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B5AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BEB21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQSN7pQh"
+	by mail.kernel.org (Postfix) with ESMTP id B7CCB21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfHZWGU (ORCPT
+        id S1726719AbfHZWHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:06:20 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40793 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfHZWGT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:06:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id t6so41306688ios.7
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:06:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j2+X7ZLdUUxNkcBQNBfyLlM7Bq5bjsdY0IjjmtqCq8s=;
-        b=lQSN7pQhTCM28br9rSgxowCmfZmsljVskLhGMUN8q9JRAPHK5tkMcdA4AhKA+ezKGf
-         qcEEG70QEoiTsJhZkfOW57KexZaK/Np9tIm3WFU1t0QflRoTMSSWKK6EKoa/oeZECM9v
-         fgpa1tg+tGUUhSa43lab1By1HWWM78GpZ1C8BjBzh9x6I0UTiFwAHzrUCuxuNCjvJSLn
-         vn+AI5TRT8NmBBGBr8ySszqREymrYNaOgZp5QoY5dt7BZKnH361RVhA5ON3uoxJSEwV8
-         Nb/+SsuAVFcRCdMd9bkdDoor3f5LDZapyZbl7ErJI+Gvy8Uqa29OSSHCZ3EjSRZ8QJdd
-         q4nw==
+        Mon, 26 Aug 2019 18:07:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59516 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfHZWHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 18:07:11 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8209680F7C
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:07:10 +0000 (UTC)
+Received: by mail-qt1-f199.google.com with SMTP id r10so19000309qte.4
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:07:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j2+X7ZLdUUxNkcBQNBfyLlM7Bq5bjsdY0IjjmtqCq8s=;
-        b=omovXBtgUJZmCvb38Y81dIVwRiWJRNHsNhW7kfHaFaB/jB6ImjAp4R+TkAnoXpyely
-         jkOuFdvUVI8GxWhZI4aw/4ZHwx9t8bwTg/sxZevbfhBw4zOH8Hd6HBDvkWWiLROeW8TD
-         a9hOx0qY9AmJYeFsRZMx16bny8loIk952rIoz8oAQkQqIdAqHQxf0yQ04N2mQkpZ6Hk/
-         BD138oPxMy6iRHDI+BfYiOFShZfGQaIdsxMjaguKYuwIUpjC2UXHR+7NWWrwkPc5TMAg
-         yaFR7oZYyFnEb7Bzbn1E6THE+AxwBsXzjc6i9KKF1xlIicPqTX1RioE2mEe2fTUnSVpK
-         5I+w==
-X-Gm-Message-State: APjAAAV+Jju8CznZxZdIFw93yDBMG0gdX0LhTLdeMbbktdvpCi9Xr5GP
-        RkeLe01+XfYduPbY8fZyv/E+b3lajJRlApoZmRjZaxEu
-X-Google-Smtp-Source: APXvYqwcYevweKqMNjHTJ83mj+kVwgsdYNMqCFj1IF88/5p1L/AzW1r6mX95/4ulDgCHTIUECfPGxzod9HEYB/twqAs=
-X-Received: by 2002:a5e:df06:: with SMTP id f6mr16773354ioq.93.1566857178737;
- Mon, 26 Aug 2019 15:06:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822102614.18164-1-kraxel@redhat.com>
-In-Reply-To: <20190822102614.18164-1-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Mon, 26 Aug 2019 15:06:07 -0700
-Message-ID: <CAPaKu7Q+T1qf4jboXSV-jsXHrvqSxG+MrJGJzFf7qNisaZj3Wg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/virtio: make resource id workaround runtime switchable.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ycIZbVMTeFm3kLyX9uTzi+eSMUtl8bWnGni4U99zQvw=;
+        b=Gk1yv8sbHls+JnnJUOde0Rx7v9TP0B1d43XvL76mOHZqA4ch+hNPMUps2UXBMci6jq
+         gy94Lynztss6PJ8Ew7wJsWVYCe2MzZUwOQNFqlZ638GGB9onRPAzHMm3ElCRGjMQO+dK
+         6IHvy8USyKWwgb/bULcdL0B30wjQ3K5FdDpssCj6inPOPhdQzH9XbdhZBAYhGkIbDVbz
+         wtsWQ2VDaOtWUQvDEV109nxUJUxdn5cAyTf+Sjajk0fRGGAn7f2r6i5SsUDY1Owft3Xn
+         Xts03jq02aUYnIK+xMjVJUh3AKJrAnn7Oq5a1GOY3KrSz5LOKq+4r8MVGAKNTT9/YNA3
+         tQ6Q==
+X-Gm-Message-State: APjAAAVnOtrjQ4rlT7puqeHzbbSp/nz69VSi7Ufzp8rHCa6pueGIsVTD
+        BO78qPijjqPagPinEy2C39cTy2p8oIj6KzdJ17q/rTPyqbv/GUvA/OdY3cfoHfwSlOJ+RszsIs4
+        50AofKTPjusn+0+kMmQrvoX0h
+X-Received: by 2002:ac8:2544:: with SMTP id 4mr20245719qtn.319.1566857229798;
+        Mon, 26 Aug 2019 15:07:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxIK7SBP5kse08y0zIHWURtOxx5pIrlkL5b6alNU0q+MABl9qFeINGvfFmyiLYo7SyvaUlHCA==
+X-Received: by 2002:ac8:2544:: with SMTP id 4mr20245690qtn.319.1566857229562;
+        Mon, 26 Aug 2019 15:07:09 -0700 (PDT)
+Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id o33sm7794230qtd.72.2019.08.26.15.07.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 15:07:09 -0700 (PDT)
+Message-ID: <9512ed84594d6927b916d46d384241ab93d1f45a.camel@redhat.com>
+Subject: Re: [PATCH 02/26] drm/dp_mst: Destroy mstbs from
+ destroy_connector_work
+From:   Lyude Paul <lyude@redhat.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 26 Aug 2019 18:07:07 -0400
+In-Reply-To: <20190813130055.GS7444@phenom.ffwll.local>
+References: <20190718014329.8107-1-lyude@redhat.com>
+         <20190718014329.8107-3-lyude@redhat.com>
+         <20190813130055.GS7444@phenom.ffwll.local>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 3:26 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> Also update the comment with a reference to the virglrenderer fix.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_object.c | 44 ++++++++++++++-----------
->  1 file changed, 24 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index b2da31310d24..e98aaa00578d 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -27,34 +27,38 @@
->
->  #include "virtgpu_drv.h"
->
-> +static int virtio_gpu_virglrenderer_workaround = 1;
-> +module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
-> +
->  static int virtio_gpu_resource_id_get(struct virtio_gpu_device *vgdev,
->                                        uint32_t *resid)
->  {
-> -#if 0
-> -       int handle = ida_alloc(&vgdev->resource_ida, GFP_KERNEL);
-> -
-> -       if (handle < 0)
-> -               return handle;
-> -#else
-> -       static int handle;
-> -
-> -       /*
-> -        * FIXME: dirty hack to avoid re-using IDs, virglrenderer
-> -        * can't deal with that.  Needs fixing in virglrenderer, also
-> -        * should figure a better way to handle that in the guest.
-> -        */
-> -       handle++;
-> -#endif
-> -
-> -       *resid = handle + 1;
-> +       if (virtio_gpu_virglrenderer_workaround) {
-> +               /*
-> +                * Hack to avoid re-using resource IDs.
-> +                *
-> +                * virglrenderer versions up to (and including) 0.7.0
-> +                * can't deal with that.  virglrenderer commit
-> +                * "f91a9dd35715 Fix unlinking resources from hash
-> +                * table." (Feb 2019) fixes the bug.
-> +                */
-> +               static int handle;
-> +               handle++;
-> +               *resid = handle + 1;
-> +       } else {
-> +               int handle = ida_alloc(&vgdev->resource_ida, GFP_KERNEL);
-> +               if (handle < 0)
-> +                       return handle;
-> +               *resid = handle + 1;
-> +       }
->         return 0;
->  }
->
->  static void virtio_gpu_resource_id_put(struct virtio_gpu_device *vgdev, uint32_t id)
->  {
-> -#if 0
-> -       ida_free(&vgdev->resource_ida, id - 1);
-> -#endif
-> +       if (!virtio_gpu_virglrenderer_workaround) {
-> +               ida_free(&vgdev->resource_ida, id - 1);
-> +       }
->  }
->
->  static void virtio_gpu_ttm_bo_destroy(struct ttm_buffer_object *tbo)
-> --
-> 2.18.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+On Tue, 2019-08-13 at 15:00 +0200, Daniel Vetter wrote:
+> On Wed, Jul 17, 2019 at 09:42:25PM -0400, Lyude Paul wrote:
+> > Currently we remove MST branch devices from the in-memory topology
+> > immediately when their topology refcount reaches 0. This works just fine
+> > at the moment, but since we're about to add suspend/resume reprobing for
+> > MST topologies we're going to need to be able to travel through the
+> > topology and drop topology refs on branch devices while holding
+> > mgr->mutex. Since we currently can't do this due to the circular locking
+> > dependencies that would incur, move all of the actual work for
+> > drm_dp_destroy_mst_branch_device() into drm_dp_destroy_connector_work()
+> > so we can drop topology refs on MSTBs in any locking context.
+> 
+> Would be good to point at where exactly the problem is here, maybe also
+> mentioned the exact future patch that causes the problem. I did go look
+> around a bit, but didn't spot it.
+
+Ah, I didn't do a great job of explaining whoops! Basically, the issue is that
+when reprobing the state during suspend/resume, there's of course going to be
+a chance that any MST ports in the topology could have had their PDT changed
+while we were suspended. This in turn means that while we're iterating through
+each mstb's ports in drm_dp_send_link_address() we want to be able to remove
+MSTBs from while under &mgr->lock, something we can't do without handling MSTB
+destruction in another thread. I'll mention this in the next version of this
+patch
+
+> 
+> > Cc: Juston Li <juston.li@intel.com>
+> > Cc: Imre Deak <imre.deak@intel.com>
+> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > Cc: Harry Wentland <hwentlan@amd.com>
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > ---
+> >  drivers/gpu/drm/drm_dp_mst_topology.c | 121 +++++++++++++++++---------
+> >  include/drm/drm_dp_mst_helper.h       |  10 +++
+> >  2 files changed, 90 insertions(+), 41 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > index 998081b9b205..d7c3d9233834 100644
+> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > @@ -1108,34 +1108,17 @@ static void
+> > drm_dp_destroy_mst_branch_device(struct kref *kref)
+> >  	struct drm_dp_mst_branch *mstb =
+> >  		container_of(kref, struct drm_dp_mst_branch, topology_kref);
+> >  	struct drm_dp_mst_topology_mgr *mgr = mstb->mgr;
+> > -	struct drm_dp_mst_port *port, *tmp;
+> > -	bool wake_tx = false;
+> > -
+> > -	mutex_lock(&mgr->lock);
+> > -	list_for_each_entry_safe(port, tmp, &mstb->ports, next) {
+> > -		list_del(&port->next);
+> > -		drm_dp_mst_topology_put_port(port);
+> > -	}
+> > -	mutex_unlock(&mgr->lock);
+> > -
+> > -	/* drop any tx slots msg */
+> > -	mutex_lock(&mstb->mgr->qlock);
+> > -	if (mstb->tx_slots[0]) {
+> > -		mstb->tx_slots[0]->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
+> > -		mstb->tx_slots[0] = NULL;
+> > -		wake_tx = true;
+> > -	}
+> > -	if (mstb->tx_slots[1]) {
+> > -		mstb->tx_slots[1]->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
+> > -		mstb->tx_slots[1] = NULL;
+> > -		wake_tx = true;
+> > -	}
+> > -	mutex_unlock(&mstb->mgr->qlock);
+> >  
+> > -	if (wake_tx)
+> > -		wake_up_all(&mstb->mgr->tx_waitq);
+> > +	INIT_LIST_HEAD(&mstb->destroy_next);
+> >  
+> > -	drm_dp_mst_put_mstb_malloc(mstb);
+> > +	/*
+> > +	 * This can get called under mgr->mutex, so we need to perform the
+> > +	 * actual destruction of the mstb in another worker
+> > +	 */
+> > +	mutex_lock(&mgr->destroy_connector_lock);
+> > +	list_add(&mstb->destroy_next, &mgr->destroy_branch_device_list);
+> > +	mutex_unlock(&mgr->destroy_connector_lock);
+> > +	schedule_work(&mgr->destroy_connector_work);
+> >  }
+> >  
+> >  /**
+> > @@ -3618,10 +3601,56 @@ static void drm_dp_tx_work(struct work_struct
+> > *work)
+> >  	mutex_unlock(&mgr->qlock);
+> >  }
+> >  
+> > +static inline void
+> > +drm_dp_finish_destroy_port(struct drm_dp_mst_port *port)
+> 
+> Bikeshed: I'd call this _delayed_destroy, I think that makes a bit clearer
+> why there's 2 stages to destroying stuff.
+> 
+> > +{
+> > +	INIT_LIST_HEAD(&port->next);
+> > +
+> > +	port->mgr->cbs->destroy_connector(port->mgr, port->connector);
+> > +
+> > +	drm_dp_port_teardown_pdt(port, port->pdt);
+> > +	port->pdt = DP_PEER_DEVICE_NONE;
+> > +
+> > +	drm_dp_mst_put_port_malloc(port);
+> > +}
+> > +
+> > +static inline void
+> > +drm_dp_finish_destroy_mst_branch_device(struct drm_dp_mst_branch *mstb)
+> > +{
+> > +	struct drm_dp_mst_topology_mgr *mgr = mstb->mgr;
+> > +	struct drm_dp_mst_port *port, *tmp;
+> > +	bool wake_tx = false;
+> > +
+> > +	mutex_lock(&mgr->lock);
+> > +	list_for_each_entry_safe(port, tmp, &mstb->ports, next) {
+> > +		list_del(&port->next);
+> > +		drm_dp_mst_topology_put_port(port);
+> > +	}
+> > +	mutex_unlock(&mgr->lock);
+> > +
+> > +	/* drop any tx slots msg */
+> > +	mutex_lock(&mstb->mgr->qlock);
+> > +	if (mstb->tx_slots[0]) {
+> > +		mstb->tx_slots[0]->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
+> > +		mstb->tx_slots[0] = NULL;
+> > +		wake_tx = true;
+> > +	}
+> > +	if (mstb->tx_slots[1]) {
+> > +		mstb->tx_slots[1]->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
+> > +		mstb->tx_slots[1] = NULL;
+> > +		wake_tx = true;
+> > +	}
+> > +	mutex_unlock(&mstb->mgr->qlock);
+> > +
+> > +	if (wake_tx)
+> > +		wake_up_all(&mstb->mgr->tx_waitq);
+> > +
+> > +	drm_dp_mst_put_mstb_malloc(mstb);
+> > +}
+> > +
+> >  static void drm_dp_destroy_connector_work(struct work_struct *work)
+> >  {
+> >  	struct drm_dp_mst_topology_mgr *mgr = container_of(work, struct
+> > drm_dp_mst_topology_mgr, destroy_connector_work);
+> > -	struct drm_dp_mst_port *port;
+> >  	bool send_hotplug = false;
+> >  	/*
+> >  	 * Not a regular list traverse as we have to drop the destroy
+> > @@ -3629,24 +3658,33 @@ static void drm_dp_destroy_connector_work(struct
+> > work_struct *work)
+> >  	 * ordering between this lock and the config mutex.
+> >  	 */
+> >  	for (;;) {
+> > +		struct drm_dp_mst_branch *mstb = NULL;
+> > +		struct drm_dp_mst_port *port = NULL;
+> > +
+> > +		/* Destroy any MSTBs first, and then their ports second */
+> >  		mutex_lock(&mgr->destroy_connector_lock);
+> > -		port = list_first_entry_or_null(&mgr->destroy_connector_list,
+> > struct drm_dp_mst_port, next);
+> > -		if (!port) {
+> > -			mutex_unlock(&mgr->destroy_connector_lock);
+> > -			break;
+> > +		mstb = list_first_entry_or_null(&mgr-
+> > >destroy_branch_device_list,
+> > +						struct drm_dp_mst_branch,
+> > +						destroy_next);
+> > +		if (mstb) {
+> > +			list_del(&mstb->destroy_next);
+> > +		} else {
+> > +			port = list_first_entry_or_null(&mgr-
+> > >destroy_connector_list,
+> > +							struct
+> > drm_dp_mst_port,
+> > +							next);
+> > +			if (port)
+> > +				list_del(&port->next);
+> >  		}
+> 
+> Control flow looks rather awkward here. I'd do either two loops, or if you
+> want to have just one, rename it to ->delayed_destroy_list and have a
+> ->delayed_destry_cb next to it?
+> 
+> Cheers, Daniel
+> 
+> 
+> > -		list_del(&port->next);
+> >  		mutex_unlock(&mgr->destroy_connector_lock);
+> >  
+> > -		INIT_LIST_HEAD(&port->next);
+> > -
+> > -		mgr->cbs->destroy_connector(mgr, port->connector);
+> > -
+> > -		drm_dp_port_teardown_pdt(port, port->pdt);
+> > -		port->pdt = DP_PEER_DEVICE_NONE;
+> > -
+> > -		drm_dp_mst_put_port_malloc(port);
+> > -		send_hotplug = true;
+> > +		if (mstb) {
+> > +			drm_dp_finish_destroy_mst_branch_device(mstb);
+> > +		} else if (port) {
+> > +			drm_dp_finish_destroy_port(port);
+> > +			send_hotplug = true;
+> > +		} else {
+> > +			break;
+> > +		}
+> >  	}
+> >  	if (send_hotplug)
+> >  		drm_kms_helper_hotplug_event(mgr->dev);
+> > @@ -3840,6 +3878,7 @@ int drm_dp_mst_topology_mgr_init(struct
+> > drm_dp_mst_topology_mgr *mgr,
+> >  	mutex_init(&mgr->destroy_connector_lock);
+> >  	INIT_LIST_HEAD(&mgr->tx_msg_downq);
+> >  	INIT_LIST_HEAD(&mgr->destroy_connector_list);
+> > +	INIT_LIST_HEAD(&mgr->destroy_branch_device_list);
+> >  	INIT_WORK(&mgr->work, drm_dp_mst_link_probe_work);
+> >  	INIT_WORK(&mgr->tx_work, drm_dp_tx_work);
+> >  	INIT_WORK(&mgr->destroy_connector_work,
+> > drm_dp_destroy_connector_work);
+> > diff --git a/include/drm/drm_dp_mst_helper.h
+> > b/include/drm/drm_dp_mst_helper.h
+> > index 8c97a5f92c47..c01f3ea72756 100644
+> > --- a/include/drm/drm_dp_mst_helper.h
+> > +++ b/include/drm/drm_dp_mst_helper.h
+> > @@ -143,6 +143,12 @@ struct drm_dp_mst_branch {
+> >  	 */
+> >  	struct kref malloc_kref;
+> >  
+> > +	/**
+> > +	 * @destroy_next: linked-list entry used by
+> > +	 * drm_dp_destroy_connector_work()
+> > +	 */
+> > +	struct list_head destroy_next;
+> > +
+> >  	u8 rad[8];
+> >  	u8 lct;
+> >  	int num_ports;
+> > @@ -578,6 +584,10 @@ struct drm_dp_mst_topology_mgr {
+> >  	 * @destroy_connector_list: List of to be destroyed connectors.
+> >  	 */
+> >  	struct list_head destroy_connector_list;
+> > +	/**
+> > +	 * @destroy_branch_device_list: List of to be destroyed branch devices
+> > +	 */
+> > +	struct list_head destroy_branch_device_list;
+> >  	/**
+> >  	 * @destroy_connector_lock: Protects @connector_list.
+> >  	 */
+> > -- 
+> > 2.21.0
+> > 
+-- 
+Cheers,
+	Lyude Paul
+
