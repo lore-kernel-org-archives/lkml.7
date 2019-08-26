@@ -2,180 +2,197 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A8BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C20C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846BC217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1266721852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dn4xaVrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbfHZNto (ORCPT
+        id S1731831AbfHZNvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:49:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45008 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728550AbfHZNtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:49:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 66B20ABF4;
-        Mon, 26 Aug 2019 13:49:41 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 170331E3DA1; Mon, 26 Aug 2019 15:49:40 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 15:49:40 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v3 4/5] writeback, memcg: Implement
- cgroup_writeback_by_id()
-Message-ID: <20190826134940.GE10614@quack2.suse.cz>
-References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
- <20190815195902.GE2263813@devbig004.ftw2.facebook.com>
- <20190821210210.GM2263813@devbig004.ftw2.facebook.com>
+        Mon, 26 Aug 2019 09:51:15 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:43529 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbfHZNvO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:51:14 -0400
+Received: by mail-lj1-f169.google.com with SMTP id h15so15122144ljg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 06:51:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8H72TrYC5gZvMPhRumnBYIWBJ5xS8zMVHqHb8s+Sb3o=;
+        b=Dn4xaVrTDityhgDmAXP5mahh8jhaq+TI8TXcev4ytU9RMTXCbnfaNmqYWkr/ZM1N3G
+         Dmn0ReLawj12cfsKUCvSAKiy+jV58Ah/khvkXPKmAwYJ8eFGbp/uAL3/Pyt0AOLEoBit
+         gYk6Uno5KfxtnY9+NXurS1w20hKq3j1OgLspIc6Z8qROdW9UNRk/oMRavNc8jrkjl3mx
+         uVjnh1nJjYeJybcif8BsxjSjzCEuwv7+QF3Hz7MocC1xHDzuoMrnESTHoVCGlsT8wHMm
+         Ocjqs7g4Buu5frPRBqa8B5IcB/Twam2qrOd+lAWRx0IWDhbKWggsNWDR+hf2gVLjAAlX
+         Q/nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8H72TrYC5gZvMPhRumnBYIWBJ5xS8zMVHqHb8s+Sb3o=;
+        b=oM7Z7LrMKAmV3SWd9QQ4RU8M29Z2HE0WxBx3KJlrOZQWtr3OhexlCyHwvaIO2tMla2
+         7h45aG2XQMlA2y8Pvbab0megbOGZ0Iuu+nS7boVTusUSwxRBk8iwvFjDtOmvAFtKfTst
+         cKgc7jqkAIFatZa/wm4I8BfeQcxKFsns15LgmZrwRK900PAbtWHnlWKHaLjy6k4bO8Sm
+         YNBrHJc49aAcpi7bZvwO5jAqxGnm9TNekVuEt5cOvEafzFcqo5Y8fe4DbeadaI2ql5UY
+         bwEjt7aRT6xp/w0G2U82wkDlQqTwh1Sx0sLP/Uq/SDNv3CXlqTblXbunswWdZWYnExyz
+         nZZw==
+X-Gm-Message-State: APjAAAXEouj9/YKlgbLLLdwBTBmDrp3pEi8fGFIsLYXeqGYoBNnQ9fCe
+        S6vD7o6WkQ4rVU0s9LoOcy3RZeZYLE7U3KQNK29YqA==
+X-Google-Smtp-Source: APXvYqxfoDUXiZvyj8ZD8yhHri4inkNQ1AyC2xCtZuHCXJahSPiD+yMmzxFbp0qFrMVuZ6SHpjt+O8ffbyiazKLxWuY=
+X-Received: by 2002:a2e:a0c3:: with SMTP id f3mr10776519ljm.123.1566827471744;
+ Mon, 26 Aug 2019 06:51:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821210210.GM2263813@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CA+G9fYtN2tjHZtjtc8isdsD5hF76teeh2-pngUp+uj3WYdj7jA@mail.gmail.com>
+ <20190826104127.GA14729@haruka> <1264279239.8133737.1566817520787.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1264279239.8133737.1566817520787.JavaMail.zimbra@redhat.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 26 Aug 2019 19:20:59 +0530
+Message-ID: <CA+G9fYsHpNKFHr=ZukVvj+uMJDyHj2Xwb9bCfzPQyYzMjZ0rCw@mail.gmail.com>
+Subject: Re: Linux-next-20190823: x86_64/i386: prot_hsymlinks.c:325: Failed to
+ run cmd: useradd hsym
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     Cyril Hrubis <chrubis@suse.cz>, ltp@lists.linux.it,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        alexey kodanev <alexey.kodanev@oracle.com>,
+        the hoang0709 <the_hoang0709@yahoo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 21-08-19 14:02:10, Tejun Heo wrote:
-> Implement cgroup_writeback_by_id() which initiates cgroup writeback
-> from bdi and memcg IDs.  This will be used by memcg foreign inode
-> flushing.
-> 
-> v2: Use wb_get_lookup() instead of wb_get_create() to avoid creating
->     spurious wbs.
-> 
-> v3: Interpret 0 @nr as 1.25 * nr_dirty to implement best-effort
->     flushing while avoding possible livelocks.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+Hi Jan and Cyril,
 
-The patch looks good to me. You can add:
+On Mon, 26 Aug 2019 at 16:35, Jan Stancek <jstancek@redhat.com> wrote:
+>
+>
+>
+> ----- Original Message -----
+> > Hi!
+> > > Do you see this LTP prot_hsymlinks failure on linux next 20190823 on
+> > > x86_64 and i386 devices?
+> > >
+> > > test output log,
+> > > useradd: failure while writing changes to /etc/passwd
+> > > useradd: /home/hsym was created, but could not be removed
+> >
+> > This looks like an unrelated problem, failure to write to /etc/passwd
+> > probably means that filesystem is full or some problem happend and how
+> > is remounted RO.
+>
+> In Naresh' example, root is on NFS:
+>   root=3D/dev/nfs rw nfsroot=3D10.66.16.123:/var/lib/lava/dispatcher/tmp/=
+886412/extract-nfsrootfs-tyuevoxm,tcp,hard,intr
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Right !
+root is mounted on NFS.
 
-								Honza
+>
+> 10.66.16.123:/var/lib/lava/dispatcher/tmp/886412/extract-nfsrootfs-tyuevo=
+xm on / type nfs (rw,relatime,vers=3D2,rsize=3D4096,wsize=3D4096,namlen=3D2=
+55,hard,nolock,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,mountaddr=3D10=
+.66.16.123,mountvers=3D1,mountproto=3Dtcp,local_lock=3Dall,addr=3D10.66.16.=
+123)
+> devtmpfs on /dev type devtmpfs (rw,relatime,size=3D3977640k,nr_inodes=3D9=
+94410,mode=3D755)
+>
+> Following message repeats couple times in logs:
+>   NFS: Server wrote zero bytes, expected XXX
+>
+> Naresh, can you check if there are any errors on NFS server side?
 
-> ---
->  fs/fs-writeback.c         |   83 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/writeback.h |    2 +
->  2 files changed, 85 insertions(+)
-> 
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -892,6 +892,89 @@ restart:
->  }
->  
->  /**
-> + * cgroup_writeback_by_id - initiate cgroup writeback from bdi and memcg IDs
-> + * @bdi_id: target bdi id
-> + * @memcg_id: target memcg css id
-> + * @nr_pages: number of pages to write, 0 for best-effort dirty flushing
-> + * @reason: reason why some writeback work initiated
-> + * @done: target wb_completion
-> + *
-> + * Initiate flush of the bdi_writeback identified by @bdi_id and @memcg_id
-> + * with the specified parameters.
-> + */
-> +int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr,
-> +			   enum wb_reason reason, struct wb_completion *done)
-> +{
-> +	struct backing_dev_info *bdi;
-> +	struct cgroup_subsys_state *memcg_css;
-> +	struct bdi_writeback *wb;
-> +	struct wb_writeback_work *work;
-> +	int ret;
-> +
-> +	/* lookup bdi and memcg */
-> +	bdi = bdi_get_by_id(bdi_id);
-> +	if (!bdi)
-> +		return -ENOENT;
-> +
-> +	rcu_read_lock();
-> +	memcg_css = css_from_id(memcg_id, &memory_cgrp_subsys);
-> +	if (memcg_css && !css_tryget(memcg_css))
-> +		memcg_css = NULL;
-> +	rcu_read_unlock();
-> +	if (!memcg_css) {
-> +		ret = -ENOENT;
-> +		goto out_bdi_put;
-> +	}
-> +
-> +	/*
-> +	 * And find the associated wb.  If the wb isn't there already
-> +	 * there's nothing to flush, don't create one.
-> +	 */
-> +	wb = wb_get_lookup(bdi, memcg_css);
-> +	if (!wb) {
-> +		ret = -ENOENT;
-> +		goto out_css_put;
-> +	}
-> +
-> +	/*
-> +	 * If @nr is zero, the caller is attempting to write out most of
-> +	 * the currently dirty pages.  Let's take the current dirty page
-> +	 * count and inflate it by 25% which should be large enough to
-> +	 * flush out most dirty pages while avoiding getting livelocked by
-> +	 * concurrent dirtiers.
-> +	 */
-> +	if (!nr) {
-> +		unsigned long filepages, headroom, dirty, writeback;
-> +
-> +		mem_cgroup_wb_stats(wb, &filepages, &headroom, &dirty,
-> +				      &writeback);
-> +		nr = dirty * 10 / 8;
-> +	}
-> +
-> +	/* issue the writeback work */
-> +	work = kzalloc(sizeof(*work), GFP_NOWAIT | __GFP_NOWARN);
-> +	if (work) {
-> +		work->nr_pages = nr;
-> +		work->sync_mode = WB_SYNC_NONE;
-> +		work->range_cyclic = 1;
-> +		work->reason = reason;
-> +		work->done = done;
-> +		work->auto_free = 1;
-> +		wb_queue_work(wb, work);
-> +		ret = 0;
-> +	} else {
-> +		ret = -ENOMEM;
-> +	}
-> +
-> +	wb_put(wb);
-> +out_css_put:
-> +	css_put(memcg_css);
-> +out_bdi_put:
-> +	bdi_put(bdi);
-> +	return ret;
-> +}
-> +
-> +/**
->   * cgroup_writeback_umount - flush inode wb switches for umount
->   *
->   * This function is called when a super_block is about to be destroyed and
-> --- a/include/linux/writeback.h
-> +++ b/include/linux/writeback.h
-> @@ -217,6 +217,8 @@ void wbc_attach_and_unlock_inode(struct
->  void wbc_detach_inode(struct writeback_control *wbc);
->  void wbc_account_cgroup_owner(struct writeback_control *wbc, struct page *page,
->  			      size_t bytes);
-> +int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr_pages,
-> +			   enum wb_reason reason, struct wb_completion *done);
->  void cgroup_writeback_umount(void);
->  
->  /**
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+I have re-tested the failed tests on next-20190822 and all get pass
+which is also
+using same NFS server [1] [2].
+
+> Maybe run NFS cthon against that server with client running next-20190822=
+ and next-20190823.
+
+Thanks for the pointers.
+I will setup and run NFS cthon on next-20190822 and next-20190823.
+
+>
+> >
+> > I do not see the kernel messages from this job anywhere at the job
+> > pages, is it stored somewhere?
+>
+> It appears to be mixed in same log file:
+>   https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190823/te=
+strun/886412/log
+
+For the record the following tests failed on linux -next-20190823 on x86_64
+and i386. The filesystem is mounted on NFS and tests are using
+locally mounted hard drive ( with -d /scratch ).
+
+Juno-r2 device filesystem mounted on NFS and did not see these errors
+and test getting pass on -next-20190823.
+
+These failures are reproducible all time on next-20190823 kernel on x86_64
+and i386 device with root mounted on NFS [3] [4] [5] [6].
+
+I will git bisect to find out which is bad commit.
+
+prot_hsymlinks: [3]
+------------------
+useradd: failure while writing changes to /etc/passwd
+useradd: /home/hsym was created, but could not be removed
+userdel: user 'hsym' does not exist
+prot_hsymlinks    1  TBROK  :  prot_hsymlinks.c:325: Failed to run
+cmd: useradd hsym
+prot_hsymlinks    2  TBROK  :  prot_hsymlinks.c:325: Remaining cases broken
+prot_hsymlinks    3  TBROK  :  prot_hsymlinks.c:325: Failed to run
+cmd: userdel -r hsym
+prot_hsymlinks    4  TBROK  :  tst_sig.c:234: unexpected signal
+SIGIOT/SIGABRT(6) received (pid =3D 8324).
+
+logrotate01: [4]
+-------------
+compressing log with: /bin/gzip
+error: error creating temp state file /var/lib/logrotate.status.tmp:
+Input/output error
+logrotate01    1  TFAIL  :  ltpapicmd.c:154: Test #1: logrotate
+command exited with 1 return code. Output:
+
+sem_unlink_2-2: [5]
+------------------
+make[3]: Entering directory
+'/opt/ltp/testcases/open_posix_testsuite/conformance/interfaces/sem_unlink'
+cat: write error: Input/output error
+conformance/interfaces/sem_unlink/sem_unlink_2-2: execution: FAILED
+
+syslog{01 ...10} [6]
+-------------------
+cp: failed to close '/etc/syslog.conf.ltpback': Input/output error
+syslog01    1  TBROK  :  ltpapicmd.c:188: failed to backup /etc/syslog.conf
+
+cp: failed to close '/etc/syslog.conf.ltpback': Input/output error
+syslog02    1  TBROK  :  ltpapicmd.c:188: failed to backup /etc/syslog.conf
+
+...
+cp: failed to close '/etc/syslog.conf.ltpback': Input/output error
+syslog10    1  TBROK  :  ltpapicmd.c:188: failed to backup /etc/syslog.conf
+
+ref:
+PASS on 20190222:
+[1] https://lkft.validation.linaro.org/scheduler/job/890446#L1232
+[2] https://lkft.validation.linaro.org/scheduler/job/890454
+
+FAILED on 20190823:
+[3] https://lkft.validation.linaro.org/scheduler/job/890404#L1245
+[4] https://lkft.validation.linaro.org/scheduler/job/886408#L2544
+[5] https://lkft.validation.linaro.org/scheduler/job/886409#L3088
+[6] https://lkft.validation.linaro.org/scheduler/job/890400#L1234
+
+ - Naresh
