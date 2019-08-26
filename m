@@ -2,112 +2,92 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305B7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18112C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA792217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="BsO0/bHV"
+	by mail.kernel.org (Postfix) with ESMTP id D8D1021848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566795200;
+	bh=Y3mEduzKt2IMLRPCc/9d2tQAduv/qs1pdxGcl2GFft0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wB0KcmD6RTlLB5WqOq8VDtsY2BcL1YfR7kHzmQKJ0hb72OwIQHJQHsoAHKPAbWC3A
+	 hIDTuQabVrrnFLR2gM3gLiA3wBsR6F6+H09jlRgHzPRZs2tEroFXodltRe9IkhvFTg
+	 tFeOWBGgG/x8vrZHaKuvp5z6RD0keFiUHoaeyhbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfHZEsb (ORCPT
+        id S1727900AbfHZExT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 00:48:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39526 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfHZEsb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 00:48:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t16so13924783wra.6
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 21:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I1X3WOpXG5XCDr09buC6cHm1zmHyPqzvS2NgnTCXAzY=;
-        b=BsO0/bHVOCA6KrgOFcyhpwuwM0sXDhof1v9dGcGxaQRPyLQI1w0E3UOjivetqc6jkM
-         kss2brU/g8NmgjGFUs42UGbwzNgjMBU5Kr1fS1YmGuSiRX+EzqKSaXJv2ggy5DNs00nq
-         c/uM8KuuYKdSaFYBwUJ9UVInJr0FEA0NWClfF45ew6OX5wLg47V3wivuwulCiqu0+xzl
-         yS4bCm+fQClVVelO+FtuxWyAb9/NOMf3rJzJ/9VhZEW72zCIOyka7LCKKeFg95HmMaOo
-         LyjqSlurgShPx4UpuIsoWuflvAN13w6F0PlhkVoKrd8Tu89H3/RXhqqzFZtlCJHWlBGJ
-         yhLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I1X3WOpXG5XCDr09buC6cHm1zmHyPqzvS2NgnTCXAzY=;
-        b=t7jVy95Un7FMqvQq/beMC2km8PLAz5s9tkECcrHa4fl0/2Gkasb9gVPluMoTQy0LDy
-         3itFgxpHba1dnH28dKHkhQcHKWM8AmgmhNtAN6zRStMMt6qOk8++tQ8JeoX7Se5TteVW
-         GlevYhfyuMVYL+aE5WhVWphiyEBfYpohynX1QJ3rV/ch0AyMrrLY5XxtTto4UImyuDrE
-         cyU1/VX45BaaPuxkc1kSIXZOck7uS4NxSmqD5gGWUaQ7dgQBQNUCSqOTEIU0htfUqnSj
-         UTprPyPdPtah8NQqFaCN1O4pwcC2dPSIbcyQ32OI/V93KRAfj/yATji2G4/UlolWhYH3
-         8K0Q==
-X-Gm-Message-State: APjAAAUjd4l7CWq4qmtqbR5Z5Qcy2iqcymlLARyHVQyLzUvdAHduldij
-        kIrsDjYAQ9asNBN/lBfLDgnpzg==
-X-Google-Smtp-Source: APXvYqwDsITf3mbd65loamqP7b0Ty+DNRnFPz243wljEeyIXMr7T5Da9pRhckNq3wv/+LrtBaJb1oQ==
-X-Received: by 2002:a5d:500c:: with SMTP id e12mr18225920wrt.213.1566794908961;
-        Sun, 25 Aug 2019 21:48:28 -0700 (PDT)
-Received: from localhost.localdomain (ip-89-102-174-174.net.upcbroadband.cz. [89.102.174.174])
-        by smtp.googlemail.com with ESMTPSA id n9sm11799010wrp.54.2019.08.25.21.48.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2019 21:48:28 -0700 (PDT)
-From:   Tom Murphy <murphyt7@tcd.ie>
-To:     iommu@lists.linux-foundation.org
-Cc:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Remove wrong default domain comments
-Date:   Mon, 26 Aug 2019 05:48:21 +0100
-Message-Id: <20190826044821.27017-1-murphyt7@tcd.ie>
-X-Mailer: git-send-email 2.20.1
+        Mon, 26 Aug 2019 00:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726606AbfHZExT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 00:53:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4C92070B;
+        Mon, 26 Aug 2019 04:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566795198;
+        bh=Y3mEduzKt2IMLRPCc/9d2tQAduv/qs1pdxGcl2GFft0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cyAooLrKGZoXcgtWaM75AD61npujRwChi/03co9+kSqt1+0c8py9dZJehKnajJKkx
+         rJaHOMobdxkVin8ch8Uy+uOInt7rqFwiFEve5XVFLuxtEmqsNewr12DiBcQSUKwfY3
+         znLCKoyLVivek0GCr1uDhRSvtPLzE9b30oxff7QU=
+Date:   Mon, 26 Aug 2019 06:53:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] USB: storage: ums-realtek: Rename module parameter
+ auto_delink_en to auto_delink_mode
+Message-ID: <20190826045315.GC1678@kroah.com>
+References: <20190826044630.21949-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826044630.21949-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These comments are wrong. request_default_domain_for_dev doesn't just
-handle direct mapped domains.
+On Mon, Aug 26, 2019 at 12:46:29PM +0800, Kai-Heng Feng wrote:
+> The option named "auto_delink_en" is a bit misleading, as setting it to
+> false doesn't really disable auto-delink but let auto-delink be firmware
+> controlled.
+> 
+> Rename it to reflect the real usage of this parameter.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/usb/storage/realtek_cr.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/usb/storage/realtek_cr.c b/drivers/usb/storage/realtek_cr.c
+> index cc794e25a0b6..4d86cfcc0b40 100644
+> --- a/drivers/usb/storage/realtek_cr.c
+> +++ b/drivers/usb/storage/realtek_cr.c
+> @@ -36,9 +36,9 @@ MODULE_DESCRIPTION("Driver for Realtek USB Card Reader");
+>  MODULE_AUTHOR("wwang <wei_wang@realsil.com.cn>");
+>  MODULE_LICENSE("GPL");
+>  
+> -static int auto_delink_en = 1;
+> -module_param(auto_delink_en, int, S_IRUGO | S_IWUSR);
+> -MODULE_PARM_DESC(auto_delink_en, "enable auto delink");
+> +static int auto_delink_mode = 1;
+> +module_param(auto_delink_mode, int, S_IRUGO | S_IWUSR);
+> +MODULE_PARM_DESC(auto_delink_mode, "auto delink mode (0=firmware, 1=software [default])");
 
-Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
----
- drivers/iommu/iommu.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+We can not just rename module parameters, as that will break working
+systems that have their startup scripts using those names :(
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index ea95080372e7..3b6807e7a2d8 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2179,7 +2179,6 @@ request_default_domain_for_dev(struct device *dev, unsigned long type)
- 
- 	mutex_lock(&group->mutex);
- 
--	/* Check if the default domain is already direct mapped */
- 	ret = 0;
- 	if (group->default_domain && group->default_domain->type == type)
- 		goto out;
-@@ -2189,7 +2188,6 @@ request_default_domain_for_dev(struct device *dev, unsigned long type)
- 	if (iommu_group_device_count(group) != 1)
- 		goto out;
- 
--	/* Allocate a direct mapped domain */
- 	ret = -ENOMEM;
- 	domain = __iommu_domain_alloc(dev->bus, type);
- 	if (!domain)
-@@ -2204,7 +2202,7 @@ request_default_domain_for_dev(struct device *dev, unsigned long type)
- 
- 	iommu_group_create_direct_mappings(group, dev);
- 
--	/* Make the direct mapped domain the default for this group */
-+	/* Make the domain the default for this group */
- 	if (group->default_domain)
- 		iommu_domain_free(group->default_domain);
- 	group->default_domain = domain;
--- 
-2.20.1
+sorry,
 
+greg k-h
