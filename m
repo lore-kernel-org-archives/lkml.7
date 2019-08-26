@@ -2,93 +2,146 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723CDC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FF8C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C90D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566826166;
-	bh=B8w4oTKAlSq8ZbOEvl/7t4CbtbVqse0prFdJzNbdtPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=04MZy/pehBozjAZpO3cljB3DV0/OoPpyks87KLw+g5gV2Zfva8c3ZDYg5C4S8SxDA
-	 3x827RqotUbNiDxdMEBUIYjFZh5XKD87f9avoi9pYAUXJuM4654xC7sylSZE8osjDw
-	 aP6ZLzk77RjeCnz6d1nevh4smi4wbkXra8zxCbBA=
+	by mail.kernel.org (Postfix) with ESMTP id 43EC22053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfHZN3Z (ORCPT
+        id S1731290AbfHZN3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfHZN3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:29:24 -0400
-Received: from localhost (unknown [89.205.128.246])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E6752053B;
-        Mon, 26 Aug 2019 13:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566826163;
-        bh=B8w4oTKAlSq8ZbOEvl/7t4CbtbVqse0prFdJzNbdtPo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LaaTm62jYNx2f2wor1dbjtx3gGJgN01k6hNOvw5pBnU2nkirrp7fK+Xvi4BGeIFur
-         UOv5YPD0CsjgPZiQe4UBTcrPZLALyMeDCxvLe1Z2BWhPJteMiXrKTnGL+jGrUivXkf
-         861K/LXfpYAEvubpifQa+r8rai0lUTXgkVzBuLtk=
-Date:   Mon, 26 Aug 2019 15:29:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Subject: Re: [PATCH v3] /dev/mem: Bail out upon SIGKILL.
-Message-ID: <20190826132916.GB12281@kroah.com>
-References: <1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+        Mon, 26 Aug 2019 09:29:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38488 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727095AbfHZN32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:29:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3A5C2AD31;
+        Mon, 26 Aug 2019 13:29:26 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 15:29:20 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 03/11] KVM: SVM: Add KVM_SEV_SEND_FINISH command
+Message-ID: <20190826132920.GD28610@zn.tnic>
+References: <20190710201244.25195-1-brijesh.singh@amd.com>
+ <20190710201244.25195-4-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190710201244.25195-4-brijesh.singh@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:13:25PM +0900, Tetsuo Handa wrote:
-> syzbot found that a thread can stall for minutes inside read_mem() or
-> write_mem() after that thread was killed by SIGKILL [1]. Reading from
-> iomem areas of /dev/mem can be slow, depending on the hardware.
-> While reading 2GB at one read() is legal, delaying termination of killed
-> thread for minutes is bad. Thus, allow reading/writing /dev/mem and
-> /dev/kmem to be preemptible and killable.
+On Wed, Jul 10, 2019 at 08:13:03PM +0000, Singh, Brijesh wrote:
+> The command is used to finailize the encryption context created with
+> KVM_SEV_SEND_START command.
 > 
->   [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
->   [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
->   [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
->   [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
->   [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
-> 
-> Theoretically, reading/writing /dev/mem and /dev/kmem can become
-> "interruptible". But this patch chose "killable". Future patch will make
-> them "interruptible" so that we can revert to "killable" if some program
-> regressed.
-> 
-> [1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
-> 
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 > ---
->  drivers/char/mem.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  .../virtual/kvm/amd-memory-encryption.rst     |  8 +++++++
+>  arch/x86/kvm/svm.c                            | 23 +++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
+> index 060ac2316d69..9864f9215c43 100644
+> --- a/Documentation/virtual/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
+> @@ -289,6 +289,14 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
+>          };
+>  
+> +12. KVM_SEV_SEND_FINISH
+> +------------------------
+> +
+> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
+> +issued by the hypervisor to delete the encryption context.
+> +
+> +Returns: 0 on success, -negative on error
+> +
+>  References
+>  ==========
+>  
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 8e815a53c420..be73a87a8c4f 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7168,6 +7168,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  	return ret;
+>  }
+>  
+> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_send_finish *data;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
 
-What changed from previous versions?
+Almost all sev_ command functions do that check, except
+sev_guest_init(). You could pull up that check, into svm_mem_enc_op()
+and save yourself the repeated pattern:
 
-That goes below the --- line at the very least.
+---
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 273ad624b23d..950282c8c4f7 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7225,6 +7225,11 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ 	if (copy_from_user(&sev_cmd, argp, sizeof(struct kvm_sev_cmd)))
+ 		return -EFAULT;
+ 
++	if (sev_cmd.id != KVM_SEV_INIT) {
++		if (!sev_guest(kvm))
++			return -ENOTTY;
++	}
++
+ 	mutex_lock(&kvm->lock);
+ 
+ 	switch (sev_cmd.id) {
+---
 
-thanks,
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
 
-greg k-h
+Btw, since
+
+  1ec696470c86 ("kvm: svm: Add memcg accounting to KVM allocations")
+
+gfp flags should be GFP_KERNEL_ACCOUNT now.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
