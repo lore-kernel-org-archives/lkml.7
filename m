@@ -2,130 +2,101 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C9CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7974C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0894F2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE77E2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QbqX3+W5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fbroD+uL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ko288Hno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfHZGa3 (ORCPT
+        id S1729771AbfHZGgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:30:29 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34133 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727650AbfHZGa2 (ORCPT
+        Mon, 26 Aug 2019 02:36:23 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:34826 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729244AbfHZGgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:30:28 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 35EC9321;
-        Mon, 26 Aug 2019 02:30:27 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 26 Aug 2019 02:30:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=vVTMyUMt6Pj6Ue/YwOdzlubQ7qZ
-        c/n/fXB43Fd8eoqQ=; b=QbqX3+W5w8vIpNDhKYNQpd1JoAxo2tFZAWGcVBBXPS0
-        KEfnh5MVFSh3Nn863+kXnsJjNth/V9jb2+RlYEvTVJu11KRflBTbdhaC7GwZLmaX
-        lNdv66O7P244+ctG7iuwby2QjDTOGeqi92P/mIyHVLgjjOVozS/Kpc4ze9rw55zX
-        AHqAobFwBBvcpBKvULxpqbyOg1wQcNxJFFkl1ulb2cJx8kAXYkqWIWwEUoa7tpaV
-        E+k9TY9ia5RY4CnVpjaBUtMAMFz7aVxfMBopdcd4bQEwoPIvllgd6fQAMqkKtWHS
-        8/0NWuAojWz+ww4H1YR3ia2MX+CxXAgzgkVOP7wYRpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vVTMyU
-        Mt6Pj6Ue/YwOdzlubQ7qZc/n/fXB43Fd8eoqQ=; b=fbroD+uLiAb2674oGIhao/
-        V6yom8Pr0g7I8F2dhx1XVMeJzWznRi/qC1G1y7d7Xi9CTxB3PEll8HPda7tJoXED
-        NiuMO+L/a4we6CNiyx9vp3eytcLMF2uFAJeKQgkXqUyeUG+Rhu0zBmH9zUAF84Lr
-        9Fes00qtFd7bHLqNPve/Mh7cErrUn+l9HfMNM55pCodbYiruulwZCum8BWlw3MQD
-        WfPQtyTsEf6pmP3P0Bw1pNtZ+wWw81k/VYaSBRPcD2+g1nRL/oAdxA3ko+3f0zNP
-        3Grfp3TK+2dEexLV683m/fCtvnYj0McqBbTueB7IgNjz12ZXjYufmBquyOHmL+Ag
-        ==
-X-ME-Sender: <xms:gnxjXYauSuR5J8x3ytpwcQQEe4mc0MWWxrlzLbOC60Qnl6P1XDFIAA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehfedguddtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:gnxjXQwztb7sGQ9zoP-1uu2V4Nke3x32lnp1yWQ4PxUY15nkM8B4aQ>
-    <xmx:gnxjXYI-EYIIeG0bnnMzzIY1G_hAaYFlx2nl_AUVkPWHGHwDZ38nYw>
-    <xmx:gnxjXQCELY6SIbmceBLL7JA7z2KBteQx6nzd-0AC3Qez3xynPxFQtw>
-    <xmx:gnxjXa816b8ixi7E5wBJu9Bj1ORTsPN_3NBvewLSrpKHw8L0PuRK1A>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 16303D60066;
-        Mon, 26 Aug 2019 02:30:25 -0400 (EDT)
-Date:   Mon, 26 Aug 2019 08:30:24 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gao Xiang <hsiangkao@aol.com>
-Subject: Re: linux-next: build warning after merge of the staging tree
-Message-ID: <20190826063024.GA1217@kroah.com>
-References: <20190826162432.11100665@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826162432.11100665@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 26 Aug 2019 02:36:23 -0400
+Received: by mail-wm1-f41.google.com with SMTP id l2so14654525wmg.0
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 23:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=iVlNOvcGkxOW82lX/stt8mZNXgPWFfdeCPzC+y26i1w=;
+        b=Ko288HnotBth8jQ1QLLaxPiIBMWT0CGuHCphEGfWiVxL3InXCHOVU/SvqRYl+8Uk7I
+         maRDjlOXSxFfzYnf7uhq9Zva9futXeSmVAMYxChtvlzzMGTZEPl2c++crWSqiz+vYzQW
+         /Cp3r2Uzy2vuRJ/YpuiMHfXMNBcmbxXQqfN6vuE7WQjy7ZLKu6bWXHe1bW5va0Zpsb3+
+         24VCf/amP3DuZFxAtkt45Q2mSJSfihWLPi301wjgoam+Op4sqi1ZCxEN0VxTPwmi4xhQ
+         AOGPUweB+T7vdpITeG+1HnPM4JAZH4qdY5b2eJyXWsk7G5mO6LrO3oWxUD+ZKN3G51bo
+         EcYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=iVlNOvcGkxOW82lX/stt8mZNXgPWFfdeCPzC+y26i1w=;
+        b=qS2iV2CcUup6hPJoJWE6OCw0SaIWgcVZOG3Wez3qIb2y3CnSvpxT60nTDx8tF6Btmx
+         4/4OmZWaHRjjxti9PxFnRrTuFC+63WghkZn53HDA+L6jYkQieqbHEcD3L0bYdnWehxc7
+         vMzkDtYO3soDRrmhO7+vdk9YXIIyCvt4HTUaEQqYAOyb+nwTDb3Dw3uGPHEaprO2pI9i
+         KsUbOS5R2xDGH8PafHxI52nlNhtWc0tvZxVRScpGNaSJ6htqwTbI3OeJuV9M8uGuiMEG
+         W0gyM6a/chMwOW/n2YoDSQTnFYoOR1DILRcK18VsmElSSfpedoLqXPco3uEmH1Yw07Pt
+         56ZQ==
+X-Gm-Message-State: APjAAAXl7mVNb1LiadD03Tw17lVE4c77llROKaONYPTqHk8stIdpysGp
+        lkj69Gznc1g+3BFKrY/Wosw9gA==
+X-Google-Smtp-Source: APXvYqxeDKmCc4R7qDu9NLMZxvNDLyI1C0C8kWTJH/SP6ir/91jdtAoyr5HCDj0WTBHBHifnG3U8zQ==
+X-Received: by 2002:a1c:c1c1:: with SMTP id r184mr19660385wmf.9.1566801381131;
+        Sun, 25 Aug 2019 23:36:21 -0700 (PDT)
+Received: from [192.168.0.100] (84-33-66-180.dyn.eolo.it. [84.33.66.180])
+        by smtp.gmail.com with ESMTPSA id x26sm8363112wmj.42.2019.08.25.23.36.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Aug 2019 23:36:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH v2 3/3] bfq: Add per-device weight
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
+Date:   Mon, 26 Aug 2019 08:36:17 +0200
+Cc:     Fam Zheng <zhengfeiran@bytedance.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Fam Zheng <fam@euphon.net>,
+        duanxiongchun@bytedance.com, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, zhangjiachen.jc@bytedance.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C2F0BE1E-9CAA-4FBD-80D8-C18ECCE3FD4B@linaro.org>
+References: <20190805063807.9494-1-zhengfeiran@bytedance.com>
+ <20190805063807.9494-4-zhengfeiran@bytedance.com>
+ <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:24:32PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the staging tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
-> 
-> In file included from include/trace/events/erofs.h:8,
->                  from <command-line>:
-> include/trace/events/erofs.h:28:37: warning: 'struct dentry' declared inside parameter list will not be visible outside of this definition or declaration
->   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
->                                      ^~~~~~
-> include/linux/tracepoint.h:233:34: note: in definition of macro '__DECLARE_TRACE'
->   static inline void trace_##name(proto)    \
->                                   ^~~~~
-> include/linux/tracepoint.h:396:24: note: in expansion of macro 'PARAMS'
->   __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),  \
->                         ^~~~~~
-> include/linux/tracepoint.h:532:2: note: in expansion of macro 'DECLARE_TRACE'
->   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
->   ^~~~~~~~~~~~~
-> include/linux/tracepoint.h:532:22: note: in expansion of macro 'PARAMS'
->   DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
->                       ^~~~~~
-> include/trace/events/erofs.h:26:1: note: in expansion of macro 'TRACE_EVENT'
->  TRACE_EVENT(erofs_lookup,
->  ^~~~~~~~~~~
-> include/trace/events/erofs.h:28:2: note: in expansion of macro 'TP_PROTO'
->   TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
->   ^~~~~~~~
-> 
-> and moany more like this ...
-> 
-> Introduced by commit
-> 
->   47e4937a4a7c ("erofs: move erofs out of staging")
-> 
-> (or, at least, exposed by it).  It needs, at least, a "struct dentry;"
-> added to the file.
+Hi Jens,
+do you think this series could now be queued for 5.4?
 
-Odd, why has this never been seen before when the same files were in
-drivers/staging/ and why 0-day isn't reporting this?
+Thanks,
+Paolo
 
-Gao, can you send me a patch for this?
+> Il giorno 21 ago 2019, alle ore 17:44, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>=20
+> On Mon, Aug 05, 2019 at 02:38:07PM +0800, Fam Zheng wrote:
+>> Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
+>=20
+> Looks good to me.
+>=20
+> Acked-by: Tejun Heo <tj@kernel.org>
+>=20
+> Thanks.
+>=20
+> --=20
+> tejun
 
-thanks,
-
-greg k-h
