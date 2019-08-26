@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8924DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAEBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6686721881
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72FF21883
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfHZWxW (ORCPT
+        id S1728556AbfHZWxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:53:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41469 "EHLO
+        Mon, 26 Aug 2019 18:53:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41473 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfHZWwY (ORCPT
+        with ESMTP id S1726820AbfHZWwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 26 Aug 2019 18:52:24 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2NqN-0006ln-5R; Tue, 27 Aug 2019 00:52:11 +0200
+        id 1i2NqT-0006o0-Be; Tue, 27 Aug 2019 00:52:17 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE5631C0DD7;
-        Tue, 27 Aug 2019 00:52:10 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 22:52:10 -0000
-From:   tip-bot2 for Maxime Ripard <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D80BA1C0DDE;
+        Tue, 27 Aug 2019 00:52:15 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 22:52:15 -0000
+From:   tip-bot2 for Jon Hunter <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] dt-bindings: timer: Convert Allwinner A10 Timer to
- a schema
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
+Subject: [tip: timers/core] clocksource/drivers/timer-of: Do not warn on
+ deferred probe
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156685993061.1282.7365267831454567798.tip-bot2@tip-bot2>
+Message-ID: <156685993577.1318.6823470223569390044.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,138 +56,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     a08bda2d27f271aacc92b75f4f260d3136cf6f58
-Gitweb:        https://git.kernel.org/tip/a08bda2d27f271aacc92b75f4f260d3136cf6f58
-Author:        Maxime Ripard <maxime.ripard@bootlin.com>
-AuthorDate:    Mon, 22 Jul 2019 10:12:19 +02:00
+Commit-ID:     763719771e84b8c8c2f53af668cdc905faa608de
+Gitweb:        https://git.kernel.org/tip/763719771e84b8c8c2f53af668cdc905faa608de
+Author:        Jon Hunter <jonathanh@nvidia.com>
+AuthorDate:    Wed, 21 Aug 2019 16:02:40 +01:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Tue, 27 Aug 2019 00:31:39 +02:00
 
-dt-bindings: timer: Convert Allwinner A10 Timer to a schema
+clocksource/drivers/timer-of: Do not warn on deferred probe
 
-The older Allwinner SoCs have a Timer supported in Linux, with a matching
-Device Tree binding.
+Deferred probe is an expected return value for clk_get() on many
+platforms. The driver deals with it properly, so there's no need
+to output a warning that may potentially confuse users.
 
-While the original binding only mentions one interrupt, the timer actually
-has 6 of them.
-
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt      | 19 +------------------
- 2 files changed, 76 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
- delete mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+ drivers/clocksource/timer-of.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-new file mode 100644
-index 0000000..7292a42
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/allwinner,sun4i-a10-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Timer Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-timer
-+      - allwinner,suniv-f1c100s-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      List of timers interrupts
-+
-+  clocks:
-+    maxItems: 1
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          items:
-+            const: allwinner,sun4i-a10-timer
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 6
-+          maxItems: 6
-+
-+  - if:
-+      properties:
-+        compatible:
-+          items:
-+            const: allwinner,suniv-f1c100s-timer
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 3
-+          maxItems: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer {
-+        compatible = "allwinner,sun4i-a10-timer";
-+        reg = <0x01c20c00 0x400>;
-+        interrupts = <22>,
-+                     <23>,
-+                     <24>,
-+                     <25>,
-+                     <67>,
-+                     <68>;
-+        clocks = <&osc>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt b/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
-deleted file mode 100644
-index 3da9d51..0000000
---- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--Allwinner A1X SoCs Timer Controller
--
--Required properties:
--
--- compatible : should be one of the following:
--              "allwinner,sun4i-a10-timer"
--              "allwinner,suniv-f1c100s-timer"
--- reg : Specifies base physical address and size of the registers.
--- interrupts : The interrupt of the first timer
--- clocks: phandle to the source clock (usually a 24 MHz fixed clock)
--
--Example:
--
--timer {
--	compatible = "allwinner,sun4i-a10-timer";
--	reg = <0x01c20c00 0x400>;
--	interrupts = <22>;
--	clocks = <&osc>;
--};
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index 8054228..d8c2bd4 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -113,8 +113,10 @@ static __init int timer_of_clk_init(struct device_node *np,
+ 	of_clk->clk = of_clk->name ? of_clk_get_by_name(np, of_clk->name) :
+ 		of_clk_get(np, of_clk->index);
+ 	if (IS_ERR(of_clk->clk)) {
+-		pr_err("Failed to get clock for %pOF\n", np);
+-		return PTR_ERR(of_clk->clk);
++		ret = PTR_ERR(of_clk->clk);
++		if (ret != -EPROBE_DEFER)
++			pr_err("Failed to get clock for %pOF\n", np);
++		goto out;
+ 	}
+ 
+ 	ret = clk_prepare_enable(of_clk->clk);
