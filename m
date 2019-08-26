@@ -2,75 +2,105 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF25C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA55C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF4E2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DAA2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:27:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y3lG0eRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfHZC0L convert rfc822-to-8bit (ORCPT
+        id S1729152AbfHZC1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 22:26:11 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:38114 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfHZC0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 22:26:10 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7Q2Q1oP024266, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7Q2Q1oP024266
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 26 Aug 2019 10:26:02 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Mon, 26 Aug
- 2019 10:26:00 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next v4 0/2] r8152: save EEE
-Thread-Topic: [PATCH net-next v4 0/2] r8152: save EEE
-Thread-Index: AQHVWYUmd+TOgW58J0ylwUoBXEMP3KcIR2UAgARshVA=
-Date:   Mon, 26 Aug 2019 02:25:59 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18D631F@RTITMBSVM03.realtek.com.tw>
-References: <1394712342-15778-304-Taiwan-albertk@realtek.com>
- <1394712342-15778-311-Taiwan-albertk@realtek.com>
- <20190823143722.GE21295@lunn.ch>
-In-Reply-To: <20190823143722.GE21295@lunn.ch>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sun, 25 Aug 2019 22:27:31 -0400
+Received: from ozlabs.org ([203.11.71.1]:50045 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfHZC1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 22:27:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Gwrc1BGSz9s7T;
+        Mon, 26 Aug 2019 12:27:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566786448;
+        bh=SkcK4GaxXaBhZShtVlHm+JpP+EHocs5ZVQOQqSb5eOo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y3lG0eRUwbu/PKZwFHp1QKR2L/U1g+DBRaS4NnWpCGUgE2aDKJ8FXzy/DvHuoNU78
+         w1gdwqzp8NRH2j4py30OCc6oKld08v9YchbxEl5iyiyO2jfv60TV77jhb00sDgSToD
+         rTBC7yR6/asE36SHFDCYrpRsPsstzuCO/XQsA3FJGtOulr7+5phSK8EHL7Ic4wFhNd
+         qlxDUOhWW38NGnMy+5dJfJBQq8ejkEg8rCPMIJHZl+lHECwK6YgC4jUA7MQz0t5kWE
+         feYROcmF0VCcfNM4kGncMZ4apAE7wsFllFsfLGIrwvTnK85dPCUHTWosMjU6PutkPI
+         0wX6qd7WOq2eg==
+Date:   Mon, 26 Aug 2019 12:27:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20190826122726.145f538d@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/KMHEud9KGq+l6RTA0YD1dE0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Lunn [mailto:andrew@lunn.ch]
-> Sent: Friday, August 23, 2019 10:37 PM
-[...]
-> Hi Hayes
-> 
-> That was 3 revisions of the patches in less than 30 minutes. Slow
-> down, take your time, review your work yourself before posting it,
-> etc.
-> 
-> Aim for no more than one revision, posted to the list, per day.
+--Sig_/KMHEud9KGq+l6RTA0YD1dE0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sorry. I would note that.
+Hi all,
 
+Today's linux-next merge of the net-next tree got a conflict in:
 
-Best Regards,
-Hayes
+  drivers/net/ethernet/realtek/r8169_main.c
 
+between commit:
 
+  345b93265b3a ("Revert "r8169: remove not needed call to dma_sync_single_f=
+or_device"")
+
+from the net tree and commit:
+
+  fcd4e60885af ("r8169: improve rtl_rx")
+  d4ed7463d02a ("r8169: fix DMA issue on MIPS platform")
+
+from the net-next tree.
+
+I fixed it up (the latter seems to do the same as the net tree patch) and
+can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/KMHEud9KGq+l6RTA0YD1dE0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1jQ44ACgkQAVBC80lX
+0Gy4QggAouAksoVmIVQKwYaVlaR1tpnVdLzoTIDHtr81rrgP7FsdFUnz4BB2g8Sa
+50Wkp92CN8CGbg5pRb4d6eFN9DTQ3dEi13pQXDYIyWAZVUM2ibiGmDmqggcVhQ1G
+l+Q1Z39U/GNTF/spuuquCx/y3k5G7CsnYr8YbRt00Flzus9QaNj4f2p1eFfd0wkd
+miqpPih6QUIprrW0+xXR/UhVUPZ78a01BfVk3PVwDLhlI/utdTZv9vYSw4TD065u
+YonV9nxKQQi5lvuqVoNyioRdLuL3BohqwfFxaXZZ16Gmuh4xlAZQGB21oSJPFMrL
+sZjJbQWcyfbdSMCs04mhtIo0PAafeg==
+=MxTe
+-----END PGP SIGNATURE-----
+
+--Sig_/KMHEud9KGq+l6RTA0YD1dE0--
