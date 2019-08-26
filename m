@@ -2,78 +2,99 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4D6C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AE0C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1036A20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 17:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AC320850
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d2fknKfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbfHZR6A (ORCPT
+        id S2387584AbfHZSCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 13:58:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30504 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728280AbfHZR57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 13:57:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 10:57:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="209451886"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Aug 2019 10:57:58 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id AA33A301A7E; Mon, 26 Aug 2019 10:57:58 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 10:57:58 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        "Jin, Yao" <yao.jin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jonatan Corbet <corbet@lwn.net>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: BoF on LPC 2019 : Linux Perf advancements for compute intensive
- and server systems
-Message-ID: <20190826175758.GH5447@tassilo.jf.intel.com>
-References: <43216530-4410-6cc4-aa4a-51fa7e7c1b0c@linux.intel.com>
- <20190826135536.GA24801@kernel.org>
- <da687997-6280-2613-a389-f7b94c600c2b@linux.intel.com>
+        Mon, 26 Aug 2019 14:02:14 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4846 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729144AbfHZSCN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 14:02:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d641ea70000>; Mon, 26 Aug 2019 11:02:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 26 Aug 2019 11:02:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 26 Aug 2019 11:02:13 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 26 Aug
+ 2019 18:02:12 +0000
+Subject: Re: [PATCH 1/2] mm/hmm: hmm_range_fault() NULL pointer bug
+To:     Christoph Hellwig <hch@lst.de>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <nouveau@lists.freedesktop.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190823221753.2514-1-rcampbell@nvidia.com>
+ <20190823221753.2514-2-rcampbell@nvidia.com> <20190824223754.GA21891@lst.de>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <e2ecc1a7-0d2f-5957-e6cb-b3c86c085d80@nvidia.com>
+Date:   Mon, 26 Aug 2019 11:02:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da687997-6280-2613-a389-f7b94c600c2b@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190824223754.GA21891@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566842535; bh=q0XlO0WIP1WKl6O/MutlXE9k/HAHL1+wksVgPZA90XQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=d2fknKfO2/+Zv6spaSSH3ujdgxCAZH3q2pr6c/Siwshb41aUxlG/I+6Tyj3fXyYY5
+         r1ZUUnxreiuxEswRCYLLZsMIXjsrYEZ2qKObAcIzx4lFW+80OBz929fmspCEwePFSM
+         Weh8IBdvRGmAYugnTXZh+qH1U82UBGS1UKNXbJ6ZBS+xJMiQMjfCYuJvF6l51O9pkO
+         O0oy/5uowbDESOjWEqnQfr3ZNPKFAUyr/vq/8JL6L4ZXdjyHlF2eCpi6YaUIhZ26eX
+         tDQ19l3lAZnppu1N//ySuXInwpJ3YqMTeBXQVmBM1ehXjdv0DZYHvm24rrRDsWS3r/
+         wDuGvR7pgamGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> > 
-> > All those are already merged, after long reviewing phases and lots of
-> > testing, right?
-> 
-> Right. These changes now constitute parts of the Linux kernel source tree.
 
-Might be better to focus on future areas that haven't been merged yet.
+On 8/24/19 3:37 PM, Christoph Hellwig wrote:
+> On Fri, Aug 23, 2019 at 03:17:52PM -0700, Ralph Campbell wrote:
+>> Although hmm_range_fault() calls find_vma() to make sure that a vma exists
+>> before calling walk_page_range(), hmm_vma_walk_hole() can still be called
+>> with walk->vma == NULL if the start and end address are not contained
+>> within the vma range.
+> 
+> Should we convert to walk_vma_range instead?  Or keep walk_page_range
+> but drop searching the vma ourselves?
+> 
+> Except for that the patch looks good to me:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
 
--Andi
+I think keeping the call to walk_page_range() makes sense.
+Jason is hoping to be able to snapshot a range with & without vmas
+and have the pfns[] filled with empty/valid entries as appropriate.
+
+I plan to repost my patch changing hmm_range_fault() to use
+walk.test_walk which will remove the call to find_vma().
+Jason had some concerns about testing it so that's why I have
+been working on some HMM self tests before resending it.
