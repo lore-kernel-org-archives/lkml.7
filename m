@@ -2,197 +2,143 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7132BC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C364C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429EF217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afRo5XfL"
+	by mail.kernel.org (Postfix) with ESMTP id 33A4C206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbfHZNk7 (ORCPT
+        id S1731334AbfHZNn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:40:59 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44439 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbfHZNk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:40:59 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so10044530plr.11;
-        Mon, 26 Aug 2019 06:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rBGgnC50tEqUQpJ+f65Q91HGdjIjtC+5DlqiDSMP1/Q=;
-        b=afRo5XfL1dnaButfIoJqTh3HWsWdfH0C/Pa8CA105hesfqqeFTx293NH2E4Cz/6fM7
-         TNs8KLbLJ8TuBk6JUzLt22sAoN0iEg65D/pjLsW7lC2HLvTFaNZD9WE/deeC2oXMFnd9
-         SS+xPJB1Q4cX2atWlPzTYPWdz478+1oaXD//7C57jtEPABMbU/XcR1iZr2iWD6HcOdEH
-         KK6i/QHOcBuR2/bFt+v9+WcqZYbttAaoTy3hA0NV/J9Di4IjKIxGiVJkQ2UsMdh1y5Ch
-         gTCxuVWYECdBGgmp7O5++TYOVTjO+dge+5Afttr5iBBpIlcNN04QKMRJztev0B8rIOzY
-         PBpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rBGgnC50tEqUQpJ+f65Q91HGdjIjtC+5DlqiDSMP1/Q=;
-        b=SzuZjg0Yqqilj0UKaeWh/bDMX61qCXZNZTXb8aO7muzAptmG8wEjaEMc7MDj/pvyF8
-         OvUvfC1pOwkI2YHVDzakGpoZwaBBud8/bMS2EDUfgFLNhCy2SSEeDnz/ZiAod2jf/T0v
-         g8gSgc5AzzrH4zTllkJFczvHEQ3VwcgHq2dVo/lEcVm/LYP1eRFPxN6cLfQpr2r7WUtL
-         CiRa+5OXc4b0OXeqrmqpe6baO4YC6lfcqSgz4M2cDr623g/8dnePh9Qc0ExNamLX7XDY
-         pihmeJSI8TjiXHp4lDjvSmW2h+9mYIwOjePKsyKCmYEBoQE6ALi4YF+0M7CzQJWuiMZd
-         oMxQ==
-X-Gm-Message-State: APjAAAWUm7JmxIy1n4kAz9kyIUiiHUOq1lGJg1Go61DRrrD9We44K9R9
-        iKlL76o0hLouFu7Ift+ZL0c=
-X-Google-Smtp-Source: APXvYqzJkaXOd2S9tFS1YwsrbYf6LHJptNMJvnaCguAQYF+y8g+Yksu0dps9YX4mGiDyLjM3HCApKA==
-X-Received: by 2002:a17:902:43:: with SMTP id 61mr19425725pla.145.1566826857867;
-        Mon, 26 Aug 2019 06:40:57 -0700 (PDT)
-Received: from localhost ([192.55.54.44])
-        by smtp.gmail.com with ESMTPSA id p5sm13565558pfg.184.2019.08.26.06.40.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 26 Aug 2019 06:40:57 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 15:40:42 +0200
-From:   Maciej Fijalkowski <maciejromanfijalkowski@gmail.com>
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan@lists.osuosl.org,
-        Eelco Chaudron <echaudro@redhat.com>,
-        William Tu <u9012063@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [PATCH net v3] ixgbe: fix double clean of tx descriptors with
- xdp
-Message-ID: <20190826154042.00004bfc@gmail.com>
-In-Reply-To: <20190822171237.20798-1-i.maximets@samsung.com>
-References: <CGME20190822171243eucas1p12213f2239d6c36be515dade41ed7470b@eucas1p1.samsung.com>
-        <20190822171237.20798-1-i.maximets@samsung.com>
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-w64-mingw32)
+        Mon, 26 Aug 2019 09:43:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38382 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728663AbfHZNn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:43:29 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 24EF210F23E6;
+        Mon, 26 Aug 2019 13:43:28 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F33E5D9CD;
+        Mon, 26 Aug 2019 13:43:24 +0000 (UTC)
+Subject: Re: [PATCH v2] fs/proc/page: Skip uninitialized page when iterating
+ page structures
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20190826124336.8742-1-longman@redhat.com>
+ <20190826132529.GC15933@bombadil.infradead.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <60464cac-6319-c3c1-47b8-d9b5cf586754@redhat.com>
+Date:   Mon, 26 Aug 2019 09:43:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190826132529.GC15933@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Mon, 26 Aug 2019 13:43:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 20:12:37 +0300
-Ilya Maximets <i.maximets@samsung.com> wrote:
+On 8/26/19 9:25 AM, Matthew Wilcox wrote:
+> On Mon, Aug 26, 2019 at 08:43:36AM -0400, Waiman Long wrote:
+>> It was found that on a dual-socket x86-64 system with nvdimm, reading
+>> /proc/kpagecount may cause the system to panic:
+>>
+>> ===================
+>> [   79.917682] BUG: unable to handle page fault for address: fffffffffffffffe
+>> [   79.924558] #PF: supervisor read access in kernel mode
+>> [   79.929696] #PF: error_code(0x0000) - not-present page
+>> [   79.934834] PGD 87b60d067 P4D 87b60d067 PUD 87b60f067 PMD 0
+>> [   79.940494] Oops: 0000 [#1] SMP NOPTI
+>> [   79.944157] CPU: 89 PID: 3455 Comm: cp Not tainted 5.3.0-rc5-test+ #14
+>> [   79.950682] Hardware name: Dell Inc. PowerEdge R740/07X9K0, BIOS 2.2.11 06/13/2019
+>> [   79.958246] RIP: 0010:kpagecount_read+0xdb/0x1a0
+>> [   79.962859] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 f7 48 c1 e7 06 48 03 3d fe da de 00 74 1d 48 8b 57 08 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 75 06 83 7f 30 80 7d 62 31 c0 4c 89 f9 e8 5d c9
+>> [   79.981603] RSP: 0018:ffffb0d9c950fe70 EFLAGS: 00010202
+>> [   79.986830] RAX: fffffffffffffffe RBX: ffff8beebe5383c0 RCX: ffffb0d9c950ff00
+>> [   79.993963] RDX: 0000000000000001 RSI: 00007fd85b29e000 RDI: ffffe77a22000000
+>> [   80.001095] RBP: 0000000000020000 R08: 0000000000000001 R09: 0000000000000000
+>> [   80.008226] R10: 0000000000000000 R11: 0000000000000001 R12: 00007fd85b29e000
+>> [   80.015358] R13: ffffffff893f0480 R14: 0000000000880000 R15: 00007fd85b29e000
+>> [   80.022491] FS:  00007fd85b312800(0000) GS:ffff8c359fb00000(0000) knlGS:0000000000000000
+>> [   80.030576] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   80.036321] CR2: fffffffffffffffe CR3: 0000004f54a38001 CR4: 00000000007606e0
+>> [   80.043455] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [   80.050586] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> [   80.057718] PKRU: 55555554
+>> [   80.060428] Call Trace:
+>> [   80.062877]  proc_reg_read+0x39/0x60
+>> [   80.066459]  vfs_read+0x91/0x140
+>> [   80.069686]  ksys_read+0x59/0xd0
+>> [   80.072922]  do_syscall_64+0x59/0x1e0
+>> [   80.076588]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> [   80.081637] RIP: 0033:0x7fd85a7f5d75
+>> ===================
+>>
+>> It turns out the panic was caused by the kpagecount_read() function
+>> hitting an uninitialized page structure at PFN 0x880000 where all its
+>> fields were set to -1. The compound_head value of -1 will mislead the
+>> kernel to treat -2 as a pointer to the head page of the compound page
+>> leading to the crash.
+>>
+>> The system have 12 GB of nvdimm ranging from PFN 0x880000-0xb7ffff.
+>> However, only PFN 0x88c200-0xb7ffff are released by the nvdimm
+>> driver to the kernel and initialized. IOW, PFN 0x880000-0x88c1ff
+>> remain uninitialized. Perhaps these 196 MB of nvdimm are reserved for
+>> internal use.
+>>
+>> To fix the panic, we need to find out if a page structure has been
+>> initialized. This is done now by checking if the PFN is in the range
+>> of a memory zone assuming that pages in a zone is either correctly
+>> marked as not present in the mem_section structure or have their page
+>> structures initialized.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  fs/proc/page.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++---
+>>  1 file changed, 65 insertions(+), 3 deletions(-)
+> Would this not work equally well?
+>
+> +++ b/fs/proc/page.c
+> @@ -46,7 +46,8 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
+>                         ppage = pfn_to_page(pfn);
+>                 else
+>                         ppage = NULL;
+> -               if (!ppage || PageSlab(ppage) || page_has_type(ppage))
+> +               if (!ppage || PageSlab(ppage) || page_has_type(ppage) ||
+> +                               PagePoisoned(ppage))
+>                         pcount = 0;
+>                 else
+>                         pcount = page_mapcount(ppage);
+>
+That is my initial thought too. However, I couldn't find out where the
+memory of the uninitialized page structures may have been initialized
+somehow. The only thing I found is when vm_debug is on that the page
+structures are indeed poisoned. Without that it is probably just
+whatever the content that the memory have when booting up the kernel.
 
-> Tx code doesn't clear the descriptors' status after cleaning.
-> So, if the budget is larger than number of used elems in a ring, some
-> descriptors will be accounted twice and xsk_umem_complete_tx will move
-> prod_tail far beyond the prod_head breaking the completion queue ring.
-> 
-> Fix that by limiting the number of descriptors to clean by the number
-> of used descriptors in the tx ring.
-> 
-> 'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
-> 'ixgbe_xsk_clean_tx_ring()' since we're allowed to directly use
-> 'next_to_clean' and 'next_to_use' indexes.
-> 
-> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> ---
-> 
-> Version 3:
->   * Reverted some refactoring made for v2.
->   * Eliminated 'budget' for tx clean.
->   * prefetch returned.
-> 
-> Version 2:
->   * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
->     'ixgbe_xsk_clean_tx_ring()'.
-> 
->  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 29 ++++++++------------
->  1 file changed, 11 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-> index 6b609553329f..a3b6d8c89127 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-> @@ -633,19 +633,17 @@ static void ixgbe_clean_xdp_tx_buffer(struct ixgbe_ring *tx_ring,
->  bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
->  			    struct ixgbe_ring *tx_ring, int napi_budget)
+It just happens on the test system that I used the memory of those page
+structures turned out to be -1. It may be different in other systems
+that can still crash the kernel, but not detected by the PagePoisoned()
+check. That is why I settle on the current scheme which is more general
+and don't rely on the memory get initialized in a certain way.
 
-While you're at it, can you please as well remove the 'napi_budget' argument?
-It wasn't used at all even before your patch.
-
-I'm jumping late in, but I was really wondering and hesitated with taking
-part in discussion since the v1 of this patch - can you elaborate why simply
-clearing the DD bit wasn't sufficient?
-
-Maciej
-
->  {
-> +	u16 ntc = tx_ring->next_to_clean, ntu = tx_ring->next_to_use;
->  	unsigned int total_packets = 0, total_bytes = 0;
-> -	u32 i = tx_ring->next_to_clean, xsk_frames = 0;
-> -	unsigned int budget = q_vector->tx.work_limit;
->  	struct xdp_umem *umem = tx_ring->xsk_umem;
->  	union ixgbe_adv_tx_desc *tx_desc;
->  	struct ixgbe_tx_buffer *tx_bi;
-> -	bool xmit_done;
-> +	u32 xsk_frames = 0;
->  
-> -	tx_bi = &tx_ring->tx_buffer_info[i];
-> -	tx_desc = IXGBE_TX_DESC(tx_ring, i);
-> -	i -= tx_ring->count;
-> +	tx_bi = &tx_ring->tx_buffer_info[ntc];
-> +	tx_desc = IXGBE_TX_DESC(tx_ring, ntc);
->  
-> -	do {
-> +	while (ntc != ntu) {
->  		if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
->  			break;
->  
-> @@ -661,22 +659,18 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
->  
->  		tx_bi++;
->  		tx_desc++;
-> -		i++;
-> -		if (unlikely(!i)) {
-> -			i -= tx_ring->count;
-> +		ntc++;
-> +		if (unlikely(ntc == tx_ring->count)) {
-> +			ntc = 0;
->  			tx_bi = tx_ring->tx_buffer_info;
->  			tx_desc = IXGBE_TX_DESC(tx_ring, 0);
->  		}
->  
->  		/* issue prefetch for next Tx descriptor */
->  		prefetch(tx_desc);
-> +	}
->  
-> -		/* update budget accounting */
-> -		budget--;
-> -	} while (likely(budget));
-> -
-> -	i += tx_ring->count;
-> -	tx_ring->next_to_clean = i;
-> +	tx_ring->next_to_clean = ntc;
->  
->  	u64_stats_update_begin(&tx_ring->syncp);
->  	tx_ring->stats.bytes += total_bytes;
-> @@ -688,8 +682,7 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
->  	if (xsk_frames)
->  		xsk_umem_complete_tx(umem, xsk_frames);
->  
-> -	xmit_done = ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
-> -	return budget > 0 && xmit_done;
-> +	return ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
->  }
->  
->  int ixgbe_xsk_async_xmit(struct net_device *dev, u32 qid)
+Cheers,
+Longman
 
