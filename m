@@ -2,138 +2,90 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A234C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6733AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67ABB2186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566826083;
-	bh=VjxUxDnVuRk1DSTLUCljhelqYMjetMiX0Jgtit+/pPg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pamU/2RS3dFDIn6oqVMkyRaRtm6QcXy6nCcG25fZSb1/EJFlz0EEXtgsLlZ/H6ywE
-	 uTnBn3IHDsdbIwEG6Z0NNN6LoK+8MrxYtRccPMoktIiQV9mbjOUaDjYB4hnW5jhFAG
-	 pate/AJfKQ5RrAZWiNqAiRkK1hG7wUMVLzIxwUts=
+	by mail.kernel.org (Postfix) with ESMTP id 275022053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 13:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbfHZN2C (ORCPT
+        id S1729937AbfHZN3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 09:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729937AbfHZN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 09:28:02 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F203121872;
-        Mon, 26 Aug 2019 13:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566826081;
-        bh=VjxUxDnVuRk1DSTLUCljhelqYMjetMiX0Jgtit+/pPg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eAitVO3YoyuYVrg7Km4FZM80GaTZmMfF8XtM3rxdRoM6HhgSMSp2F9PG0ox13+4Cy
-         3fjRHYFpb+2S9sIgjempVLcUAjTm/MvWf1sYpH72WDCqbDiRgxekXMPhys7WQGW4Ln
-         XZUZxUL3UphvQDnUcW5hAb9oFOzsOY2T2DRowQ2Q=
-Received: by mail-qt1-f171.google.com with SMTP id y26so17842245qto.4;
-        Mon, 26 Aug 2019 06:28:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAUrgrlGqxFau6Fykf+oqttbW9HsDb+GPMxsLjdi9MP4BrloV/Wg
-        gi2+fB35edzSPmXhNP0pyLW23d+8QuGaLN1yUw==
-X-Google-Smtp-Source: APXvYqyW4dx7oo0NyfH+v5v1S1mxW/IB4r3yTuAklXjRgYFmYC3NHSt4KOPNnz1iCNqEuKQUONG7lWxDvV5wx6aOu1E=
-X-Received: by 2002:aed:24f4:: with SMTP id u49mr17690228qtc.110.1566826080079;
- Mon, 26 Aug 2019 06:28:00 -0700 (PDT)
+        Mon, 26 Aug 2019 09:29:20 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:43823 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfHZN3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 09:29:20 -0400
+Received: from [192.168.1.110] ([95.118.26.153]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MUXh8-1hboEp2oAy-00QVfP; Mon, 26 Aug 2019 15:29:11 +0200
+Subject: Re: [PATCH v1 1/2] vsprintf: introduce %dE for error constants
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190824233724.1775-1-uwe@kleine-koenig.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <a5f535af-09f7-e65b-1527-7d6dd8553c1d@metux.net>
+Date:   Mon, 26 Aug 2019 15:29:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <156678933823.21459.4100380582025186209.stgit@devnote2> <156678934990.21459.10847677747264952252.stgit@devnote2>
-In-Reply-To: <156678934990.21459.10847677747264952252.stgit@devnote2>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 26 Aug 2019 08:27:48 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Pm4D_fm+iG9UfGSObx2fSXshZuMW4QKwGePbg4RUEjA@mail.gmail.com>
-Message-ID: <CAL_Jsq+Pm4D_fm+iG9UfGSObx2fSXshZuMW4QKwGePbg4RUEjA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 01/19] skc: Add supplemental kernel cmdline support
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190824233724.1775-1-uwe@kleine-koenig.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:G5RzoUT+mkDb1PhnP98I+bnT7IxJGLBn4rohV3XwBzi53At0zak
+ XcOTukvSzyaBBwsZ1w2ZujXAufGApITFPz0S4cWo7R3lqmCNqIFDeGRZD9DmC6cGsCR2tPt
+ d+nI6a8iLItPYFPvYiZV+K8AfGjXbPSof67D3AC5yr97eGz2Bph6IsZepjClB8ur4BEGWv7
+ xFIVgT5A686Qcno5zVZDw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8GFIGhsgunc=:7a0+kvbhjTR0SzPdhb2FBq
+ 0aZGTQ/xMkx/2CVPktdHSCy/5yrVc3+CxhPal/o5HYKD1TV7a+E0ySQCVpJxQ2VBCJ0LoKc2h
+ 3u5nnRRVkx1xGrBPj9bmLuqTXS/V59vCh/Q8vnZlb0wqnsb/bgssMUt9SPWkqGxf4BIN/s6+p
+ x5nvkg4Ko7aTLhKxglGWh/3oIMXrwHFaRoI4K8LF3B8R51G8y+q22S+qIJslbPXyu18RbtUB7
+ dT8JEMx9zAr+BbtQgQz2/I6TakCS5Ew+hUxMEuWFIrGFTI+BaBW8xmI2GOMrjBZMY5WceIgYW
+ Gr62SvMxSpIlyc6WA7hmCFg1lO9HzTGtjs/QpNwpVyR3iUYiFkpYhs7/ezUKDSydWL6lLqMSw
+ JWe38ZzeDEbUQsW2gnyhuhx4bfgBP3+X3HoBNMQOBMupTRCxLxhOzc+CmiqTbQzr3ajoRcvsG
+ aXRl51ojDQxFeZFl/zWTgNK0odlc1MgUqt+CytK/Qh04DZ5g4Fm4cXFzx5/Oatpbseb1qET1l
+ +fNL8dvP7xaoh0OkueaEtIQy80/eYhLiC076SQgUr6UgBUb6UkEdFDoyjy2MOlP62hc4wvSb9
+ GDMb4At24eLTqYwu5FVHwuJY+wiVyAvcxlHJkAGI5MAxHKWzG0Pg2y0T4ytrf/ddn53b5t5Ad
+ p0ciMlEiNq0icMcWHhUkwO7RZtKFLo3hEM/BALrY1yyo/6SeRJ6lvQAj3h/dnT4aUvMChX9/D
+ jknX7Or4qQsP4N6b9amBPa8UhHLjDjic5HR20K6wrG4lJnSUmWVAgCdD+y4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 10:15 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Supplemental kernel command line (SKC) allows admin to pass a
-> tree-structured supplemental kernel commandline file (SKC file)
-> when boot up kernel. This expands the kernel command line in
-> efficient way.
->
-> SKC file will contain some key-value commands, e.g.
->
-> key.word = value1;
-> another.key.word = value2;
->
-> It can fold same keys with braces, also you can write array
-> data. For example,
->
-> key {
->    word1 {
->       setting1 = data;
->       setting2;
->    }
->    word2.array = "val1", "val2";
-> }
+On 25.08.19 01:37, Uwe Kleine-König wrote:
 
-Why invent a custom file format? You could use YAML (or JSON):
+Hi,
 
-key:
- word1:
-  setting1: data
-  setting2: true
- word2:
-  - val1
-  - val2
+> +static noinline_for_stack > +char *errstr(char *buf, char *end, unsigned long long num,> +	 
+struct printf_spec spec)> +{
+#1: why not putting that into some separate strerror() lib function ?
+     This is something I've been looking for quite some time (actually
+     already hacked it up somewhere, sometime, but forgotten ...)
+
+#2: why not just having a big case statement and leave the actual lookup
+     logic to the compiler ? IMHO, could be written in a very compact way
+     by some macro magic
+
+> +	for (i = 0; i < ARRAY_SIZE(errorcodes); ++i) { > +		if (num == errorcodes[i].err || num == -errorcodes[i].err) {
+
+why not taking the abs value only once, instead of duplicate comp on
+each iteration ?
 
 
-That would allow you to define a schema for defined options and can
-easily be manipulated with python (or any language with dictionaries
-and lists). That does imply adding a YAML parser to the kernel which
-I'm not sure is a great idea. There is a C parser lib, but working
-with YAML in C is not that great compared to python.
+--mtx
 
-Another option would be using the DTS format, but as a separate file.
-That's not unprecedented as u-boot FIT image is a DTB. Then the kernel
-already has the parser. And you could still have schema now.
-
-A new interface will take a lot of bootloader work to make it easy to
-use given the user has to manually load some file in the bootloader
-and know a good address to load it to. Between that and rebuilding the
-kernel with the configuration, I'd pick rebuilding the kernel. Perhaps
-this version will highlight that the original proposal was not so bad.
-
-
-Another thought, maybe you could process the configuration file that's
-in a readable/editable format into a flat representation that could
-simply be added to the kernel command line:
-
-key.word1.setting1=data key.word1.setting2 key.word2=val1,val2
-
-That would then use an existing interface and probably simplify the
-kernel parsing.
-
-Rob
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
