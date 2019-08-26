@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32700C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF48C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21AA2186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D362F21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 19:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q+kCsyIh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vy0jQd6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbfHZTqM (ORCPT
+        id S1732865AbfHZTqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 15:46:12 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39270 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbfHZTqI (ORCPT
+        Mon, 26 Aug 2019 15:46:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44324 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732484AbfHZTqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 15:46:08 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y200so4774424pfb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 12:46:08 -0700 (PDT)
+        Mon, 26 Aug 2019 15:46:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so11201066pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 12:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+5gWSemuxt3HHekdvm6tHeI05f3zrGiyld+SNG7Me4c=;
-        b=q+kCsyIhcHwX5PX5Heefbpn6+r19P5CgbzOJ0ob5RuW98znrXBiS792y4boZ+rVNaJ
-         M+ihgxSmoDQMJ+8XpYQdD+q5pt3pp7I+nn6ZxT9eKedY5mLdtrImcmHsMwIEHvhVtROe
-         iZoKeSnbFOFecoRcOXPPLqnXdSS7UoKQ9i9PeHoNmDMNngrCcJE+7b5LXMB0hJkwayxz
-         v9s95u8L49mXYMwLsI0dHCPJzp0cdmBXdq0JJSegSUSRKG5MvCr4ymz1OJtiLrcrykgP
-         d0kCYhrhh2J3k1tV08sTrAKXExvQU1jAyYSAcMoF6J1GACPiO7ClpggY8Vvb9VM7/Jzp
-         vZXA==
+        bh=to1oeNA++JDNSoQZ9+DGa/c6NmOGbTyxF1scobzI6zQ=;
+        b=vy0jQd6ibfmNAqxqvIGEsgIqX8AWCCtFxStWZJcseWo1cqp/4a7MfZnKyIqzuaGZ1k
+         ayaqhNJzN7fzAy0ym5mFYWWNIyM8oDwrzZ0BXGss/dz37lVhtL5VPjKvRu2HBP4IUDkr
+         kHzxYmU1B62NgZI6Kd5eSZk5ipg1afqrdau02VSA+EwC5U+Uw1YhGBN46qWgUGLc1mO0
+         6pgYzCjRkSOjtrhWe8Nfl99nWhtllWgG5VKo2yXy0YO5/nrwIM1sVdX8hpSJX/oE65ax
+         UFWurs+ypKJnLH/rb5nuVWTAaSR6LjdvPshy0uBw/2rNsvpgIYffvI/nMKgVO+ZQFXzH
+         6CQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+5gWSemuxt3HHekdvm6tHeI05f3zrGiyld+SNG7Me4c=;
-        b=pxqgjjQjOpZa1TblI+8gzUezY/9vH1qYuKJWz3dr79R1UBF6637iSLTNzf43CaspTs
-         3isXkh/iYEIy0hoIU6Gb/ZY4dUj7mqJrJl/2QMMg05N/TKMwlIns2nw5gStnpACEwHCf
-         T/ZKv/DmlpczPTEe4SyJzdmjOU4jmzhb7xVlcXebw7SDh851iMcgBNzoaUXZ2+JJBpT1
-         7VXtvoH8M34S8WW5iYo0JY1ncRKurkn8OVhlGiPXIsoJ+SCnlgAGGCyao6e6hXtMgqdz
-         roiDPOWbfT+gJYaAV9hN1zZEsLyWIUsEV94SPTgV8BvTbcqAzdmdlDVynZDGab4eEyxK
-         hDOg==
-X-Gm-Message-State: APjAAAX5qyCXxSIx2JfVL5xUhlfX4ajnLLwo/3CeDMfUUPQJn6ubbvD7
-        VeRT4VdzfBcqQFRrbaYNsDaqWA==
-X-Google-Smtp-Source: APXvYqxQJvl5Xv1RjaA+GrKsEkiQ+ZZVKrENE/rXFhJs+p7tMSQsIT7tcUQnhRDrQlO3L6w7a1sZPw==
-X-Received: by 2002:a63:9245:: with SMTP id s5mr18318356pgn.123.1566848767985;
-        Mon, 26 Aug 2019 12:46:07 -0700 (PDT)
+        bh=to1oeNA++JDNSoQZ9+DGa/c6NmOGbTyxF1scobzI6zQ=;
+        b=Jl46iAip9pevW7Sb6z5+j9VDU7HFm7F4i/Khvflm48MqAGEREbdPNq7ES19npOp0xF
+         t03KnEtldf319SkQbwjjYjswTYf4DgiA6+gygvlqEUmpsxq7dWpS8kYPkhPxH37eQu+T
+         UoOM88N5O8wDFUAyWOmO0wFETMB5nlgUc8qsBo/SEHOJEpwQEVIZ2LWxFWpw74LeTEfa
+         /jvmPfJVCr3iN4Q/uiWRmHRj/Y51e26SDGKSyNdlh4g7z/IuPAV/2tHrgO3cU4RY9YUF
+         xPFkFojDJ2RuAA0aZnYP8RInx44SvxAMwHVyp8yXT+tw/VQaRCBJuwg2FQ3ySP7ZKr73
+         5OvA==
+X-Gm-Message-State: APjAAAWwh39eEpDhLgaC9SIkir2GlCUCLKbLn9o0n9OdxRDEVCnXWIw1
+        5PEMawIyw/CjtKbyJGA++x3wFw==
+X-Google-Smtp-Source: APXvYqyWitdKUoiHYjEAp6ufI6puptwr+/IHwRzNNQMvnMMuB9gnLsh5IW5tBtZxfpFaaNbaEC8eoQ==
+X-Received: by 2002:a65:4507:: with SMTP id n7mr17258859pgq.86.1566848769060;
+        Mon, 26 Aug 2019 12:46:09 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id c35sm13214789pgl.72.2019.08.26.12.46.07
+        by smtp.gmail.com with ESMTPSA id c35sm13214789pgl.72.2019.08.26.12.46.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 12:46:07 -0700 (PDT)
+        Mon, 26 Aug 2019 12:46:08 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     suzuki.poulose@arm.com, leo.yan@linaro.org, mike.leach@arm.com
 Cc:     yabinc@google.com, alexander.shishkin@linux.intel.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] coresight: tmc: Make memory width mask computation into a function
-Date:   Mon, 26 Aug 2019 13:46:03 -0600
-Message-Id: <20190826194605.3791-2-mathieu.poirier@linaro.org>
+Subject: [PATCH v2 2/3] coresight: tmc-etr: Decouple buffer sync and barrier packet insertion
+Date:   Mon, 26 Aug 2019 13:46:04 -0600
+Message-Id: <20190826194605.3791-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190826194605.3791-1-mathieu.poirier@linaro.org>
 References: <20190826194605.3791-1-mathieu.poirier@linaro.org>
@@ -70,104 +70,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the computation of a memory mask representing the width of the memory
-bus into a function so that it can be re-used by the ETR driver.
+If less space is available in the perf ring buffer than the ETR buffer,
+barrier packets inserted in the trace stream by tmc_sync_etr_buf() are
+skipped over when the head of the buffer is moved forward, resulting in
+traces that can't be decoded.
+
+This patch decouples the process of syncing ETR buffers and the addition
+of barrier packets in order to perform the latter once the offset in the
+trace buffer has been properly computed.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- .../hwtracing/coresight/coresight-tmc-etf.c   | 23 ++-------------
- drivers/hwtracing/coresight/coresight-tmc.c   | 28 +++++++++++++++++++
- drivers/hwtracing/coresight/coresight-tmc.h   |  1 +
- 3 files changed, 31 insertions(+), 21 deletions(-)
+ .../hwtracing/coresight/coresight-tmc-etr.c    | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index 23b7ff00af5c..807416b75ecc 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -479,30 +479,11 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
- 	 * traces.
- 	 */
- 	if (!buf->snapshot && to_read > handle->size) {
--		u32 mask = 0;
--
--		/*
--		 * The value written to RRP must be byte-address aligned to
--		 * the width of the trace memory databus _and_ to a frame
--		 * boundary (16 byte), whichever is the biggest. For example,
--		 * for 32-bit, 64-bit and 128-bit wide trace memory, the four
--		 * LSBs must be 0s. For 256-bit wide trace memory, the five
--		 * LSBs must be 0s.
--		 */
--		switch (drvdata->memwidth) {
--		case TMC_MEM_INTF_WIDTH_32BITS:
--		case TMC_MEM_INTF_WIDTH_64BITS:
--		case TMC_MEM_INTF_WIDTH_128BITS:
--			mask = GENMASK(31, 4);
--			break;
--		case TMC_MEM_INTF_WIDTH_256BITS:
--			mask = GENMASK(31, 5);
--			break;
--		}
-+		u32 mask = tmc_get_memwidth_mask(drvdata);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 4f000a03152e..bae47272de98 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -946,10 +946,6 @@ static void tmc_sync_etr_buf(struct tmc_drvdata *drvdata)
+ 	WARN_ON(!etr_buf->ops || !etr_buf->ops->sync);
  
- 		/*
- 		 * Make sure the new size is aligned in accordance with the
--		 * requirement explained above.
-+		 * requirement explained in function tmc_get_memwidth_mask().
- 		 */
- 		to_read = handle->size & mask;
- 		/* Move the RAM read pointer up */
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-index 3055bf8e2236..1cf82fa58289 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc.c
-@@ -70,6 +70,34 @@ void tmc_disable_hw(struct tmc_drvdata *drvdata)
- 	writel_relaxed(0x0, drvdata->base + TMC_CTL);
+ 	etr_buf->ops->sync(etr_buf, rrp, rwp);
+-
+-	/* Insert barrier packets at the beginning, if there was an overflow */
+-	if (etr_buf->full)
+-		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
  }
  
-+u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata)
-+{
-+	u32 mask = 0;
-+
-+	/*
-+	 * When moving RRP or an offset address forward, the new values must
-+	 * be byte-address aligned to the width of the trace memory databus
-+	 * _and_ to a frame boundary (16 byte), whichever is the biggest. For
-+	 * example, for 32-bit, 64-bit and 128-bit wide trace memory, the four
-+	 * LSBs must be 0s. For 256-bit wide trace memory, the five LSBs must
-+	 * be 0s.
-+	 */
-+	switch (drvdata->memwidth) {
-+	case TMC_MEM_INTF_WIDTH_32BITS:
-+	/* fallthrough */
-+	case TMC_MEM_INTF_WIDTH_64BITS:
-+	/* fallthrough */
-+	case TMC_MEM_INTF_WIDTH_128BITS:
-+		mask = GENMASK(31, 4);
-+		break;
-+	case TMC_MEM_INTF_WIDTH_256BITS:
-+		mask = GENMASK(31, 5);
-+		break;
-+	}
-+
-+	return mask;
-+}
-+
- static int tmc_read_prepare(struct tmc_drvdata *drvdata)
- {
- 	int ret = 0;
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index 9dbcdf453e22..71de978575f3 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -255,6 +255,7 @@ void tmc_wait_for_tmcready(struct tmc_drvdata *drvdata);
- void tmc_flush_and_stop(struct tmc_drvdata *drvdata);
- void tmc_enable_hw(struct tmc_drvdata *drvdata);
- void tmc_disable_hw(struct tmc_drvdata *drvdata);
-+u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata);
+ static void __tmc_etr_enable_hw(struct tmc_drvdata *drvdata)
+@@ -1086,6 +1082,13 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
+ 		drvdata->sysfs_buf = NULL;
+ 	} else {
+ 		tmc_sync_etr_buf(drvdata);
++		/*
++		 * Insert barrier packets at the beginning, if there was
++		 * an overflow.
++		 */
++		if (etr_buf->full)
++			tmc_etr_buf_insert_barrier_packet(etr_buf,
++							  etr_buf->offset);
+ 	}
+ }
  
- /* ETB/ETF functions */
- int tmc_read_prepare_etb(struct tmc_drvdata *drvdata);
+@@ -1502,11 +1505,16 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	CS_LOCK(drvdata->base);
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
++	lost = etr_buf->full;
+ 	size = etr_buf->len;
+ 	if (!etr_perf->snapshot && size > handle->size) {
+ 		size = handle->size;
+ 		lost = true;
+ 	}
++
++	/* Insert barrier packets at the beginning, if there was an overflow */
++	if (lost)
++		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
+ 	tmc_etr_sync_perf_buffer(etr_perf, size);
+ 
+ 	/*
+@@ -1517,8 +1525,6 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	 */
+ 	if (etr_perf->snapshot)
+ 		handle->head += size;
+-
+-	lost |= etr_buf->full;
+ out:
+ 	/*
+ 	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
 -- 
 2.17.1
 
