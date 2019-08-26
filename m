@@ -2,202 +2,127 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4264C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AA5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780972080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBFD2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:29:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O46FQAxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfHZIZ5 (ORCPT
+        id S1730563AbfHZI3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:25:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfHZIZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:25:56 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0310FC057E9A
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:25:56 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id c14so6340348wml.5
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 01:25:55 -0700 (PDT)
+        Mon, 26 Aug 2019 04:29:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38956 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729523AbfHZI3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:29:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so10147306pgi.6;
+        Mon, 26 Aug 2019 01:29:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7nQNofdNPA0V1tQFGi6EuiXnb+AcRnunYAP+c0aUwnQ=;
+        b=O46FQAxCgM01hf0RK+D1QTP9Z4bpcm6iSXU1AsuYjaI/HhYvWQRyFUg346Jtdm9P5k
+         W5PhHPKdBWom2AvvVFmtv0bwhhL89KazYQZNGmiKHuulCoiyy7MFvDxrgkST2167y61B
+         oZm9xvGGiBDSIKgXktfgB/4kkfgBhezmIC7U9Jb9dOKqo3tnU4IHOzW71zG2OoVjFTt3
+         IOTXDjyArz+FItOU9xNGbKQmK4qdbhs9d0cGoDhzJ/hX4RthM0Zp3gyoC6gB0672oaa/
+         /iiGXlb6ylbcn1+RRt3q3GW/xdTWhKTlD/Iu4SoYQsrZVexId487SHY9VPrNB7347aOy
+         rRog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=DJP3ebkF5F91gjKUBTSHw4NqzrDzdKKWY5xs8eEW2AU=;
-        b=jewADKiv2ohWgxlebUAiJ9fzwz9OQ8TWgoqo6sdhNtuIPIjPo9GzBXwr+DiZAIuPRe
-         i0NFSw/flyFiAcRFyPUZNEaeTGPtzhPoEGaPcpl/l2du64v0MtJgLvnxhuVqMctoVUlZ
-         R/Jc2UqYvPNCv1H7qQT0gK3X4qplh+Fe7hHp2VAGztgonKF4kGRjZV+3bK329ZzFmU8Z
-         1kPg+e91bZ731+3Ilhe68GhePmdlsdG9oVmJrNHsfBwhq1fvQmevQhrt3EQAcQQ92cNe
-         CzXwnsn7H8RNvww9WBkl/TtAC7AREadk7p+YoOMtgNe9neVTcMFRXQ+OARRq8+8PvlNn
-         FjEQ==
-X-Gm-Message-State: APjAAAXBHH6ybYXmdbcgD5/F4yahKSqUaf2nEb0lOhm29SZsKLbfrecY
-        oveVpMfkgmIuJoCzh/a9BH2HgH09htY9smLN1LEqZTxSvyJdL+Q1psA4C3cA4OGPeCe6kepk2/V
-        crkrNiwqzekkhDJ4lLjAVz07H
-X-Received: by 2002:adf:e708:: with SMTP id c8mr21073714wrm.25.1566807954316;
-        Mon, 26 Aug 2019 01:25:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxVzeHIBdq7rrUDST30gRSNyAKlXw/4uAgCuewaUWQEqmzf4E2R3ytaM88091c6yWUnj1A2aw==
-X-Received: by 2002:adf:e708:: with SMTP id c8mr21073693wrm.25.1566807954071;
-        Mon, 26 Aug 2019 01:25:54 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-89-176-161-20.net.upcbroadband.cz. [89.176.161.20])
-        by smtp.gmail.com with ESMTPSA id o5sm10227823wrv.20.2019.08.26.01.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 01:25:53 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: selftests: Detect max PA width from cpuid
-In-Reply-To: <20190826075728.21646-1-peterx@redhat.com>
-References: <20190826075728.21646-1-peterx@redhat.com>
-Date:   Mon, 26 Aug 2019 10:25:55 +0200
-Message-ID: <874l24nxik.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7nQNofdNPA0V1tQFGi6EuiXnb+AcRnunYAP+c0aUwnQ=;
+        b=AoRrDtRlqZJPrWoibkjU5o0+1g9SVNKNTEgjER/n4avEvCozmtjNp9lR3JoVT68+s7
+         ZJQygLrrnlT7QVQ0N95Rebzktu78asJeM78RBnfvypqeE6tqJJNBP5ql0Z+Kzu9rch1J
+         sMBSOeB9BQYvdpvF446uCcrcdOQVN1onCbtlPlWBjtvbXe/ZwjTE4vp/fz3Rfw4K0PnU
+         d3NtGUEGunP64SoBl1Y9OnZ6AeVT7Hf+00Cq3e42h8Au1fHG3WR9dm/JQTLVw4PbAH7J
+         YPHWZIWLDghIJf8843EWKzGQTXpsUicKdn2HU3iPQbzt3TneFVLwdsHaUk3ivXvJoNQk
+         BC8w==
+X-Gm-Message-State: APjAAAVOwJXBnbzRniKyb0ImkC8Ji3L1LISTa7rUgwvEyeM0Xmp2MyM8
+        t/CiMIkzwLBS/pbk4F9gkRs=
+X-Google-Smtp-Source: APXvYqzEFo/9132jFUKd5RLlKtIRUdOHvpdHS4+SIU3SVhuKafxKsOPWgnDw/5AcMmq/nHXsoUe8Cw==
+X-Received: by 2002:a65:500a:: with SMTP id f10mr15350698pgo.105.1566808153696;
+        Mon, 26 Aug 2019 01:29:13 -0700 (PDT)
+Received: from Gentoo ([103.231.91.35])
+        by smtp.gmail.com with ESMTPSA id ce20sm14409379pjb.16.2019.08.26.01.29.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 01:29:12 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 13:58:59 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, akpm@linux-foundation.org, jslaby@suse.cz,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Subject: Re: Linux 5.2.10
+Message-ID: <20190826082857.GE31983@Gentoo>
+References: <20190825144703.6518-1-sashal@kernel.org>
+ <20190826063834.GD31983@Gentoo>
+ <20190826080107.GB30396@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190826080107.GB30396@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Xu <peterx@redhat.com> writes:
+On 10:01 Mon 26 Aug 2019, Greg KH wrote:
+>On Mon, Aug 26, 2019 at 12:08:38PM +0530, Bhaskar Chowdhury wrote:
+>
+><snip>
+>
+>Due, learn to properly trim emails...
+>
+>> For some unknown reason kernel.org still showing me 5.2.9 ..Please refer
+>> to the attached screenshot.
+>
+>What mirror are you hitting here?  There is a way somehow to see that on
+>your end, I thought it was at the bottom of the page.
+>
+>You are not seeing any of the releases that happened yesterday, which is
+>really odd, it's not just a 5.2.10 issue.
+>
+>thanks,
+>
+>greg k-h
 
-> The dirty_log_test is failing on some old machines like Xeon E3-1220
-> with tripple faults when writting to the tracked memory region:
 
-s,writting,writing,
+>Due, learn to properly trim emails...
+ 
+ Agreed.
 
 >
->   Test iterations: 32, interval: 10 (ms)
->   Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
->   guest physical test memory offset: 0x7fbffef000
->   ==== Test Assertion Failure ====
->   dirty_log_test.c:138: false
->   pid=6137 tid=6139 - Success
->      1  0x0000000000401ca1: vcpu_worker at dirty_log_test.c:138
->      2  0x00007f3dd9e392dd: ?? ??:0
->      3  0x00007f3dd9b6a132: ?? ??:0
->   Invalid guest sync status: exit_reason=SHUTDOWN
->
+>What mirror are you hitting here?  There is a way somehow to see that
+>on
+>your end,
 
-This patch breaks on my AMD machine with
+I can see it very well at lkml.org  web page ..top right corner box ...all
+the release happen yesterday.
 
-# cpuid -1 -l 0x80000008
-CPU:
-   Physical Address and Linear Address Size (0x80000008/eax):
-      maximum physical address bits         = 0x30 (48)
-      maximum linear (virtual) address bits = 0x30 (48)
-      maximum guest physical address bits   = 0x0 (0)
+>You are not seeing any of the releases that happened yesterday, which
+>is
+>really odd, it's not just a 5.2.10 issue.
 
+Hmmm ...that indeed odd. I have tried that in "private browser
+window,firefox) and in cosole mode with w3m ...same result..
 
-Pre-patch:
+I can see that straight right here :
 
-# ./dirty_log_test 
-Test iterations: 32, interval: 10 (ms)
-Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
-guest physical test memory offset: 0x7fbffef000
-Dirtied 139264 pages
-Total bits checked: dirty (135251), clear (7991709), track_next (29789)
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.2.y
 
-Post-patch:
+..wondering!
 
-# ./dirty_log_test 
-Test iterations: 32, interval: 10 (ms)
-Testing guest mode: PA-bits:52, VA-bits:48, 4K pages
-Supported guest physical address width: 48
-guest physical test memory offset: 0xffffbffef000
-==== Test Assertion Failure ====
-  dirty_log_test.c:141: false
-  pid=77983 tid=77985 - Success
-     1	0x0000000000401d12: vcpu_worker at dirty_log_test.c:138
-     2	0x00007f636374358d: ?? ??:0
-     3	0x00007f63636726a2: ?? ??:0
-  Invalid guest sync status: exit_reason=SHUTDOWN
-
-
-
-> It's because previously we moved the testing memory region from a
-> static place (1G) to the top of the system's physical address space,
-> meanwhile we stick to 39 bits PA for all the x86_64 machines.  That's
-> not true for machines like Xeon E3-1220 where it only supports 36.
->
-> Let's unbreak this test by dynamically detect PA width from CPUID
-> 0x80000008.  Meanwhile, even allow kvm_get_supported_cpuid_index() to
-> fail.  I don't know whether that could be useful because I think
-> 0x80000008 should be there for all x86_64 hosts, but I also think it's
-> not really helpful to assert in the kvm_get_supported_cpuid_index().
->
-> Fixes: b442324b581556e
-> CC: Paolo Bonzini <pbonzini@redhat.com>
-> CC: Andrew Jones <drjones@redhat.com>
-> CC: Radim Krčmář <rkrcmar@redhat.com>
-> CC: Thomas Huth <thuth@redhat.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  tools/testing/selftests/kvm/dirty_log_test.c  | 22 +++++++++++++------
->  .../selftests/kvm/lib/x86_64/processor.c      |  3 ---
->  2 files changed, 15 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> index ceb52b952637..111592f3a1d7 100644
-> --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> @@ -274,18 +274,26 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
->  	DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
->  
->  #ifdef __x86_64__
-> -	/*
-> -	 * FIXME
-> -	 * The x86_64 kvm selftests framework currently only supports a
-> -	 * single PML4 which restricts the number of physical address
-> -	 * bits we can change to 39.
-> -	 */
-> -	guest_pa_bits = 39;
-> +	{
-> +		struct kvm_cpuid_entry2 *entry;
-> +
-> +		entry = kvm_get_supported_cpuid_entry(0x80000008);
-> +		/*
-> +		 * Supported PA width can be smaller than 52 even if
-> +		 * we're with VM_MODE_P52V48_4K mode.  Fetch it from
-> +		 * the host to update the default value (SDM 4.1.4).
-> +		 */
-> +		if (entry)
-> +			guest_pa_bits = entry->eax & 0xff;
-> +		else
-> +			guest_pa_bits = 32;
-> +	}
->  #endif
->  #ifdef __aarch64__
->  	if (guest_pa_bits != 40)
->  		type = KVM_VM_TYPE_ARM_IPA_SIZE(guest_pa_bits);
->  #endif
-> +	printf("Supported guest physical address width: %d\n", guest_pa_bits);
->  	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
->  	guest_page_size = (1ul << guest_page_shift);
->  	/*
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> index 6cb34a0fa200..9de2fd310ac8 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> @@ -760,9 +760,6 @@ kvm_get_supported_cpuid_index(uint32_t function, uint32_t index)
->  			break;
->  		}
->  	}
-> -
-> -	TEST_ASSERT(entry, "Guest CPUID entry not found: (EAX=%x, ECX=%x).",
-> -		    function, index);
->  	return entry;
->  }
-
--- 
-Vitaly
+Thanks,
+Bhaskar
