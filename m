@@ -2,81 +2,134 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01677C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4FBC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E18206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NxdnwwNC"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF84206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfHZSr2 (ORCPT
+        id S2387443AbfHZSsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:47:28 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60506 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732007AbfHZSr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:47:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=3SctyFfS3yLn1lHEdyI1Kmom1XhY5J/W6bf5Yp9jBk8=; b=NxdnwwNC6gy91psyhP3LpADnOt
-        KowX/CZGwKAahaI/D87i4FITICTVSiOGY4G928NklYtshAJ0hNMa5egvajC4/p6J7LWzi2Z6SyXZt
-        +m8PtTOvJ4r580w9m3M4V38H8PCmaYRpXfY3kWQ6W2RJ+oWiEmFjnkT7nuA/IVpq+2fs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i2K1P-00067N-EL; Mon, 26 Aug 2019 20:47:19 +0200
-Date:   Mon, 26 Aug 2019 20:47:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Voon Weifeng <weifeng.voon@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>
-Subject: Re: [PATCH v1 net-next] net: stmmac: Add support for MDIO interrupts
-Message-ID: <20190826184719.GF2168@lunn.ch>
-References: <1566870320-9825-1-git-send-email-weifeng.voon@intel.com>
+        Mon, 26 Aug 2019 14:48:07 -0400
+Received: from mailoutvs2.siol.net ([185.57.226.193]:38889 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727822AbfHZSsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 14:48:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id A3AF252502C;
+        Mon, 26 Aug 2019 20:48:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XAiW7Ff-hBd0; Mon, 26 Aug 2019 20:48:02 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 08F0E522D89;
+        Mon, 26 Aug 2019 20:48:02 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 54683524F76;
+        Mon, 26 Aug 2019 20:47:58 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        paul.kocialkowski@bootlin.com, mripard@kernel.org,
+        pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        acourbot@chromium.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+Subject: Re: [PATCH 5/8] media: cedrus: Detect first slice of a frame
+Date:   Mon, 26 Aug 2019 20:47:57 +0200
+Message-ID: <3859967.Y0CYr1sFaX@jernej-laptop>
+In-Reply-To: <20190826202831.311c7c20@collabora.com>
+References: <20190822194500.2071-1-jernej.skrabec@siol.net> <20190822194500.2071-6-jernej.skrabec@siol.net> <20190826202831.311c7c20@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566870320-9825-1-git-send-email-weifeng.voon@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 09:45:20AM +0800, Voon Weifeng wrote:
-> From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
+Dne ponedeljek, 26. avgust 2019 ob 20:28:31 CEST je Boris Brezillon 
+napisal(a):
+> Hi Jernej,
 > 
-> DW EQoS v5.xx controllers added capability for interrupt generation
-> when MDIO interface is done (GMII Busy bit is cleared).
-> This patch adds support for this interrupt on supported HW to avoid
-> polling on GMII Busy bit.
+> On Thu, 22 Aug 2019 21:44:57 +0200
 > 
-> stmmac_mdio_read() & stmmac_mdio_write() will sleep until wake_up() is
-> called by the interrupt handler.
+> Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+> > When codec supports multiple slices in one frame, VPU has to know when
+> > first slice of each frame is being processed, presumably to correctly
+> > clear/set data in auxiliary buffers.
+> > 
+> > Add first_slice field to cedrus_run structure and set it according to
+> > timestamps of capture and output buffers. If timestamps are different,
+> > it's first slice and viceversa.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
+> >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
+> >  2 files changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+> > 2f017a651848..32cb38e541c6 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > @@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
+> > 
+> >  struct cedrus_run {
+> >  
+> >  	struct vb2_v4l2_buffer	*src;
+> >  	struct vb2_v4l2_buffer	*dst;
+> > 
+> > +	bool first_slice;
+> > 
+> >  	union {
+> >  	
+> >  		struct cedrus_h264_run	h264;
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
+> > 56ca4c9ad01c..d7b54accfe83 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > @@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
+> > 
+> >  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> >  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> > 
+> > +	run.first_slice =
+> > +		run.src->vb2_buf.timestamp != run.dst-
+>vb2_buf.timestamp;
+> 
+> Can't we use slice->first_mb_in_slice to determine if a slice is the
+> first? I'd expect ->first_mb_in_slice to be 0 (unless we decide to
+> support ASO).
 
-Hi Voon
+I'm not sure if that is always the case, I would have to check the standard. 
+Anyway, this method of comparing timestamps was suggested to me a while ago 
+when we were discussing details on a way forward for multi-slice decoding. I 
+highly doubt someone would decode slices in mixed order (from different frames) 
+in same instance.
 
-I _think_ there are some order of operation issues here. The mdiobus
-is registered in the probe function. As soon as of_mdiobus_register()
-is called, the MDIO bus must work. At that point MDIO read/writes can
-start to happen.
+I can change that in next version if ->first_mb_in_slice == 0 is always true 
+for the first slice.
 
-As far as i can see, the interrupt handler is only requested in
-stmmac_open(). So it seems like any MDIO operations after probe, but
-before open are going to fail?
+Best regards,
+Jernej
 
-Thanks
-       Andrew
+> 
+> >  	/* Apply request(s) controls if needed. */
+> >  	src_req = run.src->vb2_buf.req_obj.req;
+
+
+
+
