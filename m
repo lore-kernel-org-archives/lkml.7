@@ -2,102 +2,91 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B31C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F338FC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD5E21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BB321852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731254AbfHZKKV (ORCPT
+        id S1731264AbfHZKKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:10:21 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36013 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfHZKKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:10:21 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id ADB9B1BF20B;
-        Mon, 26 Aug 2019 10:10:18 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 12:10:18 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     Trent Piepho <tpiepho@impinj.com>, Leo Li <leoyang.li@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [EXT] Re: [1/3] rtc/fsl: support flextimer for lx2160a
-Message-ID: <20190826101018.GC21713@piout.net>
-References: <20190823095740.12280-1-biwen.li@nxp.com>
- <1566579388.5029.8.camel@impinj.com>
- <DB7PR04MB4490B7AD75C6EE49F5208F738FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
+        Mon, 26 Aug 2019 06:10:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51236 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727376AbfHZKKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:10:30 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5866981DF1;
+        Mon, 26 Aug 2019 10:10:30 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-227.ams2.redhat.com [10.36.116.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72C27608C1;
+        Mon, 26 Aug 2019 10:10:28 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH v2 1/6] mm/memory_hotplug: Exit early in __remove_pages() on BUGs
+Date:   Mon, 26 Aug 2019 12:10:07 +0200
+Message-Id: <20190826101012.10575-2-david@redhat.com>
+In-Reply-To: <20190826101012.10575-1-david@redhat.com>
+References: <20190826101012.10575-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB4490B7AD75C6EE49F5208F738FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 26 Aug 2019 10:10:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/08/2019 03:37:43+0000, Biwen Li wrote:
-> > 
-> > On Fri, 2019-08-23 at 17:57 +0800, Biwen Li wrote:
-> > > The patch supports flextimer for lx2160a
-> > >
-> > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > ---
-> > >  drivers/rtc/rtc-fsl-ftm-alarm.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-
-> > > ftm-alarm.c index 4f7259c2d6a3..2b81525f6db8 100644
-> > > --- a/drivers/rtc/rtc-fsl-ftm-alarm.c
-> > > +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> > > @@ -313,6 +313,7 @@ static const struct of_device_id ftm_rtc_match[] =
-> > > {
-> > >       { .compatible = "fsl,ls1088a-ftm-alarm", },
-> > >       { .compatible = "fsl,ls208xa-ftm-alarm", },
-> > >       { .compatible = "fsl,ls1028a-ftm-alarm", },
-> > > +     { .compatible = "fsl,lx2160a-ftm-alarm", },
-> > >       { },
-> > >  };
-> > >
-> > 
-> > Since there's no data associated with each compatible, it doesn't seem like
-> > there's any need to add a new one.
-> > 
-> > What's normally done is add two compatibles in the dts, the base version and
-> > the specific version, e.g.:
-> > 
-> > +               rcpm: rcpm@1e34040 {
-> > +                       compatible = "fsl,lx2160a-rcpm",
-> > + "fsl,qoriq-cpm-2.1+";
-> > 
-> > Or in this case, compatible = "fsl,lx2160a-ftm-alarm", "fsl,ls1088a-ftm-alarm";
-> > 
-> > Then there's no need to add to the driver list.
-> Yes, it will be work. But it will be confusing. Is ls1088a same with lx2160a? No.
+The error path should never happen in practice (unless bringing up a new
+device driver, or on BUGs). However, it's clearer to not touch anything
+in case we are going to return right away. Move the check/return.
 
-Well, if you are sure it is the exact same IP that is used, then you
-should only use one compatible. We usually use the name of the first SoC
-that had the IP. Is it confusing anyone? Probably not because this will
-be in a dtsi that nobody will read.
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/memory_hotplug.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Note that adding so many compatbile will increase the boot time of your
-platform and this is annoying many NXP customers of the i.mx line.
-
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 32a5386758ce..71779b7b14df 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -542,13 +542,13 @@ void __remove_pages(struct zone *zone, unsigned long pfn,
+ 	unsigned long map_offset = 0;
+ 	unsigned long nr, start_sec, end_sec;
+ 
++	if (check_pfn_span(pfn, nr_pages, "remove"))
++		return;
++
+ 	map_offset = vmem_altmap_offset(altmap);
+ 
+ 	clear_zone_contiguous(zone);
+ 
+-	if (check_pfn_span(pfn, nr_pages, "remove"))
+-		return;
+-
+ 	start_sec = pfn_to_section_nr(pfn);
+ 	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
+ 	for (nr = start_sec; nr <= end_sec; nr++) {
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
+
