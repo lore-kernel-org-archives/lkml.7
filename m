@@ -2,129 +2,107 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766D5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B431C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9CA20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76A020850
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="U27BGH9z"
+	dkim=pass (1024-bit key) header.d=netforce.ua header.i=@netforce.ua header.b="FNGfQGkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbfHZQJ7 (ORCPT
+        id S1732465AbfHZQKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:09:59 -0400
-Received: from mail-eopbgr800079.outbound.protection.outlook.com ([40.107.80.79]:11134
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728683AbfHZQJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:09:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JQhej1VzqYzxfAx6kavZWji+xPCiHaDfHyzGw11iUwdRzgiHAnuP+DfHdOyooolCmymgt2oGQ2qeoaOrS+ay4f8Q7t8GYvdLw2cvvR75Y1q3wx06YaxFNgtAYEGkeMXjz6RxPiOPGZ6++DrO5yFMy8fTFjtO398F/S5GXybySGMFOrD8q6RbYtDsXnMX17eC9low4vodRsxCDBucx5L5fFWMBjvq+QJTv8DHMzwlwgAPWUyx2xMchQbNaQCNm85Y7HNmZpFo50Simo2C5UmE5B/0dpksF4D2Pgi4mkQDqajIQwhqGSanOB8P32eP36cXnCXluDbO/j6T2pHtchOFMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pzvhWIrnEubBNpZXN9EiUV8CsMhsOTd5VOkWUY4oA9Y=;
- b=h3GGk64GicsLScNyKtqjXbMunHC9ezOc09GdV8YPlb67PnqLraY0fGANqVHZE2fiwzjiEDXeUlg9SrBSlI7mXhYATokE6KtKhxsdhfEDh077lWR+P6bVjaug5GQJDeKZnqPejEf6bjvKGfHj3ovWW7LDEL6Yk5gjO1c4W8c1rq3e5jppBxtcBtwowEEtdqdkIyPluN8OR50D9pAsoXJdcbm+LQfZnN7ds7yhS1FxMfGxGGihi216qEeTIQghvgRGCOPPRWc7s/0ztV2Vwi3y61AShgHEzhxOR2kbXxyTOSt9zovJIA/yLiTOo3SLPwlZITk07//CSwEb3pAPBbjLgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pzvhWIrnEubBNpZXN9EiUV8CsMhsOTd5VOkWUY4oA9Y=;
- b=U27BGH9zWRCBjIdxRQLmNrq0uhYrHdGRyHHIuCzLadSsXHBrhM+fLtbVFR+46T3aMFnslYsZHesvOuRiJrdgEGqTWz4lmUun7xhPXoObBwO620Wmx9gx3ClYhFxSS6LIeh89f2e2i09s76yftC4E95mVW70KDcJzTfV+LxZN2j4=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4088.namprd05.prod.outlook.com (52.135.199.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.13; Mon, 26 Aug 2019 16:09:55 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::5163:1b6f:2d03:303d]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::5163:1b6f:2d03:303d%3]) with mapi id 15.20.2220.013; Mon, 26 Aug 2019
- 16:09:55 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Mon, 26 Aug 2019 12:10:03 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35207 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728683AbfHZQKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:10:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l14so15646979lje.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 09:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netforce.ua; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SlZtTdio1Y6VVz0EfywAkxBeMP9JChkSpHZKD+louec=;
+        b=FNGfQGkzzUQS1d1t0+p6lBcGEh/BEgDQpEU/6aO5W2NUJ6rKeUb9ErEUoQ6Eb2gjjb
+         2HMc/gN68B0VMh1ZT08BkF6lumorqI5v6RZZpVEDkSOj5jxTpxAUxGwyQMGHlm0/qYm5
+         4EPVTbWYaJCh+l4yvT3m6u1g0+OD2v2dges2M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SlZtTdio1Y6VVz0EfywAkxBeMP9JChkSpHZKD+louec=;
+        b=QfKFNhxBimYeSKIbShBTu6hDTI4/tWqHanlB9oP21brrpo+oc4e3I8DZCzUYEgBjWg
+         +0Nvs/rdVv7ydVzFH5PMA8Imv7z4/GJ9wsXC6cGnEoH2AuqzRxd/kI1pOliXXX6oSQJ0
+         3Z4OofGyFE2+GQXfSOgVKmLm6NumycZsJcqouSpKdIx6uUvNe3B/ycpLRLk928dujkb9
+         /nix/YE9EZ1F6N4CwnlW7OUGwyWk047k7JyV5Tpf2u1C10PAn/Q3ua04ceSiF4N3IhB1
+         AnF+FFEu3NctR5KBkhi0NhUupEh+i2PciE/gI31AbLkO4ZulYeXcJGo7uRwyHgUZvcif
+         CNMQ==
+X-Gm-Message-State: APjAAAUQ1op1xELrFRbuXOGUfSJ8NNLUw4wSj7IBYDIc+BWpkwSgQrPg
+        aB7ibW+bZHN2js4Yt2La2Mi2+w==
+X-Google-Smtp-Source: APXvYqxlTonBs8rkrpFa1ptcl0dgRDel7sYOE1vswwwW/SGZR/d/6ozTyUsG0N9t9ONO6p4fPlQXNg==
+X-Received: by 2002:a2e:8455:: with SMTP id u21mr10702408ljh.20.1566835799242;
+        Mon, 26 Aug 2019 09:09:59 -0700 (PDT)
+Received: from rhea.localdomain ([37.46.255.109])
+        by smtp.gmail.com with ESMTPSA id s4sm1327826lfd.77.2019.08.26.09.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 09:09:58 -0700 (PDT)
+From:   ilya.pshonkin@netforce.ua
+To:     ilya.pshonkin@netforce.ua
+Cc:     Sudokamikaze <sudokamikaze@protonmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jussi Laako <jussi@sonarnerd.net>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Manuel Reinhardt <manuel.rhdt@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
- set_kernel_text_rw()
-Thread-Topic: [PATCH] x86/mm: Do not split_large_page() for
- set_kernel_text_rw()
-Thread-Index: AQHVXAINMlzHgko6mk+L3YlByguhN6cNkWoAgAAEUYCAAAOlAA==
-Date:   Mon, 26 Aug 2019 16:09:55 +0000
-Message-ID: <36BC6E27-A6EB-4B25-82C0-311AA0652179@vmware.com>
-References: <20190823052335.572133-1-songliubraving@fb.com>
- <20190823093637.GH2369@hirez.programming.kicks-ass.net>
- <20190826073308.6e82589d@gandalf.local.home>
- <31AB5512-F083-4DC3-BA73-D5D65CBC410A@vmware.com>
- <20190826115651.43c9bde3@gandalf.local.home>
-In-Reply-To: <20190826115651.43c9bde3@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d4e16aa-7cca-49f1-8bbd-08d72a3fd5d2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4088;
-x-ms-traffictypediagnostic: BYAPR05MB4088:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <BYAPR05MB4088D44419989FCB5FD675A3D0A10@BYAPR05MB4088.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(346002)(39860400002)(136003)(52314003)(189003)(199004)(53546011)(71200400001)(33656002)(2616005)(476003)(966005)(26005)(186003)(8676002)(478600001)(6246003)(2906002)(305945005)(53936002)(6306002)(66066001)(8936002)(6916009)(7416002)(446003)(5660300002)(81156014)(6486002)(4744005)(256004)(81166006)(11346002)(7736002)(4326008)(14454004)(36756003)(86362001)(6512007)(54906003)(76176011)(3846002)(64756008)(6116002)(66946007)(66446008)(76116006)(66476007)(66556008)(71190400001)(99286004)(229853002)(6436002)(25786009)(316002)(6506007)(486006)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4088;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: E0yKTPVdEBHt5+V5TjnODcTq7r7KkgOmPUt/PZdKY4S3XOLOBWqBxNjBweGFK0vZFQN4IhczCW/dtnPjacULmdxo4YvAbcflozIr5TOx148fKvGpkdFkzNbN8/qcyPSDVfVbUS4tG9OWKD2nXw/6Dt3wP6oQxGZZfelDC7K9AQS7kKqxtnCW096fpp/aVzKHx1UDxPeGhz29NYM3VkIe/0G8UrMAtfQxMBBfBJAGIr0h9Drdu4ODnnskQFURrLDQygWTSYDGYG3CYhjOmyYM703Mk8cZRS5tIUJJj+I8S7imUJFSr5kjT2ifr11OxeOIBB4BLMAinrY1mCHXYi4EA5QHq87IH88QfbV19IGNQgT5wzWj7mtN9v+8K1D2ttNNCbvD0mgqihMzh0fpaZQugfL7ZBkhwsKeGI89ag11xcQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <947D8EBB7AFC73419909CCB664F5665C@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Linus Walleij <linus.walleij@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: usb-audio: Add Hiby R3 to quirks for native DSD support
+Date:   Mon, 26 Aug 2019 19:09:52 +0300
+Message-Id: <20190826160953.19402-1-ilya.pshonkin@netforce.ua>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d4e16aa-7cca-49f1-8bbd-08d72a3fd5d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 16:09:55.3017
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yo0tahBi9gyJiFttyO19ksiBqeP/lnFprnU18+rA42zYlIMO9cRcQ799scO6/FoMLXQocQAyVo8/rOR7Jl8jfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4088
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Aug 26, 2019, at 8:56 AM, Steven Rostedt <rostedt@goodmis.org> wrote:
->=20
-> On Mon, 26 Aug 2019 15:41:24 +0000
-> Nadav Amit <namit@vmware.com> wrote:
->=20
->>> Anyway, I believe Nadav has some patches that converts ftrace to use
->>> the shadow page modification trick somewhere. =20
->>=20
->> For the record - here is my previous patch:
->> https://lkml.org/lkml/2018/12/5/211
->=20
-> FYI, when referencing older patches, please use lkml.kernel.org or
-> lore.kernel.org, lkml.org is slow and obsolete.
->=20
-> ie. http://lkml.kernel.org/r/20181205013408.47725-9-namit@vmware.com
+From: Sudokamikaze <sudokamikaze@protonmail.com>
 
-Will do so next time.
+This patch adds quirk VID/PID IDs for Hiby R3 portable DSD player DSD support
+
+Signed-off-by: Sudokamikaze <sudokamikaze@protonmail.com>
+---
+ sound/usb/quirks.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 78858918cbc1..f90418149e4e 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1588,6 +1588,12 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 		if (fp->altsetting == 2)
+ 			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
+ 		break;
++	
++	/* ESS Sabre based USB DACs */
++	case USB_ID(0xc502, 0x0051): /* Hiby R3 */
++		if (fp->altsetting == 4)
++			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
++		break;
+ 
+ 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
+ 	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
+-- 
+2.23.0
 
