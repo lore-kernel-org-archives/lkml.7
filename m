@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F130C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F53C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A2221872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C862184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 20:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vy7I7i7S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CEDRSS3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfHZUpT (ORCPT
+        id S1731717AbfHZUpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 16:45:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36491 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731535AbfHZUpS (ORCPT
+        Mon, 26 Aug 2019 16:45:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45870 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731462AbfHZUpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 16:45:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g67so795213wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:45:16 -0700 (PDT)
+        Mon, 26 Aug 2019 16:45:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q12so16556527wrj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 13:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=v0Q9LIYPLT9Xb7NvIePpDRDG5Nr2ZHct1pfdK6Hsxio=;
-        b=vy7I7i7S9FlvZ0b7EumKVxLiBMBpKHKQiYAtIonVY+8p6F+86IuWJSe2EQrzseCoim
-         /962hHWAX71X/Z9xnmVkOMSJuxnPT58lNz6Rq4aAue+g6DGGRGJysWNzUrHi9RBVKs9v
-         WBTviGTDmb5qhKP3HgN6OKAQh8KXVDzTVZtse5ZLrgVnVz1BfbxOXgygmC0+nnshbDgE
-         aOIRPI+1L5lQWRTMnTADfYj46ZkU+kuprPgsh/+7MOd/BL8OVtThD0o2/5Vm9h0S8DVa
-         RZmlU2v4QlJ1JucV+7f8X9e+8LS8BnZQt8TamK4JIUiE/cLiiUu7tdYLv8VBj8h1v4+j
-         g0mA==
+        bh=Xx6zXzgb0vSpbhX3JZnxws+z9jl06fZin+m9UbiBa6U=;
+        b=CEDRSS3J1v//1C8W0S/Dm2bDZoR3U7cM6SpNQPaC9aCNkRuGvkpUnVguzMnLDlfW9y
+         Zdda6LAOMYaBAwO2eF0g/pl/luDQcohjoDKyATRtyX3XqDNHXZHA/oyF8ICWyCeTCqgY
+         mdBron9n4N1xk805CkMnqK5lhWChg56DyLUwO0TmhqBmy/Flc4jh399CLyogsXoP2O1/
+         N9gdTF0x6jCLgr4StWZI9S4Jx/xHewzOzzLJ4LsrGPeYkbyp3D1lMQ2+Aq9IrAgSNiH0
+         Ir7KGWT9WSe6afAge8Ezu24kz49v+UAbzcTUns/Vjo/WZexcEJErxHmOj8rPeOqe0Mj9
+         ae8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=v0Q9LIYPLT9Xb7NvIePpDRDG5Nr2ZHct1pfdK6Hsxio=;
-        b=ZkaRLMrDDqa0fKGfwhQ5bPXPPpVcJYTq1EZfu5Y3fOs9MtwQWy2bDKRKTEARxtgTwz
-         dmVaRPHnEXvMS4CwvUMQPXte8G/EZsaY5k1dJ8/GTOruOirSjaBIzaXfvFmROMvDLlmh
-         Teiu0+Oerw2x/UGC9NDzaEnOrM19JU3P2zfKGVSEc1NFG0zmjKbU3dOcyczI7KRbJE+I
-         ndLhLzr/in8GtquyRmE5XZXL3eI8fbF7Q0SgbLR9Rf+mvJQRFnfPYYH7psnsKlpSfwPA
-         oBraphKXOSfFOuYkrNfukQ9WPjdrpSQ/8iQBHCFdlR89Dq2503+BWLtZQLX4H7a0CbND
-         tr7w==
-X-Gm-Message-State: APjAAAVzhKl4+T/pOs/Tu8AIRFKs9nA3aORF/wIsSDEgVXzUw1Y5BKeK
-        NQGrwM7/QYZfhkldjV5l+6z4eQ==
-X-Google-Smtp-Source: APXvYqx58no0JlkS5nCZ70e7Qe3bjG/IHL/TSLf9TID1ZhNUfB9M6MjycO+zkc53qOEiUFTqpmyccw==
-X-Received: by 2002:a05:600c:254a:: with SMTP id e10mr25254651wma.113.1566852315736;
-        Mon, 26 Aug 2019 13:45:15 -0700 (PDT)
+        bh=Xx6zXzgb0vSpbhX3JZnxws+z9jl06fZin+m9UbiBa6U=;
+        b=Jx/zBsDvqOjjD8PBYbq3UdhZ04ezBi6F+TYASv+tRZPOgIfDsGiBRg1M+5kL3prO3y
+         oh2X6tTDDdcnwZJOeQcAHSWnPnj3BYlts7s4N6pYayh4bFtXC4F5th+e6sOQ4CdCuyCe
+         /xUQg9lAh7M5VYsVDGX1xAgnBjoUnr/QlStysLvfIIzvFtH/V+dESr85SAvunH6iPDHf
+         CWAcEHKR/JgV5vwuw6Xs6Z340yXLOAYxsl9D1LkSEkoQR6EclnDv0r2zVJmRIdQUh3d3
+         2fA5nA67g8vTMIyWhbaSKxg6/tTc5MWEXMWwI/YuelTAUSTJEwlCE8lfcYMF53TpNMcn
+         bZKQ==
+X-Gm-Message-State: APjAAAXS+MOO+NQDDaT4MNZRlRfMAY79PZZUSPyKDRLEhagcCOi5jZ54
+        TpgAWBgIWf/80pUSfIIheeIzPw==
+X-Google-Smtp-Source: APXvYqyKb/Ydh+Yo49Z9t8rzx1TpEZs8J7o69uD7rzcHk8L7zl3KYr/n2nJWtOBEAFJUNY/k3TFrTA==
+X-Received: by 2002:a5d:6a45:: with SMTP id t5mr23999753wrw.228.1566852317991;
+        Mon, 26 Aug 2019 13:45:17 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
-        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.45.14
+        by smtp.gmail.com with ESMTPSA id 20sm549557wmk.34.2019.08.26.13.45.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 13:45:14 -0700 (PDT)
+        Mon, 26 Aug 2019 13:45:16 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS)
-Subject: [PATCH 16/20] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
-Date:   Mon, 26 Aug 2019 22:44:03 +0200
-Message-Id: <20190826204407.17759-16-daniel.lezcano@linaro.org>
+Subject: [PATCH 17/20] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
+Date:   Mon, 26 Aug 2019 22:44:04 +0200
+Message-Id: <20190826204407.17759-17-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190826204407.17759-1-daniel.lezcano@linaro.org>
 References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
@@ -78,7 +78,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Magnus Damm <damm+renesas@opensource.se>
 
 This patch adds DT binding documentation for the CMT devices on
-the R-Car Gen2 V2H (r8a7792) SoC.
+the R-Car Gen3 D3 (r8a77995) SoC.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -90,18 +90,18 @@ Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index a297fca5b61e..5b7690ae8b9d 100644
+index 5b7690ae8b9d..c7fdcb02e083 100644
 --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
 +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -35,6 +35,8 @@ Required Properties:
-     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
-     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
-     - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
-+    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
-+    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
-     - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+@@ -53,6 +53,8 @@ Required Properties:
+     - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
+     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
+     - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
++    - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
++    - "renesas,r8a77995-cmt1" for the 48-bit CMT1 device included in r8a77995.
+     - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
+     - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
+     - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
 -- 
 2.17.1
 
