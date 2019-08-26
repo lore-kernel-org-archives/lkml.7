@@ -2,123 +2,209 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355B4C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50A4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77952173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="pmf2jINY"
+	by mail.kernel.org (Postfix) with ESMTP id A2E0120874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfHZHKv (ORCPT
+        id S1729906AbfHZHK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:10:51 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:40274 "EHLO mx.0dd.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbfHZHKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:10:50 -0400
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id E15F95FB9C;
-        Mon, 26 Aug 2019 09:10:48 +0200 (CEST)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="pmf2jINY";
-        dkim-atps=neutral
-Received: from www (www.vdorst.com [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id 932C11D9D97F;
-        Mon, 26 Aug 2019 09:10:48 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 932C11D9D97F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1566803448;
-        bh=nldrHn+KAKeYnid1IIOCpT7MYz4xEwc91l3x6SgF+6E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pmf2jINYRJh9VPHOycLU+JkTVk84l9+SH0R5yT6L0GCIN5y13UkDQg8XU5gh7Z1rs
-         a2fkMFSj33k6ov18h8wdC5FrcfKK2j+ZWMjHHlZTozWHTIVR+BQ638D3ZvN+DDzMo7
-         hNba0C6plwDPWYmE473SdQ+YZZZdvpgixDMwIu8+sTrpadfo9e0gT0FSQhmMBvp+Ve
-         Jv31tM4W27rQCcb6WjWVaTqDQUXI9Nea5lUy5q1X/J+QZL7pAfzQssZB0BvdlGukbI
-         cdeNqWwE85V+YQAye2auaD937iGkIVCk0ssYmgk/6P3QTSczN7Q8v8VXgg/l4yTgno
-         Zg2O3LDULsLIg==
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
- www.vdorst.com (Horde Framework) with HTTPS; Mon, 26 Aug 2019 07:10:48 +0000
-Date:   Mon, 26 Aug 2019 07:10:48 +0000
-Message-ID: <20190826071048.Horde.gwS9nzceYYiYGJLnJ6-x2hz@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-To:     Mao Wenan <maowenan@huawei.com>, sr@denx.de
-Cc:     nbd@openwrt.org, john@phrozen.org, sean.wang@mediatek.com,
-        nelson.chang@mediatek.com, davem@davemloft.net,
-        matthias.bgg@gmail.com, kernel-janitors@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 -next] net: mediatek: remove set but not used
- variable 'status'
-References: <20190824.142158.1506174328495468705.davem@davemloft.net>
- <20190826013118.22720-1-maowenan@huawei.com>
-In-Reply-To: <20190826013118.22720-1-maowenan@huawei.com>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        Mon, 26 Aug 2019 03:10:57 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:54963 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729625AbfHZHK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 03:10:56 -0400
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D9699240010;
+        Mon, 26 Aug 2019 07:10:49 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 09:12:16 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] media: add V4L2_CID_UNIT_CELL_SIZE control
+Message-ID: <20190826071216.i5k5dwvqutv6lu2u@uno.localdomain>
+References: <20190823123737.7774-1-ribalda@kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gy5q44t4rn2cb7ev"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190823123737.7774-1-ribalda@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's add Stefan to the conversation.
-He is the author of this commit.
 
-Quoting Mao Wenan <maowenan@huawei.com>:
+--gy5q44t4rn2cb7ev
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> drivers/net/ethernet/mediatek/mtk_eth_soc.c: In function mtk_handle_irq:
-> drivers/net/ethernet/mediatek/mtk_eth_soc.c:1951:6: warning:  
-> variable status set but not used [-Wunused-but-set-variable]
+Hi Ricardo,
+
+On Fri, Aug 23, 2019 at 02:37:31PM +0200, Ricardo Ribalda Delgado wrote:
+> This control returns the unit cell size in nanometres. The struct provides
+> the width and the height in separated fields to take into consideration
+> asymmetric pixels and/or hardware binning.
+> This control is required for automatic calibration of sensors/cameras.
 >
-> Fixes: 296c9120752b ("net: ethernet: mediatek: Add MT7628/88 SoC support")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 > ---
->  v2: change format of 'Fixes' tag.
->  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 --
->  1 file changed, 2 deletions(-)
+> v3:
+> -Put together all actions on ctrl_fill
+> -Move the control to IMAGE_SOURCE
 >
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c  
-> b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index 8ddbb8d..bb7d623 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -1948,9 +1948,7 @@ static irqreturn_t mtk_handle_irq_tx(int irq,  
-> void *_eth)
->  static irqreturn_t mtk_handle_irq(int irq, void *_eth)
->  {
->  	struct mtk_eth *eth = _eth;
-> -	u32 status;
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
+>  include/media/v4l2-ctrls.h           |  2 ++
+>  include/uapi/linux/v4l2-controls.h   |  1 +
+>  include/uapi/linux/videodev2.h       | 11 +++++++++++
+>  4 files changed, 25 insertions(+)
 >
-> -	status = mtk_r32(eth, MTK_PDMA_INT_STATUS);
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 1d8f38824631..b3bf458df7f7 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -994,6 +994,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> +	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
+>
+>  	/* FM Radio Modulator controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1375,6 +1376,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+>  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+>  		break;
+> +	case V4L2_CID_UNIT_CELL_SIZE:
+> +		*type = V4L2_CTRL_TYPE_AREA;
+> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +		break;
+>  	default:
+>  		*type = V4L2_CTRL_TYPE_INTEGER;
+>  		break;
+> @@ -1723,6 +1728,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  	case V4L2_CTRL_TYPE_FWHT_PARAMS:
+>  		break;
+>
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		break;
+> +
+>  	case V4L2_CTRL_TYPE_H264_SPS:
+>  	case V4L2_CTRL_TYPE_H264_PPS:
+>  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> @@ -2421,6 +2429,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		elem_size = sizeof(struct v4l2_area);
+> +		break;
+>  	default:
+>  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+>  			elem_size = sizeof(s32);
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 570ff4b0205a..9a3d11350e67 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -50,6 +50,7 @@ struct poll_table_struct;
+>   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+>   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+>   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
+> + * @p_area:			Pointer to an area.
+>   * @p:				Pointer to a compound value.
+>   */
+>  union v4l2_ctrl_ptr {
+> @@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> +	struct v4l2_area *p_area;
+>  	void *p;
+>  };
+>
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index a2669b79b294..5a7bedee2b0e 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -1034,6 +1034,7 @@ enum v4l2_jpeg_chroma_subsampling {
+>  #define V4L2_CID_TEST_PATTERN_GREENR		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 5)
+>  #define V4L2_CID_TEST_PATTERN_BLUE		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 6)
+>  #define V4L2_CID_TEST_PATTERN_GREENB		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 7)
+> +#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 8)
+>
+>
+>  /* Image processing controls */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 530638dffd93..05cfc69d7ed6 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -422,6 +422,11 @@ struct v4l2_fract {
+>  	__u32   denominator;
+>  };
+>
+> +struct v4l2_area {
+> +	__u32   width;
+> +	__u32   height;
+> +};
+> +
+>  /**
+>    * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
+>    *
+> @@ -1720,6 +1725,12 @@ enum v4l2_ctrl_type {
+>  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+>  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+>  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> +	/*
+> +	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
+> +	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
+> +	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
+> +	 */
 
-Hi Stefan,
+With a confirmation from Hans and others this comments fits here
 
-You added an extra MTK_PDMA_INT_STATUS read in mtk_handle_irq()
-Is that read necessary to work properly?
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 
-Greats,
+Thanks
+   j
 
-René
-
-
->  	if (mtk_r32(eth, MTK_PDMA_INT_MASK) & MTK_RX_DONE_INT) {
->  		if (mtk_r32(eth, MTK_PDMA_INT_STATUS) & MTK_RX_DONE_INT)
->  			mtk_handle_irq_rx(irq, _eth);
+> +	V4L2_CTRL_TYPE_AREA    = 0x0106,
+>  };
+>
+>  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
 > --
-> 2.7.4
+> 2.23.0.rc1
+>
 
+--gy5q44t4rn2cb7ev
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jhksACgkQcjQGjxah
+VjwavRAAs3r3di+gEr5tGXIuX2dim23hkoLbcBHiJqMuJR3JZMizC3UGSE3AAkb+
+1fczYyNCP8bvrgMIOBTGgwfidHfVV7bTeAfs67CO4f2RHIBYZbPx+UeXvTaMU/yc
+E4vSRjpAcLOSCysE4S7d/XRjWbGGYxRm+szPsKWW/4Hmw3Q4tgZlDklddy29yUdy
+QWk5GpA0RuhqJ4VCP1K/xPfeTF0RydVArkqMjSY9GKmhdSeNBB0fSnoDgoA5W7LU
+aOuF5hlfIqjW1RX7PDKI27And9+e4PwGujyeAqxWBcIc1kNhXeIlrhVHy2jpc9AC
+w+uNP3tGbzC1UNVpFL5Af2HSGbXgBg17cIwQeD3TKEZ5bEeZ1b0QPZ78ru+akEBz
+aPuM6EO6TAHAjqLhMsHaFIsD84A6bgs7S2b4PkHIBv3aJGFx4etWj65xvWLNAK8M
+9R8amaMEjzAqyw03SgS2/f6gkXGCql0A2mTMRwKNjYlbnNank242eOn17oz+oOHf
+zQfs40W3/FedXYSwfMnwpADlLuJ6/Adi4kMvrn7vgiEKkIz/BrTfhzo3fZAByp9b
+nRZWdZYGm53lggbt6tHsJkc0MNsFym49rUI6Cb1bjDLqEinqPobMfZU4SDY6TrjK
+u1DvSlYLlIojnBRng6LiHqP1lYasemB9eukghI9/X5yBph7CMuA=
+=h7S+
+-----END PGP SIGNATURE-----
 
+--gy5q44t4rn2cb7ev--
