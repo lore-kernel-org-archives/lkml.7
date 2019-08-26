@@ -2,166 +2,176 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495A4C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABD8C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E5D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:23:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aZd6f2fv"
+	by mail.kernel.org (Postfix) with ESMTP id 6803E206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfHZJXP (ORCPT
+        id S1730930AbfHZJYu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:23:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59618 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729753AbfHZJXP (ORCPT
+        Mon, 26 Aug 2019 05:24:50 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:64619 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbfHZJYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:23:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2KBUYcIEMh8CbI2PPoE5kOoIKtOGa1DHFxKeskY4Qlk=; b=aZd6f2fvSGtnTzhxj37lD+Gdd
-        feaLc4us57oYUJCpRf63+PtXp2xoF+FsBuCKvxUA8q7t+RXVGH6KWS+75mPQnH39rHMiFNGewlQzY
-        u6Kq1C4ysxWRUTbnm/SrJt4VpgJHSHy5sNzOdyCnSCVAx6dBftJQ+fN7K0ntkcTLgE2Kc7qIA5dpc
-        ZsBa9RgPe886KK58t75r8hhXisol3nilmufWhLyY+mt3wi8yUxmc5VlVIeIoEOZp/ojdGRSwuuNGt
-        CZiQYyH7P/jB6CDfKjVOpZiElQyFtkjLjhBhXpJkYAyB8d3M7rf0lEUJZ3vEs33VaGxS/k8hm4Iix
-        plKHNfhxA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2BDL-0005j9-6Z; Mon, 26 Aug 2019 09:23:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03BA8301FF9;
-        Mon, 26 Aug 2019 11:22:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3F8602022F842; Mon, 26 Aug 2019 11:23:00 +0200 (CEST)
-Date:   Mon, 26 Aug 2019 11:23:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "sbsiddha@gmail.com" <sbsiddha@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH] x86/mm: Do not split_large_page() for
- set_kernel_text_rw()
-Message-ID: <20190826092300.GN2369@hirez.programming.kicks-ass.net>
-References: <20190823052335.572133-1-songliubraving@fb.com>
- <20190823093637.GH2369@hirez.programming.kicks-ass.net>
- <164D1F08-80F7-4E13-94FC-78F33B3E299F@fb.com>
+        Mon, 26 Aug 2019 05:24:50 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x7Q9OfgH004152;
+        Mon, 26 Aug 2019 17:24:41 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id C2759AC31551E2DB2389;
+        Mon, 26 Aug 2019 17:24:41 +0800 (CST)
+In-Reply-To: <20190826092344.7b23ede1@xps13>
+References: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw>  <20190824130329.68f310aa@xps13>
+        <OFF725800E.8B26D2E9-ON48258462.000B94B2-48258462.000FCB85@mxic.com.tw> <20190826092344.7b23ede1@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        juliensu@mxic.com.tw, kstewart@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at, tglx@linutronix.de,
+        vigneshr@ti.com
+Subject: Re: [PATCH] Add support for Macronix NAND randomizer
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164D1F08-80F7-4E13-94FC-78F33B3E299F@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-KeepSent: BC7B2DED:A4E37205-48258462:00332180;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFBC7B2DED.A4E37205-ON48258462.00332180-48258462.0033B2E6@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 26 Aug 2019 17:24:41 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/08/26 PM 05:24:41,
+        Serialize complete at 2019/08/26 PM 05:24:41
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-MAIL: TWHMLLG4.macronix.com x7Q9OfgH004152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:40:23AM +0000, Song Liu wrote:
-> Cc: Steven Rostedt and Suresh Siddha
+
+Hi Miquel,
+
 > 
-> Hi Peter, 
+> Re: [PATCH] Add support for Macronix NAND randomizer
 > 
-> > On Aug 23, 2019, at 2:36 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> Hi Mason,
+> 
+> masonccyang@mxic.com.tw wrote on Mon, 26 Aug 2019 10:52:31 +0800:
+> 
+> > Hi Miquel,
+> > > 
+> > > Mason Yang <masonccyang@mxic.com.tw> wrote on Tue, 20 Aug 2019 
+13:53:48
+> > > +0800:
+> > > 
+> > > > Macronix NANDs support randomizer operation for user data 
+scrambled,
+> > > > which can be enabled with a SET_FEATURE.
+> > > > 
+> > > > User data written to the NAND device without randomizer is still 
+> > readable
+> > > > after randomizer function enabled.
+> > > > The penalty of randomizer are NOP = 1 instead of NOP = 4 and more 
+time 
+> > period
+> > > 
+> > > please don't use 'NOP' here, use 'subpage accesses' instead, 
+otherwise
+> > > people might not understand what it means while it has a real 
+impact.
+> > > 
 > > 
-> > On Thu, Aug 22, 2019 at 10:23:35PM -0700, Song Liu wrote:
-> >> As 4k pages check was removed from cpa [1], set_kernel_text_rw() leads to
-> >> split_large_page() for all kernel text pages. This means a single kprobe
-> >> will put all kernel text in 4k pages:
-> >> 
-> >>  root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
-> >>  0xffffffff81000000-0xffffffff82400000     20M  ro    PSE      x  pmd
-> >> 
-> >>  root@ ~# echo ONE_KPROBE >> /sys/kernel/debug/tracing/kprobe_events
-> >>  root@ ~# echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
-> >> 
-> >>  root@ ~# grep ffff81000000- /sys/kernel/debug/page_tables/kernel
-> >>  0xffffffff81000000-0xffffffff82400000     20M  ro             x  pte
-> >> 
-> >> To fix this issue, introduce CPA_FLIP_TEXT_RW to bypass "Text RO" check
-> >> in static_protections().
-> >> 
-> >> Two helper functions set_text_rw() and set_text_ro() are added to flip
-> >> _PAGE_RW bit for kernel text.
-> >> 
-> >> [1] commit 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
+> > okay, understood. 
+> > will fix it by next submitting.
 > > 
-> > ARGH; so this is because ftrace flips the whole kernel range to RW and
-> > back for giggles? I'm thinking _that_ is a bug, it's a clear W^X
-> > violation.
+> > > > is needed in program operation and entering deep power-down mode.
+> > > > i.e., tPROG 300us to 340us(randomizer enabled)
+> > > > 
+> > > > If subpage write not available with hardware ECC, for example,
+> > > > NAND chip options NAND_NO_SUBPAGE_WRITE be set in driver and
+> > > > randomizer function is recommended for high-reliability.
+> > > > Driver checks byte 167 of Vendor Blocks in ONFI parameter page 
+table
+> > > > to see if this high-reliability function is supported.
+> > > > 
+> > > 
+> > > You did not flagged this patch as a v2 and forgot about the 
+changelog. 
+> > 
+> > will fix, thank you.
+> > 
+> > > You did not listen to our comments in the last version neither. I 
+was
+> > > open to a solution with a specific DT property for warned users but 
+I
+> > > don't see it coming. 
+> > 
+> > Sorry I missed the previous version of "read-retry and randomizer 
+support" 
+> > patch. 
+> > Specific DT property is a good method to control it.
+> > 
+> > For more high-reliability concern, randomizer is recommended to enable 
+by 
+> > default,
+> > but sub-page write is not allowed when randomizer is enabled.
+> > 
+> > Since most of HW ECC did not support sub-page write and we think 
+driver to 
+> > check
+> > chip options flags is another simple and good way to enable 
+randomizer.
 > 
-> Thanks for your comments. Yes, it is related to ftrace, as we have
-> CONFIG_KPROBES_ON_FTRACE. However, after digging around, I am not sure
-> what is the expected behavior.
+> Sorry but this is wrong. Several controllers and NAND chips support
+> subpages. And changing now the behavior with such chips would entirely
+> break the concerned setups (see Boris answer about UBI complaining if
+> the subpage size changes).
 
-It changed recently; that is we got a lot more strict wrt W^X mappings.
-IIRC ftrace is the only known violator of W^X at this time.
+okay, I see.
+thanks for your information.
 
-> Kernel text region has two mappings to it. For x86_64 and four-level 
-> page table, there are: 
+I will patch it based on your comments in the last version.
+
 > 
-> 	1. kernel identity mapping, from 0xffff888000100000; 
-> 	2. kernel text mapping, from 0xffffffff81000000, 
+> Thanks,
+> Miquèl
 
-Right; AFAICT this is so that kernel text fits in s32 immediates.
+best regards,
+Mason
 
-> Per comments in arch/x86/mm/init_64.c:set_kernel_text_rw():
-> 
->         /*
->          * Make the kernel identity mapping for text RW. Kernel text
->          * mapping will always be RO. Refer to the comment in
->          * static_protections() in pageattr.c
->          */
-> 	set_memory_rw(start, (end - start) >> PAGE_SHIFT);
+CONFIDENTIALITY NOTE:
 
-So only the high mapping is ever executable; the identity map should not
-be. Both should be RO.
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
 
-> kprobe (with CONFIG_KPROBES_ON_FTRACE) should work on kernel identity
-> mapping. 
+Macronix International Co., Ltd.
 
-Please provide more information; kprobes shouldn't be touching either
-mapping. That is, afaict kprobes uses text_poke() which uses a temporary
-mapping (in 'userspace' even) to alias the high text mapping.
+=====================================================================
 
-I'm also not sure how it would then result in any 4k text maps. Yes the
-alias is 4k, but it should not affect the actual high text map in any
-way.
 
-kprobes also allocates executable slots, but it does that in the module
-range (afaict), so that, again, should not affect the high text mapping.
 
-> We found with 5.2 kernel (no CONFIG_PAGE_TABLE_ISOLATION, w/ 
-> CONFIG_KPROBES_ON_FTRACE), a single kprobe will split _all_ PMDs in 
-> kernel text mapping into pte-mapped pages. This increases iTLB 
-> miss rate from about 300 per million instructions to about 700 per
-> million instructions (for the application I test with). 
-> 
-> Per bisect, we found this behavior happens after commit 585948f4f695 
-> ("x86/mm/cpa: Avoid the 4k pages check completely"). That's why I 
-> proposed this PATCH to fix/workaround this issue. However, per
-> Peter's comment and my study of the code, this doesn't seem the 
-> real problem or the only here. 
-> 
-> I also tested that the PMD split issue doesn't happen w/o 
-> CONFIG_KPROBES_ON_FTRACE. 
+============================================================================
 
-Right, because then ftrace doesn't flip the whole kernel map writable;
-which it _really_ should stop doing anyway.
+CONFIDENTIALITY NOTE:
 
-But I'm still wondering what causes that first 4k split...
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
