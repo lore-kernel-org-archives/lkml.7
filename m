@@ -2,124 +2,114 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8164EC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EA5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E4D206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:40:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP2Xk61P"
+	by mail.kernel.org (Postfix) with ESMTP id 7289F206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732937AbfHZQka (ORCPT
+        id S1732953AbfHZQkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:40:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40730 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732900AbfHZQk3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:40:29 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c5so148375wmb.5;
-        Mon, 26 Aug 2019 09:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QjxgBXa3y+uuhZsdeO1qBTZUTIy7XmFfl96V9DIMo6Q=;
-        b=fP2Xk61Pf9uROtag057QqLPki/+ga9LNABXUsoDIZwVgKzbaYY+Yv54/cDTBAKId+L
-         Gsa9FVVOLgcFlieoK30m+kYMru8msmE8LoggM8vJq/vdFO5xSMSr2LvZhqfkrFHXjhov
-         6rD3Xh8wbBkjlyhtb6/yu5I7HY09bDnj1SpktDTI8oAOdA7J0NOLAlDbY2lLOwpdhVKk
-         cgebex/jZ8OF4iLFyBI5qhK43EJK74aDyp2TI03EElLOgyt3ObsAka0s9GSEMRH+4nIE
-         wzpWbuPNjYFtI1GG4jgryZIAosVXa3K6wI33LepQmdDRTSqGL6fvoKnf8pvI24SlblRD
-         GsiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QjxgBXa3y+uuhZsdeO1qBTZUTIy7XmFfl96V9DIMo6Q=;
-        b=M4eda8zIN+kaCcU6edWUZUSvD/2VlMTwfa/3KWOYvsE7JeBzkfWRIVrIf5xs1DI7Kh
-         ZN/MS6cyQ2zG7yAeHrnTwnMrmdWp15fwi0+lAe1ZxTguasGUrsQqNTXCiQZPi1GCcla4
-         Up84J1/a10cMc1Ovq9a81ZV7rGyfmiE7hnQmZpQPa1Wr7eCsJu4TV7NTmLvSRDP2gJ88
-         HtLGRgYkAcjmi+YE524EEndPfekydRFodFxiAnwMQYSv4SGFUPc9D2Vk5RSnLC0jKpqI
-         3exkyUXeISXDkTnWrJJUPO7WhgkeB3/JE2k8tA7qFrf5CM3aMRZU6Sl4LqmfwE0GVAdW
-         8pzQ==
-X-Gm-Message-State: APjAAAXbzUr5fNMpQFiWbxyN7IAkWna+JJDhKYPu2qMNYHs6F2vouGcU
-        7T0ZrG0dkho/SvLvaYbWaelFfs5WSMT3YR0F0Cw=
-X-Google-Smtp-Source: APXvYqyR0ybZtJiikv+kwAVgdY7AWb/vcdMGH7sI0c/nWNAyYF6Ch2IHDX6ee2DH+0Mm7f0lXuO3Rk/bCGgW2RweGT4=
-X-Received: by 2002:a1c:e487:: with SMTP id b129mr23317012wmh.93.1566837626850;
- Mon, 26 Aug 2019 09:40:26 -0700 (PDT)
+        Mon, 26 Aug 2019 12:40:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60288 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732900AbfHZQkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:40:36 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 52465C224D703FD301BC;
+        Tue, 27 Aug 2019 00:40:29 +0800 (CST)
+Received: from linux-lLwqrf.huawei.com (10.175.104.237) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 27 Aug 2019 00:40:20 +0800
+From:   Heyi Guo <guoheyi@huawei.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>
+CC:     <wanghaibin.wang@huawei.com>, Heyi Guo <guoheyi@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        "Suzuki K Poulose" <suzuki.poulose@arm.com>
+Subject: [PATCH] kvm/arm/vgic: fix potential deadlock when ap_list is long
+Date:   Tue, 27 Aug 2019 00:39:12 +0800
+Message-ID: <1566837552-127854-1-git-send-email-guoheyi@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
- <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com> <20190826145756.GB4664@cisco>
-In-Reply-To: <20190826145756.GB4664@cisco>
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-Date:   Mon, 26 Aug 2019 09:39:50 -0700
-Message-ID: <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, me@carlosedp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 7:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
->
-> Hi,
->
-> On Fri, Aug 23, 2019 at 05:30:53PM -0700, Paul Walmsley wrote:
-> > On Thu, 22 Aug 2019, David Abdurachmanov wrote:
-> >
-> > > There is one failing kernel selftest: global.user_notification_signal
-> >
-> > Also - could you follow up with the author of this failing test to see if
-> > we can get some more clarity about what might be going wrong here?  It
-> > appears that the failing test was added in commit 6a21cc50f0c7f ("seccomp:
-> > add a return code to trap to userspace") by Tycho Andersen
-> > <tycho@tycho.ws>.
->
-> Can you post an strace and a cat of /proc/$pid/stack for both tasks
-> where it gets stuck? I don't have any riscv hardware, and it "works
-> for me" on x86 and arm64 with 100 tries.
+If ap_list is longer than 256, merge_final() in sort_list() will call
+comparison function with the same element just as below:
 
-I don't have the a build with SECCOMP for the board right now, so it
-will have to wait. I just finished a new kernel (almost rc6) for Fedora,
-but it will take time to assemble new repositories and a disk image.
+    do {
+        /*
+         * If the merge is highly unbalanced (e.g. the input is
+         * already sorted), this loop may run many iterations.
+         * Continue callbacks to the client even though no
+         * element comparison is needed, so the client's cmp()
+         * routine can invoke cond_resched() periodically.
+         */
+        if (unlikely(!++count))
+            cmp(priv, b, b);
 
-There is older disk image available (5.2.0-rc7 kernel with v2 SECCOMP)
-for QEMU or libvirt/QEMU:
+This will definitely cause deadlock in vgic_irq_cmp() and the call trace
+is:
 
-https://dl.fedoraproject.org/pub/alt/risc-v/disk-images/fedora/rawhide/20190703.n.0/Developer/
-https://fedoraproject.org/wiki/Architectures/RISC-V/Installing#Boot_with_libvirt
+[ 2667.130283] Call trace:
+[ 2667.130284] queued_spin_lock_slowpath+0x64/0x2a8
+[ 2667.130284] vgic_irq_cmp+0xfc/0x130
+[ 2667.130284] list_sort.part.0+0x1c0/0x268
+[ 2667.130285] list_sort+0x18/0x28
+[ 2667.130285] vgic_flush_lr_state+0x158/0x518
+[ 2667.130285] kvm_vgic_flush_hwstate+0x70/0x108
+[ 2667.130286] kvm_arch_vcpu_ioctl_run+0x114/0xa50
+[ 2667.130286] kvm_vcpu_ioctl+0x490/0x8c8
+[ 2667.130286] do_vfs_ioctl+0xc4/0x8c0
+[ 2667.130287] ksys_ioctl+0x8c/0xa0
+[ 2667.130287] __arm64_sys_ioctl+0x28/0x38
+[ 2667.130287] el0_svc_common+0x78/0x130
+[ 2667.130288] el0_svc_handler+0x38/0x78
+[ 2667.130288] el0_svc+0x8/0xc
 
-(If you are interesting trying it locally.)
+So return 0 immediately when a==b.
 
-IIRC I attempted to connected with strace, but it quickly returns and fails
-properly. Simply put strace unblocks whatever is stuck.
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ virt/kvm/arm/vgic/vgic.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-david
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index 13d4b38..64ed0dc 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -254,6 +254,13 @@ static int vgic_irq_cmp(void *priv, struct list_head *a, struct list_head *b)
+ 	bool penda, pendb;
+ 	int ret;
+ 
++	/*
++	 * list_sort may call this function with the same element when the list
++	 * is farely long.
++	 */
++	if (unlikely(a == b))
++		return 0;
++
+ 	raw_spin_lock(&irqa->irq_lock);
+ 	raw_spin_lock_nested(&irqb->irq_lock, SINGLE_DEPTH_NESTING);
+ 
+-- 
+1.8.3.1
+
