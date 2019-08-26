@@ -2,273 +2,257 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315C5C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585D9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028E4217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1098021848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 22:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qf8GWX0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfHZWgf (ORCPT
+        id S1726796AbfHZWir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 18:36:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41402 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfHZWge (ORCPT
+        Mon, 26 Aug 2019 18:38:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33693 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfHZWiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 18:36:34 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1i2Nb2-0006c8-Uo; Tue, 27 Aug 2019 00:36:21 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: numlist_push() barriers Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190807222634.1723-2-john.ogness@linutronix.de>
-        <20190823092109.doduc36avylm5cds@pathway.suse.cz>
-Date:   Tue, 27 Aug 2019 00:36:18 +0200
-In-Reply-To: <20190823092109.doduc36avylm5cds@pathway.suse.cz> (Petr Mladek's
-        message of "Fri, 23 Aug 2019 11:21:09 +0200")
-Message-ID: <878srfo8pp.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Mon, 26 Aug 2019 18:38:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id u16so16831013wrr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 15:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SaIBmj1syIhbIo3y0DHYvDjfeP8VfIt7/4u6ebKA9hE=;
+        b=qf8GWX0azpP5W9wmjsXsvDZrIM7ZBxNUy7tCzn+PQzZ10r4izIgThuc6VT0QnWcm6M
+         zjrmMMTn9kJF9HHdcOzXtPRIN0giEANC1gVg9JJkbV76zCgMcBfWzSfKglFJjVBb2Wpu
+         fd/6kOiMxzo6isqbtY8hUzzNA7h9F+MDJC1CprHIf9YFBXnL7wkzsT0eFuo01g92YnN5
+         2charSD1JaTDWr9la4F2RIiHSci8z1wg0W2ANH0+TIhbTaSTZoc/9EsEv/3HXx4BFqu9
+         OEy5mILXfCrIgfvMXYroRQYf8ZLKyqMqyCNAr5souRRlqiWqYOtDUaq38yxQ6RwQGb+q
+         RDhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=SaIBmj1syIhbIo3y0DHYvDjfeP8VfIt7/4u6ebKA9hE=;
+        b=OiZbURpWpypa9ebJHk+vibPJg509FHbpkGYE3QxSxM6+qOwdMVjMZ+HGWe7R5jUhS7
+         F+ooLNwUh7lWIpxLt85nFiPj+kmszMfSZ7hScdkmXXzDTvxOLCX8Av1D2bgmh9SHuD4L
+         54ZcXEp78bdzDFNsgYFN9MJwBzCXIUb6m41o140U0cF75+uGzoLqgIDC3QOvdu3RUAG1
+         l8bYTfmodQF+VTpsE2h/kO+5J7hr2y9wVooSJXt2N4+E67IN0s/ybZwgHF6F+KtBCVyw
+         kLVOlkHzAT+E2XY6L/VCYk41L7TO2o1CmUuRTNBSfxLxUMRcGWzVi6k4mnfYLADCeBSz
+         40HQ==
+X-Gm-Message-State: APjAAAUgGlOlCaHqstVAgalof8BYufQC51F0VTjnYoOvTxd4Hq7092vX
+        hyGMARWNSPZPdF6hkrmDpUwn0UDxdEk=
+X-Google-Smtp-Source: APXvYqxblZTUxm+ADPBGH+nFTO9lPKBMkIX9xeYFsGruga4P+tIPzTp2+nJNr4f+BDHWiI4MT2o6vA==
+X-Received: by 2002:adf:dd88:: with SMTP id x8mr26507496wrl.331.1566859122727;
+        Mon, 26 Aug 2019 15:38:42 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab? ([2a01:e34:ed2f:f020:f881:f5ed:b15d:96ab])
+        by smtp.googlemail.com with ESMTPSA id t13sm14908638wrr.0.2019.08.26.15.38.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 15:38:42 -0700 (PDT)
+Subject: [GIT PULL] timers drivers v5.4
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Magnus Damm <damm+renesas@opensource.se>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
+ <alpine.DEB.2.21.1908262257570.1939@nanos.tec.linutronix.de>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <417e2196-964a-3f22-4497-dcc7f7b7204d@linaro.org>
+Date:   Tue, 27 Aug 2019 00:38:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <alpine.DEB.2.21.1908262257570.1939@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
 
-AndreaP responded with some explanation (and great links!) on the topic
-of READ_ONCE. But I feel like your comments about the WRITE_ONCE were
-not addressed. I address that (and your other comments) below...
+Hi Thomas,
 
-On 2019-08-23, Petr Mladek <pmladek@suse.com> wrote:
->> --- /dev/null
->> +++ b/kernel/printk/numlist.c
->> +/**
->> + * numlist_push() - Add a node to the list and assign it a sequence number.
->> + *
->> + * @nl: The numbered list to push to.
->> + *
->> + * @n:  A node to push to the numbered list.
->> + *      The node must not already be part of a list.
->> + *
->> + * @id: The ID of the node.
->> + *
->> + * A node is added in two steps: The first step is to make this node the
->> + * head, which causes a following push to add to this node. The second step is
->> + * to update @next_id of the former head node to point to this one, which
->> + * makes this node visible to any task that sees the former head node.
->> + */
->> +void numlist_push(struct numlist *nl, struct nl_node *n, unsigned long id)
->> +{
->> +	unsigned long head_id;
->> +	unsigned long seq;
->> +	unsigned long r;
->> +
->> +	/*
->> +	 * bA:
->> +	 *
->> +	 * Setup the node to be a list terminator: next_id == id.
->> +	 */
->> +	WRITE_ONCE(n->next_id, id);
->
-> Do we need WRITE_ONCE() here?
-> Both "n" and "id" are given as parameters and do not change.
-> The assigment must be done before "id" is set as nl->head_id.
-> The ordering is enforced by cmpxchg_release().
+The following changes since commit 3e2d94535adb2df15f3907e4b4c7cd8a5a4c2b5a:
 
-The cmpxchg_release() ensures that if the node is visible to writers,
-then the finalized assignment is also visible. And the store_release()
-ensures that if the previous node is visible to any readers, then the
-finalized assignment is also visible. In the reader case, if any readers
-happen to be sitting on the node, numlist_read() will fail because the
-ID was updated when the node was popped. So for all these cases any
-compiler optimizations leading to that assigment (tearing, speculation,
-etc) should be irrelevant. Therefore, IMO the WRITE_ONCE() is not
-needed.
+  clocksource/drivers/hyperv: Enable TSC page clocksource on 32bit
+(2019-08-23 16:59:54 +0200)
 
-Since all of this is lockless, I used WRITE_ONCE() whenever touching
-shared variables. I must admit the decision may be motivated primarily
-by fear of compiler optimizations. Although "documenting lockless shared
-variable access" did play a role as well.
+are available in the Git repository at:
 
-I will replace the WRITE_ONCE with an assignment.
+  https://git.linaro.org/people/daniel.lezcano/linux.git tags/timers-v5.4
 
->> +
->> +	/* bB: #1 */
->> +	head_id = atomic_long_read(&nl->head_id);
->> +
->> +	for (;;) {
->> +		/* bC: */
->> +		while (!numlist_read(nl, head_id, &seq, NULL)) {
->> +			/*
->> +			 * @head_id is invalid. Try again with an
->> +			 * updated value.
->> +			 */
->> +
->> +			cpu_relax();
->
-> I have got very confused by this. cpu_relax() suggests that this
-> cycle is busy waiting until a particular node becomes valid.
-> My first though was that it must cause deadlock in NMI when
-> the interrupted code is supposed to make the node valid.
->
-> But it is the other way. The head is always valid when it is
-> added to the list. It might become invalid when another CPU
-> moves the head and the old one gets reused.
->
-> Anyway, I do not see any reason for cpu_relax() here.
+for you to fetch changes up to 19d608458f4f3bb3a1f89bd7e4814c3fd30dbec7:
 
-You are correct. The cpu_relax() should not be there. But there is still
-an issue that this could spin hard if the head was recycled and this CPU
-does not yet see the new head value.
+  clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
+(2019-08-27 00:31:39 +0200)
 
-To handle that, and in preparation for my next version, I'm now using a
-read_acquire() to load the ID in the node() callback (matching the
-set_release() in assign_desc()). This ensures that if numlist_read()
-fails, the new head will be visible.
+----------------------------------------------------------------
+- Remove dev_err() when used with platform_get_irq (Stephen Boyd)
 
-> Also the entire cycle would deserve a comment to avoid this mistake.
-> For example:
->
-> 		/*
-> 		 * bC: Read seq from current head. Repeat with new
-> 		 * head when it has changed and the old one got reused.
-> 		 */
+- Add DT binding and new compatible for Allwinner sun4i (Maxime Ripard)
 
-Agreed.
+- Register the Atmel tcb clocksource for delays (Alexandre Belloni)
 
->> +
->> +			/* bB: #2 */
->> +			head_id = atomic_long_read(&nl->head_id);
->> +		}
->> +
->> +		/*
->> +		 * bD:
->> +		 *
->> +		 * Set @seq to +1 of @seq from the previous head.
->> +		 *
->> +		 * Memory barrier involvement:
->> +		 *
->> +		 * If bB reads from bE, then bC->aA reads from bD.
->> +		 *
->> +		 * Relies on:
->> +		 *
->> +		 * RELEASE from bD to bE
->> +		 *    matching
->> +		 * ADDRESS DEP. from bB to bC->aA
->> +		 */
->> +		WRITE_ONCE(n->seq, seq + 1);
->
-> Do we really need WRITE_ONCE() here? 
-> It is the same problem as with setting n->next_id above.
+- Add a clock divider for the Freescale imx platforms and new timer node
+  in the DT (Anson Huang)
 
-For the same reasons as the other WRITE_ONCE, I will replace the
-WRITE_ONCE with an assignment.
+- Use DIV_ROUND_CLOSEST macro for the Renesas OSTM (Geert Uytterhoeven)
 
->> +
->> +		/*
->> +		 * bE:
->> +		 *
->> +		 * This store_release() guarantees that @seq and @next are
->> +		 * stored before the node with @id is visible to any popping
->> +		 * writers. It pairs with the address dependency between @id
->> +		 * and @seq/@next provided by numlist_read(). See bD and bF
->> +		 * for details.
->> +		 */
->> +		r = atomic_long_cmpxchg_release(&nl->head_id, head_id, id);
->> +		if (r == head_id)
->> +			break;
->> +
->> +		/* bB: #3 */
->> +		head_id = r;
->> +	}
->> +
->> +	n = nl->node(head_id, nl->node_arg);
->> +
->> +	/*
->> +	 * The old head (which is still the list terminator), cannot be
->> +	 * removed because the list will always have at least one node.
->> +	 * Therefore @n must be non-NULL.
->> +	 */
->
-> Please, move this comment above the nl->node() call. Both locations
-> makes sense. I just see it as an important note for the call and thus
-> is should be above. Also it will be better separated from the below
-> comments for the _release() barrier.
+- Fix GENMASK and timer operation for the npcm timer (Avi Fishman)
 
-OK.
+- Fix timer-of showing an error message when EPROBE_DEFER is
+  returned (Jon Hunter)
 
->> +	/*
->> +	 * bF: the STORE part for @next_id
->> +	 *
->> +	 * Set @next_id of the previous head to @id.
->> +	 *
->> +	 * Memory barrier involvement:
->> +	 *
->> +	 * If bB reads from bE, then bF overwrites bA.
->> +	 *
->> +	 * Relies on:
->> +	 *
->> +	 * RELEASE from bA to bE
->> +	 *    matching
->> +	 * ADDRESS DEP. from bB to bF
->> +	 */
->> +	/*
->> +	 * bG: the RELEASE part for @next_id
->> +	 *
->> +	 * This _release() guarantees that a reader will see the updates to
->> +	 * this node's @seq/@next_id if the reader saw the @next_id of the
->> +	 * previous node in the list. It pairs with the address dependency
->> +	 * between @id and @seq/@next provided by numlist_read().
->> +	 *
->> +	 * Memory barrier involvement:
->> +	 *
->> +	 * If aB reads from bG, then aA' reads from bD, where aA' is in
->> +	 * numlist_read() to read the node ID from bG.
->> +	 * If aB reads from bG, then aB' reads from bA, where aB' is in
->> +	 * numlist_read() to read the node ID from bG.
->> +	 *
->> +	 * Relies on:
->> +	 *
->> +	 * RELEASE from bG to bD
->> +	 *    matching
->> +	 * ADDRESS DEP. from aB to aA'
->> +	 *
->> +	 * RELEASE from bG to bA
->> +	 *    matching
->> +	 * ADDRESS DEP. from aB to aB'
->> +	 */
->> +	smp_store_release(&n->next_id, id);
->
-> Sigh, I see this line one screen below the previous command thanks
-> to the extensive comments. Well, bF comment looks redundant.
+- Add new SoC DT binding and match for Renesas timers (Magnus Damm)
 
-Yes, it is a lot, but bF and bG are commenting on different things. bF
-is the explanation that the _writer_ will overwrite the previous node's
-terminating value with the ID of the new node. bG is the explanation
-that if the _reader_ reads a non-terminating @next_id value, then the
-initialization of @seq and @next_id for that next node will be visible.
+----------------------------------------------------------------
+Alexandre Belloni (1):
+      clocksource/drivers/tcb_clksrc: Register delay timer
 
-Both of these points are key to the numlist implementation because they
-guarantee the complete and correct linking of the list for all nodes
-pushed.
+Anson Huang (3):
+      clocksource/drivers/imx-sysctr: Add internal clock divider handle
+      arm64: dts: imx8mm: Add system counter node
+      arm64: dts: imx8mq: Add system counter node
 
-John Ogness
+Avi Fishman (1):
+      clocksource/drivers/npcm: Fix GENMASK and timer operation
+
+Geert Uytterhoeven (1):
+      clocksource/drivers/renesas-ostm: Use DIV_ROUND_CLOSEST() helper
+
+Jon Hunter (2):
+      clocksource/drivers/timer-of: Do not warn on deferred probe
+      clocksource/drivers: Do not warn on probe defer
+
+Magnus Damm (7):
+      dt-bindings: timer: renesas, cmt: Add CMT0234 to sh73a0 and r8a7740
+      dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
+      dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
+      dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
+      dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
+      clocksource/drivers/sh_cmt: r8a7740 and sh73a0 SoC-specific match
+      clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
+
+Maxime Ripard (4):
+      dt-bindings: timer: Convert Allwinner A10 Timer to a schema
+      dt-bindings: timer: Add missing compatibles
+      clocksource: sun4i: Add missing compatibles
+      dt-bindings: timer: Convert Allwinner A13 HSTimer to a schema
+
+Stephen Boyd (1):
+      clocksource: Remove dev_err() usage after platform_get_irq()
+
+ .../bindings/timer/allwinner,sun4i-a10-timer.yaml  | 102
++++++++++++++++++++++
+ .../bindings/timer/allwinner,sun4i-timer.txt       |  19 ----
+ .../bindings/timer/allwinner,sun5i-a13-hstimer.txt |  26 ------
+ .../timer/allwinner,sun5i-a13-hstimer.yaml         |  79 ++++++++++++++++
+ .../devicetree/bindings/timer/renesas,cmt.txt      |  40 ++++----
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi          |   8 ++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi          |   8 ++
+ drivers/clocksource/Kconfig                        |   2 +-
+ drivers/clocksource/em_sti.c                       |   4 +-
+ drivers/clocksource/renesas-ostm.c                 |   2 +-
+ drivers/clocksource/sh_cmt.c                       |  19 +++-
+ drivers/clocksource/sh_tmu.c                       |   5 +-
+ drivers/clocksource/timer-atmel-tcb.c              |  18 ++++
+ drivers/clocksource/timer-imx-sysctr.c             |   5 +
+ drivers/clocksource/timer-npcm7xx.c                |   9 +-
+ drivers/clocksource/timer-of.c                     |   6 +-
+ drivers/clocksource/timer-probe.c                  |   4 +-
+ drivers/clocksource/timer-sun4i.c                  |   4 +
+ 18 files changed, 275 insertions(+), 85 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+ delete mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.txt
+ create mode 100644
+Documentation/devicetree/bindings/timer/allwinner,sun5i-a13-hstimer.yaml
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
