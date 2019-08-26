@@ -2,113 +2,147 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D62C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC328C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597F520815
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7284620815
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 02:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnUIMT7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfHZChW (ORCPT
+        id S1729304AbfHZCqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 22:37:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:52498 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728460AbfHZChV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 22:37:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19249344;
-        Sun, 25 Aug 2019 19:37:20 -0700 (PDT)
-Received: from [10.162.43.136] (p8cg001049571a15.blr.arm.com [10.162.43.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E19513F718;
-        Sun, 25 Aug 2019 19:37:09 -0700 (PDT)
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
- <20190809101632.GM5482@bombadil.infradead.org>
- <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
- <20190809135202.GN5482@bombadil.infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
-Date:   Mon, 26 Aug 2019 08:07:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 25 Aug 2019 22:46:05 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41515 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfHZCqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 22:46:05 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m62so9901729vsc.8;
+        Sun, 25 Aug 2019 19:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ng3r5ONd1UXk9XbKRQ/zQ2B6srwD/ZPTNQ4V19/Kj9k=;
+        b=bnUIMT7JohUlW4Oahlrsf7w9EBYZqsvNo09J+X+VLhDwVpX6jTeQWC6IN6sIQAq7fp
+         0a54HgDv5nhu19OUAynDvvP15aLc44u6qo11gYC5RnNCo0J3lGtNAqhB7eWX8kzNEk/r
+         hRrg9fGUKL9FK97XUN+qWd2ptbq0ggMlaPw9C9ifvDxMrj9ox9RBsmdJDuINDmZ+2Qut
+         yvN3RnEFO8fuxwRn8FSXkieO1xxa/17uHZz9eIBgCTs0py11lO5bPabcGqwRMFnmeZ3C
+         mOH/WFKR23C0xMfMtYjDn5R3uHjgc0j7kKQa5+LCkhqbZY3Fsx7eSvmew0cspGOTaZtD
+         TsUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ng3r5ONd1UXk9XbKRQ/zQ2B6srwD/ZPTNQ4V19/Kj9k=;
+        b=PjQtq3LLbprJQVsauMhAo9Nratcu9WzlZWwdF3po6ZSq+M+GtI3sUBgQV9inesGlCo
+         ill/MEm6grybf/qvOPrRo/elk7AQ0oFuQ4PhoZRurVPztf2J3Og3/c9HxhsGZrDyJzuK
+         srTgGXNgiw7ZrsZ1p9b/6X0vpSh9QrD2Yb1q6kd++uSKFXQnukPEElH2nMNa4ClGn8MK
+         Nf5fT7tT57fdvKHyqBAIQepxFC0NHMgxl9ug6XMNgOxS+Phz9+PurSakpu/q27HgdFMr
+         h0Kw7O2Qp4g2xtZfwO3bMkrDvH/dcVNhRyvwqzuPH9cBCmePLgrAqKXPJURFflQZhZGy
+         xbdQ==
+X-Gm-Message-State: APjAAAWRDsDoowIIDhSLStJSo0HduqhkFUh7deHX8nGNsc/fkMf2j/Cz
+        iU6pnNlVymqp3kHlXg9/7OvTOqbbgTUf02ccBQ==
+X-Google-Smtp-Source: APXvYqzQCcgTMZNQ/nWhyrJuz9jbUm0rIgbeTEFk88hIcZ0/xc+RP1r9NgPZajYUzJYrKIyUk683wwYVBYswndDjx/Q=
+X-Received: by 2002:a67:eb12:: with SMTP id a18mr9289943vso.231.1566787563972;
+ Sun, 25 Aug 2019 19:46:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190809135202.GN5482@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190730122534.30687-1-rdong.ge@gmail.com> <1dc87e69-628b-fd04-619a-8dbe5bdfa108@cumulusnetworks.com>
+In-Reply-To: <1dc87e69-628b-fd04-619a-8dbe5bdfa108@cumulusnetworks.com>
+From:   Rundong Ge <rdong.ge@gmail.com>
+Date:   Mon, 26 Aug 2019 10:45:52 +0800
+Message-ID: <CAN1LvyoL3YUot0JAfz1BwN9LBxM0XUgSkYHhWJ75DFHW_-6+zw@mail.gmail.com>
+Subject: Re: [PATCH] bridge:fragmented packets dropped by bridge
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        kadlec@netfilter.org, Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 30, 2019 at 8:41 PM Nikolay Aleksandrov
+<nikolay@cumulusnetworks.com> wrote:
+>
+> On 30/07/2019 15:25, Rundong Ge wrote:
+> > Given following setup:
+> > -modprobe br_netfilter
+> > -echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+> > -brctl addbr br0
+> > -brctl addif br0 enp2s0
+> > -brctl addif br0 enp3s0
+> > -brctl addif br0 enp6s0
+> > -ifconfig enp2s0 mtu 1300
+> > -ifconfig enp3s0 mtu 1500
+> > -ifconfig enp6s0 mtu 1500
+> > -ifconfig br0 up
+> >
+> >                  multi-port
+> > mtu1500 - mtu1500|bridge|1500 - mtu1500
+> >   A                  |            B
+> >                    mtu1300
+> >
+> > With netfilter defragmentation/conntrack enabled, fragmented
+> > packets from A will be defragmented in prerouting, and refragmented
+> > at postrouting.
+> > But in this scenario the bridge found the frag_max_size(1500) is
+> > larger than the dst mtu stored in the fake_rtable whitch is
+> > always equal to the bridge's mtu 1300, then packets will be dopped.
+> >
+> > This modifies ip_skb_dst_mtu to use the out dev's mtu instead
+> > of bridge's mtu in bridge refragment.
+> >
+> > Signed-off-by: Rundong Ge <rdong.ge@gmail.com>
+> > ---
+> >  include/net/ip.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/include/net/ip.h b/include/net/ip.h
+> > index 29d89de..0512de3 100644
+> > --- a/include/net/ip.h
+> > +++ b/include/net/ip.h
+> > @@ -450,6 +450,8 @@ static inline unsigned int ip_dst_mtu_maybe_forward(const struct dst_entry *dst,
+> >  static inline unsigned int ip_skb_dst_mtu(struct sock *sk,
+> >                                         const struct sk_buff *skb)
+> >  {
+> > +     if ((skb_dst(skb)->flags & DST_FAKE_RTABLE) && skb->dev)
+> > +             return min(skb->dev->mtu, IP_MAX_MTU);
+> >       if (!sk || !sk_fullsock(sk) || ip_sk_use_pmtu(sk)) {
+> >               bool forwarding = IPCB(skb)->flags & IPSKB_FORWARDED;
+> >
+> >
+>
+> I don't think this is correct, there's a reason why the bridge chooses the smallest
+> possible MTU out of its members and this is simply a hack to circumvent it.
+> If you really like to do so just set the bridge MTU manually, we've added support
+> so it won't change automatically to the smallest, but then how do you pass packets
+> 1500 -> 1300 in this setup ?
+>
+> You're talking about the frag_size check in br_nf_ip_fragment(), right ?
+>
 
+Hi Nikolay
+My setup may not be common. And may I know if there is any reason to
+use output port's MTU
+to do the re-fragment check but then use the bridge's MTU to do the re-fragment?
+Is it the expected behavior that the bridge's MTU will affect the
+FORWARD traffic re-fragment,
+because I used to think the bridge's MTU will only effect the OUTPUT
+traffic sent from "br0".
+And the modification in this patch will replace the MTU in the
+fake_rtable which is only
+used in the FORWARD re-fragment and won't affect the local traffic from "br0".
 
-On 08/09/2019 07:22 PM, Matthew Wilcox wrote:
-> On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
->> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
->>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
->>>> Should alloc_gigantic_page() be made available as an interface for general
->>>> use in the kernel. The test module here uses very similar implementation from
->>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
->>>> needs to be exported through a header.
->>>
->>> Why are you allocating memory at all instead of just using some
->>> known-to-exist PFNs like I suggested?
->>
->> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
->> Now walking the kernel page table for a known symbol like kernel_init()
-> 
-> I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
-> for a known symbol like kernel_init().
-> 
->> as you had suggested earlier we might encounter page table page entries at PMD
->> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
->> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
->> which create large mappings at those levels but that requirement does not
->> exist for page table pages pointing to next level. Is not that correct ? Or
->> I am missing something here ?
-> 
-> Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
-> PFN.  It's really not hard.
-
-As Mark pointed out earlier that might end up being just a synthetic PFN
-which might not even exist on a given system.
+TKS
+Raydodn
