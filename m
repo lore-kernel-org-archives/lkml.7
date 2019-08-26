@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E46C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACA9C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381302187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24B82186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="b2cUU8Qm"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="I5XP+L2L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbfHZMJx (ORCPT
+        id S1731921AbfHZMJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:09:53 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:33278 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731733AbfHZMJF (ORCPT
+        Mon, 26 Aug 2019 08:09:56 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:21588 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731094AbfHZMJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:09:05 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+        Mon, 26 Aug 2019 08:09:03 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   Tudor.Ambarus@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="Tudor.Ambarus@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -34,38 +34,38 @@ Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   a:smtpout.microchip.com a:mx1.microchip.iphmx.com
   a:mx2.microchip.iphmx.com include:servers.mcsv.net
   include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: L7idsH8QsSwFb9NTCp9Mmh64x+NddcJ406FlZzlxruSH9yoAlLrN9EXyK2JNXwGH/UBRoHEvzT
- wG6fmmNlRx7vqL3FGdBdsT/GS/ZuYesVQFlHLLkva2KMSUVYiDLn9J3bgpLwnpUpOcQwH3y7y2
- u00Jtfjj0eyYi3tQN2a50Slj0AqdCsDMMkvbdT5Xqjf2CCW1cS2VxagcqRQgff5ji6hJQ8bcMM
- M0W1JRZEOg/ax8HIonsg/JwsgdYkWjVT72qQtuTWTwGHm9zN3FrDMlB1yPPRf961ZnyA8WIMw1
- Ds4=
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 1b23bYCo8oMGMPquIrYjlUvJ0y66Gm7Nf39v6h8iwVXzU2PTUysGsDX3zMuG8CUAu2KCtEf2zr
+ 7KZZzmQAeTaBgeRNvwVBi1Mjce6EuKTSbzB3doge2W5dtts0f/4Bv7lUiG9PW2mB0bkqw42K59
+ K7iJJ0w4Q4uEzq6smrhWdpDiH1lSVgLqWtnobrqolJy40f77AqzGIhnbOlRrM1Rbgpg+SR2ZYB
+ eVSLYJ8j4+FQvugJmQilEkbAwsKaCOFuWqjxJ+hDDmtO/jOfc1mpKwcB47jDCJRzBP95LWGnwE
+ u4k=
 X-IronPort-AV: E=Sophos;i="5.64,433,1559545200"; 
-   d="scan'208";a="46520777"
+   d="scan'208";a="46588846"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2019 05:09:05 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2019 05:09:02 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 26 Aug 2019 05:09:03 -0700
+ 15.1.1713.5; Mon, 26 Aug 2019 05:09:01 -0700
 Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
  email.microchip.com (10.10.87.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 26 Aug 2019 05:09:04 -0700
+ via Frontend Transport; Mon, 26 Aug 2019 05:09:02 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fL1VgZZRZ9njp4rFey4KTjbLbtcwsFqSsChKLYvKyMdAGFD1sUr2Q+eoZm55SAZIYUq/Qq0OM6xZgCWmHbedhxEQPP9drhP/VtAgITvkamUMMg2SK+H0y8iGg8c6/aM7/kqiAgD5pHfM+jTf2GABwCfXipQR7wPnI8X7Q0tVu49gsmrLM4+3x4mIZ4r1HOTY8tq1WkmGwE7NoyWKUgr9NZYWHkx33OK8gBZrtkBTbO7YdHrrc53Q5PXlMTrV4A/JuDANCRpEvVuyIpntXMKkaXY+3plZgDU9sYM1HLQEz86hKH1bWuhB56emDhEGPttcz3NTKHQKexN4NB2XQ0QRJg==
+ b=X4alxsK2hZI2VGE18wsQPBn1jUG1Jwc6DB6+OpacNGaxmMLnMdcgm76BpoVohn0Flg3Lpef5m3fHRMw1wl+iriXuYN39ijVrgAlIljdMXG7hjd4ugnoVncS4yslYLm4xbnS/QrvveDjISIaZEYAtyuaYRPzqMMlbrUqiLmSoUmUxZQ/AgWGL5vbEUCyvhU2P7L39CkvIX1Ie5e6B6lBKXdyE1nYdzjMeuBrNRQUQUZL9oCJ7jWR64Ts6xXLxtdVvba4dG0M8MoPdQhcFFQrPH2mo1V5kv+d1uB/PCVkXRKYM6OoZYqx5AEtQi0D+OiDSpEFd0/LE1Sd9aQEXmPoEvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TYkmIUFTQvRMJYvhZhq10CllljCgJS5yCXTvQ9exY1k=;
- b=W4huwBjcQNgDbjq4T2uUY2S6YcAzZ0TtLJ0PYVRXnhgLYyKr8KUxZOIcWS7tnqrrGCYcX0N8Ia7MS7qBJOqyzwDkakX/tpDrMtUDDts3CtigWaZ1WKIPW9VZAxgrF25+6z/PQI2sL3U6fKOsFTXpoHaNT7b22D9cyNmI68FboFgPR7WOr3tV/7k7kBwOr0qjFgpVNJ9RrXjtoEc8lT67VunAdaPphtt7INYiE+dW1axHun8Nyk865Wio4GDzQhujhKJRQCxjz/gwf5MASi7drn6cJeBkV+gyPzCwADH9pzNjNQoIM0CAmSbEPWKUFQSIcvenEpFJeZf34snELZBl4Q==
+ bh=bpDlfTaWESJytOMjMrbaec6vmrndTL8P/WfJRbmZdk8=;
+ b=VzCUudM8T2iYsZJfwiYmyFymULzrmzgRx0GB08esxryxhijHC9BKzML4OUpCEdoYLJ54xiJAKKdAL+4WueUFZTtzeYHh/4igK4JLh+N3gpy+T9h0rFQVKYRXM9zSjiXAQnFH6mLevNfKtR1ihf0HiYkxFWHPUHrkYkC0S0biHL6G/52PY2OED8Mp47PDvxcTUAKrCiNH0nhOPdVqgkVJyRzrqkeAbOJvxaAdHIiWLRJqSKXoYhFVA5mFH8bKmB+JjSTtGpg7x1ImWeGSkxTLagGUue2OWEEPfiq+DMApL1VYyuXQgdkp6GDhzW4QYrQOPb22Cj2bpVHyzP3b3aAqMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -73,27 +73,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TYkmIUFTQvRMJYvhZhq10CllljCgJS5yCXTvQ9exY1k=;
- b=b2cUU8QmZM6Qcb0hfK4gyCbbE6tL+wjIdNy7JrezdliLgdEPMEzI7+2Rvb6bEoazHn4cKErc3x5zd7rlzKU3tguosvHM41tetCPO0/pBGaBZBZ4inV9pqV1we0dm4G1S0+TyMTfVFJrdksmtlHe3JCsWdzqjk7uoP3UHIs8hQ+g=
+ bh=bpDlfTaWESJytOMjMrbaec6vmrndTL8P/WfJRbmZdk8=;
+ b=I5XP+L2LS1cLvyEjl1YteLoGaJYKJLd5ddvvtncwXXca2duvBxqwzPLBK0eyfvKYAn/JUP7H0WAPwAeq32wfWTEd/w+g2vs60lmQ02cg2OPdE/9ZFxbHULoLZQadcvenna2oiYSBrojIoSMmpG1DxikkLJxWdL9BkquI7mPJSqE=
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
  MN2PR11MB3678.namprd11.prod.outlook.com (20.178.252.94) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Mon, 26 Aug 2019 12:08:56 +0000
+ 15.20.2199.21; Mon, 26 Aug 2019 12:08:44 +0000
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 12:08:56 +0000
+ 12:08:44 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <boris.brezillon@collabora.com>, <marek.vasut@gmail.com>,
         <vigneshr@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
         <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC:     <boris.brezillon@bootlin.com>, <Tudor.Ambarus@microchip.com>
-Subject: [RESEND PATCH v3 09/20] mtd: spi-nor: Create a ->set_4byte() method
-Thread-Topic: [RESEND PATCH v3 09/20] mtd: spi-nor: Create a ->set_4byte()
- method
-Thread-Index: AQHVXAcE+2ySzEKDQkeCEarhbPF6Sw==
-Date:   Mon, 26 Aug 2019 12:08:48 +0000
-Message-ID: <20190826120821.16351-10-tudor.ambarus@microchip.com>
+CC:     <Tudor.Ambarus@microchip.com>
+Subject: [RESEND PATCH v3 07/20] mtd: spi_nor: Move manufacturer quad_enable()
+ in ->default_init()
+Thread-Topic: [RESEND PATCH v3 07/20] mtd: spi_nor: Move manufacturer
+ quad_enable() in ->default_init()
+Thread-Index: AQHVXAcBVqSDVjwU4UmVniY3zigyJA==
+Date:   Mon, 26 Aug 2019 12:08:44 +0000
+Message-ID: <20190826120821.16351-8-tudor.ambarus@microchip.com>
 References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
 In-Reply-To: <20190826120821.16351-1-tudor.ambarus@microchip.com>
 Accept-Language: en-US
@@ -107,214 +108,134 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.9.5
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65b6d62b-dae5-43c4-2022-08d72a1e2693
+x-ms-office365-filtering-correlation-id: fbd3d739-872a-4f40-fecb-08d72a1e241c
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB3678;
 x-ms-traffictypediagnostic: MN2PR11MB3678:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB3678A185AD68C0D0D70DDF1DF0A10@MN2PR11MB3678.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <MN2PR11MB3678BAA4E524E6F3EFF8C26FF0A10@MN2PR11MB3678.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
 x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(366004)(396003)(376002)(199004)(189003)(486006)(2616005)(476003)(6666004)(107886003)(316002)(14454004)(386003)(6506007)(76176011)(99286004)(52116002)(54906003)(110136005)(478600001)(102836004)(4326008)(25786009)(36756003)(446003)(26005)(11346002)(50226002)(81156014)(66066001)(8676002)(53936002)(81166006)(8936002)(6512007)(6486002)(6436002)(3846002)(6116002)(186003)(86362001)(305945005)(2201001)(7736002)(2906002)(64756008)(66446008)(1076003)(71190400001)(5660300002)(71200400001)(256004)(14444005)(66946007)(66556008)(66476007)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3678;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(366004)(396003)(376002)(199004)(189003)(486006)(2616005)(476003)(107886003)(316002)(14454004)(386003)(6506007)(76176011)(99286004)(52116002)(110136005)(478600001)(102836004)(4326008)(25786009)(36756003)(446003)(26005)(11346002)(50226002)(81156014)(66066001)(8676002)(53936002)(81166006)(8936002)(6512007)(6486002)(6436002)(3846002)(6116002)(186003)(86362001)(305945005)(2201001)(7736002)(2906002)(64756008)(66446008)(1076003)(71190400001)(5660300002)(71200400001)(256004)(66946007)(66556008)(66476007)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3678;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3jVb+vm/JSAkTJLqr5dycmuamWwNEeJkFM5jM2CooSQsaIOHII/6Om1yL8oEtBQHtX9dInzd3av1TyQUwt4czCOJMzLTr8NdVyBKWN72f3HWdLrvlbYMe4LKAhMX+UmFV8+abXnJ8ZIbt0yDv9fWxdaqqVwKpO5xM9k8V+OylAoWTVMa2UK1NBzMDFcTM/b+O0bHhCYTveMosumJ5+tjKzc+/X7oJQ+8ShzX0T4Ooa4rDqF3MD9YJ3LZrvTs/SAbzssKCuzcJMf1piDIHZJQxmNlOa5nz4HPDd2oGS/BjhsHKpGN0OrxlAussPcGCgpghfEsbm05jViVlh8IYHHHgYl3SWL5x1CLkwQe/YyLqito6f6OGSAO19RNHGVbi0et6BarFRym4OMQlHZiAS6qaZWJQNg2A5bguPwYDdh/E18=
+x-microsoft-antispam-message-info: k9l89VAsgiq5Qy72JkMqb5wEzYejy7L551v7+2Vyt7IOy9MhLfHrZqs98nr4dL+LRXTx/J0XO19SIZKousqiV95o1B+gYwqRQBuIuMeeORGex+6H1jvU3n5QPxkU/2UWoIMS69Xk1klL03rCOdlgFQW2fBKxKYdUHARne1tWGkfevCQlCuusnVfASbB0ErJY+cOCU9ZyLxb3IZwFB47AhHBV5fPfGmmjX0khWuUJFUuXkX5rTIu791RE4tYzMYitqohjnSkm3TGv2NapMz1y6Q/fbuvRyiOGStcPwoWxzbusfntQ+JCWqF6yohWeMPd4c77q9nsIIsGBwMXl+psltJTHKgWyT6GKHYtL/T6jNiv1XKAm0wDcYFtVz4cPlpdj6ov7YEKYEtDwmOEvVuUdiEocy3UtYwznHbHArzzDjE4=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65b6d62b-dae5-43c4-2022-08d72a1e2693
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 12:08:48.2675
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbd3d739-872a-4f40-fecb-08d72a1e241c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 12:08:44.1718
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: S5MrAPvFTiaDTSzKy1sHdXqvJ631q3lnv2WBf1YWxdH2E6/i9E3YGl54oBwjHlbI5bPgYuWDo6yPFfzfxgc4/IL3j+BjSU+UsAsdbuASPJg=
+X-MS-Exchange-CrossTenant-userprincipalname: ylhXu8uYq7o/Te42U9obuANzZaRpGq+yMvE8nfw2XyGDZp1yerIXXWOe4+eYgDP7u0Fei5JkOIjOGxeyDJ9M84wA3mEZtOiAJljNk5lwUQY=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3678
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-The procedure used to enable 4 byte addressing mode depends on the NOR
-device, so let's provide a hook so that manufacturer specific handling
-can be implemented in a sane way.
+The goal is to move the quad_enable manufacturer specific init in the
+nor->manufacturer->fixups->default_init()
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-[tudor.ambarus@microchip.com: use nor->params.set_4byte() instead of
-nor->set_4byte()]
+The legacy quad_enable() implementation is spansion_quad_enable(),
+select this method by default.
+
+Set specific manufacturer fixups->default_init() hooks to overwrite
+the default quad_enable() implementation when needed.
+
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
-v3: no changes
+v3: collect R-b
 
- drivers/mtd/spi-nor/spi-nor.c | 76 ++++++++++++++++++++++-----------------=
+ drivers/mtd/spi-nor/spi-nor.c | 48 ++++++++++++++++++++++++++-------------=
 ----
- include/linux/mtd/spi-nor.h   |  2 ++
- 2 files changed, 41 insertions(+), 37 deletions(-)
+ 1 file changed, 29 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 1e7f8dc3457d..235e82a121a1 100644
+index 3dbbfe34d1d2..2a239531704a 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -633,6 +633,17 @@ static int macronix_set_4byte(struct spi_nor *nor, boo=
-l enable)
- 			      NULL, 0);
+@@ -4150,13 +4150,38 @@ static int spi_nor_parse_sfdp(struct spi_nor *nor,
+ 	return err;
  }
 =20
-+static int st_micron_set_4byte(struct spi_nor *nor, bool enable)
++static void macronix_set_default_init(struct spi_nor *nor)
 +{
-+	int ret;
-+
-+	write_enable(nor);
-+	ret =3D macronix_set_4byte(nor, enable);
-+	write_disable(nor);
-+
-+	return ret;
++	nor->params.quad_enable =3D macronix_quad_enable;
 +}
 +
- static int spansion_set_4byte(struct spi_nor *nor, bool enable)
- {
- 	nor->bouncebuf[0] =3D enable << 7;
-@@ -667,45 +678,24 @@ static int spi_nor_write_ear(struct spi_nor *nor, u8 =
-ear)
- 	return nor->write_reg(nor, SPINOR_OP_WREAR, nor->bouncebuf, 1);
- }
-=20
--/* Enable/disable 4-byte addressing mode. */
--static int set_4byte(struct spi_nor *nor, bool enable)
-+static int winbond_set_4byte(struct spi_nor *nor, bool enable)
- {
--	int status;
--	bool need_wren =3D false;
--
--	switch (JEDEC_MFR(nor->info)) {
--	case SNOR_MFR_ST:
--	case SNOR_MFR_MICRON:
--		/* Some Micron need WREN command; all will accept it */
--		need_wren =3D true;
--		/* fall through */
--	case SNOR_MFR_MACRONIX:
--	case SNOR_MFR_WINBOND:
--		if (need_wren)
--			write_enable(nor);
-+	int ret;
-=20
--		status =3D macronix_set_4byte(nor, enable);
--		if (need_wren)
--			write_disable(nor);
-+	ret =3D macronix_set_4byte(nor, enable);
-+	if (ret || enable)
-+		return ret;
-=20
--		if (!status && !enable &&
--		    JEDEC_MFR(nor->info) =3D=3D SNOR_MFR_WINBOND) {
--			/*
--			 * On Winbond W25Q256FV, leaving 4byte mode causes
--			 * the Extended Address Register to be set to 1, so all
--			 * 3-byte-address reads come from the second 16M.
--			 * We must clear the register to enable normal behavior.
--			 */
--			write_enable(nor);
--			spi_nor_write_ear(nor, 0);
--			write_disable(nor);
--		}
-+	/*
-+	 * On Winbond W25Q256FV, leaving 4byte mode causes the Extended Address
-+	 * Register to be set to 1, so all 3-byte-address reads come from the
-+	 * second 16M. We must clear the register to enable normal behavior.
-+	 */
-+	write_enable(nor);
-+	ret =3D spi_nor_write_ear(nor, 0);
-+	write_disable(nor);
-=20
--		return status;
--	default:
--		/* Spansion style */
--		return spansion_set_4byte(nor, enable);
--	}
-+	return ret;
- }
-=20
- static int spi_nor_xread_sr(struct spi_nor *nor, u8 *sr)
-@@ -4153,11 +4143,18 @@ static int spi_nor_parse_sfdp(struct spi_nor *nor,
- static void macronix_set_default_init(struct spi_nor *nor)
- {
- 	nor->params.quad_enable =3D macronix_quad_enable;
-+	nor->params.set_4byte =3D macronix_set_4byte;
- }
-=20
- static void st_micron_set_default_init(struct spi_nor *nor)
- {
- 	nor->params.quad_enable =3D NULL;
-+	nor->params.set_4byte =3D st_micron_set_4byte;
++static void st_micron_set_default_init(struct spi_nor *nor)
++{
++	nor->params.quad_enable =3D NULL;
 +}
 +
-+static void winbond_set_default_init(struct spi_nor *nor)
-+{
-+	nor->params.set_4byte =3D winbond_set_4byte;
- }
-=20
  /**
-@@ -4178,6 +4175,10 @@ static void spi_nor_manufacturer_init_params(struct =
-spi_nor *nor)
- 		st_micron_set_default_init(nor);
- 		break;
-=20
-+	case SNOR_MFR_WINBOND:
-+		winbond_set_default_init(nor);
+  * spi_nor_manufacturer_init_params() - Initialize the flash's parameters =
+and
+- * settings based on ->default_init() hook.
++ * settings based on MFR register and ->default_init() hook.
+  * @nor:	pointer to a 'struct spi-nor'.
+  */
+ static void spi_nor_manufacturer_init_params(struct spi_nor *nor)
+ {
++	/* Init flash parameters based on MFR */
++	switch (JEDEC_MFR(nor->info)) {
++	case SNOR_MFR_MACRONIX:
++		macronix_set_default_init(nor);
 +		break;
 +
- 	default:
- 		break;
- 	}
-@@ -4222,6 +4223,7 @@ static void spi_nor_info_init_params(struct spi_nor *=
-nor)
++	case SNOR_MFR_ST:
++	case SNOR_MFR_MICRON:
++		st_micron_set_default_init(nor);
++		break;
++
++	default:
++		break;
++	}
++
+ 	if (nor->info->fixups && nor->info->fixups->default_init)
+ 		nor->info->fixups->default_init(nor);
+ }
+@@ -4168,6 +4193,9 @@ static int spi_nor_init_params(struct spi_nor *nor)
+ 	const struct flash_info *info =3D nor->info;
+ 	u8 i, erase_mask;
 =20
- 	/* Initialize legacy flash parameters and settings. */
- 	params->quad_enable =3D spansion_quad_enable;
-+	params->set_4byte =3D spansion_set_4byte;
-=20
++	/* Initialize legacy flash parameters and settings. */
++	params->quad_enable =3D spansion_quad_enable;
++
  	/* Set SPI NOR sizes. */
  	params->size =3D (u64)info->sector_size * info->n_sectors;
-@@ -4587,7 +4589,7 @@ static int spi_nor_init(struct spi_nor *nor)
- 		 */
- 		WARN_ONCE(nor->flags & SNOR_F_BROKEN_RESET,
- 			  "enabling reset hack; may not recover from unexpected reboots\n");
--		set_4byte(nor, true);
-+		nor->params.set_4byte(nor, true);
- 	}
+ 	params->page_size =3D info->page_size;
+@@ -4233,24 +4261,6 @@ static int spi_nor_init_params(struct spi_nor *nor)
+ 			       SPINOR_OP_SE);
+ 	spi_nor_init_uniform_erase_map(map, erase_mask, params->size);
 =20
- 	return 0;
-@@ -4611,7 +4613,7 @@ void spi_nor_restore(struct spi_nor *nor)
- 	/* restore the addressing mode */
- 	if (nor->addr_width =3D=3D 4 && !(nor->flags & SNOR_F_4B_OPCODES) &&
- 	    nor->flags & SNOR_F_BROKEN_RESET)
--		set_4byte(nor, false);
-+		nor->params.set_4byte(nor, false);
- }
- EXPORT_SYMBOL_GPL(spi_nor_restore);
+-	/* Select the procedure to set the Quad Enable bit. */
+-	if (params->hwcaps.mask & (SNOR_HWCAPS_READ_QUAD |
+-				   SNOR_HWCAPS_PP_QUAD)) {
+-		switch (JEDEC_MFR(info)) {
+-		case SNOR_MFR_MACRONIX:
+-			params->quad_enable =3D macronix_quad_enable;
+-			break;
+-
+-		case SNOR_MFR_ST:
+-		case SNOR_MFR_MICRON:
+-			break;
+-
+-		default:
+-			/* Kept only for backward compatibility purpose. */
+-			params->quad_enable =3D spansion_quad_enable;
+-			break;
+-		}
+-	}
 =20
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index a86c0d9fb01d..7da89dd483cb 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -482,6 +482,7 @@ struct spi_nor;
-  * @erase_map:		the erase map parsed from the SFDP Sector Map Parameter
-  *                      Table.
-  * @quad_enable:	enables SPI NOR quad mode.
-+ * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
-  */
- struct spi_nor_flash_parameter {
- 	u64				size;
-@@ -494,6 +495,7 @@ struct spi_nor_flash_parameter {
- 	struct spi_nor_erase_map        erase_map;
+ 	spi_nor_manufacturer_init_params(nor);
 =20
- 	int (*quad_enable)(struct spi_nor *nor);
-+	int (*set_4byte)(struct spi_nor *nor, bool enable);
- };
-=20
- /**
 --=20
 2.9.5
 
