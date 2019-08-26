@@ -2,110 +2,98 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CDAC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0040FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685932173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF891217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 04:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="BbUYK5lQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SqCgFehC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNQY2SpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbfHZEeG (ORCPT
+        id S1729298AbfHZEiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 00:34:06 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:42773 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726150AbfHZEeG (ORCPT
+        Mon, 26 Aug 2019 00:38:09 -0400
+Received: from mail-io1-f50.google.com ([209.85.166.50]:45445 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbfHZEiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 00:34:06 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 931422F0;
-        Mon, 26 Aug 2019 00:34:04 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 26 Aug 2019 00:34:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=i+YJVaoCdNp985rRk2d+jlhfmVC
-        mqssOEbRx507HeRk=; b=BbUYK5lQnu4JfkUP6IwuSnsuY/foEIDAOrf5eUP7EjV
-        Ta6Uf/44n/22C+a+iyGO8qzaO0SFtQa3gbucc2RqMoVF6y7OlXyFTYDYhyteFzTq
-        CAgg4gGyQO2I4o1AIOd+sMQxH6+4yzm1xbiWO8sN4I8V6tOa73twFSnaa+44x8Bx
-        ari/19eCllHHrqMwWzOuAcLwb7bRvhuJYCLrH0P2f8zK3raYLrFrb0siMx2tHSb3
-        LkWpmZzO+o0fAk7xsT9GN+CU8mzVe78wNzBjIErtnR74dC+sV2TVNBO8TwLqJT4y
-        J6q0kWf4nTCR9bz1VlscLuYsn5+zqYBBMIeiXQsar0w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=i+YJVa
-        oCdNp985rRk2d+jlhfmVCmqssOEbRx507HeRk=; b=SqCgFehCMG/PCtKLoyaFFt
-        QeYclyCXN3blkj9VBeX+WB3x3Do2uY4mAn8SmfWTvSOpEP7IS08J1k1ahSN0t1qG
-        E+Bv+QP47fPijCMV90uAwg4++UbEFTLVuMiTSeJqtvnkONUpaqaLdY7yKkgjNe6U
-        N6HpU8SrIGZBjULSGW9fdD+PQYSWz989iTi56lPkeK2QyPPsN8sdnkIz1PVoqy2w
-        lvkPixQuhUj3bh/8rvaSqv+kjldeIScT1/ny+VByaibOUbtz0fpnMeocDmG48ip6
-        1PUHpwKV7/E1v0c7ejzkz8pDBwGo3coqqgNMbliK+k4wb6lZ9pfYSehs1uKeQbvw
-        ==
-X-ME-Sender: <xms:O2FjXc-cn7UQkSKC7-3M3MCW-wFGAkUeDx5kjNzl15IIBypX1fFYtw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehfedgkeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:O2FjXY-z0G35_x80tYhWXAhtvd8Ef1DFCH6nJB8sbXYgOQIKQsdqfg>
-    <xmx:O2FjXdDarY4wmZB0sBMD1KSjIVbBj16OhqsIJoVKy96vW09uzFTeQQ>
-    <xmx:O2FjXQwUXBlhp4a7gkRIc0kcNkKpaaRwL2YUT20R-cgX86E-31ceQQ>
-    <xmx:PGFjXW3CWNExABMzfTvcQvuRHG8jDF1eBEHf8-dZFc8nNLktafjY3g>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4E2E6D60063;
-        Mon, 26 Aug 2019 00:34:03 -0400 (EDT)
-Date:   Mon, 26 Aug 2019 06:34:01 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Paul Bolle <pebolle@tiscali.nl>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, akpm@linux-foundation.org, jslaby@suse.cz,
-        lwn@lwn.net
-Subject: Re: Linux 5.2.10
-Message-ID: <20190826043401.GC26547@kroah.com>
-References: <20190825144703.6518-1-sashal@kernel.org>
- <dd3a1ec7d03888dade78db1e4c45ec1347c0815b.camel@tiscali.nl>
+        Mon, 26 Aug 2019 00:38:09 -0400
+Received: by mail-io1-f50.google.com with SMTP id t3so34089003ioj.12;
+        Sun, 25 Aug 2019 21:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b1exAYWMUyyRgKmul096n+B+OJhwM6f4sJVMKQ8yVO4=;
+        b=sNQY2SpHNTmIlNk/wEGcudVnHQM83F7hQaS1ETEjI79e15eMZ/xtylyHzPmznM+1R6
+         1IA03XGhcgR92W7/4Jezb2kbTUHRHGW4TRqQTKB7ssDi1YSl+eQvvPiSk3hy/aOjFHc+
+         3l1PR0QAE2VQsmxiOJwbV6clUiMsSCrMoAcb72aw4cNsQZWt/c844lUQLo4RLaFZmuNi
+         iLMbl/Ggw7uLD7MVLEMbeww3FeArGoHVn/PyZG/gcn8HH+sZTalWC8u4742g1hxkd9Zp
+         01oU8R2vwCiRvGUawpE99qLI/drjYNbfoEH6BEkNM6s/tm0vknYY9BWV/PKXQKn18hW1
+         Orig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b1exAYWMUyyRgKmul096n+B+OJhwM6f4sJVMKQ8yVO4=;
+        b=JkkGGgBFD8+7nOmkF31wxPEpksMnHpxw9ZBTZlR/Ofcl4UsTEPXggJiv+fVLxi4sqx
+         ES7FHeKm6rhgEM7NTokFcVXQyLtRnESfFriCpDZorMG3hwmMlgLx3PcBYIPhsqAlwCN/
+         ncCMgSWNvV67f480K2/5GBieZWSJs3hBLxNOLwtBZdpYxzdvKKAra0a149S5UsWq1i4V
+         s/YOoQ+ZJLTsaih58YvblXFXlEiNjTPTRHSbzecQeeeWVMGG2yqPZ4vnVTSUfWkVS7vS
+         8dZ1axtgQFIR4Pmq5paFW4K8MH1rL46ThHV1gpYx72hXKoLPa4Xla54Ch91DeomymO+7
+         JfQw==
+X-Gm-Message-State: APjAAAXlhoUvasUYCCEOYXTNlBJg3N0bXPOmUhGZFzLrhibB0k1H2uGM
+        WItosdvuYU8zG8JDHxm2MertFghYRPOEepU/p+k=
+X-Google-Smtp-Source: APXvYqwEEY4HsG8gz1jj+r6ZLb2rp/DiM2S4ZMAN7B0+HDDxv6FuAymB/Jnl0NRYtaRzdacjMIKfIX+oi2ihc+NiIOE=
+X-Received: by 2002:a6b:4409:: with SMTP id r9mr22335208ioa.75.1566794288499;
+ Sun, 25 Aug 2019 21:38:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd3a1ec7d03888dade78db1e4c45ec1347c0815b.camel@tiscali.nl>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190824184912.795-1-linux.amoon@gmail.com> <CAFBinCCkEE8==-Sqqj_=Ofnx7_H-970dETwEmEPohs74806ZMw@mail.gmail.com>
+In-Reply-To: <CAFBinCCkEE8==-Sqqj_=Ofnx7_H-970dETwEmEPohs74806ZMw@mail.gmail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 26 Aug 2019 10:08:01 +0530
+Message-ID: <CANAwSgTsua_x6fi7NzC2XjcV19OJcN3NhOT_niKXN4RR4X+qVQ@mail.gmail.com>
+Subject: Re: [PATCHv4 0/3] Odroid c2 usb fixs
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 07:33:36PM +0200, Paul Bolle wrote:
-> Sasha,
-> 
-> Sasha Levin schreef op zo 25-08-2019 om 10:47 [-0400]:
-> > I'm announcing the release of the 5.2.10 kernel.
-> > 
-> > All users of the 5.2 kernel series must upgrade.
-> > 
-> > The updated 5.2.y git tree can be found at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
-> > and can be browsed at the normal kernel.org git web browser:
-> >         https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-> 
-> v5.2.10 was tagged by sashal@kernel.org but signed by 
-> alexander.levin@verizon.com. Perhaps you could use one of gpg2's many options
-> to add an
->     aka "Sasha Levin <sashal@kernel.org>"
-> 
-> line to that key. (I assume "--recv-key" then would have found your key.)
+Hi Martin,
 
-It's on that key already, have you refreshed your version of it?
+On Sun, 25 Aug 2019 at 02:48, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
+>
+> thank you for the patches
+>
+> On Sat, Aug 24, 2019 at 8:49 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> [...]
+> > Anand Moon (3):
+> >   arm64: dts: meson: odroid-c2: p5v0 is the main 5V power input
+> >   arm64: dts: meson: odroid-c2: Add missing linking regulator to usb bus
+> >   arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power
+> >     failed warning
+> this whole series is:
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-thanks,
+Thanks, I have some more patch in line for this board.
 
-greg k-h
+Best Regards
+-Anand
