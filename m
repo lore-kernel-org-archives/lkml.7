@@ -2,131 +2,126 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C44C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637ACC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEAD2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4F522CED
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY5IgOtK"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Uz94Aex/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfHZJNA (ORCPT
+        id S1730736AbfHZJNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:13:00 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:38415 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730749AbfHZJNA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:13:00 -0400
-Received: by mail-yb1-f193.google.com with SMTP id j199so6719389ybg.5;
-        Mon, 26 Aug 2019 02:12:59 -0700 (PDT)
+        Mon, 26 Aug 2019 05:13:16 -0400
+Received: from mail-eopbgr750047.outbound.protection.outlook.com ([40.107.75.47]:52896
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730528AbfHZJNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:13:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P1oRWdJjntBHCx71oa9bIAS4W5TgzXGGJgovQEMR/kR+5F1SNBH0FMPBh0tscUaEXTrjLtIP3Jby5mjdEwHALG0BPtwfPLxI5KKW2jCT5O8pTVUHTOD74TH5907vGPVutRpSzrUT8GaONXpeE2OKHmVwnXqEc+jmWrUlbKwLFYlm30zReMgi2hZojgGU5sl9gDxeHFtMPzstgckQfZo3PFgKZPEIcj5nVhAkRNuJ5lcZpc2WhtLNZEQHIxwq4XSgXVGySdtV2bzS+BK4pasgZmmxn+jN0jmG/su9Pp1HQzyk5yh3i/LeDSID5mdhQfihC2FQl6PNZLemfr0PDLMktw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EhJ95noRI3yL5YhdLLcTo4P0lu9h9B/7TIJL0a0u5PE=;
+ b=AWjc/NLll6JeNsVgXa/9n+uEwq9KC7nYDy49I68o8ebpDTCnvyh0A5dd0Eqmwoc7UdPgRW4vG33Lp+X4WLNdiJxaxNu9KNQ5dwOGpEDMlwoOkLnVHA+DtUQ7tribjeNt3YBlEZFEIEYWKw2ndpFMqbKfAqCYo2PIlYI7PKocUhtqN7X+ymLmUMsnMgYyOfEYDGnA7QTROGBIiX8Fgoq3lo4eRgk+3gPn9ZsamiZmeu4BY3SoKQJtIon8vUQ3XNBNc3LeSjRviqKv0vDnro0d6xMhNq8T/fO0Lcegij8sMO6RO89XmlNLvON+ts8gL8aBQnIL1Doj3H/w+mL7TUtIlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D4Cy8L8bB4Jw3AVIBtSZIHp5FVOMiVRH7OYkAYvDcFU=;
-        b=aY5IgOtK9Y1R0OVqpRVN6dp+Avd/R10BQdvyge27urqxHRphjhah8kdbGiU+/65d7j
-         FzV5/i49fIHpyG58qKvFJFBI9FVJ/W54YjryVbP4uis4fAArB0y8KKD1YKEXn8nXkp+/
-         tzwq1336zUqIXYsAYMi21Q+4yVEkEVW1GATqrNYze4o/MIFSNV1RdNgJvxL+rmgYJGKX
-         kZFBwBbBkWL9ias0Bwx5YaoBf01CFqGkQEGSwLSnSY7Dm7w6f388e+twPef6mz5UG9nt
-         vYbhS3XPOnS1UwschchfLuav7pthlV2k0QH3GicagEx+v+q5F18vmkRFve7s1R2ULqqf
-         7xkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D4Cy8L8bB4Jw3AVIBtSZIHp5FVOMiVRH7OYkAYvDcFU=;
-        b=BxS9N17/1N+hnEbKSMOouTuU6ZSuBJ97atZMktnoR3tReqvTSXXxDQ4aDDZSqeh7lf
-         jEDh/LQo5rSbQF0MK8dGEDqgN0emYt6OF6aUYwv/n5U5fTgfU0LbcDfL8Vze3nQU/VMg
-         wwbbT0nhlsm1J8iI34Uz3xFAAA7L4WpSFqVHbkK6ba7tr4bmwikswrTi/BHni2uSsaoQ
-         6NSHmX0JyR9pO81O/XYGcMVKCLj0rEVNI5ezY2a/2DtN/7jdJ4ku9eEpkazytzgr+Eb+
-         PX/dRQl0q7avZ+uR3/a0cuFBdz3SD8K9bHVoyT27Jf7cIFCb5cG5hcCU6wZmlu/jFOGH
-         08Xw==
-X-Gm-Message-State: APjAAAV3LchGw762u2w2AL5RM1dNyiSSpTjVUngBnXJEGTqKEDtOx9EA
-        qZZwFCR8MhfHK84ElyFYaM/p55ZJiFkiDC4LgHM=
-X-Google-Smtp-Source: APXvYqymIcX9MTQRTDDVMra8V0dV9qxpC9rLOcIlKQ/lbNeKTzSREvV6LnuDB4Nbwyt2d0IntiEF2yHdZhoxvHDISPc=
-X-Received: by 2002:a25:d751:: with SMTP id o78mr13265833ybg.101.1566810778665;
- Mon, 26 Aug 2019 02:12:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190825174019.5977-1-kkamagui@gmail.com> <20190826055903.5um5pfweoszibem3@linux.intel.com>
-In-Reply-To: <20190826055903.5um5pfweoszibem3@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Mon, 26 Aug 2019 18:12:47 +0900
-Message-ID: <CAHjaAcQ5ArtrGzKsPRasFfTmdE59cYWLVbOT4pMHhgJZ_fXUcQ@mail.gmail.com>
-Subject: Re: [PATCH] tpm: tpm_crb: Add an AMD fTPM support feature
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EhJ95noRI3yL5YhdLLcTo4P0lu9h9B/7TIJL0a0u5PE=;
+ b=Uz94Aex/9HE93zLx7DOLFKXvQzyi3kilyTwdmBs7zcqnI1RYa20eI7zRPt6KYbIqxGdA3dlhjnHfXvrCngtMTsUo/0ncJlSxBnZBsnLP/cH3rKVCjPEYIemaDr63SCE7o3snivOqvYw27ZyL6Fblu0OJ2G/p18zmNLLs09gDZ8U=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3767.namprd03.prod.outlook.com (20.176.254.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.20; Mon, 26 Aug 2019 09:13:13 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b050:60f8:d275:e9f4]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b050:60f8:d275:e9f4%7]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
+ 09:13:13 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ftrace/x86: Remove mcount() declaration
+Thread-Topic: [PATCH] ftrace/x86: Remove mcount() declaration
+Thread-Index: AQHVW+58+SbOUj5nAUyBN5jCZRXaDg==
+Date:   Mon, 26 Aug 2019 09:13:12 +0000
+Message-ID: <20190826170150.10f101ba@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR0101CA0002.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:92::14) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9926310f-8e91-491c-7772-08d72a059eec
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3767;
+x-ms-traffictypediagnostic: BYAPR03MB3767:
+x-microsoft-antispam-prvs: <BYAPR03MB3767ACA6F86E3EAF653CC70EEDA10@BYAPR03MB3767.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(39850400004)(346002)(366004)(199004)(189003)(7736002)(25786009)(66946007)(99286004)(66556008)(66446008)(64756008)(486006)(476003)(110136005)(3846002)(71200400001)(305945005)(2906002)(66066001)(4326008)(4744005)(6116002)(256004)(66476007)(14444005)(1076003)(52116002)(8676002)(50226002)(478600001)(71190400001)(81156014)(81166006)(8936002)(6506007)(6486002)(6436002)(386003)(102836004)(26005)(186003)(9686003)(14454004)(86362001)(53936002)(5660300002)(6512007)(2501003)(316002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3767;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ElLhQ2qpA2xvvdvoH5RczeGFK0rQteb1r+PLjGtPiZvffumjtSByzjDj89XR5bxU4gNE1dAvc6jpu6izJuWSD13ujwLt7rMHuZvrDgcJ2v4ZsD7iwsQfdgUafcuO9wzw5vuDN7YhdnsLCHRnfOUzMlu8bOXk5eXRCITywqDwW1UFuklwe1l2AED69fzRkj8VIOM7X87rlkTQhc1l3I9RWpIbUr+7ZtxVadVbXUQXibzb6H5BYtTAAsL95oecYumaQ7iRmfOh97CBNhZK9FceWWp9+ecO5KfFwvkwMyqc35aMV6tIVbCZ9DUVNMEpEiFsE4RDVWAtzNq3w0NrTbTOgvR1yddFTvJHEQpIBz/3XtLWeevcpMmEbzVSZfEqkjD35gFefjyJy+2S2Z+NuJV3Hqa4nve3Eem8rdfL5swcwy0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <737A4A171D9DF448BCD50E9C33E9A44E@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9926310f-8e91-491c-7772-08d72a059eec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 09:13:12.9562
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sEiL1ez2G8/AmUsdsEOxlEuxgGpfFlx0vxIh9ZmgR1/q7jD0NID4+OTcz3xJQlxGoemN/OmjSVY79MtjDTNm/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Mon, Aug 26, 2019 at 02:40:19AM +0900, Seunghun Han wrote:
-> > I'm Seunghun Han and work at the Affiliated Institute of ETRI. I got an AMD
-> > system which had a Ryzen Threadripper 1950X and MSI mainboard, and I had
-> > a problem with AMD's fTPM. My machine showed an error message below, and
-> > the fTPM didn't work because of it.
-> >
-> > [    5.732084] tpm_crb MSFT0101:00: can't request region for resource
-> >                [mem 0x79b4f000-0x79b4ffff]
-> > [    5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
-> >
-> > When I saw the iomem areas and found two TPM CRB regions were in the ACPI
-> > NVS area.  The iomem regions are below.
-> >
-> > 79a39000-79b6afff : ACPI Non-volatile Storage
-> >   79b4b000-79b4bfff : MSFT0101:00
-> >   79b4f000-79b4ffff : MSFT0101:00
-> >
-> > After analyzing this issue, I found out that a busy bit was set to the ACPI
-> > NVS area, and the current Linux kernel allowed nothing to be assigned in
-> > it. I also found that the kernel couldn't calculate the sizes of command
-> > and response buffers correctly when the TPM regions were two or more.
-> >
-> > To support AMD's fTPM, I removed the busy bit from the ACPI NVS area
-> > so that AMD's fTPM regions could be assigned in it. I also fixed the bug
-> > that did not calculate the sizes of command and response buffer correctly.
-> >
-> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
->
-> You need to split this into multiple patches e.g. if you think you've
-> fixed a bug, please write a patch with just the bug fix and nothing
-> else.
->
-> For further information, read the section three of
->
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
->
-> I'd also recommend to check out the earlier discussion on ACPI NVS:
->
-> https://lore.kernel.org/linux-integrity/BCA04D5D9A3B764C9B7405BBA4D4A3C035EF7BC7@ALPMBAPA12.e2k.ad.ge.com/
->
-> /Jarkko
+Commit 562e14f72292 ("ftrace/x86: Remove mcount support") removed the
+support for using mcount, so we could remove the mcount() declaration
+to clean up.
 
-Thank you for your advice. I have made two separated patches on your advice.
-Please check these patches, https://lkml.org/lkml/2019/8/26/125 and
-https://lkml.org/lkml/2019/8/26/163.
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ arch/x86/include/asm/ftrace.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-In my opinion, the last link you gave me had two problems with AMD's
-fTPM. One problem was the ACPI NVS area was set to the busy area, and
-TPM regions of the ACPI table were in it. Therefore, TPM CRB driver
-couldn't allocate command and response buffers in it because ACPI NVS
-area was busy. The other problem was buffer size calculation bugs.
-Because of it, TPM CRB driver requested larger than the size ACPI
-table described. So, TPM CRB driver also couldn't map command and
-response buffers even though the reserved area was not busy.
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index 287f1f7b2e52..c38a66661576 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -16,7 +16,6 @@
+ #define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+=20
+ #ifndef __ASSEMBLY__
+-extern void mcount(void);
+ extern atomic_t modifying_ftrace_code;
+ extern void __fentry__(void);
+=20
+--=20
+2.23.0.rc1
 
-It seems that my separated patches could handle those two problems and
-enable AMD's fTPM in any case.
-
-Seunghun
