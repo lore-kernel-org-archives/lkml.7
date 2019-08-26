@@ -2,97 +2,80 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259D1C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FE7217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57E421852
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pb7accaB"
+	dkim=pass (2048-bit key) header.d=flameeyes-com.20150623.gappssmtp.com header.i=@flameeyes-com.20150623.gappssmtp.com header.b="HTFzbbyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732719AbfHZOte (ORCPT
+        id S1731842AbfHZOwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:49:34 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:6071 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbfHZOte (ORCPT
+        Mon, 26 Aug 2019 10:52:05 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38002 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbfHZOwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:49:34 -0400
+        Mon, 26 Aug 2019 10:52:05 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u190so14270966qkh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566830973; x=1598366973;
-  h=from:subject:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=cV++afZdVCdnVK5vWMAnee3Y5NbvfdxEOLMY1xSyQuY=;
-  b=pb7accaBtgIRuxawZzQCai/79IvcvKtrFjHRGE55GL3ui3rUt4/5qtoK
-   3NaWSWCfs9oaXplx1eEqCQyNNoN/40hzZR9F+puksbMC0SxY0IF5yeddf
-   GoWe1XZqsydcaGT7b0QLdytck/z9l1AN9I/X34LFkF+RLEQnbksegBJuY
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.64,433,1559520000"; 
-   d="scan'208";a="697550575"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 Aug 2019 14:49:17 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 364B3A2027;
-        Mon, 26 Aug 2019 14:49:16 +0000 (UTC)
-Received: from EX13D08UEE003.ant.amazon.com (10.43.62.118) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 26 Aug 2019 14:49:15 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEE003.ant.amazon.com (10.43.62.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 26 Aug 2019 14:49:15 +0000
-Received: from [10.107.3.18] (10.107.3.18) by mail-relay.amazon.com
- (10.43.61.243) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Mon, 26 Aug 2019 14:49:12 +0000
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-To:     Rob Herring <robh@kernel.org>
-CC:     <mark.rutland@arm.com>, <bp@alien8.de>, <mchehab@kernel.org>,
-        <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
-        <paulmck@linux.ibm.com>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
-        <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
-Message-ID: <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
-Date:   Mon, 26 Aug 2019 17:49:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        d=flameeyes-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lhk4ps2Zdoy+aA3Z362ilgq6ODDDLrQbUgEhy2SNBH0=;
+        b=HTFzbbyAuoOgB+shLGbS5vkreQw0WFo080S0q9L52eKRPlNHS/4Mt/3zWGyEZwKKEs
+         FZRj8z1URofbb5V6lmKcmmhqdbtMfXNF+wZw1OQ9r3xQHkoQkLoNWoQH4uzVHo5Ajj/O
+         em2wSbAdGvBAx42/jUV3MODHnx/2mgMK2v9AEFk0hZZ5UHuqgfWWz1SM2i9DdRNvB6em
+         GoKRZUW5lubFCME6n0Mz8lGgeedMl8Wtip3I9rkXbCMfzKURpiwun2Tm2C+I5S6Bgt6n
+         MoCjfxliti0pVr2kEZsXSZoqsShsTx/rvg5+Qun6VJLIRtWv2KEBRJPGyI4Gi/a7RjJp
+         UCEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lhk4ps2Zdoy+aA3Z362ilgq6ODDDLrQbUgEhy2SNBH0=;
+        b=fjA0fGb4GjqbSHtPtmdAXwHfkCNWWIxU53pttggK0gzij00fd3XzBM0L2zEceHGcqF
+         WNsrXlzhTxmk7FpdcPr+KSyfOTNRqNFFoUKuFY09hILm545//U+KWlzXGh9/UuUq6prz
+         FyrNg/Uk/tpsrrypIG44s5Y5mjTPnWLvSHwYzEltrBYUNDU1XW0Yp+khLIWqyXVZQYJN
+         vjdjiKTA3l4dEh0VTo1mHDEQ2kLauL4JTtPuVm1GVIZUVyC0FWs8adWELfmQvVUZ1nmb
+         Qd+HuUjjjbsmcNDDhsJ++Rh7EN9B6GGDSN7Ew9fB6mPL7grw7onkuwiwk1XMgsBcvc31
+         Npiw==
+X-Gm-Message-State: APjAAAVAxVoQroq00URvvj40KqzYgsAtoXD9hsybwzJagdwcNeRbSYCy
+        Ds/1WK/LjSmRq6rhhSt+9ZDDVEsLukHsXkikTccyykCSHf8=
+X-Google-Smtp-Source: APXvYqy6gsKerGcq08pDu4KgA+s9hKTuGu/EOJ2sv7K2uJcmfQ9QsYZsHhVsoalgC65CDrc/IiSKan8+lkwRbbDptT4=
+X-Received: by 2002:a37:4dc5:: with SMTP id a188mr17394794qkb.206.1566831123952;
+ Mon, 26 Aug 2019 07:52:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190821191704.GA32425@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190825215833.25817-1-flameeyes@flameeyes.com> <98427b15d2a5cc93c72867bb7800df6c38f1f7bf.camel@perches.com>
+In-Reply-To: <98427b15d2a5cc93c72867bb7800df6c38f1f7bf.camel@perches.com>
+From:   =?UTF-8?Q?Diego_Elio_Petten=C3=B2?= <flameeyes@flameeyes.com>
+Date:   Mon, 26 Aug 2019 15:51:53 +0100
+Message-ID: <CAHcsgXTDoVGPhGg+wkcu4CYDxyRMc8+wzUZ_qbJ-L6EomkRN6g@mail.gmail.com>
+Subject: Re: [PATCH] cdrom: make debug logging rely on pr_debug and debugfs only.
+To:     Joe Perches <joe@perches.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 25, 2019 at 11:13 PM Joe Perches <joe@perches.com> wrote:
+> > -     cd_dbg(CD_OPEN, "entering register_cdrom\n");
+> > +     pr_debug("entering register_cdrom\n");
+>
+> debut output for function tracing can also be removed
+> and ftrace used instead.
 
+Oh, nice! I have never had to go this deep into a driver before, so
+I'm pretty much an ftrace noob, but that pointer actually made the
+whole debugging _much_ easier, too!
 
-On 8/21/2019 10:17 PM, Rob Herring wrote:
-> Why is this even in DT? AFAICT, this is all just CortexA57 core features
-> (i.e. nothing Amazon specific). The core type and the ECC capabilities
-> are discoverable.
-
-Added to the DT in order to easily enable/disable the driver. You are 
-correct that they are CortexA57 core features and nothing Amazon 
-specific, but it's IMPLEMENTATION DEFINED, meaning that in different 
-cortex revisions (e.g. A57) the register bitmap may change. Because of 
-that we added an Amazon compatible which corresponds to the specific 
-core we are using.
-
-Thanks,
-Hanna
-
-> 
-> Rob
+I'll send an updated patch series now that (thanks to that!) I managed
+to make the device I'm fighting with work.
