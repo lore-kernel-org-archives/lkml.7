@@ -2,114 +2,309 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A37BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06C7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCD82173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B842820874
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 07:21:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="FAgv1IhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfHZHUi (ORCPT
+        id S1729932AbfHZHVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 03:20:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45110 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfHZHUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 03:20:38 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96B67356CE
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:20:37 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id a17so9252119wrr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 00:20:37 -0700 (PDT)
+        Mon, 26 Aug 2019 03:21:53 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:41272 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbfHZHVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 03:21:53 -0400
+Received: by mail-vk1-f193.google.com with SMTP id w20so3744702vkd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 00:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q//x/B+FcM5+mJKULk/MG/UlK4qdLpiW5WdWmOLmU7s=;
+        b=FAgv1IhJFDubdW4a8IRMDFF7CJnLICrSzCXNV2KIDokUkWTZPW64toOYjmqCftxUAk
+         TKJp6jam2Q1Vfiq7TG4EpHv+eTbbQ2f1CGRJ+DSRzVj6789Ku6ZzK5LWdbwxI46ox0SS
+         ZWRlWw2cGfpTZog2t3WNNMjk5+i+6jdEpR8tY4/DzmulesZcwdxgfs9L8iRfBu3D6+z9
+         e9fG/Od0+6fJrQQtBvojIbFiP8DBP62UQElQ3LtF8MBQU3SRcwVgWaRk16x1yvUX9SyD
+         8f1pKdOaKRAYVhA9lfcgar53ApGcNfN5v2Em8CUnTiYmwMqy6lbssyuInVqWV6VpclJX
+         kY2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Qr6ks7uI6Ob3HfkdqYZ1mV0jtXig91Oji7qUddOHKkE=;
-        b=RhPgz6F2JjTRW4aAfsRwlIf99TwovthXeN/51i3zLna5R4ZP+TJZrx8CR62QMiXI7T
-         gHny+Q2R+chDmvPzJJz2XnGhvGvDnC0cV7sNydNnU7WRPOtjJ8lWvLDe0S2bs0QUKJwX
-         a5xf7aPMw3rK0x90N/N59g0tWGL/T2BFgNgxPKmY1eJcIMYFSVqCNBi98U4mZcjGDBuV
-         aPJc+79p/6GH1DCrHvswaeyBiH4eRDJ3n2qtdyK9qpy/WUinwbTUuFv2a/5i9o/UWIIK
-         qF+IBY3k2xcFYWGJbIeNqapfF0tqdxBBo45h+bXZI8GEyF9heGWP8FMD258XadZQyYJn
-         c99A==
-X-Gm-Message-State: APjAAAVb9Va0J1eWq5Y//TpriVVsA+1ls4aguxXCZyrqd3seaZLq9dkS
-        pbldlzekBfCFCkFSzXdEu7CyZWBUoYl8Lh40j0vXx8riv63s91GTEwdd8t7gKqg+kyjNHOtDKTE
-        jdoW+V79NwnCGjR4c5zSb26fH
-X-Received: by 2002:a5d:53c1:: with SMTP id a1mr20655986wrw.185.1566804036283;
-        Mon, 26 Aug 2019 00:20:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwt/GrvvkTFE9kWbOoAuRkBgia1BmCyyHEBCO8VYyM5xQx/69FBatjunWTDdFQMflwDVGrC1w==
-X-Received: by 2002:a5d:53c1:: with SMTP id a1mr20655953wrw.185.1566804036055;
-        Mon, 26 Aug 2019 00:20:36 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-89-176-161-20.net.upcbroadband.cz. [89.176.161.20])
-        by smtp.gmail.com with ESMTPSA id e14sm8994700wma.37.2019.08.26.00.20.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 00:20:35 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     lantianyu1986@gmail.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        daniel.lezcano@linaro.org, michael.h.kelley@microsoft.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH] x86/Hyper-V: Fix build error with CONFIG_HYPERV_TSCPAGE=N
-In-Reply-To: <20190824151218.GM1581@sasha-vm>
-References: <20190822053852.239309-1-Tianyu.Lan@microsoft.com> <87zhk1pp9p.fsf@vitty.brq.redhat.com> <20190824151218.GM1581@sasha-vm>
-Date:   Mon, 26 Aug 2019 09:20:36 +0200
-Message-ID: <87d0gso0jf.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q//x/B+FcM5+mJKULk/MG/UlK4qdLpiW5WdWmOLmU7s=;
+        b=kjeLkCh4XIow69786uBx+C6Qq8YNqz0nTit919brOihjqzmhv7rzRYrvU33dQTJOPM
+         tdX0XgPMQchyv21xhn9g1lPpi8KneAA8L6LYNjnSCsHa3Yn4zYy4/usULVDOBSgL1LJO
+         hCRUVgIELfyPv92yBTTH2E4g2Kg63h3MbzIPt9fMokxptJs0+bLfroaO1PdxBcGAlnlJ
+         wiwWdunrGP9TD+HN4x1mkBM6YEXt0w7kCfnWlxs7qAJU7/2AYR8fX/WTunhh3uV6YCDL
+         FIIgfZvvMMzX6o+5lRajmPPLxyWPXpZxt03W9ZQmGrEk3Tda/H2rqaEoslki5h+jewwa
+         op3g==
+X-Gm-Message-State: APjAAAWEg6PBBN1AoFHzkIdtPiFTHHS/Tai2S9rFp0H9kkf8xReEjJjb
+        Q9r1kMbf/SzxdUh6igoWgn44dwgg0fxx/LMW4WSuJg==
+X-Google-Smtp-Source: APXvYqznGccIjmJXFqVoPf9Q3Qu8ITqUYkyxxABcNsL+ixapg2DtVic3eVRnXspFOdEfJxm4mPn4tcv1H+dhSfQTLgg=
+X-Received: by 2002:ac5:c7b5:: with SMTP id d21mr5608482vkn.56.1566804111572;
+ Mon, 26 Aug 2019 00:21:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAPpJ_edU68X-Ki+J61qfws+1-=zv54bcak9tzkMX=CkDS5mOMA@mail.gmail.com>
+ <20190820045934.24841-1-jian-hong@endlessm.com> <F7CD281DE3E379468C6D07993EA72F84D18A5786@RTITMBSVM04.realtek.com.tw>
+In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D18A5786@RTITMBSVM04.realtek.com.tw>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Mon, 26 Aug 2019 15:21:15 +0800
+Message-ID: <CAPpJ_edXoHhR++pn9gwbi==wHQXW4y2Z5-_KajdcpMQp-FqQXw@mail.gmail.com>
+Subject: Re: [PATCH v3] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha Levin <sashal@kernel.org> writes:
-
-> On Thu, Aug 22, 2019 at 10:39:46AM +0200, Vitaly Kuznetsov wrote:
->>lantianyu1986@gmail.com writes:
->>
->>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->>>
->>> Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
->>> hv_sched_clock_offset for their sched clock callback and so
->>> define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
->>
->>CONFIG_HYPERV_TSCPAGE is gone after my "x86/hyper-v: enable TSC page
->>clocksource on 32bit" patch. Do we still have an issue to fix?
+Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=8821=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:16=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Yes. Let's get it fixed on older kernels (as such we need to tag this
-> one for stable). The 32bit TSC patch won't come in before 5.4 anyway.
+> Hi,
 >
-> Vitaly, does can you ack this patch? It might require you to re-spin
-> your patch.
+> > From: Jian-Hong Pan [mailto:jian-hong@endlessm.com]
+> >
+> > There is a mass of jobs between spin lock and unlock in the hardware
+> > IRQ which will occupy much time originally. To make system work more
+> > efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
+> > reduce the time in hardware IRQ.
+> >
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > ---
+> > v2:
+> >  Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
+> >  rtw_pci_interrupt_handler. Because the interrupts are already disabled
+> >  in the hardware interrupt handler.
+> >
+> > v3:
+> >  Extend the spin lock protecting area for the TX path in
+> >  rtw_pci_interrupt_threadfn by Realtek's suggestion
+> >
+> >  drivers/net/wireless/realtek/rtw88/pci.c | 33 +++++++++++++++++++-----
+> >  1 file changed, 27 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> > b/drivers/net/wireless/realtek/rtw88/pci.c
+> > index 00ef229552d5..a8c17a01f318 100644
+> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> > @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int =
+irq,
+> > void *dev)
+> >  {
+> >       struct rtw_dev *rtwdev =3D dev;
+> >       struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
+> > -     u32 irq_status[4];
+> >
+> >       spin_lock(&rtwpci->irq_lock);
+> >       if (!rtwpci->irq_enabled)
+> >               goto out;
+> >
+> > +     /* disable RTW PCI interrupt to avoid more interrupts before the =
+end of
+> > +      * thread function
+> > +      */
+> > +     rtw_pci_disable_interrupt(rtwdev, rtwpci);
+> > +out:
+> > +     spin_unlock(&rtwpci->irq_lock);
+> > +
+> > +     return IRQ_WAKE_THREAD;
+> > +}
+> > +
+> > +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
+> > +{
+> > +     struct rtw_dev *rtwdev =3D dev;
+> > +     struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
+> > +     unsigned long flags;
+> > +     u32 irq_status[4];
+> > +
+> > +     spin_lock_irqsave(&rtwpci->irq_lock, flags);
+> >       rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
+> >
+> >       if (irq_status[0] & IMR_MGNTDOK)
+> > @@ -891,8 +908,10 @@ static irqreturn_t rtw_pci_interrupt_handler(int i=
+rq,
+> > void *dev)
+> >       if (irq_status[0] & IMR_ROK)
+> >               rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
+> >
+> > -out:
+> > -     spin_unlock(&rtwpci->irq_lock);
+> > +     /* all of the jobs for this interrupt have been done */
+> > +     if (rtw_flag_check(rtwdev, RTW_FLAG_RUNNING))
+> > +             rtw_pci_enable_interrupt(rtwdev, rtwpci);
 >
+> I've applied this patch and tested it.
+> But I failed to connect to AP, it seems that the
+> scan_result is empty. And when I failed to connect
+> to the AP, I found that the IMR is not enabled.
+> I guess the check bypass the interrupt enable function.
+>
+> And I also found that *without MSI*, the driver is
+> able to connect to the AP. Could you please verify
+> this patch again with MSI interrupt enabled and
+> send a v4?
+>
+> You can find my MSI patch on
+> https://patchwork.kernel.org/patch/11081539/
 
-Sure, no problem,
+I have just sent v4 patch.  Also tested the modified MSI patch like below:
+The WiFi works fine on ASUS X512DK (including MSI enabled).
 
-Acked-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Jian-Hong Pan
 
-I, however, was under the impression the patch fixes the issue with the
-newly introduced sched clock:
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+b/drivers/net/wireless/realtek/rtw88/pci.c
+index 955dd6c6fb57..d18f5aae1585 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -11,6 +11,10 @@
+ #include "fw.h"
+ #include "debug.h"
 
-commit b74e1d61dbc614ff35ef3ad9267c61ed06b09051
-Author: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Date:   Wed Aug 14 20:32:16 2019 +0800
++static bool rtw_disable_msi;
++module_param_named(disable_msi, rtw_disable_msi, bool, 0644);
++MODULE_PARM_DESC(disable_msi, "Set Y to disable MSI interrupt support");
++
+ static u32 rtw_pci_tx_queue_idx_addr[] =3D {
+     [RTW_TX_QUEUE_BK]    =3D RTK_PCI_TXBD_IDX_BKQ,
+     [RTW_TX_QUEUE_BE]    =3D RTK_PCI_TXBD_IDX_BEQ,
+@@ -1116,6 +1120,48 @@ static struct rtw_hci_ops rtw_pci_ops =3D {
+     .write_data_h2c =3D rtw_pci_write_data_h2c,
+ };
 
-    clocksource/hyperv: Add Hyper-V specific sched clock function
++static int rtw_pci_request_irq(struct rtw_dev *rtwdev, struct pci_dev *pde=
+v)
++{
++    struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
++    int ret;
++
++    if (!rtw_disable_msi) {
++        ret =3D pci_enable_msi(pdev);
++        if (ret) {
++            rtw_warn(rtwdev, "failed to enable msi %d, using legacy irq\n"=
+,
++                 ret);
++        } else {
++            rtw_warn(rtwdev, "pci msi enabled\n");
++            rtwpci->msi_enabled =3D true;
++        }
++    }
++
++    ret =3D devm_request_threaded_irq(rtwdev->dev, pdev->irq,
++                    rtw_pci_interrupt_handler,
++                    rtw_pci_interrupt_threadfn,
++                    IRQF_SHARED, KBUILD_MODNAME, rtwdev);
++    if (ret) {
++        rtw_err(rtwdev, "failed to request irq %d\n", ret);
++        if (rtwpci->msi_enabled) {
++            pci_disable_msi(pdev);
++            rtwpci->msi_enabled =3D false;
++        }
++    }
++
++    return ret;
++}
++
++static void rtw_pci_free_irq(struct rtw_dev *rtwdev, struct pci_dev *pdev)
++{
++    struct rtw_pci *rtwpci =3D (struct rtw_pci *)rtwdev->priv;
++
++    devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
++    if (rtwpci->msi_enabled) {
++        pci_disable_msi(pdev);
++        rtwpci->msi_enabled =3D false;
++    }
++}
++
+ static int rtw_pci_probe(struct pci_dev *pdev,
+              const struct pci_device_id *id)
+ {
+@@ -1170,10 +1216,7 @@ static int rtw_pci_probe(struct pci_dev *pdev,
+         goto err_destroy_pci;
+     }
 
-(and Fixes: tag is missing)
+-    ret =3D devm_request_threaded_irq(rtwdev->dev, pdev->irq,
+-                    rtw_pci_interrupt_handler,
+-                    rtw_pci_interrupt_threadfn,
+-                    IRQF_SHARED, KBUILD_MODNAME, rtwdev);
++    ret =3D rtw_pci_request_irq(rtwdev, pdev);
+     if (ret) {
+         ieee80211_unregister_hw(hw);
+         goto err_destroy_pci;
+@@ -1212,7 +1255,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
+     rtw_pci_disable_interrupt(rtwdev, rtwpci);
+     rtw_pci_destroy(rtwdev, pdev);
+     rtw_pci_declaim(rtwdev, pdev);
+-    devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
++    rtw_pci_free_irq(rtwdev, pdev);
+     rtw_core_deinit(rtwdev);
+     ieee80211_free_hw(hw);
+ }
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.h
+b/drivers/net/wireless/realtek/rtw88/pci.h
+index 87824a4caba9..a8e369c5eaca 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.h
++++ b/drivers/net/wireless/realtek/rtw88/pci.h
+@@ -186,6 +186,7 @@ struct rtw_pci {
+     spinlock_t irq_lock;
+     u32 irq_mask[4];
+     bool irq_enabled;
++    bool msi_enabled;
 
-and this is not in mainline as of v5.3-rc6. In tip/timers/core Thomas
-already picked my "clocksource/drivers/hyperv: Enable TSC page
-clocksource on 32bit" which also resolves the issue.
+     u16 rx_tag;
+     struct rtw_pci_tx_ring tx_rings[RTK_MAX_TX_QUEUE_NUM];
 
-So my question is - which older/stable kernel do you have in mind?
 
--- 
-Vitaly
+> > +     spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
+> >
+> >       return IRQ_HANDLED;
+> >  }
+> > @@ -1152,8 +1171,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
+> >               goto err_destroy_pci;
+> >       }
+> >
+> > -     ret =3D request_irq(pdev->irq, &rtw_pci_interrupt_handler,
+> > -                       IRQF_SHARED, KBUILD_MODNAME, rtwdev);
+> > +     ret =3D devm_request_threaded_irq(rtwdev->dev, pdev->irq,
+> > +                                     rtw_pci_interrupt_handler,
+> > +                                     rtw_pci_interrupt_threadfn,
+> > +                                     IRQF_SHARED, KBUILD_MODNAME, rtwd=
+ev);
+> >       if (ret) {
+> >               ieee80211_unregister_hw(hw);
+> >               goto err_destroy_pci;
+> > @@ -1192,7 +1213,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
+> >       rtw_pci_disable_interrupt(rtwdev, rtwpci);
+> >       rtw_pci_destroy(rtwdev, pdev);
+> >       rtw_pci_declaim(rtwdev, pdev);
+> > -     free_irq(rtwpci->pdev->irq, rtwdev);
+> > +     devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
+> >       rtw_core_deinit(rtwdev);
+> >       ieee80211_free_hw(hw);
+> >  }
+> > --
+>
+>
+> NACK
+> Need to verify it with MSI https://patchwork.kernel.org/patch/11081539/
+> And hope v4 could fix it.
+>
+> Yan-Hsuan
+>
