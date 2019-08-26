@@ -2,124 +2,498 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E0CC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D19BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8100321852
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C7B21872
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="feyTleVG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VcxgIC8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732828AbfHZPF3 (ORCPT
+        id S1732837AbfHZPHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:05:29 -0400
-Received: from mail-eopbgr740088.outbound.protection.outlook.com ([40.107.74.88]:44804
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732812AbfHZPFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:05:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kwy1x8hfqzA/ha1/3CxCwqf+H1n7mYxTtqbisTdtZPOpqo7X0rLqe1eIaRBkuf1BdkV/VL6pfuj2Iz0irPfMdTmCB/iZNf1oa1ghSC/upkVZIOjn7/t091fIRhUggjX/Rz5FIONVJusqr9LHfdVW3qNY0h8qiwTwy4dhdxbpiHWGhHzDUgz1YJUoDrj0jR/gGPSfmHrnLDaWZevhve1tVRSZ+72k0zzIsnDuoOEFq4MswVXTJHCKcGOKv9OzwZteA5aTKJ/B1pokfqK1zZRTx0cFzdOeXGx70cllIujhf6n2qq8Yr+SVaVCl5fQX8ju4UtG7/O3NCyBtp5NQJ6CTNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cpIDE+a+1xmo0A6TrAJqWkf1p2TRolFmxY6DDTsZSF0=;
- b=EPZhItxwsubwhg4Fd+dgr7TS/52IFeA1/7iIefRhREAV/WEVsPkAQaSZVyoNKy4Gh8hraT6QfG9fQ9S82F+v3X3wuhtnBaEMkbDhUiRlC1EoB6dGvJ805ZGHA+Jnjxls87XqcFMxI2vZUlGG8IJyCA7r1lHn0RTaRa5QriAEmI2b1GdY4wZny9Oj4KoIT/vMvXyQhB1wBvOO5dGZY4DYsZisXZFJlFEJOIcg+tUevOPtmdG2j4wDzis5yT6wc8m304sN6SFq3M+eUb3Xz8mdr+oIOdQQkKKEU/5CNBOtZlngNPHmYTqMQRGrI419hnkS2MnSq8/Ry9c3xQTJG+uLbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cpIDE+a+1xmo0A6TrAJqWkf1p2TRolFmxY6DDTsZSF0=;
- b=feyTleVGGcbMt5t/dfW8IPvHohxPynIeaQtKOF0fKxjA9do7Owd0qwp7BuIgo5bWpadG3DfQ5rnwB5mePW77D3tylRCFAFyBVxi5otzcoTo9e4nFHbpwIQBJbbFZx31nWuICIRn8nBPW0oUG2Q0+BkZkk+lpOlDVMbM0hlOTAdk=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2670.namprd12.prod.outlook.com (52.135.103.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Mon, 26 Aug 2019 15:05:21 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d0b4:a849:c22b:3b53]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d0b4:a849:c22b:3b53%2]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
- 15:05:20 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Adam Borowski <kilobyte@angband.pl>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 0/8] AMD64 EDAC fixes
-Thread-Topic: [PATCH v3 0/8] AMD64 EDAC fixes
-Thread-Index: AQHVWHyGkq5ZZJpNOUKXQmjNKGyrbqcGViwAgAEuRFCAAVZ98IAABX2AgASfGOCAAA0bgIAAAIoQ
-Date:   Mon, 26 Aug 2019 15:05:20 +0000
-Message-ID: <SN6PR12MB26392D6BD4846C7BE25431FFF8A10@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
- <20190822005020.GA403@angband.pl>
- <SN6PR12MB2639CD6D755B6FFCF5C4B756F8A50@SN6PR12MB2639.namprd12.prod.outlook.com>
- <SN6PR12MB263989CCDCC0F74138B6B747F8A40@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190823153739.GC28379@zn.tnic>
- <SN6PR12MB2639E02109E30165D4A37D8AF8A10@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190826145901.GH27636@zn.tnic>
-In-Reply-To: <20190826145901.GH27636@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [2601:3c2:8280:2327:3414:3059:320b:d027]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 54f9d263-2669-4a42-b6d0-08d72a36d06c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2670;
-x-ms-traffictypediagnostic: SN6PR12MB2670:
-x-microsoft-antispam-prvs: <SN6PR12MB2670E109323E495A8ADDDAEBF8A10@SN6PR12MB2670.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01415BB535
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(13464003)(189003)(199004)(76116006)(55016002)(8936002)(66946007)(54906003)(6246003)(6436002)(6506007)(25786009)(229853002)(53546011)(53936002)(305945005)(14454004)(478600001)(33656002)(6916009)(5660300002)(46003)(186003)(66446008)(11346002)(66476007)(316002)(64756008)(446003)(66556008)(74316002)(9686003)(7736002)(256004)(14444005)(52536014)(86362001)(81156014)(8676002)(81166006)(76176011)(7696005)(102836004)(476003)(486006)(71200400001)(2906002)(71190400001)(6116002)(99286004)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2670;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 42U+UXkfHZuesobTvxRie2N78NbVKsAdzstvoh/exmpLQ+w0rYUfaSoXyHklCUr+ZQ0jZIf8Cxjtfso/ZCkarOLfoR/S9lnOZB/F++DxbS8G9hzCQLtCuLs6x6QQ2px2v0DATg+qxUzCQa0AWGUXsLKvvZSx1wJzr/jQ8ZnRFz3aZuMzFqFYjgqJaPaoLbEKnAMKU91h9Uj1WME8I915CM5e6TZjr41WcvTq6gwNx3AjriWctAPPEA/1kIaoeJ+hTWnVBSPboZiAzSrkp/H568Z7ZKpN4F2DWLbsn4rIM95HtS0uEpa24h9Hv4S1nGhniVWIriZnuoP8f0jurgvbph6R+hVSj2Jsp9atzERukpFKGVepY22NMttx7kHnjV4GQ2Vnrj171vRYyrZHeIAFLO/lbOoxP+E3QwIs9pwR/2Y=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 26 Aug 2019 11:07:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48518 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730826AbfHZPHJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:07:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RPqKPzaEEcJy5R1UqFTMhSXKJI3Vmmv8DkikNGnTSWU=; b=VcxgIC8Mh9aziOM1IbQEWyb6I
+        mO6vxZXmzVhQVsSGjE92YUaX1kCy498Ff6ChPJSnGhPWSthqc+qp2T0kzU4Py+Y2VOC4d/Nm7b+yE
+        byvT4G6ORzem64Os4w+chBDxeqkq8Uc1JJBo/rZ0Vy9bA0L3Y0wxLrQTDQGcby9wDjtg0G5X0i5dK
+        i7nRnNy250w+BpZlAWE0qmS7VbAh7zs21kAlpLqQKDo27NEac8Heu/RI5Z8iwDKpjb/X/0M/yqA3P
+        NPW+cXTFnKCrmrhrsXZajZ2bAdxdLbanvEZf9oP/fnihrek03kOZkQmWw7P81eBcuvDj0AL7BGKmg
+        2REeRP2Ew==;
+Received: from [2001:4bb8:180:3f4c:863:2ead:e9d4:da9f] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2GaA-00066Z-Ec; Mon, 26 Aug 2019 15:06:59 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     x86@kernel.org
+Cc:     bhelgaas@google.com, dwmw2@infradead.org, joro@8bytes.org,
+        keith.busch@intel.com, jonathan.derrick@intel.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vmd: Stop overriding dma_map_ops
+Date:   Mon, 26 Aug 2019 17:06:52 +0200
+Message-Id: <20190826150652.10316-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54f9d263-2669-4a42-b6d0-08d72a36d06c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 15:05:20.9130
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 46hXM6vtJw/MdTB9vXn7NRY70Nk/34zLbbqg787zsSt1wfiQF2m5V7CVo5yO4Z+yuXF0qCFgU3PSUmuAw3qwTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2670
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
-ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
-ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogTW9uZGF5LCBBdWd1c3QgMjYsIDIwMTkgOTo1
-OSBBTQ0KPiBUbzogR2hhbm5hbSwgWWF6ZW4gPFlhemVuLkdoYW5uYW1AYW1kLmNvbT4NCj4gQ2M6
-IEFkYW0gQm9yb3dza2kgPGtpbG9ieXRlQGFuZ2JhbmQucGw+OyBsaW51eC1lZGFjQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BB
-VENIIHYzIDAvOF0gQU1ENjQgRURBQyBmaXhlcw0KPiANCj4gT24gTW9uLCBBdWcgMjYsIDIwMTkg
-YXQgMDI6MTk6MThQTSArMDAwMCwgR2hhbm5hbSwgWWF6ZW4gd3JvdGU6DQo+ID4gSSB3YXMgdHJh
-Y2tpbmcgZG93biB0aGUgZmFpbHVyZSB3aXRoIEVDQyBkaXNhYmxlZCwgYW5kIHRoYXQgc2VlbXMg
-dG8gYmUgaXQuDQo+ID4NCj4gPiBTbyBJIHRoaW5rIHdlIHNob3VsZCByZXR1cm4gMCAiaWYgKCFl
-ZGFjX2hhc19tY3MoKSkiLCBiZWNhdXNlIHdlJ2Qgb25seSBnZXQNCj4gPiB0aGVyZSBpZiBFQ0Mg
-aXMgZGlzYWJsZWQgb24gYWxsIG5vZGVzIGFuZCB0aGVyZSB3YXNuJ3Qgc29tZSBvdGhlciBpbml0
-aWFsaXphdGlvbg0KPiA+IGVycm9yLg0KPiA+DQo+ID4gSSdsbCBzZW5kIGEgcGF0Y2ggZm9yIHRo
-aXMgc29vbi4NCj4gPg0KPiA+IEFkYW0sIHdvdWxkIHlvdSBtaW5kIHRlc3RpbmcgdGhpcyBwYXRj
-aD8NCj4gDQo+IFlvdSBjYW4ndCByZXR1cm4gMCB3aGVuIEVDQyBpcyBkaXNhYmxlZCBvbiBhbGwg
-bm9kZXMgYmVjYXVzZSB0aGVuIHRoZQ0KPiBkcml2ZXIgcmVtYWlucyBsb2FkZWQgd2l0aG91dCBk
-cml2aW5nIGFueXRoaW5nLiBUaGF0IHNpbGx5IHVzZXJzcGFjZQ0KPiBuZWVkcyB0byB1bmRlcnN0
-YW5kIHRoYXQgRU5PREVWIG1lYW5zICJzdG9wIHRyeWluZyB0byBsb2FkIHRoaXMgZHJpdmVyIi4N
-Cj4gDQoNClllcywgeW91J3JlIHJpZ2h0Lg0KDQpJJ2xsIHRyeSBhbmQgdHJhY2sgZG93biB0aGUg
-aW50ZXJhY3Rpb24gaGVyZSBiZXR3ZWVuIHVzZXJzcGFjZSBhbmQgdGhlIG1vZHVsZS4NClBsZWFz
-ZSBsZXQgbWUga25vdyBpZiB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbnMuDQoNClRoYW5rcywNCllh
-emVuDQo=
+With a little tweak to the intel-iommu code we should be able to work
+around the VMD mess for the requester IDs without having to create giant
+amounts of boilerplate DMA ops wrapping code.  The other advantage of
+this scheme is that we can respect the real DMA masks for the actual
+devices, and I bet it will only be a matter of time until we'll see the
+first DMA challeneged NVMe devices.
+
+The only downside is that we can't offer vmd as a module given that
+intel-iommu calls into it.  But the driver only has about 700 lines
+of code, so this should not be a major issue.
+
+This also removes the leftover bits of the X86_DEV_DMA_OPS dma_map_ops
+registry.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/Kconfig               |   3 -
+ arch/x86/include/asm/device.h  |  10 ---
+ arch/x86/include/asm/pci.h     |   2 +
+ arch/x86/pci/common.c          |  38 ---------
+ drivers/iommu/intel-iommu.c    |  33 +++++---
+ drivers/pci/controller/Kconfig |   6 +-
+ drivers/pci/controller/vmd.c   | 139 +--------------------------------
+ 7 files changed, 27 insertions(+), 204 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 222855cc0158..35597dae38b7 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2905,9 +2905,6 @@ config HAVE_ATOMIC_IOMAP
+ 	def_bool y
+ 	depends on X86_32
+ 
+-config X86_DEV_DMA_OPS
+-	bool
+-
+ source "drivers/firmware/Kconfig"
+ 
+ source "arch/x86/kvm/Kconfig"
+diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
+index a8f6c809d9b1..3e6c75a6d070 100644
+--- a/arch/x86/include/asm/device.h
++++ b/arch/x86/include/asm/device.h
+@@ -11,16 +11,6 @@ struct dev_archdata {
+ #endif
+ };
+ 
+-#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
+-struct dma_domain {
+-	struct list_head node;
+-	const struct dma_map_ops *dma_ops;
+-	int domain_nr;
+-};
+-void add_dma_domain(struct dma_domain *domain);
+-void del_dma_domain(struct dma_domain *domain);
+-#endif
+-
+ struct pdev_archdata {
+ };
+ 
+diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+index e662f987dfa2..f740246ea812 100644
+--- a/arch/x86/include/asm/pci.h
++++ b/arch/x86/include/asm/pci.h
+@@ -73,6 +73,8 @@ static inline bool is_vmd(struct pci_bus *bus)
+ #endif
+ }
+ 
++struct device *to_vmd_dev(struct device *dev);
++
+ /* Can be used to override the logic in pci_scan_bus for skipping
+    already-configured bus numbers - to be used for buggy BIOSes
+    or architectures with incomplete PCI setup by the loader */
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index 9acab6ac28f5..d2ac803b6c00 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -625,43 +625,6 @@ unsigned int pcibios_assign_all_busses(void)
+ 	return (pci_probe & PCI_ASSIGN_ALL_BUSSES) ? 1 : 0;
+ }
+ 
+-#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
+-static LIST_HEAD(dma_domain_list);
+-static DEFINE_SPINLOCK(dma_domain_list_lock);
+-
+-void add_dma_domain(struct dma_domain *domain)
+-{
+-	spin_lock(&dma_domain_list_lock);
+-	list_add(&domain->node, &dma_domain_list);
+-	spin_unlock(&dma_domain_list_lock);
+-}
+-EXPORT_SYMBOL_GPL(add_dma_domain);
+-
+-void del_dma_domain(struct dma_domain *domain)
+-{
+-	spin_lock(&dma_domain_list_lock);
+-	list_del(&domain->node);
+-	spin_unlock(&dma_domain_list_lock);
+-}
+-EXPORT_SYMBOL_GPL(del_dma_domain);
+-
+-static void set_dma_domain_ops(struct pci_dev *pdev)
+-{
+-	struct dma_domain *domain;
+-
+-	spin_lock(&dma_domain_list_lock);
+-	list_for_each_entry(domain, &dma_domain_list, node) {
+-		if (pci_domain_nr(pdev->bus) == domain->domain_nr) {
+-			pdev->dev.dma_ops = domain->dma_ops;
+-			break;
+-		}
+-	}
+-	spin_unlock(&dma_domain_list_lock);
+-}
+-#else
+-static void set_dma_domain_ops(struct pci_dev *pdev) {}
+-#endif
+-
+ static void set_dev_domain_options(struct pci_dev *pdev)
+ {
+ 	if (is_vmd(pdev->bus))
+@@ -697,7 +660,6 @@ int pcibios_add_device(struct pci_dev *dev)
+ 		pa_data = data->next;
+ 		memunmap(data);
+ 	}
+-	set_dma_domain_ops(dev);
+ 	set_dev_domain_options(dev);
+ 	return 0;
+ }
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 12d094d08c0a..e8e876605d6a 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3416,9 +3416,14 @@ static struct dmar_domain *get_private_domain_for_dev(struct device *dev)
+ 	return domain;
+ }
+ 
+-/* Check if the dev needs to go through non-identity map and unmap process.*/
+-static bool iommu_need_mapping(struct device *dev)
++/*
++ * Check if the dev needs to go through non-identity map and unmap process.
++ * Also where needed replace dev with the actual device used for the mapping
++ * process.
++ */
++static bool iommu_need_mapping(struct device **devp)
+ {
++	struct device *dev = *devp;
+ 	int ret;
+ 
+ 	if (iommu_dummy(dev))
+@@ -3456,6 +3461,14 @@ static bool iommu_need_mapping(struct device *dev)
+ 		dev_info(dev, "32bit DMA uses non-identity mapping\n");
+ 	}
+ 
++	/*
++	 * For VMD we need to use the VMD devices for mapping requests instead
++	 * of the actual device to get the proper PCIe requester ID.
++	 */
++#ifdef CONFIG_VMD
++	if (dev_is_pci(dev) && is_vmd(to_pci_dev(dev)->bus))
++		*devp = to_vmd_dev(dev);
++#endif
+ 	return true;
+ }
+ 
+@@ -3520,7 +3533,7 @@ static dma_addr_t intel_map_page(struct device *dev, struct page *page,
+ 				 enum dma_data_direction dir,
+ 				 unsigned long attrs)
+ {
+-	if (iommu_need_mapping(dev))
++	if (iommu_need_mapping(&dev))
+ 		return __intel_map_single(dev, page_to_phys(page) + offset,
+ 				size, dir, *dev->dma_mask);
+ 	return dma_direct_map_page(dev, page, offset, size, dir, attrs);
+@@ -3530,7 +3543,7 @@ static dma_addr_t intel_map_resource(struct device *dev, phys_addr_t phys_addr,
+ 				     size_t size, enum dma_data_direction dir,
+ 				     unsigned long attrs)
+ {
+-	if (iommu_need_mapping(dev))
++	if (iommu_need_mapping(&dev))
+ 		return __intel_map_single(dev, phys_addr, size, dir,
+ 				*dev->dma_mask);
+ 	return dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
+@@ -3585,7 +3598,7 @@ static void intel_unmap_page(struct device *dev, dma_addr_t dev_addr,
+ 			     size_t size, enum dma_data_direction dir,
+ 			     unsigned long attrs)
+ {
+-	if (iommu_need_mapping(dev))
++	if (iommu_need_mapping(&dev))
+ 		intel_unmap(dev, dev_addr, size);
+ 	else
+ 		dma_direct_unmap_page(dev, dev_addr, size, dir, attrs);
+@@ -3594,7 +3607,7 @@ static void intel_unmap_page(struct device *dev, dma_addr_t dev_addr,
+ static void intel_unmap_resource(struct device *dev, dma_addr_t dev_addr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	if (iommu_need_mapping(dev))
++	if (iommu_need_mapping(&dev))
+ 		intel_unmap(dev, dev_addr, size);
+ }
+ 
+@@ -3605,7 +3618,7 @@ static void *intel_alloc_coherent(struct device *dev, size_t size,
+ 	struct page *page = NULL;
+ 	int order;
+ 
+-	if (!iommu_need_mapping(dev))
++	if (!iommu_need_mapping(&dev))
+ 		return dma_direct_alloc(dev, size, dma_handle, flags, attrs);
+ 
+ 	size = PAGE_ALIGN(size);
+@@ -3641,7 +3654,7 @@ static void intel_free_coherent(struct device *dev, size_t size, void *vaddr,
+ 	int order;
+ 	struct page *page = virt_to_page(vaddr);
+ 
+-	if (!iommu_need_mapping(dev))
++	if (!iommu_need_mapping(&dev))
+ 		return dma_direct_free(dev, size, vaddr, dma_handle, attrs);
+ 
+ 	size = PAGE_ALIGN(size);
+@@ -3661,7 +3674,7 @@ static void intel_unmap_sg(struct device *dev, struct scatterlist *sglist,
+ 	struct scatterlist *sg;
+ 	int i;
+ 
+-	if (!iommu_need_mapping(dev))
++	if (!iommu_need_mapping(&dev))
+ 		return dma_direct_unmap_sg(dev, sglist, nelems, dir, attrs);
+ 
+ 	for_each_sg(sglist, sg, nelems, i) {
+@@ -3685,7 +3698,7 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
+ 	struct intel_iommu *iommu;
+ 
+ 	BUG_ON(dir == DMA_NONE);
+-	if (!iommu_need_mapping(dev))
++	if (!iommu_need_mapping(&dev))
+ 		return dma_direct_map_sg(dev, sglist, nelems, dir, attrs);
+ 
+ 	domain = find_domain(dev);
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index fe9f9f13ce11..a3a140c7abaf 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -267,8 +267,7 @@ config PCIE_TANGO_SMP8759
+ 
+ config VMD
+ 	depends on PCI_MSI && X86_64 && SRCU
+-	select X86_DEV_DMA_OPS
+-	tristate "Intel Volume Management Device Driver"
++	bool "Intel Volume Management Device Driver"
+ 	---help---
+ 	  Adds support for the Intel Volume Management Device (VMD). VMD is a
+ 	  secondary PCI host bridge that allows PCI Express root ports,
+@@ -278,8 +277,5 @@ config VMD
+ 	  single domain. If you know your system provides one of these and
+ 	  has devices attached to it, say Y; if you are not sure, say N.
+ 
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called vmd.
+-
+ source "drivers/pci/controller/dwc/Kconfig"
+ endmenu
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 4575e0c6dc4b..45c471c48756 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -94,9 +94,6 @@ struct vmd_dev {
+ 	struct resource		resources[3];
+ 	struct irq_domain	*irq_domain;
+ 	struct pci_bus		*bus;
+-
+-	struct dma_map_ops	dma_ops;
+-	struct dma_domain	dma_domain;
+ };
+ 
+ static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
+@@ -296,7 +293,7 @@ static struct msi_domain_info vmd_msi_domain_info = {
+  * VMD domain need to be mapped for the VMD, not the device requiring
+  * the mapping.
+  */
+-static struct device *to_vmd_dev(struct device *dev)
++struct device *to_vmd_dev(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct vmd_dev *vmd = vmd_from_bus(pdev->bus);
+@@ -304,138 +301,6 @@ static struct device *to_vmd_dev(struct device *dev)
+ 	return &vmd->dev->dev;
+ }
+ 
+-static void *vmd_alloc(struct device *dev, size_t size, dma_addr_t *addr,
+-		       gfp_t flag, unsigned long attrs)
+-{
+-	return dma_alloc_attrs(to_vmd_dev(dev), size, addr, flag, attrs);
+-}
+-
+-static void vmd_free(struct device *dev, size_t size, void *vaddr,
+-		     dma_addr_t addr, unsigned long attrs)
+-{
+-	return dma_free_attrs(to_vmd_dev(dev), size, vaddr, addr, attrs);
+-}
+-
+-static int vmd_mmap(struct device *dev, struct vm_area_struct *vma,
+-		    void *cpu_addr, dma_addr_t addr, size_t size,
+-		    unsigned long attrs)
+-{
+-	return dma_mmap_attrs(to_vmd_dev(dev), vma, cpu_addr, addr, size,
+-			attrs);
+-}
+-
+-static int vmd_get_sgtable(struct device *dev, struct sg_table *sgt,
+-			   void *cpu_addr, dma_addr_t addr, size_t size,
+-			   unsigned long attrs)
+-{
+-	return dma_get_sgtable_attrs(to_vmd_dev(dev), sgt, cpu_addr, addr, size,
+-			attrs);
+-}
+-
+-static dma_addr_t vmd_map_page(struct device *dev, struct page *page,
+-			       unsigned long offset, size_t size,
+-			       enum dma_data_direction dir,
+-			       unsigned long attrs)
+-{
+-	return dma_map_page_attrs(to_vmd_dev(dev), page, offset, size, dir,
+-			attrs);
+-}
+-
+-static void vmd_unmap_page(struct device *dev, dma_addr_t addr, size_t size,
+-			   enum dma_data_direction dir, unsigned long attrs)
+-{
+-	dma_unmap_page_attrs(to_vmd_dev(dev), addr, size, dir, attrs);
+-}
+-
+-static int vmd_map_sg(struct device *dev, struct scatterlist *sg, int nents,
+-		      enum dma_data_direction dir, unsigned long attrs)
+-{
+-	return dma_map_sg_attrs(to_vmd_dev(dev), sg, nents, dir, attrs);
+-}
+-
+-static void vmd_unmap_sg(struct device *dev, struct scatterlist *sg, int nents,
+-			 enum dma_data_direction dir, unsigned long attrs)
+-{
+-	dma_unmap_sg_attrs(to_vmd_dev(dev), sg, nents, dir, attrs);
+-}
+-
+-static void vmd_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
+-				    size_t size, enum dma_data_direction dir)
+-{
+-	dma_sync_single_for_cpu(to_vmd_dev(dev), addr, size, dir);
+-}
+-
+-static void vmd_sync_single_for_device(struct device *dev, dma_addr_t addr,
+-				       size_t size, enum dma_data_direction dir)
+-{
+-	dma_sync_single_for_device(to_vmd_dev(dev), addr, size, dir);
+-}
+-
+-static void vmd_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
+-				int nents, enum dma_data_direction dir)
+-{
+-	dma_sync_sg_for_cpu(to_vmd_dev(dev), sg, nents, dir);
+-}
+-
+-static void vmd_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+-				   int nents, enum dma_data_direction dir)
+-{
+-	dma_sync_sg_for_device(to_vmd_dev(dev), sg, nents, dir);
+-}
+-
+-static int vmd_dma_supported(struct device *dev, u64 mask)
+-{
+-	return dma_supported(to_vmd_dev(dev), mask);
+-}
+-
+-static u64 vmd_get_required_mask(struct device *dev)
+-{
+-	return dma_get_required_mask(to_vmd_dev(dev));
+-}
+-
+-static void vmd_teardown_dma_ops(struct vmd_dev *vmd)
+-{
+-	struct dma_domain *domain = &vmd->dma_domain;
+-
+-	if (get_dma_ops(&vmd->dev->dev))
+-		del_dma_domain(domain);
+-}
+-
+-#define ASSIGN_VMD_DMA_OPS(source, dest, fn)	\
+-	do {					\
+-		if (source->fn)			\
+-			dest->fn = vmd_##fn;	\
+-	} while (0)
+-
+-static void vmd_setup_dma_ops(struct vmd_dev *vmd)
+-{
+-	const struct dma_map_ops *source = get_dma_ops(&vmd->dev->dev);
+-	struct dma_map_ops *dest = &vmd->dma_ops;
+-	struct dma_domain *domain = &vmd->dma_domain;
+-
+-	domain->domain_nr = vmd->sysdata.domain;
+-	domain->dma_ops = dest;
+-
+-	if (!source)
+-		return;
+-	ASSIGN_VMD_DMA_OPS(source, dest, alloc);
+-	ASSIGN_VMD_DMA_OPS(source, dest, free);
+-	ASSIGN_VMD_DMA_OPS(source, dest, mmap);
+-	ASSIGN_VMD_DMA_OPS(source, dest, get_sgtable);
+-	ASSIGN_VMD_DMA_OPS(source, dest, map_page);
+-	ASSIGN_VMD_DMA_OPS(source, dest, unmap_page);
+-	ASSIGN_VMD_DMA_OPS(source, dest, map_sg);
+-	ASSIGN_VMD_DMA_OPS(source, dest, unmap_sg);
+-	ASSIGN_VMD_DMA_OPS(source, dest, sync_single_for_cpu);
+-	ASSIGN_VMD_DMA_OPS(source, dest, sync_single_for_device);
+-	ASSIGN_VMD_DMA_OPS(source, dest, sync_sg_for_cpu);
+-	ASSIGN_VMD_DMA_OPS(source, dest, sync_sg_for_device);
+-	ASSIGN_VMD_DMA_OPS(source, dest, dma_supported);
+-	ASSIGN_VMD_DMA_OPS(source, dest, get_required_mask);
+-	add_dma_domain(domain);
+-}
+-#undef ASSIGN_VMD_DMA_OPS
+-
+ static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
+ 				  unsigned int devfn, int reg, int len)
+ {
+@@ -690,7 +555,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	}
+ 
+ 	vmd_attach_resources(vmd);
+-	vmd_setup_dma_ops(vmd);
+ 	dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+ 
+ 	pci_scan_child_bus(vmd->bus);
+@@ -805,7 +669,6 @@ static void vmd_remove(struct pci_dev *dev)
+ 	pci_stop_root_bus(vmd->bus);
+ 	pci_remove_root_bus(vmd->bus);
+ 	vmd_cleanup_srcu(vmd);
+-	vmd_teardown_dma_ops(vmd);
+ 	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
+ }
+-- 
+2.20.1
+
