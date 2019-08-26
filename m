@@ -2,220 +2,445 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0C3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F5AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DC92087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QvjxXF7z"
+	by mail.kernel.org (Postfix) with ESMTP id DA28021744
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 08:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566809783;
+	bh=tcS8K/s1i8KfMqHuEbwek20gIkSr0U6AsqOiw1H+uGY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CQ/RvTOOl6Lq577ZNFTK8jE/75/eIppaCMxaC4H4YgIgqHzfEFWoFtJ6Xj+w32wAD
+	 jwUsjwC6ttQv481O7/AGVwhjp2s7gdtnde1j0TY/88EKHydpaxHLsd68MXVVZy+jqH
+	 ylggBWwqnmQdMIHlYFHif3V2dqnWMe9Ov50VCrsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbfHZIzl (ORCPT
+        id S1730372AbfHZI4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 04:55:41 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46312 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730134AbfHZIzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 04:55:39 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190826085537euoutp013a815b2874aaad24efd0f10936c22a53~_bSesIOEy1606616066euoutp01k
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:55:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190826085537euoutp013a815b2874aaad24efd0f10936c22a53~_bSesIOEy1606616066euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566809737;
-        bh=4/G5wg4DJNiOKBA319u2NGoaV2LPWGLsqRRCL6/5HbQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=QvjxXF7zVrmfXunVZqkZ4ls/9lxHpgBFLiopFUbjZzdEcpgvUurcbFNEbEjxmWwTA
-         mK/MtritHyvmnE3JAAd85YS4XiqvZJVtNQ2lC/VtDX5X5PqyOUNTVKZAon/H0mcKha
-         3D2jx8p2t6jZOpNk8ZBMVbKd3Ctz+DTkHbpw5yWo=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190826085536eucas1p1943cfcfb3497665cba5f208d711d68db~_bSd0SaSu2548625486eucas1p15;
-        Mon, 26 Aug 2019 08:55:36 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id BF.79.04374.88E936D5; Mon, 26
-        Aug 2019 09:55:36 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190826085535eucas1p290033f348e272069bffd17dbad137cfe~_bSdA_5zZ0746807468eucas1p2b;
-        Mon, 26 Aug 2019 08:55:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190826085535eusmtrp2c82f1e0dd63676a43fb028d6db854908~_bScy0dBl3154031540eusmtrp2F;
-        Mon, 26 Aug 2019 08:55:35 +0000 (GMT)
-X-AuditID: cbfec7f5-4ddff70000001116-14-5d639e88d97b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9C.E7.04117.78E936D5; Mon, 26
-        Aug 2019 09:55:35 +0100 (BST)
-Received: from [106.120.50.63] (unknown [106.120.50.63]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190826085534eusmtip287a9a55fd9201dbd54a99efc6132d4d9~_bScSNjKf2034120341eusmtip2V;
-        Mon, 26 Aug 2019 08:55:34 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2 RESEND] usb: core: phy: add support for PHY
- calibration
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
+        Mon, 26 Aug 2019 04:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727974AbfHZI4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 04:56:21 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FCF206BA;
+        Mon, 26 Aug 2019 08:56:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566809780;
+        bh=tcS8K/s1i8KfMqHuEbwek20gIkSr0U6AsqOiw1H+uGY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FjhT9Fc94rYqwk9XFpiqM7EvmBJ14MhKXbYZXAy49AKT0YGFbcz6B7V/Cq766MYPt
+         yacVsPVF/H3shzb70quG4tuEiaMocKM+yvfF8GQMrACWyYktOsCfcdQ/nRGOzSMKeI
+         K0EVsOnHKqBDreww+hIxm2JHJZaBiquPi+zohLWo=
+Date:   Mon, 26 Aug 2019 09:56:12 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jochen Sprickerhof <jochen@sprickerhof.de>,
-        Anand Moon <linux.amoon@gmail.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <a380a635-e036-1a18-bc0f-947931f8735c@samsung.com>
-Date:   Mon, 26 Aug 2019 10:55:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] counter: cros_ec: Add synchronization sensor
+Message-ID: <20190826095612.7455cb05@archlinux>
+In-Reply-To: <d985a8a811996148e8cda78b9fe47bb87b884b56.1566563833.git.fabien.lahoudere@collabora.com>
+References: <cover.1566563833.git.fabien.lahoudere@collabora.com>
+        <d985a8a811996148e8cda78b9fe47bb87b884b56.1566563833.git.fabien.lahoudere@collabora.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190808094128.27213-2-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe3bv7r1a0+tUPJkUDFQqX1pJ3LTMwmLUh/rQlyzJq17U1Cmb
-        07Qvli/NISa+lK6a4csUy7clpmKLNtDMcr4QmWSaOElxIWhCoZbbxfLb73+e/+F/zuGhMLFF
-        6E0lyTM4hZxNkRDOeFf/r+FAtS4u+kj3RzHTUdUmZPoL50gmr66NYBo2viLGYmknmfHexwRT
-        ZTEKmFp9Aca0dkySTH/tIM7kGSqEEbtlPdopUmYtLSdldX0LApmhuYiQvX7ynJSVdDYjWXvn
-        Ji5bMey/TEU5n4znUpIyOUVweIxz4otPZiJ91PuW2jSD56IlTw2iKKBDoO/OOQ1ypsR0E4KN
-        od9CXqwiGNZOC3ixgmC9vBjTICdHx8KrbVcjgtXqeZwXNgRmYxeyu9zpK/Bswkra2YOOgPqG
-        L4TdhNElGHS+XXKYCFoKGpuGsLOIDod8m8URgdO+MLZhdDR70tehZ4mPFtFuMFg9h9vZacs/
-        22AW2hmjD8BL22OMZy+YnKtxzA30LAnT3cs4P3ckWHP1BM/usDjQSfLsA396thvyEHwbbiF5
-        UYxg/G4V4l1hYB4YFdpvhtEHoa03mC+fgcaiIpI/pQtM2Nz4IVygrOshxpdFoC4U824/0A60
-        /ot9MzKGlSKJdsdq2h3raHeso/2f+xThzciLUylTEzjlMTmXFaRkU5UqeUJQXFqqAW19s6HN
-        gZ/dyLgea0I0hSR7RDGquGixkM1UZqeaEFCYxEOUEsxGi0XxbHYOp0i7oVClcEoT2kfhEi/R
-        7V0z18R0ApvBJXNcOqfYfhVQTt65KH3zYotp0/1Bh8p4NUw+7hOin6/0yDmrqEymCxZO+LHh
-        TRd0/rqlH41lIdLvl9j3h7GQrNrzUnLklNPC8cio4Hwvl5q1wDxXtdD6zjYV+rl+7aj/oqpv
-        lVKNLk4P3hzUF0YsgzqA1N1vOW15FLchMHzwDd0be4+pyKICPEdcJbgykZUewhRK9i8lYCSB
-        YgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xe7rt85JjDaYfkrbYOGM9q8Wxtifs
-        Fs2L17NZLP17j9Hi/PkN7BaXd81hs5hxfh+TxaJlrcwW6zbeYrc4tugki0XzpimsDtweO2fd
-        Zfd4OmEyu8fiPS+ZPDat6mTz2D93DbtH35ZVjB4btvxj8fi8SS6AI0rPpii/tCRVISO/uMRW
-        KdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY/P1w2wFF6UqOg49YGlgfCPa
-        xcjJISFgIvFy7y/WLkYuDiGBpYwS+7r2MkMkZCROTmtghbCFJf5c62KDKHrNKNG4cxpYkbBA
-        iMTqG0/ZQWwRAQeJJUvvgBUxC0xgltj6+yA7RMdRRonP3bPAOtgEDCW63oKM4uTgFbCTaHl7
-        HizOIqAqcenvPrBJogIxEvvObGeHqBGUODnzCQuIzQlU/2jpYbCTmAXMJOZtfsgMYctLbH87
-        B8oWl7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzEC
-        43fbsZ9bdjB2vQs+xCjAwajEw5tQmhwrxJpYVlyZe4hRgoNZSYQ3Rz8xVog3JbGyKrUoP76o
-        NCe1+BCjKdBzE5mlRJPzgaklryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFM
-        HxMHp1QD48L/mfLVgTtm6rpHyXKJB2cUuFxL2ZzREOjrNmuV65vDapYN+Zxtm6f4HoqVK/xp
-        tfrh0t0r36vqvlsaUZryjvUoi7r5FvYvN29uffRPlcPq9XO7qPpoiQpuV+k6f+lffHMuXuXx
-        f6+W8OYvX07lr9U9e5YxVXw9fnajgNX87WE5ntHX3l5tV2Ipzkg01GIuKk4EAKvISLj1AgAA
-X-CMS-MailID: 20190826085535eucas1p290033f348e272069bffd17dbad137cfe
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
-References: <20190808094128.27213-1-m.szyprowski@samsung.com>
-        <CGME20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5@eucas1p2.samsung.com>
-        <20190808094128.27213-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg
+On Fri, 23 Aug 2019 14:41:27 +0200
+Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
 
-On 2019-08-08 11:41, Marek Szyprowski wrote:
-> Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
-> done after every USB HCD reset. Generic PHY framework has been already
-> extended with phy_calibrate() function in commit 36914111e682 ("drivers:
-> phy: add calibrate method"). This patch adds support for it to generic
-> PHY handling code in USB HCD core.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Anand Moon <linux.amoon@gmail.com>
-> Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
+> From: Gwendal Grignou <gwendal@chromium.org>
+> 
+> EC returns a counter when there is an event on camera vsync.
+> This patch comes from chromeos kernel 4.4
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> 
+> CROS EC sync sensor was originally designed as an IIO device.
+> Now that the counter subsystem will replace IIO_COUNTER, we
+> have to implement a new way to get sync count.
 
-Greg: any chance to give it this a try in -next? If not, maybe You can 
-point someone whose review will help?
+I'm curious.  What is this counter used for?
 
+This combined counter and iio driver isn't something we would normally
+want to support.  What is the reasoning behind doing both interfaces?
 
+> 
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 > ---
->   drivers/usb/core/hcd.c |  7 +++++++
->   drivers/usb/core/phy.c | 21 +++++++++++++++++++++
->   drivers/usb/core/phy.h |  1 +
->   3 files changed, 29 insertions(+)
->
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index 88533938ce19..b89936c1df23 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -2291,6 +2291,9 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
->   	hcd->state = HC_STATE_RESUMING;
->   	status = hcd->driver->bus_resume(hcd);
->   	clear_bit(HCD_FLAG_WAKEUP_PENDING, &hcd->flags);
-> +	if (status == 0)
-> +		status = usb_phy_roothub_calibrate(hcd->phy_roothub);
+>  Documentation/driver-api/generic-counter.rst  |   3 +
+>  MAINTAINERS                                   |   7 +
+>  drivers/counter/Kconfig                       |   9 +
+>  drivers/counter/Makefile                      |   1 +
+>  drivers/counter/counter.c                     |   2 +
+>  drivers/counter/cros_ec_sensors_sync.c        | 208 ++++++++++++++++++
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   1 +
+>  drivers/mfd/cros_ec_dev.c                     |   3 +
+>  include/linux/counter.h                       |   1 +
+>  9 files changed, 235 insertions(+)
+>  create mode 100644 drivers/counter/cros_ec_sensors_sync.c
+> 
+> diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+> index 8382f01a53e3..beb80714ac8b 100644
+> --- a/Documentation/driver-api/generic-counter.rst
+> +++ b/Documentation/driver-api/generic-counter.rst
+> @@ -44,6 +44,9 @@ Counter interface provides the following available count data types:
+>  * COUNT_POSITION:
+>    Unsigned integer value representing position.
+>  
+> +* COUNT_TALLY:
+> +  Unsigned integer value representing tally.
 > +
->   	if (status == 0) {
->   		struct usb_device *udev;
->   		int port1;
-> @@ -2864,6 +2867,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
->   	}
->   	hcd->rh_pollable = 1;
->   
-> +	retval = usb_phy_roothub_calibrate(hcd->phy_roothub);
-> +	if (retval)
-> +		goto err_hcd_driver_setup;
+>  A Count has a count function mode which represents the update behavior
+>  for the count data. The Generic Counter interface provides the following
+>  available count function modes:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e60f5c361969..83bd291d103e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3902,6 +3902,13 @@ R:	Guenter Roeck <groeck@chromium.org>
+>  F:	Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+>  F:	sound/soc/codecs/cros_ec_codec.*
+>  
+> +CHROMEOS EC COUNTER DRIVER
+> +M:	Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> +M:	William Breathitt Gray <vilhelm.gray@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/counter/cros_ec_sensors_sync.c
 > +
->   	/* NOTE: root hub and controller capabilities may not be the same */
->   	if (device_can_wakeup(hcd->self.controller)
->   			&& device_can_wakeup(&hcd->self.root_hub->dev))
-> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-> index 7580493b867a..fb1588e7c282 100644
-> --- a/drivers/usb/core/phy.c
-> +++ b/drivers/usb/core/phy.c
-> @@ -151,6 +151,27 @@ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
->   }
->   EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
->   
-> +int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub)
+>  CIRRUS LOGIC AUDIO CODEC DRIVERS
+>  M:	Brian Austin <brian.austin@cirrus.com>
+>  M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
+> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
+> index 2967d0a9ff91..22287f5715e5 100644
+> --- a/drivers/counter/Kconfig
+> +++ b/drivers/counter/Kconfig
+> @@ -59,4 +59,13 @@ config FTM_QUADDEC
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ftm-quaddec.
+>  
+> +config IIO_CROS_EC_SENSORS_SYNC
+> +	tristate "ChromeOS EC Counter Sensors"
+> +	depends on IIO_CROS_EC_SENSORS_CORE && IIO
+> +	help
+> +	  Module to handle synchronisation sensors presented by the ChromeOS EC
+> +	  Sensor hub.
+> +	  Synchronisation sensors are counter sensors triggered when events
+> +	  occurs from other subsystems.
+> +
+>  endif # COUNTER
+> diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
+> index 40d35522937d..6fe4c98a446f 100644
+> --- a/drivers/counter/Makefile
+> +++ b/drivers/counter/Makefile
+> @@ -9,3 +9,4 @@ obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
+>  obj-$(CONFIG_STM32_TIMER_CNT)	+= stm32-timer-cnt.o
+>  obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
+>  obj-$(CONFIG_FTM_QUADDEC)	+= ftm-quaddec.o
+> +obj-$(CONFIG_IIO_CROS_EC_SENSORS_SYNC) += cros_ec_sensors_sync.o
+> diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
+> index 106bc7180cd8..53525b109094 100644
+> --- a/drivers/counter/counter.c
+> +++ b/drivers/counter/counter.c
+> @@ -261,6 +261,7 @@ void counter_count_read_value_set(struct counter_count_read_value *const val,
+>  {
+>  	switch (type) {
+>  	case COUNTER_COUNT_POSITION:
+> +	case COUNTER_COUNT_TALLY:
+>  		val->len = sprintf(val->buf, "%lu\n", *(unsigned long *)data);
+>  		break;
+>  	default:
+> @@ -290,6 +291,7 @@ int counter_count_write_value_get(void *const data,
+>  
+>  	switch (type) {
+>  	case COUNTER_COUNT_POSITION:
+> +	case COUNTER_COUNT_TALLY:
+>  		err = kstrtoul(val->buf, 0, data);
+>  		if (err)
+>  			return err;
+> diff --git a/drivers/counter/cros_ec_sensors_sync.c b/drivers/counter/cros_ec_sensors_sync.c
+> new file mode 100644
+> index 000000000000..b6f5e2c6da9f
+> --- /dev/null
+> +++ b/drivers/counter/cros_ec_sensors_sync.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver of counter incremented after events on interrupt line in EC.
+> + *
+> + * Copyright 2018 Google, Inc
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/counter.h>
+> +#include <linux/iio/common/cros_ec_sensors_core.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/cros_ec.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define DRV_NAME "cros-ec-sync"
+> +
+> +/*
+> + * One channel for counter, the other for timestamp.
+> + */
+> +#define MAX_CHANNELS (1)
+> +
+> +/* State data for ec_sensors iio driver. */
+> +struct cros_ec_sensors_sync_state {
+> +	/* Shared by all sensors */
+> +	struct cros_ec_sensors_core_state core;
+> +	struct counter_device counter;
+> +	struct iio_chan_spec channels[MAX_CHANNELS];
+> +};
+> +
+> +static int cros_ec_sensors_sync_read(struct iio_dev *indio_dev,
+> +				     struct iio_chan_spec const *chan,
+> +				     int *val, int *val2, long mask)
 > +{
-> +	struct usb_phy_roothub *roothub_entry;
-> +	struct list_head *head;
-> +	int err;
+> +	struct cros_ec_sensors_sync_state *st = iio_priv(indio_dev);
+> +	u16 data;
+> +	int ret;
 > +
-> +	if (!phy_roothub)
-> +		return 0;
-> +
-> +	head = &phy_roothub->list;
-> +
-> +	list_for_each_entry(roothub_entry, head, list) {
-> +		err = phy_calibrate(roothub_entry->phy);
-> +		if (err)
-> +			return err;
+> +	mutex_lock(&st->core.cmd_lock);
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = cros_ec_sensors_read_cmd(indio_dev, BIT(0), &data);
+> +		if (ret < 0)
+> +			break;
+> +		ret = IIO_VAL_INT;
+> +		*val = data;
+> +		break;
+> +	default:
+> +		ret = cros_ec_sensors_core_read(&st->core, chan, val, val2,
+> +						mask);
+> +		break;
 > +	}
+> +	mutex_unlock(&st->core.cmd_lock);
+> +	return ret;
+> +}
+> +
+> +static struct iio_info cros_ec_sensors_sync_info = {
+> +	.read_raw = &cros_ec_sensors_sync_read,
+> +	.read_avail = &cros_ec_sensors_core_read_avail,
+> +};
+> +
+> +static struct counter_count cros_ec_sync_counts = {
+> +	.id = 0,
+> +	.name = "Cros EC sync counter",
+> +};
+> +
+> +static int cros_ec_sync_cnt_read(struct counter_device *counter,
+> +				struct counter_count *count,
+> +				struct counter_count_read_value *val)
+> +{
+> +	s16 cnt;
+> +	int ret;
+> +	struct iio_dev *indio_dev = counter->priv;
+> +	struct cros_ec_sensors_sync_state *const st = iio_priv(indio_dev);
+> +	unsigned long data;
+> +
+> +	mutex_lock(&st->core.cmd_lock);
+> +	ret = cros_ec_sensors_read_cmd(indio_dev, BIT(0), &cnt);
+> +	mutex_unlock(&st->core.cmd_lock);
+> +	if (ret != 0) {
+> +		dev_warn(&indio_dev->dev, "Unable to read sensor data\n");
+> +		return ret;
+> +	}
+> +
+> +	data = (unsigned long) cnt;
+> +	counter_count_read_value_set(val, COUNTER_COUNT_TALLY, &data);
 > +
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(usb_phy_roothub_calibrate);
 > +
->   int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
->   {
->   	struct usb_phy_roothub *roothub_entry;
-> diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
-> index dad564e2d2d4..20a267cd986b 100644
-> --- a/drivers/usb/core/phy.h
-> +++ b/drivers/usb/core/phy.h
-> @@ -18,6 +18,7 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
->   
->   int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
->   			     enum phy_mode mode);
-> +int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub);
->   int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
->   void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
->   
+> +static const struct counter_ops cros_ec_sync_cnt_ops = {
+> +	.count_read = cros_ec_sync_cnt_read,
+> +};
+> +
+> +static char *cros_ec_loc[] = {
+> +	[MOTIONSENSE_LOC_BASE] = "base",
+> +	[MOTIONSENSE_LOC_LID] = "lid",
+> +	[MOTIONSENSE_LOC_CAMERA] = "camera",
+> +	[MOTIONSENSE_LOC_MAX] = "unknown",
+> +};
+> +
+> +static ssize_t cros_ec_sync_id(struct counter_device *counter,
+> +				  void *private, char *buf)
+> +{
+> +	struct iio_dev *indio_dev = counter->priv;
+> +	struct cros_ec_sensors_sync_state *const st = iio_priv(indio_dev);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%d\n", st->core.param.info.sensor_num);
+> +}
+> +
+> +static ssize_t cros_ec_sync_loc(struct counter_device *counter,
+> +				   void *private, char *buf)
+> +{
+> +	struct iio_dev *indio_dev = counter->priv;
+> +	struct cros_ec_sensors_sync_state *const st = iio_priv(indio_dev);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s\n", cros_ec_loc[st->core.loc]);
+> +}
+> +
+> +static struct counter_device_ext cros_ec_sync_cnt_ext[] = {
+> +	{
+> +		.name = "id",
+> +		.read = cros_ec_sync_id
+> +	},
+> +	{
+> +		.name = "location",
+> +		.read = cros_ec_sync_loc
+> +	},
+> +};
+> +
+> +static int cros_ec_sensors_sync_probe(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_sensors_sync_state *state;
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_chan_spec *channel;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->info = &cros_ec_sensors_sync_info;
+> +	state = iio_priv(indio_dev);
+> +
+> +	if (state->core.type != MOTIONSENSE_TYPE_SYNC)
+> +		return -EINVAL;
+> +
+> +	/* Initialize IIO device */
+> +	channel = state->channels;
+> +	channel->type = IIO_TIMESTAMP;
+> +	channel->channel = -1;
+> +	channel->scan_index = 1;
+> +	channel->scan_type.sign = 's';
+> +	channel->scan_type.realbits = 64;
+> +	channel->scan_type.storagebits = 64;
+> +
+> +	indio_dev->channels = state->channels;
+> +	indio_dev->num_channels = MAX_CHANNELS;
+> +
+> +	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+> +
+> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> +					      cros_ec_sensors_capture, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_device_register(dev, indio_dev);
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Hmm. Wasn't expecting to see that here if it's a counter device.
+
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Initialize counter device */
+> +	state->counter.name = dev_name(&pdev->dev);
+> +	state->counter.parent = &pdev->dev;
+> +	state->counter.counts = &cros_ec_sync_counts;
+> +	state->counter.num_counts = 1;
+> +	state->counter.priv = indio_dev;
+> +	state->counter.ops = &cros_ec_sync_cnt_ops;
+> +	state->counter.ext = cros_ec_sync_cnt_ext;
+> +	state->counter.num_ext = ARRAY_SIZE(cros_ec_sync_cnt_ext);
+> +
+> +	return devm_counter_register(&pdev->dev, &state->counter);
+> +}
+> +
+> +static const struct platform_device_id cros_ec_sensors_sync_ids[] = {
+> +	{ .name = DRV_NAME, },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(platform, cros_ec_sensors_sync_ids);
+> +
+> +static struct platform_driver cros_ec_sensors_sync_platform_driver = {
+> +	.driver = {
+> +		.name	= DRV_NAME,
+> +		.pm	= &cros_ec_sensors_pm_ops,
+> +	},
+> +	.probe		= cros_ec_sensors_sync_probe,
+> +	.id_table	= cros_ec_sensors_sync_ids,
+> +};
+> +module_platform_driver(cros_ec_sensors_sync_platform_driver);
+> +
+> +MODULE_DESCRIPTION("ChromeOS EC synchronisation sensor driver");
+> +MODULE_ALIAS("platform:" DRV_NAME);
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 805652250960..2bf183425eaf 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -22,6 +22,7 @@
+>  static char *cros_ec_loc[] = {
+>  	[MOTIONSENSE_LOC_BASE] = "base",
+>  	[MOTIONSENSE_LOC_LID] = "lid",
+> +	[MOTIONSENSE_LOC_CAMERA] = "camera",
+>  	[MOTIONSENSE_LOC_MAX] = "unknown",
+>  };
+>  
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index 41dccced5026..1c5c2c38af88 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -332,6 +332,9 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+>  		case MOTIONSENSE_TYPE_ACTIVITY:
+>  			sensor_cells[id].name = "cros-ec-activity";
+>  			break;
+> +		case MOTIONSENSE_TYPE_SYNC:
+> +			sensor_cells[id].name = "cros-ec-sync";
+> +			break;
+>  		default:
+>  			dev_warn(ec->dev, "unknown type %d\n", resp->info.type);
+>  			continue;
+> diff --git a/include/linux/counter.h b/include/linux/counter.h
+> index a061cdcdef7c..1198e675306f 100644
+> --- a/include/linux/counter.h
+> +++ b/include/linux/counter.h
+> @@ -488,6 +488,7 @@ enum counter_signal_value_type {
+>  
+>  enum counter_count_value_type {
+>  	COUNTER_COUNT_POSITION = 0,
+> +	COUNTER_COUNT_TALLY
+>  };
+>  
+>  void counter_signal_read_value_set(struct counter_signal_read_value *const val,
 
