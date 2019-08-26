@@ -2,185 +2,126 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E5EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4A2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3744B206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389D521744
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 03:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WSVkTJl0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qYQydgeN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbfHZDha (ORCPT
+        id S1729591AbfHZDhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 25 Aug 2019 23:37:30 -0400
-Received: from gateway20.websitewelcome.com ([192.185.44.20]:35387 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726215AbfHZDh3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 25 Aug 2019 23:37:29 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id DB4E1400DED21
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 21:28:29 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 25kwiJ2rR2qH725kwiGJ3J; Sun, 25 Aug 2019 22:33:22 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:To:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eIrYihMjW2sluR5uV5NO3MSvoaFh0ScIl4JWwE8d9pM=; b=WSVkTJl0YdiIBMyJ5IcqNTdE/b
-        HmhDkLnHAhFuwSIjrH9PYqV+H/SCDX9N2BAaoqcGkrpfl9eAf78WWFrBWSSyBoNc00dIsmxQMyhy3
-        WsmrG69xu4utIOaqLr+shNSB7rtk8pV+ve6zj8HPnozMBj9J3S527laCTuH/DkDghqvqD/bU6T5tR
-        YcrtT3bL1yuZlUn53+DkKe2VaEnEBKY583BTcCUg4H70ZU8Hj0MPRhUUiq3MkG/qiPtDKS3rU0D5Q
-        qfgVasNb0b6iS5jXelT3qsIjtTsuZy8XlHTrXTEvPlvB7p5jZrkFWq2oPRAGtpnjh22sUG7tTD6rn
-        V4ZyuWcA==;
-Received: from [189.152.216.116] (port=51728 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i25kw-00483z-0T; Sun, 25 Aug 2019 22:33:22 -0500
-To:     tglx@linutronix.de, bp@suse.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, x86@kernel.org,
-        mingo@kernel.org, kirill.shutemov@linux.intel.com,
-        kirill@shutemov.name, linux-tip-commits@vger.kernel.org
-References: <20190813131654.24378-1-kirill.shutemov@linux.intel.com>
- <tip-0a46fff2f9108c2c44218380a43a736cf4612541@git.kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [tip:x86/urgent] x86/boot/compressed/64: Fix boot on machines
- with broken E820 table
-Message-ID: <caa30daa-9ed5-e293-f6cd-ff261c995e1e@embeddedor.com>
-Date:   Sun, 25 Aug 2019 22:33:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <tip-0a46fff2f9108c2c44218380a43a736cf4612541@git.kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Sun, 25 Aug 2019 23:37:50 -0400
+Received: from mail-eopbgr50082.outbound.protection.outlook.com ([40.107.5.82]:22339
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726215AbfHZDht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 25 Aug 2019 23:37:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RMNwNFakIst8CqKgmF0vQJqsHN+hSzku5btSwSkdtxqOHmSuyekY56MO4IgUDpanrbqBboa3LbYrDSjWd64RhoyqbPxpIShMSJmkAtwjEDkA6xbwmSZYrLK6B6ku5uYlxyPUKT4vWPD5SDicOLYqVbHgxM/KFUlTLRz9yIgOytfQ9551MHRXI5KykYVyofcT9753o4vahdTFx+JsfF4Y464tEkIx8we4ctkmdUrDFr5F+UozHqKwLHUihX+iW+TaK84Ir+m29+5aS1If0Oy3AsjUg5+ZGRHBzBaG8zecQ1AM6SUitT7LNKMu8/ty7ORFU700rvsjBif6mOfaDwBung==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dd4/O9ORxgwd/betCcSZypsrMzzPltx6jwPJWNYx4bw=;
+ b=durZWxR8y3oOToPElJzsw0NyZFX5p3sB0Mpfu7lBIJzloDUpGHP5ox8SDFj0eJY9dzFH2iaQnvIbecMuGxSkRB6xxByp+zn3pqcpBRya+kaJe+kyAY7GmC8lx4x2kApsKY05XJRRPwtpjxgzVZutXL3/j6H/UZJPN7jnKDlMhhzmjwKwYV3ug5xwd5GSSS801pZU8pdl1MsMVtJ5gIKrNvCwhM3MW/zOgYHIsGeZqJ3lRMAiGdgi/moWe+4NVzceQz72qyhllKedfAQ6Rk1so7yo8KG27OB7Yvpr9ev+tdnPBbjfMCre1ibc1PuFYRtCrGeCXaOQ3fsmFhYxlvKLvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dd4/O9ORxgwd/betCcSZypsrMzzPltx6jwPJWNYx4bw=;
+ b=qYQydgeNppUoleXcrwnledLPDagxEBlYyUXoe7e/8rlSTJEBhqZdlN398hlMyxPPgJXy38FErYhbXCIgy7oHo0u9yodcwu2rdVJr8cBuaEyoYwkWMSO6E8veIbBEDjOqOnc0Xul9Nc5oWrsQlYVbU8qhBQyhIrabY72td/bzuC8=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4313.eurprd04.prod.outlook.com (52.135.131.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Mon, 26 Aug 2019 03:37:43 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::3cd8:4bcf:8626:4254%3]) with mapi id 15.20.2199.021; Mon, 26 Aug 2019
+ 03:37:43 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Trent Piepho <tpiepho@impinj.com>, Leo Li <leoyang.li@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] Re: [1/3] rtc/fsl: support flextimer for lx2160a
+Thread-Topic: [EXT] Re: [1/3] rtc/fsl: support flextimer for lx2160a
+Thread-Index: AQHVWZqkS7VqFcEexkmgcQwv8J5Ri6cI9DMAgAPWNrA=
+Date:   Mon, 26 Aug 2019 03:37:43 +0000
+Message-ID: <DB7PR04MB4490B7AD75C6EE49F5208F738FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190823095740.12280-1-biwen.li@nxp.com>
+ <1566579388.5029.8.camel@impinj.com>
+In-Reply-To: <1566579388.5029.8.camel@impinj.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.216.116
-X-Source-L: No
-X-Exim-ID: 1i25kw-00483z-0T
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.216.116]:51728
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 455464d6-d1e7-412a-31de-08d729d6c0f0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4313;
+x-ms-traffictypediagnostic: DB7PR04MB4313:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB43134C121C11AA673A65B3008FA10@DB7PR04MB4313.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(366004)(376002)(396003)(199004)(189003)(102836004)(186003)(256004)(52536014)(81156014)(81166006)(6436002)(8676002)(8936002)(66066001)(26005)(54906003)(76176011)(33656002)(2201001)(7696005)(316002)(7736002)(99286004)(229853002)(305945005)(74316002)(110136005)(86362001)(486006)(25786009)(71200400001)(71190400001)(446003)(11346002)(66476007)(76116006)(66946007)(66446008)(64756008)(66556008)(3846002)(476003)(2501003)(2906002)(44832011)(478600001)(9686003)(55016002)(4326008)(6116002)(53936002)(5660300002)(14454004)(6506007)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4313;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3LagQpKrbLv4Zn/XZk6qfyM5a1hovwtD2MrBP4AdQV22ERquvhRPz8pl7Yw1WfHhkX9KCb/C2/aQ6NLxmPhXCgyt+5s7wQda2Q4KXMeDSjBTm09P6GyrD9Kaetep1zVtKNXGemuFKT48OEEZnyhI5VuZQLoJa2j+sORQgCyJGqXWjyXs0ukujpzVx2SajnAYb6+PvpKit6BIp904XMFMk/rRg1/Nr4M63mH2cI4lCrO2lrPzZKXLtKEx18ucJJxvDwpJoDpARtGcNU9FE4w1jsA5P8r8Mof6nB3Pe/ELJkmHmqqAsGM+SbtXlVgCtmF9txjEu9WoZmV+RR8BEbgUwEF1YfFxYAoVcfz/jn8KkFXnq/bOajS3eEk52dMA5hKwhNddJY4Cwh5EMyeGxlSUOswICP7gWj1rjgyJ9gorD2U=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 455464d6-d1e7-412a-31de-08d729d6c0f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 03:37:43.2441
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /0+03KxBMGDBIY5HkVpm9C9JhgYsJO4QD8l8LrkHGmCen6nWWtri6XsfBPmyAhXfs4EA2u/wP0vzPgqdbw105g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4313
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-On 8/19/19 9:16 AM, tip-bot for Kirill A. Shutemov wrote:
-[..]
-> 
-> diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-> index 5f2d03067ae5..2faddeb0398a 100644
-> --- a/arch/x86/boot/compressed/pgtable_64.c
-> +++ b/arch/x86/boot/compressed/pgtable_64.c
-> @@ -72,6 +72,8 @@ static unsigned long find_trampoline_placement(void)
->  
->  	/* Find the first usable memory region under bios_start. */
->  	for (i = boot_params->e820_entries - 1; i >= 0; i--) {
-> +		unsigned long new;
-> +
->  		entry = &boot_params->e820_table[i];
->  
->  		/* Skip all entries above bios_start. */
-> @@ -84,15 +86,20 @@ static unsigned long find_trampoline_placement(void)
->  
->  		/* Adjust bios_start to the end of the entry if needed. */
->  		if (bios_start > entry->addr + entry->size)
-
-Notice that if this condition happens to be false, we end up with an
-uninitialized variable *new*.
-
-What would be the right value to assign to *new* at declaration under
-this condition?
-
-> -			bios_start = entry->addr + entry->size;
-> +			new = entry->addr + entry->size;
->  
->  		/* Keep bios_start page-aligned. */
-> -		bios_start = round_down(bios_start, PAGE_SIZE);
-> +		new = round_down(new, PAGE_SIZE);
->  
->  		/* Skip the entry if it's too small. */
-> -		if (bios_start - TRAMPOLINE_32BIT_SIZE < entry->addr)
-> +		if (new - TRAMPOLINE_32BIT_SIZE < entry->addr)
->  			continue;
->  
-> +		/* Protect against underflow. */
-> +		if (new - TRAMPOLINE_32BIT_SIZE > bios_start)
-> +			break;
-> +
-> +		bios_start = new;
->  		break;
->  	}
->  
-> 
-
---
-Gustavo
-
+PiANCj4gT24gRnJpLCAyMDE5LTA4LTIzIGF0IDE3OjU3ICswODAwLCBCaXdlbiBMaSB3cm90ZToN
+Cj4gPiBUaGUgcGF0Y2ggc3VwcG9ydHMgZmxleHRpbWVyIGZvciBseDIxNjBhDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAg
+ZHJpdmVycy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0uYyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMt
+ZnNsLWZ0bS1hbGFybS5jIGIvZHJpdmVycy9ydGMvcnRjLWZzbC0NCj4gPiBmdG0tYWxhcm0uYyBp
+bmRleCA0ZjcyNTljMmQ2YTMuLjJiODE1MjVmNmRiOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L3J0Yy9ydGMtZnNsLWZ0bS1hbGFybS5jDQo+ID4gKysrIGIvZHJpdmVycy9ydGMvcnRjLWZzbC1m
+dG0tYWxhcm0uYw0KPiA+IEBAIC0zMTMsNiArMzEzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
+Zl9kZXZpY2VfaWQgZnRtX3J0Y19tYXRjaFtdID0NCj4gPiB7DQo+ID4gICAgICAgeyAuY29tcGF0
+aWJsZSA9ICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iLCB9LA0KPiA+ICAgICAgIHsgLmNvbXBhdGli
+bGUgPSAiZnNsLGxzMjA4eGEtZnRtLWFsYXJtIiwgfSwNCj4gPiAgICAgICB7IC5jb21wYXRpYmxl
+ID0gImZzbCxsczEwMjhhLWZ0bS1hbGFybSIsIH0sDQo+ID4gKyAgICAgeyAuY29tcGF0aWJsZSA9
+ICJmc2wsbHgyMTYwYS1mdG0tYWxhcm0iLCB9LA0KPiA+ICAgICAgIHsgfSwNCj4gPiAgfTsNCj4g
+Pg0KPiANCj4gU2luY2UgdGhlcmUncyBubyBkYXRhIGFzc29jaWF0ZWQgd2l0aCBlYWNoIGNvbXBh
+dGlibGUsIGl0IGRvZXNuJ3Qgc2VlbSBsaWtlDQo+IHRoZXJlJ3MgYW55IG5lZWQgdG8gYWRkIGEg
+bmV3IG9uZS4NCj4gDQo+IFdoYXQncyBub3JtYWxseSBkb25lIGlzIGFkZCB0d28gY29tcGF0aWJs
+ZXMgaW4gdGhlIGR0cywgdGhlIGJhc2UgdmVyc2lvbiBhbmQNCj4gdGhlIHNwZWNpZmljIHZlcnNp
+b24sIGUuZy46DQo+IA0KPiArICAgICAgICAgICAgICAgcmNwbTogcmNwbUAxZTM0MDQwIHsNCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1yY3BtIiwN
+Cj4gKyAiZnNsLHFvcmlxLWNwbS0yLjErIjsNCj4gDQo+IE9yIGluIHRoaXMgY2FzZSwgY29tcGF0
+aWJsZSA9ICJmc2wsbHgyMTYwYS1mdG0tYWxhcm0iLCAiZnNsLGxzMTA4OGEtZnRtLWFsYXJtIjsN
+Cj4gDQo+IFRoZW4gdGhlcmUncyBubyBuZWVkIHRvIGFkZCB0byB0aGUgZHJpdmVyIGxpc3QuDQpZ
+ZXMsIGl0IHdpbGwgYmUgd29yay4gQnV0IGl0IHdpbGwgYmUgY29uZnVzaW5nLiBJcyBsczEwODhh
+IHNhbWUgd2l0aCBseDIxNjBhPyBOby4NCg==
