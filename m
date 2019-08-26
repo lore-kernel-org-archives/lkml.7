@@ -2,130 +2,99 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AABC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F5BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680042186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:13:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHtspKsJ"
+	by mail.kernel.org (Postfix) with ESMTP id CBC3A23406
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 18:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387765AbfHZSNy (ORCPT
+        id S1733105AbfHZSQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 14:13:54 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41566 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731907AbfHZSNx (ORCPT
+        Mon, 26 Aug 2019 14:16:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40911 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfHZSQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:13:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w5so27694317edl.8;
-        Mon, 26 Aug 2019 11:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LkBa3xlPOxOIGFlL1z8V5TVoSldQC5MdlkD84cfKRv8=;
-        b=tHtspKsJDGE101W9EwqaVw0RgyBItM+nuQ0t4HmFQxw8OOnTGWImttNiNv8SFEded0
-         euMRRkgZfC6mLuNlT/9iBPDDCsrvMQRx6qLvSmCo3mqRpNXnzs1owfAUkCA0ufyldWzk
-         a1vT7AJxa/lJFTDDZgGrNtxKfMEFCd0hc6Ey/0EvQKJetmZGByWPnf3nCrjkPZwtdQzJ
-         2u4MaQUsrRM+/yYqGgNO44TpoKI57WUyZxletgfGyw6jPTWLk4o122qcSOGoe3J0hC2j
-         Yo/DICe8ZKzPGUT1WkkyBuDUxnExLklDPdp6YlQler4ppFFb1gkE5TChtinAvj7OsX1F
-         T1pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LkBa3xlPOxOIGFlL1z8V5TVoSldQC5MdlkD84cfKRv8=;
-        b=romdlgEE06Xe3gnt0aFqWnmPYyyYDsl5S6ZzZpkA6oltODiHl9aDxgnzAdEk2MCS04
-         GGxfFQw/KFlOqxfRkDNPMBxyFktsiQCqzwsAQTpLF8sIuQSJJu+drOR9zbkkxQ2fntcD
-         LSDMlncNAYB2/T2XYiUAWsA1bKVBUBK+LOPA9bhI0FENcXb1YOxkxeY04Gb578jkZL1z
-         iGZ6AX0ODGTjiMnXNaVrY4JaXXtw5D8cJOElwBZ9cYRUhMcpUUGjre10P/vj1YNGsP0q
-         boPna9724wpgdV5EYjjIY1q9Z2cTHfCIRm7+JQj9VEPuAaftt96zE+WERdeqDkt4Dj+H
-         Axwg==
-X-Gm-Message-State: APjAAAVKmYkw1FkuxE/z3pVserg57DkCUqyYN0zQGXyq6SYJbl1eGYT1
-        Eddah+bH50bTTLfaEntFtRAne5PjGWTjUNR0Nt8W/qyvSI0=
-X-Google-Smtp-Source: APXvYqyGAYp7Wc3WxOchrO2+Oxu8D11zxo36a83fsqpzYs2gbTmJmVVNOIKcNizLEW9OYby9yLqiVsld2qi68kngN+g=
-X-Received: by 2002:a50:9401:: with SMTP id p1mr19812028eda.189.1566843231777;
- Mon, 26 Aug 2019 11:13:51 -0700 (PDT)
+        Mon, 26 Aug 2019 14:16:07 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i2JXA-0003Hh-A3; Mon, 26 Aug 2019 20:16:04 +0200
+Date:   Mon, 26 Aug 2019 20:16:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 28/38] posix-cpu-timers: Restructure expiry array
+In-Reply-To: <20190826163204.GA14309@lenoir>
+Message-ID: <alpine.DEB.2.21.1908262014260.1939@nanos.tec.linutronix.de>
+References: <20190821190847.665673890@linutronix.de> <20190821192921.895254344@linutronix.de> <20190826163204.GA14309@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190823124553.19364-1-yuehaibing@huawei.com> <20190823140513.GB9844@piout.net>
- <4b608c55-2541-30cf-ad88-c19a5c0cc84f@huawei.com> <01a2b6b2-eb15-1b40-1edc-de122bbdb5a2@roeck-us.net>
-In-Reply-To: <01a2b6b2-eb15-1b40-1edc-de122bbdb5a2@roeck-us.net>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Mon, 26 Aug 2019 20:13:35 +0200
-Message-ID: <CAH+2xPDw3ZWcH_g=Ui6u4Bzw2ii3EBnwGT0QuBseu1z+FgS9LA@mail.gmail.com>
-Subject: Re: [PATCH -next] rtc: pcf2127: Fix build error without CONFIG_WATCHDOG_CORE
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Yuehaibing <yuehaibing@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den man. 26. aug. 2019 kl. 15.20 skrev Guenter Roeck <linux@roeck-us.net>:
->
-> On 8/26/19 1:12 AM, Yuehaibing wrote:
-> >
-> >
-> > On 2019/8/23 22:05, Alexandre Belloni wrote:
-> >> On 23/08/2019 20:45:53+0800, YueHaibing wrote:
-> >>> If WATCHDOG_CORE is not set, build fails:
-> >>>
-> >>> drivers/rtc/rtc-pcf2127.o: In function `pcf2127_probe.isra.6':
-> >>> drivers/rtc/rtc-pcf2127.c:478: undefined reference to `devm_watchdog_register_device'
-> >>>
-> >>> Add WATCHDOG_CORE Kconfig dependency to fix this.
-> >>>
-> >>> Reported-by: Hulk Robot <hulkci@huawei.com>
-> >>> Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
-> >>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> >>> ---
-> >>>   drivers/rtc/Kconfig | 2 ++
-> >>>   1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> >>> index 25af63d..9dce7dc 100644
-> >>> --- a/drivers/rtc/Kconfig
-> >>> +++ b/drivers/rtc/Kconfig
-> >>> @@ -886,6 +886,8 @@ config RTC_DRV_DS3232_HWMON
-> >>>   config RTC_DRV_PCF2127
-> >>>     tristate "NXP PCF2127"
-> >>>     depends on RTC_I2C_AND_SPI
-> >>> +   depends on WATCHDOG
-> >>
-> >> Definitively not, I fixed it that way:
-> >> +       select WATCHDOG_CORE if WATCHDOG
-> >
-> >
-> > No, this still fails while WATCHDOG is not set
-> >
->
-> Correct, there are no dummy functions for watchdog device registration.
-> There would have to be conditional code in the driver if the watchdog
-> is supposed to be optional.
+On Mon, 26 Aug 2019, Frederic Weisbecker wrote:
+> On Wed, Aug 21, 2019 at 09:09:15PM +0200, Thomas Gleixner wrote:
+> >  /**
+> > - * task_cputimers_expired - Compare two task_cputime entities.
+> > + * task_cputimers_expired - Check whether posix CPU timers are expired
+> >   *
+> >   * @samples:	Array of current samples for the CPUCLOCK clocks
+> > - * @expiries:	Array of expiry values for the CPUCLOCK clocks
+> > + * @pct:	Pointer to a posix_cputimers container
+> >   *
+> > - * Returns true if any mmember of @samples is greater than the corresponding
+> > - * member of @expiries if that member is non zero. False otherwise
+> > + * Returns true if any member of @samples is greater than the corresponding
+> > + * member of @pct->bases[CLK].nextevt. False otherwise
+> >   */
+> > -static inline bool task_cputimers_expired(const u64 *sample, const u64 *expiries)
+> > +static inline bool
+> > +task_cputimers_expired(const u64 *sample, struct posix_cputimers *pct)
+> >  {
+> >  	int i;
+> >  
+> >  	for (i = 0; i < CPUCLOCK_MAX; i++) {
+> > -		if (expiries[i] && sample[i] >= expiries[i])
+> > +		if (sample[i] >= pct->bases[i].nextevt)
+> 
+> You may have false positive here if you don't check if pct->bases[i].nextevt
+> is 0. Probably no big deal by the end of the series since you change that 0
+> for KTIME_MAX later but right now it might hurt bisection with performance
+> issues (locking sighand at every tick...).
 
-Hi
+Hrm. That should have stayed until the patch  which removes that 0 state
 
-During review of version 1, there was a wish for the watchdog feature not
-to be hidden behind Kconfig option, e.g. RTC_DRV_PCF2127_WDT, as
-it would not result in a much bigger driver.
+> [...]
+> 
+> > @@ -1176,7 +1182,7 @@ void run_posix_cpu_timers(void)
+> >  void set_process_cpu_timer(struct task_struct *tsk, unsigned int clkid,
+> >  			   u64 *newval, u64 *oldval)
+> >  {
+> > -	u64 now, *expiry = tsk->signal->posix_cputimers.expiries + clkid;
+> > +	u64 now, *nextevt = &tsk->signal->posix_cputimers.bases[clkid].nextevt;
+> 
+> You're dereferencing the pointer before checking clkid sanity below.
 
-I did not add any other selects/depends on in Kconfig as
-RTC_DRV_DS1374_WDT and RTC_DRV_M41T80_WDT options
-does not select WATCHDOG_CORE and/or WATCHDOG either.
-DS1374 and M41T80 does not seem to check on any other
-WATCHDOG defines other then their _WDT Kconfig.
+Urgh. Yes.
+ 
+Thanks,
 
-I can create a patch that hides the watchdog code if WATCHDOG
-define is not set, if that's the right way?
-
-Bruno
+	tglx
