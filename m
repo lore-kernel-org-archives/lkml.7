@@ -2,84 +2,71 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0935C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AAAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6776921872
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566856642;
-	bh=D9K92IFV4XsqcixfHYhV/oX9lfC7OT+SzS4AAi8rcJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oU/Nd17xa/uepnNov/yWhd7rwz6w+I12CF9JrtCJ2Oyrdw58ZNTvm4zLqT2iw1Qv+
-	 1VRVztaSh4Dyj8S2Hqv+GGqz7jh8ftY/yqAYfjM/yJAA1zDYORxIojih+1YUbKNN1U
-	 o+M5ytxAVhTzDydgqT9OlH5bAF5MYF7TGMNmHQPk=
+	by mail.kernel.org (Postfix) with ESMTP id F3CF420850
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfHZV5V (ORCPT
+        id S1726550AbfHZV61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 17:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49802 "EHLO mail.kernel.org"
+        Mon, 26 Aug 2019 17:58:27 -0400
+Received: from muru.com ([72.249.23.125]:58762 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbfHZV5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 17:57:21 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2276920850;
-        Mon, 26 Aug 2019 21:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566856640;
-        bh=D9K92IFV4XsqcixfHYhV/oX9lfC7OT+SzS4AAi8rcJ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XLff1dIe8jDmY1CzJ6Vpbq9DDlJ+/QGJNLEciCOenlUYJMWcXAMLXls/mGMKhz43M
-         8f8TEcR1bnZK3xWCcWNe/wxqReIAOHQ96zz3xNXw0yJgzW1mU9sDvR5IBxOiR/ncFk
-         Tcb9dTv9UejSJPeCXFeI4ZwbWeurQ1DZZwphbHLk=
-Date:   Mon, 26 Aug 2019 23:57:18 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 32/38] posix-cpu-timers: Get rid of zero checks
-Message-ID: <20190826215717.GG14309@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192922.275086128@linutronix.de>
+        id S1725933AbfHZV60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 17:58:26 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AE30580AA;
+        Mon, 26 Aug 2019 21:58:54 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 14:58:22 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
+Message-ID: <20190826215822.GY52127@atomide.com>
+References: <20190820195307.27590-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821192922.275086128@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190820195307.27590-1-dmurphy@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:09:19PM +0200, Thomas Gleixner wrote:
-> Deactivation of the expiry cache is done by setting all clock caches to
-> 0. That requires to have a check for zero in all places which update the
-> expiry cache:
-> 
-> 	if (cache == 0 || new < cache)
-> 		cache = new;
-> 
-> Use U64_MAX as the deactivated value, which allows to remove the zero
-> checks when updating the cache and reduces it to the obvious check:
-> 
-> 	if (new < cache)
-> 		cache = new;
-> 
-> This also removes the weird workaround in do_prlimit() which was required
-> to convert a RLIMIT_CPU value of 0 (immediate expiry) to 1 because handing
-> in 0 to the posix CPU timer code would have effectively disarmed it.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Hi,
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+* Dan Murphy <dmurphy@ti.com> [190820 19:53]:
+> Fix the brightness control for I2C mode.  Instead of
+> changing the full scale current register update the ALS target
+> register for the appropriate banks.
+> 
+> In addition clean up some code errors and random misspellings found
+> during coding.
+> 
+> Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
+> 
+> Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
+> Reported-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v3 - Removed register define updates - https://lore.kernel.org/patchwork/patch/1114542/
+
+Looks like starting with this patch in Linux next the LCD on droid4
+is so dim it's unreadable even with brightness set to 255. Setting
+brightness to 0 does blank it completely though.
+
+Did something maybe break with the various patch revisions or are
+we now missing some dts patch?
+
+Regards,
+
+Tony
