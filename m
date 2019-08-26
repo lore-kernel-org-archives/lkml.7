@@ -2,143 +2,124 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D8BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585BD20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FD021848
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ByyjV9JH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAzJwDRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbfHZPls (ORCPT
+        id S1731763AbfHZPmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:41:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35891 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729514AbfHZPlr (ORCPT
+        Mon, 26 Aug 2019 11:42:05 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39347 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729800AbfHZPmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:41:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w2so12044227pfi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 08:41:47 -0700 (PDT)
+        Mon, 26 Aug 2019 11:42:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i63so16330401wmg.4;
+        Mon, 26 Aug 2019 08:42:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=OFHbZ4oNFSxjFZCVr96ZdpAMPyMgbA9Alsj60HdaewI=;
-        b=ByyjV9JHG63hj8brWPvTOWRMkb07LDwqViT/wl+ByOyHsb6BiCQgFeLQTJMzmddT7M
-         LVHh3S1tn5tPnNPijiJYPg6diPhUhy4mAPULE1m88x1z5o8TtM2UHOW0324cmi17jDC5
-         ppqTzE3a7/9LRhb/jRjWbldP9oSdeEYf6z1lQ=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BuKiLPPx3WZb18KjEBPIDucn0EvSVWkRKmbpGZhpx+A=;
+        b=VAzJwDRuBaxBdFubOwbTnTfVQq9MfH+ytDLchNHQMQQ8ecq0q+LhTNcNoavQ2Wauko
+         /Uom0aUGQJx4//eKpLCL7XH1BGeJ9vlNyjDopVVydGi2EkiElRo1cR61XIJZ55g4rZ/A
+         DDjYzCg83uMzyPlVufvjb/rxD+Ae/xWjgEKVwvzn63/I/51EPNQqyti8fuBDuAFvnRWu
+         z9heqT0thRiVuJPSDiFqEHCagGXCv22RDjSKExEMA9Jc42PM6cnE1zqi5zVNWmUuEHfb
+         c40Y34Nq//Zc01oyzKHysavfyTdaowaXPSobtolIetIWGpZtOH/mrgyYraDEaAHubCES
+         5scg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=OFHbZ4oNFSxjFZCVr96ZdpAMPyMgbA9Alsj60HdaewI=;
-        b=SzA8i0I4VqjJNKWjp/6Y4vjJxwTRQv/HiospP6FrSqHUEA+5ZF1Ks/Ak1UqjOstF/4
-         lsMFCbWakvdy5wx5X2YX7EcDkhMv0kN7v3n2qtZmESwmIvDPT32kGRNrhk71NUtC6pdb
-         Hzrj3rfT1wMb2zrdC104OkYJq8SA+WHXBpVRA5urXYPhTchTyBYk4kMtbsNxU7xYl0EB
-         cqjsie0ri37VJDxKRrJCzA2CdnQb2Rjyj9Xgr/0TUwMUKfdQZeUhP4co425PtDdnfhDz
-         K2aVQ+kZ37825pVOraIXRu6KNpsl5Y215Q1sGGmdYxDY8Lmey6yNrd0JPz0dFN3XXIT3
-         IExA==
-X-Gm-Message-State: APjAAAVNnaixmQc/rAxVSYg0+sgg8n8+rxbkBxdIOvntfAqiIr9SCwj+
-        WKG6jERcOGQBEs1iywTgrl9hfg==
-X-Google-Smtp-Source: APXvYqy4bSxYdli1WrXDqQe8R/DvGtZrO1Cy5GBw8/YXcCOZahjyYWX1rEKv/qFLyxrXQCEZcSOj0Q==
-X-Received: by 2002:a17:90a:b781:: with SMTP id m1mr14092341pjr.141.1566834106841;
-        Mon, 26 Aug 2019 08:41:46 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id v189sm12729023pfv.176.2019.08.26.08.41.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 08:41:44 -0700 (PDT)
-Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-3-scott.branden@broadcom.com>
- <s5hef1crybq.wl-tiwai@suse.de>
- <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
- <s5hr258j6ln.wl-tiwai@suse.de>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
-Date:   Mon, 26 Aug 2019 08:41:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=BuKiLPPx3WZb18KjEBPIDucn0EvSVWkRKmbpGZhpx+A=;
+        b=n+LhylHAOMM9Y1eGfW4Hs1OJzvqR9bPlm6cZtT81h1bB2fxvhks50KZQXOLT+twXuy
+         EMWoGt1gYYEAxcW0n23cT8k+FQB4nbctG5ATKL0nlyn91ndbVYFXZbZs92C1Jo2NXzG1
+         sXVTe+GlZ+ab/l97xf55lIY4NY8zJ9JGizXKetFgZ4dn09T0Imh1Bb2/crzTY9DFPa1z
+         Lu12AJAnzAMOmLNN1Drbux/32zW3hsSk89r7CE1XzauDFO/l5M3lbzUGAUoJDRkKC+G4
+         NEtsHd/tOYHVn4v30Hm+jFVnhrE25fMEcdwq6+b4CCPlsgMEVuOF7d1QBLp485h3ZN+Q
+         KJrg==
+X-Gm-Message-State: APjAAAU2K4Sms0iZW46mchjklg3z0RAID2NAx5OSiCPlbkEFzjyY/L57
+        bxi3ht2jd3UJ8iDSkVxjHh0=
+X-Google-Smtp-Source: APXvYqzvHRKG3k5WDrYTTbUuQ0IVTK+v4eHtFzB3In8kqXePOoZn326xQ7UkwrF+Hh0HO/fH8WqJ1Q==
+X-Received: by 2002:a1c:c018:: with SMTP id q24mr22317873wmf.162.1566834121939;
+        Mon, 26 Aug 2019 08:42:01 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id g26sm12148959wmh.32.2019.08.26.08.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 08:42:00 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH] PCI: hv: Make functions only used locally static in pci-hyperv.c
+Date:   Mon, 26 Aug 2019 17:41:59 +0200
+Message-Id: <20190826154159.9005-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <s5hr258j6ln.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Takashi,
+Functions hv_read_config_block(), hv_write_config_block()
+and hv_register_block_invalidate() are not used anywhere
+else and are local to drivers/pci/controller/pci-hyperv.c,
+and do not need to be in global scope, so make these static.
 
-On 2019-08-26 8:20 a.m., Takashi Iwai wrote:
-> On Fri, 23 Aug 2019 21:44:42 +0200,
-> Scott Branden wrote:
->> Hi Takashi,
->>
->> Thanks for review.  comments below.
->>
->> On 2019-08-23 3:05 a.m., Takashi Iwai wrote:
->>> On Thu, 22 Aug 2019 21:24:46 +0200,
->>> Scott Branden wrote:
->>>> Add offset to request_firmware_into_buf to allow for portions
->>>> of firmware file to be read into a buffer.  Necessary where firmware
->>>> needs to be loaded in portions from file in memory constrained systems.
->>> AFAIU, this won't work with the fallback user helper, right?
->> Seems to work fine in the fw_run_tests.sh with fallbacks.
-> But how?  You patch doesn't change anything about the fallback loading
-> mechanism.
-Correct - I didn't change any of the underlying mechanisms,
-so however request_firmware_into_buf worked before it still does.
->   Or, if the expected behavior is to load the whole content
-> and then copy a part, what's the merit of this API?
-The merit of the API is that the entire file is not copied into a buffer.
-In my use case, the buffer is a memory region in PCIe space that isn't
-even large enough for the whole file.  So the only way to get the file 
-is to read it
-in portions.
->
->>> Also it won't work for the compressed firmware files as-is.
->> Although unnecessary, seems to work fine in the fw_run_tests.sh with
->> "both" and "xzonly" options.
-> This looks also suspicious.  Loading a part of the file from the
-> middle and decompression won't work together, from obvious reasons.
-I don't know what the underlying mechanisms are doing right now.
-If they decompress the whole file then that is why it's working.
-An obvious improvement that could be made later is to only read
-a portion of the file before writing it into the buffer in the non-xz case.
->
-> If the test passes, it means that the test itself is more likely
-> incorrect, I'm afraid.
-Then all of the tests for "both" and "xzonly" could be broken.
->
->
-> thanks,
->
-> Takashi
-Regards,
-  Scott
+Resolve compiler warning that can be seen when building with
+warnings enabled (W=1).
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..c9642e429c2d 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -930,7 +930,7 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
++static int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+ 			 unsigned int block_id, unsigned int *bytes_returned)
+ {
+ 	struct hv_pcibus_device *hbus =
+@@ -1010,7 +1010,7 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
++static int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+ 			  unsigned int block_id)
+ {
+ 	struct hv_pcibus_device *hbus =
+@@ -1079,7 +1079,7 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
++static int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+ 				 void (*block_invalidate)(void *context,
+ 							  u64 block_mask))
+ {
+-- 
+2.22.1
+
