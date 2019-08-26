@@ -2,155 +2,249 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1005C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AFEC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF3220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FE3217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 16:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Xoa0pz2e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZdZrch9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfHZQRJ (ORCPT
+        id S1732546AbfHZQSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 12:17:09 -0400
-Received: from mout.gmx.net ([212.227.17.21]:33959 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731950AbfHZQRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:17:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566836190;
-        bh=s54ttNbPjMmgaywLYl/fIGUCXpGizAY5jyRSfFgH75g=;
-        h=X-UI-Sender-Class:To:Cc:References:From:Subject:Date:In-Reply-To;
-        b=Xoa0pz2eniMEL5+fk08kJDGQ4OIkoawO2g1GPYzbS3XpqP1gfD+tkLBQ7S+j3Rymf
-         T4D3Hl/mnqjWmEy7reYGdVJ84dvqu0RG1rRRM9u0bDqMVHeP4craOUEy7idm9BSlOT
-         UqbD+K7zZnCJad5VCh0h4ZJO4xOV4e3BgYIzqyhc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from mandree.no-ip.org ([84.160.52.178]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBDnC-1hvAvo2fde-00CfZb; Mon, 26
- Aug 2019 18:16:30 +0200
-Received: from ryzen.an3e.de (localhost [IPv6:::1])
-        by ryzen.an3e.de (Postfix) with ESMTP id 14A4312009D;
-        Mon, 26 Aug 2019 18:16:28 +0200 (CEST)
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
- <20190824021254.GB127465@google.com>
- <20190826101726.GD19908@lahna.fi.intel.com>
- <20190826140712.GC127465@google.com>
- <20190826144242.GA2643@lahna.fi.intel.com>
-From:   Matthias Andree <matthias.andree@gmx.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=matthias.andree@gmx.de; prefer-encrypt=mutual; keydata=
- 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
- H29L93g/7fa+B3v7
-Subject: Re: [PATCH] PCI: Add missing link delays required by the PCIe spec
-Message-ID: <1880d84c-b8fa-47ca-4fc7-191ccc6f976f@gmx.de>
-Date:   Mon, 26 Aug 2019 18:16:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 12:18:55 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38175 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732488AbfHZQSz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:18:55 -0400
+Received: by mail-qt1-f196.google.com with SMTP id q64so6752480qtd.5
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 09:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Z5gvMbbRMA03QD8dKnrTiIPKqCiNs7aRT27yoUz84tA=;
+        b=qZdZrch9lgOa88HyQXDJ1OYHyc9nl9MHADIMTv2NOVz01JeJL57nacgvMMzg52L/pr
+         lBAQUpmgJYc3pqT9CR4MG9JX+So95kZEAC0P+IZGayf6y8sx3c4q1Ad1Yr18+bnYA0eE
+         5Zj5azaV6KaUWcA4mDJNUf9YPoevr7sqTVtf/ogOGGRlH0u2JuIeznzIgjDc9SATgjE/
+         oz4+kPI7MGwLKqLTnoWppuBqhyD9gDiI20SGVl91+UkiBylUkZgbC/qPe7/lDK5UKe5L
+         SNsUd0WqTDqDw88ng1rK7kK5JaIukd2RYwgxxXMSPD7r1uKjlgEkn+ElHBrJP0dZYnJD
+         T4xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Z5gvMbbRMA03QD8dKnrTiIPKqCiNs7aRT27yoUz84tA=;
+        b=NhOpPi+/LQhUUowdq0xcwMrn64kxAInmhGbSmsr75ELX9f1ZyTH09QvTCwFiZ4KCGP
+         d7Vm4GUawMs2zvEC4ENJ6EbFdg1bqZ9uZAQnERQ6qhoyEVoszw6004ErWi50zAJsDAD/
+         ld8LDOIu0e1DoQGrV/P4/VHxqIPWXH2I00Z6pl/+VM2PTKxbw9t/k1gYSI0c+LsOSLMe
+         MfWcE+ha8O3e7Sog/awo4ZxEKHIvRbP/57oensul32SP2sjuckfcC3/rAKTkGWXIqmcL
+         BrtlORoNUvs7t0AHspmZhafzrEM4B5NL3F2fx93ai3CEBMKj1HHloiNxu7sLHTTS/Ntc
+         H+Sw==
+X-Gm-Message-State: APjAAAW+TI4vsdtP3BKq4ax9lU/nEvPbFAGlyN8mQ+piI8oZN8gLpH4G
+        n7goXdwSIA3HxsfME1ZXAyU=
+X-Google-Smtp-Source: APXvYqwaNlEyZYpblg/CRm4Lyd7wt0MMi9ADmpffKbXyy5zUO9hxzGQEAbiLa2ZZlXlKwM3qpFczkw==
+X-Received: by 2002:ac8:3130:: with SMTP id g45mr17919338qtb.270.1566836333529;
+        Mon, 26 Aug 2019 09:18:53 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id v4sm7444665qtj.77.2019.08.26.09.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 09:18:52 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9E2D440916; Mon, 26 Aug 2019 13:18:49 -0300 (-03)
+Date:   Mon, 26 Aug 2019 13:18:49 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 00/12] libperf: Add events to perf/event.h
+Message-ID: <20190826161849.GF24801@kernel.org>
+References: <20190825181752.722-1-jolsa@kernel.org>
+ <20190826160627.GE24801@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190826144242.GA2643@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-X-Provags-ID: V03:K1:8K+LTxU6Q9TX6ZRRU598LWGuX79LZb5ELp7s0G7h9sGzA0/qdcy
- NQjqitqmf3addJg+sZBu6vFtommkLJ7x8iEepkSabmAS9CCzDNnVUIEZKMKkUPt9FO1m34y
- KeCS9VBqBFHrLOeEprtZ5SUVP0u6LOwwVMJtRD7LubK2x61SD5utppy6p47Jd2ZkkOU1Ydh
- /aIQxWir5hgP265kSqW2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:thTn0Mmxle4=:+CjcXst3Y5rSLAv3z2rmQ8
- CgChpbtY+qYbmmf3alk9RDSUNQzYReWM9KkvQAxe/YRfdg0UGOgoiR7LuDWr8/fWGY87jGvmS
- BzwGJSV6VM/701kl1bMUeJIlzjaSVwLNacG4lb7rl7wumFzJjBD1yfqLDW9nSc9f5kAX5BFs4
- O011ydjVLqdHxg04VpKjyPwlLm5JboqYhHglXo7BEqgKqok9QXOHYw/iPzUKsA8GVyOn29ust
- 9WlTBgyXDlwjR9pGaQM8Q7UvfnWLFeo2mSZoFHMiojX8TMYkYlwZhBVag+wC74U54bR/74mBl
- 49SXjRxRFjifxQSex98DpubQHQapp41xJmt8yu5D5/O121MKooQ6H9n7kHsdBNge3RBo0qdXK
- CCatuulh6w1CQp6a1PtC4a3yh2qWPBMhvFiOQBrzFLSlqObp3CxVMefCKFc5XRMIDxB9i9+Go
- pvPQ2P5sW9oZqesD2t67zzRlg4iDm5bqvppppfXwAqqluG88Jx9QImee/MpVi8eqLsWrDHkB2
- m273lK9qaUUZcN5LUf0ht/sBPP/hLNjN94iRLnjbkmBri2ULBrV12WOaPUMSeTLtkM2KPoyBO
- U1UZqZDxyTLXs/sSTWG6do0y09RG4fAy6tcncHAzSBYy+doKHptH1rtHzQ2sKaM0b+4Da1OfD
- g+6Rge9GXG2ARfrBcKCPRmn+WICgRBQ+Lgcqtjkeogpxdd320/Opj51d9qhWOaUekmXGaphyP
- mKu82qrN3sSAjRejfPhgI12Ow76v3hMZmoBt6OdbsrZz6Cgje3aOzWCSAXHL/qRT5DBlos8Ju
- BlRTi+pIBtAzWrTSQvEkN3XbsSDIXQ4UX5srb/RkJ5hwtsdfqJ95e1vyTi+JIC1IZBkflIiGY
- Yr+cjUbNGencgG3BPh9pAmN64bwKopPFhOIidX8ZobQXrYCzeOy6C5VYEjYCk+MLnPSDbTzYB
- K9P1bhiXjHJK2w6iBYCQG5LVh1yjo8c1xzCgUAWNAinoOpBGrDEZO5lHK0Gmfg5snP/QlSuFZ
- JwyGMQ4b+Cn78cfGbeduOtX5ad65yVcppbnaXkWjRCr1Rkzj+I8m59lRl9/tKamrVd62OoDuo
- IAhXjUZ9o/4TRWMqUFSjuWgHUC81iRFaYLeGW2GAYSEDx+zVFiKITjfMCtk9arT/QiOHdQkde
- OOrDA=
+In-Reply-To: <20190826160627.GE24801@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 26.08.19 um 16:42 schrieb Mika Westerberg:
-> According to PCI FW 3.2 the OS is responsible for those delays if the
-> platform firmware does not provide that _DSM. So simpler way would be
-> always do the delays if the _DSM is not there.
+Em Mon, Aug 26, 2019 at 01:06:28PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Sun, Aug 25, 2019 at 08:17:40PM +0200, Jiri Olsa escreveu:
+> > hi,
+> > as a preparation for sampling libperf interface, moving event
+> > definitions into the library header. Moving just the kernel=20
+> > non-AUX events now.
+> >=20
+> > In order to keep libperf simple, we switch 'u64/u32/u16/u8'
+> > types used events to their generic '__u*' versions.
+> >=20
+> > Perf added 'u*' types mainly to ease up printing __u64 values
+> > as stated in the linux/types.h comment:
+> >=20
+> >   /*
+> >    * We define u64 as uint64_t for every architecture
+> >    * so that we can print it with "%"PRIx64 without getting warnings.
+> >    *
+> >    * typedef __u64 u64;
+> >    * typedef __s64 s64;
+> >    */
+> >=20
+> > Adding and using new PRI_lu64 and PRI_lx64 macros to be used for
+> > that.  Using extra '_' to ease up the reading and differentiate
+> > them from standard PRI*64 macros.
+>=20
+> So, this is not building on android env:
+>=20
+> builtin-sched.c: In function 'process_lost':
+> builtin-sched.c:2646:2: error: unknown conversion type character 'l' in f=
+ormat [-Werror=3Dformat=3D]
+>   printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sampl=
+e->cpu);
+>   ^
+> builtin-sched.c:2646:2: error: format '%d' expects argument of type 'int'=
+, but argument 2 has type '__u64' [-Werror=3Dformat=3D]
+> builtin-sched.c:2646:2: error: too many arguments for format [-Werror=3Df=
+ormat-extra-args]
+>   MKDIR    /tmp/build/perf/util/
+>=20
+>=20
+> [perfbuilder@490c2c7bdaab ~]$ /opt/android-ndk-r12b//toolchains/arm-linux=
+-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc -v
+> Using built-in specs.
+> COLLECT_GCC=3D/opt/android-ndk-r12b//toolchains/arm-linux-androideabi-4.9=
+/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
+> COLLECT_LTO_WRAPPER=3D/opt/android-ndk-r12b/toolchains/arm-linux-androide=
+abi-4.9/prebuilt/linux-x86_64/bin/../libexec/gcc/arm-linux-androideabi/4.9.=
+x/lto-wrapper
+> Target: arm-linux-androideabi
+> Configured with: /usr/local/google/buildbot/src/android/gcc/toolchain/bui=
+ld/../gcc/gcc-4.9/configure --prefix=3D/tmp/59719db9ae19ff43aef46bbcb79596b=
+6 --target=3Darm-linux-androideabi --host=3Dx86_64-linux-gnu --build=3Dx86_=
+64-linux-gnu --with-gnu-as --with-gnu-ld --enable-languages=3Dc,c++ --with-=
+gmp=3D/buildbot/tmp/build/toolchain/temp-install --with-mpfr=3D/buildbot/tm=
+p/build/toolchain/temp-install --with-mpc=3D/buildbot/tmp/build/toolchain/t=
+emp-install --with-cloog=3D/buildbot/tmp/build/toolchain/temp-install --wit=
+h-isl=3D/buildbot/tmp/build/toolchain/temp-install --with-ppl=3D/buildbot/t=
+mp/build/toolchain/temp-install --disable-ppl-version-check --disable-cloog=
+-version-check --disable-isl-version-check --enable-cloog-backend=3Disl --w=
+ith-host-libstdcxx=3D'-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm' -=
+-disable-libssp --enable-threads --disable-nls --disable-libmudflap --disab=
+le-libgomp --disable-libstdc__-v3 --disable-sjlj-exceptions --disable-share=
+d --disable-tls --disable-libitm --with-float=3Dsoft --with-fpu=3Dvfp --wit=
+h-arch=3Darmv5te --enable-target-optspace --enable-bionic-libs --enable-lib=
+atomic-ifuncs=3Dno --enable-initfini-array --disable-nls --prefix=3D/tmp/59=
+719db9ae19ff43aef46bbcb79596b6 --with-sysroot=3D/tmp/59719db9ae19ff43aef46b=
+bcb79596b6/sysroot --with-binutils-version=3D2.25 --with-mpfr-version=3D3.1=
+=2E1 --with-mpc-version=3D1.0.1 --with-gmp-version=3D5.0.5 --with-gcc-versi=
+on=3D4.9 --with-gdb-version=3Dnone --with-gxx-include-dir=3D/tmp/59719db9ae=
+19ff43aef46bbcb79596b6/include/c++/4.9.x --with-bugurl=3Dhttp://source.andr=
+oid.com/source/report-bugs.html --enable-languages=3Dc,c++ --disable-bootst=
+rap --enable-plugins --enable-libgomp --enable-gnu-indirect-function --disa=
+ble-libsanitizer --enable-gold --enable-threads --enable-eh-frame-hdr-for-s=
+tatic --enable-graphite=3Dyes --with-isl-version=3D0.11.1 --with-cloog-vers=
+ion=3D0.18.0 --with-arch=3Darmv5te --program-transform-name=3D's&^&arm-linu=
+x-androideabi-&' --enable-gold=3Ddefault
+> Thread model: posix
+> gcc version 4.9.x 20150123 (prerelease) (GCC)
+> [perfbuilder@490c2c7bdaab ~]$
+>=20
+> It doesn't build on the r15b as well.
+>=20
+> I'll investigate after lunch.
 
-Well, that is
+$ make $EXTRA_MAKE_ARGS ARCH=3D$ARCH CROSS_COMPILE=3D$CROSS_COMPILE EXTRA_C=
+FLAGS=3D"$EXTRA_CFLAGS" -C /git/perf/tools/perf O=3D/tmp/build/perf /tmp/bu=
+ild/perf/builtin-sched.i
 
-* unless we trip over delays that make other parts of the kernel spin
-crazy in unterminated loops because there's this mismatch between the
-PME and the readyness world or whatever you analyzed my system PME
-interrupt storms for.
+We end up with one 'l' too many?
 
-Note we normally resume devices asynchronously these days unless someone
-zeroes out /sys/power/pm_async.
+[perfbuilder@490c2c7bdaab ~]$ grep 'printf("lost' /tmp/build/perf/builtin-s=
+ched.i
+ printf("lost %" "l" "ll""u" " events on cpu %d\n", event->lost.lost, sampl=
+e->cpu);
+[perfbuilder@490c2c7bdaab ~]$
 
-* assuming we're not seeing complaints from I think it was Nicholas's
-system with wakeup/resume deadlines.
+And if we do this on a fedora:30 x86_64:
+
+$ make -C tools/perf O=3D/tmp/build/perf /tmp/build/perf/builtin-sched.i
+[acme@quaco perf]$ grep -A4 'printf("lost' /tmp/build/perf/builtin-sched.i
+ printf("lost %" "l"=20
+# 2646 "builtin-sched.c" 3 4
+                "l" "u"=20
+# 2646 "builtin-sched.c"
+                         " events on cpu %d\n", event->lost.lost, sample->c=
+pu);
+[acme@quaco perf]$
+
+I.e. on 32-bit arches we shouldn't add that extra "l", right?
+
+I bet the build for the mips/mipsel will fail too, lemme see... Yeah,
+both failed:
 
 
+[root@quaco ~]# grep -m1 -A6 -- -Werror=3Dformat=3D  dm.log/debian\:experim=
+ental-x-mips
+builtin-sched.c:2646:9: error: unknown conversion type character 'l' in for=
+mat [-Werror=3Dformat=3D]
+  printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample-=
+>cpu);
+         ^~~~~~~~
+In file included from builtin-sched.c:31:
+/usr/mips-linux-gnu/include/inttypes.h:47:28: note: format string is define=
+d here
+ #  define __PRI64_PREFIX "ll"
+                            ^
+[root@quaco ~]#
+
+[root@quaco ~]# grep -m1 -A6 -- -Werror=3Dformat=3D  dm.log/debian\:experim=
+ental-x-mipsel
+builtin-sched.c:2646:9: error: unknown conversion type character 'l' in for=
+mat [-Werror=3Dformat=3D]
+  printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample-=
+>cpu);
+         ^~~~~~~~
+In file included from builtin-sched.c:31:
+/usr/mipsel-linux-gnu/include/inttypes.h:47:28: note: format string is defi=
+ned here
+ #  define __PRI64_PREFIX "ll"
+                            ^
+[root@quaco ~]#
+
+And also on a uclibc ARC arch container:
+
+[root@quaco ~]# grep -m1 -A6 -- -Werror=3Dformat=3D  dm.log/fedora\:24-x-AR=
+C-uClibc
+builtin-sched.c:2646:9: error: unknown conversion type character 'l' in for=
+mat [-Werror=3Dformat=3D]
+  printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample-=
+>cpu);
+         ^~~~~~~~
+In file included from builtin-sched.c:31:0:
+/arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install/arc-snps-linux=
+-uclibc/sysroot/usr/include/inttypes.h:47:28: note: format string is define=
+d here
+ #  define __PRI64_PREFIX "ll"
+                            ^
+[root@quaco ~]#
+
+The _fix_ will come after lunch :)
+
+- Arnaldo
