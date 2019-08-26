@@ -2,143 +2,113 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7263DC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAA1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4186A2341E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:28:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvuVyXHS"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB2123405
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 15:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732401AbfHZP2W (ORCPT
+        id S1732439AbfHZPai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 11:28:22 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45437 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731140AbfHZP2W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:28:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l1so15465346lji.12;
-        Mon, 26 Aug 2019 08:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NL6fJrZIKeO5LGB29dZn2JLD+LBKfQdeed3wOTeWK7w=;
-        b=NvuVyXHSK5exUD1YgfbCAfe8fX7FvWxN50g0xhgm48XRzkkAsV+gCA//2RnpvU5dt+
-         VUQmPamsrQunReSVqYmvp2LjcSCffcgzRbEbIjKCzz7DrSLF6ebx196Q8oHuQ9HfKmZL
-         8P++PXOWOhT98dGOums7Id+m06nPf5irwX0VvnGRuicr8hMj0HuNwAsH+tVr0qXQm3CM
-         1Kyre+jnYiYwD86v+L9BRza8KmAC28aff/lUu90t0+xKq3mXJZrKsTLglEHylSy22Wqa
-         YTgk0JWxHTmO8jwrcXUI47gT/ZJP6T8WzOIPPleh+MquZwl4LG7GOStKjolW3TqnTpYF
-         bwDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NL6fJrZIKeO5LGB29dZn2JLD+LBKfQdeed3wOTeWK7w=;
-        b=CQLGQDJqdvTiK1T1zl5UFGHtW7+HMmsMl53eus2A8LVF650na9INTzoCPTTf1+UP++
-         pi49clC3xmcJ5G/ZGSjGo7AOKctwjZARZ4+zwXwdy1BanJCd8dxjnfFanHhNnVrss1ma
-         l+/U9yVApKAmSZi8Vx8fQ45QpWQfPM+iKFtxE/PAexhQCpmUHLTihGmX7/uUxLkmjydi
-         tYvAEegCJy1+6kHwm+BivLTJ5teoriI8Wy6YYC/iep3qt+d6w7mYEMLayf2N7EQY7CA6
-         77nQx4JyYQebxxS1uO6XIAHKm5flgzy4I7a9htLCOBxS5pKs/0FcxnZFCQW7vCCMOKU6
-         ynWA==
-X-Gm-Message-State: APjAAAXpL/J6hfUGKWX+Wa0Cy6seGYoPt1105W8zWmlCCLgJctw8H7eB
-        BY3IYT/yUDWp6SR+/iD4fuNXbbgK
-X-Google-Smtp-Source: APXvYqyN125me/ufP2gB3KH6hLVYyHqP5k4wmDOSNNvM8HI/uxSSqmN/fKMcvMHs/LE2mut6sluJcg==
-X-Received: by 2002:a2e:8591:: with SMTP id b17mr10833631lji.200.1566833300226;
-        Mon, 26 Aug 2019 08:28:20 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id r12sm2404801ljg.36.2019.08.26.08.28.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 08:28:19 -0700 (PDT)
-Subject: Re: [PATCH] media: staging: tegra-vde: Disable building with
- COMPILE_TEST
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, robin.murphy@arm.com,
-        hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <20190826133140.13456-1-yuehaibing@huawei.com>
- <58a8c62c-a45e-77e4-d2cb-99f95b847a73@gmail.com>
-Message-ID: <79dacfcc-9407-bac6-8e9b-bb8f890994ee@gmail.com>
-Date:   Mon, 26 Aug 2019 18:28:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 26 Aug 2019 11:30:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728965AbfHZPai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 11:30:38 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EF6573082131;
+        Mon, 26 Aug 2019 15:30:37 +0000 (UTC)
+Received: from trillian.uncooperative.org.com (dhcp-10-20-1-91.bss.redhat.com [10.20.1.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C6AE1001E85;
+        Mon, 26 Aug 2019 15:30:37 +0000 (UTC)
+From:   Peter Jones <pjones@redhat.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Lyude Paul <lyude@redhat.com>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
+Subject: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't mapped.
+Date:   Mon, 26 Aug 2019 11:30:27 -0400
+Message-Id: <20190826153028.32639-1-pjones@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <58a8c62c-a45e-77e4-d2cb-99f95b847a73@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 26 Aug 2019 15:30:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.08.2019 18:18, Dmitry Osipenko пишет:
-> Hello Yue,
-> 
-> 26.08.2019 16:31, YueHaibing пишет:
->> If COMPILE_TEST is y and IOMMU_SUPPORT is n, selecting TEGRA_VDE
->> to m will set IOMMU_IOVA to m, this fails the building of
->> TEGRA_HOST1X and DRM_TEGRA which is y like this:
->>
->> drivers/gpu/host1x/cdma.o: In function `host1x_cdma_init':
->> cdma.c:(.text+0x66c): undefined reference to `alloc_iova'
->> cdma.c:(.text+0x698): undefined reference to `__free_iova'
->>
->> drivers/gpu/drm/tegra/drm.o: In function `tegra_drm_unload':
->> drm.c:(.text+0xeb0): undefined reference to `put_iova_domain'
->> drm.c:(.text+0xeb4): undefined reference to `iova_cache_put'
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 6b2265975239 ("media: staging: tegra-vde: Fix build error")
->> Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/staging/media/tegra-vde/Kconfig | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
->> index ba49ea5..a41d30c 100644
->> --- a/drivers/staging/media/tegra-vde/Kconfig
->> +++ b/drivers/staging/media/tegra-vde/Kconfig
->> @@ -1,9 +1,9 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  config TEGRA_VDE
->>  	tristate "NVIDIA Tegra Video Decoder Engine driver"
->> -	depends on ARCH_TEGRA || COMPILE_TEST
->> +	depends on ARCH_TEGRA
->>  	select DMA_SHARED_BUFFER
->> -	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
->> +	select IOMMU_IOVA if IOMMU_SUPPORT
->>  	select SRAM
->>  	help
->>  	    Say Y here to enable support for the NVIDIA Tegra video decoder
->>
-> 
-> What about this variant:
-> 
-> 	select IOMMU_IOVA if (IOMMU_SUPPORT && !COMPILE_TEST)
-> 
-> which should fix the building and preserve compile-testing.
-> 
-> It shouldn't matter at all whether IOVA is enabled or not for
-> compile-testing of the driver.
-> 
+Some machines generate a lot of event log entries.  When we're
+iterating over them, the code removes the old mapping and adds a
+new one, so once we cross the page boundary we're unmapping the page
+with the count on it.  Hilarity ensues.
 
-Ah, actually this won't work if TEGRA_VDE=y and IOMMU_IOVA=m. I'm still
-not sure that disabling compile-testing is a good solution, maybe
-DRM_TEGRA and TEGRA_HOST1X should be fixed instead. Although, I'm fine
-with both variants.
+This patch keeps the info from the header in local variables so we don't
+need to access that page again or keep track of if it's mapped.
 
-Acked-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Tested-by: Lyude Paul <lyude@redhat.com>
+---
+ include/linux/tpm_eventlog.h | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index 63238c84dc0..549dab0b56b 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -170,6 +170,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	u16 halg;
+ 	int i;
+ 	int j;
++	u32 count, event_type;
+ 
+ 	marker = event;
+ 	marker_start = marker;
+@@ -190,16 +191,22 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	}
+ 
+ 	event = (struct tcg_pcr_event2_head *)mapping;
++	/*
++	 * the loop below will unmap these fields if the log is larger than
++	 * one page, so save them here for reference.
++	 */
++	count = event->count;
++	event_type = event->event_type;
+ 
+ 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+ 
+ 	/* Check if event is malformed. */
+-	if (event->count > efispecid->num_algs) {
++	if (count > efispecid->num_algs) {
+ 		size = 0;
+ 		goto out;
+ 	}
+ 
+-	for (i = 0; i < event->count; i++) {
++	for (i = 0; i < count; i++) {
+ 		halg_size = sizeof(event->digests[i].alg_id);
+ 
+ 		/* Map the digest's algorithm identifier */
+@@ -256,8 +263,9 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 		+ event_field->event_size;
+ 	size = marker - marker_start;
+ 
+-	if ((event->event_type == 0) && (event_field->event_size == 0))
++	if (event_type == 0 && event_field->event_size == 0)
+ 		size = 0;
++
+ out:
+ 	if (do_mapping)
+ 		TPM_MEMUNMAP(mapping, mapping_size);
+-- 
+2.23.0.rc2
+
