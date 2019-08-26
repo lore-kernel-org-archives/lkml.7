@@ -2,88 +2,75 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18246C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4D5C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7FB2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:38:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lh/zn7Cc"
+	by mail.kernel.org (Postfix) with ESMTP id DFA6F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfHZMiU (ORCPT
+        id S1731691AbfHZMiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:38:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59746 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730339AbfHZMiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:38:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1ih+AgAlOAqD7WWVhbqdG9ORb7gLcSRQfi7VWfKpTPM=; b=lh/zn7CcjkTcSNCReHm8+IH4Xi
-        0yqiH49nK/6cMItUaLCrvoVKR1E3JcwiwkaJnte2wOiWQbCLy1TaxKEpwLdgdt94Abit612MIU1wj
-        GPFFEjlOvnaMJ45gssN0NiIr3YXiUWHv0UuFCWYgUNfwa6HasQFvkX12vj7t2D8nT09g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i2EGB-0003lc-GP; Mon, 26 Aug 2019 14:38:11 +0200
-Date:   Mon, 26 Aug 2019 14:38:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, UNGLinuxDriver@microchip.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
-Subject: Re: [PATCH v2 0/3] Add NETIF_F_HW_BR_CAP feature
-Message-ID: <20190826123811.GA13411@lunn.ch>
-References: <1566807075-775-1-git-send-email-horatiu.vultur@microchip.com>
+        Mon, 26 Aug 2019 08:38:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46622 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730339AbfHZMiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 08:38:23 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CCF6328A178;
+        Mon, 26 Aug 2019 13:38:21 +0100 (BST)
+Date:   Mon, 26 Aug 2019 14:38:18 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <marek.vasut@gmail.com>, <vigneshr@ti.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND PATCH v3 04/20] mtd: spi-nor: Move erase_map to 'struct
+ spi_nor_flash_parameter'
+Message-ID: <20190826143818.0eee77b2@collabora.com>
+In-Reply-To: <20190826120821.16351-5-tudor.ambarus@microchip.com>
+References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
+        <20190826120821.16351-5-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566807075-775-1-git-send-email-horatiu.vultur@microchip.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:11:12AM +0200, Horatiu Vultur wrote:
-> When a network port is added to a bridge then the port is added in
-> promisc mode. Some HW that has bridge capabilities(can learn, forward,
-> flood etc the frames) they are disabling promisc mode in the network
-> driver when the port is added to the SW bridge.
+On Mon, 26 Aug 2019 12:08:38 +0000
+<Tudor.Ambarus@microchip.com> wrote:
+
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> This patch adds the feature NETIF_F_HW_BR_CAP so that the network ports
-> that have this feature will not be set in promisc mode when they are
-> added to a SW bridge.
+> All flash parameters and settings should reside inside
+> 'struct spi_nor_flash_parameter'. Move the SMPT parsed erase map
+> from 'struct spi_nor' to 'struct spi_nor_flash_parameter'.
 > 
-> In this way the HW that has bridge capabilities don't need to send all the
-> traffic to the CPU and can also implement the promisc mode and toggle it
-> using the command 'ip link set dev swp promisc on'
+> Please note that there is a roll-back mechanism for the flash
+> parameter and settings, for cases when SFDP parser fails. The SFDP
+> parser receives a Stack allocated copy of nor->params, called
+> sfdp_params, and uses it to retrieve the serial flash discoverable
+> parameters. JESD216 SFDP is a standard and has a higher priority
+> than the default initialized flash parameters, so will overwrite the
+> sfdp_params data when needed. All SFDP code uses the local copy of
+> nor->params, that will overwrite it in the end, if the parser succeds.
+> 
+> Saving and restoring the nor->params.erase_map is no longer needed,
+> since the SFDP code does not touch it.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+> v3: Collect R-b
 
-Hi Horatiu
-
-I'm still not convinced this is needed. The model is, the hardware is
-there to accelerate what Linux can do in software. Any peculiarities
-of the accelerator should be hidden in the driver.  If the accelerator
-can do its job without needing promisc mode, do that in the driver.
-
-So you are trying to differentiate between promisc mode because the
-interface is a member of a bridge, and promisc mode because some
-application, like pcap, has asked for promisc mode.
-
-dev->promiscuity is a counter. So what you can do it look at its
-value, and how the interface is being used. If the interface is not a
-member of a bridge, and the count > 0, enable promisc mode in the
-accelerator. If the interface is a member of a bridge, and the count >
-1, enable promisc mode in the accelerator.
-
-   Andrew
-
+Looks like you actually forgot to collect them :P.
