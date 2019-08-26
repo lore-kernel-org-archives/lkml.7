@@ -2,466 +2,143 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B91C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C1AC3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E7B20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566828437;
-	bh=/nm/+KhqCdL7bAN9O4fph2GMIKdGck+DQhumrX+psko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yj/tg39dGWiuOfLSLcE60LmAoeuphqp6RJ5R6Wkae+xIWNntS7rn8vsPLpSrlmDZa
-	 MRcKcCKa4mfGrCLMC6hGITLbjllK9CZG009Y3/jhUgl5mlTVG9Uzrm2pvsUIAoMDAK
-	 hRssJXMRFoJjyGRC3I/iv3pNH7QIZvvQSmmHDY0s=
+	by mail.kernel.org (Postfix) with ESMTP id 617082053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 14:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkUpi6g/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732283AbfHZOHQ (ORCPT
+        id S1732304AbfHZOIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 10:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732248AbfHZOHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 10:07:15 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BF3E2053B;
-        Mon, 26 Aug 2019 14:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566828433;
-        bh=/nm/+KhqCdL7bAN9O4fph2GMIKdGck+DQhumrX+psko=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=inXSMo6dvHbMA/R9lP1t8YU4Wo9a9sA+PEkPBQXy499M3fSqG3q7AiuACL9lHaWse
-         qJF1Blq9k2I7U3xS4IUc/9+6FsLh78bbMyGBSKzZrm0Y+1+uAcIylkDDDWAEJVoFf/
-         Sh6syr8l00rRUWXw7vgtmTOFB/CwmLTax8/jtOhA=
-Date:   Mon, 26 Aug 2019 09:07:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add missing link delays required by the PCIe spec
-Message-ID: <20190826140712.GC127465@google.com>
-References: <20190821124519.71594-1-mika.westerberg@linux.intel.com>
- <20190824021254.GB127465@google.com>
- <20190826101726.GD19908@lahna.fi.intel.com>
+        Mon, 26 Aug 2019 10:08:00 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43997 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731206AbfHZOH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 10:07:59 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b11so17927314qtp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 07:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=32F2PlmYkgb1muHslquiA4mPzLRCcQAuASi3sPwh5v0=;
+        b=gkUpi6g/GHTJ2qBHj+K8LDoxhTHpFAawBxnxK1+UCsAYzzJU7OGVkI0x8aAIsFBqYb
+         JJtjHf/2EZ0vMM4teA5PtUj1MnLdBdEvvXLnbCXyj8m3bjgi/Iux+8JNRQRggUOMfA0B
+         A40+JuUvtI33L5kifRhjwhmroWSvzz+Ke1fInHPTRFrZTP4QYiabAzhCDqkQxLrMH6gX
+         1MgjHb9wxPDCO424QFFMsU1HmzYeTZ3ez+VneFPaKzAjWpH5feqyJsltWgTDHggRXwAR
+         uJ5kvngmIRzleuE1vZgrHZgMevAjL9XKi/0t8HStgV0VEzpmPbabOeIlwLB12+w82Mev
+         0GwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=32F2PlmYkgb1muHslquiA4mPzLRCcQAuASi3sPwh5v0=;
+        b=aMDdtzlmkl+2r4kjSAlZqpMfLLjtr9eH/LW8zVGcUga+JVSMKDC+5/a106bhlJVihK
+         +wBbOhTC1T0prlaU7wnn47LL2t4Y+pE5DI8QpPXDipBXgwUdbOcKUCekZ0RHR4/g810H
+         U7PF54GPr4yTpI48Vrd9DoKv3+f0QHrGgsXpviJpzvHJXerpwesbFzHExsmZXu0Kl+Jv
+         t+CZdPx5eif8RvZB/lKkPvVag4XaCUHvzV8O7i5nZwM5ah1DlGe7AnsWf7WhtcWu0JXJ
+         y8b1DEMJOQHeQ/uL7UQAXkjl7+M+PpUYVqXo0vfmifIHCO3AFCghae59o8IoEa7Y+H7q
+         0UEQ==
+X-Gm-Message-State: APjAAAXqyIEDuarBp+h+//5NW5ddnJwOlYxGMnKP2c1cJovY+YCHBDu5
+        AldtJWHGyPefngoBCMlueTc=
+X-Google-Smtp-Source: APXvYqx62m2TQO7FNqvvZeWblm0ug1xZHwhkCcAfeTpI2H/XE0rFw274QbMqbnicnl4hDD5PT3/qwg==
+X-Received: by 2002:ac8:2914:: with SMTP id y20mr17916656qty.150.1566828478905;
+        Mon, 26 Aug 2019 07:07:58 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id v7sm6306839qte.86.2019.08.26.07.07.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 07:07:57 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 33B3E40916; Mon, 26 Aug 2019 11:07:55 -0300 (-03)
+Date:   Mon, 26 Aug 2019 11:07:55 -0300
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf script: Fix memory leaks in list_scripts()
+Message-ID: <20190826140755.GC24801@kernel.org>
+References: <20190408162748.GA21008@embeddedor>
+ <567a492a-08fd-7580-24fa-b07a1ebf532e@embeddedor.com>
+ <da724a58-56f3-e68a-c1db-6e9cb1ee8155@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826101726.GD19908@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <da724a58-56f3-e68a-c1db-6e9cb1ee8155@embeddedor.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:17:26PM +0300, Mika Westerberg wrote:
-> On Fri, Aug 23, 2019 at 09:12:54PM -0500, Bjorn Helgaas wrote:
-> > Hi Mika,
+Em Sun, Aug 25, 2019 at 11:06:25PM -0500, Gustavo A. R. Silva escreveu:
+> Hi all,
 > 
-> Hi,
+> Friendly ping (second one after 4 months):
 > 
-> > I'm trying to figure out specifically why we need this and where it
-> > should go.  Questions below.
-> 
-> Thanks for looking at this.
-> 
-> > On Wed, Aug 21, 2019 at 03:45:19PM +0300, Mika Westerberg wrote:
-> > > Currently Linux does not follow PCIe spec regarding the required delays
-> > > after reset. A concrete example is a Thunderbolt add-in-card that
-> > > consists of a PCIe switch and two PCIe endpoints:
-> > > 
-> > >   +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
-> > >                                   +-01.0-[04-36]-- DS hotplug port
-> > >                                   +-02.0-[37]----00.0 xHCI controller
-> > >                                   \-04.0-[38-6b]-- DS hotplug port
-> > > 
-> > > The root port (1b.0) and the PCIe switch downstream ports are all PCIe
-> > > gen3 so they support 8GT/s link speeds.
-> > > 
-> > > We wait for the PCIe hierarchy to enter D3cold (runtime):
-> > > 
-> > >   pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
-> > > 
-> > > When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
-> > > PCIe switch is put to reset and its power is re-applied. This means that
-> > > we must follow the rules in PCIe 4.0 section 6.6.1.
-> > > 
-> > > For the PCIe gen3 ports we are dealing with here, the following applies:
-> > > 
-> > >   With a Downstream Port that supports Link speeds greater than 5.0
-> > >   GT/s, software must wait a minimum of 100 ms after Link training
-> > >   completes before sending a Configuration Request to the device
-> > >   immediately below that Port. Software can determine when Link training
-> > >   completes by polling the Data Link Layer Link Active bit or by setting
-> > >   up an associated interrupt (see Section 6.7.3.3).
-> > > 
-> > > Translating this into the above topology we would need to do this (DLLLA
-> > > stands for Data Link Layer Link Active):
-> > > 
-> > >   pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
-> > >   pcieport 0000:02:00.0: wait for 100ms after DLLLA is set before access to 0000:03:00.0
-> > >   pcieport 0000:02:02.0: wait for 100ms after DLLLA is set before access to 0000:37:00.0
-> > > 
-> > > I've instrumented the kernel with additional logging so we can see the
-> > > actual delays the kernel performs:
-> > > ...
+> Who can take this?
 
-> > >   xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
-> > >   ...
-> > >   thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
-> > > 
-> > > This is even worse. None of the mandatory delays are performed. If this
-> > > would be S3 instead of s2idle then according to PCI FW spec 3.2 section
-> > > 4.6.8.  there is a specific _DSM that allows the OS to skip the delays
-> > > but this platform does not provide the _DSM and does not go to S3 anyway
-> > > so no firmware is involved that could already handle these delays.
-> > > 
-> > > In this particular Intel Coffee Lake platform these delays are not
-> > > actually needed because there is an additional delay as part of the ACPI
-> > > power resource that is used to turn on power to the hierarchy but since
-> > > that additional delay is not required by any of standards (PCIe, ACPI)
+Sorry for the delay, finally applied, thanks!
+
+- Arnaldo
+ 
+> Thanks
+> --
+> Gustavo
+> 
+> On 4/22/19 10:14 AM, Gustavo A. R. Silva wrote:
+> > Hi all,
 > > 
-> > So it sounds like this Coffee Lake accidentally works because of
-> > unrelated firmware delay that's not actually required, or at least not
-> > related to the delay required by PCIe?
-> 
-> Correct. The root port ACPI Power Resource includes quite long delay
-> which allows the links to be trained before the _ON method is finished.
-> 
-> > I did notice that we don't implement all of _DSM function 9 and the
-> > parts we're missing look like they could be relevant.
-> 
-> AFAICT that _DSM is only for lowering the delays, not increasing them.
-> If the platform does not provide it the OS must adhere to all the timing
-> requirements of the PCIe spec (PCI FW 3.2 section 4.6.9). Here we are
-> actually trying to do just that :)
-
-Yep, true.
-
-> > > it is not present in the Intel Ice Lake, for example where missing the
-> > > mandatory delays causes pciehp to start tearing down the stack too early
-> > > (links are not yet trained).
+> > Friendly ping:
 > > 
-> > I'm guessing the Coffee Lake/Ice Lake distinction is not really
-> > relevant and the important thing is that something about Ice Lake is
-> > faster and reduces the accidental delay to the point that things stop
-> > working.
+> > Who can take this?
 > > 
-> > So probably the same thing could happen on Coffee Lake or any other
-> > system if it had different firmware.
-> 
-> Indeed.
-
-Thanks for confirming that.  I would probably abstract this somehow in
-the commit log so people don't have the impression that we're fixing
-something specific to Ice Lake.
-
-> > > There is also one reported case (see the bugzilla link below) where the
-> > > missing delay causes xHCI on a Titan Ridge controller fail to runtime
-> > > resume when USB-C dock is plugged.
-> > > 
-> > > For this reason, introduce a new function pcie_wait_downstream_accessible()
-> > > that is called on PCI core resume and runtime resume paths accordingly
-> > > if downstream/root port with device below entered D3cold.
-> > > 
-> > > This is second attempt to add the missing delays. The previous solution
-> > > in commit c2bf1fc212f7 ("PCI: Add missing link delays required by the
-> > > PCIe spec") was reverted because of two issues it caused:
+> > Thanks
 > > 
-> > c2bf1fc212f7 was merged for v5.3 (it appeared in v5.3-rc1).  I *guess*
-> > it addressed https://bugzilla.kernel.org/show_bug.cgi?id=203885, which
-> > was reported on v5.2-rc4, though c2bf1fc212f7 doesn't actually mention
-> > the bugzilla?
-> 
-> I think c2bf1fc212f7 was merged before I was aware of that bug (or I
-> just missed it).
+> > On 4/8/19 11:27 AM, Gustavo A. R. Silva wrote:
+> >> In case memory resources for *buf* and *paths* were allocated,
+> >> jump to *out* and release them before return.
+> >>
+> >> Addresses-Coverity-ID: 1444328 ("Resource leak")
+> >> Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
+> >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> >> ---
+> >>  tools/perf/ui/browsers/scripts.c | 6 ++++--
+> >>  1 file changed, 4 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+> >> index 27cf3ab88d13..f4edb18f67ec 100644
+> >> --- a/tools/perf/ui/browsers/scripts.c
+> >> +++ b/tools/perf/ui/browsers/scripts.c
+> >> @@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
+> >>  		int key = ui_browser__input_window("perf script command",
+> >>  				"Enter perf script command line (without perf script prefix)",
+> >>  				script_args, "", 0);
+> >> -		if (key != K_ENTER)
+> >> -			return -1;
+> >> +		if (key != K_ENTER) {
+> >> +			ret = -1;
+> >> +			goto out;
+> >> +		}
+> >>  		sprintf(script_name, "%s script %s", perf, script_args);
+> >>  	} else if (choice < num + max_std) {
+> >>  		strcpy(script_name, paths[choice]);
+> >>
 
-Ah, so there's some other issue that prompted this patch in the first
-place.
+-- 
 
-> > 0617bdede511 ("Revert "PCI: Add missing link delays required by the
-> > PCIe spec"") appeared in v5.3-rc4.  If c2bf1fc212f7 was supposed to
-> > address BZ 203885, I'm confused about why you asked Kai-Heng to test
-> > v5.3-rc4, where c2bf1fc212f7 had already been reverted.
-> 
-> I was hoping that the revert in v5.3-rc4 would help here as well but
-> after futher investigation it turned to be the exact opposite.
-> 
-> > Or maybe c2bf1fc212f7 wasn't connected with BZ 203885 in the first
-> > place?
-> > 
-> > The net result is that I think v5.3-rc4 is equivalent to v5.2 with
-> > respect to this issue.  It *is* a pretty serious usability issue, no
-> > question, but it's not completely obvious that this fix needs to be in
-> > v5.3 since it's not something we broke during the v5.3 merge window.
-> > So if we *do* want it in v5.3, we need to think about how to justify
-> > that, e.g., if this issue affects shipping systems that are likely to
-> > run an upstream kernel, etc.
-> 
-> I don't think it needs to be in v5.3. I was thinking more like v5.4 so
-> we get some more testing coverage.
-
-Sounds good.
-
-> > >   1. One system become unresponsive after S3 resume due to PME service
-> > >      spinning in pcie_pme_work_fn(). The root port in question reports
-> > >      that the xHCI sent PME but the xHCI device itself does not have PME
-> > >      status set. The PME status bit is never cleared in the root port
-> > >      resulting the indefinite loop in pcie_pme_work_fn().
-> > 
-> > I don't see the connection between PME and either c2bf1fc212f7 or this
-> > patch.  Is there a fix for this pcie_pme_work_fn() infinite loop?
-> 
-> No.
-> 
-> > I do see that BZ 203885 mentions a flood of "PME: Spurious native
-> > interrupt!" messages, but I don't see how we've fixed that.
-> 
-> It was not completely root caused yet. To me it looks like the root port
-> keeps the PME status and pending bits set and that causes
-> pcie_pme_work_fn() spin forever. From the debugging output logs I got
-> from Matthias, it is the xHCI that seems to send the PME but it does not
-> have PME status set for some reason.
-
-I'm not sure what the value of mentioning this PME issue is.  If this
-patch happens to mask the PME issue, maybe it's worth a brief mention
-just to say "this patch masks but does not fix this problem".
-Otherwise it's a distraction.
-
-> > >   2. Slows down resume if the root/downstream port does not support
-> > >      Data Link Layer Active Reporting because pcie_wait_for_link_delay()
-> > >      waits 1100ms in that case.
-> > 
-> > I don't see the slowdown mentioned in BZ 203885; is there another link
-> > to these reports?
-> 
-> Nicholas for example reported it here:
-> 
->   https://lore.kernel.org/linux-pci/SL2P216MB01878BBCD75F21D882AEEA2880C60@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM/
-> 
-> I should have added that link to the changelog.
-> 
-> > > This version should avoid the above issues because we restrict the delay
-> > > to happen only if the port went into D3cold (so it goes through reset)
-> > > and only when there is no firmware involved on resume path (so the
-> > > kernel is responsible for all the delays).
-> > > 
-> > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203885
-> > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > ---
-> > > Hi all,
-> > > 
-> > > As the changelog says this is reworked version that tries to avoid reported
-> > > issues while at the same time fix the missing delays so we can get ICL
-> > > systems and at least the one system with Titan Ridge controller working
-> > > properly.
-> > > 
-> > > @Matthias, @Paul and @Nicholas: it would be great if you could try the
-> > > patch on top of v5.4-rc5+ and verify that it does not cause any issues on
-> > > your systems.
-> > > 
-> > >  drivers/pci/pci-driver.c |  19 ++++++
-> > >  drivers/pci/pci.c        | 127 ++++++++++++++++++++++++++++++++++++---
-> > >  drivers/pci/pci.h        |   1 +
-> > >  3 files changed, 137 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > > index a8124e47bf6e..9aec78ed8907 100644
-> > > --- a/drivers/pci/pci-driver.c
-> > > +++ b/drivers/pci/pci-driver.c
-> > > @@ -918,6 +918,7 @@ static int pci_pm_resume_noirq(struct device *dev)
-> > >  {
-> > >  	struct pci_dev *pci_dev = to_pci_dev(dev);
-> > >  	struct device_driver *drv = dev->driver;
-> > > +	pci_power_t state = pci_dev->current_state;
-> > >  	int error = 0;
-> > >  
-> > >  	if (dev_pm_may_skip_resume(dev))
-> > > @@ -947,6 +948,15 @@ static int pci_pm_resume_noirq(struct device *dev)
-> > >  
-> > >  	pcie_pme_root_status_cleanup(pci_dev);
-> > >  
-> > > +	/*
-> > > +	 * If resume involves firmware assume it takes care of any delays
-> > > +	 * for now. For suspend-to-idle case we need to do that here before
-> > > +	 * resuming PCIe port services to keep pciehp from tearing down the
-> > > +	 * downstream devices too early.
-> > > +	 */
-> > > +	if (state == PCI_D3cold && pm_suspend_no_platform())
-> > > +		pcie_wait_downstream_accessible(pci_dev);
-> > 
-> > Aren't these paths used for Conventional PCI devices as well as PCIe
-> > devices?
-> 
-> Indeed they are.
-> 
-> > I think the D3cold and pm_suspend_no_platform() checks should move
-> > inside the new interface, whatever it's called.  I'm not sure what
-> > that means for the fact that you don't check pm_suspend_no_platform()
-> > in the runtime-resume path; maybe it needs a flag or something.
-> 
-> It is not needed for runtime-resume path since we are not entering
-> system suspend. For runtime-resume path we need to perform the delays
-> always.
-
-From the hardware device point of view, I don't think the
-system/runtime resume distinction is important.  The only thing the
-devices know is that they're changing from D3->D0, and it doesn't
-matter whether it's because of a runtime resume or an entire system
-resume.
-
-> Here we just assume the firmware actually handles the delays which is
-> not entirely accurate. According to PCI FW 3.2 section 4.6.8 there is a
-> _DSM that the firmware can use to indicate to the OS that it can skip
-> the reset delays. So I think more correct would be to check for that in
-> resume path. However, since it looks like that _DSM is not implemented
-> in too many systems I've seen, it may slow down resume times
-> unnecessarily if the firmware actually handles the delays.
-> 
-> > But the "wait downstream" part seems a little too specific to be at
-> > the .resume_noirq and .runtime_resume level.
-> > 
-> > Do we descend the hierarchy and call .resume_noirq and .runtime_resume
-> > for the children of the bridge, too?
-> 
-> We do but at that time it is too late as we have already resumed pciehp
-> of the parent downstream port and it may have already started tearing
-> down the device stack below.
-> 
-> I'm open to any better ideas where this delay could be added, though :)
-
-So we resume pciehp *before* we're finished resuming the Downstream
-Port?  That sounds wrong.
-
-> > > +static int pcie_get_downstream_delay(struct pci_bus *bus)
-> > > +{
-> > > +	struct pci_dev *pdev;
-> > > +	int min_delay = 100;
-> > > +	int max_delay = 0;
-> > > +
-> > > +	list_for_each_entry(pdev, &bus->devices, bus_list) {
-> > > +		if (pdev->imm_ready)
-> > > +			min_delay = 0;
-> > > +		else if (pdev->d3cold_delay < min_delay)
-> > > +			min_delay = pdev->d3cold_delay;
-> > > +		if (pdev->d3cold_delay > max_delay)
-> > > +			max_delay = pdev->d3cold_delay;
-> > > +	}
-> > > +
-> > > +	return max(min_delay, max_delay);
-> > > +}
-
-> > > + */
-> > > +void pcie_wait_downstream_accessible(struct pci_dev *pdev)
-
-> > Do we need to observe the Trhfa requirements for Conventional PCI and
-> > PCI-X devices here?  If we don't do it here, where is it observed?
-> 
-> We probably should but I intented this to be PCIe specific since there
-> we have issues. For conventional PCI/PCI-X things "seem" to work and we
-> don't power manage those bridges anyway.
-> 
-> I'm not aware if Trhfa is handled in anywhere in the PCI stack
-> currently.
-
-I think we should make this agnostic of the Conventional/PCIe
-difference if possible.  I assume we can tell if we're dealing with a
-D3->D0 transition and we only add delays in that case.  If we don't
-power manage Conventional PCI devices, I assume we won't see D3->D0
-transitions for runtime resume so there won't be any harm.
-
-Making it PCIe-specific seems like it adds extra code ("dev-is-PCIe
-checks") with no obvious reason for existence and an implicit
-dependency on the fact that we only power manage PCIe devices.  If we
-ever *did* support runtime power-management for Conventional PCI, we'd
-trip over that implicit dependency and probably debug this issue
-again.
-
-But I guess it might slow down system resume for Conventional PCI
-devices.  If we rely on delays in firmware, I wonder if there's
-any point during resume where we could grab an early timestamp, then
-take another timestamp here and deduce that we've already delayed the
-difference?
-
-> > > +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
-> > > +	    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
-> > > +		return;
-> > > +
-> > > +	if (pci_dev_is_disconnected(pdev))
-> > > +		return;
-> > > +
-> > > +	if (!pdev->bridge_d3)
-> > > +		return;
-> > > +
-> > > +	bus = pdev->subordinate;
-> > > +	if (!bus)
-> > > +		return;
-> > > +
-> > > +	child = list_first_entry_or_null(&bus->devices, struct pci_dev,
-> > > +					 bus_list);
-> > > +	if (!child)
-> > > +		return;
-> > 
-> > I'm not convinced yet about skipping this if there's no subordinate
-> > bus or no children.  Don't we have to assume that the caller may
-> > immediately *probe* for children as soon as we return?
-> 
-> Yes, you are right. I was trying to avoid any unnecessary delays but
-> looks like we can't avoid them here.
-> 
-> > > +	delay = pcie_get_downstream_delay(bus);
-> > > +	if (!delay)
-> > > +		return;
-> > 
-> > I'm not sold on the idea that this delay depends on what's *below* the
-> > bridge.  We're using sec 6.6.1 to justify the delay, and that section
-> > doesn't say anything about downstream devices.
-> 
-> 6.6.1 indeed talks about Downstream Ports and devices immediately below
-> them.
-
-Wait, I don't think we're reading this the same way.  6.6.1 mentions
-Downstream Ports: "With a Downstream Port that does not support Link
-speeds greater than 5.0 GT/s, software must wait a minimum of 100 ms
-before sending a Configuration Request to the device immediately below
-that Port."
-
-This says we have to delay before sending a config request to a device
-below a Downstream Port, but it doesn't say anything about the
-characteristics of that device.  In particular, I don't think it says
-the delay can be shortened if that device supports Immediate Readiness
-or implements a readiness _DSM.
-
-I don't think this delay has anything to do with devices downstream
-from the Port.  I think this is about giving the Downstream Port time
-to bring up the link.  That way config requests may fail because
-there's no device below the Port or it's not ready yet, but they
-shouldn't fail simply because the link isn't up yet.
-
-> > If we call .resume_noirq/.runtime_resume for the downstream devices
-> > themselves, could we use d3cold_delay *there*?
-> 
-> Otherwise probably but since we already have resumed the downstream port
-> itself including pciehp it may notice that the link is not up anymore
-> and remove the device below.
-
-I think this sounds like a problem with pciehp or the order in which
-we resume devices and portdrv services.
-
-Bjorn
+- Arnaldo
