@@ -2,59 +2,137 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266B7C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92AAC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F408F206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8843F206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 21:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfHZVNj (ORCPT
+        id S1727978AbfHZVNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 17:13:39 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38318 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfHZVNj (ORCPT
+        Mon, 26 Aug 2019 17:13:48 -0400
+Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:51554 "EHLO
+        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfHZVNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 17:13:39 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9EB4515008345;
-        Mon, 26 Aug 2019 14:13:38 -0700 (PDT)
-Date:   Mon, 26 Aug 2019 14:13:38 -0700 (PDT)
-Message-Id: <20190826.141338.1571164902049647689.davem@davemloft.net>
-To:     andrew@lunn.ch
-Cc:     horatiu.vultur@microchip.com, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, UNGLinuxDriver@microchip.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
-Subject: Re: [PATCH v2 0/3] Add NETIF_F_HW_BR_CAP feature
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190826123811.GA13411@lunn.ch>
-References: <1566807075-775-1-git-send-email-horatiu.vultur@microchip.com>
-        <20190826123811.GA13411@lunn.ch>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 26 Aug 2019 14:13:39 -0700 (PDT)
+        Mon, 26 Aug 2019 17:13:48 -0400
+X-Greylist: delayed 475 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Aug 2019 17:13:45 EDT
+Received: from ydin.reaktio.net (reaktio.net [85.76.255.15])
+        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 50E9C2000A;
+        Tue, 27 Aug 2019 00:05:48 +0300 (EEST)
+Received: by ydin.reaktio.net (Postfix, from userid 1001)
+        id 955DE36C0F6; Tue, 27 Aug 2019 00:05:47 +0300 (EEST)
+Date:   Tue, 27 Aug 2019 00:05:47 +0300
+From:   Pasi =?iso-8859-1?Q?K=E4rkk=E4inen?= <pasik@iki.fi>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
+        George Dunlap <George.Dunlap@citrix.com>,
+        Jan Beulich <JBeulich@suse.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?iso-8859-1?Q?H=E5kon?= Alstadheim <hakon@alstadheim.priv.no>
+Subject: Re: [Xen-devel] [PATCH V3 2/2] Xen/PCIback: Implement PCI
+ flr/slot/bus reset with 'reset' SysFS attribute
+Message-ID: <20190826210547.GE2840@reaktio.net>
+References: <5A377E020200007800197FFA@prv-mh.provo.novell.com>
+ <559ffd12-b541-8a69-60bd-fbe10e3dc159@oracle.com>
+ <20180916114306.GF18222@reaktio.net>
+ <a726840b-8a5c-0890-73c6-3a95a7205153@oracle.com>
+ <20180918071519.GG18222@reaktio.net>
+ <5E7DDB68-4E68-48A5-AEEC-EE1B21A50E9E@citrix.com>
+ <352310b3-ec9b-2ceb-83f0-4550718120c3@oracle.com>
+ <20180919090526.s3ahnemrt2ik2tx3@mac.bytemobile.com>
+ <20181003155104.GH5318@reaktio.net>
+ <f6b8e055-7afc-b4de-af88-425d799dcd28@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6b8e055-7afc-b4de-af88-425d799dcd28@oracle.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Mon, 26 Aug 2019 14:38:11 +0200
+Hi,
 
-> I'm still not convinced this is needed. The model is, the hardware is
-> there to accelerate what Linux can do in software. Any peculiarities
-> of the accelerator should be hidden in the driver.  If the accelerator
-> can do its job without needing promisc mode, do that in the driver.
+On Mon, Oct 08, 2018 at 10:32:45AM -0400, Boris Ostrovsky wrote:
+> On 10/3/18 11:51 AM, Pasi Kärkkäinen wrote:
+> > On Wed, Sep 19, 2018 at 11:05:26AM +0200, Roger Pau Monné wrote:
+> >> On Tue, Sep 18, 2018 at 02:09:53PM -0400, Boris Ostrovsky wrote:
+> >>> On 9/18/18 5:32 AM, George Dunlap wrote:
+> >>>>> On Sep 18, 2018, at 8:15 AM, Pasi Kärkkäinen <pasik@iki.fi> wrote:
+> >>>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> On Mon, Sep 17, 2018 at 02:06:02PM -0400, Boris Ostrovsky wrote:
+> >>>>>> What about the toolstack changes? Have they been accepted? I vaguely
+> >>>>>> recall there was a discussion about those changes but don't remember how
+> >>>>>> it ended.
+> >>>>>>
+> >>>>> I don't think toolstack/libxl patch has been applied yet either.
+> >>>>>
+> >>>>>
+> >>>>> "[PATCH V1 0/1] Xen/Tools: PCI reset using 'reset' SysFS attribute":
+> >>>>> https://lists.xen.org/archives/html/xen-devel/2017-12/msg00664.html
+> >>>>>
+> >>>>> "[PATCH V1 1/1] Xen/libxl: Perform PCI reset using 'reset' SysFS attribute":
+> >>>>> https://lists.xen.org/archives/html/xen-devel/2017-12/msg00663.html
+> >>>
+> >>> Will this patch work for *BSD? Roger?
+> >> At least FreeBSD don't support pci-passthrough, so none of this works
+> >> ATM. There's no sysfs on BSD, so much of what's in libxl_pci.c will
+> >> have to be moved to libxl_linux.c when BSD support is added.
+> >>
+> > Ok. That sounds like it's OK for the initial pci 'reset' implementation in xl/libxl to be linux-only.. 
+> >
+> 
+> Are these two patches still needed? ISTR they were  written originally
+> to deal with guest trying to use device that was previously assigned to
+> another guest. But pcistub_put_pci_dev() calls
+> __pci_reset_function_locked() which first tries FLR, and it looks like
+> it was added relatively recently.
+> 
 
-I completely agree.
+Replying to an old thread.. I only now realized I forgot to reply to this message earlier.
+
+afaik these patches are still needed. Håkon (CC'd) wrote to me in private that
+he gets a (dom0) Linux kernel crash if he doesn't have these patches applied.
+
+
+Here are the links to both the linux kernel and libxl patches:
+
+
+"[Xen-devel] [PATCH V3 0/2] Xen/PCIback: PCI reset using 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00659.html
+
+[Note that PATCH V3 1/2 "Drivers/PCI: Export pcie_has_flr() interface" is already applied in upstream linux kernel, so it's not needed anymore]
+
+"[Xen-devel] [PATCH V3 2/2] Xen/PCIback: Implement PCI flr/slot/bus reset with 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00661.html
+
+
+"[Xen-devel] [PATCH V1 0/1] Xen/Tools: PCI reset using 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00664.html
+
+"[Xen-devel] [PATCH V1 1/1] Xen/libxl: Perform PCI reset using 'reset' SysFS attribute":
+https://lists.xen.org/archives/html/xen-devel/2017-12/msg00663.html
+
+
+> 
+> -boris
+
+
+Thanks,
+
+-- Pasi
+
