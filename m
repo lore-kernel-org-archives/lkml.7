@@ -2,101 +2,67 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7974C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61482C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE77E2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC4C22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 06:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ko288Hno"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XIOGeVHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfHZGgX (ORCPT
+        id S1729792AbfHZGi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 02:36:23 -0400
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:34826 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729244AbfHZGgX (ORCPT
+        Mon, 26 Aug 2019 02:38:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54920 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbfHZGi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 02:36:23 -0400
-Received: by mail-wm1-f41.google.com with SMTP id l2so14654525wmg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Aug 2019 23:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=iVlNOvcGkxOW82lX/stt8mZNXgPWFfdeCPzC+y26i1w=;
-        b=Ko288HnotBth8jQ1QLLaxPiIBMWT0CGuHCphEGfWiVxL3InXCHOVU/SvqRYl+8Uk7I
-         maRDjlOXSxFfzYnf7uhq9Zva9futXeSmVAMYxChtvlzzMGTZEPl2c++crWSqiz+vYzQW
-         /Cp3r2Uzy2vuRJ/YpuiMHfXMNBcmbxXQqfN6vuE7WQjy7ZLKu6bWXHe1bW5va0Zpsb3+
-         24VCf/amP3DuZFxAtkt45Q2mSJSfihWLPi301wjgoam+Op4sqi1ZCxEN0VxTPwmi4xhQ
-         AOGPUweB+T7vdpITeG+1HnPM4JAZH4qdY5b2eJyXWsk7G5mO6LrO3oWxUD+ZKN3G51bo
-         EcYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=iVlNOvcGkxOW82lX/stt8mZNXgPWFfdeCPzC+y26i1w=;
-        b=qS2iV2CcUup6hPJoJWE6OCw0SaIWgcVZOG3Wez3qIb2y3CnSvpxT60nTDx8tF6Btmx
-         4/4OmZWaHRjjxti9PxFnRrTuFC+63WghkZn53HDA+L6jYkQieqbHEcD3L0bYdnWehxc7
-         vMzkDtYO3soDRrmhO7+vdk9YXIIyCvt4HTUaEQqYAOyb+nwTDb3Dw3uGPHEaprO2pI9i
-         KsUbOS5R2xDGH8PafHxI52nlNhtWc0tvZxVRScpGNaSJ6htqwTbI3OeJuV9M8uGuiMEG
-         W0gyM6a/chMwOW/n2YoDSQTnFYoOR1DILRcK18VsmElSSfpedoLqXPco3uEmH1Yw07Pt
-         56ZQ==
-X-Gm-Message-State: APjAAAXl7mVNb1LiadD03Tw17lVE4c77llROKaONYPTqHk8stIdpysGp
-        lkj69Gznc1g+3BFKrY/Wosw9gA==
-X-Google-Smtp-Source: APXvYqxeDKmCc4R7qDu9NLMZxvNDLyI1C0C8kWTJH/SP6ir/91jdtAoyr5HCDj0WTBHBHifnG3U8zQ==
-X-Received: by 2002:a1c:c1c1:: with SMTP id r184mr19660385wmf.9.1566801381131;
-        Sun, 25 Aug 2019 23:36:21 -0700 (PDT)
-Received: from [192.168.0.100] (84-33-66-180.dyn.eolo.it. [84.33.66.180])
-        by smtp.gmail.com with ESMTPSA id x26sm8363112wmj.42.2019.08.25.23.36.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 25 Aug 2019 23:36:20 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH v2 3/3] bfq: Add per-device weight
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
-Date:   Mon, 26 Aug 2019 08:36:17 +0200
-Cc:     Fam Zheng <zhengfeiran@bytedance.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Fam Zheng <fam@euphon.net>,
-        duanxiongchun@bytedance.com, linux-block@vger.kernel.org,
-        cgroups@vger.kernel.org, zhangjiachen.jc@bytedance.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C2F0BE1E-9CAA-4FBD-80D8-C18ECCE3FD4B@linaro.org>
-References: <20190805063807.9494-1-zhengfeiran@bytedance.com>
- <20190805063807.9494-4-zhengfeiran@bytedance.com>
- <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
-To:     Tejun Heo <tj@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Mon, 26 Aug 2019 02:38:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/cTefX4WriggdI6xhCa46FySFPWkgwoZoZ9aeiu49hA=; b=XIOGeVHaCMWHYSZ9wmgjF2NFC
+        PTwXn2qYkGpq+fMW7LX+UATKkUuM5w26sjIMRKCQ8PagJDIdum11NIfubHvureFR7OQRuchBlr7RO
+        6izRKXx55CuysG9Zv7vnhxbHSIkGlKTpbUYdbI4MBXPFrBfDRLMs7aaLNST+loT1uU8Ldkiy1Aznz
+        SSE41Nx1ExYQeiXd1PUydNdlgFgpx2UWyo7/5HFO77VoPQY4mqtltHiiL2ON0qT8QfHs8m+uYu02K
+        hBECoAa+O9qLrIrPwXYPS49s3fWAiT1yUxfG61yCzAQNmP8Y5qUTu5YuvpVnMDogGukC5Ce1T9nFB
+        tDfPs4sMg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i28du-0007y0-F9; Mon, 26 Aug 2019 06:38:18 +0000
+Date:   Sun, 25 Aug 2019 23:38:18 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     guoren@kernel.org
+Cc:     arnd@arndb.de, hch@infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
+        douzhk@nationalchip.com, Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V2] csky: Fixup 610 vipt cache flush mechanism
+Message-ID: <20190826063818.GA29871@infradead.org>
+References: <1566443122-17540-1-git-send-email-guoren@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566443122-17540-1-git-send-email-guoren@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-do you think this series could now be queued for 5.4?
+On Thu, Aug 22, 2019 at 11:05:22AM +0800, guoren@kernel.org wrote:
+> From: Guo Ren <ren_guo@c-sky.com>
+> 
+> 610 has vipt aliasing issue, so we need to finish the cache flush
+> apis mentioned in cachetlb.rst to avoid data corruption.
+> 
+> Here is the list of modified apis in the patch:
 
-Thanks,
-Paolo
-
-> Il giorno 21 ago 2019, alle ore 17:44, Tejun Heo <tj@kernel.org> ha =
-scritto:
->=20
-> On Mon, Aug 05, 2019 at 02:38:07PM +0800, Fam Zheng wrote:
->> Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
->=20
-> Looks good to me.
->=20
-> Acked-by: Tejun Heo <tj@kernel.org>
->=20
-> Thanks.
->=20
-> --=20
-> tejun
-
+Looks sensible to me, although I can't really verify the details.
+You might also want to Cc linux-mm.
