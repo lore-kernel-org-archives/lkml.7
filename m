@@ -2,306 +2,189 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D10C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72086C3A59E
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B4122CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CBF22CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 09:15:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e4WBQ2kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbfHZJOq (ORCPT
+        id S1730833AbfHZJPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 05:14:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59272 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfHZJOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 05:14:45 -0400
-Received: from 79.184.255.249.ipv4.supernova.orange.pl (79.184.255.249) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 8e64012d1cc6121d; Mon, 26 Aug 2019 11:14:42 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Kalesh Singh <kaleshsingh@google.com>
-Cc:     gregkh@linuxfoundation.org, trong@google.com, trong@android.com,
-        sspatil@google.com, hridya@google.com, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] PM/sleep: Expose suspend stats in sysfs
-Date:   Mon, 26 Aug 2019 11:14:42 +0200
-Message-ID: <2302681.QTKqPxHXBN@kreacher>
-In-Reply-To: <20190731212933.23673-1-kaleshsingh@google.com>
-References: <20190731050549.GA20809@kroah.com> <20190731212933.23673-1-kaleshsingh@google.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Mon, 26 Aug 2019 05:15:24 -0400
+Received: from mail-eopbgr60068.outbound.protection.outlook.com ([40.107.6.68]:41861
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726354AbfHZJPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 05:15:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WTgjhUhsNVr7OJwU0Si5uZIQQxFWrmYVlJaZCXtB+EbonpmiIB7qokgcxoa5FW0nR07EKlU73vzDYS+fgYVDaf2Qp21+RuCarIpAd/sJIK0YIlS2qzTab59Ev6CbuAwL9hZGKYUAL7ktg8+Q+GD0yzhwbsYMnBaHIBo6juHZBTnXaQ+OAX7JhXkf2UYLXhllpVmdbEDWUhJgE/GsY4BuBsvkPrECEY0+NJzQizq6jJMS2e71IhA5x4j4XuQpqHoss4oZj9IJuWQFhc1e+jz0Z/zuq4XZf9YqQVh15UsHGYpCVpsL52unt4Ue1jhw8IMZUjvuHOso0RPBMSG+lah7Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nJMWLQpMdsOWvsQb0wBOF0K/W+6d1kI6CSGWcnB0n/k=;
+ b=kfp7p4eQjJ481zIjf/ZXuwriBpeIyLfr+bz46QCmA+WsTnkOLcMk2FhBvwVU3vps3OI7k+uUi0U3QOzn+7ZSjom5DfYROYqIZLgtS1GKp4cwIm+YOy5ClQGne6GI5PyVQyKyupyXR6bbb/Jr0vu55tmtY9PsE1qyGzJlMdLkEpJPIn1Q0ur1BloNnLeUU/+IvSYhy+dyRAmukGhJSc68WfRFW4yCXz1xfO6YpRiFg6nFdFGssk4kt5hdGQrhkyfKYSup+nkIXwAtjldW4i8t4UUGgiX8FBtmQ1EOvCVMvX+1qCRF41RWi8CIIQPHQRkyqa+PeSLwHcUmLFuFIRZ5xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nJMWLQpMdsOWvsQb0wBOF0K/W+6d1kI6CSGWcnB0n/k=;
+ b=e4WBQ2kvBBmdu8H7t673snvXzwU3zg5DGPLLTYiY/ikcgPq7Pm3Bvt5C7knneAzOoglq8QnKt4Urp+NntIu2Hd2gdb1hA8cOU+/qHWKcEqXonZQJFGuv2JK8vkpj0B1Skr9Q8A1q0ZY57sreZ8UiibNWxUaCqK7vxhy8XOO71ek=
+Received: from DB7PR04MB4011.eurprd04.prod.outlook.com (52.134.110.11) by
+ DB7PR04MB5243.eurprd04.prod.outlook.com (20.176.233.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Mon, 26 Aug 2019 09:15:15 +0000
+Received: from DB7PR04MB4011.eurprd04.prod.outlook.com
+ ([fe80::5d74:d199:a2bb:448]) by DB7PR04MB4011.eurprd04.prod.outlook.com
+ ([fe80::5d74:d199:a2bb:448%3]) with mapi id 15.20.2178.022; Mon, 26 Aug 2019
+ 09:15:15 +0000
+From:   Ashish Kumar <ashish.kumar@nxp.com>
+To:     Ashish Kumar <ashish.kumar@nxp.com>,
+        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Subject: RE: [Patch v3] drivers: mtd: spi-nor: Add flash property for
+ mt25qu512a and mt35xu02g
+Thread-Topic: [Patch v3] drivers: mtd: spi-nor: Add flash property for
+ mt25qu512a and mt35xu02g
+Thread-Index: AQHVUcNFGTl4okY6Y0qzj8r47WNYKacNOHkQ
+Date:   Mon, 26 Aug 2019 09:15:15 +0000
+Message-ID: <DB7PR04MB40112046D17A999C1793CD0495A10@DB7PR04MB4011.eurprd04.prod.outlook.com>
+References: <1565692705-27749-1-git-send-email-Ashish.Kumar@nxp.com>
+In-Reply-To: <1565692705-27749-1-git-send-email-Ashish.Kumar@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ashish.kumar@nxp.com; 
+x-originating-ip: [92.120.0.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 56878908-200a-4563-5c81-08d72a05e855
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB5243;
+x-ms-traffictypediagnostic: DB7PR04MB5243:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB5243C6490925C665A9EC02F595A10@DB7PR04MB5243.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01415BB535
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(376002)(136003)(39860400002)(13464003)(189003)(199004)(5660300002)(305945005)(6506007)(6116002)(3846002)(53546011)(102836004)(52536014)(74316002)(33656002)(25786009)(44832011)(476003)(14454004)(71190400001)(486006)(6246003)(71200400001)(53936002)(4326008)(478600001)(11346002)(446003)(9686003)(55016002)(6436002)(86362001)(2201001)(2501003)(2906002)(26005)(7736002)(256004)(14444005)(8676002)(81156014)(81166006)(229853002)(8936002)(7696005)(186003)(316002)(66946007)(64756008)(66556008)(66446008)(110136005)(66476007)(99286004)(66066001)(54906003)(76176011)(76116006)(138113003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5243;H:DB7PR04MB4011.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KvcS+SK9fBsGUkA03GqQ4kttRrktdYlYztF+pRAzX6Zkp2QvRIe4OW6ilKSibnNqJlLGlc/PPgeeV9MppK5uEWeVIYZ1G9X6GtYgTcGLjfoFSjM+g4uZ2CjE4YwBGPpeqQy5YzqoV+1LpRPr1I12J8EzMhn1/2C/GxYdZTDOpkckM0h/ImpUmNeehmJigcWVXlf2mQhB5vog0Z8FtRrQARGTTwvHq6u38reCxTrxSqS8O3uwucoQLPCbTkskl76X3UQ1Tij4CAgW3gILQUNrMTaSEkOEWUIfpsy5EanK+UWoH7uT7QiIplmEKUlgLMsV6+wcumsgpdq34XkbshnTQewR3nQc8CM9bx/OZrnJ5IPCCOlTHZCt8Z68HILGEUm54kNrS5rDVcwQsmpmKJIl8iLO9qygjquCsOyBpXZ0tR4=
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56878908-200a-4563-5c81-08d72a05e855
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2019 09:15:15.6236
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: R9grCI5sOA7WgQk1dGVps6/SfobpnhQ6572Ssb3HAUx15okBkagokhnv0Se7fFQjRdwKNrUJoEWNQ+oDXkGutQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5243
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, July 31, 2019 11:29:33 PM CEST Kalesh Singh wrote:
-> Userspace can get suspend stats from the suspend stats debugfs node.
-> Since debugfs doesn't have stable ABI, expose suspend stats in
-> sysfs under /sys/power/suspend_stats.
-> 
-> Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+
+
+> -----Original Message-----
+> From: Ashish Kumar <Ashish.Kumar@nxp.com>
+> Sent: Tuesday, August 13, 2019 4:08 PM
+> To: tudor.ambarus@microchip.com; marek.vasut@gmail.com;
+> dwmw2@infradead.org; computersforpeace@gmail.com;
+> miquel.raynal@bootlin.com; richard@nod.at; vigneshr@ti.com; linux-
+> mtd@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org; Ashish Kumar <ashish.kumar@nxp.com>;
+> Kuldeep Singh <kuldeep.singh@nxp.com>; Ashish Kumar
+> <ashish.kumar@nxp.com>
+> Subject: [Patch v3] drivers: mtd: spi-nor: Add flash property for mt25qu5=
+12a
+> and mt35xu02g
+Hi Vignesh, Tudor Ambarus,
+=20
+Could you please update, if there are any further comments on this patch.
+
+Regards
+Ashish=20
+>=20
+> mt25qu512a is rebranded after its spinoff from STM, so it is different on=
+ly in
+> term of operating frequency, initial JEDEC id is same as that of n25q512a=
+. In
+> order to avoid any confussion with respect to name new entry is added.
+> This flash is tested for Single I/O and QUAD I/O mode on LS1046FRWY.
+>=20
+> mt35xu02g is Octal flash supporting Single I/O and QCTAL I/O and it has b=
+een
+> tested on LS1028ARDB
+>=20
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
 > ---
-> Changes in v2:
->   - Added separate show functions for last_failed_* stats, as per Greg
->   - Updated ABI Documentation
-> 
->  Documentation/ABI/testing/sysfs-power | 106 ++++++++++++++++++++++++++
->  kernel/power/main.c                   |  97 ++++++++++++++++++++++-
->  2 files changed, 201 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-> index 3c5130355011..6f87b9dd384b 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -301,3 +301,109 @@ Description:
->  
->  		Using this sysfs file will override any values that were
->  		set using the kernel command line for disk offset.
+> v3:
+> -Reword commits msg
+> -rebase to top of mtd-linux spi-nor/next
+> v2:
+> Incorporate review comments from Vignesh
+>=20
+>  drivers/mtd/spi-nor/spi-nor.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.=
+c
+> index 03cc788..97d3de8 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -1988,6 +1988,12 @@ static const struct flash_info spi_nor_ids[] =3D {
+>  	{ "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K |
+> SPI_NOR_QUAD_READ) },
+>  	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K |
+> SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K |
+> SPI_NOR_QUAD_READ) },
 > +
-> +What:		/sys/power/suspend_stats
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats directory contains suspend related
-> +		statistics.
+> +	/* Micron */
+> +	{ "mt25qu512a", INFO6(0x20bb20, 0x104400, 64 * 1024, 1024,
+> SECT_4K |
+> +				USE_FSR | SPI_NOR_DUAL_READ |
+> +				SPI_NOR_QUAD_READ |
+> SPI_NOR_4B_OPCODES) },
 > +
-> +What:		/sys/power/suspend_stats/success
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/success file contains the number
-> +		of times entering system sleep state succeeded.
-> +
-> +What:		/sys/power/suspend_stats/fail
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/fail file contains the number
-> +		of times entering system sleep state failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_freeze
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_freeze file contains the
-> +		number of times freezing processes failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_prepare
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_prepare file contains the
-> +		number of times preparing all non-sysdev devices for
-> +		a system PM transition failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_resume
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_resume file contains the
-> +		number of times executing "resume" callbacks of
-> +		non-sysdev devices failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_resume_early
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_resume_early file contains
-> +		the number of times executing "early resume" callbacks
-> +		of devices failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_resume_noirq
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_resume_noirq file contains
-> +		the number of times executing "noirq resume" callbacks
-> +		of devices failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_suspend
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_suspend file contains
-> +		the number of times executing "suspend" callbacks
-> +		of all non-sysdev devices failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_suspend_late
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_suspend_late file contains
-> +		the number of times executing "late suspend" callbacks
-> +		of all devices failed.
-> +
-> +What:		/sys/power/suspend_stats/failed_suspend_noirq
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/failed_suspend_noirq file contains
-> +		the number of times executing "noirq suspend" callbacks
-> +		of all devices failed.
-> +
-> +What:		/sys/power/suspend_stats/last_failed_dev
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/last_failed_dev file contains
-> +		the last device for which a suspend/resume callback failed.
-> +
-> +What:		/sys/power/suspend_stats/last_failed_errno
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/last_failed_errno file contains
-> +		the errno of the last failed attempt at entering
-> +		system sleep state.
-> +
-> +What:		/sys/power/suspend_stats/last_failed_step
-> +Date:		July 2019
-> +Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
-> +Description:
-> +		The /sys/power/suspend_stats/last_failed_step file contains
-> +		the last failed step in the suspend/resume path.
-> diff --git a/kernel/power/main.c b/kernel/power/main.c
-> index bdbd605c4215..938dc53a8b94 100644
-> --- a/kernel/power/main.c
-> +++ b/kernel/power/main.c
-> @@ -254,7 +254,6 @@ static ssize_t pm_test_store(struct kobject *kobj, struct kobj_attribute *attr,
->  power_attr(pm_test);
->  #endif /* CONFIG_PM_SLEEP_DEBUG */
->  
-> -#ifdef CONFIG_DEBUG_FS
->  static char *suspend_step_name(enum suspend_stat_step step)
->  {
->  	switch (step) {
-> @@ -275,6 +274,92 @@ static char *suspend_step_name(enum suspend_stat_step step)
->  	}
->  }
->  
-> +#define suspend_attr(_name)					\
-> +static ssize_t _name##_show(struct kobject *kobj,		\
-> +		struct kobj_attribute *attr, char *buf)		\
-> +{								\
-> +	return sprintf(buf, "%d\n", suspend_stats._name);	\
-> +}								\
-> +static struct kobj_attribute _name = __ATTR_RO(_name)
-> +
-> +suspend_attr(success);
-> +suspend_attr(fail);
-> +suspend_attr(failed_freeze);
-> +suspend_attr(failed_prepare);
-> +suspend_attr(failed_suspend);
-> +suspend_attr(failed_suspend_late);
-> +suspend_attr(failed_suspend_noirq);
-> +suspend_attr(failed_resume);
-> +suspend_attr(failed_resume_early);
-> +suspend_attr(failed_resume_noirq);
-> +
-> +static ssize_t last_failed_dev_show(struct kobject *kobj,
-> +		struct kobj_attribute *attr, char *buf)
-> +{
-> +	int index;
-> +	char *last_failed_dev = NULL;
-> +
-> +	index = suspend_stats.last_failed_dev + REC_FAILED_NUM - 1;
-> +	index %= REC_FAILED_NUM;
-> +	last_failed_dev = suspend_stats.failed_devs[index];
-> +
-> +	return sprintf(buf, "%s\n", last_failed_dev);
-> +}
-> +static struct kobj_attribute last_failed_dev = __ATTR_RO(last_failed_dev);
-> +
-> +static ssize_t last_failed_errno_show(struct kobject *kobj,
-> +		struct kobj_attribute *attr, char *buf)
-> +{
-> +	int index;
-> +	int last_failed_errno;
-> +
-> +	index = suspend_stats.last_failed_errno + REC_FAILED_NUM - 1;
-> +	index %= REC_FAILED_NUM;
-> +	last_failed_errno = suspend_stats.errno[index];
-> +
-> +	return sprintf(buf, "%d\n", last_failed_errno);
-> +}
-> +static struct kobj_attribute last_failed_errno = __ATTR_RO(last_failed_errno);
-> +
-> +static ssize_t last_failed_step_show(struct kobject *kobj,
-> +		struct kobj_attribute *attr, char *buf)
-> +{
-> +	int index;
-> +	enum suspend_stat_step step;
-> +	char *last_failed_step = NULL;
-> +
-> +	index = suspend_stats.last_failed_step + REC_FAILED_NUM - 1;
-> +	index %= REC_FAILED_NUM;
-> +	step = suspend_stats.failed_steps[index];
-> +	last_failed_step = suspend_step_name(step);
-> +
-> +	return sprintf(buf, "%s\n", last_failed_step);
-> +}
-> +static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
-> +
-> +static struct attribute *suspend_attrs[] = {
-> +	&success.attr,
-> +	&fail.attr,
-> +	&failed_freeze.attr,
-> +	&failed_prepare.attr,
-> +	&failed_suspend.attr,
-> +	&failed_suspend_late.attr,
-> +	&failed_suspend_noirq.attr,
-> +	&failed_resume.attr,
-> +	&failed_resume_early.attr,
-> +	&failed_resume_noirq.attr,
-> +	&last_failed_dev.attr,
-> +	&last_failed_errno.attr,
-> +	&last_failed_step.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group suspend_attr_group = {
-> +	.name = "suspend_stats",
-> +	.attrs = suspend_attrs,
-> +};
-> +
-> +#ifdef CONFIG_DEBUG_FS
->  static int suspend_stats_show(struct seq_file *s, void *unused)
->  {
->  	int i, index, last_dev, last_errno, last_step;
-> @@ -794,6 +879,14 @@ static const struct attribute_group attr_group = {
->  	.attrs = g,
->  };
->  
-> +static const struct attribute_group *attr_groups[] = {
-> +	&attr_group,
-> +#ifdef CONFIG_PM_SLEEP
-> +	&suspend_attr_group,
-> +#endif
-> +	NULL,
-> +};
-> +
->  struct workqueue_struct *pm_wq;
->  EXPORT_SYMBOL_GPL(pm_wq);
->  
-> @@ -815,7 +908,7 @@ static int __init pm_init(void)
->  	power_kobj = kobject_create_and_add("power", NULL);
->  	if (!power_kobj)
->  		return -ENOMEM;
-> -	error = sysfs_create_group(power_kobj, &attr_group);
-> +	error = sysfs_create_groups(power_kobj, attr_groups);
->  	if (error)
->  		return error;
->  	pm_print_times_init();
-> 
-
-Applied with the Greg's R-by, thanks!
-
-
+>  	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K |
+> USE_FSR | SPI_NOR_QUAD_READ) },
+>  	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K |
+> USE_FSR | SPI_NOR_QUAD_READ) },
+>  	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR
+> | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+> @@ -2003,6 +2009,9 @@ static const struct flash_info spi_nor_ids[] =3D {
+>  			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
+>  			SPI_NOR_4B_OPCODES)
+>  	},
+> +	{ "mt35xu02g",  INFO(0x2c5b1c, 0, 128 * 1024, 2048,
+> +			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
+> +			SPI_NOR_4B_OPCODES) },
+>=20
+>  	/* PMC */
+>  	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
+> --
+> 2.7.4
 
