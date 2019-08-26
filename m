@@ -2,132 +2,93 @@ Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9C1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02056C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17702186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566816073;
-	bh=8ziD+meEXqXL5pLNd7FdOcpozYaNgK5kwHaeo4uhx28=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=U7tXZ6Df5OsjFhHeF5fEYCWILL+zPT3fgzARH7//PWPrfep7GqkQD/q9M0+XrUWP9
-	 G9QI4Ui6r7LlDn7eBWpow/nZiq/tw7zz3x38VLL2ZeFWJ8GtOZizwsX7jLGV2bdJFU
-	 eMr5hkHMes+wpA0nyLScAlXN1OJvet0mqYxC8WXQ=
+	by mail.kernel.org (Postfix) with ESMTP id C658920828
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 10:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfHZKlM (ORCPT
+        id S1731035AbfHZKly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 06:41:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730640AbfHZKlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 06:41:12 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E32920828;
-        Mon, 26 Aug 2019 10:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566816070;
-        bh=8ziD+meEXqXL5pLNd7FdOcpozYaNgK5kwHaeo4uhx28=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=It43Y4jhI4WRMT7EOX/lr7UQrAHGcp7abrKi/dW/O0Kd9egEDPpQrb9qKy1oWb9pe
-         lnOftVy2OCBwYNxuaPQUMNRvYTlPGOmE5p+KJsXKHIySHdTnGKve5YDOmGidGBo/29
-         cnTh0m+X3A/MuYbOjoz90Mp0uG6r73lbyIxhL/QI=
-Message-ID: <e6f4f619967f4551adb5003d0364770fde2b8110.camel@kernel.org>
-Subject: Re: [RFC PATCH v2 02/19] fs/locks: Add Exclusive flag to user
- Layout lease
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     ira.weiny@intel.com, Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Date:   Mon, 26 Aug 2019 06:41:07 -0400
-In-Reply-To: <20190814215630.GQ6129@dread.disaster.area>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
-         <20190809225833.6657-3-ira.weiny@intel.com>
-         <fde2959db776616008fc5d31df700f5d7d899433.camel@kernel.org>
-         <20190814215630.GQ6129@dread.disaster.area>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 26 Aug 2019 06:41:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52390 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730421AbfHZKly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 06:41:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2D3E9AF8D;
+        Mon, 26 Aug 2019 10:41:53 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 12:41:50 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     n-horiguchi@ah.jp.nec.com
+Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, vbabka@suse.cz
+Subject: poisoned pages do not play well in the buddy allocator
+Message-ID: <20190826104144.GA7849@linux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-15 at 07:56 +1000, Dave Chinner wrote:
-> On Wed, Aug 14, 2019 at 10:15:06AM -0400, Jeff Layton wrote:
-> > On Fri, 2019-08-09 at 15:58 -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Add an exclusive lease flag which indicates that the layout mechanism
-> > > can not be broken.
-> > > 
-> > > Exclusive layout leases allow the file system to know that pages may be
-> > > GUP pined and that attempts to change the layout, ie truncate, should be
-> > > failed.
-> > > 
-> > > A process which attempts to break it's own exclusive lease gets an
-> > > EDEADLOCK return to help determine that this is likely a programming bug
-> > > vs someone else holding a resource.
-> .....
-> > > diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-> > > index baddd54f3031..88b175ceccbc 100644
-> > > --- a/include/uapi/asm-generic/fcntl.h
-> > > +++ b/include/uapi/asm-generic/fcntl.h
-> > > @@ -176,6 +176,8 @@ struct f_owner_ex {
-> > >  
-> > >  #define F_LAYOUT	16      /* layout lease to allow longterm pins such as
-> > >  				   RDMA */
-> > > +#define F_EXCLUSIVE	32      /* layout lease is exclusive */
-> > > +				/* FIXME or shoudl this be F_EXLCK??? */
-> > >  
-> > >  /* operations for bsd flock(), also used by the kernel implementation */
-> > >  #define LOCK_SH		1	/* shared lock */
-> > 
-> > This interface just seems weird to me. The existing F_*LCK values aren't
-> > really set up to be flags, but are enumerated values (even if there are
-> > some gaps on some arches). For instance, on parisc and sparc:
-> 
-> I don't think we need to worry about this - the F_WRLCK version of
-> the layout lease should have these exclusive access semantics (i.e
-> other ops fail rather than block waiting for lease recall) and hence
-> the API shouldn't need a new flag to specify them.
-> 
-> i.e. the primary difference between F_RDLCK and F_WRLCK layout
-> leases is that the F_RDLCK is a shared, co-operative lease model
-> where only delays in operations will be seen, while F_WRLCK is a
-> "guarantee exclusive access and I don't care what it breaks"
-> model... :)
-> 
+Hi,
 
-Not exactly...
+When analyzing a problem reported by one of our customers, I stumbbled upon an issue
+that origins from the fact that poisoned pages end up in the buddy allocator.
 
-F_WRLCK and F_RDLCK leases can both be broken, and will eventually time
-out if there is conflicting access. The F_EXCLUSIVE flag on the other
-hand is there to prevent any sort of lease break from 
+Let me break down the stepts that lie to the problem:
 
-I'm guessing what Ira really wants with the F_EXCLUSIVE flag is
-something akin to what happens when we set fl_break_time to 0 in the
-nfsd code. nfsd never wants the locks code to time out a lease of any
-sort, since it handles that timeout itself.
+1) We soft-offline a page
+2) Page gets flagged as HWPoison and is being sent to the buddy allocator.
+   This is done through set_hwpoison_free_buddy_page().
+3) Kcompactd wakes up in order to perform some compaction.
+4) compact_zone() will call migrate_pages()
+5) migrate_pages() will try to get a new page from compaction_alloc() to migrate to
+6) if cc->freelist is empty, compaction_alloc() will call isolate_free_pagesblock()
+7) isolate_free_pagesblock only checks for PageBuddy() to assume that a page is OK
+   to be used to migrate to. Since HWPoisoned page are also PageBuddy, we add
+   the page to the list. (same problem exists in fast_isolate_freepages()).
 
-If you're going to add this functionality, it'd be good to also convert
-knfsd to use it as well, so we don't end up with multiple ways to deal
-with that situation.
+The outcome of that is that we end up happily handing poisoned pages in compaction_alloc,
+so if we ever got a fault on that page through *_fault, we will return VM_FAULT_HWPOISON,
+and the process will be killed.
+
+I first though that I could get away with it by checking PageHWPoison in
+{fast_isolate_freepages/isolate_free_pagesblock}, but not really.
+It might be that the page we are checking is an order > 0 page, so the first page
+might not be poisoned, but the one the follows might be, and we end up in the
+same situation.
+
+After some more thought, I really came to the conclusion that HWPoison pages should not
+really be in the buddy allocator, as this is only asking for problems.
+In this case it is only compaction code, but it could be happening somewhere else,
+and one would expect that the pages you got from the buddy allocator are __ready__ to use.
+
+I __think__ that we thought we were safe to put HWPoison pages in the buddy allocator as we
+perform healthy checks when getting a page from there, so we skip poisoned pages
+
+Of course, this is not the end of the story, now that someone got a page, if he frees it,
+there is a high chance that this page ends up in a pcplist (I saw that).
+Unless we are on CONFIG_VM_DEBUG, we do not check for the health of pages got from pcplist,
+as we do when getting a page from the buddy allocator.
+
+I checked [1], and it seems that [2] was going towards fixing this kind of issue.
+
+I think it is about time to revamp the whole thing.
+
+@Naoya: I could give it a try if you are busy.
+
+[1] https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
+[2] https://lore.kernel.org/linux-mm/1541746035-13408-9-git-send-email-n-horiguchi@ah.jp.nec.com/
+
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Oscar Salvador
+SUSE L3
