@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B771AC3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1156C3A59F
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDD7217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A642186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 12:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qMN6hF0/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S9JG0MNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfHZMUQ (ORCPT
+        id S1731890AbfHZMUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 08:20:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50006 "EHLO
+        Mon, 26 Aug 2019 08:20:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50312 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730964AbfHZMUP (ORCPT
+        with ESMTP id S1731854AbfHZMUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 08:20:15 -0400
+        Mon, 26 Aug 2019 08:20:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=S2Mh/koMqWE5/IDrMMarWfmM4ONE569Aw8dJZHBpwwk=; b=qMN6hF0/QJ+Z7/NAuEDgqW/pOm
-        bXTgtZPO76Hv9+jKSxUr72HbDhOgNSPUuNASYeYwoh4x2J5iqiIyaZ0+95JWH0HJAtrpQgxQxr2Rb
-        CRcZfWFqAj4B2RTAh9FgPErLXhMIXAFERQbJ9EQx+7/O73YOx8u6KNeJkXLwda0sQo/INTa3M43Px
-        NjYYALKUaLhXmBytFn+Kzk1TaQoUga7fxkJzQwtPgBoSXOjQPtU8rgNQTlcrLT2grJjDfr9hNQq0t
-        6yMeVF8Y8SfjoSoNxda03w7V3b2itFF7734b3nOOesaB8HHVFW0UPrJZUpTP/8wjJYE5XSdaCNx6u
-        ad89Dbrw==;
+        bh=0tSMllic9oVfu0f4xPvD0IBZHN0oierJ545FtJepfzM=; b=S9JG0MNSbTrudAqrn0zwmDRPQt
+        Su8RWXxwch73jgR+SsMuz9mYimOy+KL3jFz26itZ92R1RfHD+3kin/Gt2pGSwrH/AAo58EcIn1u+I
+        gcpyOpw4xb3vSr4PporXHCficdBlFfVw8QLIHaMiZyGM+l0VQwoYlWsk4/0BemZHmlb/WonqczrHh
+        Z6EFlPcINmSnSX8TP6nkoP5kilyAPYSZM4YmFGKkZaljTTDdvmA/pPTwOLzlA/FR39iYHdjEdJ2Pl
+        jg/6PVmQeCpHzx/fco4LqRaVM26ZJUMUAscDuM5ERRwyYN26gtosMS8Lzl7rTS2PgfDrZFu4hWT3x
+        kgLQE2cg==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2Dyc-0002W3-CM; Mon, 26 Aug 2019 12:20:02 +0000
+        id 1i2Dyo-0003os-VQ; Mon, 26 Aug 2019 12:20:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Stefano Stabellini <sstabellini@kernel.org>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/11] swiotlb-xen: always use dma-direct helpers to alloc coherent pages
-Date:   Mon, 26 Aug 2019 14:19:39 +0200
-Message-Id: <20190826121944.515-7-hch@lst.de>
+Subject: [PATCH 10/11] swiotlb-xen: merge xen_unmap_single into xen_swiotlb_unmap_page
+Date:   Mon, 26 Aug 2019 14:19:43 +0200
+Message-Id: <20190826121944.515-11-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190826121944.515-1-hch@lst.de>
 References: <20190826121944.515-1-hch@lst.de>
@@ -58,100 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x86 currently calls alloc_pages, but using dma-direct works as well
-there, with the added benefit of using the CMA pool if available.
-The biggest advantage is of course to remove a pointless bit of
-architecture specific code.
+No need for a no-op wrapper.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/include/asm/xen/page-coherent.h | 16 ----------------
- drivers/xen/swiotlb-xen.c                |  7 +++----
- include/xen/arm/page-coherent.h          | 12 ------------
- 3 files changed, 3 insertions(+), 32 deletions(-)
+ drivers/xen/swiotlb-xen.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/xen/page-coherent.h b/arch/x86/include/asm/xen/page-coherent.h
-index 116777e7f387..8ee33c5edded 100644
---- a/arch/x86/include/asm/xen/page-coherent.h
-+++ b/arch/x86/include/asm/xen/page-coherent.h
-@@ -5,22 +5,6 @@
- #include <asm/page.h>
- #include <linux/dma-mapping.h>
- 
--static inline void *xen_alloc_coherent_pages(struct device *hwdev, size_t size,
--		dma_addr_t *dma_handle, gfp_t flags,
--		unsigned long attrs)
--{
--	void *vstart = (void*)__get_free_pages(flags, get_order(size));
--	*dma_handle = virt_to_phys(vstart);
--	return vstart;
--}
--
--static inline void xen_free_coherent_pages(struct device *hwdev, size_t size,
--		void *cpu_addr, dma_addr_t dma_handle,
--		unsigned long attrs)
--{
--	free_pages((unsigned long) cpu_addr, get_order(size));
--}
--
- static inline void xen_dma_map_page(struct device *hwdev, struct page *page,
- 	     dma_addr_t dev_addr, unsigned long offset, size_t size,
- 	     enum dma_data_direction dir, unsigned long attrs) { }
 diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index b8808677ae1d..f9dd4cb6e4b3 100644
+index 95911ff9c11c..384304a77020 100644
 --- a/drivers/xen/swiotlb-xen.c
 +++ b/drivers/xen/swiotlb-xen.c
-@@ -299,8 +299,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
- 	 * address. In fact on ARM virt_to_phys only works for kernel direct
- 	 * mapped RAM memory. Also see comment below.
- 	 */
--	ret = xen_alloc_coherent_pages(hwdev, size, dma_handle, flags, attrs);
--
-+	ret = dma_direct_alloc(hwdev, size, dma_handle, flags, attrs);
- 	if (!ret)
- 		return ret;
+@@ -414,9 +414,8 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+  * After this call, reads by the cpu to the buffer are guaranteed to see
+  * whatever the device wrote there.
+  */
+-static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
+-			     size_t size, enum dma_data_direction dir,
+-			     unsigned long attrs)
++static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	phys_addr_t paddr = xen_bus_to_phys(dev_addr);
  
-@@ -319,7 +318,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
- 	else {
- 		if (xen_create_contiguous_region(phys, order,
- 						 fls64(dma_mask), dma_handle) != 0) {
--			xen_free_coherent_pages(hwdev, size, ret, (dma_addr_t)phys, attrs);
-+			dma_direct_free(hwdev, size, ret, (dma_addr_t)phys, attrs);
- 			return NULL;
- 		}
- 		SetPageXenRemapped(virt_to_page(ret));
-@@ -351,7 +350,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	    TestClearPageXenRemapped(virt_to_page(vaddr)))
- 		xen_destroy_contiguous_region(phys, order);
- 
--	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
-+	dma_direct_free(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+@@ -430,13 +429,6 @@ static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
+ 		swiotlb_tbl_unmap_single(hwdev, paddr, size, dir, attrs);
  }
  
- /*
-diff --git a/include/xen/arm/page-coherent.h b/include/xen/arm/page-coherent.h
-index a840d6949a87..0e244f4fec1a 100644
---- a/include/xen/arm/page-coherent.h
-+++ b/include/xen/arm/page-coherent.h
-@@ -16,18 +16,6 @@ void __xen_dma_sync_single_for_cpu(struct device *hwdev,
- void __xen_dma_sync_single_for_device(struct device *hwdev,
- 		dma_addr_t handle, size_t size, enum dma_data_direction dir);
+-static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+-			    size_t size, enum dma_data_direction dir,
+-			    unsigned long attrs)
+-{
+-	xen_unmap_single(hwdev, dev_addr, size, dir, attrs);
+-}
+-
+ static void
+ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
+ 		size_t size, enum dma_data_direction dir)
+@@ -477,7 +469,8 @@ xen_swiotlb_unmap_sg(struct device *hwdev, struct scatterlist *sgl, int nelems,
+ 	BUG_ON(dir == DMA_NONE);
  
--static inline void *xen_alloc_coherent_pages(struct device *hwdev, size_t size,
--		dma_addr_t *dma_handle, gfp_t flags, unsigned long attrs)
--{
--	return dma_direct_alloc(hwdev, size, dma_handle, flags, attrs);
--}
--
--static inline void xen_free_coherent_pages(struct device *hwdev, size_t size,
--		void *cpu_addr, dma_addr_t dma_handle, unsigned long attrs)
--{
--	dma_direct_free(hwdev, size, cpu_addr, dma_handle, attrs);
--}
--
- static inline void xen_dma_sync_single_for_cpu(struct device *hwdev,
- 		dma_addr_t handle, size_t size, enum dma_data_direction dir)
- {
+ 	for_each_sg(sgl, sg, nelems, i)
+-		xen_unmap_single(hwdev, sg->dma_address, sg_dma_len(sg), dir, attrs);
++		xen_swiotlb_unmap_page(hwdev, sg->dma_address, sg_dma_len(sg),
++				dir, attrs);
+ 
+ }
+ 
 -- 
 2.20.1
 
