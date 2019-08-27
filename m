@@ -5,49 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB76AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB432C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A455F21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F45922CED
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892802;
-	bh=xaWelcPPqQjbYJIjD9T+FNUz1VwcHbQUGS4SZ6Jrn34=;
+	s=default; t=1566892805;
+	bh=/hUz0QHXM4fVdpZ2JqX3CUAwKTuN+Sp2nfxIucumXWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJR1Sn1F+KMAGyI9xXUWXL+GmYxt4AWJS7hi3mMlHfc8TQfImYdbghrVeMDc/50Zs
-	 4LvHBh407sqahamVJ5bZs+F8bSeXBTC69xxMKPYrPipVFYXS9jbyEk8+xQJox+gtYW
-	 bapp+CbEhoyn8Al1CVlM2Jx7MGOe1jdELfnIfOHg=
+	b=wEng9Su5U2Rn2EfHXIqtBw2BB/tCsBDnI0ri7JDJ1vkGVYTPgC66xAJHuCzARIO5d
+	 ypxx2ExR1FIWyD6LPTYYPNRDi6hH3xU+uBa4AsTuUYWkR4H9UvYtPALBhR61snGt/Q
+	 FZbAdZcG1MZwrO6fodTqTUPy+zV/iVT4xooPdrTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbfH0IAB (ORCPT
+        id S1730991AbfH0IAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:00:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730721AbfH0H76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:58 -0400
+        id S1730474AbfH0IAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96000206BF;
-        Tue, 27 Aug 2019 07:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48E98206BF;
+        Tue, 27 Aug 2019 08:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892798;
-        bh=xaWelcPPqQjbYJIjD9T+FNUz1VwcHbQUGS4SZ6Jrn34=;
+        s=default; t=1566892800;
+        bh=/hUz0QHXM4fVdpZ2JqX3CUAwKTuN+Sp2nfxIucumXWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=by+3g0AVvko/BkS5XeOY8g6FmqPaStwwz5kbCTY+Qe3m80xh3+uXVLcPd8OfW+Rat
-         q5ocLrY3NV1ITVakGX0rc7i8tu6JwtdrCtCLlxTgXRgmLyqmaX0ObsR+uQJ9PO4Ybc
-         7wUgpbTFaLJL0GBtElxWBAdlrCbY13rfXIw8FpJs=
+        b=FOk9lpc+kWZqmZuvbA0NCG77cnpb8eVZXlhaNMPa4kcAoHiDh9vw7h2iobuH8K+Tm
+         aps4L6hNykzHknjpEykLt3Kr/vf9dPMuYE5hTTsmNIS+TCSzqmmIFsdZMv169UtiiB
+         k7HXQN8FrUe2l2LKw1cG1Y977tJIo8DX2jBSu/kM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 008/162] regulator: axp20x: fix DCDC5 and DCDC6 for AXP803
-Date:   Tue, 27 Aug 2019 09:48:56 +0200
-Message-Id: <20190827072738.559612488@linuxfoundation.org>
+Subject: [PATCH 5.2 009/162] ASoC: samsung: odroid: fix an use-after-free issue for codec
+Date:   Tue, 27 Aug 2019 09:48:57 +0200
+Message-Id: <20190827072738.668230721@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,48 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8f46e22b5ac692b48d04bb722547ca17b66dda02 ]
+[ Upstream commit 9b6d104a6b150bd4d3e5b039340e1f6b20c2e3c1 ]
 
-Refactoring of axp20x driver introduced a bug in AXP803's DCDC6
-regulator definition. AXP803_DCDC6_1120mV_STEPS was obtained by
-subtracting 0x47 and 0x33. This should be 0x14 (hex) and not 14
-(dec).
+The codec variable is still being used after the of_node_put() call,
+which may result in use-after-free.
 
-Refactoring also carried over a bug in DCDC5 regulator definition.
-Number of possible voltages must be for 1 bigger than maximum valid
-voltage index, because 0 is also valid and it means lowest voltage.
-
-Fixes: 1dbe0ccb0631 ("regulator: axp20x-regulator: add support for AXP803")
-Fixes: db4a555f7c4c ("regulator: axp20x: use defines for masks")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://lore.kernel.org/r/20190713090717.347-3-jernej.skrabec@siol.net
+Fixes: bc3cf17b575a ("ASoC: samsung: odroid: Add support for secondary CPU DAI")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/1562989575-33785-2-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/axp20x-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/samsung/odroid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index c951568994a11..989506bd90b19 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -174,14 +174,14 @@
- #define AXP803_DCDC5_1140mV_STEPS	35
- #define AXP803_DCDC5_1140mV_END		\
- 	(AXP803_DCDC5_1140mV_START + AXP803_DCDC5_1140mV_STEPS)
--#define AXP803_DCDC5_NUM_VOLTAGES	68
-+#define AXP803_DCDC5_NUM_VOLTAGES	69
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index e688169ff12ab..95c35e3ff3303 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -275,9 +275,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 	}
  
- #define AXP803_DCDC6_600mV_START	0x00
- #define AXP803_DCDC6_600mV_STEPS	50
- #define AXP803_DCDC6_600mV_END		\
- 	(AXP803_DCDC6_600mV_START + AXP803_DCDC6_600mV_STEPS)
- #define AXP803_DCDC6_1120mV_START	0x33
--#define AXP803_DCDC6_1120mV_STEPS	14
-+#define AXP803_DCDC6_1120mV_STEPS	20
- #define AXP803_DCDC6_1120mV_END		\
- 	(AXP803_DCDC6_1120mV_START + AXP803_DCDC6_1120mV_STEPS)
- #define AXP803_DCDC6_NUM_VOLTAGES	72
+ 	of_node_put(cpu);
+-	of_node_put(codec);
+ 	if (ret < 0)
+-		return ret;
++		goto err_put_node;
+ 
+ 	ret = snd_soc_of_get_dai_link_codecs(dev, codec, codec_link);
+ 	if (ret < 0)
+@@ -308,6 +307,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 		goto err_put_clk_i2s;
+ 	}
+ 
++	of_node_put(codec);
+ 	return 0;
+ 
+ err_put_clk_i2s:
+@@ -317,6 +317,8 @@ err_put_sclk:
+ err_put_cpu_dai:
+ 	of_node_put(cpu_dai);
+ 	snd_soc_of_put_dai_link_codecs(codec_link);
++err_put_node:
++	of_node_put(codec);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
