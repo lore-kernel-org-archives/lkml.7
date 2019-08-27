@@ -2,125 +2,208 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4DBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D578FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA532070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:55:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lA5psUzQ"
+	by mail.kernel.org (Postfix) with ESMTP id B37242070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfH0Vzo (ORCPT
+        id S1726556AbfH0Vz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:55:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34413 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfH0Vzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:55:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so276507pfp.1;
-        Tue, 27 Aug 2019 14:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=m917iy68AiYtkb2q0cQ7Q/izkV3v3/AN7Omu2+VjOfg=;
-        b=lA5psUzQf2ludbNU59iHu6CcA2pcJoWFp7AeDz5ogJiLP4FvrIoHI7e5ctjg9Klv8M
-         Z9LjArGRWSOg1KpLsVKjj4IhW+myFcWm91vtmsRA/c+a0LxKZjJftuu1axF6W3n64dVN
-         WvtIzDp4d6zvazewkvIXMOW59MdXesudUskDFG3Mw2pdppSwbBiVtNlv5nqlqbUU9eRN
-         ki2/VPiRHSCi5y09VpJ9tY4r70NhJF3mP2erKptgXuvf++fCbPtXmEW8Qxj9vfRl6lrd
-         JDgZUxcGuAkyZF8N9Tzvfazyk4eZT/GTVzxtFCrdcRop09j8SrfD/LlCXayt3IP649Nf
-         7fAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=m917iy68AiYtkb2q0cQ7Q/izkV3v3/AN7Omu2+VjOfg=;
-        b=KFpuHRMapVq5RvSL3V5z3C0rd1J/hGi7ASuXYCLnT8yWl7Or1Lvw3SN+2QtOm9gKTb
-         +0dPO6+yJQqQKHPto7CzlywuitstAcuO9OeY/7HpDNjKqH1qhGqxSTaiOiU1xOuBZn0i
-         roszRafYeOAvuzVTXIlkb5QcBLF/o0Xbw/BSJd7mUZ/i7fDpl1VkN8tiiK0pYK2IvmxE
-         0wf8eJimyUpEDo1dk3DXi65Jn/D7v1R4hiDzZ0cpCgihDQ9N09str3Xjp0ATcoXI3fpF
-         CVpbWZjS7wuHPAcGEqAneUNRxAGjM29moaPK9boKq4T40XIlQ1sbx/XeMSImjHvtA0Cb
-         3y3Q==
-X-Gm-Message-State: APjAAAXVe+hwnojS8JY2VVEftid3pNVJrTV/JgZRVQxRffWWO/gtUknr
-        uzZOa73SH4zsGrng5T5VMEpatIcovik=
-X-Google-Smtp-Source: APXvYqyHAA5th5FDbqfZ0JZdkF19gY0MgtZL/1IefiqClEs4PRtVuWU/s/xStQACjpNSJ+MzWOVN/Q==
-X-Received: by 2002:a63:2b0c:: with SMTP id r12mr564319pgr.206.1566942943450;
-        Tue, 27 Aug 2019 14:55:43 -0700 (PDT)
-Received: from a06aacb89ec0.pdc.gateworks.com (68-189-91-139.static.snlo.ca.charter.com. [68.189.91.139])
-        by smtp.gmail.com with ESMTPSA id i9sm298640pgg.38.2019.08.27.14.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 14:55:43 -0700 (PDT)
-From:   Matthew Michilot <matthew.michilot@gmail.com>
-X-Google-Original-From: Matthew Michilot <mmichilot@gateworks.com>
-To:     lars@metafoo.de
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matthew Michilot <matthew.michilot@gmail.com>
-Subject: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
-Date:   Tue, 27 Aug 2019 21:55:39 +0000
-Message-Id: <20190827215539.1286-1-mmichilot@gateworks.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 27 Aug 2019 17:55:56 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27694 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbfH0Vzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 17:55:55 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 14:55:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="185426781"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2019 14:55:53 -0700
+Date:   Wed, 28 Aug 2019 05:38:29 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org
+Subject: Re: [PATCH v5 3/9] fpga: dfl: afu: convert platform_driver to use
+ dev_groups
+Message-ID: <20190827213829.GA4237@hao-dev>
+References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
+ <1565578204-13969-4-git-send-email-hao.wu@intel.com>
+ <20190822150701.GB22556@archbox>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822150701.GB22556@archbox>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Michilot <matthew.michilot@gmail.com>
+On Thu, Aug 22, 2019 at 08:07:01AM -0700, Moritz Fischer wrote:
+> Hi Hao,
+> 
+> On Mon, Aug 12, 2019 at 10:49:58AM +0800, Wu Hao wrote:
+> > This patch takes advantage of driver core which helps to create
+> > and remove sysfs attribute files, so there is no need to register
+> > sysfs entries manually in dfl-afu platform river code.
+> Same nit: s/river/driver
+> > 
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
 
-Captured video would be out of sync when using the adv7280 with
-the BT.656-4 protocol. Certain registers (0x04, 0x31, 0xE6) had to
-be configured properly to ensure BT.656-4 compatibility.
 
-An error in the adv7280 reference manual suggested that EAV/SAV mode
-was enabled by default, however upon inspecting register 0x31, it was
-determined to be disabled by default.
+Hi Moritz
 
-Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
-Reviewed-by: Tim Harvey <tharvey@gateworks.com>
----
- drivers/media/i2c/adv7180.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Thanks a lot for the review. : )
 
-diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
-index 99697baad2ea..27da424dce76 100644
---- a/drivers/media/i2c/adv7180.c
-+++ b/drivers/media/i2c/adv7180.c
-@@ -94,6 +94,7 @@
- #define ADV7180_REG_SHAP_FILTER_CTL_1	0x0017
- #define ADV7180_REG_CTRL_2		0x001d
- #define ADV7180_REG_VSYNC_FIELD_CTL_1	0x0031
-+#define ADV7180_VSYNC_FIELD_CTL_1_NEWAV 0x12
- #define ADV7180_REG_MANUAL_WIN_CTL_1	0x003d
- #define ADV7180_REG_MANUAL_WIN_CTL_2	0x003e
- #define ADV7180_REG_MANUAL_WIN_CTL_3	0x003f
-@@ -935,10 +936,20 @@ static int adv7182_init(struct adv7180_state *state)
- 		adv7180_write(state, ADV7180_REG_EXTENDED_OUTPUT_CONTROL, 0x57);
- 		adv7180_write(state, ADV7180_REG_CTRL_2, 0xc0);
- 	} else {
--		if (state->chip_info->flags & ADV7180_FLAG_V2)
-+		if (state->chip_info->flags & ADV7180_FLAG_V2) {
-+			/* ITU-R BT.656-4 compatible */
- 			adv7180_write(state,
- 				      ADV7180_REG_EXTENDED_OUTPUT_CONTROL,
--				      0x17);
-+				      ADV7180_EXTENDED_OUTPUT_CONTROL_NTSCDIS);
-+			/* Manually set NEWAVMODE */
-+			adv7180_write(state,
-+				      ADV7180_REG_VSYNC_FIELD_CTL_1,
-+				      ADV7180_VSYNC_FIELD_CTL_1_NEWAV);
-+			/* Manually set V bit end position in NTSC mode */
-+			adv7180_write(state,
-+				      ADV7180_REG_NTSC_V_BIT_END,
-+				      ADV7180_NTSC_V_BIT_END_MANUAL_NVEND);
-+		}
- 		else
- 			adv7180_write(state,
- 				      ADV7180_REG_EXTENDED_OUTPUT_CONTROL,
--- 
-2.17.1
+Have you got a chance to look into the other patches in this patchset?
 
+Thanks
+Hao
+
+> > ---
+> >  drivers/fpga/dfl-afu-main.c | 69 +++++++++++++++++++++++----------------------
+> >  1 file changed, 36 insertions(+), 33 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> > index e50c45e..e955149 100644
+> > --- a/drivers/fpga/dfl-afu-main.c
+> > +++ b/drivers/fpga/dfl-afu-main.c
+> > @@ -282,24 +282,17 @@ static int port_get_id(struct platform_device *pdev)
+> >  	&dev_attr_power_state.attr,
+> >  	NULL,
+> >  };
+> > -ATTRIBUTE_GROUPS(port_hdr);
+> > +
+> > +static const struct attribute_group port_hdr_group = {
+> > +	.attrs = port_hdr_attrs,
+> > +};
+> >  
+> >  static int port_hdr_init(struct platform_device *pdev,
+> >  			 struct dfl_feature *feature)
+> >  {
+> > -	dev_dbg(&pdev->dev, "PORT HDR Init.\n");
+> > -
+> >  	port_reset(pdev);
+> >  
+> > -	return device_add_groups(&pdev->dev, port_hdr_groups);
+> > -}
+> > -
+> > -static void port_hdr_uinit(struct platform_device *pdev,
+> > -			   struct dfl_feature *feature)
+> > -{
+> > -	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
+> > -
+> > -	device_remove_groups(&pdev->dev, port_hdr_groups);
+> > +	return 0;
+> >  }
+> >  
+> >  static long
+> > @@ -330,7 +323,6 @@ static void port_hdr_uinit(struct platform_device *pdev,
+> >  
+> >  static const struct dfl_feature_ops port_hdr_ops = {
+> >  	.init = port_hdr_init,
+> > -	.uinit = port_hdr_uinit,
+> >  	.ioctl = port_hdr_ioctl,
+> >  };
+> >  
+> > @@ -361,32 +353,37 @@ static void port_hdr_uinit(struct platform_device *pdev,
+> >  	&dev_attr_afu_id.attr,
+> >  	NULL
+> >  };
+> > -ATTRIBUTE_GROUPS(port_afu);
+> >  
+> > -static int port_afu_init(struct platform_device *pdev,
+> > -			 struct dfl_feature *feature)
+> > +static umode_t port_afu_attrs_visible(struct kobject *kobj,
+> > +				      struct attribute *attr, int n)
+> >  {
+> > -	struct resource *res = &pdev->resource[feature->resource_index];
+> > -	int ret;
+> > -
+> > -	dev_dbg(&pdev->dev, "PORT AFU Init.\n");
+> > +	struct device *dev = kobj_to_dev(kobj);
+> >  
+> > -	ret = afu_mmio_region_add(dev_get_platdata(&pdev->dev),
+> > -				  DFL_PORT_REGION_INDEX_AFU, resource_size(res),
+> > -				  res->start, DFL_PORT_REGION_READ |
+> > -				  DFL_PORT_REGION_WRITE | DFL_PORT_REGION_MMAP);
+> > -	if (ret)
+> > -		return ret;
+> > +	/*
+> > +	 * sysfs entries are visible only if related private feature is
+> > +	 * enumerated.
+> > +	 */
+> > +	if (!dfl_get_feature_by_id(dev, PORT_FEATURE_ID_AFU))
+> > +		return 0;
+> >  
+> > -	return device_add_groups(&pdev->dev, port_afu_groups);
+> > +	return attr->mode;
+> >  }
+> >  
+> > -static void port_afu_uinit(struct platform_device *pdev,
+> > -			   struct dfl_feature *feature)
+> > +static const struct attribute_group port_afu_group = {
+> > +	.attrs      = port_afu_attrs,
+> > +	.is_visible = port_afu_attrs_visible,
+> > +};
+> > +
+> > +static int port_afu_init(struct platform_device *pdev,
+> > +			 struct dfl_feature *feature)
+> >  {
+> > -	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
+> Thanks.
+> > +	struct resource *res = &pdev->resource[feature->resource_index];
+> >  
+> > -	device_remove_groups(&pdev->dev, port_afu_groups);
+> > +	return afu_mmio_region_add(dev_get_platdata(&pdev->dev),
+> > +				   DFL_PORT_REGION_INDEX_AFU,
+> > +				   resource_size(res), res->start,
+> > +				   DFL_PORT_REGION_MMAP | DFL_PORT_REGION_READ |
+> > +				   DFL_PORT_REGION_WRITE);
+> >  }
+> >  
+> >  static const struct dfl_feature_id port_afu_id_table[] = {
+> > @@ -396,7 +393,6 @@ static void port_afu_uinit(struct platform_device *pdev,
+> >  
+> >  static const struct dfl_feature_ops port_afu_ops = {
+> >  	.init = port_afu_init,
+> > -	.uinit = port_afu_uinit,
+> >  };
+> >  
+> >  static struct dfl_feature_driver port_feature_drvs[] = {
+> > @@ -748,9 +744,16 @@ static int afu_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > +static const struct attribute_group *afu_dev_groups[] = {
+> > +	&port_hdr_group,
+> > +	&port_afu_group,
+> > +	NULL
+> > +};
+> > +
+> >  static struct platform_driver afu_driver = {
+> >  	.driver	= {
+> > -		.name    = DFL_FPGA_FEATURE_DEV_PORT,
+> > +		.name	    = DFL_FPGA_FEATURE_DEV_PORT,
+> > +		.dev_groups = afu_dev_groups,
+> >  	},
+> >  	.probe   = afu_probe,
+> >  	.remove  = afu_remove,
+> > -- 
+> > 1.8.3.1
+> > 
+> 
+> Thanks,
+> Moritz
