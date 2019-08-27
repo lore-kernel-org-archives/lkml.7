@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66E3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BBEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB532186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689A42186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892366;
-	bh=/KOK3OH48vC2VItYTbJKiYMJWE2BEQfRSMdBrCQG9Tw=;
+	s=default; t=1566892370;
+	bh=K3sUxwuK4U/+xieBaB5p/JucqXzHSKvpmUsQVWuCUMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOYNwD/w0E7LB0VN6KN6SwDtyGqfd3YP9Q/Rg3wtIBLcsEFerq3t2xvs6q0hE2Ze9
-	 KnsVJ7lFfVSx7tUHw8nCpj1LyLzD16Blst7VzSJ46Gt23UM4y21rgG6R6r2h6wAOb8
-	 FyEpLrSRmKSAdEID6T4qBtsYadE/Shtbxc6TQCto=
+	b=jCqu9UCBbqBYtrU2caifJuqyhbhfWx/yD6P81CY+Dc4MJTbfXta6aTHPaEOz7usVk
+	 uLDQ7wYBIemruY9hrkto+wHuWER8R2ffB6MXLBU3+I0McvGHKNePGCNKFLXBZUFJsC
+	 QB0bu8vyNTm1vR3jScUDq1F5yHuBJnxKaQK959ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfH0Hwp (ORCPT
+        id S1729606AbfH0Hwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44092 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729543AbfH0Hwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:41 -0400
+        id S1729543AbfH0Hwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F56A206BA;
-        Tue, 27 Aug 2019 07:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 565EF2173E;
+        Tue, 27 Aug 2019 07:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892360;
-        bh=/KOK3OH48vC2VItYTbJKiYMJWE2BEQfRSMdBrCQG9Tw=;
+        s=default; t=1566892365;
+        bh=K3sUxwuK4U/+xieBaB5p/JucqXzHSKvpmUsQVWuCUMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwIiqZm1WMIjd81MgFnwFV3ZlFg1RKCAuK0rhMm9fIbSFVuSCzhDSw0qxB2g4utko
-         kzPayiEstfmuZX3gf5TeFgFD/Qi0YVgFuwdMoI8s7TShY/hyECFKQYa+bSgjGKjHzD
-         yzDZd699E3+ivPOkz8WvjhCwbnaEjrRqEedFbKHo=
+        b=S2FjAPWZCAY933WJFyaJIz/K1kTE26ZlZ1d2cyZM9MoLWuR6Qolv221EVyMW7DxoJ
+         b91zZDnsT9/JhY+4GkzutnKRLVI8lqkhCCy6HYvANhdl/jXVU0IKYycBlAjuNx5pWV
+         ZRlG2LsXiasrVP9IJeyvV1U+tN8jJ8nmDoEpsDVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krishna Ram Prakash R <krp@gtux.in>,
-        Kees Cook <keescook@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/62] libata: have ata_scsi_rw_xlat() fail invalid passthrough requests
-Date:   Tue, 27 Aug 2019 09:50:33 +0200
-Message-Id: <20190827072702.163588625@linuxfoundation.org>
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 30/62] x86/lib/cpu: Address missing prototypes warning
+Date:   Tue, 27 Aug 2019 09:50:35 +0200
+Message-Id: <20190827072702.504539805@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,80 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d7271501720038381d45fb3dcbe4831228fc8cc ]
+[ Upstream commit 04f5bda84b0712d6f172556a7e8dca9ded5e73b9 ]
 
-For passthrough requests, libata-scsi takes what the user passes in
-as gospel. This can be problematic if the user fills in the CDB
-incorrectly. One example of that is in request sizes. For read/write
-commands, the CDB contains fields describing the transfer length of
-the request. These should match with the SG_IO header fields, but
-libata-scsi currently does no validation of that.
+When building with W=1, warnings about missing prototypes are emitted:
 
-Check that the number of blocks in the CDB for passthrough requests
-matches what was mapped into the request. If the CDB asks for more
-data then the validated SG_IO header fields, error it.
+  CC      arch/x86/lib/cpu.o
+arch/x86/lib/cpu.c:5:14: warning: no previous prototype for 'x86_family' [-Wmissing-prototypes]
+    5 | unsigned int x86_family(unsigned int sig)
+      |              ^~~~~~~~~~
+arch/x86/lib/cpu.c:18:14: warning: no previous prototype for 'x86_model' [-Wmissing-prototypes]
+   18 | unsigned int x86_model(unsigned int sig)
+      |              ^~~~~~~~~
+arch/x86/lib/cpu.c:33:14: warning: no previous prototype for 'x86_stepping' [-Wmissing-prototypes]
+   33 | unsigned int x86_stepping(unsigned int sig)
+      |              ^~~~~~~~~~~~
 
-Reported-by: Krishna Ram Prakash R <krp@gtux.in>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Add the proper include file so the prototypes are there.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/42513.1565234837@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-scsi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/x86/lib/cpu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index bf5777bc04d35..eb0c4ee205258 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -1804,6 +1804,21 @@ nothing_to_do:
- 	return 1;
- }
+diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
+index 2dd1fe13a37b3..19f707992db22 100644
+--- a/arch/x86/lib/cpu.c
++++ b/arch/x86/lib/cpu.c
+@@ -1,5 +1,6 @@
+ #include <linux/types.h>
+ #include <linux/export.h>
++#include <asm/cpu.h>
  
-+static bool ata_check_nblocks(struct scsi_cmnd *scmd, u32 n_blocks)
-+{
-+	struct request *rq = scmd->request;
-+	u32 req_blocks;
-+
-+	if (!blk_rq_is_passthrough(rq))
-+		return true;
-+
-+	req_blocks = blk_rq_bytes(rq) / scmd->device->sector_size;
-+	if (n_blocks > req_blocks)
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  *	ata_scsi_rw_xlat - Translate SCSI r/w command into an ATA one
-  *	@qc: Storage for translated ATA taskfile
-@@ -1848,6 +1863,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
- 		scsi_10_lba_len(cdb, &block, &n_block);
- 		if (cdb[1] & (1 << 3))
- 			tf_flags |= ATA_TFLAG_FUA;
-+		if (!ata_check_nblocks(scmd, n_block))
-+			goto invalid_fld;
- 		break;
- 	case READ_6:
- 	case WRITE_6:
-@@ -1862,6 +1879,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
- 		 */
- 		if (!n_block)
- 			n_block = 256;
-+		if (!ata_check_nblocks(scmd, n_block))
-+			goto invalid_fld;
- 		break;
- 	case READ_16:
- 	case WRITE_16:
-@@ -1872,6 +1891,8 @@ static unsigned int ata_scsi_rw_xlat(struct ata_queued_cmd *qc)
- 		scsi_16_lba_len(cdb, &block, &n_block);
- 		if (cdb[1] & (1 << 3))
- 			tf_flags |= ATA_TFLAG_FUA;
-+		if (!ata_check_nblocks(scmd, n_block))
-+			goto invalid_fld;
- 		break;
- 	default:
- 		DPRINTK("no-byte command\n");
+ unsigned int x86_family(unsigned int sig)
+ {
 -- 
 2.20.1
 
