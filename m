@@ -2,112 +2,141 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D2AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71C7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC47621883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566927596;
-	bh=DiNYoLiv4IcUPSNG97ieyXT9yc+fcZd1YRCGjmkHEIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BuZ4MZVN2PMi000qgiNO5ChpSCz+ClfFkR8MODVvaJxk8K/hTUIOVRGywagW8qE12
-	 afBI3dmrzDbEVlDlmXS5UnPLP0NvEOY3biQTMC9WhFJVGoOF1dvPoWDdy1qCZsghhi
-	 CnOhJCg6HVW+C0RELsY43aqiP2b9GL03oruopMpo=
+	by mail.kernel.org (Postfix) with ESMTP id C57B72184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfH0Rjz (ORCPT
+        id S1730378AbfH0RkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:39:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47852 "EHLO mx1.suse.de"
+        Tue, 27 Aug 2019 13:40:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47920 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727306AbfH0Rjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:39:55 -0400
+        id S1727306AbfH0RkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:40:02 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 078F3AF93;
-        Tue, 27 Aug 2019 17:39:54 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 19:39:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     Thomas Backlund <tmb@mageia.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM
- counters in sync with the hierarchical ones"
-Message-ID: <20190827173950.GJ7538@dhcp22.suse.cz>
-References: <20190817004726.2530670-1-guro@fb.com>
- <20190817063616.GA11747@kroah.com>
- <20190817191518.GB11125@castle>
- <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
- <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
- <20190827141016.GH7538@dhcp22.suse.cz>
- <20190827170618.GC21369@kroah.com>
+        by mx1.suse.de (Postfix) with ESMTP id 490C7AF93;
+        Tue, 27 Aug 2019 17:40:00 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 19:39:55 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
+Message-ID: <20190827173955.GI29752@zn.tnic>
+References: <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
+ <20190825182922.GC20639@zn.tnic>
+ <CAHk-=wjhyg-MndXHZGRD+ZKMK1UrcghyLH32rqQA=YmcxV7Z0Q@mail.gmail.com>
+ <20190825193218.GD20639@zn.tnic>
+ <CAHk-=wiBqmHTFYJWOehB=k3mC7srsx0DWMCYZ7fMOC0T7v1KHA@mail.gmail.com>
+ <20190825194912.GF20639@zn.tnic>
+ <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
+ <20190825201723.GG20639@zn.tnic>
+ <20190826125342.GC28610@zn.tnic>
+ <CAHk-=wj_E58JskechbJyWwpzu5rwKFHEABr4dCZjS+JBvv67Uw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190827170618.GC21369@kroah.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wj_E58JskechbJyWwpzu5rwKFHEABr4dCZjS+JBvv67Uw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 19:06:18, Greg KH wrote:
-> On Tue, Aug 27, 2019 at 04:10:16PM +0200, Michal Hocko wrote:
-> > On Sat 24-08-19 23:23:07, Thomas Backlund wrote:
-> > > Den 24-08-2019 kl. 22:57, skrev Andrew Morton:
-> > > > On Sat, 17 Aug 2019 19:15:23 +0000 Roman Gushchin <guro@fb.com> wrote:
-> > > > 
-> > > > > > > Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
-> > > > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > > > > > Cc: Yafang Shao <laoar.shao@gmail.com>
-> > > > > > > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > > > > > > ---
-> > > > > > >   mm/memcontrol.c | 8 +++-----
-> > > > > > >   1 file changed, 3 insertions(+), 5 deletions(-)
-> > > > > > 
-> > > > > > <formletter>
-> > > > > > 
-> > > > > > This is not the correct way to submit patches for inclusion in the
-> > > > > > stable kernel tree.  Please read:
-> > > > > >      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > > > > > for how to do this properly.
-> > > > > 
-> > > > > Oh, I'm sorry, will read and follow next time. Thanks!
-> > > > 
-> > > > 766a4c19d880 is not present in 5.2 so no -stable backport is needed, yes?
-> > > > 
-> > > 
-> > > Unfortunately it got added in 5.2.7, so backport is needed.
-> > 
-> > yet another example of patch not marked for stable backported to the
-> > stable tree. yay...
+On Tue, Aug 27, 2019 at 09:55:08AM -0700, Linus Torvalds wrote:
+> Side note: I'd suggest
 > 
-> If you do not want autobot to pick up patches for specific
-> subsystems/files, just let us know and we will add them to the
-> blacklist.
+>         if (WARN_ON_ONCE(!changed))
+>                 pr_emerg("RDRAND gives funky smelling output, might
+> consider not using it by booting with \"nordrand\"");
+> 
+> instead.
 
-Done that on several occasions over last year and so. I always get "yep
-we are going to black list" and whoops and we are back there with
-patches going to stable like nothing happened. We've been through this
-discussion so many times I am tired of it and to be honest I simply do
-not care anymore.
+Done, final result with a proper commit message below.
 
-I will keep encouraging people to mark patches for stable but I do not
-give a wee bit about any reports for the stable tree. Nor do I care
-whether something made it in and we should be careful to mark another
-patch for stable as a fixup like this one.
+Do you want it this weekend, after some smoke testing on boxes or should
+I leave it a couple of weeks in tip until the merge window opens, and
+then queue it for 5.4 for longer exposure in linux-next?
 
+Thx.
+
+---
+From: Borislav Petkov <bp@suse.de>
+Date: Sun, 25 Aug 2019 22:50:18 +0200
+Subject: [PATCH] x86/rdrand: Sanity-check RDRAND output
+
+It turned out recently that on certain AMD F15h and F16h machines, due
+to the BIOS dropping the ball after resume, yet again, RDRAND would not
+function anymore:
+
+  c49a0a80137c ("x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h")
+
+Add a silly test to the CPU bringup path, to sanity-check the random
+data RDRAND returns and scream as loudly as possible if that returned
+random data doesn't change.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/CAHk-=wjWPDauemCmLTKbdMYFB0UveMszZpcrwoUkJRRWKrqaTw@mail.gmail.com
+---
+ arch/x86/kernel/cpu/rdrand.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/rdrand.c b/arch/x86/kernel/cpu/rdrand.c
+index 5c900f9527ff..c4be62058dd9 100644
+--- a/arch/x86/kernel/cpu/rdrand.c
++++ b/arch/x86/kernel/cpu/rdrand.c
+@@ -29,7 +29,8 @@ __setup("nordrand", x86_rdrand_setup);
+ #ifdef CONFIG_ARCH_RANDOM
+ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ {
+-	unsigned long tmp;
++	unsigned int changed = 0;
++	unsigned long tmp, prev;
+ 	int i;
+ 
+ 	if (!cpu_has(c, X86_FEATURE_RDRAND))
+@@ -42,5 +43,24 @@ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ 			return;
+ 		}
+ 	}
++
++	/*
++	 * Stupid sanity-check whether RDRAND does *actually* generate
++	 * some at least random-looking data.
++	 */
++	prev = tmp;
++	for (i = 0; i < SANITY_CHECK_LOOPS; i++) {
++		if (rdrand_long(&tmp)) {
++			if (prev != tmp)
++				changed++;
++
++			prev = tmp;
++		}
++	}
++
++	if (WARN_ON_ONCE(!changed))
++		pr_emerg(
++"RDRAND gives funky smelling output, might consider not using it by booting with \"nordrand\"");
++
+ }
+ #endif
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
+-- 
