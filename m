@@ -2,133 +2,85 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D33AC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34976C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC812173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="kugD2vcu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qy9816xr"
+	by mail.kernel.org (Postfix) with ESMTP id 03CFA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566925603;
+	bh=XDl+jytqvrkWytxS69BL/h7ZUxAKzdidu8F7R/CsLzI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bb73xl1DGGOO4EffYGsBjaB/36JkB5FI1lL+vBHSHFHZilgFfq/9H23tdnRe4k1jl
+	 YrUjgpVN29xcJFC9sKt6lw7BU0ypbZ706ErPWwlhA4QfTVaRQxmtIybTlyMJO4qJFd
+	 hb59iZuCtoycdcGs0/Rg/BAvJXJfsIAR9QNIAu1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbfH0RGX (ORCPT
+        id S1730355AbfH0RGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:06:23 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:48331 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727807AbfH0RGX (ORCPT
+        Tue, 27 Aug 2019 13:06:42 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43750 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0RGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:06:23 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0A9BA22200;
-        Tue, 27 Aug 2019 13:06:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 27 Aug 2019 13:06:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=5nkEIGxasqd/7yw+ZF5/COJl223
-        XTMYfYLQZXHCUB7g=; b=kugD2vculIs2kPbSnws+e69oxwOX68Py+emRFuU2Tpi
-        69UIOdyVuNbnsT5rmYJ8lLa8njewkBBoa4+zb4faEeDiV6wwLrjQuqvpWIRwzKhe
-        cbAnXRnMME3laZ2tP3RBbq8fAcBA7Nsvqe5tRP06njHYRTbY3Sd/NBQBnw85E4mH
-        XHZ7+Muukvc2XbLwRhRuJ/glDgBDjnhrVQjqivKu5bhV71W36DiAS+0Fye6lo+CO
-        FW60sA1AsnHL6nv6FZDSBeBa66zyOrmVT8NHbL709TLUx1V2ithesWktuADUwNsp
-        VShLiV50fqlWPZ11QNzjt8nxPCTgV8AB5TSNYvdgMFw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5nkEIG
-        xasqd/7yw+ZF5/COJl223XTMYfYLQZXHCUB7g=; b=qy9816xrwDMcFVLZuL87eS
-        RD3BB8UJ0myM9Ep0ruyj/gYm7dZzX0xX+B7JXFgH9IS68ZzjuCNDs7Dckm0XCROp
-        cFr+nu2E1o2HnnlMrp0fw7tT6qbPYXuJCSEmcePffWqqiaxvjG5NfHxLAHnnJMzy
-        sR3d8CyI/BAp6AvMTVvlKJ8lHq9HM9RtnWBR+6TI+eLXrlkMOA1ipSso0IZ4pqw/
-        ZyX6v+w26CmLoC189kmDkOBCWf0g+ODLTSXROITWi1Iw4aeLxa7mX5vidTTgy9TV
-        L8u4B+a3OlaBZuFoPwE8PG/4iEMdmtgW9ZxJLaG+1cNsk1Lbp56een9+78eVprBQ
-        ==
-X-ME-Sender: <xms:DWNlXRCDJClRk-hEq5Qu42gb-Cc75xqggO8WMZ8SpDP3wmzEXOyLpw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehkedgheejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:DWNlXVilDt5E0R5ztZo5WlU-TEdXYF55JTBu9hApuYUdfjKksMvuCQ>
-    <xmx:DWNlXXbfqQVTr1eTL8zOopPat_2Kmwx1n_sMIMipMO2z58eLIEHSMQ>
-    <xmx:DWNlXek5Uh-JxPhoye92UBH_ibOJyXa99Yf8L6e8fpPLDVT46Bo-9Q>
-    <xmx:DmNlXcmjOdOwq3SzXLeHbGpJrqiJknWcxGrII7O5jpYEUNJxdN0vTA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BD4A68006C;
-        Tue, 27 Aug 2019 13:06:20 -0400 (EDT)
-Date:   Tue, 27 Aug 2019 19:06:18 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Thomas Backlund <tmb@mageia.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM
- counters in sync with the hierarchical ones"
-Message-ID: <20190827170618.GC21369@kroah.com>
-References: <20190817004726.2530670-1-guro@fb.com>
- <20190817063616.GA11747@kroah.com>
- <20190817191518.GB11125@castle>
- <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
- <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
- <20190827141016.GH7538@dhcp22.suse.cz>
+        Tue, 27 Aug 2019 13:06:42 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e12so19362390otp.10;
+        Tue, 27 Aug 2019 10:06:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yb7OsvRoJ3pUmTC3nieNUsZv+jJ8H0pkWBr1pJcDLEI=;
+        b=FbL2f6kM4yQz/YOJdliRSmInIJILVXDzeP0QxTAF/vVbMcSRXRM8k4SM9L3LO9GSOs
+         g1WemaktECumnCgj6SWYf8lhQbE3/TnN74T4Tx9vmJd+1stGCGgzvIP+p0WhdnRSQAMd
+         dn9ModkP85S9L8mBjriGaMPHsi9p0I6ELL6p2E2edyzPLWM9/uejOrKxDUKuHxqDFJZi
+         C9Xn8LwEcSfvo5QT8V3NqL8F/x323MsW2IIpsI74n2HMPcSJPl6R1UK7vr0EttgvZz1x
+         U2bTofH/b77lPXk+Li1I2B3uJTPBaiJLMyejPfEkz4QthDxK8tjFpLmp3VYwPBGd4JwX
+         BKrA==
+X-Gm-Message-State: APjAAAUJp6x7E+mF7bI9BBRzk92jgQx8pGvSjnqYkBlgBf2F4YO7lNoj
+        5GvotJl0fGa26WVIQXaHXQ==
+X-Google-Smtp-Source: APXvYqxN/blzNEpxMuatrg1y1bReIJVGv0mbRaK1UFr6lrK0MNRwnxCRcbDArmesumhflYNdAmNv1g==
+X-Received: by 2002:a9d:5551:: with SMTP id h17mr21256881oti.194.1566925601070;
+        Tue, 27 Aug 2019 10:06:41 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m10sm5525773otq.0.2019.08.27.10.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:06:40 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:06:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, linux@roeck-us.net,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/4] dt-bindings: Add optional label property for ina2xx
+Message-ID: <20190827170639.GA18927@bogus>
+References: <cover.1566310292.git.michal.simek@xilinx.com>
+ <3c56deb8cc1842d2915b203e622be1eb442414de.1566310292.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827141016.GH7538@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <3c56deb8cc1842d2915b203e622be1eb442414de.1566310292.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 04:10:16PM +0200, Michal Hocko wrote:
-> On Sat 24-08-19 23:23:07, Thomas Backlund wrote:
-> > Den 24-08-2019 kl. 22:57, skrev Andrew Morton:
-> > > On Sat, 17 Aug 2019 19:15:23 +0000 Roman Gushchin <guro@fb.com> wrote:
-> > > 
-> > > > > > Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
-> > > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > > > > Cc: Yafang Shao <laoar.shao@gmail.com>
-> > > > > > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > > > > > ---
-> > > > > >   mm/memcontrol.c | 8 +++-----
-> > > > > >   1 file changed, 3 insertions(+), 5 deletions(-)
-> > > > > 
-> > > > > <formletter>
-> > > > > 
-> > > > > This is not the correct way to submit patches for inclusion in the
-> > > > > stable kernel tree.  Please read:
-> > > > >      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > > > > for how to do this properly.
-> > > > 
-> > > > Oh, I'm sorry, will read and follow next time. Thanks!
-> > > 
-> > > 766a4c19d880 is not present in 5.2 so no -stable backport is needed, yes?
-> > > 
-> > 
-> > Unfortunately it got added in 5.2.7, so backport is needed.
+On Tue, 20 Aug 2019 16:11:40 +0200, Michal Simek wrote:
+> Using optional "label" property is adding an option to user to use better
+> name for device identification.
 > 
-> yet another example of patch not marked for stable backported to the
-> stable tree. yay...
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-If you do not want autobot to pick up patches for specific
-subsystems/files, just let us know and we will add them to the
-blacklist.
-
-thanks,
-
-greg k-h
+Reviewed-by: Rob Herring <robh@kernel.org>
