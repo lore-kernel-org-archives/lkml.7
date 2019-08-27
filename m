@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A271FC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F53C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD8E20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAEA206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892627;
-	bh=I2smVJliUFII8oEaC9GY5BqS7YV28ykYbm5vJwOO2Xw=;
+	s=default; t=1566892631;
+	bh=cCFlfElHTk27Od+bknINvEpkLtX3fYgqOlg0j9v4jmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bp7F724JsaQzvef2hTRDNtgSw2TPXVzPol99BcU2uaDuXL92neiKG8EWJRZCimhaR
-	 n7AEVewc0vrFjq49Wv0HFxSNS0w3bn0TvN608devpQ9l17fYkkU2fYL8xTIr3aAKx/
-	 Owt5gUuZ/Z3U3MiMJ47pzcZizmRyAZGWtm8zT/dA=
+	b=QOZHcOXF3ZW1BW8pBjsNf156duoLXXIZDr3ZsWuvbUZdbb2kyoWVP4hbnaBdyQvW8
+	 e+/or4qMLUysI0tEtpGYWvClB3VOWq64X2F4vZ9GpLGDxDpfLHcE4ydwkvwnZTbxlT
+	 23lSonHB3/41DnuzO8PY8HIdOeZJor3VrKXrGLIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfH0H5G (ORCPT
+        id S1730758AbfH0H5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49196 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730731AbfH0H5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:57:02 -0400
+        id S1730745AbfH0H5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:57:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B989206BA;
-        Tue, 27 Aug 2019 07:57:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E17F4206BA;
+        Tue, 27 Aug 2019 07:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892621;
-        bh=I2smVJliUFII8oEaC9GY5BqS7YV28ykYbm5vJwOO2Xw=;
+        s=default; t=1566892624;
+        bh=cCFlfElHTk27Od+bknINvEpkLtX3fYgqOlg0j9v4jmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mbEFoNq1qt0oA0gXXWELfWdvKIYODchcB3BXd4q/9b+g+dlCZXWRxTHSCnDt3mRoC
-         8kxayvOrT9mrprEJfGIurGn4EeH9mdnTT6Zl31/u8Jvh5JB9+k+3MTO4ZgddWiZaHX
-         gTVep+8qQ+GenoYqBKWlpJ6//mlhdkFaV+WmAOU8=
+        b=aAiZcen9sXqNHSD0wro81Cd8l0wIDaKWWP9110h4xfkeA8za1Jw4/qlcwGR1kGmxW
+         HCvHalKq9uwZARx9SAwxhdwha+tTh52+jbQpPcO6w7AWIxNpaOYrnO5OnBHvIDrnag
+         wXhKELCG57SH/JgLin1Drf3+E71gj4RCoN2IToJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        stable@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/98] st_nci_hci_connectivity_event_received: null check the allocation
-Date:   Tue, 27 Aug 2019 09:49:55 +0200
-Message-Id: <20190827072719.170733598@linuxfoundation.org>
+Subject: [PATCH 4.19 07/98] bonding: Force slave speed check after link state recovery for 802.3ad
+Date:   Tue, 27 Aug 2019 09:49:46 +0200
+Message-Id: <20190827072718.560389472@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,30 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
+[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
 
-devm_kzalloc may fail and return NULL. So the null check is needed.
+The following scenario was encountered during testing of logical
+partition mobility on pseries partitions with bonded ibmvnic
+adapters in LACP mode.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+1. Driver receives a signal that the device has been
+   swapped, and it needs to reset to initialize the new
+   device.
+
+2. Driver reports loss of carrier and begins initialization.
+
+3. Bonding driver receives NETDEV_CHANGE notifier and checks
+   the slave's current speed and duplex settings. Because these
+   are unknown at the time, the bond sets its link state to
+   BOND_LINK_FAIL and handles the speed update, clearing
+   AD_PORT_LACP_ENABLE.
+
+4. Driver finishes recovery and reports that the carrier is on.
+
+5. Bond receives a new notification and checks the speed again.
+   The speeds are valid but miimon has not altered the link
+   state yet.  AD_PORT_LACP_ENABLE remains off.
+
+Because the slave's link state is still BOND_LINK_FAIL,
+no further port checks are made when it recovers. Though
+the slave devices are operational and have valid speed
+and duplex settings, the bond will not send LACPDU's. The
+simplest fix I can see is to force another speed check
+in bond_miimon_commit. This way the bond will update
+AD_PORT_LACP_ENABLE if needed when transitioning from
+BOND_LINK_FAIL to BOND_LINK_UP.
+
+CC: Jarod Wilson <jarod@redhat.com>
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st-nci/se.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/bonding/bond_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index f55d082ace715..5d6e7e931bc6c 100644
---- a/drivers/nfc/st-nci/se.c
-+++ b/drivers/nfc/st-nci/se.c
-@@ -344,6 +344,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 8f14f85b8e95e..0d2392c4b625a 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2190,6 +2190,15 @@ static void bond_miimon_commit(struct bonding *bond)
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		switch (slave->new_link) {
+ 		case BOND_LINK_NOCHANGE:
++			/* For 802.3ad mode, check current slave speed and
++			 * duplex again in case its port was disabled after
++			 * invalid speed/duplex reporting but recovered before
++			 * link monitoring could make a decision on the actual
++			 * link status
++			 */
++			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
++			    slave->link == BOND_LINK_UP)
++				bond_3ad_adapter_speed_duplex_changed(slave);
+ 			continue;
  
- 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 					    skb->len - 2, GFP_KERNEL);
-+		if (!transaction)
-+			return -ENOMEM;
- 
- 		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
+ 		case BOND_LINK_UP:
 -- 
 2.20.1
 
