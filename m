@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94535C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B00C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60654206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FF5206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893732;
-	bh=HDYpMpXygh6DzBAFUso9mRhj6FU64mGHz38ZIkfZbwo=;
+	s=default; t=1566893741;
+	bh=x8G/+spOK1KkqunKclxM5WEhUj4bsI1BAHWtozBZiWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JSH0677YOdRPctZVHEFKxuMiQcdA9DF5QFkgV6BRGzD97W+5HACd4tiRarieI57Ek
-	 6mc3QYHp/kxDwP10gjsJgWIDY+AZjQcAiv02sH46Im285JBTFzONNbNS0OCg+UK2e4
-	 kFiYjto7IA9H7zS2bWLdNmG0pjAvIYyXOtNgcvy0=
+	b=EGqcx9EnXuui4c2ZD8bXGr5eqc9E4fj4MPRdJ72eNmaZ7/dPZ/sF/GzJz3JDh3oZI
+	 9VA0gfP9Lm1Sckyy2yl9T7hAOok62a6zPz/u409CIqCKA+N++ujvYEFWPQ0qE6gfqS
+	 QYyUZLvCBao1yhmKqVuTuIwXFialTiwW0gJdjy6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbfH0HzT (ORCPT
+        id S1731133AbfH0IPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:55:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729387AbfH0HzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:16 -0400
+        id S1729722AbfH0HzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFF6020828;
-        Tue, 27 Aug 2019 07:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E47A921872;
+        Tue, 27 Aug 2019 07:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892515;
-        bh=HDYpMpXygh6DzBAFUso9mRhj6FU64mGHz38ZIkfZbwo=;
+        s=default; t=1566892506;
+        bh=x8G/+spOK1KkqunKclxM5WEhUj4bsI1BAHWtozBZiWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFVZO8zAh62K1DzRehzv1Gh0OtKt3i+QsIN1viyxMpThQ7BLAxi5SIs3k7GbQr2Yu
-         tFyMF6qmZ4Bq7DSTYKyKZN3xojckcg/veOGwS5l5bk4cgq4Punq7gKLPK/Kpx4ov9H
-         bMw3VIbjvDQc1Sy5wNX8zGLMyCVggMZX/I2NTtgA=
+        b=WjRuVJNviul4QaSjqvfOPG5QAKg/NPBAsjzxvVzkaEo/I1xu1PUorGkPODq+0LoIP
+         WF++q/hXi60/+NWLsy0D4vLJ/rgc7XJkuvWzY1WvDB8q+9PZWvLIacd0Ww63G9gsY6
+         QQHy86cVRnTmJHRGyY3l+24ZJmCpyp5C+qHboQJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/98] qed: RDMA - Fix the hw_ver returned in device attributes
-Date:   Tue, 27 Aug 2019 09:49:59 +0200
-Message-Id: <20190827072719.349691597@linuxfoundation.org>
+Subject: [PATCH 4.19 17/98] ASoC: rockchip: Fix mono capture
+Date:   Tue, 27 Aug 2019 09:49:56 +0200
+Message-Id: <20190827072719.211225533@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,30 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81af04b432fdfabcdbd2c06be2ee647e3ca41a22 ]
+[ Upstream commit 789e162a6255325325bd321ab0cd51dc7e285054 ]
 
-The hw_ver field was initialized to zero. Return the chip revision.
-This is relevant for rdma driver.
+This reverts commit db51707b9c9aeedd310ebce60f15d5bb006567e0.
+Revert "ASoC: rockchip: i2s: Support mono capture"
 
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Previous discussion in
+
+https://patchwork.kernel.org/patch/10147153/
+
+explains the issue of the patch.
+While device is configured as 1-ch, hardware is still
+generating a 2-ch stream.
+When user space reads the data and assumes it is a 1-ch stream,
+the rate will be slower by 2x.
+
+Revert the change so 1-ch is not supported.
+User space can selectively take one channel data out of two channel
+if 1-ch is preferred.
+Currently, both channels record identical data.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20190726044202.26866-1-cychiang@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_rdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/rockchip/rockchip_i2s.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-index 13802b825d65a..909422d939033 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-@@ -442,7 +442,7 @@ static void qed_rdma_init_devinfo(struct qed_hwfn *p_hwfn,
- 	/* Vendor specific information */
- 	dev->vendor_id = cdev->vendor_id;
- 	dev->vendor_part_id = cdev->device_id;
--	dev->hw_ver = 0;
-+	dev->hw_ver = cdev->chip_rev;
- 	dev->fw_ver = (FW_MAJOR_VERSION << 24) | (FW_MINOR_VERSION << 16) |
- 		      (FW_REVISION_VERSION << 8) | (FW_ENGINEERING_VERSION);
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 60d43d53a8f5e..11399f81c92f9 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -329,7 +329,6 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		val |= I2S_CHN_4;
+ 		break;
+ 	case 2:
+-	case 1:
+ 		val |= I2S_CHN_2;
+ 		break;
+ 	default:
+@@ -462,7 +461,7 @@ static struct snd_soc_dai_driver rockchip_i2s_dai = {
+ 	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+-		.channels_min = 1,
++		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+ 		.formats = (SNDRV_PCM_FMTBIT_S8 |
+@@ -662,7 +661,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (!of_property_read_u32(node, "rockchip,capture-channels", &val)) {
+-		if (val >= 1 && val <= 8)
++		if (val >= 2 && val <= 8)
+ 			soc_dai->capture.channels_max = val;
+ 	}
  
 -- 
 2.20.1
