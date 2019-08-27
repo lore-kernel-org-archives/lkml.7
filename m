@@ -2,216 +2,143 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9F3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C93121881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UOf5q/JT"
+	by mail.kernel.org (Postfix) with ESMTP id 93DA021881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfH0QY2 (ORCPT
+        id S1730127AbfH0QYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:24:28 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15202 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfH0QY2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:24:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d65593b0000>; Tue, 27 Aug 2019 09:24:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 27 Aug 2019 09:24:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 27 Aug 2019 09:24:26 -0700
-Received: from [10.25.73.29] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
- 2019 16:24:20 +0000
-Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190826073143.4582-7-vidyas@nvidia.com>
- <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
-Date:   Tue, 27 Aug 2019 21:54:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 12:24:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41836 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbfH0QYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:24:37 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 320803082126;
+        Tue, 27 Aug 2019 16:24:36 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A2295DC18;
+        Tue, 27 Aug 2019 16:24:35 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 10:24:35 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Message-ID: <20190827102435.7bd30ef3@x1.home>
+In-Reply-To: <AM0PR05MB486671BB1CD562D070F0C0F2D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-3-parav@mellanox.com>
+        <20190827122928.752e763b.cohuck@redhat.com>
+        <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190827132946.0b92d259.cohuck@redhat.com>
+        <20190827092855.29702347@x1.home>
+        <AM0PR05MB486671BB1CD562D070F0C0F2D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566923067; bh=2HdnrU28EZ0UoDqd1XHS7RWTxi3+8RJrX0DXDhdTXkQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=UOf5q/JTyE7cqbJ2RVqu81ZL65HIP/RvqM8b1wP0H1VXjJebSJDsJvXXdA3VfdA1x
-         Jbr3ddj2il6lYfOFxuCYGJNMp6xxACUwmdB6GqACH8qZExBnD7xHVadBilMH29V0te
-         uJdU/li30TESP1YmrqDsAKct4j8wbJuXi33QGvUzLVIz5/JxV1ctWzJOQ5fYnBhLJa
-         i7DOxUfJkTiiqPq2+SQLT+4jzJXo0VEleuCsTH9fpqvQZ8l2EBajamhY3cFBEHMngJ
-         L7QSsuDVebiATbOuUuGU/Ze28NuAV2p2oj/cLWB2uG80hgKBVfkQxVk5Z/q6wmv9QI
-         xXMNSMo/Z0bqA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 27 Aug 2019 16:24:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/2019 9:17 PM, Andrew Murray wrote:
-> On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
->> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
->> slot from the respective controller's device-tree node and enable those
->> supplies. This is required in platforms like p2972-0000 where the supplies
->> to x16 slot owned by C5 controller need to be enabled before attempting to
->> enumerate the devices.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
->>   1 file changed, 65 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index 8a27b25893c9..97de2151a738 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
->>   	u32 aspm_l0s_enter_lat;
->>   
->>   	struct regulator *pex_ctl_supply;
->> +	struct regulator *slot_ctl_3v3;
->> +	struct regulator *slot_ctl_12v;
->>   
->>   	unsigned int phy_count;
->>   	struct phy **phys;
->> @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
->>   	}
->>   }
->>   
->> +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
->> +{
->> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
->> +	if (IS_ERR(pcie->slot_ctl_3v3))
->> +		pcie->slot_ctl_3v3 = NULL;
->> +
->> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
->> +	if (IS_ERR(pcie->slot_ctl_12v))
->> +		pcie->slot_ctl_12v = NULL;
-> 
-> Do these need to take into consideration -EPROBE_DEFER?
-Since these are devm_* APIs, isn't it taken care of automatically?
+On Tue, 27 Aug 2019 16:13:27 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
->> +}
->> +
->> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
->> +{
->> +	int ret;
->> +
->> +	if (pcie->slot_ctl_3v3) {
->> +		ret = regulator_enable(pcie->slot_ctl_3v3);
->> +		if (ret < 0) {
->> +			dev_err(pcie->dev,
->> +				"Failed to enable 3V3 slot supply: %d\n", ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (pcie->slot_ctl_12v) {
->> +		ret = regulator_enable(pcie->slot_ctl_12v);
->> +		if (ret < 0) {
->> +			dev_err(pcie->dev,
->> +				"Failed to enable 12V slot supply: %d\n", ret);
->> +			if (pcie->slot_ctl_3v3)
->> +				regulator_disable(pcie->slot_ctl_3v3);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	/*
->> +	 * According to PCI Express Card Electromechanical Specification
->> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
->> +	 * should be a minimum of 100ms.
->> +	 */
->> +	msleep(100);
->> +
->> +	return 0;
->> +}
->> +
->> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
->> +{
->> +	if (pcie->slot_ctl_12v)
->> +		regulator_disable(pcie->slot_ctl_12v);
->> +	if (pcie->slot_ctl_3v3)
->> +		regulator_disable(pcie->slot_ctl_3v3);
->> +}
->> +
->>   static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->>   					bool en_hw_hot_rst)
->>   {
->> @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->>   		return ret;
->>   	}
->>   
->> +	ret = tegra_pcie_enable_slot_regulators(pcie);
->> +	if (ret < 0)
->> +		goto fail_slot_reg_en;
->> +
->>   	ret = regulator_enable(pcie->pex_ctl_supply);
->>   	if (ret < 0) {
->>   		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
->> @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->>   fail_core_clk:
->>   	regulator_disable(pcie->pex_ctl_supply);
->>   fail_reg_en:
->> +	tegra_pcie_disable_slot_regulators(pcie);
->> +fail_slot_reg_en:
->>   	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->>   
->>   	return ret;
->> @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
->>   		return ret;
->>   	}
->>   
->> +	tegra_pcie_disable_slot_regulators(pcie);
->> +
->>   	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->>   	if (ret) {
->>   		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
->> @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->>   		return ret;
->>   	}
->>   
->> +	tegra_pcie_get_slot_regulators(pcie);
->> +
->>   	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
->>   	if (IS_ERR(pcie->pex_ctl_supply)) {
->>   		dev_err(dev, "Failed to get regulator: %ld\n",
->> -- 
->> 2.17.1
->>
+> > -----Original Message-----
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Tuesday, August 27, 2019 8:59 PM
+> > To: Cornelia Huck <cohuck@redhat.com>
+> > Cc: Parav Pandit <parav@mellanox.com>; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+> > 
+> > On Tue, 27 Aug 2019 13:29:46 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
+> >   
+> > > On Tue, 27 Aug 2019 11:08:59 +0000
+> > > Parav Pandit <parav@mellanox.com> wrote:
+> > >  
+> > > > > -----Original Message-----
+> > > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > > Sent: Tuesday, August 27, 2019 3:59 PM
+> > > > > To: Parav Pandit <parav@mellanox.com>
+> > > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
+> > > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
+> > > > > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all
+> > > > > mdevs
+> > > > >
+> > > > > On Mon, 26 Aug 2019 15:41:17 -0500 Parav Pandit
+> > > > > <parav@mellanox.com> wrote:
+> > > > >  
+> > > > > > Mdev alias should be unique among all the mdevs, so that when
+> > > > > > such alias is used by the mdev users to derive other objects,
+> > > > > > there is no collision in a given system.
+> > > > > >
+> > > > > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > > > > ---
+> > > > > >  drivers/vfio/mdev/mdev_core.c | 5 +++++
+> > > > > >  1 file changed, 5 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/vfio/mdev/mdev_core.c
+> > > > > > b/drivers/vfio/mdev/mdev_core.c index e825ff38b037..6eb37f0c6369
+> > > > > > 100644
+> > > > > > --- a/drivers/vfio/mdev/mdev_core.c
+> > > > > > +++ b/drivers/vfio/mdev/mdev_core.c
+> > > > > > @@ -375,6 +375,11 @@ int mdev_device_create(struct kobject *kobj,  
+> > struct  
+> > > > > device *dev,  
+> > > > > >  			ret = -EEXIST;
+> > > > > >  			goto mdev_fail;
+> > > > > >  		}
+> > > > > > +		if (tmp->alias && strcmp(tmp->alias, alias) == 0) {  
+> > > > >
+> > > > > Any way we can relay to the caller that the uuid was fine, but
+> > > > > that we had a hash collision? Duplicate uuids are much more obvious than  
+> > a collision here.  
+> > > > >  
+> > > > How do you want to relay this rare event?
+> > > > Netlink interface has way to return the error message back, but sysfs is  
+> > limited due to its error code based interface.  
+> > >
+> > > I don't know, that's why I asked :)
+> > >
+> > > The problem is that "uuid already used" and "hash collision" are
+> > > indistinguishable. While "use a different uuid" will probably work in
+> > > both cases, "increase alias length" might be a good alternative in
+> > > some cases.
+> > >
+> > > But if there is no good way to relay the problem, we can live with it.  
+> > 
+> > It's a rare event, maybe just dev_dbg(dev, "Hash collision creating alias \"%s\"
+> > for mdev device %pUl\n",...
+> >   
+> Ok.
+> dev_dbg_once() to avoid message flood.
 
+I'd suggest a rate-limit rather than a once.  The fact that the kernel
+may have experienced a collision at some time in the past does not help
+someone debug why they can't create a device now.  The only way we're
+going to get a flood is if a user sufficiently privileged to create
+mdev devices stumbles onto a collision and continues to repeat the same
+operation.  That falls into shoot-yourself-in-the-foot behavior imo.
+Thanks,
+
+Alex
