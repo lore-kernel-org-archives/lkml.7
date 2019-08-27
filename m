@@ -2,80 +2,77 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413D0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B335C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5AA2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUuYMNh/"
+	by mail.kernel.org (Postfix) with ESMTP id 20D932173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566864901;
+	bh=tSwVld8MM/cOgBLeA2MiA5uHgn0imrIC4cq8obSMK/E=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LNsX/BFdMiVKEoDK7CIKGL5itMKu7uSy10zoJciKM0q2dQYEvJeOMHdx8C2HOAPkG
+	 D1KgtTjCi9tl7Hae1ILhnmUn8xvq1X/aSxN353P9JUKNJjeOtcfDxvFFLSaZbqkoCH
+	 c2yzOHBD7sZemU6vZOf289/YIC5LUs2bU5GhX8SQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfH0AOb (ORCPT
+        id S1727850AbfH0APA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:14:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33887 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfH0AOb (ORCPT
+        Mon, 26 Aug 2019 20:15:00 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46366 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfH0AO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:14:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so12904524pfp.1;
-        Mon, 26 Aug 2019 17:14:30 -0700 (PDT)
+        Mon, 26 Aug 2019 20:14:59 -0400
+Received: by mail-io1-f68.google.com with SMTP id x4so41812089iog.13
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nJ8C78NoAqVqSum3LuoxAwskIWISqkgXdmo5sYpNHfk=;
-        b=GUuYMNh/Zq9M6fu3kKwUR7xomor6vHtCuypnWT895hvqEeOCsaQgqtTUlpLfLT1S+o
-         NkpHhFzliH5Lcd84Iu2vU+E93qYlREQSqB5+xntHrnTGwYhb6XslmoRGqDumw2vz8Cor
-         gEEwJ/AjDkn2qUKos9LEGcfdNXCSjKxjhehiLRsTJy7tM9CAV4p+NEyo6yGR1FF55cjV
-         OE/DMCIAu3bKaQj0ARtBGTikFBgjgIdsC53XHtFkTBr4qbZXUy/w/E9S7pqRNYzi8Wt1
-         bPf/p5vnV6zh1RU0pVL4/yFQGTGekQqeYVcjLyQIac4bJBvIcasZ8ywgiG6Fd4tStHiT
-         rLGw==
+        bh=+QMCinwwBEDqKLCmDU4DlJ6py1ELvU6M8qGgkaHN8sw=;
+        b=aCPbHhxoXL4tzq4ideSgYvCJLLRssa4FaK69iATvTb/eoxm/kuRpEGKmnnD6Odc/Mr
+         LGxjHF2v//lCnJOXFnva7cWO9WtN68CNjU44RYnJAp8Ui+VpTtLqUKrpPix2zZCqoffq
+         FcllTBQIKVbx4qt2+lEAud/Xw61AEt6rk9L5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nJ8C78NoAqVqSum3LuoxAwskIWISqkgXdmo5sYpNHfk=;
-        b=W9eny5tw32Z0PZ81yhfvP2wH3e9qF9ohix3GMBUlz8uEj8qPa6ib/OeyZp9k7CgPnO
-         UbeXji+QHXxKQpFaa4eMxebIWDovXGuvCcxz4XbhAlyNVGCtb4lomTWt/LxKXR1B1rr5
-         B7tfniVVkXK+IYyPZG4JAINAXLdsCbCJ8eu50+M94NGHDvQ7FuYp7WjVf7ANTfq7vou7
-         UFMvF4FNEsvDBjZN6tITzK9uKfnw5TJh+DKOEkjYCh6lCUKlZJWDOGIyMcNL2mhxEBDv
-         6APyRxd9Fb11k8VlzJR6a53B5kVja4jIgPjmf/KSvCRaZZbYXWYZARwzZBNn1UQN7C+E
-         yf4Q==
-X-Gm-Message-State: APjAAAUIQ2EPVenO7cklpyarX0QGShauyyWThp09eMzT9UGrOQthaV3j
-        FoADKM6FL2M9lAklKYXbD4tvYSPv
-X-Google-Smtp-Source: APXvYqxvhXCKutjPnT5nWH3BMk7cObsbeQwIEFqub1CAyoV7XPoqs0YnakBp1Z0eeWOxE2cRwsTUlw==
-X-Received: by 2002:a63:460d:: with SMTP id t13mr18245482pga.205.1566864869792;
-        Mon, 26 Aug 2019 17:14:29 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id j11sm4723844pfa.113.2019.08.26.17.14.28
+        bh=+QMCinwwBEDqKLCmDU4DlJ6py1ELvU6M8qGgkaHN8sw=;
+        b=mMYe77CH27r+Y1tlqqHkVR3QaPcoGlKiI75JwaP/Yi87ePO27dtuSNkyCu18ll7F1s
+         T3He+xI2CMtTQl96uWDqrU0AoxajZt6e07ZnduL6D+8HOll/e19+lbOAh3sW35h9IiFn
+         wODihnie4Q0zRTQ/BZuqef7F67jOeIEHCb2BM+/0K3BXKHIi1MdWB1Nv89yOPOXYP4V0
+         PVZAJbYbCuFkTfPN1JneLD3hz5AcLzBfPxhqzDUm2jU4/GVTNykTnmtR6UpX+5YtTB47
+         2GTDNpDvSipVGareuyeOg0FQ7/9LeAXx/kCpo5ROMPDudv8p1c1TFw7y5aBMqW/mrzvI
+         AKAg==
+X-Gm-Message-State: APjAAAXAMD6nIiFmnDJ1BYkgIyZDSz6VUaGzRdYIcwUzm0qVHpqXjWrs
+        F6bb2xYksBziHU9f1ultfiVzOA==
+X-Google-Smtp-Source: APXvYqywJ/qpqys4wO4lLVKl1zfBmSdBUgW1qHv0/O6Bbnm8djpRCLarxiWGQOeEn1FSGc8aQvL6lQ==
+X-Received: by 2002:a6b:3784:: with SMTP id e126mr23249715ioa.8.1566864898909;
+        Mon, 26 Aug 2019 17:14:58 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id w5sm16657506iom.33.2019.08.26.17.14.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Aug 2019 17:14:29 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] watchdog/aspeed: add support for dual boot
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexander Amelkin <a.amelkin@yadro.com>,
-        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
- <20190826104636.19324-4-i.mikhaylov@yadro.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
-Date:   Mon, 26 Aug 2019 17:14:27 -0700
+        Mon, 26 Aug 2019 17:14:58 -0700 (PDT)
+Subject: Re: [PATCH] doc: kselftest: update for clarity on running kselftests
+ in CI rings
+To:     shuah@kernel.org, corbet@lwn.net
+Cc:     linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.rue@linaro.org,
+        anders.roxell@linaro.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20190827000753.25081-1-skhan@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <473cff26-9c01-fb72-12c5-e25535a3c129@linuxfoundation.org>
+Date:   Mon, 26 Aug 2019 18:14:57 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190826104636.19324-4-i.mikhaylov@yadro.com>
+In-Reply-To: <20190827000753.25081-1-skhan@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,125 +81,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 3:46 AM, Ivan Mikhaylov wrote:
-> Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
-> to clear out boot code source and re-enable access to the primary SPI flash
-> chip while booted via wdt2 from the alternate chip.
+On 8/26/19 6:07 PM, Shuah Khan wrote:
+> Update to add clarity and recommendations on running newer kselftests
+> on older kernels vs. matching the kernel and kselftest revisions.
 > 
-> AST2400 datasheet says:
-> "In the 2nd flash booting mode, all the address mapping to CS0# would be
-> re-directed to CS1#. And CS0# is not accessable under this mode. To access
-> CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
-> register WDT30.bit[1]."
+> The recommendation is "Match kernel revision and kselftest."
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 > ---
->   drivers/watchdog/aspeed_wdt.c | 62 ++++++++++++++++++++++++++++++++++-
->   1 file changed, 61 insertions(+), 1 deletion(-)
+>   Documentation/dev-tools/kselftest.rst | 25 +++++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
 > 
-> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-> index cc71861e033a..bbc42847c0e3 100644
-> --- a/drivers/watchdog/aspeed_wdt.c
-> +++ b/drivers/watchdog/aspeed_wdt.c
-> @@ -53,6 +53,8 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
->   #define   WDT_CTRL_ENABLE		BIT(0)
->   #define WDT_TIMEOUT_STATUS	0x10
->   #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
-> +#define WDT_CLEAR_TIMEOUT_STATUS	0x14
-> +#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
+> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+> index 25604904fa6e..e55d9229fa8c 100644
+> --- a/Documentation/dev-tools/kselftest.rst
+> +++ b/Documentation/dev-tools/kselftest.rst
+> @@ -12,6 +12,31 @@ write new tests using the framework on Kselftest wiki:
 >   
->   /*
->    * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-> @@ -165,6 +167,57 @@ static int aspeed_wdt_restart(struct watchdog_device *wdd,
->   	return 0;
->   }
+>   https://kselftest.wiki.kernel.org/
 >   
-> +/* access_cs0 shows if cs0 is accessible, hence the reverted bit */
-> +static ssize_t access_cs0_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
+> +Recommendations on running kselftests in Continuous Integration test rings
+> +=========================================================================
 
-This and other multi-line declarations do not appear to be aligned
-with '('.
+Sorry. I missed the "WARNING: Title underline too short."
 
-> +{
-> +	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-> +	uint32_t status = readl(wdt->base + WDT_TIMEOUT_STATUS);
-> +
-> +	return sprintf(buf, "%u\n",
-> +			!(status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY));
-> +}
-> +
-> +static ssize_t access_cs0_store(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t size)
-> +{
-> +	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-> +	unsigned long val;
-> +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	if (val)
-> +		writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
-> +			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
-> +
-> +	return size;
-> +}
-> +
-> +/*
-> + * At alternate side the 'access_cs0' sysfs node provides:
-> + *   ast2400: a way to get access to the primary SPI flash chip at CS0
-> + *            after booting from the alternate chip at CS1.
-> + *   ast2500: a way to restore the normal address mapping from
-> + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
-> + *
-> + * Clearing the boot code selection and timeout counter also resets to the
-> + * initial state the chip select line mapping. When the SoC is in normal
-> + * mapping state (i.e. booted from CS0), clearing those bits does nothing for
-> + * both versions of the SoC. For alternate boot mode (booted from CS1 due to
-> + * wdt2 expiration) the behavior differs as described above.
-> + *
-The above needs to be in the sysfs attribute documentation as well.
+Will send v2 with this corrected.
 
-> + * This option can be used with wdt2 (watchdog1) only.
-
-This implies a specific watchdog numbering which is not guaranteed.
-Someone might implement a system with some external watchdog.
-
-> + */
-> +static DEVICE_ATTR_RW(access_cs0);
-> +
-> +static struct attribute *bswitch_attrs[] = {
-> +	&dev_attr_access_cs0.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(bswitch);
-> +
->   static const struct watchdog_ops aspeed_wdt_ops = {
->   	.start		= aspeed_wdt_start,
->   	.stop		= aspeed_wdt_stop,
-> @@ -306,9 +359,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
->   	}
->   
->   	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
-> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
-> +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
->   		wdt->wdd.bootstatus = WDIOF_CARDRESET;
->   
-> +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
-> +			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
-> +			wdt->wdd.groups = bswitch_groups;
-
-Kind of odd that the attribute only exists if the system booted from the
-second flash, but if that is what you want I won't object. Just make sure
-that this is explained properly.
-
-> +	}
-> +
-> +	dev_set_drvdata(dev, wdt);
-> +
->   	return devm_watchdog_register_device(dev, &wdt->wdd);
->   }
->   
-> 
-
+thanks,
+-- Shuah
