@@ -2,116 +2,114 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152DDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB47C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF498214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D458D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QWOq4bQU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLln4fpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbfH0PJS (ORCPT
+        id S1730399AbfH0PJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:09:18 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58782 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728506AbfH0PI5 (ORCPT
+        Tue, 27 Aug 2019 11:09:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38764 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728506AbfH0PJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:08:57 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RF27Pu026516;
-        Tue, 27 Aug 2019 17:08:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=MKlaahYh2GyrYNC5OSGbdIImAgdDz5WxBqftSeUPh6k=;
- b=QWOq4bQUMB5zBU1+CzaYPmnKeVEpx+m6YtBdbQ+JTjVJtfKZLxfXYcZWWIP61Egv4hny
- TQjT0+ak6jI32S4OD2hd9Fx21WbUZ5GJefv94gDkc9H56I2/u67lqOsaVzBEUakwCJ5V
- bx2mpGWek4rQUDqWotQ3lzuo8HK77C6gV4IdoAG6WJfXt2BEmrC66G2VWhGUuyd8i2aQ
- F2Lb3QodX3RpwOhBJBvAvq9DDUaKQ+nQuROR4RwVz0k2Wx5Ei8ZbEiXEgfZtBbmF9pq/
- 6LHyUvVMyhQ6nNIsYGdgdABWjz06OLYUSbffJZLdCyfde85BicwlxQ3gA+5nAub496Py CA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ujv4kt4ay-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 27 Aug 2019 17:08:29 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 20AD154;
-        Tue, 27 Aug 2019 15:08:22 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CCE1B2B76DF;
-        Tue, 27 Aug 2019 17:08:21 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
- 2019 17:08:21 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Tue, 27 Aug 2019 17:08:21 +0200
-From:   Gerald BAEZA <gerald.baeza@st.com>
-To:     "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-CC:     Gerald BAEZA <gerald.baeza@st.com>
-Subject: [PATCH v3 4/5] ARM: configs: enable STM32_DDR_PMU
-Thread-Topic: [PATCH v3 4/5] ARM: configs: enable STM32_DDR_PMU
-Thread-Index: AQHVXOlD6Kq1uoloYU2GrfhWvkfaXA==
-Date:   Tue, 27 Aug 2019 15:08:21 +0000
-Message-ID: <1566918464-23927-5-git-send-email-gerald.baeza@st.com>
-References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
-In-Reply-To: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 11:09:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so3433924wmm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Qq0g1XL+PbeMFceNKBAmH7iRX3/JfNtU8Nq/VEW2ks=;
+        b=PLln4fpd0YhSY8pSpNl44r1UmZv2vqlKnFyViLPoAd1mnWo4OIjHPPURJoj2rKCdBh
+         fAWeNLWPIxIhMOiIMJA6yOibIUt8iBghTSzVn1Xefjz3tcRqiUd5CTSWEz/u9PL1xm5u
+         7HDylFoozw9wrhl2n9guPuDxSp92vS3sMXAsnezNFd4nMGan3Bc5Yidb4F7FGDDEeSFB
+         o0AUevQMHGDtP4gvfVqumaCHgjwoZfzHIC1N2/Hzuh64J7al1OCBZjvDhQcnUagqsB2l
+         aWple+A7KtLS+xtjGCUs4yQL7oT+MnvB3fM3mgonL8xNwMUO/UsaPp34PTshPZ3P2F3O
+         Taaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Qq0g1XL+PbeMFceNKBAmH7iRX3/JfNtU8Nq/VEW2ks=;
+        b=sLnXIzRWiDb7SbLa25GIcjV0sH6CqgKsjwpBoIOIcXfQ2jG7dC3R71chlbuWbMhShe
+         UOs8V4wzxwemL90k9FF1La1nEZXlDDd4eSAK7BEXN0kvKSLmgz/1hPbYgQDft9ssSxZM
+         0ocMHe42w9KOErPgck/c7WDk7EcwENuxVsLhVhtWzvkbK8gusYdDHU23GMf+2JuEBull
+         zO8Uo7U+OrF+S1XGBMSm1eMHI6yGrGO2uUS9igFWfYxzw75eXhdCtRsCn22npXslSTTY
+         mDBN4QIEnC6yS469M3y/3yDkodySYMzM8DVTet/e6P5Qk9rl0efVeB6N9ywZn5SgCTyQ
+         0QYA==
+X-Gm-Message-State: APjAAAWsTJN+Bwd6bQ2v1scvwyRpbYFub8D0YHDkcdumFh+8LDby9/SX
+        PBfSQ+0GiHYk4jI0q3e5yxfNwU2sHjpC+6XYoDc=
+X-Google-Smtp-Source: APXvYqwXAxK4qE/kfjKMd/jlTPp+yDppDz4AMPQr+Hz42Vgnu4UxoeuKdCuXbSMp+hx7UWIC0reBZcWVTh99hk0ZtFo=
+X-Received: by 2002:a05:600c:352:: with SMTP id u18mr29119665wmd.141.1566918591384;
+ Tue, 27 Aug 2019 08:09:51 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
- signatures=0
+References: <20190827064425.19627-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190827064425.19627-1-yamada.masahiro@socionext.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 27 Aug 2019 11:09:38 -0400
+Message-ID: <CADnq5_OUC_Wtwe2+w-DRtEUoBEmNa6GkoQ10_qD8=28xF32jBg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd: remove meaningless descending into amd/amdkfd/
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?B?Q2hyaXN0aWFuIEvvv73vv73Dk25pZw==?= 
+        <christian.koenig@amd.com>, David Zhou <David1.Zhou@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-STM32_DDR_PMU enables the perf driver that
-controls the DDR Performance Monitor (DDRPERFM)
+On Tue, Aug 27, 2019 at 3:29 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Since commit 04d5e2765802 ("drm/amdgpu: Merge amdkfd into amdgpu"),
+> drivers/gpu/drm/amd/amdkfd/Makefile does not contain any syntax that
+> is understood by the build system.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Applied.  thanks!
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v=
-7_defconfig
-index 6a40bc2..8fa4690 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -1011,6 +1011,7 @@ CONFIG_PHY_DM816X_USB=3Dm
- CONFIG_OMAP_USB2=3Dy
- CONFIG_TI_PIPE3=3Dy
- CONFIG_TWL4030_USB=3Dm
-+CONFIG_STM32_DDR_PMU=3Dm
- CONFIG_MESON_MX_EFUSE=3Dm
- CONFIG_ROCKCHIP_EFUSE=3Dm
- CONFIG_NVMEM_IMX_OCOTP=3Dy
---=20
-2.7.4
+Alex
+
+> ---
+>
+>  drivers/gpu/drm/Makefile | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 9f0d2ee35794..3f9195b7ad13 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -62,7 +62,6 @@ obj-$(CONFIG_DRM_TTM) += ttm/
+>  obj-$(CONFIG_DRM_SCHED)        += scheduler/
+>  obj-$(CONFIG_DRM_TDFX) += tdfx/
+>  obj-$(CONFIG_DRM_R128) += r128/
+> -obj-$(CONFIG_HSA_AMD) += amd/amdkfd/
+>  obj-$(CONFIG_DRM_RADEON)+= radeon/
+>  obj-$(CONFIG_DRM_AMDGPU)+= amd/amdgpu/
+>  obj-$(CONFIG_DRM_MGA)  += mga/
+> --
+> 2.17.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
