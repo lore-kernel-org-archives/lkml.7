@@ -2,207 +2,168 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4FCC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91192C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0099B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585C7206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmChool4"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZvkBKnvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbfH0VCX (ORCPT
+        id S1730392AbfH0VDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:02:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36844 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfH0VCX (ORCPT
+        Tue, 27 Aug 2019 17:03:31 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:10960 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfH0VDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:02:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p13so284633wmh.1;
-        Tue, 27 Aug 2019 14:02:20 -0700 (PDT)
+        Tue, 27 Aug 2019 17:03:30 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Tristram.Ha@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tristram.Ha@microchip.com";
+  x-sender="Tristram.Ha@microchip.com"; x-conformance=spf_only;
+  x-record-type="v=spf1"; x-record-text="v=spf1 mx
+  a:ushub1.microchip.com a:smtpout.microchip.com
+  a:mx1.microchip.iphmx.com a:mx2.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tristram.Ha@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tristram.Ha@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: zpWlrr/LAzjO4unoCeeA9rptwCvcMKkjSSBUOju6ttgwYCRfnLiLFLI0qWMTW2QsVcxhrw35bH
+ G9IzKMa8Q2otw5X+oU/vrIv7tOhn2vvhdScFVdhWJmyqdJZuZVC2h6ivS5cernHofc1CxXq7lw
+ URCckNHLebi0VfYZY3qMvk2/FJYJ9+/unNv0H+OEsOn+s9uz1WfCFFwpLgaSZESJa1HtQUR6HW
+ oPRxnCViWHcUvhUl8zsutXksUE7WymR36lDoW05dPij5rfJAQuKj2i5vXbrBpweSo4fEWXIVDY
+ qio=
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="46748735"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Aug 2019 14:03:29 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 27 Aug 2019 14:03:28 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 27 Aug 2019 14:03:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YUKSdOnUcqhOVAggoOsw3YoIzbrDVdw/LtqFd1hIBSSPflksQY7ZRKu6rG7mIv1a7Xrd8QEnU3w2uPiAxPN+99b2jkuFf/mDrMwA2Umil49KnhTA5yP10J8JMm2GcTk+RyQCh/MAcXG6YA0TTu0goLMiX9YW9IJXZohRhM9yollOAWxpz+YBZDUrdadfHVXb3e/HF5nbGyd0adIJeIN5RQ/NCHFzIyqPs7sF6xo78pWT7EyR2ase1YBrFgdNe2VR/+A+WB25uAAJ1plx/0vQl5ExNqV9ZIBZylkithV99qcF71CkxteJDa8rjSAab3ShD3j7VZ/Vio8LU0QlvQiMbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SbraKHQYPk0Jm70dcR0Zr/1/ZdEZK5cI8MVHjz4JuK4=;
+ b=IC4IAKuqj+bXfcqL3OXd0Yo1ILnNd006LDhRo3v9wgyv0zV9hmyHJk4lDjdR4Kw//oib1w/tD3DW0UaAAZoBUlF5QQ69YYc9apgi7Trml6/+xgJlbPAW6C2yDpfRLBxZ9OezSBvUp1B7rjrdE+cc12cszja5M/EYQDlB4HVsA1eF9SjbMYjDxit2fl2etk9t8kVwRFz67tNWLbEZ1W9T2j2WkFf0qyivmm4FaCpmmZYPuzKYZUjjr38eZXr70DZ/ZuZqdg+beD4A/dYqBOSSVshcoq3xurGV54FtRLQ99vD1Y+VJy0qUbdzYEmtJ8LEgUCq+/d0xwOq+EE+3Jcm5xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LYnBmNFm/AVJ/ogCESBihbknRq6ODHDlLJ5Za9H92/M=;
-        b=UmChool4DH3Va70ZGeqC8JNdidvWiuO/nHaFXAT1HrEDpHB9zXL1IZpyzcFXnxZEn0
-         EXXIsyDDd1Cp8GoSwIiXDQ2FixEW+Fkqi6gFYOEK7p7UZbl2zMRstgy4bTBXwnumXaXn
-         KpMPgjpR3oM8k8aEUTVG/SS36LLA95NT0PNn2a5G7+opuIBnENsleGGP1vbK2jVH2CMT
-         H4/2AIsIZUPF+EBsWz5zw8Gxa29VLVmpqwPgpW938JHYUtlLIZBMPg5B0fMEu6arGr/9
-         EewKVP5vXRNq+yAJlsWtfaKqvItg1xBMni2M6xH5+xi17sL/QLT7uxHvF6/8n8YEPk/e
-         5qZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LYnBmNFm/AVJ/ogCESBihbknRq6ODHDlLJ5Za9H92/M=;
-        b=koYaQ8/gFD9sfFZp7cF8erNwYFm1jC0ucAGg9VUHmVYpcbW0MQIbCPj5rI5oQ2NIM/
-         me9UmSCH0QnDduX9bNq1eAwx/57JtcI9Pi0CPka/83k5GIfSkdBQhq9FeUQLsSRe8wHE
-         P9sJG5HkrOG3rTwlY9ntJS9EguH7TnK8g33PjmSNQsyfj67+3a195vexYAk/9hG4x9b6
-         pn0Qj2h34n0Y519KKWu1Cif+6m6/hmI4KhKFWxcI56ekiLtkmFFaMSKxs363SZ6Ob+EG
-         SSaa9/iGEWr6mYMbboePOhnNZIEpNdGtUVADRw3VbVIWE+SosRQdNXFncwP8PM2sFD25
-         rQ6w==
-X-Gm-Message-State: APjAAAVDArUzk301KS7MWuFaZtaVMyvgciiON428cxoN2GmuRWuTdSiQ
-        mkNn8PkYR/q2wB+rXBEzlK6HJJb9
-X-Google-Smtp-Source: APXvYqwEnVAkClYUBMXp1YvaiT495jh9omLvI8TCbkUc0Uz+5XX6JhEAqMWOuQ5jyWBR4pZfXMLHbA==
-X-Received: by 2002:a1c:4d06:: with SMTP id o6mr526942wmh.43.1566939739832;
-        Tue, 27 Aug 2019 14:02:19 -0700 (PDT)
-Received: from [192.168.1.19] (ckl27.neoplus.adsl.tpnet.pl. [83.31.87.27])
-        by smtp.gmail.com with ESMTPSA id w8sm6285886wmc.1.2019.08.27.14.02.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 14:02:19 -0700 (PDT)
-Subject: Re: [PATCH] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190823195523.20950-1-dmurphy@ti.com>
- <4a1872e8-89a5-4bc4-6aa4-bcadbc48697a@gmail.com>
- <de1bb95d-d5ca-6f8f-e758-b03479091f99@ti.com>
- <48fc16c5-9f43-e5c3-e756-514f9f3eb254@gmail.com>
- <12746d3e-e658-5ce6-5231-33005a74e549@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f36eac2f-6643-c4f3-2b73-45f147b019a7@gmail.com>
-Date:   Tue, 27 Aug 2019 23:02:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <12746d3e-e658-5ce6-5231-33005a74e549@ti.com>
-Content-Type: text/plain; charset=utf-8
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SbraKHQYPk0Jm70dcR0Zr/1/ZdEZK5cI8MVHjz4JuK4=;
+ b=ZvkBKnvJ5p27Gv0W/BMdtkCePTiQ3TT//Txx30CAiFDkHqp4o6mOzVaYu8KVJONOGJMalFzbgu/Jy25Sff0koB+vEMCNX06b89x1bmGhIWWhgkOZMwDTwv1ffdUqk8dxeek/k6pDB4oUP8kg4GxOvjZBXQo+ldUfa5boCRsfySc=
+Received: from MN2PR11MB3678.namprd11.prod.outlook.com (20.178.252.94) by
+ MN2PR11MB4271.namprd11.prod.outlook.com (52.135.36.212) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 21:03:27 +0000
+Received: from MN2PR11MB3678.namprd11.prod.outlook.com
+ ([fe80::b98c:209e:ba2c:e682]) by MN2PR11MB3678.namprd11.prod.outlook.com
+ ([fe80::b98c:209e:ba2c:e682%5]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
+ 21:03:27 +0000
+From:   <Tristram.Ha@microchip.com>
+To:     <Razvan.Stefanescu@microchip.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Razvan.Stefanescu@microchip.com>, <Woojung.Huh@microchip.com>,
+        <vivien.didelot@gmail.com>, <UNGLinuxDriver@microchip.com>,
+        <andrew@lunn.ch>, <f.fainelli@gmail.com>, <davem@davemloft.net>
+Subject: RE: [PATCH 4/4] net: dsa: microchip: avoid hard-codded port count
+Thread-Topic: [PATCH 4/4] net: dsa: microchip: avoid hard-codded port count
+Thread-Index: AQHVXLpYAiqtkBHu40WEfk7DWY00bqcPeo1g
+Date:   Tue, 27 Aug 2019 21:03:27 +0000
+Message-ID: <MN2PR11MB3678CF331310105FA5916A56ECA00@MN2PR11MB3678.namprd11.prod.outlook.com>
+References: <20190827093110.14957-1-razvan.stefanescu@microchip.com>
+ <20190827093110.14957-5-razvan.stefanescu@microchip.com>
+In-Reply-To: <20190827093110.14957-5-razvan.stefanescu@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [173.46.67.20]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41ee7c34-dac7-4e8d-0cee-08d72b3201f4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB4271;
+x-ms-traffictypediagnostic: MN2PR11MB4271:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB4271442E3B080B3D7DD6F3D2ECA00@MN2PR11MB4271.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(366004)(189003)(199004)(71200400001)(4326008)(6116002)(3846002)(14454004)(25786009)(71190400001)(102836004)(5660300002)(74316002)(305945005)(6506007)(6862004)(11346002)(99286004)(9686003)(446003)(7736002)(52536014)(7696005)(76176011)(66066001)(14444005)(86362001)(55016002)(26005)(6436002)(33656002)(53936002)(316002)(6636002)(478600001)(81166006)(54906003)(256004)(486006)(66946007)(66556008)(476003)(64756008)(66476007)(76116006)(229853002)(2906002)(8936002)(8676002)(186003)(6246003)(81156014)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4271;H:MN2PR11MB3678.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BB4qEVwq0wUIjvRcw0ZvyLUJJeHzzzYKqDKHjxJK38elRlF9PV9cgyBTdudJYXSCDZUIx9RYx10H+L7pvwWTHouqGdjgIJjlfAcC5qv+l0BlZNyGUjjKi3JJQX07gzJOMPuaUKgDyEjU0z8Mm/ZK9ZWcK95ySkModi+rw+mSo3o7GJ6FpNk0Qg45BpLLZrUPaq0YwggA6jDF5cWMsYbgwQSeShC2Fehv8hnOBsXRawb8HU/LvRhd2rHfq35rAeGMkdTbrnjHscAtbyVTiobK/JG+wCEx1pp0iJMFbiMMGn4HTeDGcx5voR/b3FnpSRYsALhmGkwbdPj6qagNn59zcqcXOVtjUnNL6t0RHle0Ty7HB4IYKx/vs1ThlPU8+pxIXBemS5ROeuc3KiQmOyUTtCAAtEfkZJn31789Co6ZwZY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41ee7c34-dac7-4e8d-0cee-08d72b3201f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 21:03:27.5905
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EZ/TbV/i6YZfY+ZV8LQBhMHlE1w7qgPc5gNCBAe47gpT0Q/+w/ZVe0jCooE6nWvKZNKJlZdYUUzFzLqbCE0ZsPEsxB2+T5NNb9LorW9m1eE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4271
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+> Subject: [PATCH 4/4] net: dsa: microchip: avoid hard-codded port count
+>=20
+> Use port_cnt value to disable interrupts on switch reset.
+>=20
+> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+> ---
+>  drivers/net/dsa/microchip/ksz9477.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/dsa/microchip/ksz9477.c
+> b/drivers/net/dsa/microchip/ksz9477.c
+> index 187be42de5f1..54fc05595d48 100644
+> --- a/drivers/net/dsa/microchip/ksz9477.c
+> +++ b/drivers/net/dsa/microchip/ksz9477.c
+> @@ -213,7 +213,7 @@ static int ksz9477_reset_switch(struct ksz_device
+> *dev)
+>=20
+>  	/* disable interrupts */
+>  	ksz_write32(dev, REG_SW_INT_MASK__4, SWITCH_INT_MASK);
+> -	ksz_write32(dev, REG_SW_PORT_INT_MASK__4, 0x7F);
+> +	ksz_write32(dev, REG_SW_PORT_INT_MASK__4, dev->port_cnt);
+>  	ksz_read32(dev, REG_SW_PORT_INT_STATUS__4, &data32);
+>=20
+>  	/* set broadcast storm protection 10% rate */
 
-On 8/27/19 3:37 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 8/26/19 2:34 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 8/26/19 4:53 PM, Dan Murphy wrote:
->>> Jacek
->>>
->>> On 8/24/19 10:18 AM, Jacek Anaszewski wrote:
->>>> Hi Dan,
->>>>
->>>> Thank you for the patch.
->>>>
->>>> On 8/23/19 9:55 PM, Dan Murphy wrote:
->>>>> Fix the coccinelle issues found in the TI LMU common code
->>>>>
->>>>> drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned
->>>>> expression compared with zero: ramp_down < 0
->>>>> drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned
->>>>> expression compared with zero: ramp_up < 0
->>>> Wouldn't it make more sense to remove those pointless checks?
->>>> Clearly a correct index of an array cannot be negative.
->>>> Looking at the code I would make more int -> unsigned int conversions:
->>>>
->>>> - ramp_table should be unsigned int
->>>> - ti_lmu_common_convert_ramp_to_index should return unsigned int
->>>>
->>> Yeah I was going to just remove the code but when I was writing the
->>> original code my intent was
->>>
->>> to extend the ramp call to allow other TI LMU driver to pass in the
->>> device specific ramp table.
->>>
->>> But since I don't currently have any devices on my plate that require
->>> that I can just remove the code as well
->> You don't need to remove, just do the conversions I proposed.
->> Unless it introduces some other problems I am currently not aware of.
->>
-> Well just converting those two would/did not fix the issue.
+The register value is a portmap, so using port_cnt may be wrong.
 
-I implicitly assumed that you'd just drop the check since it
-would make no sense to check unsigned int for being lower than 0.
+The chip is a 7-port switch.  There is a 6-port variant, but it is okay to =
+write 0x7F.
 
-And I propose to not return any error code from
-ti_lmu_common_convert_ramp_to_index(), just make sure inside it
-you return sane value. Ramp should, well, ramp.
+There is also a 3-port variant which uses a different design.  It is a bit =
+of stretch to use 0x7F on it.
 
-> 
-> But actually there is only 1 possibility that could happen if the
-> convert function returns -EINVAL
-> 
-> So the check should be
-> 
-> if (ramp_up == -EINVAL || ramp_down == -EINVAL)
-> 
-> Because ramp_up/down should never be less then zero otherwise.
-> 
-> Dan
-> 
-> 
-> 
+It is more a code readability or correctness than incorrect hardware operat=
+ion.
 
--- 
-Best regards,
-Jacek Anaszewski
