@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F16C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382C8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5DE2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6E8217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893508;
-	bh=/zzZA9U0vrszr+exayCqiwcHv1WS9ZwywmCOOuoNULQ=;
+	s=default; t=1566893511;
+	bh=MUIcTWJ/nQc3kOxlYLVxWaob9x9FWvs1EU/9x9YOFck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gY82gWtkCbewwB3VTkWQbQoHHnq7Gta5GaudeUWQt0vc9cZX3X1b2zb0try6tC8QA
-	 WEoTO03keEYTbDtBW4sME4nvdxbrx0whThVWdjNSgPZQf6vxkssqMZX+wBpWi+JYNB
-	 DQiNel45M+BNJ0fVXRso80KPSMlFATVHnEsWffeA=
+	b=Y8Fj95j8/Nkpg2cbDquZV043A3SNxRIUKRuoPI317bdC/PHuBpwt3uaWe9uwtY9yv
+	 OOmTk2O7dHQDDFcXUprDeQjKT10cS/ZoTEsWNzXAljndOjZt5rR8vha1bB1fSwktL8
+	 oQnNoCXrQTxkIJ2M/nrdQEZv/CnWaI9ijyeJXXUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfH0IAj (ORCPT
+        id S1731522AbfH0IAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731534AbfH0IAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:00:36 -0400
+        id S1731502AbfH0IAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5998D217F5;
-        Tue, 27 Aug 2019 08:00:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B3F20828;
+        Tue, 27 Aug 2019 08:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892834;
-        bh=/zzZA9U0vrszr+exayCqiwcHv1WS9ZwywmCOOuoNULQ=;
+        s=default; t=1566892829;
+        bh=MUIcTWJ/nQc3kOxlYLVxWaob9x9FWvs1EU/9x9YOFck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H98oh5wUvli8zyGKyXeK8sv+nn0giu8oDgLiYEdsNOdgaQmptmnHssFQqkDuVtaoD
-         x/HEk88exjmuZT38Hk55Scyqk5LXYoKTHxOpSeb+oB8SF/pZwZklvZ3ICO8Y0E6K2Y
-         ixVlZbaf2afgY/BeJ4wyXhFzlYu46wViVbHx5jcg=
+        b=d3JQLk86dWqbYxJ8ElddMYs/3Td3XRdGuhj+gO2T2aVfUK2x1smJPIhRu0877co/0
+         hsvrLUWpeqy1xIJ7XjABolDWV2fXIS1oT8pk3Yn3VvG+R2SzkA90lY8NmicBhaSaMG
+         neVpeUmI1TY4khIGGLUdQYj+hkNv1tceqYNyBM4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Ilya Maximets <i.maximets@samsung.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 031/162] libbpf: fix using uninitialized ioctl results
-Date:   Tue, 27 Aug 2019 09:49:19 +0200
-Message-Id: <20190827072739.375906444@linuxfoundation.org>
+Subject: [PATCH 5.2 029/162] selftests: forwarding: gre_multipath: Fix flower filters
+Date:   Tue, 27 Aug 2019 09:49:17 +0200
+Message-Id: <20190827072739.303797408@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -63,76 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit decb705e01a5d325c9876b9674043cde4b54f0db ]
+[ Upstream commit 1be79d89b7ae96e004911bd228ce8c2b5cc6415f ]
 
-'channels.max_combined' initialized only on ioctl success and
-errno is only valid on ioctl failure.
+The TC filters used in the test do not work with veth devices because the
+outer Ethertype is 802.1Q and not IPv4. The test passes with mlxsw
+netdevs since the hardware always looks at "The first Ethertype that
+does not point to either: VLAN, CNTAG or configurable Ethertype".
 
-The code doesn't produce any runtime issues, but makes memory
-sanitizers angry:
+Fix this by matching on the VLAN ID instead, but on the ingress side.
+The reason why this is not performed at egress is explained in the
+commit cited below.
 
- Conditional jump or move depends on uninitialised value(s)
-    at 0x55C056F: xsk_get_max_queues (xsk.c:336)
-    by 0x55C05B2: xsk_create_bpf_maps (xsk.c:354)
-    by 0x55C089F: xsk_setup_xdp_prog (xsk.c:447)
-    by 0x55C0E57: xsk_socket__create (xsk.c:601)
-  Uninitialised value was created by a stack allocation
-    at 0x55C04CD: xsk_get_max_queues (xsk.c:318)
-
-Additionally fixed warning on uninitialized bytes in ioctl arguments:
-
- Syscall param ioctl(SIOCETHTOOL) points to uninitialised byte(s)
-    at 0x648D45B: ioctl (in /usr/lib64/libc-2.28.so)
-    by 0x55C0546: xsk_get_max_queues (xsk.c:330)
-    by 0x55C05B2: xsk_create_bpf_maps (xsk.c:354)
-    by 0x55C089F: xsk_setup_xdp_prog (xsk.c:447)
-    by 0x55C0E57: xsk_socket__create (xsk.c:601)
-  Address 0x1ffefff378 is on thread 1's stack
-  in frame #1, created by xsk_get_max_queues (xsk.c:318)
-  Uninitialised value was created by a stack allocation
-    at 0x55C04CD: xsk_get_max_queues (xsk.c:318)
-
-CC: Magnus Karlsson <magnus.karlsson@intel.com>
-Fixes: 1cad07884239 ("libbpf: add support for using AF_XDP sockets")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 541ad323db3a ("selftests: forwarding: gre_multipath: Update next-hop statistics match criteria")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Tested-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/xsk.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ .../selftests/net/forwarding/gre_multipath.sh | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-index ca272c5b67f47..8e03b65830da0 100644
---- a/tools/lib/bpf/xsk.c
-+++ b/tools/lib/bpf/xsk.c
-@@ -327,15 +327,14 @@ static int xsk_load_xdp_prog(struct xsk_socket *xsk)
+diff --git a/tools/testing/selftests/net/forwarding/gre_multipath.sh b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+index 37d7297e1cf8a..a8d8e8b3dc819 100755
+--- a/tools/testing/selftests/net/forwarding/gre_multipath.sh
++++ b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+@@ -93,18 +93,10 @@ sw1_create()
+ 	ip route add vrf v$ol1 192.0.2.16/28 \
+ 	   nexthop dev g1a \
+ 	   nexthop dev g1b
+-
+-	tc qdisc add dev $ul1 clsact
+-	tc filter add dev $ul1 egress pref 111 prot ipv4 \
+-	   flower dst_ip 192.0.2.66 action pass
+-	tc filter add dev $ul1 egress pref 222 prot ipv4 \
+-	   flower dst_ip 192.0.2.82 action pass
+ }
  
- static int xsk_get_max_queues(struct xsk_socket *xsk)
+ sw1_destroy()
  {
--	struct ethtool_channels channels;
--	struct ifreq ifr;
-+	struct ethtool_channels channels = { .cmd = ETHTOOL_GCHANNELS };
-+	struct ifreq ifr = {};
- 	int fd, err, ret;
+-	tc qdisc del dev $ul1 clsact
+-
+ 	ip route del vrf v$ol1 192.0.2.16/28
  
- 	fd = socket(AF_INET, SOCK_DGRAM, 0);
- 	if (fd < 0)
- 		return -errno;
+ 	ip route del vrf v$ol1 192.0.2.82/32 via 192.0.2.146
+@@ -139,10 +131,18 @@ sw2_create()
+ 	ip route add vrf v$ol2 192.0.2.0/28 \
+ 	   nexthop dev g2a \
+ 	   nexthop dev g2b
++
++	tc qdisc add dev $ul2 clsact
++	tc filter add dev $ul2 ingress pref 111 prot 802.1Q \
++	   flower vlan_id 111 action pass
++	tc filter add dev $ul2 ingress pref 222 prot 802.1Q \
++	   flower vlan_id 222 action pass
+ }
  
--	channels.cmd = ETHTOOL_GCHANNELS;
- 	ifr.ifr_data = (void *)&channels;
- 	strncpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ - 1);
- 	ifr.ifr_name[IFNAMSIZ - 1] = '\0';
-@@ -345,7 +344,7 @@ static int xsk_get_max_queues(struct xsk_socket *xsk)
- 		goto out;
- 	}
+ sw2_destroy()
+ {
++	tc qdisc del dev $ul2 clsact
++
+ 	ip route del vrf v$ol2 192.0.2.0/28
  
--	if (channels.max_combined == 0 || errno == EOPNOTSUPP)
-+	if (err || channels.max_combined == 0)
- 		/* If the device says it has no channels, then all traffic
- 		 * is sent to a single stream, so max queues = 1.
- 		 */
+ 	ip route del vrf v$ol2 192.0.2.81/32 via 192.0.2.145
+@@ -215,15 +215,15 @@ multipath4_test()
+ 	   nexthop dev g1a weight $weight1 \
+ 	   nexthop dev g1b weight $weight2
+ 
+-	local t0_111=$(tc_rule_stats_get $ul1 111 egress)
+-	local t0_222=$(tc_rule_stats_get $ul1 222 egress)
++	local t0_111=$(tc_rule_stats_get $ul2 111 ingress)
++	local t0_222=$(tc_rule_stats_get $ul2 222 ingress)
+ 
+ 	ip vrf exec v$h1 \
+ 	   $MZ $h1 -q -p 64 -A 192.0.2.1 -B 192.0.2.18 \
+ 	       -d 1msec -t udp "sp=1024,dp=0-32768"
+ 
+-	local t1_111=$(tc_rule_stats_get $ul1 111 egress)
+-	local t1_222=$(tc_rule_stats_get $ul1 222 egress)
++	local t1_111=$(tc_rule_stats_get $ul2 111 ingress)
++	local t1_222=$(tc_rule_stats_get $ul2 222 ingress)
+ 
+ 	local d111=$((t1_111 - t0_111))
+ 	local d222=$((t1_222 - t0_222))
 -- 
 2.20.1
 
