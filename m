@@ -2,132 +2,181 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08E2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A15C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800CD2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUisLtI1"
+	by mail.kernel.org (Postfix) with ESMTP id 8967F20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfH0Sqe (ORCPT
+        id S1730662AbfH0SsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:46:34 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45657 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730313AbfH0Sqe (ORCPT
+        Tue, 27 Aug 2019 14:48:09 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37861 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730302AbfH0SsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:46:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w26so14642798pfq.12;
-        Tue, 27 Aug 2019 11:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y/FpJfIQDFFYFWCv8d3VQXA3ejRf4dcDUC9VQhShWIk=;
-        b=PUisLtI1N8WCRaQO16uILlJJfdxkC1gSxGhTwLgCpeRbDvg+pIPeq3HngTxt+0WdCm
-         ZnUuS9myTf58efM2uqSEvZ3OT0yH61LQLgnLEydkvgGi6OSmR73pJZOSpEKmH0SEbUew
-         E/ap2SW/XY6EgjMGBG1aJMEB0INkVpLQGRJFNfnYiutaB+J1V2MNjYblS/dgxAzZxoQ6
-         jrWQ4ZcMJFcGLpQGpxk2eLb/6hMa/Bqg91YUKuxYs3TLXH7+3Twix0OcSToEsqC1O6iC
-         Igv81Ho8J/fwUTQ7zIhQGZFAPIX9BVIO0blL5FNczXwPS5W/OSy0er9XnjSGlwWQXkGh
-         kFuw==
+        Tue, 27 Aug 2019 14:48:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id m7so353020ioc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:48:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y/FpJfIQDFFYFWCv8d3VQXA3ejRf4dcDUC9VQhShWIk=;
-        b=VCcR0iz5Vy67yJXMUEo/4OgEGU8H58C5I1ODayYI1Tzx+wMpUBZVjq9QumoGbFxBIY
-         nNQLSLdp3IycuoMZ3fXXQEz/2l5lebRfLpwxkyJfKScPgyTTjHsIRlNbR1Ds/9Exh/w3
-         vA5xqivuKSJnV0RAb0E1LKOae3+PtzrkqBqBQwTzgOHUMSo0wU/87MZN7Il3w03ranCf
-         G9aPbnRCxFDLRryVuKbIBh7JHXPmhtFUUpO+VqyCSerGl5yBvrKgWxrfamPyd5rN3BjR
-         43dB4iNo1VFO6ZvFEI822lVx2oBJk7IUesD1h4P3uhCzmmfweRGc+1IpUen4XI/bMIQx
-         2Sgw==
-X-Gm-Message-State: APjAAAVoPZyqseryrxJ3/tKgN3RqVSbfp3uom1jhQYtVOGRP1AUgZKvp
-        OGQnjvgXGAnHuNCtx8v6D54=
-X-Google-Smtp-Source: APXvYqz09YuVdeR/3PMOpPSn74q3fvy5vLGD3UkUsFXl/F/WadfQsTqxhHLZ5pJgNxtIwAbJBwn9oQ==
-X-Received: by 2002:a65:49cc:: with SMTP id t12mr21051640pgs.83.1566931593494;
-        Tue, 27 Aug 2019 11:46:33 -0700 (PDT)
-Received: from [192.168.1.70] (c-73-231-235-122.hsd1.ca.comcast.net. [73.231.235.122])
-        by smtp.gmail.com with ESMTPSA id b13sm110101pjz.10.2019.08.27.11.46.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 11:46:33 -0700 (PDT)
-Subject: Re: [PATCH] scripts/dtc: Simplify condition in get_node_by_path
-To:     Denis Efremov <efremov@linux.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190827145727.16791-1-efremov@linux.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <1b896532-006b-b729-35cc-03f5c58748ef@gmail.com>
-Date:   Tue, 27 Aug 2019 11:46:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=sQ8MNdMNmLlB3NIanyL0OpPLIbX3QOpCLANyJoIpL54=;
+        b=Bwr4cx3va2/glXJNmy7bK1JOSIUAV4gK30FZ7UiT+OO748IZVZ84g6sGBKblzyulXj
+         1rUbI2cE0f1h4UwE1p0znG/soEmOOl24CgXVSZjKlCcqQjYtlgIo6IY7GNhkN+rZW7Hi
+         EF/GYKOULETJ/G2ijnX59w3Cc64j9m13KUxfPce6P7Tr1Kj+et1fvrHgX26lLTrCAjbw
+         vWVExksSCerIZn01q+DcYqjsBlxDKLg8rZFgE9Jn3HsXMhXeHVaWm0A6k99V4kjze1T/
+         316l+J59jpg4C0duVLu+lk7uXhOPSeZDLqKhLL2+0/0wyK8Xvz7B9vEj7Xvk4omWmq04
+         HuqQ==
+X-Gm-Message-State: APjAAAUHuyiBf7C0HmM+dBkP40ZXY3aEupikfMq+JmDkotBoIzUcZCdv
+        7jcRmrKSTKsR+n7Kz1mmnwRNXRFxzu8ai5Ovg6t8X18pXV6U
+X-Google-Smtp-Source: APXvYqwRLYYYUtIrkcr8H1T3H/EhrEfG8b4d/BakqKtif5mnwoh76GPAv0p7y+dW8tByNrRZ/GiS6ABZalfopNg5+21+TArgUXnU
 MIME-Version: 1.0
-In-Reply-To: <20190827145727.16791-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5d:9750:: with SMTP id c16mr5252841ioo.260.1566931687980;
+ Tue, 27 Aug 2019 11:48:07 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 11:48:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a64c4a05911db6fe@google.com>
+Subject: WARNING in posix_cpu_timer_del
+From:   syzbot <syzbot+654f89dafed9092dac4d@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Denis,
+Hello,
 
-On 8/27/19 7:57 AM, Denis Efremov wrote:
-> The strlen && strprefixeq check in get_node_by_path is
-> excessive, since strlen is checked in strprefixeq macro
-> internally. Thus, 'strlen(child->name) == p-path'
-> conjunct duplicates after macro expansion and could
-> be removed.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  scripts/dtc/livetree.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
-> index 0c039993953a..032df5878ccc 100644
-> --- a/scripts/dtc/livetree.c
-> +++ b/scripts/dtc/livetree.c
-> @@ -526,8 +526,7 @@ struct node *get_node_by_path(struct node *tree, const char *path)
->  	p = strchr(path, '/');
->  
->  	for_each_child(tree, child) {
-> -		if (p && (strlen(child->name) == p-path) &&
-> -		    strprefixeq(path, p - path, child->name))
-> +		if (p && strprefixeq(path, p - path, child->name))
->  			return get_node_by_path(child, p+1);
->  		else if (!p && streq(path, child->name))
->  			return child;
-> 
+syzbot found the following crash on:
 
-livetree.c is maintained in the upstream dtc project.  We pull changes
-from that project into the Linux kernel source tree.
+HEAD commit:    ed858b88 Add linux-next specific files for 20190826
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=130c2eca600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ee8373cd9733e305
+dashboard link: https://syzkaller.appspot.com/bug?extid=654f89dafed9092dac4d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133cbeb6600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e931ca600000
 
-Info on submitting patches is in the upstream file "Documentation/manual.txt":
+Bisection is inconclusive: the first bad commit could be any of:
 
-   1) Sources
+fc0a4de8 posix-cpu-timers: Provide array based access to expiry cache
+4cc12137 posix-cpu-timers: Move expiry cache into struct posix_cputimers
+6f440f88 posix-cpu-timers: Simplify timer queueing
+2fcd363a sched: Move struct task_cputime to types.h
+95c0e29a posix-cpu-timers: Simplify set_process_cpu_timer()
+05c191a0 posix-cpu-timers: Create a container struct
+ca2258d8 posix-cpu-timers: Switch check_*_timers() to array cache
+080b3114 posix-cpu-timers: Remove the odd field rename defines
+4663b7f4 posix-cpu-timers: Move prof/virt_ticks into caller
+c663b713 posix-cpu-timers: Sample task times once in expiry check
+c96d6e59 posix-cpu-timers: Provide array based sample functions
+957d8bca posix-cpu-timers: Get rid of pointer indirection
+e762ac92 posix-cpu-timers: Make expiry checks array based
+8dc06959 posix-cpu-timers: Remove cputime_expires
+9459311b posix-cpu-timers: Simplify sample functions
+0102a96d posix-cpu-timers: Restructure expiry array
+9ebc1ad3 posix-cpu-timers: Remove pointless return value check
+8c768bb8 posix-cpu-timers: Use clock ID in posix_cpu_timer_rearm()
+8e8c6459 posix-cpu-timers: Switch thread group sampling to array
+13aa8bba posix-cpu-timers: Use clock ID in posix_cpu_timer_get()
+d9f868a0 posix-cpu-timers: Respect INFINITY for hard RTTIME limit
+9336cd13 rlimit: Rewrite non-sensical RLIMIT_CPU comment
+e70ad8c0 posix-cpu-timers: Use clock ID in posix_cpu_timer_set()
+5786d249 posix-cpu-timers: Get rid of zero checks
+b141b8de posix-cpu-timers: Consolidate thread group sample code
+8f8fb8af posix-cpu-timers: Rename thread_group_cputimer() and make it static
+ac1089cb posix-cpu-timers: Consolidate timer expiry further
+c895a99d posix-cpu-timers: Sample directly in timer check
+c9401dda posix-cpu-timers: Get rid of 64bit divisions
+ae5366ec itimers: Use quick sample function
+f0610ad1 posix-cpu-timers: Remove pointless comparisons
+6add2f23 posix-cpu-timers: Provide quick sample function for itimer
+f4a2ed1b posix-cpu-timers: Deduplicate rlimit handling
+cc1f6a2e posix-cpu-timers: Move state tracking to struct posix_cputimers
+dd73866d posix-cpu-timers: Use common permission check in  
+posix_cpu_timer_create()
+4d9b4beb posix-cpu-timers: Use common permission check in  
+posix_cpu_clock_get()
+ce709abd posix-cpu-timers: Utilize timerqueue for storage
+5b67bc20 posix-cpu-timers: Provide task validation functions
+d1543e48 posix-cpu-timers: Fix build on !CONFIG_POSIX_TIMERS
+02c12a14 Merge branch 'WIP.timers/core'
 
-   Source code for the Device Tree Compiler can be found at git.kernel.org.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1490f4de600000
 
-   The upstream repository is here:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+654f89dafed9092dac4d@syzkaller.appspotmail.com
 
-       git://git.kernel.org/pub/scm/utils/dtc/dtc.git
-       https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 8887 at kernel/time/posix-cpu-timers.c:401  
+posix_cpu_timer_del+0x2f0/0x3b0 kernel/time/posix-cpu-timers.c:401
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8887 Comm: syz-executor029 Not tainted 5.3.0-rc6-next-20190826  
+#73
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:220
+  __warn.cold+0x2f/0x3c kernel/panic.c:581
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:posix_cpu_timer_del+0x2f0/0x3b0 kernel/time/posix-cpu-timers.c:401
+Code: 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85  
+b5 00 00 00 48 83 bb c8 00 00 00 00 74 16 e8 10 58 0d 00 <0f> 0b e9 87 fe  
+ff ff e8 44 41 48 00 e9 dd fd ff ff e8 fa 57 0d 00
+RSP: 0018:ffff888093297a30 EFLAGS: 00010093
+RAX: ffff8880939a20c0 RBX: ffff8880a8968450 RCX: 1ffff1101273452a
+RDX: 0000000000000000 RSI: ffffffff8164d5c0 RDI: ffff8880a8968518
+RBP: ffff888093297ac0 R08: 0000000000000002 R09: ffff8880939a2958
+R10: fffffbfff138b0f8 R11: ffffffff89c587c7 R12: ffff88809157a100
+R13: 1ffff11012652f47 R14: ffff888093297a98 R15: ffff8880a89684a8
+  timer_delete_hook kernel/time/posix-timers.c:978 [inline]
+  itimer_delete kernel/time/posix-timers.c:1021 [inline]
+  exit_itimers+0xdb/0x2e0 kernel/time/posix-timers.c:1041
+  do_exit+0x1980/0x2e60 kernel/exit.c:853
+  do_group_exit+0x135/0x360 kernel/exit.c:983
+  get_signal+0x47c/0x2500 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4466b9
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffbc0b8368 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: 0000000000000000 RBX: 0000000000010bca RCX: 00000000004466b9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc2c
+RBP: 00000000006dbc2c R08: 000000037ffffa00 R09: 000000037ffffa00
+R10: 00007fffbc0b8380 R11: 0000000000000246 R12: 00000000006dbc20
+R13: 0000000000000000 R14: 000000000000002d R15: 20c49ba5e353f7cf
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-   The gitweb interface for the upstream respository is:
 
-       https://git.kernel.org/cgit/utils/dtc/dtc.git/
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-   1.1) Submitting Patches
-
-   Patches should be sent to the maintainers:
-           David Gibson <david@gibson.dropbear.id.au>
-           Jon Loeliger <jdl@jdl.com>
-   and CCed to <devicetree-compiler@vger.kernel.org>.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
