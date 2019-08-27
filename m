@@ -2,156 +2,141 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995B9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108EBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F68D206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47F4206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="B0QbXxlS"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="WSPzSS36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbfH0LJG (ORCPT
+        id S1729481AbfH0LJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:09:06 -0400
-Received: from mail-eopbgr30057.outbound.protection.outlook.com ([40.107.3.57]:31236
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Tue, 27 Aug 2019 07:09:18 -0400
+Received: from mail-eopbgr10093.outbound.protection.outlook.com ([40.107.1.93]:44093
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbfH0LJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:09:05 -0400
+        id S1725912AbfH0LJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:09:17 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WCO79oRXggdLtXx6li6RTqu7QDGBtlB2L7oegMRU1Wp2ZWiGfVKgZytVv0mXbFiOM21lcXC6QbLoafZ9xQ8SaSsabtHa/CrhfZcxP5pf1JDJURfd58T/iQQ4y2mXtNXETVlsUsSsUcytFWazDBn0MC+7+ySXwn6znmcQYy6z9nSHMHk7EStOneAhjaSUK9TnswojFKVt1xwzIfPJ126sc+0be7yjvH+Tmpie/eIuDyEWecHOk/FVy/1hRo1FAWuMdLzKJn0GUrcFV3Uv3r4LnFeq9vGzAmH7i0AfKggmHOytppSRgvTg1OBCPRiLkiFRO75FzeZx7JyXxxMxpH89nA==
+ b=WAV6j1SjBj1Ycdlvo96H8/tpxsFmU3MIY8rapajZdeW0HAbJ/E5WQch7MfXdOvLWeWuDIBBp9GRZD19lNmA8y09P3fMS3YCxGD/2CBstLsAvhpDzZpQfJ/MxRMexPmM87AnV8taEMj1NJxpQBa/j6gmWW+6y17SdFCjz0YZlsRfCxuP+4+/iV2YJ8nOMxezIiqEbwvmYgbLBeHaBNpU71k0mUQgUXW/cchZpjJLu6wJ3pGLnXGPz6Dw+pcx0XDGysHd7SSKH8Y6jJHSpm0c+NZIRVB1tXe3kCqaTpE5jrpHcxaa5aY+l4QwK2EjCF0qs9Q+GBerXIaIWycyiBQSjZw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Gz20VflWbpO8MToyd1ah/SOCTMl1npVpMUielPSOcQ=;
- b=ns9IOMYL8EZ9IHHj4WrRVBLdrH8dNSnQgUxRdZH5EGtx74T9n3wQvuZWW9oESgqI8FGWj3/X4u+1eD/gzrLwrugKa66QGJ16ByCn4y141CXVNdH6Rb6gdPgRUWcxvcZ555FK36xEGphW6UNV6HvDlKJ6NaV0QtWwcnEUvWo9s72vpYUDjcQrAhD0McVvK6HNDcx2Y5YYrA6Y2JQqGpPp5XyVnVgwPanP+v/649QXxxtfvNc3MuIblSXsene6Ov21n399dMx2TPtAXM8vT6iGUok8lPmqAGmxR0x1Ko72Te6ygeKww6MWj//a8YU2DV40pasvHvQaAJfzYLbomswivQ==
+ bh=gYo8sJBv8YM1g/V/cokURBHRLd8P6275YpESc1rKdIE=;
+ b=YN+AkrztSL73oWy3BiefA4vEHHf056HG2ag9RGln+ZvkdGdlwC8i6sJErwkR76550WfQnIpaZXisbc0e0tqT8a1xOKWWA6gsi70lu/RG0/rnHUTaZNnjRkkU9Gn/Y8n5WC8EF+P7qq5qti5KNgechhXXtiRmZaYElHtCI27SJ6xGCcKNzJKeuBIQCChBx43eLNvENv9RneVquSk6S6zNk0lkBwBD2o71bKddRIoVuIeDg/JiLdGo8YURNiIsPy2N4o/8zAgERQwMmeaS7ZHW3x3zl/ADmxzMczTirELnNfo0TOROVrvJ+pmSFYssZFJf+lzKMQRNJoPtbgn8jbyUXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Gz20VflWbpO8MToyd1ah/SOCTMl1npVpMUielPSOcQ=;
- b=B0QbXxlSmtv+OHT9FDmYLfa7c3ZPc6/WhdENKyeosJK0ViBUktgGpC/gIjsWgF4GfJPX2mrxCLrkulXldmJ8me+bDHToxVlKvBPozAEmmLrHdlKLmYTLaUuEUelhGj7ACqOd8Ef3fhtp6pQMdu2+Nv4D4j/97mMoUArlt80fT00=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB4161.eurprd05.prod.outlook.com (52.134.91.15) with Microsoft SMTP
+ bh=gYo8sJBv8YM1g/V/cokURBHRLd8P6275YpESc1rKdIE=;
+ b=WSPzSS36WfpmG9pSQkJjcW7L7DVCYUCLqEQJEQaxf2XNpuLEa15RMIrAtjj5SDC9iwbAh+XxhwCl1tHe7IkZCKKQSEHGI/8LIIzTHhzlnw/g6/OnkA08IiCazI2qTzWVocaNHawyvZWOlsIlNrJHe1BF2Mwht2/fTo6RAr1LPLQ=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3420.eurprd02.prod.outlook.com (52.134.67.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 11:08:59 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
- 11:08:59 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Topic: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Index: AQHVXE627FcLaFBgXUa8jSc95m92WKcOy/4AgAAKv2A=
-Date:   Tue, 27 Aug 2019 11:08:59 +0000
-Message-ID: <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-3-parav@mellanox.com>
- <20190827122928.752e763b.cohuck@redhat.com>
-In-Reply-To: <20190827122928.752e763b.cohuck@redhat.com>
-Accept-Language: en-US
+ 15.20.2178.16; Tue, 27 Aug 2019 11:09:11 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::a0df:d7d9:f95e:f3ea]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::a0df:d7d9:f95e:f3ea%3]) with mapi id 15.20.2178.023; Tue, 27 Aug 2019
+ 11:09:11 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Peter Rosin <peda@axentia.se>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v3 0/3] Add possibility to specify the number of displayed
+ logos
+Thread-Topic: [PATCH v3 0/3] Add possibility to specify the number of
+ displayed logos
+Thread-Index: AQHVXMfaisPyvC57MUmljkwoBL1ZPA==
+Date:   Tue, 27 Aug 2019 11:09:11 +0000
+Message-ID: <20190827110854.12574-1-peda@axentia.se>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.11.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0802CA0012.eurprd08.prod.outlook.com
+ (2603:10a6:3:bd::22) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9dd4c7a2-a163-4cb7-b73e-08d72adef634
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4161;
-x-ms-traffictypediagnostic: AM0PR05MB4161:
+x-ms-office365-filtering-correlation-id: 99923712-40e9-4990-a6e9-08d72adefce1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3420;
+x-ms-traffictypediagnostic: DB3PR0202MB3420:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB4161C64D893B49EED198CD12D1A00@AM0PR05MB4161.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <DB3PR0202MB3420B6F0E4C07C5C98684127BCA00@DB3PR0202MB3420.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(13464003)(199004)(189003)(486006)(305945005)(446003)(11346002)(52536014)(66476007)(66556008)(64756008)(66446008)(66946007)(476003)(53546011)(71200400001)(76116006)(6506007)(71190400001)(26005)(66066001)(55016002)(9686003)(76176011)(86362001)(7736002)(6436002)(7696005)(74316002)(5660300002)(99286004)(478600001)(33656002)(256004)(14444005)(102836004)(14454004)(55236004)(54906003)(6116002)(6916009)(4326008)(186003)(53936002)(6246003)(8936002)(81156014)(8676002)(81166006)(9456002)(229853002)(2906002)(316002)(25786009)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4161;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(39830400003)(396003)(376002)(199004)(189003)(3846002)(50226002)(2906002)(81156014)(6436002)(81166006)(4326008)(8936002)(6116002)(36756003)(66446008)(186003)(26005)(53936002)(256004)(5640700003)(99286004)(52116002)(6506007)(102836004)(25786009)(6512007)(14444005)(386003)(66476007)(66556008)(1076003)(4744005)(8676002)(5660300002)(6486002)(86362001)(14454004)(305945005)(7736002)(316002)(66066001)(64756008)(66946007)(2351001)(508600001)(2501003)(71190400001)(476003)(71200400001)(6916009)(486006)(2616005)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3420;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: L2OkaaWLRUkC71M7cfHeHFLvO9v66wPyXHfs2dapECrxos6ypTMVRPDVJ+MtZvbgstdvD2+pnNfMXoRv4yQRHUbj70Thr9MYnPhfbg8+NdhcUv2fNTsR/ltKoIFNkuzLxetiVXss1xyqKDsODYzaevAJHjN/vbyEtmMTGeGLv9JCkF4+w07vxtMgiGuRBM1V+g8eHE11uMOKDON5EIMcrRp5rajoCKV6wE40aLUA1LkcCVthD+vAe0ff43mC2LFLGpEtE4lpG9v5RlZJfV07Wj904sTZQK1O/xAndSEADp3Cw9D5pVIpxBiRfs5gXyBkRTVmIL0NwTefTkUf5jN2jh1EDUKkj9tjG6gmOMzIHfgIgnM+Zuoq5GwqSGoxXKCRzDQPyRxoowdUuDu4AwWnosv+Ht1tVaDIUwu4xd2razE=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: nRINbDps++ALpDsPj3Vwaw1+WA7BKtcp34LG2dynwYdq0Y9KAckr8P8xvxjNT6GETPbs0D0W6QTcY+3GDTO5EQH0guSSPGUaP3a0ogBeA/TFnJVZYGg0zL7Qao+iRQnHOCvRWJcF9yA9G1O9IiDZN+bx75sLms0awoQKxSLDW9NZzZckEpE8PfhOqFCiWrkuH8bkQrDeGojozum/tKuZtf6v7Y0DEmWSF28G7vDsd3tQjY1/oHbzCaxWk/uOFmV4jtGWRdqgOQXEo8b44lEr8iW/INkNuPtk6hJ4IpB1Fp3DvmRmG5XtvgFwIft+rqiW8RAY3UtxmmgdXCjIQi8FiTY74XDRgxRxZbKqdDzbuH6J1I2A34tX7yU1wFEDi4J0TprVIPLhXhM82djFcycJc3f9cwDXeYldrt4FsbdIV/Y=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dd4c7a2-a163-4cb7-b73e-08d72adef634
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 11:08:59.7131
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99923712-40e9-4990-a6e9-08d72adefce1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 11:09:11.6014
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 76VvySNtlx7/jEgxpAnRpdeFSUdDKooj9zaAYD5zIbH5AQwMoMwAAEO54ACWAPYOBXxdg5f8IOYTIJx/QctqpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4161
+X-MS-Exchange-CrossTenant-userprincipalname: NHu3a5FVn7pFm7hTAjPCOlYZngF/4sZ7jk3F7z7jAo57OHlr3UuWTYw5Zb0nh78x
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3420
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi!
 
+The first patch fixes the fact that there are two items numbered "4" in
+the list of fbcon options. This bug is a teenager...
 
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Tuesday, August 27, 2019 3:59 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
->=20
-> On Mon, 26 Aug 2019 15:41:17 -0500
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > Mdev alias should be unique among all the mdevs, so that when such
-> > alias is used by the mdev users to derive other objects, there is no
-> > collision in a given system.
-> >
-> > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > ---
-> >  drivers/vfio/mdev/mdev_core.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/vfio/mdev/mdev_core.c
-> > b/drivers/vfio/mdev/mdev_core.c index e825ff38b037..6eb37f0c6369
-> > 100644
-> > --- a/drivers/vfio/mdev/mdev_core.c
-> > +++ b/drivers/vfio/mdev/mdev_core.c
-> > @@ -375,6 +375,11 @@ int mdev_device_create(struct kobject *kobj, struc=
-t
-> device *dev,
-> >  			ret =3D -EEXIST;
-> >  			goto mdev_fail;
-> >  		}
-> > +		if (tmp->alias && strcmp(tmp->alias, alias) =3D=3D 0) {
->=20
-> Any way we can relay to the caller that the uuid was fine, but that we ha=
-d a
-> hash collision? Duplicate uuids are much more obvious than a collision he=
-re.
->=20
-How do you want to relay this rare event?
-Netlink interface has way to return the error message back, but sysfs is li=
-mited due to its error code based interface.
+The second patch extends that list with a new option that allows the
+user to display any number of logos (that fits on the screen). I need it
+to limit the display to only one logo instead of one for each CPU core.
 
-> > +			mutex_unlock(&mdev_list_lock);
-> > +			ret =3D -EEXIST;
-> > +			goto mdev_fail;
-> > +		}
-> >  	}
-> >
-> >  	mdev =3D kzalloc(sizeof(*mdev), GFP_KERNEL);
+Changes since v2
+
+- make -1 the default and make 0 disable the logo [Geert Uytterhoeven]
+- cpu -> CPU
+
+Changes since v1
+
+- do not needlessly export fb_logo_count [Matthew Wilcox]
+- added patch 3/3, which removes the export of fb_center_logo
+
+Cheers,
+Peter
+
+Peter Rosin (3):
+  fbdev: fix numbering of fbcon options
+  fbdev: fbmem: allow overriding the number of bootup logos
+  fbdev: fbmem: avoid exporting fb_center_logo
+
+ Documentation/fb/fbcon.rst       | 13 +++++++++----
+ drivers/video/fbdev/core/fbcon.c |  7 +++++++
+ drivers/video/fbdev/core/fbmem.c | 13 +++++++++----
+ include/linux/fb.h               |  1 +
+ 4 files changed, 26 insertions(+), 8 deletions(-)
+
+--=20
+2.11.0
 
