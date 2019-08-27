@@ -2,113 +2,100 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801AEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E671C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5499220656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CxO4kuP7"
+	by mail.kernel.org (Postfix) with ESMTP id 45365233A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566921009;
+	bh=8EvBRx62KUujNSPNFGRIYfL3iqN9PAZPLXFavXUjmUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c+5BBvL+UmL5Wo2vfNagl9aKrW9sMDyMXTxWdoq5HZFTQ8/Eh+byUAduFKJkifs8j
+	 AKuQ36YY+p12BNlQ+b6JR2NVtkVLdtR+AP96hXLnIIQ/BafpUoeUdYrR/SFPQgDUam
+	 +Ogx3IEpTRJVUtULW5RoWxqATXQD5Xq0tzvzbtKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbfH0Ptu (ORCPT
+        id S1730165AbfH0PuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:49:50 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38881 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbfH0Ptu (ORCPT
+        Tue, 27 Aug 2019 11:50:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42151 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0PuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:49:50 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u190so17430202qkh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=dibpdWj0PBeXuEM69FfN87DRWH5kS3v94RiPB1mv5iU=;
-        b=CxO4kuP71bXMdZBURSFVdEA6wqQw9veNFs9SiOUXDz8+GLQkSMpNUvDc2+Uu7dWt5K
-         2RVqK/QVIomtdFygUzu5x3xCfxHiRlG1TaWOhZw9yakOOL7eXp8igeouILW2IaBuMGay
-         4KaJtN0aWzCBRsZKQ5XbWAH8QKIfmKVbVsIi6DrJvzDGlXADj65lpVVey4TVTpELbhjQ
-         DAm9fF3n4JfH6dW+9Ax7obiuUAB8pkae7qQawFmQUd90wT2p/W0euy8Hh6/qYLWuMb/9
-         j50hqCT+1aYw1nZRljxHT2U4ZMnPFIUFpeTnY3fVpOScRYLoiFUFUeFMkjfYEgWJnyRH
-         jLaQ==
+        Tue, 27 Aug 2019 11:50:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j7so19113568ota.9;
+        Tue, 27 Aug 2019 08:50:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dibpdWj0PBeXuEM69FfN87DRWH5kS3v94RiPB1mv5iU=;
-        b=WasUyfeQKyvLSs4jKQvyl2Jgc4N2+jH/8UZ6trRdLFiyd4s3iO7g9SrnrkKq1NcCnr
-         JY7/ppOfy1BcjCiblDpIT8snvCX4V9JUn/kBoKYh3DOLpDxijtCxkeP/mdtjEs4a6UGw
-         HpUGuQ9OzgLC+23QU2cGnv2Bng4/6vQom7q5cSwXdRheaMEX3rJhBmx8EE9u7qwzyJe4
-         zKEVtVcJ2/H63N/2hzv4ykTquXqqWlpVIG/CdxvEVmmLQGhZE3Gdd3dENEfND2ayF7nj
-         KSOojIbhDMGdPHN1T8ERWJTFzc2yrWqJUK+N7Gc+bm3ocBOP4YPqSMgsCw0AbfB0+PYN
-         JnSA==
-X-Gm-Message-State: APjAAAU13q/HvALZk8765CHTa+hcyRc90Z0ma+VfO8wOtJoGP28azxPh
-        IpM7bWSMqQp7rXnXuyvrTuTa5Mtloik=
-X-Google-Smtp-Source: APXvYqzu5/zr/pjEg/k5K28N3QPNYROqHF/i7rqJ5Ju2ChMhxp/jinXqOZrHzVQafRHebX5wnlONpg==
-X-Received: by 2002:a37:c49:: with SMTP id 70mr22348368qkm.429.1566920989128;
-        Tue, 27 Aug 2019 08:49:49 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w1sm8505153qte.36.2019.08.27.08.49.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 08:49:48 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     clang-built-linux@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm: silence -Woverride-init/initializer-overrides
-Date:   Tue, 27 Aug 2019 11:47:47 -0400
-Message-Id: <1566920867-27453-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qYug+8A/OHB6xQ/Ambyfj+28FmEVXD07tPk7WO6HC3Y=;
+        b=Kf5LxI3IoXvREjjgXrfbR5kPTGN9hKsTJRrQJAtT0j59m83wMzylY/PD500IHduPt/
+         gPVyu7hOSeZnjEm2ZIccMrP/YBrTM/b1zpSKy3BTmnMS9AkcL5eJ3gvSkjIzVWYJP3MW
+         J0HOuSkmBPAn98RPJ6oVt3dEbvPTkUPJzqPJPJvXLnF0PT70qHYLYRcKTt/6ICp34FoJ
+         qRJlQcuVwYYRGA+hc7sVTcldtBSHGv/whVMNdNEU8rJ1kowCiEMIrHhCLQq1RKBC4Asj
+         ng4tfuRhk1UkvreSFSArU45wgJLHL69VLgdEmMx0Jqv6yFASsSbvXmki8dRyJT6CgyZH
+         /kAw==
+X-Gm-Message-State: APjAAAUbgsbD2KSPnedMwgQiZ9qNeRTOm87KyS4UsvXfbagX7l7jqRH/
+        w8REN4SEZ06UnvUbGKoPrg==
+X-Google-Smtp-Source: APXvYqyQsr3HFBe8hthN1uJ3CQ2iXfwZPpOybLyrFsnNasFsgN+n7AhakqmuQnHfxjBkmOE1nELixg==
+X-Received: by 2002:a9d:7dc4:: with SMTP id k4mr20904237otn.171.1566921006959;
+        Tue, 27 Aug 2019 08:50:06 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a22sm5137067otr.3.2019.08.27.08.50.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 08:50:06 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:50:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+Message-ID: <20190827155005.GA18581@bogus>
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20190821110640.GC5128@sirena.co.uk>
+ <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <VI1PR04MB4015474B3086AE99354FE65395A50@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <20190822184927.GH23391@sirena.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822184927.GH23391@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When compiling a kernel with W=1, there are several of those warnings
-due to arm64 override a field by purpose. Just disable those warnings
-for both GCC and Clang of this file, so it will help dig "gems" hidden
-in the W=1 warnings by reducing some noises.
+On Thu, Aug 22, 2019 at 07:49:27PM +0100, Mark Brown wrote:
+> On Thu, Aug 22, 2019 at 06:39:18AM +0000, Ashish Kumar wrote:
+> 
+> > > > Please use subject lines matching the style for the subsystem.  This
+> > > > makes it easier for people to identify relevant patches.
+> > Hi Mark,
+> 
+> > After looking at some patch in Documentation/devicetree/bindings/spi/
+> > I think I should update subject line to
+> > dt-bindings: spi: Add ls2080-qspi compatible string for FSL QSPI driver
+> > or 
+> > doc: qspi: Add ls2080-qspi compatible to DT bindings for FSL QSPI driver
+> 
+> Drop the dt-bindings:.
 
-mm/init-mm.c:39:2: warning: initializer overrides prior initialization
-of this subobject [-Winitializer-overrides]
-        INIT_MM_CONTEXT(init_mm)
-        ^~~~~~~~~~~~~~~~~~~~~~~~
-./arch/arm64/include/asm/mmu.h:133:9: note: expanded from macro
-'INIT_MM_CONTEXT'
-        .pgd = init_pg_dir,
-               ^~~~~~~~~~~
-mm/init-mm.c:30:10: note: previous initialization is here
-        .pgd            = swapper_pg_dir,
-                          ^~~~~~~~~~~~~~
+If you do 'git log --oneline Documentation/devicetree/bindings/' you'll 
+notice that SPI and ASoC are the oddballs now. I don't really care
+except it does add to tribal knowledge needed regarding maintainers' 
+requirements.
 
-Note: there is a side project trying to support explicitly allowing
-specific initializer overrides in Clang, but there is no guarantee it
-will happen or not.
-
-https://github.com/ClangBuiltLinux/linux/issues/639
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/mm/Makefile b/mm/Makefile
-index d0b295c3b764..5a30b8ecdc55 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -21,6 +21,9 @@ KCOV_INSTRUMENT_memcontrol.o := n
- KCOV_INSTRUMENT_mmzone.o := n
- KCOV_INSTRUMENT_vmstat.o := n
- 
-+CFLAGS_init-mm.o += $(call cc-disable-warning, override-init)
-+CFLAGS_init-mm.o += $(call cc-disable-warning, initializer-overrides)
-+
- mmu-y			:= nommu.o
- mmu-$(CONFIG_MMU)	:= highmem.o memory.o mincore.o \
- 			   mlock.o mmap.o mmu_gather.o mprotect.o mremap.o \
--- 
-1.8.3.1
-
+Rob
