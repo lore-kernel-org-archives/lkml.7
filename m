@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A214FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8083C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743E42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3DA217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892312;
-	bh=EckQD5802OaCUczfZ4Hir4YXw79+iz7taCIsv2SumYA=;
+	s=default; t=1566892315;
+	bh=XPxVmuh+hgcmzKCCKNJMNbO8/qU+oZA+EBmHPfEy8Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nwv/BbGOMMkuxf2irnGno3YkbEDHrsxslpzHiVX7guSVRA9Lu2pgY+30HXhwQfZ5Z
-	 na0Ujwn2lUmawIUDXlwrtV1bXytCcweSjRZnyuafxb/cZjvhGskXsNUVWGo2s188HN
-	 Q2AYGShNrDNmbXw71AHDeO95ZcjImvqWn1aGp2nI=
+	b=o42FxvfFntE49dhxz/7qwFbrRWgf88sPCD1ylQxrBDrhnXDI878cgnvVgjlDfkeWo
+	 /V+3S9vYIujTc6OMftNOG3pL5ptPP+TndSNUa0uBblecjFgqUrWr20f3HSV7xsMzId
+	 3HIHTdwLvz80I5kUpD0Rt39W0b8gaQKGOLrPslCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbfH0Hvv (ORCPT
+        id S1729116AbfH0Hvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42984 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbfH0Hvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:51:50 -0400
+        id S1729017AbfH0Hvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:51:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6890217F5;
-        Tue, 27 Aug 2019 07:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1544A20828;
+        Tue, 27 Aug 2019 07:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892309;
-        bh=EckQD5802OaCUczfZ4Hir4YXw79+iz7taCIsv2SumYA=;
+        s=default; t=1566892312;
+        bh=XPxVmuh+hgcmzKCCKNJMNbO8/qU+oZA+EBmHPfEy8Ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxhhXNrRH4SsYmzx/yyPbg6i5a8vXm4pLLILvfVB6AGUONoJfB5TjeQWZVTGxifrt
-         EXJ4BmVN/32sadQ0gaVNj1mcqNK+UQLb3g6KFWCvDkFVV003uFK1KLSIVeTouV3V0s
-         wZzAS0YGujv+VkT7tcS/u9TQRdYq0LX/Nu85P9vM=
+        b=pQDTWJegqWxcAbIqEAGHOhKoc3UN6B2sWzWn0Hex6xRFRnlHkhRFQGzSUBljSzCut
+         G0cSaGJ46MyvOTW9baaMXs0c5W8BM06EIKnkvIbgWfwu00FvXpNrlQ68Jm0sHSoszV
+         cabTxVb7WHVNOsTC+QXtWSzxW8OuRASFb6IMYMas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/62] netfilter: ebtables: fix a memory leak bug in compat
-Date:   Tue, 27 Aug 2019 09:50:09 +0200
-Message-Id: <20190827072700.331076787@linuxfoundation.org>
+Subject: [PATCH 4.14 05/62] ASoC: dapm: Fix handling of custom_stop_condition on DAPM graph walks
+Date:   Tue, 27 Aug 2019 09:50:10 +0200
+Message-Id: <20190827072700.450291435@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -61,42 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
+[ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
 
-In compat_do_replace(), a temporary buffer is allocated through vmalloc()
-to hold entries copied from the user space. The buffer address is firstly
-saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
-the entries in this temporary buffer is copied to the internal kernel
-structure through compat_copy_entries(). If this copy process fails,
-compat_do_replace() should be terminated. However, the allocated temporary
-buffer is not freed on this path, leading to a memory leak.
+DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
+list of the widgets connected to a specific front end DAI so it
+can search through this list for available back end DAIs. The
+custom_stop_condition was added to is_connected_ep to facilitate this
+list not containing more widgets than is necessary. Doing so both
+speeds up the DPCM handling as less widgets need to be searched and
+avoids issues with CODEC to CODEC links as these would be confused
+with back end DAIs if they appeared in the list of available widgets.
 
-To fix the bug, free the buffer before returning from compat_do_replace().
+custom_stop_condition was implemented by aborting the graph walk
+when the condition is triggered, however there is an issue with this
+approach. Whilst walking the graph is_connected_ep should update the
+endpoints cache on each widget, if the walk is aborted the number
+of attached end points is unknown for that sub-graph. When the stop
+condition triggered, the original patch ignored the triggering widget
+and returned zero connected end points; a later patch updated this
+to set the triggering widget's cache to 1 and return that. Both of
+these approaches result in inaccurate values being stored in various
+end point caches as the values propagate back through the graph,
+which can result in later issues with widgets powering/not powering
+unexpectedly.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+As the original goal was to reduce the size of the widget list passed
+to the DPCM code, the simplest solution is to limit the functionality
+of the custom_stop_condition to the widget list. This means the rest
+of the graph will still be processed resulting in correct end point
+caches, but only widgets up to the stop condition will be added to the
+returned widget list.
+
+Fixes: 6742064aef7f ("ASoC: dapm: support user-defined stop condition in dai_get_connected_widgets")
+Fixes: 5fdd022c2026 ("ASoC: dpcm: play nice with CODEC<->CODEC links")
+Fixes: 09464974eaa8 ("ASoC: dapm: Fix to return correct path list in is_connected_ep.")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190718084333.15598-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/soc-dapm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index f9c6e8ca1fcb0..100b4f88179a2 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2273,8 +2273,10 @@ static int compat_do_replace(struct net *net, void __user *user,
- 	state.buf_kern_len = size64;
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index b4c8ba412a5c1..104d5f487c7d1 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -1152,8 +1152,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+ 		list_add_tail(&widget->work_list, list);
  
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
--	if (WARN_ON(ret < 0))
-+	if (WARN_ON(ret < 0)) {
-+		vfree(entries_tmp);
- 		goto out_unlock;
-+	}
+ 	if (custom_stop_condition && custom_stop_condition(widget, dir)) {
+-		widget->endpoints[dir] = 1;
+-		return widget->endpoints[dir];
++		list = NULL;
++		custom_stop_condition = NULL;
+ 	}
  
- 	vfree(entries_tmp);
- 	tmp.entries_size = size64;
+ 	if ((widget->is_ep & SND_SOC_DAPM_DIR_TO_EP(dir)) && widget->connected) {
+@@ -1190,8 +1190,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+  *
+  * Optionally, can be supplied with a function acting as a stopping condition.
+  * This function takes the dapm widget currently being examined and the walk
+- * direction as an arguments, it should return true if the walk should be
+- * stopped and false otherwise.
++ * direction as an arguments, it should return true if widgets from that point
++ * in the graph onwards should not be added to the widget list.
+  */
+ static int is_connected_output_ep(struct snd_soc_dapm_widget *widget,
+ 	struct list_head *list,
 -- 
 2.20.1
 
