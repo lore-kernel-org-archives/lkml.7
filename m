@@ -2,52 +2,50 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EB1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765F1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8C32186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD242186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892761;
-	bh=fp7pC5A6v8DesicfVH1brRId9ycSV71FJmTtEnSVlJ0=;
+	s=default; t=1566892764;
+	bh=4ekf4C9nTPVXu0ZAQ5v09vBZQJoNmr3sCBvUk0WyD/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LHUtq0n94UohDQ3nFQYAnPV+/N8t+iFuzXNmfRLl5iEmVl5WTfxgt/ZQyql6fG8d1
-	 igF7S7YGr1gH24Dy4/DlAvjOXGa7x2QP2aPDz4/PM9b4xKMB+GDaDgK9pBMr8qDuqG
-	 ENlJhlbWl1PXs2kTRxPCGXaHx3Pl12HIYwWxtcas=
+	b=iPqC8Kf7t/9nMArIb80/HNW5GEu1M0+8uJpYzNhXOWiTegw41xs/uPUcNQ41GM4pz
+	 cGYejH9mrk5Z+UyGRshVL9cwPFYdamq8H0iBFzPAIKDVQ20XqCH5Bx+eoFxj2eXIts
+	 biySQYyTgGhlNSFcm4wAwnwKu+pYOdozP6U1Y0Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbfH0H7U (ORCPT
+        id S1731196AbfH0H7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52416 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731123AbfH0H7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:11 -0400
+        id S1730791AbfH0H7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2535D2186A;
-        Tue, 27 Aug 2019 07:59:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E78206BF;
+        Tue, 27 Aug 2019 07:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892750;
-        bh=fp7pC5A6v8DesicfVH1brRId9ycSV71FJmTtEnSVlJ0=;
+        s=default; t=1566892760;
+        bh=4ekf4C9nTPVXu0ZAQ5v09vBZQJoNmr3sCBvUk0WyD/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7BoYAhU5OUbTsD3KtQONnjpPswpjWPgl8r8TziZOAqDSikrbvJvJfips8T7369z9
-         qP9SHkVfZ+9y7LQShbD6afnOUhk1B44dsRGI5TfwztazN07TmwGEfppZc/h6KA7xbM
-         2slzpeEWFu6Ff5VlZYuzVa3LfsWfeRLi/NJJSql4=
+        b=bwfLXM49D4JPmHZUHiMSqVjy24gtkoWNx6WLCexdIrLowbcqxXnBtMY2gfuAr3ONr
+         ke66/fulkre2GoaZ4sWLsFEKxDTpVQQpuzo/QHjjQetcR4WQfK4FOyQgClDgheK3W9
+         H7vmDQZYQdZrhZAPPcR1g/ghcDgcp/ETIRkoNfWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, alastair@d-silva.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/98] selftests: kvm: Adding config fragments
-Date:   Tue, 27 Aug 2019 09:50:37 +0200
-Message-Id: <20190827072721.346509931@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 96/98] powerpc: Allow flush_(inval_)dcache_range to work across ranges >4GB
+Date:   Tue, 27 Aug 2019 09:51:15 +0200
+Message-Id: <20190827072723.365389667@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,30 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c096397c78f766db972f923433031f2dec01cae0 ]
 
-selftests kvm test cases need pre-required kernel configs for the test
-to get pass.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The upstream commit:
+22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+has a similar effect, but since it is a rewrite of the assembler to C, is
+too invasive for stable. This patch is a minimal fix to address the issue in
+assembler.
+
+This patch applies cleanly to v5.2, v4.19 & v4.14.
+
+When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
+
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
+
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/testing/selftests/kvm/config | 3 +++
- 1 file changed, 3 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/config
+ arch/powerpc/kernel/misc_64.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
-new file mode 100644
-index 0000000000000..63ed533f73d6e
---- /dev/null
-+++ b/tools/testing/selftests/kvm/config
-@@ -0,0 +1,3 @@
-+CONFIG_KVM=y
-+CONFIG_KVM_INTEL=y
-+CONFIG_KVM_AMD=y
--- 
-2.20.1
-
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -135,7 +135,7 @@ _GLOBAL_TOC(flush_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+ 0:	dcbst	0,r6
+@@ -153,7 +153,7 @@ _GLOBAL(flush_inval_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	sync
+ 	isync
 
 
