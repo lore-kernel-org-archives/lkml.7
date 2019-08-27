@@ -2,110 +2,108 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2347C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8264C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E94214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A23214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AHEBEuNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfH0Q1u (ORCPT
+        id S1729140AbfH0Q3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:27:50 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34537 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfH0Q1t (ORCPT
+        Tue, 27 Aug 2019 12:29:43 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45195 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbfH0Q3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:27:49 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m10so17525968qkk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:27:49 -0700 (PDT)
+        Tue, 27 Aug 2019 12:29:43 -0400
+Received: by mail-io1-f67.google.com with SMTP id t3so47623948ioj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IPfWvcwVfrcY1k8aoUFruMr5YkWe0H+HYKEdtrmh3H8=;
+        b=AHEBEuNVjcdNoAW+vvqZ+N3wKuz8LBL2T8s9b7O3ZaBiGh+If49H7yqyqmdkoI/d1+
+         3PnFydaJwChLjqnLhjHZqw7gl7m96W6hkpZo2NVMV6HsMTlndtoutmWv5x1Fndh0Hle5
+         PL72nVjCIiOB544xh8zFFqp5gKS2S8wtjQUMk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3piUJp2MoC2ky9MeuOLHIQnHrz85ApEsVwyMMA5tACI=;
-        b=g7ft7xk5da3j65wkJWSotyzNG19g52qNY7KdsZL2wkqLO9wePclzOhis8ixK4r0sN2
-         LAac5fuo2NRFPHHI0gfcHahsuU2Hw0Tgb45HsNxgaE7PWtH7WBohjKALTrdqbOLZTyUF
-         IFlvvQ2RgpgBQCeebPOxuc6+CUB4MtWYY6XN5kJNzn3l05n5Z7HmlNzjzoF8UF5dQPX5
-         WPFtmqCqElbe70tvHlsOr7i/ZQIrzhUgw/NKquZk6dFsrP1UgaIfHBGyQ7P+VwkTalop
-         dC0RMxEqdY/jm4IA5hBOAaSvwzT3bUodYo38bFxurkT5EGqvN9BC38kDMiQbcCPWITwV
-         o+3A==
-X-Gm-Message-State: APjAAAUB7IkTov/5oPBFCcGEWj4yZB8Ip5YDwL7KWplaNk8sbpk+noyG
-        g5cGCLsYsUhw+qNK84YbCTw4GFypcNj2XIoYOSw=
-X-Google-Smtp-Source: APXvYqwuYdvnwR9sEFMTO6qMRpJ+oTKsJGjfctTublzUJ92RtOfeuApb6wiSvhk+Hz1CgDqEVg9AqCgbxqtlDePcPes=
-X-Received: by 2002:a37:4051:: with SMTP id n78mr21668760qka.138.1566923269072;
- Tue, 27 Aug 2019 09:27:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IPfWvcwVfrcY1k8aoUFruMr5YkWe0H+HYKEdtrmh3H8=;
+        b=uBHD82sioq0lHxgv3tyGxwHe1/2YkseqA1lHUgb5lURAmdpfBXv5qpAP5v/4giAr3f
+         IvxOElwKQxw5rg00gztiL4yPWOZ10c30yStIFV7JSvmrfjIjQ9EP2mnrUXgiAnEq0EDo
+         PJTwsDRh4eguh78N0LOh7PoMzRsjYb7gNA266MifHJG78w6awaPEutEUpV31zhYtOAUM
+         4FBDkD1X5wyXltyQttblFrs/RczBxXd7GinpzuUJ7qhJHyMcb15qpaKpA9bO8lakkjTr
+         RBiK1+PWP/CzobDQJfoOGZyfYfpXOaxx3GwC6w/443688JbjdraoZMoYPOq2wUN1nTjs
+         emaA==
+X-Gm-Message-State: APjAAAXxg70yYuWUrGgWpTzSvhP55+N5k32cc/cpF/ipkF+CPtwCZTRw
+        4k/9yR2A+RE8mO9fsx60SnMicw==
+X-Google-Smtp-Source: APXvYqzdUQDLGPHiqiCzDf92LqsaVidtW1JcW3tvkc0lgAyUdMAr3tJqk4Caezea7fdrzV93W+PxFA==
+X-Received: by 2002:a6b:b756:: with SMTP id h83mr32567090iof.147.1566923382513;
+        Tue, 27 Aug 2019 09:29:42 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
+        by smtp.gmail.com with ESMTPSA id h9sm14723177ior.9.2019.08.27.09.29.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Aug 2019 09:29:41 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     Raul E Rangel <rrangel@chromium.org>, Leo Li <sunpeng.li@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        hersen wu <hersenxs.wu@amd.com>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Nikola Cornij <nikola.cornij@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Charlene Liu <charlene.liu@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/amd/display: fix struct init in update_bounding_box
+Date:   Tue, 27 Aug 2019 10:29:24 -0600
+Message-Id: <20190827162924.88524-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
- <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
- <20190814000622.GB20365@mit.edu> <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
- <20190814090936.GB10516@gardel-login> <20190814093208.GG3600@piout.net>
- <20190819110903.if3dzhvfnlqutn6s@ws.net.home> <20190820185830.GQ3545@piout.net>
-In-Reply-To: <20190820185830.GQ3545@piout.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 27 Aug 2019 18:27:32 +0200
-Message-ID: <CAK8P3a0EiP-LsKp1nFHgeRF09tQ0+5kPQd9JXBEKc1is30x3SA@mail.gmail.com>
-Subject: Re: New kernel interface for sys_tz and timewarp?
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 8:58 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 19/08/2019 13:09:03+0200, Karel Zak wrote:
-> > On Wed, Aug 14, 2019 at 11:32:08AM +0200, Alexandre Belloni wrote:
-> > > On 14/08/2019 11:09:36+0200, Lennart Poettering wrote:
-> > > > On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
-> > > >
-> > > > > - glibc stops passing the caller timezone argument to the kernel
-> > > > > - the distro kernel disables CONFIG_RTC_HCTOSYS,
-> > > > >   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
-> > > >
-> > > > What's the benefit of letting userspace do this? It sounds a lot more
-> > > > fragile to leave this syncing to userspace if the kernel can do this
-> > > > trivially on its own.
-> >
-> > Good point, why CONFIG_RTC_SYSTOHC has been added to the kernel?
-> >
-> > If I good remember than it's because synchronize userspace hwclock
-> > with rtc is pretty fragile and frustrating. We have improved this
-> > hwclock code many times and it will never be perfect. See for example
-> > hwclock --delay= option, sometimes hwclock has no clue about RTC behaviour.
-> >
->
-> With a bit of care, we can reliably set the rtc to the system time from
-> userspace. It takes a bit of time (up to 2 seconds) but it can be
-> reliably set with an accuracy of a few ms on a slow system and an rtc on
-> a slow bus or a few ns with a fast system and a fast bus.
-> I know I did say I would implement it in hwclock and I still didn't
-> (sorry) but we could do better than the --delay option.
+dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
+  struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
+         ^
 
-Would you use the regular RTC_SET_TIME ioctl for that, or
-add a new RTC_SYS_TO_HC command that takes an explicit
-offset? It sounds to me that the synchronization bit (actually
-waiting for the right moment to update the rtc registers) is better
-done in the kernel, while the decision about the offset and when
-to call into the driver is better done in user space.
+Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
 
-     Arnd
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
+
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+index b949e202d6cb..d8dd99bfa275 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -2633,7 +2633,7 @@ static void cap_soc_clocks(
+ static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
+ 		struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
+ {
+-	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
++	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {};
+ 	int i;
+ 	int num_calculated_states = 0;
+ 	int min_dcfclk = 0;
+-- 
+2.23.0.187.g17f5b7556c-goog
+
