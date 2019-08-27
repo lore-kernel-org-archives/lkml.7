@@ -2,165 +2,207 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47448C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBB4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E06214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3499120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TUGwbzRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfH0PFx (ORCPT
+        id S1730058AbfH0PGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:05:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52908 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfH0PFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:05:53 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3094510576DE;
-        Tue, 27 Aug 2019 15:05:53 +0000 (UTC)
-Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CA3060126;
-        Tue, 27 Aug 2019 15:05:52 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     jikos@kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20190719122840.15353-1-mbenes@suse.cz>
- <20190719122840.15353-3-mbenes@suse.cz>
- <20190728200427.dbrojgu7hafphia7@treble>
- <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
- <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <5efd9f4e-eccb-cbe0-ec2e-0e2a6a34c0ea@redhat.com>
-Date:   Tue, 27 Aug 2019 11:05:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 11:06:20 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40672 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfH0PGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:06:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Usqt65qKCjW/SaanMddOsovi4Ansin8CNvgKX8B3UgI=; b=TUGwbzRp9V7EITrN5S0x0Kr1h
+        lrjEaPLBpRfSGGvIWY/DanU0uumSNFLQ+DZBNjadjBC5dtkaPpKQDbKx4tDmcEeY4tO7/XgX8Luky
+        LNITSD5W7yPZZCwS583g4HvX7RUrqefOSQH0B0WjBPOW0iYfKPI837f61jkbWwdXsMrawP9ZAjWal
+        TRJXoD3Ltc62QphcGOMJVGrdWHje9c6QY23nG48l9j8ahEypW29Q8Htops4bei1liVd1Vo6+NcUb/
+        qeZKfRcnn65gAExGZc5LqSUDrOhycXc/UrX/yijndaq7BiSDye6rl3a5VMfIC1AznvFvnluy159O7
+        IqCh+OMtA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38672)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i2d32-00058Q-3K; Tue, 27 Aug 2019 16:06:16 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i2d30-0005q3-Oj; Tue, 27 Aug 2019 16:06:14 +0100
+Date:   Tue, 27 Aug 2019 16:06:14 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Continuous SD IO causes hung task messages
+Message-ID: <20190827150614.GN13294@shell.armlinux.org.uk>
+References: <20190827134337.GK13294@shell.armlinux.org.uk>
+ <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
+ <20190827143634.GL13294@shell.armlinux.org.uk>
+ <20190827145216.GM13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190826145449.wyo7avwpqyriem46@treble>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 27 Aug 2019 15:05:53 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827145216.GM13294@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 10:54 AM, Josh Poimboeuf wrote:
-> On Fri, Aug 23, 2019 at 10:13:06AM +0200, Petr Mladek wrote:
->> On Thu 2019-08-22 17:36:49, Josh Poimboeuf wrote:
->>> On Fri, Aug 16, 2019 at 11:46:08AM +0200, Petr Mladek wrote:
->>>> On Wed 2019-08-14 10:12:44, Josh Poimboeuf wrote:
->>>>> On Wed, Aug 14, 2019 at 01:06:09PM +0200, Miroslav Benes wrote:
->>>>>>> Really, we should be going in the opposite direction, by creating module
->>>>>>> dependencies, like all other kernel modules do, ensuring that a module
->>>>>>> is loaded *before* we patch it.  That would also eliminate this bug.
->>>>>
->>>>> We should look at whether it makes sense to destabilize live patching
->>>>> for everybody, for a small minority of people who care about a small
->>>>> minority of edge cases.
->>>>
->>>> I do not see it that simple. Forcing livepatched modules to be
->>>> loaded would mean loading "random" new modules when updating
->>>> livepatches:
->>>
->>> I don't want to start a long debate on this, because this idea isn't
->>> even my first choice.  But we shouldn't dismiss it outright.
->>
->> I am glad to hear that this is not your first choice.
->>
->>
->>>>    + It means more actions and higher risk to destabilize
->>>>      the system. Different modules have different quality.
->>>
->>> Maybe the distro shouldn't ship modules which would destabilize the
->>> system.
->>
->> Is this realistic? Even the best QA could not check all scenarios.
->> My point is that the more actions we do the bigger the risk is.
+On Tue, Aug 27, 2019 at 03:52:17PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Aug 27, 2019 at 03:36:34PM +0100, Russell King - ARM Linux admin wrote:
+> > On Tue, Aug 27, 2019 at 03:55:23PM +0200, Ulf Hansson wrote:
+> > > On Tue, 27 Aug 2019 at 15:43, Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > While dd'ing the contents of a SD card, I get hung task timeout
+> > > > messages as per below.  However, the dd is making progress.  Any
+> > > > ideas?
+> > > >
+> > > > Presumably, mmc_rescan doesn't get a look-in while IO is progressing
+> > > > for the card?
+> > > 
+> > > Is it a regression?
+> > > 
+> > > There not much of recent mmc core and mmc block changes, that I can
+> > > think of at this point.
+> > 
+> > No idea - I just repaired the SD socket after the D2 line became
+> > disconnected, and decided to run that command as a test.
+> > 
+> > > > ARM64 host, Macchiatobin, uSD card.
+> > > 
+> > > What mmc host driver is it? mmci?
+> > 
+> > sdhci-xenon.
+> > 
+> > I'm just trying with one CPU online, then I'll try with two.  My
+> > suspicion is that there's a problem in the ARM64 arch code where
+> > unlocking a mutex doesn't get noticed on other CPUs.
+> > 
+> > Hmm, I thought I'd try bringing another CPU online, but it seems
+> > like the ARM64 CPU hotplug code is broken:
+> > 
+> > [ 3552.029689] CPU1: shutdown
+> > [ 3552.031099] psci: CPU1 killed.
+> > [ 3949.835212] CPU1: failed to come online
+> > [ 3949.837753] CPU1: failed in unknown state : 0x0
+> > 
+> > which means I can only take CPUs down, I can't bring them back
+> > online without rebooting.
 > 
-> Sure, it introduces risk.  But we have to compare that risk (which only
-> affects rare edge cases) with the ones introduced by the late module
-> patching code.  I get the feeling that "late module patching" introduces
-> risk to a broader range of use cases than "occasional loading of unused
-> modules".
+> Okay, running on a single CPU shows no problems.
 > 
-> The latter risk could be minimized by introducing a disabled state for
-> modules - load it in memory, but don't expose it to users until
-> explicitly loaded.  Just a brainstormed idea; not sure whether it would
-> work in practice.
+> Running on four CPUs (as originally) shows that the kworker thread
+> _never_ gets scheduled, so the warning is not false.
 > 
-
-Interesting idea.  We would need to ensure consistency between the 
-loaded-but-not-enabled module and the version on disk.  Does module init 
-run when it's enabled?  Etc.
-
-<blue sky ideas>
-
-What about folding this the other way?  ie, if a livepatch targets 
-unloaded module foo, loaded module bar, and vmlinux ... it effectively 
-patches bar and vmlinux, but the foo changes are dropped. 
-Responsibility is placed on the admin to install an updated foo before 
-loading it (in which case, livepatching core will again ignore foo.)
-
-Building on this idea, perhaps loading that livepatch would also 
-blacklist specific, known vulnerable (unloaded) module versions.  If the 
-admin tries to load one, a debug msg is generated explaining why it 
-can't be loaded by default.
-
-</blue sky ideas>
-
->>>>    + It might open more security holes that are not fixed by
->>>>      the livepatch.
->>>
->>> Following the same line of thinking, the livepatch infrastructure might
->>> open security holes because of the inherent complexity of late module
->>> patching.
->>
->> Could you be more specific, please?
->> Has there been any known security hole in the late module
->> livepatching code?
+> With three CPUs, same problem.
 > 
-> Just off the top of my head, I can think of two recent bugs which can be
-> blamed on late module patching:
+> root@arm-d06300000000:~# ps aux | grep ' D '
+> root        34  0.0  0.0      0     0 ?        D    15:38   0:00 [kworker/1:1+events_freezable]
+> root@arm-d06300000000:~# cat /proc/34/sched
+> kworker/1:1 (34, #threads: 1)
+> -------------------------------------------------------------------
+> se.exec_start                                :        318689.992440
+> se.vruntime                                  :         37750.882357
+> se.sum_exec_runtime                          :             9.421240
+> se.nr_migrations                             :                    0
+> nr_switches                                  :                 1174
+> nr_voluntary_switches                        :                 1171
+> nr_involuntary_switches                      :                    3
+> se.load.weight                               :              1048576
+> se.runnable_weight                           :              1048576
+> se.avg.load_sum                              :                    6
+> se.avg.runnable_load_sum                     :                    6
+> se.avg.util_sum                              :                 5170
+> se.avg.load_avg                              :                    0
+> se.avg.runnable_load_avg                     :                    0
+> se.avg.util_avg                              :                    0
+> se.avg.last_update_time                      :         318689991680
+> se.avg.util_est.ewma                         :                   10
+> se.avg.util_est.enqueued                     :                    0
+> policy                                       :                    0
+> prio                                         :                  120
+> clock-delta                                  :                    0
 > 
-> 1) There was a RHEL-only bug which caused arch_klp_init_object_loaded()
->     to not be loaded.  This resulted in a panic when certain patched code
->     was executed.
+> The only thing that changes there is "clock-delta".  When I kill the
+> dd, I get:
 > 
-> 2) arch_klp_init_object_loaded() currently doesn't have any jump label
->     specific code.  This has recently caused panics for patched code
->     which relies on static keys.  The workaround is to not use jump
->     labels in patched code.  The real fix is to add support for them in
->     arch_klp_init_object_loaded().
+> root@arm-d06300000000:~# cat /proc/34/sched
+> kworker/1:1 (34, #threads: 1)
+> -------------------------------------------------------------------
+> se.exec_start                                :        574025.791680
+> se.vruntime                                  :         79996.657300
+> se.sum_exec_runtime                          :            10.916400
+> se.nr_migrations                             :                    0
+> nr_switches                                  :                 1403
+> nr_voluntary_switches                        :                 1400
+> nr_involuntary_switches                      :                    3
+> se.load.weight                               :              1048576
+> se.runnable_weight                           :              1048576
+> se.avg.load_sum                              :                   15
+> se.avg.runnable_load_sum                     :                   15
+> se.avg.util_sum                              :                15007
+> se.avg.load_avg                              :                    0
+> se.avg.runnable_load_avg                     :                    0
+> se.avg.util_avg                              :                    0
+> se.avg.last_update_time                      :         574025791488
+> se.avg.util_est.ewma                         :                   10
+> se.avg.util_est.enqueued                     :                    0
+> policy                                       :                    0
+> prio                                         :                  120
+> clock-delta                                  :                   40
 > 
-> I can easily foresee more problems like those in the future.  Going
-> forward we have to always keep track of which special sections are
-> needed for which architectures.  Those special sections can change over
-> time, or can simply be overlooked for a given architecture.  It's
-> fragile.
+> so the thread makes forward progress.
+> 
+> Down to two CPUs:
+> 
+> root@arm-d06300000000:~# ps aux | grep ' D '
+> root        34  0.0  0.0      0     0 ?        D    15:38   0:00 [kworker/1:1+events_freezable]
+> 
+> Same symptoms.  dd and md5sum switch between CPU 0 and CPU1.
 
-FWIW, the static keys case is more involved than simple deferred 
-relocations -- those keys are added to lists and then the static key 
-code futzes with them when it needs to update code sites.  That means 
-the code managing the data structures, kernel/jump_label.c, will need to 
-understand livepatch's strangely loaded-but-not-initialized variants.
+Hmm.
 
-I don't think the other special sections will require such invasive 
-changes, but it's something to keep in mind with respect to late module 
-patching.
+static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
+                                    const struct blk_mq_queue_data *bd)
 
--- Joe
+        mq->in_flight[issue_type] += 1;
+	get_card = (mmc_tot_in_flight(mq) == 1);
+
+        if (get_card)
+	        mmc_get_card(card, &mq->ctx);
+
+mmc_get_card() gets the host lock according to the card.
+
+So, if we always have requests in flight (which is probably the case
+here) we never drop the host lock, and mmc_rescan() never gets a look
+in - hence blocking the kworker.
+
+So this is a real issue with MMC, and not down to something in the
+arch.
+
+I suspect the reason that single-CPU doesn't show it is because it is
+unable to keep multiple requests in flight.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
