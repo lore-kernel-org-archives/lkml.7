@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFFCC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DE5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD462173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21702173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfH0IyW (ORCPT
+        id S1729942AbfH0Iy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:54:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49554 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 04:54:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48684 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbfH0IyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:54:19 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1729895AbfH0IyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:54:25 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4495D8BA2DA;
-        Tue, 27 Aug 2019 08:54:19 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D729C308339B;
+        Tue, 27 Aug 2019 08:54:24 +0000 (UTC)
 Received: from localhost (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D0CF5DA8B;
-        Tue, 27 Aug 2019 08:54:18 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E74585D71C;
+        Tue, 27 Aug 2019 08:54:21 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
@@ -38,27 +38,24 @@ Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
         John Garry <john.garry@huawei.com>,
         Hannes Reinecke <hare@suse.com>,
         linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
-Subject: [PATCH 3/4] nvme: pci: pass IRQF_RESCURE_THREAD to request_threaded_irq
-Date:   Tue, 27 Aug 2019 16:53:43 +0800
-Message-Id: <20190827085344.30799-4-ming.lei@redhat.com>
+Subject: [PATCH 4/4] genirq: use irq's affinity for threaded irq with IRQF_RESCUE_THREAD
+Date:   Tue, 27 Aug 2019 16:53:44 +0800
+Message-Id: <20190827085344.30799-5-ming.lei@redhat.com>
 In-Reply-To: <20190827085344.30799-1-ming.lei@redhat.com>
 References: <20190827085344.30799-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 27 Aug 2019 08:54:19 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 27 Aug 2019 08:54:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If one vector is spread on several CPUs, usually the interrupt is only
-handled on one of these CPUs. Meantime, IO can be issued to the single
-hw queue from different CPUs concurrently, this way is easy to cause
-IRQ flood and CPU lockup.
-
-Pass IRQF_RESCURE_THREAD in above case for asking genirq to handle
-interrupt in the rescurd thread when irq flood is detected.
+In case of IRQF_RESCUE_THREAD, the threaded handler is only used to
+handle interrupt when IRQ flood comes, use irq's affinity for this thread
+so that scheduler may select other not too busy CPUs for handling the
+interrupt.
 
 Cc: Long Li <longli@microsoft.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -74,37 +71,33 @@ Cc: linux-nvme@lists.infradead.org
 Cc: linux-scsi@vger.kernel.org
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/nvme/host/pci.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ kernel/irq/manage.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 45a80b708ef4..0b8d49470230 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1501,8 +1501,21 @@ static int queue_request_irq(struct nvme_queue *nvmeq)
- 		return pci_request_irq(pdev, nvmeq->cq_vector, nvme_irq_check,
- 				nvme_irq, nvmeq, "nvme%dq%d", nr, nvmeq->qid);
- 	} else {
--		return pci_request_irq(pdev, nvmeq->cq_vector, nvme_irq,
--				NULL, nvmeq, "nvme%dq%d", nr, nvmeq->qid);
-+		char *devname;
-+		const struct cpumask *mask;
-+		unsigned long irqflags = IRQF_SHARED;
-+		int vector = pci_irq_vector(pdev, nvmeq->cq_vector);
-+
-+		devname = kasprintf(GFP_KERNEL, "nvme%dq%d", nr, nvmeq->qid);
-+		if (!devname)
-+			return -ENOMEM;
-+
-+		mask = pci_irq_get_affinity(pdev, nvmeq->cq_vector);
-+		if (mask && cpumask_weight(mask) > 1)
-+			irqflags |= IRQF_RESCUE_THREAD;
-+
-+		return request_threaded_irq(vector, nvme_irq, NULL, irqflags,
-+				devname, nvmeq);
- 	}
- }
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 1566abbf50e8..03bc041348b7 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -968,7 +968,18 @@ irq_thread_check_affinity(struct irq_desc *desc, struct irqaction *action)
+ 	if (cpumask_available(desc->irq_common_data.affinity)) {
+ 		const struct cpumask *m;
  
+-		m = irq_data_get_effective_affinity_mask(&desc->irq_data);
++		/*
++		 * Managed IRQ's affinity is setup gracefull on MUNA locality,
++		 * also if IRQF_RESCUE_THREAD is set, interrupt flood has been
++		 * triggered, so ask scheduler to run the thread on CPUs
++		 * specified by this interrupt's affinity.
++		 */
++		if ((action->flags & IRQF_RESCUE_THREAD) &&
++				irqd_affinity_is_managed(&desc->irq_data))
++			m = desc->irq_common_data.affinity;
++		else
++			m = irq_data_get_effective_affinity_mask(
++					&desc->irq_data);
+ 		cpumask_copy(mask, m);
+ 	} else {
+ 		valid = false;
 -- 
 2.20.1
 
