@@ -2,133 +2,107 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19354C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85107C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D15206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD322077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:12:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5+0+hI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730505AbfH0VLY (ORCPT
+        id S1730495AbfH0VMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:11:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49232 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727064AbfH0VLX (ORCPT
+        Tue, 27 Aug 2019 17:12:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38885 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfH0VMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:11:23 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1i2ikJ-0006SQ-9d; Tue, 27 Aug 2019 22:11:19 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1i2ikI-0007E4-NV; Tue, 27 Aug 2019 22:11:18 +0100
-Message-ID: <2b6111fbbe3f44c18c93bd247601a40986eacb22.camel@decadent.org.uk>
-Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Debian kernel maintainers <debian-kernel@lists.debian.org>
-Date:   Tue, 27 Aug 2019 22:11:13 +0100
-In-Reply-To: <20190827170931.GA26908@kroah.com>
-References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
-         <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
-         <1566899033.o5acyopsar.astroid@bobo.none>
-         <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
-         <1566908344.dio7j9zb2h.astroid@bobo.none>
-         <daacccf8e36132b6a747fa4b42626a8812906eaa.camel@decadent.org.uk>
-         <20190827170931.GA26908@kroah.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-BE+bv3pJLifouWhO5Q8C"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 27 Aug 2019 17:12:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id o70so205633pfg.5;
+        Tue, 27 Aug 2019 14:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oL1GWqOgGJTUP/aWDisoRY9YUOhWjgpc42t3TLlasqI=;
+        b=s5+0+hI1teFiarwiw5+rK/Q/iNAOVIhSBKphVOHZ5QClySxbYLYH6WDerBGWk/7y9+
+         Q3e8fvkcjesT0E61joXjZV6HP+vEqoD+kAZ04wFh3Mz8OttC0ZdLTku7JRdiQA1nwcGQ
+         ljyLDNYjOAH63EswSRCB5l9XF0SJm+8adNZQxPnuhGhJxeGNLqbQfzmk/v7pUU7xltf+
+         rXqvPgOdvNqLByVfuGDVnJ9bSVIubEFZlGi8aQV9GOD4c0CrTpfMnmJSGFkM1w4v49d/
+         CXXJ5L9rUacb8cBTC3LSs3Ios857CIBM+c1bodtTEwoCl2awTuJG5amJ1nxNFTnHhto9
+         uNew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oL1GWqOgGJTUP/aWDisoRY9YUOhWjgpc42t3TLlasqI=;
+        b=ibzGKRw2RCRjL3Qg8beCtrHGOFDeolyCLP8Rm6yrWYnTGgWupuUBLheYmGIAoCX1cU
+         CC4lP88RVmsPz3TCaBfe7uHVB3YTjj0XHsiaieJWn2eRIVZUV7OBKL3U4S7h+YRUFcJD
+         +MmL3B4CC9iiDZuOAdFRVWw1j0g3Aq+G2sAz1iF1xRHbDEHizQ3eb6MdwBEz+f2/RB1I
+         uNlZ6yytOYq9PC6WwwyFbPFRHe1wgrNp7iyNMTtp56EI183WnhgT82HP7VU0J0mfd1F4
+         7ULOIaxVJuePTOd4Ks1b4nWbkmhXsCKfmDIg7cd7WQef1124K9UamvthBeXSABUzfRfo
+         EtBQ==
+X-Gm-Message-State: APjAAAVdKJ4TcQFdw2lQuXS6og04c/fElP5VFliTQ0eqXFX8zRt5oHw5
+        YiBta8Jw30PNY08TV0C6dKs=
+X-Google-Smtp-Source: APXvYqxYD6any9nW+zK6K4XhJJ0N2mcL84DjNDyOLURw69g/TpNdeXKyvCThlPyAs/Q/GKoyeRZoCA==
+X-Received: by 2002:a65:4808:: with SMTP id h8mr436492pgs.22.1566940349493;
+        Tue, 27 Aug 2019 14:12:29 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id z14sm131424pjr.23.2019.08.27.14.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 14:12:28 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bruce Wang <bzwang@chromium.org>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm/dpu: remove stray "\n"
+Date:   Tue, 27 Aug 2019 14:10:09 -0700
+Message-Id: <20190827211016.18070-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rob Clark <robdclark@chromium.org>
 
---=-BE+bv3pJLifouWhO5Q8C
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The extra line-break in traces was annoying me.
 
-On Tue, 2019-08-27 at 19:09 +0200, Greg KH wrote:
-> On Tue, Aug 27, 2019 at 04:34:15PM +0100, Ben Hutchings wrote:
-> > On Tue, 2019-08-27 at 22:42 +1000, Nicholas Piggin wrote:
-> > > Masahiro Yamada's on August 27, 2019 8:49 pm:
-[...]
-> > > > modversions is ugly, so it would be great if we could dump it.
-> > > >=20
-> > > > > IIRC (without re-reading it all), in theory distros would be okay
-> > > > > without modversions if they could just provide their own explicit
-> > > > > versioning. They take care about ABIs, so they can version things
-> > > > > carefully if they had to change.
-> >=20
-> > Debian doesn't currently have any other way of detecting ABI changes
-> > (other than eyeballing diffs).
-> >=20
-> > I know there have been proposals of using libabigail for this instead,
-> > but I'm not sure how far those progressed.
->=20
-> Google has started using libabigail to track api changes in AOSP, here's
-> a patch that updates the ABI file after changing it:
-> 	https://android-review.googlesource.com/c/kernel/common/+/1108662
->=20
-> Note, there are issues with it, and some rough edges, but I think it can
-> work.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the pointer.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
+index 765484437d11..eecfe9b3199e 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
+@@ -392,7 +392,7 @@ TRACE_EVENT(dpu_enc_rc,
+ 		__entry->rc_state = rc_state;
+ 		__assign_str(stage_str, stage);
+ 	),
+-	TP_printk("%s: id:%u, sw_event:%d, idle_pc_supported:%s, rc_state:%d\n",
++	TP_printk("%s: id:%u, sw_event:%d, idle_pc_supported:%s, rc_state:%d",
+ 		  __get_str(stage_str), __entry->drm_id, __entry->sw_event,
+ 		  __entry->idle_pc_supported ? "true" : "false",
+ 		  __entry->rc_state)
+-- 
+2.21.0
 
-> But, it means nothing at module load time, this is only at build-check
-> time.  At least modversions would prevent module loading in some cases.
-
-Right, but I *think* that would be enough if we could mark modules for
-strict (exact version) or loose ("ABI version") matching as I outlined.
-
-Ben.
-
---=20
-Ben Hutchings
-I'm always amazed by the number of people who take up solipsism because
-they heard someone else explain it. - E*Borg on alt.fan.pratchett
-
-
-
---=-BE+bv3pJLifouWhO5Q8C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1lnHEACgkQ57/I7JWG
-EQnH0BAAlri4E/3gs5cBbfQh5sIsnVG9aVv5R1v+vDF8+D6Cc68bnGBijEFifV94
-LNiV9UvQzfkvxSNZHBAOPWZZlY3GIgWFR7IsSR539jH8QSu+8GTZyoO6ZWCx5sm7
-feSSRh2KMTBhonLKRx7DzTMtI9x7UbyuxY82wESbE9BzRwUpZ/YJ1eVXByWkTsow
-6OE9739/AtxDrgQ5mEhw21YVZzgf/173SsCJIZd7MwGN4Isyeetm9ZpCSQSpXez0
-vlojkIlSKk1E+w2WwygxKd/nzYw/YPjfh/8HE6FvvVbdD1UcUj8o0kTjy39WVTe6
-97lC0NEOA8ARgz1AIWpDt/PVYKKATm7iLGAUi5PeB42Hw4VqbuqQHhATelT8W3i2
-UJ9zjeZiIWsB+hXBUB+fG3PAIebpnj4/OboTcpvPNDKxrLUSjOhqNH3yAdM7SGu/
-IFUGo4ayvoXAspTxutjfhBDS6Hfd+voT79+0Za9gTsE4Awpz+soYtykwYpmZTrDc
-ov5iKmEpPI+eyJwDOn0o7bdMyx1OZdGQ+3fONi45rfH3kzVVBPfdzASGcIRtBFae
-xQxf9tOIKg0RKCWHKxnJ8OKQOWV05Bg0YofeSOsrO7srBbQd7WzlvH27o2Tohnb+
-8BfqtvE+Wk4fyxvYQm7qhXxWxu1+9V6UCvmP3TF9UDJxCnYSXQ4=
-=g4Is
------END PGP SIGNATURE-----
-
---=-BE+bv3pJLifouWhO5Q8C--
