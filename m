@@ -2,87 +2,104 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE5AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F90C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF361206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704B22184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566908515;
+	bh=eit3RrFqNrNE4vZrZrZF8s6p9Ki/i527M3cLIrYgSgk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WwM8VMqbRWUXp38DefmYPh+A8kGSbDY1OZtSiX5viJes6oCGq+HjEw12vMxPT8Zui
+	 9sFOFl8Qgoez5ICSTyoVD9vSpBsNzQwyKH6RdLZEZczo6b7i0Osc3QJPqVSAqITAir
+	 MrSEf5CSARYF/9ITeAL2mmPMZaRtUoXFED08LK2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfH0MUm (ORCPT
+        id S1729717AbfH0MVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:20:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46287 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfH0MUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:20:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z1so18572083wru.13;
-        Tue, 27 Aug 2019 05:20:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9YiLMzN5FRFc66UBSg4I7hR0hdxNL+dhq+vTlwPS1+A=;
-        b=ZOGza1JY5t1oNUxdSuoZYqgcwlzDE4WglTtIViYZOobeMFj/KqDbFyFuO7VbUbIfCM
-         UJTw0BJZHR5nRgO+47lx3YLoZLHq3qMRjG0R7+Ie5bazei2YxSvGx2nUO5lb5Xk28XWj
-         uUKDQMaz6iqJ3lbUfb/FYOtBVny8mhaDIjuFGTTbDC4ghKdgwEq0Oi58rZmjIN0xo28X
-         k6VAJlSd8fFd4Sg1oLkkAINg6xYnSVz5eszxWa3Aa/3mjO9TuK862A8yEKs9W0SX+TvV
-         rt2lgxAo5ByZhienwXkSh56Vd0bjJ0YQWnSo9qzQEIYOaCGzypEEDffG4+m+UYBsjOPt
-         mZyQ==
-X-Gm-Message-State: APjAAAVENYceb8ndoBIXsq8a411ADcR8pHLCxhSc/o3HyKGep3mr77Ei
-        XcFQxPLZ/O0wSebSc53er4c=
-X-Google-Smtp-Source: APXvYqwO7vn03LTFpqQ9ngvvTwiMldgPKHecOUTmCBtEmSRe0vl9sAmbUqJBgQ8IAe9J30XjSgMIIQ==
-X-Received: by 2002:adf:e5d1:: with SMTP id a17mr4034066wrn.118.1566908439451;
-        Tue, 27 Aug 2019 05:20:39 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id f197sm8086254wme.22.2019.08.27.05.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 05:20:38 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] modpost: add NOFAIL to strndup
-Date:   Tue, 27 Aug 2019 15:20:23 +0300
-Message-Id: <20190827122023.15086-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 27 Aug 2019 08:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfH0MVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:21:54 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3152022CF5;
+        Tue, 27 Aug 2019 12:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566908513;
+        bh=eit3RrFqNrNE4vZrZrZF8s6p9Ki/i527M3cLIrYgSgk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K+bhF6LQlv0PWuqu69sB60FlA8VjbX6q7t88std4fDvwW+Qdv9KvM0+06G4BpppUE
+         Tq7Cm1xEVtY69dumS4ki+R8Lx4ZUFhuF9PEy4Xz7vrH+kntlW5Qv1SH6JUm28eC46r
+         UVt7J4YMad9VT8qigX+DqJi8v3/FaWGHckQXRWjE=
+Received: by mail-qt1-f175.google.com with SMTP id a13so251816qtj.1;
+        Tue, 27 Aug 2019 05:21:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAVSZkctW86tZeY4a8DwYOE7qx2kYiC25d3J++dfr1JW9/L/onfu
+        zLqsZka/A5t4jveqKbxFxr1LDOpgEBdnJ2djPQ==
+X-Google-Smtp-Source: APXvYqyA08IogmVH6/eLxgDuudG/7vlKnuGh62iApaH8ZRCJvpE+Z067YCE/LHZReBYhVH85YjaQVbcpek7HBHvUyfc=
+X-Received: by 2002:ac8:386f:: with SMTP id r44mr22938146qtb.300.1566908512316;
+ Tue, 27 Aug 2019 05:21:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190823121637.5861-1-masneyb@onstation.org> <20190823121637.5861-3-masneyb@onstation.org>
+In-Reply-To: <20190823121637.5861-3-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 27 Aug 2019 07:21:41 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLmaE+6Lj6KDgscK3OO=fsCGM=90eRCYK_gBA7bdkEbEg@mail.gmail.com>
+Message-ID: <CAL_JsqLmaE+6Lj6KDgscK3OO=fsCGM=90eRCYK_gBA7bdkEbEg@mail.gmail.com>
+Subject: Re: [PATCH v7 2/7] dt-bindings: display: msm: gmu: add optional ocmem property
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        devicetree@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add NOFAIL check for the strndup call, because the function
-allocates memory and can return NULL. All calls to strdup in
-modpost are checked with NOFAIL.
+On Fri, Aug 23, 2019 at 7:16 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
+> must use the On Chip MEMory (OCMEM) in order to be functional. Add the
+> optional ocmem property to the Adreno Graphics Management Unit bindings.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v6:
+> - link to gmu-sram in example
+> - add ranges property to ocmem example to match bindings
+>
+> Changes since v5:
+> - rename ocmem property to sram to match what TI currently has.
+>
+> Changes since v4:
+> - None
+>
+> Changes since v3:
+> - correct link to qcom,ocmem.yaml
+>
+> Changes since v2:
+> - Add a3xx example with OCMEM
+>
+> Changes since v1:
+> - None
+>
+>  .../devicetree/bindings/display/msm/gmu.txt   | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- scripts/mod/modpost.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index f277e116e0eb..0255538528fe 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -795,9 +795,9 @@ static int match(const char *sym, const char * const pat[])
- 
- 		/* "*foo*" */
- 		if (*p == '*' && *endp == '*') {
--			char *here, *bare = strndup(p + 1, strlen(p) - 2);
-+			char *bare = NOFAIL(strndup(p + 1, strlen(p) - 2));
-+			char *here = strstr(sym, bare);
- 
--			here = strstr(sym, bare);
- 			free(bare);
- 			if (here != NULL)
- 				return 1;
--- 
-2.21.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
