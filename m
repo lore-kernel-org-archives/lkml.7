@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D464AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A2AC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66122173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFC52189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893057;
-	bh=CeETEi2Wr7r5E+0ckBNN9DI8p3w6xM9/Ulo1YSbBOMA=;
+	s=default; t=1566893058;
+	bh=ZggfT+JWHGu1siNVM/GePQqwV8dlcwldZQqu52ZGpr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgS7D8eUxXIzpNX2lUnXmdknxDEWVzQujiGCoKdLy5KtFYOJRniXUIl79pyIvE1vb
-	 Rkm4UJCyqc7nlwuEu1kpyR83pvdRwoG8p7LKd+KxMyuRqTowvFY50JZfgZPRJIad6c
-	 xApf1YX4d4q5Sd+LHOUHlK4DbbNvVybvUcrGtYSY=
+	b=HFr8SM9l92rjOVgzawU7cG0XkrcpPE382RbpnpwpxjZv4CreYthxJU6MHElCgp/BR
+	 1kD01rqpJERWiG3B+jr4dUhRQeiZ9S0b3JqUe3CwM16pL1fp/HKGyzs/7cemcNxqS0
+	 5ObhMJMpZBIQLXDZ7Nx+QLCipkrnEVKuLiWpRHj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732507AbfH0IEQ (ORCPT
+        id S1732518AbfH0IER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:04:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33554 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:04:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbfH0IEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:04:13 -0400
+        id S1732494AbfH0IEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:04:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F78206BA;
-        Tue, 27 Aug 2019 08:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA042184D;
+        Tue, 27 Aug 2019 08:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893052;
-        bh=CeETEi2Wr7r5E+0ckBNN9DI8p3w6xM9/Ulo1YSbBOMA=;
+        s=default; t=1566893055;
+        bh=ZggfT+JWHGu1siNVM/GePQqwV8dlcwldZQqu52ZGpr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1s3HC2oIRV/h74rMSL+fLFRcIf6owrajlkWQh6DJ+riLkfiVFtGutYzhK9xeuRBA
-         cFoawWtJVLSkj7+URIP9Oj9+duuJ4nZ8TsjUlCeU11LkyVtIOFFmVTgHS603iOHpRE
-         f9EcAI/Ibkb42ktCpUjKK8Je1PHN7DVutN/FIrSM=
+        b=I7MepG1+a6DZihSTuI/LpbzaHAVh47pf/ZEQnwPdLHX6JqjTKBwNZnFMP7Dm6qasx
+         UQuKvJMe9DEiOjGGAgynWF5ULUZnV2BbeBk7cpOzR6Rl+/kw2XpEDAnZcvDCTXCLdI
+         Xn+b8PHHAByoDon5iynRNuYwQJ2X/qDn9rUTf/UM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@google.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 102/162] block, bfq: handle NULL return value by bfq_init_rq()
-Date:   Tue, 27 Aug 2019 09:50:30 +0200
-Message-Id: <20190827072741.819216658@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 063/162] net: phy: phy_led_triggers: Fix a possible null-pointer dereference in phy_led_trigger_change_speed()
+Date:   Tue, 27 Aug 2019 09:49:51 +0200
+Message-Id: <20190827072740.358896227@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -63,74 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fd03177c33b287c6541f4048f1d67b7b45a1abc9 ]
+[ Upstream commit 271da132e29b5341c31eca6ba6a72ea1302ebac8 ]
 
-As reported in [1], the call bfq_init_rq(rq) may return NULL in case
-of OOM (in particular, if rq->elv.icq is NULL because memory
-allocation failed in failed in ioc_create_icq()).
+In phy_led_trigger_change_speed(), there is an if statement on line 48
+to check whether phy->last_triggered is NULL:
+    if (!phy->last_triggered)
 
-This commit handles this circumstance.
+When phy->last_triggered is NULL, it is used on line 52:
+    led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
 
-[1] https://lkml.org/lkml/2019/7/22/824
+Thus, a possible null-pointer dereference may occur.
 
-Cc: Hsin-Yi Wang <hsinyi@google.com>
-Cc: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Reported-by: Hsin-Yi Wang <hsinyi@google.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
+LED_OFF) is called when phy->last_triggered is not NULL.
+
+This bug is found by a static analysis tool STCheck written by
+the OSLAB group in Tsinghua University.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/phy/phy_led_triggers.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 404e776aa36d0..b528710364e9e 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2085,9 +2085,14 @@ static void bfq_request_merged(struct request_queue *q, struct request *req,
- 	    blk_rq_pos(container_of(rb_prev(&req->rb_node),
- 				    struct request, rb_node))) {
- 		struct bfq_queue *bfqq = bfq_init_rq(req);
--		struct bfq_data *bfqd = bfqq->bfqd;
-+		struct bfq_data *bfqd;
- 		struct request *prev, *next_rq;
+diff --git a/drivers/net/phy/phy_led_triggers.c b/drivers/net/phy/phy_led_triggers.c
+index b86a4b2116f81..59a94e07e7c55 100644
+--- a/drivers/net/phy/phy_led_triggers.c
++++ b/drivers/net/phy/phy_led_triggers.c
+@@ -48,8 +48,9 @@ void phy_led_trigger_change_speed(struct phy_device *phy)
+ 		if (!phy->last_triggered)
+ 			led_trigger_event(&phy->led_link_trigger->trigger,
+ 					  LED_FULL);
++		else
++			led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
  
-+		if (!bfqq)
-+			return;
-+
-+		bfqd = bfqq->bfqd;
-+
- 		/* Reposition request in its sort_list */
- 		elv_rb_del(&bfqq->sort_list, req);
- 		elv_rb_add(&bfqq->sort_list, req);
-@@ -2134,6 +2139,9 @@ static void bfq_requests_merged(struct request_queue *q, struct request *rq,
- 	struct bfq_queue *bfqq = bfq_init_rq(rq),
- 		*next_bfqq = bfq_init_rq(next);
- 
-+	if (!bfqq)
-+		return;
-+
- 	/*
- 	 * If next and rq belong to the same bfq_queue and next is older
- 	 * than rq, then reposition rq in the fifo (by substituting next
-@@ -5061,12 +5069,12 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 
- 	spin_lock_irq(&bfqd->lock);
- 	bfqq = bfq_init_rq(rq);
--	if (at_head || blk_rq_is_passthrough(rq)) {
-+	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
- 		if (at_head)
- 			list_add(&rq->queuelist, &bfqd->dispatch);
- 		else
- 			list_add_tail(&rq->queuelist, &bfqd->dispatch);
--	} else { /* bfqq is assumed to be non null here */
-+	} else {
- 		idle_timer_disabled = __bfq_insert_request(bfqd, rq);
- 		/*
- 		 * Update bfqq, because, if a queue merge has occurred
+-		led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
+ 		led_trigger_event(&plt->trigger, LED_FULL);
+ 		phy->last_triggered = plt;
+ 	}
 -- 
 2.20.1
 
