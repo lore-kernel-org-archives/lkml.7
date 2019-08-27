@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFC1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2397FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009DE2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB05221881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893100;
-	bh=crjlqMoDAtHaJ0EO+4rd6JDfLo9OA5+Po6RyYPRh/d0=;
+	s=default; t=1566893107;
+	bh=zSt9OyuCCf+/314BuRfbHEIHr6Hl7XP/JOfES86IgzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vhPYNqqoyAbLNEqGGiIxfIT1knX19gBYtghL87tHAGRcSn8q0PYQmvlvjE22NhX5v
-	 UxUNwGQEn/ZIrzbeKyGYEtXkjTA/xdAFRdOW5SYjFpeHJyPrhSJ0RMAi2N6WT4Zwwy
-	 Rh7iZGYY9kH4UnCzhcYKPK4N3VIplxQbuagUDSHE=
+	b=uwGZu7TxDjZ91/ItLVTMYHzuak8bp+34WmnkkyYmlMDWJISQvZCO3yNX6k/mRqZal
+	 3JT6yn1e61hdH7pEdCYjrE7/ohxjmw82Kp+grWtlsd6pzGgra3V5FhciDkq6JFaaHs
+	 3WJ4PtXSYJ6stw+gh1sfC6LNQCjnABkPril3DZKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732680AbfH0IE7 (ORCPT
+        id S1732694AbfH0IFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34522 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732640AbfH0IEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:04:55 -0400
+        id S1731410AbfH0IFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:05:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A0C206BA;
-        Tue, 27 Aug 2019 08:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3677206BA;
+        Tue, 27 Aug 2019 08:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893094;
-        bh=crjlqMoDAtHaJ0EO+4rd6JDfLo9OA5+Po6RyYPRh/d0=;
+        s=default; t=1566893100;
+        bh=zSt9OyuCCf+/314BuRfbHEIHr6Hl7XP/JOfES86IgzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTA86i9z9CgmrOxRM71c9zl2FtFDx3vCE4eN8UjQfkJCC7st4ziXHdu5nO6/J+4eS
-         RJIxhLiJ7MmvNsk43dEBdRWDAxPA6kQZW1NzvsG7x3nHz4gXZI/to5rcH01AgZRnpk
-         ycPaBjtm3PY6DaPbCZITO4BOvmpiklMi/pr9PZJg=
+        b=BUphbPD58LjUtc9t4EyTJ38Bfb5tUXnFpbcUDHj7keiDK1Wy68UC97eyIyoQ+htZr
+         mGsIlGxJx+EBo8b8rNb8KrqmQa7TNPUiOB1gcw6VJRRO+CBnHobmo2Ufcdykk98l0V
+         PaUtMzzVp88HHwWRz2cUqhSB7mV85d0G5UHm+ZOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.2 119/162] drm/amdgpu/gfx9: update pg_flags after determining if gfx off is possible
-Date:   Tue, 27 Aug 2019 09:50:47 +0200
-Message-Id: <20190827072742.587018671@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.2 121/162] scsi: ufs: Fix NULL pointer dereference in ufshcd_config_vreg_hpm()
+Date:   Tue, 27 Aug 2019 09:50:49 +0200
+Message-Id: <20190827072742.673224680@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,56 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 98f58ada2d37e68125c056f1fc005748251879c2 upstream.
+commit 7c7cfdcf7f1777c7376fc9a239980de04b6b5ea1 upstream.
 
-We need to set certain power gating flags after we determine
-if the firmware version is sufficient to support gfxoff.
-Previously we set the pg flags in early init, but we later
-we might have disabled gfxoff if the firmware versions didn't
-support it.  Move adding the additional pg flags after we
-determine whether or not to support gfxoff.
+Fix the following BUG:
 
-Fixes: 005440066f92 ("drm/amdgpu: enable gfxoff again on raven series (v2)")
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Tom St Denis <tom.stdenis@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
+  [ 187.065689] BUG: kernel NULL pointer dereference, address: 000000000000001c
+  [ 187.065790] RIP: 0010:ufshcd_vreg_set_hpm+0x3c/0x110 [ufshcd_core]
+  [ 187.065938] Call Trace:
+  [ 187.065959] ufshcd_resume+0x72/0x290 [ufshcd_core]
+  [ 187.065980] ufshcd_system_resume+0x54/0x140 [ufshcd_core]
+  [ 187.065993] ? pci_pm_restore+0xb0/0xb0
+  [ 187.066005] ufshcd_pci_resume+0x15/0x20 [ufshcd_pci]
+  [ 187.066017] pci_pm_thaw+0x4c/0x90
+  [ 187.066030] dpm_run_callback+0x5b/0x150
+  [ 187.066043] device_resume+0x11b/0x220
+
+Voltage regulators are optional, so functions must check they exist
+before dereferencing.
+
+Note this issue is hidden if CONFIG_REGULATORS is not set, because the
+offending code is optimised away.
+
+Notes for stable:
+
+The issue first appears in commit 57d104c153d3 ("ufs: add UFS power
+management support") but is inadvertently fixed in commit 60f0187031c0
+("scsi: ufs: disable vccq if it's not needed by UFS device") which in
+turn was reverted by commit 730679817d83 ("Revert "scsi: ufs: disable vccq
+if it's not needed by UFS device""). So fix applies v3.18 to v4.5 and
+v5.1+
+
+Fixes: 57d104c153d3 ("ufs: add UFS power management support")
+Fixes: 730679817d83 ("Revert "scsi: ufs: disable vccq if it's not needed by UFS device"")
 Cc: stable@vger.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    4 ++++
- drivers/gpu/drm/amd/amdgpu/soc15.c    |    5 -----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -596,6 +596,10 @@ static void gfx_v9_0_check_if_need_gfxof
- 		    (adev->gfx.rlc_feature_version < 1) ||
- 		    !adev->gfx.rlc.is_rlc_v2_1)
- 			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
-+		if (adev->pm.pp_feature & PP_GFXOFF_MASK)
-+			adev->pg_flags |= AMD_PG_SUPPORT_GFX_PG |
-+				AMD_PG_SUPPORT_CP |
-+				AMD_PG_SUPPORT_RLC_SMU_HS;
- 		break;
- 	default:
- 		break;
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -949,11 +949,6 @@ static int soc15_common_early_init(void
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -7032,6 +7032,9 @@ static inline int ufshcd_config_vreg_lpm
+ static inline int ufshcd_config_vreg_hpm(struct ufs_hba *hba,
+ 					 struct ufs_vreg *vreg)
+ {
++	if (!vreg)
++		return 0;
++
+ 	return ufshcd_config_vreg_load(hba->dev, vreg, vreg->max_uA);
+ }
  
- 			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
- 		}
--
--		if (adev->pm.pp_feature & PP_GFXOFF_MASK)
--			adev->pg_flags |= AMD_PG_SUPPORT_GFX_PG |
--				AMD_PG_SUPPORT_CP |
--				AMD_PG_SUPPORT_RLC_SMU_HS;
- 		break;
- 	default:
- 		/* FIXME: not supported yet */
 
 
