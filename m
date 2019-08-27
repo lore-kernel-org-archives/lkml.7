@@ -2,98 +2,90 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AB5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932EEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C8221881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="OGEgskoN"
+	by mail.kernel.org (Postfix) with ESMTP id 738B121881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbfH0QzK (ORCPT
+        id S1730522AbfH0QzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:55:10 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:39974 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730360AbfH0Qyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:54:52 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 3DAF842ECC;
-        Tue, 27 Aug 2019 16:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1566924890; x=1568739291; bh=mEhEh6gAJzPJESzZ96RxoI02+oLNMejWhrw
-        LDGL5SN0=; b=OGEgskoNln7egAIhfiLrKN4P/S1HDpgt9khkLFP9deDZ+M+EpmP
-        FAfFqOUuQj+WiQSd9GGIDO8rn2ys5gdlP+p3+vitx9bA360ixxE93qWpf5cXojEn
-        buwT0/VlsDmHom5zuXGU7tFz3JxC6iL30O1RP31P3MpgERUmaCB13SXc=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2d4klrJHhy_p; Tue, 27 Aug 2019 19:54:50 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id F1B6741209;
-        Tue, 27 Aug 2019 19:54:49 +0300 (MSK)
-Received: from localhost.dev.yadro.com (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Tue, 27 Aug 2019 19:54:49 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        Alexander Amelkin <a.amelkin@yadro.com>,
-        <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Subject: [PATCH v3 1/4] vesnin: add wdt2 section with alt-boot option
-Date:   Tue, 27 Aug 2019 19:54:23 +0300
-Message-ID: <20190827165426.17037-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190827165426.17037-1-i.mikhaylov@yadro.com>
-References: <20190827165426.17037-1-i.mikhaylov@yadro.com>
+        Tue, 27 Aug 2019 12:55:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43661 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfH0QzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:55:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y8so19516778wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:55:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nJ6Yhnmx0Z0m7upWdz8dDf2ghGkiqwiluwv7s0RuRzw=;
+        b=r/1/FW9K/xvuA1EMuhXiOewETkY57LpLS0iNzP2MBWFvZaZGgakmL3A0ibspVZjUfj
+         lCqhLhprFwz9oPl5SQrIH5jTABPpvu08gW32+JOnjOfN+yWz0Sr02qjSjrgMfDjsl2Kt
+         YXLCqSjTmy1E9gwIyqStd+/NdVIbnWtBBZ2F6z2HLhvEhV+KFy3DL9cdbhyMSQiZvqww
+         CGd2A03GLxXqEWnzeHhkaCeyIT6TLTX35LUy129/cmnoYJe6YSCzKsBw66gt/KAdwBf+
+         kNBQySxpywFBr9HY6o4uaEal2gXF+Oq252cmS5PiFt9w0YtDYoweQm3guGFTiI8sUlLE
+         yZUQ==
+X-Gm-Message-State: APjAAAXwM8MmhYSdK5QcLHq8I5MZVPONwRXTLhY96biUv2GQ+nbDUw7K
+        T50lvqg3/S/mmNro+IJQhTA=
+X-Google-Smtp-Source: APXvYqzmGy6ajJC6nrDUd+QNoqJqocuS2o207FH1VdgkNulgd++bQf8a5fXl9c/wEjWvyq21q9XK7A==
+X-Received: by 2002:a05:6000:1186:: with SMTP id g6mr31711139wrx.17.1566924922812;
+        Tue, 27 Aug 2019 09:55:22 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id n14sm54925295wra.75.2019.08.27.09.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 09:55:22 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] checkpatch: check for nested (un)?likely calls
+Date:   Tue, 27 Aug 2019 19:55:15 +0300
+Message-Id: <20190827165515.21668-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds wdt2 section with 'alt-boot' option into dts for vesnin.
+IS_ERR, IS_ERR_OR_NULL, IS_ERR_VALUE already contain unlikely optimization
+internally. Thus, there is no point in calling these functions under
+likely/unlikely.
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+This check is based on the coccinelle rule developed by Enrico Weigelt
+https://lore.kernel.org/lkml/1559767582-11081-1-git-send-email-info@metux.net/
+
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/checkpatch.pl | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-index 0b9e29c3212e..2ee26c86a32e 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -222,3 +222,7 @@
- &vuart {
- 	status = "okay";
- };
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 93a7edfe0f05..81dace5ceea5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6480,6 +6480,13 @@ sub process {
+ 			     "Using $1 should generally have parentheses around the comparison\n" . $herecurr);
+ 		}
+ 
++# nested likely/unlikely calls
++		if ($perl_version_ok &&
++		    $line =~ /\b(?:(?:un)?likely)\s*\(!?\s*(IS_ERR(?:_OR_NULL|_VALUE)?)\s*${balanced_parens}\s*\)/) {
++			WARN("LIKELY_MISUSE",
++			     "nested (un)?likely calls, unlikely already used in $1 internally\n" . $herecurr);
++		}
 +
-+&wdt2 {
-+	aspeed,alt-boot;
-+};
+ # whine mightly about in_atomic
+ 		if ($line =~ /\bin_atomic\s*\(/) {
+ 			if ($realfile =~ m@^drivers/@) {
 -- 
-2.20.1
+2.21.0
 
