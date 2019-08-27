@@ -2,129 +2,150 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C49CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBA9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F15206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566931172;
-	bh=mA6/COdlY32LtWt962o3G5YVRffVgo1lKDPVMKMavrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YuQINBcvTJy7Lm4M8oWx0TQeSYq419kbqLb2kjj0Ri0tyVRcOo4kgNmchB9TXc7Z8
-	 SlkpM3QrPvaBydco1/dn2gI1eWlj3TOaePt+zgDiKI7kO/O1NUfV5KUxYCeTKHAoEr
-	 hr+9n2OoHRfy1oC5zliF91UYdrJBrmpT6TfgDjBI=
+	by mail.kernel.org (Postfix) with ESMTP id 9731621883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ERL0kigP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wMTir3CH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfH0Sjb (ORCPT
+        id S1730575AbfH0Sjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:39:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41943 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729779AbfH0Sja (ORCPT
+        Tue, 27 Aug 2019 14:39:46 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50555 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729779AbfH0Sjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:39:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so134404ota.8;
-        Tue, 27 Aug 2019 11:39:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XMfpx8zaYFv8FB4sdyqjlN5h9P+ymLOJHIBXDCz83lw=;
-        b=RM3iTfg94Sp11I7dq9Cb0WBP8TJ5XRBib4cii0Mypj+gvMfJLFd2T+tqEzKDFEqlwu
-         znl+oY7YP02WAyXiSB9D0rzj32ZA1pOx8XZpF2jW1ABWJb8LAl5NVzel22XSeSnG9Sz4
-         fQD+sWcQdCdTG4b5nsIGQzjRd+AtZLkr343KWbrx/2i5bHOLRTJGskNREcoaldH4G57V
-         Wu3pV3tNBxTl7603iU/3UeeMuZDKd8HUan0vWzZ6aeQi9GMdLBEByOtrrIgwpHBOqiF3
-         Cu13ynDH0NcNrVajRhanlpzjWb0r6e8G8xPHsG3jgiV+1TL1u/jIcbbL26HoU68829sF
-         mcBg==
-X-Gm-Message-State: APjAAAWMbGTWk6oNvozJt8XTs4nhf+pLcHzw7TovELpVO6j6JFKiCMXF
-        M2AeJ1j8dVLUVVyTqNdSqw==
-X-Google-Smtp-Source: APXvYqzoemcNCPbstiXM/G8dfEnWRe5MtRuqF2QfOKr+DAg0PvZiCXcrcG6fxo8TiaEvdRGl8Ab2hg==
-X-Received: by 2002:a9d:170b:: with SMTP id i11mr40703ota.60.1566931169589;
-        Tue, 27 Aug 2019 11:39:29 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z16sm3966oic.10.2019.08.27.11.39.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 11:39:25 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 13:39:24 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
-Message-ID: <20190827183924.GA24178@bogus>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
- <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+        Tue, 27 Aug 2019 14:39:46 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 101C528AD;
+        Tue, 27 Aug 2019 14:39:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 27 Aug 2019 14:39:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=2Pi2UrTYWIZeSLhHDsmgNc73uGU
+        Eowqv9oRu+ZwsHGA=; b=ERL0kigPYO3OOz4tGQ+vEqkqh0JtqzICMMQfqdWbcU/
+        rytJcRaMGrU/T8owYvdVPhUKoDWhD0/ZOr1Z5wHQJE4Ug5/TmRzTt9/72pfzgiuL
+        Du1v8YcF7vi673FsOfHS3CwrD8BfytsPXZ9rD/wJe94ok9QIYzCYWXR7DkiwCU+T
+        cV7GGZDxvYZilkzclYwbHDf0a2VdjdCZJAOfJmPhaSHd7Yy1qGF3j1/edzsYmCHx
+        2DK47P8o90y3AcG9b8cWDMNx+XtBlahTB7SptqEo+PDdnYp+1uBj4YlurE/1aSjD
+        PmGDvqUtiNwcDXRucyXs/4vxz96WbU2QwLrkUr3ue8w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=2Pi2Ur
+        TYWIZeSLhHDsmgNc73uGUEowqv9oRu+ZwsHGA=; b=wMTir3CHsmW0knAj4jGavl
+        VA3aikjJIy/f6GBK9UNZuaKk7Whb35zv9Tk7sPLWnTsxGrI/w9jAcAVbOeOqD750
+        He9Pkdwp7mNCVN8qZkuPyI0wdsF6fDD5JzpVr4UpietVo1Y8/i8mJp18D3vHWjp0
+        ixBpcqJ6z8LZs5sO64y3Tq0eRdmn5Pnx2SdtHcU10vOqzSqDsmmDnkua58OkiGfG
+        ZOPrWiV2J2joUvQdfOpEItP3AXgoZ0Y2O6/rdVMJwsr3K180qg3c4xztZP35Yr+k
+        Vqw3ZcjK5GLwNwr1XwKnIfqUg1+UXhYgQDMur9W1zUXeq4WHy1Ju17TUrV8UY+Sw
+        ==
+X-ME-Sender: <xms:73hlXfX7Vchuz9zmlBM56kYVBLGIQJHubf8MIvFsRBXXNJGdbaMu8Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehkedgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
+    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:73hlXdH7YI8jCFkiLHviNcu0jCeAgL0xjiUisNijqqGoGNn19CErzw>
+    <xmx:73hlXafPM7yZFn7IJWAJdeE7G0lRiGGdAvdsBfdJhywjJDDgktYWtA>
+    <xmx:73hlXeqBLLjyr1V-zR_NyQdKihMQgf4PAihzAUEF3FGUVfCLeoENlQ>
+    <xmx:8XhlXTfghgODvyWc3J-F8F6rCiKefmXMXzgzjeMopFsEt6l7CsM9uw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ABAA580063;
+        Tue, 27 Aug 2019 14:39:42 -0400 (EDT)
+Date:   Tue, 27 Aug 2019 20:39:40 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Sasha Levin <sashal@kernel.org>, Michal Hocko <mhocko@kernel.org>
+Cc:     Thomas Backlund <tmb@mageia.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM
+ counters in sync with the hierarchical ones"
+Message-ID: <20190827183940.GA2924@kroah.com>
+References: <20190817004726.2530670-1-guro@fb.com>
+ <20190817063616.GA11747@kroah.com>
+ <20190817191518.GB11125@castle>
+ <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
+ <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
+ <20190827141016.GH7538@dhcp22.suse.cz>
+ <20190827170618.GC21369@kroah.com>
+ <20190827173950.GJ7538@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190827173950.GJ7538@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-
-The subject should indicate this is for Mediatek.
-
+On Tue, Aug 27, 2019 at 07:39:50PM +0200, Michal Hocko wrote:
+> On Tue 27-08-19 19:06:18, Greg KH wrote:
+> > On Tue, Aug 27, 2019 at 04:10:16PM +0200, Michal Hocko wrote:
+> > > On Sat 24-08-19 23:23:07, Thomas Backlund wrote:
+> > > > Den 24-08-2019 kl. 22:57, skrev Andrew Morton:
+> > > > > On Sat, 17 Aug 2019 19:15:23 +0000 Roman Gushchin <guro@fb.com> wrote:
+> > > > > 
+> > > > > > > > Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
+> > > > > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > > > > > > Cc: Yafang Shao <laoar.shao@gmail.com>
+> > > > > > > > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > > > > > > > ---
+> > > > > > > >   mm/memcontrol.c | 8 +++-----
+> > > > > > > >   1 file changed, 3 insertions(+), 5 deletions(-)
+> > > > > > > 
+> > > > > > > <formletter>
+> > > > > > > 
+> > > > > > > This is not the correct way to submit patches for inclusion in the
+> > > > > > > stable kernel tree.  Please read:
+> > > > > > >      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> > > > > > > for how to do this properly.
+> > > > > > 
+> > > > > > Oh, I'm sorry, will read and follow next time. Thanks!
+> > > > > 
+> > > > > 766a4c19d880 is not present in 5.2 so no -stable backport is needed, yes?
+> > > > > 
+> > > > 
+> > > > Unfortunately it got added in 5.2.7, so backport is needed.
+> > > 
+> > > yet another example of patch not marked for stable backported to the
+> > > stable tree. yay...
+> > 
+> > If you do not want autobot to pick up patches for specific
+> > subsystems/files, just let us know and we will add them to the
+> > blacklist.
 > 
-> This adds a property "num-pwms" in example so that we could
-> specify the number of PWM channels via device tree.
+> Done that on several occasions over last year and so. I always get "yep
+> we are going to black list" and whoops and we are back there with
+> patches going to stable like nothing happened. We've been through this
+> discussion so many times I am tired of it and to be honest I simply do
+> not care anymore.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> Changes since v5:
-> - Add an Acked-by tag
-> - This file is original v4 patch 5/10
-> (https://patchwork.kernel.org/patch/11102577/)
-> 
-> Change-Id: I429048afeffa96f3f14533910efe242f88776043
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> index 991728cb46cb..ea95b490a913 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> @@ -14,12 +14,12 @@ Required properties:
->                  has no clocks
->     - "top": the top clock generator
->     - "main": clock used by the PWM core
-> -   - "pwm1-8": the eight per PWM clocks for mt2712
-> -   - "pwm1-6": the six per PWM clocks for mt7622
-> -   - "pwm1-5": the five per PWM clocks for mt7623
-> +   - "pwm1-N": the PWM clocks for each channel
-> +   where N starting from 1 to the maximum number of PWM channels
+> I will keep encouraging people to mark patches for stable but I do not
+> give a wee bit about any reports for the stable tree. Nor do I care
+> whether something made it in and we should be careful to mark another
+> patch for stable as a fixup like this one.
 
-Once converted to schema, you are going to be back to listing them out.
+Sasha, can you add these to the blacklist for autosel?
 
->   - pinctrl-names: Must contain a "default" entry.
->   - pinctrl-0: One property must exist for each entry in pinctrl-names.
->     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> + - num-pwms: the number of PWM channels.
+thanks,
 
-You can't add new required properties without breaking compatibility. 
-
-You already have to imply the number of channels from the compatible (or 
-number of clocks) and you have to keep doing so to maintain 
-compatibility, so why not just keep doing that for new chips?
-
-Rob
+greg k-h
