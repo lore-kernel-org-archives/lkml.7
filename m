@@ -2,171 +2,304 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41968C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B600CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15CA32070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GXtulx5b"
+	by mail.kernel.org (Postfix) with ESMTP id 8C69D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfH0N4B (ORCPT
+        id S1729947AbfH0N4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 27 Aug 2019 09:56:01 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:45110 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbfH0N4A (ORCPT
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12594 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726170AbfH0N4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 09:56:00 -0400
-Received: by mail-vs1-f66.google.com with SMTP id j25so13465612vsq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iQzhNAIFt5hn3lNj8VHzyzeNesjUsxuZGnqma8bu4p4=;
-        b=GXtulx5b+8SWICbyuPjwDF9F7bv+zAAqlu3W0izJJ9FxbhtfIyDF2TP/yJ4bvTKKRJ
-         kgNhO8/nY9YbctW58lDbFnAWR6Meq0ojGpQZmXLNP1dQZLvYE8QaHs6k0J0zlZ/SsYls
-         PI8D1ZdYXfEXEnq9nmLbvAMn7hNxxdUoL4jaNKYRLdyyhhon6NVBCTXJ5tGKFO7KK9K1
-         I+ZME+KKZOGOZnRBwyA0gD5Ki2Okp9WZUjEh7cnmTchfvMKoxZjQAMVRCi66JZLUezCE
-         7R4sYFa3DMEvWHqp98Yh/W1rU58+BlXbxxZFO4cimlrY0k3gSvb56qpaixubm0OuJP7a
-         tVsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iQzhNAIFt5hn3lNj8VHzyzeNesjUsxuZGnqma8bu4p4=;
-        b=nLH2N34x6GI72vWVP17/V5lITq7dcMElzC0Lxj11UFu2m4botEPcwI41N6EaqicO1n
-         MgqcrSxlaa2VlLCootK8kzo3fhqP1FruADa4f1CrNBUQ22/4wRux5LAIsKyOEbfyrPDT
-         VJDq/Ra88xeS6cGDyV50pCskpLXAxSRiCHQMaat5sAH+ls/IHunBkw+mRQXo4gtOQvAo
-         B5Q68j+7c4NfJoxsqfXPAPy6M1m/agRXHgaBlIFdHORAPVdx+dX/uBUdeW5J4JglM2OQ
-         V1eAEoJnsHnSOkKYQWvcMMIEDyoJGqVJFePiGk+o5TQ94aaXl5reLZ0V4eXrSSm72Uq6
-         yBFg==
-X-Gm-Message-State: APjAAAVm8a58bcrxjAZtJ/Mwi/MnAZ+yTzG2clPiiIYqF6tYupLDFzRM
-        kxgMTXwX5WkjLGNUUrwE3gvhF644HFOY0VGBUZqV6rTr
-X-Google-Smtp-Source: APXvYqxyqinG9B1wk9mMD63rudWgHA96o+UjC3keLDloPcQN/XZg/h4S9AIvpCaBd00wLVyZueMl5UVixOOQudOS1oc=
-X-Received: by 2002:a67:e287:: with SMTP id g7mr13489601vsf.200.1566914160059;
- Tue, 27 Aug 2019 06:56:00 -0700 (PDT)
+X-UUID: c17170cbd5a0412fa614064381d32081-20190827
+X-UUID: c17170cbd5a0412fa614064381d32081-20190827
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 546030916; Tue, 27 Aug 2019 21:55:50 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 27 Aug 2019 21:55:56 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 27 Aug 2019 21:55:56 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [RESEND PATCH v4] checkpatch: add several Kconfig default value tests
+Date:   Tue, 27 Aug 2019 21:55:47 +0800
+Message-ID: <20190827135547.23131-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20190827134337.GK13294@shell.armlinux.org.uk>
-In-Reply-To: <20190827134337.GK13294@shell.armlinux.org.uk>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 27 Aug 2019 15:55:23 +0200
-Message-ID: <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
-Subject: Re: Continuous SD IO causes hung task messages
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 5C6B16DABEAC2A22C971A115B57E60A13784C980BAD27267ED660BEB496236D42000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 at 15:43, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> Hi,
->
-> While dd'ing the contents of a SD card, I get hung task timeout
-> messages as per below.  However, the dd is making progress.  Any
-> ideas?
->
-> Presumably, mmc_rescan doesn't get a look-in while IO is progressing
-> for the card?
+This change adds 3 Kconfig default value tests.
 
-Is it a regression?
+1. Discourage default n cases:
+e.g.,
+default n
 
-There not much of recent mmc core and mmc block changes, that I can
-think of at this point.
+2. Discourage default "[ynm]" cases:
+e.g.,
+arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+arch/powerpc/Kconfig:   default "n"
+drivers/auxdisplay/Kconfig:     default "n"
+drivers/crypto/Kconfig: default "m"
+drivers/rapidio/devices/Kconfig:        default "n"
 
->
-> ARM64 host, Macchiatobin, uSD card.
+3. Discourage default EXPERT or default !EXPERT cases:
+e.g.,
+drivers/hid/Kconfig:    default !EXPERT
 
-What mmc host driver is it? mmci?
+tested cases:
+default m
+default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
+default y if ALPHA_QEMU
+default n if PPC_POWERNV
+default n
+default EXPERT
+default !EXPERT
+default "m"
+default "n"
+default "y" if EXPERT
+default "y" if PPC_POWERNV
 
-Kind regards
-Uffe
+test result:
+WARNING: 'default n' is the default value, no need to write it explicitly
++       default n
 
->
-> Thanks.
->
-> root@arm-d06300000000:~# dd if=/dev/mmcblk1 | md5sum
-> INFO: task kworker/2:1:52 blocked for more than 120 seconds.
->       Not tainted 5.2.0+ #309
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/2:1     D    0    52      2 0x00000028
-> Workqueue: events_freezable mmc_rescan
-> Call trace:
->  __switch_to+0xb0/0x198
->  __schedule+0x22c/0x604
->  schedule+0x38/0xc8
->  __mmc_claim_host+0xcc/0x1ec
->  mmc_get_card+0x30/0x3c
->  mmc_sd_detect+0x1c/0x78
->  mmc_rescan+0x1c4/0x35c
->  process_one_work+0x14c/0x408
->  worker_thread+0x140/0x3f4
->  kthread+0xfc/0x128
->  ret_from_fork+0x10/0x18
-> INFO: task kworker/2:1:52 blocked for more than 120 seconds.
->       Not tainted 5.2.0+ #309
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/2:1     D    0    52      2 0x00000028
-> Workqueue: events_freezable mmc_rescan
-> Call trace:
->  __switch_to+0xb0/0x198
->  __schedule+0x22c/0x604
->  schedule+0x38/0xc8
->  __mmc_claim_host+0xcc/0x1ec
->  mmc_get_card+0x30/0x3c
->  mmc_sd_detect+0x1c/0x78
->  mmc_rescan+0x1c4/0x35c
->  process_one_work+0x14c/0x408
->  worker_thread+0x140/0x3f4
->  kthread+0xfc/0x128
->  ret_from_fork+0x10/0x18
-> INFO: task kworker/2:1:52 blocked for more than 241 seconds.
->       Not tainted 5.2.0+ #309
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/2:1     D    0    52      2 0x00000028
-> Workqueue: events_freezable mmc_rescan
-> Call trace:
->  __switch_to+0xb0/0x198
->  __schedule+0x22c/0x604
->  schedule+0x38/0xc8
->  __mmc_claim_host+0xcc/0x1ec
->  mmc_get_card+0x30/0x3c
->  mmc_sd_detect+0x1c/0x78
->  mmc_rescan+0x1c4/0x35c
->  process_one_work+0x14c/0x408
->  worker_thread+0x140/0x3f4
->  kthread+0xfc/0x128
->  ret_from_fork+0x10/0x18
-> INFO: task kworker/2:1:52 blocked for more than 362 seconds.
->       Not tainted 5.2.0+ #309
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/2:1     D    0    52      2 0x00000028
-> Workqueue: events_freezable mmc_rescan
-> Call trace:
->  __switch_to+0xb0/0x198
->  __schedule+0x22c/0x604
->  schedule+0x38/0xc8
->  __mmc_claim_host+0xcc/0x1ec
->  mmc_get_card+0x30/0x3c
->  mmc_sd_detect+0x1c/0x78
->  mmc_rescan+0x1c4/0x35c
->  process_one_work+0x14c/0x408
->  worker_thread+0x140/0x3f4
->  kthread+0xfc/0x128
->  ret_from_fork+0x10/0x18
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+WARNING: Avoid using default EXPERT
++       default EXPERT
+
+WARNING: Avoid using default EXPERT
++       default !EXPERT
+
+WARNING: Use 'default m' not 'default "m"'
++       default "m"
+
+WARNING: Use 'default n' not 'default "n"'
++       default "n"
+
+WARNING: Use 'default y' not 'default "y"'
++       default "y" if EXPERT
+
+WARNING: Use 'default y' not 'default "y"'
++       default "y" if PPC_POWERNV
+
+test --fix capability:
+default n => delete line
+default "m" => default m
+default "n" => default n
+default "y" if EXPERT => default y if EXPERT
+default "y" if PPC_POWERNV => default y if PPC_POWERNV
+default !EXPERT => no change
+default EXPERT => no change
+
+Change since v1:
+discourage default n$
+discourage default "[ynm]"
+discourage default \!?EXPERT
+
+Change since v2:
+(Joe has provided the whole patch and I just post it)
+test Kconfig in a single block
+print precise message such as 'default "m"', not 'default "[ynm]"'
+provide --fix capability
+
+Change since v3:
+resend patch, no change
+
+Cc: Joe Perches <joe@perches.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ scripts/checkpatch.pl | 139 ++++++++++++++++++++++++++----------------
+ 1 file changed, 85 insertions(+), 54 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 93a7edfe0f05..b080eea68cf6 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2932,60 +2932,98 @@ sub process {
+ 				      "Do not include the paragraph about writing to the Free Software Foundation's mailing address from the sample GPL notice. The FSF has changed addresses in the past, and may do so again. Linux already includes a copy of the GPL.\n" . $herevet)
+ 		}
+ 
+-# check for Kconfig help text having a real description
+-# Only applies when adding the entry originally, after that we do not have
+-# sufficient context to determine whether it is indeed long enough.
+-		if ($realfile =~ /Kconfig/ &&
+-		    # 'choice' is usually the last thing on the line (though
+-		    # Kconfig supports named choices), so use a word boundary
+-		    # (\b) rather than a whitespace character (\s)
+-		    $line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
+-			my $length = 0;
+-			my $cnt = $realcnt;
+-			my $ln = $linenr + 1;
+-			my $f;
+-			my $is_start = 0;
+-			my $is_end = 0;
+-			for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
+-				$f = $lines[$ln - 1];
+-				$cnt-- if ($lines[$ln - 1] !~ /^-/);
+-				$is_end = $lines[$ln - 1] =~ /^\+/;
+-
+-				next if ($f =~ /^-/);
+-				last if (!$file && $f =~ /^\@\@/);
+-
+-				if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
+-					$is_start = 1;
+-				} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
+-					if ($lines[$ln - 1] =~ "---help---") {
+-						WARN("CONFIG_DESCRIPTION",
+-						     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
++# Kconfig tests
++		if ($realfile =~ /Kconfig/) {
++			# check for Kconfig help text having a real description
++			# Only applies when adding the entry originally, after
++			# that we do not have sufficient context to determine
++			# whether it is indeed long enough.
++			# 'choice' is usually the last thing on the line (though
++			# Kconfig supports named choices), so use a word
++			# boundary (\b) rather than a whitespace character (\s)
++			if ($line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
++				my $length = 0;
++				my $cnt = $realcnt;
++				my $ln = $linenr + 1;
++				my $f;
++				my $is_start = 0;
++				my $is_end = 0;
++				for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
++					$f = $lines[$ln - 1];
++					$cnt-- if ($lines[$ln - 1] !~ /^-/);
++					$is_end = $lines[$ln - 1] =~ /^\+/;
++
++					next if ($f =~ /^-/);
++					last if (!$file && $f =~ /^\@\@/);
++
++					if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
++						$is_start = 1;
++					} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
++						if ($lines[$ln - 1] =~ "---help---") {
++							WARN("CONFIG_DESCRIPTION",
++							     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
++						}
++						$length = -1;
++					}
++
++					$f =~ s/^.//;
++					$f =~ s/#.*//;
++					$f =~ s/^\s+//;
++					next if ($f =~ /^$/);
++
++					# This only checks context lines in the patch
++					# and so hopefully shouldn't trigger false
++					# positives, even though some of these are
++					# common words in help texts
++					if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
++							   if|endif|menu|endmenu|source)\b/x) {
++						$is_end = 1;
++						last;
+ 					}
+-					$length = -1;
++					$length++;
++				}
++				if ($is_start && $is_end && $length < $min_conf_desc_length) {
++					WARN("CONFIG_DESCRIPTION",
++					     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
+ 				}
++				#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
++			}
+ 
+-				$f =~ s/^.//;
+-				$f =~ s/#.*//;
+-				$f =~ s/^\s+//;
+-				next if ($f =~ /^$/);
+-
+-				# This only checks context lines in the patch
+-				# and so hopefully shouldn't trigger false
+-				# positives, even though some of these are
+-				# common words in help texts
+-				if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
+-						  if|endif|menu|endmenu|source)\b/x) {
+-					$is_end = 1;
+-					last;
++# discourage the use of boolean for type definition attributes
++			if ($line =~ /^\+\s*\bboolean\b/) {
++				if (WARN("CONFIG_TYPE_BOOLEAN",
++					 "Use of boolean is deprecated, please use bool instead\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\bboolean\b/bool/;
++				}
++			}
++
++# Kconfig: discourage redundant 'default n'
++			if ($line =~ /^\+\s*default\s+n$/) {
++				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
++					 "'default n' is the default value, no need to write it explicitly\n" . $herecurr) &&
++				    $fix) {
++					fix_delete_line($fixlinenr, $rawline);
+ 				}
+-				$length++;
+ 			}
+-			if ($is_start && $is_end && $length < $min_conf_desc_length) {
+-				WARN("CONFIG_DESCRIPTION",
+-				     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
++
++# Kconfig: discourage quoted defaults: use default [ynm], not default "[ynm]"
++			if ($rawline =~ /^\+\s*default\s+"([ynm])"/) {
++				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
++					 "Use 'default $1' not 'default \"$1\"'\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\b(default\s+)"(.)"/$1$2/;
++				}
++			}
++
++# Kconfig: discourage using default EXPERT or !EXPERT
++			if ($line =~ /^\+\s*default\s+\!?\s*EXPERT\b/) {
++				WARN("CONFIG_DEFAULT_VALUE_STYLE",
++				     "Avoid using default EXPERT\n" . $herecurr);
+ 			}
+-			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
+ 		}
++# End of Kconfig tests
++
+ 
+ # check for MAINTAINERS entries that don't have the right form
+ 		if ($realfile =~ /^MAINTAINERS$/ &&
+@@ -2998,13 +3036,6 @@ sub process {
+ 			}
+ 		}
+ 
+-# discourage the use of boolean for type definition attributes of Kconfig options
+-		if ($realfile =~ /Kconfig/ &&
+-		    $line =~ /^\+\s*\bboolean\b/) {
+-			WARN("CONFIG_TYPE_BOOLEAN",
+-			     "Use of boolean is deprecated, please use bool instead.\n" . $herecurr);
+-		}
+-
+ 		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
+ 		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
+ 			my $flag = $1;
+-- 
+2.18.0
+
