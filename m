@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52457C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBC1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20505206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D772173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893043;
-	bh=HB1+XBlrKA2fnQFn9Mr45kV8E9wDm780oDv+uQwd5z8=;
+	s=default; t=1566893046;
+	bh=OxvKZqEgFGdajh+6mbJpbK1tjc2ZWpcKeqOITLSV9aQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYnPgjkItyh5hNv8FWi5HBqZCPloczw15X0zsWBkUn3+wVJDELanBYo5lo4k15XSK
-	 fG/ZJWhWvc0HftrKD6cL6aBglaN0zh2K9WwMr03Dk/21KNhQNrQ3SbOftChNdEuHQF
-	 yJaT8UD1586JNcSiV2dk6JwGik65eCFiYsAtAg+w=
+	b=jPTEShLQb6wdvMG7NVXYRyjmbi2I4eb/psdqUmK2h0qPirVVzQVgvX0Ggeuzos9dl
+	 /s/rGaKa+5fdMqllmnBXD+8v86Gg31eNQgpKrbNGnLMEkJPn7XbmCGmMWubP4KgzvY
+	 mMj9QW+2k8zj8alb6S+9G2oUYjT4ncJC0AKNa50w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbfH0IDw (ORCPT
+        id S1731965AbfH0IEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:04:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731242AbfH0IDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:03:48 -0400
+        id S1729684AbfH0ID7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:03:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A24521881;
-        Tue, 27 Aug 2019 08:03:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1360B206BA;
+        Tue, 27 Aug 2019 08:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893027;
-        bh=HB1+XBlrKA2fnQFn9Mr45kV8E9wDm780oDv+uQwd5z8=;
+        s=default; t=1566893038;
+        bh=OxvKZqEgFGdajh+6mbJpbK1tjc2ZWpcKeqOITLSV9aQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjosO263LbQKbjpRPL84JAj5lJAyG7N1Jk1Ghn/vAnazs1Oxd8jsj582uy4psElpR
-         xI454jx+JYZDV8xsh3iEOsSAhNQCvVFb5HZSeoWcSoKiGhGA49keZxMbs9BXobMTMm
-         LDWcRXDIoHVJ7MpIc/Ru71xLByyhrG0nMnEk3gLY=
+        b=E25S+Gmw0xNhKz7GkceQ1OHWSFFcyJr8sNbSFKAYuvi0yrTyVQx5OKsYFisoDRQZ1
+         ib821j3sH22G67LWSVigRzi4ThSM89rce7emEy1ktYrjVE+n56WxCKKpLSkHD606Ta
+         EThR5Kbe58JeTdXYGsNs2IrV5GQmIosUUwYISeUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        stable@vger.kernel.org,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 094/162] net: hisilicon: fix hip04-xmit never return TX_BUSY
-Date:   Tue, 27 Aug 2019 09:50:22 +0200
-Message-Id: <20190827072741.470651593@linuxfoundation.org>
+Subject: [PATCH 5.2 062/162] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
+Date:   Tue, 27 Aug 2019 09:49:50 +0200
+Message-Id: <20190827072740.327172080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,39 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
+[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
 
-TX_DESC_NUM is 256, in tx_count, the maximum value of
-mod(TX_DESC_NUM - 1) is 254, the variable "count" in
-the hip04_mac_start_xmit function is never equal to
-(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
-return NETDEV_TX_BUSY.
+Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
 
-tx_count is modified to mod(TX_DESC_NUM) so that
-the maximum value of tx_count can reach
-(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
-NETDEV_TX_BUSY.
+During usb probe the driver crashes with "transfer buffer is on stack" message.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
+that calls "usb_control_msg" under the hood.
+
+Kernel 4.19 backtrace:
+
+usb_hcd_submit_urb+0x3e5/0x900
+? sched_clock+0x9/0x10
+? log_store+0x203/0x270
+? get_random_u32+0x6f/0x90
+? cache_alloc_refill+0x784/0x8a0
+usb_submit_urb+0x3b4/0x550
+usb_start_wait_urb+0x4e/0xd0
+usb_control_msg+0xb8/0x120
+hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
+usb_probe_interface+0xc2/0x260
+really_probe+0x176/0x280
+driver_probe_device+0x49/0x130
+__driver_attach+0xa9/0xb0
+? driver_probe_device+0x130/0x130
+bus_for_each_dev+0x5a/0x90
+driver_attach+0x14/0x20
+? driver_probe_device+0x130/0x130
+bus_add_driver+0x157/0x1e0
+driver_register+0x51/0xe0
+usb_register_driver+0x5d/0x120
+? 0xf81ed000
+hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
+do_one_initcall+0x44/0x190
+? free_unref_page_commit+0x6a/0xd0
+do_init_module+0x46/0x1c0
+load_module+0x1dc1/0x2400
+sys_init_module+0xed/0x120
+do_fast_syscall_32+0x7a/0x200
+entry_SYSENTER_32+0x6b/0xbe
+
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 5abe88dfe6abf..ee6da8d66cd31 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -181,7 +181,7 @@ struct hip04_priv {
- 
- static inline unsigned int tx_count(unsigned int head, unsigned int tail)
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 8fb7c5dea07fc..008a74a1ed444 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1693,13 +1693,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
+ static int
+ setup_hfcsusb(struct hfcsusb *hw)
  {
--	return (head - tail) % (TX_DESC_NUM - 1);
-+	return (head - tail) % TX_DESC_NUM;
- }
++	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
+ 	u_char b;
++	int ret;
  
- static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
+ 	if (debug & DBG_HFC_CALL_TRACE)
+ 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 
++	if (!dmabuf)
++		return -ENOMEM;
++
++	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
++
++	memcpy(&b, dmabuf, sizeof(u_char));
++	kfree(dmabuf);
++
+ 	/* check the chip id */
+-	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
++	if (ret != 1) {
+ 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
+ 		       hw->name, __func__);
+ 		return 1;
 -- 
 2.20.1
 
