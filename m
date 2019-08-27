@@ -2,87 +2,113 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE57C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D24C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C5C22CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566919643;
-	bh=FCCSTIab2OQzAojNOw/kM20Aa9X7gnErWDF5+9+ja7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dhRgIbe/boaSmZjw2GRZokv9/DdClCSQUz4w0GS3AZf7zle1bozkzxbhIzc+m3FMp
-	 0pNctjCPUw2GArVq+ALkiAo15zUWMTPnSYGojvZ2TsoQqPP+JOL391lkVQoTrDHlXD
-	 kUe2qpJXSs/TEMUIHy5a/k2Lbptpl2V68MxfGrxs=
+	by mail.kernel.org (Postfix) with ESMTP id 54B01204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfH0P1W (ORCPT
+        id S1729803AbfH0P2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:27:22 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33643 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfH0P1W (ORCPT
+        Tue, 27 Aug 2019 11:28:09 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42427 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfH0P2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:27:22 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l2so15276653oil.0;
-        Tue, 27 Aug 2019 08:27:21 -0700 (PDT)
+        Tue, 27 Aug 2019 11:28:09 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so17313505qkm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:28:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5a2qkMONKijUeeWaRhR2tzwZA4N/jTBHB+gjYWsBgqk=;
-        b=tlj1SJevynUVUZLRKLzsZVVbtpvRpOw6Fe38hneWTMFz5D1qWSc+KvugQojJRWWhFD
-         Mt1D04yudb4klsjVgqEegtY5fab0MLVuIB4YU2W7osCSirYEvXEyZ0V1AUdpg157fdZO
-         7Vgltb7M0iCXMU87QZ8hVqJG8IwZRKF8Xl50iIiOH8liPRB/bhwwHEDvQFHFnPAtXNvv
-         mJyl7HZ1/6tclNZvTzP+XOca7dT4yeafyD3lU+mKGqhiZow+sQ3JIe2Jqw5iwkWBlBGg
-         r9tJCEtU0okPBOE1ZwLSWqRfVYqKldGzVcTKUet0cuiR3EJKrYgxhsRbBYqcm2sjXHyZ
-         +fTA==
-X-Gm-Message-State: APjAAAWMonLY+baoPqOEMdE4R4qwfbUm60ZrfzbMYdd9jIDSAW0P6NML
-        Tr7/OK0t3xGMCUzxEQc7hg==
-X-Google-Smtp-Source: APXvYqz++OPbvepRcKtjgMn+dNQGml3FmGpPuBLHTxhzF0nrXokDGXGy1WXvHQuOxkbhOS6VRJHraQ==
-X-Received: by 2002:aca:c449:: with SMTP id u70mr16884592oif.5.1566919641033;
-        Tue, 27 Aug 2019 08:27:21 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w10sm5367778otm.68.2019.08.27.08.27.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 08:27:20 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 10:27:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        nicolas.ferre@microchip.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: Re: [PATCH v5 17/18] dt-bindings: thermal: add binding document for
- r40 thermal controller
-Message-ID: <20190827152719.GA26972@bogus>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190810052829.6032-18-tiny.windzz@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l3ksHcNSIabovy1lG4Hu34xi55zJA9WDe2gc7j1lkZM=;
+        b=XXoeiususcAAy4FGAOr0VQsMrEsQngAuAEOdSb/bTr9n7RxJbBd2fuGf4Olb/h3sxk
+         luvII4KJKiQFWwvSffDLW/YiXa3f1/YDdLGao8qN9DO1+clmRbRUZXI9lvVCBAUIKd2C
+         u5VMrIhP26vOo97lVAcJm4lBUj/tcbXK6EdLxybJPDW7GmRfdgVeM+IjRZeOi+W8AoVz
+         eAYz9iSdmoEmd36pGveyHQf9Oe+OgkjyjWytoNBdif1tm3feG88VqVnfqs3RoPqyY9UL
+         4m6jsY9izQwd/3DdsDIFbZhOs/jT56LFsX/CG18TexjU/IBcu2EDPalNA4RmOZMME3qy
+         uO6Q==
+X-Gm-Message-State: APjAAAV+n16Ixtm5EJ7R7/gzESrpQz6YgBeM7/FTXp6q4eQ/+EViMYux
+        ndlLJHL8rruS+JRFkXZle/8UDwpJbqdz9Q2+F+k=
+X-Google-Smtp-Source: APXvYqyhxki76SYI4cr4BqFQDRo2aBbKnaP65WQLVFj2ojTY81JAvnMBeeKCPrBMK0vEnccPy5+Yyu2CBie2/njlyOw=
+X-Received: by 2002:a37:bd44:: with SMTP id n65mr22220560qkf.286.1566919687788;
+ Tue, 27 Aug 2019 08:28:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190810052829.6032-18-tiny.windzz@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190823125331.5070-1-enric.balletbo@collabora.com>
+ <20190823125331.5070-12-enric.balletbo@collabora.com> <910312bc-d4f1-b587-b6f2-e832b13d7237@collabora.com>
+In-Reply-To: <910312bc-d4f1-b587-b6f2-e832b13d7237@collabora.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 27 Aug 2019 17:27:51 +0200
+Message-ID: <CAK8P3a1ScpJCVEPWiVo+Kc=Ec=c_uhidAt44i==RH+YN5Y+U=Q@mail.gmail.com>
+Subject: Re: [PATCH v6 11/11] arm/arm64: defconfig: Update configs to use the
+ new CROS_EC options
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Olof Johansson <olof@lixom.net>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 10 Aug 2019 05:28:28 +0000, Yangtao Li wrote:
-> This patch adds binding document for allwinner r40 thermal controller.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Tue, Aug 27, 2019 at 4:52 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi,
+>
+> On 23/8/19 14:53, Enric Balletbo i Serra wrote:
+> > Recently we refactored the CrOS EC drivers moving part of the code from
+> > the MFD subsystem to the platform chrome subsystem. During this change
+> > we needed to rename some config options, so, update the defconfigs
+> > accordingly.
+> >
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+>
+>
+> For some reason I reduced too much the recipients from the get_maintainers
+> script and I missed the defconfig maintainers. Sorry about that, so cc'ing Arnd,
+> Olof, Will and Catalin
+>
+> To give you some context the full series can be found here [1].
+>
+> All the patches in the series are acked and will go through the MFD tree (Lee
+> Jones). This specific patch is still missing some acks from arm/arm64 defconfigs
+> and if you are agree can go through the Lee's tree with your acks, otherwise can
+> go through another tree.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Defconfig changes often cause merge conflicts, so I'd prefer to have
+this merged through the arm-soc tree. Can you resend the latest patch
+with the Acks to 'soc@kernel.org' to get it into our patchwork?
+
+       Arnd
