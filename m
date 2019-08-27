@@ -2,174 +2,93 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5C3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA8DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559172064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AFE2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4kexfQT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aKIPYGdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfH0XmM (ORCPT
+        id S1726347AbfH0Xmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:42:12 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44075 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfH0XmL (ORCPT
+        Tue, 27 Aug 2019 19:42:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44191 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfH0Xmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:42:11 -0400
-Received: by mail-io1-f65.google.com with SMTP id j4so2041147iog.11;
-        Tue, 27 Aug 2019 16:42:11 -0700 (PDT)
+        Tue, 27 Aug 2019 19:42:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c81so390035pfc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fAkCsG+LfrTL4UGMAIquUE2ULf5h5EBAaE7x0EeLZEg=;
-        b=m4kexfQTWGYpHGXqP0LYp8yz54l7T3jjdgj8Y3To44Wtd4BVWYDmm4qpVyR0RZtBOI
-         aSbjYbij4Z9KC8b9TzR9jK/q4wMG9QJgRuZ/687YOfaqc2+2VKdlzdFnz8JZMYbl50fo
-         2M/8acHcXYECd46jtqXNT6vcy3IuDNSsNRbdbfFCO7iw3AZfNehbSpX6gdHHUKtOWDNo
-         CoiVlzPK26Ncvl+lxJE3F++6mlxWExnEnzy4rKaFzvwOX457OvfSwLii6yvtUCI/DtHv
-         xVrfwFPQo1laViaptvFhUgDeVbW0rDtPpfORmlwRaUWgnIxKSor00hKXpH+/AIIH8Zhu
-         TqqA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=zZhupswYJRpQl2nx+3EaAYIvNYHJJK6zS8VHQ2dEq0o=;
+        b=aKIPYGdpDtpWjheRueo74FyiXWqdB3rxs9dqEadj9ooeD9wrrjQUXhGqf+pBNgzwRs
+         +33Q0tKEOxQcQaIciDay3urxoZZ0LUm7TFkRiRAfERG+2rR1MEoMiyHVb8u+F2qFfgQB
+         ERRMV4s4gpt7SyF4cI8pR7aT7vac+5uZ1BJMQMhrrJv1u6anWjbKOGJQtr6zZax0bQCT
+         t/m5nv4XRPE05BHeGPgr/pNsl5TncA9GfVE1gIMiW93thDK0UYplitY5eIwCYxE3T39U
+         4mv5Uooq96x961Ewdmqr1eo+72Znz4u1POBNBzJitLjUY6f8h+Mqy5JTAhNblnz3/sMC
+         NZjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fAkCsG+LfrTL4UGMAIquUE2ULf5h5EBAaE7x0EeLZEg=;
-        b=NpxBw/361+YePQpOm2UfaMcO1/YUX/bIr7P3PzRx3vq9sUmNcK64o1asNNOvY/+KV4
-         F80pGogVDNCu0u+QtVJ72J8YY23lgHFGjK6HX7Khj0ASLEoTLHrGAILL5vci7XKQvslN
-         W4o+4vPCcvKI38Ae1pcLg3TdKwOIPwrruPnMaTaOPtVwycyio/6H8XPB8lYWdp+IiNLG
-         rHgSiQ0++Ym0uHhndjyb2mZs4iKafqVHC/j51x33TbeEDzaC4m7pTUB0dTQgD/OMPBYY
-         piwwXCuiFFouV2m7np6ZpbWLwFhyg3tHgAky7Clb8MAuySV3sNfk5IaGfTBgWhGn0pxo
-         s0jg==
-X-Gm-Message-State: APjAAAU/EC9WC8TZYZHIlEzBNyCTYN5N6qdiqiCRPSszmaESQnRprOhM
-        0MmxBNgUIhaBICpU1Z7d/G4/F/oVs9qErKHfPbI=
-X-Google-Smtp-Source: APXvYqw9FPGLKMvuxuRalZIHFU6gtUuvALXjMlCBRAxvOKkRjRS+pqxedw6XSof+czWezQc+QRTQR6uYC//V6JVXUSU=
-X-Received: by 2002:a6b:6e0e:: with SMTP id d14mr1075179ioh.18.1566949330504;
- Tue, 27 Aug 2019 16:42:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=zZhupswYJRpQl2nx+3EaAYIvNYHJJK6zS8VHQ2dEq0o=;
+        b=YOelh0x/wQ1bNEaR0uLaSp2V9T/HcSF2tYvSuyqfRdQM7Qz4O8YLBZXIInlnidgVqh
+         2tCF0Awoe2x90lI4SmbYPkDvAYEoekhsmOtk7Oy/7gdW5ruDA5Er/Bbqc7MQfzALQ7d5
+         e1sRIjdsyr3pR/jnOOk+L1+jDNWyBpyVMGuKk8rVPHjXurXAPTY1kIplq0asJOCtYGCW
+         xdjh6Lqr5suRX1JFS8tO9R2Pz6Io0JGawJ1x99ZsFSbxx3h28zu45QneyWBw8GG80MsF
+         hLPafOSGZgR3hvIxmiu3QyBbWp7r65RqgvIBg8SniV0t9teXdldgxhy2D9zH1NNDa712
+         qBXQ==
+X-Gm-Message-State: APjAAAXIa/2Hxq62FZ3ZVxMyrdrVRIp3zTeWMBqfc9NDOKk0JYaRjnCm
+        9ORgSP55I3xADIYr433D5QLgiQ==
+X-Google-Smtp-Source: APXvYqwXfzwRgynraPWYmZHmZ4nqfdc0jVUarkPtMHItZPdLhXyQy/n60WaWTA3gyehqjYkOkVqSTw==
+X-Received: by 2002:a17:90a:1a8d:: with SMTP id p13mr1342730pjp.15.1566949370220;
+        Tue, 27 Aug 2019 16:42:50 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:cc35:e750:308e:47f])
+        by smtp.gmail.com with ESMTPSA id h195sm468857pfe.20.2019.08.27.16.42.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 16:42:49 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+In-Reply-To: <20190820121551.18398-1-jbrunet@baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com>
+Date:   Tue, 27 Aug 2019 16:42:49 -0700
+Message-ID: <7hh862tbt2.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190819160643.27998-1-efremov@linux.com> <20190819160643.27998-2-efremov@linux.com>
-In-Reply-To: <20190819160643.27998-2-efremov@linux.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 28 Aug 2019 09:41:59 +1000
-Message-ID: <CAOSf1CEMwePWiGPEfqsqjXQ2bbBiRRSHHk7BpWcwqUdgSmpzCQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] PCI: pciehp: Add pciehp_set_indicators() to
- jointly set LED indicators
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 2:07 AM Denis Efremov <efremov@linux.com> wrote:
->
-> Add pciehp_set_indicators() to set power and attention indicators with a
-> single register write. Thus, avoiding waiting twice for Command Complete.
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  drivers/pci/hotplug/pciehp.h     |  1 +
->  drivers/pci/hotplug/pciehp_hpc.c | 29 +++++++++++++++++++++++++++++
->  include/uapi/linux/pci_regs.h    |  2 ++
->  3 files changed, 32 insertions(+)
->
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 8c51a04b8083..0e272bf3deb4 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -167,6 +167,7 @@ int pciehp_power_on_slot(struct controller *ctrl);
->  void pciehp_power_off_slot(struct controller *ctrl);
->  void pciehp_get_power_status(struct controller *ctrl, u8 *status);
->
-> +void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
->  void pciehp_set_attention_status(struct controller *ctrl, u8 status);
->  void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
->  int pciehp_query_power_fault(struct controller *ctrl);
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index bd990e3371e3..5474b9854a7f 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -443,6 +443,35 @@ void pciehp_set_attention_status(struct controller *ctrl, u8 value)
->                  pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_cmd);
->  }
->
-> +void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
-> +{
-> +       u16 cmd = 0, mask = 0;
-> +
-> +       if (PWR_LED(ctrl))
-> +               switch (pwr) {
-> +               case PCI_EXP_SLTCTL_PWR_IND_ON:
-> +               case PCI_EXP_SLTCTL_PWR_IND_BLINK:
-> +               case PCI_EXP_SLTCTL_PWR_IND_OFF:
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Do you need an explicit /* fallthrough */ comment? I thought the
-fallthrough warning was enabled by default now.
+> This patchset adds the dedicated reset of the tdm formatters which
+> have been added on the g12a SoC family. Using these help with the channel
+> mapping when the formatter uses more than 1 i2s lane.
 
-> +                       cmd |= pwr;
-> +                       mask |= PCI_EXP_SLTCTL_PIC;
-> +               }
-> +
-> +       if (ATTN_LED(ctrl))
-> +               switch (attn) {
-> +               case PCI_EXP_SLTCTL_ATTN_IND_ON:
-> +               case PCI_EXP_SLTCTL_ATTN_IND_BLINK:
-> +               case PCI_EXP_SLTCTL_ATTN_IND_OFF:
-> +                       cmd |= attn;
-> +                       mask |= PCI_EXP_SLTCTL_AIC;
-> +               }
-> +
-> +       if (cmd) {
-> +               pcie_write_cmd_nowait(ctrl, cmd, mask);
-> +               ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
-> +                        pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, cmd);
-> +       }
-> +}
-> +
->  void pciehp_green_led_on(struct controller *ctrl)
->  {
->         if (!PWR_LED(ctrl))
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f28e562d7ca8..291788b58f3a 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -591,10 +591,12 @@
->  #define  PCI_EXP_SLTCTL_CCIE   0x0010  /* Command Completed Interrupt Enable */
->  #define  PCI_EXP_SLTCTL_HPIE   0x0020  /* Hot-Plug Interrupt Enable */
->  #define  PCI_EXP_SLTCTL_AIC    0x00c0  /* Attention Indicator Control */
+Because I forgot^W waited on this, we did the meson-g12a-common split,
+so this no longer applies cleanly.  Could you rebase this on current v5.4/dt64
+and I'll queue it for v5.4/dt64.
 
-> +#define  PCI_EXP_SLTCTL_ATTN_IND_NONE  0x0    /* Attention Indicator noop */
->  #define  PCI_EXP_SLTCTL_ATTN_IND_ON    0x0040 /* Attention Indicator on */
->  #define  PCI_EXP_SLTCTL_ATTN_IND_BLINK 0x0080 /* Attention Indicator blinking */
->  #define  PCI_EXP_SLTCTL_ATTN_IND_OFF   0x00c0 /* Attention Indicator off */
->  #define  PCI_EXP_SLTCTL_PIC    0x0300  /* Power Indicator Control */
-> +#define  PCI_EXP_SLTCTL_PWR_IND_NONE   0x0    /* Power Indicator noop */
-
-I don't think pci_regs.h is the right place for this. The contents of
-pci_regs.h is essentially a transcription of bit definitions from the
-various PCI standards documents. The PCIe Base spec says the the 0b00
-combination for the two-bit Power and Attn indicator fields is
-reserved and there's nothing suggesting that writing a zero to those
-fields should preserve the current value. Basicly, we now have a
-implementation quirk of pcie_set_indicators() masquerading as part of
-the standard.
-
->  #define  PCI_EXP_SLTCTL_PWR_IND_ON     0x0100 /* Power Indicator on */
->  #define  PCI_EXP_SLTCTL_PWR_IND_BLINK  0x0200 /* Power Indicator blinking */
->  #define  PCI_EXP_SLTCTL_PWR_IND_OFF    0x0300 /* Power Indicator off */
-> --
-> 2.21.0
+> Kevin, please note that to build, this patchset depends on the new reset
+> bindings of the audio clock controller. I've prepared a tag for you [0]
 >
+> [0]: git://github.com/BayLibre/clk-meson.git - clk-meson-dt-v5.4-2
+
+Thanks for the tag.  This is now included in v5.4/dt64.
+
+Kevin
+
