@@ -2,98 +2,154 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6511DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5EDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340A020828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C11206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MHYvhQTl"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="f+5hfHZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbfH0OEp (ORCPT
+        id S1729396AbfH0OE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:04:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42996 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfH0OEp (ORCPT
+        Tue, 27 Aug 2019 10:04:58 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35930 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfH0OE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:04:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=661U0lSjozJky25e5/EuVz5qAI0zmTf9XyJtMCPs0n0=; b=MHYvhQTl7K//OKrXEbamD4ni1
-        UvrLZ3Lz0teQfWmr6PngU7IqrWfwUicXW+jUHr8dLMN1JozqkCrSN4KDkJbeZ8nOtl7mds9mUT4hF
-        36GNcEtt2d360CH1CNyEuNrQJJ5N+eHgsdmmsx7Vdr1I81RSN86Yrh+dq8FetfkBVh50QXXrNGrRv
-        +YdJcDZV07q5nK/ZG034qdRWyjUuF64/S+tU1oqF2QYUWEbPhLw77Sir1pvnmBoXcWfvHzj4Axs+u
-        P6Mid9tbKsY+3lIM/mGNe/EN5/xnq7ZjP4nRaoebAqq+t8BSjVxR29XT0w1lq+v3qdJM15/WS15oN
-        w/Qc13A5w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2c5S-0004DE-5P; Tue, 27 Aug 2019 14:04:42 +0000
-Date:   Tue, 27 Aug 2019 07:04:42 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Alan Kao <alankao@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Gary Guo <gary@garyguo.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 1/2] RISC-V: Mark existing SBI as legacy SBI.
-Message-ID: <20190827140442.GB21855@infradead.org>
-References: <20190826233256.32383-1-atish.patra@wdc.com>
- <20190826233256.32383-2-atish.patra@wdc.com>
- <20190827140304.GA21855@infradead.org>
+        Tue, 27 Aug 2019 10:04:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f19so11842212plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 07:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=t9xctO/WP/vM2N5V7/AvRgZTobzXsqkZj3kzkKzY+c8=;
+        b=f+5hfHZV3TLUfwm18/n69YUcml42uyWVJgGc8yRGKvJ6GLp8HQG9luHFUXoEWzxjW0
+         O+XZZG7YHbCih0Dy6sejyDN6Z6kupVnFkKcRAermqU4rEN0pwLnKx+WS9sM/p6T7fmmU
+         L6JE3W2OMSlkM5Q39iwan4bJ/4NGnt+ah1qkE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=t9xctO/WP/vM2N5V7/AvRgZTobzXsqkZj3kzkKzY+c8=;
+        b=lRMls6vpdC5Q5F6jGDyyxylVwHLh5JNMnQIrqjeEHpuJ1RCIihwpQgRC+22NRt3H9O
+         SB1wp3p2Wb6twrgKqlhI4yr9I/wv5cbn3c2nlMuRE+qS2+5dqUGjurtGKIfy3e2jBJ6n
+         BL+lPPypqxsb4n7cbl9trLM1TcXzcyr3AcwKNSQiym1uOfnw/S7/Cutla5ilOpsFJ4OR
+         pZ/m+F3Tsp4AsvLJ1RciPdhH3mwZaxhRJ0XuprTbUl7bNL0lnsaBali83WzjYmkKLzTP
+         apzZndegdo97SRWYi/k1D7DFVb5NTjGVptkRVBUCPvekgCOIf7poDy7RHCuf0u61a3Hn
+         HQEQ==
+X-Gm-Message-State: APjAAAWYfK5Wn9KLEXehHxeDxFZ7rg/aNdB/ge3sPPDyslReIrmGEWIE
+        YtZifN6N1Y1mgfJeamfVVaf0ww==
+X-Google-Smtp-Source: APXvYqyj0rYfewcCj6c1ycF9gMEuwWvzV9FIgo+OumVuJdxKjZsukAJMiIcCF0D+WMeg/csHRIWD2A==
+X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr24484244plm.306.1566914697754;
+        Tue, 27 Aug 2019 07:04:57 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id r61sm2282367pjb.7.2019.08.27.07.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 07:04:56 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: powerpc asm-prototypes.h seems odd
+In-Reply-To: <CAK7LNATg7O0ZQQ4fe2maNqf0ascHU8b2Mfnqkrxzpzj8D_X7pQ@mail.gmail.com>
+References: <CAK7LNATg7O0ZQQ4fe2maNqf0ascHU8b2Mfnqkrxzpzj8D_X7pQ@mail.gmail.com>
+Date:   Wed, 28 Aug 2019 00:04:38 +1000
+Message-ID: <871rx64scp.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827140304.GA21855@infradead.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 07:03:04AM -0700, Christoph Hellwig wrote:
-> > +#define SBI_EXT_LEGACY_SET_TIMER 0x0
-> > +#define SBI_EXT_LEGACY_CONSOLE_PUTCHAR 0x1
-> > +#define SBI_EXT_LEGACY_CONSOLE_GETCHAR 0x2
-> > +#define SBI_EXT_LEGACY_CLEAR_IPI 0x3
-> > +#define SBI_EXT_LEGACY_SEND_IPI 0x4
-> > +#define SBI_EXT_LEGACY_REMOTE_FENCE_I 0x5
-> > +#define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA 0x6
-> > +#define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID 0x7
-> > +#define SBI_EXT_LEGACY_SHUTDOWN 0x8
-> 
-> As Mike said legacy is a bit of a weird name.  I think this should
-> be SBI01_* or so.  And pleae align the numeric values and maybe use
-> an enum.
-> 
-> > +
-> > +#define SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3) ({             \
-> >  	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
-> >  	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);	\
-> >  	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);	\
-> 
-> Instead of the weird inline assembly with forced register allocation,
-> why not move this to pure assembly?  AFAICs this is the whole assembly
-> code we'd need:
-> 
-> ENTRY(sbi01_call)
->         ecall
-> END(sbi01_call)
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
 
-Actually we'll need a mv to a7 for the function id, but the point
-still stands.
+> Hi.
+>
+> Lots of powerpc files include <asm/asm-prototypes.h>,
+> and powerpc is the only architecture that does this.
+>
+> <asm/asm-prototypes.h> exists to support modversion for asm.
+> So, it is supposed to be parsed by genksysms, not to be
+> included from other files.  Right?
+
+It exists to support sparse, squashing a bunch of sparse warnings.
+
+From the commit where I introduced it:
+
+commit 42f5b4cacd783faf05e3ff8bf85e8be31f3dfa9d
+Author: Daniel Axtens <dja@axtens.net>
+Date:   Wed May 18 11:16:50 2016 +1000
+
+    powerpc: Introduce asm-prototypes.h
+    
+    Sparse picked up a number of functions that are implemented in C and
+    then only referred to in asm code.
+    
+    This introduces asm-prototypes.h, which provides a place for
+    prototypes of these functions.
+    
+    This silences some sparse warnings.
+    
+    Signed-off-by: Daniel Axtens <dja@axtens.net>
+    [mpe: Add include guards, clean up copyright & GPL text]
+    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+
+Regards,
+Daniel
+
+>
+>
+> $  git grep  asm/asm-prototypes.h
+> arch/arm64/include/asm/asm-prototypes.h: * ... kbuild will
+> automatically pick these up from <asm/asm-prototypes.h> and
+> arch/powerpc/kernel/early_32.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/irq.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/machine_kexec_64.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/process.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/prom_init.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/ptrace.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/security.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/setup_32.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/signal_32.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/signal_64.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/smp.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/syscalls.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/tau_6xx.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/time.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/trace/ftrace.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kernel/traps.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kvm/book3s_emulate.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kvm/book3s_hv.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kvm/book3s_hv_builtin.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kvm/book3s_hv_rm_xive.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/kvm/book3s_pr.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/lib/vmx-helper.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/mm/book3s64/hash_utils.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/mm/book3s64/slb.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/platforms/powernv/idle.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/platforms/powernv/opal-call.c:#include <asm/asm-prototypes.h>
+> arch/powerpc/platforms/powernv/opal-tracepoints.c:#include
+> <asm/asm-prototypes.h>
+> arch/powerpc/platforms/pseries/lpar.c:#include <asm/asm-prototypes.h>
+> scripts/Makefile.build:# .S file exports must have their C prototypes
+> defined in asm/asm-prototypes.h
+> scripts/Makefile.build:     echo "\#include <asm/asm-prototypes.h>" ;
+>                             \
+> scripts/Makefile.build:ASM_PROTOTYPES := $(wildcard
+> $(srctree)/arch/$(SRCARCH)/include/asm/asm-prototypes.h)
+>
+>
+>
+> -- 
+> Best Regards
+> Masahiro Yamada
