@@ -2,169 +2,166 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323E8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23688C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABAC20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEED920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfH0JUo convert rfc822-to-8bit (ORCPT
+        id S1729414AbfH0JV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:20:44 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:45767 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfH0JUn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:20:43 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7R9KWis027676, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7R9KWis027676
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Aug 2019 17:20:33 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Tue, 27 Aug
- 2019 17:20:32 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>
-Subject: RE: [PATCH v4] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
-Thread-Topic: [PATCH v4] rtw88: pci: Move a mass of jobs in hw IRQ to soft
- IRQ
-Thread-Index: AQHVW93/L3LBm1nnhUKTmpJa6tAmKKcOtzHQ
-Date:   Tue, 27 Aug 2019 09:20:32 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D18AE2DA@RTITMBSVM04.realtek.com.tw>
-References: <F7CD281DE3E379468C6D07993EA72F84D18A5786@RTITMBSVM04.realtek.com.tw>
- <20190826070827.1436-1-jian-hong@endlessm.com>
-In-Reply-To: <20190826070827.1436-1-jian-hong@endlessm.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 27 Aug 2019 05:21:27 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:35238 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725912AbfH0JV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 05:21:26 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id B83BB7482842402892CA;
+        Tue, 27 Aug 2019 17:21:23 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 27 Aug 2019 17:21:21 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 27 Aug 2019 17:21:20 +0800
+Date:   Tue, 27 Aug 2019 17:20:36 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Viresh Kumar <viresh.kumar@linaro.org>,
+        <devel@driverdev.osuosl.org>, <elder@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, <johan@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <greybus-dev@lists.linaro.org>,
+        <yuchao0@huawei.com>
+Subject: Re: [PATCH 1/9] staging: greybus: fix up SPDX comment in .h files
+Message-ID: <20190827092036.GA138083@architecture4>
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+ <20190825055429.18547-2-gregkh@linuxfoundation.org>
+ <20190826055119.4pbmf5ape224giwz@vireshk-i7>
+ <20190827075802.GA29204@kroah.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="gbk"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190827075802.GA29204@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jian-Hong Pan 
-> Subject: [PATCH v4] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+Hi Greg,
+
+On Tue, Aug 27, 2019 at 09:58:02AM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Aug 26, 2019 at 11:21:19AM +0530, Viresh Kumar wrote:
+> > On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
+> > > When these files originally got an SPDX tag, I used // instead of /* */
+> > > for the .h files.  Fix this up to use // properly.
+> > > 
+> > > Cc: Viresh Kumar <vireshk@kernel.org>
+> > > Cc: Johan Hovold <johan@kernel.org>
+> > > Cc: Alex Elder <elder@kernel.org>
+> > > Cc: greybus-dev@lists.linaro.org
+> > > Cc: devel@driverdev.osuosl.org
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > ---
+> > >  drivers/staging/greybus/firmware.h               | 2 +-
+> > >  drivers/staging/greybus/gb-camera.h              | 2 +-
+> > >  drivers/staging/greybus/gbphy.h                  | 2 +-
+> > >  drivers/staging/greybus/greybus.h                | 2 +-
+> > >  drivers/staging/greybus/greybus_authentication.h | 2 +-
+> > >  drivers/staging/greybus/greybus_firmware.h       | 2 +-
+> > >  drivers/staging/greybus/greybus_manifest.h       | 2 +-
+> > >  drivers/staging/greybus/greybus_protocols.h      | 2 +-
+> > >  drivers/staging/greybus/greybus_trace.h          | 2 +-
+> > >  drivers/staging/greybus/hd.h                     | 2 +-
+> > >  drivers/staging/greybus/interface.h              | 2 +-
+> > >  drivers/staging/greybus/manifest.h               | 2 +-
+> > >  drivers/staging/greybus/module.h                 | 2 +-
+> > >  drivers/staging/greybus/operation.h              | 2 +-
+> > >  drivers/staging/greybus/spilib.h                 | 2 +-
+> > >  drivers/staging/greybus/svc.h                    | 2 +-
+> > >  16 files changed, 16 insertions(+), 16 deletions(-)
+> > 
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> There is a mass of jobs between spin lock and unlock in the hardware
-> IRQ which will occupy much time originally. To make system work more
-> efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
-> reduce the time in hardware IRQ.
+> Thanks for all of the acks!
 > 
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> ---
-> v2:
->  Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
->  rtw_pci_interrupt_handler. Because the interrupts are already disabled
->  in the hardware interrupt handler.
-> 
-> v3:
->  Extend the spin lock protecting area for the TX path in
->  rtw_pci_interrupt_threadfn by Realtek's suggestion
-> 
-> v4:
->  Remove the WiFi running check in rtw_pci_interrupt_threadfn to avoid AP
->  connection failed by Realtek's suggestion.
-> 
->  drivers/net/wireless/realtek/rtw88/pci.c | 32 +++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> b/drivers/net/wireless/realtek/rtw88/pci.c
-> index 00ef229552d5..955dd6c6fb57 100644
-> --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
-> void *dev)
->  {
->  	struct rtw_dev *rtwdev = dev;
->  	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-> -	u32 irq_status[4];
-> 
->  	spin_lock(&rtwpci->irq_lock);
->  	if (!rtwpci->irq_enabled)
->  		goto out;
-> 
-> +	/* disable RTW PCI interrupt to avoid more interrupts before the end of
-> +	 * thread function
-> +	 */
-> +	rtw_pci_disable_interrupt(rtwdev, rtwpci);
-> +out:
-> +	spin_unlock(&rtwpci->irq_lock);
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
-> +{
-> +	struct rtw_dev *rtwdev = dev;
-> +	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
-> +	unsigned long flags;
-> +	u32 irq_status[4];
-> +
-> +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
->  	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
-> 
->  	if (irq_status[0] & IMR_MGNTDOK)
-> @@ -891,8 +908,9 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
-> void *dev)
->  	if (irq_status[0] & IMR_ROK)
->  		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
-> 
-> -out:
-> -	spin_unlock(&rtwpci->irq_lock);
-> +	/* all of the jobs for this interrupt have been done */
-> +	rtw_pci_enable_interrupt(rtwdev, rtwpci);
-> +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
-> 
->  	return IRQ_HANDLED;
->  }
-> @@ -1152,8 +1170,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
->  		goto err_destroy_pci;
->  	}
-> 
-> -	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
-> -			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
-> +	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
-> +					rtw_pci_interrupt_handler,
-> +					rtw_pci_interrupt_threadfn,
-> +					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
->  	if (ret) {
->  		ieee80211_unregister_hw(hw);
->  		goto err_destroy_pci;
-> @@ -1192,7 +1212,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
->  	rtw_pci_disable_interrupt(rtwdev, rtwpci);
->  	rtw_pci_destroy(rtwdev, pdev);
->  	rtw_pci_declaim(rtwdev, pdev);
-> -	free_irq(rtwpci->pdev->irq, rtwdev);
-> +	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
->  	rtw_core_deinit(rtwdev);
->  	ieee80211_free_hw(hw);
->  }
-> --
-> 2.20.1
+> greg k-h
+
+I found similar issues of graybus when I tested the latest staging-testing
+
+In file included from <command-line>:0:0:
+./include/linux/greybus/greybus_protocols.h:45:2: error: unknown type name ¡®__le16¡¯
+  __le16 size;  /* Size in bytes of header + payload */
+  ^~~~~~
+./include/linux/greybus/greybus_protocols.h:46:2: error: unknown type name ¡®__le16¡¯
+  __le16 operation_id; /* Operation unique id */
+  ^~~~~~
+./include/linux/greybus/greybus_protocols.h:47:2: error: unknown type name ¡®__u8¡¯
+  __u8 type;  /* E.g GB_I2C_TYPE_* or GB_GPIO_TYPE_* */
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:48:2: error: unknown type name ¡®__u8¡¯
+  __u8 result;  /* Result of request (in responses only) */
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:49:2: error: unknown type name ¡®__u8¡¯
+  __u8 pad[2];  /* must be zero (ignore when read) */
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:58:2: error: unknown type name ¡®__u8¡¯
+  __u8 phase;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:88:2: error: unknown type name ¡®__u8¡¯
+  __u8 major;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:89:2: error: unknown type name ¡®__u8¡¯
+  __u8 minor;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:93:2: error: unknown type name ¡®__u8¡¯
+  __u8 major;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:94:2: error: unknown type name ¡®__u8¡¯
+  __u8 minor;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:98:2: error: unknown type name ¡®__u8¡¯
+  __u8 bundle_id;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:102:2: error: unknown type name ¡®__u8¡¯
+  __u8 major;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:103:2: error: unknown type name ¡®__u8¡¯
+  __u8 minor;
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:108:2: error: unknown type name ¡®__le16¡¯
+  __le16   size;
+  ^~~~~~
+./include/linux/greybus/greybus_protocols.h:113:2: error: unknown type name ¡®__u8¡¯
+  __u8   data[0];
+  ^~~~
+./include/linux/greybus/greybus_protocols.h:118:2: error: unknown type name ¡®__le16¡¯
+  __le16   cport_id;
+  ^~~~~~
+./include/linux/greybus/greybus_protocols.h:122:2: error: unknown type name ¡®__le16¡¯
+  __le16   cport_id;
+
+.. and other files...
+
+Not very sure... but it seems it can be observed with allmodconfig or
+CONFIG_KERNEL_HEADER_TEST=y and fail my compilation...
+Hope that of some help (kind reminder...)
+
+Thanks,
+Gao Xiang
 
 
-Now it works fine with MSI interrupt enabled.
-
-But this patch is conflicting with MSI interrupt patch.
-Is there a better way we can make Kalle apply them more smoothly?
-I can rebase them and submit both if you're OK.
-
-Yan-Hsuan
+> _______________________________________________
+> devel mailing list
+> devel@linuxdriverproject.org
+> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
