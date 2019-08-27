@@ -2,111 +2,211 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED7FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FCEC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C1F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09A32186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbfH0QEM (ORCPT
+        id S1730093AbfH0QE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:04:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:10917 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 12:04:59 -0400
+Received: from muru.com ([72.249.23.125]:58840 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbfH0QEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:04:11 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B9B67FDCA
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:04:11 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id w11so11626057wru.17
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:04:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/XqWagcDFu3I/3+ooG2WadK5AEABMMtW/Vv17jrsAvY=;
-        b=SnfqafSC9chOrjJwCNyLU7vliZKv5qNDYnjBJqwNHxbzQj5cjJn6ZzpUFz6ftSk+2m
-         Uda1D/opE0qrqqiIullYXt6ByEiZP7oYl11cq2hHSONKimjqFTqmwqFB1uCvrmAfyMlt
-         UD3bWluDL41kZB01Gbr+XEEcNtRdezzBzKG+0pSASxmr1w8WnXAev+gKldZzmtGCqNxV
-         gNupsPdgzMxDtaJ4a+evdb0DFkjC9ncgW0Fhi71Wk+p9sWtclLmnAuMx/iWRRGjbrI4/
-         wPiEb/st6PbKs7xLw1CGZLW87NvqyYYhuPLyQNWOBnI18XQ3BiPGA4IdKv392FyvT4GR
-         uZqA==
-X-Gm-Message-State: APjAAAXo+8vADDlt2E2y45A37g2Zlatjlq6D1KvV4GgGxNt5i+ZdGkjj
-        GrMnavxMDsC7YyLq00rOhtVODHqq6gvcQmOESlaWpSTXFhKcr6oa/qOCMEm+GFwMgcQIdEt2856
-        MwWECx2LP0LxiC5Kxfyr2ynyu
-X-Received: by 2002:a7b:c157:: with SMTP id z23mr29337862wmi.104.1566921849783;
-        Tue, 27 Aug 2019 09:04:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqybdX7p/8QSoNaXF11fp+waAg3kYnqCagdBNshParsrqdkSV4cb0vJ1fCD53SJ5jbyMRhQ3aw==
-X-Received: by 2002:a7b:c157:: with SMTP id z23mr29337838wmi.104.1566921849575;
-        Tue, 27 Aug 2019 09:04:09 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n8sm13461246wro.89.2019.08.27.09.04.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:04:08 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: [PATCH 2/3] KVM: x86: svm: remove unneeded nested_enable_evmcs() hook
-Date:   Tue, 27 Aug 2019 18:04:03 +0200
-Message-Id: <20190827160404.14098-3-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190827160404.14098-1-vkuznets@redhat.com>
-References: <20190827160404.14098-1-vkuznets@redhat.com>
+        id S1727064AbfH0QE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:04:59 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3DE5C8107;
+        Tue, 27 Aug 2019 16:05:26 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 09:04:54 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
+        sre@kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
+        merlijn@wizzup.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
+Message-ID: <20190827160454.GA52127@atomide.com>
+References: <20190820195307.27590-1-dmurphy@ti.com>
+ <20190826215822.GY52127@atomide.com>
+ <20190826221413.GA19124@amd>
+ <20190826224437.GZ52127@atomide.com>
+ <20190827121818.GB19927@amd>
+ <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
+ <9939e253-0c9e-5ef7-e160-c1e5fe99c453@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9939e253-0c9e-5ef7-e160-c1e5fe99c453@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 5158917c7b019 ("KVM: x86: nVMX: Allow nested_enable_evmcs to
-be NULL") the code in x86.c is prepared to see nested_enable_evmcs being
-NULL and in VMX case it actually is when nesting is disabled. Remove the
-unneeded stub from SVM code.
+* Dan Murphy <dmurphy@ti.com> [190827 13:02]:
+> Hello
+> 
+> On 8/27/19 7:44 AM, Dan Murphy wrote:
+> > Tony
+> > 
+> > On 8/27/19 7:18 AM, Pavel Machek wrote:
+> > > On Mon 2019-08-26 15:44:37, Tony Lindgren wrote:
+> > > > * Pavel Machek <pavel@ucw.cz> [190826 22:14]:
+> > > > > On Mon 2019-08-26 14:58:22, Tony Lindgren wrote:
+> > > > > > Hi,
+> > > > > > 
+> > > > > > * Dan Murphy <dmurphy@ti.com> [190820 19:53]:
+> > > > > > > Fix the brightness control for I2C mode.  Instead of
+> > > > > > > changing the full scale current register update the ALS target
+> > > > > > > register for the appropriate banks.
+> > > > > > > 
+> > > > > > > In addition clean up some code errors and random misspellings found
+> > > > > > > during coding.
+> > > > > > > 
+> > > > > > > Tested on Droid4 as well as LM3532 EVM connected to
+> > > > > > > a BeagleBoneBlack
+> > > > > > > 
+> > > > > > > Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the
+> > > > > > > lm3532 LED driver")
+> > > > > > > Reported-by: Pavel Machek <pavel@ucw.cz>
+> > > > > > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > > > > > > ---
+> > > > > > > 
+> > > > > > > v3 - Removed register define updates -
+> > > > > > > https://lore.kernel.org/patchwork/patch/1114542/
+> > > > > > Looks like starting with this patch in Linux next the LCD on droid4
+> > > > > > is so dim it's unreadable even with brightness set to 255. Setting
+> > > > > > brightness to 0 does blank it completely though.
+> > > > > > 
+> > > > > > Did something maybe break with the various patch revisions or are
+> > > > > > we now missing some dts patch?
+> > > > > Maybe missing dts patch. We should provide maximum current the LED can
+> > > > > handle...
+> > > > Or i2c control is somehow broken and only als control now works?
+> > 
+> > With only setting CONFIG_LEDS_LM3532=m to the next branch I get full
+> > brightness with 255.
+> > 
+> > I also see half brightness at 128 with the ramp down working.
+> > 
+> > I am not able to reproduce this issue on my device.
+> > 
+> Just to make sure my data was right I did a clean rebuild on commit
+> 1dbb9fb4082ce2a2f1cf9596881ddece062d15d0
+> 
+> from the led-next branch.
+> 
+> Just adding the above config flag.  I still cannot reproduce the issue
+> 
+> See attached pic
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/svm.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+OK thanks for checking. Probably you can reproduce the issue if you
+reset things to commit c4b8354e5341 ("leds: lm3532: Fix brightness
+control for i2c mode"). There might now be something uninitialized
+with that commit depending on the hardware state on boot if you
+care to check that. Or maybe there's some interaction with other
+patches not yet at commit c4b8354e5341 level.
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 40175c42f116..6d52c65d625b 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7122,13 +7122,6 @@ static int svm_unregister_enc_region(struct kvm *kvm,
- 	return ret;
+I confirmed again that things fail at commit c4b8354e5341. But
+now testing with the same Linux next as yesterday things works again.
+Not sure what's going on as failures with Linux next yestreday
+made me start narrowing down what commit causes the issues.
+
+Anyways, playing with loading and unloading the leds-lm3532.ko I
+noticed we can also have unpaired regulator calls when using sysfs
+brightness that the below patch attempts to fix. Not sure how I got
+to the point of regulator warnings, but I was trying to enable
+the brightness via sysfs. Maybe I had other patches too when
+I got the regulator warnings.. But please check if the below
+patch makes sense.
+
+Regards,
+
+Tony
+
+8< ---------------------------
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -127,6 +127,7 @@ struct lm3532_als_data {
+  * @num_leds - Number of LED strings are supported in this array
+  * @full_scale_current - The full-scale current setting for the current sink.
+  * @led_strings - The LED strings supported in this array
++ * @enabled - Enabled status
+  * @label - LED label
+  */
+ struct lm3532_led {
+@@ -138,6 +139,7 @@ struct lm3532_led {
+ 	int ctrl_brt_pointer;
+ 	int num_leds;
+ 	int full_scale_current;
++	int enabled:1;
+ 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
+ 	char label[LED_MAX_NAME_SIZE];
+ };
+@@ -292,11 +294,15 @@ static int lm3532_get_ramp_index(int ramp_time)
+ 				ramp_time);
  }
  
--static int nested_enable_evmcs(struct kvm_vcpu *vcpu,
--				   uint16_t *vmcs_version)
--{
--	/* Intel-only feature */
--	return -ENODEV;
--}
--
- static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
++/* Caller must take care of locking */
+ static int lm3532_led_enable(struct lm3532_led *led_data)
  {
- 	unsigned long cr4 = kvm_read_cr4(vcpu);
-@@ -7337,7 +7330,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.mem_enc_reg_region = svm_register_enc_region,
- 	.mem_enc_unreg_region = svm_unregister_enc_region,
+ 	int ctrl_en_val = BIT(led_data->control_bank);
+ 	int ret;
  
--	.nested_enable_evmcs = nested_enable_evmcs,
-+	.nested_enable_evmcs = NULL,
- 	.nested_get_evmcs_version = NULL,
++	if (led_data->enabled)
++		return 0;
++
+ 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
+ 					 ctrl_en_val, ctrl_en_val);
+ 	if (ret) {
+@@ -304,14 +310,24 @@ static int lm3532_led_enable(struct lm3532_led *led_data)
+ 		return ret;
+ 	}
  
- 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+-	return regulator_enable(led_data->priv->regulator);
++	ret = regulator_enable(led_data->priv->regulator);
++	if (ret < 0)
++		return ret;
++
++	led_data->enabled = 1;
++
++	return 0;
+ }
+ 
++/* Caller must take care of locking */
+ static int lm3532_led_disable(struct lm3532_led *led_data)
+ {
+ 	int ctrl_en_val = BIT(led_data->control_bank);
+ 	int ret;
+ 
++	if (!led_data->enabled)
++		return 0;
++
+ 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
+ 					 ctrl_en_val, 0);
+ 	if (ret) {
+@@ -319,7 +335,13 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
+ 		return ret;
+ 	}
+ 
+-	return regulator_disable(led_data->priv->regulator);
++	ret = regulator_disable(led_data->priv->regulator);
++	if (ret < 0)
++		return ret;
++
++	led_data->enabled = 0;
++
++	return 0;
+ }
+ 
+ static int lm3532_brightness_set(struct led_classdev *led_cdev,
 -- 
-2.20.1
-
+2.23.0
