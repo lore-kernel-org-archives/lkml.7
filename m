@@ -2,141 +2,292 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B32AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26883C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89A9217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:23:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="sTxpZnPT"
+	by mail.kernel.org (Postfix) with ESMTP id D3F1221881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566894250;
+	bh=F2EeM65Vw9QXowD/5k6epy+05mZQDWiPim2ChYemKAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WXvPdDgs3oBlC6dtW+HTqQ+9+puBIsLYSnPbPcqqaFs4dahZhebFF8dNSHlzKOrvb
+	 OGBNB+o7QRvJY0frSsHlENXY5hZ6MVWeVZugT6QLGzEjc5acgQ2dhX3EQxPfYHvWmq
+	 yU6JEVbc0BbAlutxKfEtigD+edYXEBg5GGLM0ErY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbfH0IXv (ORCPT
+        id S1729805AbfH0IYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:23:51 -0400
-Received: from mout.web.de ([212.227.17.11]:41107 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729376AbfH0IXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566894216;
-        bh=EOdG8Jg0bjYCtLktuVJDbrUxViSF+xEWa2XtDYURb5A=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=sTxpZnPTX8/7gHKAGQe4WOKJo1P27D3gYAqv3viSy768z/e6Ii5sAnCFg/gdQszQQ
-         tzkMzgBSmVkcK76z2OBG0QDWuf+6dWGmy5dL0ccmUxJ5upnDZPKuR1d4yGytpPYd12
-         I3OUIZuC2e/INzYm/XiQZMcHm0niuVvVAY1DkiU0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.143.232]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MLPaA-1i34zd3bAQ-000fCi; Tue, 27
- Aug 2019 10:23:36 +0200
-To:     linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <lkml@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 0/2] powerpc/82xx: Adjustments for pq2ads_pci_init_irq()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <6dc7d70e-8a40-46ab-897b-d2eaf9a87d77@web.de>
-Date:   Tue, 27 Aug 2019 10:23:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 04:24:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51040 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728976AbfH0IYI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:24:08 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so2104889wml.0;
+        Tue, 27 Aug 2019 01:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vjcjSeCevbHEiiIy79EbgY2nEsyBXssjOQgmLoyTyCY=;
+        b=V+tpn3RtcsLU1B1PVUCBuFlt7KWVheNM/LfR/1S+zRKFo6UPy2Mi4eBMWHFNzgAp5m
+         NYePQN5L1EZ7Lpxrl33nFyLWyHDYogJTezoAIDRNofrOgSluXg41d2ONwLOpbqaAavkB
+         Bm3ELBFOM5C1/QnnONC0+EdkdZbN2aywnm4GezmuUJvGbvt/KGPz+KxmgQptwTvm1ZbL
+         dyFC6iUDg0pYgta90+NNMFKoycPUKbA+NFdlglFUPpWFRNZcXoMZvX+uQCjkHPvpY6vk
+         smOu/9nXSK9mOPasJNhpev5/bzqdEsgZo41mVwPeLgbExzLQFePFujhUrqih3uBlrWH4
+         eQTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vjcjSeCevbHEiiIy79EbgY2nEsyBXssjOQgmLoyTyCY=;
+        b=mkKLBnKBCJ81WJLPvmFoDCh2EZRnHE8jO20MsuvMFh+s5SSjQEt8ixcx8QEOa9aAYv
+         h0B7ks0CRrVXs+Q3f4P+Afm7+gYUW/3Z6wcwt0XqcKmeCcbYvnQS5rbfS5uqGHdGPqil
+         gOPkRDtelTkeK7ciJCb/A2uVYXDONH9ikU0xFtbcZ+oDhWOExxcs12n4QSasTJW6g98l
+         CCmGwl/bjRZZIeBIEBn0BHYRAyNKpwdIbEhv7sS0j0c9GHgkMJ3Ixhfw7TjwUnm5yEsy
+         orUy6mxTMBaRc5e5mRJG/BWXZ7M5tpvLzgxBegWq+oV+YH540W0JtjvKEXvJOA0rCoxt
+         alNw==
+X-Gm-Message-State: APjAAAXAeCMHTK05mM9d5Mliwa30fOH4IfaR9bAXs1yfyKDBv75INtTy
+        gsCBfGCUBSuKFqb0xxI9D/A=
+X-Google-Smtp-Source: APXvYqy9kOVG5T7VK0SQ1saYsd37E2xZfKg6cgI+3cxVqiudSnCKKzuKHUftMUvrzfXGA579EQsboQ==
+X-Received: by 2002:a1c:7611:: with SMTP id r17mr26707588wmc.117.1566894245355;
+        Tue, 27 Aug 2019 01:24:05 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id g65sm3031208wma.21.2019.08.27.01.24.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 01:24:04 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:24:02 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Benjamin Peterson <benjamin@python.org>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        James Clark <james.clark@arm.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20190827082402.GA83092@gmail.com>
+References: <20190827013634.3173-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FWPP7FnuP0R0YkBDMtPwXcV+dkmywBeiHniH8l8wNxIKIYzA2VH
- mGaZbaqheDKQWXTxTf0APXFrL/TOvCW8LtjeGIkoGh7Zd3rMCSaxC4N51eBKxDAjml7aRMw
- 4M+YOa3AISg6vixPub+WGvxOxAKc40HgJsa3aiqOgMRuaYHaKZzDnJlYk+CwWrEonowb5Ga
- StBBa1O9YSLzYjPfZ9laQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nLDhNZ+302c=:7EAJy3DTm+DleBPFApAPXV
- s/zlqX/7KAH3yAJOprL80VhwqT3TihIdTmCwNeOM/dI5Y1ItvUUgCgj5y+i4IeKUaalvq6wfJ
- iU0tz5MhFWCYGgcb14+IiFQmYU6LBNgkY0UEAvzrgsAAFS9icfcK530MJKOae0OYiPxjixzSb
- FCHgpMr7A3XSTiG0rY0YgKOAjmkSFESUCMhbXd0Zy3UeaVLh1NC04bjFYCiDSrwi1jK4KbBEP
- rB0RZyq0cIH654dxulraTl3IXMj/5K0X3UnyDtxd53CEXQng7xTI16EnXwxgFZlvfoVFqmSDx
- Q2AEOkIBNLXwsjOU2lZ0tzuf+vgEI8tH+/qU0CvvdSSPLW0PoOgRy0bSJRm9HckC3UY43paDA
- 72Sl/373wXhYf39SRBgd7cxY9X6/vx5lYTqfJUogze7pLRobfunqKkGnsMt/ygn2VtAZVuMqk
- cpD5yJvMO+cSQ0Gga409tJXeIdP0yAcEULV//EQ/W6BOx6UA/0b408PPCjav8t2zXNIEobH5F
- 6heHIU0NmvCiIQeK27GjSoAtfJCRDlWwwk8BBGLPFinHMB/8us2i857RU/cLAcdzALbUxMUkX
- tV8huOq0QeR5isMfYVtcAb4l40DIq51n6SiotVmn0O9Bqn3kWlVCFV+VkDWFFUKVerz6AQYAf
- Dr5W1MLoH5DVYQSrjgb+T6bfKBjOXpVqkM+yUTa8oZ7w4x9hGUd66EvHiciNaOh1wxmx7SSFN
- iz/P/VdU3n46GY4TpzytPEWu02AUlRudwhuZulggzGlYTZ9FFBgmZC7cZuUa2w/0oOs1pHvaU
- s4lty4yYFmb5KUVelpJpOBuJaeU1+087wH0yQ8QlguSPPjGw3h5/CE67s1YEcn0nfNTczrP/j
- gynFLRMGBNPDjEiAZaD89g4u547EC8WgEotlf8J3hPOIIuwU95B3QptHmDpXdfCdu4Dd0GOiE
- l1gMjfvyMkPs+PVaMG9gcIFH+WIfrFyW9KsWU498s5J91R6Phf2hRN6JDBx7hAi+MM2q0YMv2
- jMhkg7WAJPbGM5xh32sW3iOJxokD44etrkRpJTBnGdJZxXG8wavtRaShk42hyBgjDicoXdRjs
- F8NrTlX2MlDwmFvrClKJgppIYB6bP7v2WPJ4MRV8Dl11ZRHI7iLpNO2XP2wxf50pd/zSxjDjY
- qkEiV6vi4AwtkPSqwW3ukwRnf+nvovIHS5Shm6lPHbMHM6wg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827013634.3173-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 27 Aug 2019 10:16:32 +0200
 
-Two update suggestions were taken into account
-from static source code analysis.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Markus Elfring (2):
-  Delete an unnecessary of_node_put() call
-  Use common error handling code
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 39152ee51b77851689f9b23fde6f610d13566c39:
+> 
+>   perf/x86/intel/pt: Get rid of reverse lookup table for ToPA (2019-08-26 12:00:16 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.4-20190826
+> 
+> for you to fetch changes up to 74a1e863eb73dcc9f069b671dfb40650f3832116:
+> 
+>   perf evsel: Rename perf_missing_features::bpf_event to ::bpf (2019-08-26 19:39:11 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf report:
+> 
+>   Andi Kleen:
+> 
+>   - Make --ns time sort key output column wide enough for nanoseconds.
+> 
+> perf script:
+> 
+>   Gustavo A. R. Silva:
+> 
+>   - Fix memory leaks in list_scripts()
+> 
+> perf tests:
+> 
+>   James Clark:
+> 
+>   - Fixes hang in zstd compression test by changing the source of random data.
+> 
+> perf trace:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - augmented_raw_syscalls.c BPF helper improvements.
+> 
+>   Benjamin Peterson:
+> 
+>   - Fix off-by-one error in ioctl cmd->string table.
+> 
+> libperf:
+> 
+>   Jiri Olsa:
+> 
+>   - Move most PERF_RECORD_ structs to perf/event.h.
+> 
+> headers:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Move cacheline related routines to separate source files.
+> 
+>   - Move record_opts and other record declarations to separate files.
+> 
+>   - Explicitly add some more needed headers here and there.
+> 
+>   Souptick Joarder:
+> 
+>   - Remove some duplicate include directives.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andi Kleen (2):
+>       perf report: Use timestamp__scnprintf_nsec() for time sort key
+>       perf report: Fix --ns time sort key output
+> 
+> Arnaldo Carvalho de Melo (15):
+>       perf cpumap: No need to include perf.h, ditch it
+>       perf stat: Remove needless headers from stat.h
+>       perf record: Move record_opts and other record decls out of perf.h
+>       perf cacheline: Move cacheline related routines to separate files
+>       perf srcline: Add missing srcline.h header to files needing its defs
+>       perf sort: Remove needless headers from sort.h, provide fwd struct decls
+>       perf augmented_raw_syscalls: Rename augmented_filename to augmented_arg
+>       perf augmented_raw_syscalls: Postpone tmp map lookup to after pid_filter
+>       perf augmented_raw_syscalls: Introduce helper to get the scratch space
+>       perf augmented_raw_syscalls: Reduce perf_event_output() boilerplate
+>       libperf: Rename the PERF_RECORD_ structs to have a "perf" suffix
+>       perf tools: Rename perf_event::ksymbol_event to perf_event::ksymbol
+>       perf tools: Rename perf_event::bpf_event to perf_event::bpf
+>       perf tool: Rename perf_tool::bpf_event to bpf
+>       perf evsel: Rename perf_missing_features::bpf_event to ::bpf
+> 
+> Benjamin Peterson (1):
+>       perf trace beauty ioctl: Fix off-by-one error in cmd->string table
+> 
+> Gustavo A. R. Silva (1):
+>       perf script: Fix memory leaks in list_scripts()
+> 
+> James Clark (1):
+>       perf tests: Fixes hang in zstd compression test by changing the source of random data
+> 
+> Jiri Olsa (12):
+>       libperf: Add PERF_RECORD_MMAP 'struct mmap_event' to perf/event.h
+>       libperf: Add PERF_RECORD_MMAP2 'struct mmap2_event' to perf/event.h
+>       libperf: Add PERF_RECORD_COMM 'struct comm_event' to perf/event.h
+>       libperf: Add PERF_RECORD_NAMESPACES 'struct namespaces_event' to perf/event.h
+>       libperf: Add PERF_RECORD_FORK 'struct fork_event' to perf/event.h
+>       libperf: Add PERF_RECORD_LOST 'struct lost_event' to perf/event.h
+>       libperf: Add PERF_RECORD_LOST_SAMPLES 'struct lost_samples_event' to perf/event.h
+>       libperf: Add PERF_RECORD_READ 'struct read_event' to perf/event.h
+>       libperf: Add PERF_RECORD_THROTTLE 'struct throttle_event' to perf/event.h
+>       libperf: Add PERF_RECORD_KSYMBOL 'struct ksymbol_event' to perf/event.h
+>       libperf: Add PERF_RECORD_BPF_EVENT 'struct bpf_event' to perf/event.h
+>       libperf: Add PERF_RECORD_SAMPLE 'struct sample_event' to perf/event.h
+> 
+> Souptick Joarder (1):
+>       perf tools: Remove duplicate headers
+> 
+>  tools/perf/arch/arm/util/cs-etm.c                 |   2 +-
+>  tools/perf/arch/arm64/util/arm-spe.c              |   1 +
+>  tools/perf/arch/s390/util/auxtrace.c              |   1 +
+>  tools/perf/arch/x86/tests/perf-time-to-tsc.c      |   2 +
+>  tools/perf/arch/x86/util/intel-bts.c              |   1 +
+>  tools/perf/arch/x86/util/intel-pt.c               |   3 +-
+>  tools/perf/builtin-c2c.c                          |   1 +
+>  tools/perf/builtin-diff.c                         |   2 +
+>  tools/perf/builtin-record.c                       |   4 +-
+>  tools/perf/builtin-report.c                       |   1 +
+>  tools/perf/builtin-sched.c                        |   2 +-
+>  tools/perf/builtin-script.c                       |   7 +-
+>  tools/perf/builtin-stat.c                         |   2 +-
+>  tools/perf/builtin-trace.c                        |   1 +
+>  tools/perf/examples/bpf/augmented_raw_syscalls.c  | 100 +++++++--------
+>  tools/perf/lib/include/perf/event.h               | 112 ++++++++++++++++
+>  tools/perf/perf.h                                 |  62 ---------
+>  tools/perf/tests/backward-ring-buffer.c           |   2 +-
+>  tools/perf/tests/bpf.c                            |   1 +
+>  tools/perf/tests/code-reading.c                   |   1 +
+>  tools/perf/tests/keep-tracking.c                  |   1 +
+>  tools/perf/tests/openat-syscall-tp-fields.c       |   3 +-
+>  tools/perf/tests/parse-no-sample-id-all.c         |   4 +-
+>  tools/perf/tests/perf-record.c                    |   2 +-
+>  tools/perf/tests/shell/record+zstd_comp_decomp.sh |   2 +-
+>  tools/perf/tests/switch-tracking.c                |   1 +
+>  tools/perf/tests/task-exit.c                      |   1 +
+>  tools/perf/trace/beauty/ioctl.c                   |   2 +-
+>  tools/perf/ui/browsers/res_sample.c               |   2 +
+>  tools/perf/ui/browsers/scripts.c                  |   8 +-
+>  tools/perf/ui/stdio/hist.c                        |   1 +
+>  tools/perf/util/Build                             |   1 +
+>  tools/perf/util/annotate.c                        |   2 +
+>  tools/perf/util/auxtrace.c                        |   2 +-
+>  tools/perf/util/bpf-event.c                       |  36 +++---
+>  tools/perf/util/bpf-event.h                       |  10 +-
+>  tools/perf/util/cacheline.c                       |  26 ++++
+>  tools/perf/util/cacheline.h                       |  21 +++
+>  tools/perf/util/callchain.c                       |   1 +
+>  tools/perf/util/cpumap.h                          |   2 -
+>  tools/perf/util/data.c                            |   1 -
+>  tools/perf/util/event.c                           |  35 +++--
+>  tools/perf/util/event.h                           | 149 +++++-----------------
+>  tools/perf/util/evlist.c                          |   2 +-
+>  tools/perf/util/evsel.c                           |  22 ++--
+>  tools/perf/util/evsel.h                           |   4 +-
+>  tools/perf/util/get_current_dir_name.c            |   1 -
+>  tools/perf/util/hist.c                            |   5 +-
+>  tools/perf/util/intel-bts.c                       |   2 +-
+>  tools/perf/util/kvm-stat.h                        |   2 +-
+>  tools/perf/util/machine.c                         |  25 ++--
+>  tools/perf/util/machine.h                         |   1 +
+>  tools/perf/util/namespaces.c                      |   2 +-
+>  tools/perf/util/namespaces.h                      |   4 +-
+>  tools/perf/util/python.c                          |  58 ++++-----
+>  tools/perf/util/record.c                          |   1 +
+>  tools/perf/util/record.h                          |  74 +++++++++++
+>  tools/perf/util/session.c                         |  16 +--
+>  tools/perf/util/sort.c                            |  12 +-
+>  tools/perf/util/sort.h                            |  27 +---
+>  tools/perf/util/stat-display.c                    |   1 -
+>  tools/perf/util/stat.c                            |   1 +
+>  tools/perf/util/stat.h                            |   7 +-
+>  tools/perf/util/thread.c                          |   4 +-
+>  tools/perf/util/thread.h                          |   4 +-
+>  tools/perf/util/tool.h                            |   2 +-
+>  tools/perf/util/top.h                             |   1 +
+>  tools/perf/util/util.c                            |  20 ---
+>  tools/perf/util/util.h                            |   1 -
+>  69 files changed, 493 insertions(+), 427 deletions(-)
+>  create mode 100644 tools/perf/lib/include/perf/event.h
+>  create mode 100644 tools/perf/util/cacheline.c
+>  create mode 100644 tools/perf/util/cacheline.h
+>  create mode 100644 tools/perf/util/record.h
 
- arch/powerpc/platforms/82xx/pq2ads-pci-pic.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+Pulled, thanks a lot Arnaldo!
 
-=2D-
-2.23.0
-
+	Ingo
