@@ -2,52 +2,57 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E24C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD1C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA3A217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8580E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893545;
-	bh=4SXE3u17cW/vios+tf7ONzbZdajlNUm1nl86PBM+ESo=;
+	s=default; t=1566893552;
+	bh=RxDSkfwBhmaBGf5yeYT9XqsGu+pXDn6KUzqQgAHY1JI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fX9AkfreKQKc41mrhbxgh5QQeLl+JfSZ/i+4edVfgSn/hv/6lPke2kemSU1c5aC0d
-	 E2ezm6zbAPytxQc0e/GFEG8CO9fcGz6I+6kxUgIUfpHKlo2+7KZcWwaJxf2G5H/jLP
-	 IPv5JEs/ZqWWHv4TaAWAtKos5Uh3k92G9Fx9yPUs=
+	b=s2lvbYJUZKNWtszcTxAhEXdSwy80lcyY/1gQ5Oy5poU5KqYSUwITZ+E+rCa+1RPJL
+	 HaxE7UBQLxpOV8ZKzM4K6UgB2XON7dvNuCLBVKutQL1E0n9QNIRvTN2qq8f61lhtX5
+	 y0C2TUcO38pMvGFHyVI7BBhpMPnXIePW6+2XvwBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfH0IMT (ORCPT
+        id S1731155AbfH0H7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731169AbfH0H71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:27 -0400
+        id S1731099AbfH0H7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF7FF206BA;
-        Tue, 27 Aug 2019 07:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95C7A2186A;
+        Tue, 27 Aug 2019 07:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892766;
-        bh=4SXE3u17cW/vios+tf7ONzbZdajlNUm1nl86PBM+ESo=;
+        s=default; t=1566892742;
+        bh=RxDSkfwBhmaBGf5yeYT9XqsGu+pXDn6KUzqQgAHY1JI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bDRswvR+mv8vnwsdNBYMUygmCiZArx52CsOI9J6JeCJ6k8Ew1aroU0AADMD+Gc1w4
-         xj7Mj7pyf1q5R1FZDUhkojvmLAgh3sCmUD4riGm2r6KuybrouhS5z8I14/IE6RzpuL
-         J4LqedkcrSlbrBRIDLlQxcSSsQ+//mF/HqBzckJY=
+        b=0Ka0MDBUpcqpnRoKJctWNtJMjNdBGQ+d9dw18bCIXh1O8e092IU58Nks9NgZyiufP
+         seC32hNNEb479NmJc5sRLO7NpPdHghPDDaTG2xZ9leBcZtRADScxA0dwaM3vpygf6c
+         06iEDP/X9WKKAhkIL//9verc9ACzwccrjwKJEG0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.19 98/98] rxrpc: Fix read-after-free in rxrpc_queue_local()
-Date:   Tue, 27 Aug 2019 09:51:17 +0200
-Message-Id: <20190827072723.427504193@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 55/98] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
+Date:   Tue, 27 Aug 2019 09:50:34 +0200
+Message-Id: <20190827072721.212895393@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,122 +65,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
 
-commit 06d9532fa6b34f12a6d75711162d47c17c1add72 upstream.
+The events defined in pmu-events JSON are parsed and added into perf
+tool. For fixed counters, we handle the encodings between JSON and perf
+by using a static array fixed[].
 
-rxrpc_queue_local() attempts to queue the local endpoint it is given and
-then, if successful, prints a trace line.  The trace line includes the
-current usage count - but we're not allowed to look at the local endpoint
-at this point as we passed our ref on it to the workqueue.
+But the fixed[] has missed an important event "cpu_clk_unhalted.core".
 
-Fix this by reading the usage count before queuing the work item.
+For example, on the Tremont platform,
 
-Also fix the reading of local->debug_id for trace lines, which must be done
-with the same consideration as reading the usage count.
+  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
+  event syntax error: 'cpu_clk_unhalted.core'
+                       \___ parser error
 
-Fixes: 09d2bf595db4 ("rxrpc: Add a tracepoint to track rxrpc_local refcounting")
-Reported-by: syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With this patch, the event cpu_clk_unhalted.core can be parsed.
 
+  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             112
+    config                           0x3c
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    exclude_guest                    1
+  ------------------------------------------------------------
+...
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |    6 +++---
- net/rxrpc/local_object.c     |   19 ++++++++++---------
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ tools/perf/pmu-events/jevents.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -500,10 +500,10 @@ rxrpc_tx_points;
- #define E_(a, b)	{ a, b }
- 
- TRACE_EVENT(rxrpc_local,
--	    TP_PROTO(struct rxrpc_local *local, enum rxrpc_local_trace op,
-+	    TP_PROTO(unsigned int local_debug_id, enum rxrpc_local_trace op,
- 		     int usage, const void *where),
- 
--	    TP_ARGS(local, op, usage, where),
-+	    TP_ARGS(local_debug_id, op, usage, where),
- 
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,	local		)
-@@ -513,7 +513,7 @@ TRACE_EVENT(rxrpc_local,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->local = local->debug_id;
-+		    __entry->local = local_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -97,7 +97,7 @@ static struct rxrpc_local *rxrpc_alloc_l
- 		local->debug_id = atomic_inc_return(&rxrpc_debug_id);
- 		memcpy(&local->srx, srx, sizeof(*srx));
- 		local->srx.srx_service = 0;
--		trace_rxrpc_local(local, rxrpc_local_new, 1, NULL);
-+		trace_rxrpc_local(local->debug_id, rxrpc_local_new, 1, NULL);
- 	}
- 
- 	_leave(" = %p", local);
-@@ -325,7 +325,7 @@ struct rxrpc_local *rxrpc_get_local(stru
- 	int n;
- 
- 	n = atomic_inc_return(&local->usage);
--	trace_rxrpc_local(local, rxrpc_local_got, n, here);
-+	trace_rxrpc_local(local->debug_id, rxrpc_local_got, n, here);
- 	return local;
- }
- 
-@@ -339,7 +339,8 @@ struct rxrpc_local *rxrpc_get_local_mayb
- 	if (local) {
- 		int n = atomic_fetch_add_unless(&local->usage, 1, 0);
- 		if (n > 0)
--			trace_rxrpc_local(local, rxrpc_local_got, n + 1, here);
-+			trace_rxrpc_local(local->debug_id, rxrpc_local_got,
-+					  n + 1, here);
- 		else
- 			local = NULL;
- 	}
-@@ -347,16 +348,16 @@ struct rxrpc_local *rxrpc_get_local_mayb
- }
- 
- /*
-- * Queue a local endpoint unless it has become unreferenced and pass the
-- * caller's reference to the work item.
-+ * Queue a local endpoint and pass the caller's reference to the work item.
-  */
- void rxrpc_queue_local(struct rxrpc_local *local)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = local->debug_id;
-+	int n = atomic_read(&local->usage);
- 
- 	if (rxrpc_queue_work(&local->processor))
--		trace_rxrpc_local(local, rxrpc_local_queued,
--				  atomic_read(&local->usage), here);
-+		trace_rxrpc_local(debug_id, rxrpc_local_queued, n, here);
- 	else
- 		rxrpc_put_local(local);
- }
-@@ -371,7 +372,7 @@ void rxrpc_put_local(struct rxrpc_local
- 
- 	if (local) {
- 		n = atomic_dec_return(&local->usage);
--		trace_rxrpc_local(local, rxrpc_local_put, n, here);
-+		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
- 
- 		if (n == 0)
- 			call_rcu(&local->rcu, rxrpc_local_rcu);
-@@ -458,7 +459,7 @@ static void rxrpc_local_processor(struct
- 		container_of(work, struct rxrpc_local, processor);
- 	bool again;
- 
--	trace_rxrpc_local(local, rxrpc_local_processing,
-+	trace_rxrpc_local(local->debug_id, rxrpc_local_processing,
- 			  atomic_read(&local->usage), NULL);
- 
- 	do {
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 68c92bb599eef..6b36b71106695 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -450,6 +450,7 @@ static struct fixed {
+ 	{ "inst_retired.any_p", "event=0xc0" },
+ 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+ 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
++	{ "cpu_clk_unhalted.core", "event=0x3c" },
+ 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
+ 	{ NULL, NULL},
+ };
+-- 
+2.20.1
+
 
 
