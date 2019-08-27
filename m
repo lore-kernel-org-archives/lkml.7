@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BF8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BD4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A860B206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9EB206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893814;
-	bh=Jie4Z5NXgR+SZsUsabxqaQqBZME0D+RudUPlaEOqIY8=;
+	s=default; t=1566893817;
+	bh=7WN0+bMcTcvSSgmiL/qEoFkf9ghDb+NMHD8d+5s8cCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFLAriC1cViLNIbheeGTgkgHe5zUztjCNN13yJKJK7wD1T3KMzu1rY1TLZSo8i9wc
-	 TM+5xF5Lsj3Nw38VDB90zl4O1s9vqdGz8mRVc3PxKf8QcRjjRwF36PFNS8VFmKfDaM
-	 rW4l6pX0TCPudL4773utOJGUz5ftOYDj9aMw/BJQ=
+	b=KTe5QbXXRgu6vadLRzkTMp5GN3Ropmu/ZA4N97zfdF4ivZLr+sQIvVEFb5ZXcbWs0
+	 dAs432Z9JhSNjfJTD+MdBOAqmUrnWClKtrK1CGfLtVPa2MFlhJMU99tXTJsPrk4RDL
+	 aewDkByGl3+gXvTNMAy5TF2o8rvKMgj1rQNhJaJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfH0IQx (ORCPT
+        id S1729741AbfH0HxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44842 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfH0HxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:23 -0400
+        id S1728836AbfH0HxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71CD3206BA;
-        Tue, 27 Aug 2019 07:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16F81217F5;
+        Tue, 27 Aug 2019 07:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892403;
-        bh=Jie4Z5NXgR+SZsUsabxqaQqBZME0D+RudUPlaEOqIY8=;
+        s=default; t=1566892391;
+        bh=7WN0+bMcTcvSSgmiL/qEoFkf9ghDb+NMHD8d+5s8cCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJDLeGJ9vPvsM0M0kmxoLvzVNXFllYG1orTjOcbE79AkT6d/UU4rcTdgxwXlVRUaL
-         VJ+GUFuPmCO/zhQuqIm7zbSv92j6N+9kanjsFrPLFcyHwASuHtW727SH6teyxChIhD
-         n0EdQY64DvPSaKDUk8dxkpNs7Dpc2JhWJHqNAayc=
+        b=GEwBolOSq5yEK4MxfpBhchu1U95lHU55Z7BahAt3F3J5KD+5Bbe+udwQQxL6MQD95
+         w4/9qBjovhIx/0zJUv/9+lpim+E8S0yM65QC3Xi4I25BqeENKFEjO2uAZkmGyALzRj
+         +epuF+SPFPzwwbBrmC03pT0MzJ7F7bU/3imB1rqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 42/62] gpiolib: never report open-drain/source lines as input to user-space
-Date:   Tue, 27 Aug 2019 09:50:47 +0200
-Message-Id: <20190827072703.032244937@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 38/62] Revert "dm bufio: fix deadlock with loop device"
+Date:   Tue, 27 Aug 2019 09:50:43 +0200
+Message-Id: <20190827072702.856629894@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,50 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 2c60e6b5c9241b24b8b523fefd3e44fb85622cda upstream.
+commit cf3591ef832915892f2499b7e54b51d4c578b28c upstream.
 
-If the driver doesn't support open-drain/source config options, we
-emulate this behavior when setting the direction by calling
-gpiod_direction_input() if the default value is 0 (open-source) or
-1 (open-drain), thus not actively driving the line in those cases.
+Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
+fix has been made available with commit d0a255e795ab ("loop: set
+PF_MEMALLOC_NOIO for the worker thread").
 
-This however clears the FLAG_IS_OUT bit for the GPIO line descriptor
-and makes the LINEINFO ioctl() incorrectly report this line's mode as
-'input' to user-space.
+Note that the fix offered by commit bd293d071ffe doesn't really prevent
+the deadlock from occuring - if we look at the stacktrace reported by
+Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
+i.e. it has already successfully taken the mutex. Changing the mutex
+from mutex_lock to mutex_trylock won't help with deadlocks that happen
+afterwards.
 
-This commit modifies the ioctl() to always set the GPIOLINE_FLAG_IS_OUT
-bit in the lineinfo structure's flags field. Since it's impossible to
-use the input mode and open-drain/source options at the same time, we
-can be sure the reported information will be correct.
+PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
 
-Fixes: 521a2ad6f862 ("gpio: add userspace ABI for GPIO line information")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Link: https://lore.kernel.org/r/20190806114151.17652-1-brgl@bgdev.pl
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
+Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/dm-bufio.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -971,9 +971,11 @@ static long gpio_ioctl(struct file *filp
- 		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
- 			lineinfo.flags |= GPIOLINE_FLAG_ACTIVE_LOW;
- 		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_OPEN_DRAIN;
-+			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
-+					   GPIOLINE_FLAG_IS_OUT);
- 		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_OPEN_SOURCE;
-+			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
-+					   GPIOLINE_FLAG_IS_OUT);
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -1630,7 +1630,9 @@ dm_bufio_shrink_scan(struct shrinker *sh
+ 	unsigned long freed;
  
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
+ 	c = container_of(shrink, struct dm_bufio_client, shrinker);
+-	if (!dm_bufio_trylock(c))
++	if (sc->gfp_mask & __GFP_FS)
++		dm_bufio_lock(c);
++	else if (!dm_bufio_trylock(c))
+ 		return SHRINK_STOP;
+ 
+ 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
 
 
