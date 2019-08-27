@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0688C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C893CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79400206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13C3206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893766;
-	bh=zoZ7wu9PPhyAfaaWF3fMYsYbg80wjiSCDJEYLVog2go=;
+	s=default; t=1566893772;
+	bh=udaqUPiPzuY0HXY31O3O3v6qDWZt9qyS0+RjrPuCBtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jUwwP8b2wATywqB8TPB+kAldvceBel77mVzKZBUz2zVqDO5XtYDvGyzLL9OaTt5oL
-	 cNL489lXHJyfiZH3fcgSZTtNb7LsXFeXX36V6VkrO7OrsMoTW643ViqJJnzRLpYxM5
-	 nLH09h+OSrX1W9EuQRFy8knb247OWiPQaglkyxsA=
+	b=wLmd/IpZTbr8liqQHQ0/gHyBEgT52onaiSRtB2pbgsP8griPeS7Ueg7gu6mHCr8Jn
+	 hi4uGjENU5onIQ0tc9ZStdVxWJzXWl7tSBet7TaF6J0li122XyaWkM7exsEVi3tJFd
+	 3gi6dymeHO0H/OOPlogMb7KXmevL1YxZHsszNnLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfH0IQF (ORCPT
+        id S1730024AbfH0HyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730081AbfH0Hyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:54:36 -0400
+        id S1729429AbfH0HyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:54:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8517E206BA;
-        Tue, 27 Aug 2019 07:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B7F1206BF;
+        Tue, 27 Aug 2019 07:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892475;
-        bh=zoZ7wu9PPhyAfaaWF3fMYsYbg80wjiSCDJEYLVog2go=;
+        s=default; t=1566892452;
+        bh=udaqUPiPzuY0HXY31O3O3v6qDWZt9qyS0+RjrPuCBtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gV4Tw/ey62rsYDqzoMYM7+R9/8T/8lkXE0GABHJyVsM5fAEozjfLUfZe7oU8yUwl0
-         vzMMxeiTdA8s+t5ZN8n6QbmMAk+iAVKctBSVnfrue42kjt2DReOZpfkPvvrUj97jfr
-         cUFWCHhGxeIcFZmG2Gn3ADF2UEYycjqseTozvbSY=
+        b=mo2mY0ynXxsRUb1JPEG3MVxQleHNcqmXSzqnh08GVHn2UGOVdD7hSiYsGNjHahr+A
+         +Nkd87YKbPDsc/8pyei/TyOnRrA0nPuUaGqXUe+9+MOXndiIUrS90zQ2GqNxrQlB4O
+         /xj4xOGX9J/8etf0nTNdAt2va9JDyDAzRULLLMRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, benjamin.moody@gmail.com,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 4.14 60/62] xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to EDQUOT
-Date:   Tue, 27 Aug 2019 09:51:05 +0200
-Message-Id: <20190827072703.922260797@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 53/62] dm zoned: improve error handling in reclaim
+Date:   Tue, 27 Aug 2019 09:50:58 +0200
+Message-Id: <20190827072703.613048843@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -61,63 +60,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit 1fb254aa983bf190cfd685d40c64a480a9bafaee upstream.
+commit b234c6d7a703661b5045c5bf569b7c99d2edbf88 upstream.
 
-Benjamin Moody reported to Debian that XFS partially wedges when a chgrp
-fails on account of being out of disk quota.  I ran his reproducer
-script:
+There are several places in reclaim code where errors are not
+propagated to the main function, dmz_reclaim(). This function
+is responsible for unlocking zones that might be still locked
+at the end of any failed reclaim iterations. As the result,
+some device zones may be left permanently locked for reclaim,
+degrading target's capability to reclaim zones.
 
-# adduser dummy
-# adduser dummy plugdev
+This patch fixes these issues as follows -
 
-# dd if=/dev/zero bs=1M count=100 of=test.img
-# mkfs.xfs test.img
-# mount -t xfs -o gquota test.img /mnt
-# mkdir -p /mnt/dummy
-# chown -c dummy /mnt/dummy
-# xfs_quota -xc 'limit -g bsoft=100k bhard=100k plugdev' /mnt
+Make sure that dmz_reclaim_buf(), dmz_reclaim_seq_data() and
+dmz_reclaim_rnd_data() return error codes to the caller.
 
-(and then as user dummy)
+dmz_reclaim() function is renamed to dmz_do_reclaim() to avoid
+clashing with "struct dmz_reclaim" and is modified to return the
+error to the caller.
 
-$ dd if=/dev/urandom bs=1M count=50 of=/mnt/dummy/foo
-$ chgrp plugdev /mnt/dummy/foo
+dmz_get_zone_for_reclaim() now returns an error instead of NULL
+pointer and reclaim code checks for that error.
 
-and saw:
+Error logging/debug messages are added where necessary.
 
-================================================
-WARNING: lock held when returning to user space!
-5.3.0-rc5 #rc5 Tainted: G        W
-------------------------------------------------
-chgrp/47006 is leaving the kernel with locks still held!
-1 lock held by chgrp/47006:
- #0: 000000006664ea2d (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0xd2/0x290 [xfs]
-
-...which is clearly caused by xfs_setattr_nonsize failing to unlock the
-ILOCK after the xfs_qm_vop_chown_reserve call fails.  Add the missing
-unlock.
-
-Reported-by: benjamin.moody@gmail.com
-Fixes: 253f4911f297 ("xfs: better xfs_trans_alloc interface")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/xfs_iops.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/dm-zoned-metadata.c |    4 ++--
+ drivers/md/dm-zoned-reclaim.c  |   28 +++++++++++++++++++---------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -789,6 +789,7 @@ xfs_setattr_nonsize(
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1534,7 +1534,7 @@ static struct dm_zone *dmz_get_rnd_zone_
+ 	struct dm_zone *zone;
  
- out_cancel:
- 	xfs_trans_cancel(tp);
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- out_dqrele:
- 	xfs_qm_dqrele(udqp);
- 	xfs_qm_dqrele(gdqp);
+ 	if (list_empty(&zmd->map_rnd_list))
+-		return NULL;
++		return ERR_PTR(-EBUSY);
+ 
+ 	list_for_each_entry(zone, &zmd->map_rnd_list, link) {
+ 		if (dmz_is_buf(zone))
+@@ -1545,7 +1545,7 @@ static struct dm_zone *dmz_get_rnd_zone_
+ 			return dzone;
+ 	}
+ 
+-	return NULL;
++	return ERR_PTR(-EBUSY);
+ }
+ 
+ /*
+--- a/drivers/md/dm-zoned-reclaim.c
++++ b/drivers/md/dm-zoned-reclaim.c
+@@ -217,7 +217,7 @@ static int dmz_reclaim_buf(struct dmz_re
+ 
+ 	dmz_unlock_flush(zmd);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ /*
+@@ -261,7 +261,7 @@ static int dmz_reclaim_seq_data(struct d
+ 
+ 	dmz_unlock_flush(zmd);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ /*
+@@ -314,7 +314,7 @@ static int dmz_reclaim_rnd_data(struct d
+ 
+ 	dmz_unlock_flush(zmd);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ /*
+@@ -336,7 +336,7 @@ static void dmz_reclaim_empty(struct dmz
+ /*
+  * Find a candidate zone for reclaim and process it.
+  */
+-static void dmz_reclaim(struct dmz_reclaim *zrc)
++static int dmz_do_reclaim(struct dmz_reclaim *zrc)
+ {
+ 	struct dmz_metadata *zmd = zrc->metadata;
+ 	struct dm_zone *dzone;
+@@ -346,8 +346,8 @@ static void dmz_reclaim(struct dmz_recla
+ 
+ 	/* Get a data zone */
+ 	dzone = dmz_get_zone_for_reclaim(zmd);
+-	if (!dzone)
+-		return;
++	if (IS_ERR(dzone))
++		return PTR_ERR(dzone);
+ 
+ 	start = jiffies;
+ 
+@@ -393,13 +393,20 @@ static void dmz_reclaim(struct dmz_recla
+ out:
+ 	if (ret) {
+ 		dmz_unlock_zone_reclaim(dzone);
+-		return;
++		return ret;
+ 	}
+ 
+-	(void) dmz_flush_metadata(zrc->metadata);
++	ret = dmz_flush_metadata(zrc->metadata);
++	if (ret) {
++		dmz_dev_debug(zrc->dev,
++			      "Metadata flush for zone %u failed, err %d\n",
++			      dmz_id(zmd, rzone), ret);
++		return ret;
++	}
+ 
+ 	dmz_dev_debug(zrc->dev, "Reclaimed zone %u in %u ms",
+ 		      dmz_id(zmd, rzone), jiffies_to_msecs(jiffies - start));
++	return 0;
+ }
+ 
+ /*
+@@ -444,6 +451,7 @@ static void dmz_reclaim_work(struct work
+ 	struct dmz_metadata *zmd = zrc->metadata;
+ 	unsigned int nr_rnd, nr_unmap_rnd;
+ 	unsigned int p_unmap_rnd;
++	int ret;
+ 
+ 	if (!dmz_should_reclaim(zrc)) {
+ 		mod_delayed_work(zrc->wq, &zrc->work, DMZ_IDLE_PERIOD);
+@@ -473,7 +481,9 @@ static void dmz_reclaim_work(struct work
+ 		      (dmz_target_idle(zrc) ? "Idle" : "Busy"),
+ 		      p_unmap_rnd, nr_unmap_rnd, nr_rnd);
+ 
+-	dmz_reclaim(zrc);
++	ret = dmz_do_reclaim(zrc);
++	if (ret)
++		dmz_dev_debug(zrc->dev, "Reclaim error %d\n", ret);
+ 
+ 	dmz_schedule_reclaim(zrc);
+ }
 
 
