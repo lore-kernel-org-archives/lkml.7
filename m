@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B68C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CE3206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4343D206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893261;
-	bh=qodxeXGYfcOG3YludvI4FKuvMQVlM8+iqthkdXfuZj8=;
+	s=default; t=1566893267;
+	bh=SVdxk6ilj4BwyVaOwvyBgAEyCIvz4LQuT1n5DJ4QGrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JnufUQlpFL3E2oxK+yxst9ibfuKtvB9h8gqoa8qP7zQUX3SFoewTOZS7w2Knh+wCL
-	 yXRHHqctoCzwdExOFrfuJyMQ6dn3Q0nxSEKN2wJ/JTsDEPV/MODRh+K/oDZhLnHR2A
-	 K/95qAAdaDNClhK7mHTT7gMOqmgY914Riv5InFKI=
+	b=rt2bEi+C/27pyq/WWADv6aRE8EoqsBewilmagkC5SrxLLytGWC1FHCxj2TKNbvqbP
+	 EN6lnzMzKlHljya6Zcf4rvTfFvwh/9dJsTu55Yn+WByBxKHdDhb/UghMRVkMlQ39Z1
+	 gCtKLbCTWS6emdO1fMpGpyIY1ntmaOj21gsZsI6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732976AbfH0IHl (ORCPT
+        id S1733201AbfH0IHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:07:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733133AbfH0IHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:07:15 -0400
+        id S1732788AbfH0IHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:07:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52715217F5;
-        Tue, 27 Aug 2019 08:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 113F6206BF;
+        Tue, 27 Aug 2019 08:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893234;
-        bh=qodxeXGYfcOG3YludvI4FKuvMQVlM8+iqthkdXfuZj8=;
+        s=default; t=1566893226;
+        bh=SVdxk6ilj4BwyVaOwvyBgAEyCIvz4LQuT1n5DJ4QGrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZPrZwIGrf6CDn6W2PfnzzXbT19rBUXRq9PcfYwIVVj181Y5F2IZeSPt9/lxtOhWf
-         vAiGoFmIjNGMTluB3ki6wC0meS+uZyavgz5+Tv6m1lCJj7h0m5PkJ2X3ZZaig/waZA
-         CGrjoZXb3H4mmOwtQeimHk0MbS+Xv9HKnUmcczIo=
+        b=XscZZAx1bomd3GUNaEmKJxoYYNsJnXC0b9JhQeVtC0OgYwR4rSR5NfhpGlLvyMTQH
+         OcHhvsQpVj7vqT5Z5EC/qFiFZRe3eoljhCpxU1VfkcXp9mw4Kq006DJzyT1jbrAG0t
+         XQj704A4gcO9adBJOmU2nZFjUp0Xwv26ZLOT186M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH 5.2 155/162] IB/hfi1: Drop stale TID RDMA packets
-Date:   Tue, 27 Aug 2019 09:51:23 +0200
-Message-Id: <20190827072744.196060505@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 152/162] mm/zsmalloc.c: fix race condition in zs_destroy_pool
+Date:   Tue, 27 Aug 2019 09:51:20 +0200
+Message-Id: <20190827072744.064581197@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -62,79 +65,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Henry Burns <henryburns@google.com>
 
-commit d58c1834bf0d218a0bc00f8fb44874551b21da84 upstream.
+commit 701d678599d0c1623aaf4139c03eea260a75b027 upstream.
 
-In a congested fabric with adaptive routing enabled, traces show that
-the sender could receive stale TID RDMA NAK packets that contain newer
-KDETH PSNs and older Verbs PSNs. If not dropped, these packets could
-cause the incorrect rewinding of the software flows and the incorrect
-completion of TID RDMA WRITE requests, and eventually leading to memory
-corruption and kernel crash.
+In zs_destroy_pool() we call flush_work(&pool->free_work).  However, we
+have no guarantee that migration isn't happening in the background at
+that time.
 
-The current code drops stale TID RDMA ACK/NAK packets solely based
-on KDETH PSNs, which may lead to erroneous processing. This patch
-fixes the issue by also checking the Verbs PSN. Addition checks are
-added before rewinding the TID RDMA WRITE DATA packets.
+Since migration can't directly free pages, it relies on free_work being
+scheduled to free the pages.  But there's nothing preventing an
+in-progress migrate from queuing the work *after*
+zs_unregister_migration() has called flush_work().  Which would mean
+pages still pointing at the inode when we free it.
 
-Fixes: 9e93e967f7b4 ("IB/hfi1: Add a function to receive TID RDMA ACK packet")
+Since we know at destroy time all objects should be free, no new
+migrations can come in (since zs_page_isolate() fails for fully-free
+zspages).  This means it is sufficient to track a "# isolated zspages"
+count by class, and have the destroy logic ensure all such pages have
+drained before proceeding.  Keeping that state under the class spinlock
+keeps the logic straightforward.
+
+In this case a memory leak could lead to an eventual crash if compaction
+hits the leaked page.  This crash would only occur if people are
+changing their zswap backend at runtime (which eventually starts
+destruction).
+
+Link: http://lkml.kernel.org/r/20190809181751.219326-2-henryburns@google.com
+Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
+Signed-off-by: Henry Burns <henryburns@google.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Jonathan Adams <jwadams@google.com>
 Cc: <stable@vger.kernel.org>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Link: https://lore.kernel.org/r/20190815192033.105923.44192.stgit@awfm-01.aw.intel.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/tid_rdma.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ mm/zsmalloc.c |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 59 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -4480,7 +4480,7 @@ void hfi1_rc_rcv_tid_rdma_ack(struct hfi
- 	struct rvt_swqe *wqe;
- 	struct tid_rdma_request *req;
- 	struct tid_rdma_flow *flow;
--	u32 aeth, psn, req_psn, ack_psn, fspsn, resync_psn, ack_kpsn;
-+	u32 aeth, psn, req_psn, ack_psn, flpsn, resync_psn, ack_kpsn;
- 	unsigned long flags;
- 	u16 fidx;
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -53,6 +53,7 @@
+ #include <linux/zpool.h>
+ #include <linux/mount.h>
+ #include <linux/migrate.h>
++#include <linux/wait.h>
+ #include <linux/pagemap.h>
+ #include <linux/fs.h>
  
-@@ -4509,6 +4509,9 @@ void hfi1_rc_rcv_tid_rdma_ack(struct hfi
- 		ack_kpsn--;
+@@ -267,6 +268,10 @@ struct zs_pool {
+ #ifdef CONFIG_COMPACTION
+ 	struct inode *inode;
+ 	struct work_struct free_work;
++	/* A wait queue for when migration races with async_free_zspage() */
++	struct wait_queue_head migration_wait;
++	atomic_long_t isolated_pages;
++	bool destroying;
+ #endif
+ };
+ 
+@@ -1894,6 +1899,19 @@ static void putback_zspage_deferred(stru
+ 
+ }
+ 
++static inline void zs_pool_dec_isolated(struct zs_pool *pool)
++{
++	VM_BUG_ON(atomic_long_read(&pool->isolated_pages) <= 0);
++	atomic_long_dec(&pool->isolated_pages);
++	/*
++	 * There's no possibility of racing, since wait_for_isolated_drain()
++	 * checks the isolated count under &class->lock after enqueuing
++	 * on migration_wait.
++	 */
++	if (atomic_long_read(&pool->isolated_pages) == 0 && pool->destroying)
++		wake_up_all(&pool->migration_wait);
++}
++
+ static void replace_sub_page(struct size_class *class, struct zspage *zspage,
+ 				struct page *newpage, struct page *oldpage)
+ {
+@@ -1963,6 +1981,7 @@ static bool zs_page_isolate(struct page
+ 	 */
+ 	if (!list_empty(&zspage->list) && !is_zspage_isolated(zspage)) {
+ 		get_zspage_mapping(zspage, &class_idx, &fullness);
++		atomic_long_inc(&pool->isolated_pages);
+ 		remove_zspage(class, zspage, fullness);
  	}
  
-+	if (unlikely(qp->s_acked == qp->s_tail))
-+		goto ack_op_err;
+@@ -2062,8 +2081,16 @@ static int zs_page_migrate(struct addres
+ 	 * Page migration is done so let's putback isolated zspage to
+ 	 * the list if @page is final isolated subpage in the zspage.
+ 	 */
+-	if (!is_zspage_isolated(zspage))
++	if (!is_zspage_isolated(zspage)) {
++		/*
++		 * We cannot race with zs_destroy_pool() here because we wait
++		 * for isolation to hit zero before we start destroying.
++		 * Also, we ensure that everyone can see pool->destroying before
++		 * we start waiting.
++		 */
+ 		putback_zspage_deferred(pool, class, zspage);
++		zs_pool_dec_isolated(pool);
++	}
+ 
+ 	reset_page(page);
+ 	put_page(page);
+@@ -2114,8 +2141,8 @@ static void zs_page_putback(struct page
+ 		 * so let's defer.
+ 		 */
+ 		putback_zspage_deferred(pool, class, zspage);
++		zs_pool_dec_isolated(pool);
+ 	}
+-
+ 	spin_unlock(&class->lock);
+ }
+ 
+@@ -2138,8 +2165,36 @@ static int zs_register_migration(struct
+ 	return 0;
+ }
+ 
++static bool pool_isolated_are_drained(struct zs_pool *pool)
++{
++	return atomic_long_read(&pool->isolated_pages) == 0;
++}
 +
- 	wqe = rvt_get_swqe_ptr(qp, qp->s_acked);
++/* Function for resolving migration */
++static void wait_for_isolated_drain(struct zs_pool *pool)
++{
++
++	/*
++	 * We're in the process of destroying the pool, so there are no
++	 * active allocations. zs_page_isolate() fails for completely free
++	 * zspages, so we need only wait for the zs_pool's isolated
++	 * count to hit zero.
++	 */
++	wait_event(pool->migration_wait,
++		   pool_isolated_are_drained(pool));
++}
++
+ static void zs_unregister_migration(struct zs_pool *pool)
+ {
++	pool->destroying = true;
++	/*
++	 * We need a memory barrier here to ensure global visibility of
++	 * pool->destroying. Thus pool->isolated pages will either be 0 in which
++	 * case we don't care, or it will be > 0 and pool->destroying will
++	 * ensure that we wake up once isolation hits 0.
++	 */
++	smp_mb();
++	wait_for_isolated_drain(pool); /* This can block */
+ 	flush_work(&pool->free_work);
+ 	iput(pool->inode);
+ }
+@@ -2377,6 +2432,8 @@ struct zs_pool *zs_create_pool(const cha
+ 	if (!pool->name)
+ 		goto err;
  
- 	if (wqe->wr.opcode != IB_WR_TID_RDMA_WRITE)
-@@ -4521,7 +4524,8 @@ void hfi1_rc_rcv_tid_rdma_ack(struct hfi
- 	trace_hfi1_tid_flow_rcv_tid_ack(qp, req->acked_tail, flow);
++	init_waitqueue_head(&pool->migration_wait);
++
+ 	if (create_cache(pool))
+ 		goto err;
  
- 	/* Drop stale ACK/NAK */
--	if (cmp_psn(psn, full_flow_psn(flow, flow->flow_state.spsn)) < 0)
-+	if (cmp_psn(psn, full_flow_psn(flow, flow->flow_state.spsn)) < 0 ||
-+	    cmp_psn(req_psn, flow->flow_state.resp_ib_psn) < 0)
- 		goto ack_op_err;
- 
- 	while (cmp_psn(ack_kpsn,
-@@ -4683,8 +4687,12 @@ done:
- 		switch ((aeth >> IB_AETH_CREDIT_SHIFT) &
- 			IB_AETH_CREDIT_MASK) {
- 		case 0: /* PSN sequence error */
-+			if (!req->flows)
-+				break;
- 			flow = &req->flows[req->acked_tail];
--			fspsn = full_flow_psn(flow, flow->flow_state.spsn);
-+			flpsn = full_flow_psn(flow, flow->flow_state.lpsn);
-+			if (cmp_psn(psn, flpsn) > 0)
-+				break;
- 			trace_hfi1_tid_flow_rcv_tid_ack(qp, req->acked_tail,
- 							flow);
- 			req->r_ack_psn = mask_psn(be32_to_cpu(ohdr->bth[2]));
 
 
