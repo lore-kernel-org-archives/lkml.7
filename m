@@ -2,109 +2,126 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D12C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305E9C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C4B204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D73217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfH0Kiy convert rfc822-to-8bit (ORCPT
+        id S1728964AbfH0KkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:38:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56706 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfH0Kiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:38:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 03:38:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
-   d="scan'208";a="355732298"
-Received: from pgsmsx104.gar.corp.intel.com ([10.221.44.91])
-  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2019 03:38:51 -0700
-Received: from pgsmsx106.gar.corp.intel.com (10.221.44.98) by
- PGSMSX104.gar.corp.intel.com (10.221.44.91) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 27 Aug 2019 18:38:50 +0800
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.25]) by
- PGSMSX106.gar.corp.intel.com ([169.254.9.10]) with mapi id 14.03.0439.000;
- Tue, 27 Aug 2019 18:38:50 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Subject: RE: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency clk
- support for EHL & TGL
-Thread-Topic: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency
- clk support for EHL & TGL
-Thread-Index: AQHVXDU69zXHtb/poUqtoKXItI5YJKcNUeeAgAAFGQCAAXRAAA==
-Date:   Tue, 27 Aug 2019 10:38:50 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814758DB5@PGSMSX103.gar.corp.intel.com>
-References: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
- <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
- <7d43e0c6-6f51-0d71-0af8-89f22b0234f9@gmail.com>
- <20190826201346.GJ2168@lunn.ch>
-In-Reply-To: <20190826201346.GJ2168@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.205]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Tue, 27 Aug 2019 06:40:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52496 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725793AbfH0KkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:40:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 32A1FAFD4;
+        Tue, 27 Aug 2019 10:40:03 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 12:40:02 +0200
+Message-ID: <s5hwoeyj3i5.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
+In-Reply-To: <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+        <20190822192451.5983-3-scott.branden@broadcom.com>
+        <s5hef1crybq.wl-tiwai@suse.de>
+        <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
+        <s5hr258j6ln.wl-tiwai@suse.de>
+        <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
+        <s5ho90byhnv.wl-tiwai@suse.de>
+        <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > +#include <linux/clk-provider.h>
-> > >  #include <linux/pci.h>
-> > >  #include <linux/dmi.h>
-> > >
-> > > @@ -174,6 +175,19 @@ static int intel_mgbe_common_data(struct
-> pci_dev *pdev,
-> > >  	plat->axi->axi_blen[1] = 8;
-> > >  	plat->axi->axi_blen[2] = 16;
-> > >
-> > > +	plat->ptp_max_adj = plat->clk_ptp_rate;
-> > > +
-> > > +	/* Set system clock */
-> > > +	plat->stmmac_clk = clk_register_fixed_rate(&pdev->dev,
-> > > +						   "stmmac-clk", NULL, 0,
-> > > +						   plat->clk_ptp_rate);
-> > > +
-> > > +	if (IS_ERR(plat->stmmac_clk)) {
-> > > +		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
-> > > +		plat->stmmac_clk = NULL;
-> >
-> > Don't you need to propagate at least EPROBE_DEFER here?
+On Mon, 26 Aug 2019 19:24:22 +0200,
+Scott Branden wrote:
 > 
-> Hi Florian
+> Hi Takashi,
 > 
-> Isn't a fixed rate clock a complete fake. There is no hardware behind it.
-> So can it return EPROBE_DEFER?
-> 
->     Andrew
+> On 2019-08-26 10:12 a.m., Takashi Iwai wrote:
+> > On Mon, 26 Aug 2019 17:41:40 +0200,
+> > Scott Branden wrote:
+> >> HI Takashi,
+> >>
+> >> On 2019-08-26 8:20 a.m., Takashi Iwai wrote:
+> >>> On Fri, 23 Aug 2019 21:44:42 +0200,
+> >>> Scott Branden wrote:
+> >>>> Hi Takashi,
+> >>>>
+> >>>> Thanks for review.  comments below.
+> >>>>
+> >>>> On 2019-08-23 3:05 a.m., Takashi Iwai wrote:
+> >>>>> On Thu, 22 Aug 2019 21:24:46 +0200,
+> >>>>> Scott Branden wrote:
+> >>>>>> Add offset to request_firmware_into_buf to allow for portions
+> >>>>>> of firmware file to be read into a buffer.  Necessary where firmware
+> >>>>>> needs to be loaded in portions from file in memory constrained systems.
+> >>>>> AFAIU, this won't work with the fallback user helper, right?
+> >>>> Seems to work fine in the fw_run_tests.sh with fallbacks.
+> >>> But how?  You patch doesn't change anything about the fallback loading
+> >>> mechanism.
+> >> Correct - I didn't change any of the underlying mechanisms,
+> >> so however request_firmware_into_buf worked before it still does.
+> >>>    Or, if the expected behavior is to load the whole content
+> >>> and then copy a part, what's the merit of this API?
+> >> The merit of the API is that the entire file is not copied into a buffer.
+> >> In my use case, the buffer is a memory region in PCIe space that isn't
+> >> even large enough for the whole file.  So the only way to get the file
+> >> is to read it
+> >> in portions.
+> > BTW: does the use case above mean that the firmware API directly
+> > writes onto the given PCI iomem region?  If so, I'm not sure whether
+> > it would work as expected on all architectures.  There must be a
+> > reason of the presence of iomem-related API like memcpy_toio()...
+> Yes, we access the PCI region directly in the driver and thus also
+> through request_firmware_into_buf.
 
-Yes, there is no hardware behind it. So, I don't think we need to deferred probe
-and a warning message should be sufficient. Anyhow, please point it out if I miss
-out anything.
+Then you really need to access via the standard APIs for iomem.
+The normal memory copy would work only on some architectures like
+x86.
 
-Thanks. 
+> I will admit I am not familiar with every subtlety of PCI
+> accesses. Any comments to the Valkyrie driver in this patch series are
+> appreciated.
+> But not all drivers need to work on all architectures. I can add a
+> depends on x86 64bit architectures to the driver to limit it to such.
 
+But it's an individual board on PCIe, and should work no matter which
+architecture is?  Or is this really exclusive to x86?
+
+
+thanks,
+
+Takashi
