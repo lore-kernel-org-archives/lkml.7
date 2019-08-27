@@ -2,117 +2,120 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE77C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5124DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28802189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240DD2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zoV9sB08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbfH0QMs (ORCPT
+        id S1729821AbfH0QNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:12:48 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41115 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730159AbfH0QMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:12:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id i4so21805981qtj.8;
-        Tue, 27 Aug 2019 09:12:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eRE+ONyqMbnDAqAAt7DNGwf4rRMmk/Hc31TRfDzpAP4=;
-        b=NvBDM/Fmk+0Gbswsr2vZZYkLbZrTzW9TO0uzdrvfJRzEiPpKzCoMVriHaD89sI/KUK
-         AS6VURCsktY4yLe5W2fGoiAfTU5CPzvQWBoN38xm2r9ePTfYOj5fPSBrN5BtwbRsoG9f
-         pPfSmQy/Pid/S92C/IS9u8a7uyJAUUQd/mtY4Y01jbl8ehjxg+VkYjSluKb/OtAjtEal
-         lAnDQtJq7eGQUTmoTpuyDycjVplkL+Hn6xxPDtyIESFT2Ba0M3KbNVoZyZlgasgaoaHf
-         qEAYKPdS1YobzL6SsV6aFSjOUDCadaJHUTUuPOYBzrLnZ89As+JiIgFYRN7JjsrTI8pC
-         ah9g==
-X-Gm-Message-State: APjAAAWTJpoF9VkXkxG3Xvt4j8TgsEB8qVyr+I5+WyZiKYDsUas1pIuV
-        p16c6X60h3rCQ0UNr3aPFZ+O9t32KBeuYL9tKKo=
-X-Google-Smtp-Source: APXvYqzJzXwniWV11iyI5rB1xzenfbGjuNt16WjkWMKnungYxIEtSdoNzRX/9im4O+QtvL8NXUN1aMXrq3HPv0xExpQ=
-X-Received: by 2002:aed:3363:: with SMTP id u90mr23512125qtd.7.1566922365105;
- Tue, 27 Aug 2019 09:12:45 -0700 (PDT)
+        Tue, 27 Aug 2019 12:13:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34982 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbfH0QNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:13:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=EUdcOXqzDMg/BPMZ+mHA3Lf8aib/qAEj7QKintG8i1o=; b=zoV9sB08UoCM+TTqsh2QC+T5y+
+        lZz1Ib+zNYLNZRXVPOm2DbrZuZSMep/zbGNMPAsR7DBWL3PjE0xYRuVSiCMWWrT9paWu+58hqLWYK
+        BeT4BvV4LrCDclJaiVCpjNqloDVf7Yaooj0FbOSeQq/jYcfdbQfLo98KAgBObxacyNmk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i2dig-0004bz-PJ; Tue, 27 Aug 2019 17:49:18 +0200
+Date:   Tue, 27 Aug 2019 17:49:18 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: Re: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
+ cover PHY that only talks C45
+Message-ID: <20190827154918.GO2168@lunn.ch>
+References: <1566870769-9967-1-git-send-email-weifeng.voon@intel.com>
+ <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
+ <20190826185418.GG2168@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
 MIME-Version: 1.0
-References: <20190827154851.10486-1-enric.balletbo@collabora.com> <20190827161045.GC26807@tuxbook-pro>
-In-Reply-To: <20190827161045.GC26807@tuxbook-pro>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 27 Aug 2019 18:12:28 +0200
-Message-ID: <CAK8P3a2h2gUhxcVgD5JhR1Uo4qUSuG5yp4RCrAxevNmyD4ZRTA@mail.gmail.com>
-Subject: Re: [PATCH] arm/arm64: defconfig: Update configs to use the new
- CROS_EC options
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        SoC Team <soc@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>, kernel@collabora.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Yannick Fertr?" <yannick.fertre@st.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 6:08 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 27 Aug 08:48 PDT 2019, Enric Balletbo i Serra wrote:
->
-> > Recently we refactored the CrOS EC drivers moving part of the code from
-> > the MFD subsystem to the platform chrome subsystem. During this change
-> > we needed to rename some config options, so, update the defconfigs
-> > accordingly.
-> >
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> > Tested-by: Gwendal Grignou <gwendal@chromium.org>
->
-> Can we make the entries in the generic arm64 defconfig modules?
+On Tue, Aug 27, 2019 at 03:23:34PM +0000, Voon, Weifeng wrote:
+> > > > Make mdiobus_scan() to try harder to look for any PHY that only
+> > talks C45.
+> > > If you are not using Device Tree or ACPI, and you are letting the MDIO
+> > > bus be scanned, it sounds like there should be a way for you to
+> > > provide a hint as to which addresses should be scanned (that's
+> > > mii_bus::phy_mask) and possibly enhance that with a mask of possible
+> > > C45 devices?
+> > 
+> > Yes, i don't like this unconditional c45 scanning. A lot of MDIO bus
+> > drivers don't look for the MII_ADDR_C45. They are going to do a C22
+> > transfer, and maybe not mask out the MII_ADDR_C45 from reg, causing an
+> > invalid register write. Bad things can then happen.
+> > 
+> > With DT and ACPI, we have an explicit indication that C45 should be used,
+> > so we know on this platform C45 is safe to use. We need something
+> > similar when not using DT or ACPI.
+> > 
+> > 	  Andrew
+> 
+> Florian and Andrew,
+> The mdio c22 is using the start-of-frame ST=01 while mdio c45 is using ST=00
+> as identifier. So mdio c22 device will not response to mdio c45 protocol.
+> As in IEEE 802.1ae-2002 Annex 45A.3 mention that:
+> " Even though the Clause 45 MDIO frames using the ST=00 frame code
+> will also be driven on to the Clause 22 MII Management interface,
+> the Clause 22 PHYs will ignore the frames. "
+> 
+> Hence, I am not seeing any concern that the c45 scanning will mess up with 
+> c22 devices.
 
-Good idea.
+Hi Voon
 
-Actually I would prefer to have all of them as modules for consistency,
-if at all possible.
+Take for example mdio-hisi-femac.c 
 
-       Arnd
+static int hisi_femac_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+{
+        struct hisi_femac_mdio_data *data = bus->priv;
+        int ret;
+
+        ret = hisi_femac_mdio_wait_ready(data);
+        if (ret)
+                return ret;
+
+        writel((mii_id << BIT_PHY_ADDR_OFFSET) | regnum,
+               data->membase + MDIO_RWCTRL);
+
+
+There is no check here for MII_ADDR_C45. So it will perform a C22
+transfer. And regnum will still have MII_ADDR_C45 in it, so the
+writel() is going to set bit 30, since #define MII_ADDR_C45
+(1<<30). What happens on this hardware under these conditions?
+
+You cannot unconditionally ask an MDIO driver to do a C45
+transfer. Some drivers are going to do bad things.
+
+	  Andrew
+
