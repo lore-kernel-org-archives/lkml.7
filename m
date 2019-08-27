@@ -2,94 +2,225 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E904FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F533C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B791F2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566924840;
-	bh=KNdLHyDOo/U1Vr4kWAJz1ISVspxT3JaGQnutGK0tG90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t+wOTYeMpAVCPhVu8+lEhy8TlOoyVq8q1rHDso29Lrw18kApIjiW2vqgsT4qKSrwy
-	 XGaa9+3JzFKowbJMzNOB/eLl/0Z6kGhIeeDFj2WnHMRaUn9hDQdqsw7d5YrYkYFI6p
-	 ckyaUsiN66QISlnKKaktShMnW0T3QDPNIILU0NsY=
+	by mail.kernel.org (Postfix) with ESMTP id 6ADC12173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gHNdDy1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfH0QyA (ORCPT
+        id S1730248AbfH0Qy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:54:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46209 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0Qx7 (ORCPT
+        Tue, 27 Aug 2019 12:54:29 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33358 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0Qy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:53:59 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t24so15472099oij.13;
-        Tue, 27 Aug 2019 09:53:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/cWnSwSnizJoPptrMCxgyU0EGIA7FE8H3qBw7ZxkmMM=;
-        b=FhlNulBcTRdzxP+A9ueXa99BmB0nmJD5lSOK6EK+cncRmhFudE7AjO4Z3STk6vKnPX
-         wxDodSPIu3UX3Y9It+fkP1m5eqcw4IFlCT1MqGZI5ttem7yoX9LzTFBNMKYsbBrLS2j2
-         cPhG8AYCq+tpSLBCES05HakH02jU++uee3/KGFF3JoR27PR8plF2p+X4eETGfOOrces/
-         9NhDQsz4FDqmFH7KCw/OO1rnzPWw/xSsCDhojVmWHIV+U8B5KrdJa53sqbDUzV3m1Tz8
-         jo0z4DIAhY9tlb+FXYHAVD34XmYvgL4b6Yn5pJHFMofGy4lQMfVkWJHqhVrevZ0SFFcL
-         /DdQ==
-X-Gm-Message-State: APjAAAUCFnMXgiHIXZNt+qyFfL6QMInDN/TBtiNCLstiwSACDtB4DXfM
-        Kvffv2V4OVETpuIP4oD+Ng==
-X-Google-Smtp-Source: APXvYqy/YlUNjEPP5QW/TvNLxzezivmnRm+zWoT/6RxwryHO+9wlLtBLicefYrG9cQNpNDQFaShGug==
-X-Received: by 2002:aca:5f46:: with SMTP id t67mr16825090oib.42.1566924838416;
-        Tue, 27 Aug 2019 09:53:58 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 44sm5772961otf.30.2019.08.27.09.53.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:53:57 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 11:53:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix misspelled words.
-Message-ID: <20190827165357.GA31146@bogus>
-References: <20190819115306.27338-1-kw@linux.com>
+        Tue, 27 Aug 2019 12:54:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7RGsNOm033976;
+        Tue, 27 Aug 2019 11:54:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566924863;
+        bh=HC0VQo87xCYzvz3EczML+vIkBhy+KbWR5luZ0gk+F3M=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=gHNdDy1DOWwXGWbe5bRGyidRam0qnRYHduVkK7b89Ik/h47sfVZ3slXmhAdwowLod
+         auMGs0lZ3RrENmyqgwFsibXmVwfD7ZqnWIKmm5uX86Ys+3HKZaB6AQGTiLc01DIF1M
+         oFyAke1aVwtzPZHy4LxyOZdyXPFM93n2Aok+1KsA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7RGsN4I069629
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 27 Aug 2019 11:54:23 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
+ Aug 2019 11:54:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 27 Aug 2019 11:54:22 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7RGsMd0113429;
+        Tue, 27 Aug 2019 11:54:22 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 1/9] leds: multicolor: Add sysfs interface definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190725182818.29556-1-dmurphy@ti.com>
+ <20190725182818.29556-2-dmurphy@ti.com>
+ <c451847b-d08e-19a2-281c-70ba46cff29a@gmail.com>
+Message-ID: <bfcd15e3-ed94-fd16-9281-d49129c23abf@ti.com>
+Date:   Tue, 27 Aug 2019 11:54:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819115306.27338-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c451847b-d08e-19a2-281c-70ba46cff29a@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 13:53:06 +0200, Krzysztof Wilczynski wrote:
-> Fix misspelled words in include/linux/pci.h, drivers/pci/Kconfig,
-> and in the documentation for Freescale i.MX6 and Marvell Armada 7K/8K
-> PCIe interfaces.  No functional change intended.
-> 
-> Related commit 96291d565550 ("PCI: Fix typos and whitespace errors").
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 2 +-
->  Documentation/devicetree/bindings/pci/pci-armada8k.txt   | 2 +-
->  drivers/pci/Kconfig                                      | 2 +-
->  include/linux/pci.h                                      | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
+Jacek
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+OK finally getting back to this.
+
+On 7/29/19 3:45 PM, Jacek Anaszewski wrote:
+> Hi Dan,
+>
+> Thank you for the v4.
+>
+> I have a bunch of comments below. Please take a look.
+>
+> On 7/25/19 8:28 PM, Dan Murphy wrote:
+>> Add a documentation of LED Multicolor LED class specific
+>> sysfs attributes.
+>>
+>> Signed-off-by: Dan Murphy<dmurphy@ti.com>
+>> ---
+>>   .../ABI/testing/sysfs-class-led-multicolor    | 67 +++++++++++++++++++
+>>   1 file changed, 67 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..59839f0eae76
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,67 @@
+>> +What:		/sys/class/leds/<led>/brightness
+>> +Date:		Sept 2019
+>> +KernelVersion:	TBD
+>> +Contact:	Dan Murphy<dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The multicolor class will redirect the device drivers call back
+>> +		function for brightness control to the multicolor class
+>> +		brightness control function.
+>> +
+>> +		Writing to this file will update all LEDs within the group to a
+>> +		calculated percentage of what each color LED in the group is set
+>> +		to.  Please refer to the leds-class-multicolor.txt in the
+>> +		Documentation directory for a complete description.
+> Instead of redirecting the reader to led-class-multicolor.txt I'd prefer
+> to have at least the formula to calculate the colors laid out here.
+> Aside of that - it is more helpful to have a full path to the referenced
+> file.
+
+Ack
+
+
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/max_brightness.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/color_mix
+>> +Date:		Sept 2019
+>> +KernelVersion:	TBD
+>> +Contact:	Dan Murphy<dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The color_mix file allows writing all registered multicolor LEDs
+>> +		virtually at the same time.  The value(s) written to this file
+> I'd drop parentheses form "value(s)". Multi color LED class device is
+> supposed to always have more then one LED. And if I understand it
+> correctly we have to pass intensities of all colors supported by LED
+> multicolor class device here, even we're changing single one.
+
+Yes that is true.
+
+
+>> +		contain the intensity values for each multicolor LED within
+>> +		the colors directory.  The color indexes are reported in the
+>> +		color_id file as defined in this document.
+> This is a bit misleading. It sounds as if single color_id file would be
+> reporting more than one index.
+>
+>> +		Please refer to the leds-class-multicolor.txt in the
+>> +		Documentation directory for a complete description.
+> Here, similarly as for brightness, I would prefer to have complete
+> documentation of this file.
+>
+> How about:
+>
+> The values written to this file should contain the intensity values of
+> each multicolor LED within the colors directory. The index of given
+> color is reported by the color_id file present in colors/<color>
+> directory. The index determines the position in the sequence of
+> intensities on which the related intensity should be passed to this
+> file.
+>
+> And here we could have the examples from leds-class-multicolor.txt.
+
+I prefer to keep the examples in the leds-class-multicolor.rst.
+
+This is an ABI document not a document describing the code.
+
+I updated the doc to what you have above.
+
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<led_color>/color_id
+>> +Date:		Sept 2019
+>> +KernelVersion:	TBD
+>> +Contact:	Dan Murphy<dmurphy@ti.com>
+>> +Description:	read only
+>> +		This file when read will return the index of the color in the
+>> +		color_mix.
+>> +		Please refer to the leds-class-multicolor.txt in the
+>> +		Documentation directory for a complete description.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<led_color>/intensity
+>> +Date:		Sept 2019
+>> +KernelVersion:	TBD
+>> +Contact:	Dan Murphy<dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The led_color directory is dynamically created based on the
+>> +		colors defined by the registrar of the class.
+>> +		The led_color can be but not limited to red, green, blue,
+>> +		white, amber, yellow and violet.  Drivers can also declare a
+> Instead of this vague sentence about the available colors I propose to
+> maintain the list of supported colors in leds-class.rst or in a separate
+> file and keep it in sync with the led_colors array. Then we could refer
+> to that file here.
+
+I would rather point to the file that contains the colors.  This way we 
+don't have added documentation
+
+maintenance to add a new color.
+
+
+>
+>> +		LED color for presentation.  There is one directory per color
+> I'd not let drivers define their custom colors. It would entail issues
+> related to lack of generic LED_COLOR_ID and DT parsing failure.
+
+Ack
+
+Dan
+
+>
+>> +		presented.  The brightness file is created under each
+>> +		led_color directory and controls the individual LED color
+>> +		setting.
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/colors/<led_color>/max_intensity.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<led_color>/max_intensity
+>> +Date:		Sept 2019
+>> +KernelVersion:	TBD
+>> +Contact:	Dan Murphy<dmurphy@ti.com>
+>> +Description:	read only
+>> +		Maximum intensity level for the LED color, default is
+>> +		255 (LED_FULL).
+>> +
+>> +		If the LED does not support different intensity levels, this
+>> +		should be 1.
+>>
