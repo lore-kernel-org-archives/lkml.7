@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BA2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998C5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA722206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6681A22CBB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893183;
-	bh=YjerzujQHNFzHW6x30LYl9x9aky76kArD48zYRFWU9U=;
+	s=default; t=1566893186;
+	bh=t6k67GIlIUXzT/gXOlEDFqmMVmK3wQOp4nkJAV6YrEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgxAD6eXSppMYZA3CbzFBC0p8F5PAMzzofoiGZOXT09872Yikgaxt+IKZM1UhkHmJ
-	 H51IexOBQTAEQb1PfaRcFZLICKm7nZe+FZR8ts0mKVHWpnoP7g7c51o6YsPe8APtRm
-	 q9R8g41Uau9wLNZdI9YU7RBcBt5/CP0kmoAO/pWc=
+	b=VBkNzDMm+4v78OCzbYvL+xgaNvmrOb9reM9Ck9Q1plfNOgAL6hphvNSnWmJ5beKw/
+	 vA5T8hyDCX5261RB7k8vyO0pB6Hj8+cdvHy7g33TjtvJ+9MpYPYlOpGB+c3WNOJpbD
+	 6xJl7bioclZlrN/sl7DHBUbIc/PRCPaQf4pVkc8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbfH0IGV (ORCPT
+        id S1733002AbfH0IGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731768AbfH0IGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:18 -0400
+        id S1732588AbfH0IGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68CC52173E;
-        Tue, 27 Aug 2019 08:06:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF65B2186A;
+        Tue, 27 Aug 2019 08:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893177;
-        bh=YjerzujQHNFzHW6x30LYl9x9aky76kArD48zYRFWU9U=;
+        s=default; t=1566893171;
+        bh=t6k67GIlIUXzT/gXOlEDFqmMVmK3wQOp4nkJAV6YrEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGCDW6pvOq4oj2mST1BARBxosYa1XHMCuPgXjiwoUuyL/4I/aIgLO6FNtiRFoLjWJ
-         wY/yQ53TcVj/7KWMiKHmasKJ8lqwVRuV+FGFziV3OE/+Qz6f0jzTy4TaBbencxclaW
-         AkJ1ve6yxzyilUDH808fR81maEUKBoGMQZrBWGaw=
+        b=DYrdvN8dDcLnq4HGegLPUE0mVwAdUcjCxJ4TD9oGr434QUfVJlzOUiMEzWZGJwTW1
+         mEY50IPryRfGykfhCS85Ht6mUzHt8+VRUuy66YrU5s+cG/aY/V8wB2irlm0+lW0swV
+         lPrlNJRNtp3ajsJL2lbAlO4lHbQx31SchkWzRKQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.2 145/162] genirq: Properly pair kobject_del() with kobject_add()
-Date:   Tue, 27 Aug 2019 09:51:13 +0200
-Message-Id: <20190827072743.753109574@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.2 143/162] dm zoned: improve error handling in i/o map code
+Date:   Tue, 27 Aug 2019 09:51:11 +0200
+Message-Id: <20190827072743.655237170@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,73 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit d0ff14fdc987303aeeb7de6f1bd72c3749ae2a9b upstream.
+commit d7428c50118e739e672656c28d2b26b09375d4e0 upstream.
 
-If alloc_descs() fails before irq_sysfs_init() has run, free_desc() in the
-cleanup path will call kobject_del() even though the kobject has not been
-added with kobject_add().
+Some errors are ignored in the I/O path during queueing chunks
+for processing by chunk works. Since at least these errors are
+transient in nature, it should be possible to retry the failed
+incoming commands.
 
-Fix this by making the call to kobject_del() conditional on whether
-irq_sysfs_init() has run.
+The fix -
 
-This problem surfaced because commit aa30f47cf666 ("kobject: Add support
-for default attribute groups to kobj_type") makes kobject_del() stricter
-about pairing with kobject_add(). If the pairing is incorrrect, a WARNING
-and backtrace occur in sysfs_remove_group() because there is no parent.
+Errors that can happen while queueing chunks are carried upwards
+to the main mapping function and it now returns DM_MAPIO_REQUEUE
+for any incoming requests that can not be properly queued.
 
-[ tglx: Add a comment to the code and make it work with CONFIG_SYSFS=n ]
+Error logging/debug messages are added where needed.
 
-Fixes: ecb3f394c5db ("genirq: Expose interrupt information through sysfs")
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1564703564-4116-1-git-send-email-mikelley@microsoft.com
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/irqdesc.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/md/dm-zoned-target.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -295,6 +295,18 @@ static void irq_sysfs_add(int irq, struc
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -513,22 +513,24 @@ static void dmz_flush_work(struct work_s
+  * Get a chunk work and start it to process a new BIO.
+  * If the BIO chunk has no work yet, create one.
+  */
+-static void dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
++static int dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
+ {
+ 	unsigned int chunk = dmz_bio_chunk(dmz->dev, bio);
+ 	struct dm_chunk_work *cw;
++	int ret = 0;
+ 
+ 	mutex_lock(&dmz->chunk_lock);
+ 
+ 	/* Get the BIO chunk work. If one is not active yet, create one */
+ 	cw = radix_tree_lookup(&dmz->chunk_rxtree, chunk);
+ 	if (!cw) {
+-		int ret;
+ 
+ 		/* Create a new chunk work */
+ 		cw = kmalloc(sizeof(struct dm_chunk_work), GFP_NOIO);
+-		if (!cw)
++		if (unlikely(!cw)) {
++			ret = -ENOMEM;
+ 			goto out;
++		}
+ 
+ 		INIT_WORK(&cw->work, dmz_chunk_work);
+ 		refcount_set(&cw->refcount, 0);
+@@ -539,7 +541,6 @@ static void dmz_queue_chunk_work(struct
+ 		ret = radix_tree_insert(&dmz->chunk_rxtree, chunk, cw);
+ 		if (unlikely(ret)) {
+ 			kfree(cw);
+-			cw = NULL;
+ 			goto out;
+ 		}
  	}
+@@ -547,10 +548,12 @@ static void dmz_queue_chunk_work(struct
+ 	bio_list_add(&cw->bio_list, bio);
+ 	dmz_get_chunk_work(cw);
+ 
++	dmz_reclaim_bio_acc(dmz->reclaim);
+ 	if (queue_work(dmz->chunk_wq, &cw->work))
+ 		dmz_get_chunk_work(cw);
+ out:
+ 	mutex_unlock(&dmz->chunk_lock);
++	return ret;
  }
  
-+static void irq_sysfs_del(struct irq_desc *desc)
-+{
-+	/*
-+	 * If irq_sysfs_init() has not yet been invoked (early boot), then
-+	 * irq_kobj_base is NULL and the descriptor was never added.
-+	 * kobject_del() complains about a object with no parent, so make
-+	 * it conditional.
-+	 */
-+	if (irq_kobj_base)
-+		kobject_del(&desc->kobj);
-+}
-+
- static int __init irq_sysfs_init(void)
- {
- 	struct irq_desc *desc;
-@@ -325,6 +337,7 @@ static struct kobj_type irq_kobj_type =
- };
+ /*
+@@ -564,6 +567,7 @@ static int dmz_map(struct dm_target *ti,
+ 	sector_t sector = bio->bi_iter.bi_sector;
+ 	unsigned int nr_sectors = bio_sectors(bio);
+ 	sector_t chunk_sector;
++	int ret;
  
- static void irq_sysfs_add(int irq, struct irq_desc *desc) {}
-+static void irq_sysfs_del(struct irq_desc *desc) {}
+ 	dmz_dev_debug(dev, "BIO op %d sector %llu + %u => chunk %llu, block %llu, %u blocks",
+ 		      bio_op(bio), (unsigned long long)sector, nr_sectors,
+@@ -601,8 +605,14 @@ static int dmz_map(struct dm_target *ti,
+ 		dm_accept_partial_bio(bio, dev->zone_nr_sectors - chunk_sector);
  
- #endif /* CONFIG_SYSFS */
+ 	/* Now ready to handle this BIO */
+-	dmz_reclaim_bio_acc(dmz->reclaim);
+-	dmz_queue_chunk_work(dmz, bio);
++	ret = dmz_queue_chunk_work(dmz, bio);
++	if (ret) {
++		dmz_dev_debug(dmz->dev,
++			      "BIO op %d, can't process chunk %llu, err %i\n",
++			      bio_op(bio), (u64)dmz_bio_chunk(dmz->dev, bio),
++			      ret);
++		return DM_MAPIO_REQUEUE;
++	}
  
-@@ -438,7 +451,7 @@ static void free_desc(unsigned int irq)
- 	 * The sysfs entry must be serialized against a concurrent
- 	 * irq_sysfs_init() as well.
- 	 */
--	kobject_del(&desc->kobj);
-+	irq_sysfs_del(desc);
- 	delete_irq_desc(irq);
- 
- 	/*
+ 	return DM_MAPIO_SUBMITTED;
+ }
 
 
