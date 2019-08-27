@@ -4,496 +4,339 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15367C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF1C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2B2206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC42F206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfH0OrK (ORCPT
+        id S1729096AbfH0Osf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:47:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58182 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725920AbfH0OrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:47:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5F514ACC1;
-        Tue, 27 Aug 2019 14:47:07 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id ED3841E4362; Tue, 27 Aug 2019 16:47:06 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 16:47:06 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 5/5] writeback, memcg: Implement foreign dirty flushing
-Message-ID: <20190827144706.GC10098@quack2.suse.cz>
-References: <20190826160656.870307-1-tj@kernel.org>
- <20190826160656.870307-6-tj@kernel.org>
+        Tue, 27 Aug 2019 10:48:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:46172 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfH0Ose (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:48:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CAF2337;
+        Tue, 27 Aug 2019 07:48:33 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6957B3F59C;
+        Tue, 27 Aug 2019 07:48:32 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 15:48:31 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     christophe leroy <christophe.leroy@c-s.fr>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190827144830.GN14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
+ <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <89c90732-5e42-f87e-73b1-8d615355afc4@c-s.fr>
+ <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190826160656.870307-6-tj@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 26-08-19 09:06:56, Tejun Heo wrote:
-> There's an inherent mismatch between memcg and writeback.  The former
-> trackes ownership per-page while the latter per-inode.  This was a
-> deliberate design decision because honoring per-page ownership in the
-> writeback path is complicated, may lead to higher CPU and IO overheads
-> and deemed unnecessary given that write-sharing an inode across
-> different cgroups isn't a common use-case.
+On Sun, Aug 25, 2019 at 03:07:32AM +0000, Xiaowei Bao wrote:
 > 
-> Combined with inode majority-writer ownership switching, this works
-> well enough in most cases but there are some pathological cases.  For
-> example, let's say there are two cgroups A and B which keep writing to
-> different but confined parts of the same inode.  B owns the inode and
-> A's memory is limited far below B's.  A's dirty ratio can rise enough
-> to trigger balance_dirty_pages() sleeps but B's can be low enough to
-> avoid triggering background writeback.  A will be slowed down without
-> a way to make writeback of the dirty pages happen.
 > 
-> This patch implements foreign dirty recording and foreign mechanism so
-> that when a memcg encounters a condition as above it can trigger
-> flushes on bdi_writebacks which can clean its pages.  Please see the
-> comment on top of mem_cgroup_track_foreign_dirty_slowpath() for
-> details.
+> > -----Original Message-----
+> > From: christophe leroy <christophe.leroy@c-s.fr>
+> > Sent: 2019年8月24日 14:45
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; Andrew Murray
+> > <andrew.murray@arm.com>
+> > Cc: mark.rutland@arm.com; Roy Zang <roy.zang@nxp.com>;
+> > lorenzo.pieralisi@arm.co; arnd@arndb.de; devicetree@vger.kernel.org;
+> > gregkh@linuxfoundation.org; linuxppc-dev@lists.ozlabs.org;
+> > linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; kishon@ti.com; M.h.
+> > Lian <minghuan.lian@nxp.com>; robh+dt@kernel.org;
+> > gustavo.pimentel@synopsys.com; jingoohan1@gmail.com;
+> > bhelgaas@google.com; Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
+> > Mingkai Hu <mingkai.hu@nxp.com>; linux-arm-kernel@lists.infradead.org
+> > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+> > ls1088a and ls2088a
+> > 
+> > 
+> > 
+> > Le 24/08/2019 à 02:18, Xiaowei Bao a écrit :
+> > >
+> > >
+> > >> -----Original Message-----
+> > >> From: Andrew Murray <andrew.murray@arm.com>
+> > >> Sent: 2019年8月23日 22:28
+> > >> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > >> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > >> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org;
+> > M.h.
+> > >> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > >> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > >> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > >> Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support
+> > >> for ls1088a and ls2088a
+> > >>
+> > >> On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+> > >>> Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> > >>> difference between LS1 and LS2 platform, so refactor the code of the
+> > >>> EP driver.
+> > >>>
+> > >>> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >>> ---
+> > >>> v2:
+> > >>>   - New mechanism for layerscape EP driver.
+> > >>
+> > >> Was there a v1 of this patch?
+> > >
+> > > Yes, but I don't know how to comments, ^_^
+> > 
+> > As far as I can see, in the previous version of the series
+> > (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+> > work.ozlabs.org%2Fproject%2Flinuxppc-dev%2Flist%2F%3Fseries%3D125315
+> > %26state%3D*&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7C1befe9
+> > a67c8046f9535e08d7285eaab6%7C686ea1d3bc2b4c6fa92cd99c5c301635%
+> > 7C0%7C0%7C637022259387139020&amp;sdata=p4wbycd04Z7qRUfAoZtwc
+> > UP7pR%2FuA3%2FjVcWMz6YyQVQ%3D&amp;reserved=0),
+> > the 8/10 was something completely different, and I can't find any other patch
+> > in the series that could have been the v1 of this patch.
 > 
-> A reproducer follows.
-> 
-> write-range.c::
-> 
->   #include <stdio.h>
->   #include <stdlib.h>
->   #include <unistd.h>
->   #include <fcntl.h>
->   #include <sys/types.h>
-> 
->   static const char *usage = "write-range FILE START SIZE\n";
-> 
->   int main(int argc, char **argv)
->   {
-> 	  int fd;
-> 	  unsigned long start, size, end, pos;
-> 	  char *endp;
-> 	  char buf[4096];
-> 
-> 	  if (argc < 4) {
-> 		  fprintf(stderr, usage);
-> 		  return 1;
-> 	  }
-> 
-> 	  fd = open(argv[1], O_WRONLY);
-> 	  if (fd < 0) {
-> 		  perror("open");
-> 		  return 1;
-> 	  }
-> 
-> 	  start = strtoul(argv[2], &endp, 0);
-> 	  if (*endp != '\0') {
-> 		  fprintf(stderr, usage);
-> 		  return 1;
-> 	  }
-> 
-> 	  size = strtoul(argv[3], &endp, 0);
-> 	  if (*endp != '\0') {
-> 		  fprintf(stderr, usage);
-> 		  return 1;
-> 	  }
-> 
-> 	  end = start + size;
-> 
-> 	  while (1) {
-> 		  for (pos = start; pos < end; ) {
-> 			  long bread, bwritten = 0;
-> 
-> 			  if (lseek(fd, pos, SEEK_SET) < 0) {
-> 				  perror("lseek");
-> 				  return 1;
-> 			  }
-> 
-> 			  bread = read(0, buf, sizeof(buf) < end - pos ?
-> 					       sizeof(buf) : end - pos);
-> 			  if (bread < 0) {
-> 				  perror("read");
-> 				  return 1;
-> 			  }
-> 			  if (bread == 0)
-> 				  return 0;
-> 
-> 			  while (bwritten < bread) {
-> 				  long this;
-> 
-> 				  this = write(fd, buf + bwritten,
-> 					       bread - bwritten);
-> 				  if (this < 0) {
-> 					  perror("write");
-> 					  return 1;
-> 				  }
-> 
-> 				  bwritten += this;
-> 				  pos += bwritten;
-> 			  }
-> 		  }
-> 	  }
->   }
-> 
-> repro.sh::
-> 
->   #!/bin/bash
-> 
->   set -e
->   set -x
-> 
->   sysctl -w vm.dirty_expire_centisecs=300000
->   sysctl -w vm.dirty_writeback_centisecs=300000
->   sysctl -w vm.dirtytime_expire_seconds=300000
->   echo 3 > /proc/sys/vm/drop_caches
-> 
->   TEST=/sys/fs/cgroup/test
->   A=$TEST/A
->   B=$TEST/B
-> 
->   mkdir -p $A $B
->   echo "+memory +io" > $TEST/cgroup.subtree_control
->   echo $((1<<30)) > $A/memory.high
->   echo $((32<<30)) > $B/memory.high
-> 
->   rm -f testfile
->   touch testfile
->   fallocate -l 4G testfile
-> 
->   echo "Starting B"
-> 
->   (echo $BASHPID > $B/cgroup.procs
->    pv -q --rate-limit 70M < /dev/urandom | ./write-range testfile $((2<<30)) $((2<<30))) &
-> 
->   echo "Waiting 10s to ensure B claims the testfile inode"
->   sleep 5
->   sync
->   sleep 5
->   sync
->   echo "Starting A"
-> 
->   (echo $BASHPID > $A/cgroup.procs
->    pv < /dev/urandom | ./write-range testfile 0 $((2<<30)))
-> 
-> v2: Added comments explaining why the specific intervals are being used.
-> 
-> v3: Use 0 @nr when calling cgroup_writeback_by_id() to use best-effort
->     flushing while avoding possible livelocks.
-> 
-> v4: Use get_jiffies_64() and time_before/after64() instead of raw
->     jiffies_64 and arthimetic comparisons as suggested by Jan.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Thanks, I will correct it to v1 in next version patch.
 
-The patch looks good to me. You can add:
+I think you numbered it correctly (so please leave it as v2, referring to
+the patch series revision) - I got confused trying to find a previous
+version of this patch.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Perhaps in the future when new patches are introduced in a series you can
+indicate that in the description patch revision history (e.g. introduced
+in v2).
 
-								Honza
+Thanks,
 
-> ---
->  include/linux/backing-dev-defs.h |   1 +
->  include/linux/memcontrol.h       |  39 +++++++++
->  mm/memcontrol.c                  | 134 +++++++++++++++++++++++++++++++
->  mm/page-writeback.c              |   4 +
->  4 files changed, 178 insertions(+)
+Andrew Murray 
+
 > 
-> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-> index 1075f2552cfc..4fc87dee005a 100644
-> --- a/include/linux/backing-dev-defs.h
-> +++ b/include/linux/backing-dev-defs.h
-> @@ -63,6 +63,7 @@ enum wb_reason {
->  	 * so it has a mismatch name.
->  	 */
->  	WB_REASON_FORKER_THREAD,
-> +	WB_REASON_FOREIGN_FLUSH,
->  
->  	WB_REASON_MAX,
->  };
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 2cd4359cb38c..ad8f1a397ae4 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -183,6 +183,23 @@ struct memcg_padding {
->  #define MEMCG_PADDING(name)
->  #endif
->  
-> +/*
-> + * Remember four most recent foreign writebacks with dirty pages in this
-> + * cgroup.  Inode sharing is expected to be uncommon and, even if we miss
-> + * one in a given round, we're likely to catch it later if it keeps
-> + * foreign-dirtying, so a fairly low count should be enough.
-> + *
-> + * See mem_cgroup_track_foreign_dirty_slowpath() for details.
-> + */
-> +#define MEMCG_CGWB_FRN_CNT	4
-> +
-> +struct memcg_cgwb_frn {
-> +	u64 bdi_id;			/* bdi->id of the foreign inode */
-> +	int memcg_id;			/* memcg->css.id of foreign inode */
-> +	u64 at;				/* jiffies_64 at the time of dirtying */
-> +	struct wb_completion done;	/* tracks in-flight foreign writebacks */
-> +};
-> +
->  /*
->   * The memory controller data structure. The memory controller controls both
->   * page cache and RSS per cgroup. We would eventually like to provide
-> @@ -307,6 +324,7 @@ struct mem_cgroup {
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	struct list_head cgwb_list;
->  	struct wb_domain cgwb_domain;
-> +	struct memcg_cgwb_frn cgwb_frn[MEMCG_CGWB_FRN_CNT];
->  #endif
->  
->  	/* List of events which userspace want to receive */
-> @@ -1237,6 +1255,18 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
->  			 unsigned long *pheadroom, unsigned long *pdirty,
->  			 unsigned long *pwriteback);
->  
-> +void mem_cgroup_track_foreign_dirty_slowpath(struct page *page,
-> +					     struct bdi_writeback *wb);
-> +
-> +static inline void mem_cgroup_track_foreign_dirty(struct page *page,
-> +						  struct bdi_writeback *wb)
-> +{
-> +	if (unlikely(&page->mem_cgroup->css != wb->memcg_css))
-> +		mem_cgroup_track_foreign_dirty_slowpath(page, wb);
-> +}
-> +
-> +void mem_cgroup_flush_foreign(struct bdi_writeback *wb);
-> +
->  #else	/* CONFIG_CGROUP_WRITEBACK */
->  
->  static inline struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb)
-> @@ -1252,6 +1282,15 @@ static inline void mem_cgroup_wb_stats(struct bdi_writeback *wb,
->  {
->  }
->  
-> +static inline void mem_cgroup_track_foreign_dirty(struct page *page,
-> +						  struct bdi_writeback *wb)
-> +{
-> +}
-> +
-> +static inline void mem_cgroup_flush_foreign(struct bdi_writeback *wb)
-> +{
-> +}
-> +
->  #endif	/* CONFIG_CGROUP_WRITEBACK */
->  
->  struct sock;
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 26e2999af608..eb626a290d93 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -87,6 +87,10 @@ int do_swap_account __read_mostly;
->  #define do_swap_account		0
->  #endif
->  
-> +#ifdef CONFIG_CGROUP_WRITEBACK
-> +static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
-> +#endif
-> +
->  /* Whether legacy memory+swap accounting is active */
->  static bool do_memsw_account(void)
->  {
-> @@ -4238,6 +4242,127 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
->  	}
->  }
->  
-> +/*
-> + * Foreign dirty flushing
-> + *
-> + * There's an inherent mismatch between memcg and writeback.  The former
-> + * trackes ownership per-page while the latter per-inode.  This was a
-> + * deliberate design decision because honoring per-page ownership in the
-> + * writeback path is complicated, may lead to higher CPU and IO overheads
-> + * and deemed unnecessary given that write-sharing an inode across
-> + * different cgroups isn't a common use-case.
-> + *
-> + * Combined with inode majority-writer ownership switching, this works well
-> + * enough in most cases but there are some pathological cases.  For
-> + * example, let's say there are two cgroups A and B which keep writing to
-> + * different but confined parts of the same inode.  B owns the inode and
-> + * A's memory is limited far below B's.  A's dirty ratio can rise enough to
-> + * trigger balance_dirty_pages() sleeps but B's can be low enough to avoid
-> + * triggering background writeback.  A will be slowed down without a way to
-> + * make writeback of the dirty pages happen.
-> + *
-> + * Conditions like the above can lead to a cgroup getting repatedly and
-> + * severely throttled after making some progress after each
-> + * dirty_expire_interval while the underyling IO device is almost
-> + * completely idle.
-> + *
-> + * Solving this problem completely requires matching the ownership tracking
-> + * granularities between memcg and writeback in either direction.  However,
-> + * the more egregious behaviors can be avoided by simply remembering the
-> + * most recent foreign dirtying events and initiating remote flushes on
-> + * them when local writeback isn't enough to keep the memory clean enough.
-> + *
-> + * The following two functions implement such mechanism.  When a foreign
-> + * page - a page whose memcg and writeback ownerships don't match - is
-> + * dirtied, mem_cgroup_track_foreign_dirty() records the inode owning
-> + * bdi_writeback on the page owning memcg.  When balance_dirty_pages()
-> + * decides that the memcg needs to sleep due to high dirty ratio, it calls
-> + * mem_cgroup_flush_foreign() which queues writeback on the recorded
-> + * foreign bdi_writebacks which haven't expired.  Both the numbers of
-> + * recorded bdi_writebacks and concurrent in-flight foreign writebacks are
-> + * limited to MEMCG_CGWB_FRN_CNT.
-> + *
-> + * The mechanism only remembers IDs and doesn't hold any object references.
-> + * As being wrong occasionally doesn't matter, updates and accesses to the
-> + * records are lockless and racy.
-> + */
-> +void mem_cgroup_track_foreign_dirty_slowpath(struct page *page,
-> +					     struct bdi_writeback *wb)
-> +{
-> +	struct mem_cgroup *memcg = page->mem_cgroup;
-> +	struct memcg_cgwb_frn *frn;
-> +	u64 now = get_jiffies_64();
-> +	u64 oldest_at = now;
-> +	int oldest = -1;
-> +	int i;
-> +
-> +	/*
-> +	 * Pick the slot to use.  If there is already a slot for @wb, keep
-> +	 * using it.  If not replace the oldest one which isn't being
-> +	 * written out.
-> +	 */
-> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
-> +		frn = &memcg->cgwb_frn[i];
-> +		if (frn->bdi_id == wb->bdi->id &&
-> +		    frn->memcg_id == wb->memcg_css->id)
-> +			break;
-> +		if (time_before64(frn->at, oldest_at) &&
-> +		    atomic_read(&frn->done.cnt) == 1) {
-> +			oldest = i;
-> +			oldest_at = frn->at;
-> +		}
-> +	}
-> +
-> +	if (i < MEMCG_CGWB_FRN_CNT) {
-> +		/*
-> +		 * Re-using an existing one.  Update timestamp lazily to
-> +		 * avoid making the cacheline hot.  We want them to be
-> +		 * reasonably up-to-date and significantly shorter than
-> +		 * dirty_expire_interval as that's what expires the record.
-> +		 * Use the shorter of 1s and dirty_expire_interval / 8.
-> +		 */
-> +		unsigned long update_intv =
-> +			min_t(unsigned long, HZ,
-> +			      msecs_to_jiffies(dirty_expire_interval * 10) / 8);
-> +
-> +		if (time_before64(frn->at, now - update_intv))
-> +			frn->at = now;
-> +	} else if (oldest >= 0) {
-> +		/* replace the oldest free one */
-> +		frn = &memcg->cgwb_frn[oldest];
-> +		frn->bdi_id = wb->bdi->id;
-> +		frn->memcg_id = wb->memcg_css->id;
-> +		frn->at = now;
-> +	}
-> +}
-> +
-> +/* issue foreign writeback flushes for recorded foreign dirtying events */
-> +void mem_cgroup_flush_foreign(struct bdi_writeback *wb)
-> +{
-> +	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
-> +	unsigned long intv = msecs_to_jiffies(dirty_expire_interval * 10);
-> +	u64 now = jiffies_64;
-> +	int i;
-> +
-> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
-> +		struct memcg_cgwb_frn *frn = &memcg->cgwb_frn[i];
-> +
-> +		/*
-> +		 * If the record is older than dirty_expire_interval,
-> +		 * writeback on it has already started.  No need to kick it
-> +		 * off again.  Also, don't start a new one if there's
-> +		 * already one in flight.
-> +		 */
-> +		if (time_after64(frn->at, now - intv) &&
-> +		    atomic_read(&frn->done.cnt) == 1) {
-> +			frn->at = 0;
-> +			cgroup_writeback_by_id(frn->bdi_id, frn->memcg_id, 0,
-> +					       WB_REASON_FOREIGN_FLUSH,
-> +					       &frn->done);
-> +		}
-> +	}
-> +}
-> +
->  #else	/* CONFIG_CGROUP_WRITEBACK */
->  
->  static int memcg_wb_domain_init(struct mem_cgroup *memcg, gfp_t gfp)
-> @@ -4760,6 +4885,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
->  	struct mem_cgroup *memcg;
->  	unsigned int size;
->  	int node;
-> +	int __maybe_unused i;
->  
->  	size = sizeof(struct mem_cgroup);
->  	size += nr_node_ids * sizeof(struct mem_cgroup_per_node *);
-> @@ -4803,6 +4929,9 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
->  #endif
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	INIT_LIST_HEAD(&memcg->cgwb_list);
-> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++)
-> +		memcg->cgwb_frn[i].done =
-> +			__WB_COMPLETION_INIT(&memcg_cgwb_frn_waitq);
->  #endif
->  	idr_replace(&mem_cgroup_idr, memcg, memcg->id.id);
->  	return memcg;
-> @@ -4932,7 +5061,12 @@ static void mem_cgroup_css_released(struct cgroup_subsys_state *css)
->  static void mem_cgroup_css_free(struct cgroup_subsys_state *css)
->  {
->  	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-> +	int __maybe_unused i;
->  
-> +#ifdef CONFIG_CGROUP_WRITEBACK
-> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++)
-> +		wb_wait_for_completion(&memcg->cgwb_frn[i].done);
-> +#endif
->  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys) && !cgroup_memory_nosocket)
->  		static_branch_dec(&memcg_sockets_enabled_key);
->  
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index 1804f64ff43c..50055d2e4ea8 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -1667,6 +1667,8 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  		if (unlikely(!writeback_in_progress(wb)))
->  			wb_start_background_writeback(wb);
->  
-> +		mem_cgroup_flush_foreign(wb);
-> +
->  		/*
->  		 * Calculate global domain's pos_ratio and select the
->  		 * global dtc by default.
-> @@ -2427,6 +2429,8 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
->  		task_io_account_write(PAGE_SIZE);
->  		current->nr_dirtied++;
->  		this_cpu_inc(bdp_ratelimits);
-> +
-> +		mem_cgroup_track_foreign_dirty(page, wb);
->  	}
->  }
->  
-> -- 
-> 2.17.1
+> > 
+> > Christophe
+> > 
+> > >
+> > >>
+> > >>>
+> > >>>   drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
+> > >>> ++++++++++++++++++++------
+> > >>>   1 file changed, 58 insertions(+), 18 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> index 7ca5fe8..2a66f07 100644
+> > >>> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > >>> @@ -20,27 +20,29 @@
+> > >>>
+> > >>>   #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> > >>>
+> > >>> -struct ls_pcie_ep {
+> > >>> -	struct dw_pcie		*pci;
+> > >>> -	struct pci_epc_features	*ls_epc;
+> > >>> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > >>> +
+> > >>> +struct ls_pcie_ep_drvdata {
+> > >>> +	u32				func_offset;
+> > >>> +	const struct dw_pcie_ep_ops	*ops;
+> > >>> +	const struct dw_pcie_ops	*dw_pcie_ops;
+> > >>>   };
+> > >>>
+> > >>> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > >>> +struct ls_pcie_ep {
+> > >>> +	struct dw_pcie			*pci;
+> > >>> +	struct pci_epc_features		*ls_epc;
+> > >>> +	const struct ls_pcie_ep_drvdata *drvdata; };
+> > >>>
+> > >>>   static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+> > >>>   	return 0;
+> > >>>   }
+> > >>>
+> > >>> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> > >>> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+> > >>>   	.start_link = ls_pcie_establish_link,  };
+> > >>>
+> > >>> -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > >>> -	{ .compatible = "fsl,ls-pcie-ep",},
+> > >>> -	{ },
+> > >>> -};
+> > >>> -
+> > >>>   static const struct pci_epc_features*
+> > >>> ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -82,10 +84,44
+> > >>> @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > >>>   	}
+> > >>>   }
+> > >>>
+> > >>> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> > >>> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> > >>> +						u8 func_no)
+> > >>> +{
+> > >>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > >>> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > >>> +	u8 header_type;
+> > >>> +
+> > >>> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> > >>> +
+> > >>> +	if (header_type & (1 << 7))
+> > >>> +		return pcie->drvdata->func_offset * func_no;
+> > >>> +	else
+> > >>> +		return 0;
+> > >>
+> > >> It looks like there isn't a PCI define for multi function, the
+> > >> nearest I could find was PCI_HEADER_TYPE_MULTIDEVICE in
+> > >> hotplug/ibmphp.h. A comment above the test might be helpful to explain
+> > the test.
+> > >
+> > > Yes, I have not find the PCI_HEADER_TYPE_MULTIDEVICE define. OK, I
+> > > will add The comments in next version patch.
+> > >
+> > >>
+> > >> As the ls_pcie_ep_drvdata structures are static, the unset
+> > >> .func_offset will be initialised to 0, so you could just drop the test above.
+> > >
+> > > OK, thanks
+> > >
+> > >>
+> > >> However something to the effect of the following may help spot
+> > >> misconfiguration:
+> > >>
+> > >> WARN_ON(func_no && !pcie->drvdata->func_offset); return
+> > >> pcie->drvdata->func_offset * func_no;
+> > >
+> > > Thanks a lot, this looks better.
+> > >
+> > >>
+> > >> The WARN is probably quite useful as if you are attempting to use
+> > >> non-zero functions and func_offset isn't set - then things may appear
+> > >> to work normally but actually will break horribly.
+> > >
+> > > got it, thanks.
+> > >
+> > >>
+> > >> Thanks,
+> > >>
+> > >> Andrew Murray
+> > >>
+> > >>> +}
+> > >>> +
+> > >>> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+> > >>>   	.ep_init = ls_pcie_ep_init,
+> > >>>   	.raise_irq = ls_pcie_ep_raise_irq,
+> > >>>   	.get_features = ls_pcie_ep_get_features,
+> > >>> +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+> > >>> +
+> > >>> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> > >>> +	.ops = &ls_pcie_ep_ops,
+> > >>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > >>> +
+> > >>> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> > >>> +	.func_offset = 0x20000,
+> > >>> +	.ops = &ls_pcie_ep_ops,
+> > >>> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > >>> +
+> > >>> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > >>> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> > >>> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > >>> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > >>> +	{ },
+> > >>>   };
+> > >>>
+> > >>>   static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -98,7
+> > >>> +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> > >>>   	int ret;
+> > >>>
+> > >>>   	ep = &pci->ep;
+> > >>> -	ep->ops = &pcie_ep_ops;
+> > >>> +	ep->ops = pcie->drvdata->ops;
+> > >>>
+> > >>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > >> "addr_space");
+> > >>>   	if (!res)
+> > >>> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
+> > >> platform_device *pdev)
+> > >>>   	if (!ls_epc)
+> > >>>   		return -ENOMEM;
+> > >>>
+> > >>> -	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > >> "regs");
+> > >>> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > >>> -	if (IS_ERR(pci->dbi_base))
+> > >>> -		return PTR_ERR(pci->dbi_base);
+> > >>> +	pcie->drvdata = of_device_get_match_data(dev);
+> > >>>
+> > >>> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > >>>   	pci->dev = dev;
+> > >>> -	pci->ops = &ls_pcie_ep_ops;
+> > >>> +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> > >>> +
+> > >>>   	pcie->pci = pci;
+> > >>>
+> > >>>   	ls_epc->linkup_notifier = false,
+> > >>> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct
+> > >>> platform_device *pdev)
+> > >>>
+> > >>>   	pcie->ls_epc = ls_epc;
+> > >>>
+> > >>> +	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > >> "regs");
+> > >>> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > >>> +	if (IS_ERR(pci->dbi_base))
+> > >>> +		return PTR_ERR(pci->dbi_base);
+> > >>> +
+> > >>> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > >>> +
+> > >>>   	platform_set_drvdata(pdev, pcie);
+> > >>>
+> > >>>   	ret = ls_add_pcie_ep(pcie, pdev);
+> > >>> --
+> > >>> 2.9.5
+> > >>>
+> > 
+> > ---
+> > L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel
+> > antivirus Avast.
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.
+> > avast.com%2Fantivirus&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7
+> > C1befe9a67c8046f9535e08d7285eaab6%7C686ea1d3bc2b4c6fa92cd99c5c3
+> > 01635%7C0%7C0%7C637022259387139020&amp;sdata=JAYds7X%2FHVxgtrg
+> > e%2F%2FvnP84zdb2yReXcctQUiSLC11I%3D&amp;reserved=0
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
