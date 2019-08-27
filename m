@@ -2,776 +2,199 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6E5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851C1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCA12184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:55:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gynwRJy5"
+	by mail.kernel.org (Postfix) with ESMTP id 54A6C217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbfH0IzR (ORCPT
+        id S1729040AbfH0I5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:55:17 -0400
-Received: from forward102j.mail.yandex.net ([5.45.198.243]:52428 "EHLO
-        forward102j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbfH0IzR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:55:17 -0400
-Received: from mxback17o.mail.yandex.net (mxback17o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::68])
-        by forward102j.mail.yandex.net (Yandex) with ESMTP id 017FCF2199C;
-        Tue, 27 Aug 2019 11:55:09 +0300 (MSK)
-Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
-        by mxback17o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id yY6L4p7kYF-t8P0nJpJ;
-        Tue, 27 Aug 2019 11:55:08 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896108;
-        bh=owisGGSSSLuAIaTLqmdEsfbg56svw6meWRNkz/o/U7U=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=gynwRJy5sUPZRXbhhyJZPMH+jakf54awphvNB9p/l75CiF3HD6NTTr+ypUQzjIAkR
-         aiXWaie8ngizQ8+7jPIw1MHMvWFWth5xEfoykbzJ6uv/f6ZuJyqUwAHybsg+eUjftm
-         aVz2VlOgaLTkjqyim568po5IEGgPu1xgW+0YOfuM=
-Authentication-Results: mxback17o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-t1tCmVBW;
-        Tue, 27 Aug 2019 11:55:06 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 12/13] MIPS: Loongson64: Add generic dts
-Date:   Tue, 27 Aug 2019 16:53:01 +0800
-Message-Id: <20190827085302.5197-13-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+        Tue, 27 Aug 2019 04:57:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:41210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfH0I5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:57:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32F00337;
+        Tue, 27 Aug 2019 01:57:08 -0700 (PDT)
+Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.144.41])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B86673F246;
+        Tue, 27 Aug 2019 01:57:07 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:57:06 +0200
+From:   Christoffer Dall <christoffer.dall@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 01/10] KVM: arm64: Document PV-time interface
+Message-ID: <20190827085706.GB6541@e113682-lin.lund.arm.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-2-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821153656.33429-2-steven.price@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add generic device dts for Loongson-3 devices.
-They seems identical but will be different later.
+On Wed, Aug 21, 2019 at 04:36:47PM +0100, Steven Price wrote:
+> Introduce a paravirtualization interface for KVM/arm64 based on the
+> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
+> 
+> This only adds the details about "Stolen Time" as the details of "Live
+> Physical Time" have not been fully agreed.
+> 
+> User space can specify a reserved area of memory for the guest and
+> inform KVM to populate the memory with information on time that the host
+> kernel has stolen from the guest.
+> 
+> A hypercall interface is provided for the guest to interrogate the
+> hypervisor's support for this interface and the location of the shared
+> memory structures.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+> 
+> diff --git a/Documentation/virt/kvm/arm/pvtime.txt b/Documentation/virt/kvm/arm/pvtime.txt
+> new file mode 100644
+> index 000000000000..1ceb118694e7
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/arm/pvtime.txt
+> @@ -0,0 +1,100 @@
+> +Paravirtualized time support for arm64
+> +======================================
+> +
+> +Arm specification DEN0057/A defined a standard for paravirtualised time
+> +support for AArch64 guests:
+> +
+> +https://developer.arm.com/docs/den0057/a
+> +
+> +KVM/arm64 implements the stolen time part of this specification by providing
+> +some hypervisor service calls to support a paravirtualized guest obtaining a
+> +view of the amount of time stolen from its execution.
+> +
+> +Two new SMCCC compatible hypercalls are defined:
+> +
+> +PV_FEATURES 0xC5000020
+> +PV_TIME_ST  0xC5000022
+> +
+> +These are only available in the SMC64/HVC64 calling convention as
+> +paravirtualized time is not available to 32 bit Arm guests. The existence of
+> +the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
+> +mechanism before calling it.
+> +
+> +PV_FEATURES
+> +    Function ID:  (uint32)  : 0xC5000020
+> +    PV_func_id:   (uint32)  : Either PV_TIME_LPT or PV_TIME_ST
+> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
+> +                              PV-time feature is supported by the hypervisor.
+> +
+> +PV_TIME_ST
+> +    Function ID:  (uint32)  : 0xC5000022
+> +    Return value: (int64)   : IPA of the stolen time data structure for this
+> +                              (V)CPU. On failure:
+> +                              NOT_SUPPORTED (-1)
+> +
+> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
+> +with inner and outer write back caching attributes, in the inner shareable
+> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
+> +meaningfully filled by the hypervisor (see structure below).
+> +
+> +PV_TIME_ST returns the structure for the calling VCPU.
+> +
+> +Stolen Time
+> +-----------
+> +
+> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
+> +
+> +  Field       | Byte Length | Byte Offset | Description
+> +  ----------- | ----------- | ----------- | --------------------------
+> +  Revision    |      4      |      0      | Must be 0 for version 0.1
+> +  Attributes  |      4      |      4      | Must be 0
+> +  Stolen time |      8      |      8      | Stolen time in unsigned
+> +              |             |             | nanoseconds indicating how
+> +              |             |             | much time this VCPU thread
+> +              |             |             | was involuntarily not
+> +              |             |             | running on a physical CPU.
+> +
+> +The structure will be updated by the hypervisor prior to scheduling a VCPU. It
+> +will be present within a reserved region of the normal memory given to the
+> +guest. The guest should not attempt to write into this memory. There is a
+> +structure per VCPU of the guest.
+> +
+> +User space interface
+> +====================
+> +
+> +User space can request that KVM provide the paravirtualized time interface to
+> +a guest by creating a KVM_DEV_TYPE_ARM_PV_TIME device, for example:
+> +
+> +    struct kvm_create_device pvtime_device = {
+> +            .type = KVM_DEV_TYPE_ARM_PV_TIME,
+> +            .attr = 0,
+> +            .flags = 0,
+> +    };
+> +
+> +    pvtime_fd = ioctl(vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
+> +
+> +Creation of the device should be done after creating the vCPUs of the virtual
+> +machine.
+> +
+> +The IPA of the structures must be given to KVM. This is the base address
+> +of an array of stolen time structures (one for each VCPU). The base address
+> +must be page aligned. The size must be at least 64 * number of VCPUs and be a
+> +multiple of PAGE_SIZE.
+> +
+> +The memory for these structures should be added to the guest in the usual
+> +manner (e.g. using KVM_SET_USER_MEMORY_REGION).
+> +
+> +For example:
+> +
+> +    struct kvm_dev_arm_st_region region = {
+> +            .gpa = <IPA of guest base address>,
+> +            .size = <size in bytes>
+> +    };
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/Kconfig                             |   4 +-
- arch/mips/boot/dts/Makefile                   |   1 +
- arch/mips/boot/dts/loongson/Makefile          |   8 +
- arch/mips/boot/dts/loongson/ls3-2nodes.dtsi   |   8 +
- arch/mips/boot/dts/loongson/ls3-4nodes.dtsi   |  15 ++
- arch/mips/boot/dts/loongson/ls3-cpus.dtsi     | 150 ++++++++++++++++++
- arch/mips/boot/dts/loongson/ls3-gs464.dtsi    |  18 +++
- arch/mips/boot/dts/loongson/ls3-gs464e.dtsi   |  18 +++
- .../boot/dts/loongson/ls3-rs780e-pch.dtsi     |  35 ++++
- arch/mips/boot/dts/loongson/ls3a-package.dtsi |  59 +++++++
- .../boot/dts/loongson/ls3a1000_780e_1way.dts  |  12 ++
- .../boot/dts/loongson/ls3a1000_780e_2way.dts  |  13 ++
- .../boot/dts/loongson/ls3a1000_780e_4way.dts  |  13 ++
- .../boot/dts/loongson/ls3a2000_780e_1way.dts  |  12 ++
- .../boot/dts/loongson/ls3a2000_780e_2way.dts  |  13 ++
- .../boot/dts/loongson/ls3a2000_780e_4way.dts  |  13 ++
- .../boot/dts/loongson/ls3a3000_780e_1way.dts  |  12 ++
- .../boot/dts/loongson/ls3a3000_780e_2way.dts  |  13 ++
- .../boot/dts/loongson/ls3a3000_780e_4way.dts  |  13 ++
- arch/mips/boot/dts/loongson/ls3b-package.dtsi |  59 +++++++
- .../mips/boot/dts/loongson/ls3b_780e_1way.dts |  13 ++
- .../mips/boot/dts/loongson/ls3b_780e_2way.dts |  13 ++
- 22 files changed, 514 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/boot/dts/loongson/Makefile
- create mode 100644 arch/mips/boot/dts/loongson/ls3-2nodes.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3-4nodes.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3-cpus.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3-gs464.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3-gs464e.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3-rs780e-pch.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3a-package.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3a1000_780e_1way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a1000_780e_2way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a1000_780e_4way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a2000_780e_1way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a2000_780e_2way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a2000_780e_4way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a3000_780e_1way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a3000_780e_2way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3a3000_780e_4way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3b-package.dtsi
- create mode 100644 arch/mips/boot/dts/loongson/ls3b_780e_1way.dts
- create mode 100644 arch/mips/boot/dts/loongson/ls3b_780e_2way.dts
+This feel fragile; how are you handling userspace creating VCPUs after
+setting this up, the GPA overlapping guest memory, etc.  Is the
+philosophy here that the VMM can mess up the VM if it wants, but that
+this should never lead attacks on the host (we better hope not) and so
+we don't care?
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 92a2ee773a40..1c27c3a4e036 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -485,6 +485,8 @@ config MACH_LOONGSON64
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select ZONE_DMA32
- 	select SYS_SUPPORTS_ZBOOT
-+	select USE_OF
-+	select BUILTIN_DTB
- 	help
- 	  This enables the support of Loongson-3A/3B/2-series-soc processors
- 
-@@ -3074,7 +3076,7 @@ endchoice
- choice
- 	prompt "Kernel command line type" if !CMDLINE_OVERRIDE
- 	default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
--					 !MIPS_MALTA && \
-+					 !MACH_LOONGSON64 && !MIPS_MALTA && \
- 					 !CAVIUM_OCTEON_SOC
- 	default MIPS_CMDLINE_FROM_BOOTLOADER
- 
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 1e79cab8e269..d429a69bfe30 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -4,6 +4,7 @@ subdir-y	+= cavium-octeon
- subdir-y	+= img
- subdir-y	+= ingenic
- subdir-y	+= lantiq
-+subdir-y	+= loongson
- subdir-y	+= mscc
- subdir-y	+= mti
- subdir-y	+= netlogic
-diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loongson/Makefile
-new file mode 100644
-index 000000000000..25dca8a89d5d
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX_License_Identifier: GPL_2.0
-+dtb-$(CONFIG_MACH_LOONGSON64)	+= ls3a1000_780e_1way.dtb ls3a1000_780e_2way.dtb ls3a1000_780e_4way.dtb \
-+								ls3b_780e_1way.dtb ls3b_780e_2way.dtb \
-+								ls3a2000_780e_1way.dtb ls3a2000_780e_2way.dtb ls3a2000_780e_4way.dtb \
-+								ls3a3000_780e_1way.dtb ls3a3000_780e_2way.dtb ls3a3000_780e_4way.dtb
-+
-+
-+obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
-diff --git a/arch/mips/boot/dts/loongson/ls3-2nodes.dtsi b/arch/mips/boot/dts/loongson/ls3-2nodes.dtsi
-new file mode 100644
-index 000000000000..3103a4f96f68
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3-2nodes.dtsi
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+&cpu4 { status = "okay"; };
-+&cpu5 { status = "okay"; };
-+&cpu6 { status = "okay"; };
-+&cpu7 { status = "okay"; };
-+
-+&scache1 { status = "okay"; };
-diff --git a/arch/mips/boot/dts/loongson/ls3-4nodes.dtsi b/arch/mips/boot/dts/loongson/ls3-4nodes.dtsi
-new file mode 100644
-index 000000000000..be8cca52c072
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3-4nodes.dtsi
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/include/ "ls3-2nodes.dtsi"
-+
-+&cpu8 { status = "okay"; };
-+&cpu9 { status = "okay"; };
-+&cpu10 { status = "okay"; };
-+&cpu11 { status = "okay"; };
-+&cpu12 { status = "okay"; };
-+&cpu13 { status = "okay"; };
-+&cpu14 { status = "okay"; };
-+&cpu15 { status = "okay"; };
-+
-+&scache2 { status = "okay"; };
-+&scache3 { status = "okay"; };
-diff --git a/arch/mips/boot/dts/loongson/ls3-cpus.dtsi b/arch/mips/boot/dts/loongson/ls3-cpus.dtsi
-new file mode 100644
-index 000000000000..7e4705cd8a7c
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3-cpus.dtsi
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	/*
-+	 * Loongson-3 may have as many as 4 nodes, each node has 4 cores.
-+	 * Each core has its own pcache and cores in the same node share scache.
-+	 * CPU 0-3 should always exist in all the systems.
-+	 */
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			reg = <0x0>;
-+			next-level-cache = <&scache0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			reg = <0x1>;
-+			next-level-cache = <&scache0>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			reg = <0x2>;
-+			next-level-cache = <&scache0>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			reg = <0x3>;
-+			next-level-cache = <&scache0>;
-+		};
-+
-+		cpu4: cpu@4 {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0x4>;
-+			next-level-cache = <&scache1>;
-+		};
-+
-+		cpu5: cpu@5 {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0x5>;
-+			next-level-cache = <&scache1>;
-+		};
-+
-+		cpu6: cpu@6 {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0x6>;
-+			next-level-cache = <&scache1>;
-+		};
-+
-+		cpu7: cpu@7 {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0x7>;
-+			next-level-cache = <&scache1>;
-+		};
-+
-+		cpu8: cpu@8 {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0x8>;
-+			next-level-cache = <&scache2>;
-+		};
-+
-+		cpu9: cpu@9 {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0x9>;
-+			next-level-cache = <&scache2>;
-+		};
-+
-+		cpu10: cpu@a {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0xa>;
-+			next-level-cache = <&scache2>;
-+		};
-+
-+		cpu11: cpu@b {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0xb>;
-+			next-level-cache = <&scache2>;
-+		};
-+
-+		cpu12: cpu@c {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0xc>;
-+			next-level-cache = <&scache3>;
-+		};
-+
-+		cpu13: cpu@d {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0xd>;
-+			next-level-cache = <&scache3>;
-+		};
-+
-+		cpu14: cpu@e {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0xe>;
-+			next-level-cache = <&scache3>;
-+		};
-+
-+		cpu15: cpu@f {
-+			status = "disabled";
-+			device_type = "cpu";
-+			reg = <0xf>;
-+			next-level-cache = <&scache3>;
-+		};
-+
-+		scache0: l2-cache0 {
-+			compatible = "cache";
-+		};
-+
-+		scache1: l2-cache1 {
-+			status = "disabled";
-+			compatible = "cache";
-+		};
-+
-+		scache2: l2-cache2 {
-+			status = "disabled";
-+			compatible = "cache";
-+		};
-+
-+		scache3: l2-cache3 {
-+			status = "disabled";
-+			compatible = "cache";
-+		};
-+	};
-+	
-+	cpuintc: interrupt-controller {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3-gs464.dtsi b/arch/mips/boot/dts/loongson/ls3-gs464.dtsi
-new file mode 100644
-index 000000000000..54d7be042150
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3-gs464.dtsi
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+&cpu0 { compatible = "loongson,gs464"; };
-+&cpu1 { compatible = "loongson,gs464"; };
-+&cpu2 { compatible = "loongson,gs464"; };
-+&cpu3 { compatible = "loongson,gs464"; };
-+&cpu4 { compatible = "loongson,gs464"; };
-+&cpu5 { compatible = "loongson,gs464"; };
-+&cpu6 { compatible = "loongson,gs464"; };
-+&cpu7 { compatible = "loongson,gs464"; };
-+&cpu8 { compatible = "loongson,gs464"; };
-+&cpu9 { compatible = "loongson,gs464"; };
-+&cpu10 { compatible = "loongson,gs464"; };
-+&cpu11 { compatible = "loongson,gs464"; };
-+&cpu12 { compatible = "loongson,gs464"; };
-+&cpu13 { compatible = "loongson,gs464"; };
-+&cpu14 { compatible = "loongson,gs464"; };
-+&cpu15 { compatible = "loongson,gs464"; };
-diff --git a/arch/mips/boot/dts/loongson/ls3-gs464e.dtsi b/arch/mips/boot/dts/loongson/ls3-gs464e.dtsi
-new file mode 100644
-index 000000000000..c5f545ef8d94
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3-gs464e.dtsi
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+&cpu0 { compatible = "loongson,gs464e"; };
-+&cpu1 { compatible = "loongson,gs464e"; };
-+&cpu2 { compatible = "loongson,gs464e"; };
-+&cpu3 { compatible = "loongson,gs464e"; };
-+&cpu4 { compatible = "loongson,gs464e"; };
-+&cpu5 { compatible = "loongson,gs464e"; };
-+&cpu6 { compatible = "loongson,gs464e"; };
-+&cpu7 { compatible = "loongson,gs464e"; };
-+&cpu8 { compatible = "loongson,gs464e"; };
-+&cpu9 { compatible = "loongson,gs464e"; };
-+&cpu10 { compatible = "loongson,gs464e"; };
-+&cpu11 { compatible = "loongson,gs464e"; };
-+&cpu12 { compatible = "loongson,gs464e"; };
-+&cpu13 { compatible = "loongson,gs464e"; };
-+&cpu14 { compatible = "loongson,gs464e"; };
-+&cpu15 { compatible = "loongson,gs464e"; };
-diff --git a/arch/mips/boot/dts/loongson/ls3-rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/ls3-rs780e-pch.dtsi
-new file mode 100644
-index 000000000000..e971a44efc56
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3-rs780e-pch.dtsi
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/ {
-+	pch {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0x000 0x10000000 0x000 0x10000000 0x10000000
-+			  0x000 0x40000000 0x000 0x40000000 0x40000000>;
-+
-+	    isa {
-+		    compatible = "isa";
-+		    #address-cells = <2>;
-+		    #size-cells = <1>;
-+		    ranges = <1 0 0 0 0x1000>;
-+
-+            i8259: interrupt-controller@20 {
-+		        compatible = "intel,i8259";
-+		        interrupt-controller;
-+		        #interrupt-cells = <1>;
-+                plat-poll;
-+		        interrupts = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>,
-+                            <8>, <9>, <10>, <11>, <12>, <13>, <14>, <15>;
-+		        interrupt-parent = <&htintc>;
-+	        };
-+
-+		    rtc0: rtc@70 {
-+			    compatible = "motorola,mc146818";
-+			    reg = <1 0x70 0x8>;
-+			    interrupts = <8>;
-+			    interrupt-parent = <&i8259>;
-+		    };
-+	    };
-+    };  
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a-package.dtsi b/arch/mips/boot/dts/loongson/ls3a-package.dtsi
-new file mode 100644
-index 000000000000..23e5c3a6a71e
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a-package.dtsi
-@@ -0,0 +1,59 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	package@0 {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
-+                0 0x3ff00000 0 0x3ff00000 0x100000
-+				0xEFD 0xFB000000 0xEFD 0xFB000000 0x10000000 /* 3A HT Config Space */>;
-+
-+		iointc: interrupt-controller@3ff01400 {
-+			compatible = "loongson,ls3-iointc";
-+			reg = <0 0x3ff01400 0x64>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpuintc>;
-+			interrupts = <2>;
-+			};
-+
-+		cpu_uart0: serial@1fe001e0 {
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1fe001e0 0x8>;
-+			clock-frequency = <33000000>;
-+			interrupt-parent = <&iointc>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+			no-loopback-test;
-+		};
-+
-+		cpu_uart1: serial@1fe001e8 {
-+			status = "disabled";
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1fe001e8 0x8>;
-+			clock-frequency = <33000000>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&iointc>;
-+			no-loopback-test;
-+		};
-+
-+		htintc: interrupt-controller@0xEFDFB000080 {
-+			compatible = "loongson,ls3-htintc";
-+			reg = <0xEFD 0xFB000080 0x100>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&iointc>;
-+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+						<25 IRQ_TYPE_LEVEL_HIGH>,
-+						<26 IRQ_TYPE_LEVEL_HIGH>,
-+						<27 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a1000_780e_1way.dts b/arch/mips/boot/dts/loongson/ls3a1000_780e_1way.dts
-new file mode 100644
-index 000000000000..6cf90d032cf6
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a1000_780e_1way.dts
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a1000-780e-1way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a1000_780e_2way.dts b/arch/mips/boot/dts/loongson/ls3a1000_780e_2way.dts
-new file mode 100644
-index 000000000000..cb1325a2bd64
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a1000_780e_2way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-2nodes.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a1000-780e-2way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a1000_780e_4way.dts b/arch/mips/boot/dts/loongson/ls3a1000_780e_4way.dts
-new file mode 100644
-index 000000000000..e6fa9859fa4f
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a1000_780e_4way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-4nodes.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a1000-780e-4way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a2000_780e_1way.dts b/arch/mips/boot/dts/loongson/ls3a2000_780e_1way.dts
-new file mode 100644
-index 000000000000..a726f0186355
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a2000_780e_1way.dts
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464e.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a2000-780e-1way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a2000_780e_2way.dts b/arch/mips/boot/dts/loongson/ls3a2000_780e_2way.dts
-new file mode 100644
-index 000000000000..19268b640cae
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a2000_780e_2way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464e.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-2nodes.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a2000-780e-2way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a2000_780e_4way.dts b/arch/mips/boot/dts/loongson/ls3a2000_780e_4way.dts
-new file mode 100644
-index 000000000000..2b491396225b
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a2000_780e_4way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464e.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-4nodes.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a2000-780e-4way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a3000_780e_1way.dts b/arch/mips/boot/dts/loongson/ls3a3000_780e_1way.dts
-new file mode 100644
-index 000000000000..628c5d0a7a25
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a3000_780e_1way.dts
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464e.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a3000-780e-1way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a3000_780e_2way.dts b/arch/mips/boot/dts/loongson/ls3a3000_780e_2way.dts
-new file mode 100644
-index 000000000000..1390767ed462
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a3000_780e_2way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464e.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-2nodes.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a3000-780e-2way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3a3000_780e_4way.dts b/arch/mips/boot/dts/loongson/ls3a3000_780e_4way.dts
-new file mode 100644
-index 000000000000..3f94c05e944a
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3a3000_780e_4way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464e.dtsi"
-+#include "ls3a-package.dtsi"
-+#include "ls3-4nodes.dtsi"
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3a3000-780e-4way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3b-package.dtsi b/arch/mips/boot/dts/loongson/ls3b-package.dtsi
-new file mode 100644
-index 000000000000..f7e71cd5ba5b
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3b-package.dtsi
-@@ -0,0 +1,59 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	package@0 {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
-+                0 0x3ff00000 0 0x3ff00000 0x100000
-+				0x1EFD 0xFB000000 0x1EFD 0xFB000000 0x10000000 /* 3B HT Config Space */>;
-+
-+		iointc: interrupt-controller@3ff01400 {
-+			compatible = "loongson,ls3-iointc";
-+			reg = <0 0x3ff01400 0x64>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&cpuintc>;
-+			interrupts = <2>;
-+			};
-+
-+		cpu_uart0: serial@1fe001e0 {
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1fe001e0 0x8>;
-+			clock-frequency = <33000000>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&iointc>;
-+			no-loopback-test;
-+		};
-+
-+		cpu_uart1: serial@1fe001e8 {
-+			status = "disabled";
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1fe001e8 0x8>;
-+			clock-frequency = <33000000>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&iointc>;
-+			no-loopback-test;
-+		};
-+
-+		htintc: interrupt-controller@0x1EFDFB000080 {
-+			compatible = "loongson,ls3-htintc";
-+			reg = <0x1EFD 0xFB000080 0x100>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&iointc>;
-+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+						<25 IRQ_TYPE_LEVEL_HIGH>,
-+						<26 IRQ_TYPE_LEVEL_HIGH>,
-+						<27 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3b_780e_1way.dts b/arch/mips/boot/dts/loongson/ls3b_780e_1way.dts
-new file mode 100644
-index 000000000000..9b73e0e49408
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3b_780e_1way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464.dtsi"
-+#include "ls3b-package.dtsi"
-+#include "ls3-2nodes.dtsi" /* Yes, ls3b have 2 nodes per way */
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3b-780e-1way";
-+};
-diff --git a/arch/mips/boot/dts/loongson/ls3b_780e_2way.dts b/arch/mips/boot/dts/loongson/ls3b_780e_2way.dts
-new file mode 100644
-index 000000000000..6090de8a32d3
---- /dev/null
-+++ b/arch/mips/boot/dts/loongson/ls3b_780e_2way.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include "ls3-cpus.dtsi"
-+#include "ls3-gs464.dtsi"
-+#include "ls3b-package.dtsi"
-+#include "ls3-4nodes.dtsi" /* Yes, ls3b have 2 nodes per way */
-+#include "ls3-rs780e-pch.dtsi"
-+
-+/ {
-+    compatible = "loongson,ls3b-780e-2way";
-+};
--- 
-2.22.0
+It seems to me setting the IPA per vcpu throught the VCPU device would
+avoid a lot of these issues.  See
+Documentation/virt/kvm/devices/vcpu.txt.
 
+
+Thanks,
+
+    Christoffer
+
+> +
+> +    struct kvm_device_attr st_base = {
+> +            .group = KVM_DEV_ARM_PV_TIME_PADDR,
+> +            .attr = KVM_DEV_ARM_PV_TIME_ST,
+> +            .addr = (u64)&region
+> +    };
+> +
+> +    ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &st_base);
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> kvmarm mailing list
+> kvmarm@lists.cs.columbia.edu
+> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
