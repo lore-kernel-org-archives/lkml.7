@@ -2,91 +2,194 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F30C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC92C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C79B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38234206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfH0Oml (ORCPT
+        id S1729977AbfH0OnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:42:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43993 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfH0Omk (ORCPT
+        Tue, 27 Aug 2019 10:43:00 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45869 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfH0Om7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:42:40 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i2cfc-0000BW-0E; Tue, 27 Aug 2019 16:42:04 +0200
-Date:   Tue, 27 Aug 2019 16:42:02 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-cc:     linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-In-Reply-To: <20190827085344.30799-2-ming.lei@redhat.com>
-Message-ID: <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
-References: <20190827085344.30799-1-ming.lei@redhat.com> <20190827085344.30799-2-ming.lei@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 27 Aug 2019 10:42:59 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CEF00C0003;
+        Tue, 27 Aug 2019 14:42:50 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 16:44:21 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: Re: [PATCH v3 13/14] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+Message-ID: <20190827144421.vbcoizfjxj5ashv2@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-14-jacopo+renesas@jmondi.org>
+ <20190827000017.GB5274@pendragon.ideasonboard.com>
+ <20190827001927.GA5926@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3m3cb2q7h77rk35u"
+Content-Disposition: inline
+In-Reply-To: <20190827001927.GA5926@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019, Ming Lei wrote:
-> +/*
-> + * Update average irq interval with the Exponential Weighted Moving
-> + * Average(EWMA)
-> + */
-> +static void irq_update_interval(void)
-> +{
-> +#define IRQ_INTERVAL_EWMA_WEIGHT	128
-> +#define IRQ_INTERVAL_EWMA_PREV_FACTOR	127
-> +#define IRQ_INTERVAL_EWMA_CURR_FACTOR	(IRQ_INTERVAL_EWMA_WEIGHT - \
-> +		IRQ_INTERVAL_EWMA_PREV_FACTOR)
 
-Please do not stick defines into a function body. That's horrible.
+--3m3cb2q7h77rk35u
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> +
-> +	int cpu = raw_smp_processor_id();
-> +	struct irq_interval *inter = per_cpu_ptr(&avg_irq_interval, cpu);
-> +	u64 delta = sched_clock_cpu(cpu) - inter->last_irq_end;
+HI Laurent,
 
-Why are you doing that raw_smp_processor_id() dance? The call site has
-interrupts and preemption disabled.
+On Tue, Aug 27, 2019 at 03:19:27AM +0300, Laurent Pinchart wrote:
+> On Tue, Aug 27, 2019 at 03:00:17AM +0300, Laurent Pinchart wrote:
+> > Hi Jacopo,
+> >
+> > Thank you for the patch.
+> >
+> > On Sun, Aug 25, 2019 at 03:51:53PM +0200, Jacopo Mondi wrote:
+> > > Update CMM settings at in the atomic commit tail helper method.
+> > >
+> > > The CMM is updated with new gamma values provided to the driver
+> > > in the GAMMA_LUT blob property.
+> > >
+> > > Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
+> > >  1 file changed, 35 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > > index 61ca1d3c379a..047fdb982a11 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > > @@ -22,6 +22,7 @@
+> > >  #include <linux/of_platform.h>
+> > >  #include <linux/wait.h>
+> > >
+> > > +#include "rcar_cmm.h"
+> > >  #include "rcar_du_crtc.h"
+> > >  #include "rcar_du_drv.h"
+> > >  #include "rcar_du_encoder.h"
+> > > @@ -368,6 +369,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+> > >   * Atomic Check and Update
+> > >   */
+> > >
+> > > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> > > +					     struct drm_crtc_state *old_state)
+> > > +{
+> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > > +	struct rcar_cmm_config cmm_config = {};
+> > > +
+> > > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> > > +		return;
+> > > +
+> > > +	if (!crtc->state->gamma_lut) {
+> > > +		cmm_config.lut.enable = false;
+> > > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > > +
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	cmm_config.lut.enable = true;
+> > > +	cmm_config.lut.table = (struct drm_color_lut *)
+> > > +			       crtc->state->gamma_lut->data;
+> > > +
+> > > +	/* Set LUT table size to 0 if entries should not be updated. */
+> > > +	if (!old_state->gamma_lut ||
+> > > +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
+> > > +		cmm_config.lut.size = crtc->state->gamma_lut->length
+> > > +				    / sizeof(cmm_config.lut.table[0]);
+> >
+> > It has just occurred to me that the hardware only support LUTs of
 
-Also how is that supposed to work when sched_clock is jiffies based?
+Where did you find this strict requirement ? I have tried programming
+less than 256 entries in the 1-D LUT table, and it seems to me things
+are working fine (from a visual inspection of the output image, I
+don't see much differences from when I program the full table, maybe
+that's an indication something is bad?)
 
-> +	inter->avg = (inter->avg * IRQ_INTERVAL_EWMA_PREV_FACTOR +
-> +		delta * IRQ_INTERVAL_EWMA_CURR_FACTOR) /
-> +		IRQ_INTERVAL_EWMA_WEIGHT;
+Thanks
+   j
+> > exactly 256 entries. Should we remove cmm_config.lut.size (simplifying
+> > the code in the CMM driver), and add a check to the CRTC .atomic_check()
+> > handler to reject invalid LUTs ? Sorry for not having caught this
+> > earlier.
+>
+> Just an additional comment, if we drop the size field, then the
+> cmm_config.lut.table pointer should be set to NULL when the LUT contents
+> don't need to be updated.
+>
+> > > +	else
+> > > +		cmm_config.lut.size = 0;
+> > > +
+> > > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > > +}
+> > > +
+> > >  static int rcar_du_atomic_check(struct drm_device *dev,
+> > >  				struct drm_atomic_state *state)
+> > >  {
+> > > @@ -410,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+> > >  			rcdu->dpad1_source = rcrtc->index;
+> > >  	}
+> > >
+> > > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> > > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
+> > > +
+> > >  	/* Apply the atomic update. */
+> > >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> > >  	drm_atomic_helper_commit_planes(dev, old_state,
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
-We definitely are not going to have a 64bit multiplication and division on
-every interrupt. Asided of that this breaks 32bit builds all over the place.
+--3m3cb2q7h77rk35u
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-	tglx
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1lQcUACgkQcjQGjxah
+VjzMqRAAvjI1dIl75COJM8s3AwAk9V/Sl1o3l0ttHp1a6JrSakhJCJidsuH29+GC
+XbkCLizR1XSBa2yrfWyAPtFlltJjO35+iypOc73L7OI9tBFyIar7dsRDeCzQ853N
+U26ToA5f9JCvHHAMyc6NJzzqWpp1QkkT2GPJmxavvyvhi0k4zHRvNMhkKmUfq/XS
+vGGV/3q96JTPnHy+loaMRiasMhwt7Ow2SwTgjLlvwQy7v+bFxqXfPGTp+1ovUVxg
+6FUccyq3e2CWH/sL2hcTomIUj4efvnhI5rHZ/pmayxmi++TeUPiZ+qQDZfGVU1hQ
+9R6kUWBgZahFStAeqU4k3Hum4xklB77oeKeB9ndV5IgHzVE+5mpvdQMTYV4bkltT
+KKkleHPtb8CH2Fqm+cu1Odake+iXOWKmjWtsVyAe81GCt80DjdzE01IlPnuuqxP4
+aLS5Q1SAOLN1Z7EiBCU62JyBVB2vl6teH42yD8Y48ctU+0wtLuQ6tS1J8xVAdiQ0
+SdB+gFIHa1skyA4KVR8DxOkaucO2ldAhHLSj0pLKKeR29Ojp9HjfmpJpb/Z+cFYA
+Px2v0e4l/HGXEAvNEr2Glrss6a/Znz4qledwHJBYNDTgp9WqFnD5+1dDWJK0dzOJ
+mS6b+uN5iNbHTQ1TSDDDkAxryETL+mUDPIN1Gnxfq5H5X+NTo08=
+=RTB1
+-----END PGP SIGNATURE-----
 
-
-
-
+--3m3cb2q7h77rk35u--
