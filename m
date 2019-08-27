@@ -2,155 +2,115 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F050C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2935DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574902077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LSEXvsMX"
+	by mail.kernel.org (Postfix) with ESMTP id 06B43206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfH0NI5 (ORCPT
+        id S1728030AbfH0NKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:08:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45188 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbfH0NI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:08:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so11786188plr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fLKzn2mA80Hl5wtgJKSE5GefgidMmtcVKTEdAzrb1ys=;
-        b=LSEXvsMXS1osnScXKbxTi3fKBv18wI+PDW4Nvq2+kpZ3c9bx+EpsaBZrkNHCXomYC2
-         Oe+FabRp5243tsTmll1xu7EaOxuiawnzHzCpgy+Zm+DAuhzTdvReeHr3qeARxOrso8SH
-         dEE3JRh/qDZ7MAM8FstRQ5DjpXQ6g5RNi2LBU=
+        Tue, 27 Aug 2019 09:10:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56534 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727784AbfH0NK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:10:29 -0400
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F3DA6C0578F8
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:10:28 +0000 (UTC)
+Received: by mail-pg1-f199.google.com with SMTP id h3so11775929pgc.19
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:10:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fLKzn2mA80Hl5wtgJKSE5GefgidMmtcVKTEdAzrb1ys=;
-        b=efvkmv4gd1xJAUnXHX/YrMfl1BLRZXMZmPKYz5P9n0ZNM1vZxPF8i0TL/avi2Dov28
-         NtxYatArLifAYwwSU0JcacpmoDUH9JDB9EVZtdDQQQPQgPShXGiQWlBA66T3xPXefEh9
-         +91c5NcyHd88Nw+EsBqWqIXEm74TpNGY6Bi4rXNUhqVpf5nczdkh19zv8QGZYWQ+Rcq5
-         d2m/v+mW2p6GLsU8StJ+omG1m0p+xXnXz8XQcHsVGwDV9gvL59Ir42lpOSo003cN7e5v
-         2tIfPf6Ksm4K8jUBcIIvz9MmkZGagMn2scidVu899QOPtHp/K+20TS9UMdGi35elI1J4
-         egqg==
-X-Gm-Message-State: APjAAAUSEdUKUpAWxNWkI2WvWLW4yx9gIqDtytq5rFo5yaEk3YRMlgx1
-        z5foybRdWqkte5YD070CZzgCcg==
-X-Google-Smtp-Source: APXvYqzVB3vgR7JI2pMvsQbXOE2X3fasVmErUkh3HU5QGZ4MSD3bPdstKmA4ZesoUGssLrOqQ+uK4A==
-X-Received: by 2002:a17:902:a706:: with SMTP id w6mr9131523plq.166.1566911335938;
-        Tue, 27 Aug 2019 06:08:55 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 138sm16233198pfw.78.2019.08.27.06.08.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WB5qdqTIX9xVQw8FeHTpQkMeJp+LDnsJufUnItqkzHg=;
+        b=W9kefueFKhnok17yr2PuRt3QxrY3mpTN+CDy1C1resBwq43jLgjrp6hR6DqbNzhD6A
+         +x32AiMurrLs8Nz/Kk1Z1FzqE8SK1e3v6LfMyYuWHsbFLk2pPujuFYHUI+BWjmO5YcEB
+         f6iVob1Q+dRY3Av+T/tQAYRIzVdwAPv2gqc6IAvLCbsN1LHSwr7hJO4j5lgZhPsDo0Vi
+         GD2lrhQIBf7xmGk0ItClWHJvtvfGQaytJM3RoLvbPSmA8y43MZMtvGRau/3t6zNPU5DG
+         Czm+M2eSg+zsCJdIA2+7A6dD3KazkaFNn1CpwQ9syF5OzGotuGDKfZ0UU2PzoFCy9yUl
+         SQ6Q==
+X-Gm-Message-State: APjAAAUSzwawFBpvvG7ghxuM/ZG9dgjbrm2mErp4VSucTdL44CvwHizW
+        aYqO3wZlmEHxE4nTCKO0gaO7/2WbnmxTL1jOQwyBlkl9Ujcr26zTU2wNQZZI0ENQ7QSr2Sj3z+s
+        id02DUfinqdzFuLoDgwuVa8uN
+X-Received: by 2002:a62:82cb:: with SMTP id w194mr25027632pfd.181.1566911428158;
+        Tue, 27 Aug 2019 06:10:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyT2Tx2jarPm3ooBXfwx3j891SdrFGJX1PrAnh/JG2qbesp+yVlka5LV5rjOpYbvkIW1i/ogw==
+X-Received: by 2002:a62:82cb:: with SMTP id w194mr25027592pfd.181.1566911427881;
+        Tue, 27 Aug 2019 06:10:27 -0700 (PDT)
+Received: from xz-x1.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id o67sm24393050pfb.39.2019.08.27.06.10.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 06:08:55 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 09:08:53 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
- indicate involuntary sleep
-Message-ID: <20190827130853.GB132568@google.com>
-References: <20190821231906.4224-1-swood@redhat.com>
- <20190821231906.4224-3-swood@redhat.com>
- <20190823162024.47t7br6ecfclzgkw@linutronix.de>
- <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
- <20190824031014.GB2731@google.com>
- <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
- <20190826162945.GE28441@linux.ibm.com>
- <20190827092333.jp3darw7teyyw67g@linutronix.de>
+        Tue, 27 Aug 2019 06:10:27 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Andrew Jones <drjones@redhat.com>, peterx@redhat.com
+Subject: [PATCH 0/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
+Date:   Tue, 27 Aug 2019 21:10:11 +0800
+Message-Id: <20190827131015.21691-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827092333.jp3darw7teyyw67g@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 11:23:33AM +0200, Sebastian Andrzej Siewior wrote:
-[snip]
-> > However, if this was instead an rcu_read_lock() critical section within
-> > a PREEMPT=y kernel, then if a schedule() occured within stop_one_task(),
-> > RCU would consider that critical section to be preempted.  This means
-> > that any RCU grace period that is blocked by this RCU read-side critical
-> > section would remain blocked until stop_one_cpu() resumed, returned,
-> > and so on until the matching rcu_read_unlock() was reached.  In other
-> > words, RCU would consider that RCU read-side critical section to span
-> > the call to stop_one_cpu() even if stop_one_cpu() invoked schedule().
-> 
-> Isn't that my example from above and what we do in RT? My understanding
-> is that this is the reason why we need BOOST on RT otherwise the RCU
-> critical section could remain blocked for some time.
+The work is based on Thomas's s390 port for dirty_log_test.
 
-Not just for boost, it is needed to block the grace period itself on
-PREEMPT=y. On PREEMPT=y, if rcu_note_context_switch() happens in middle of a
-rcu_read_lock() reader section, then the task is added to a blocked list
-(rcu_preempt_ctxt_queue). Then just after that, the CPU reports a QS state
-(rcu_qs()) as you can see in the PREEMPT=y implementation of
-rcu_note_context_switch(). Even though the CPU has reported a QS, the grace
-period will not end because the preempted (or block as could be in -rt) task
-is still blocking the grace period. This is fundamental to the function of
-Preemptible-RCU where there is the concept of tasks blocking a grace period,
-not just CPUs.
+This series originates from "[PATCH] KVM: selftests: Detect max PA
+width from cpuid" [1] and one of Drew's comments - instead of keeping
+the hackish line to overwrite guest_pa_bits all the time, this series
+introduced the new mode VM_MODE_PXXV48_4K for x86_64 platform.
 
-I think what Paul is trying to explain AIUI (Paul please let me know if I
-missed something):
+The major issue is that even all the x86_64 kvm selftests are
+currently using the guest mode VM_MODE_P52V48_4K, many x86_64 hosts
+are not using 52 bits PA (and in most cases, far less).  If with luck
+we could be having 48 bits hosts, but it's more adhoc (I've observed 3
+x86_64 systems, they are having different PA width of 36, 39, 48).  I
+am not sure whether this is happening to the other archs as well, but
+it probably makes sense to bring the x86_64 tests to the real world on
+always using the correct PA bits.
 
-(1) Anyone calling rcu_note_context_switch() and expecting it to respect
-RCU-readers that are readers as a result of interrupt disabled regions, have
-incorrect expectations. So calling rcu_note_context_switch() has to be done
-carefully.
+A side effect of this series is that it will also fix the crash we've
+encountered on Xeon E3-1220 as mentioned [1] due to the
+differenciation of PA width.
 
-(2) Disabling interrupts is "generally" implied as an RCU-sched flavor
-reader. However, invoking rcu_note_context_switch() from a disabled interrupt
-region is *required* for rcu_note_context_switch() to work correctly.
+With [1], we've observed AMD host issues when with NPT=off.  However a
+funny fact is that after I reworked into this series, the tests can
+instead pass on both NPT=on/off.  It could be that the series changes
+vm->pa_bits or other fields so something was affected.  I didn't dig
+more on that though, considering we should not lose anything.
 
-(3) On PREEMPT=y kernels, invoking rcu_note_context_switch() from an
-interrupt disabled region does not mean that that the task will be added to a
-blocked list (unless it is also in an RCU-preempt reader) so
-rcu_note_context_switch() may immediately report a quiescent state and
-nothing blockings the grace period.
-So callers of rcu_note_context_switch() must be aware of this behavior.
+Any kind of smoke test would be greatly welcomed (especially on s390
+or ARM).  Same to comments.  Thanks,
 
-(4) On PREEMPT=n, unlike PREEMPT=y, there is no blocked list handling and so
-nothing will block the grace period once rcu_note_context_switch() is called.
-So any path calling rcu_note_context_switch() on a PREEMPT=n kernel, in the
-middle of something that is expected to be an RCU reader would be really bad
-from an RCU view point.
+[1] https://lkml.org/lkml/2019/8/26/141
 
-Probably, we should add this all to documentation somewhere.
+Peter Xu (4):
+  KVM: selftests: Move vm type into _vm_create() internally
+  KVM: selftests: Create VM earlier for dirty log test
+  KVM: selftests: Introduce VM_MODE_PXXV48_4K
+  KVM: selftests: Remove duplicate guest mode handling
 
-thanks!
+ tools/testing/selftests/kvm/dirty_log_test.c  | 78 +++++--------------
+ .../testing/selftests/kvm/include/kvm_util.h  | 17 +++-
+ .../selftests/kvm/lib/aarch64/processor.c     |  3 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 77 ++++++++++++++----
+ .../selftests/kvm/lib/x86_64/processor.c      |  8 +-
+ 5 files changed, 107 insertions(+), 76 deletions(-)
 
- - Joel
+-- 
+2.21.0
 
-
-> > On the other hand, within a PREEMPT=n kernel, the call to schedule()
-> > would split even an rcu_read_lock() critical section.  Which is why I
-> > asked earlier if sleeping_lock_inc() and sleeping_lock_dec() are no-ops
-> > in !PREEMPT_RT_BASE kernels.  We would after all want the usual lockdep
-> > complaints in that case.
-> 
-> sleeping_lock_inc() +dec() is only RT specific. It is part of RT's
-> spin_lock() implementation and used by RCU (rcu_note_context_switch())
-> to not complain if invoked within a critical section.
-> 
-> > Does that help, or am I missing the point?
-> > 
-> > 							Thanx, Paul
-> Sebastian
