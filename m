@@ -2,235 +2,157 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2326C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40811C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B923620828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E34206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iq1GBoj5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VcjhuM4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfH0WFR (ORCPT
+        id S1726227AbfH0WHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:05:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39736 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfH0WFR (ORCPT
+        Tue, 27 Aug 2019 18:07:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38500 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfH0WHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:05:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RM3wdI081971;
-        Tue, 27 Aug 2019 22:04:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=C1DvjJcOlwTkvrYi789M/FVZ6QfJfKpylKnh1CXBCMs=;
- b=iq1GBoj5HNQ+Oep2arFhK8Prm5HWYexdXg/ASevKUnAsM53WZpeT8PAq9LyXjBix/1sO
- 0tTnXJgC14scR4bsYTnn/VEBcl4X84cQNGUB6o9q6aSvkF8nE5X1Ex4VrTgA5nK9yD1s
- BuNzEIQam43A/kllrW9sU2xWRlM35RBKwEwgmoWEvUUVMxS5Lnu2Lfb4fiVq/woWMJrI
- qTsZ6gcjRkn9sYjXqdp+JsXwx9VGJCuvL0jcPxnSKhRHivOykwvyAjdKrhz/6ZDWPk/j
- 6k95ARV+6CD4LHyBU19Aa0E8nHy35P3C7ysliw3gBsgTYKBsacs9seMxJUGdpcCvB9lr 2g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2uncu6g21f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 22:04:11 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RM3Mp7157450;
-        Tue, 27 Aug 2019 22:04:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2umhu99rq2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 22:04:10 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7RM3a7J010038;
-        Tue, 27 Aug 2019 22:03:38 GMT
-Received: from [192.168.14.112] (/79.180.242.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Aug 2019 15:03:36 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v2 05/14] KVM: x86: Move #GP injection for VMware into
- x86_emulate_instruction()
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20190827214040.18710-6-sean.j.christopherson@intel.com>
-Date:   Wed, 28 Aug 2019 01:03:31 +0300
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E80FCB06-83D1-41D5-B22D-58A72B4DC5DF@oracle.com>
-References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
- <20190827214040.18710-6-sean.j.christopherson@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9362 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908270207
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9362 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908270207
+        Tue, 27 Aug 2019 18:07:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id o70so281244pfg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 15:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JRsLR75QBbtFPEoo6FTBbqVJvymrGpw03cigQGOg42c=;
+        b=VcjhuM4zuLxMnMNqOpPhcjufeybyAO7mQbdE9srbbULJC5WSlzLbtvM4zmb7bkPF+q
+         vU2M/P4QBSCXXIHzSgdvhP3QQGSFxW9d/5Do01DxO1fUAfWEEW6ix0atxs9YoF1Fw+Kj
+         dW7KPa2RKiujBC7jO+p7FSNpr1kju43tH8Fu1BnWFWolGlKnc4mByPv114s5cr6h7cQJ
+         JIa7HbuqRhwlQ3hsJT8aetDFFmh08uxImpzLrlsGJDjOGrAd4mWuTjsQ7ocJg8iH30QF
+         TQtTDB5GDv6jcPpEJAFtSa2jEGr1n+K2QOOeVEROSqJ16ziIBKc7Bix1CDIQY92HAcRY
+         DTIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JRsLR75QBbtFPEoo6FTBbqVJvymrGpw03cigQGOg42c=;
+        b=FNLgKFfpjpi4FztLdoqTQcn559AKZwGq8a2SAyPEFH34boWQyk8wqi6C9BImnwolxX
+         BD29OaGFL6NR6xBQtOPjKhVnh09owAcinAGEBMypD/F3HT29Kt4bkdEyVRdSb30Eqtd2
+         bHBDyMWb5WmYr4agEjvtUipw9wVbEc0qCaG4pjo/jAdP5ukJk1L9D/zOk5e6uyuUFhmn
+         I6Hh2I2liJ75m/pvdTaRptc4HZQXlRzXG0/HyY/BjMmN1abh5cKX6eW0BgpQdHfB54sA
+         hxVV3QkK94ZUgVJQX75yezhA8YuVtfNPFJeTzX6IvjOYO9fqM/LUmuZRth4wZbTE0Eq2
+         IyaQ==
+X-Gm-Message-State: APjAAAWCMAHDs3pbn2xKjMZmcDQS02st6nCTDTmnslIz/ALluVZzlCT9
+        YKLmAdLEGy2vXl0qoPOfLvLVsA==
+X-Google-Smtp-Source: APXvYqw9HeVUwZAckWW6qXBs8bJo1tCP6q4Gsyeg8AyC5HTnjGnTgFf+uML+YEKWxrxlMACvtMJOIg==
+X-Received: by 2002:a63:7205:: with SMTP id n5mr559549pgc.443.1566943633743;
+        Tue, 27 Aug 2019 15:07:13 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r1sm315183pgv.70.2019.08.27.15.07.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 15:07:13 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 15:07:11 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
+Message-ID: <20190827220711.GK6167@minitux>
+References: <20181024011909.21674-1-s-anna@ti.com>
+ <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com>
+ <20190827051007.GK1263@builder>
+ <8d36d695-dd66-c21f-f49e-f6dc3dbdfc5a@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d36d695-dd66-c21f-f49e-f6dc3dbdfc5a@ti.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 27 Aug 13:25 PDT 2019, Suman Anna wrote:
 
-> On 28 Aug 2019, at 0:40, Sean Christopherson =
-<sean.j.christopherson@intel.com> wrote:
->=20
-> Immediately inject a #GP when VMware emulation fails and return
-> EMULATE_DONE instead of propagating EMULATE_FAIL up the stack.  This
-> helps pave the way for removing EMULATE_FAIL altogether.
->=20
-> Rename EMULTYPE_VMWARE to EMULTYPE_VMWARE_GP to document that the x86
-> emulator is called to handle VMware #GP interception, e.g. why a #GP
-> is injected on emulation failure for EMULTYPE_VMWARE_GP.
->=20
-> Drop EMULTYPE_NO_UD_ON_FAIL as a standalone type.  The "no #UD on =
-fail"
-> is used only in the VMWare case and is obsoleted by having the =
-emulator
-> itself reinject #GP.
->=20
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Hi Bjorn,
+> 
+> On 8/27/19 12:10 AM, Bjorn Andersson wrote:
+> > On Fri 09 Aug 13:25 PDT 2019, Suman Anna wrote:
+> > 
+> >> Hi Bjorn,
+> >>
+> > 
+> > Hi Suman
+> > 
+> >> On 10/23/18 8:19 PM, Suman Anna wrote:
+> >>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
+> >>> printing the vring buffer address. This prints only a hashed
+> >>> pointer even for previliged users. Use "%pK" instead so that
+> >>> the address can be printed during debug using kptr_restrict
+> >>> sysctl.
+> >>
+> >> Seems to have been lost among the patches, can you pick up this trivial
+> >> patch for 5.4? Should apply cleanly on the latest HEAD as well.
+> >>
+> > 
+> > I share Andrew's question regarding what benefit you have from knowing
+> > this value. Should we not just remove the va from the print? Or do you
+> > actually have a use case for it?.
+> 
+> I mainly use it during debug when comparing against kernel_page_tables
+> and vmallocinfo. The pools that we use are not always guaranteed to be
+> from linear memory, and behavior changes when using with CMA or DMA pools.
+> 
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Thanks Suman. It seems to me that there's room for improvement to aid
+this kind of debugging. But your usecase seems reasonable, so I'm
+merging the patch.
 
-> ---
-> arch/x86/include/asm/kvm_host.h |  3 +--
-> arch/x86/kvm/svm.c              | 10 ++--------
-> arch/x86/kvm/vmx/vmx.c          | 10 ++--------
-> arch/x86/kvm/x86.c              | 14 +++++++++-----
-> 4 files changed, 14 insertions(+), 23 deletions(-)
->=20
-> diff --git a/arch/x86/include/asm/kvm_host.h =
-b/arch/x86/include/asm/kvm_host.h
-> index 44a5ce57a905..d1d5b5ca1195 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1318,8 +1318,7 @@ enum emulation_result {
-> #define EMULTYPE_TRAP_UD	    (1 << 1)
-> #define EMULTYPE_SKIP		    (1 << 2)
-> #define EMULTYPE_ALLOW_RETRY	    (1 << 3)
-> -#define EMULTYPE_NO_UD_ON_FAIL	    (1 << 4)
-> -#define EMULTYPE_VMWARE		    (1 << 5)
-> +#define EMULTYPE_VMWARE_GP	    (1 << 5)
-> int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int =
-emulation_type);
-> int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
-> 					void *insn, int insn_len);
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 7242142573d6..c4b72db48bc5 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2768,7 +2768,6 @@ static int gp_interception(struct vcpu_svm *svm)
-> {
-> 	struct kvm_vcpu *vcpu =3D &svm->vcpu;
-> 	u32 error_code =3D svm->vmcb->control.exit_info_1;
-> -	int er;
->=20
-> 	WARN_ON_ONCE(!enable_vmware_backdoor);
->=20
-> @@ -2780,13 +2779,8 @@ static int gp_interception(struct vcpu_svm =
-*svm)
-> 		kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
-> 		return 1;
-> 	}
-> -	er =3D kvm_emulate_instruction(vcpu,
-> -		EMULTYPE_VMWARE | EMULTYPE_NO_UD_ON_FAIL);
-> -	if (er =3D=3D EMULATE_USER_EXIT)
-> -		return 0;
-> -	else if (er !=3D EMULATE_DONE)
-> -		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-> -	return 1;
-> +	return kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE_GP) !=3D
-> +						EMULATE_USER_EXIT;
-> }
->=20
-> static bool is_erratum_383(void)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 8a65e1122376..c6ba452296e3 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4492,7 +4492,6 @@ static int handle_exception_nmi(struct kvm_vcpu =
-*vcpu)
-> 	u32 intr_info, ex_no, error_code;
-> 	unsigned long cr2, rip, dr6;
-> 	u32 vect_info;
-> -	enum emulation_result er;
->=20
-> 	vect_info =3D vmx->idt_vectoring_info;
-> 	intr_info =3D vmx->exit_intr_info;
-> @@ -4519,13 +4518,8 @@ static int handle_exception_nmi(struct kvm_vcpu =
-*vcpu)
-> 			kvm_queue_exception_e(vcpu, GP_VECTOR, =
-error_code);
-> 			return 1;
-> 		}
-> -		er =3D kvm_emulate_instruction(vcpu,
-> -			EMULTYPE_VMWARE | EMULTYPE_NO_UD_ON_FAIL);
-> -		if (er =3D=3D EMULATE_USER_EXIT)
-> -			return 0;
-> -		else if (er !=3D EMULATE_DONE)
-> -			kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-> -		return 1;
-> +		return kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE_GP) =
-!=3D
-> +							=
-EMULATE_USER_EXIT;
-> 	}
->=20
-> 	/*
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fe847f8eb947..228ca71d5b01 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6210,8 +6210,10 @@ static int handle_emulation_failure(struct =
-kvm_vcpu *vcpu, int emulation_type)
-> 	++vcpu->stat.insn_emulation_fail;
-> 	trace_kvm_emulate_insn_failed(vcpu);
->=20
-> -	if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
-> -		return EMULATE_FAIL;
-> +	if (emulation_type & EMULTYPE_VMWARE_GP) {
-> +		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-> +		return EMULATE_DONE;
-> +	}
->=20
-> 	kvm_queue_exception(vcpu, UD_VECTOR);
->=20
-> @@ -6543,9 +6545,11 @@ int x86_emulate_instruction(struct kvm_vcpu =
-*vcpu,
-> 		}
-> 	}
->=20
-> -	if ((emulation_type & EMULTYPE_VMWARE) &&
-> -	    !is_vmware_backdoor_opcode(ctxt))
-> -		return EMULATE_FAIL;
-> +	if ((emulation_type & EMULTYPE_VMWARE_GP) &&
-> +	    !is_vmware_backdoor_opcode(ctxt)) {
-> +		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-> +		return EMULATE_DONE;
-> +	}
->=20
-> 	if (emulation_type & EMULTYPE_SKIP) {
-> 		kvm_rip_write(vcpu, ctxt->_eip);
-> --=20
-> 2.22.0
->=20
+> Note that usage of %pK does not leak the addresses automatically, but
+> atleast enables me to get the values when needed. The changes also bring
+> the usage in rpmsg core in sync with the remoteproc core.
+> 
 
+Sounds like shouldn't have merged them in remoteproc then ;P
+
+Thanks,
+Bjorn
+
+> regards
+> Suman
+> 
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> >> regards
+> >> Suman
+> >>
+> >>>
+> >>> Signed-off-by: Suman Anna <s-anna@ti.com>
+> >>> ---
+> >>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+> >>> index f29dee731026..1345f373a1a0 100644
+> >>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+> >>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+> >>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+> >>>  		goto vqs_del;
+> >>>  	}
+> >>>  
+> >>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
+> >>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
+> >>>  		bufs_va, &vrp->bufs_dma);
+> >>>  
+> >>>  	/* half of the buffers is dedicated for RX */
+> >>>
+> >>
+> 
