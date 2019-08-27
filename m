@@ -2,144 +2,87 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F19FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE5AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5126206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566908436;
-	bh=10BPMi7ogBKEVUWUCp+OlUh6tWIYmElWTtO/pbCLCfE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wGrW7i1zNO0cdc1NAhndZfn4fAp2frpvvwgugF9qeFEDSL/edPkxF0rmW1KbqouUl
-	 OwOQJgwkdYR1Hx+RhuWwVnvCOO//4onnFPt/gtStBYM+CCQ9wBRhJAGS6AbKpt0CkD
-	 ZMjKdohIp8X5f59UnoOE1GDwwx7cvb9UhTeRITi4=
+	by mail.kernel.org (Postfix) with ESMTP id EF361206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfH0MUg (ORCPT
+        id S1729846AbfH0MUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfH0MUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:20:35 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7816206BF;
-        Tue, 27 Aug 2019 12:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566908434;
-        bh=10BPMi7ogBKEVUWUCp+OlUh6tWIYmElWTtO/pbCLCfE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hiSjrNzN9O29H/jZozkaXJ1RY7B2iPUnmPqzXqXAfbEHqvCNs2qwYPYjz+fe0bIVP
-         3OWIUxGwCDw0ICc9roj00pPsDU+tYy6PMcG/TCSw0YwM5ErWb8psm8Fm/gJJGcB7wT
-         Gdyvjxn2TXOQ9wvf0rvh4w1k9UfLYSxEan4/ebTw=
-Received: by mail-qt1-f176.google.com with SMTP id q64so9348813qtd.5;
-        Tue, 27 Aug 2019 05:20:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAXzNhZ+egjyhcIPGnxugc26lJPigKtAR8jh6r9xYli+sf86xObF
-        5Rsx9eMA9EiXMdbzNfqEUK8f8qMr+nFyvoQexQ==
-X-Google-Smtp-Source: APXvYqwMqxGiTa7rYYydtko9BqUul5ihk660b1Rd0cPJHim/fp9+Uq5BxXYH75v80lYawW9Ve2rEL384NDhcnbTwKFM=
-X-Received: by 2002:a05:6214:10e1:: with SMTP id q1mr19735401qvt.148.1566908433096;
- Tue, 27 Aug 2019 05:20:33 -0700 (PDT)
+        Tue, 27 Aug 2019 08:20:42 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46287 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfH0MUl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:20:41 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so18572083wru.13;
+        Tue, 27 Aug 2019 05:20:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9YiLMzN5FRFc66UBSg4I7hR0hdxNL+dhq+vTlwPS1+A=;
+        b=ZOGza1JY5t1oNUxdSuoZYqgcwlzDE4WglTtIViYZOobeMFj/KqDbFyFuO7VbUbIfCM
+         UJTw0BJZHR5nRgO+47lx3YLoZLHq3qMRjG0R7+Ie5bazei2YxSvGx2nUO5lb5Xk28XWj
+         uUKDQMaz6iqJ3lbUfb/FYOtBVny8mhaDIjuFGTTbDC4ghKdgwEq0Oi58rZmjIN0xo28X
+         k6VAJlSd8fFd4Sg1oLkkAINg6xYnSVz5eszxWa3Aa/3mjO9TuK862A8yEKs9W0SX+TvV
+         rt2lgxAo5ByZhienwXkSh56Vd0bjJ0YQWnSo9qzQEIYOaCGzypEEDffG4+m+UYBsjOPt
+         mZyQ==
+X-Gm-Message-State: APjAAAVENYceb8ndoBIXsq8a411ADcR8pHLCxhSc/o3HyKGep3mr77Ei
+        XcFQxPLZ/O0wSebSc53er4c=
+X-Google-Smtp-Source: APXvYqwO7vn03LTFpqQ9ngvvTwiMldgPKHecOUTmCBtEmSRe0vl9sAmbUqJBgQ8IAe9J30XjSgMIIQ==
+X-Received: by 2002:adf:e5d1:: with SMTP id a17mr4034066wrn.118.1566908439451;
+        Tue, 27 Aug 2019 05:20:39 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id f197sm8086254wme.22.2019.08.27.05.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 05:20:38 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] modpost: add NOFAIL to strndup
+Date:   Tue, 27 Aug 2019 15:20:23 +0300
+Message-Id: <20190827122023.15086-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org> <20190822233759.12663-4-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20190822233759.12663-4-srinivas.kandagatla@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 27 Aug 2019 07:20:21 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLjgOy3TKrpuNYYkRxy-Ln+3FOoKVE9KweS0ycTxriWMQ@mail.gmail.com>
-Message-ID: <CAL_JsqLjgOy3TKrpuNYYkRxy-Ln+3FOoKVE9KweS0ycTxriWMQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 3/4] dt-bindings: ASoC: Add WSA881x bindings
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Vinod <vkoul@kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 6:38 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
-> Amplifier. This Amplifier also has a simple thermal sensor for
-> over temperature and speaker protection.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../bindings/sound/qcom,wsa881x.yaml          | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
->
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-> new file mode 100644
-> index 000000000000..ad718d75c660
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +allOf:
-> +  - $ref: "soundwire-controller.yaml#"
+Add NOFAIL check for the strndup call, because the function
+allocates memory and can return NULL. All calls to strdup in
+modpost are checked with NOFAIL.
 
-This is not the controller, so this should not be included here. You
-should get lots of warnings from doing so. You did run 'make
-dt_binding_check', right?
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ scripts/mod/modpost.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +
-> +properties:
-> +  compatible:
-> +    const: sdw10217201000
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  pd-gpios:
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index f277e116e0eb..0255538528fe 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -795,9 +795,9 @@ static int match(const char *sym, const char * const pat[])
+ 
+ 		/* "*foo*" */
+ 		if (*p == '*' && *endp == '*') {
+-			char *here, *bare = strndup(p + 1, strlen(p) - 2);
++			char *bare = NOFAIL(strndup(p + 1, strlen(p) - 2));
++			char *here = strstr(sym, bare);
+ 
+-			here = strstr(sym, bare);
+ 			free(bare);
+ 			if (here != NULL)
+ 				return 1;
+-- 
+2.21.0
 
-powerdown-gpios is the standard name.
-
-> +    description: GPIO spec for Powerdown/Shutdown line to use
-> +    maxItems: 1
-> +
-> +  "#thermal-sensor-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - pd-gpios
-> +  - #thermal-sensor-cells
-> +
-> +examples:
-> +  - |
-> +    efuse@1c23800 {
-> +        compatible = "allwinner,sun4i-a10-sid";
-
-Huh?
-
-> +        reg = <0x01c23800 0x10>;
-> +        pd-gpios = <&wcdpinctrl 2 0>;
-> +        #thermal-sensor-cells = <0>;
-> +    };
-> +
-> +...
-> --
-> 2.21.0
->
