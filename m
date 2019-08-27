@@ -2,28 +2,28 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D834CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AA7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA283206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D13206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfH0Jb0 (ORCPT
+        id S1729933AbfH0Jbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:31:26 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:35609 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfH0JbY (ORCPT
+        Tue, 27 Aug 2019 05:31:31 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:11957 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729852AbfH0Jb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:31:24 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+        Tue, 27 Aug 2019 05:31:29 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   Razvan.Stefanescu@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Razvan.Stefanescu@microchip.com";
   x-sender="Razvan.Stefanescu@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   a:smtpout.microchip.com a:mx1.microchip.iphmx.com
   a:mx2.microchip.iphmx.com include:servers.mcsv.net
   include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Razvan.Stefanescu@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Razvan.Stefanescu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: itwsSQAO8myMWy72rN8KrHwOiLT+tNQSYMeGzKdvqrPbclflAbU17zQ3Z5vxkjqznjjiDPbFBv
- p+09V28tnpS0LjHouTaD49PmBkufMZ8THlxhwTwrryMrNn2omV66sptC147hDdwYoEAWRmLEtK
- GkE3U75ozMeAuz7fxDhWMHLJdlMlzR6iS8AsrqkKJ/Eg0mT6U+b8k443F1li83ELxSj0KYxjKl
- De8V4FJNOfrhDTHI8EFDLhSrasyRG0h2B2an3uiJYi2dRe6XX3CNuSameZvVfQeutgqZotKJSg
- Mo4=
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Razvan.Stefanescu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: IoZAp5hx2bx5mAEHwX5AeKcwVJJ2UJ80Kf706x25uffIrOfPzEeGDZ0q8aSOU897343Q0IEYmY
+ RTWQR6DUvQYLKvYDasGM6uPA7zP0wNtQyOWZiZ4JGWWVQwegLqsLYw/5V8V2Phha+STbPMbTgY
+ L+aY+YmV8aTRC4ApxS3k/zzDsAaXKONjxmRoR7qRYe1+6/8cgWGILhy/Fe9OeUPsKrcNkvqsLC
+ o/hivPk8hejORfh6TV7LUZFkH2x2oymY52UxlhsoEi4Ni8Tt/CmgHv3IFjriiKBeAM/sRVDH3V
+ Jm4=
 X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
-   d="scan'208";a="45737829"
+   d="scan'208";a="46731633"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Aug 2019 02:31:23 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Aug 2019 02:31:28 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 27 Aug 2019 02:31:22 -0700
+ 15.1.1713.5; Tue, 27 Aug 2019 02:31:27 -0700
 Received: from rob-ult-m50855.microchip.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 27 Aug 2019 02:31:21 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 27 Aug 2019 02:31:26 -0700
 From:   Razvan Stefanescu <razvan.stefanescu@microchip.com>
 To:     Woojung Huh <woojung.huh@microchip.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
@@ -64,9 +64,9 @@ To:     Woojung Huh <woojung.huh@microchip.com>,
         "David S . Miller" <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Razvan Stefanescu" <razvan.stefanescu@microchip.com>
-Subject: [PATCH 1/4] dt-bindings: net: dsa: document additional Microchip KSZ8563 switch
-Date:   Tue, 27 Aug 2019 12:31:07 +0300
-Message-ID: <20190827093110.14957-2-razvan.stefanescu@microchip.com>
+Subject: [PATCH 3/4] net: dsa: microchip: fix interrupt mask
+Date:   Tue, 27 Aug 2019 12:31:09 +0300
+Message-ID: <20190827093110.14957-4-razvan.stefanescu@microchip.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190827093110.14957-1-razvan.stefanescu@microchip.com>
 References: <20190827093110.14957-1-razvan.stefanescu@microchip.com>
@@ -78,25 +78,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is a 3-Port 10/100 Ethernet Switch with 1588v2 PTP.
+Global Interrupt Mask Register comprises of Lookup Engine (LUE) Interrupt
+Mask (bit 31) and GPIO Pin Output Trigger and Timestamp Unit Interrupt
+Mask (bit 29).
+
+This corrects LUE bit.
 
 Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 ---
- Documentation/devicetree/bindings/net/dsa/ksz.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/microchip/ksz9477_reg.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-index 5e8429b6f9ca..95e91e84151c 100644
---- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-@@ -15,6 +15,7 @@ Required properties:
-   - "microchip,ksz8565"
-   - "microchip,ksz9893"
-   - "microchip,ksz9563"
-+  - "microchip,ksz8563"
+diff --git a/drivers/net/dsa/microchip/ksz9477_reg.h b/drivers/net/dsa/microchip/ksz9477_reg.h
+index 2938e892b631..f3949d7b9bbd 100644
+--- a/drivers/net/dsa/microchip/ksz9477_reg.h
++++ b/drivers/net/dsa/microchip/ksz9477_reg.h
+@@ -76,7 +76,7 @@
+ #define TRIG_TS_INT			BIT(30)
+ #define APB_TIMEOUT_INT			BIT(29)
  
- Optional properties:
+-#define SWITCH_INT_MASK			(TRIG_TS_INT | APB_TIMEOUT_INT)
++#define SWITCH_INT_MASK			(LUE_INT | TRIG_TS_INT)
  
+ #define REG_SW_PORT_INT_STATUS__4	0x0018
+ #define REG_SW_PORT_INT_MASK__4		0x001C
 -- 
 2.20.1
 
