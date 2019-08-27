@@ -2,96 +2,91 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F8AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CFCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE2A21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42C621881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566922821;
+	bh=ibK1qVIas9BIT+LYZA3pLPV76QUimGx3itHLUJ0J+po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bwkMvTR5zHINHm1mLuSNgvBlcvRKRi63Mati1pLkAWJWB70OcrAx4mOV8xdCMxpdD
+	 S/yL9JiKEEdbaVIBkGO93rhxDAvtsjSkQzX94QUygT3IB1apBH8CW9L5WTB1scXm9f
+	 74/iPDCk/irE9RxARDeKt6NA76/9IE83S+YwdUXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfH0QTr (ORCPT
+        id S1730065AbfH0QUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:19:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44288 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfH0QTq (ORCPT
+        Tue, 27 Aug 2019 12:20:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44641 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfH0QUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:19:46 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i2eBS-0002Hz-3S; Tue, 27 Aug 2019 18:19:02 +0200
-Date:   Tue, 27 Aug 2019 18:19:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-In-Reply-To: <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1908271817180.1939@nanos.tec.linutronix.de>
-References: <20190827085344.30799-1-ming.lei@redhat.com> <20190827085344.30799-2-ming.lei@redhat.com> <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 27 Aug 2019 12:20:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id w4so19188436ote.11;
+        Tue, 27 Aug 2019 09:20:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=03y+6O+pVdA0iRm3AU9FQ8YTQS7jTiqNnHaIUG6Eo4I=;
+        b=Sw9/jXIoAqZpm2F0NqDym0bH1i070k6y8tAwOnStGwKSeDsC+lPtbPiDSfoqykrTnp
+         zak37mpWTWkJgSw3FfjrmluMeOXjKQbZRkHEr8cttH8QiLZWb4RFpRGd6qFNFfPpiycH
+         orVlFTDq5Fsh6TAe9+nbumon1sudw5DNv2CR+7sfW7jn87ji1AmyWl2F/tB5USuNM9ma
+         QwD8ntE3P70+wf7qj3ksemT3w2vcBbUPGbGzKHbCZ8JcrObOeJkqz/IwUB5plTwS5E4r
+         WPqUj4joBSWP+75A3hODaPQybF704ltqFOERwGXA9A6hJXRQ+ubt1KdEEks7DVnx91O8
+         k+Yw==
+X-Gm-Message-State: APjAAAXCKCh4fRR200sJWDjG6reTC2yGsZ8rQ1zXArnTy2LlyLo7HN6L
+        x+3m3s+PgsXV4pB6N8F1q/t8nVg=
+X-Google-Smtp-Source: APXvYqy6L2w6poPxiOiA1JXS3qP3upveE43AeK0ekRiMmhT+yWG4TzGjK2lym2Xula+v5WXsCL41wQ==
+X-Received: by 2002:a9d:77cc:: with SMTP id w12mr13373051otl.207.1566922819429;
+        Tue, 27 Aug 2019 09:20:19 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f60sm5991174otf.18.2019.08.27.09.20.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 09:20:18 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 11:20:18 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        u.kleine-koenig@pengutronix.de, mark.rutland@arm.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        vincent.guittot@linaro.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
+ documentation
+Message-ID: <20190827162018.GA11135@bogus>
+References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019, Thomas Gleixner wrote:
-> On Tue, 27 Aug 2019, Ming Lei wrote:
-> > +/*
-> > + * Update average irq interval with the Exponential Weighted Moving
-> > + * Average(EWMA)
-> > + */
-> > +static void irq_update_interval(void)
-> > +{
-> > +#define IRQ_INTERVAL_EWMA_WEIGHT	128
-> > +#define IRQ_INTERVAL_EWMA_PREV_FACTOR	127
-> > +#define IRQ_INTERVAL_EWMA_CURR_FACTOR	(IRQ_INTERVAL_EWMA_WEIGHT - \
-> > +		IRQ_INTERVAL_EWMA_PREV_FACTOR)
+On Wed, 14 Aug 2019 20:46:10 +0800, Baolin Wang wrote:
+> Add Spreadtrum PWM controller documentation.
 > 
-> Please do not stick defines into a function body. That's horrible.
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes from v2:
+>  - Fix some typos.
+>  - Move assigned-clocks to be optional.
 > 
-> > +
-> > +	int cpu = raw_smp_processor_id();
-> > +	struct irq_interval *inter = per_cpu_ptr(&avg_irq_interval, cpu);
-> > +	u64 delta = sched_clock_cpu(cpu) - inter->last_irq_end;
+> Changes from v1:
+>  - Use assigned-clock-parents and assigned-clocks to set PWM clock parent.
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-sprd.txt |   40 ++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.txt
 > 
-> Why are you doing that raw_smp_processor_id() dance? The call site has
-> interrupts and preemption disabled.
-> 
-> Also how is that supposed to work when sched_clock is jiffies based?
-> 
-> > +	inter->avg = (inter->avg * IRQ_INTERVAL_EWMA_PREV_FACTOR +
-> > +		delta * IRQ_INTERVAL_EWMA_CURR_FACTOR) /
-> > +		IRQ_INTERVAL_EWMA_WEIGHT;
-> 
-> We definitely are not going to have a 64bit multiplication and division on
-> every interrupt. Asided of that this breaks 32bit builds all over the place.
 
-That said, we already have infrastructure for something like this in the
-core interrupt code which is optimized to be lightweight in the fast path.
-
-kernel/irq/timings.c
-
-Talk to Daniel Lezcano (Cc'ed) how you can (ab)use that.
-
-Thanks,
-
-	tglx
+Reviewed-by: Rob Herring <robh@kernel.org>
