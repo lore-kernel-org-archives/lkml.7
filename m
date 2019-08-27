@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572EDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31246C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B26C2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0597A2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892939;
-	bh=9UdBi8Lm4fpynGT55m3i75gNhsuv8d7zzSNBc9a+6Rk=;
+	s=default; t=1566892944;
+	bh=6abIy+WU9xfUE0ZIkiK0oS8B9mSv4+iueYbcm3+7bpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w840j10s9HuTTQOYOgkn8iQ8WS47wi+5Y6szzUAQjyXbA5YIp9spfwrHjdcJ+WbzV
-	 7SGzBM/SSNvLh2nup9M4/Ovs+a3zc2xsHyfYGP1Auzt5CqhelX8WgB0EZdeL/Ww19T
-	 ONzPVm/1DShO1pdiTGKCQlVKGInijNoAioTaP1Ek=
+	b=k2dRRvlo8PIZZwoEOXLTe9tQ6mxacEmoEZtkD8yG8KHBPkFC6nKLL9LNICO1xp6dU
+	 08O0EPqyjntfTFNBL1+3bBbxv4j6on2RQMQnNT+8Kt9yfXsGadmtj3kzq694N7qYE/
+	 3Th1O6ou0ldWmxLXSyTJmM1ByW4RbxTk2PKJCszQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbfH0ICS (ORCPT
+        id S1731949AbfH0ICX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731424AbfH0IB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:01:58 -0400
+        id S1731863AbfH0ICE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 457A1206BA;
-        Tue, 27 Aug 2019 08:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3FCF20828;
+        Tue, 27 Aug 2019 08:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892917;
-        bh=9UdBi8Lm4fpynGT55m3i75gNhsuv8d7zzSNBc9a+6Rk=;
+        s=default; t=1566892923;
+        bh=6abIy+WU9xfUE0ZIkiK0oS8B9mSv4+iueYbcm3+7bpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCvzcwqMh40tEnOmOaSyu1AKTcuO6lPwn2w1AUEPRlBRJ4v07PK2zXjg/uggpHqAi
-         a2s/9xP0XByc8Zs+PvhC+nRAELQvC8jadvq0dy+XK3jbdpJm9DHOiDgVtElWlK5V+w
-         8NYC0JMm/YhZaG8YKDbAeDP4UQVhomoBFJe63oRY=
+        b=PR58BmR/Ex4ZfQ8ypHTCczaQpRo4OjH/08W+IKIynmmMRgXXzL87UybUzXUf3z47L
+         OMP6bpV2demUWMAa0x1h9hP1+KOQxa8y00AVfurQfwpwKLoiqEDJy5w44bEncL5eL9
+         W5X9HQxuKTUj7PUU2JgSXvTa+Z6XWVuvHjmXvYKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 057/162] iwlwifi: dbg_ini: move iwl_dbg_tlv_load_bin out of debug override ifdef
-Date:   Tue, 27 Aug 2019 09:49:45 +0200
-Message-Id: <20190827072740.174362408@linuxfoundation.org>
+Subject: [PATCH 5.2 018/162] ASoC: dapm: Fix handling of custom_stop_condition on DAPM graph walks
+Date:   Tue, 27 Aug 2019 09:49:06 +0200
+Message-Id: <20190827072738.963720616@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -62,32 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 072b30642f90b01d139131ec7bf763778a3a3f41 ]
+[ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
 
-ini debug mode should work even if debug override is not defined.
+DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
+list of the widgets connected to a specific front end DAI so it
+can search through this list for available back end DAIs. The
+custom_stop_condition was added to is_connected_ep to facilitate this
+list not containing more widgets than is necessary. Doing so both
+speeds up the DPCM handling as less widgets need to be searched and
+avoids issues with CODEC to CODEC links as these would be confused
+with back end DAIs if they appeared in the list of available widgets.
 
-Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-Fixes: 68f6f492c4fa ("iwlwifi: trans: support loading ini TLVs from external file")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+custom_stop_condition was implemented by aborting the graph walk
+when the condition is triggered, however there is an issue with this
+approach. Whilst walking the graph is_connected_ep should update the
+endpoints cache on each widget, if the walk is aborted the number
+of attached end points is unknown for that sub-graph. When the stop
+condition triggered, the original patch ignored the triggering widget
+and returned zero connected end points; a later patch updated this
+to set the triggering widget's cache to 1 and return that. Both of
+these approaches result in inaccurate values being stored in various
+end point caches as the values propagate back through the graph,
+which can result in later issues with widgets powering/not powering
+unexpectedly.
+
+As the original goal was to reduce the size of the widget list passed
+to the DPCM code, the simplest solution is to limit the functionality
+of the custom_stop_condition to the widget list. This means the rest
+of the graph will still be processed resulting in correct end point
+caches, but only widgets up to the stop condition will be added to the
+returned widget list.
+
+Fixes: 6742064aef7f ("ASoC: dapm: support user-defined stop condition in dai_get_connected_widgets")
+Fixes: 5fdd022c2026 ("ASoC: dpcm: play nice with CODEC<->CODEC links")
+Fixes: 09464974eaa8 ("ASoC: dapm: Fix to return correct path list in is_connected_ep.")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190718084333.15598-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-dapm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-index fba242284507b..efd4bf04d0162 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1627,6 +1627,8 @@ struct iwl_drv *iwl_drv_start(struct iwl_trans *trans)
- 	init_completion(&drv->request_firmware_complete);
- 	INIT_LIST_HEAD(&drv->list);
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index c91df5a9c8406..835ce1ff188d9 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -1156,8 +1156,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+ 		list_add_tail(&widget->work_list, list);
  
-+	iwl_load_fw_dbg_tlv(drv->trans->dev, drv->trans);
-+
- #ifdef CONFIG_IWLWIFI_DEBUGFS
- 	/* Create the device debugfs entries. */
- 	drv->dbgfs_drv = debugfs_create_dir(dev_name(trans->dev),
+ 	if (custom_stop_condition && custom_stop_condition(widget, dir)) {
+-		widget->endpoints[dir] = 1;
+-		return widget->endpoints[dir];
++		list = NULL;
++		custom_stop_condition = NULL;
+ 	}
+ 
+ 	if ((widget->is_ep & SND_SOC_DAPM_DIR_TO_EP(dir)) && widget->connected) {
+@@ -1194,8 +1194,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
+  *
+  * Optionally, can be supplied with a function acting as a stopping condition.
+  * This function takes the dapm widget currently being examined and the walk
+- * direction as an arguments, it should return true if the walk should be
+- * stopped and false otherwise.
++ * direction as an arguments, it should return true if widgets from that point
++ * in the graph onwards should not be added to the widget list.
+  */
+ static int is_connected_output_ep(struct snd_soc_dapm_widget *widget,
+ 	struct list_head *list,
 -- 
 2.20.1
 
