@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49603C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE98C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD05206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09CA206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892579;
-	bh=i5Jgkpqf/Im+tbDi/BtnbwcDMMNHSPeIWGCo8ndierY=;
+	s=default; t=1566892583;
+	bh=Nk/rjZVOpy6/x/zI+r3iu7QrtVVzTdoyk3cX/tQ90/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ld9PX8V2t2HG8MZLLGvIzUkR1DSs9r0JHrm7y1f8IN/AXxWaYv2Xu/fGOJfGXjSyC
-	 1cLoyhtbgQPO/dNDkZ3enAbWiIxFgMsTdptouRpJq08+nq1GC+cyXRhqZPF/Bylp5D
-	 0JRfwAXnkzt0IGhqXpUR/RrSfAUvezVS08HQXvBE=
+	b=foS/XNMGo4OJPfwTHDvjE1A5d7sfuC4WDu3NMqi3murXLxpJnUUOO7ryZaJrFlCTl
+	 k/hbclN5gvPbUZOIzKfVUgSNNl0itxcJb7Wo7kHfXeKnXTW7LTV1CLmhHj7OIAcfbI
+	 ZZ2LPGCU9bgB5/JsZSvdQpo67r6cZzu/T/uBJEgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbfH0H4S (ORCPT
+        id S1730578AbfH0H4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:56:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbfH0H4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:17 -0400
+        id S1729988AbfH0H4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C78B206BA;
-        Tue, 27 Aug 2019 07:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27DEB206BA;
+        Tue, 27 Aug 2019 07:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892575;
-        bh=i5Jgkpqf/Im+tbDi/BtnbwcDMMNHSPeIWGCo8ndierY=;
+        s=default; t=1566892578;
+        bh=Nk/rjZVOpy6/x/zI+r3iu7QrtVVzTdoyk3cX/tQ90/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVQNB7Co3t951hpU/HvM96AjJNnY/sit4ZriAN5q978uLUVvIi9K9g3kXKYIWoNTC
-         JaRE7yr4/2WG2A4Q61hCokfki8iYZVnN7QV3Dg00uXbAoOzp8HTGMK49Clb2zZkQR4
-         wWVs5H7RHfkX6/brxODoNkN/WwlcONti8kdInQE0=
+        b=v2LVgwEM0qwNpFgaazHuAIy9gPfugDEdIVl1H7jP6MsmlPwWXlhHI/iee97Z0Miy1
+         +6UEG5AtuQW0I3+wm/GKXBR5iuMfjYYj0hF91Sqc74HTH3XHn5zbv9jR/k4DB3zdkG
+         /e1KiSliXNNNULWjA6cO57nGTgHmY72HyjhNiHvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
+        stable@vger.kernel.org,
+        Sebastien Tisserant <stisserant@wallix.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/98] SMB3: Fix potential memory leak when processing compound chain
-Date:   Tue, 27 Aug 2019 09:50:18 +0200
-Message-Id: <20190827072720.252611874@linuxfoundation.org>
+Subject: [PATCH 4.19 40/98] SMB3: Kernel oops mounting a encryptData share with CONFIG_DEBUG_VIRTUAL
+Date:   Tue, 27 Aug 2019 09:50:19 +0200
+Message-Id: <20190827072720.303622823@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,85 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3edeb4a4146dc3b54d6fa71b7ee0585cb52ebfdf ]
+[ Upstream commit ee9d66182392695535cc9fccfcb40c16f72de2a9 ]
 
-When a reconnect happens in the middle of processing a compound chain
-the code leaks a buffer from the memory pool. Fix this by properly
-checking for a return code and freeing buffers in case of error.
+Fix kernel oops when mounting a encryptData CIFS share with
+CONFIG_DEBUG_VIRTUAL
 
-Also maintain a buf variable to be equal to either smallbuf or bigbuf
-depending on a response buffer size while parsing a chain and when
-returning to the caller.
-
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Sebastien Tisserant <stisserant@wallix.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ fs/cifs/smb2ops.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 0ccf8f9b63a2e..97fdbec54db97 100644
+index 97fdbec54db97..cc9e846a38658 100644
 --- a/fs/cifs/smb2ops.c
 +++ b/fs/cifs/smb2ops.c
-@@ -3121,7 +3121,6 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
+@@ -2545,7 +2545,15 @@ fill_transform_hdr(struct smb2_transform_hdr *tr_hdr, unsigned int orig_len,
+ static inline void smb2_sg_set_buf(struct scatterlist *sg, const void *buf,
+ 				   unsigned int buflen)
  {
- 	int ret, length;
- 	char *buf = server->smallbuf;
--	char *tmpbuf;
- 	struct smb2_sync_hdr *shdr;
- 	unsigned int pdu_length = server->pdu_size;
- 	unsigned int buf_size;
-@@ -3151,18 +3150,15 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- 		return length;
+-	sg_set_page(sg, virt_to_page(buf), buflen, offset_in_page(buf));
++	void *addr;
++	/*
++	 * VMAP_STACK (at least) puts stack into the vmalloc address space
++	 */
++	if (is_vmalloc_addr(buf))
++		addr = vmalloc_to_page(buf);
++	else
++		addr = virt_to_page(buf);
++	sg_set_page(sg, addr, buflen, offset_in_page(buf));
+ }
  
- 	next_is_large = server->large_buf;
-- one_more:
-+one_more:
- 	shdr = (struct smb2_sync_hdr *)buf;
- 	if (shdr->NextCommand) {
--		if (next_is_large) {
--			tmpbuf = server->bigbuf;
-+		if (next_is_large)
- 			next_buffer = (char *)cifs_buf_get();
--		} else {
--			tmpbuf = server->smallbuf;
-+		else
- 			next_buffer = (char *)cifs_small_buf_get();
--		}
- 		memcpy(next_buffer,
--		       tmpbuf + le32_to_cpu(shdr->NextCommand),
-+		       buf + le32_to_cpu(shdr->NextCommand),
- 		       pdu_length - le32_to_cpu(shdr->NextCommand));
- 	}
- 
-@@ -3191,12 +3187,21 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
- 		pdu_length -= le32_to_cpu(shdr->NextCommand);
- 		server->large_buf = next_is_large;
- 		if (next_is_large)
--			server->bigbuf = next_buffer;
-+			server->bigbuf = buf = next_buffer;
- 		else
--			server->smallbuf = next_buffer;
--
--		buf += le32_to_cpu(shdr->NextCommand);
-+			server->smallbuf = buf = next_buffer;
- 		goto one_more;
-+	} else if (ret != 0) {
-+		/*
-+		 * ret != 0 here means that we didn't get to handle_mid() thus
-+		 * server->smallbuf and server->bigbuf are still valid. We need
-+		 * to free next_buffer because it is not going to be used
-+		 * anywhere.
-+		 */
-+		if (next_is_large)
-+			free_rsp_buf(CIFS_LARGE_BUFFER, next_buffer);
-+		else
-+			free_rsp_buf(CIFS_SMALL_BUFFER, next_buffer);
- 	}
- 
- 	return ret;
+ /* Assumes the first rqst has a transform header as the first iov.
 -- 
 2.20.1
 
