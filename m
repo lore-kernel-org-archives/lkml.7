@@ -2,148 +2,85 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059DBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746C4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5974204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="u6qzukAh"
+	by mail.kernel.org (Postfix) with ESMTP id 45EA7206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfH0KhP (ORCPT
+        id S1729100AbfH0Kho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:37:15 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:47835 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfH0KhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:37:15 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x7RAaNlw022326;
-        Tue, 27 Aug 2019 19:36:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x7RAaNlw022326
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566902184;
-        bh=FO349XjUNELPoDFkfp0JNDKza99Kv6R8kSRcxXIPYYs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=u6qzukAh6+Ep3piO54BqJloftQavacwDCNtvFPE00NCyS5GFfiGnhFnRILzRBFLiD
-         ky04ajNvtoi6wyxHf5SxE6MCU0zRfcQk6KXGJf13q7BRwtJDCzDzMmE8OtZvkboj4R
-         Nc7CUxDKHYS73cPsJR6rWU0Lk0DugAcmCpbb4k/L3oue4yH1pR0uRDpe4+S1itAsoN
-         edX1NTcASyv/8O3Hbdc7WjBUDBr4hvhV7v5ltW51Ei7l7iUaMes6SPkrJ7aVKFDLi4
-         aHRYfWJV1NCr5llJxugtclgQu8WSs9aA8W4p0ysUgKY9BWa4w5ifBA9bloOTCHEjcj
-         VKMQcwNr9YUVw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kbuild: enable unused-function warnings for W= build with Clang
-Date:   Tue, 27 Aug 2019 19:36:21 +0900
-Message-Id: <20190827103621.1073-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 27 Aug 2019 06:37:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:42494 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfH0Khn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:37:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1640E28;
+        Tue, 27 Aug 2019 03:37:41 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B0B53F718;
+        Tue, 27 Aug 2019 03:37:39 -0700 (PDT)
+Subject: Re: [PATCH 12/15] sched,fair: flatten update_curr functionality
+To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, pjt@google.com, peterz@infradead.org,
+        mingo@redhat.com, morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+References: <20190822021740.15554-1-riel@surriel.com>
+ <20190822021740.15554-13-riel@surriel.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <63f17078-b467-b239-2824-a0f9b9d14537@arm.com>
+Date:   Tue, 27 Aug 2019 12:37:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190822021740.15554-13-riel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC and Clang have different policy for -Wunused-function; GCC never
-reports unused-function warnings for 'static inline' functions whereas
-Clang reports them if they are defined in source files instead of
-included headers although it has been suppressed since commit
-abb2ea7dfd82 ("compiler, clang: suppress warning for unused static
-inline functions").
+On 22/08/2019 04:17, Rik van Riel wrote:
+> Make it clear that update_curr only works on tasks any more.
+> 
+> There is no need for task_tick_fair to call it on every sched entity up
+> the hierarchy, so move the call out of entity_tick.
+> 
+> Signed-off-by: Rik van Riel <riel@surriel.com>`
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  kernel/sched/fair.c | 24 +++++++++++-------------
+>  1 file changed, 11 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fa8e88731821..5cfa3dbeba49 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -872,10 +872,11 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq, int force)
+>  static void update_curr(struct cfs_rq *cfs_rq)
+>  {
+>  	struct sched_entity *curr = cfs_rq->curr;
+> +	struct task_struct *curtask;
+>  	u64 now = rq_clock_task(rq_of(cfs_rq));
+>  	u64 delta_exec;
+>  
+> -	if (unlikely(!curr))
+> +	if (unlikely(!curr) || !entity_is_task(curr))
+>  		return;
 
-We often miss to remove unused functions where 'static inline' is used
-in .c files since there is no tool to detect them. Unused code remains
-until somebody notices. For example, commit 075ddd75680f ("regulator:
-core: remove unused rdev_get_supply()").
+Shouldn't this be
 
-Let's remove __maybe_unused from the inline macro to allow Clang to
-start finding unused static inline functions. As always, it is not a
-good idea to sprinkle warnings for the normal build, so I added
--Wno-unsued-function for no W= build.
+-       if (unlikely(!curr) || !entity_is_task(curr))
++       if (unlikely(!curr))
+                return;
 
-Per the documentation [1], -Wno-unused-function will also disable
--Wunneeded-internal-declaration, which can help find bugs like
-commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
-mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
-I added -Wunneeded-internal-declaration to address it.
++       BUG_ON(!entity_is_task(curr));
 
-If you contribute to code clean-up, please run "make CC=clang W=1"
-and check -Wunused-function warnings. You will find lots of unused
-functions.
-
-Some of them are false-positives because the call-sites are disabled
-by #ifdef. I do not like to abuse the inline keyword for suppressing
-unused-function warnings because it is intended to be a hint for the
-compiler's optimization. I prefer __maybe_unused or #ifdef around the
-definition.
-
-[1]: https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-function
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
-
-Changes in v2:
-  - Add -Wunneeded-internal-declaration (per Nathan Chancellor)
-
- include/linux/compiler_types.h | 10 ++--------
- scripts/Makefile.extrawarn     |  4 ++++
- 2 files changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 599c27b56c29..14de8d0162fb 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -130,10 +130,6 @@ struct ftrace_likely_data {
- 
- /*
-  * Force always-inline if the user requests it so via the .config.
-- * GCC does not warn about unused static inline functions for
-- * -Wunused-function.  This turns out to avoid the need for complex #ifdef
-- * directives.  Suppress the warning in clang as well by using "unused"
-- * function attribute, which is redundant but not harmful for gcc.
-  * Prefer gnu_inline, so that extern inline functions do not emit an
-  * externally visible function. This makes extern inline behave as per gnu89
-  * semantics rather than c99. This prevents multiple symbol definition errors
-@@ -143,11 +139,9 @@ struct ftrace_likely_data {
-  * (which would break users of __always_inline).
-  */
- #if !defined(CONFIG_OPTIMIZE_INLINING)
--#define inline inline __attribute__((__always_inline__)) __gnu_inline \
--	__maybe_unused notrace
-+#define inline inline __attribute__((__always_inline__)) __gnu_inline notrace
- #else
--#define inline inline                                    __gnu_inline \
--	__maybe_unused notrace
-+#define inline inline                                    __gnu_inline notrace
- #endif
- 
- #define __inline__ inline
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index a74ce2e3c33e..69589f4bac48 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -70,5 +70,9 @@ KBUILD_CFLAGS += -Wno-initializer-overrides
- KBUILD_CFLAGS += -Wno-format
- KBUILD_CFLAGS += -Wno-sign-compare
- KBUILD_CFLAGS += -Wno-format-zero-length
-+KBUILD_CFLAGS += -Wno-unused-function
-+# -Wno-unused-function would also disable -Wunneeded-internal-declaration,
-+# but we want to keep it enabled.
-+KBUILD_CFLAGS += -Wunneeded-internal-declaration
- endif
- endif
--- 
-2.17.1
-
+IMHO, cfs_rq->curr can only be a task with your changes.
