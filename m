@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43765C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A25C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E75321872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11B9217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892392;
-	bh=FSfcG/9Y4fiGy/iFk9Uk6lrJU6yMcP4v2223qcX1u9M=;
+	s=default; t=1566892399;
+	bh=NowFkdEu21UO3lyhuKThxidzyxj5RXtdZ+GwbRkJ17E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zz9n+Akwn/f9R73FaeE8pAppFoCHv8bnfUCzfJ+zN5rHO5I+1xAHYd/OVyhXsLy0D
-	 LcqEszhVnBdgOf7mCZobFMwLmzAyohkYmTKZHQwCIGOZfXo5d1qyaTpUNmsc/FMRK5
-	 VAqV8rlBznisLRKPX1P5DI+FgYLyF1iRnAG0ITtw=
+	b=BhQXsC5aFb2bcH9YgBi1GxufJana3AbPoxuOyQWCcNETUjL195KemiyC7CjEqI93y
+	 X2iB0P1iXt75Kz1eGCEm3tcKpgaBz+qPeThUEa7kWZAYxI77Q3HimtLrnkZuTJpG/h
+	 9aSKQSREbkLeVBFDWrBFHzlyrXDcYKX2WXVCsoLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfH0HxL (ORCPT
+        id S1729757AbfH0HxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44560 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbfH0HxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:03 -0400
+        id S1728988AbfH0HxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 986E62173E;
-        Tue, 27 Aug 2019 07:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF1EC217F5;
+        Tue, 27 Aug 2019 07:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892383;
-        bh=FSfcG/9Y4fiGy/iFk9Uk6lrJU6yMcP4v2223qcX1u9M=;
+        s=default; t=1566892394;
+        bh=NowFkdEu21UO3lyhuKThxidzyxj5RXtdZ+GwbRkJ17E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mKOvoqTnu2btGT+jiCQxmLEyYxlGPaHtAijUjlGc8qOIgPt8bQaA5HJHIlfVzPAP
-         sYdhbrlOtMLh4I1IOGsXUxDSLimFeVL8ErfrObcsr4xK3gVbnoBiuRcuAcKyRN4rGw
-         aV38DTdvO+Z7d2R4giyxUcvvjeEzdpeVjPkuQIjk=
+        b=tWml8olDwdKG103Afgx9FcmG9Fx2pJG3hPRwoR6qjD4nPrnINHriqCZDRppPFCmG3
+         3+WdGalo/xK7KOwf+CqiYzAbJNmxep3RVG5BqGH0UaHFrEe1duDEyIo3mMczgUe0g4
+         cVgQ89rVxeBx3IEy8BI/gh5T3u7QSO3z6yRKEImo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Ping Cheng <ping.cheng@wacom.com>,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.14 36/62] HID: wacom: correct misreported EKR ring values
-Date:   Tue, 27 Aug 2019 09:50:41 +0200
-Message-Id: <20190827072702.774481658@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <hector@marcansoft.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.14 39/62] ceph: dont try fill file_lock on unsuccessful GETFILELOCK reply
+Date:   Tue, 27 Aug 2019 09:50:44 +0200
+Message-Id: <20190827072702.894262572@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -62,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Armstrong Skomra <skomra@gmail.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit fcf887e7caaa813eea821d11bf2b7619a37df37a upstream.
+commit 28a282616f56990547b9dcd5c6fbd2001344664c upstream.
 
-The EKR ring claims a range of 0 to 71 but actually reports
-values 1 to 72. The ring is used in relative mode so this
-change should not affect users.
+When ceph_mdsc_do_request returns an error, we can't assume that the
+filelock_reply pointer will be set. Only try to fetch fields out of
+the r_reply_info when it returns success.
 
-Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Fixes: 72b236d60218f ("HID: wacom: Add support for Express Key Remote.")
-Cc: <stable@vger.kernel.org> # v4.3+
-Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
-Reviewed-by: Jason Gerecke <jason.gerecke@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Cc: stable@vger.kernel.org
+Reported-by: Hector Martin <hector@marcansoft.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/locks.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1061,7 +1061,7 @@ static int wacom_remote_irq(struct wacom
- 	input_report_key(input, BTN_BASE2, (data[11] & 0x02));
+--- a/fs/ceph/locks.c
++++ b/fs/ceph/locks.c
+@@ -78,8 +78,7 @@ static int ceph_lock_message(u8 lock_typ
+ 		req->r_wait_for_completion = ceph_lock_wait_for_completion;
  
- 	if (data[12] & 0x80)
--		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f));
-+		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f) - 1);
- 	else
- 		input_report_abs(input, ABS_WHEEL, 0);
- 
+ 	err = ceph_mdsc_do_request(mdsc, inode, req);
+-
+-	if (operation == CEPH_MDS_OP_GETFILELOCK) {
++	if (!err && operation == CEPH_MDS_OP_GETFILELOCK) {
+ 		fl->fl_pid = -le64_to_cpu(req->r_reply_info.filelock_reply->pid);
+ 		if (CEPH_LOCK_SHARED == req->r_reply_info.filelock_reply->type)
+ 			fl->fl_type = F_RDLCK;
 
 
