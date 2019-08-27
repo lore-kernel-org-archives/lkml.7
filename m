@@ -2,80 +2,47 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B80C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB15C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FE52186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rcg7Rp6k"
+	by mail.kernel.org (Postfix) with ESMTP id E2F93206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfH0VlU (ORCPT
+        id S1730842AbfH0Vks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:41:20 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37437 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731122AbfH0VlS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:41:18 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bj8so181745plb.4;
-        Tue, 27 Aug 2019 14:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7+fSbMopRLMnridzw1P8dzUFCbFj/uVg1P8Nkx1MHXg=;
-        b=Rcg7Rp6khY3tW2TmrSCr+uyiTa9Utqx+bbYWjGBT+biGN2/KR58GcsJewtRl+Ksm1c
-         rPLdOQgtnUoFpEDQe2JU9NaZ8w0T0Xn0tpijmSPKor1eboA287tdio+SAA9uLqCoZWD/
-         A7/sgqHFoDnxA2zVzwbVHEerzCXNOb974a0nWEi9nY+TxqxeJBlB5g7DQDe8yu9rl5iy
-         1+IJmJnQakpvgl+IImkfCTSfi1vaL2HqoESEczvJ2rOsORMtO73nGi+TJ9zYn2qKHNOU
-         7iQ0qNm9e5rnXRMTx/RP9nGT0yGSiaUKUkTWQkmQ+ydUhSGBckwUis8xVb5OxE2FRk19
-         /IYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7+fSbMopRLMnridzw1P8dzUFCbFj/uVg1P8Nkx1MHXg=;
-        b=YOd9bgm9EjY+VMT2rOLHGXJabCrZDO2fD0VeUN7HAZ16LBqprsYGixhQfrwsKYeTlu
-         LFD+/7KUrnpz03HT781Fvnb/X7wfzb6E+u2BWBk8DYiBuROma6wsC8PSSE1s2uILzKT8
-         ZTvRSVQM6JMgHtj93y1ljPM5L9fLFabsWBr3VzhxVnXNUG1nUcInM+vTEPPUHo0Tf36N
-         DQrJDnHuR9O+2q/xo9AFTLWCwOftyglwE8WgXNOpo2v1sT7V8dtU6QRLE3FKpynOtk9A
-         6PkwpdkTwWvNBY14HPupipGt2k86FxJmyPX74PYCjPPWK17150cJHF1SzOgXWNyQu6jl
-         nHZQ==
-X-Gm-Message-State: APjAAAX+ZVUdCe05MzrFUW33Z0er+5dbNHMFvJQmELrdmYpzVCjFCCQ9
-        kJhWuUE2Og8SX3YFbeigZrRg/m2B8DQ=
-X-Google-Smtp-Source: APXvYqynZaMt6R7MTGG7LcwrU+uap8vEDW0FRTXcMmh0PSz5vUl5+Xi9cvqe/DSDwOaBdjdm/XrYKg==
-X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr1040185plr.101.1566942077825;
-        Tue, 27 Aug 2019 14:41:17 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id m19sm293202pff.108.2019.08.27.14.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 14:41:17 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Allison Randal <allison@lohutok.net>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/9] drm/msm/dpu: add real wait_for_commit_done()
-Date:   Tue, 27 Aug 2019 14:33:32 -0700
-Message-Id: <20190827213421.21917-3-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190827213421.21917-1-robdclark@gmail.com>
-References: <20190827213421.21917-1-robdclark@gmail.com>
+        Tue, 27 Aug 2019 17:40:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50844 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730693AbfH0Vkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 17:40:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 14:40:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="182919741"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2019 14:40:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH v2 02/14] KVM: x86: Clean up handle_emulation_failure()
+Date:   Tue, 27 Aug 2019 14:40:28 -0700
+Message-Id: <20190827214040.18710-3-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190827214040.18710-1-sean.j.christopherson@intel.com>
+References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,57 +50,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+When handling emulation failure, return the emulation result directly
+instead of capturing it in a local variable.  Future patches will move
+additional cases into handle_emulation_failure(), clean up the cruft
+before so there isn't an ugly mix of setting a local variable and
+returning directly.
 
-Just waiting for next vblank isn't ideal.. we should really be looking
-at the hw FLUSH register value to know if there is still an in-progress
-flush without stalling unnecessarily when there is no pending flush.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 737fe963a490..7c73b09894f0 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -526,6 +526,26 @@ static int dpu_encoder_phys_vid_wait_for_vblank(
- 	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index cd425f54096a..c6de5bc4fa5e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6207,24 +6207,22 @@ EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
+ 
+ static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
+ {
+-	int r = EMULATE_DONE;
+-
+ 	++vcpu->stat.insn_emulation_fail;
+ 	trace_kvm_emulate_insn_failed(vcpu);
+ 
+ 	if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
+ 		return EMULATE_FAIL;
+ 
++	kvm_queue_exception(vcpu, UD_VECTOR);
++
+ 	if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) {
+ 		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+ 		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+ 		vcpu->run->internal.ndata = 0;
+-		r = EMULATE_USER_EXIT;
++		return EMULATE_USER_EXIT;
+ 	}
+ 
+-	kvm_queue_exception(vcpu, UD_VECTOR);
+-
+-	return r;
++	return EMULATE_DONE;
  }
  
-+static int dpu_encoder_phys_vid_wait_for_commit_done(
-+		struct dpu_encoder_phys *phys_enc)
-+{
-+	struct dpu_hw_ctl *hw_ctl = phys_enc->hw_ctl;
-+	int ret;
-+
-+	if (!hw_ctl)
-+		return 0;
-+
-+	ret = wait_event_timeout(phys_enc->pending_kickoff_wq,
-+		(hw_ctl->ops.get_flush_register(hw_ctl) == 0),
-+		msecs_to_jiffies(50));
-+	if (ret <= 0) {
-+		DPU_ERROR("vblank timeout\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
- static void dpu_encoder_phys_vid_prepare_for_kickoff(
- 		struct dpu_encoder_phys *phys_enc)
- {
-@@ -676,7 +696,7 @@ static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
- 	ops->destroy = dpu_encoder_phys_vid_destroy;
- 	ops->get_hw_resources = dpu_encoder_phys_vid_get_hw_resources;
- 	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
--	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_vblank;
-+	ops->wait_for_commit_done = dpu_encoder_phys_vid_wait_for_commit_done;
- 	ops->wait_for_vblank = dpu_encoder_phys_vid_wait_for_vblank;
- 	ops->wait_for_tx_complete = dpu_encoder_phys_vid_wait_for_vblank;
- 	ops->irq_control = dpu_encoder_phys_vid_irq_control;
+ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gva_t cr2,
 -- 
-2.21.0
+2.22.0
 
