@@ -2,215 +2,126 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8042C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79ACC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3E920828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:54:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="iah81Adk"
+	by mail.kernel.org (Postfix) with ESMTP id CA24220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbfH0SyW (ORCPT
+        id S1730931AbfH0S4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:54:22 -0400
-Received: from mail-eopbgr50060.outbound.protection.outlook.com ([40.107.5.60]:64679
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726871AbfH0SyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:54:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LD+P/843vnlcE7Nk5BIa2/xnLfFJPkWUq6IsGP0PvkuoKMaf/fLIQTY1X00orwxvMgC+Q+e3ss7C9y685k+ovoHub2cy23GOLyyZZJy0xAQPtyoEp8re6b+LZkpsfcMnNRYO2WqSzvIAxxp1umt5XneOJZ+PJn+jFwAcEZsuQP3+sBepOko8530wmDXNysMJNCem8vxsE/dYUjdSJ20ORZZuOfc1v7nS6xdS7+4l2yPxu5EffZuEDcM+ELIKER/6sL21l4ksu/LjecuY5EHclAqW1z+jNf+RALirUr0XkubZfyZ7YztiWsF6ODLSqLrUUPdVJ171oQ4KXyFt3jElOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uXcqgDOgotYwMgYoj93UjZFHnCinMA44xEdTZnLZeR0=;
- b=HnJFfnTjXEa4k0GUNxj8lOrXbxkai78RPhwdQhMf8DXDZxorwbvhf9cQT826+M3jt7aFJV2tMqxfut48xENtJDbfUbc0R2sxoH+udwgwp3TsFqcLjxgt3O9tPr3sSoDj3m57f+aHiGhzgactbqr3orRSNBiprfWrnSYwexpaeoZ7OUxsgsPzBKok82xbEhH/ajiI52lk6VLqiT7LQNcsMHZDZjpcuDFFQ72Cte/e9WEEWCIeNIe7TrNW8s77WpWdCEMVENUloPhYaqOoFqvuXy3bTiNXPvX/nMjg9g4lZOJCV8yQrky5Ug1hSuDDySCk6fioqjcc+bTmtR7pB9IkdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uXcqgDOgotYwMgYoj93UjZFHnCinMA44xEdTZnLZeR0=;
- b=iah81Adk8y1ShCltwG+yxk6WGmDU4hwuiC9umtPHM5IqqBeR46jQ2RPEkfqxMG7QBEQXawBfICdcJsg7J7pWx8K5aIGEBuXG/FyinE/Tb4TID4v6Rad2vs3fToMLkYbu8xZ6CbcS8yRIPugH1jaCDUuZrwHcx9CJM2zI23R7b0U=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB5922.eurprd05.prod.outlook.com (20.178.119.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 18:54:08 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
- 18:54:07 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Cornelia Huck <cohuck@redhat.com>, Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Topic: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Thread-Index: AQHVXE627FcLaFBgXUa8jSc95m92WKcOy/4AgAAKv2CAAAYaAIAAQtGAgAAMQNCAAANOgIAAKbIQ
-Date:   Tue, 27 Aug 2019 18:54:07 +0000
-Message-ID: <AM0PR05MB48669AA6561A70AECEC8A1CFD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-3-parav@mellanox.com>
-        <20190827122928.752e763b.cohuck@redhat.com>
-        <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190827132946.0b92d259.cohuck@redhat.com>     <20190827092855.29702347@x1.home>
-        <AM0PR05MB486671BB1CD562D070F0C0F2D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190827102435.7bd30ef3@x1.home>
-In-Reply-To: <20190827102435.7bd30ef3@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.18.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a429c88b-3c58-4481-5db9-08d72b1ff0c2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR05MB5922;
-x-ms-traffictypediagnostic: AM0PR05MB5922:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB5922128E2030B55A6944CDCCD1A00@AM0PR05MB5922.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(189003)(199004)(13464003)(3846002)(86362001)(256004)(14444005)(7736002)(14454004)(486006)(476003)(6916009)(66066001)(66946007)(64756008)(66476007)(66556008)(66446008)(53936002)(4326008)(6246003)(81166006)(81156014)(8676002)(8936002)(71190400001)(54906003)(99286004)(33656002)(26005)(2906002)(76116006)(186003)(5660300002)(305945005)(25786009)(446003)(9456002)(478600001)(55016002)(229853002)(6436002)(11346002)(9686003)(102836004)(316002)(76176011)(52536014)(71200400001)(7696005)(55236004)(53546011)(6506007)(74316002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5922;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SmnCnVty3ze4OWNY0srslW8qb6+c0PFTBkTbm1lSRUaJsOpJzwrF5teTU4Jw3AzUftldUs2tLOwtQVAVr0lio29ouLFGatwZnDVh/+/EhvCsVyvsB7OBWnQn8Hi/m8JEXBq7sViO1xmwqlIPl4aYBBHGT7yevfNCH8p8mfs5A3p8RaTFs3Zn4lkPPihzPzL3kqyxhDD/mBDB+WhstV0YxdJo4w+Fhiwkf7YdRCRopAZCwMT4DMlhmP2cCryUgB6LMaAjpsOg8lXE/PoYJNiTGk5N3KjCpn9fZ4jqJmZXxGB+DbyZfVrYorCcVsPBXmGfyLU6lqEvj3KbwbbeeaeAoYABhr0Gd2w3an5la4pIkm3vpdr2l98cABynjZo2q9P4KeNvnMiaxCbAcHtm2DrfA//TrY+6NGlcf+2IlmT1tto=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 14:56:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36416 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728312AbfH0S4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:56:24 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RIb9oS084097;
+        Tue, 27 Aug 2019 14:55:46 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2un8kkcjgr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 14:55:46 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7RItYvC022964;
+        Tue, 27 Aug 2019 18:55:45 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma05wdc.us.ibm.com with ESMTP id 2ujvv71b32-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 18:55:45 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7RItiq747972670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 18:55:44 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87A72112063;
+        Tue, 27 Aug 2019 18:55:44 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 082D7112062;
+        Tue, 27 Aug 2019 18:55:43 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.216])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Aug 2019 18:55:42 +0000 (GMT)
+Message-ID: <0c563d05f6615d5cb32716f62416a5496ad197d4.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
+ IPv6 is disabled on boot
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Date:   Tue, 27 Aug 2019 15:55:39 -0300
+In-Reply-To: <20190827185111.cgutfqkqwsufe2nl@salvia>
+References: <20190821141505.2394-1-leonardo@linux.ibm.com>
+         <20190827103541.vzwqwg4jlbuzajxu@salvia>
+         <77c43754ff72e9a2e8048ccd032351cf0186080a.camel@linux.ibm.com>
+         <20190827185111.cgutfqkqwsufe2nl@salvia>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-bC3QiacUuz+PrqDXq2+v"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a429c88b-3c58-4481-5db9-08d72b1ff0c2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 18:54:07.7655
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JNm5L616CEL7KdWA/+RFsTLbZ+s9jaO9pNLVRdjHv3D1GkzWJ29ywE+D8AWMXLfG5DxdyT96G7MUocOzurGn4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5922
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908270179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--=-bC3QiacUuz+PrqDXq2+v
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Tuesday, August 27, 2019 9:55 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>; Jiri Pirko <jiri@mellanox.com>;
-> kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> linux-kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+On Tue, 2019-08-27 at 20:51 +0200, Pablo Neira Ayuso wrote:
+> > > The drop case at the bottom of the fib eval function never actually
+> > > never happens.
+> >=20
+> > Which one do you mean?
 >=20
-> On Tue, 27 Aug 2019 16:13:27 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > > -----Original Message-----
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Tuesday, August 27, 2019 8:59 PM
-> > > To: Cornelia Huck <cohuck@redhat.com>
-> > > Cc: Parav Pandit <parav@mellanox.com>; Jiri Pirko
-> > > <jiri@mellanox.com>; kwankhede@nvidia.com; davem@davemloft.net;
-> > > kvm@vger.kernel.org; linux- kernel@vger.kernel.org;
-> > > netdev@vger.kernel.org
-> > > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all
-> > > mdevs
-> > >
-> > > On Tue, 27 Aug 2019 13:29:46 +0200
-> > > Cornelia Huck <cohuck@redhat.com> wrote:
-> > >
-> > > > On Tue, 27 Aug 2019 11:08:59 +0000 Parav Pandit
-> > > > <parav@mellanox.com> wrote:
-> > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Cornelia Huck <cohuck@redhat.com>
-> > > > > > Sent: Tuesday, August 27, 2019 3:59 PM
-> > > > > > To: Parav Pandit <parav@mellanox.com>
-> > > > > > Cc: alex.williamson@redhat.com; Jiri Pirko
-> > > > > > <jiri@mellanox.com>; kwankhede@nvidia.com;
-> > > > > > davem@davemloft.net; kvm@vger.kernel.org;
-> > > > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > > > > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among
-> > > > > > all mdevs
-> > > > > >
-> > > > > > On Mon, 26 Aug 2019 15:41:17 -0500 Parav Pandit
-> > > > > > <parav@mellanox.com> wrote:
-> > > > > >
-> > > > > > > Mdev alias should be unique among all the mdevs, so that
-> > > > > > > when such alias is used by the mdev users to derive other
-> > > > > > > objects, there is no collision in a given system.
-> > > > > > >
-> > > > > > > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > > > > > > ---
-> > > > > > >  drivers/vfio/mdev/mdev_core.c | 5 +++++
-> > > > > > >  1 file changed, 5 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/vfio/mdev/mdev_core.c
-> > > > > > > b/drivers/vfio/mdev/mdev_core.c index
-> > > > > > > e825ff38b037..6eb37f0c6369
-> > > > > > > 100644
-> > > > > > > --- a/drivers/vfio/mdev/mdev_core.c
-> > > > > > > +++ b/drivers/vfio/mdev/mdev_core.c
-> > > > > > > @@ -375,6 +375,11 @@ int mdev_device_create(struct kobject
-> > > > > > > *kobj,
-> > > struct
-> > > > > > device *dev,
-> > > > > > >  			ret =3D -EEXIST;
-> > > > > > >  			goto mdev_fail;
-> > > > > > >  		}
-> > > > > > > +		if (tmp->alias && strcmp(tmp->alias, alias) =3D=3D 0) {
-> > > > > >
-> > > > > > Any way we can relay to the caller that the uuid was fine, but
-> > > > > > that we had a hash collision? Duplicate uuids are much more
-> > > > > > obvious than
-> > > a collision here.
-> > > > > >
-> > > > > How do you want to relay this rare event?
-> > > > > Netlink interface has way to return the error message back, but
-> > > > > sysfs is
-> > > limited due to its error code based interface.
-> > > >
-> > > > I don't know, that's why I asked :)
-> > > >
-> > > > The problem is that "uuid already used" and "hash collision" are
-> > > > indistinguishable. While "use a different uuid" will probably work
-> > > > in both cases, "increase alias length" might be a good alternative
-> > > > in some cases.
-> > > >
-> > > > But if there is no good way to relay the problem, we can live with =
-it.
-> > >
-> > > It's a rare event, maybe just dev_dbg(dev, "Hash collision creating a=
-lias
-> \"%s\"
-> > > for mdev device %pUl\n",...
-> > >
-> > Ok.
-> > dev_dbg_once() to avoid message flood.
->=20
-> I'd suggest a rate-limit rather than a once.  The fact that the kernel ma=
-y have
-> experienced a collision at some time in the past does not help someone
-> debug why they can't create a device now.  The only way we're going to ge=
-t a
-> flood is if a user sufficiently privileged to create mdev devices stumble=
-s onto
-> a collision and continues to repeat the same operation.  That falls into
-> shoot-yourself-in-the-foot behavior imo.
-> Thanks,
->=20
-Ok. Will do.
+> Line 31 of net/netfilter/nft_fib_inet.c.
+Oh, yeah, I was thinking about that when I wrote the patch.
+Thanks for explaining :)
+
+I will send the v3 in a few minutes.
+
+Best regards,
+
+--=-bC3QiacUuz+PrqDXq2+v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1lfKsACgkQlQYWtz9S
+ttRjNxAArsbMmS4pe2EfMQGGOr2krvP+GCUcOCHZA32WFNQUme+NlnKmkERtMUgt
+OmI+FZv3Q2W8l+dZR1sOxk8uaoyhh8ny9g4rK/qypga5NaXIId0U1RYnGKJadFqp
+lWJLHtfHGXG0ljzPtpdKzvCtMnAMm6PIEs6yGGblfIciRBhI5ldxUEcD5AzHhXdj
+yT7wNPyk+uq1LJ2QFs1doP2stuIMjXnBngKOb8us180KlEsAtvLCrIl3Hu4zrvF8
+2Ogu8PqmCf8BfogE0maGCUz8rwRMs+o+YyQP82Ra8XLjiKm3uvvAn0rKh08BGDsA
+PEcr0VZvrgT8PnbxLI6fwplERJgtSw2WO6SFMGr4v5ETCz2+nppsc1mAv18wvdK8
+GNYpSuEeG/qGAtOWmWyDqxxEsfqA83oHHilnB3stAJEYKFClB0eBDmO9cQKaHu83
+3eC5df7hl9GfIQLjo2MjeusSQt3tJfQ9fcdv8qLX7DZAw1/t/yjrg0a7DGt6VBx2
+Uauhkh3Rlzz8mNji9WLEZfsh6Lm0aO0/g1gYMfM4hJ0V43KKZ2SVqzif1WBo1RcL
+Z31Fi2ROWihgs4RZYUKFofwG/dte+n26Pol5bIOOy84sHw1I+3E8HV0H1bmZqXqW
+zzHpx5gsHVyJ/Gn712FM8bgrFxxmEL/yJ3hXzhDclPUr2iHDpr8=
+=G0DM
+-----END PGP SIGNATURE-----
+
+--=-bC3QiacUuz+PrqDXq2+v--
+
