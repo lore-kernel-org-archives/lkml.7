@@ -2,86 +2,127 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836AC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE24C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D9220673
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DD720673
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbfH0Nb2 convert rfc822-to-8bit (ORCPT
+        id S1729770AbfH0Nbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:31:28 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41214 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfH0Nb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:31:27 -0400
-Received: by mail-oi1-f193.google.com with SMTP id p127so6314458oic.8;
-        Tue, 27 Aug 2019 06:31:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fbrpcnaW6FeusXGWHy/FZL17iPbB9NJ4oGcjQCYCxAc=;
-        b=RakY2sD09NKfmQRgIm5vkJ6AD90XUEMiPdtphaWnbaz6kuZ3msa/zniJWSblqmLsm5
-         CQ3Y7FMIUUeJzESZRJh/pFXN4rTDrlwoAbnnl57RxoOVuVncCOmdBqk6IUl/CGsPRZCu
-         oJaAqu5b+ZDsotlFFj+MkoJ+CoOm2rmAAi/xJ2y/M09Vf2Z1eqYqGdL/KIb21ApzZw+A
-         Yl77l8BgxFvCtpGdgbIRu6xdqecBfeu0lnDsyEOOvmqKZGJVArUEEEMfgUTaWpQ7/GBP
-         eJ7i/HXnPHbqC3YpD6QqLM+5yBbyzbt0iNXH/LpI3hSJ0sDx/ufas+isaYWCUp6qWWYo
-         lS3Q==
-X-Gm-Message-State: APjAAAVj+fSpW5P2a1T99jfa7B7Gc+jZv5pNccHfjsnii1pnerxS0MQ9
-        ydQnbBAAhPTNtL/LiBfbyXJUIYAxkAc1kYtWEcc=
-X-Google-Smtp-Source: APXvYqzZzbXU+RqScZH8H98sHGPvNyaTmnwaD9hadGmeyRCrAgllptmivlqOHf5SeYogP/M2CHNeVInHgpGlCSPZLcY=
-X-Received: by 2002:aca:f4ca:: with SMTP id s193mr15420301oih.131.1566912686716;
- Tue, 27 Aug 2019 06:31:26 -0700 (PDT)
+        Tue, 27 Aug 2019 09:31:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34776 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726333AbfH0Nbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:31:43 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 89BAD8B5FF0;
+        Tue, 27 Aug 2019 13:31:43 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AC1B5C1B2;
+        Tue, 27 Aug 2019 13:31:39 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 15:31:37 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 0/4] Introduce variable length mdev alias
+Message-ID: <20190827153137.533e5d59.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <e66b822b-026b-29cc-e461-6334aafd1d30@web.de>
-In-Reply-To: <e66b822b-026b-29cc-e461-6334aafd1d30@web.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 27 Aug 2019 15:31:15 +0200
-Message-ID: <CAMuHMdVCcHn1YHFhehkvNV29s5jCDDsDWBOkVcWmf1XBPRdfYg@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: mstp: Delete an unnecessary kfree() call in cpg_mstp_clocks_init()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Tue, 27 Aug 2019 13:31:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 3:27 PM Markus Elfring <Markus.Elfring@web.de> wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 27 Aug 2019 15:22:12 +0200
->
-> A null pointer would be passed to a call of the function “kfree”
-> directly after a call of the function “kzalloc” failed at one place.
-> Remove this superfluous function call.
->
-> This issue was detected by using the Coccinelle software.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+On Tue, 27 Aug 2019 13:11:17 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.5.
+> Hi Alex, Cornelia,
+> 
+> > -----Original Message-----
+> > From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf
+> > Of Parav Pandit
+> > Sent: Tuesday, August 27, 2019 2:11 AM
+> > To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
+> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
+> > Subject: [PATCH 0/4] Introduce variable length mdev alias
+> > 
+> > To have consistent naming for the netdevice of a mdev and to have consistent
+> > naming of the devlink port [1] of a mdev, which is formed using
+> > phys_port_name of the devlink port, current UUID is not usable because UUID
+> > is too long.
+> > 
+> > UUID in string format is 36-characters long and in binary 128-bit.
+> > Both formats are not able to fit within 15 characters limit of netdev name.
+> > 
+> > It is desired to have mdev device naming consistent using UUID.
+> > So that widely used user space framework such as ovs [2] can make use of
+> > mdev representor in similar way as PCIe SR-IOV VF and PF representors.
+> > 
+> > Hence,
+> > (a) mdev alias is created which is derived using sha1 from the mdev name.
+> > (b) Vendor driver describes how long an alias should be for the child mdev
+> > created for a given parent.
+> > (c) Mdev aliases are unique at system level.
+> > (d) alias is created optionally whenever parent requested.
+> > This ensures that non networking mdev parents can function without alias
+> > creation overhead.
+> > 
+> > This design is discussed at [3].
+> > 
+> > An example systemd/udev extension will have,
+> > 
+> > 1. netdev name created using mdev alias available in sysfs.
+> > 
+> > mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
+> > mdev 12 character alias=cd5b146a80a5
+> > 
+> > netdev name of this mdev = enmcd5b146a80a5 Here en = Ethernet link m =
+> > mediated device
+> > 
+> > 2. devlink port phys_port_name created using mdev alias.
+> > devlink phys_port_name=pcd5b146a80a5
+> > 
+> > This patchset enables mdev core to maintain unique alias for a mdev.
+> > 
+> > Patch-1 Introduces mdev alias using sha1.
+> > Patch-2 Ensures that mdev alias is unique in a system.
+> > Patch-3 Exposes mdev alias in a sysfs hirerchy.
+> > Patch-4 Extends mtty driver to optionally provide alias generation.
+> > This also enables to test UUID based sha1 collision and trigger error handling
+> > for duplicate sha1 results.
+> > 
+> > In future when networking driver wants to use mdev alias, mdev_alias() API will
+> > be added to derive devlink port name.
+> >   
+> Now that majority of above patches looks in shape and I addressed all comments,
 
-Gr{oetje,eeting}s,
+I think the discussion of what to do with the attribute if no alias is
+available is still unresolved; waiting for maintainer opinion.
 
-                        Geert
+> In next v1 post, I was considering to include mdev_alias() and have example use in mtty driver.
+> 
+> This way, subsequent series of mlx5_core who intents to use mdev_alias() API makes it easy to review and merge through Dave M, netdev tree.
+> Is that ok with you?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
