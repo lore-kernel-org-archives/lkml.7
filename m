@@ -2,57 +2,54 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD1C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D6C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8580E2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7B32173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893552;
-	bh=RxDSkfwBhmaBGf5yeYT9XqsGu+pXDn6KUzqQgAHY1JI=;
+	s=default; t=1566893558;
+	bh=FSfcG/9Y4fiGy/iFk9Uk6lrJU6yMcP4v2223qcX1u9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s2lvbYJUZKNWtszcTxAhEXdSwy80lcyY/1gQ5Oy5poU5KqYSUwITZ+E+rCa+1RPJL
-	 HaxE7UBQLxpOV8ZKzM4K6UgB2XON7dvNuCLBVKutQL1E0n9QNIRvTN2qq8f61lhtX5
-	 y0C2TUcO38pMvGFHyVI7BBhpMPnXIePW6+2XvwBs=
+	b=0GmaPYrAH9twS3P5Tjnd0tSBn/q59HDgBXutsjVN0KShIVZ7yaVQ0R1StCmP35500
+	 8nf89KdcA5kDa5m90HRdohGiFZsThVS5hlgqrm3ACX4OSzXrWQcMgwq2SAN1KF+BLR
+	 ZeP/H51rqTRTW2vOuewqIvbZZl7D2yC41ts+TCGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfH0H7P (ORCPT
+        id S1731872AbfH0IMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731099AbfH0H7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:03 -0400
+        id S1730809AbfH0H7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95C7A2186A;
-        Tue, 27 Aug 2019 07:59:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3197E2186A;
+        Tue, 27 Aug 2019 07:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892742;
-        bh=RxDSkfwBhmaBGf5yeYT9XqsGu+pXDn6KUzqQgAHY1JI=;
+        s=default; t=1566892753;
+        bh=FSfcG/9Y4fiGy/iFk9Uk6lrJU6yMcP4v2223qcX1u9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Ka0MDBUpcqpnRoKJctWNtJMjNdBGQ+d9dw18bCIXh1O8e092IU58Nks9NgZyiufP
-         seC32hNNEb479NmJc5sRLO7NpPdHghPDDaTG2xZ9leBcZtRADScxA0dwaM3vpygf6c
-         06iEDP/X9WKKAhkIL//9verc9ACzwccrjwKJEG0g=
+        b=uLp7ho1y+SKxtRuSBYMNTzJC0bED33xFGsvzl47gjm1ThTRQsYYlzwQ/bt14pAU+c
+         JKp8wD2leJWmx8Go0KK505khHuLl8fg9o3/xdW1rsNifY8OOD905+ULCw+Z9jJEfNO
+         YiMAtuFwnjeyZs1dGkhMhKog7KxsSmimFljXtIao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/98] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
-Date:   Tue, 27 Aug 2019 09:50:34 +0200
-Message-Id: <20190827072721.212895393@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Ping Cheng <ping.cheng@wacom.com>,
+        Jason Gerecke <jason.gerecke@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.19 59/98] HID: wacom: correct misreported EKR ring values
+Date:   Tue, 27 Aug 2019 09:50:38 +0200
+Message-Id: <20190827072721.400101505@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -65,64 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
+From: Aaron Armstrong Skomra <skomra@gmail.com>
 
-The events defined in pmu-events JSON are parsed and added into perf
-tool. For fixed counters, we handle the encodings between JSON and perf
-by using a static array fixed[].
+commit fcf887e7caaa813eea821d11bf2b7619a37df37a upstream.
 
-But the fixed[] has missed an important event "cpu_clk_unhalted.core".
+The EKR ring claims a range of 0 to 71 but actually reports
+values 1 to 72. The ring is used in relative mode so this
+change should not affect users.
 
-For example, on the Tremont platform,
+Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Fixes: 72b236d60218f ("HID: wacom: Add support for Express Key Remote.")
+Cc: <stable@vger.kernel.org> # v4.3+
+Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
+Reviewed-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-  event syntax error: 'cpu_clk_unhalted.core'
-                       \___ parser error
-
-With this patch, the event cpu_clk_unhalted.core can be parsed.
-
-  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4
-    size                             112
-    config                           0x3c
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-    disabled                         1
-    inherit                          1
-    exclude_guest                    1
-  ------------------------------------------------------------
-...
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/wacom_wac.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 68c92bb599eef..6b36b71106695 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -450,6 +450,7 @@ static struct fixed {
- 	{ "inst_retired.any_p", "event=0xc0" },
- 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
- 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c" },
- 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
- 	{ NULL, NULL},
- };
--- 
-2.20.1
-
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -1061,7 +1061,7 @@ static int wacom_remote_irq(struct wacom
+ 	input_report_key(input, BTN_BASE2, (data[11] & 0x02));
+ 
+ 	if (data[12] & 0x80)
+-		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f));
++		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f) - 1);
+ 	else
+ 		input_report_abs(input, ABS_WHEEL, 0);
+ 
 
 
