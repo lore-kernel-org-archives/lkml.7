@@ -2,211 +2,155 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FCEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F4AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09A32186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD022173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xbJ3LuWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfH0QE7 (ORCPT
+        id S1728783AbfH0QGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:04:59 -0400
-Received: from muru.com ([72.249.23.125]:58840 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfH0QE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:04:59 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3DE5C8107;
-        Tue, 27 Aug 2019 16:05:26 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 09:04:54 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        sre@kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
-        merlijn@wizzup.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
-Message-ID: <20190827160454.GA52127@atomide.com>
-References: <20190820195307.27590-1-dmurphy@ti.com>
- <20190826215822.GY52127@atomide.com>
- <20190826221413.GA19124@amd>
- <20190826224437.GZ52127@atomide.com>
- <20190827121818.GB19927@amd>
- <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
- <9939e253-0c9e-5ef7-e160-c1e5fe99c453@ti.com>
+        Tue, 27 Aug 2019 12:06:23 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37749 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfH0QGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:06:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bj8so12008180plb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1L35nAsSCuH9O7ksDDdD2gjCKxQPbQrMSvK9pHg5hLg=;
+        b=xbJ3LuWXwg3Nq02nn3AbHTU8VpTOZaJrBe1s/K+wwywtZ//0Ww372OwQEHTOSDkOau
+         b7RZBBOJ1Yu3BM3pCc/YmFO479ZR0A1oNwpQ9pocN4sv+4RMNpue5t/iXM3I6Gf/ZWoa
+         iEvU0kcH1H93WoH9os8MK16JA2+RRpTrapdcQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1L35nAsSCuH9O7ksDDdD2gjCKxQPbQrMSvK9pHg5hLg=;
+        b=j+WVvdLde5hSF9dKuwgHXUsJSBACVs2QWg58YGpjD2bAaPar6EK6ZNga/rOrSzPWbM
+         2uwvgN72Ho1wb46Fbw8jiqui3XKr5IY1ITEDYzS/5v0jxgo0V7IdHwh+yzU2aC6Kwq96
+         wL59jJ0waOctPPI4MZrS05kYwnBv/sfSzsPB+kFTBNYAbp5pLrohP724KllGOiABaHw4
+         tPoOXgJPFbob7X0GNiqdFg0dbuISav/o6mV1laZsceePfxFSBaoAfbgo2ezt31VpQd8/
+         /Ygva5uZHHxXQ45gDOGd/gv4jlYb4P/+PGOXpNxGtD+oHN6Jei712dHVbvj9omlGduGJ
+         BG1g==
+X-Gm-Message-State: APjAAAWNUyCj+saR2sGztj2brXUFXNFd3Kw9KOx4/ZMNi8JHiyqO/hKB
+        B5e4Vu5JHGyNsC1xfAAoRsJ7Ug==
+X-Google-Smtp-Source: APXvYqyaGmwKpA/k2W0bQmgxlBgAXYTJvuTo9aOtY8wLvfxOIFa1djzD+hu7oJ/bQ7x4GWt8LdNDvw==
+X-Received: by 2002:a17:902:f30e:: with SMTP id gb14mr25331225plb.32.1566921981880;
+        Tue, 27 Aug 2019 09:06:21 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y10sm3143262pjp.27.2019.08.27.09.06.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 09:06:21 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:06:19 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
+ indicate involuntary sleep
+Message-ID: <20190827160619.GA55873@google.com>
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-3-swood@redhat.com>
+ <20190823162024.47t7br6ecfclzgkw@linutronix.de>
+ <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
+ <20190824031014.GB2731@google.com>
+ <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
+ <20190826162945.GE28441@linux.ibm.com>
+ <20190827092333.jp3darw7teyyw67g@linutronix.de>
+ <20190827130853.GB132568@google.com>
+ <20190827155813.GG26530@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9939e253-0c9e-5ef7-e160-c1e5fe99c453@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190827155813.GG26530@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dan Murphy <dmurphy@ti.com> [190827 13:02]:
-> Hello
+On Tue, Aug 27, 2019 at 08:58:13AM -0700, Paul E. McKenney wrote:
+> On Tue, Aug 27, 2019 at 09:08:53AM -0400, Joel Fernandes wrote:
+> > On Tue, Aug 27, 2019 at 11:23:33AM +0200, Sebastian Andrzej Siewior wrote:
+> > [snip]
+> > > > However, if this was instead an rcu_read_lock() critical section within
+> > > > a PREEMPT=y kernel, then if a schedule() occured within stop_one_task(),
+> > > > RCU would consider that critical section to be preempted.  This means
+> > > > that any RCU grace period that is blocked by this RCU read-side critical
+> > > > section would remain blocked until stop_one_cpu() resumed, returned,
+> > > > and so on until the matching rcu_read_unlock() was reached.  In other
+> > > > words, RCU would consider that RCU read-side critical section to span
+> > > > the call to stop_one_cpu() even if stop_one_cpu() invoked schedule().
+> > > 
+> > > Isn't that my example from above and what we do in RT? My understanding
+> > > is that this is the reason why we need BOOST on RT otherwise the RCU
+> > > critical section could remain blocked for some time.
+> > 
+> > Not just for boost, it is needed to block the grace period itself on
+> > PREEMPT=y. On PREEMPT=y, if rcu_note_context_switch() happens in middle of a
+> > rcu_read_lock() reader section, then the task is added to a blocked list
+> > (rcu_preempt_ctxt_queue). Then just after that, the CPU reports a QS state
+> > (rcu_qs()) as you can see in the PREEMPT=y implementation of
+> > rcu_note_context_switch(). Even though the CPU has reported a QS, the grace
+> > period will not end because the preempted (or block as could be in -rt) task
+> > is still blocking the grace period. This is fundamental to the function of
+> > Preemptible-RCU where there is the concept of tasks blocking a grace period,
+> > not just CPUs.
+> > 
+> > I think what Paul is trying to explain AIUI (Paul please let me know if I
+> > missed something):
+> > 
+> > (1) Anyone calling rcu_note_context_switch() and expecting it to respect
+> > RCU-readers that are readers as a result of interrupt disabled regions, have
+> > incorrect expectations. So calling rcu_note_context_switch() has to be done
+> > carefully.
+> > 
+> > (2) Disabling interrupts is "generally" implied as an RCU-sched flavor
+> > reader. However, invoking rcu_note_context_switch() from a disabled interrupt
+> > region is *required* for rcu_note_context_switch() to work correctly.
+> > 
+> > (3) On PREEMPT=y kernels, invoking rcu_note_context_switch() from an
+> > interrupt disabled region does not mean that that the task will be added to a
+> > blocked list (unless it is also in an RCU-preempt reader) so
+> > rcu_note_context_switch() may immediately report a quiescent state and
+> > nothing blockings the grace period.
+> > So callers of rcu_note_context_switch() must be aware of this behavior.
+> > 
+> > (4) On PREEMPT=n, unlike PREEMPT=y, there is no blocked list handling and so
+> > nothing will block the grace period once rcu_note_context_switch() is called.
+> > So any path calling rcu_note_context_switch() on a PREEMPT=n kernel, in the
+> > middle of something that is expected to be an RCU reader would be really bad
+> > from an RCU view point.
+> > 
+> > Probably, we should add this all to documentation somewhere.
 > 
-> On 8/27/19 7:44 AM, Dan Murphy wrote:
-> > Tony
-> > 
-> > On 8/27/19 7:18 AM, Pavel Machek wrote:
-> > > On Mon 2019-08-26 15:44:37, Tony Lindgren wrote:
-> > > > * Pavel Machek <pavel@ucw.cz> [190826 22:14]:
-> > > > > On Mon 2019-08-26 14:58:22, Tony Lindgren wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > * Dan Murphy <dmurphy@ti.com> [190820 19:53]:
-> > > > > > > Fix the brightness control for I2C mode.  Instead of
-> > > > > > > changing the full scale current register update the ALS target
-> > > > > > > register for the appropriate banks.
-> > > > > > > 
-> > > > > > > In addition clean up some code errors and random misspellings found
-> > > > > > > during coding.
-> > > > > > > 
-> > > > > > > Tested on Droid4 as well as LM3532 EVM connected to
-> > > > > > > a BeagleBoneBlack
-> > > > > > > 
-> > > > > > > Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the
-> > > > > > > lm3532 LED driver")
-> > > > > > > Reported-by: Pavel Machek <pavel@ucw.cz>
-> > > > > > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> > > > > > > ---
-> > > > > > > 
-> > > > > > > v3 - Removed register define updates -
-> > > > > > > https://lore.kernel.org/patchwork/patch/1114542/
-> > > > > > Looks like starting with this patch in Linux next the LCD on droid4
-> > > > > > is so dim it's unreadable even with brightness set to 255. Setting
-> > > > > > brightness to 0 does blank it completely though.
-> > > > > > 
-> > > > > > Did something maybe break with the various patch revisions or are
-> > > > > > we now missing some dts patch?
-> > > > > Maybe missing dts patch. We should provide maximum current the LED can
-> > > > > handle...
-> > > > Or i2c control is somehow broken and only als control now works?
-> > 
-> > With only setting CONFIG_LEDS_LM3532=m to the next branch I get full
-> > brightness with 255.
-> > 
-> > I also see half brightness at 128 with the ramp down working.
-> > 
-> > I am not able to reproduce this issue on my device.
-> > 
-> Just to make sure my data was right I did a clean rebuild on commit
-> 1dbb9fb4082ce2a2f1cf9596881ddece062d15d0
-> 
-> from the led-next branch.
-> 
-> Just adding the above config flag.  I still cannot reproduce the issue
-> 
-> See attached pic
+> I think that Sebastian understands this and was using the example of RCU
+> priority boosting to confirm his understanding.  But documentation would
+> be good.  Extremely difficult to keep current, but good.  I believe that
+> the requirements document does cover this.
 
-OK thanks for checking. Probably you can reproduce the issue if you
-reset things to commit c4b8354e5341 ("leds: lm3532: Fix brightness
-control for i2c mode"). There might now be something uninitialized
-with that commit depending on the hardware state on boot if you
-care to check that. Or maybe there's some interaction with other
-patches not yet at commit c4b8354e5341 level.
+Oh ok, got it. Sorry about the noise then!
 
-I confirmed again that things fail at commit c4b8354e5341. But
-now testing with the same Linux next as yesterday things works again.
-Not sure what's going on as failures with Linux next yestreday
-made me start narrowing down what commit causes the issues.
+(In a way, I was just thinking out loud since this is a slightly confusing
+ topic :-P and an archive link to this discussion serves a great purpose in
+ my notes :-D :-)).
 
-Anyways, playing with loading and unloading the leds-lm3532.ko I
-noticed we can also have unpaired regulator calls when using sysfs
-brightness that the below patch attempts to fix. Not sure how I got
-to the point of regulator warnings, but I was trying to enable
-the brightness via sysfs. Maybe I had other patches too when
-I got the regulator warnings.. But please check if the below
-patch makes sense.
+thanks!
 
-Regards,
+ - Joel
 
-Tony
-
-8< ---------------------------
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -127,6 +127,7 @@ struct lm3532_als_data {
-  * @num_leds - Number of LED strings are supported in this array
-  * @full_scale_current - The full-scale current setting for the current sink.
-  * @led_strings - The LED strings supported in this array
-+ * @enabled - Enabled status
-  * @label - LED label
-  */
- struct lm3532_led {
-@@ -138,6 +139,7 @@ struct lm3532_led {
- 	int ctrl_brt_pointer;
- 	int num_leds;
- 	int full_scale_current;
-+	int enabled:1;
- 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
- 	char label[LED_MAX_NAME_SIZE];
- };
-@@ -292,11 +294,15 @@ static int lm3532_get_ramp_index(int ramp_time)
- 				ramp_time);
- }
- 
-+/* Caller must take care of locking */
- static int lm3532_led_enable(struct lm3532_led *led_data)
- {
- 	int ctrl_en_val = BIT(led_data->control_bank);
- 	int ret;
- 
-+	if (led_data->enabled)
-+		return 0;
-+
- 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
- 					 ctrl_en_val, ctrl_en_val);
- 	if (ret) {
-@@ -304,14 +310,24 @@ static int lm3532_led_enable(struct lm3532_led *led_data)
- 		return ret;
- 	}
- 
--	return regulator_enable(led_data->priv->regulator);
-+	ret = regulator_enable(led_data->priv->regulator);
-+	if (ret < 0)
-+		return ret;
-+
-+	led_data->enabled = 1;
-+
-+	return 0;
- }
- 
-+/* Caller must take care of locking */
- static int lm3532_led_disable(struct lm3532_led *led_data)
- {
- 	int ctrl_en_val = BIT(led_data->control_bank);
- 	int ret;
- 
-+	if (!led_data->enabled)
-+		return 0;
-+
- 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
- 					 ctrl_en_val, 0);
- 	if (ret) {
-@@ -319,7 +335,13 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
- 		return ret;
- 	}
- 
--	return regulator_disable(led_data->priv->regulator);
-+	ret = regulator_disable(led_data->priv->regulator);
-+	if (ret < 0)
-+		return ret;
-+
-+	led_data->enabled = 0;
-+
-+	return 0;
- }
- 
- static int lm3532_brightness_set(struct led_classdev *led_cdev,
--- 
-2.23.0
