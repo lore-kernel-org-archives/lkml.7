@@ -2,127 +2,95 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE24C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927C6C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DD720673
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A7B20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfH0Nbo (ORCPT
+        id S1729787AbfH0NcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:31:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34776 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbfH0Nbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:31:43 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89BAD8B5FF0;
-        Tue, 27 Aug 2019 13:31:43 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AC1B5C1B2;
-        Tue, 27 Aug 2019 13:31:39 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 15:31:37 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 0/4] Introduce variable length mdev alias
-Message-ID: <20190827153137.533e5d59.cohuck@redhat.com>
-In-Reply-To: <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat GmbH
+        Tue, 27 Aug 2019 09:32:14 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57219 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfH0NcO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:32:14 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id B3E201C0010;
+        Tue, 27 Aug 2019 13:32:11 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 15:32:11 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Alejandro =?utf-8?B?R29uesOhbGV6?= 
+        <alejandro.gonzalez.correo@gmail.com>
+Cc:     ulf.hansson@linaro.org, wens@csie.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some H6 boards by
+ disabling DDR
+Message-ID: <20190827133211.g5n4uasyz2yvjpjr@flea>
+References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Tue, 27 Aug 2019 13:31:43 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lkjtz2d6pscj5wie"
+Content-Disposition: inline
+In-Reply-To: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 13:11:17 +0000
-Parav Pandit <parav@mellanox.com> wrote:
 
-> Hi Alex, Cornelia,
-> 
-> > -----Original Message-----
-> > From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf
-> > Of Parav Pandit
-> > Sent: Tuesday, August 27, 2019 2:11 AM
-> > To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
-> > Subject: [PATCH 0/4] Introduce variable length mdev alias
-> > 
-> > To have consistent naming for the netdevice of a mdev and to have consistent
-> > naming of the devlink port [1] of a mdev, which is formed using
-> > phys_port_name of the devlink port, current UUID is not usable because UUID
-> > is too long.
-> > 
-> > UUID in string format is 36-characters long and in binary 128-bit.
-> > Both formats are not able to fit within 15 characters limit of netdev name.
-> > 
-> > It is desired to have mdev device naming consistent using UUID.
-> > So that widely used user space framework such as ovs [2] can make use of
-> > mdev representor in similar way as PCIe SR-IOV VF and PF representors.
-> > 
-> > Hence,
-> > (a) mdev alias is created which is derived using sha1 from the mdev name.
-> > (b) Vendor driver describes how long an alias should be for the child mdev
-> > created for a given parent.
-> > (c) Mdev aliases are unique at system level.
-> > (d) alias is created optionally whenever parent requested.
-> > This ensures that non networking mdev parents can function without alias
-> > creation overhead.
-> > 
-> > This design is discussed at [3].
-> > 
-> > An example systemd/udev extension will have,
-> > 
-> > 1. netdev name created using mdev alias available in sysfs.
-> > 
-> > mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-> > mdev 12 character alias=cd5b146a80a5
-> > 
-> > netdev name of this mdev = enmcd5b146a80a5 Here en = Ethernet link m =
-> > mediated device
-> > 
-> > 2. devlink port phys_port_name created using mdev alias.
-> > devlink phys_port_name=pcd5b146a80a5
-> > 
-> > This patchset enables mdev core to maintain unique alias for a mdev.
-> > 
-> > Patch-1 Introduces mdev alias using sha1.
-> > Patch-2 Ensures that mdev alias is unique in a system.
-> > Patch-3 Exposes mdev alias in a sysfs hirerchy.
-> > Patch-4 Extends mtty driver to optionally provide alias generation.
-> > This also enables to test UUID based sha1 collision and trigger error handling
-> > for duplicate sha1 results.
-> > 
-> > In future when networking driver wants to use mdev alias, mdev_alias() API will
-> > be added to derive devlink port name.
-> >   
-> Now that majority of above patches looks in shape and I addressed all comments,
+--lkjtz2d6pscj5wie
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think the discussion of what to do with the attribute if no alias is
-available is still unresolved; waiting for maintainer opinion.
+On Sun, Aug 25, 2019 at 05:05:58PM +0200, Alejandro Gonz=E1lez wrote:
+> Some Allwinner H6 boards have timing problems when dealing with
+> DDR-capable eMMC cards. These boards include the Pine H64 and Tanix TX6.
+>
+> These timing problems result in out of sync communication between the
+> driver and the eMMC, which renders the memory unsuable for every
+> operation but some basic commmands, like reading the status register.
+>
+> The cause of these timing problems is not yet well known, but they go
+> away by disabling DDR mode operation in the driver. Like on some H5
+> boards, it might be that the traces are not precise enough to support
+> these speeds. However, Jernej Skrabec compared the BSP driver with this
+> driver, and found that the BSP driver configures pinctrl to operate at
+> 1.8 V when entering DDR mode (although 3.3 V operation is supported), whi=
+le
+> the mainline kernel lacks any mechanism to switch voltages dynamically.
+> Finally, other possible cause might be some timing parameter that is
+> different on the H6 with respect to other SoCs.
 
-> In next v1 post, I was considering to include mdev_alias() and have example use in mtty driver.
-> 
-> This way, subsequent series of mlx5_core who intents to use mdev_alias() API makes it easy to review and merge through Dave M, netdev tree.
-> Is that ok with you?
+This should be a comment in the driver where this is disabled.
 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--lkjtz2d6pscj5wie
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWUw2wAKCRDj7w1vZxhR
+xYt3AP4+3qKwy0ckh4dZ7jCoxIsKTjo6Lg7T9mmsX0KTdpD3uAD/UnDk8+qHwDox
+MZfS8s6gYu/gIOndKMAIAGQBPJh+bgU=
+=Cii8
+-----END PGP SIGNATURE-----
+
+--lkjtz2d6pscj5wie--
