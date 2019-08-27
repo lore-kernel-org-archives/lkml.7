@@ -2,220 +2,131 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B41EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B1DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5930721881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="vq6f5Mgl"
+	by mail.kernel.org (Postfix) with ESMTP id E81A221881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731010AbfH0TCS (ORCPT
+        id S1731137AbfH0TCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:02:18 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46750 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730972AbfH0TCP (ORCPT
+        Tue, 27 Aug 2019 15:02:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726871AbfH0TCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:02:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q139so14675409pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 12:02:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=message-id:from:to:cc:subject:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=52EK6rfbsq7VobrSZHmcWaacNY1VwE+wKKdzQGaeJmQ=;
-        b=vq6f5MglKnqT62mSThQ/w/JQa8CM/RdJHfTZ9Tac3vS3vLL95wISvQbHokDLuFmaFy
-         RADwOVqVDER25+bQ0dlC/unG/D3mOXZclpmYseEds4XydjPpQKn5Sa1OvMtOlMvTwNjc
-         1NT7fuO/k3GgSobmPG2Mr1V+tjhrzS/nvbJOc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:to:cc:subject:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=52EK6rfbsq7VobrSZHmcWaacNY1VwE+wKKdzQGaeJmQ=;
-        b=XNPaGjQvIHNrt8x5GOcS9JtrP9dwYPKEykOmLvDygar0RncPqtr/5c3/6LhsGaEyyu
-         V7WQXrHZXCRpW227shknkVtFeiPUESAefaniRf7o7Q+NLF96rwQdEnyWTpK0L88JRpEi
-         gDh/tCsOfEUpn25Y7D7tLeBC8ZnlklMprfLx2VjNCQhrL/Obw8aXehLLB9nmrPJ/vCF/
-         9hK/e/WHNZ05Snn/8wKqioj+5JeVwKCe/ZwCwjyPjDx4pdlMec2We3ggwEoO2NNOxZnE
-         bXtJETQq5p93nF++xVJ0xx0sf955jFCvWytiVxvoptFk+wU5ehV71dWL6dI9IaYMpike
-         Oyyg==
-X-Gm-Message-State: APjAAAVngjH+zjlklYp7xMoX8VG3CCFxEfYLwRyZISXFyzJ7Le9OIazW
-        RVluZcvn8pANoFqyiT+Y+fT7JPr3408=
-X-Google-Smtp-Source: APXvYqwFfJK0Bv7+ebFqvAJLuDGybi+9XbXAaWxMh0CqxLK8UMWSMEj+o57dGtYDClJ+Bm2nm7OuxQ==
-X-Received: by 2002:a17:90a:5d12:: with SMTP id s18mr201806pji.112.1566932533839;
-        Tue, 27 Aug 2019 12:02:13 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k14sm33196pfi.98.2019.08.27.12.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 12:02:13 -0700 (PDT)
-Message-ID: <5d657e35.1c69fb81.54250.01de@mx.google.com>
-X-Google-Original-Message-ID: 156693247271239@cam.corp.google.com
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        byungchul.park@lge.com, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: [PATCH 2/5] rcu/tree: Add multiple in-flight batches of kfree_rcu work
-Date:   Tue, 27 Aug 2019 15:01:56 -0400
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-In-Reply-To: 156693247224727@cam.corp.google.com
-References: 156693247224727@cam.corp.google.com
+        Tue, 27 Aug 2019 15:02:54 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RIxcWJ050616;
+        Tue, 27 Aug 2019 15:02:09 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2un90xk84d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 15:02:09 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7RJ1A4Y027212;
+        Tue, 27 Aug 2019 19:02:08 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01dal.us.ibm.com with ESMTP id 2ujvv75vwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 19:02:08 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7RJ27mr46924278
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 19:02:07 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E8ACAE060;
+        Tue, 27 Aug 2019 19:02:07 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3669AE05F;
+        Tue, 27 Aug 2019 19:02:05 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.216])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Aug 2019 19:02:05 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Subject: [PATCH v3 1/1] netfilter: nf_tables: fib: Drop IPV6 packets if IPv6 is disabled on boot
+Date:   Tue, 27 Aug 2019 15:57:49 -0300
+Message-Id: <20190827185748.19148-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908270180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During testing, it was observed that amount of memory consumed due
-kfree_rcu() batching is 300-400MB. Previously we had only a single
-head_free pointer pointing to the list of rcu_head(s) that are to be
-freed after a grace period. Until this list is drained, we cannot queue
-any more objects on it since such objects may not be ready to be
-reclaimed when the worker thread eventually gets to drainin g the
-head_free list.
+If IPv6 is disabled on boot (ipv6.disable=1), but nft_fib_inet ends up
+dealing with a IPv6 packet, it causes a kernel panic in
+fib6_node_lookup_1(), crashing in bad_page_fault.
 
-We can do better by maintaining multiple lists as done by this patch.
-Testing shows that memory consumption came down by around 100-150MB with
-just adding another list. Adding more than 1 additional list did not
-show any improvement.
+The panic is caused by trying to deference a very low address (0x38
+in ppc64le), due to ipv6.fib6_main_tbl = NULL.
+BUG: Kernel NULL pointer dereference at 0x00000038
 
-Suggested-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Fix this behavior by dropping IPv6 packets if !ipv6_mod_enabled().
+
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
 ---
- kernel/rcu/tree.c | 64 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 19 deletions(-)
+Changes from v2:
+- Replace veredict.code from NF_DROP to NFT_BREAK
+- Updated commit message (s/package/packet)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 4f7c3096d786..9b9ae4db1c2d 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2688,28 +2688,38 @@ EXPORT_SYMBOL_GPL(call_rcu);
+Changes from v1:
+- Move drop logic from nft_fib_inet_eval() to nft_fib6_eval{,_type}
+so it can affect other usages of these functions.
+
+ net/ipv6/netfilter/nft_fib_ipv6.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/net/ipv6/netfilter/nft_fib_ipv6.c b/net/ipv6/netfilter/nft_fib_ipv6.c
+index 7ece86afd079..8496e43b73bd 100644
+--- a/net/ipv6/netfilter/nft_fib_ipv6.c
++++ b/net/ipv6/netfilter/nft_fib_ipv6.c
+@@ -125,6 +125,11 @@ void nft_fib6_eval_type(const struct nft_expr *expr, struct nft_regs *regs,
+ 	u32 *dest = &regs->data[priv->dreg];
+ 	struct ipv6hdr *iph, _iph;
  
- /* Maximum number of jiffies to wait before draining a batch. */
- #define KFREE_DRAIN_JIFFIES (HZ / 50)
-+#define KFREE_N_BATCHES 2
-+
-+struct kfree_rcu_work {
-+	/* The rcu_work node for queuing work with queue_rcu_work(). The work
-+	 * is done after a grace period.
-+	 */
-+	struct rcu_work rcu_work;
-+
-+	/* The list of objects that have now left ->head and are queued for
-+	 * freeing after a grace period.
-+	 */
-+	struct rcu_head *head_free;
-+
-+	struct kfree_rcu_cpu *krcp;
-+};
-+static DEFINE_PER_CPU(__typeof__(struct kfree_rcu_work)[KFREE_N_BATCHES], krw);
- 
- /*
-  * Maximum number of kfree(s) to batch, if this limit is hit then the batch of
-  * kfree(s) is queued for freeing after a grace period, right away.
-  */
- struct kfree_rcu_cpu {
--	/* The rcu_work node for queuing work with queue_rcu_work(). The work
--	 * is done after a grace period.
--	 */
--	struct rcu_work rcu_work;
- 
- 	/* The list of objects being queued in a batch but are not yet
- 	 * scheduled to be freed.
- 	 */
- 	struct rcu_head *head;
- 
--	/* The list of objects that have now left ->head and are queued for
--	 * freeing after a grace period.
--	 */
--	struct rcu_head *head_free;
-+	/* Pointer to the per-cpu array of kfree_rcu_work structures */
-+	struct kfree_rcu_work *krwp;
- 
--	/* Protect concurrent access to this structure. */
-+	/* Protect concurrent access to this structure and kfree_rcu_work. */
- 	spinlock_t lock;
- 
- 	/* The delayed work that flushes ->head to ->head_free incase ->head
-@@ -2730,12 +2740,14 @@ static void kfree_rcu_work(struct work_struct *work)
- {
- 	unsigned long flags;
- 	struct rcu_head *head, *next;
--	struct kfree_rcu_cpu *krcp = container_of(to_rcu_work(work),
--					struct kfree_rcu_cpu, rcu_work);
-+	struct kfree_rcu_work *krwp = container_of(to_rcu_work(work),
-+					struct kfree_rcu_work, rcu_work);
-+	struct kfree_rcu_cpu *krcp;
-+
-+	krcp = krwp->krcp;
- 
- 	spin_lock_irqsave(&krcp->lock, flags);
--	head = krcp->head_free;
--	krcp->head_free = NULL;
-+	head = xchg(&krwp->head_free, NULL);
- 	spin_unlock_irqrestore(&krcp->lock, flags);
- 
- 	/*
-@@ -2758,19 +2770,28 @@ static void kfree_rcu_work(struct work_struct *work)
-  */
- static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
- {
-+	int i = 0;
-+	struct kfree_rcu_work *krwp = NULL;
-+
- 	lockdep_assert_held(&krcp->lock);
-+	while (i < KFREE_N_BATCHES) {
-+		if (!krcp->krwp[i].head_free) {
-+			krwp = &(krcp->krwp[i]);
-+			break;
-+		}
-+		i++;
++	if (!ipv6_mod_enabled()) {
++		regs->verdict.code = NFT_BREAK;
++		return;
 +	}
++
+ 	iph = skb_header_pointer(pkt->skb, noff, sizeof(_iph), &_iph);
+ 	if (!iph) {
+ 		regs->verdict.code = NFT_BREAK;
+@@ -150,6 +155,11 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 	struct rt6_info *rt;
+ 	int lookup_flags;
  
--	/* If a previous RCU batch work is already in progress, we cannot queue
-+	/* If both RCU batches are already in progress, we cannot queue
- 	 * another one, just refuse the optimization and it will be retried
- 	 * again in KFREE_DRAIN_JIFFIES time.
- 	 */
--	if (krcp->head_free)
-+	if (!krwp)
- 		return false;
- 
--	krcp->head_free = krcp->head;
--	krcp->head = NULL;
--	INIT_RCU_WORK(&krcp->rcu_work, kfree_rcu_work);
--	queue_rcu_work(system_wq, &krcp->rcu_work);
-+	krwp->head_free = xchg(&krcp->head, NULL);
-+	INIT_RCU_WORK(&krwp->rcu_work, kfree_rcu_work);
-+	queue_rcu_work(system_wq, &krwp->rcu_work);
- 
- 	return true;
- }
-@@ -3736,8 +3757,13 @@ static void __init kfree_rcu_batch_init(void)
- 
- 	for_each_possible_cpu(cpu) {
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
-+		struct kfree_rcu_work *krwp = &(per_cpu(krw, cpu)[0]);
-+		int i = KFREE_N_BATCHES;
- 
- 		spin_lock_init(&krcp->lock);
-+		krcp->krwp = krwp;
-+		while (i--)
-+			krwp[i].krcp = krcp;
- 		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
- 	}
- }
++	if (!ipv6_mod_enabled()) {
++		regs->verdict.code = NFT_BREAK;
++		return;
++	}
++
+ 	if (priv->flags & NFTA_FIB_F_IIF)
+ 		oif = nft_in(pkt);
+ 	else if (priv->flags & NFTA_FIB_F_OIF)
 -- 
-2.23.0.187.g17f5b7556c-goog
+2.20.1
 
