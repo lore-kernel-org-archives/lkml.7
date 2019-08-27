@@ -2,213 +2,131 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BF7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632D4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8C22077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BFB2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nz76BwGo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VDrvrGap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfH0MtI (ORCPT
+        id S1729794AbfH0MtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:49:08 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35320 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfH0MtI (ORCPT
+        Tue, 27 Aug 2019 08:49:25 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33453 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfH0MtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:49:08 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn20so11743210plb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:49:07 -0700 (PDT)
+        Tue, 27 Aug 2019 08:49:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id u16so18689272wrr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:49:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=6ZFqFHRXSVgB76+jQv0yGNyeEOATQA5Fq5064fFB84Y=;
-        b=Nz76BwGoaBuHpEfaGtiEVVwVkKCFh+wT09563rJsuhGNNA3CGybNU3blKGeZLpG2TQ
-         E28fVdZfd51sPITvyo1cscQWzYrOa+jaZ/nC1+v6+51zWohzIoAaFIrOS15hv2kM/7S0
-         FA6qJzYJyIH7UnFPfsBTyvT1OcdB6X+Cyqcga/16xW3L7HEsdfXEQR57sEqzINNdGaFv
-         HwlcxAgIpGyhfXI2wJQ0kAKUjo/cgWeKy7HliMjY6YIXPbYpteeH79ibbVuDYG0v5OwF
-         9VxqE6Z+pfgkUc1Z1BpyfabgmpD3b2QaLdA0TXmSDs6np47n0R7F9jfT3idRnOKWfV4B
-         miNQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=K6sGGcnkNfJ7ijmDZaaObo8SqOBDw8MmU1nR9YFrhj8=;
+        b=VDrvrGap44JQj1pV7ukPNeiNPrl33ZJdIjVWQNuThmlV/RYhymoEVyAKwyHwndqZvN
+         qww7p2ZMRh7JgLOD2y6mCnT9y/evAWEtC13jipki/Uy0KE4NEJMlUVXT7/P1tqUgy+GN
+         SIP39SOCRSxRfHcWg81XLLReIFmnYZCnf2KyBbYHfCu5kPicUx2bOrALKil0Pu4UmcNT
+         sHALJwpk0rPk8rvhl1DqjMWnHyUKetqGj1uVr5HiobXyyXTSmSsdhUneZ6MPsDaVk/hp
+         huWtxDHsBk3K/R8ZJHQOZQs8gJOReqB3jTJGDqd52oAdYlKduIhTFKZ/U6+vDVrc++vY
+         bI/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=6ZFqFHRXSVgB76+jQv0yGNyeEOATQA5Fq5064fFB84Y=;
-        b=hjQoo9jpK94HvEoPbGRWKoiPxSYsYmPnYQ80YSU5OBCnxbDaCy4ivODZVwHlM4K5PU
-         iMfUQx2mn/soLY6/f1nN2WOhCHFVAabtihh2FvWujnMEKfeCmSRaYxE1+3QArmjuipwL
-         EUMLHyQDWmkyiSffQsosFk+9T6wW7Z0kYEaiLDiaUNL422CfpO/P57yJq8woKzBZI/Hn
-         JNYQy2QW640boYJej+jLQ422unpg0BhGp04XwaZjEfVrt/+DdoUM6asN0pjRgoOGMnxg
-         oX6C3S45RukhsNXrMMTyw2C7vhe5snJBVTySrpIRa+S+ic3z06MUy83SRHM5O0+N/Egs
-         FFFg==
-X-Gm-Message-State: APjAAAVw7ktU5qyDduFdqk5ak7nbjHSmPnay/Mq/9vvEgKUpkDs3GV41
-        CiL9R3nYjdy1tbmWkTJ1/wM=
-X-Google-Smtp-Source: APXvYqyBvg9ztoOHMn/uG4MxUZeCV06J4IFbuJCyr7j4czCeAKLyX5Q2VP/OIrQK9RbT71/QMi93kw==
-X-Received: by 2002:a17:902:a60f:: with SMTP id u15mr24077889plq.201.1566910147467;
-        Tue, 27 Aug 2019 05:49:07 -0700 (PDT)
-Received: from localhost (14-202-91-55.tpgi.com.au. [14.202.91.55])
-        by smtp.gmail.com with ESMTPSA id 131sm16437330pge.37.2019.08.27.05.49.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 05:49:06 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 22:48:24 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 2/2] powerpc: cleanup hw_irq.h
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <0f7e164afb5d1b022441559fe5a999bb6d3c0a23.1566893505.git.christophe.leroy@c-s.fr>
-        <81f39fa06ae582f4a783d26abd2b310204eba8f4.1566893505.git.christophe.leroy@c-s.fr>
-In-Reply-To: <81f39fa06ae582f4a783d26abd2b310204eba8f4.1566893505.git.christophe.leroy@c-s.fr>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=K6sGGcnkNfJ7ijmDZaaObo8SqOBDw8MmU1nR9YFrhj8=;
+        b=pAwyKhLndYVnP5aboaCt/oRkIjfaAEUqmaE9kTfjrb1uXDCNNhtJizI9fOmgraHgom
+         olIwyR9X+6uRAC7caJQZsUjW4BbsdguKX1CuwU1eRj380BGzxQ80xTZ3UaWG0mR//mvH
+         6pqK2vdIZp8zusl9qD1qi+imChUpXC2M4GTeqvjl4tCaNiL72Ns9CXCR3w/D681WiNLX
+         xb3X7znj0ML4xZu78C1DHcI4HMuVfV+t7zmKbIrarpp3J8Oh2CekJPHM7EYxOj9RDjEg
+         kkrOvGx9mZLq7SgCWWfdQL5vePhmLLB4RzzMMJCWfz1Rm1YWoJhdSfYG+BC6jN07onCf
+         MakA==
+X-Gm-Message-State: APjAAAXZH+RYWkt8mBqhVoRG8vds8uDeMRXXobtcgMMsvCIbbRToIv+I
+        0fOsW6YV4BSVz6wC8Y9UaOaS4Q==
+X-Google-Smtp-Source: APXvYqwNsNJ89B57qTK4F90oQyhoU6bn99bji2y67EUH88lzxmr0C/UR7DYf6KN5yZwh7dNbo4+uiw==
+X-Received: by 2002:a5d:4446:: with SMTP id x6mr28897624wrr.11.1566910163278;
+        Tue, 27 Aug 2019 05:49:23 -0700 (PDT)
+Received: from dell ([2.27.35.174])
+        by smtp.gmail.com with ESMTPSA id r17sm39025961wrg.93.2019.08.27.05.49.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 05:49:22 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 13:49:21 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: Re: [PATCH v6 11/11] arm/arm64: defconfig: Update configs to use the
+ new CROS_EC options
+Message-ID: <20190827124921.GE4804@dell>
+References: <20190823125331.5070-1-enric.balletbo@collabora.com>
+ <20190823125331.5070-12-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1566909844.x4jee1jjda.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190823125331.5070-12-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on August 27, 2019 6:13 pm:
-> SET_MSR_EE() is just use in this file and doesn't provide
-> any added value compared to mtmsr(). Drop it.
->=20
-> Add macros to use wrtee/wrteei insn.
->=20
-> Replace #ifdefs by IS_ENABLED()
->=20
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On Fri, 23 Aug 2019, Enric Balletbo i Serra wrote:
+
+> Recently we refactored the CrOS EC drivers moving part of the code from
+> the MFD subsystem to the platform chrome subsystem. During this change
+> we needed to rename some config options, so, update the defconfigs
+> accordingly.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  arch/powerpc/include/asm/hw_irq.h | 57 ++++++++++++++++++---------------=
-------
->  arch/powerpc/include/asm/reg.h    |  2 ++
->  2 files changed, 28 insertions(+), 31 deletions(-)
->=20
-> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm=
-/hw_irq.h
-> index 32a18f2f49bc..c25d57f25a8b 100644
-> --- a/arch/powerpc/include/asm/hw_irq.h
-> +++ b/arch/powerpc/include/asm/hw_irq.h
-> @@ -226,8 +226,8 @@ static inline bool arch_irqs_disabled(void)
->  #endif /* CONFIG_PPC_BOOK3S */
-> =20
->  #ifdef CONFIG_PPC_BOOK3E
-> -#define __hard_irq_enable()	asm volatile("wrteei 1" : : : "memory")
-> -#define __hard_irq_disable()	asm volatile("wrteei 0" : : : "memory")
-> +#define __hard_irq_enable()	wrteei(1)
-> +#define __hard_irq_disable()	wrteei(0)
->  #else
->  #define __hard_irq_enable()	__mtmsrd(MSR_EE|MSR_RI, 1)
->  #define __hard_irq_disable()	__mtmsrd(MSR_RI, 1)
-> @@ -280,8 +280,6 @@ extern void force_external_irq_replay(void);
-> =20
->  #else /* CONFIG_PPC64 */
-> =20
-> -#define SET_MSR_EE(x)	mtmsr(x)
-> -
->  static inline unsigned long arch_local_save_flags(void)
->  {
->  	return mfmsr();
-> @@ -289,47 +287,44 @@ static inline unsigned long arch_local_save_flags(v=
-oid)
-> =20
->  static inline void arch_local_irq_restore(unsigned long flags)
->  {
-> -#if defined(CONFIG_BOOKE)
-> -	asm volatile("wrtee %0" : : "r" (flags) : "memory");
-> -#else
-> -	mtmsr(flags);
-> -#endif
-> +	if (IS_ENABLED(CONFIG_BOOKE))
-> +		wrtee(flags);
-> +	else
-> +		mtmsr(flags);
->  }
-> =20
->  static inline unsigned long arch_local_irq_save(void)
->  {
->  	unsigned long flags =3D arch_local_save_flags();
-> -#ifdef CONFIG_BOOKE
-> -	asm volatile("wrteei 0" : : : "memory");
-> -#elif defined(CONFIG_PPC_8xx)
-> -	wrtspr(SPRN_EID);
-> -#else
-> -	SET_MSR_EE(flags & ~MSR_EE);
-> -#endif
-> +
-> +	if (IS_ENABLED(CONFIG_BOOKE))
-> +		wrteei(0);
-> +	else if (IS_ENABLED(CONFIG_PPC_8xx))
-> +		wrtspr(SPRN_EID);
-> +	else
-> +		mtmsr(flags & ~MSR_EE);
-> +
->  	return flags;
->  }
-> =20
->  static inline void arch_local_irq_disable(void)
->  {
-> -#ifdef CONFIG_BOOKE
-> -	asm volatile("wrteei 0" : : : "memory");
-> -#elif defined(CONFIG_PPC_8xx)
-> -	wrtspr(SPRN_EID);
-> -#else
-> -	arch_local_irq_save();
-> -#endif
-> +	if (IS_ENABLED(CONFIG_BOOKE))
-> +		wrteei(0);
-> +	else if (IS_ENABLED(CONFIG_PPC_8xx))
-> +		wrtspr(SPRN_EID);
-> +	else
-> +		mtmsr(mfmsr() & ~MSR_EE);
->  }
-> =20
->  static inline void arch_local_irq_enable(void)
->  {
-> -#ifdef CONFIG_BOOKE
-> -	asm volatile("wrteei 1" : : : "memory");
-> -#elif defined(CONFIG_PPC_8xx)
-> -	wrtspr(SPRN_EIE);
-> -#else
-> -	unsigned long msr =3D mfmsr();
-> -	SET_MSR_EE(msr | MSR_EE);
-> -#endif
-> +	if (IS_ENABLED(CONFIG_BOOKE))
-> +		wrteei(1);
-> +	else if (IS_ENABLED(CONFIG_PPC_8xx))
-> +		wrtspr(SPRN_EIE);
-> +	else
-> +		mtmsr(mfmsr() | MSR_EE);
->  }
-> =20
->  static inline bool arch_irqs_disabled_flags(unsigned long flags)
-> diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/re=
-g.h
-> index b17ee25df226..04896dd09455 100644
-> --- a/arch/powerpc/include/asm/reg.h
-> +++ b/arch/powerpc/include/asm/reg.h
-> @@ -1361,6 +1361,8 @@ static inline void mtmsr_isync(unsigned long val)
->  #endif
->  #define wrtspr(rn)	asm volatile("mtspr " __stringify(rn) ",0" : \
->  				     : : "memory")
-> +#define wrtee(val)	asm volatile("wrtee %0" : : "r" (val) : "memory")
-> +#define wrteei(val)	asm volatile("wrteei %0" : : "i" (val) : "memory")
+> 
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/configs/exynos_defconfig   | 6 +++++-
+>  arch/arm/configs/multi_v7_defconfig | 6 ++++--
+>  arch/arm/configs/pxa_defconfig      | 4 +++-
+>  arch/arm/configs/tegra_defconfig    | 2 +-
+>  arch/arm64/configs/defconfig        | 6 ++++--
+>  5 files changed, 17 insertions(+), 7 deletions(-)
 
-Can you implement just one macro that uses __builtin_constant_p to=20
-select between the imm and reg versions? I forgot if there's some
-corner cases that prevent that working with inline asm i constraints.
+This needs an ARM-SoC Ack before I can take it.
 
-Otherwise, looks like a nice cleanup.
-
-Thanks,
-Nick
-=
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
