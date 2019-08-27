@@ -2,94 +2,86 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D053C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836AC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95FD20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D9220673
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfH0Nav (ORCPT
+        id S1729582AbfH0Nb2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:30:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43700 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfH0Nav (ORCPT
+        Tue, 27 Aug 2019 09:31:28 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41214 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfH0Nb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:30:51 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i2bYN-0006N9-RX; Tue, 27 Aug 2019 15:30:31 +0200
-Date:   Tue, 27 Aug 2019 15:30:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pavel Machek <pavel@denx.de>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4.19 72/98] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD
- family 15h/16h
-In-Reply-To: <20190827113604.GB18218@amd>
-Message-ID: <alpine.DEB.2.21.1908271525480.1939@nanos.tec.linutronix.de>
-References: <20190827072718.142728620@linuxfoundation.org> <20190827072722.020603090@linuxfoundation.org> <20190827113604.GB18218@amd>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 27 Aug 2019 09:31:27 -0400
+Received: by mail-oi1-f193.google.com with SMTP id p127so6314458oic.8;
+        Tue, 27 Aug 2019 06:31:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fbrpcnaW6FeusXGWHy/FZL17iPbB9NJ4oGcjQCYCxAc=;
+        b=RakY2sD09NKfmQRgIm5vkJ6AD90XUEMiPdtphaWnbaz6kuZ3msa/zniJWSblqmLsm5
+         CQ3Y7FMIUUeJzESZRJh/pFXN4rTDrlwoAbnnl57RxoOVuVncCOmdBqk6IUl/CGsPRZCu
+         oJaAqu5b+ZDsotlFFj+MkoJ+CoOm2rmAAi/xJ2y/M09Vf2Z1eqYqGdL/KIb21ApzZw+A
+         Yl77l8BgxFvCtpGdgbIRu6xdqecBfeu0lnDsyEOOvmqKZGJVArUEEEMfgUTaWpQ7/GBP
+         eJ7i/HXnPHbqC3YpD6QqLM+5yBbyzbt0iNXH/LpI3hSJ0sDx/ufas+isaYWCUp6qWWYo
+         lS3Q==
+X-Gm-Message-State: APjAAAVj+fSpW5P2a1T99jfa7B7Gc+jZv5pNccHfjsnii1pnerxS0MQ9
+        ydQnbBAAhPTNtL/LiBfbyXJUIYAxkAc1kYtWEcc=
+X-Google-Smtp-Source: APXvYqzZzbXU+RqScZH8H98sHGPvNyaTmnwaD9hadGmeyRCrAgllptmivlqOHf5SeYogP/M2CHNeVInHgpGlCSPZLcY=
+X-Received: by 2002:aca:f4ca:: with SMTP id s193mr15420301oih.131.1566912686716;
+ Tue, 27 Aug 2019 06:31:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <e66b822b-026b-29cc-e461-6334aafd1d30@web.de>
+In-Reply-To: <e66b822b-026b-29cc-e461-6334aafd1d30@web.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 27 Aug 2019 15:31:15 +0200
+Message-ID: <CAMuHMdVCcHn1YHFhehkvNV29s5jCDDsDWBOkVcWmf1XBPRdfYg@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: mstp: Delete an unnecessary kfree() call in cpg_mstp_clocks_init()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019, Pavel Machek wrote:
+On Tue, Aug 27, 2019 at 3:27 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 27 Aug 2019 15:22:12 +0200
+>
+> A null pointer would be passed to a call of the function “kfree”
+> directly after a call of the function “kzalloc” failed at one place.
+> Remove this superfluous function call.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-> On Tue 2019-08-27 09:50:51, Greg Kroah-Hartman wrote:
-> > From: Tom Lendacky <thomas.lendacky@amd.com>
-> > 
-> > commit c49a0a80137c7ca7d6ced4c812c9e07a949f6f24 upstream.
-> > 
-> > There have been reports of RDRAND issues after resuming from suspend on
-> > some AMD family 15h and family 16h systems. This issue stems from a BIOS
-> > not performing the proper steps during resume to ensure RDRAND continues
-> > to function properly.
-> 
-> Yes. And instead of reinitializing the RDRAND on resume, this patch
-> breaks support even for people with properly functioning BIOSes...
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v5.5.
 
-There is no way to reinitialize RDRAND from the kernel otherwise we would
-have exactly done that. If you know how to do that please tell.
+Gr{oetje,eeting}s,
 
-Also disabling it for every BIOS is the only way which can be done because
-there is no way to know whether the BIOS is fixed or not at cold boot
-time. And it has to be known there because applications cache the
-availablity and continue using it after resume and because the valid bit is
-set they wont notice.
+                        Geert
 
-There is a know to turn it back on for those who are sure that it works,
-but the default has to be: OFF simply because we cannot endanger everyone
-out there with a broken BIOS just to please you.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks,
-
-	tglx
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
