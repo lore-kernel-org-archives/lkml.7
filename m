@@ -2,171 +2,436 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5A8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B0FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C477121883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B3622CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOn/Th1Q"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LtORSIGA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="guLVDkVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbfH0Rts (ORCPT
+        id S1730276AbfH0RxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:49:48 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:35864 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfH0Rtr (ORCPT
+        Tue, 27 Aug 2019 13:53:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56866 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727683AbfH0RxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:49:47 -0400
-Received: by mail-pl1-f202.google.com with SMTP id z7so1046685plo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 10:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=kBdnxSxfNrFWkVEGyrNiJF2qYM16TCNtAyDwbg8s3Rk=;
-        b=HOn/Th1QKNcSzNR3M0ivHvPiRM2bzQGo8BrsuGTsP0yVKcaY9EThjCVmrGsqv68SRl
-         08AFZc+Ve9nLv+iuxMWWoQ8TfuoczhlgUagEpq4zf93CTKd5WfjAM71R3eFW1bl8x2kv
-         a/If01mUOn+T/zWriHxXPvCBW8ssCgL7q7AQF+09Dzd8dYLWrmJQrx6Fr4RYWfa9nqr4
-         fHQiDDcS7vc9ks9Y0T0YBiDTEyShWi/5rmpo4XF6r+rl1EdZOn8wwU5cJSG0qA+IYNtL
-         7DxPEE9WqIzJhTBvuCB2Y9gMYcXYLFadNIklLwxHR7pfGvIJdBAaoSAsh5dWfLh2K7W1
-         Ihjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=kBdnxSxfNrFWkVEGyrNiJF2qYM16TCNtAyDwbg8s3Rk=;
-        b=cR1kZdZDW4OPLLQSZA1hKC5bZMtxBReIt5RughMsKPF3RgYsKYQ3TrF2F4jAJjMuPp
-         JEY32LFFr3xEjJkZhzHqwhbNTyBz/T4a6TGY7gCT33Wu2VlFQfjWEoCsMxz69ulOpuT7
-         UWfH4wbXoKaKhc8E8Mh33ezaannUmD7nrSVx/JBrE/rsH64KLyzH8/gvaI8DXSIZ1pAK
-         822xpmDA6hQkUvrF2MHxzv0t5cJgdUfWTHjtQdA2473ac2h3GkEueJmVvChw5F5hvl2t
-         ZxRfXPki2ghnIJL2I+0zze44Vjj8Nln3WdtotX1jCvG60sAuQlLrcXqOG7Dfs43g5H58
-         G+ZQ==
-X-Gm-Message-State: APjAAAXi7IZOB+jLU02XSbVlDWsmsIh93sotZaIZw+dVJE1MwWEdnVs+
-        RCcVaLTDx2tblNxHs9V7FJkrrFniDN9lliKquCSkKg==
-X-Google-Smtp-Source: APXvYqzuY3DB3JPKTCk1lSTX1WmoxGNBIKvHThp1bwIkRjN5dpabp0rDjmzoCO0QjJ5fmhmmeC4w2szCM4IP8kr+EoqdCg==
-X-Received: by 2002:a63:595d:: with SMTP id j29mr22734669pgm.134.1566928186602;
- Tue, 27 Aug 2019 10:49:46 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 10:49:32 -0700
-Message-Id: <20190827174932.44177-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v1] kunit: fix failure to build without printk
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah@kernel.org
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
-        sboyd@kernel.org, Brendan Higgins <brendanhiggins@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 27 Aug 2019 13:53:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C88B36D8DE; Tue, 27 Aug 2019 15:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566922677;
+        bh=Yg0LKP9VDg1ut1tbZj4dVvcx7uWBcYeorGSckKymSi0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LtORSIGAFIta2Sy8NUw9uUtngTL/HaWo+f4jW9rn+8TvEliCXgOFBqW45T5QsLMa4
+         W2b7pd7dGj8C/IBz6kxy5HYkAKx4PE1QtICkYhztGcDpSf4Rz1ckUWe9sUs8BPmUwC
+         +lL8UCY/aQsMVqAufzCAmOSVqQQf6A1expWQDVTw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 85E636A536;
+        Tue, 27 Aug 2019 15:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566919387;
+        bh=Yg0LKP9VDg1ut1tbZj4dVvcx7uWBcYeorGSckKymSi0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=guLVDkVAJwfDZddMQeGhtvQvcWD7OJ3wTYzb7HsurL66VHEfYv/wdfsY0sfzsADrG
+         n8/N6Btqlrit8BGgQ3d59RD1LGCp+tkPxMOOErbs8FbHhn8mtndEHz26jbfbVvVIKr
+         +8SLFwv5FvaXVQSknU1gDutfzEvzW5TXKxXh8n/g=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 27 Aug 2019 20:53:05 +0530
+From:   kgunda@codeaurora.org
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v4 6/8] arm64: dts: qcom: sm8150-mtp: Add regulators
+In-Reply-To: <2000d2ae8b0c3ee079cce75233b53330@codeaurora.org>
+References: <20190821184239.12364-1-vkoul@kernel.org>
+ <20190821184239.12364-7-vkoul@kernel.org>
+ <2000d2ae8b0c3ee079cce75233b53330@codeaurora.org>
+Message-ID: <8011e6a82fe0b7ce6f81c896ae4c4d0c@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously KUnit assumed that printk would always be present, which is
-not a valid assumption to make. Fix that by ifdefing out functions which
-directly depend on printk core functions similar to what dev_printk
-does.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- include/kunit/test.h |  7 +++++++
- kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
- 2 files changed, 31 insertions(+), 17 deletions(-)
-
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 8b7eb03d4971..339af5f95c4a 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
- 
- void kunit_cleanup(struct kunit *test);
- 
-+#ifdef CONFIG_PRINTK
- void __printf(3, 4) kunit_printk(const char *level,
- 				 const struct kunit *test,
- 				 const char *fmt, ...);
-+#else
-+static inline void __printf(3, 4) kunit_printk(const char *level,
-+					       const struct kunit *test,
-+					       const char *fmt, ...)
-+{}
-+#endif
- 
- /**
-  * kunit_info() - Prints an INFO level message associated with @test.
-diff --git a/kunit/test.c b/kunit/test.c
-index b2ca9b94c353..0aa1caf07a6b 100644
---- a/kunit/test.c
-+++ b/kunit/test.c
-@@ -16,6 +16,7 @@ static void kunit_set_failure(struct kunit *test)
- 	WRITE_ONCE(test->success, false);
- }
- 
-+#ifdef CONFIG_PRINTK
- static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
- {
- 	return vprintk_emit(0, level, NULL, 0, fmt, args);
-@@ -40,6 +41,29 @@ static void kunit_vprintk(const struct kunit *test,
- 	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
- }
- 
-+void kunit_printk(const char *level,
-+		  const struct kunit *test,
-+		  const char *fmt, ...)
-+{
-+	struct va_format vaf;
-+	va_list args;
-+
-+	va_start(args, fmt);
-+
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
-+
-+	kunit_vprintk(test, level, &vaf);
-+
-+	va_end(args);
-+}
-+#else /* CONFIG_PRINTK */
-+static inline int kunit_printk_emit(int level, const char *fmt, ...)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_PRINTK */
-+
- static void kunit_print_tap_version(void)
- {
- 	static bool kunit_has_printed_tap_version;
-@@ -504,20 +528,3 @@ void kunit_cleanup(struct kunit *test)
- 		kunit_resource_free(test, resource);
- 	}
- }
--
--void kunit_printk(const char *level,
--		  const struct kunit *test,
--		  const char *fmt, ...)
--{
--	struct va_format vaf;
--	va_list args;
--
--	va_start(args, fmt);
--
--	vaf.fmt = fmt;
--	vaf.va = &args;
--
--	kunit_vprintk(test, level, &vaf);
--
--	va_end(args);
--}
--- 
-2.23.0.187.g17f5b7556c-goog
-
+On 2019-08-23 11:35, kgunda@codeaurora.org wrote:
+> On 2019-08-22 00:12, Vinod Koul wrote:
+>> Add the regulators found in the mtp platform. This platform consists 
+>> of
+>> pmic PM8150, PM8150L and PM8009.
+>> 
+>> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+>> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 324 
+>> ++++++++++++++++++++++++
+>>  1 file changed, 324 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>> b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>> index 6f5777f530ae..aa5de42fcae4 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>> @@ -6,6 +6,7 @@
+>> 
+>>  /dts-v1/;
+>> 
+>> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>>  #include "sm8150.dtsi"
+>>  #include "pm8150.dtsi"
+>>  #include "pm8150b.dtsi"
+>> @@ -22,6 +23,329 @@
+>>  	chosen {
+>>  		stdout-path = "serial0:115200n8";
+>>  	};
+>> +
+>> +	vph_pwr: vph-pwr-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vph_pwr";
+>> +		regulator-min-microvolt = <3700000>;
+>> +		regulator-max-microvolt = <3700000>;
+>> +	};
+>> +
+>> +	/*
+>> +	 * Apparently RPMh does not provide support for PM8150 S4 because it
+>> +	 * is always-on; model it as a fixed regulator.
+>> +	 */
+>> +	vreg_s4a_1p8: pm8150-s4 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vreg_s4a_1p8";
+>> +
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +
+>> +		vin-supply = <&vph_pwr>;
+>> +	};
+>> +};
+>> +
+>> +&apps_rsc {
+>> +	pm8150-rpmh-regulators {
+>> +		compatible = "qcom,pm8150-rpmh-regulators";
+>> +		qcom,pmic-id = "a";
+>> +
+>> +		vdd-s1-supply = <&vph_pwr>;
+>> +		vdd-s2-supply = <&vph_pwr>;
+>> +		vdd-s3-supply = <&vph_pwr>;
+>> +		vdd-s4-supply = <&vph_pwr>;
+>> +		vdd-s5-supply = <&vph_pwr>;
+>> +		vdd-s6-supply = <&vph_pwr>;
+>> +		vdd-s7-supply = <&vph_pwr>;
+>> +		vdd-s8-supply = <&vph_pwr>;
+>> +		vdd-s9-supply = <&vph_pwr>;
+>> +		vdd-s10-supply = <&vph_pwr>;
+>> +
+>> +		vdd-l1-l8-l11-supply = <&vreg_s6a_0p9>;
+>> +		vdd-l2-l10-supply = <&vreg_bob>;
+>> +		vdd-l3-l4-l5-l18-supply = <&vreg_s6a_0p9>;
+> You no need to vote for the parent supply from the Linux driver. The
+> parent/child dependency is completely taken care by the
+> AOP/RPMh. Voting on the parent will create unnecessary additional RPMh
+> transactions, which may degrade the performance.
+>> +		vdd-l6-l9-supply = <&vreg_s8c_1p3>;
+>> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p0>;
+>> +		vdd-l13-l16-l17-supply = <&vreg_bob>;
+>> +
+>> +		vreg_s5a_2p0: smps5 {
+>> +			regulator-min-microvolt = <1904000>;
+>> +			regulator-max-microvolt = <2000000>;
+>> +		};
+>> +
+>> +		vreg_s6a_0p9: smps6 {
+>> +			regulator-min-microvolt = <920000>;
+>> +			regulator-max-microvolt = <1128000>;
+>> +		};
+>> +
+>> +		vdda_wcss_pll:
+>> +		vreg_l1a_0p75: ldo1 {
+>> +			regulator-min-microvolt = <752000>;
+>> +			regulator-max-microvolt = <752000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vdd_pdphy:
+>> +		vdda_usb_hs_3p1:
+>> +		vreg_l2a_3p1: ldo2 {
+>> +			regulator-min-microvolt = <3072000>;
+>> +			regulator-max-microvolt = <3072000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l3a_0p8: ldo3 {
+>> +			regulator-min-microvolt = <480000>;
+>> +			regulator-max-microvolt = <932000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vdd_usb_hs_core:
+>> +		vdda_csi_0_0p9:
+>> +		vdda_csi_1_0p9:
+>> +		vdda_csi_2_0p9:
+>> +		vdda_csi_3_0p9:
+>> +		vdda_dsi_0_0p9:
+>> +		vdda_dsi_1_0p9:
+>> +		vdda_dsi_0_pll_0p9:
+>> +		vdda_dsi_1_pll_0p9:
+>> +		vdda_pcie_1ln_core:
+>> +		vdda_pcie_2ln_core:
+>> +		vdda_pll_hv_cc_ebi01:
+>> +		vdda_pll_hv_cc_ebi23:
+>> +		vdda_qrefs_0p875_5:
+>> +		vdda_sp_sensor:
+>> +		vdda_ufs_2ln_core_1:
+>> +		vdda_ufs_2ln_core_2:
+>> +		vdda_usb_ss_dp_core_1:
+>> +		vdda_usb_ss_dp_core_2:
+>> +		vdda_qlink_lv:
+>> +		vdda_qlink_lv_ck:
+Why few LDOs doesn't have the consumer names (handles) mentioned, while 
+few LDOs have them.
+Can you have them for all LDOs?
+>> +		vreg_l5a_0p875: ldo5 {
+>> +			regulator-min-microvolt = <880000>;
+>> +			regulator-max-microvolt = <880000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l6a_1p2: ldo6 {
+>> +			regulator-min-microvolt = <1200000>;
+>> +			regulator-max-microvolt = <1200000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l7a_1p8: ldo7 {
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vddpx_10:
+>> +		vreg_l9a_1p2: ldo9 {
+>> +			regulator-min-microvolt = <1200000>;
+>> +			regulator-max-microvolt = <1200000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l10a_2p5: ldo10 {
+>> +			regulator-min-microvolt = <2504000>;
+>> +			regulator-max-microvolt = <2960000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l11a_0p8: ldo11 {
+>> +			regulator-min-microvolt = <800000>;
+>> +			regulator-max-microvolt = <800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vdd_qfprom:
+>> +		vdd_qfprom_sp:
+>> +		vdda_apc_cs_1p8:
+>> +		vdda_gfx_cs_1p8:
+>> +		vdda_usb_hs_1p8:
+>> +		vdda_qrefs_vref_1p8:
+>> +		vddpx_10_a:
+>> +		vreg_l12a_1p8: ldo12 {
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l13a_2p7: ldo13 {
+>> +			regulator-min-microvolt = <2704000>;
+>> +			regulator-max-microvolt = <2704000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l14a_1p8: ldo14 {
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1880000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l15a_1p7: ldo15 {
+>> +			regulator-min-microvolt = <1704000>;
+>> +			regulator-max-microvolt = <1704000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l16a_2p7: ldo16 {
+>> +			regulator-min-microvolt = <2704000>;
+>> +			regulator-max-microvolt = <2960000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l17a_3p0: ldo17 {
+>> +			regulator-min-microvolt = <2856000>;
+>> +			regulator-max-microvolt = <3008000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +	};
+>> +
+>> +	pm8150l-rpmh-regulators {
+>> +		compatible = "qcom,pm8150l-rpmh-regulators";
+>> +		qcom,pmic-id = "c";
+>> +
+>> +		vdd-s1-supply = <&vph_pwr>;
+>> +		vdd-s2-supply = <&vph_pwr>;
+>> +		vdd-s3-supply = <&vph_pwr>;
+>> +		vdd-s4-supply = <&vph_pwr>;
+>> +		vdd-s5-supply = <&vph_pwr>;
+>> +		vdd-s6-supply = <&vph_pwr>;
+>> +		vdd-s7-supply = <&vph_pwr>;
+>> +		vdd-s8-supply = <&vph_pwr>;
+>> +
+>> +		vdd-l1-l8-supply = <&vreg_s4a_1p8>;
+>> +		vdd-l2-l3-supply = <&vreg_s8c_1p3>;
+>> +		vdd-l4-l5-l6-supply = <&vreg_bob>;
+>> +		vdd-l7-l11-supply = <&vreg_bob>;
+>> +		vdd-l9-l10-supply = <&vreg_bob>;
+>> +
+>> +		vdd-bob-supply = <&vph_pwr>;
+>> +		vdd-flash-supply = <&vreg_bob>;
+>> +		vdd-rgb-supply = <&vreg_bob>;
+>> +
+>> +		vreg_bob: bob {
+>> +			regulator-min-microvolt = <3008000>;
+>> +			regulator-max-microvolt = <4000000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
+>> +			regulator-allow-bypass;
+>> +		};
+>> +
+>> +		vreg_s8c_1p3: smps8 {
+>> +			regulator-min-microvolt = <1352000>;
+>> +			regulator-max-microvolt = <1352000>;
+>> +		};
+>> +
+>> +		vreg_l1c_1p8: ldo1 {
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vdda_wcss_adcdac_1:
+>> +		vdda_wcss_adcdac_22:
+>> +		vreg_l2c_1p3: ldo2 {
+>> +			regulator-min-microvolt = <1304000>;
+>> +			regulator-max-microvolt = <1304000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vdda_hv_ebi0:
+>> +		vdda_hv_ebi1:
+>> +		vdda_hv_ebi2:
+>> +		vdda_hv_ebi3:
+>> +		vdda_hv_refgen0:
+>> +		vdda_qlink_hv_ck:
+>> +		vreg_l3c_1p2: ldo3 {
+>> +			regulator-min-microvolt = <1200000>;
+>> +			regulator-max-microvolt = <1200000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vddpx_5:
+>> +		vreg_l4c_1p8: ldo4 {
+>> +			regulator-min-microvolt = <1704000>;
+>> +			regulator-max-microvolt = <2928000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vddpx_6:
+>> +		vreg_l5c_1p8: ldo5 {
+>> +			regulator-min-microvolt = <1704000>;
+>> +			regulator-max-microvolt = <2928000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vddpx_2:
+>> +		vreg_l6c_2p9: ldo6 {
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <2960000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l7c_3p0: ldo7 {
+>> +			regulator-min-microvolt = <2856000>;
+>> +			regulator-max-microvolt = <3104000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l8c_1p8: ldo8 {
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l9c_2p9: ldo9 {
+>> +			regulator-min-microvolt = <2704000>;
+>> +			regulator-max-microvolt = <2960000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l10c_3p3: ldo10 {
+>> +			regulator-min-microvolt = <3000000>;
+>> +			regulator-max-microvolt = <3312000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l11c_3p3: ldo11 {
+>> +			regulator-min-microvolt = <3000000>;
+>> +			regulator-max-microvolt = <3312000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +	};
+>> +
+>> +	pm8009-rpmh-regulators {
+>> +		compatible = "qcom,pm8009-rpmh-regulators";
+>> +		qcom,pmic-id = "f";
+>> +
+>> +		vdd-s1-supply = <&vph_pwr>;
+>> +		vdd-s2-supply = <&vreg_bob>;
+>> +
+>> +		vdd-l2-supply = <&vreg_s8c_1p3>;
+>> +		vdd-l5-l6-supply = <&vreg_bob>;
+>> +
+>> +		vreg_l2f_1p2: ldo2 {
+>> +			regulator-min-microvolt = <1200000>;
+>> +			regulator-max-microvolt = <1200000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l5f_2p85: ldo5 {
+>> +			regulator-min-microvolt = <2800000>;
+>> +			regulator-max-microvolt = <2800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +		};
+>> +
+>> +		vreg_l6f_2p85: ldo6 {
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +			regulator-min-microvolt = <2856000>;
+>> +			regulator-max-microvolt = <2856000>;
+>> +		};
+>> +	};
+>>  };
+>> 
+>>  &qupv3_id_1 {
