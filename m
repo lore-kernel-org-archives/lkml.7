@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C1EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFD8206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF5E20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892978;
-	bh=gMSsurQFK8yP6ao5WbTqBX6EiVu1X4UoGWIWom96rp0=;
+	s=default; t=1566892982;
+	bh=BQJJ7V0TFi5l6Xs2+GGf5LTmUXearB8vYzqzeyd7hmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tn2CC4y93PtFpPdJJksE2A5JcG9Zin88+QaUueu/r8j0W4RxjjPOwOLhu3xMWsgDw
-	 02IqFOndEOjrjZnfSaeuao9yS9LENwO9jgRVt8de71W+3EkMb5TP7hR/JE6/NbBewA
-	 ViZFqU49FwL0Y9zmm+fWY7kIum9qKeDZJi/5amNw=
+	b=B3GRgJS6RbVdpi7DW6b7APac6/8APSmf6mpQQLJ5aWao4NZ2FaTXNSWnwsKZh2Sz/
+	 q0Z4ZbRNDrYnAnjzqPU+PbNbutySFWcLI60mEiClxrY2phw7SN3ARU4aqysBbEWs5s
+	 V2sDnP+O8bG2ma1p6KbJN4A3sk9EgpT7kuILstp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbfH0IC5 (ORCPT
+        id S1730862AbfH0IDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60188 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732105AbfH0ICz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:55 -0400
+        id S1732105AbfH0IC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92666206BA;
-        Tue, 27 Aug 2019 08:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 826D6206BA;
+        Tue, 27 Aug 2019 08:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892974;
-        bh=gMSsurQFK8yP6ao5WbTqBX6EiVu1X4UoGWIWom96rp0=;
+        s=default; t=1566892977;
+        bh=BQJJ7V0TFi5l6Xs2+GGf5LTmUXearB8vYzqzeyd7hmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XfZZ4Aa1m5FkY1FvMTcxSaL+78NvBCcopsRlCQIC9ZUqhhYV4kV7luSE0O0vNZamE
-         sQySBcpyD4GUGAp3B0bTKqJ1JFvS6qdJ1cCZEJa01shGDhhxv9CPGnvHU+FKsFGF2h
-         0RQj9Q4qRPN21kpvrfSmqEEQNMb/5gB28K7RemOE=
+        b=UgHkAb/QoqHDdHGp7HQU3OJ3wXx7wCIWjxMg4+zenLeGrJ9G3Gp/kuWIDVx8xkt+A
+         NxSzRH5lLqYfOC0SDLm7jSCCEOH8i/wFMIqvDuf2OVpY5lZ2k1aDkuCpR+iv/xjr5X
+         HZXnSYxhRnS7viX6MVlVDHv4HLfyHy1iLhRxAGjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 079/162] drm/rockchip: Suspend DP late
-Date:   Tue, 27 Aug 2019 09:50:07 +0200
-Message-Id: <20190827072740.863064218@linuxfoundation.org>
+Subject: [PATCH 5.2 080/162] SMB3: Fix potential memory leak when processing compound chain
+Date:   Tue, 27 Aug 2019 09:50:08 +0200
+Message-Id: <20190827072740.898571657@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,42 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f7ccbed656f78212593ca965d9a8f34bf24e0aab ]
+[ Upstream commit 3edeb4a4146dc3b54d6fa71b7ee0585cb52ebfdf ]
 
-In commit fe64ba5c6323 ("drm/rockchip: Resume DP early") we moved
-resume to be early but left suspend at its normal time.  This seems
-like it could be OK, but casues problems if a suspend gets interrupted
-partway through.  The OS only balances matching suspend/resume levels.
-...so if suspend was called then resume will be called.  If suspend
-late was called then resume early will be called.  ...but if suspend
-was called resume early might not get called.  This leads to an
-unbalance in the clock enables / disables.
+When a reconnect happens in the middle of processing a compound chain
+the code leaks a buffer from the memory pool. Fix this by properly
+checking for a return code and freeing buffers in case of error.
 
-Lets take the simple fix and just move suspend to be late to match.
-This makes the PM core take proper care in keeping things balanced.
+Also maintain a buf variable to be equal to either smallbuf or bigbuf
+depending on a response buffer size while parsing a chain and when
+returning to the caller.
 
-Fixes: fe64ba5c6323 ("drm/rockchip: Resume DP early")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190802184616.44822-1-dianders@chromium.org
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2ops.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index 95e5c517a15f7..9aae3d8e99ef4 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -432,7 +432,7 @@ static int rockchip_dp_resume(struct device *dev)
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 2ec37dc589a7b..ae10d6e297c3a 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -4015,7 +4015,6 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
+ {
+ 	int ret, length;
+ 	char *buf = server->smallbuf;
+-	char *tmpbuf;
+ 	struct smb2_sync_hdr *shdr;
+ 	unsigned int pdu_length = server->pdu_size;
+ 	unsigned int buf_size;
+@@ -4045,18 +4044,15 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
+ 		return length;
  
- static const struct dev_pm_ops rockchip_dp_pm_ops = {
- #ifdef CONFIG_PM_SLEEP
--	.suspend = rockchip_dp_suspend,
-+	.suspend_late = rockchip_dp_suspend,
- 	.resume_early = rockchip_dp_resume,
- #endif
- };
+ 	next_is_large = server->large_buf;
+- one_more:
++one_more:
+ 	shdr = (struct smb2_sync_hdr *)buf;
+ 	if (shdr->NextCommand) {
+-		if (next_is_large) {
+-			tmpbuf = server->bigbuf;
++		if (next_is_large)
+ 			next_buffer = (char *)cifs_buf_get();
+-		} else {
+-			tmpbuf = server->smallbuf;
++		else
+ 			next_buffer = (char *)cifs_small_buf_get();
+-		}
+ 		memcpy(next_buffer,
+-		       tmpbuf + le32_to_cpu(shdr->NextCommand),
++		       buf + le32_to_cpu(shdr->NextCommand),
+ 		       pdu_length - le32_to_cpu(shdr->NextCommand));
+ 	}
+ 
+@@ -4085,12 +4081,21 @@ receive_encrypted_standard(struct TCP_Server_Info *server,
+ 		pdu_length -= le32_to_cpu(shdr->NextCommand);
+ 		server->large_buf = next_is_large;
+ 		if (next_is_large)
+-			server->bigbuf = next_buffer;
++			server->bigbuf = buf = next_buffer;
+ 		else
+-			server->smallbuf = next_buffer;
+-
+-		buf += le32_to_cpu(shdr->NextCommand);
++			server->smallbuf = buf = next_buffer;
+ 		goto one_more;
++	} else if (ret != 0) {
++		/*
++		 * ret != 0 here means that we didn't get to handle_mid() thus
++		 * server->smallbuf and server->bigbuf are still valid. We need
++		 * to free next_buffer because it is not going to be used
++		 * anywhere.
++		 */
++		if (next_is_large)
++			free_rsp_buf(CIFS_LARGE_BUFFER, next_buffer);
++		else
++			free_rsp_buf(CIFS_SMALL_BUFFER, next_buffer);
+ 	}
+ 
+ 	return ret;
 -- 
 2.20.1
 
