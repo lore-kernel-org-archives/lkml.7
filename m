@@ -2,201 +2,174 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C34C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BACCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D5420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CC122CF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KzAqKcI6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xTTKaHbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfH0WRK (ORCPT
+        id S1726285AbfH0WRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:17:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32776 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfH0WRJ (ORCPT
+        Tue, 27 Aug 2019 18:17:37 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43674 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfH0WRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:17:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so310169pfq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 15:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XmHEEeZ1gZXeiZrVc/P4jeL9zwo1EK/NB5YR5K1Ru2Q=;
-        b=KzAqKcI6ZucUDreVq3vvwgpn1UL9erxABHPa9vUQufua8lEHs4mNixBJDrQ4jk9xmU
-         gnYGNL3M7dIR4TQu1nBgh2ZW30tf+458c6FeMVhuSYn+B0/kCirSwxsvGiytoK7dr0Mx
-         gB/eIIIpUyrgvcT7qO4oOiIsO+RQj0Keh4zpi3eKk5FEWa8fYvDdv2c7Bx0cCPYX7Sea
-         qZEdRz418EipF4eGfKKgbeVOZjIy3kLbt5qzN/XEOgUFqoT2vrD6VAaOIZEF33MUHFr1
-         8SE6jOJmX59VOiV1QOWOE9wVQH/oNhHq/aP5SZebM7I2/6bfAZqfLixdnfSW7mSbZ2qy
-         wtQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XmHEEeZ1gZXeiZrVc/P4jeL9zwo1EK/NB5YR5K1Ru2Q=;
-        b=EkrLO/V/I3mWGqGviKygZMU2Ec15agzSpuC/o4Pm9IaoeGSi6XFr2mkcPAHt8kljUh
-         /ZJKmW4kKhLwr7DBAdYg1OqqtkvpSRHZaq2sCEX3oo41q6fSEVOLgtiuZ1+MuuDfpS3c
-         aipiuXzQCDLnHXYxvbJm/6TOXRkSpHpSIenqU41DNy5eNDxtCLUx+mC3gmo7Af/+qqZ5
-         JtvMtoEV8wOo0TrZSO/PsK9J1fa+wpF5HhqAJVmyhG0c0Brr2quQC6QUagRI/4JaFCSI
-         jiF1llxZNuq9objeRKn+Do7+vtr5KHB84yAJV8Ga9QDF2g2iwwJ+lShi301pWtvOYTOa
-         xxAQ==
-X-Gm-Message-State: APjAAAUHsBcKgOEFn2ApSlp5sxI4uREu4ltGpIl0QS0Cz9Cin1D6jVCV
-        Gu10LyNEqGoTpXDtl9C2KjyhcLAhixqefm7I7AS4ow==
-X-Google-Smtp-Source: APXvYqxmxR8dZBVQL91YAYj1ET806y8t7KREseIU2B3B3ouUSoDBMtx8syuTU2wskW9bO7xDvMQD8kP6P6xL6oZpZF4=
-X-Received: by 2002:a17:90a:cd03:: with SMTP id d3mr971638pju.117.1566944228168;
- Tue, 27 Aug 2019 15:17:08 -0700 (PDT)
+        Tue, 27 Aug 2019 18:17:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7RMHTR8103928;
+        Tue, 27 Aug 2019 17:17:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566944249;
+        bh=nvLDApQhxExLfj35o+dlzYSpdH8NwxDvB4z1k8JjXPo=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=xTTKaHbo8ygsoxEN/RVyZMc625z1AE05HTdWjKG7HGzzFNQU48W5F1+Qkx2WhobDv
+         sDIvJY5EiWVyYIa4wbuWNb0DoB8YeYfEuHPyy3jqCnIzo/1+PDHhpobe27UVI1KJxs
+         KtoZQ4/5sLj10kZvdbLp/sbzi3CpEIoN61RW7g14=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7RMHT88097318
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 27 Aug 2019 17:17:29 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
+ Aug 2019 17:17:29 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 27 Aug 2019 17:17:29 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7RMHSQg128133;
+        Tue, 27 Aug 2019 17:17:28 -0500
+Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <linux-remoteproc@vger.kernel.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20181024011909.21674-1-s-anna@ti.com>
+ <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com> <20190827051007.GK1263@builder>
+ <8d36d695-dd66-c21f-f49e-f6dc3dbdfc5a@ti.com> <20190827220711.GK6167@minitux>
+ <619b06b0-c3cc-e36f-c3e5-d13e98520c9c@ti.com>
+Message-ID: <9c5f95a0-c95b-bf68-e78f-6e3d4d837b1e@ti.com>
+Date:   Tue, 27 Aug 2019 17:17:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190827174932.44177-1-brendanhiggins@google.com>
- <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org> <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
- <CAFd5g47rSBJS8QVH6d5HqoJW5PJXdNnkoP6WcvQCFUqHUEmDzw@mail.gmail.com>
- <CAFd5g44A5vtgxBYErP4mCGwDgOHEMYUXCDSF=d9bYB3ktpW5jA@mail.gmail.com> <10b44374-829d-0daa-8fb0-4450582cb40c@kernel.org>
-In-Reply-To: <10b44374-829d-0daa-8fb0-4450582cb40c@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 27 Aug 2019 15:16:56 -0700
-Message-ID: <CAFd5g474EYEj1BmqCv=xe6M9JW4L389xL2SU1Ak-evjmpGOvJg@mail.gmail.com>
-Subject: Re: [PATCH v1] kunit: fix failure to build without printk
-To:     shuah <shuah@kernel.org>
-Cc:     kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <619b06b0-c3cc-e36f-c3e5-d13e98520c9c@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 3:00 PM shuah <shuah@kernel.org> wrote:
->
-> On 8/27/19 3:36 PM, Brendan Higgins wrote:
-> > On Tue, Aug 27, 2019 at 2:09 PM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> >>
-> >> On Tue, Aug 27, 2019 at 2:03 PM Brendan Higgins
-> >> <brendanhiggins@google.com> wrote:
-> >>>
-> >>> On Tue, Aug 27, 2019 at 1:21 PM shuah <shuah@kernel.org> wrote:
-> >>>>
-> >>>> On 8/27/19 11:49 AM, Brendan Higgins wrote:
-> >>>>> Previously KUnit assumed that printk would always be present, which is
-> >>>>> not a valid assumption to make. Fix that by ifdefing out functions which
-> >>>>> directly depend on printk core functions similar to what dev_printk
-> >>>>> does.
-> >>>>>
-> >>>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> >>>>> Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
-> >>>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> >>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >>>>> ---
-> >>>>>    include/kunit/test.h |  7 +++++++
-> >>>>>    kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
-> >>>>>    2 files changed, 31 insertions(+), 17 deletions(-)
-> >>>>>
-> >>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> >>>>> index 8b7eb03d4971..339af5f95c4a 100644
-> >>>>> --- a/include/kunit/test.h
-> >>>>> +++ b/include/kunit/test.h
-> >>>>> @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
-> >>> [...]
-> >>>> Okay after reviewing this, I am not sure why you need to do all
-> >>>> this.
-> >>>>
-> >>>> Why can't you just change the root function that throws the warn:
-> >>>>
-> >>>>    static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-> >>>> {
-> >>>>           return vprintk_emit(0, level, NULL, 0, fmt, args);
-> >>>> }
-> >>>>
-> >>>> You aren'r really doing anything extra here, other than calling
-> >>>> vprintk_emit()
-> >>>
-> >>> Yeah, I did that a while ago. I think it was a combination of trying
-> >>> to avoid an extra layer of adding and then removing the log level, and
-> >>> that's what dev_printk and friends did.
-> >>>
-> >>> But I think you are probably right. It's a lot of maintenance overhead
-> >>> to get rid of that. Probably best to just use what the printk people
-> >>> have.
-> >>>
-> >>>> Unless I am missing something, can't you solve this problem by including
-> >>>> printk.h and let it handle the !CONFIG_PRINTK case?
-> >>>
-> >>> Randy, I hope you don't mind, but I am going to ask you to re-ack my
-> >>> next revision since it basically addresses the problem in a totally
-> >>> different way.
-> >>
-> >> Actually, scratch that. Checkpatch doesn't like me calling printk
-> >> without using a KERN_<LEVEL>.
-> >>
-> >> Now that I am thinking back to when I wrote this. I think it also
-> >> might not like using a dynamic KERN_<LEVEL> either (printk("%s my
-> >> message", KERN_INFO)).
-> >>
-> >> I am going to have to do some more investigation.
-> >
-> > Alright, I am pretty sure it is safe to do printk("%smessage", KERN_<LEVEL>);
-> >
-> > Looking at the printk implementation, it appears to do the format
-> > before it checks the log level:
-> >
-> > https://elixir.bootlin.com/linux/v5.2.10/source/kernel/printk/printk.c#L1907
-> >
-> > So I am pretty sure we can do it either with the vprintk_emit or with printk.
->
-> Let me see if we are on the same page first. I am asking if you can
-> just include printk.h for vprintk_emit() define for both CONFIG_PRINTK
-> and !CONFIG_PRINTK cases.
+On 8/27/19 5:15 PM, Suman Anna wrote:
+> On 8/27/19 5:07 PM, Bjorn Andersson wrote:
+>> On Tue 27 Aug 13:25 PDT 2019, Suman Anna wrote:
+>>
+>>> Hi Bjorn,
+>>>
+>>> On 8/27/19 12:10 AM, Bjorn Andersson wrote:
+>>>> On Fri 09 Aug 13:25 PDT 2019, Suman Anna wrote:
+>>>>
+>>>>> Hi Bjorn,
+>>>>>
+>>>>
+>>>> Hi Suman
+>>>>
+>>>>> On 10/23/18 8:19 PM, Suman Anna wrote:
+>>>>>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
+>>>>>> printing the vring buffer address. This prints only a hashed
+>>>>>> pointer even for previliged users. Use "%pK" instead so that
+>>>>>> the address can be printed during debug using kptr_restrict
+>>>>>> sysctl.
+>>>>>
+>>>>> Seems to have been lost among the patches, can you pick up this trivial
+>>>>> patch for 5.4? Should apply cleanly on the latest HEAD as well.
+>>>>>
+>>>>
+>>>> I share Andrew's question regarding what benefit you have from knowing
+>>>> this value. Should we not just remove the va from the print? Or do you
+>>>> actually have a use case for it?.
+>>>
+>>> I mainly use it during debug when comparing against kernel_page_tables
+>>> and vmallocinfo. The pools that we use are not always guaranteed to be
+>>> from linear memory, and behavior changes when using with CMA or DMA pools.
+>>>
+>>
+>> Thanks Suman. It seems to me that there's room for improvement to aid
+>> this kind of debugging. But your usecase seems reasonable, so I'm
+>> merging the patch.
+> 
+> Thanks Bjorn.
 
-Ah sorry, I misunderstood you.
+Btw, looks like you applied the patch against rproc-next instead of
+rpmsg-next.
 
-No, that doesn't work. I tried including linux/printk.h, and I get the
-same error.
+regards
+Suman
 
-The reason for this is that vprintk_emit() is only defined when CONFIG_PRINTK=y:
+> 
+>>
+>>> Note that usage of %pK does not leak the addresses automatically, but
+>>> atleast enables me to get the values when needed. The changes also bring
+>>> the usage in rpmsg core in sync with the remoteproc core.
+>>>
+>>
+>> Sounds like shouldn't have merged them in remoteproc then ;P
+> 
+> Slightly different reasoning looking at the commit, it was probably when
+> %p was leaking the addresses.
+> 
+> regards
+> Suman
+> 
+>>
+>> Thanks,
+>> Bjorn
+>>
+>>> regards
+>>> Suman
+>>>
+>>>>
+>>>> Regards,
+>>>> Bjorn
+>>>>
+>>>>> regards
+>>>>> Suman
+>>>>>
+>>>>>>
+>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>> ---
+>>>>>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
+>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>>>>> index f29dee731026..1345f373a1a0 100644
+>>>>>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>>>>>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>>>>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>>>>>>  		goto vqs_del;
+>>>>>>  	}
+>>>>>>  
+>>>>>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
+>>>>>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
+>>>>>>  		bufs_va, &vrp->bufs_dma);
+>>>>>>  
+>>>>>>  	/* half of the buffers is dedicated for RX */
+>>>>>>
+>>>>>
+>>>
+> 
 
-https://elixir.bootlin.com/linux/latest/ident/vprintk_emit
-
-> I am not asking you to use printk() in place of vprintk_emit().
-> It is perfectly fine to use vprintk_emit()
-
-Okay, cool.
-
-> >
-> > So it appears that we have to weigh the following trade-offs:
-> >
-> > Using vprintk_emit:
-> >
-> > Pros:
-> >   - That's what dev_printk uses.
->
-> Not sure what you mean by this. I am suggesting if you can just
-> call vprintk_emit() and include printk.h and not have to ifdef
-> around all the other callers of kunit_vprintk_emit()
-
-Oh, I was just saying that I heavily based my implementation of
-kunit_printk on dev_printk. So I have a high degree of confidence that
-it is okay to use it the way that I am using it.
-
-> Yes. There is the other issue of why do you need the complexity
-> of having kunit_vprintk_emit() at all.
-
-Right, and the problem with the alternative, is there is no good
-kernel API for logging with the log level set dynamically. printk
-prefers to have it as a string prefix on the format string, but I
-cannot do that because I need to add my own prefix to the format
-string.
-
-So, I guess I should just go ahead and address the earlier comments on
-this patch?
