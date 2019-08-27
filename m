@@ -2,113 +2,108 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C744C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C36C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C4E2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CD221883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566948701;
-	bh=LsV8QUEhHQEko3PDxpj8+W5exFapUg7lwvX/nFzLuWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1klfN0QZJhJN2S6+AMqMYeCZiGmX57UYDSXyopEaIPLnSNdhJvIImevDO8hsm7yAU
-	 siCc9PGdBsJ/iw+NvGq+gi+CLNN540rYsRswX2E1ND4+FFD/+uawUDfygY0HGj/jW0
-	 rSBbKMNNajFnUOe3PLlbxr7/AAiiRS4DW6Xi041A=
+	s=default; t=1566948874;
+	bh=u9kCNCuUavGaLUJ2do7q30aA0z/LKW25VjraHn2v2vc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rRQUsVryaakgmbuyldQATQBCEiPmrO4D7FMw//R2AYeCGOZYRO3iMyG/Hgy2J7PHN
+	 KtmxvRZcm907526CMgNhYWdpjCVFaFCj0GwDST6V2lzfnIhYgXJ+NdYoY+tEYa+6wW
+	 5EgLqIwycV2i92Y6Lqpxd4py3PzxuHLblvRgyZeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfH0XaT (ORCPT
+        id S1726234AbfH0Xed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46032 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 19:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfH0XaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:30:19 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1726044AbfH0Xed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:34:33 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3FB520856;
-        Tue, 27 Aug 2019 23:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 351362186A;
+        Tue, 27 Aug 2019 23:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566948618;
-        bh=LsV8QUEhHQEko3PDxpj8+W5exFapUg7lwvX/nFzLuWE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mz1S/p6189siRsHcNVccrCwXLN+r4td8xRvM1S3oOZX5RXp2Vk1+uRGwGRUEmSdnV
-         ovGZ7ekgtlPB0Czr4CqYgTQwJ+Mmwcz3pDiFp66Faf+HVNNlojZVTncs42q1PtcYkf
-         qUJvnpTX1i+Zg3l411MsGV1+Z6T/a65gaBk61gow=
-Date:   Tue, 27 Aug 2019 18:30:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] PCI: Move static keyword to the front of declarations in
- pci-bridge-emul.c
-Message-ID: <20190827233017.GK9987@google.com>
-References: <20190826151436.4672-1-kw@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826151436.4672-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1566948872;
+        bh=u9kCNCuUavGaLUJ2do7q30aA0z/LKW25VjraHn2v2vc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LXm9jCHmK23s8tYo+VE6Lab+PTzMgUi6sRDCTL0vitposmHdXmBpAC+mgt6kTUbFt
+         nIfo1O1h4No9kJag7WO7GxlixmY9oakcfe2fa9j1m3Pxb6/QZaYTir6B6q51dwbT9X
+         mykbsb5rT60Zb9k45E0ee8wQp//7FsxTnbPABkao=
+Date:   Tue, 27 Aug 2019 16:34:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: cleanup the walk_page_range interface
+Message-Id: <20190827163431.65a284b295004d1ed258fbd5@linux-foundation.org>
+In-Reply-To: <20190827013408.GC31766@mellanox.com>
+References: <20190808154240.9384-1-hch@lst.de>
+        <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
+        <20190816062751.GA16169@infradead.org>
+        <20190823134308.GH12847@mellanox.com>
+        <20190824222654.GA28766@infradead.org>
+        <20190827013408.GC31766@mellanox.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Thomas]
+On Tue, 27 Aug 2019 01:34:13 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-On Mon, Aug 26, 2019 at 05:14:36PM +0200, Krzysztof Wilczynski wrote:
-> Move the static keyword to the front of declarations of
-> pci_regs_behavior and pcie_cap_regs_behavior, and resolve
-> compiler warning that can be seen when building with
-> warnings enabled (W=1).
-
-It would be useful to include the compiler warning in the commit log.
-
-I notice there are a few similar occurrences elsewhere in the tree:
-
-  arch/csky/kernel/perf_event.c:const static struct of_device_id csky_pmu_of_device_ids[] = {
-  arch/nds32/kernel/perf_event_cpu.c:const static struct of_device_id cpu_pmu_of_device_ids[] = {
-  drivers/gpu/drm/msm/dsi/dsi_cfg.c:const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
-  drivers/gpu/drm/msm/dsi/dsi_cfg.c:const static struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
-  drivers/gpu/drm/msm/dsi/dsi_cfg.c:const static struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
-  drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:const static struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
-  fs/unicode/utf8-selftest.c:const static struct {
-  fs/unicode/utf8-selftest.c:const static struct {
-
-Those should probably be fixed, too (but in separate patches since
-other maintainers would take them).
-
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
->  drivers/pci/pci-bridge-emul.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On Sat, Aug 24, 2019 at 03:26:55PM -0700, Christoph Hellwig wrote:
+> > On Fri, Aug 23, 2019 at 01:43:12PM +0000, Jason Gunthorpe wrote:
+> > > > So what is the plan forward?  Probably a little late for 5.3,
+> > > > so queue it up in -mm for 5.4 and deal with the conflicts in at least
+> > > > hmm?  Queue it up in the hmm tree even if it doesn't 100% fit?
+> > > 
+> > > Did we make a decision on this? Due to travel & LPC I'd like to
+> > > finalize the hmm tree next week.
+> > 
+> > I don't think we've made any decision.  I'd still love to see this
+> > in hmm.git.  It has a minor conflict, but I can resend a rebased
+> > version.
 > 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index 06083b86d4f4..5fd90105510d 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
->  	u32 rsvd;
->  };
->  
-> -const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-> +static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
->  	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
->  	[PCI_COMMAND / 4] = {
->  		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-> @@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
->  	},
->  };
->  
-> -const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-> +static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
->  	[PCI_CAP_LIST_ID / 4] = {
->  		/*
->  		 * Capability ID, Next Capability Pointer and
-> -- 
-> 2.22.1
+> I'm looking at this.. The hmm conflict is easy enough to fix.
 > 
+> But the compile conflict with these two patches in -mm requires some
+> action from Andrew:
+> 
+> commit 027b9b8fd9ee3be6b7440462102ec03a2d593213
+> Author: Minchan Kim <minchan@kernel.org>
+> Date:   Sun Aug 25 11:49:27 2019 +1000
+> 
+>     mm: introduce MADV_PAGEOUT
+> 
+> commit f227453a14cadd4727dd159782531d617f257001
+> Author: Minchan Kim <minchan@kernel.org>
+> Date:   Sun Aug 25 11:49:27 2019 +1000
+> 
+>     mm: introduce MADV_COLD
+>     
+>     Patch series "Introduce MADV_COLD and MADV_PAGEOUT", v7.
+> 
+> I'm inclined to suggest you send this series in the 2nd half of the
+> merge window after this MADV stuff lands for least disruption? 
+
+Just merge it, I'll figure it out.  Probably by staging Minchan's
+patches after linux-next.
+
