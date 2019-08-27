@@ -4,133 +4,199 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0334AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCD4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C07214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1782070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfH0RMi (ORCPT
+        id S1730255AbfH0RNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:12:38 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:33724 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727057AbfH0RMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:12:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tacy7tn_1566925936;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tacy7tn_1566925936)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 28 Aug 2019 01:12:20 +0800
-Subject: Re: WARNINGs in set_task_reclaim_state with memory cgroup and full
- memory usage
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Adric Blake <promarbler14@gmail.com>, akpm@linux-foundation.org,
-        ktkhai@virtuozzo.com, hannes@cmpxchg.org,
-        daniel.m.jordan@oracle.com, laoar.shao@gmail.com,
-        mgorman@techsingularity.net, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
- <b9cd7603-2441-d351-156a-57d6c13b2c79@linux.alibaba.com>
- <20190826105521.GF7538@dhcp22.suse.cz> <20190827104313.GW7538@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <6bbdd982-8c33-0a07-b8ea-5bd1be594b6e@linux.alibaba.com>
-Date:   Tue, 27 Aug 2019 10:12:07 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 27 Aug 2019 13:13:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:48298 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727064AbfH0RNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:13:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82C7337;
+        Tue, 27 Aug 2019 10:13:36 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13F4B3F718;
+        Tue, 27 Aug 2019 10:13:36 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 18:13:34 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
+Message-ID: <20190827171333.GQ14582@e119886-lin.cambridge.arm.com>
+References: <20190826073143.4582-1-vidyas@nvidia.com>
+ <20190826073143.4582-7-vidyas@nvidia.com>
+ <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
+ <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190827104313.GW7538@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 27, 2019 at 09:54:17PM +0530, Vidya Sagar wrote:
+> On 8/27/2019 9:17 PM, Andrew Murray wrote:
+> > On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
+> > > Add support to get regulator information of 3.3V and 12V supplies of a PCIe
+> > > slot from the respective controller's device-tree node and enable those
+> > > supplies. This is required in platforms like p2972-0000 where the supplies
+> > > to x16 slot owned by C5 controller need to be enabled before attempting to
+> > > enumerate the devices.
+> > > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
+> > >   1 file changed, 65 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index 8a27b25893c9..97de2151a738 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+> > >   	u32 aspm_l0s_enter_lat;
+> > >   	struct regulator *pex_ctl_supply;
+> > > +	struct regulator *slot_ctl_3v3;
+> > > +	struct regulator *slot_ctl_12v;
+> > >   	unsigned int phy_count;
+> > >   	struct phy **phys;
+> > > @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+> > >   	}
+> > >   }
+> > > +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+> > > +{
+> > > +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
+> > > +	if (IS_ERR(pcie->slot_ctl_3v3))
+> > > +		pcie->slot_ctl_3v3 = NULL;
+> > > +
+> > > +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
+> > > +	if (IS_ERR(pcie->slot_ctl_12v))
+> > > +		pcie->slot_ctl_12v = NULL;
+> > 
+> > Do these need to take into consideration -EPROBE_DEFER?
+> Since these are devm_* APIs, isn't it taken care of automatically?
 
+devm_regulator_get_optional can still return -EPROBE_DEFER - for times when
+"lookup could succeed in the future".
 
-On 8/27/19 3:43 AM, Michal Hocko wrote:
-> If there are no objection to the patch I will post it as a standalong
-> one.
->
-> On Mon 26-08-19 12:55:21, Michal Hocko wrote:
->>  From 59d128214a62bf2d83c2a2a9cde887b4817275e7 Mon Sep 17 00:00:00 2001
->> From: Michal Hocko <mhocko@suse.com>
->> Date: Mon, 26 Aug 2019 12:43:15 +0200
->> Subject: [PATCH] mm, memcg: do not set reclaim_state on soft limit reclaim
->>
->> Adric Blake has noticed the following warning:
->> [38491.963105] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:245 set_task_reclaim_state+0x1e/0x40
->> [...]
->> [38491.963239] Call Trace:
->> [38491.963246]  mem_cgroup_shrink_node+0x9b/0x1d0
->> [38491.963250]  mem_cgroup_soft_limit_reclaim+0x10c/0x3a0
->> [38491.963254]  balance_pgdat+0x276/0x540
->> [38491.963258]  kswapd+0x200/0x3f0
->> [38491.963261]  ? wait_woken+0x80/0x80
->> [38491.963265]  kthread+0xfd/0x130
->> [38491.963267]  ? balance_pgdat+0x540/0x540
->> [38491.963269]  ? kthread_park+0x80/0x80
->> [38491.963273]  ret_from_fork+0x35/0x40
->> [38491.963276] ---[ end trace 727343df67b2398a ]---
->>
->> which tells us that soft limit reclaim is about to overwrite the
->> reclaim_state configured up in the call chain (kswapd in this case but
->> the direct reclaim is equally possible). This means that reclaim stats
->> would get misleading once the soft reclaim returns and another reclaim
->> is done.
->>
->> Fix the warning by dropping set_task_reclaim_state from the soft reclaim
->> which is always called with reclaim_state set up.
+It's probably helpful here for your driver to distinguish between there not
+being a regulator specified in the DT, and there being a regulator but there
+is no device for it yet. For the latter case - your driver would probe but
+nothing would enumerate.
 
-This is exactly what I thought. Looks good to me. Acked-by: Yang Shi 
-<yang.shi@linux.alibaba.com>
+See pcie-rockchip-host.c for an example of where this is handled.
 
->>
->> Reported-by: Adric Blake <promarbler14@gmail.com>
->> Signed-off-by: Michal Hocko <mhocko@suse.com>
->> ---
->>   mm/vmscan.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index c77d1e3761a7..a6c5d0b28321 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -3220,6 +3220,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
->>   
->>   #ifdef CONFIG_MEMCG
->>   
->> +/* Only used by soft limit reclaim. Do not reuse for anything else. */
->>   unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->>   						gfp_t gfp_mask, bool noswap,
->>   						pg_data_t *pgdat,
->> @@ -3235,7 +3236,8 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->>   	};
->>   	unsigned long lru_pages;
->>   
->> -	set_task_reclaim_state(current, &sc.reclaim_state);
->> +	WARN_ON_ONCE(!current->reclaim_state);
->> +
->>   	sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
->>   			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
->>   
->> @@ -3253,7 +3255,6 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->>   
->>   	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
->>   
->> -	set_task_reclaim_state(current, NULL);
->>   	*nr_scanned = sc.nr_scanned;
->>   
->>   	return sc.nr_reclaimed;
->> -- 
->> 2.20.1
->>
->> -- 
->> Michal Hocko
->> SUSE Labs
+Of course if, for whatever reason it is unlikely you'll ever get -EPROBE_DEFER
+then maybe it's OK as it is.
 
+Thanks,
+
+Andrew Murray
+
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +}
+> > > +
+> > > +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	if (pcie->slot_ctl_3v3) {
+> > > +		ret = regulator_enable(pcie->slot_ctl_3v3);
+> > > +		if (ret < 0) {
+> > > +			dev_err(pcie->dev,
+> > > +				"Failed to enable 3V3 slot supply: %d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (pcie->slot_ctl_12v) {
+> > > +		ret = regulator_enable(pcie->slot_ctl_12v);
+> > > +		if (ret < 0) {
+> > > +			dev_err(pcie->dev,
+> > > +				"Failed to enable 12V slot supply: %d\n", ret);
+> > > +			if (pcie->slot_ctl_3v3)
+> > > +				regulator_disable(pcie->slot_ctl_3v3);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * According to PCI Express Card Electromechanical Specification
+> > > +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+> > > +	 * should be a minimum of 100ms.
+> > > +	 */
+> > > +	msleep(100);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
+> > > +{
+> > > +	if (pcie->slot_ctl_12v)
+> > > +		regulator_disable(pcie->slot_ctl_12v);
+> > > +	if (pcie->slot_ctl_3v3)
+> > > +		regulator_disable(pcie->slot_ctl_3v3);
+> > > +}
+> > > +
+> > >   static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+> > >   					bool en_hw_hot_rst)
+> > >   {
+> > > @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+> > >   		return ret;
+> > >   	}
+> > > +	ret = tegra_pcie_enable_slot_regulators(pcie);
+> > > +	if (ret < 0)
+> > > +		goto fail_slot_reg_en;
+> > > +
+> > >   	ret = regulator_enable(pcie->pex_ctl_supply);
+> > >   	if (ret < 0) {
+> > >   		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+> > > @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+> > >   fail_core_clk:
+> > >   	regulator_disable(pcie->pex_ctl_supply);
+> > >   fail_reg_en:
+> > > +	tegra_pcie_disable_slot_regulators(pcie);
+> > > +fail_slot_reg_en:
+> > >   	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+> > >   	return ret;
+> > > @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
+> > >   		return ret;
+> > >   	}
+> > > +	tegra_pcie_disable_slot_regulators(pcie);
+> > > +
+> > >   	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+> > >   	if (ret) {
+> > >   		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+> > > @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+> > >   		return ret;
+> > >   	}
+> > > +	tegra_pcie_get_slot_regulators(pcie);
+> > > +
+> > >   	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+> > >   	if (IS_ERR(pcie->pex_ctl_supply)) {
+> > >   		dev_err(dev, "Failed to get regulator: %ld\n",
+> > > -- 
+> > > 2.17.1
+> > > 
+> 
