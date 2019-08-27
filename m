@@ -2,193 +2,165 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB712C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32B0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821592070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="F4gvlveW"
+	by mail.kernel.org (Postfix) with ESMTP id B339D2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566921790;
+	bh=Wuon1Ne3AM4+fpOK6WFO/oTO3QLSdasSlXHYlRfeXWg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=NJy4umZzLwbuvxTgsd6mvfF2xY6+YGj/GB5guDC+Rg5dcdmi66AOWSkaZnWBvrka7
+	 m7aUCUUM9BIKVDwfUCyJErZIvraW2YYLaoyYizyRP0VMXVFCHT3ea8ZmSQdUrzMFVR
+	 VhMY79SgBvWWSR0hMeGgQuMFo8jNRt4bZa8tQ3zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbfH0QBQ (ORCPT
+        id S1729185AbfH0QDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:01:16 -0400
-Received: from sonic317-20.consmr.mail.gq1.yahoo.com ([98.137.66.146]:38113
-        "EHLO sonic317-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbfH0QBQ (ORCPT
+        Tue, 27 Aug 2019 12:03:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43356 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725804AbfH0QDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:01:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566921675; bh=Va2OG6Wv03uRNYmTvJK00J7t+7d/cvOorlhT1YLsbWY=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=F4gvlveWdkHbKVyFb+OeeF2Fe8+BTVjzpoSx2Qsh0eva6UGBRqg+GeUVIs1fs4XzZh3GtDLUsZDjCidvPMpyhDgvHfxu6iqzkfD0HRlJjfdNSnJxVuwKUw0V4P/3ONWv0m3olC6fMtp7XJx0Lxaa/EKKPD8PVHpkzCezMesCD6Q+17IQdBurLwxcg0IqwHDd+y6tHNRuqccuYrt109vxf2fCyjJKYlNS+xRNFI/Dq1Cme960+4tutjGdEHOPZYoHi8Hfa/aJynBKmQpUsckTKGEN2wyCZux51dLIh6FmqhRVCWvmL0MTZIES+1+Kp/y34h2cTM1BsvboL8phezqRGQ==
-X-YMail-OSG: kTwfsoYVM1kKOYH3tMwGmZuqz8tbQCyawtzzTzVO1fVcgqeNqTC06hNPdz5STjl
- Oluz4GjRd47QL.jrQfmYbrCF9dBHz3_j8.eCb2Qst8TrYwvRvq6MRh3Dl_.cy3m8QPVNntm24ROn
- bhXYfFktMA9DvNywvxVeTAPwhtBHcTl.YYAveR6SZBI.qkNWJXevtqXkqHppkF8j0TBCmxGqex_g
- j3JIVx5l5frPlT28ikkOHJGpFGwR3Xo.brjO52I32OjweaIMezoCIcbAt7O7wzEz_AsyW_aLjJS8
- el_g2LmSpf_ZJrFfjcZxOd3jrbNEwFiHvlIw7DJSPztIyf2h9ahLYQlKkc.pSQw6gJAFTpoHiGbO
- Buz59A.uLJwUYUBUtst.4uxpfZaxewwUqT7A1_TJXbxJ7b37wSk9HQoaPc_8uPL0Or5Neqi30Hhn
- bOZltRy1Tdacn57HMaQ3JX.f9nWJizUNkuXMQVPN3TotipIDRqHB2jLn3ZVQEW54yXCgNv4qoqjl
- 14huE60B7cBiG_3Cvh14EGXaT9PkdA3x4CLS0DRFIuZcbIa4.Qtg6zKn0SuNZ1ATpIZgcfl9keXS
- Eb33Yfny3OtJEIZhW0beqyUMtONUK2HPfckjxhju6HjNkDFrEGdgvzF9frbYPI6J3nBl2EbvSq01
- 4js6LgldBRMwd5D.yUPlG8kygrN4uM881pJnGJnp5oFvhQ2soCf0aHAY2MSTNKr10plhELeO66YJ
- NP3QtaBUEtiQJEg1O_aFkbbnItzaMyBIs9mlvIPqPJGKEt2PYHIWXKu9GEEuz3AzUPM9.rSpNdYq
- HdSNya_dGN8RnRseQcaHcTAh._uqN6S4GE._QDyItIExG1wUh9yHY0AbdAIzOOt8awVgyBKygpkp
- _GFBxMVHFx0eGCJU6ZaSw4zpZ3bRIJ6qGtxQKoj69Xbj8lzXpXjoACy7VIxvgT0JZ8m.LG3sBh_l
- _O.2L3sqbGuycBRLrD8CLVFXdjvg2mJnMY6rik64ate..eHimzv1o2loVeVzU6fVEvpDLTLt0pHg
- KMrehpuf4s.HGhem4Dw6tD8zmtVeilEuRmxML0f8afpvmV6HZdkgmZTTQJx4o83Eg8cvXWMUAqad
- CAkjVC3GC8nvp_PIJVNvmLKpJJfBGK3bch6uYgYhInBod1zR.dqI0kW4Q_WG3E7UxWTAbrLikwyA
- GWKiK6NvcWLWyFbQ8f9quGqT6lyn9vtfi8be47aJxC6JnuhBUv.Od6QVAuv4rWQjIQrHlHsOwlwr
- voU5gzpWIKprBQHXqh4y1pbE1RWI4
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.gq1.yahoo.com with HTTP; Tue, 27 Aug 2019 16:01:15 +0000
-Received: by smtp428.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 5f6ccd683c4adab0833962eb3ba498ab;
-          Tue, 27 Aug 2019 16:01:14 +0000 (UTC)
-Date:   Wed, 28 Aug 2019 00:01:03 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
-        elder@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        yuchao0@huawei.com, johan@kernel.org, linux-kernel@vger.kernel.org,
-        greybus-dev@lists.linaro.org, Viresh Kumar <vireshk@kernel.org>
-Subject: Re: [PATCH 1/9] staging: greybus: fix up SPDX comment in .h files
-Message-ID: <20190827160059.GA21783@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190825055429.18547-2-gregkh@linuxfoundation.org>
- <20190826055119.4pbmf5ape224giwz@vireshk-i7>
- <20190827075802.GA29204@kroah.com>
- <20190827092036.GA138083@architecture4>
- <20190827154343.GE534@kroah.com>
+        Tue, 27 Aug 2019 12:03:09 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RFvY7b145430;
+        Tue, 27 Aug 2019 12:02:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2un5cxyryn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 12:02:25 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7RFwG8t000842;
+        Tue, 27 Aug 2019 12:02:24 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2un5cxyrxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 12:02:24 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7RFxZr0018609;
+        Tue, 27 Aug 2019 16:02:23 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 2ujvv68jgf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 16:02:23 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7RG2NDo52756750
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 16:02:23 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AD0FB2064;
+        Tue, 27 Aug 2019 16:02:23 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A39DB205F;
+        Tue, 27 Aug 2019 16:02:23 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Aug 2019 16:02:23 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9D6E216C2A50; Tue, 27 Aug 2019 09:02:23 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 09:02:23 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Scott Wood <swood@redhat.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation: Rename rcu_node_context_switch() to
+ rcu_note_context_switch()
+Message-ID: <20190827160223.GH26530@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190827093603.x2dist7q5e2z36c5@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8\""
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190827154343.GE534@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190827093603.x2dist7q5e2z36c5@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908270159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 05:43:43PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Aug 27, 2019 at 05:20:36PM +0800, Gao Xiang wrote:
-> > Hi Greg,
-> > 
-> > On Tue, Aug 27, 2019 at 09:58:02AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, Aug 26, 2019 at 11:21:19AM +0530, Viresh Kumar wrote:
-> > > > On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
-> > > > > When these files originally got an SPDX tag, I used // instead of /* */
-> > > > > for the .h files.  Fix this up to use // properly.
-> > > > > 
-> > > > > Cc: Viresh Kumar <vireshk@kernel.org>
-> > > > > Cc: Johan Hovold <johan@kernel.org>
-> > > > > Cc: Alex Elder <elder@kernel.org>
-> > > > > Cc: greybus-dev@lists.linaro.org
-> > > > > Cc: devel@driverdev.osuosl.org
-> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > ---
-> > > > >  drivers/staging/greybus/firmware.h               | 2 +-
-> > > > >  drivers/staging/greybus/gb-camera.h              | 2 +-
-> > > > >  drivers/staging/greybus/gbphy.h                  | 2 +-
-> > > > >  drivers/staging/greybus/greybus.h                | 2 +-
-> > > > >  drivers/staging/greybus/greybus_authentication.h | 2 +-
-> > > > >  drivers/staging/greybus/greybus_firmware.h       | 2 +-
-> > > > >  drivers/staging/greybus/greybus_manifest.h       | 2 +-
-> > > > >  drivers/staging/greybus/greybus_protocols.h      | 2 +-
-> > > > >  drivers/staging/greybus/greybus_trace.h          | 2 +-
-> > > > >  drivers/staging/greybus/hd.h                     | 2 +-
-> > > > >  drivers/staging/greybus/interface.h              | 2 +-
-> > > > >  drivers/staging/greybus/manifest.h               | 2 +-
-> > > > >  drivers/staging/greybus/module.h                 | 2 +-
-> > > > >  drivers/staging/greybus/operation.h              | 2 +-
-> > > > >  drivers/staging/greybus/spilib.h                 | 2 +-
-> > > > >  drivers/staging/greybus/svc.h                    | 2 +-
-> > > > >  16 files changed, 16 insertions(+), 16 deletions(-)
-> > > > 
-> > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > 
-> > > Thanks for all of the acks!
-> > > 
-> > > greg k-h
-> > 
-> > I found similar issues of graybus when I tested the latest staging-testing
-> > 
-> > In file included from <command-line>:0:0:
-> > ./include/linux/greybus/greybus_protocols.h:45:2: error: unknown type name ??????_le16??????
-> >   __le16 size;  /* Size in bytes of header + payload */
-> >   ^~~~~~
-> > ./include/linux/greybus/greybus_protocols.h:46:2: error: unknown type name ??????_le16??????
-> >   __le16 operation_id; /* Operation unique id */
-> >   ^~~~~~
-> > ./include/linux/greybus/greybus_protocols.h:47:2: error: unknown type name ??????_u8??????
-> >   __u8 type;  /* E.g GB_I2C_TYPE_* or GB_GPIO_TYPE_* */
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:48:2: error: unknown type name ??????_u8??????
-> >   __u8 result;  /* Result of request (in responses only) */
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:49:2: error: unknown type name ??????_u8??????
-> >   __u8 pad[2];  /* must be zero (ignore when read) */
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:58:2: error: unknown type name ??????_u8??????
-> >   __u8 phase;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:88:2: error: unknown type name ??????_u8??????
-> >   __u8 major;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:89:2: error: unknown type name ??????_u8??????
-> >   __u8 minor;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:93:2: error: unknown type name ??????_u8??????
-> >   __u8 major;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:94:2: error: unknown type name ??????_u8??????
-> >   __u8 minor;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:98:2: error: unknown type name ??????_u8??????
-> >   __u8 bundle_id;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:102:2: error: unknown type name ??????_u8??????
-> >   __u8 major;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:103:2: error: unknown type name ??????_u8??????
-> >   __u8 minor;
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:108:2: error: unknown type name ??????_le16??????
-> >   __le16   size;
-> >   ^~~~~~
-> > ./include/linux/greybus/greybus_protocols.h:113:2: error: unknown type name ??????_u8??????
-> >   __u8   data[0];
-> >   ^~~~
-> > ./include/linux/greybus/greybus_protocols.h:118:2: error: unknown type name ??????_le16??????
-> >   __le16   cport_id;
-> >   ^~~~~~
-> > ./include/linux/greybus/greybus_protocols.h:122:2: error: unknown type name ??????_le16??????
-> >   __le16   cport_id;
-> > 
-> > .. and other files...
-> > 
-> > Not very sure... but it seems it can be observed with allmodconfig or
-> > CONFIG_KERNEL_HEADER_TEST=y and fail my compilation...
-> > Hope that of some help (kind reminder...)
+On Tue, Aug 27, 2019 at 11:36:03AM +0200, Sebastian Andrzej Siewior wrote:
+> While Paul was explaning some RCU magic I noticed a typo in
+> rcu_note_context_switch().
+> Replace rcu_node_context_switch() with rcu_note_context_switch().
 > 
-> Ah, thank you so much for this, NOW that makes sense why I got that odd
-> kbuild warning that I could not figure out.
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Yeah, it seems KERNEL_HEADER_TEST is a new feature which aims at ensuring
-kernel headers are self-contained... I think it can be observed by
-  CONFIG_GREYBUS and CONFIG_KERNEL_HEADER_TEST are on
+Good eyes, queued for v5.5, thank you!
 
-see commit 43c78d88036e ("kbuild: compile-test kernel headers to ensure they are self-contained")
+Sounds like I should explain RCU magic more often, then.  ;-)
 
+							Thanx, Paul
+
+> ---
+>  .../RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html    | 2 +-
+>  Documentation/RCU/Design/Memory-Ordering/TreeRCU-gp.svg         | 2 +-
+>  Documentation/RCU/Design/Memory-Ordering/TreeRCU-qs.svg         | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> Let me go fix this up, thank you so much.
-
-You're welcome, I was just testing my previous patch after merging as well...
-
-Thanks,
-Gao Xiang
-
+> diff --git a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html
+> index c64f8d26609fb..54db02b74f636 100644
+> --- a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html
+> +++ b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html
+> @@ -481,7 +481,7 @@ section that the grace period must wait on.
+>  </table>
+>  
+>  <p>If the CPU does a context switch, a quiescent state will be
+> -noted by <tt>rcu_node_context_switch()</tt> on the left.
+> +noted by <tt>rcu_note_context_switch()</tt> on the left.
+>  On the other hand, if the CPU takes a scheduler-clock interrupt
+>  while executing in usermode, a quiescent state will be noted by
+>  <tt>rcu_sched_clock_irq()</tt> on the right.
+> diff --git a/Documentation/RCU/Design/Memory-Ordering/TreeRCU-gp.svg b/Documentation/RCU/Design/Memory-Ordering/TreeRCU-gp.svg
+> index 2bcd742d6e491..069f6f8371c20 100644
+> --- a/Documentation/RCU/Design/Memory-Ordering/TreeRCU-gp.svg
+> +++ b/Documentation/RCU/Design/Memory-Ordering/TreeRCU-gp.svg
+> @@ -3880,7 +3880,7 @@
+>           font-style="normal"
+>           y="-4418.6582"
+>           x="3745.7725"
+> -         xml:space="preserve">rcu_node_context_switch()</text>
+> +         xml:space="preserve">rcu_note_context_switch()</text>
+>      </g>
+>      <g
+>         transform="translate(1881.1886,54048.57)"
+> diff --git a/Documentation/RCU/Design/Memory-Ordering/TreeRCU-qs.svg b/Documentation/RCU/Design/Memory-Ordering/TreeRCU-qs.svg
+> index 779c9ac31a527..7d6c5f7e505c6 100644
+> --- a/Documentation/RCU/Design/Memory-Ordering/TreeRCU-qs.svg
+> +++ b/Documentation/RCU/Design/Memory-Ordering/TreeRCU-qs.svg
+> @@ -753,7 +753,7 @@
+>           font-style="normal"
+>           y="-4418.6582"
+>           x="3745.7725"
+> -         xml:space="preserve">rcu_node_context_switch()</text>
+> +         xml:space="preserve">rcu_note_context_switch()</text>
+>      </g>
+>      <g
+>         transform="translate(3131.2648,-585.6713)"
+> -- 
+> 2.23.0
 > 
-> greg k-h
