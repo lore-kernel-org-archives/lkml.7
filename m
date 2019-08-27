@@ -2,105 +2,90 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABE8C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5232BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520D6206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EBC2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="im8IgKyU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c7Qmh9V0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfH0QJ4 (ORCPT
+        id S1729925AbfH0QK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:09:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34334 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfH0QJ4 (ORCPT
+        Tue, 27 Aug 2019 12:10:58 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38469 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfH0QK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:09:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b24so14447823pfp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:09:55 -0700 (PDT)
+        Tue, 27 Aug 2019 12:10:57 -0400
+Received: by mail-io1-f67.google.com with SMTP id p12so47639303iog.5
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=n+ewofGgqXwwrEKyd3RnPtDD4SWAWjoyL/KF4JyMz0k=;
-        b=im8IgKyU7PApob9zdI2bKkHvClM5tT3ZrZYAP9rmDDUg2jlCUrhIR7L7c0BfEDnHpO
-         83ImifBo2cwuBUYl0UrPcB7CsJhC4+RrnVCamMHsdTui6dclTm5U19ArrKd8yJoxlQ7t
-         c3tKw01vr0xikmjsHQ+RmpVXSfKJPDY2IXJ99aAd+gvVVMdibijXDdCXNuumogny6Rdc
-         hq1Uao85EHQuS0GacD1QPj9OpkXEqnkLKbKkiOuM8YUifp1Q723saPkLh1zDASOy6TDZ
-         m1baB002Y+CIWihR71yHbuQzHwiHYbvlkv9Gj4f89a/+tfj7GF6yucTl9PeicbkqwJEy
-         iP/A==
+         :cc;
+        bh=wAZSFhrkNg8EdOkX7+bIojO3qOZTJEurdw0nzGyP6oc=;
+        b=c7Qmh9V0mJfsmJ0EtwOBmGCFdov/0upZx5p7QsvvjmGhxRJqV+e8Z3ZHDER41CuEts
+         K9cPQ1cOAheQbiqZ2SmTXQ1ZGiBiSjya9NaJFFWjm/BXZM++XyBrYhgHB5v1k5v2rd8e
+         EAgsk1PetLvEQljYTJ1wKgeWp/Rr+wCQvCS20bG9aYWDplPJq+R6g3sqy/l0AmyBoSso
+         f5VcH+pNgnuxyy9+HJXmprUUDNDHbFzyQ3WeemOF5F5fYMTMwHeB/sbcNgkq6WDiCtf+
+         yWdYD1L2ttJF8xjf2NNWIWCP/dzG/kIBLeUXWrR/aCXcTjQDkKfJ1eSIKLOvamky62TS
+         rvHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n+ewofGgqXwwrEKyd3RnPtDD4SWAWjoyL/KF4JyMz0k=;
-        b=WGIAobcQrg3xrvIlKG8/u1ygW0gs6CH30XD28NvbIAGHkNzVk1FJuw0RaOCQuwbrIV
-         lo1iPHdYvj30tm8kh4M4D/mohfVbShvRSpS2n4coD8wZ/jI1bCfHd9DWAOP7rkiECCfj
-         ks2PoFkHG8JE9/51xrNfZGE1k9FDSLJIifpytGWYzMmhx2umUevaXlPhM5bTmkPiAMtB
-         u7UL6k+RfyPa5quccomLs495c+kHIn0VXuSK9UPeL1sKLPx6aeJpZhYm/PjnQTeP/StC
-         m4jjCKFxxofJXYnpwPGeFmqXOXuD9vYXZVOkGgqxHD9zc4CC5iL2qMidWuB4r8A0JKrE
-         5Y8A==
-X-Gm-Message-State: APjAAAVE0MrV0zcdEyZmCRRBCG8IWCD7GNSxh58M+YJhFbtMDnp6R7t+
-        lKfT8Bz0Hb2kIc93nsdCRYZ2Zbqf9AXlPKkmWo67aQ==
-X-Google-Smtp-Source: APXvYqzquXmLYJxp8UUmLZGf/BqLEQu+rHsFlpty6Ng28rMacp102hu83XiIbg/DHK3ZGZb0KgfDfSnGw/9w/JHxBWg=
-X-Received: by 2002:a17:90a:25ea:: with SMTP id k97mr26573759pje.131.1566922194974;
- Tue, 27 Aug 2019 09:09:54 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=wAZSFhrkNg8EdOkX7+bIojO3qOZTJEurdw0nzGyP6oc=;
+        b=J1bnYPNaonLbUXOfrXNhwMTJIUQO7UQT59kwPIj0hB7cDCKtJsMIIQxs9kCNJPXkmK
+         iL0pi+TS+d+kJ6zDmBBDLJ2ExHNhsu29W/RULmeD58KMPeq8EqeAVCh0qAjs0bnNoqYs
+         EAiGvQzgVK97q9LpsQDmTkEceoQd6t6+zUWvRl/TUzM19YYjmR2PnC/HTtXnTQaIJ4+G
+         4Cc1XdSCO3YcpIf52aIpMHJiZw0ty+7IBrr+BblEKmfVP9Zq8O8bVQ7yPRhpdYvMTF4h
+         SZHi3gM1H91TIW9xHk5ot7D+Upf8pnjtix6v5RyJU7i5AjCAkQdiQeoGdCE+qv8i7t/p
+         gv2Q==
+X-Gm-Message-State: APjAAAV4x7L/bT19UA/YDi0sZtIxvf9xPRf96cu1nHOnaIL5jDzCrhw5
+        BsX4p+GnJdR3N/P3dBm+AurAfMo8S7ql1MAv8AW+Wg==
+X-Google-Smtp-Source: APXvYqwQmXQ63LGIFbQMm/5m/D+YgrCWN32dRNivv1cpTg5pdioaBPmvKsRxmwCw4WeZ2O8Zi4kZOW+1RuNO/TuK42M=
+X-Received: by 2002:a02:cc8f:: with SMTP id s15mr23773601jap.53.1566922256653;
+ Tue, 27 Aug 2019 09:10:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190827190526.6f27e763@canb.auug.org.au> <c7229254-0d90-d90e-f3df-5b6d6fc0b51f@infradead.org>
-In-Reply-To: <c7229254-0d90-d90e-f3df-5b6d6fc0b51f@infradead.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 27 Aug 2019 09:09:43 -0700
-Message-ID: <CAFd5g452baXuwL1hDyX+U53_p6XGppTf5p1qMwRsGK-wjzJ8Lg@mail.gmail.com>
-Subject: Re: linux-next: Tree for Aug 27 (kunit)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <20190826081752.57258-1-kkamagui@gmail.com> <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
+ <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
+In-Reply-To: <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 27 Aug 2019 09:10:45 -0700
+Message-ID: <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
+ supporting AMD's fTPM
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 8:29 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Tue, Aug 27, 2019 at 1:23 AM Seunghun Han <kkamagui@gmail.com> wrote:
+> If the regions allocated in the NVS region need to be handled by a
+> driver, the callback mechanism is good for it. However, this case
+> doesn't need it because the regions allocated in NVS are just I/O
+> regions.
 >
-> On 8/27/19 2:05 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20190826:
-> >
->
-> on i386:
-> # CONFIG_PRINTK is not set
->
->
-> ../kunit/test.c: In function =E2=80=98kunit_vprintk_emit=E2=80=99:
-> ../kunit/test.c:21:9: error: implicit declaration of function =E2=80=98vp=
-rintk_emit=E2=80=99; did you mean =E2=80=98vprintk=E2=80=99? [-Werror=3Dimp=
-licit-function-declaration]
->   return vprintk_emit(0, level, NULL, 0, fmt, args);
->          ^~~~~~~~~~~~
->          vprintk
+> In my opinion, if the driver wants to handle the region in the NVS
+> while suspending or hibernating, it has to use register_pm_notifier()
+> function and handle the event. We already had the mechanism that could
+> ensure that the cases you worried about would be handled, so it seems
+> to me that removing the busy bit from the NVS region is fine.
 
-Ooops, it never occurred to me to test the situation where I wouldn't
-be able to see test results :-)
-
-It seems to me that the right thing to do here is to do what
-dev_printk and friends do and to ifdef this out if CONFIG_PRINTK is
-unavailable. Does that seem reasonable?
-
-Also, do you want me to resend my patches with the fix or do you want
-me to send a new patch with this fix? (Sorry for the newbie question.)
-
-Thanks!
+No. The NVS regions are regions that need to be saved and restored
+over hibernation, but which aren't otherwise handled by a driver -
+that's why the NVS code exists. If drivers are allowed to bind to NVS
+regions without explicit handling, they risk conflicting with that.
