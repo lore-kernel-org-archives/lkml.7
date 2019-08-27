@@ -2,222 +2,140 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E1FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77181C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17477205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B7HB8HTB"
+	by mail.kernel.org (Postfix) with ESMTP id 543A420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfH0HNO (ORCPT
+        id S1728621AbfH0HOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:13:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59814 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfH0HNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:13:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R7D0kq131025;
-        Tue, 27 Aug 2019 02:13:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566889980;
-        bh=Qz1caDsmTLrcgY1LRoE54Osz0mu6gtZdadLVqIgskSo=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=B7HB8HTBua5z0KnMw9zNx6j9kSItbx5sZCqo1X8Fwsr4UyxzDWxGv7NlFsrfSB1sb
-         Oqxxg1/AOu0yXCs6k6/nBJhhKjvf49y6kwp+Hkdim9aE9Nx6frza6vYjo86gzb+CDc
-         JMrgxOdPdE4WyUGowJy0+A49YLpo9auoD+pKRo8s=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R7D0O6007391
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Aug 2019 02:13:00 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
- Aug 2019 02:13:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 27 Aug 2019 02:13:00 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R7Cu87034505;
-        Tue, 27 Aug 2019 02:12:57 -0500
-Subject: Re: [RESEND PATCH v3 13/20] mtd: spi-nor: Add a ->convert_addr()
- method
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
- <20190826120821.16351-14-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <b6db18f9-3eb9-6bd6-8a9a-3b7320c48739@ti.com>
-Date:   Tue, 27 Aug 2019 12:43:34 +0530
+        Tue, 27 Aug 2019 03:14:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:11135 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfH0HOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:14:02 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20944307D962;
+        Tue, 27 Aug 2019 07:14:02 +0000 (UTC)
+Received: from [10.36.117.50] (ovpn-117-50.ams2.redhat.com [10.36.117.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C9CAA5D6B7;
+        Tue, 27 Aug 2019 07:13:59 +0000 (UTC)
+Subject: Re: [PATCH] powerpc: Perform a bounds check in arch_add_memory
+To:     Alastair D'Silva <alastair@au1.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190827052047.31547-1-alastair@au1.ibm.com>
+ <20190827062844.GQ7538@dhcp22.suse.cz>
+ <ea9e43fff6b6531af0620f9df62e015af66d4535.camel@au1.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <1f2d967a-57a1-d3a3-4eb7-306b43709fee@redhat.com>
+Date:   Tue, 27 Aug 2019 09:13:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190826120821.16351-14-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <ea9e43fff6b6531af0620f9df62e015af66d4535.camel@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 27 Aug 2019 07:14:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 27.08.19 08:39, Alastair D'Silva wrote:
+> On Tue, 2019-08-27 at 08:28 +0200, Michal Hocko wrote:
+>> On Tue 27-08-19 15:20:46, Alastair D'Silva wrote:
+>>> From: Alastair D'Silva <alastair@d-silva.org>
+>>>
+>>> It is possible for firmware to allocate memory ranges outside
+>>> the range of physical memory that we support (MAX_PHYSMEM_BITS).
+>>
+>> Doesn't that count as a FW bug? Do you have any evidence of that in
+>> the
+>> field? Just wondering...
+>>
+> 
+> Not outside our lab, but OpenCAPI attached LPC memory is assigned
+> addresses based on the slot/NPU it is connected to. These addresses
+> prior to:
+> 4ffe713b7587 ("powerpc/mm: Increase the max addressable memory to 2PB")
+> were inaccessible and resulted in bogus sections - see our discussion
+> on 'mm: Trigger bug on if a section is not found in __section_nr'.
+> Doing this check here was your suggestion :)
+> 
+> It's entirely possible that a similar problem will occur in the future,
+> and it's cheap to guard against, which is why I've added this.
+> 
 
+If you keep it here, I guess this should be wrapped by a WARN_ON_ONCE().
 
-On 26/08/19 5:38 PM, Tudor.Ambarus@microchip.com wrote:
-> From: Boris Brezillon <boris.brezillon@bootlin.com>
-> 
-> In order to separate manufacturer quirks from the core we need to get
-> rid of all the manufacturer specific flags, like the
-> SNOR_F_S3AN_ADDR_DEFAULT one.
-> 
-> This can easily be replaced by a ->convert_addr() hook, which when
-> implemented will provide the core with an easy way to convert an
-> absolute address into something the flash understands.
-> 
-> Right now the only user are the S3AN chips, but other manufacturers
-> can implement it if needed.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
-
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
-> v3: no changes, rebase on previous commits
-> 
->  drivers/mtd/spi-nor/spi-nor.c | 24 ++++++++++++++----------
->  include/linux/mtd/spi-nor.h   | 17 ++++++++++-------
->  2 files changed, 24 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index c862a59ce9df..b96a7066a36c 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -899,10 +899,9 @@ static void spi_nor_unlock_and_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
->   * Addr can safely be unsigned int, the biggest S3AN device is smaller than
->   * 4 MiB.
->   */
-> -static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
-> +static u32 s3an_convert_addr(struct spi_nor *nor, u32 addr)
->  {
-> -	unsigned int offset;
-> -	unsigned int page;
-> +	u32 offset, page;
->  
->  	offset = addr % nor->page_size;
->  	page = addr / nor->page_size;
-> @@ -911,6 +910,14 @@ static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
->  	return page | offset;
->  }
->  
-> +static u32 spi_nor_convert_addr(struct spi_nor *nor, loff_t addr)
-> +{
-> +	if (!nor->params.convert_addr)
-> +		return addr;
-> +
-> +	return nor->params.convert_addr(nor, addr);
-> +}
-> +
->  /*
->   * Initiate the erasure of a single sector
->   */
-> @@ -918,8 +925,7 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
->  {
->  	int i;
->  
-> -	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
-> -		addr = spi_nor_s3an_addr_convert(nor, addr);
-> +	addr = spi_nor_convert_addr(nor, addr);
->  
->  	if (nor->erase)
->  		return nor->erase(nor, addr);
-> @@ -2535,8 +2541,7 @@ static int spi_nor_read(struct mtd_info *mtd, loff_t from, size_t len,
->  	while (len) {
->  		loff_t addr = from;
->  
-> -		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
-> -			addr = spi_nor_s3an_addr_convert(nor, addr);
-> +		addr = spi_nor_convert_addr(nor, addr);
->  
->  		ret = spi_nor_read_data(nor, addr, len, buf);
->  		if (ret == 0) {
-> @@ -2680,8 +2685,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
->  		page_remain = min_t(size_t,
->  				    nor->page_size - page_offset, len - i);
->  
-> -		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
-> -			addr = spi_nor_s3an_addr_convert(nor, addr);
-> +		addr = spi_nor_convert_addr(nor, addr);
->  
->  		write_enable(nor);
->  		ret = spi_nor_write_data(nor, addr, page_remain, buf + i);
-> @@ -2748,7 +2752,7 @@ static int s3an_nor_scan(struct spi_nor *nor)
->  		nor->mtd.erasesize = 8 * nor->page_size;
->  	} else {
->  		/* Flash in Default addressing mode */
-> -		nor->flags |= SNOR_F_S3AN_ADDR_DEFAULT;
-> +		nor->params.convert_addr = s3an_convert_addr;
->  	}
->  
->  	return 0;
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index ea3bcac54dc2..35aad92a4ff8 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -237,13 +237,12 @@ enum spi_nor_option_flags {
->  	SNOR_F_USE_FSR		= BIT(0),
->  	SNOR_F_HAS_SR_TB	= BIT(1),
->  	SNOR_F_NO_OP_CHIP_ERASE	= BIT(2),
-> -	SNOR_F_S3AN_ADDR_DEFAULT = BIT(3),
-> -	SNOR_F_READY_XSR_RDY	= BIT(4),
-> -	SNOR_F_USE_CLSR		= BIT(5),
-> -	SNOR_F_BROKEN_RESET	= BIT(6),
-> -	SNOR_F_4B_OPCODES	= BIT(7),
-> -	SNOR_F_HAS_4BAIT	= BIT(8),
-> -	SNOR_F_HAS_LOCK		= BIT(9),
-> +	SNOR_F_READY_XSR_RDY	= BIT(3),
-> +	SNOR_F_USE_CLSR		= BIT(4),
-> +	SNOR_F_BROKEN_RESET	= BIT(5),
-> +	SNOR_F_4B_OPCODES	= BIT(6),
-> +	SNOR_F_HAS_4BAIT	= BIT(7),
-> +	SNOR_F_HAS_LOCK		= BIT(8),
->  };
->  
->  /**
-> @@ -496,6 +495,9 @@ struct spi_nor_locking_ops {
->   *                      Table.
->   * @quad_enable:	enables SPI NOR quad mode.
->   * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
-> + * @convert_addr:	converts an absolute address into something the flash
-> + *                      will understand. Particularly useful when pagesize is
-> + *                      not a power-of-2.
->   * @locking_ops:	SPI NOR locking methods.
->   */
->  struct spi_nor_flash_parameter {
-> @@ -510,6 +512,7 @@ struct spi_nor_flash_parameter {
->  
->  	int (*quad_enable)(struct spi_nor *nor);
->  	int (*set_4byte)(struct spi_nor *nor, bool enable);
-> +	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
->  
->  	const struct spi_nor_locking_ops *locking_ops;
->  };
-> 
+If we move it to common code (e.g., __add_pages() or add_memory()), then
+probably not. I can see that s390x allows to configure MAX_PHYSMEM_BITS,
+so the check could actually make sense.
 
 -- 
-Regards
-Vignesh
+
+Thanks,
+
+David / dhildenb
