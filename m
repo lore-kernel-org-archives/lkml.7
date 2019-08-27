@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F16C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A53C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935632173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AC02173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893559;
-	bh=5v+LE2CFUhor7motpMyaw12UaTOlwc6cVyNRiwey90c=;
+	s=default; t=1566893568;
+	bh=sV8A029NbP79JhWcV3l+Cv3/1wrI7UO0DdQ5OyIiX3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FYk6qo3w3sIpRKx++Pz6rRFZQd7GKDZx6ZF+vNV0/lmXn+cyDxJ518vWgui/nSEHy
-	 BQ7DU5dSVh60b75inesTmNRfMKRR7+MOpVJ8welSwGYq6FZah13El7OVDLGx4W50tp
-	 FDmnbSDSDwHowzoIi9Z6HC1vYH/vaGRHH1BXAM8Y=
+	b=p8o0LebYSIbgDeKYw68bnblUeCJX+6NDF60JesbsqtPVxKtGFsQLAhr0zHtLoSFjD
+	 K65pLUwsD2RjHnDcHQAEF6DkiWFe6Gotou8TGeo4c8qEtmd39MJIeP00QM4Tezu5ri
+	 mJ/+15h86jSXvKSOz1sy/EMnTD0B2kR037oI/lVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731142AbfH0H7N (ORCPT
+        id S1728571AbfH0IMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:59:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52142 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbfH0H7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:59:00 -0400
+        id S1729800AbfH0H7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89CE7217F5;
-        Tue, 27 Aug 2019 07:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D102217F5;
+        Tue, 27 Aug 2019 07:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892739;
-        bh=5v+LE2CFUhor7motpMyaw12UaTOlwc6cVyNRiwey90c=;
+        s=default; t=1566892745;
+        bh=sV8A029NbP79JhWcV3l+Cv3/1wrI7UO0DdQ5OyIiX3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VgVjN4m3hiVJ3/x2snRMVc00Udc8nSrd3xZ4vbmN1TDzvTwB1gi/TvOe2DSRbzzzv
-         US9t1yBqw3zkS2JAH5ocWP9N1WtMOGD2GTJfW6Ta3PlUwqSrezsThsIicM9Wwz8+4E
-         AwfDkp7cPsQ8UHc4bUgOou0rTlOk74Zo/OraSbmw=
+        b=qUqWae7HcgO8exQTzw2PhrQhntB77hk46oSLnzAfD7+q19TZB1LLAswFn/xl5ckJe
+         kFJyCgRsrxjKBQdW3uDUmXWcucdXW5M0IFOmxf9+EwNgIJ2Xczy776wbXpQwKnt4am
+         OYbHmhjgqJrSr9TlfD8UUH/Swm+8JQ3ebGhmqkKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 94/98] xfs: always rejoin held resources during defer roll
-Date:   Tue, 27 Aug 2019 09:51:13 +0200
-Message-Id: <20190827072723.294158483@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 56/98] KVM: arm64: Dont write junk to sysregs on reset
+Date:   Tue, 27 Aug 2019 09:50:35 +0200
+Message-Id: <20190827072721.278787742@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -62,240 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 710d707d2fa9cf4c2aa9def129e71e99513466ea upstream.
+[ Upstream commit 03fdfb2690099c19160a3f2c5b77db60b3afeded ]
 
-During testing of xfs/141 on a V4 filesystem, I observed some
-inconsistent behavior with regards to resources that are held (i.e.
-remain locked) across a defer roll.  The transaction roll always gives
-the defer roll function a new transaction, even if committing the old
-transaction fails.  However, the defer roll function only rejoins the
-held resources if the transaction commit succeedied.  This means that
-callers of defer roll have to figure out whether the held resources are
-attached to the transaction being passed back.
+At the moment, the way we reset system registers is mildly insane:
+We write junk to them, call the reset functions, and then check that
+we have something else in them.
 
-Worse yet, if the defer roll was part of a defer finish call, we have a
-third possibility: the defer finish could pass back a dirty transaction
-with dirty held resources and an error code.
+The "fun" thing is that this can happen while the guest is running
+(PSCI, for example). If anything in KVM has to evaluate the state
+of a system register while junk is in there, bad thing may happen.
 
-The only sane way to handle all of these scenarios is to require that
-the code that held the resource either cancel the transaction before
-unlocking and releasing the resources, or use functions that detach
-resources from a transaction properly (e.g.  xfs_trans_brelse) if they
-need to drop the reference before committing or cancelling the
-transaction.
+Let's stop doing that. Instead, we track that we have called a
+reset function for that register, and assume that the reset
+function has done something. This requires fixing a couple of
+sysreg refinition in the trap table.
 
-In order to make this so, change the defer roll code to join held
-resources to the new transaction unconditionally and fix all the bhold
-callers to release the held buffers correctly.
+In the end, the very need of this reset check is pretty dubious,
+as it doesn't check everything (a lot of the sysregs leave outside of
+the sys_regs[] array). It may well be axed in the near future.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-[mcgrof: fixes kz#204223 ]
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Tested-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr.c  | 35 ++++++++++++-----------------------
- fs/xfs/libxfs/xfs_attr.h  |  2 +-
- fs/xfs/libxfs/xfs_defer.c | 14 +++++++++-----
- fs/xfs/xfs_dquot.c        | 17 +++++++++--------
- 4 files changed, 31 insertions(+), 37 deletions(-)
+ arch/arm64/kvm/sys_regs.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 844ed87b19007..6410d3e00ce07 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -224,10 +224,10 @@ xfs_attr_try_sf_addname(
-  */
- int
- xfs_attr_set_args(
--	struct xfs_da_args	*args,
--	struct xfs_buf          **leaf_bp)
-+	struct xfs_da_args	*args)
- {
- 	struct xfs_inode	*dp = args->dp;
-+	struct xfs_buf          *leaf_bp = NULL;
- 	int			error;
- 
- 	/*
-@@ -255,7 +255,7 @@ xfs_attr_set_args(
- 		 * It won't fit in the shortform, transform to a leaf block.
- 		 * GROT: another possible req'mt for a double-split btree op.
- 		 */
--		error = xfs_attr_shortform_to_leaf(args, leaf_bp);
-+		error = xfs_attr_shortform_to_leaf(args, &leaf_bp);
- 		if (error)
- 			return error;
- 
-@@ -263,23 +263,16 @@ xfs_attr_set_args(
- 		 * Prevent the leaf buffer from being unlocked so that a
- 		 * concurrent AIL push cannot grab the half-baked leaf
- 		 * buffer and run into problems with the write verifier.
-+		 * Once we're done rolling the transaction we can release
-+		 * the hold and add the attr to the leaf.
- 		 */
--		xfs_trans_bhold(args->trans, *leaf_bp);
--
-+		xfs_trans_bhold(args->trans, leaf_bp);
- 		error = xfs_defer_finish(&args->trans);
--		if (error)
--			return error;
--
--		/*
--		 * Commit the leaf transformation.  We'll need another
--		 * (linked) transaction to add the new attribute to the
--		 * leaf.
--		 */
--		error = xfs_trans_roll_inode(&args->trans, dp);
--		if (error)
-+		xfs_trans_bhold_release(args->trans, leaf_bp);
-+		if (error) {
-+			xfs_trans_brelse(args->trans, leaf_bp);
- 			return error;
--		xfs_trans_bjoin(args->trans, *leaf_bp);
--		*leaf_bp = NULL;
-+		}
- 	}
- 
- 	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
-@@ -322,7 +315,6 @@ xfs_attr_set(
- 	int			flags)
- {
- 	struct xfs_mount	*mp = dp->i_mount;
--	struct xfs_buf		*leaf_bp = NULL;
- 	struct xfs_da_args	args;
- 	struct xfs_trans_res	tres;
- 	int			rsvd = (flags & ATTR_ROOT) != 0;
-@@ -381,9 +373,9 @@ xfs_attr_set(
- 		goto out_trans_cancel;
- 
- 	xfs_trans_ijoin(args.trans, dp, 0);
--	error = xfs_attr_set_args(&args, &leaf_bp);
-+	error = xfs_attr_set_args(&args);
- 	if (error)
--		goto out_release_leaf;
-+		goto out_trans_cancel;
- 	if (!args.trans) {
- 		/* shortform attribute has already been committed */
- 		goto out_unlock;
-@@ -408,9 +400,6 @@ xfs_attr_set(
- 	xfs_iunlock(dp, XFS_ILOCK_EXCL);
- 	return error;
- 
--out_release_leaf:
--	if (leaf_bp)
--		xfs_trans_brelse(args.trans, leaf_bp);
- out_trans_cancel:
- 	if (args.trans)
- 		xfs_trans_cancel(args.trans);
-diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index bdf52a333f3f9..cc04ee0aacfbe 100644
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -140,7 +140,7 @@ int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
- 		 unsigned char *value, int *valuelenp, int flags);
- int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
- 		 unsigned char *value, int valuelen, int flags);
--int xfs_attr_set_args(struct xfs_da_args *args, struct xfs_buf **leaf_bp);
-+int xfs_attr_set_args(struct xfs_da_args *args);
- int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name, int flags);
- int xfs_attr_remove_args(struct xfs_da_args *args);
- int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index e792b167150a0..c52beee31836a 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -266,13 +266,15 @@ xfs_defer_trans_roll(
- 
- 	trace_xfs_defer_trans_roll(tp, _RET_IP_);
- 
--	/* Roll the transaction. */
-+	/*
-+	 * Roll the transaction.  Rolling always given a new transaction (even
-+	 * if committing the old one fails!) to hand back to the caller, so we
-+	 * join the held resources to the new transaction so that we always
-+	 * return with the held resources joined to @tpp, no matter what
-+	 * happened.
-+	 */
- 	error = xfs_trans_roll(tpp);
- 	tp = *tpp;
--	if (error) {
--		trace_xfs_defer_trans_roll_error(tp, error);
--		return error;
--	}
- 
- 	/* Rejoin the joined inodes. */
- 	for (i = 0; i < ipcount; i++)
-@@ -284,6 +286,8 @@ xfs_defer_trans_roll(
- 		xfs_trans_bhold(tp, bplist[i]);
- 	}
- 
-+	if (error)
-+		trace_xfs_defer_trans_roll_error(tp, error);
- 	return error;
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index d112af75680bb..6da2bbdb9648f 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -626,7 +626,7 @@ static void reset_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
+ 	 */
+ 	val = ((pmcr & ~ARMV8_PMU_PMCR_MASK)
+ 	       | (ARMV8_PMU_PMCR_MASK & 0xdecafbad)) & (~ARMV8_PMU_PMCR_E);
+-	__vcpu_sys_reg(vcpu, PMCR_EL0) = val;
++	__vcpu_sys_reg(vcpu, r->reg) = val;
  }
  
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 87e6dd5326d5d..a1af984e4913e 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -277,7 +277,8 @@ xfs_dquot_set_prealloc_limits(struct xfs_dquot *dqp)
+ static bool check_pmu_access_disabled(struct kvm_vcpu *vcpu, u64 flags)
+@@ -968,13 +968,13 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+ /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+ #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+ 	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+-	  trap_bvr, reset_bvr, n, 0, get_bvr, set_bvr },		\
++	  trap_bvr, reset_bvr, 0, 0, get_bvr, set_bvr },		\
+ 	{ SYS_DESC(SYS_DBGBCRn_EL1(n)),					\
+-	  trap_bcr, reset_bcr, n, 0, get_bcr, set_bcr },		\
++	  trap_bcr, reset_bcr, 0, 0, get_bcr, set_bcr },		\
+ 	{ SYS_DESC(SYS_DBGWVRn_EL1(n)),					\
+-	  trap_wvr, reset_wvr, n, 0,  get_wvr, set_wvr },		\
++	  trap_wvr, reset_wvr, 0, 0,  get_wvr, set_wvr },		\
+ 	{ SYS_DESC(SYS_DBGWCRn_EL1(n)),					\
+-	  trap_wcr, reset_wcr, n, 0,  get_wcr, set_wcr }
++	  trap_wcr, reset_wcr, 0, 0,  get_wcr, set_wcr }
  
- /*
-  * Ensure that the given in-core dquot has a buffer on disk backing it, and
-- * return the buffer. This is called when the bmapi finds a hole.
-+ * return the buffer locked and held. This is called when the bmapi finds a
-+ * hole.
-  */
- STATIC int
- xfs_dquot_disk_alloc(
-@@ -355,13 +356,14 @@ xfs_dquot_disk_alloc(
- 	 * If everything succeeds, the caller of this function is returned a
- 	 * buffer that is locked and held to the transaction.  The caller
- 	 * is responsible for unlocking any buffer passed back, either
--	 * manually or by committing the transaction.
-+	 * manually or by committing the transaction.  On error, the buffer is
-+	 * released and not passed back.
- 	 */
- 	xfs_trans_bhold(tp, bp);
- 	error = xfs_defer_finish(tpp);
--	tp = *tpp;
- 	if (error) {
--		xfs_buf_relse(bp);
-+		xfs_trans_bhold_release(*tpp, bp);
-+		xfs_trans_brelse(*tpp, bp);
- 		return error;
- 	}
- 	*bpp = bp;
-@@ -521,7 +523,6 @@ xfs_qm_dqread_alloc(
- 	struct xfs_buf		**bpp)
+ /* Macro to expand the PMEVCNTRn_EL0 register */
+ #define PMU_PMEVCNTR_EL0(n)						\
+@@ -1359,7 +1359,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 
+ 	{ SYS_DESC(SYS_CSSELR_EL1), NULL, reset_unknown, CSSELR_EL1 },
+ 
+-	{ SYS_DESC(SYS_PMCR_EL0), access_pmcr, reset_pmcr, },
++	{ SYS_DESC(SYS_PMCR_EL0), access_pmcr, reset_pmcr, PMCR_EL0 },
+ 	{ SYS_DESC(SYS_PMCNTENSET_EL0), access_pmcnten, reset_unknown, PMCNTENSET_EL0 },
+ 	{ SYS_DESC(SYS_PMCNTENCLR_EL0), access_pmcnten, NULL, PMCNTENSET_EL0 },
+ 	{ SYS_DESC(SYS_PMOVSCLR_EL0), access_pmovs, NULL, PMOVSSET_EL0 },
+@@ -2072,13 +2072,19 @@ static int emulate_sys_reg(struct kvm_vcpu *vcpu,
+ }
+ 
+ static void reset_sys_reg_descs(struct kvm_vcpu *vcpu,
+-			      const struct sys_reg_desc *table, size_t num)
++				const struct sys_reg_desc *table, size_t num,
++				unsigned long *bmap)
  {
- 	struct xfs_trans	*tp;
--	struct xfs_buf		*bp;
- 	int			error;
+ 	unsigned long i;
  
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_dqalloc,
-@@ -529,7 +530,7 @@ xfs_qm_dqread_alloc(
- 	if (error)
- 		goto err;
+ 	for (i = 0; i < num; i++)
+-		if (table[i].reset)
++		if (table[i].reset) {
++			int reg = table[i].reg;
++
+ 			table[i].reset(vcpu, &table[i]);
++			if (reg > 0 && reg < NR_SYS_REGS)
++				set_bit(reg, bmap);
++		}
+ }
  
--	error = xfs_dquot_disk_alloc(&tp, dqp, &bp);
-+	error = xfs_dquot_disk_alloc(&tp, dqp, bpp);
- 	if (error)
- 		goto err_cancel;
+ /**
+@@ -2576,18 +2582,16 @@ void kvm_reset_sys_regs(struct kvm_vcpu *vcpu)
+ {
+ 	size_t num;
+ 	const struct sys_reg_desc *table;
+-
+-	/* Catch someone adding a register without putting in reset entry. */
+-	memset(&vcpu->arch.ctxt.sys_regs, 0x42, sizeof(vcpu->arch.ctxt.sys_regs));
++	DECLARE_BITMAP(bmap, NR_SYS_REGS) = { 0, };
  
-@@ -539,10 +540,10 @@ xfs_qm_dqread_alloc(
- 		 * Buffer was held to the transaction, so we have to unlock it
- 		 * manually here because we're not passing it back.
- 		 */
--		xfs_buf_relse(bp);
-+		xfs_buf_relse(*bpp);
-+		*bpp = NULL;
- 		goto err;
+ 	/* Generic chip reset first (so target could override). */
+-	reset_sys_reg_descs(vcpu, sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
++	reset_sys_reg_descs(vcpu, sys_reg_descs, ARRAY_SIZE(sys_reg_descs), bmap);
+ 
+ 	table = get_target_table(vcpu->arch.target, true, &num);
+-	reset_sys_reg_descs(vcpu, table, num);
++	reset_sys_reg_descs(vcpu, table, num, bmap);
+ 
+ 	for (num = 1; num < NR_SYS_REGS; num++) {
+-		if (WARN(__vcpu_sys_reg(vcpu, num) == 0x4242424242424242,
++		if (WARN(!test_bit(num, bmap),
+ 			 "Didn't reset __vcpu_sys_reg(%zi)\n", num))
+ 			break;
  	}
--	*bpp = bp;
- 	return 0;
- 
- err_cancel:
 -- 
 2.20.1
 
