@@ -2,104 +2,126 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4AFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B95C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18172186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332F42173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bgTanDys"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KuMqge6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfH0FGs (ORCPT
+        id S1729269AbfH0FKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:06:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46063 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbfH0FGq (ORCPT
+        Tue, 27 Aug 2019 01:10:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37082 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfH0FKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:06:46 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so11172312plr.12
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:06:46 -0700 (PDT)
+        Tue, 27 Aug 2019 01:10:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y9so12933682pfl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:10:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xGYf3jT/OywcihGiyF5DuZOJxtPVxDOHX/P0bgLTLJc=;
-        b=bgTanDysTxIvjBPOAptfkieUGdxGxP94KRoDugwTLGzJP4TXWmq18fatIv4CJ5hkjF
-         6cB1s70XskgYvExXIuFERiMKnvZz7Kmclh/GC6dS04oECEoG56Wgtmclg6T5RcHxcuQM
-         nxf+xWUqVtcZeQtrpd4LYPmS2P+v1XFduGiK9o86lVazMsCy+VtVWxLDP3OA9wbruKOM
-         fnXUF73OpQdJqyNo82WuTSZu+gWo7svhNl8ywdWvb259klOLtpcUKOk1SsiM++cP2s7N
-         xwQzFwCURx1JBmrHrYuWvugEA9iTS5j+IOWxwAROpMjxaM36lkPuTQU8Vt5jx+fUReRC
-         fCtw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kue46rIH4JbVHYlsaa+MeXhi8APX3bNmyCw0oXBiDLk=;
+        b=KuMqge6vlDfh8jKRoUD1gXms5XSFdS1FlnpSUUgkV3Anmlc5b2oHqJbvmp9PRK9HwC
+         cXoaHeEt91RFR/N/ICoDIUULdkm9h3zMfzEZUg03XCSuWbDcmXj6mlOFtvixsfmRpljM
+         +f80ERIcyeyyyhaKaWGX+70wWZTaNrqFIFiQZwBBU31lphbOAMIXNQAfQkydWDf4u7VD
+         ZUfkl/7pxtzhTER9JrlBceTvZGBiuHFxDYQPj3hNCwxhDaiTEVkDTAMBqqgZ67LE/pLm
+         s28iAqXtdlfxdlO3SY/yKy70m/oc1Qbb8nWkxpueiPJk2i8QRIInyzbhB57hxPpRiAFI
+         hgEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xGYf3jT/OywcihGiyF5DuZOJxtPVxDOHX/P0bgLTLJc=;
-        b=BV3F6ZzRFa2fHm+P8C9zaw9OsbkINu9pDxRPwTD/qYUGvK1Q7M7CAHSx1qTs+MN1du
-         lZ4tTgSKqQVZpZrhbMs8WtyHxi8UmMMNgo2EV+bHzpoOOwj3qEO/tkPE9RaNcbI2IIpC
-         xRKhr1MpJGDOR/6INTiExEylK6k1HXoXbHabPAx+fXtMyAkBstEuI3JBUc/+6r4kxnAT
-         URQDHHpCvHMIW/EXAmRClYDfNfH5c3X87f9S9g7JASwacNvBmebutWJIpukL/0HfWzWj
-         xRbBU1KIvwG/2VtY1JUZCbToJfDJvJAv7PXQJA240JPUZhY6OOisIwMzNNc1bIms2pJQ
-         FbhA==
-X-Gm-Message-State: APjAAAWrOoBEMQOsBRFjVN1xUZ090pWloa1IRZCC9ZqytvoiJ/Vvt35u
-        lCzud5B51oghDlwYlXQyeRBZGA==
-X-Google-Smtp-Source: APXvYqzjLiuejY0DazschLAZMfhXglu+wZbQBz00aBmRwNg7xBm8uxbhlOxf9U8si4Lr0KVQVQntcA==
-X-Received: by 2002:a17:902:a714:: with SMTP id w20mr22158808plq.135.1566882406319;
-        Mon, 26 Aug 2019 22:06:46 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id q8sm896414pjq.20.2019.08.26.22.06.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 26 Aug 2019 22:06:45 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, palmer@sifive.com,
-        paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2 2/2] macb: Update compatibility string for SiFive FU540-C000
-Date:   Tue, 27 Aug 2019 10:36:04 +0530
-Message-Id: <1566882364-23891-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566882364-23891-1-git-send-email-yash.shah@sifive.com>
-References: <1566882364-23891-1-git-send-email-yash.shah@sifive.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kue46rIH4JbVHYlsaa+MeXhi8APX3bNmyCw0oXBiDLk=;
+        b=s8Z4i3QQ44+bgXKeSOwsxAr5DM+ylcoHYwLz5F1FtgvyaicvspTVOFOMQo/Rd85gF2
+         rG7kDZZARD0OfJcGtAFiw+iJoqQzIhTNZiRlFLeUuGLmln2UdnaoKEhoGl2jSWPSGRRo
+         RmgRIh9gN/dpZc41qU8SJpVFsLmxkVhMwqWB8WmvxY+h9eWTjEZmSEIy0Tt07kgMA021
+         S1V4dc6W0pwgB6YlMcwijI8m6C89Z5ymWvV4sm8odQLGQXf3Uhb95FKQ1LwLytfGyktG
+         RX6PC6guLJDA+djUdbnj3ElVW6eIVmZC/G6G/HSaw3MX6+SR3zo41NsKDBUyfy+cLLZw
+         m1lA==
+X-Gm-Message-State: APjAAAWE3q1sNjBchFnHViIlegQEdmlcIC5jos4fZ1cceqAgZHxJTnEA
+        9or2xMjxIPz975XM6n4wxV25VSWMi+w=
+X-Google-Smtp-Source: APXvYqwcaGrGmBqQbq+ZXIx4wrncCySdMwJsO+BZOga+pwX1bi4P2t3U7PQxLtkRvcP8a/wee3hCMQ==
+X-Received: by 2002:a17:90a:250c:: with SMTP id j12mr23377818pje.96.1566882609922;
+        Mon, 26 Aug 2019 22:10:09 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y8sm21644391pfr.140.2019.08.26.22.10.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 26 Aug 2019 22:10:09 -0700 (PDT)
+Date:   Mon, 26 Aug 2019 22:10:07 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
+Message-ID: <20190827051007.GK1263@builder>
+References: <20181024011909.21674-1-s-anna@ti.com>
+ <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40831f80-1e36-66ca-b8e5-684d46ba167e@ti.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the compatibility string for SiFive FU540-C000 as per the new
-string updated in the binding doc.
-Reference:
-https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5KA-+rgww@mail.gmail.com/
+On Fri 09 Aug 13:25 PDT 2019, Suman Anna wrote:
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
-Tested-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- drivers/net/ethernet/cadence/macb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Bjorn,
+> 
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 5ca17e6..35b59b5 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4154,7 +4154,7 @@ static int fu540_c000_init(struct platform_device *pdev)
- 	{ .compatible = "cdns,emac", .data = &emac_config },
- 	{ .compatible = "cdns,zynqmp-gem", .data = &zynqmp_config},
- 	{ .compatible = "cdns,zynq-gem", .data = &zynq_config },
--	{ .compatible = "sifive,fu540-macb", .data = &fu540_c000_config },
-+	{ .compatible = "sifive,fu540-c000-gem", .data = &fu540_c000_config },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, macb_dt_ids);
--- 
-1.9.1
+Hi Suman
 
+> On 10/23/18 8:19 PM, Suman Anna wrote:
+> > The virtio_rpmsg_bus driver uses the "%p" format-specifier for
+> > printing the vring buffer address. This prints only a hashed
+> > pointer even for previliged users. Use "%pK" instead so that
+> > the address can be printed during debug using kptr_restrict
+> > sysctl.
+> 
+> Seems to have been lost among the patches, can you pick up this trivial
+> patch for 5.4? Should apply cleanly on the latest HEAD as well.
+> 
+
+I share Andrew's question regarding what benefit you have from knowing
+this value. Should we not just remove the va from the print? Or do you
+actually have a use case for it?
+
+Regards,
+Bjorn
+
+> regards
+> Suman
+> 
+> > 
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > ---
+> >  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+> > index f29dee731026..1345f373a1a0 100644
+> > --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+> > +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+> > @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+> >  		goto vqs_del;
+> >  	}
+> >  
+> > -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
+> > +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
+> >  		bufs_va, &vrp->bufs_dma);
+> >  
+> >  	/* half of the buffers is dedicated for RX */
+> > 
+> 
