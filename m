@@ -2,114 +2,174 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E14DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0546C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1F82173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39142173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0fxmZy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfH0LlV (ORCPT
+        id S1728559AbfH0Lo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:41:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:65064 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfH0LlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:41:21 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AB59461D25;
-        Tue, 27 Aug 2019 11:41:20 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D2EEB600D1;
-        Tue, 27 Aug 2019 11:41:16 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 13:41:14 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-Message-ID: <20190827134114.01ddd049.cohuck@redhat.com>
-In-Reply-To: <AM0PR05MB4866CC932630ADD9BDA51371D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-2-parav@mellanox.com>
-        <20190827122428.37442fe1.cohuck@redhat.com>
-        <AM0PR05MB4866B68C9E60E42359BE1F4DD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190827132404.483a74ad.cohuck@redhat.com>
-        <AM0PR05MB4866CC932630ADD9BDA51371D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat GmbH
+        Tue, 27 Aug 2019 07:44:26 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39979 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfH0Lo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:44:26 -0400
+Received: by mail-io1-f67.google.com with SMTP id t6so45544562ios.7
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B6JKwNjAX9OFJ5Xpu3hN1K2seR+5vG6lZdDfWoSwR4Y=;
+        b=k0fxmZy5mkRO2ooZzqehi9uB3sSTOy7DeHxXcX76sPz5P/kJMkE6dE/KO8756/7LFu
+         LzwR+VnWhUMMBLuZIOIOaQPqqt8Dt2/ANod0nT4sL8th5LprN+dh8fGsh89uWp960+lM
+         7rjYfVHHjGi3yVT9YbaPA2DuFoYbh1ERUyFbLHE47q6uKgd8liYwqsEX9LdcH+jal+nB
+         ajXw7FAJhUGoWC8BrTi6s/6AbFg2tBHUEd/mAVCCeqS8ZjOJgfSo9PMXyoL29h+3h/rA
+         FdjkoZveFpVmVRok2wvo/sI5+M9WmjA/0+nYxuheAtFKAnVph2kVxMd04vwiVyKsvwwo
+         hU7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B6JKwNjAX9OFJ5Xpu3hN1K2seR+5vG6lZdDfWoSwR4Y=;
+        b=LMGEeg8DcnWWLuuGUU1D4FdkLA9FK/g9FaR5HymNTX3b/ggLZSMXLSoRcXYg60U3lJ
+         SHBXaQxXKui2z7FSkp2toz0hcVkHd+IXH8j9ec8GyKC6wqnrpjqhstj5mvVdlqplkjlP
+         SHxDhciLzZCzmTAaX7Lh9HQA0i8PLEV7damZcbUzfDHwT4mVTeEFKUu7Ik9LA1/bQR4U
+         wU5Fv6dsL+ymEIHN6zafaXGp0qSqKXi6vFTN6YCxNfI13Lk4DdRDg3redn2+t62ZWKHh
+         4Y0JlZ0Ba0KUHC3Icg+a1HFvWj1PbSxsrzpVZ/FBRzy0UAt3kQp0ABLOuACyU3jwOfnM
+         L3ZA==
+X-Gm-Message-State: APjAAAWiW59vm3P+5FqyouXvsAnwENMRZ9312ULmMMsj4p6YSfBrjl2+
+        J3j/NNLcavz67tMcnJYPHtKTy7V3J8dir8ZEs3jPjw==
+X-Google-Smtp-Source: APXvYqwUjF2i+jobmTD/+17nn+qZUSU8T53snEGwU4Uiy0N1tHQF84x+e/mm0P637mHevNeqThe8tS+Ho+AmsZuexSg=
+X-Received: by 2002:a6b:cac2:: with SMTP id a185mr17954858iog.142.1566906265777;
+ Tue, 27 Aug 2019 04:44:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 27 Aug 2019 11:41:20 +0000 (UTC)
+References: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
+ <b9cd7603-2441-d351-156a-57d6c13b2c79@linux.alibaba.com> <20190826105521.GF7538@dhcp22.suse.cz>
+ <20190827104313.GW7538@dhcp22.suse.cz>
+In-Reply-To: <20190827104313.GW7538@dhcp22.suse.cz>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Tue, 27 Aug 2019 19:43:49 +0800
+Message-ID: <CALOAHbBMWyPBw+Ciup4+YupbLrxcTW76w+Mfc-mGEm9kcWb8YQ@mail.gmail.com>
+Subject: Re: WARNINGs in set_task_reclaim_state with memory cgroup and full
+ memory usage
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        Adric Blake <promarbler14@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 11:33:54 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On Tue, Aug 27, 2019 at 6:43 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> If there are no objection to the patch I will post it as a standalong
+> one.
 
-> > -----Original Message-----
-> > From: Cornelia Huck <cohuck@redhat.com>
-> > Sent: Tuesday, August 27, 2019 4:54 PM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; netdev@vger.kernel.org
-> > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-> > 
-> > On Tue, 27 Aug 2019 11:12:23 +0000
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >   
-> > > > -----Original Message-----
-> > > > From: Cornelia Huck <cohuck@redhat.com>
-> > > > Sent: Tuesday, August 27, 2019 3:54 PM
-> > > > To: Parav Pandit <parav@mellanox.com>
-> > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > > Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-> > > >
+I have no objection to your patch. It could fix the issue.
 
-> > > > What about:
-> > > >
-> > > > * @get_alias_length: optional callback to specify length of the alias to  
-> > create  
-> > > > *                    Returns unsigned integer: length of the alias to be created,
-> > > > *                                              0 to not create an alias
-> > > >  
-> > > Ack.
-> > >  
-> > > > I also think it might be beneficial to add a device parameter here
-> > > > now (rather than later); that seems to be something that makes sense.
-> > > >  
-> > > Without showing the use, it shouldn't be added.  
-> > 
-> > It just feels like an omission: Why should the vendor driver only be able to
-> > return one value here, without knowing which device it is for?
-> > If a driver supports different devices, it may have different requirements for
-> > them.
-> >   
-> Sure. Lets first have this requirement to add it.
-> I am against adding this length field itself without an actual vendor use case, which is adding some complexity in code today.
-> But it was ok to have length field instead of bool.
-> 
-> Lets not further add "no-requirement futuristic knobs" which hasn't shown its need yet.
-> When a vendor driver needs it, there is nothing prevents such addition.
+I still think that it is not proper to use a new scan_control here as
+it breaks the global reclaim context.
+This context switch from global reclaim to memcg reclaim is very
+subtle change to the subsequent processing, that may cause some
+unexpected behavior.
+Anyway, we can send this patch as a standalong one.
+Feel free to add:
 
-Frankly, I do not see how it adds complexity; the other callbacks have
-device arguments already, and the vendor driver is free to ignore it if
-it does not have a use for it. I'd rather add the argument before a
-possible future user tries weird hacks to allow multiple values, but
-I'll leave the decision to the maintainers.
+Acked-by: Yafang Shao <laoar.shao@gmail.com>
+
+>
+> On Mon 26-08-19 12:55:21, Michal Hocko wrote:
+> > From 59d128214a62bf2d83c2a2a9cde887b4817275e7 Mon Sep 17 00:00:00 2001
+> > From: Michal Hocko <mhocko@suse.com>
+> > Date: Mon, 26 Aug 2019 12:43:15 +0200
+> > Subject: [PATCH] mm, memcg: do not set reclaim_state on soft limit reclaim
+> >
+> > Adric Blake has noticed the following warning:
+> > [38491.963105] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:245 set_task_reclaim_state+0x1e/0x40
+> > [...]
+> > [38491.963239] Call Trace:
+> > [38491.963246]  mem_cgroup_shrink_node+0x9b/0x1d0
+> > [38491.963250]  mem_cgroup_soft_limit_reclaim+0x10c/0x3a0
+> > [38491.963254]  balance_pgdat+0x276/0x540
+> > [38491.963258]  kswapd+0x200/0x3f0
+> > [38491.963261]  ? wait_woken+0x80/0x80
+> > [38491.963265]  kthread+0xfd/0x130
+> > [38491.963267]  ? balance_pgdat+0x540/0x540
+> > [38491.963269]  ? kthread_park+0x80/0x80
+> > [38491.963273]  ret_from_fork+0x35/0x40
+> > [38491.963276] ---[ end trace 727343df67b2398a ]---
+> >
+> > which tells us that soft limit reclaim is about to overwrite the
+> > reclaim_state configured up in the call chain (kswapd in this case but
+> > the direct reclaim is equally possible). This means that reclaim stats
+> > would get misleading once the soft reclaim returns and another reclaim
+> > is done.
+> >
+> > Fix the warning by dropping set_task_reclaim_state from the soft reclaim
+> > which is always called with reclaim_state set up.
+> >
+> > Reported-by: Adric Blake <promarbler14@gmail.com>
+> > Signed-off-by: Michal Hocko <mhocko@suse.com>
+> > ---
+> >  mm/vmscan.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index c77d1e3761a7..a6c5d0b28321 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -3220,6 +3220,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+> >
+> >  #ifdef CONFIG_MEMCG
+> >
+> > +/* Only used by soft limit reclaim. Do not reuse for anything else. */
+> >  unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+> >                                               gfp_t gfp_mask, bool noswap,
+> >                                               pg_data_t *pgdat,
+> > @@ -3235,7 +3236,8 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+> >       };
+> >       unsigned long lru_pages;
+> >
+> > -     set_task_reclaim_state(current, &sc.reclaim_state);
+> > +     WARN_ON_ONCE(!current->reclaim_state);
+> > +
+> >       sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
+> >                       (GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
+> >
+> > @@ -3253,7 +3255,6 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+> >
+> >       trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
+> >
+> > -     set_task_reclaim_state(current, NULL);
+> >       *nr_scanned = sc.nr_scanned;
+> >
+> >       return sc.nr_reclaimed;
+> > --
+> > 2.20.1
+> >
+> > --
+> > Michal Hocko
+> > SUSE Labs
+>
+> --
+> Michal Hocko
+> SUSE Labs
