@@ -2,139 +2,231 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E4BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9702C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3427C20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80CF20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfH0KYf (ORCPT
+        id S1728909AbfH0KYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:24:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:3146 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfH0KYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:24:34 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 84C4118012FA;
-        Tue, 27 Aug 2019 10:24:34 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6BED10018F9;
-        Tue, 27 Aug 2019 10:24:30 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 12:24:28 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     alex.williamson@redhat.com, jiri@mellanox.com,
-        kwankhede@nvidia.com, davem@davemloft.net, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
-Message-ID: <20190827122428.37442fe1.cohuck@redhat.com>
-In-Reply-To: <20190826204119.54386-2-parav@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-2-parav@mellanox.com>
-Organization: Red Hat GmbH
+        Tue, 27 Aug 2019 06:24:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47854 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726071AbfH0KYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:24:41 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CEBBCB941559D00A119D;
+        Tue, 27 Aug 2019 18:24:36 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 27 Aug 2019 18:24:28 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/2] f2fs: fix to reserve space for IO align feature
+Date:   Tue, 27 Aug 2019 18:24:25 +0800
+Message-ID: <20190827102425.29607-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190827102425.29607-1-yuchao0@huawei.com>
+References: <20190827102425.29607-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Tue, 27 Aug 2019 10:24:34 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019 15:41:16 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=204137
 
-> Whenever a parent requests to generate mdev alias, generate a mdev
-> alias.
-> It is an optional attribute that parent can request to generate
-> for each of its child mdev.
-> mdev alias is generated using sha1 from the mdev name.
+With below script, we will hit panic during new segment allocation:
 
-Maybe add some motivation here as well?
+DISK=bingo.img
+MOUNT_DIR=/mnt/f2fs
 
-"Some vendor drivers want an identifier for an mdev device that is
-shorter than the uuid, due to length restrictions in the consumers of
-that identifier.
+dd if=/dev/zero of=$DISK bs=1M count=105
+mkfs.f2fe -a 1 -o 19 -t 1 -z 1 -f -q $DISK
 
-Add a callback that allows a vendor driver to request an alias of a
-specified length to be generated (via sha1) for an mdev device. If
-generated, that alias is checked for collisions."
+mount -t f2fs $DISK $MOUNT_DIR -o "noinline_dentry,flush_merge,noextent_cache,mode=lfs,io_bits=7,fsync_mode=strict"
 
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c    | 98 +++++++++++++++++++++++++++++++-
->  drivers/vfio/mdev/mdev_private.h |  5 +-
->  drivers/vfio/mdev/mdev_sysfs.c   | 13 +++--
->  include/linux/mdev.h             |  4 ++
->  4 files changed, 111 insertions(+), 9 deletions(-)
-> 
+for (( i = 0; i < 4096; i++ )); do
+	name=`head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10`
+	mkdir $MOUNT_DIR/$name
+done
 
-(...)
+umount $MOUNT_DIR
+rm $DISK
 
-> @@ -406,6 +495,10 @@ EXPORT_SYMBOL(mdev_get_iommu_device);
->  
->  static int __init mdev_init(void)
->  {
-> +	alias_hash = crypto_alloc_shash("sha1", 0, 0);
-> +	if (!alias_hash)
-> +		return -ENOMEM;
-> +
->  	return mdev_bus_register();
+--- Core dump ---
+Call Trace:
+ allocate_segment_by_default+0x9d/0x100 [f2fs]
+ f2fs_allocate_data_block+0x3c0/0x5c0 [f2fs]
+ do_write_page+0x62/0x110 [f2fs]
+ f2fs_outplace_write_data+0x43/0xc0 [f2fs]
+ f2fs_do_write_data_page+0x386/0x560 [f2fs]
+ __write_data_page+0x706/0x850 [f2fs]
+ f2fs_write_cache_pages+0x267/0x6a0 [f2fs]
+ f2fs_write_data_pages+0x19c/0x2e0 [f2fs]
+ do_writepages+0x1c/0x70
+ __filemap_fdatawrite_range+0xaa/0xe0
+ filemap_fdatawrite+0x1f/0x30
+ f2fs_sync_dirty_inodes+0x74/0x1f0 [f2fs]
+ block_operations+0xdc/0x350 [f2fs]
+ f2fs_write_checkpoint+0x104/0x1150 [f2fs]
+ f2fs_sync_fs+0xa2/0x120 [f2fs]
+ f2fs_balance_fs_bg+0x33c/0x390 [f2fs]
+ f2fs_write_node_pages+0x4c/0x1f0 [f2fs]
+ do_writepages+0x1c/0x70
+ __writeback_single_inode+0x45/0x320
+ writeback_sb_inodes+0x273/0x5c0
+ wb_writeback+0xff/0x2e0
+ wb_workfn+0xa1/0x370
+ process_one_work+0x138/0x350
+ worker_thread+0x4d/0x3d0
+ kthread+0x109/0x140
+ ret_from_fork+0x25/0x30
 
-Don't you need to call crypto_free_shash() if mdev_bus_register() fails?
+The root cause here is, with IO alignment feature enables, in worst
+case, we need F2FS_IO_SIZE() free blocks space for single one 4k write
+due to filling dummy pages to make IO being aligned.
 
->  }
->  
-> @@ -415,6 +508,7 @@ static void __exit mdev_exit(void)
->  		class_compat_unregister(mdev_bus_compat_class);
->  
->  	mdev_bus_unregister();
-> +	crypto_free_shash(alias_hash);
->  }
->  
->  module_init(mdev_init)
+So we will easily run out of free segments during non-inline directory's
+data writeback, even in process of foreground GC.
 
-(...)
+In order to fix this issue, I just propose to reserve additional free
+space for IO alignment feature to handle worst case of free space usage
+ratio during FGGC.
 
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 0ce30ca78db0..f036fe9854ee 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -72,6 +72,9 @@ struct device *mdev_get_iommu_device(struct device *dev);
->   * @mmap:		mmap callback
->   *			@mdev: mediated device structure
->   *			@vma: vma structure
-> + * @get_alias_length:	Generate alias for the mdevs of this parent based on the
-> + *			mdev device name when it returns non zero alias length.
-> + *			It is optional.
+Fixes: 0a595ebaaa6b ("f2fs: support IO alignment for DATA and NODE writes")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h    |  5 +++++
+ fs/f2fs/segment.h |  3 ++-
+ fs/f2fs/super.c   | 43 +++++++++++++++++++++++++++++++++++++++++++
+ fs/f2fs/sysfs.c   |  4 +++-
+ 4 files changed, 53 insertions(+), 2 deletions(-)
 
-What about:
-
-* @get_alias_length: optional callback to specify length of the alias to create
-*                    Returns unsigned integer: length of the alias to be created,
-*                                              0 to not create an alias
-
-I also think it might be beneficial to add a device parameter here now
-(rather than later); that seems to be something that makes sense.
-
->   * Parent device that support mediated device should be registered with mdev
->   * module with mdev_parent_ops structure.
->   **/
-> @@ -92,6 +95,7 @@ struct mdev_parent_ops {
->  	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
->  			 unsigned long arg);
->  	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +	unsigned int (*get_alias_length)(void);
->  };
->  
->  /* interface for exporting mdev supported type attributes */
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index c7b2b68c8c85..4b21ac42d44e 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -929,6 +929,7 @@ struct f2fs_sm_info {
+ 	unsigned int segment_count;	/* total # of segments */
+ 	unsigned int main_segments;	/* # of segments in main area */
+ 	unsigned int reserved_segments;	/* # of reserved segments */
++	unsigned int additional_reserved_segments;/* reserved segs for IO align feature */
+ 	unsigned int ovp_segments;	/* # of overprovision segments */
+ 
+ 	/* a threshold to reclaim prefree segments */
+@@ -1777,6 +1778,10 @@ static inline unsigned int get_available_block_count(struct inode *inode,
+ 	if (!__allow_reserved_blocks(sbi, inode, cap))
+ 		avail_user_block_count -= F2FS_OPTION(sbi).root_reserved_blocks;
+ 
++	if (F2FS_IO_ALIGNED(sbi))
++		avail_user_block_count -= sbi->blocks_per_seg *
++				SM_I(sbi)->additional_reserved_segments;
++
+ 	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
+ 		if (avail_user_block_count > sbi->unusable_block_count)
+ 			avail_user_block_count -= sbi->unusable_block_count;
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 325781a1ae4d..78d0f7b4c47a 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -508,7 +508,8 @@ static inline unsigned int free_segments(struct f2fs_sb_info *sbi)
+ 
+ static inline int reserved_segments(struct f2fs_sb_info *sbi)
+ {
+-	return SM_I(sbi)->reserved_segments;
++	return SM_I(sbi)->reserved_segments +
++			SM_I(sbi)->additional_reserved_segments;
+ }
+ 
+ static inline unsigned int free_sections(struct f2fs_sb_info *sbi)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index bf642d1f25fc..c98f2db76cf8 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -277,6 +277,45 @@ static inline void limit_reserve_root(struct f2fs_sb_info *sbi)
+ 					   F2FS_OPTION(sbi).s_resgid));
+ }
+ 
++static inline int adjust_reserved_segment(struct f2fs_sb_info *sbi)
++{
++	unsigned int sec_blks = sbi->blocks_per_seg * sbi->segs_per_sec;
++	unsigned int avg_vblocks;
++	unsigned int wanted_reserved_segments;
++	block_t avail_user_block_count;
++
++	if (!F2FS_IO_ALIGNED(sbi))
++		return 0;
++
++	/* average valid block count in section in worst case */
++	avg_vblocks = sec_blks / F2FS_IO_SIZE(sbi);
++
++	/*
++	 * we need enough free space when migrating one section in worst case
++	 */
++	wanted_reserved_segments = (F2FS_IO_SIZE(sbi) / avg_vblocks) *
++						reserved_segments(sbi);
++	wanted_reserved_segments -= reserved_segments(sbi);
++
++	avail_user_block_count = sbi->user_block_count -
++				sbi->current_reserved_blocks -
++				F2FS_OPTION(sbi).root_reserved_blocks;
++
++	if (wanted_reserved_segments * sbi->blocks_per_seg >
++					avail_user_block_count) {
++		f2fs_err(sbi, "IO align feature can't grab additional reserved segment: %u",
++				 wanted_reserved_segments);
++		return -ENOSPC;
++	}
++
++	SM_I(sbi)->additional_reserved_segments = wanted_reserved_segments;
++
++	f2fs_info(sbi, "IO align feature needs additional reserved segment: %u",
++			 wanted_reserved_segments);
++
++	return 0;
++}
++
+ static void init_once(void *foo)
+ {
+ 	struct f2fs_inode_info *fi = (struct f2fs_inode_info *) foo;
+@@ -3424,6 +3463,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto free_nm;
+ 	}
+ 
++	err = adjust_reserved_segment(sbi);
++	if (err)
++		goto free_nm;
++
+ 	/* For write statistics */
+ 	if (sb->s_bdev->bd_part)
+ 		sbi->sectors_written_start =
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index f9fcca695db9..1824114d739c 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -259,7 +259,9 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+ 	if (a->struct_type == RESERVED_BLOCKS) {
+ 		spin_lock(&sbi->stat_lock);
+ 		if (t > (unsigned long)(sbi->user_block_count -
+-				F2FS_OPTION(sbi).root_reserved_blocks)) {
++				F2FS_OPTION(sbi).root_reserved_blocks -
++				sbi->blocks_per_seg *
++				SM_I(sbi)->additional_reserved_segments)) {
+ 			spin_unlock(&sbi->stat_lock);
+ 			return -EINVAL;
+ 		}
+-- 
+2.18.0.rc1
 
