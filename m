@@ -2,126 +2,104 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771A6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1835C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49673217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566915210;
-	bh=pl2trC3SUKLOMkiq8cJFVya7N1BiXPCf1NJhGvJLSMw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dLyQmSiHTwzyy/nULtvcTVJxj9se58jmgvfMP5hs2rtkBVkdJDQ9xlS6+DGu29CyW
-	 bar/ppKLIHqWxO4sel/SvafO9yGKyDGEcRQILCJipgQeoQ5FkwaKS7ZFjrEZuvs/DH
-	 wDmNo7z4DK16mWBdv+MNUiJwFRlafJgxGQtOec8Q=
+	by mail.kernel.org (Postfix) with ESMTP id A31D5214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfH0ON3 (ORCPT
+        id S1729159AbfH0OPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbfH0ON3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:13:29 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CB52214DA;
-        Tue, 27 Aug 2019 14:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566915208;
-        bh=pl2trC3SUKLOMkiq8cJFVya7N1BiXPCf1NJhGvJLSMw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NBcLeWKjodp6DLvUNoe/GG4H9KDx7NsTp+DJ7tH/ydWrFedw9eck+AcxxEJbK+nDk
-         uEikpV6cGeBlB14TQPMBjzRXXPL1ki0eVbmOTI9WmOyFlsMkkN/C6O5dfciw4m7/qw
-         vVhaq7mVFhCnlTK277nOfy12FBpandzq+VL1mXY8=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org,
-        linux@armlinux.org.uk, frowand.list@gmail.com,
-        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, daniel.thompson@linaro.org,
-        linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de
-Subject: [PATCHv6] drivers/amba: add reset control to amba bus probe
-Date:   Tue, 27 Aug 2019 09:11:53 -0500
-Message-Id: <20190827141153.20254-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+        Tue, 27 Aug 2019 10:15:13 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34013 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfH0OPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:15:12 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x18so18662088ljh.1;
+        Tue, 27 Aug 2019 07:15:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KfeseVQWz48HAsLr5kcHWdtkdT6kJKG3U+x7h2FYyGM=;
+        b=aOGBqq4Z85flFdMhhFl9AvnbOfU7QDOmEVBPnoX21w4aDGd0QjB01vrR0GhSwtmw1L
+         dhb+Qa3SnEUgASCKtYNN3kRj9hV6w0R6o2tDd6/MxnXn6QZaKe/QbqKr85uzZ5w/u7bK
+         KJMCJz8JASMbf8OyuOzrMXrdIRoO+Co4Pty/fBQZrYb8EhY7HXsktEUDWLh5OcirFdMh
+         t01hzebLjzQVXg42WVcByA9x4z1Sb4nBlnohhoW66ooWM+JyFUzZWGpAwO3hHIj6tbok
+         N5GbLjUaLhs68IOPk6ciZc3cZfMOt2EWaC7EuV7MAdcybjrP3cnmZpsdCwHT+5Z4i8+v
+         8gog==
+X-Gm-Message-State: APjAAAXYirbHHlrkRAL+Iyc5m62UrRLjMBQiIdVa5Q0UJ5e4JfDWNju4
+        7P+bfJDedfXEGPiVKhg+rvBHofBOzIY4wxZL6Y8=
+X-Google-Smtp-Source: APXvYqynbPEMJ5NJosXQEn553TI+EwJm9qEyttNHdgRx0B6Cd7hXJqH69rtOKEoglJrjQ9eC04IA7D0x4NcOdaJK7k0=
+X-Received: by 2002:a2e:980d:: with SMTP id a13mr14098210ljj.145.1566915310400;
+ Tue, 27 Aug 2019 07:15:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190822192451.5983-1-scott.branden@broadcom.com> <20190822192451.5983-7-scott.branden@broadcom.com>
+In-Reply-To: <20190822192451.5983-7-scott.branden@broadcom.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 27 Aug 2019 16:14:54 +0200
+Message-ID: <CAK8P3a1WBkmXbJx=rZMumxn7EN4bmA1AdZEgrWBVyQ3XNngU6Q@mail.gmail.com>
+Subject: Re: [PATCH 6/7] misc: bcm-vk: add Broadcom Valkyrie driver
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-default. Until recently, the DMA controller was brought out of reset by the
-bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
-that are not used are held in reset and are left to Linux to bring them
-out of reset.
+On Thu, Aug 22, 2019 at 9:25 PM Scott Branden
+<scott.branden@broadcom.com> wrote:
+>
+> Add Broadcom Valkyrie driver offload engine.
+> This driver interfaces to the Valkyrie PCIe offload engine to perform
+> should offload functions as video transcoding on multiple streams
+> in parallel.  Valkyrie device is booted from files loaded using
+> request_firmware_into_buf mechanism.  After booted card status is updated
+> and messages can then be sent to the card.
+> Such messages contain scatter gather list of addresses
+> to pull data from the host to perform operations on.
+>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Signed-off-by: Desmond Yan <desmond.yan@broadcom.com>
+> Signed-off-by: James Hu <james.hu@broadcom.com>
 
-Add a mechanism for getting the reset property and de-assert the primecell
-module from reset if found. This is a not a hard fail if the reset properti
-is not present in the device tree node, so the driver will continue to
-probe.
+Can you explain the decision to make this is a standalone misc driver
+rather than hooking into the existing framework in drivers/media?
 
-Because there are different variants of the controller that may have
-multiple reset signals, the code will find all reset(s) specified and
-de-assert them.
+There is an existing interface that looks like it could fit the hardware
+in include/media/v4l2-mem2mem.h. Have you considered using that?
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v6: remove the need to reset_control_get_count as
-    of_reset_control_array_get_optional_shared is already doing that
-v5: use of_reset_control_array_get_optional_shared()
-v4: cleaned up indentation in loop
-    fix up a few checkpatch warnings
-    add Reviewed-by:
-v3: add a reset_control_put()
-    add error handling
-v2: move reset control to bus code
-    find all reset properties and de-assert them
----
- drivers/amba/bus.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+There is also support for video transcoding using GPUs in
+driver/gpu/drm/, that could also be used in theory, though it sounds
+like a less optimal fit.
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 100e798a5c82..f39f075abff9 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -18,6 +18,7 @@
- #include <linux/limits.h>
- #include <linux/clk/clk-conf.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- 
- #include <asm/irq.h>
- 
-@@ -401,6 +402,19 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 	ret = amba_get_enable_pclk(dev);
- 	if (ret == 0) {
- 		u32 pid, cid;
-+		struct reset_control *rstc;
-+
-+		/*
-+		 * Find reset control(s) of the amba bus and de-assert them.
-+		 */
-+		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
-+		if (IS_ERR(rstc)) {
-+			if (PTR_ERR(rstc) != -EPROBE_DEFER)
-+				dev_err(&dev->dev, "Can't get amba reset!\n");
-+			return PTR_ERR(rstc);
-+		}
-+		reset_control_deassert(rstc);
-+		reset_control_put(rstc);
- 
- 		/*
- 		 * Read pid and cid based on size of resource
--- 
-2.20.0
-
+      Arnd
