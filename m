@@ -2,92 +2,90 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD24BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF2AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FD120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsNJ748s"
+	by mail.kernel.org (Postfix) with ESMTP id 981A322CBB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566926707;
+	bh=Nm+q9L6zyBi97IeEXL8rzcrEJ2UKOzBpyiUPDHZ0MoM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ql6efz/fFAStQ+uWgW3wgyTgFzOq3BlHzd/sZ34z5N02VVlh8NAY4er0swvP1VuEv
+	 d6SJz7bzQp/zTCPYGbCFeRPbaHheTksGPBI+6Fjh2sTngtSZxhgGI1jRJQ3CjBz/TB
+	 A4gEACISBA8GkPtOqcPXPM2kcz4leQml1CURPPDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfH0RYy (ORCPT
+        id S1730413AbfH0RZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:24:54 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44953 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0RYx (ORCPT
+        Tue, 27 Aug 2019 13:25:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36841 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0RZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:24:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so13043576pgl.11;
-        Tue, 27 Aug 2019 10:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9RJdQrmyKjLb32J8gO0GI+Ezcoe1g1D/7c/GHUyIiJw=;
-        b=MsNJ748s9LLSkZzv2KypSTXYeImPDd/unK/uj0s6CAw23GuIc684aj+5yMwTLFKHu3
-         yhS206i25sBOKfEJFl/ik52EoEBSBz2OjfhEAN1PhU4HrMO3w3Qjfdmf4KFeK0NXtg+m
-         pSlxtOXvsKKi+kb+tkLFr5vYiJXedEh6CWsfRRHRkry4tRh6fO/8cgO7O5TqX+JHeR+z
-         H/nIm1sOzhe6r/cI5phqKq3vLJW/Hze3iIcdDKpUCttvOhP1dKYaIzJHZaB9VEFxFTHD
-         /u3jlD6iMpZ7VI8mxNc16nKBIY4Qi8py/cAxdWaUs3jhKRo2t/A4FiRmJePfJZcWkb+R
-         0WOA==
+        Tue, 27 Aug 2019 13:25:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n1so15588238oic.3;
+        Tue, 27 Aug 2019 10:25:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9RJdQrmyKjLb32J8gO0GI+Ezcoe1g1D/7c/GHUyIiJw=;
-        b=pE/uIyShurxRPW2eDfPRLFgwXEJAjJYBEHLcH8Zlw+yBT1++NKGxAHDOPUFxChxzvr
-         Iu1U07GSjHAKWdNKwrKFVgUcYBnAO9tISZLB+jqXDbKqTalvUxeM5xGmvbTL9shqcUHW
-         pTD0JPPBN4n1p7r3TptHKdt59vfOTXffDuZSlZbeLko6Rnfkto6NFGBpJwczw8wOJw/8
-         Ggi6EVtyVAifw3pEYabbvchedI0Nr13Gjs0Bv+sUDpmH9RRO2D6OoB38FIKYuJpIP4YD
-         WyLXaTUXvvauSupq9DWL5UjTLng519jbVrCra8gKr9owC2h8B2bKZqa/POObvcI/PJwt
-         4AeQ==
-X-Gm-Message-State: APjAAAVZP3r3GTKE1ZDyA0rOvSJO+yWRzlHbBgHATR41qrlc3QBxu2C3
-        5y+UVeyr7ZOFaP+6EKFLQ4A=
-X-Google-Smtp-Source: APXvYqzaSEGfoqxpwBvATbFDTVlqP/ulSN9kgs28DSxS1q63cVhmX3Qi/N3toDdU8Tyuh5gCGeV5dQ==
-X-Received: by 2002:a17:90a:f011:: with SMTP id bt17mr2544pjb.21.1566926693227;
-        Tue, 27 Aug 2019 10:24:53 -0700 (PDT)
-Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id q13sm25569148pfl.124.2019.08.27.10.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 10:24:52 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 10:24:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/62] 4.14.141-stable review
-Message-ID: <20190827172451.GB31588@roeck-us.net>
-References: <20190827072659.803647352@linuxfoundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EjM7jzuwyaCH9suwOcoqt23F6ratx04VI7mr/XZ4IN4=;
+        b=eQ64X54L6X9u72DkZFO5x5XEvA0+Xa6BXpL9C3bbRgWDzVlbFX+XeEgmzx6LkCsa5I
+         28C1hq/VhieTjFN4GdElfSEmSsb20CkN489PDQXmjwmeqz6HurQ3OfrWRO8oYmm4XS+D
+         xB6INDegiYFIZmoaPdRycehJPGfAAcTVhd1jC9Houc01xAIlykjzLAUXxlbYFUv5xQQG
+         z/FoohA4pnpAv/GTDYkXYIlWMKaVweyL6usifuLY7c15CctDqX9s4qhHAmSsnIQ8aWWe
+         HbmSElMSsBy8O4ijO8MEb96Inu6RmItt+cJZfbnplHozyyJNvp6vfL/BI4r0BHRJvGIV
+         Mi0A==
+X-Gm-Message-State: APjAAAXqBGTUwGzLgoueKQ6t++9Lkko/oZPM3xRXPpPjlbehsFbV+L6A
+        pt/Wn+vJWix/Z2ExWtA/yA==
+X-Google-Smtp-Source: APXvYqwNobMD75awqFzunTVadMpb1x0jg67Rt2MOGSA5oaDz3ZLFqDi5igEHZfZ6DhAfesboGrIJdQ==
+X-Received: by 2002:aca:3388:: with SMTP id z130mr17051307oiz.81.1566926705408;
+        Tue, 27 Aug 2019 10:25:05 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u5sm6241844ote.27.2019.08.27.10.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:25:04 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 12:25:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/15] dt-bindings: display: Add max-memory-bandwidth
+ property for mxsfb
+Message-ID: <20190827172504.GA15786@bogus>
+References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+ <1566382555-12102-11-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1566382555-12102-11-git-send-email-robert.chiras@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 09:50:05AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.141 release.
-> There are 62 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 21 Aug 2019 13:15:50 +0300, Robert Chiras wrote:
+> Add new optional property 'max-memory-bandwidth', to limit the maximum
+> bandwidth used by the MXSFB_DRM driver.
 > 
-> Responses should be made by Thu 29 Aug 2019 07:25:02 AM UTC.
-> Anything received after that time might be too late.
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/display/mxsfb.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 372 pass: 372 fail: 0
-
-Guenter
+Reviewed-by: Rob Herring <robh@kernel.org>
