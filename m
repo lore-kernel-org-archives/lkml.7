@@ -2,174 +2,189 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0546C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69E1C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39142173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0fxmZy5"
+	by mail.kernel.org (Postfix) with ESMTP id 8DFAF2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfH0Lo0 (ORCPT
+        id S1728942AbfH0Lo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:44:26 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39979 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfH0Lo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:44:26 -0400
-Received: by mail-io1-f67.google.com with SMTP id t6so45544562ios.7
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B6JKwNjAX9OFJ5Xpu3hN1K2seR+5vG6lZdDfWoSwR4Y=;
-        b=k0fxmZy5mkRO2ooZzqehi9uB3sSTOy7DeHxXcX76sPz5P/kJMkE6dE/KO8756/7LFu
-         LzwR+VnWhUMMBLuZIOIOaQPqqt8Dt2/ANod0nT4sL8th5LprN+dh8fGsh89uWp960+lM
-         7rjYfVHHjGi3yVT9YbaPA2DuFoYbh1ERUyFbLHE47q6uKgd8liYwqsEX9LdcH+jal+nB
-         ajXw7FAJhUGoWC8BrTi6s/6AbFg2tBHUEd/mAVCCeqS8ZjOJgfSo9PMXyoL29h+3h/rA
-         FdjkoZveFpVmVRok2wvo/sI5+M9WmjA/0+nYxuheAtFKAnVph2kVxMd04vwiVyKsvwwo
-         hU7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B6JKwNjAX9OFJ5Xpu3hN1K2seR+5vG6lZdDfWoSwR4Y=;
-        b=LMGEeg8DcnWWLuuGUU1D4FdkLA9FK/g9FaR5HymNTX3b/ggLZSMXLSoRcXYg60U3lJ
-         SHBXaQxXKui2z7FSkp2toz0hcVkHd+IXH8j9ec8GyKC6wqnrpjqhstj5mvVdlqplkjlP
-         SHxDhciLzZCzmTAaX7Lh9HQA0i8PLEV7damZcbUzfDHwT4mVTeEFKUu7Ik9LA1/bQR4U
-         wU5Fv6dsL+ymEIHN6zafaXGp0qSqKXi6vFTN6YCxNfI13Lk4DdRDg3redn2+t62ZWKHh
-         4Y0JlZ0Ba0KUHC3Icg+a1HFvWj1PbSxsrzpVZ/FBRzy0UAt3kQp0ABLOuACyU3jwOfnM
-         L3ZA==
-X-Gm-Message-State: APjAAAWiW59vm3P+5FqyouXvsAnwENMRZ9312ULmMMsj4p6YSfBrjl2+
-        J3j/NNLcavz67tMcnJYPHtKTy7V3J8dir8ZEs3jPjw==
-X-Google-Smtp-Source: APXvYqwUjF2i+jobmTD/+17nn+qZUSU8T53snEGwU4Uiy0N1tHQF84x+e/mm0P637mHevNeqThe8tS+Ho+AmsZuexSg=
-X-Received: by 2002:a6b:cac2:: with SMTP id a185mr17954858iog.142.1566906265777;
- Tue, 27 Aug 2019 04:44:25 -0700 (PDT)
+        Tue, 27 Aug 2019 07:44:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44066 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbfH0Lo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:44:27 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 342B896AE480CE040498;
+        Tue, 27 Aug 2019 19:44:25 +0800 (CST)
+Received: from localhost (10.67.212.75) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 27 Aug
+ 2019 19:44:15 +0800
+Date:   Tue, 27 Aug 2019 19:42:08 +0800
+From:   Kenneth Lee <liguozhu@hisilicon.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     zhangfei <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        <linux-accelerators@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>, "Zaibo Xu" <xuzaibo@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH 2/2] uacce: add uacce module
+Message-ID: <20190827114208.GB116872@Turing-Arch-b>
+References: <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
+ <20190815141351.GD23267@kroah.com>
+ <6daab785-a8f9-684e-eb71-7a81604d3bb0@linaro.org>
+ <20190820165947.GC3736@kroah.com>
+ <5d5cf0fc.1c69fb81.ec57f.b853SMTPIN_ADDED_BROKEN@mx.google.com>
+ <20190821091709.GA22914@kroah.com>
+ <b88abb8d-50a9-b29e-d3e5-96cc585ecac4@linaro.org>
+ <20190821160542.GA14760@kroah.com>
+ <20190826041042.GB27955@Turing-Arch-b>
+ <20190826042910.GA26547@kroah.com>
 MIME-Version: 1.0
-References: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
- <b9cd7603-2441-d351-156a-57d6c13b2c79@linux.alibaba.com> <20190826105521.GF7538@dhcp22.suse.cz>
- <20190827104313.GW7538@dhcp22.suse.cz>
-In-Reply-To: <20190827104313.GW7538@dhcp22.suse.cz>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 27 Aug 2019 19:43:49 +0800
-Message-ID: <CALOAHbBMWyPBw+Ciup4+YupbLrxcTW76w+Mfc-mGEm9kcWb8YQ@mail.gmail.com>
-Subject: Re: WARNINGs in set_task_reclaim_state with memory cgroup and full
- memory usage
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Adric Blake <promarbler14@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190826042910.GA26547@kroah.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 6:43 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> If there are no objection to the patch I will post it as a standalong
-> one.
+On Mon, Aug 26, 2019 at 06:29:10AM +0200, Greg Kroah-Hartman wrote:
+> Date: Mon, 26 Aug 2019 06:29:10 +0200
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> To: Kenneth Lee <liguozhu@hisilicon.com>
+> CC: zhangfei <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+>  linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org, Zaibo
+>  Xu <xuzaibo@huawei.com>, Zhou Wang <wangzhou1@hisilicon.com>
+> Subject: Re: [PATCH 2/2] uacce: add uacce module
+> User-Agent: Mutt/1.12.1 (2019-06-15)
+> Message-ID: <20190826042910.GA26547@kroah.com>
+> 
+> On Mon, Aug 26, 2019 at 12:10:42PM +0800, Kenneth Lee wrote:
+> > On Wed, Aug 21, 2019 at 09:05:42AM -0700, Greg Kroah-Hartman wrote:
+> > > Date: Wed, 21 Aug 2019 09:05:42 -0700
+> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > To: zhangfei <zhangfei.gao@linaro.org>
+> > > CC: Arnd Bergmann <arnd@arndb.de>, linux-accelerators@lists.ozlabs.org,
+> > >  linux-kernel@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>, Zaibo
+> > >  Xu <xuzaibo@huawei.com>, Zhou Wang <wangzhou1@hisilicon.com>
+> > > Subject: Re: [PATCH 2/2] uacce: add uacce module
+> > > User-Agent: Mutt/1.12.1 (2019-06-15)
+> > > Message-ID: <20190821160542.GA14760@kroah.com>
+> > > 
+> > > On Wed, Aug 21, 2019 at 10:30:22PM +0800, zhangfei wrote:
+> > > > 
+> > > > 
+> > > > On 2019/8/21 下午5:17, Greg Kroah-Hartman wrote:
+> > > > > On Wed, Aug 21, 2019 at 03:21:18PM +0800, zhangfei.gao@foxmail.com wrote:
+> > > > > > Hi, Greg
+> > > > > > 
+> > > > > > On 2019/8/21 上午12:59, Greg Kroah-Hartman wrote:
+> > > > > > > On Tue, Aug 20, 2019 at 09:08:55PM +0800, zhangfei wrote:
+> > > > > > > > On 2019/8/15 下午10:13, Greg Kroah-Hartman wrote:
+> > > > > > > > > On Wed, Aug 14, 2019 at 05:34:25PM +0800, Zhangfei Gao wrote:
+> > > > > > > > > > +int uacce_register(struct uacce *uacce)
+> > > > > > > > > > +{
+> > > > > > > > > > +	int ret;
+> > > > > > > > > > +
+> > > > > > > > > > +	if (!uacce->pdev) {
+> > > > > > > > > > +		pr_debug("uacce parent device not set\n");
+> > > > > > > > > > +		return -ENODEV;
+> > > > > > > > > > +	}
+> > > > > > > > > > +
+> > > > > > > > > > +	if (uacce->flags & UACCE_DEV_NOIOMMU) {
+> > > > > > > > > > +		add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
+> > > > > > > > > > +		dev_warn(uacce->pdev,
+> > > > > > > > > > +			 "Register to noiommu mode, which export kernel data to user space and may vulnerable to attack");
+> > > > > > > > > > +	}
+> > > > > > > > > THat is odd, why even offer this feature then if it is a major issue?
+> > > > > > > > UACCE_DEV_NOIOMMU maybe confusing here.
+> > > > > > > > 
+> > > > > > > > In this mode, app use ioctl to get dma_handle from dma_alloc_coherent.
+> > > > > > > That's odd, why not use the other default apis to do that?
+> > > > > > > 
+> > > > > > > > It does not matter iommu is enabled or not.
+> > > > > > > > In case iommu is disabled, it maybe dangerous to kernel, so we added warning here, is it required?
+> > > > > > > You should use the other documentated apis for this, don't create your
+> > > > > > > own.
+> > > > > > I am sorry, not understand here.
+> > > > > > Do you mean there is a standard ioctl or standard api in user space, it can
+> > > > > > get dma_handle from dma_alloc_coherent from kernel?
+> > > > > There should be a standard way to get such a handle from userspace
+> > > > > today.  Isn't that what the ion interface does?  DRM also does this, as
+> > > > > does UIO I think.
+> > > > Thanks Greg,
+> > > > Still not find it, will do more search.
+> > > > But this may introduce dependency in our lib, like depend on ion?
+> > > > > Do you have a spec somewhere that shows exactly what you are trying to
+> > > > > do here, along with example userspace code?  It's hard to determine it
+> > > > > given you only have one "half" of the code here and no users of the apis
+> > > > > you are creating.
+> > > > > 
+> > > > The purpose is doing dma in user space.
+> > > 
+> > > Oh no, please no.  Are you _SURE_ you want to do this?
+> > > 
+> > > Again, look at how ION does this and how the DMAbuff stuff is replacing
+> > > it.  Use that api please instead, otherwise you will get it wrong and we
+> > > don't want to duplicate efforts.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > 
+> > Dear Greg. I wrote a blog to explain the intention of WarpDrive here:
+> > https://zhuanlan.zhihu.com/p/79680889.
+> 
+> Putting that information into the changelog and kernel documentation is
+> a much better idea than putting it there.
 
-I have no objection to your patch. It could fix the issue.
+Yes, will do. Thank you.
 
-I still think that it is not proper to use a new scan_control here as
-it breaks the global reclaim context.
-This context switch from global reclaim to memcg reclaim is very
-subtle change to the subsequent processing, that may cause some
-unexpected behavior.
-Anyway, we can send this patch as a standalong one.
-Feel free to add:
+> 
+> > Sharing data is not our intention, Sharing address is. NOIOMMU mode is just a
+> > temporary solution to let some hardware which does not care the security issue
+> > to try WarpDrive for the first step. Some user do not care this much in embedded
+> > scenario. We saw VFIO use the same model so we also want to make a try. If you
+> > insist this is risky, we can remove it.
+> 
+> Why not just use vfio then?
 
-Acked-by: Yafang Shao <laoar.shao@gmail.com>
+We tried that in previous patches. But it needs to create unnecessary mdev to
+fulfill the requirement. So we discard it after the discussion in lkml.
 
->
-> On Mon 26-08-19 12:55:21, Michal Hocko wrote:
-> > From 59d128214a62bf2d83c2a2a9cde887b4817275e7 Mon Sep 17 00:00:00 2001
-> > From: Michal Hocko <mhocko@suse.com>
-> > Date: Mon, 26 Aug 2019 12:43:15 +0200
-> > Subject: [PATCH] mm, memcg: do not set reclaim_state on soft limit reclaim
-> >
-> > Adric Blake has noticed the following warning:
-> > [38491.963105] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:245 set_task_reclaim_state+0x1e/0x40
-> > [...]
-> > [38491.963239] Call Trace:
-> > [38491.963246]  mem_cgroup_shrink_node+0x9b/0x1d0
-> > [38491.963250]  mem_cgroup_soft_limit_reclaim+0x10c/0x3a0
-> > [38491.963254]  balance_pgdat+0x276/0x540
-> > [38491.963258]  kswapd+0x200/0x3f0
-> > [38491.963261]  ? wait_woken+0x80/0x80
-> > [38491.963265]  kthread+0xfd/0x130
-> > [38491.963267]  ? balance_pgdat+0x540/0x540
-> > [38491.963269]  ? kthread_park+0x80/0x80
-> > [38491.963273]  ret_from_fork+0x35/0x40
-> > [38491.963276] ---[ end trace 727343df67b2398a ]---
-> >
-> > which tells us that soft limit reclaim is about to overwrite the
-> > reclaim_state configured up in the call chain (kswapd in this case but
-> > the direct reclaim is equally possible). This means that reclaim stats
-> > would get misleading once the soft reclaim returns and another reclaim
-> > is done.
-> >
-> > Fix the warning by dropping set_task_reclaim_state from the soft reclaim
-> > which is always called with reclaim_state set up.
-> >
-> > Reported-by: Adric Blake <promarbler14@gmail.com>
-> > Signed-off-by: Michal Hocko <mhocko@suse.com>
-> > ---
-> >  mm/vmscan.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index c77d1e3761a7..a6c5d0b28321 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -3220,6 +3220,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
-> >
-> >  #ifdef CONFIG_MEMCG
-> >
-> > +/* Only used by soft limit reclaim. Do not reuse for anything else. */
-> >  unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
-> >                                               gfp_t gfp_mask, bool noswap,
-> >                                               pg_data_t *pgdat,
-> > @@ -3235,7 +3236,8 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
-> >       };
-> >       unsigned long lru_pages;
-> >
-> > -     set_task_reclaim_state(current, &sc.reclaim_state);
-> > +     WARN_ON_ONCE(!current->reclaim_state);
-> > +
-> >       sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
-> >                       (GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
-> >
-> > @@ -3253,7 +3255,6 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
-> >
-> >       trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
-> >
-> > -     set_task_reclaim_state(current, NULL);
-> >       *nr_scanned = sc.nr_scanned;
-> >
-> >       return sc.nr_reclaimed;
-> > --
-> > 2.20.1
-> >
-> > --
-> > Michal Hocko
-> > SUSE Labs
->
-> --
-> Michal Hocko
-> SUSE Labs
+> 
+> And yes, for now, please remove it, if you are not requiring it.
+> 
+
+We do require it;) But surely we can kept it in our own branch but push only the
+main function. Thank you.
+
+> thanks,
+> 
+> greg k-h
+
+-- 
+			-Kenneth(Hisilicon)
+
+================================================================================
+本邮件及其附件含有华为公司的保密信息，仅限于发送给上面地址中列出的个人或群组。禁
+止任何其他人以任何形式使用（包括但不限于全部或部分地泄露、复制、或散发）本邮件中
+的信息。如果您错收了本邮件，请您立即电话或邮件通知发件人并删除本邮件！
+This e-mail and its attachments contain confidential information from HUAWEI,
+which is intended only for the person or entity whose address is listed above.
+Any use of the 
+information contained herein in any way (including, but not limited to, total or
+partial disclosure, reproduction, or dissemination) by persons other than the
+intended 
+recipient(s) is prohibited. If you receive this e-mail in error, please notify
+the sender by phone or email immediately and delete it!
+
