@@ -2,95 +2,79 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6B5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D79C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FB92184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D1121883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfH0RaF (ORCPT
+        id S1730338AbfH0Rcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:30:05 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44943 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0RaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:30:04 -0400
-Received: by mail-ot1-f68.google.com with SMTP id w4so19417598ote.11;
-        Tue, 27 Aug 2019 10:30:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lp7s9jTNmH1XT1CzC7jr2iIgsMFcBH+5gm5QDo4mxuA=;
-        b=A9zTBHxM0WmsWDF/Tetl+EN3Yah3T+tNfwcNEWVUUyjVeNF2f+FaBQXvAAV4//qual
-         29A+5Iwt83YIZX52UxCgeTxkyoIjMG5b2NLxsFeI/ySo+xySNaLANB3YRCZipN3MpA+o
-         csKBGCyKHkR8E5ugYuQsvwD1L9/h8/YMlX08mBOVY1rADiX7RxlPhbvYZbqg/ofB0Hq7
-         YiBeyr6VTsIZpfyy4td/3+VAKxmfdz37KtgOzEjB0KAnIs8iEDL+UYPyXfjjkZE7SHMg
-         6I5hAFXd7HMuhpyJJ4arU+NLbUdHahBo4m8Rn0pJmRllMnlfxuBYFUF20RMx9gGUg5N9
-         zOzQ==
-X-Gm-Message-State: APjAAAV4Hw9YYxOwaC3Ma9lhuawhTtMu7CXp2iV2llfngB5/OJNJyz9h
-        0n00HSgWcZJJfVcRMsDQZ6J3wRwb9BH7Vb/xaYc=
-X-Google-Smtp-Source: APXvYqzY25m2s2+2xkANxC+qR9+JKRkF2wxjHDh4iAbFON+7jLENyc3ERXETasyThuzk2O/97gnmmMfYS046Imua1JQ=
-X-Received: by 2002:a9d:61c3:: with SMTP id h3mr21336576otk.39.1566927003738;
- Tue, 27 Aug 2019 10:30:03 -0700 (PDT)
+        Tue, 27 Aug 2019 13:32:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62456 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727219AbfH0Rcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:32:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 10:32:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="171269810"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 10:32:38 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v8 7/8] PCI/DPC: Clear AER registers in EDR mode
+Date:   Tue, 27 Aug 2019 10:29:29 -0700
+Message-Id: <59fa2b06ac97f7816f7e6f3f2abbd781b14919dc.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1566865502.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-References: <20190819100526.13788-1-geert@linux-m68k.org> <581e7d79ed75484beb227672b2695ff14e1f1e34.camel@perches.com>
- <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com> <dbc03b4ac1ef4ba2a807409676cf8066@AcuMS.aculab.com>
-In-Reply-To: <dbc03b4ac1ef4ba2a807409676cf8066@AcuMS.aculab.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 27 Aug 2019 19:29:52 +0200
-Message-ID: <CAMuHMdWHGTMwK+PO_BgsNZMpqRat1SHE-_CP0UqxEALA_OJeNg@mail.gmail.com>
-Subject: Re: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
- u64/pointer abuse
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On Tue, Aug 27, 2019 at 4:17 PM David Laight <David.Laight@aculab.com> wrote:
-> From: Geert Uytterhoeven
-> > Sent: 19 August 2019 18:15
-> ...
-> > > I think a cast to unsigned long is rather more common.
-> > >
-> > > uintptr_t is used ~1300 times in the kernel.
-> > > I believe a cast to unsigned long is much more common.
-> >
-> > That is true, as uintptr_t was introduced in C99.
-> > Similarly, unsigned long was used before size_t became common.
-> >
-> > However, nowadays size_t and uintptr_t are preferred.
->
-> Isn't uintptr_t defined by the same standard as uint32_t?
+As per PCI firmware specification r3.2 Downstream Port Containment
+Related Enhancements ECN, OS is responsible for clearing the AER
+registers in EDR mode. So clear AER registers in dpc_process_error()
+function.
 
-I believe so.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Acked-by: Keith Busch <keith.busch@intel.com>
+---
+ drivers/pci/pcie/dpc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> If the former is allowed so should the latter.
-
-You mean the other way around?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index fafc55c00fe0..de2d892bc7c4 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -275,6 +275,10 @@ static void dpc_process_error(struct dpc_dev *dpc)
+ 		pci_aer_clear_fatal_status(pdev);
+ 	}
+ 
++	/* In EDR mode, OS is responsible for clearing AER registers */
++	if (dpc->firmware_dpc)
++		pci_cleanup_aer_error_status_regs(pdev);
++
+ 	/*
+ 	 * Irrespective of whether the DPC event is triggered by
+ 	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
