@@ -2,92 +2,129 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD59AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A40DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803AD20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566945180;
-	bh=1+QNJKUgz+gea1zCCXAK/Hc/T4SGAhK43TGzjR48Lmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dvCelqte/6nUBYak42nzuN2Xb5lYU4y0YLhTDWA1/cMZS7sD7unLmDQ1C3ZqQH/WZ
-	 uWmsur05K7AQu2rJDunKTmNkXM0GQ6hihMv7bZZa4UaIX8Alb4HT/I1bJxsdf/o1CY
-	 jv5BNocLI5rss1TrpN3T0cuNez6YQKYMRgJjUiIU=
+	by mail.kernel.org (Postfix) with ESMTP id 0E6A020856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="erWudouu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfH0Wc7 (ORCPT
+        id S1726258AbfH0WfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfH0Wc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:32:57 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D726120856;
-        Tue, 27 Aug 2019 22:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566945176;
-        bh=1+QNJKUgz+gea1zCCXAK/Hc/T4SGAhK43TGzjR48Lmk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iZn1gGeISV7sMLyJAWPA3zeSgGFzMulVtOlCichsCyw2q3fdgawfyEsHjr4KL65bz
-         wCm7gNW2nm5lFa3R90WX//Grb6qYufDlmR7iFbjWqtbOy7Cpn7x3nErLKRZxDcbq/o
-         yCwTXt4Awd8wYq48Pu5CdmDCAOnwdhW8w0TQDmvc=
-Date:   Tue, 27 Aug 2019 17:32:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
-Message-ID: <20190827223254.GC9987@google.com>
-References: <20190819160643.27998-1-efremov@linux.com>
- <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
+        Tue, 27 Aug 2019 18:35:13 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35819 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfH0WfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:35:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d85so328709pfd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 15:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=jdwDMeG5Gy8r+selbq8n2uifwalgXCtHNkU64dqsTgM=;
+        b=erWudouuqQ0Yh6EkCEe6Xx4WugJd7xm8WMPsfPht6ox6w5IPtS+q29u/A3mTFBZEJH
+         LTadr2zS+89ffAaJDt+4ZaeHq8EO/BwyhyWXOdmun2Z48Yuk1NzOGRvhk8itUKqyW9qk
+         8rG/O3+euT/5hvx3SWA9cke3mhhXIEApT0fnMlDy94G+6fKTrakyFJ3JCZVaUG4VOXMI
+         ayIIGSg+l9SMXi0NnVNxx8fPKRwgOJgtg1MbMsNqzMyqSr+MwJqxSrGpYN3ymU5ZFb85
+         Q5vtcLg87ILuyBPxJBjVphvQZOQQRva8uBM4Q4mSwXZIJkpT+0bi4iFCbPRlNeCjvbpq
+         hNSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=jdwDMeG5Gy8r+selbq8n2uifwalgXCtHNkU64dqsTgM=;
+        b=KJSVFQ7BhbHbPz2+2i3/xOqK34QO2CseMw8lE32pqoLxIzszfPRAaznCbCb38Ey7M8
+         H6B3qSVTbwKkMBEJodDS83Ops5hI5kkL3klrMA/qezCBIjClHgmHwJOkyMIh9W3+XASz
+         COKhgE9zLILiSaQ4Eho6N+ddEqXNjfxjjqdQ0QAh8ique/MCC8vS+gjmj6JA0EX8c//7
+         DOXYQY16wjxgy5kTtnmr1ySBcZEhv8kqfF/qQ77DxYk6cO3fpEvbaRkHNy2HXO9gFl1H
+         MUFK28CZkZr5TkdT2EHLEHowKJeWgtaW6e/OobwpTPWesHH92Ze7jSwU1pIqIT7LE0CQ
+         iblQ==
+X-Gm-Message-State: APjAAAVCFbGNhdeXSqK1CI0TROyTKFopJP6dx9nO0mS4DCoE3qYRF3TH
+        D+Guoja6aRyGlD+8m+y2EgHnAQ==
+X-Google-Smtp-Source: APXvYqxRh6iZPF7EBcmWzywBoXlbYwRouh4Bcrsl9kudC14pWnkhfyepcM10JRQLzhwAV0ZpX28itQ==
+X-Received: by 2002:a63:3009:: with SMTP id w9mr737348pgw.260.1566945312087;
+        Tue, 27 Aug 2019 15:35:12 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:cc35:e750:308e:47f])
+        by smtp.gmail.com with ESMTPSA id d18sm364839pgi.40.2019.08.27.15.35.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 15:35:11 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] 0/6] arm64: meson-sm1: add support for DVFS
+In-Reply-To: <7h8srexw1i.fsf@baylibre.com>
+References: <20190826072539.27725-1-narmstrong@baylibre.com> <1jblwc6wjq.fsf@starbuckisacylon.baylibre.com> <7h8srexw1i.fsf@baylibre.com>
+Date:   Tue, 27 Aug 2019 15:35:11 -0700
+Message-ID: <7h1rx6uti8.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:16:43PM +0300, Denis Efremov wrote:
-> On 8/19/19 7:06 PM, Denis Efremov wrote:
-> > PCIe defines two optional hotplug indicators: a Power indicator and an
-> > Attention indicator. Both are controlled by the same register, and each
-> > can be on, off or blinking. The current interfaces
-> > (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
-> > non-uniform and require two register writes in many cases where we could
-> > do one.
-> > 
-> > This patchset introduces the new function pciehp_set_indicators(). It
-> > allows one to set two indicators with a single register write. All
-> > calls to previous interfaces (pciehp_green_led_* and
-> > pciehp_set_attention_status()) are replaced with a new one. Thus,
-> > the amount of duplicated code for setting indicators is reduced.
-> > 
-> > Changes in v3:
-> >   - Changed pciehp_set_indicators() to work with existing
-> >     PCI_EXP_SLTCTL_* macros
-> >   - Reworked the inputs validation in pciehp_set_indicators()
-> >   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
-> >     completely
-> > 
-> > Denis Efremov (4):
-> >   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
-> >   PCI: pciehp: Switch LED indicators with a single write
-> >   PCI: pciehp: Remove pciehp_set_attention_status()
-> >   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
-> 
-> Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
-> The changes in the last 2 patches were significant.
+Kevin Hilman <khilman@baylibre.com> writes:
 
-Anybody want to review these?
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+>
+>> On Mon 26 Aug 2019 at 09:25, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>>> Following DVFS support for the Amlogic G12A and G12B SoCs, this serie
+>>> enables DVFS on the SM1 SoC for the SEI610 board.
+>>>
+>>> The SM1 Clock structure is slightly different because of the Cortex-A55
+>>> core used, having the capability for each core of a same cluster to run
+>>> at a different frequency thanks to the newly used DynamIQ Shared Unit.
+>>>
+>>> This is why SM1 has a CPU clock tree for each core and for DynamIQ Shared Unit,
+>>> with a bypass mux to use the CPU0 instead of the dedicated trees.
+>>>
+>>> The DSU uses a new GP1 PLL as default clock, thus GP1 is added as read-only.
+>>>
+>>> The SM1 OPPs has been taken from the Amlogic Vendor tree, and unlike
+>>> G12A only a single version of the SoC is available.
+>>>
+>>> Dependencies:
+>>> - patch 6 is based on the "arm64: meson: add support for SM1 Power Domains" serie,
+>>> 	but is not a strong dependency, it will work without
+>>>
+>>> Changes since v1:
+>>> - exposed GP1, DSU and CPU 1,2,3 clock in patch 1
+>>>
+>>> Neil Armstrong (5):
+>>>   dt-bindings: clk: meson: add sm1 periph clock controller bindings
+>>>   clk: meson: g12a: add support for SM1 GP1 PLL
+>>>   clk: meson: g12a: add support for SM1 DynamIQ Shared Unit clock
+>>>   clk: meson: g12a: add support for SM1 CPU 1, 2 & 3 clocks
+>>>   arm64: dts: meson-sm1-sei610: enable DVFS
+>>>
+>>>  .../bindings/clock/amlogic,gxbb-clkc.txt      |   1 +
+>>>  .../boot/dts/amlogic/meson-sm1-sei610.dts     |  59 +-
+>>>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  69 +++
+>>>  drivers/clk/meson/g12a.c                      | 544 ++++++++++++++++++
+>>>  drivers/clk/meson/g12a.h                      |  24 +-
+>>>  include/dt-bindings/clock/g12a-clkc.h         |   5 +
+>>>  6 files changed, 697 insertions(+), 5 deletions(-)
+>>
+>> Applied 1 to 4
+>
+> Will there be a stable tag I can use for that so I can apply patch 5?
+
+Ah, I should've finished reading the list before asking.  I now see your
+clock PR.  I'll use this tag[1] unless there's a different one I should
+use.
+
+Kevin
+
+[1] git://github.com/BayLibre/clk-meson.git tags/clk-meson-v5.4-2
