@@ -2,87 +2,105 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EABDC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE8B2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566923211;
-	bh=6QRPtMUcf50VdB3wLevqpYVmHAgxTegqwp3VyP8kXMI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uOEVFvPXsNQ/wF3GX+y8Yo1geQDpA9Pq3D5FdcH5Zlw6ayOJ19/7rAT7oHvhMkBBr
-	 C7vHddJ3bIRXV60kRR5O4frqIBDfLhXI0uB94maC1aMwzd6kwnH4oaKSm2B/RHmDks
-	 AWYzelboWft53yKHf5wVCrau8oQZIJWVfEFmtkMg=
+	by mail.kernel.org (Postfix) with ESMTP id 3646A214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:27:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="FbgrV/dT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbfH0Q0u (ORCPT
+        id S1730272AbfH0Q1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:26:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36685 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfH0Q0u (ORCPT
+        Tue, 27 Aug 2019 12:27:22 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36433 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0Q1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:26:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id n1so15433321oic.3;
-        Tue, 27 Aug 2019 09:26:49 -0700 (PDT)
+        Tue, 27 Aug 2019 12:27:22 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z4so21924871qtc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lnAKsbXKD7RPlntdvWmMqnSDlV/9SfNV6+qNsMZx1qE=;
+        b=FbgrV/dT3r1z1Rc57v9Qf+uj6Yns4EqBXIbLCnGw2bWmIq8rDwdBygEV2vnaYu0kPu
+         gfjJuVB87hlqL7AXxQ9lTnxt+WHCCjh+Fcx2Ys6z6roLWd6N8yhxDPMKePNid5e8HLGG
+         wBYtUi7fCu2yPOMpuQrWZKjxxhfIJIu/ht1MQGH1GkIwqMNAjAkW5xIESun2SaF3e3oo
+         WZI9UbHjUVJT3l4FQWfBXyJGLIfyGy6K8l/rcedBmDY/PHebj023FKWikA6L0zspjfUp
+         92uKjwF/iSv2DfwwWX6kguce7dZXL6D3Nmx7vewGCXFNTlAR4t5yAf5tLPeexcBEb1TJ
+         cdAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4HSp7GpMjayluxWHO7ugEoqBf1XE55/uOIFDoDgJv6Q=;
-        b=jsB92w66Dst0WBEF8yw2f0Lm8mbvlzjPO0pIFtStcB/u9DwceX7WcM2QMnytrz5MAx
-         AgWlpTD5NywTzhhihSS1jUMePbR3Bq8muc2djMMtE5eWAn2TXQJqEUwlQIQ84t/0Qnaj
-         XUpmtQ1Rze1rM/D7wr1vrBHjtesmKv6iEmcO7vO1xLOi7oJyGUswDOhdSfxV+yLJPvta
-         z4G1n0+1+P+bUdMfbsLXloWdUQDQFr4uYuwbz+F2p0uEcuxwTHPLiEaqly0A4s/7IzV+
-         Aa/lu1kB52KjNPqTA7cnU5uXkB3FwgIp4Yi7fEiOwU/VP9DK5dLSOXqNySu89oYkLWd6
-         ufDQ==
-X-Gm-Message-State: APjAAAUrbm4vmxKhz7RB/zXWhtYYBlDuWJe5AciogHP5n3qfIMy8MjKO
-        JQIxweq32YCuR8sUUttd2Q==
-X-Google-Smtp-Source: APXvYqz+FEVhEUY3wCiucFQEMMkHkhySFHT9ozYmvRgI1VOAn+6/u4QwVBFFW28kEOM0vAnYZbB4fA==
-X-Received: by 2002:aca:5652:: with SMTP id k79mr1967173oib.175.1566923209074;
-        Tue, 27 Aug 2019 09:26:49 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c3sm5232759otm.70.2019.08.27.09.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:26:48 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 11:26:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCH 08/10] dt-bindings: PCI: Add the pf-offset property
-Message-ID: <20190827162647.GA21347@bogus>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-8-xiaowei.bao@nxp.com>
+        bh=lnAKsbXKD7RPlntdvWmMqnSDlV/9SfNV6+qNsMZx1qE=;
+        b=DSow2mH3eeFvRwi4Aiw/SHY4G+NP4oPF6B/rvQ5Isnur1jWqrw7haOMiI/553sfV7Y
+         2WN6Kn7UrGelbYN4xsnVdM9RGUwnFjkipjcgGXQaiCN9IhIsprmIOq7EwM6XfbxUABs7
+         zIkaE8ql1ZjtAUfciwF9N4nMDPP2Hx4d9oEciKgwHN7GQwc1h9/x21N/CBbJANlXvXVd
+         nVxfCrCUZFz8OYUZbN4TcC7P7k15AcweVGrHf5L4Vo3pN09jFv0lL3adwlLT0t3/OWSn
+         jP0UyIRohk41oopJdh24M2ZgjCsJgpJlLT2w1N6S3th+FHTlx24SLa2p5Yzee9/87aZb
+         cJcA==
+X-Gm-Message-State: APjAAAXrUbzGKxKnReD6BQPJs2mP/G19ljpTDfl2N0LS8d7TDOrLSbjU
+        nT4KV4nPUJvcM/GSMjBwV8U/jQ==
+X-Google-Smtp-Source: APXvYqyql8bxQV0/FB90h23PfUVjOUoxcX1fJUbzxMYDmwzWfOkMnMIARbD6dEDr2H7L/c0ocCf7Bg==
+X-Received: by 2002:a0c:9bc9:: with SMTP id g9mr20446108qvf.240.1566923241047;
+        Tue, 27 Aug 2019 09:27:21 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-216-168.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.216.168])
+        by smtp.gmail.com with ESMTPSA id g8sm8649956qti.79.2019.08.27.09.27.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 09:27:20 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i2eJU-00052e-2w; Tue, 27 Aug 2019 13:27:20 -0300
+Date:   Tue, 27 Aug 2019 13:27:20 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-rdma@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Tatyana Nikolova <Tatyana.E.Nikolova@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/iwpm: Delete =?utf-8?Q?un?=
+ =?utf-8?Q?necessary_checks_before_the_macro_call_=E2=80=9Cdev=5Fkfree=5Fs?=
+ =?utf-8?B?a2LigJ0=?=
+Message-ID: <20190827162720.GA19357@ziepe.ca>
+References: <16df4c50-1f61-d7c4-3fc8-3073666d281d@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190815083716.4715-8-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <16df4c50-1f61-d7c4-3fc8-3073666d281d@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019 16:37:14 +0800, Xiaowei Bao wrote:
-> Add the pf-offset property for multiple PF.
+On Wed, Aug 21, 2019 at 07:47:08PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 21 Aug 2019 19:30:09 +0200
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> The dev_kfree_skb() function performs also input parameter validation.
+> Thus the test around the shown calls is not needed.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 > ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+>  drivers/infiniband/core/iwpm_msg.c  | 9 +++------
+>  drivers/infiniband/core/iwpm_util.c | 9 +++------
+>  2 files changed, 6 insertions(+), 12 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to for-next, thanks
+
+Jason
