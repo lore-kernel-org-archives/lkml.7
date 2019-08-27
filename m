@@ -2,156 +2,182 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBC5C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D80C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E53220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65FC20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566873454;
+	bh=1IV2CM6ErWuo3N+yfdMw51ZAbsWRy4I36btniWe1qIA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Qgmk9sXyCjyLOhFkvBCMBeZEVZZYnl7zyvl0LJwIklMg3hhJTjZVYe1h9FGxcIsth
+	 XTwP9CF09jl0oA9yxBPW8hWCVVLj/ViqWTrY2wLnd3CtvMAaDKoN6n9AACWdk1C5o8
+	 SHKuC8Df/FhtzewQ5QZiHVMdYvnN3Ct6nqSEIvQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfH0Cb1 (ORCPT
+        id S1728760AbfH0Chd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 22:31:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55460 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 22:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbfH0Cb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 22:31:26 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726487AbfH0Chd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 22:37:33 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1563CC009DE8
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 02:31:26 +0000 (UTC)
-Received: by mail-io1-f72.google.com with SMTP id x9so25266887ior.9
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 19:31:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ySf8YTYMsVP8iamqAEphzE0BR0aETXvL0kY9WW3W6kY=;
-        b=Rd53snyOMlP9URAkiStSwZX8MAZXlyPDwJA4xYNYZXCcxUm3BHqGl9BYi3OlL+X0A7
-         NcKJNcXRDd7oTf55+z4xJ2/HCHLgyCQWBsyjPOr2DdDdzERbZ0AN563IwkpJPaY3A/DI
-         fVpSwOlZ5gKk9QOJ+n/gilFF2rcsemTmzazYAGSIMrDi8oQLQpYI68JaWrl1HpavMXyP
-         M0Zo09mE2BtlLHBsugIH5usJCGv7zOSwnyEiUgl5GA0XL4Zidiqy6uBCz1Uo/JJzYjRL
-         KWbu4R+TQi7fS3eitvC8JZoN5bMztkQOWagqn49RZ/6a9dUSD2Ya0P8GHjdyyPKC3cVm
-         4ouA==
-X-Gm-Message-State: APjAAAUAWYV73JQDeH4OtOoH3SAlDwSHIk+S8xZVX8rbLWoU1D8L6JTV
-        v1w7L0kqFcMkmi69+G2VvKJ7nI0GFl0hrtjx8XX0ZRFyGXg5c1ID+kLfSA9R7Rbrt+Yu9HU4m0J
-        Th23IvON8kZxM0ewAHPWcZ9Sy
-X-Received: by 2002:a5e:c101:: with SMTP id v1mr13090739iol.231.1566873085458;
-        Mon, 26 Aug 2019 19:31:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzzoafTXhIdip+uTwFS7HgjaZ5P2T1bEX1t7ELjzkEe1CjYbFKzZkGpqR4VR89aap48to/uHw==
-X-Received: by 2002:a5e:c101:: with SMTP id v1mr13090725iol.231.1566873085224;
-        Mon, 26 Aug 2019 19:31:25 -0700 (PDT)
-Received: from masetto.ahs3 (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
-        by smtp.gmail.com with ESMTPSA id z9sm19383904ior.79.2019.08.26.19.31.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Aug 2019 19:31:24 -0700 (PDT)
-Reply-To: ahs3@redhat.com
-Subject: Re: [PATCH v2] ACPI / CPPC: do not require the _PSD method when using
- CPPC
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-References: <20190826223047.13146-1-ahs3@redhat.com>
- <CAJZ5v0hXJNa3Z14MQgvNcVF8YxH+M46mMyC5U6vZqrpBZUjOgw@mail.gmail.com>
-From:   Al Stone <ahs3@redhat.com>
-Organization: Red Hat, Inc.
-Message-ID: <38f21587-f5c9-c831-d7ff-707974178d7f@redhat.com>
-Date:   Mon, 26 Aug 2019 20:31:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hXJNa3Z14MQgvNcVF8YxH+M46mMyC5U6vZqrpBZUjOgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        by mail.kernel.org (Postfix) with ESMTPSA id BC527206E0;
+        Tue, 27 Aug 2019 02:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566873452;
+        bh=1IV2CM6ErWuo3N+yfdMw51ZAbsWRy4I36btniWe1qIA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q7Go3M99ctkACkffmRIl2U9APAA7HHwtwnMynerXPU5BSUSZR8Ru99vPmYSG2aJLa
+         VYMoQrvB097EzDzv3sL6Ia+UOUks4qbnXOu6opjr96OAci7grhSLeKJjw2DQHJXYCK
+         dRgXzahaJxb2PBjJQCuInQN+zjyswv+UYbfMBiFw=
+Date:   Tue, 27 Aug 2019 11:37:24 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v3 01/19] skc: Add supplemental kernel cmdline
+ support
+Message-Id: <20190827113724.fa32ce580f5901004044d0f1@kernel.org>
+In-Reply-To: <CAL_Jsq+Pm4D_fm+iG9UfGSObx2fSXshZuMW4QKwGePbg4RUEjA@mail.gmail.com>
+References: <156678933823.21459.4100380582025186209.stgit@devnote2>
+        <156678934990.21459.10847677747264952252.stgit@devnote2>
+        <CAL_Jsq+Pm4D_fm+iG9UfGSObx2fSXshZuMW4QKwGePbg4RUEjA@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 5:02 PM, Rafael J. Wysocki wrote:
-> On Tue, Aug 27, 2019 at 12:30 AM Al Stone <ahs3@redhat.com> wrote:
->>
->> According to the ACPI 6.3 specification, the _PSD method is optional
->> when using CPPC.  The underlying assumption is that each CPU can change
->> frequency independently from all other CPUs; _PSD is provided to tell
->> the OS that some processors can NOT do that.
->>
->> However, the acpi_get_psd() function returns ENODEV if there is no _PSD
->> method present, or an ACPI error status if an error occurs when evaluating
->> _PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
->> of the specification, and only on Linux.
->>
->> This has forced some firmware writers to provide a dummy _PSD, even though
->> it is irrelevant, but only because Linux requires it; other OSPMs follow
->> the spec.  We really do not want to have OS specific ACPI tables, though.
->>
->> So, correct acpi_get_psd() so that it does not return an error if there
->> is no _PSD method present, but does return a failure when the method can
->> not be executed properly.  This allows _PSD to be optional as it should
->> be.
->>
->> v2:
->>    -- verified simple check for AE_NOT_FOUND was sufficient
->>    -- simplified return status check per Rafael's suggestion
->>
->> Signed-off-by: Al Stone <ahs3@redhat.com>
->> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
->> Cc: Len Brown <lenb@kernel.org>
->> ---
->>  drivers/acpi/cppc_acpi.c | 10 ++++++----
->>  1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
->> index 15f103d7532b..7a946f1944ab 100644
->> --- a/drivers/acpi/cppc_acpi.c
->> +++ b/drivers/acpi/cppc_acpi.c
->> @@ -365,10 +365,12 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
->>         union acpi_object  *psd = NULL;
->>         struct acpi_psd_package *pdomain;
->>
->> -       status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
->> -                       ACPI_TYPE_PACKAGE);
->> -       if (ACPI_FAILURE(status))
->> -               return -ENODEV;
->> +       if (acpi_has_method(handle, "_PSD")) {
+Hi Rob,
+
+Thank you for your comment!
+
+On Mon, 26 Aug 2019 08:27:48 -0500
+Rob Herring <robh+dt@kernel.org> wrote:
+
+> On Sun, Aug 25, 2019 at 10:15 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Supplemental kernel command line (SKC) allows admin to pass a
+> > tree-structured supplemental kernel commandline file (SKC file)
+> > when boot up kernel. This expands the kernel command line in
+> > efficient way.
+> >
+> > SKC file will contain some key-value commands, e.g.
+> >
+> > key.word = value1;
+> > another.key.word = value2;
+> >
+> > It can fold same keys with braces, also you can write array
+> > data. For example,
+> >
+> > key {
+> >    word1 {
+> >       setting1 = data;
+> >       setting2;
+> >    }
+> >    word2.array = "val1", "val2";
+> > }
 > 
-> This doesn't look necessary any more.
+> Why invent a custom file format? You could use YAML (or JSON):
 
-Probably true.  I'll look back through acpi_evaluate_object_typed().
+Yeah, actually my early idea was using JSON, since it is widely used and
+many good tools. However, I thought that is not human friendly format :(.
+I would like to give an easy to read/write but structured interface.
 
->> +               status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
->> +                                                   &buffer, ACPI_TYPE_PACKAGE);
->> +               if (status == AE_NOT_FOUND)     /* _PSD is optional */
->> +                       return 0;
 > 
-> And what about the other possible errors?
+> key:
+>  word1:
+>   setting1: data
+>   setting2: true
+>  word2:
+>   - val1
+>   - val2
 
-Argh.  My apologies.  I was not paying attention.  I'll correct
-this and send proper code tomorrow.  Really sorry for the noise :(...
+(Ah, in above example "array" is just a part of key, and is not
+a reserved word.)
 
->> +       }
->>
->>         psd = buffer.pointer;
->>         if (!psd || psd->package.count != 1) {
->> --
->> 2.21.0
->>
+> That would allow you to define a schema for defined options and can
+> easily be manipulated with python (or any language with dictionaries
+> and lists). That does imply adding a YAML parser to the kernel which
+> I'm not sure is a great idea. There is a C parser lib, but working
+> with YAML in C is not that great compared to python.
 
+Yes, using plain YAML maybe requires user-space coverter to some
+other format.
+
+> 
+> Another option would be using the DTS format, but as a separate file.
+> That's not unprecedented as u-boot FIT image is a DTB. Then the kernel
+> already has the parser. And you could still have schema now.
+
+Yeah, that is what I consider at first. I discussed it with Frank at
+OSSJ, but he suggested to not use DTS, nor touch current parser in kernel.
+So I finally convinced not using DTS.
+
+> A new interface will take a lot of bootloader work to make it easy to
+> use given the user has to manually load some file in the bootloader
+> and know a good address to load it to.
+
+Right, that is what I have to do next if this is accepted. As I shown, I
+modified Qemu and Grub. (Since U-Boot is very flexible, it is easy to
+load skc file and modify bootargs by manual.)
+What I found was, since the bootloaders already supported loading DTB,
+it would not be so hard to add loading another file :)  (curiously, the
+most complicated part was modifying kernel cmdline)
+
+> Between that and rebuilding the
+> kernel with the configuration, I'd pick rebuilding the kernel. Perhaps
+> this version will highlight that the original proposal was not so bad.
+
+Maybe for embedded, yes. For admins who use vendor kernel, no.
+
+> Another thought, maybe you could process the configuration file that's
+> in a readable/editable format into a flat representation that could
+> simply be added to the kernel command line:
+
+(BTW, it is easy to make a flat representation data as you can see
+in /proc/sup_cmdline, which is added by [2/19])
+
+> 
+> key.word1.setting1=data key.word1.setting2 key.word2=val1,val2
+> 
+> That would then use an existing interface and probably simplify the
+> kernel parsing.
+
+Hmm, if it is just for passing extended arguments, that will be enough
+(that was my first version of SKC, here 
+https://github.com/mhiramat/skc/tree/5f0429c244d1c9f8f84711bc33e1e6f90df62df8 )
+
+But I found that was not enough flexible for my usage. For expressing
+complex ftrace settings (e.g. nesting options, some options related to
+other options etc.), I need tree-structured data, something like Devicetree. 
+
+Thank you,
 
 -- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+Masami Hiramatsu <mhiramat@kernel.org>
