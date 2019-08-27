@@ -2,93 +2,214 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC0AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B361C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC472173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F6D20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X4NiWjJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfH0FV6 (ORCPT
+        id S1728886AbfH0FXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:21:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44994 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfH0FV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:21:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4601D3082E25;
-        Tue, 27 Aug 2019 05:21:56 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-95.ams2.redhat.com [10.36.116.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C750E1E0;
-        Tue, 27 Aug 2019 05:21:55 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 223D01747D; Tue, 27 Aug 2019 07:21:54 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 07:21:54 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v2] drm/virtio: add plane check
-Message-ID: <20190827052154.etk4jbx45hsrl7z5@sirius.home.kraxel.org>
-References: <20190822094657.27483-1-kraxel@redhat.com>
- <CAPaKu7S_He9RYsxDi0Qco4u=Xnc3FjB5nvFT_Zh+o7pvFzCvRQ@mail.gmail.com>
+        Tue, 27 Aug 2019 01:23:21 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34918 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfH0FXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 01:23:21 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r21so16069801qke.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sC2NjC8+A0TKELBjbIVVNtKDnT9aRehN1CXf+Kpbi1M=;
+        b=X4NiWjJimWS+yY7P9ODH4dTSXcADuJFv2Dzvp7EpZLt1KWavXUOtnEMzZafunw9qIk
+         5di4G0Sx5gZ6kgyKqos7Sfws36gBgXsVJTWxo/5TNgAYLJf3p8N3i1oBKl0m89QGBnEN
+         RVpYGnp3cQwzaxHxYiJjQhTCbcVR1ACjqiB1s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sC2NjC8+A0TKELBjbIVVNtKDnT9aRehN1CXf+Kpbi1M=;
+        b=SHQKERFzrnmUS3rAfsVyF7Bj5y+X0iD6rSs2Qu5AiPsvYzpIK/AeebTCDTvRnaTrCL
+         /EmOb4zkiKh/u0Oem6P1ocuAM/BvPaH1FTSK5dJCjhr5ChklKi0U+RVjycZ4+IvkLa6d
+         eF1nZt4KT+I0SjEz6iJpu4ySFEDPSZL2kAiOV7Doc8Zk4DxmDEY509egZqy1PVtduERY
+         0PlDYVVujqnl8j6HT9ITWxR1MAklGDrs5niKBhNfy+Swr8+spVW/1IH+oZjvBC0s/rAp
+         /kTbba1Q+E1qKXt7yOJ8yURCMvUf+a+MaudQwwndrDudpfm5yPzXoatKssZq9dHjUd0n
+         iLDQ==
+X-Gm-Message-State: APjAAAWTGNoF01rm7bnXjK7bf6OoIuz6+JpjafBM0uxOI0lhqGDOueIp
+        tGwzCcFAYom+8XUIhV36s9NLTKsmXBooKfDJPqblGxU9
+X-Google-Smtp-Source: APXvYqwF7HM8zQgP6LqbFjZvM0l7BwT2ajiN3bPb5DfDxjuUJzojQGxg6ldKtJzgynvs1cI1K+pN2ixAS5TPReXhdz8=
+X-Received: by 2002:ae9:f301:: with SMTP id p1mr20356780qkg.353.1566883399611;
+ Mon, 26 Aug 2019 22:23:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7S_He9RYsxDi0Qco4u=Xnc3FjB5nvFT_Zh+o7pvFzCvRQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 27 Aug 2019 05:21:56 +0000 (UTC)
+References: <20190827003326.147452-1-drinkcat@chromium.org> <36878f3488f047978038c844daedd02f@aptaiexm02f.ap.qualcomm.com>
+In-Reply-To: <36878f3488f047978038c844daedd02f@aptaiexm02f.ap.qualcomm.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 27 Aug 2019 13:23:08 +0800
+Message-ID: <CANMq1KDTBJOnQZQihH91FDj+jOZcODV-xYEx5umukV7+UEPR1g@mail.gmail.com>
+Subject: Re: [PATCH, RFC] ath10k: Fix skb->len (properly) in ath10k_sdio_mbox_rx_packet
+To:     Wen Gong <wgong@qti.qualcomm.com>
+Cc:     "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        Alagu Sankar <alagusankar@silex-india.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "briannorris@chromium.org" <briannorris@chromium.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "wgong@codeaurora.org" <wgong@codeaurora.org>,
+        "niklas.cassel@linaro.org" <niklas.cassel@linaro.org>,
+        "tientzu@chromium.org" <tientzu@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 03:34:56PM -0700, Chia-I Wu wrote:
-> On Thu, Aug 22, 2019 at 2:47 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Tue, Aug 27, 2019 at 11:34 AM Wen Gong <wgong@qti.qualcomm.com> wrote:
+>
+> > -----Original Message-----
+> > From: ath10k <ath10k-bounces@lists.infradead.org> On Behalf Of Nicolas
+> > Boichat
+> > Sent: Tuesday, August 27, 2019 8:33 AM
+> > To: kvalo@codeaurora.org
+> > Cc: Alagu Sankar <alagusankar@silex-india.com>; netdev@vger.kernel.org;
+> > briannorris@chromium.org; linux-wireless@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; ath10k@lists.infradead.org;
+> > wgong@codeaurora.org; niklas.cassel@linaro.org; tientzu@chromium.org;
+> > David S . Miller <davem@davemloft.net>
+> > Subject: [EXT] [PATCH, RFC] ath10k: Fix skb->len (properly) in
+> > ath10k_sdio_mbox_rx_packet
 > >
-> > Use drm_atomic_helper_check_plane_state()
-> > to sanity check the plane state.
+> > (not a formal patch, take this as a bug report for now, I can clean
+> > up depending on the feedback I get here)
 > >
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > There's at least 3 issues here, and the patch fixes 2/3 only, I'm not sure
+> > how/if 1 should be handled.
+> >  1. ath10k_sdio_mbox_rx_alloc allocating skb of a incorrect size (too
+> >     small)
+> >  2. ath10k_sdio_mbox_rx_packet calling skb_put with that incorrect size.
+> >  3. ath10k_sdio_mbox_rx_process_packet attempts to fixup the size, but
+> >     does not use proper skb_put commands to do so, so we end up with
+> >     a mismatch between skb->head + skb->tail and skb->data + skb->len.
+> >
+> > Let's start with 3, this is quite serious as this and causes corruptions
+> > in the TCP stack, as the stack tries to coalesce packets, and relies on
+> > skb->tail being correct (that is, skb_tail_pointer must point to the
+> > first byte _after_ the data): one must never manipulate skb->len
+> > directly.
+> >
+> > Instead, we need to use skb_put to allocate more space (which updates
+> > skb->len and skb->tail). But it seems odd to do that in
+> > ath10k_sdio_mbox_rx_process_packet, so I move the code to
+> > ath10k_sdio_mbox_rx_packet (point 2 above).
+> >
+> > However, there is still something strange (point 1 above), why is
+> > ath10k_sdio_mbox_rx_alloc allocating packets of the incorrect
+> > (too small?) size? What happens if the packet is bigger than alloc_len?
+> > Does this lead to corruption/lost data?
+> >
+> > Fixes: 8530b4e7b22bc3b ("ath10k: sdio: set skb len for all rx packets")
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> >
 > > ---
-> >  drivers/gpu/drm/virtio/virtgpu_plane.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> > index a492ac3f4a7e..fe5efb2de90d 100644
-> > --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-> > +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> > @@ -84,7 +84,22 @@ static const struct drm_plane_funcs virtio_gpu_plane_funcs = {
-> >  static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
-> >                                          struct drm_plane_state *state)
-> >  {
-> > -       return 0;
-> > +       bool is_cursor = plane->type == DRM_PLANE_TYPE_CURSOR;
-> > +       struct drm_crtc_state *crtc_state;
-> > +       int ret;
-> > +
-> > +       if (!state->fb || !state->crtc)
-> > +               return 0;
-> > +
-> > +       crtc_state = drm_atomic_get_crtc_state(state->state, state->crtc);
-> > +       if (IS_ERR(crtc_state))
-> > +                return PTR_ERR(crtc_state);
-> Is drm_atomic_get_new_crtc_state better here?
+> > One simple way to test this is this scriplet, that sends a lot of
+> > small packets over SSH:
+> > (for i in `seq 1 300`; do echo $i; sleep 0.1; done) | ssh $IP cat
+> >
+> > In my testing it rarely ever reach 300 without failure.
+> >
+> >  drivers/net/wireless/ath/ath10k/sdio.c | 18 ++++++++++++------
+> >  1 file changed, 12 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath10k/sdio.c
+> > b/drivers/net/wireless/ath/ath10k/sdio.c
+> > index 8ed4fbd8d6c3888..a9f5002863ee7bb 100644
+> > --- a/drivers/net/wireless/ath/ath10k/sdio.c
+> > +++ b/drivers/net/wireless/ath/ath10k/sdio.c
+> > @@ -381,16 +381,14 @@ static int
+> > ath10k_sdio_mbox_rx_process_packet(struct ath10k *ar,
+> >       struct ath10k_htc_hdr *htc_hdr = (struct ath10k_htc_hdr *)skb->data;
+> >       bool trailer_present = htc_hdr->flags &
+> > ATH10K_HTC_FLAG_TRAILER_PRESENT;
+> >       enum ath10k_htc_ep_id eid;
+> > -     u16 payload_len;
+> >       u8 *trailer;
+> >       int ret;
+> >
+> > -     payload_len = le16_to_cpu(htc_hdr->len);
+> > -     skb->len = payload_len + sizeof(struct ath10k_htc_hdr);
+> > +     /* TODO: Remove this? */
+> If the pkt->act_len has set again in ath10k_sdio_mbox_rx_packet, seems not needed.
 
-We don't have to worry about old/new state here.  The drm_plane_state we
-get passed is the state we should check in this callback (and I think
-this always is the new state).
+Sure, will drop.
 
-cheers,
-  Gerd
+> > +     WARN_ON(skb->len != le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr));
+> >
+> >       if (trailer_present) {
+> > -             trailer = skb->data + sizeof(*htc_hdr) +
+> > -                       payload_len - htc_hdr->trailer_len;
+> > +             trailer = skb->data + skb->len - htc_hdr->trailer_len;
+> >
+> >               eid = pipe_id_to_eid(htc_hdr->eid);
+> >
+> > @@ -637,8 +635,16 @@ static int ath10k_sdio_mbox_rx_packet(struct
+> > ath10k *ar,
+> >       ret = ath10k_sdio_readsb(ar, ar_sdio->mbox_info.htc_addr,
+> >                                skb->data, pkt->alloc_len);
+> >       pkt->status = ret;
+> > -     if (!ret)
+> > +     if (!ret) {
+> > +             /* Update actual length. */
+> > +             /* FIXME: This looks quite wrong, why is pkt->act_len not
+> > +              * correct in the first place?
+> > +              */
+> Firmware will do bundle for rx packet, and the aligned length by block size(256) of each packet's len is same
+> in a bundle.
+>
+> Eg.
+> packet 1 len: 300, aligned length:512
+> packet 2 len: 400, aligned length:512
+> packet 3 len: 200, aligned length:256
+> packet 4 len: 100, aligned length:256
+> packet 5 len: 700, aligned length:768
+> packet 6 len: 600, aligned length:768
+>
+> then packet 1,2 will in bundle 1, packet 3,4 in a bundle 2, packet 5,6 in a bundle 3.
+>
+> For bundle 1, packet 1,2 will both allocate with len 512, and act_len is 300 first,
+> then packet 2's len will be overwrite to 400.
+>
+> For bundle 2, packet 3,4 will both allocate with len 256, and act_len is 200 first,
+> then packet 4's len will be overwrite to 100.
+>
+> For bundle 3, packet 5,6 will both allocate with len 768, and act_len is 700 first,
+> then packet 6's len will be overwrite to 600.
 
+Ok thanks, I'll send a v2 with an improved description.
+
+> > +             struct ath10k_htc_hdr *htc_hdr =
+> > +                     (struct ath10k_htc_hdr *)skb->data;
+> > +             pkt->act_len = le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr);
+> >               skb_put(skb, pkt->act_len);
+> > +     }
+> >
+> >       return ret;
+> >  }
+> > --
+> > 2.23.0.187.g17f5b7556c-goog
+> >
+> >
+> > _______________________________________________
+> > ath10k mailing list
+> > ath10k@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/ath10k
