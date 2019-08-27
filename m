@@ -2,95 +2,192 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2974C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CE3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4F02054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G72/sLBI"
+	by mail.kernel.org (Postfix) with ESMTP id 195E720673
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566913022;
+	bh=mD4q3LMo8D/oOkYLDOKCUAJJn9XFxRojkzOMMIIoH1I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZOLIPuXvovKwdqXQPOQaKzJ8PRR2u6OG/+Siop/6tV9sHtFw9v/b4Xd61RKLxkobm
+	 4rkG9yRrz2FZVBrze6yfCQs/sdxDDpxYGtUiZ4FpKESvtvX6eg9CV8fpCwUwEI6Jd8
+	 clPF4kB5xmtuN5ugMQezQpxJxFXF8poJLKNteEVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfH0Ng3 (ORCPT
+        id S1729517AbfH0NhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:36:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56338 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfH0Ng2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:36:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RDYd2V195703;
-        Tue, 27 Aug 2019 13:36:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=RfJyOS5EC0GN/YwO4IHH9U9alxOQgZ3re2Bes/V6CM8=;
- b=G72/sLBIlmGT4TQGE5hkM7efp+GdnUDogn65wdcZtMST8Oz35lnzFbJ9xabqyS3Sruaf
- OLf0n9BhjzsoJZG0kvCXLuu0rqah7Ipzj+HTMh67MF0sd4a3qbDapQC0rNxEfYX5nHbB
- OC7bJ5w1H2b4v7dMV9M7xDCwoOkb/C4J7YyTZ8ReHFwgV6xhXyW+yQp6/HavhyB26jtr
- uQR09TYrlhhcAA3cSLuZoZm/DZDxWVxiu6z7cDIrXxmTB10AwyjDxvEZlB9Xxlhbd7wd
- lN/pHFzH5ncv+E8kk+21BYdRwjDqnleZ/cp+OFQ5+7SlDLu+UCpABiNMXPi3E7hcd6sr SA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2un551g73h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 13:36:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7RDXrFQ121925;
-        Tue, 27 Aug 2019 13:36:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2umhu8rpgx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 13:36:21 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7RDaKSZ008735;
-        Tue, 27 Aug 2019 13:36:20 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Aug 2019 06:36:20 -0700
-Date:   Tue, 27 Aug 2019 16:36:11 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] staging: move greybus core out of staging
-Message-ID: <20190827133611.GE23584@kadam>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+        Tue, 27 Aug 2019 09:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbfH0NhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:37:01 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82A820673;
+        Tue, 27 Aug 2019 13:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566913019;
+        bh=mD4q3LMo8D/oOkYLDOKCUAJJn9XFxRojkzOMMIIoH1I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iIHtOikMNFdIzPT8jWOw/5DwxGlxnvIEDZv9e0PiIiaJHWvdLX+iDsXGeyppF1TUt
+         c17W7Fc/T4Ik+b8XGYSHnukX7bjPDJcSTOeFIdDfjLuyWZrYhffCGT6g1hesZDhpUj
+         3ZgF2FfSALXvFmHTL98And13MaG/+fN4e5USc9s4=
+Received: by mail-qt1-f177.google.com with SMTP id z4so21308542qtc.3;
+        Tue, 27 Aug 2019 06:36:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAU7mfZwakEtztu/sMj5ID/Uyt9AY8SLd0ZRYKMJM4kH7V8NLZ/0
+        ok97OqN9a2T9MWbWZlAgsWg3nUEhOCJIEReUwQ==
+X-Google-Smtp-Source: APXvYqzEOWLWWqszNcnpUlBSWwsUeCt8Jjat6t6FjKZi0ldOgh/0RivRU5T9R/NH2jHj7b42YDO9ISbX143dqtx8U7A=
+X-Received: by 2002:a0c:eb92:: with SMTP id x18mr20126969qvo.39.1566913018683;
+ Tue, 27 Aug 2019 06:36:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190825055429.18547-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908270146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908270146
+References: <20190822092643.593488-1-lkundrak@v3.sk> <20190822092643.593488-3-lkundrak@v3.sk>
+ <CAL_JsqJ4_h+M=6L-nzK2N+A9TAy-N8SoiFv1SSTk_kCcKt0eXw@mail.gmail.com> <136a57cf3d293e3233f31d5ee660a6418726333a.camel@v3.sk>
+In-Reply-To: <136a57cf3d293e3233f31d5ee660a6418726333a.camel@v3.sk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 27 Aug 2019 08:36:47 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK1pkwPZj+Us8CecNnfA7L17YVk9aTe3qPoNTAvRiHibw@mail.gmail.com>
+Message-ID: <CAL_JsqK1pkwPZj+Us8CecNnfA7L17YVk9aTe3qPoNTAvRiHibw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/20] dt-bindings: arm: Convert Marvell MMP board/soc
+ bindings to json-schema
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I can't compile greybus so it's hard to run Smatch on it...  I have a
-Smatch thing which ignores missing includes and just tries its best.
-It mostly generates garbage output but a couple of these look like
-potential issues:
+On Tue, Aug 27, 2019 at 8:24 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> On Tue, 2019-08-27 at 06:59 -0500, Rob Herring wrote:
+> > On Thu, Aug 22, 2019 at 4:27 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> > > Convert Marvell MMP SoC bindings to DT schema format using json-schema.
+> > >
+> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > >
+> > > ---
+> > > Changes since v1:
+> > > - Added this patch
+> > >
+> > >  .../devicetree/bindings/arm/mrvl/mrvl.txt     | 14 ---------
+> > >  .../devicetree/bindings/arm/mrvl/mrvl.yaml    | 31 +++++++++++++++++++
+> > >  2 files changed, 31 insertions(+), 14 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> > > deleted file mode 100644
+> > > index 951687528efb0..0000000000000
+> > > --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> > > +++ /dev/null
+> > > @@ -1,14 +0,0 @@
+> > > -Marvell Platforms Device Tree Bindings
+> > > -----------------------------------------------------
+> > > -
+> > > -PXA168 Aspenite Board
+> > > -Required root node properties:
+> > > -       - compatible = "mrvl,pxa168-aspenite", "mrvl,pxa168";
+> > > -
+> > > -PXA910 DKB Board
+> > > -Required root node properties:
+> > > -       - compatible = "mrvl,pxa910-dkb";
+> > > -
+> > > -MMP2 Brownstone Board
+> > > -Required root node properties:
+> > > -       - compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
+> > > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+> > > new file mode 100644
+> > > index 0000000000000..dc9de506ac6e3
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+> > > @@ -0,0 +1,31 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/arm/mrvl/mrvl.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Marvell Platforms Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Lubomir Rintel <lkundrak@v3.sk>
+> > > +
+> > > +properties:
+> > > +  $nodename:
+> > > +    const: '/'
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - description: PXA168 Aspenite Board
+> > > +        items:
+> > > +          - enum:
+> > > +              - mrvl,pxa168-aspenite
+> > > +          - const: mrvl,pxa168
+> > > +      - description: PXA910 DKB Board
+> > > +        items:
+> > > +          - enum:
+> > > +              - mrvl,pxa910-dkb
+> >
+> > Doesn't match what's in dts file:
+> >
+> > arch/arm/boot/dts/pxa910-dkb.dts:       compatible =
+> > "mrvl,pxa910-dkb", "mrvl,pxa910";
+>
+> It corresponds to the .txt bindings specification this commit is
+> converting. I thought it wouldn't be a good idea to do any changes to
+> the contents at the time the conversion is done.
 
-drivers/staging/greybus/operation.c:379 gb_operation_message_alloc() warn: check 'message_size' for integer overflows 'kzalloc()'
-drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->channels' double freed
-drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->name' double freed
+There are so many errors like this, that it's fine to do it in the
+conversion. A separate patch is fine too.
 
-regards,
-dan carpenter
+> I also don't understand why does the dts file specify the board-
+> specific compatible string. Surely "mrvl,pxa910" alone would be
+> sufficient?
 
+To potentially work around any board specific issue without a dtb change.
 
+>
+> > > +      - description: MMP2 Brownstone Board
+> >
+> > If this entry is only for this board...
+> >
+> > > +        items:
+> > > +          - enum:
+> > > +              - mrvl,mmp2-brownstone
+> >
+> > ...then this can be a 'const' instead. Same for the others.
+>
+> Sure, but is it preferable? I've actually done a "git grep -A3 enum
+> Documentation/devicetree/bindings/" to see if the single-element is
+> typically used and it seems like it is. Perhaps it's a good idea to
+> indicate to a human reader that this is a list that's expected to
+> eventually be extended with new elements.
+
+Then the description should match and say 'MMP2 based boards'.
+
+> In any case, there are more boards with MMP2 currently supported,
+> notably the XO-1.75 laptop. I've actually sent out the dts file for
+> review some time ago. I haven't added a separate compatible string for
+> it because I thought it is not necessary (see above).
+
+You should add one.
+
+Rob
