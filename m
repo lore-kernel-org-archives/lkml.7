@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1DFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF13AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FC72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C328E21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="NashDxeo"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ItpLCNRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfH0JBM (ORCPT
+        id S1729949AbfH0JBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:01:12 -0400
-Received: from forward104j.mail.yandex.net ([5.45.198.247]:55692 "EHLO
-        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbfH0JBM (ORCPT
+        Tue, 27 Aug 2019 05:01:20 -0400
+Received: from forward106p.mail.yandex.net ([77.88.28.109]:49564 "EHLO
+        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfH0JBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:01:12 -0400
-Received: from mxback15o.mail.yandex.net (mxback15o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::66])
-        by forward104j.mail.yandex.net (Yandex) with ESMTP id 7A8A14A1B5A;
-        Tue, 27 Aug 2019 11:55:15 +0300 (MSK)
+        Tue, 27 Aug 2019 05:01:20 -0400
+Received: from mxback28o.mail.yandex.net (mxback28o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::79])
+        by forward106p.mail.yandex.net (Yandex) with ESMTP id E9A541C81A15;
+        Tue, 27 Aug 2019 11:55:00 +0300 (MSK)
 Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
-        by mxback15o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 3r8G3bhQvA-tE5Ogajn;
-        Tue, 27 Aug 2019 11:55:15 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896115;
-        bh=9x9JHKkA5s2saezMDxxt5Ql6wxmaHniD/+8n/iFpUTE=;
+        by mxback28o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Hptl9zhHrY-t08a4aTr;
+        Tue, 27 Aug 2019 11:55:00 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896100;
+        bh=Y6sfZ58nj6HzDrvBbI59ncoDg0LgIEFsSAJSPkb15cQ=;
         h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=NashDxeo1Tfl+b8j0QMdUXOR7BeLWTXdY8jILSaOTvTLo9cRK799i6XOwJg4sZsxZ
-         hiMCBBtYujEVUxH1hGtBN40UDAGTeVO5Wds7nbQ7nopLgsvApmMAcWu2GGlx6OP7JQ
-         ngUulvIjgzIfc9cNNDo2pQsAm288nW2UDU4oNu+4=
-Authentication-Results: mxback15o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-t9tClHm7;
-        Tue, 27 Aug 2019 11:55:13 +0300
+        b=ItpLCNRMQorxM6o/rJmNmiJGruMvcws/t4qnRv6ynhTh/uMXaXRHsMYaoYLDtmHNe
+         tzh+VRvOcyqqsoxaqfnTvn49nEVkDbXuJX2k9SGw6awt1LImS2sx90UVGyiNCEos7P
+         7R8Zw2OpkT6CLzwcS5Q9ZvCUITw2QwY7MkWDbAxw=
+Authentication-Results: mxback28o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-sttCsrGB;
+        Tue, 27 Aug 2019 11:54:59 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
@@ -46,9 +46,9 @@ Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
         jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.co,
         devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 13/13] MIPS: Loongson64: Load built-in dtbs
-Date:   Tue, 27 Aug 2019 16:53:02 +0800
-Message-Id: <20190827085302.5197-14-jiaxun.yang@flygoat.com>
+Subject: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
+Date:   Tue, 27 Aug 2019 16:53:00 +0800
+Message-Id: <20190827085302.5197-12-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
 References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
@@ -59,186 +59,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Load proper dtb according to firmware passed parameters and
-CPU PRID.
+Prepare for later dts.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- .../asm/mach-loongson64/builtin_dtbs.h        | 26 +++++++
- .../include/asm/mach-loongson64/loongson64.h  |  2 +
- arch/mips/loongson64/env.c                    | 67 +++++++++++++++++++
- arch/mips/loongson64/setup.c                  | 15 +++++
- 4 files changed, 110 insertions(+)
- create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+ .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
+ .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
+ 2 files changed, 102 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
 
-diff --git a/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
 new file mode 100644
-index 000000000000..234803ba9d82
+index 000000000000..410d896a0078
 --- /dev/null
-+++ b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ * 
-+ * Built-in Generic dtbs for MACH_LOONGSON64 
-+ */
++++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#ifndef __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
-+#define __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
++title: Loongson CPUs bindings
 +
-+extern u32 __dtb_ls3a1000_780e_1way_begin[];
-+extern u32 __dtb_ls3a1000_780e_2way_begin[];
-+extern u32 __dtb_ls3a1000_780e_4way_begin[];
++maintainers:
++  - Jiaxun Yang <jiaxun.yang@flygoat.com>
 +
-+extern u32 __dtb_ls3b_780e_1way_begin[];
-+extern u32 __dtb_ls3b_780e_2way_begin[];
++description: |+
++  The device tree allows to describe the layout of CPUs in a system through
++  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
++  defining properties for every cpu.
 +
-+extern u32 __dtb_ls3a2000_780e_1way_begin[];
-+extern u32 __dtb_ls3a2000_780e_2way_begin[];
-+extern u32 __dtb_ls3a2000_780e_4way_begin[];
++  Bindings for CPU nodes follow the Devicetree Specification, available from:
 +
-+extern u32 __dtb_ls3a3000_780e_1way_begin[];
-+extern u32 __dtb_ls3a3000_780e_2way_begin[];
-+extern u32 __dtb_ls3a3000_780e_4way_begin[];
++  https://www.devicetree.org/specifications/
 +
-+#endif
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson64.h b/arch/mips/include/asm/mach-loongson64/loongson64.h
-index d877adb99d33..78daa3fb3fa7 100644
---- a/arch/mips/include/asm/mach-loongson64/loongson64.h
-+++ b/arch/mips/include/asm/mach-loongson64/loongson64.h
-@@ -45,4 +45,6 @@ extern u64 loongson_freqctrl[MAX_PACKAGES];
- 
- extern const struct plat_smp_ops loongson3_smp_ops;
- extern void __init prom_init_lefi(void);
-+extern void *loongson_fdt_blob;
++properties:
++  reg:
++    maxItems: 1
++    description: |
++      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
 +
- #endif
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 93658cfbf3a6..4336bd7c1b94 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -20,6 +20,7 @@
- 
- #include <loongson64.h>
- #include <boot_param.h>
-+#include <builtin_dtbs.h>
- #include <workarounds.h>
- 
- u32 cpu_clock_freq;
-@@ -126,6 +127,72 @@ void __init prom_init_lefi(void)
- 		loongson_sysconf.cores_per_node - 1) /
- 		loongson_sysconf.cores_per_node;
- 
-+	if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64) {
-+		switch (read_c0_prid() & PRID_REV_MASK) {
-+		case PRID_REV_LOONGSON3A_R1:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3a1000_780e_4way_begin;
-+				break;
-+			case 2:
-+				loongson_fdt_blob = __dtb_ls3a1000_780e_2way_begin;
-+				break;			
-+			case 1:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3a1000_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3A_R2_0:
-+		case PRID_REV_LOONGSON3A_R2_1:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3a2000_780e_4way_begin;
-+				break;
-+			case 2:
-+				loongson_fdt_blob = __dtb_ls3a2000_780e_2way_begin;
-+				break;			
-+			case 1:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3a2000_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3A_R3_0:
-+		case PRID_REV_LOONGSON3A_R3_1:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3a3000_780e_4way_begin;
-+				break;
-+			case 2:
-+				loongson_fdt_blob = __dtb_ls3a3000_780e_2way_begin;
-+				break;			
-+			case 1:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3a3000_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3B_R1:
-+		case PRID_REV_LOONGSON3B_R2:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3b_780e_2way_begin;
-+				break;			
-+			case 2:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3b_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+	}
++  compatible:
++    enum:
++      - loongson,gs464
++      - loongson,gs464e
++      - loongson,gs264
++      - loongson,gs464v
 +
-+	if(!loongson_fdt_blob)
-+		pr_err("Failed to determine built-in Loongson64 dtb\n");
++required:
++  - device_type
++  - reg
++  - compatible
++...
+diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+new file mode 100644
+index 000000000000..181881a9f4a9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	loongson_sysconf.pci_mem_start_addr = eirq_source->pci_mem_start_addr;
- 	loongson_sysconf.pci_mem_end_addr = eirq_source->pci_mem_end_addr;
- 	loongson_sysconf.pci_io_base = eirq_source->pci_io_start_addr;
-diff --git a/arch/mips/loongson64/setup.c b/arch/mips/loongson64/setup.c
-index 24432adc8350..3b850b3128ea 100644
---- a/arch/mips/loongson64/setup.c
-+++ b/arch/mips/loongson64/setup.c
-@@ -7,9 +7,15 @@
- #include <asm/setup.h>
- #include <asm/smp-ops.h>
- #include <asm/cacheflush.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
++title: MediaTek SoC based Platforms Device Tree Bindings
 +
-+#include <asm/prom.h>
- 
- #include <loongson64.h>
- 
-+void *loongson_fdt_blob;
++maintainers:
++  - Jiaxun Yang <jiaxun.yang@flygoat.com>
++description: |
++  Devices with a Loongson CPU shall have the following properties.
 +
- static void wbflush_loongson(void)
- {
- 	asm(".set\tpush\n\t"
-@@ -81,6 +87,8 @@ void __init prom_free_prom_memory(void)
- 
- void __init plat_mem_setup(void)
- {
-+	if (loongson_fdt_blob)
-+		__dt_setup_arch(loongson_fdt_blob);
- }
- 
- void __init plat_time_init(void)
-@@ -90,3 +98,10 @@ void __init plat_time_init(void)
- #endif
- }
- 
-+void __init device_tree_init(void)
-+{
-+	if (!initial_boot_params)
-+		return;
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
 +
-+	unflatten_and_copy_device_tree();
-+}
++      - description: Loongson 3A1000 + RS780E 1Way
++        items:
++          - const: loongson,ls3a1000-780e-1way
++
++      - description: Loongson 3A1000 + RS780E 2Way
++        items:
++          - const: loongson,ls3a1000-780e-2way
++
++      - description: Loongson 3A1000 + RS780E 4Way
++        items:
++          - const: loongson,ls3a1000-780e-4way
++
++      - description: Loongson 3B1000/1500 + RS780E 1Way
++        items:
++          - const: loongson,ls3b-780e-1way
++
++      - description: Loongson 3B1000/1500 + RS780E 2Way
++        items:
++          - const: loongson,ls3b-780e-2way
++
++      - description: Loongson 3A2000 + RS780E 1Way
++        items:
++          - const: loongson,ls3a2000-780e-1way
++
++      - description: Loongson 3A2000 + RS780E 2Way
++        items:
++          - const: loongson,ls3a2000-780e-2way
++
++      - description: Loongson 3A2000 + RS780E 4Way
++        items:
++          - const: loongson,ls3a2000-780e-4way
++
++      - description: Loongson 3A3000 + RS780E 1Way
++        items:
++          - const: loongson,ls3a3000-780e-1way
++
++      - description: Loongson 3A3000 + RS780E 2Way
++        items:
++          - const: loongson,ls3a3000-780e-2way
++
++      - description: Loongson 3A3000 + RS780E 4Way
++        items:
++          - const: loongson,ls3a3000-780e-4way
++
++...
 -- 
 2.22.0
 
