@@ -2,124 +2,185 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF92C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B07CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746D72054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mIVcGmL2"
+	by mail.kernel.org (Postfix) with ESMTP id ED2052070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfH0NhV (ORCPT
+        id S1729024AbfH0NjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:37:21 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48058 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfH0NhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:37:20 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7RDbFZO095893;
-        Tue, 27 Aug 2019 08:37:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566913035;
-        bh=idSC7WAHIV2lQSz7AHnFlEGNVeMX3kh33tNpXiiWeAA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mIVcGmL2B4dROlbl6Kop5YOPkwC6BLDvQpCZ6TUDFRTtZ2oVhxt0RB3sskHhB9uZF
-         6cvH1Cd9TPvtMJf1dfrm3y/FcRnZsFSyKVLqk6PBH1Dz4VSyRscCvpmoZbNqpW614u
-         /2FawPwGfMGu3u8ZinuG/xatWCI0inhICM/O0LM4=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7RDbFtq061789
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Aug 2019 08:37:15 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
- Aug 2019 08:37:15 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 27 Aug 2019 08:37:15 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7RDbEpI074090;
-        Tue, 27 Aug 2019 08:37:14 -0500
-Subject: Re: [PATCH] leds: ti-lmu-common: Fix coccinelle issue in TI LMU
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190823195523.20950-1-dmurphy@ti.com>
- <4a1872e8-89a5-4bc4-6aa4-bcadbc48697a@gmail.com>
- <de1bb95d-d5ca-6f8f-e758-b03479091f99@ti.com>
- <48fc16c5-9f43-e5c3-e756-514f9f3eb254@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <12746d3e-e658-5ce6-5231-33005a74e549@ti.com>
-Date:   Tue, 27 Aug 2019 08:37:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 09:39:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725825AbfH0NjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:39:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D9B2BB684;
+        Tue, 27 Aug 2019 13:39:11 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 703F71E4362; Tue, 27 Aug 2019 15:39:08 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 15:39:08 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     " Steven J. Magnani " <steve.magnani@digidescorp.com>
+Cc:     Jan Kara <jack@suse.com>,
+        "Steven J . Magnani" <steve@digidescorp.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] udf: augment UDF permissions on new inodes
+Message-ID: <20190827133908.GA10098@quack2.suse.cz>
+References: <20190827121359.9954-1-steve@digidescorp.com>
 MIME-Version: 1.0
-In-Reply-To: <48fc16c5-9f43-e5c3-e756-514f9f3eb254@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827121359.9954-1-steve@digidescorp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Tue 27-08-19 07:13:59,  Steven J. Magnani  wrote:
+> Windows presents files created within Linux as read-only, even when
+> permissions in Linux indicate the file should be writable.
+> 
+> 
+> UDF defines a slightly different set of basic file permissions than Linux.
+> Specifically, UDF has "delete" and "change attribute" permissions for each
+> access class (user/group/other). Linux has no equivalents for these.
+> 
+> When the Linux UDF driver creates a file (or directory), no UDF delete or
+> change attribute permissions are granted. The lack of delete permission
+> appears to cause Windows to mark an item read-only when its permissions
+> otherwise indicate that it should be read-write.
+> 
+> Fix this by having UDF delete permissions track Linux write permissions.
+> Also grant UDF change attribute permission to the owner when creating a
+> new inode.
+> 
+> Reported by: Ty Young
+> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
 
-On 8/26/19 2:34 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 8/26/19 4:53 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 8/24/19 10:18 AM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> Thank you for the patch.
->>>
->>> On 8/23/19 9:55 PM, Dan Murphy wrote:
->>>> Fix the coccinelle issues found in the TI LMU common code
->>>>
->>>> drivers/leds/leds-ti-lmu-common.c:97:20-29: WARNING: Unsigned
->>>> expression compared with zero: ramp_down < 0
->>>> drivers/leds/leds-ti-lmu-common.c:97:5-12: WARNING: Unsigned
->>>> expression compared with zero: ramp_up < 0
->>> Wouldn't it make more sense to remove those pointless checks?
->>> Clearly a correct index of an array cannot be negative.
->>> Looking at the code I would make more int -> unsigned int conversions:
->>>
->>> - ramp_table should be unsigned int
->>> - ti_lmu_common_convert_ramp_to_index should return unsigned int
->>>
->> Yeah I was going to just remove the code but when I was writing the
->> original code my intent was
->>
->> to extend the ramp call to allow other TI LMU driver to pass in the
->> device specific ramp table.
->>
->> But since I don't currently have any devices on my plate that require
->> that I can just remove the code as well
-> You don't need to remove, just do the conversions I proposed.
-> Unless it introduces some other problems I am currently not aware of.
->
-Well just converting those two would/did not fix the issue.
+Thanks for the patch! I've added it to my tree.
 
-But actually there is only 1 possibility that could happen if the 
-convert function returns -EINVAL
+								Honza
 
-So the check should be
-
-if (ramp_up == -EINVAL || ramp_down == -EINVAL)
-
-Because ramp_up/down should never be less then zero otherwise.
-
-Dan
-
-
+> ---
+> 
+> Changes since rev 1:
+> UDF delete permission tracks with Linux write permission instead
+> of being unconditionally granted to the owner at inode creation
+> 
+> --- a/fs/udf/udf_i.h	2019-08-14 07:24:05.029508342 -0500
+> +++ b/fs/udf/udf_i.h	2019-08-26 21:33:05.064410067 -0500
+> @@ -38,6 +38,7 @@ struct udf_inode_info {
+>  	__u32			i_next_alloc_block;
+>  	__u32			i_next_alloc_goal;
+>  	__u32			i_checkpoint;
+> +	__u32			i_extraPerms;
+>  	unsigned		i_alloc_type : 3;
+>  	unsigned		i_efe : 1;	/* extendedFileEntry */
+>  	unsigned		i_use : 1;	/* unallocSpaceEntry */
+> --- a/fs/udf/udfdecl.h	2019-08-26 21:38:12.138562583 -0500
+> +++ b/fs/udf/udfdecl.h	2019-08-26 21:09:19.465000110 -0500
+> @@ -178,6 +178,7 @@ extern int8_t udf_next_aext(struct inode
+>  			    struct kernel_lb_addr *, uint32_t *, int);
+>  extern int8_t udf_current_aext(struct inode *, struct extent_position *,
+>  			       struct kernel_lb_addr *, uint32_t *, int);
+> +extern void udf_update_extra_perms(struct inode *inode, umode_t mode);
+>  
+>  /* misc.c */
+>  extern struct buffer_head *udf_tgetblk(struct super_block *sb,
+> --- a/fs/udf/ialloc.c	2019-08-14 07:24:05.029508342 -0500
+> +++ b/fs/udf/ialloc.c	2019-08-26 21:16:43.379449924 -0500
+> @@ -125,6 +125,9 @@ struct inode *udf_new_inode(struct inode
+>  	iinfo->i_lenAlloc = 0;
+>  	iinfo->i_use = 0;
+>  	iinfo->i_checkpoint = 1;
+> +	iinfo->i_extraPerms = FE_PERM_U_CHATTR;
+> +	udf_update_extra_perms(inode, mode);
+> +
+>  	if (UDF_QUERY_FLAG(inode->i_sb, UDF_FLAG_USE_AD_IN_ICB))
+>  		iinfo->i_alloc_type = ICBTAG_FLAG_AD_IN_ICB;
+>  	else if (UDF_QUERY_FLAG(inode->i_sb, UDF_FLAG_USE_SHORT_AD))
+> --- a/fs/udf/inode.c	2019-08-14 07:24:05.029508342 -0500
+> +++ b/fs/udf/inode.c	2019-08-26 21:40:17.865649383 -0500
+> @@ -45,6 +45,13 @@
+>  
+>  #define EXTENT_MERGE_SIZE 5
+>  
+> +#define FE_MAPPED_PERMS	(FE_PERM_U_READ | FE_PERM_U_WRITE | FE_PERM_U_EXEC | \
+> +			 FE_PERM_G_READ | FE_PERM_G_WRITE | FE_PERM_G_EXEC | \
+> +			 FE_PERM_O_READ | FE_PERM_O_WRITE | FE_PERM_O_EXEC)
+> +
+> +#define FE_DELETE_PERMS	(FE_PERM_U_DELETE | FE_PERM_G_DELETE | \
+> +			 FE_PERM_O_DELETE)
+> +
+>  static umode_t udf_convert_permissions(struct fileEntry *);
+>  static int udf_update_inode(struct inode *, int);
+>  static int udf_sync_inode(struct inode *inode);
+> @@ -1458,6 +1465,8 @@ reread:
+>  	else
+>  		inode->i_mode = udf_convert_permissions(fe);
+>  	inode->i_mode &= ~sbi->s_umask;
+> +	iinfo->i_extraPerms = le32_to_cpu(fe->permissions) & ~FE_MAPPED_PERMS;
+> +
+>  	read_unlock(&sbi->s_cred_lock);
+>  
+>  	link_count = le16_to_cpu(fe->fileLinkCount);
+> @@ -1631,6 +1640,23 @@ static umode_t udf_convert_permissions(s
+>  	return mode;
+>  }
+>  
+> +void udf_update_extra_perms(struct inode *inode, umode_t mode)
+> +{
+> +	struct udf_inode_info *iinfo = UDF_I(inode);
+> +
+> +	/*
+> +	 * UDF 2.01 sec. 3.3.3.3 Note 2:
+> +	 * In Unix, delete permission tracks write
+> +	 */
+> +	iinfo->i_extraPerms &= ~FE_DELETE_PERMS;
+> +	if (mode & 0200)
+> +		iinfo->i_extraPerms |= FE_PERM_U_DELETE;
+> +	if (mode & 0020)
+> +		iinfo->i_extraPerms |= FE_PERM_G_DELETE;
+> +	if (mode & 0002)
+> +		iinfo->i_extraPerms |= FE_PERM_O_DELETE;
+> +}
+> +
+>  int udf_write_inode(struct inode *inode, struct writeback_control *wbc)
+>  {
+>  	return udf_update_inode(inode, wbc->sync_mode == WB_SYNC_ALL);
+> @@ -1703,10 +1729,7 @@ static int udf_update_inode(struct inode
+>  		   ((inode->i_mode & 0070) << 2) |
+>  		   ((inode->i_mode & 0700) << 4);
+>  
+> -	udfperms |= (le32_to_cpu(fe->permissions) &
+> -		    (FE_PERM_O_DELETE | FE_PERM_O_CHATTR |
+> -		     FE_PERM_G_DELETE | FE_PERM_G_CHATTR |
+> -		     FE_PERM_U_DELETE | FE_PERM_U_CHATTR));
+> +	udfperms |= iinfo->i_extraPerms;
+>  	fe->permissions = cpu_to_le32(udfperms);
+>  
+>  	if (S_ISDIR(inode->i_mode) && inode->i_nlink > 0)
+> --- a/fs/udf/file.c	2019-08-26 21:38:12.138562583 -0500
+> +++ b/fs/udf/file.c	2019-08-26 21:12:44.664536308 -0500
+> @@ -280,6 +280,9 @@ static int udf_setattr(struct dentry *de
+>  			return error;
+>  	}
+>  
+> +	if (attr->ia_valid & ATTR_MODE)
+> +		udf_update_extra_perms(inode, attr->ia_mode);
+> +
+>  	setattr_copy(inode, attr);
+>  	mark_inode_dirty(inode);
+>  	return 0;
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
