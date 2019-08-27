@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAACC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4EBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE6821872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF92921872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gfV2hkVC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q1UgZvdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbfH0J30 (ORCPT
+        id S1729721AbfH0J3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:29:26 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8235 "EHLO
+        Tue, 27 Aug 2019 05:29:36 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8256 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfH0J3Z (ORCPT
+        with ESMTP id S1725793AbfH0J3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:29:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d64f7f40000>; Tue, 27 Aug 2019 02:29:24 -0700
+        Tue, 27 Aug 2019 05:29:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d64f7ff0000>; Tue, 27 Aug 2019 02:29:35 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 27 Aug 2019 02:29:22 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 27 Aug 2019 02:29:33 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 27 Aug 2019 02:29:22 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
- 2019 09:29:22 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by hqmail110.nvidia.com
+        by hqpgpgate102.nvidia.com on Tue, 27 Aug 2019 02:29:33 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
+ 2019 09:29:33 +0000
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by hqmail110.nvidia.com
  (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
- 2019 09:29:22 +0000
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.54) by
- HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 27 Aug 2019 09:29:22 +0000
+ 2019 09:29:33 +0000
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (104.47.49.59) by
+ HQMAIL110.nvidia.com (172.18.146.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 27 Aug 2019 09:29:33 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YzuZUZ0jzZRZaKgYCvysl4+24H0XxcgbR9m5KSllmq7CaP4wXRGP4/17iOX//k+62jT4i56HaluiWL5GHYbW9gQM0ruhnE8BbQ0DUAngkiL2RUCy8cPHFRxLc1IGNGDMqrYDO96YF0MFGMLp37/M06MsyvnHoFDREdvdsA2qYjKEOe12qmO/eik2vlAmmFtixYB+4VWqJ9N1qUkWtFPDffQEKfDlDRjlw1dD1IQwhB0D2zcv72C8d7ft8+vnZWR6C6++/ks3JMRmYJxJ0YItReks6YkbcGL8rX497lrt+Azf47TPP9iC0YRe3WVQHCfm1AqHHVMpsZrZl5iqntQL2g==
+ b=k+k6lK+iUuAwrVPA2knAbADNoE6PAd7YGJlVGNGiJatBvr+krTr0bBTiBs597C3MJOMVMi1HjYjiFrme7OV756TCIAICOv+AK4FUGmbwzEKQPvgrIvz394jJ9tyZ645GDJDEgp+k1rKvGDAdhtqc26aDXROS73Zd0YoOYyyTgLvWtRAn8uGCpFxCxn+JuJpkY2Fz+0L+Ujv2HN8zKZNX3vd42Zop2ggSZOQK7zOWfY4YidvtlNXksh/TnMLEI/MdSkWV/5ems9Kfgd5eqmrXcFwxHIbU/6OwzpA1arfG+0bJn9FedpoqrirRfDeEikv1ZuU1Rq/xYaFwVQCS5R+KfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YRdUsNtJNiE0T3X7ALE1gMZxNXa1qEsqTeqqKuRhA1E=;
- b=MtFjF5Wc+3dNMaYogKgKJP1I0RFb1IMs3igy/95yoZ2n4SgI7bmK1Bd877AQBb59fSFglnOIp6DZGr1ZCWM4qmGbFX5+VraAE97gfqZByknqgd05s8gofwOverJwOpsuWC06jUYWTSUkErRlX2Cyz8xiRuGYsiL20hAnH2Ef6luRUxtCra6PAKMeBEYN6PaysgabMzlkeVEP8W06JUsGh9bQxcZfhikzHhDwDbb4PyJCoosuK4mG3xQ1BHjbhjxOE5/ADRK1OxjiRrJB25HyL8HTQY73D62Y7jn2bXQ1lV2SMzQhh+1rdRfgF3DTNjWxvJCDbKsoiUV9FwOYtDb/3g==
+ bh=WLOz2gFlQelo20KM8Qz7RIw9KX7/ORHYu+5eJbF9HkE=;
+ b=FrpJZ4ksLqj5tCrhJJTupP566JC9Qh/qvyMxcl8APTADwtdS8qMzbNlWHclomJIv9CWlGqlTjAGcuZr5z1KP0qIo61zNXnc4MbqvjHm8QlRPFIKzCNujpDk/LD+66t0kXYa95J3mRlumut2FcHM40IlB8mqd8WzLknbwzJ8l2fgoK/MCSLd6NQ976Rj9D9KKkEoZwRWTrWZ/NWQd5yoIb2nH2gkq7+GRKT6JjmkskPtSt6x+7I6nPMzf/3P+VvqBKXykik9ek1Kq0/A5jhJAzqMer06Or3ZlGqVCVLm7wTng1Js1I+kdQaiYR5EprajtYcW2Bz4Q10RM4DPDOkRA3A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 Received: from SN6PR12MB2734.namprd12.prod.outlook.com (52.135.107.25) by
- SN6PR12MB2831.namprd12.prod.outlook.com (20.177.251.138) with Microsoft SMTP
+ SN6PR12MB2735.namprd12.prod.outlook.com (52.135.107.26) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 09:29:21 +0000
+ 15.20.2199.21; Tue, 27 Aug 2019 09:29:31 +0000
 Received: from SN6PR12MB2734.namprd12.prod.outlook.com
  ([fe80::fdaf:cdfc:c0da:f84b]) by SN6PR12MB2734.namprd12.prod.outlook.com
  ([fe80::fdaf:cdfc:c0da:f84b%7]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
- 09:29:21 +0000
+ 09:29:31 +0000
 From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
@@ -69,59 +69,60 @@ CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Shardar Mohammed" <smohammed@nvidia.com>
-Subject: RE: [PATCH 02/14] serial: tegra: add support to ignore read
-Thread-Topic: [PATCH 02/14] serial: tegra: add support to ignore read
-Thread-Index: AQHVUQEgJm8szYaGP0iCFvSf5iMeOKb41LwAgAFRxjA=
-Date:   Tue, 27 Aug 2019 09:29:21 +0000
-Message-ID: <SN6PR12MB2734D67C01A97D87D1735EDBC3A00@SN6PR12MB2734.namprd12.prod.outlook.com>
+        Ahung Cheng <ahcheng@nvidia.com>,
+        Shardar Mohammed <smohammed@nvidia.com>
+Subject: RE: [PATCH 03/14] serial: tegra: avoid reg access when clk disabled
+Thread-Topic: [PATCH 03/14] serial: tegra: avoid reg access when clk disabled
+Thread-Index: AQHVUQEjJb7cbjvyq0SMWcw2NtXAS6b41cwAgBR+wGA=
+Date:   Tue, 27 Aug 2019 09:29:31 +0000
+Message-ID: <SN6PR12MB2734315A9D5DEB8EDE008D2DC3A00@SN6PR12MB2734.namprd12.prod.outlook.com>
 References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-3-git-send-email-kyarlagadda@nvidia.com>
- <20190813094208.GG1137@ulmo>
-In-Reply-To: <20190813094208.GG1137@ulmo>
+ <1565609303-27000-4-git-send-email-kyarlagadda@nvidia.com>
+ <20190813094556.GH1137@ulmo>
+In-Reply-To: <20190813094556.GH1137@ulmo>
 Accept-Language: en-IN, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
  MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
  MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=kyarlagadda@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2019-08-27T09:29:17.7939215Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2019-08-27T09:29:29.3630589Z;
  MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
  MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=00d1f8b6-0abb-42f9-916e-ed23295f9292;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=829eaedc-c73b-4585-b6be-42c0409cda47;
  MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=kyarlagadda@nvidia.com; 
 x-originating-ip: [115.114.118.135]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12cad3fc-49a7-4525-9077-08d72ad10aaf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2831;
-x-ms-traffictypediagnostic: SN6PR12MB2831:
+x-ms-office365-filtering-correlation-id: 68fe7563-5d0d-4a3e-74b1-08d72ad110f8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2735;
+x-ms-traffictypediagnostic: SN6PR12MB2735:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR12MB2831D9C07408C0DD9B72A2B4C3A00@SN6PR12MB2831.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-microsoft-antispam-prvs: <SN6PR12MB2735FC8DAD992932DFC45ECAC3A00@SN6PR12MB2735.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(366004)(376002)(39850400004)(136003)(199004)(189003)(13464003)(486006)(86362001)(55016002)(76116006)(66476007)(66556008)(64756008)(66446008)(26005)(186003)(66946007)(229853002)(66066001)(478600001)(54906003)(81156014)(81166006)(8676002)(8936002)(102836004)(71200400001)(53546011)(7736002)(3846002)(14454004)(6116002)(305945005)(74316002)(71190400001)(25786009)(52536014)(4326008)(446003)(5660300002)(11346002)(6246003)(55236004)(107886003)(76176011)(6916009)(316002)(256004)(9686003)(2906002)(476003)(53936002)(7696005)(14444005)(6436002)(99286004)(6506007)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2831;H:SN6PR12MB2734.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(39860400002)(136003)(396003)(346002)(366004)(189003)(199004)(13464003)(66066001)(316002)(81156014)(53546011)(6506007)(81166006)(8936002)(55236004)(6436002)(76116006)(107886003)(8676002)(33656002)(6246003)(55016002)(7736002)(305945005)(76176011)(52536014)(71200400001)(4326008)(53936002)(66446008)(64756008)(66556008)(66476007)(7696005)(6116002)(3846002)(66946007)(2906002)(486006)(476003)(9686003)(446003)(229853002)(14454004)(26005)(102836004)(14444005)(256004)(86362001)(11346002)(99286004)(25786009)(71190400001)(6916009)(54906003)(74316002)(186003)(5660300002)(478600001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2735;H:SN6PR12MB2734.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nvidia.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /Gj8G7Gk46Cy5E+Rt+rXlzdZEmby5WSyz6KATF41e5JQ1c1Bln6mBF1auluMEMFCJFwfBTlv6XKLUm5XRzD2jJweTnjJHKrEYnHzZq5sqem4TB6GsNXS4IDLR/JLSZl2eI5Q5zXrZLx5Q/h2si46hFfQGi7B6x8iB62eYx3v1WqddHnIwmEloEL+ExCP0o/5CktrjK89+35mS3ofs/c+Ga0bEWDtvKvZIjcCKzyWgj+j/n9BHFvcmp5jKchIRsgTzAykImlLgqCwf8HgALd3zwsjMXXV6sm2ztB6w3KTejGr/I1NAvKk7z0e2k/UzyZkG4b/hpigwPRyOKpPfEV1bUVQB9eidVbYyBvYTYrsFv/wJ/aqRKfEgBk37HRHvEsQcdkY7RvyXAoXuDBau/rmHhSlfgv1FdTXIut1QhNAEFg=
+x-microsoft-antispam-message-info: Qm+1Zxnc04DVmL4/SRuHKeigmbFo2VW+baZ0jPZcvNCnB0lrUGqj5ic7NsIcjAtr1jIs/diPQgeZ4cMlFpVMWEntY5qtNQta7yEmYwlewdW7Ju6djZh4nu5+wQ4DALXpJzlQX6bv3m78NcsTT/JFDl4ikjPDFYgDS4GEtvaU0/JEWoLhAxNxM77sB0Ab4+XHfV+7O/jlFCZ6lZXldku4bn8rDsjnE/sqKMuYqQ0/u6UaIwUh2jX/hvsPk/MIy5xnTexk5mdd59e51+k43+5tmiP/91N6GJJ7UN2HQgvlQkOPy491761sBFOMrOisVuia1gD95ysU4sna/mK5g8SQfkVgrUNi6kOYe9kXuOPxd44CflkpcwCbjWlOqzB+N55E3TS7x4pz8+/MeZntbFfB11ZolKnk7I/ATLX4Yrg1EEE=
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12cad3fc-49a7-4525-9077-08d72ad10aaf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 09:29:21.0654
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68fe7563-5d0d-4a3e-74b1-08d72ad110f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 09:29:31.6424
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xHykuBD4vyEZsFZBP5nBPhBuMH1THFZlaZwkcPCRiiPc+BD1EJKacx2u9ORnjkdjLsWCsP0MDrNaOicnEf4nBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2831
+X-MS-Exchange-CrossTenant-userprincipalname: jr+2ilB43lCGztT3dPpubkH0ESTZAncSGSbK3+JJnQfz4ADROi4dy0KPNvs4GNI5Un6P/R9VV1Scf9/G6V8q4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2735
 X-OriginatorOrg: Nvidia.com
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566898164; bh=YRdUsNtJNiE0T3X7ALE1gMZxNXa1qEsqTeqqKuRhA1E=;
+        t=1566898175; bh=WLOz2gFlQelo20KM8Qz7RIw9KX7/ORHYu+5eJbF9HkE=;
         h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
          ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
          Thread-Index:Date:Message-ID:References:In-Reply-To:
@@ -139,97 +140,125 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
          X-MS-Exchange-CrossTenant-userprincipalname:
          X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
          Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=gfV2hkVCiDICWcBNi22TuccdKVIYin7mVx06JCkyIeFC1QWu88pmtm485qK64T6ao
-         FF1rDTD6ErkqCFYE9yKo0ybuggN1hvTqCAr4grYINKqdpllzJX6ipHpBVURNZngDUJ
-         3PeU4OrBeearV212XGw4HuUmfLleYlPCgOn8/yFNlxVJwBFblumiFkmjuGbecTMgno
-         FbupFmKd5EucCMzbSOLwxXczleV1xaCZqgfv1jZbn7RH91RgbjRyLDwPHm+BR+4VMB
-         fNBSwEIEStUWwKHMQ3DFsupeoDuhI22QN74U8ZNCxxWFOEOGQTvzsslSb08l8xGyTd
-         CWhKUelf+sd+A==
+        b=Q1UgZvdmIu3Q3PfAgLW7nIbFgDiLIur+5y68V+pEm9A+dHQ3qu/CFaXuY1mJXI8JZ
+         wgWf4k+Z11M3K8BXWf9QliP91HIcbpiyiiMxAkw1Z8FcKxQckuBCL+PkKuuuqjHcUs
+         X6RbbTEAYoTZd732AVOWEUTZSqBdKaFGsrl6mUlf7Uk5u+sSDk/QIu+fiA3l5gl5z+
+         na5lTCcbx1+8fhGB2V8rN2K9F06qUOlNZtCo/I5ZEtMjywUKT362wAfXU/2Q6W5Pvw
+         OQpjSk4PkKRxNZhBJBtUoP0Z4XBE+TrUOGiY1P0vMjnZKG0RfkkYPHkIff2xsPXLIk
+         S/mAvB6JI4Npw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 > -----Original Message-----
-> From: linux-tegra-owner@vger.kernel.org <linux-tegra-
+> From: linux-tegra-owner@vger.kernel.org <linux-tegra-=20
 > owner@vger.kernel.org> On Behalf Of Thierry Reding
-> Sent: Tuesday, August 13, 2019 3:12 PM
+> Sent: Tuesday, August 13, 2019 3:16 PM
 > To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> Cc: gregkh@linuxfoundation.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>; Laxman
-> Dewangan <ldewangan@nvidia.com>; jslaby@suse.com; linux-
-> serial@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> tegra@vger.kernel.org; linux-kernel@vger.kernel.org; Shardar Mohammed
-> <smohammed@nvidia.com>
-> Subject: Re: [PATCH 02/14] serial: tegra: add support to ignore read
+> Cc: gregkh@linuxfoundation.org; robh+dt@kernel.org;=20
+> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>; Laxman=20
+> Dewangan <ldewangan@nvidia.com>; jslaby@suse.com; linux-=20
+> serial@vger.kernel.org; devicetree@vger.kernel.org; linux-=20
+> tegra@vger.kernel.org; linux-kernel@vger.kernel.org; Ahung Cheng=20
+> <ahcheng@nvidia.com>; Shardar Mohammed <smohammed@nvidia.com>
+> Subject: Re: [PATCH 03/14] serial: tegra: avoid reg access when clk=20
+> disabled
 >=20
-> On Mon, Aug 12, 2019 at 04:58:11PM +0530, Krishna Yarlagadda wrote:
-> > From: Shardar Shariff Md <smohammed@nvidia.com>
+> On Mon, Aug 12, 2019 at 04:58:12PM +0530, Krishna Yarlagadda wrote:
+> > From: Ahung Cheng <ahcheng@nvidia.com>
 > >
-> > Add support to ignore read characters if CREAD flag is not set.
+> > This avoids two race conditions from the UART shutdown sequence both=20
+> > leading to 'Machine check error in AXI2APB' and kernel oops.
 > >
-> > Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
+> > One was that the clock was disabled before the DMA was terminated=20
+> > making it possible for the DMA callbacks to be called after the=20
+> > clock was disabled. These callbacks could write to the UART=20
+> > registers causing timeout.
+> >
+> > The second was that the clock was disabled before the UART was=20
+> > completely flagged as closed. This is done after the shutdown is=20
+> > called and a new write could be started after the clock was disabled.
+> > tegra_uart_start_pio_tx could be called causing timeout.
+> >
+> > Given that the baud rate is reset at the end of shutdown sequence,=20
+> > this fix is to examine the baud rate to avoid register access from=20
+> > both race conditions.
+> >
+> > Besides, terminate the DMA before disabling the clock.
+> >
+> > Signed-off-by: Ahung Cheng <ahcheng@nvidia.com>
+> > Signed-off-by: Shardar Mohammed <smohammed@nvidia.com>
 > > Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
 > > ---
-> >  drivers/tty/serial/serial-tegra.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
+> >  drivers/tty/serial/serial-tegra.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
 > >
 > > diff --git a/drivers/tty/serial/serial-tegra.c
 > > b/drivers/tty/serial/serial-tegra.c
-> > index 19f4c24..93d299e 100644
+> > index 93d299e..d908465 100644
 > > --- a/drivers/tty/serial/serial-tegra.c
 > > +++ b/drivers/tty/serial/serial-tegra.c
-> > @@ -542,6 +542,9 @@ static void tegra_uart_handle_rx_pio(struct
-> tegra_uart_port *tup,
-> >  		ch =3D (unsigned char) tegra_uart_read(tup, UART_RX);
-> >  		tup->uport.icount.rx++;
+> > @@ -126,6 +126,8 @@ struct tegra_uart_port {
 > >
-> > +		if (tup->uport.ignore_status_mask & UART_LSR_DR)
-> > +			continue;
-> > +
-> >  		if (!uart_handle_sysrq_char(&tup->uport, ch) && tty)
-> >  			tty_insert_flip_char(tty, ch, flag);
+> >  static void tegra_uart_start_next_tx(struct tegra_uart_port *tup);=20
+> > static int tegra_uart_start_rx_dma(struct tegra_uart_port *tup);
+> > +static void tegra_uart_dma_channel_free(struct tegra_uart_port *tup,
+> > +					bool dma_to_memory);
+> >
+> >  static inline unsigned long tegra_uart_read(struct tegra_uart_port *tu=
+p,
+> >  		unsigned long reg)
+> > @@ -458,6 +460,9 @@ static void tegra_uart_start_next_tx(struct
+> tegra_uart_port *tup)
+> >  	unsigned long count;
+> >  	struct circ_buf *xmit =3D &tup->uport.state->xmit;
+> >
+> > +	if (WARN_ON(!tup->current_baud))
+> > +		return;
 >=20
-> Is it a good idea to ignore even sysrq characters if CREAD is not set?
-> According to termios, CREAD enables the receiver, so technically if it is=
-n't set
-> you can't even receive sysrq characters. But I don't know if there are an=
-y
-> rules regarding this.
->=20
-> Is this the same way that other drivers work?
+> Are the race conditions that you are describing something which can be=20
+> triggered by the user? If so, it's not a good idea to use a WARN_ON,=20
+> because that could lead to some userspace spamming the log with these,=20
+> potentially on purpose.
 >=20
 > Thierry
 >=20
-Looked into few drivers and sysrq characters are not ignored. This driver d=
-oes
-not support console driver. So this might not be needed.
+These are triggered by user events. I will remove WARN_ON
 
-KY
-> >  	} while (1);
-> > @@ -562,6 +565,10 @@ static void tegra_uart_copy_rx_to_tty(struct
-> tegra_uart_port *tup,
-> >  		dev_err(tup->uport.dev, "No tty port\n");
-> >  		return;
-> >  	}
+ KY
 > > +
-> > +	if (tup->uport.ignore_status_mask & UART_LSR_DR)
-> > +		return;
-> > +
-> >  	dma_sync_single_for_cpu(tup->uport.dev, tup->rx_dma_buf_phys,
-> >  				TEGRA_UART_RX_DMA_BUFFER_SIZE,
-> DMA_FROM_DEVICE);
-> >  	copied =3D tty_insert_flip_string(tty, @@ -1190,6 +1197,11 @@ static
-> > void tegra_uart_set_termios(struct uart_port *u,
-> >  	tegra_uart_write(tup, tup->ier_shadow, UART_IER);
-> >  	tegra_uart_read(tup, UART_IER);
+> >  	tail =3D (unsigned long)&xmit->buf[xmit->tail];
+> >  	count =3D CIRC_CNT_TO_END(xmit->head, xmit->tail,
+> UART_XMIT_SIZE);
+> >  	if (!count)
+> > @@ -829,6 +834,12 @@ static void tegra_uart_hw_deinit(struct
+> tegra_uart_port *tup)
+> >  	tup->current_baud =3D 0;
+> >  	spin_unlock_irqrestore(&tup->uport.lock, flags);
 > >
-> > +	tup->uport.ignore_status_mask =3D 0;
-> > +	/* Ignore all characters if CREAD is not set */
-> > +	if ((termios->c_cflag & CREAD) =3D=3D 0)
-> > +		tup->uport.ignore_status_mask |=3D UART_LSR_DR;
+> > +	tup->rx_in_progress =3D 0;
+> > +	tup->tx_in_progress =3D 0;
 > > +
-> >  	spin_unlock_irqrestore(&u->lock, flags);  }
+> > +	tegra_uart_dma_channel_free(tup, true);
+> > +	tegra_uart_dma_channel_free(tup, false);
+> > +
+> >  	clk_disable_unprepare(tup->uart_clk);
+> >  }
+> >
+> > @@ -1066,12 +1077,6 @@ static void tegra_uart_shutdown(struct
+> uart_port *u)
+> >  	struct tegra_uart_port *tup =3D to_tegra_uport(u);
+> >
+> >  	tegra_uart_hw_deinit(tup);
+> > -
+> > -	tup->rx_in_progress =3D 0;
+> > -	tup->tx_in_progress =3D 0;
+> > -
+> > -	tegra_uart_dma_channel_free(tup, true);
+> > -	tegra_uart_dma_channel_free(tup, false);
+> >  	free_irq(u->irq, tup);
+> >  }
 > >
 > > --
 > > 2.7.4
