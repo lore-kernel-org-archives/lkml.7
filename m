@@ -2,90 +2,121 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B1FC3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030B0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C53217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="CAZimfyO"
+	by mail.kernel.org (Postfix) with ESMTP id D84C720850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfH0CoK (ORCPT
+        id S1728844AbfH0Coi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 22:44:10 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45273 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfH0CoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 22:44:10 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m2so15830007qki.12
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 19:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ALo2se9tgrniPYFX0bT5iHmGVqO3QJBoqA7cFuqMpl4=;
-        b=CAZimfyOfJedLHvcojyTMfYruy39wvxx93L0GI5uTcacgiOJ5Yyq3FhPYe5FsZYH5+
-         3N+gayRbTKKzDCzQVjXSOMeMFSjyLJJQ690yPjhMZ4lx07xno4x/He/iZRGX20OchrA6
-         fU9ebrvx40TVb3Cf7rMcDMu4Vct5X73lRwBHWCllYlsoSxEIe5iWeeZbGdFpYqX7K4KU
-         vY4mKhhY9GS4hjmDpWsGXrgzh6IalziEVe/k+N4SAfjIv/wVSxra+211EVjNUgz1tnOi
-         4/mek9IjGrvAPxJYPTSBBJ3NzS6pHfe/NKHBmYjrjLpDDDI3rFiozfMan+mNmnDEXeYG
-         Soxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ALo2se9tgrniPYFX0bT5iHmGVqO3QJBoqA7cFuqMpl4=;
-        b=NO4l8Ic/v3dafr7b0/5ZlVPzgaaznRHLD72P5eyFr5eIWvf8+fDT24rP+NE2SvZM3f
-         3feQCsx2S3G0uMvVzROQ3zueHpr7hH/+/6q1shF/BOQRD+Z+O5rhx6U5oNpgNv/wpj7Q
-         50WLwuZjcEl95+IBlqABUB9CIv955cKeSV5ZJspu02NUN+qah4KwEeVn6LnTUVRLRr2c
-         XVX/hSdZRUl4SneKTHhshX17ohrCgNPbYhWGAcyBLPVmg12gcWASiwAH7S21RwVJdyjj
-         fOt53O1HU3s/uyYz7gbuLxpe9DeqwWiV9VEB8/STvd64Xr5GzU+SPK30Rj3L+BEr2wDx
-         U2eg==
-X-Gm-Message-State: APjAAAUnBXpz+W7CyS1527M3uWIA16gU86G+atTKylKXWbpL78mZOUvH
-        lcsWmGjMqK4fttHXMl7RKigIA48O0XMq2f5UQ20QaQ==
-X-Google-Smtp-Source: APXvYqwH+1nJX9BnF0hTAr/iGIJOtgC/Q1ezZWHVlFvR/hRfCSoovtViAX4vZ6I4zlpbyh8ByWX3OxkmBe/RXzSfkRU=
-X-Received: by 2002:ae9:eb4e:: with SMTP id b75mr19215266qkg.478.1566873849070;
- Mon, 26 Aug 2019 19:44:09 -0700 (PDT)
+        Mon, 26 Aug 2019 22:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728345AbfH0Coh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 22:44:37 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E06BF206E0;
+        Tue, 27 Aug 2019 02:44:35 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 22:44:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: [PATCH] tracing: Fix histogram referencing a variable
+Message-ID: <20190826224434.385bc6b5@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190826153900.25969-1-katsuhiro@katsuster.net>
-In-Reply-To: <20190826153900.25969-1-katsuhiro@katsuster.net>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Tue, 27 Aug 2019 10:43:58 +0800
-Message-ID: <CAD8Lp44a0i2Z9YV0tOKB=QuoZzU-ALSqTr_X8XaMVrGbw-DfQg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ASoC: es8316: fix headphone mixer volume table
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Mark Brown <broonie@kernel.org>,
-        David Yang <yangxiaohua@everest-semi.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:39 PM Katsuhiro Suzuki
-<katsuhiro@katsuster.net> wrote:
->
-> This patch fix setting table of Headphone mixer volume.
-> Current code uses 4 ... 7 values but these values are prohibited.
->
-> Correct settings are the following:
->   0000 -12dB
->   0001 -10.5dB
->   0010 -9dB
->   0011 -7.5dB
->   0100 -6dB
->   1000 -4.5dB
->   1001 -3dB
->   1010 -1.5dB
->   1011 0dB
->
-> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
+
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+I performed a three way histogram with the following commands:
+
+echo 'irq_lat u64 lat pid_t pid' > synthetic_events
+echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
+echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
+echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
+echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
+echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger 
+echo 1 > events/synthetic/wake_lat/enable 
+
+Basically I wanted to see:
+
+ hrtimer_start (calling function tick_sched_timer)
+
+Note:
+
+  # grep tick_sched_timer /proc/kallsyms
+ffffffff81200580 t tick_sched_timer
+
+And save the time of that, and then record sched_waking if it is called
+in interrupt context and with the same pid as the hrtimer_start, it
+will record the latency between that and the waking event.
+
+I then look at when the task that is woken is scheduled in, and record
+the latency between the wakeup and the task running.
+
+At the end, the wake_lat synthetic event will show the wakeup to
+scheduled latency, as well as the irq latency in from hritmer_start to
+the wakeup. The problem is that I found this:
+
+          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
+          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
+          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
+          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
+          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
+          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
+          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
+          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
+
+The irqlat seemed quite large! Investigating this further, if I had
+enabled the irq_lat synthetic event, I noticed this:
+
+          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
+          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
+
+Notice that the timestamp of the irq_lat "249.429308" is awfully
+similar to the reported irqlat variable. In fact, all instances were
+like this. It appeared that:
+
+  irqlat=$irqlat
+
+Wasn't assigning the old $irqlat to the new irqlat variable, but
+instead was assigning the $irqts to it.
+
+The issue is that hist_field_var_ref() is using hist_field->var_ref_idx
+(the ref of the var being assigned) and not the ref of the var that is
+the value (hist_field->var.idx).
+
+Cc: stable@vger.kernel.org
+Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 65e7d071ed28..329488aeb9dd 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1858,7 +1858,7 @@ static u64 hist_field_var_ref(struct hist_field *hist_field,
+ 		return var_val;
+ 
+ 	elt_data = elt->private_data;
+-	var_val = elt_data->var_ref_vals[hist_field->var_ref_idx];
++	var_val = elt_data->var_ref_vals[hist_field->var.idx];
+ 
+ 	return var_val;
+ }
