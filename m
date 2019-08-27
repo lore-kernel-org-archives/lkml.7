@@ -2,160 +2,185 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35639C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8BFC3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033232173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:30:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vX3rxJJm"
+	by mail.kernel.org (Postfix) with ESMTP id A752420850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfH0Bas (ORCPT
+        id S1728527AbfH0Bd5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 21:30:48 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43117 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfH0Bar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 21:30:47 -0400
-Received: by mail-yb1-f194.google.com with SMTP id o82so7664909ybg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 18:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tnOKZVI2QOtjsx7l6GiMYgVTnUPPJYldd6RePG5ghms=;
-        b=vX3rxJJm953Uw6Onz9/pZS2n4ACF3qqSTizq7x04kl2lFxHfNfTJN627+igH9UdpX7
-         ARfAlJNXBpkT74h9GXk7w/g0j7vg9mhIc6E6Vopg3H1BMMNM/WzPP2aYXu97V0I66BXQ
-         QV+/peRihYrX5YLimVdSBztjFOMnXSS7TtHjmN0ZnBIYl1QTfs1+aE4DlYE6XU2keRqL
-         6AaEw1jxtX32qDcEr4s/h3IXvmYag70M4BYKEqXar8hSCueU9WtBT2VCoXAlMPP+deik
-         Gww+apYt9+elDrgII9LHzlSTdl+Yq9AH3PtC4GEiubI5lI5fq87uyzz8psu9UYS++wqa
-         7wjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tnOKZVI2QOtjsx7l6GiMYgVTnUPPJYldd6RePG5ghms=;
-        b=RvV48p0Qkr28E0ZoXv93328IMFtnsc2URf2zjqrrSG6BMiYw/Q+MmJvhK6YJpUYvxx
-         /JAAb/XLdgYB4NXLLrYmJyoKthh1giytEcmztZISdB1cspqVAzQ0lydoG9Lhm1v0d6qW
-         7F+QwvqusBk5TbKQRaJ3nSxWpfkCi95/Pgpmm7zUMsZkgUp2ZuUWIf/OFuDL/LLZ8Lvy
-         g3VcrgnUFLRhV/ibxRAoqRIUubPiVb0F5S3CzlBT8l3UbG2cH1p7E83e1YnYkqQ2psP/
-         jjGRtD4vssxJ0dehdzsdDpGIATbdqK2LX9Yssb5vJFmv9yh8m6cofor1iLstLfljBq18
-         lYpg==
-X-Gm-Message-State: APjAAAW3ks3AM7UKxUjgTHo7yb8zmbIjg3Flwvhk6++jfiJyGBCIZxY/
-        71ICCUJfE1jMrvDJbv64JbLk1Q==
-X-Google-Smtp-Source: APXvYqyvwkntuxPSlWKESJ6L4XB+N21yveACkjPf5xkRW4oRIYfpW5Wrgi1POx6hlYp6IxHJLJNeuA==
-X-Received: by 2002:a25:aa23:: with SMTP id s32mr14370115ybi.198.1566869446653;
-        Mon, 26 Aug 2019 18:30:46 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1320-244.members.linode.com. [45.79.221.244])
-        by smtp.gmail.com with ESMTPSA id d191sm3600156ywh.12.2019.08.26.18.30.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 26 Aug 2019 18:30:45 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 09:30:38 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     suzuki.poulose@arm.com, mike.leach@arm.com, yabinc@google.com,
-        alexander.shishkin@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] coresight: tmc-etr: Decouple buffer sync and
- barrier packet insertion
-Message-ID: <20190827013038.GA4596@leoy-ThinkPad-X240s>
-References: <20190826194605.3791-1-mathieu.poirier@linaro.org>
- <20190826194605.3791-3-mathieu.poirier@linaro.org>
+        Mon, 26 Aug 2019 21:33:57 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50255 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726257AbfH0Bd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 21:33:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46HWcH4NZ4z9s00;
+        Tue, 27 Aug 2019 11:33:51 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Scott Wood <oss@buserror.net>
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
+        zhaohongjiang@huawei.com, Jason Yan <yanaijie@huawei.com>,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
+In-Reply-To: <529fd908-42d6-f96f-daa2-9010f3035879@huawei.com>
+References: <20190809100800.5426-1-yanaijie@huawei.com> <ed96199d-715c-3f1c-39db-10a569ba6601@huawei.com> <529fd908-42d6-f96f-daa2-9010f3035879@huawei.com>
+Date:   Tue, 27 Aug 2019 11:33:51 +1000
+Message-ID: <878srf4cjk.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826194605.3791-3-mathieu.poirier@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:46:04PM -0600, Mathieu Poirier wrote:
-> If less space is available in the perf ring buffer than the ETR buffer,
-> barrier packets inserted in the trace stream by tmc_sync_etr_buf() are
-> skipped over when the head of the buffer is moved forward, resulting in
-> traces that can't be decoded.
-> 
-> This patch decouples the process of syncing ETR buffers and the addition
-> of barrier packets in order to perform the latter once the offset in the
-> trace buffer has been properly computed.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  .../hwtracing/coresight/coresight-tmc-etr.c    | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> index 4f000a03152e..bae47272de98 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> @@ -946,10 +946,6 @@ static void tmc_sync_etr_buf(struct tmc_drvdata *drvdata)
->  	WARN_ON(!etr_buf->ops || !etr_buf->ops->sync);
->  
->  	etr_buf->ops->sync(etr_buf, rrp, rwp);
-> -
-> -	/* Insert barrier packets at the beginning, if there was an overflow */
-> -	if (etr_buf->full)
-> -		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
->  }
->  
->  static void __tmc_etr_enable_hw(struct tmc_drvdata *drvdata)
-> @@ -1086,6 +1082,13 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
->  		drvdata->sysfs_buf = NULL;
->  	} else {
->  		tmc_sync_etr_buf(drvdata);
-> +		/*
-> +		 * Insert barrier packets at the beginning, if there was
-> +		 * an overflow.
-> +		 */
-> +		if (etr_buf->full)
-> +			tmc_etr_buf_insert_barrier_packet(etr_buf,
-> +							  etr_buf->offset);
->  	}
->  }
->  
-> @@ -1502,11 +1505,16 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
->  	CS_LOCK(drvdata->base);
->  	spin_unlock_irqrestore(&drvdata->spinlock, flags);
->  
-> +	lost = etr_buf->full;
+Jason Yan <yanaijie@huawei.com> writes:
+> A polite ping :)
+>
+> What else should I do now?
 
-Comparing to the previous version, it drops '|' bitwise operator;
-seems to me this is more neat :)
+That's a good question.
 
-I think Yabin's testing is more convinced, so I skip to test.
-FWIW, these three patches look good to me:
+Scott, are you still maintaining FSL bits, and if so any comments? Or
+should I take this.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+cheers
 
->  	size = etr_buf->len;
->  	if (!etr_perf->snapshot && size > handle->size) {
->  		size = handle->size;
->  		lost = true;
->  	}
-> +
-> +	/* Insert barrier packets at the beginning, if there was an overflow */
-> +	if (lost)
-> +		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
->  	tmc_etr_sync_perf_buffer(etr_perf, size);
->  
->  	/*
-> @@ -1517,8 +1525,6 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
->  	 */
->  	if (etr_perf->snapshot)
->  		handle->head += size;
-> -
-> -	lost |= etr_buf->full;
->  out:
->  	/*
->  	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
-> -- 
-> 2.17.1
-> 
+> On 2019/8/19 14:12, Jason Yan wrote:
+>> Hi Michael,
+>> 
+>> Is there anything more I should do to get this feature meeting the 
+>> requirements of the mainline?
+>> 
+>> Thanks,
+>> Jason
+>> 
+>> On 2019/8/9 18:07, Jason Yan wrote:
+>>> This series implements KASLR for powerpc/fsl_booke/32, as a security
+>>> feature that deters exploit attempts relying on knowledge of the location
+>>> of kernel internals.
+>>>
+>>> Since CONFIG_RELOCATABLE has already supported, what we need to do is
+>>> map or copy kernel to a proper place and relocate. Freescale Book-E
+>>> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+>>> entries are not suitable to map the kernel directly in a randomized
+>>> region, so we chose to copy the kernel to a proper place and restart to
+>>> relocate.
+>>>
+>>> Entropy is derived from the banner and timer base, which will change 
+>>> every
+>>> build and boot. This not so much safe so additionally the bootloader may
+>>> pass entropy via the /chosen/kaslr-seed node in device tree.
+>>>
+>>> We will use the first 512M of the low memory to randomize the kernel
+>>> image. The memory will be split in 64M zones. We will use the lower 8
+>>> bit of the entropy to decide the index of the 64M zone. Then we chose a
+>>> 16K aligned offset inside the 64M zone to put the kernel in.
+>>>
+>>>      KERNELBASE
+>>>
+>>>          |-->   64M   <--|
+>>>          |               |
+>>>          +---------------+    +----------------+---------------+
+>>>          |               |....|    |kernel|    |               |
+>>>          +---------------+    +----------------+---------------+
+>>>          |                         |
+>>>          |----->   offset    <-----|
+>>>
+>>>                                kernstart_virt_addr
+>>>
+>>> We also check if we will overlap with some areas like the dtb area, the
+>>> initrd area or the crashkernel area. If we cannot find a proper area,
+>>> kaslr will be disabled and boot from the original kernel.
+>>>
+>>> Changes since v5:
+>>>   - Rename M_IF_NEEDED to MAS2_M_IF_NEEDED
+>>>   - Define some global variable as __ro_after_init
+>>>   - Replace kimage_vaddr with kernstart_virt_addr
+>>>   - Depend on RELOCATABLE, not select it
+>>>   - Modify the comment block below the SPDX tag
+>>>   - Remove some useless headers in kaslr_booke.c and move is_second_reloc
+>>>     declarationto mmu_decl.h
+>>>   - Remove DBG() and use pr_debug() and rewrite comment above 
+>>> get_boot_seed().
+>>>   - Add a patch to document the KASLR implementation.
+>>>   - Split a patch from patch #10 which exports kaslr offset in 
+>>> VMCOREINFO ELF notes.
+>>>   - Remove extra logic around finding nokaslr string in cmdline.
+>>>   - Make regions static global and __initdata
+>>>
+>>> Changes since v4:
+>>>   - Add Reviewed-by tag from Christophe
+>>>   - Remove an unnecessary cast
+>>>   - Remove unnecessary parenthesis
+>>>   - Fix checkpatch warning
+>>>
+>>> Changes since v3:
+>>>   - Add Reviewed-by and Tested-by tag from Diana
+>>>   - Change the comment in fsl_booke_entry_mapping.S to be consistent
+>>>     with the new code.
+>>>
+>>> Changes since v2:
+>>>   - Remove unnecessary #ifdef
+>>>   - Use SZ_64M instead of0x4000000
+>>>   - Call early_init_dt_scan_chosen() to init boot_command_line
+>>>   - Rename kaslr_second_init() to kaslr_late_init()
+>>>
+>>> Changes since v1:
+>>>   - Remove some useless 'extern' keyword.
+>>>   - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
+>>>   - Improve some assembly code
+>>>   - Use memzero_explicit instead of memset
+>>>   - Use boot_command_line and remove early_command_line
+>>>   - Do not print kaslr offset if kaslr is disabled
+>>>
+>>> Jason Yan (12):
+>>>    powerpc: unify definition of M_IF_NEEDED
+>>>    powerpc: move memstart_addr and kernstart_addr to init-common.c
+>>>    powerpc: introduce kernstart_virt_addr to store the kernel base
+>>>    powerpc/fsl_booke/32: introduce create_tlb_entry() helper
+>>>    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
+>>>    powerpc/fsl_booke/32: implement KASLR infrastructure
+>>>    powerpc/fsl_booke/32: randomize the kernel image offset
+>>>    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
+>>>    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
+>>>    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
+>>>    powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
+>>>    powerpc/fsl_booke/32: Document KASLR implementation
+>>>
+>>>   Documentation/powerpc/kaslr-booke32.rst       |  42 ++
+>>>   arch/powerpc/Kconfig                          |  11 +
+>>>   arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
+>>>   arch/powerpc/include/asm/page.h               |   7 +
+>>>   arch/powerpc/kernel/Makefile                  |   1 +
+>>>   arch/powerpc/kernel/early_32.c                |   2 +-
+>>>   arch/powerpc/kernel/exceptions-64e.S          |  12 +-
+>>>   arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
+>>>   arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
+>>>   arch/powerpc/kernel/kaslr_booke.c             | 393 ++++++++++++++++++
+>>>   arch/powerpc/kernel/machine_kexec.c           |   1 +
+>>>   arch/powerpc/kernel/misc_64.S                 |   7 +-
+>>>   arch/powerpc/kernel/setup-common.c            |  20 +
+>>>   arch/powerpc/mm/init-common.c                 |   7 +
+>>>   arch/powerpc/mm/init_32.c                     |   5 -
+>>>   arch/powerpc/mm/init_64.c                     |   5 -
+>>>   arch/powerpc/mm/mmu_decl.h                    |  11 +
+>>>   arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
+>>>   18 files changed, 572 insertions(+), 52 deletions(-)
+>>>   create mode 100644 Documentation/powerpc/kaslr-booke32.rst
+>>>   create mode 100644 arch/powerpc/kernel/kaslr_booke.c
+>>>
