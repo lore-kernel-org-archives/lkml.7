@@ -2,237 +2,102 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E03C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6398C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34AF2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566946526;
-	bh=KNwArzVbNm8E/1uMq4N2WCFYXTVjp5rzpzUHm185bIg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=bUGIBpmiEd0DCbiTvDdO58WMTWlDI0F+KBAj3tVXlBXYA010gSjU7Xq7NlpOV811r
-	 8eoTWAqLqluzSHVeoIrqnpsrgukfz0PfY1WZLpk1QbwBIMfjvRkM80oygn3sU+Cz1y
-	 bgBMMW9Y6vrv/qPbSswFWraJ3Svo1Ehy5JZ1qcNk=
+	by mail.kernel.org (Postfix) with ESMTP id A8CF3214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfH0WzZ (ORCPT
+        id S1726178AbfH0W7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 18:59:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50952 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbfH0WzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:55:23 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725997AbfH0W7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:59:07 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 401C2217F5;
-        Tue, 27 Aug 2019 22:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566946522;
-        bh=KNwArzVbNm8E/1uMq4N2WCFYXTVjp5rzpzUHm185bIg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=0Ri5y9DtZ6EwxRD84fFUzn9ouh1+D+xrBUkHCnkf+RGms/JIW1n3lbZpNjyz/dXDX
-         lpGAIUgaQAyC7NrhyM56tpF5k6D4WguZrLIwerhB3tviHK60OgG9k1cPbVepSbzYjG
-         q55XH/5YxHoZeZm2/jwVL8E/knU6InIoz8d74SAs=
-Subject: Re: [PATCH v1] kunit: fix failure to build without printk
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        shuah <shuah@kernel.org>
-References: <20190827174932.44177-1-brendanhiggins@google.com>
- <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org>
- <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
- <CAFd5g47rSBJS8QVH6d5HqoJW5PJXdNnkoP6WcvQCFUqHUEmDzw@mail.gmail.com>
- <CAFd5g44A5vtgxBYErP4mCGwDgOHEMYUXCDSF=d9bYB3ktpW5jA@mail.gmail.com>
- <10b44374-829d-0daa-8fb0-4450582cb40c@kernel.org>
- <CAFd5g474EYEj1BmqCv=xe6M9JW4L389xL2SU1Ak-evjmpGOvJg@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <559233b8-cd29-189a-e63b-0f46ea9b6f83@kernel.org>
-Date:   Tue, 27 Aug 2019 16:55:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 93D233084244;
+        Tue, 27 Aug 2019 22:59:06 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C6825D6B0;
+        Tue, 27 Aug 2019 22:58:53 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 06:58:30 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190827225827.GA5263@ming.t460p>
+References: <20190827085344.30799-1-ming.lei@redhat.com>
+ <20190827085344.30799-2-ming.lei@redhat.com>
+ <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g474EYEj1BmqCv=xe6M9JW4L389xL2SU1Ak-evjmpGOvJg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 27 Aug 2019 22:59:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 4:16 PM, Brendan Higgins wrote:
-> On Tue, Aug 27, 2019 at 3:00 PM shuah <shuah@kernel.org> wrote:
->>
->> On 8/27/19 3:36 PM, Brendan Higgins wrote:
->>> On Tue, Aug 27, 2019 at 2:09 PM Brendan Higgins
->>> <brendanhiggins@google.com> wrote:
->>>>
->>>> On Tue, Aug 27, 2019 at 2:03 PM Brendan Higgins
->>>> <brendanhiggins@google.com> wrote:
->>>>>
->>>>> On Tue, Aug 27, 2019 at 1:21 PM shuah <shuah@kernel.org> wrote:
->>>>>>
->>>>>> On 8/27/19 11:49 AM, Brendan Higgins wrote:
->>>>>>> Previously KUnit assumed that printk would always be present, which is
->>>>>>> not a valid assumption to make. Fix that by ifdefing out functions which
->>>>>>> directly depend on printk core functions similar to what dev_printk
->>>>>>> does.
->>>>>>>
->>>>>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->>>>>>> Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
->>>>>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
->>>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>>>>>> ---
->>>>>>>     include/kunit/test.h |  7 +++++++
->>>>>>>     kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
->>>>>>>     2 files changed, 31 insertions(+), 17 deletions(-)
->>>>>>>
->>>>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
->>>>>>> index 8b7eb03d4971..339af5f95c4a 100644
->>>>>>> --- a/include/kunit/test.h
->>>>>>> +++ b/include/kunit/test.h
->>>>>>> @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
->>>>> [...]
->>>>>> Okay after reviewing this, I am not sure why you need to do all
->>>>>> this.
->>>>>>
->>>>>> Why can't you just change the root function that throws the warn:
->>>>>>
->>>>>>     static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
->>>>>> {
->>>>>>            return vprintk_emit(0, level, NULL, 0, fmt, args);
->>>>>> }
->>>>>>
->>>>>> You aren'r really doing anything extra here, other than calling
->>>>>> vprintk_emit()
->>>>>
->>>>> Yeah, I did that a while ago. I think it was a combination of trying
->>>>> to avoid an extra layer of adding and then removing the log level, and
->>>>> that's what dev_printk and friends did.
->>>>>
->>>>> But I think you are probably right. It's a lot of maintenance overhead
->>>>> to get rid of that. Probably best to just use what the printk people
->>>>> have.
->>>>>
->>>>>> Unless I am missing something, can't you solve this problem by including
->>>>>> printk.h and let it handle the !CONFIG_PRINTK case?
->>>>>
->>>>> Randy, I hope you don't mind, but I am going to ask you to re-ack my
->>>>> next revision since it basically addresses the problem in a totally
->>>>> different way.
->>>>
->>>> Actually, scratch that. Checkpatch doesn't like me calling printk
->>>> without using a KERN_<LEVEL>.
->>>>
->>>> Now that I am thinking back to when I wrote this. I think it also
->>>> might not like using a dynamic KERN_<LEVEL> either (printk("%s my
->>>> message", KERN_INFO)).
->>>>
->>>> I am going to have to do some more investigation.
->>>
->>> Alright, I am pretty sure it is safe to do printk("%smessage", KERN_<LEVEL>);
->>>
->>> Looking at the printk implementation, it appears to do the format
->>> before it checks the log level:
->>>
->>> https://elixir.bootlin.com/linux/v5.2.10/source/kernel/printk/printk.c#L1907
->>>
->>> So I am pretty sure we can do it either with the vprintk_emit or with printk.
->>
->> Let me see if we are on the same page first. I am asking if you can
->> just include printk.h for vprintk_emit() define for both CONFIG_PRINTK
->> and !CONFIG_PRINTK cases.
+On Tue, Aug 27, 2019 at 04:42:02PM +0200, Thomas Gleixner wrote:
+> On Tue, 27 Aug 2019, Ming Lei wrote:
+> > +/*
+> > + * Update average irq interval with the Exponential Weighted Moving
+> > + * Average(EWMA)
+> > + */
+> > +static void irq_update_interval(void)
+> > +{
+> > +#define IRQ_INTERVAL_EWMA_WEIGHT	128
+> > +#define IRQ_INTERVAL_EWMA_PREV_FACTOR	127
+> > +#define IRQ_INTERVAL_EWMA_CURR_FACTOR	(IRQ_INTERVAL_EWMA_WEIGHT - \
+> > +		IRQ_INTERVAL_EWMA_PREV_FACTOR)
 > 
-> Ah sorry, I misunderstood you.
-> 
-> No, that doesn't work. I tried including linux/printk.h, and I get the
-> same error.
-> 
-> The reason for this is that vprintk_emit() is only defined when CONFIG_PRINTK=y:
-> 
+> Please do not stick defines into a function body. That's horrible.
 
-This is the real problem here. printk.h defines several for
-!CONFIG_PRINTK case.
+OK.
 
-> https://elixir.bootlin.com/linux/latest/ident/vprintk_emit
 > 
->> I am not asking you to use printk() in place of vprintk_emit().
->> It is perfectly fine to use vprintk_emit()
+> > +
+> > +	int cpu = raw_smp_processor_id();
+> > +	struct irq_interval *inter = per_cpu_ptr(&avg_irq_interval, cpu);
+> > +	u64 delta = sched_clock_cpu(cpu) - inter->last_irq_end;
 > 
-> Okay, cool.
-> 
->>>
->>> So it appears that we have to weigh the following trade-offs:
->>>
->>> Using vprintk_emit:
->>>
->>> Pros:
->>>    - That's what dev_printk uses.
->>
->> Not sure what you mean by this. I am suggesting if you can just
->> call vprintk_emit() and include printk.h and not have to ifdef
->> around all the other callers of kunit_vprintk_emit()
-> 
-> Oh, I was just saying that I heavily based my implementation of
-> kunit_printk on dev_printk. So I have a high degree of confidence that
-> it is okay to use it the way that I am using it.
-> 
->> Yes. There is the other issue of why do you need the complexity
->> of having kunit_vprintk_emit() at all.
-> 
-> Right, and the problem with the alternative, is there is no good
-> kernel API for logging with the log level set dynamically. printk
-> prefers to have it as a string prefix on the format string, but I
-> cannot do that because I need to add my own prefix to the format
-> string.
-> 
-> So, I guess I should just go ahead and address the earlier comments on
-> this patch?
-> 
+> Why are you doing that raw_smp_processor_id() dance? The call site has
+> interrupts and preemption disabled.
 
-So what does your code do in the case of !CONFIG_PRINTK. From my read of
-it, it returns 0 from kunit_printk_emit(0 from my read of it. What I am
-saying is this is a lot of indirection instead of fixing the leaf
-function which is kunit_vprintk_emit().
+OK, will change to __smp_processor_id().
 
-+#else /* CONFIG_PRINTK */
-+static inline int kunit_printk_emit(int level, const char *fmt, ...)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_PRINTK */
+> 
+> Also how is that supposed to work when sched_clock is jiffies based?
 
-Does the following work?
+Good catch, looks ktime_get_ns() is needed.
 
-#if defined CONFIG_PRINTK
-static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-{
-         return vprintk_emit(0, level, NULL, 0, fmt, args);
-}
-#else
-static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-{
-        return 0;
-}
-#endif
+> 
+> > +	inter->avg = (inter->avg * IRQ_INTERVAL_EWMA_PREV_FACTOR +
+> > +		delta * IRQ_INTERVAL_EWMA_CURR_FACTOR) /
+> > +		IRQ_INTERVAL_EWMA_WEIGHT;
+> 
+> We definitely are not going to have a 64bit multiplication and division on
+> every interrupt. Asided of that this breaks 32bit builds all over the place.
 
-I think the real problem is in the printk.h with its missing define for
-vprintk_emit() for !CONFIG_PRINTK case. There seem to only one call for
-this in drivers/base/core.c in CONFIG_PRINTK path. Unless I am totally
-missing some context for why there is no stub for vprintk_emit() for
-!CONFIG_PRINTK case
+I will convert the above into add/subtract/shift only.
 
 thanks,
--- Shuah
+Ming
