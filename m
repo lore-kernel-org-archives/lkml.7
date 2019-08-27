@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F54C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E0BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F4320828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CF723406
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892656;
-	bh=FV3IRIyvs2Q4rYRQLy3nOPb/ADYbjAdMocqApLBLm6E=;
+	s=default; t=1566892661;
+	bh=3vbSJCKix/NAshU9YCL6JENDiRjmEV0yD3dXShKN4mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z9k+EOnkmZyxUELFFvSJkqbrx28bn75Tu0x1SRXjuHfmXSRA2UrR0haupb598QM1I
-	 M42pSy8BJXU7XwZGCwLchlKTo1YeX+tZIdT0iazhgzoLueJCp/Uci8vC5JAXQYHzR3
-	 z7S6lp4O640jWwR0des9e4hIRmi2l/kZTHfXN14o=
+	b=wOTgmWM4odNrN/39fvNLxx+L2xlJNI947JCp/G8DJ/f/0D/zLNloDoIOTlLoYf93u
+	 iAHqGGIoIWMF2E1BMVPrBwt8ehvdTsS4B2i/oDImsrBUsqpNiJ7+cBkmxBa6KH2YXb
+	 alusrMawSfSwjIjWe1VQg6gsPkAZlcP4IXNKBU1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbfH0H5g (ORCPT
+        id S1730850AbfH0H5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbfH0H50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:57:26 -0400
+        id S1729864AbfH0H5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:57:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B34206BF;
-        Tue, 27 Aug 2019 07:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D243206BF;
+        Tue, 27 Aug 2019 07:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892645;
-        bh=FV3IRIyvs2Q4rYRQLy3nOPb/ADYbjAdMocqApLBLm6E=;
+        s=default; t=1566892652;
+        bh=3vbSJCKix/NAshU9YCL6JENDiRjmEV0yD3dXShKN4mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9Uge74dotNYWwDuai0kbpdvvMQfkSh9WZObwa1xOu00hxUNDG0tFZJSszPAItwff
-         Z92ej87XuEm41Icp9bekEnfvopcVOFFnxDauGM5zoswGQ25/cZZZXnmUo3WGFhrRX7
-         O5ihTK/PTZoS5cEPB3RmuyV980vygk3WcJaTwtSc=
+        b=Tw6nt6o9ePzxoZhnU3eEcmn80o5JdjRVEEWt1tptNS/ypE1f6S5qWJRWoas5glsyA
+         RHMZdKblRLRa7z40nZcxafo7WCGNFGrLQcCOP3TbuLATXEh1L0TZTI7ZlHyITowcsd
+         gokCcVEiBCTusJOBiv4CrOVKb92KlCUV6UWC9Gqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Lee <leisurelysw24@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 4.19 65/98] libceph: fix PG split vs OSD (re)connect race
-Date:   Tue, 27 Aug 2019 09:50:44 +0200
-Message-Id: <20190827072721.726686571@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.19 67/98] gpiolib: never report open-drain/source lines as input to user-space
+Date:   Tue, 27 Aug 2019 09:50:46 +0200
+Message-Id: <20190827072721.803594347@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,71 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-commit a561372405cf6bc6f14239b3a9e57bb39f2788b0 upstream.
+commit 2c60e6b5c9241b24b8b523fefd3e44fb85622cda upstream.
 
-We can't rely on ->peer_features in calc_target() because it may be
-called both when the OSD session is established and open and when it's
-not.  ->peer_features is not valid unless the OSD session is open.  If
-this happens on a PG split (pg_num increase), that could mean we don't
-resend a request that should have been resent, hanging the client
-indefinitely.
+If the driver doesn't support open-drain/source config options, we
+emulate this behavior when setting the direction by calling
+gpiod_direction_input() if the default value is 0 (open-source) or
+1 (open-drain), thus not actively driving the line in those cases.
 
-In userspace this was fixed by looking at require_osd_release and
-get_xinfo[osd].features fields of the osdmap.  However these fields
-belong to the OSD section of the osdmap, which the kernel doesn't
-decode (only the client section is decoded).
+This however clears the FLAG_IS_OUT bit for the GPIO line descriptor
+and makes the LINEINFO ioctl() incorrectly report this line's mode as
+'input' to user-space.
 
-Instead, let's drop this feature check.  It effectively checks for
-luminous, so only pre-luminous OSDs would be affected in that on a PG
-split the kernel might resend a request that should not have been
-resent.  Duplicates can occur in other scenarios, so both sides should
-already be prepared for them: see dup/replay logic on the OSD side and
-retry_attempt check on the client side.
+This commit modifies the ioctl() to always set the GPIOLINE_FLAG_IS_OUT
+bit in the lineinfo structure's flags field. Since it's impossible to
+use the input mode and open-drain/source options at the same time, we
+can be sure the reported information will be correct.
 
-Cc: stable@vger.kernel.org
-Fixes: 7de030d6b10a ("libceph: resend on PG splits if OSD has RESEND_ON_SPLIT")
-Link: https://tracker.ceph.com/issues/41162
-Reported-by: Jerry Lee <leisurelysw24@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Tested-by: Jerry Lee <leisurelysw24@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Fixes: 521a2ad6f862 ("gpio: add userspace ABI for GPIO line information")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Link: https://lore.kernel.org/r/20190806114151.17652-1-brgl@bgdev.pl
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ceph/osd_client.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpio/gpiolib.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -1423,7 +1423,7 @@ static enum calc_target_result calc_targ
- 	struct ceph_osds up, acting;
- 	bool force_resend = false;
- 	bool unpaused = false;
--	bool legacy_change;
-+	bool legacy_change = false;
- 	bool split = false;
- 	bool sort_bitwise = ceph_osdmap_flag(osdc, CEPH_OSDMAP_SORTBITWISE);
- 	bool recovery_deletes = ceph_osdmap_flag(osdc,
-@@ -1511,15 +1511,14 @@ static enum calc_target_result calc_targ
- 		t->osd = acting.primary;
- 	}
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1082,9 +1082,11 @@ static long gpio_ioctl(struct file *filp
+ 		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
+ 			lineinfo.flags |= GPIOLINE_FLAG_ACTIVE_LOW;
+ 		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_OPEN_DRAIN;
++			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
++					   GPIOLINE_FLAG_IS_OUT);
+ 		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
+-			lineinfo.flags |= GPIOLINE_FLAG_OPEN_SOURCE;
++			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
++					   GPIOLINE_FLAG_IS_OUT);
  
--	if (unpaused || legacy_change || force_resend ||
--	    (split && con && CEPH_HAVE_FEATURE(con->peer_features,
--					       RESEND_ON_SPLIT)))
-+	if (unpaused || legacy_change || force_resend || split)
- 		ct_res = CALC_TARGET_NEED_RESEND;
- 	else
- 		ct_res = CALC_TARGET_NO_ACTION;
- 
- out:
--	dout("%s t %p -> ct_res %d osd %d\n", __func__, t, ct_res, t->osd);
-+	dout("%s t %p -> %d%d%d%d ct_res %d osd%d\n", __func__, t, unpaused,
-+	     legacy_change, force_resend, split, ct_res, t->osd);
- 	return ct_res;
- }
- 
+ 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+ 			return -EFAULT;
 
 
