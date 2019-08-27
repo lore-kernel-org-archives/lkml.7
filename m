@@ -2,91 +2,112 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A3DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3185CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7212189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE7F21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:36:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="deVT/vbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbfH0RfB (ORCPT
+        id S1730277AbfH0Rg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:35:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44090 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730462AbfH0RfA (ORCPT
+        Tue, 27 Aug 2019 13:36:26 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34396 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfH0RgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:35:00 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2fMv-0004Ep-71; Tue, 27 Aug 2019 17:34:57 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     stern@rowland.harvard.edu
-Cc:     gregkh@linuxfoundation.org, bauer.chen@realtek.com,
-        ricky_wu@realtek.com, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v3 2/2] USB: storage: ums-realtek: Whitelist auto-delink support
-Date:   Wed, 28 Aug 2019 01:34:50 +0800
-Message-Id: <20190827173450.13572-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190827173450.13572-1-kai.heng.feng@canonical.com>
-References: <20190827173450.13572-1-kai.heng.feng@canonical.com>
+        Tue, 27 Aug 2019 13:36:25 -0400
+Received: by mail-io1-f65.google.com with SMTP id s21so157689ioa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 10:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0OrHiG8ZkzhZsHqSisGBWWpJnATlfuQ86+HaFYyJA8I=;
+        b=deVT/vbYc4ecP5ExASXcivwIhq9LaGe6lFZQ5X7PEbp1VNmmEvZVoRpTfFuXXega+w
+         g5J6LR1Nmy5GvXW0bBy1RTX8IbvUJvrVfUOm/wokhFpRJdimSUYKhxkWeiyxhTfjKEbb
+         YK8UDkRp/IR35lmplPD4vbkH5JrSz3drDIZHg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0OrHiG8ZkzhZsHqSisGBWWpJnATlfuQ86+HaFYyJA8I=;
+        b=CXwhSg8gQbU/wrX9Drwp4b1guF3BgDDSy2JLU48zUhi58yLrPQY41vTl0UUkgh+W8u
+         o60dld3wyMmMKRPPS3QbNISkxTmLYqHK++FKIqlkJjrJiPb6JIiKzex5NqZd/BRWbpdz
+         bgdAayuJR9YwU+B9m5Qu9M7KZ6cGpQ7+5MaKak7aH11qjx5oahH3RJM/94uO0QY/niwK
+         M74cFtCnMj+32Ym6WrQCq6jRMgkHrKJNh/EPr3ppFqQEoO9+c61w4+tYiCt66acCkKA2
+         IzI0vyqpHnvWd7JnNp9w8ub1Rsy9wmYIO+sykZAdYT3OzhtBTX1ukWR/29cwbXAeqqxy
+         hTjQ==
+X-Gm-Message-State: APjAAAXLVpcDv7MvCnmVAo2kvfDDnteqQbdi+iR1xpAzO02UqWta+qpB
+        ZIe+ngcuA387s3GZJaDT6hBq4A==
+X-Google-Smtp-Source: APXvYqw10pFnr5k3LJbhhD6xNDvDhQzuQL69lTHbE6Fa0PE6dkSJMKuw5olJU9OTjMhs+2qHEEJZqA==
+X-Received: by 2002:a02:bb8c:: with SMTP id g12mr24679646jan.116.1566927384789;
+        Tue, 27 Aug 2019 10:36:24 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
+        by smtp.gmail.com with ESMTPSA id z3sm15276592ioi.54.2019.08.27.10.36.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Aug 2019 10:36:24 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     keescook@chromium.org
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] lkdtm/bugs: fix build error in lkdtm_EXHAUST_STACK
+Date:   Tue, 27 Aug 2019 11:36:19 -0600
+Message-Id: <20190827173619.170065-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Auto-delink requires writing special registers to ums-realtek devices.
-Unconditionally enable auto-delink may break newer devices.
+lkdtm/bugs.c:94:2: error: format '%d' expects argument of type 'int', but argument 2 has type 'long unsigned int' [-Werror=format=]
+  pr_info("Calling function with %d frame size to depth %d ...\n",
+  ^
+THREAD_SIZE is defined as a unsigned long, cast CONFIG_FRAME_WARN to
+unsigned long as well.
 
-So only enable auto-delink by default for the original three IDs,
-0x0138, 0x0158 and 0x0159.
+Fixes: 24cccab42c419 ("lkdtm/bugs: Adjust recursion test to avoid elision")
 
-Realtek is working on a patch to properly support auto-delink for other
-IDs.
-
-BugLink: https://bugs.launchpad.net/bugs/1838886
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
-v3:
-- Whitelisting instead of adding new module parameter.
-v2:
-- Use auto_delink_support instead of auto_delink_enable.
 
- drivers/usb/storage/realtek_cr.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Changes in v2:
+- Correctly cast CONFIG_FRAME_WARN so the type is consistent.
 
-diff --git a/drivers/usb/storage/realtek_cr.c b/drivers/usb/storage/realtek_cr.c
-index beaffac805af..1d9ce9cbc831 100644
---- a/drivers/usb/storage/realtek_cr.c
-+++ b/drivers/usb/storage/realtek_cr.c
-@@ -996,12 +996,15 @@ static int init_realtek_cr(struct us_data *us)
- 			goto INIT_FAIL;
- 	}
+ drivers/misc/lkdtm/bugs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 1606658b9b7e..24245ccdba72 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -22,7 +22,7 @@ struct lkdtm_list {
+  * recurse past the end of THREAD_SIZE by default.
+  */
+ #if defined(CONFIG_FRAME_WARN) && (CONFIG_FRAME_WARN > 0)
+-#define REC_STACK_SIZE (CONFIG_FRAME_WARN / 2)
++#define REC_STACK_SIZE (_AC(CONFIG_FRAME_WARN, UL) / 2)
+ #else
+ #define REC_STACK_SIZE (THREAD_SIZE / 8)
+ #endif
+@@ -91,7 +91,7 @@ void lkdtm_LOOP(void)
  
--	if (CHECK_FW_VER(chip, 0x5888) || CHECK_FW_VER(chip, 0x5889) ||
--	    CHECK_FW_VER(chip, 0x5901))
--		SET_AUTO_DELINK(chip);
--	if (STATUS_LEN(chip) == 16) {
--		if (SUPPORT_AUTO_DELINK(chip))
-+	if (CHECK_PID(chip, 0x0138) || CHECK_PID(chip, 0x0158) ||
-+	    CHECK_PID(chip, 0x0159)) {
-+		if (CHECK_FW_VER(chip, 0x5888) || CHECK_FW_VER(chip, 0x5889) ||
-+				CHECK_FW_VER(chip, 0x5901))
- 			SET_AUTO_DELINK(chip);
-+		if (STATUS_LEN(chip) == 16) {
-+			if (SUPPORT_AUTO_DELINK(chip))
-+				SET_AUTO_DELINK(chip);
-+		}
- 	}
- #ifdef CONFIG_REALTEK_AUTOPM
- 	if (ss_en)
+ void lkdtm_EXHAUST_STACK(void)
+ {
+-	pr_info("Calling function with %d frame size to depth %d ...\n",
++	pr_info("Calling function with %lu frame size to depth %d ...\n",
+ 		REC_STACK_SIZE, recur_count);
+ 	recursive_loop(recur_count);
+ 	pr_info("FAIL: survived without exhausting stack?!\n");
 -- 
-2.17.1
+2.23.0.187.g17f5b7556c-goog
 
