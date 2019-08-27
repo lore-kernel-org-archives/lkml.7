@@ -2,53 +2,53 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ACAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9720C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AE2206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA305206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893240;
-	bh=9139bLgvZNJhVU+/KuehRZ88uo1vuy8PX04vIiAa+M4=;
+	s=default; t=1566893243;
+	bh=bIUiQfUrAfiyzT/EZEz2yoa3/JD/aDxkK+xgJWgp3uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnfxHO5ogScWoPx+m2VWo7xDQbA+8u7SoFbkB4t9vesRIZVjJSghMGXPKnICAdS2P
-	 RxkRH7AYZkOrtC5PaGRK8HOAFDf4z0lutn9XbOOREMgTixEpMpiuFYL+B211VALrH3
-	 +GLswIBmGHH5ewgrBo68t7zDd4LNHB4DCMONONzI=
+	b=0n/4cKMSmBwjxboZe57kDthmDEtrxfc+nkKQnvwxgYoIV19vvSLAO7V3jGncZpajx
+	 DSgpQmeqetnb+bY32d3SpahJ3Ytda9nv+FuKWFYXW0jHZEbzcMUUYpxsY037m8v+DA
+	 EmmOl1U0c36Jh++yCUd1qE87ll5DXsC6hZ/XXc7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbfH0IHT (ORCPT
+        id S1733172AbfH0IHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732098AbfH0IHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:07:12 -0400
+        id S1730471AbfH0IHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:07:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79BD4206BF;
-        Tue, 27 Aug 2019 08:07:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A79206BA;
+        Tue, 27 Aug 2019 08:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893232;
-        bh=9139bLgvZNJhVU+/KuehRZ88uo1vuy8PX04vIiAa+M4=;
+        s=default; t=1566893237;
+        bh=bIUiQfUrAfiyzT/EZEz2yoa3/JD/aDxkK+xgJWgp3uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwNt4t+AxC6pADstDaDUqkHysKJ6oQK/m/dfyQUUOqPxPmlZdeD5RsiJKaupN1s3l
-         f36IgqZKGCLyeCExEVSg8chW2ygYO0vcJ6k18qsfCFfLODLuWdFAMTmN10/U9i6i5l
-         QyH8SxLlmUvhkQ7KZkT5Vhw9NDVWUtueOqZ0vnc8=
+        b=CU/w/lzPKqa5QGIF4ZIQGpmaw8m/VzIj4N+Q7/sXOfKnFqdW6QTaKAflonuRcpfcl
+         bDYl8a7uFCXZEn8TpgQdYuEf2qgu9APcNIb/YnhfX81Z+Aaw3yzE7pikdc6Ud3nLVG
+         6qtDEcc3E+BAwc1KTEnAJApa9CUsNd9akJf5ro5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, benjamin.moody@gmail.com,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 5.2 154/162] xfs: fix missing ILOCK unlock when xfs_setattr_nonsize fails due to EDQUOT
-Date:   Tue, 27 Aug 2019 09:51:22 +0200
-Message-Id: <20190827072744.154956000@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 156/162] dm zoned: fix potential NULL dereference in dmz_do_reclaim()
+Date:   Tue, 27 Aug 2019 09:51:24 +0200
+Message-Id: <20190827072744.239419615@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,63 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+[ Upstream commit e0702d90b79d430b0ccc276ead4f88440bb51352 ]
 
-commit 1fb254aa983bf190cfd685d40c64a480a9bafaee upstream.
+This function is supposed to return error pointers so it matches the
+dmz_get_rnd_zone_for_reclaim() function.  The current code could lead to
+a NULL dereference in dmz_do_reclaim()
 
-Benjamin Moody reported to Debian that XFS partially wedges when a chgrp
-fails on account of being out of disk quota.  I ran his reproducer
-script:
-
-# adduser dummy
-# adduser dummy plugdev
-
-# dd if=/dev/zero bs=1M count=100 of=test.img
-# mkfs.xfs test.img
-# mount -t xfs -o gquota test.img /mnt
-# mkdir -p /mnt/dummy
-# chown -c dummy /mnt/dummy
-# xfs_quota -xc 'limit -g bsoft=100k bhard=100k plugdev' /mnt
-
-(and then as user dummy)
-
-$ dd if=/dev/urandom bs=1M count=50 of=/mnt/dummy/foo
-$ chgrp plugdev /mnt/dummy/foo
-
-and saw:
-
-================================================
-WARNING: lock held when returning to user space!
-5.3.0-rc5 #rc5 Tainted: G        W
-------------------------------------------------
-chgrp/47006 is leaving the kernel with locks still held!
-1 lock held by chgrp/47006:
- #0: 000000006664ea2d (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0xd2/0x290 [xfs]
-
-...which is clearly caused by xfs_setattr_nonsize failing to unlock the
-ILOCK after the xfs_qm_vop_chown_reserve call fails.  Add the missing
-unlock.
-
-Reported-by: benjamin.moody@gmail.com
-Fixes: 253f4911f297 ("xfs: better xfs_trans_alloc interface")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b234c6d7a703 ("dm zoned: improve error handling in reclaim")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_iops.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/dm-zoned-metadata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -803,6 +803,7 @@ xfs_setattr_nonsize(
+diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
+index 00e7a343eacf1..7e8d7fc99410d 100644
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1579,7 +1579,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
+ 	struct dm_zone *zone;
  
- out_cancel:
- 	xfs_trans_cancel(tp);
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- out_dqrele:
- 	xfs_qm_dqrele(udqp);
- 	xfs_qm_dqrele(gdqp);
+ 	if (list_empty(&zmd->map_seq_list))
+-		return NULL;
++		return ERR_PTR(-EBUSY);
+ 
+ 	list_for_each_entry(zone, &zmd->map_seq_list, link) {
+ 		if (!zone->bzone)
+@@ -1588,7 +1588,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
+ 			return zone;
+ 	}
+ 
+-	return NULL;
++	return ERR_PTR(-EBUSY);
+ }
+ 
+ /*
+-- 
+2.20.1
+
 
 
