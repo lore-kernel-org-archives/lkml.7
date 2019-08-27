@@ -7,46 +7,41 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821F1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F99C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592392186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5037217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfH0I0f (ORCPT
+        id S1730097AbfH0I0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:26:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42796 "EHLO
+        Tue, 27 Aug 2019 04:26:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42801 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729824AbfH0I03 (ORCPT
+        with ESMTP id S1729852AbfH0I0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:26:29 -0400
+        Tue, 27 Aug 2019 04:26:30 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i2Wo2-0007tL-CR; Tue, 27 Aug 2019 10:26:22 +0200
+        id 1i2Wo2-0007qQ-Tg; Tue, 27 Aug 2019 10:26:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABCFD1C0DE1;
-        Tue, 27 Aug 2019 10:26:20 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 08:26:20 -0000
-From:   tip-bot2 for Jiri Olsa <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 95D471C07DC;
+        Tue, 27 Aug 2019 10:26:17 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 08:26:17 -0000
+From:   tip-bot2 for Andi Kleen <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Add PERF_RECORD_LOST 'struct lost_event' to
- perf/event.h
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Subject: [tip: perf/core] perf report: Fix --ns time sort key output
+Cc:     Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190825181752.722-7-jolsa@kernel.org>
-References: <20190825181752.722-7-jolsa@kernel.org>
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190823210338.12360-2-andi@firstfloor.org>
+References: <20190823210338.12360-2-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <156689438055.24538.2709969380333836917.tip-bot2@tip-bot2>
+Message-ID: <156689437747.24515.12882688378485685652.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,134 +58,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     5290ed6955ebc481d5cd62f7175e8514931058bc
-Gitweb:        https://git.kernel.org/tip/5290ed6955ebc481d5cd62f7175e8514931058bc
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Sun, 25 Aug 2019 20:17:46 +02:00
+Commit-ID:     3dab6ac080dcd7f71cb9ceb84ad7dafecd6f7c07
+Gitweb:        https://git.kernel.org/tip/3dab6ac080dcd7f71cb9ceb84ad7dafecd6f7c07
+Author:        Andi Kleen <ak@linux.intel.com>
+AuthorDate:    Fri, 23 Aug 2019 14:03:38 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 26 Aug 2019 19:39:09 -03:00
+CommitterDate: Mon, 26 Aug 2019 11:58:29 -03:00
 
-libperf: Add PERF_RECORD_LOST 'struct lost_event' to perf/event.h
+perf report: Fix --ns time sort key output
 
-Move the lost_event event definition to libperf's event.h header
-include.
+If the user specified --ns, the column to print the sort time stamp
+wasn't wide enough to actually print the full nanoseconds.
 
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
+Widen the time key column width when --ns is specified.
 
-Perf added 'u*' types mainly to ease up printing __u64 values as stated
-in the linux/types.h comment:
+Before:
 
-  /*
-   * We define u64 as uint64_t for every architecture
-   * so that we can print it with "%"PRIx64 without getting warnings.
-   *
-   * typedef __u64 u64;
-   * typedef __s64 s64;
-   */
+  % perf record -a sleep 1
+  % perf report --sort time,overhead,symbol --stdio --ns
+  ...
+       2.39%  187851.10000  [k] smp_call_function_single   -      -
+       1.53%  187851.10000  [k] intel_idle                 -      -
+       0.59%  187851.10000  [.] __wcscmp_ifunc             -      -
+       0.33%  187851.10000  [.] 0000000000000000           -      -
+       0.28%  187851.10000  [k] cpuidle_enter_state        -      -
 
-Add and use new PRI_lu64 and PRI_lx64 macros for that.  Use extra '_' to
-ease up the reading and differentiate them from standard PRI*64 macros.
+After:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190825181752.722-7-jolsa@kernel.org
+  % perf report --sort time,overhead,symbol --stdio --ns
+  ...
+       2.39%  187851.100000000  [k] smp_call_function_single   -      -
+       1.53%  187851.100000000  [k] intel_idle                 -      -
+       0.59%  187851.100000000  [.] __wcscmp_ifunc             -      -
+       0.33%  187851.100000000  [.] 0000000000000000           -      -
+       0.28%  187851.100000000  [k] cpuidle_enter_state        -      -
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190823210338.12360-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c          | 2 +-
- tools/perf/lib/include/perf/event.h | 6 ++++++
- tools/perf/util/event.c             | 2 +-
- tools/perf/util/event.h             | 6 ------
- tools/perf/util/machine.c           | 2 +-
- tools/perf/util/python.c            | 4 ++--
- 6 files changed, 11 insertions(+), 11 deletions(-)
+ tools/perf/util/hist.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 0d6b4c3..025151d 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2643,7 +2643,7 @@ static int process_lost(struct perf_tool *tool __maybe_unused,
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 8efbf58..3370267 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -193,7 +193,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
+ 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
+ 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
+-	hists__new_col_len(hists, HISTC_TIME, 12);
++	if (symbol_conf.nanosecs)
++		hists__new_col_len(hists, HISTC_TIME, 16);
++	else
++		hists__new_col_len(hists, HISTC_TIME, 12);
  
- 	timestamp__scnprintf_usec(sample->time, tstr, sizeof(tstr));
- 	printf("%15s ", tstr);
--	printf("lost %" PRIu64 " events on cpu %d\n", event->lost.lost, sample->cpu);
-+	printf("lost %" PRI_lu64 " events on cpu %d\n", event->lost.lost, sample->cpu);
- 
- 	return 0;
- }
-diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index c7cae58..71045ea 100644
---- a/tools/perf/lib/include/perf/event.h
-+++ b/tools/perf/lib/include/perf/event.h
-@@ -50,4 +50,10 @@ struct fork_event {
- 	__u64			 time;
- };
- 
-+struct lost_event {
-+	struct perf_event_header header;
-+	__u64			 id;
-+	__u64			 lost;
-+};
-+
- #endif /* __LIBPERF_EVENT_H */
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 0954f98..3bd9fc2 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -1480,7 +1480,7 @@ size_t perf_event__fprintf_switch(union perf_event *event, FILE *fp)
- 
- static size_t perf_event__fprintf_lost(union perf_event *event, FILE *fp)
- {
--	return fprintf(fp, " lost %" PRIu64 "\n", event->lost.lost);
-+	return fprintf(fp, " lost %" PRI_lu64 "\n", event->lost.lost);
- }
- 
- size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp)
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 38b258c..4a3f502 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -27,12 +27,6 @@
- #define PRI_lx64 PRIx64
- #endif
- 
--struct lost_event {
--	struct perf_event_header header;
--	u64 id;
--	u64 lost;
--};
--
- struct lost_samples_event {
- 	struct perf_event_header header;
- 	u64 lost;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 47430af..1ad6e98 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -645,7 +645,7 @@ int machine__process_namespaces_event(struct machine *machine __maybe_unused,
- int machine__process_lost_event(struct machine *machine __maybe_unused,
- 				union perf_event *event, struct perf_sample *sample __maybe_unused)
- {
--	dump_printf(": id:%" PRIu64 ": lost:%" PRIu64 "\n",
-+	dump_printf(": id:%" PRI_lu64 ": lost:%" PRI_lu64 "\n",
- 		    event->lost.id, event->lost.lost);
- 	return 0;
- }
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 8bdadb2..5be85f5 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -263,8 +263,8 @@ static PyObject *pyrf_lost_event__repr(struct pyrf_event *pevent)
- 	PyObject *ret;
- 	char *s;
- 
--	if (asprintf(&s, "{ type: lost, id: %#" PRIx64 ", "
--			 "lost: %#" PRIx64 " }",
-+	if (asprintf(&s, "{ type: lost, id: %#" PRI_lx64 ", "
-+			 "lost: %#" PRI_lx64 " }",
- 		     pevent->event.lost.id, pevent->event.lost.lost) < 0) {
- 		ret = PyErr_NoMemory();
- 	} else {
+ 	if (h->srcline) {
+ 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
