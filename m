@@ -2,225 +2,157 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8B7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5948F2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3ED2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORQG6ecU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730672AbfH0VgF (ORCPT
+        id S1730765AbfH0Vgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:36:05 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:48518 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfH0VgE (ORCPT
+        Tue, 27 Aug 2019 17:36:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38004 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfH0Vgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:36:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by antares.kleine-koenig.org (Postfix) with ESMTP id 4D42C7860E7;
-        Tue, 27 Aug 2019 23:36:00 +0200 (CEST)
-Received: from antares.kleine-koenig.org ([127.0.0.1])
-        by localhost (antares.kleine-koenig.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ogGPutiTK-Yk; Tue, 27 Aug 2019 23:35:59 +0200 (CEST)
-Received: from [IPv6:2a02:8071:b5c2:53f8:3192:99d7:1d59:986] (unknown [IPv6:2a02:8071:b5c2:53f8:3192:99d7:1d59:986])
-        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
-        Tue, 27 Aug 2019 23:35:59 +0200 (CEST)
-Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
-To:     Joe Perches <joe@perches.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190827211244.7210-1-uwe@kleine-koenig.org>
- <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
-From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
- 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
- kC8vBDJg
-Message-ID: <59bfcf90-f7f8-4d55-b5bf-211f6ca67917@kleine-koenig.org>
-Date:   Tue, 27 Aug 2019 23:35:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 27 Aug 2019 17:36:44 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w11so177154plp.5;
+        Tue, 27 Aug 2019 14:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k+0AUBxbU6JVGwde8Yye0R2BikQpnByAsWECQmXnXdg=;
+        b=ORQG6ecUUO5DHHrbAG09EZHk4pcKZezQuBxRAF+KWI2FGlRh5SpcXahV1RvNmYAeFl
+         dn1epk7Ea0CJf26fKzI/BP5wzDexaa4K9aOFA2nGh98/oHHeHJf25lame43eyEgYOtNN
+         PIexZfo4kWgQrIKgGV1PspZOBb53LpAoG5aO/wAbEqfUlEbIIcfTyK8+a52s3lXPXjbO
+         bqeoqBQbMSkDMQoua45nrrUo0S9OSEBLwN9uRyZ0Zn505CbC+8+vogDtWZSCTTM6tahU
+         7w9X76M1Jwnevb1HG3vcL5+/WlcOoFvyZAUVDkTldSvpT5s3xzipcHNQFsWS+KJTHJg8
+         7RxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k+0AUBxbU6JVGwde8Yye0R2BikQpnByAsWECQmXnXdg=;
+        b=qXi+GXrAjDzkXj4Cs2mEXLhVbEu6aA+a0HOMfDujGMvZfJT/pJ0mbUix8ub0BYYD1E
+         O8BdZ0hddJmOMZha3xxAbXcwavXgAbrfubp99BEo6+tKw3lTdU8PMZYvxw8vj/CSgJcu
+         Lx6NkVMwO7vFgEc4/HmEruWuNuzpnxXHR865ycCYd3mNEnee0sCqLZGjgV4HviyS+CHq
+         Y6JY3T3H6MODeUiVa9gXHnfumkOax7G/QtFNSACEjvA6RHmXd7i8pM+1UgQV0GdLk14Y
+         9R6G020UCA1nCgjf1rzcvng8Jz3R9CDYVxlUD19hAWYGl2t8I7cxJePhEVnKghS0kEXa
+         o9HA==
+X-Gm-Message-State: APjAAAV1MZR701VbQHO1saODfUMPhCDk/PA1q4X3y3kSF7uec0yLGQIj
+        KEGAbo2nLn4d/we+7QkUfn4=
+X-Google-Smtp-Source: APXvYqy07weBiz46/PfoQJBr6AVmaA4u5nf1lNwSBxa3zqpE7lPXtS1ZoG1ndxvssYCOXXhfmOjHoQ==
+X-Received: by 2002:a17:902:f01:: with SMTP id 1mr981614ply.337.1566941803570;
+        Tue, 27 Aug 2019 14:36:43 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id b126sm275451pfa.177.2019.08.27.14.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 14:36:42 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Enrico Weigelt <info@metux.net>,
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), Fritz Koenig <frkoenig@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        linux-kernel@vger.kernel.org (open list),
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 0/9] drm/msm: async commit support
+Date:   Tue, 27 Aug 2019 14:33:30 -0700
+Message-Id: <20190827213421.21917-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym
-Content-Type: multipart/mixed; boundary="OibJTfYqSb8ZYpRBIfcgkpdEmi3BwmzKy";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Joe Perches <joe@perches.com>,
- Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
- Jani Nikula <jani.nikula@linux.intel.com>, Petr Mladek <pmladek@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <59bfcf90-f7f8-4d55-b5bf-211f6ca67917@kleine-koenig.org>
-Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
-References: <20190827211244.7210-1-uwe@kleine-koenig.org>
- <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
-In-Reply-To: <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
+From: Rob Clark <robdclark@chromium.org>
 
---OibJTfYqSb8ZYpRBIfcgkpdEmi3BwmzKy
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Currently the dpu backend attempts to handle async commits.  But it
+is racey and could result in flushing multiple times in a frame, or
+modifying hw state (such as scanout address or cursor position) after
+the previous flush, but before vblank, causing underflows (which
+manifest as brief black flashes).
 
-Hello Joe,
+This patchset removes the previous dpu async commit handling, and
+reworks the internal kms backend API to decouple flushing.  And in
+the end introduces an hrtimer to flush async updates.  The overall
+approach is:
 
-On 8/27/19 11:22 PM, Joe Perches wrote:
-> On Tue, 2019-08-27 at 23:12 +0200, Uwe Kleine-K=C3=B6nig wrote:
->> The new format specifier %dE introduced with this patch pretty-prints
->> the typical negative error values. So
->>
->> 	pr_info("probing failed (%dE)\n", ret);
->>
->> yields
->>
->> 	probing failed (EIO)
->>
->> if ret holds -EIO. This is easier to understand than the for now commo=
-n
->>
->> 	probing failed (-5)
->=20
-> I suggest using both outputs like '-5 -EIO'
-> rather than a single string
+ 1) Move flushing various hw state out of encoder/crtc atomic commit
+    (which is anyways an improvement over the current state, where
+    we either flush from crtc or encoder, depending on whether it is
+    a full modeset)
 
-I like it the way it is implemented as it is more flexible. If you want
-to see both, you can still do
+ 2) Switch to crtc_mask for anything that completes after atomic
+    _commit_tail(), so we do not need to keep the atomic state
+    around.  Ie. from drm core's perspective, an async commit
+    completes immediately.
 
-	pr_info("probing failed (%d %dE)\n", ret, ret);
+    This avoids fighting with drm core about the lifecycle of an
+    atomic state object.
 
-and people (like me) who think that giving only EIO can still do just tha=
-t.
+ 3) Track a bitmask of crtcs w/ pending async flush, and setup
+    an hrtimer with expiration 1ms before vblank, to trigger
+    the flush.  For async commits, we push the state down to
+    the double buffered hw registers immediately, and only
+    defer writing the flush registers.
 
-Best regards
-Uwe
+Current patchset only includes the dpu backend support for async
+commits.. mdp4 and mdp5 should be relatively trivial (less layers
+of indirection involved).  But I won't have access to any mdp4 hw
+for a few more weeks, so at least that part I might punt on for
+now.
 
+Rob Clark (9):
+  drm/msm/dpu: unwind async commit handling
+  drm/msm/dpu: add real wait_for_commit_done()
+  drm/msm/dpu: handle_frame_done() from vblank irq
+  drm/msm: add kms->wait_flush()
+  drm/msm: convert kms->complete_commit() to crtc_mask
+  drm/msm: add kms->flush_commit()
+  drm/msm: split power control from prepare/complete_commit
+  drm/msm: async commit support
+  drm/msm/dpu: async commit support
 
---OibJTfYqSb8ZYpRBIfcgkpdEmi3BwmzKy--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  48 +---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h      |   7 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |  46 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h   |   8 +-
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |  39 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  99 +++++----
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c      |  48 ++--
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c      |  47 ++--
+ drivers/gpu/drm/msm/msm_atomic.c              | 210 +++++++++++++++---
+ drivers/gpu/drm/msm/msm_drv.c                 |   1 +
+ drivers/gpu/drm/msm/msm_drv.h                 |   4 +
+ drivers/gpu/drm/msm/msm_kms.h                 | 108 ++++++++-
+ 12 files changed, 466 insertions(+), 199 deletions(-)
 
---JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+-- 
+2.21.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl1lojsACgkQwfwUeK3K
-7An5Rwf/cDKkW9zVOCTTnyhlRHfVJNZRfCsCPtmZyRRcvtgoC6kTCVolTwThZx5X
-aZRpgCXOjwbqPTzK5w9xk5ved15f8eGQmcq02KQqkNkk/bds72l4y/QJcQIXvdXJ
-o40Oi6m9PplDh7GudbHeJEhKIFL9GlIJde2Y8M6zYNOP5FJQbr9oBRbhrnVubMX9
-fgu2pyy8VNNYvf0nBW1RKptHv0rXHMfKLNEFDaQY+Qi//wQx0FE6HjfMu1hDlTM4
-bFYgdUnYsIDiT9z+tCFGj368P8G/almHOqFtxKqzaFjiRHkSmmsvz+uvLHy7275Y
-mEhXyCNyq88FXrPhtBSLcZj6+R3dYQ==
-=TW0X
------END PGP SIGNATURE-----
-
---JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym--
