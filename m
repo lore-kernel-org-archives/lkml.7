@@ -2,139 +2,116 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6838CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45636206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F4A214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:55:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pMVrBsv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfH0OzF (ORCPT
+        id S1730195AbfH0OzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:55:05 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20918 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfH0OzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:55:04 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:55:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="192257168"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 27 Aug 2019 07:55:03 -0700
-Date:   Tue, 27 Aug 2019 07:55:03 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Yi Wang <wang.yi59@zte.com.cn>, Peng Hao <peng.hao2@zte.com.cn>
-Subject: Re: [PATCH 3/3] KVM: x86: always stop emulation on page fault
-Message-ID: <20190827145503.GE27459@linux.intel.com>
-References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
- <1566911210-30059-4-git-send-email-jan.dakinevich@virtuozzo.com>
- <20190827145030.GC27459@linux.intel.com>
+        Tue, 27 Aug 2019 10:55:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38925 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfH0OzO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:55:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g8so31761913edm.6;
+        Tue, 27 Aug 2019 07:55:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J28up6uPKD34qaYuEApixR8UwpIcwgN+tKjvn/kdwk8=;
+        b=pMVrBsv09u5KWA+6vj2Cr0qR0GSZe6r8BMU1JSA+mY2m8bDJ+IdYJXV+hJDfmP273h
+         03KsR0CTQqVWzTM8EllBHW37q99IulCpwRlLntm1wh7QpBeheqcUWjdGcF92vEjKdwGe
+         JWg1stYWqsmHKwaAOkhxXnI4at6LB104kKnM4BFKCBSqOUYTlJLleTaPM+cWFcES1i88
+         zXTO9JvkAZyanLSswiDgGLU/w5Lg9OUsu2V4nZRlg9a47CKLJgik6d2SfwFNb8UzzLdP
+         TduGiWMz2vDnqLl/Tjwin5PPv0YyzSGJtEK4Qh0lsI17GPFMi0jTeoxn4o37yhTPsYs/
+         Yajw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J28up6uPKD34qaYuEApixR8UwpIcwgN+tKjvn/kdwk8=;
+        b=ZqxUsczPBiPFBMK5XZlZPVniX1hsWyMq3pzntgIbxB1hH70yGkODme5tXDJbS87Y4o
+         U93W3dBXWldkcqz8tiNYJMuitURVfOu3xgfA2NwbSVQXN+Mi8c31DNSUdIhEna4dRbaX
+         OfChr0VM6VtAsXFaAZezwiGIgky0HT6xwhLnXt8pHDaXs7d95ZTrW9bDXHajhc2jQZ05
+         heCOI74UlRmC5NgLNPAf7c/uc4ezQf/PxdJ8BQLXeFYxA4K5NNK/2kE3qvkC7i5e0VpR
+         IDtj8qpeqN7JwaOL7lDjSkQoptYJSKqauEjQs0xku0/xyRFhgbfcyS6mZoqAs0Gr2Nii
+         lecg==
+X-Gm-Message-State: APjAAAUtey+eXkR7Iq91j9H48jW3SvqmodP63Iqf2SZo42Tp55DI00iM
+        uWiyKDEZAspKhCoOGVvvrxo0Pku9xcGPH1DnbhQ=
+X-Google-Smtp-Source: APXvYqwpdkTQqMFYaHNmnBUxl9LiyKGwNSuxlXy0J60wneAG3Ifqr5uUMFvDC7+xGCyeK/INY6fNuNmfO28F3cIuk8s=
+X-Received: by 2002:a17:906:9607:: with SMTP id s7mr21872991ejx.300.1566917712168;
+ Tue, 27 Aug 2019 07:55:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827145030.GC27459@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1566807075-775-1-git-send-email-horatiu.vultur@microchip.com>
+ <20190826123811.GA13411@lunn.ch> <20190827101033.g2cb6j2j4kuyzh2a@soft-dev3.microsemi.net>
+ <20190827131824.GC11471@lunn.ch>
+In-Reply-To: <20190827131824.GC11471@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 27 Aug 2019 17:55:00 +0300
+Message-ID: <CA+h21hrRafYQm8eOcXjNVwudDbu-2=miWD6nCUJdh0jAGE319w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add NETIF_F_HW_BR_CAP feature
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        nikolay@cumulusnetworks.com,
+        "David S. Miller" <davem@davemloft.net>,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        bridge@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually adding Peng Hao and Yi Wang...
+On Tue, 27 Aug 2019 at 16:20, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > That sounds like a great idea. I was expecting to add this logic in the
+> > set_rx_mode function of the driver. But unfortunetly, I got the calls to
+> > this function before the dev->promiscuity is updated or not to get the
+> > call at all. For example in case the port is member of a bridge and I try
+> > to enable the promisc mode.
+>
+> Hi Horatiu
+>
+> What about the notifier? Is it called in all the conditions you need
+> to know about?
+>
+> Or, you could consider adding a new switchdev call to pass this
+> information to any switchdev driver which is interested in the
+> information.
+>
+> At the moment, the DSA driver core does not pass onto the driver it
+> should put a port into promisc mode. So pcap etc, will only see
+> traffic directed to the CPU, not all the traffic ingressing the
+> interface. If you put the needed core infrastructure into place, we
+> could plumb it down from the DSA core to DSA drivers.
+>
+> Having said that, i don't actually know if the Marvell switches
+> support this. Forward using the ATU and send a copy to the CPU?  What
+> switches tend to support is port mirroring, sending all the traffic
+> out another port. A couple of DSA drivers support that, via TC.
+>
 
-On Tue, Aug 27, 2019 at 07:50:30AM -0700, Sean Christopherson wrote:
-> +Cc Peng Hao and Yi Wang
-> 
-> On Tue, Aug 27, 2019 at 01:07:09PM +0000, Jan Dakinevich wrote:
-> > inject_emulated_exception() returns true if and only if nested page
-> > fault happens. However, page fault can come from guest page tables
-> > walk, either nested or not nested. In both cases we should stop an
-> > attempt to read under RIP and give guest to step over its own page
-> > fault handler.
-> > 
-> > Fixes: 6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
-> > Cc: Denis Lunev <den@virtuozzo.com>
-> > Cc: Roman Kagan <rkagan@virtuozzo.com>
-> > Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
-> > Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 93b0bd4..45caa69 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -6521,8 +6521,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
-> >  			if (reexecute_instruction(vcpu, cr2, write_fault_to_spt,
-> >  						emulation_type))
-> >  				return EMULATE_DONE;
-> > -			if (ctxt->have_exception && inject_emulated_exception(vcpu))
-> > +			if (ctxt->have_exception) {
-> > +				inject_emulated_exception(vcpu);
-> >  				return EMULATE_DONE;
-> > +			}
-> 
-> 
-> Yikes, this patch and the previous have quite the sordid history.
-> 
-> 
-> The non-void return from inject_emulated_exception() was added by commit
-> 
->   ef54bcfeea6c ("KVM: x86: skip writeback on injection of nested exception")
-> 
-> for the purpose of skipping writeback.  At the time, the above blob in the
-> decode flow didn't exist.
-> 
-> 
-> Decode exception handling was added by commit
-> 
->   6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
-> 
-> but it was dead code even then.  The patch discussion[1] even point out that
-> it was dead code, i.e. the change probably should have been reverted.
-> 
-> 
-> Peng Hao and Yi Wang later ran into what appears to be the same bug you're
-> hitting[2][3], and even had patches temporarily queued[4][5], but the
-> patches never made it to mainline as they broke kvm-unit-tests.  Fun side
-> note, Radim even pointed out[4] the bug fixed by patch 1/3.
-> 
-> So, the patches look correct, but there's the open question of why the
-> hypercall test was failing for Paolo.  I've tried to reproduce the #DF to
-> no avail.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/850077/
-> [2] https://lkml.kernel.org/r/1537311828-4547-1-git-send-email-penghao122@sina.com.cn
-> [3] https://lkml.kernel.org/r/20190111133002.GA14852@flask
-> [4] https://lkml.kernel.org/r/20190111133002.GA14852@flask
-> [5] https://lkml.kernel.org/r/9835d255-dd9a-222b-f4a2-93611175b326@redhat.com
-> 
-> >  			if (emulation_type & EMULTYPE_SKIP)
-> >  				return EMULATE_FAIL;
-> >  			return handle_emulation_failure(vcpu, emulation_type);
-> > -- 
-> > 2.1.4
-> > 
+But the CPU port is not a valid destination for port mirroring in DSA,
+I might add.
+
+>         Andrew
+
+Regards,
+-Vladimir
