@@ -2,168 +2,80 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B403DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F210DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8587B2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893247;
-	bh=5l8NdeJXT/Pd1cRyEEteliHe12VXiLgTXUaRCo6yo38=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xo0UjX2frzWLBOqtrnptqRhYNz0ge5ddfNgl/hZiNsTdeNMqxLT5YxpPVSH9AjvTg
-	 q5/rCKPp37U4RUaw3VhGuRDPUWfnZVTeGHM77lTpCDLNILEaxtaoZORU/hxKTtElyW
-	 vr19tfk0aQ+GiyFtVMriIR5LTC+f5/CHJCSkOkmc=
+	by mail.kernel.org (Postfix) with ESMTP id C2E8F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732911AbfH0IH0 (ORCPT
+        id S1733195AbfH0IHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730471AbfH0IHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:07:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B8D206BA;
-        Tue, 27 Aug 2019 08:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893243;
-        bh=5l8NdeJXT/Pd1cRyEEteliHe12VXiLgTXUaRCo6yo38=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mgyPoAFWWjRctR9q/WL5HUAJHoQospiQHQriJ+/Rol7hmdx98nO6eZ7oGwC2snZXG
-         vjUQheSJnVb+Cxsz6cR6oqBvHJEQ+J5d9z4fieMh3+4fvK1K79bm2EiVBk/b9zt78l
-         Rz2KgPRlo6LLnxLO0o0LYwHwh6o47DlZwVOLjHT0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 148/162] mm: memcontrol: flush percpu vmstats before releasing memcg
-Date:   Tue, 27 Aug 2019 09:51:16 +0200
-Message-Id: <20190827072743.890460259@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
-References: <20190827072738.093683223@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 27 Aug 2019 04:07:33 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:1433 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730471AbfH0IH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:07:29 -0400
+IronPort-SDR: okybydZ720+8OTwnjqV7ZPqywGZbnhKb8NRjL2NRQMPXdMcSBwJyoLUqB8v5ZMm4sxpVvvlpFx
+ hOfUACiyFH6O8EAks9bxBSd72rCqjZODFF3YyLrDtzw8xpU6sK0/ddpK0tVouK1qzwK+wUFswv
+ WREYy70Tr7Zje/3PAirQo+ORfuq9/3sdwKmPQnDL827V2U2PKdGccPFHljqaNYJQ3/KJLfHNne
+ VecGmHAFdce0jaVJgYrohFH6mGfaFeQ/MvvJmpf4N+hNp9bzPO+u/pLYrUfouBhpWUGb5kn1E7
+ acs=
+X-IronPort-AV: E=Sophos;i="5.64,436,1559509200"; 
+   d="scan'208";a="229735730"
+Subject: Re: [v4] rtc: pcf85363/pcf85263: fix error that failed to run hwclock
+ -w
+To:     Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, leoyang.li@nxp.com,
+        broonie@kernel.org
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190827043735.31231-1-biwen.li@nxp.com>
+From:   Nandor Han <nandor.han@vaisala.com>
+Message-ID: <2b49e282-fc03-ee59-2719-5a3c1ce573ce@vaisala.com>
+Date:   Tue, 27 Aug 2019 11:07:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190827043735.31231-1-biwen.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 27 Aug 2019 08:07:24.0220 (UTC) FILETIME=[757897C0:01D55CAE]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+On 8/27/19 7:37 AM, Biwen Li wrote:
+>   - In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS
+>        is 0, max_regiter is 0x2f, then reg will be equal to 0x30,
+>        '0x30 < 0x2f' is false,so regmap_writeable will return false.
+> 
+>      - The pcf85363/pcf85263 has the capability of address wrapping
+>        which means if you access a continuous address range across a
+>        certain boundary(max_register of struct regmap_config) the
+>        hardware actually wraps the access to a lower address. But the
+>        address violation check of regmap rejects such access.
 
-commit c350a99ea2b1b666c28948d74ab46c16913c28a7 upstream.
+nitpick: This 2 paragraphs could be combined to clear up the issue:
 
-Percpu caching of local vmstats with the conditional propagation by the
-cgroup tree leads to an accumulation of errors on non-leaf levels.
+`
+The pcf85363/pcf85263 has the capability of address wrapping
+which means if you access an address outside the allowed range 
+(0x00-0x2f) the hardware actually wraps the access to a lower address. 
+The rtc-pf85363 driver will use this feature to configure the time and 
+execute 2 actions in the same i2c write operation (stopping the clock 
+and configure the time). However the driver has also configured the 
+`regmap maxregister` protection mechanism that will block accessing 
+addresses outside valid range (0x00-0x2f).
+`
 
-Let's imagine two nested memory cgroups A and A/B.  Say, a process
-belonging to A/B allocates 100 pagecache pages on the CPU 0.  The percpu
-cache will spill 3 times, so that 32*3=96 pages will be accounted to A/B
-and A atomic vmstat counters, 4 pages will remain in the percpu cache.
+nitpick: I would also use separate buffers for this actions. Up to you :)
 
-Imagine A/B is nearby memory.max, so that every following allocation
-triggers a direct reclaim on the local CPU.  Say, each such attempt will
-free 16 pages on a new cpu.  That means every percpu cache will have -16
-pages, except the first one, which will have 4 - 16 = -12.  A/B and A
-atomic counters will not be touched at all.
+Otherwise LGTM +1
 
-Now a user removes A/B.  All percpu caches are freed and corresponding
-vmstat numbers are forgotten.  A has 96 pages more than expected.
-
-As memory cgroups are created and destroyed, errors do accumulate.  Even
-1-2 pages differences can accumulate into large numbers.
-
-To fix this issue let's accumulate and propagate percpu vmstat values
-before releasing the memory cgroup.  At this point these numbers are
-stable and cannot be changed.
-
-Since on cpu hotplug we do flush percpu vmstats anyway, we can iterate
-only over online cpus.
-
-Link: http://lkml.kernel.org/r/20190819202338.363363-2-guro@fb.com
-Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/memcontrol.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3150,6 +3150,41 @@ static u64 mem_cgroup_read_u64(struct cg
- 	}
- }
- 
-+static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
-+{
-+	unsigned long stat[MEMCG_NR_STAT];
-+	struct mem_cgroup *mi;
-+	int node, cpu, i;
-+
-+	for (i = 0; i < MEMCG_NR_STAT; i++)
-+		stat[i] = 0;
-+
-+	for_each_online_cpu(cpu)
-+		for (i = 0; i < MEMCG_NR_STAT; i++)
-+			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
-+
-+	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
-+		for (i = 0; i < MEMCG_NR_STAT; i++)
-+			atomic_long_add(stat[i], &mi->vmstats[i]);
-+
-+	for_each_node(node) {
-+		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
-+		struct mem_cgroup_per_node *pi;
-+
-+		for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-+			stat[i] = 0;
-+
-+		for_each_online_cpu(cpu)
-+			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-+				stat[i] += raw_cpu_read(
-+					pn->lruvec_stat_cpu->count[i]);
-+
-+		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
-+			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-+				atomic_long_add(stat[i], &pi->lruvec_stat[i]);
-+	}
-+}
-+
- #ifdef CONFIG_MEMCG_KMEM
- static int memcg_online_kmem(struct mem_cgroup *memcg)
- {
-@@ -4551,6 +4586,11 @@ static void __mem_cgroup_free(struct mem
- {
- 	int node;
- 
-+	/*
-+	 * Flush percpu vmstats to guarantee the value correctness
-+	 * on parent's and all ancestor levels.
-+	 */
-+	memcg_flush_percpu_vmstats(memcg);
- 	for_each_node(node)
- 		free_mem_cgroup_per_node_info(memcg, node);
- 	free_percpu(memcg->vmstats_percpu);
-
-
+Nandor
