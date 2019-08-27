@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B51AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28397C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F003214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB40C214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566923568;
-	bh=PiMK7h0Mx5b5PVG0IQIwupkKORbuS0OjdVqBlNFEzJo=;
+	s=default; t=1566923571;
+	bh=LNo7GFZx0l5JYVc7mDOffXV4SXATPTOgwghMXJusL9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClZi8zHZ8RMov7xw5ZUE38GxdCRL3oIHb6F75Gk95GnNbS6tbWoVjHEvSgFD7NfXu
-	 AGS0Tp8YJ2EkaVRFl9w3D4yawctlIkMIyz+uuqJ68Fv4B15vMRjfw8pm1VqcLYK37X
-	 MuSbmyObyAAeAUfpqIARBFF5ei2XG3h+xR9HAXF4=
+	b=S41es/kVv4pNKepivN/lMtlA8dv9jYKnzrZqTD95C5rt3fWdpPBCcHj6IdCjPEwTT
+	 N5j1vYP7S+AuSfa0MpAfWJul5f9r7OASMTOrvntl7iodosCaynz9FA4jJEXE1/YWKG
+	 U9TvP7eOIkMJOByPiFnHj5dFm08EVKvSOF7sZ+ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfH0Qcr (ORCPT
+        id S1730371AbfH0Qci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:32:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:47654 "EHLO foss.arm.com"
+        Tue, 27 Aug 2019 12:32:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:47596 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbfH0Qcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:32:39 -0400
+        id S1727138AbfH0Qcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:32:35 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64C9A337;
-        Tue, 27 Aug 2019 09:32:39 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4B091576;
+        Tue, 27 Aug 2019 09:32:34 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2BD413F59C;
-        Tue, 27 Aug 2019 09:32:38 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AC1ED3F59C;
+        Tue, 27 Aug 2019 09:32:33 -0700 (PDT)
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
@@ -42,9 +42,9 @@ Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Hanjun Guo <guohanjun@huawei.com>,
         Jan Glauber <jglauber@marvell.com>
-Subject: [PATCH v2 6/6] lib/refcount: Consolidate REFCOUNT_{MAX,SATURATED} definitions
-Date:   Tue, 27 Aug 2019 17:32:04 +0100
-Message-Id: <20190827163204.29903-7-will@kernel.org>
+Subject: [PATCH v2 3/6] lib/refcount: Remove unused refcount_*_checked() variants
+Date:   Tue, 27 Aug 2019 17:32:01 +0100
+Message-Id: <20190827163204.29903-4-will@kernel.org>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190827163204.29903-1-will@kernel.org>
 References: <20190827163204.29903-1-will@kernel.org>
@@ -53,9 +53,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The definitions of REFCOUNT_MAX and REFCOUNT_SATURATED are the same,
-regardless of CONFIG_REFCOUNT_FULL, so consolidate them into a single
-pair of definitions.
+The full-fat refcount implementation is exposed via a set of functions
+suffixed with "_checked()", the idea being that code can choose to use
+the more expensive, yet more secure implementation on a case-by-case
+basis.
+
+In reality, this hasn't happened, so with a grand total of zero users,
+let's remove the checked variants for now by simply dropping the suffix
+and predicating the out-of-line functions on CONFIG_REFCOUNT_FULL=y.
 
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Ingo Molnar <mingo@kernel.org>
@@ -64,43 +69,210 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/linux/refcount.h | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ include/linux/refcount.h | 25 +++++++---------------
+ lib/refcount.c           | 54 ++++++++++++++++++++++++++----------------------
+ 2 files changed, 36 insertions(+), 43 deletions(-)
 
 diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-index 7f9aa6511142..1f7e364cfb6d 100644
+index 89066a1471dd..edd505d1a23b 100644
 --- a/include/linux/refcount.h
 +++ b/include/linux/refcount.h
-@@ -22,6 +22,8 @@ typedef struct refcount_struct {
- } refcount_t;
+@@ -44,32 +44,21 @@ static inline unsigned int refcount_read(const refcount_t *r)
+ 	return atomic_read(&r->refs);
+ }
  
- #define REFCOUNT_INIT(n)	{ .refs = ATOMIC_INIT(n), }
-+#define REFCOUNT_MAX		INT_MAX
-+#define REFCOUNT_SATURATED	(INT_MIN / 2)
- 
- /**
-  * refcount_set - set a refcount's value
-@@ -47,9 +49,6 @@ static inline unsigned int refcount_read(const refcount_t *r)
+-extern __must_check bool refcount_add_not_zero_checked(int i, refcount_t *r);
+-extern void refcount_add_checked(int i, refcount_t *r);
+-
+-extern __must_check bool refcount_inc_not_zero_checked(refcount_t *r);
+-extern void refcount_inc_checked(refcount_t *r);
+-
+-extern __must_check bool refcount_sub_and_test_checked(int i, refcount_t *r);
+-
+-extern __must_check bool refcount_dec_and_test_checked(refcount_t *r);
+-extern void refcount_dec_checked(refcount_t *r);
+-
  #ifdef CONFIG_REFCOUNT_FULL
+ 
+ #define REFCOUNT_MAX		(UINT_MAX - 1)
+ #define REFCOUNT_SATURATED	UINT_MAX
+ 
+-#define refcount_add_not_zero	refcount_add_not_zero_checked
+-#define refcount_add		refcount_add_checked
++extern __must_check bool refcount_add_not_zero(int i, refcount_t *r);
++extern void refcount_add(int i, refcount_t *r);
+ 
+-#define refcount_inc_not_zero	refcount_inc_not_zero_checked
+-#define refcount_inc		refcount_inc_checked
++extern __must_check bool refcount_inc_not_zero(refcount_t *r);
++extern void refcount_inc(refcount_t *r);
+ 
+-#define refcount_sub_and_test	refcount_sub_and_test_checked
++extern __must_check bool refcount_sub_and_test(int i, refcount_t *r);
+ 
+-#define refcount_dec_and_test	refcount_dec_and_test_checked
+-#define refcount_dec		refcount_dec_checked
++extern __must_check bool refcount_dec_and_test(refcount_t *r);
++extern void refcount_dec(refcount_t *r);
+ 
+ #else
+ 
+diff --git a/lib/refcount.c b/lib/refcount.c
+index 719b0bc42ab1..a2f670998cee 100644
+--- a/lib/refcount.c
++++ b/lib/refcount.c
+@@ -43,8 +43,10 @@
+ #include <linux/spinlock.h>
  #include <linux/bug.h>
  
--#define REFCOUNT_MAX		INT_MAX
--#define REFCOUNT_SATURATED	(INT_MIN / 2)
--
- /*
-  * Variant of atomic_t specialized for reference counts.
++#ifdef CONFIG_REFCOUNT_FULL
++
+ /**
+- * refcount_add_not_zero_checked - add a value to a refcount unless it is 0
++ * refcount_add_not_zero - add a value to a refcount unless it is 0
+  * @i: the value to add to the refcount
+  * @r: the refcount
   *
-@@ -261,10 +260,6 @@ static inline void refcount_dec(refcount_t *r)
- 	}
+@@ -61,7 +63,7 @@
+  *
+  * Return: false if the passed refcount is 0, true otherwise
+  */
+-bool refcount_add_not_zero_checked(int i, refcount_t *r)
++bool refcount_add_not_zero(int i, refcount_t *r)
+ {
+ 	unsigned int new, val = atomic_read(&r->refs);
+ 
+@@ -83,10 +85,10 @@ bool refcount_add_not_zero_checked(int i, refcount_t *r)
+ 
+ 	return true;
  }
- #else /* CONFIG_REFCOUNT_FULL */
--
--#define REFCOUNT_MAX		INT_MAX
--#define REFCOUNT_SATURATED	(INT_MIN / 2)
--
- # ifdef CONFIG_ARCH_HAS_REFCOUNT
- #  include <asm/refcount.h>
- # else
+-EXPORT_SYMBOL(refcount_add_not_zero_checked);
++EXPORT_SYMBOL(refcount_add_not_zero);
+ 
+ /**
+- * refcount_add_checked - add a value to a refcount
++ * refcount_add - add a value to a refcount
+  * @i: the value to add to the refcount
+  * @r: the refcount
+  *
+@@ -101,14 +103,14 @@ EXPORT_SYMBOL(refcount_add_not_zero_checked);
+  * cases, refcount_inc(), or one of its variants, should instead be used to
+  * increment a reference count.
+  */
+-void refcount_add_checked(int i, refcount_t *r)
++void refcount_add(int i, refcount_t *r)
+ {
+-	WARN_ONCE(!refcount_add_not_zero_checked(i, r), "refcount_t: addition on 0; use-after-free.\n");
++	WARN_ONCE(!refcount_add_not_zero(i, r), "refcount_t: addition on 0; use-after-free.\n");
+ }
+-EXPORT_SYMBOL(refcount_add_checked);
++EXPORT_SYMBOL(refcount_add);
+ 
+ /**
+- * refcount_inc_not_zero_checked - increment a refcount unless it is 0
++ * refcount_inc_not_zero - increment a refcount unless it is 0
+  * @r: the refcount to increment
+  *
+  * Similar to atomic_inc_not_zero(), but will saturate at REFCOUNT_SATURATED
+@@ -120,7 +122,7 @@ EXPORT_SYMBOL(refcount_add_checked);
+  *
+  * Return: true if the increment was successful, false otherwise
+  */
+-bool refcount_inc_not_zero_checked(refcount_t *r)
++bool refcount_inc_not_zero(refcount_t *r)
+ {
+ 	unsigned int new, val = atomic_read(&r->refs);
+ 
+@@ -140,10 +142,10 @@ bool refcount_inc_not_zero_checked(refcount_t *r)
+ 
+ 	return true;
+ }
+-EXPORT_SYMBOL(refcount_inc_not_zero_checked);
++EXPORT_SYMBOL(refcount_inc_not_zero);
+ 
+ /**
+- * refcount_inc_checked - increment a refcount
++ * refcount_inc - increment a refcount
+  * @r: the refcount to increment
+  *
+  * Similar to atomic_inc(), but will saturate at REFCOUNT_SATURATED and WARN.
+@@ -154,14 +156,14 @@ EXPORT_SYMBOL(refcount_inc_not_zero_checked);
+  * Will WARN if the refcount is 0, as this represents a possible use-after-free
+  * condition.
+  */
+-void refcount_inc_checked(refcount_t *r)
++void refcount_inc(refcount_t *r)
+ {
+-	WARN_ONCE(!refcount_inc_not_zero_checked(r), "refcount_t: increment on 0; use-after-free.\n");
++	WARN_ONCE(!refcount_inc_not_zero(r), "refcount_t: increment on 0; use-after-free.\n");
+ }
+-EXPORT_SYMBOL(refcount_inc_checked);
++EXPORT_SYMBOL(refcount_inc);
+ 
+ /**
+- * refcount_sub_and_test_checked - subtract from a refcount and test if it is 0
++ * refcount_sub_and_test - subtract from a refcount and test if it is 0
+  * @i: amount to subtract from the refcount
+  * @r: the refcount
+  *
+@@ -180,7 +182,7 @@ EXPORT_SYMBOL(refcount_inc_checked);
+  *
+  * Return: true if the resulting refcount is 0, false otherwise
+  */
+-bool refcount_sub_and_test_checked(int i, refcount_t *r)
++bool refcount_sub_and_test(int i, refcount_t *r)
+ {
+ 	unsigned int new, val = atomic_read(&r->refs);
+ 
+@@ -203,10 +205,10 @@ bool refcount_sub_and_test_checked(int i, refcount_t *r)
+ 	return false;
+ 
+ }
+-EXPORT_SYMBOL(refcount_sub_and_test_checked);
++EXPORT_SYMBOL(refcount_sub_and_test);
+ 
+ /**
+- * refcount_dec_and_test_checked - decrement a refcount and test if it is 0
++ * refcount_dec_and_test - decrement a refcount and test if it is 0
+  * @r: the refcount
+  *
+  * Similar to atomic_dec_and_test(), it will WARN on underflow and fail to
+@@ -218,14 +220,14 @@ EXPORT_SYMBOL(refcount_sub_and_test_checked);
+  *
+  * Return: true if the resulting refcount is 0, false otherwise
+  */
+-bool refcount_dec_and_test_checked(refcount_t *r)
++bool refcount_dec_and_test(refcount_t *r)
+ {
+-	return refcount_sub_and_test_checked(1, r);
++	return refcount_sub_and_test(1, r);
+ }
+-EXPORT_SYMBOL(refcount_dec_and_test_checked);
++EXPORT_SYMBOL(refcount_dec_and_test);
+ 
+ /**
+- * refcount_dec_checked - decrement a refcount
++ * refcount_dec - decrement a refcount
+  * @r: the refcount
+  *
+  * Similar to atomic_dec(), it will WARN on underflow and fail to decrement
+@@ -234,11 +236,13 @@ EXPORT_SYMBOL(refcount_dec_and_test_checked);
+  * Provides release memory ordering, such that prior loads and stores are done
+  * before.
+  */
+-void refcount_dec_checked(refcount_t *r)
++void refcount_dec(refcount_t *r)
+ {
+-	WARN_ONCE(refcount_dec_and_test_checked(r), "refcount_t: decrement hit 0; leaking memory.\n");
++	WARN_ONCE(refcount_dec_and_test(r), "refcount_t: decrement hit 0; leaking memory.\n");
+ }
+-EXPORT_SYMBOL(refcount_dec_checked);
++EXPORT_SYMBOL(refcount_dec);
++
++#endif /* CONFIG_REFCOUNT_FULL */
+ 
+ /**
+  * refcount_dec_if_one - decrement a refcount if it is 1
 -- 
 2.11.0
 
