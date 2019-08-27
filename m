@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AC5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF050C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5991217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8564E2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893428;
-	bh=sy0/m07PKMTkCdmcinVLBxpf0qhjiUFZE268cm2ABUM=;
+	s=default; t=1566893430;
+	bh=Q4357+CLrATKCNN2NdR6Db6rhCBBv0YlO8NsV05X+ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N7uP2ci36EH4fHbY1/V4nA4JwazelO+NJJFVCQYdydZ5oSEwLKwjvzyG1KxyzeUWY
-	 FH1w0aciBtuxsysSg19wWnpDs5uXclAKHMoEQ0TSdWWV9pX9aRikP9VQl7k89prqd/
-	 w54NBnqIjgcPIK47s09P03UL8CbGcS59KuVU7ekk=
+	b=R4JFWkCqSD4ZsluSJqmJn5HCuqBzwr5EHZQA9QHCGmtAIETxSZuOtVbCW2pwYWmBS
+	 HbHg3kv5bjuFsAzTd3cMjYvVwMT4sKr5Tz2X4I+UDpKrLz9NInOpJ3biq0ClrAuVEz
+	 5rY2pJouVKM8i2lEukoyLGow+6p3YAfGNCuE6FGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbfH0ICf (ORCPT
+        id S1731564AbfH0ICc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731908AbfH0ICT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:19 -0400
+        id S1729911AbfH0ICQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F08420828;
-        Tue, 27 Aug 2019 08:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E133206BF;
+        Tue, 27 Aug 2019 08:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892937;
-        bh=sy0/m07PKMTkCdmcinVLBxpf0qhjiUFZE268cm2ABUM=;
+        s=default; t=1566892934;
+        bh=Q4357+CLrATKCNN2NdR6Db6rhCBBv0YlO8NsV05X+ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1aUjc5E3Nd/U3ph5gRRFIxEUF7I3H8xroHQ1b1q4/dCtMP1fowp8vhHoY5uqBPciL
-         josIXwRXJwCWRdwrgrzUYUQlDqhQ/uJpLhquqEQdjRSKorSrpeQQpdo3xnGQyXT9fe
-         oeoBtayyl0UO2U0mqe/BHzE8mUJ3uUo7dkoS87wU=
+        b=T/W8+vtA23jkKHhgU6cnkdM9JpjfM/NDTEZDZIklde9bGEec8ZwSXiH5zG7ge+vzN
+         PQsEu6Z1mH49CytL0Bnm5nEw073hW52SQn1dMhPpLsz3oA8YvTzM/EnUcAgRCIKE1Y
+         EiW7HJid/aXzfERXWyDsoljzSf70hDL6kxj3AICM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 059/162] iwlwifi: fix locking in delayed GTK setting
-Date:   Tue, 27 Aug 2019 09:49:47 +0200
-Message-Id: <20190827072740.233875735@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 012/162] HID: logitech-hidpp: add USB PID for a few more supported mice
+Date:   Tue, 27 Aug 2019 09:49:00 +0200
+Message-Id: <20190827072738.774367486@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,99 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6569e7d36773956298ec1d5f4e6a2487913d2752 ]
+[ Upstream commit 27fc32fd9417968a459d43d9a7c50fd423d53eb9 ]
 
-This code clearly never could have worked, since it locks
-while already locked. Add an unlocked __iwl_mvm_mac_set_key()
-variant that doesn't do locking to fix that.
+Add more device IDs to logitech-hidpp driver.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Filipe Laíns <lains@archlinux.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/mvm/mac80211.c | 39 ++++++++++++-------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 964c7baabede3..edffae3741e00 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -207,11 +207,11 @@ static const struct cfg80211_pmsr_capabilities iwl_mvm_pmsr_capa = {
- 	},
- };
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index cf05816a601f5..34e2b3f9d540d 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3749,15 +3749,45 @@ static const struct hid_device_id hidpp_devices[] = {
  
--static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
--			       enum set_key_cmd cmd,
--			       struct ieee80211_vif *vif,
--			       struct ieee80211_sta *sta,
--			       struct ieee80211_key_conf *key);
-+static int __iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
-+				 enum set_key_cmd cmd,
-+				 struct ieee80211_vif *vif,
-+				 struct ieee80211_sta *sta,
-+				 struct ieee80211_key_conf *key);
+ 	{ L27MHZ_DEVICE(HID_ANY_ID) },
  
- void iwl_mvm_ref(struct iwl_mvm *mvm, enum iwl_mvm_ref_type ref_type)
- {
-@@ -2725,7 +2725,7 @@ static int iwl_mvm_start_ap_ibss(struct ieee80211_hw *hw,
+-	{ /* Logitech G403 Gaming Mouse over USB */
++	{ /* Logitech G203/Prodigy Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC084) },
++	{ /* Logitech G302 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07F) },
++	{ /* Logitech G303 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC080) },
++	{ /* Logitech G400 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07E) },
++	{ /* Logitech G403 Wireless Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC082) },
++	{ /* Logitech G403 Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC083) },
++	{ /* Logitech G403 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08F) },
++	{ /* Logitech G502 Proteus Core Gaming Mouse */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07D) },
++	{ /* Logitech G502 Proteus Spectrum Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC332) },
++	{ /* Logitech G502 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08B) },
+ 	{ /* Logitech G700 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
++	{ /* Logitech G700s Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07C) },
++	{ /* Logitech G703 Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC087) },
++	{ /* Logitech G703 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC090) },
+ 	{ /* Logitech G900 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
++	{ /* Logitech G903 Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC086) },
++	{ /* Logitech G903 Hero Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC091) },
+ 	{ /* Logitech G920 Wheel over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_G920_WHEEL),
+ 		.driver_data = HIDPP_QUIRK_CLASS_G920 | HIDPP_QUIRK_FORCE_OUTPUT_REPORTS},
++	{ /* Logitech G Pro Gaming Mouse over USB */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC088) },
  
- 		mvmvif->ap_early_keys[i] = NULL;
- 
--		ret = iwl_mvm_mac_set_key(hw, SET_KEY, vif, NULL, key);
-+		ret = __iwl_mvm_mac_set_key(hw, SET_KEY, vif, NULL, key);
- 		if (ret)
- 			goto out_quota_failed;
- 	}
-@@ -3493,11 +3493,11 @@ static int iwl_mvm_mac_sched_scan_stop(struct ieee80211_hw *hw,
- 	return ret;
- }
- 
--static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
--			       enum set_key_cmd cmd,
--			       struct ieee80211_vif *vif,
--			       struct ieee80211_sta *sta,
--			       struct ieee80211_key_conf *key)
-+static int __iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
-+				 enum set_key_cmd cmd,
-+				 struct ieee80211_vif *vif,
-+				 struct ieee80211_sta *sta,
-+				 struct ieee80211_key_conf *key)
- {
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
- 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
-@@ -3552,8 +3552,6 @@ static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
- 			return -EOPNOTSUPP;
- 	}
- 
--	mutex_lock(&mvm->mutex);
--
- 	switch (cmd) {
- 	case SET_KEY:
- 		if ((vif->type == NL80211_IFTYPE_ADHOC ||
-@@ -3699,7 +3697,22 @@ static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
- 		ret = -EINVAL;
- 	}
- 
-+	return ret;
-+}
-+
-+static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
-+			       enum set_key_cmd cmd,
-+			       struct ieee80211_vif *vif,
-+			       struct ieee80211_sta *sta,
-+			       struct ieee80211_key_conf *key)
-+{
-+	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
-+	int ret;
-+
-+	mutex_lock(&mvm->mutex);
-+	ret = __iwl_mvm_mac_set_key(hw, cmd, vif, sta, key);
- 	mutex_unlock(&mvm->mutex);
-+
- 	return ret;
- }
- 
+ 	{ /* MX5000 keyboard over Bluetooth */
+ 	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb305),
 -- 
 2.20.1
 
