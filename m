@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634E8C3A5A3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9682AC3A5A6
 	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC4D217F5
+	by mail.kernel.org (Postfix) with ESMTP id 63A3A2186A
 	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1566893494;
-	bh=zq1uNPKinyJYge4bsychB7kvd71bQAuStkyBQJMgH6A=;
+	bh=BVc9jPVXfB9lSCQwQrTt1ByWYOlvUO3fKEJjo7L40EQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIOKsiYyTteGeiDB9pMPDhByzhTl7+1g1JgON7Hx5YqCT+x2RCUvVWHzDTXqyBYSp
-	 dKIsUJOhkQ2oAI92x+Gk4T2qhuoNgAe4ialn3xeveEERWc6GHZTYfoIixb2JMp8nL7
-	 knMFLH3cgNe10ZyYQIYaaFOJ87pSipD/yaLX7mNM=
+	b=ZukhSVpDvLsWNW122NN6rHjbtCEfKfaYGzsfe+f3B/mc8ZytHC2RWoBocCAuq2rCL
+	 4YFVsJsYCGNmaX6m2yYeOsRm+Roi5dmLVF2bR4i+4SnfdIMgDtTM0Slc0fKT9xeYF1
+	 7qXToXB84OBLLmLJpzQA5egdXLQMdXqKKixRQ11U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbfH0ILc (ORCPT
+        id S1731657AbfH0IBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:01:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfH0IBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:01:07 -0400
+        id S1731135AbfH0IA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E6B21872;
-        Tue, 27 Aug 2019 08:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFCB4206BA;
+        Tue, 27 Aug 2019 08:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892866;
-        bh=zq1uNPKinyJYge4bsychB7kvd71bQAuStkyBQJMgH6A=;
+        s=default; t=1566892857;
+        bh=BVc9jPVXfB9lSCQwQrTt1ByWYOlvUO3fKEJjo7L40EQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAYO3MiyUfC0QStOQKPHniuRAVXKZXTyDK0Hk0vFbQmZNiNUb7VaN0Hy6TIDSG9pt
-         VfDfJ0vZwezffm3LgRJugVkV4VKseyGtyVDCW1gDvzY70WUpxr1KHoXtqmebUzn7C0
-         DYghxx9NDfq/NlVfsWVL6ucHfn+TYhm3/3WLi82Y=
+        b=xUbK7WBQBUALHoprHkz4icthjkKWMYZs3ZZJZ2iLegG3c9ZFCLxbKo9DmSbZjIGo2
+         bwT8xOhRYN3qwE4UQpF445pAwzoJNq8cHCYWZGCu04fEM5yv9rQAGaIyw9byj5UTKY
+         3a8Vhf9qSow4oS0s+K5f2Y40LOodyDAJypvHoA28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 041/162] ASoC: ti: davinci-mcasp: Fix clk PDIR handling for i2s master mode
-Date:   Tue, 27 Aug 2019 09:49:29 +0200
-Message-Id: <20190827072739.685598752@linuxfoundation.org>
+Subject: [PATCH 5.2 038/162] st21nfca_connectivity_event_received: null check the allocation
+Date:   Tue, 27 Aug 2019 09:49:26 +0200
+Message-Id: <20190827072739.591097394@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,49 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 34a2a80ff30b5d2330abfa8980c7f0cc15a8158a ]
+[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
 
-When running McASP as master capture alone will not record any audio unless
-a parallel playback stream is running. As soon as the playback stops the
-captured data is going to be silent again.
+devm_kzalloc may fail and return null. So the null check is needed.
 
-In McASP master mode we need to set the PDIR for the clock pins and fix
-the mcasp_set_axr_pdir() to skip the bits in the PDIR registers above
-AMUTE.
-
-This went unnoticed as most of the boards uses McASP as slave and neither
-of these issues are visible (audible) in those setups.
-
-Fixes: ca3d9433349e ("ASoC: davinci-mcasp: Update PDIR (pin direction) register handling")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190725083423.7321-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nfc/st21nfca/se.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index 5e8e31743a28d..dc01bbca0ff69 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -194,7 +194,7 @@ static inline void mcasp_set_axr_pdir(struct davinci_mcasp *mcasp, bool enable)
- {
- 	u32 bit;
+diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
+index 06fc542fd1987..6586378cacb05 100644
+--- a/drivers/nfc/st21nfca/se.c
++++ b/drivers/nfc/st21nfca/se.c
+@@ -317,6 +317,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
  
--	for_each_set_bit(bit, &mcasp->pdir, PIN_BIT_AFSR) {
-+	for_each_set_bit(bit, &mcasp->pdir, PIN_BIT_AMUTE) {
- 		if (enable)
- 			mcasp_set_bits(mcasp, DAVINCI_MCASP_PDIR_REG, BIT(bit));
- 		else
-@@ -222,6 +222,7 @@ static void mcasp_start_rx(struct davinci_mcasp *mcasp)
- 	if (mcasp_is_synchronous(mcasp)) {
- 		mcasp_set_ctl_reg(mcasp, DAVINCI_MCASP_GBLCTLX_REG, TXHCLKRST);
- 		mcasp_set_ctl_reg(mcasp, DAVINCI_MCASP_GBLCTLX_REG, TXCLKRST);
-+		mcasp_set_clk_pdir(mcasp, true);
- 	}
+ 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+ 						   skb->len - 2, GFP_KERNEL);
++		if (!transaction)
++			return -ENOMEM;
  
- 	/* Activate serializer(s) */
+ 		transaction->aid_len = skb->data[1];
+ 		memcpy(transaction->aid, &skb->data[2],
 -- 
 2.20.1
 
