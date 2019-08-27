@@ -2,135 +2,371 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8A1C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22306C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4243520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:51:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LjulPGvE"
+	by mail.kernel.org (Postfix) with ESMTP id E175720679
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfH0Bv1 (ORCPT
+        id S1728720AbfH0Bvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 21:51:27 -0400
-Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:50277
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726487AbfH0Bv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 21:51:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RjWP7zZkrDS6iYPE7ncOfoB61LbUzKD85Nv7HEsplBf4Flc4K0F89YKpr+UO6ZFFsXKKOQHoxuxvRLJei/1rvejFbztS1B60SmM8QMW3CNDydg7JzGMTdrSjjKyjbAYxi6/ux8qo3qDSme0se/T1clqHiFQTVRnEDFDaMTARpXXawl6hbH0PHtskcqZvd4VlEv+Cf4R0wZI+qXj9MJFHNrXg1Q2tDGa/MJ4/y6mJhWRfQhkLaIHLAfluJyMok1sThdm3fRDFTE3tOXEdTy0Gq6TdOIkYKIGtHtcfBTmonOO8427hStAwxSUIS/lWMkaT4b8KuKi44UDGmmN1zQjnAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=04kpSK0OjLxD75A8OFUUoZ1dPnRiJi30AynNX349/YU=;
- b=nuIwxYCNwhI2y+luVk9IWdymb7KvepiV9NyNr6G+uAFuYQWPwYXZ/2Kow8v96Rannx/y3/fQVwBpU+j1Y0xF5DAZBGBkEidfM3KgpDRTzOgV2zV5fOw74Psg/5xJhPVjqU2Ov2g7dSOwgHBiIjg2oCWUjCbCGGh/qmfgYAKpKmeSBGznYP+KWRgggWyWg/yRG4HxsGNqWFR1bQ+qCsRh2w8RmoxF2oJS0gkeqhu3YXEDluQ10aVexFIXgQacVkzoKYdBAXh7yeaRChn4bQ20jrt5lH6aYiKka0axjWFNwXQ1P3SVfQfeXq+zmpE0moVtKB3EwB7x0M/GeUAs+I5b7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=04kpSK0OjLxD75A8OFUUoZ1dPnRiJi30AynNX349/YU=;
- b=LjulPGvEN07kzCI9roCVlEkDXrKnha7tLQ2FSyvlTYM7njZ+VDI6hgzeDaHx0fSurfowJlNbx2dCbMWiID3zGuAzpUGJiWEJO7jKp2pa+RFlg7I4i4laYVRHDqWVDqjIMGWK3E3hTrp9vMcF7KcVhGuTxD2Mf3NJoBkUNGEY8Z0=
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
- AM6PR0402MB3894.eurprd04.prod.outlook.com (52.133.8.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 01:51:20 +0000
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::c9d3:4e41:12b7:892]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::c9d3:4e41:12b7:892%5]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
- 01:51:20 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Thread-Topic: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Thread-Index: AQHVRn7U0xGc5nAWcEuPNmwDSS0IiacOZc9g
-Date:   Tue, 27 Aug 2019 01:51:20 +0000
-Message-ID: <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
- <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a8ee726-5a46-4b65-4006-08d72a910eed
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0402MB3894;
-x-ms-traffictypediagnostic: AM6PR0402MB3894:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0402MB389462E7CF145C846171B4F1F5A00@AM6PR0402MB3894.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(366004)(189003)(199004)(446003)(305945005)(4326008)(256004)(66476007)(2906002)(25786009)(8936002)(14444005)(229853002)(33656002)(316002)(110136005)(9686003)(53936002)(74316002)(6246003)(7416002)(54906003)(71190400001)(71200400001)(6436002)(7696005)(55016002)(76176011)(6506007)(53546011)(102836004)(26005)(66574012)(186003)(478600001)(66066001)(5660300002)(3846002)(86362001)(6116002)(486006)(76116006)(44832011)(14454004)(8676002)(7736002)(66556008)(64756008)(11346002)(66446008)(81156014)(81166006)(476003)(66946007)(99286004)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3894;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RWJJNfUHL5JyuaUrNyghSSaJKQNH0b+1m7sDBjZ/7p7hfigLSotdP4MOWyTMbBqHGl9ijXxuTeq9Gk0Wnb7DmoWJrgCBbMWAJRLf1Emzp9qLq6517VFiIuDIMgTuV1rlRnYIiUF5ZN0nOeOdtHrXJaJuEISEsumimE+YNN8VN+YBzqYPoib2/gzdbEpOaF5b3hoHIO/dNM4FABiTrv0KXXjg0rHzZ37dvfTZduKzqFrgr18iXyS8yx+6E/m8EyLiiEPBdHiU2Bno43g/KWQ+uP1UPiIIGgBT1rTgCiKJJJKuIvlfip/VXqiQg7jcPHwsDhhZXGulMFhR++xMI4DnUOl/Fy2oVXs9Htb26vmKklVA0crtjztIZg9k9ZuKZ75yOEWwfXMI6YFvokv33owflL671FQrJSe4tn7p3P0l7dA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 26 Aug 2019 21:51:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44784 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbfH0Bvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 21:51:42 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D37E8A4D3E6;
+        Tue, 27 Aug 2019 01:51:41 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 469D510016EA;
+        Tue, 27 Aug 2019 01:51:41 +0000 (UTC)
+Date:   Mon, 26 Aug 2019 19:51:40 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     jiri@mellanox.com, kwankhede@nvidia.com, cohuck@redhat.com,
+        davem@davemloft.net, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+Message-ID: <20190826195140.0db1c9fd@x1.home>
+In-Reply-To: <20190826194456.6edef7d1@x1.home>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-2-parav@mellanox.com>
+        <20190826194456.6edef7d1@x1.home>
+Organization: Red Hat
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a8ee726-5a46-4b65-4006-08d72a910eed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 01:51:20.3749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8ksd2GJ3EzniwHaJ7u5Pnmy/Ic5wKmUf1XDKZlKD5aqqCvhE4Yvh1g/LhyKQuAMwNZaHL2KcSi3ImQe6rT1ZKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3894
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 27 Aug 2019 01:51:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gNy8zMC8yMDE5IDU6MzEgQU0sIEFuc29uLkh1YW5nQG54cC5jb20gd3JvdGU6DQo+
-ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4NCj4gPiBTb21l
-IHBsYXRmb3JtcyBsaWtlIGkuTVg4TVEgaGFzIGNsb2NrIGNvbnRyb2wgZm9yIHRoaXMgbW9kdWxl
-LCBuZWVkIHRvDQo+ID4gYWRkIGNsb2NrIG9wZXJhdGlvbnMgdG8gbWFrZSBzdXJlIHRoZSBkcml2
-ZXIgaXMgd29ya2luZyBwcm9wZXJseS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBHdWlkbyBHw7xudGhl
-ciA8YWd4QHNpZ3hjcHUub3JnPg0KPiANCj4gVGhpcyBzZXJpZXMgbG9va3MgZ29vZCwgZG8geW91
-IHRoaW5rIGl0IGNhbiBiZSBtZXJnZWQgaW4gdGltZSBmb3IgdjUuND8NCj4gVG9kYXkgd2FzIHY1
-LjMtcmM2Lg0KDQpJZiB0aGUgcXVlc3Rpb24gaXMgZm9yIG1lLCB0aGVuIEkgYW0gTk9UIHN1cmUs
-IHRoZSB0aGVybWFsIHBhdGNoZXMgYXJlIHBlbmRpbmcNCnRoZXJlIGZvciBhbG1vc3QgaGFsZiB5
-ZWFyIGFuZCBJIGRpZCBOT1QgcmVjZWl2ZSBhbnkgcmVzcG9uc2UsIGxvb2tzIGxpa2Ugbm8gb25l
-DQppcyBtYWludGFpbmluZyB0aGUgdGhlcm1hbCBzdWItc3lzdGVtPw0KDQo+IA0KPiBJbiBhbiBl
-YXJsaWVyIHNlcmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdzIHdhcyByZW1vdmVkIGZyb20g
-dGhlIFRNVQ0KPiBjbG9jayBzbyBpZiB0aGUgdGhlcm1hbCBkcml2ZXIgZG9lc24ndCBleHBsaWNp
-dGx5IGVuYWJsZSBpdCB0aGUgc3lzdGVtIHdpbGwgaGFuZw0KPiBvbiBwcm9iZS4gVGhpcyBpcyB3
-aGF0IGhhcHBlbnMgaW4gbGludXgtbmV4dCByaWdodCBub3chDQoNClRoZSB0aGVybWFsIGRyaXZl
-ciBzaG91bGQgYmUgYnVpbHQgd2l0aCBtb2R1bGUsIHNvIGRlZmF1bHQga2VybmVsIHNob3VsZCBj
-YW4gYm9vdA0KdXAsIGRvIHlvdSBtb2RpZnkgdGhlIHRoZXJtYWwgZHJpdmVyIGFzIGJ1aWx0LWlu
-Pw0KDQo+IA0KPiBVbmxlc3MgdGhpcyBwYXRjaGVzIGlzIG1lcmdlZCBzb29uIHdlJ2xsIGVuZCB1
-cCB3aXRoIGEgNS40LXJjMSB0aGF0IGRvZXNuJ3QNCj4gYm9vdCBvbiBpbXg4bXEuIEFuIGVhc3kg
-Zml4IHdvdWxkIGJlIHRvIGRyb3AvcmV2ZXJ0IGNvbW1pdA0KPiA5NTFjMWFlZjk2OTEgKCJjbGs6
-IGlteDhtcTogUmVtb3ZlIENMS19JU19DUklUSUNBTCBmbGFnIGZvcg0KPiBJTVg4TVFfQ0xLX1RN
-VV9ST09UIikgdW50aWwgdGhlIHRoZXJtYWwgcGF0Y2hlcyBhcmUgYWNjZXB0ZWQuDQoNCklmIHRo
-ZSB0aGVybWFsIGRyaXZlciBpcyBidWlsdCBhcyBtb2R1bGUsIEkgdGhpbmsgbm8gbmVlZCB0byBy
-ZXZlcnQgdGhlIGNvbW1pdCwgYnV0DQppZiBieSBkZWZhdWx0IHRoZXJtYWwgZHJpdmVyIGlzIGJ1
-aWx0LWluIG9yIG1vZCBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFrDQprZXJu
-ZWwgYm9vdCB1cC4NCg0KQW5zb24uDQoNCj4gDQo+IE1lcmdpbmcgcGF0Y2hlcyBvdXQtb2Ytb3Jk
-ZXIgd2hlbiB0aGV5IGhhdmUgaGFyZCAoYm9vdC1icmVha2luZykNCj4gZGVwZW5kZW5jaWVzIGFs
-c28gYnJlYWtzIGJpc2VjdC4NCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IExlb25hcmQNCg==
+On Mon, 26 Aug 2019 19:44:56 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> On Mon, 26 Aug 2019 15:41:16 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+> 
+> > Whenever a parent requests to generate mdev alias, generate a mdev
+> > alias.
+> > It is an optional attribute that parent can request to generate
+> > for each of its child mdev.
+> > mdev alias is generated using sha1 from the mdev name.
+> > 
+> > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > ---
+> >  drivers/vfio/mdev/mdev_core.c    | 98 +++++++++++++++++++++++++++++++-
+> >  drivers/vfio/mdev/mdev_private.h |  5 +-
+> >  drivers/vfio/mdev/mdev_sysfs.c   | 13 +++--
+> >  include/linux/mdev.h             |  4 ++
+> >  4 files changed, 111 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> > index b558d4cfd082..e825ff38b037 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+> > @@ -10,9 +10,11 @@
+> >  #include <linux/module.h>
+> >  #include <linux/device.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/mm.h>
+> >  #include <linux/uuid.h>
+> >  #include <linux/sysfs.h>
+> >  #include <linux/mdev.h>
+> > +#include <crypto/hash.h>
+> >  
+> >  #include "mdev_private.h"
+> >  
+> > @@ -27,6 +29,8 @@ static struct class_compat *mdev_bus_compat_class;
+> >  static LIST_HEAD(mdev_list);
+> >  static DEFINE_MUTEX(mdev_list_lock);
+> >  
+> > +static struct crypto_shash *alias_hash;
+> > +
+> >  struct device *mdev_parent_dev(struct mdev_device *mdev)
+> >  {
+> >  	return mdev->parent->dev;
+> > @@ -164,6 +168,18 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >  		goto add_dev_err;
+> >  	}
+> >  
+> > +	if (ops->get_alias_length) {
+> > +		unsigned int digest_size;
+> > +		unsigned int aligned_len;
+> > +
+> > +		aligned_len = roundup(ops->get_alias_length(), 2);
+> > +		digest_size = crypto_shash_digestsize(alias_hash);
+> > +		if (aligned_len / 2 > digest_size) {
+> > +			ret = -EINVAL;
+> > +			goto add_dev_err;
+> > +		}
+> > +	}  
+> 
+> This looks like a sanity check, it could be done outside of the
+> parent_list_lock, even before we get a parent device reference.
+> 
+> I think we're using a callback for get_alias_length() rather than a
+> fixed field to support the mtty module option added in patch 4, right?
+> Its utility is rather limited with no args.  I could imagine that if a
+> parent wanted to generate an alias that could be incorporated into a
+> string with the parent device name that it would be useful to call this
+> with the parent device as an arg.  I guess we can save that until a
+> user comes along though.
+> 
+> There doesn't seem to be anything serializing use of alias_hash.
+> 
+> > +
+> >  	parent = kzalloc(sizeof(*parent), GFP_KERNEL);
+> >  	if (!parent) {
+> >  		ret = -ENOMEM;
+> > @@ -259,6 +275,7 @@ static void mdev_device_free(struct mdev_device *mdev)
+> >  	mutex_unlock(&mdev_list_lock);
+> >  
+> >  	dev_dbg(&mdev->dev, "MDEV: destroying\n");
+> > +	kvfree(mdev->alias);
+> >  	kfree(mdev);
+> >  }
+> >  
+> > @@ -269,18 +286,86 @@ static void mdev_device_release(struct device *dev)
+> >  	mdev_device_free(mdev);
+> >  }
+> >  
+> > -int mdev_device_create(struct kobject *kobj,
+> > -		       struct device *dev, const guid_t *uuid)
+> > +static const char *
+> > +generate_alias(const char *uuid, unsigned int max_alias_len)
+> > +{
+> > +	struct shash_desc *hash_desc;
+> > +	unsigned int digest_size;
+> > +	unsigned char *digest;
+> > +	unsigned int alias_len;
+> > +	char *alias;
+> > +	int ret = 0;
+> > +
+> > +	/* Align to multiple of 2 as bin2hex will generate
+> > +	 * even number of bytes.
+> > +	 */  
+> 
+> Comment style for non-networking code please.
+> 
+> > +	alias_len = roundup(max_alias_len, 2);
+> > +	alias = kvzalloc(alias_len + 1, GFP_KERNEL);  
+
+Oops, here's the null termination of alias for the even case (+ 1),
+ignore the comment below about odd/even.  Thanks,
+
+Alex
+
+> 
+> The size we're generating here should be small enough to just use
+> kzalloc(), probably below too.
+> 
+> > +	if (!alias)
+> > +		return NULL;
+> > +
+> > +	/* Allocate and init descriptor */
+> > +	hash_desc = kvzalloc(sizeof(*hash_desc) +
+> > +			     crypto_shash_descsize(alias_hash),
+> > +			     GFP_KERNEL);
+> > +	if (!hash_desc)
+> > +		goto desc_err;
+> > +
+> > +	hash_desc->tfm = alias_hash;
+> > +
+> > +	digest_size = crypto_shash_digestsize(alias_hash);
+> > +
+> > +	digest = kvzalloc(digest_size, GFP_KERNEL);
+> > +	if (!digest) {
+> > +		ret = -ENOMEM;
+> > +		goto digest_err;
+> > +	}
+> > +	crypto_shash_init(hash_desc);
+> > +	crypto_shash_update(hash_desc, uuid, UUID_STRING_LEN);
+> > +	crypto_shash_final(hash_desc, digest);
+> > +	bin2hex(&alias[0], digest,  
+> 
+> &alias[0], ie. alias
+> 
+> > +		min_t(unsigned int, digest_size, alias_len / 2));
+> > +	/* When alias length is odd, zero out and additional last byte
+> > +	 * that bin2hex has copied.
+> > +	 */
+> > +	if (max_alias_len % 2)
+> > +		alias[max_alias_len] = 0;  
+> 
+> Doesn't this give us a null terminated string for odd numbers but not
+> even numbers?  Probably best to define that we always provide a null
+> terminated string then we could do this unconditionally.
+> 
+> > +
+> > +	kvfree(digest);
+> > +	kvfree(hash_desc);
+> > +	return alias;
+> > +
+> > +digest_err:
+> > +	kvfree(hash_desc);
+> > +desc_err:
+> > +	kvfree(alias);
+> > +	return NULL;
+> > +}
+> > +
+> > +int mdev_device_create(struct kobject *kobj, struct device *dev,
+> > +		       const char *uuid_str, const guid_t *uuid)
+> >  {
+> >  	int ret;
+> >  	struct mdev_device *mdev, *tmp;
+> >  	struct mdev_parent *parent;
+> >  	struct mdev_type *type = to_mdev_type(kobj);
+> > +	unsigned int alias_len = 0;
+> > +	const char *alias = NULL;
+> >  
+> >  	parent = mdev_get_parent(type->parent);
+> >  	if (!parent)
+> >  		return -EINVAL;
+> >  
+> > +	if (parent->ops->get_alias_length)
+> > +		alias_len = parent->ops->get_alias_length();
+> > +	if (alias_len) {  
+> 
+> Why isn't this nested into the branch above?
+> 
+> > +		alias = generate_alias(uuid_str, alias_len);
+> > +		if (!alias) {
+> > +			ret = -ENOMEM;  
+> 
+> Could use an ERR_PTR and propagate an errno.
+> 
+> > +			goto alias_fail;
+> > +		}
+> > +	}
+> > +
+> >  	mutex_lock(&mdev_list_lock);
+> >  
+> >  	/* Check for duplicate */
+> > @@ -300,6 +385,8 @@ int mdev_device_create(struct kobject *kobj,
+> >  	}
+> >  
+> >  	guid_copy(&mdev->uuid, uuid);
+> > +	mdev->alias = alias;
+> > +	alias = NULL;  
+> 
+> A comment justifying this null'ing might help prevent it getting culled
+> as some point.  It appears arbitrary at first look.  Thanks,
+> 
+> Alex
+> 
+> >  	list_add(&mdev->next, &mdev_list);
+> >  	mutex_unlock(&mdev_list_lock);
+> >  
+> > @@ -346,6 +433,8 @@ int mdev_device_create(struct kobject *kobj,
+> >  	up_read(&parent->unreg_sem);
+> >  	put_device(&mdev->dev);
+> >  mdev_fail:
+> > +	kvfree(alias);
+> > +alias_fail:
+> >  	mdev_put_parent(parent);
+> >  	return ret;
+> >  }
+> > @@ -406,6 +495,10 @@ EXPORT_SYMBOL(mdev_get_iommu_device);
+> >  
+> >  static int __init mdev_init(void)
+> >  {
+> > +	alias_hash = crypto_alloc_shash("sha1", 0, 0);
+> > +	if (!alias_hash)
+> > +		return -ENOMEM;
+> > +
+> >  	return mdev_bus_register();
+> >  }
+> >  
+> > @@ -415,6 +508,7 @@ static void __exit mdev_exit(void)
+> >  		class_compat_unregister(mdev_bus_compat_class);
+> >  
+> >  	mdev_bus_unregister();
+> > +	crypto_free_shash(alias_hash);
+> >  }
+> >  
+> >  module_init(mdev_init)
+> > diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> > index 7d922950caaf..cf1c0d9842c6 100644
+> > --- a/drivers/vfio/mdev/mdev_private.h
+> > +++ b/drivers/vfio/mdev/mdev_private.h
+> > @@ -33,6 +33,7 @@ struct mdev_device {
+> >  	struct kobject *type_kobj;
+> >  	struct device *iommu_device;
+> >  	bool active;
+> > +	const char *alias;
+> >  };
+> >  
+> >  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+> > @@ -57,8 +58,8 @@ void parent_remove_sysfs_files(struct mdev_parent *parent);
+> >  int  mdev_create_sysfs_files(struct device *dev, struct mdev_type *type);
+> >  void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type);
+> >  
+> > -int  mdev_device_create(struct kobject *kobj,
+> > -			struct device *dev, const guid_t *uuid);
+> > +int mdev_device_create(struct kobject *kobj, struct device *dev,
+> > +		       const char *uuid_str, const guid_t *uuid);
+> >  int  mdev_device_remove(struct device *dev);
+> >  
+> >  #endif /* MDEV_PRIVATE_H */
+> > diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+> > index 7570c7602ab4..43afe0e80b76 100644
+> > --- a/drivers/vfio/mdev/mdev_sysfs.c
+> > +++ b/drivers/vfio/mdev/mdev_sysfs.c
+> > @@ -63,15 +63,18 @@ static ssize_t create_store(struct kobject *kobj, struct device *dev,
+> >  		return -ENOMEM;
+> >  
+> >  	ret = guid_parse(str, &uuid);
+> > -	kfree(str);
+> >  	if (ret)
+> > -		return ret;
+> > +		goto err;
+> >  
+> > -	ret = mdev_device_create(kobj, dev, &uuid);
+> > +	ret = mdev_device_create(kobj, dev, str, &uuid);
+> >  	if (ret)
+> > -		return ret;
+> > +		goto err;
+> >  
+> > -	return count;
+> > +	ret = count;
+> > +
+> > +err:
+> > +	kfree(str);
+> > +	return ret;
+> >  }
+> >  
+> >  MDEV_TYPE_ATTR_WO(create);
+> > diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> > index 0ce30ca78db0..f036fe9854ee 100644
+> > --- a/include/linux/mdev.h
+> > +++ b/include/linux/mdev.h
+> > @@ -72,6 +72,9 @@ struct device *mdev_get_iommu_device(struct device *dev);
+> >   * @mmap:		mmap callback
+> >   *			@mdev: mediated device structure
+> >   *			@vma: vma structure
+> > + * @get_alias_length:	Generate alias for the mdevs of this parent based on the
+> > + *			mdev device name when it returns non zero alias length.
+> > + *			It is optional.
+> >   * Parent device that support mediated device should be registered with mdev
+> >   * module with mdev_parent_ops structure.
+> >   **/
+> > @@ -92,6 +95,7 @@ struct mdev_parent_ops {
+> >  	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
+> >  			 unsigned long arg);
+> >  	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
+> > +	unsigned int (*get_alias_length)(void);
+> >  };
+> >  
+> >  /* interface for exporting mdev supported type attributes */  
+> 
+
