@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D095C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE41C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383D62064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FE7217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNsVucHK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdWCJos9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfH0VsN (ORCPT
+        id S1726272AbfH0Vu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:48:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:47033 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfH0VsM (ORCPT
+        Tue, 27 Aug 2019 17:50:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39368 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfH0Vu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:48:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q139so230705pfc.13;
-        Tue, 27 Aug 2019 14:48:11 -0700 (PDT)
+        Tue, 27 Aug 2019 17:50:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y200so254795pfb.6;
+        Tue, 27 Aug 2019 14:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GwDOnkrnLpdgVBu7M/RamF/lpaRf1yq0QF6S3Xo+fHs=;
-        b=FNsVucHKWjONzr9VV6Q3XvY73dZLLwMsVB/8Hwyd8Yd0Zi/N152O1qFKCx1/UFrNDJ
-         cSoxDs46q34GYZbdxfL2rmRZA3IFBWqSQdRVdBnTxi/fOHqnA0MAbT/GJOsXYQ8djkOm
-         W+lU8bpP79KdgOAto6G+/lhDfDDAmxvlmNxsYbNqCyLj6L8/nZ5u5AXuTPv1TYjYJDEB
-         18n09xp2l/yX7bdzOzrEyZCfz0Rgk06osILdvvjl3T7LcXqEO8BT1Ouh1klei8HQu+Ac
-         91WE9/sldx6jTGIeemCjpKzIaBpN3IiW0e74gPX3vr2dZRqMmoqjzXDiFjBVYFiYxiA3
-         6Feg==
+        bh=67dthvLQIGmCSZUHq7Jei20QPubBtL7HhTfOXNW4WF4=;
+        b=PdWCJos9nCgYf48y4+FDxUsXgCJs0SoJCyz6LfvQHnW66BUzHK61PZHaDY3bppd2GJ
+         dr0aA8y7gTEW3F+MKEuan0WF1/i+YQK6i+P4pZywA8ei5vk9yYmlSFLoBdQRnZoKi3O3
+         CrQcbPdIUch4IJZIVmY3NKe8hVIsZ5jKxSHJUiESSJtg0bG4809kr6IFdrBOzClLa1BG
+         xr2Ook6DljUEh74639WORy0FbK98x6otbneGK8WzOYTiGU/DBYZ2yZIKR6qbGGGFAnhi
+         cvGEgi9+s59z1bVLXyOuNai/Da7lMiol1jcKrT5Dw3tTaboq2tOGSQVwIQTOmPhAF/g5
+         2S2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GwDOnkrnLpdgVBu7M/RamF/lpaRf1yq0QF6S3Xo+fHs=;
-        b=oMTOkH2Ipp83Xh2Og6jwGFOjZM1nPqVzr4UIOT93N6vml3dC0Io4S7uyoP06VJf2It
-         bYO4BjSOH9zXcCsHjZpWGCN75y+XGzAr2nTOuhHawlsqxXyS0vxjfrGUKDJ9upsBQ6Pg
-         2KkqCBfP26j4JQUVZUGo69yfVQf0VrJy1yOIKQd7YZ1Rv6HmDgJOD2fm2ICi7plXHny3
-         ihiBg2UyNBsqPYlIplkiEWmSns0sgznJf/5lMIYFOixhUo6u4BXOLw26DZVB5lC+mQ6n
-         nIqj/cDcGsm2OabzLnRCU2h7ADBG2RQCra1cEd+vq5kKLPDl1lC6iPmYQhLjggtRoO8+
-         Co8A==
-X-Gm-Message-State: APjAAAVk9Ovz7dalM8zJmWiE4LHSIrlsne4o6jHRLFWbp4Ki6xIRe5zR
-        GBICaZcQEjtv5c/7QqQknoo=
-X-Google-Smtp-Source: APXvYqxqsHXFOBI2aOLZhxiO5isCYRVZW7GUk7igP6PAYNnPzVHfrjZsl61jXuLHmqZ+oDA9Ry5sJg==
-X-Received: by 2002:a62:1bd5:: with SMTP id b204mr778906pfb.14.1566942491534;
-        Tue, 27 Aug 2019 14:48:11 -0700 (PDT)
+        bh=67dthvLQIGmCSZUHq7Jei20QPubBtL7HhTfOXNW4WF4=;
+        b=O3/pg0399oQE/v6BMHo6k2qO27pszZWDfuSoqwhJkE9s7IFVrwMmQ2KEUQhIkI2y7V
+         m/R3oj8QynJ0kTOXjk0iAAtBqVb9s/mZi94+LLJiCrsbljXaGtwthYR7CieHUzJ65aak
+         AZmNtPYvNeHTPaw1HdcNs+srVHa29rk0sGRTcFeElCSu0XbIDSqT460QlA+J5HzR/0YT
+         u4ms+IlcNvu8KWlZkrxWAPuF8iPd7ZUd3cFDbexdOg+7yNlKmkMJWRDmg2S+2y+rJiba
+         IkVGrG/xd0osVrzr5Fdc9ccuNCQRbDDrs7Vndo+nHo6L2fmeJKMdXzf1IiR20N3wyMub
+         tXXQ==
+X-Gm-Message-State: APjAAAWAp4E91P1hf6mXH5x3NTDEMr0Qv9qmtI8f/sjDPoLTWqVSPBY7
+        MQnfBKUPU4/MqewzHmCHhEU=
+X-Google-Smtp-Source: APXvYqxHkejbaXK7Kp2PvkkIJ/I+Q6bqEUSOz7KEjQh1OwY9GdmCOPhSqgdGPccdIfOwie1SRCLHUw==
+X-Received: by 2002:a63:2157:: with SMTP id s23mr538841pgm.167.1566942627035;
+        Tue, 27 Aug 2019 14:50:27 -0700 (PDT)
 Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id m9sm283743pfh.84.2019.08.27.14.48.10
+        by smtp.gmail.com with ESMTPSA id d128sm291440pfa.42.2019.08.27.14.50.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 14:48:10 -0700 (PDT)
+        Tue, 27 Aug 2019 14:50:26 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Rob Clark <robdclark@chromium.org>,
@@ -64,24 +64,24 @@ Cc:     Rob Clark <robdclark@chromium.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
         Jonathan Marek <jonathan@marek.ca>,
+        Enrico Weigelt <info@metux.net>,
         Mamta Shukla <mamtashukla555@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
         Alexios Zavras <alexios.zavras@intel.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         Georgi Djakov <georgi.djakov@linaro.org>,
         linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
         freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
         GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/9] drm/msm: convert kms->complete_commit() to crtc_mask
-Date:   Tue, 27 Aug 2019 14:33:35 -0700
-Message-Id: <20190827213421.21917-6-robdclark@gmail.com>
+Subject: [PATCH 6/9] drm/msm: add kms->flush_commit()
+Date:   Tue, 27 Aug 2019 14:33:36 -0700
+Message-Id: <20190827213421.21917-7-robdclark@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190827213421.21917-1-robdclark@gmail.com>
 References: <20190827213421.21917-1-robdclark@gmail.com>
@@ -94,164 +94,186 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-Prep work for async commits, in which case this will be called after we
-no longer have the atomic state object.
+Add ->flush_commit(crtc_mask).  Currently a no-op, but kms backends
+should migrate writing flush registers to this hook, so we can decouple
+pushing updates to hardware, and flushing the updates.
 
-This drops some wait_for_vblanks(), but those should be unnecessary, as
-we call this after waiting for flush to complete.
+Once we add async commit support, the hw updates will be pushed down to
+the hw synchronously, but flushing the updates will be deferred until as
+close to vblank as possible, so that multiple updates can be combined in
+a single frame.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c |  7 +------
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h |  4 +---
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 20 ++++----------------
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c |  8 ++------
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c |  4 +---
- drivers/gpu/drm/msm/msm_atomic.c         |  2 +-
- drivers/gpu/drm/msm/msm_kms.h            |  2 +-
- 7 files changed, 11 insertions(+), 36 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  |  6 ++++
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c |  6 ++++
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c |  6 ++++
+ drivers/gpu/drm/msm/msm_atomic.c         |  9 ++++--
+ drivers/gpu/drm/msm/msm_kms.h            | 40 ++++++++++++++++++++++--
+ 5 files changed, 63 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index e7354aef9805..31debd31ab8c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -389,13 +389,8 @@ static void dpu_crtc_frame_event_cb(void *data, u32 event)
- 	kthread_queue_work(&priv->event_thread[crtc_id].worker, &fevent->work);
- }
- 
--void dpu_crtc_complete_commit(struct drm_crtc *crtc,
--		struct drm_crtc_state *old_state)
-+void dpu_crtc_complete_commit(struct drm_crtc *crtc)
- {
--	if (!crtc || !crtc->state) {
--		DPU_ERROR("invalid crtc\n");
--		return;
--	}
- 	trace_dpu_crtc_complete_commit(DRMID(crtc));
- }
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-index 10f78459f6c2..5174e86124cc 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-@@ -244,10 +244,8 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc);
- /**
-  * dpu_crtc_complete_commit - callback signalling completion of current commit
-  * @crtc: Pointer to drm crtc object
-- * @old_state: Pointer to drm crtc old state object
-  */
--void dpu_crtc_complete_commit(struct drm_crtc *crtc,
--		struct drm_crtc_state *old_state);
-+void dpu_crtc_complete_commit(struct drm_crtc *crtc);
- 
- /**
-  * dpu_crtc_init - create a new crtc object
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index df421b986bc3..606815e50625 100644
+index 606815e50625..efbf8fd343de 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -320,27 +320,15 @@ static void dpu_kms_commit(struct msm_kms *kms, struct drm_atomic_state *state)
+@@ -278,6 +278,11 @@ static void dpu_kms_prepare_commit(struct msm_kms *kms,
  	}
  }
  
--static void dpu_kms_complete_commit(struct msm_kms *kms,
--		struct drm_atomic_state *old_state)
-+static void dpu_kms_complete_commit(struct msm_kms *kms, unsigned crtc_mask)
- {
--	struct dpu_kms *dpu_kms;
--	struct msm_drm_private *priv;
-+	struct dpu_kms *dpu_kms = to_dpu_kms(kms);
- 	struct drm_crtc *crtc;
--	struct drm_crtc_state *old_crtc_state;
--	int i;
--
--	if (!kms || !old_state)
--		return;
--	dpu_kms = to_dpu_kms(kms);
--
--	if (!dpu_kms->dev || !dpu_kms->dev->dev_private)
--		return;
--	priv = dpu_kms->dev->dev_private;
- 
- 	DPU_ATRACE_BEGIN("kms_complete_commit");
- 
--	for_each_old_crtc_in_state(old_state, crtc, old_crtc_state, i)
--		dpu_crtc_complete_commit(crtc, old_crtc_state);
-+	for_each_crtc_mask(dpu_kms->dev, crtc, crtc_mask)
-+		dpu_crtc_complete_commit(crtc);
- 
- 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
- 
++static void dpu_kms_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
++{
++	/* TODO */
++}
++
+ /*
+  * Override the encoder enable since we need to setup the inline rotator and do
+  * some crtc magic before enabling any bridge that might be present.
+@@ -678,6 +683,7 @@ static const struct msm_kms_funcs kms_funcs = {
+ 	.irq_uninstall   = dpu_irq_uninstall,
+ 	.irq             = dpu_irq,
+ 	.prepare_commit  = dpu_kms_prepare_commit,
++	.flush_commit    = dpu_kms_flush_commit,
+ 	.commit          = dpu_kms_commit,
+ 	.wait_flush      = dpu_kms_wait_flush,
+ 	.complete_commit = dpu_kms_complete_commit,
 diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-index 32dcb1d7860c..a6a056df5878 100644
+index a6a056df5878..78ce2c8a9a38 100644
 --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
 +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-@@ -116,17 +116,13 @@ static void mdp4_wait_flush(struct msm_kms *kms, unsigned crtc_mask)
- 		mdp4_crtc_wait_for_commit_done(crtc);
+@@ -107,6 +107,11 @@ static void mdp4_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
+ 		drm_crtc_vblank_get(crtc);
  }
  
--static void mdp4_complete_commit(struct msm_kms *kms, struct drm_atomic_state *state)
-+static void mdp4_complete_commit(struct msm_kms *kms, unsigned crtc_mask)
++static void mdp4_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
++{
++	/* TODO */
++}
++
+ static void mdp4_wait_flush(struct msm_kms *kms, unsigned crtc_mask)
  {
  	struct mdp4_kms *mdp4_kms = to_mdp4_kms(to_mdp_kms(kms));
--	int i;
- 	struct drm_crtc *crtc;
--	struct drm_crtc_state *crtc_state;
--
--	drm_atomic_helper_wait_for_vblanks(mdp4_kms->dev, state);
- 
- 	/* see 119ecb7fd */
--	for_each_new_crtc_in_state(state, crtc, crtc_state, i)
-+	for_each_crtc_mask(mdp4_kms->dev, crtc, crtc_mask)
- 		drm_crtc_vblank_put(crtc);
- 
- 	mdp4_disable(mdp4_kms);
+@@ -178,6 +183,7 @@ static const struct mdp_kms_funcs kms_funcs = {
+ 		.enable_vblank   = mdp4_enable_vblank,
+ 		.disable_vblank  = mdp4_disable_vblank,
+ 		.prepare_commit  = mdp4_prepare_commit,
++		.flush_commit    = mdp4_flush_commit,
+ 		.wait_flush      = mdp4_wait_flush,
+ 		.complete_commit = mdp4_complete_commit,
+ 		.get_format      = mdp_get_format,
 diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 440e000c8c3d..7a19526eef50 100644
+index 7a19526eef50..eff1b000258e 100644
 --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
 +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -163,14 +163,12 @@ static void mdp5_wait_flush(struct msm_kms *kms, unsigned crtc_mask)
- 		mdp5_crtc_wait_for_commit_done(crtc);
+@@ -154,6 +154,11 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
+ 		mdp5_smp_prepare_commit(mdp5_kms->smp, &global_state->smp);
  }
  
--static void mdp5_complete_commit(struct msm_kms *kms, struct drm_atomic_state *state)
-+static void mdp5_complete_commit(struct msm_kms *kms, unsigned crtc_mask)
++static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
++{
++	/* TODO */
++}
++
+ static void mdp5_wait_flush(struct msm_kms *kms, unsigned crtc_mask)
  {
  	struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
- 	struct device *dev = &mdp5_kms->pdev->dev;
- 	struct mdp5_global_state *global_state;
- 
--	drm_atomic_helper_wait_for_vblanks(mdp5_kms->dev, state);
--
- 	global_state = mdp5_get_existing_global_state(mdp5_kms);
- 
- 	if (mdp5_kms->smp)
+@@ -272,6 +277,7 @@ static const struct mdp_kms_funcs kms_funcs = {
+ 		.irq             = mdp5_irq,
+ 		.enable_vblank   = mdp5_enable_vblank,
+ 		.disable_vblank  = mdp5_disable_vblank,
++		.flush_commit    = mdp5_flush_commit,
+ 		.prepare_commit  = mdp5_prepare_commit,
+ 		.wait_flush      = mdp5_wait_flush,
+ 		.complete_commit = mdp5_complete_commit,
 diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
-index 639cc88c31a1..bcb6d6144d4d 100644
+index bcb6d6144d4d..27369b020bee 100644
 --- a/drivers/gpu/drm/msm/msm_atomic.c
 +++ b/drivers/gpu/drm/msm/msm_atomic.c
-@@ -66,7 +66,7 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+@@ -54,16 +54,21 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 
+ 	kms->funcs->prepare_commit(kms, state);
+ 
++	/*
++	 * Push atomic updates down to hardware:
++	 */
+ 	drm_atomic_helper_commit_modeset_disables(dev, state);
+-
+ 	drm_atomic_helper_commit_planes(dev, state, 0);
+-
+ 	drm_atomic_helper_commit_modeset_enables(dev, state);
+ 
++	/*
++	 * Flush hardware updates:
++	 */
+ 	if (kms->funcs->commit) {
+ 		DRM_DEBUG_ATOMIC("triggering commit\n");
+ 		kms->funcs->commit(kms, state);
  	}
++	kms->funcs->flush_commit(kms, crtc_mask);
  
  	kms->funcs->wait_flush(kms, crtc_mask);
--	kms->funcs->complete_commit(kms, state);
-+	kms->funcs->complete_commit(kms, crtc_mask);
- 
- 	drm_atomic_helper_commit_hw_done(state);
- 
+ 	kms->funcs->complete_commit(kms, crtc_mask);
 diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
-index 8562bbfd5dca..c56c54b698ec 100644
+index c56c54b698ec..55234f661382 100644
 --- a/drivers/gpu/drm/msm/msm_kms.h
 +++ b/drivers/gpu/drm/msm/msm_kms.h
-@@ -33,7 +33,7 @@ struct msm_kms_funcs {
- 	/* modeset, bracketing atomic_commit(): */
+@@ -30,12 +30,47 @@ struct msm_kms_funcs {
+ 	irqreturn_t (*irq)(struct msm_kms *kms);
+ 	int (*enable_vblank)(struct msm_kms *kms, struct drm_crtc *crtc);
+ 	void (*disable_vblank)(struct msm_kms *kms, struct drm_crtc *crtc);
+-	/* modeset, bracketing atomic_commit(): */
++
++	/*
++	 * Atomic commit handling:
++	 */
++
++	/**
++	 * Prepare for atomic commit.  This is called after any previous
++	 * (async or otherwise) commit has completed.
++	 */
  	void (*prepare_commit)(struct msm_kms *kms, struct drm_atomic_state *state);
++
++	/**
++	 * Flush an atomic commit.  This is called after the hardware
++	 * updates have already been pushed down to effected planes/
++	 * crtcs/encoders/connectors.
++	 */
++	void (*flush_commit)(struct msm_kms *kms, unsigned crtc_mask);
++
++	/* TODO remove ->commit(), use ->flush_commit() instead: */
  	void (*commit)(struct msm_kms *kms, struct drm_atomic_state *state);
--	void (*complete_commit)(struct msm_kms *kms, struct drm_atomic_state *state);
-+	void (*complete_commit)(struct msm_kms *kms, unsigned crtc_mask);
+-	void (*complete_commit)(struct msm_kms *kms, unsigned crtc_mask);
++
++	/**
++	 * Wait for any in-progress flush to complete on the specified
++	 * crtcs.  This should not block if there is no in-progress
++	 * commit (ie. don't just wait for a vblank), as it will also
++	 * be called before ->prepare_commit() to ensure any potential
++	 * "async" commit has completed.
++	 */
  	void (*wait_flush)(struct msm_kms *kms, unsigned crtc_mask);
  
++	/**
++	 * Clean up are commit is completed.  This is called after
++	 * ->wait_flush(), to give the backend a chance to do any
++	 * post-commit cleanup.
++	 */
++	void (*complete_commit)(struct msm_kms *kms, unsigned crtc_mask);
++
++	/*
++	 * Format handling:
++	 */
++
  	/* get msm_format w/ optional format modifiers from drm_mode_fb_cmd2 */
+ 	const struct msm_format *(*get_format)(struct msm_kms *kms,
+ 					const uint32_t format,
+@@ -45,6 +80,7 @@ struct msm_kms_funcs {
+ 			const struct msm_format *msm_fmt,
+ 			const struct drm_mode_fb_cmd2 *cmd,
+ 			struct drm_gem_object **bos);
++
+ 	/* misc: */
+ 	long (*round_pixclk)(struct msm_kms *kms, unsigned long rate,
+ 			struct drm_encoder *encoder);
 -- 
 2.21.0
 
