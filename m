@@ -2,192 +2,119 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7659DC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53902C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405A320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:54:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="PzF/CKqI"
+	by mail.kernel.org (Postfix) with ESMTP id 21CF120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566903276;
+	bh=0ebAIqPXd2tnAJcfsrgETGb6e7Acfvfvuv1FFNfLAPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CCV+PYqVQayEhMmQwv1XutTpfQjTttF9M/R12jAaxWm2BUEgiD0K9lDIrMHXCvGzw
+	 ZoeXB/tuQ24Vz1DDBeCSFAgA7ODVGjRT0UZxR8Qtsd9mfU4SrZCthJV+5Qg/KtUI0/
+	 MAUxi0mC70yJhXpYobJ54h0j0mTuTRlvLNdVm6/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfH0Kx7 (ORCPT
+        id S1729009AbfH0Kyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:53:59 -0400
-Received: from mail-eopbgr1400110.outbound.protection.outlook.com ([40.107.140.110]:24529
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfH0Kx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:53:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eRiyIp+cacLYe0ZTQ40Nt8/T1wQnsIC9aLax9jeUfUTgmilsBblQoH6n+86IPDAKD5igJF7dy4VpvK+uxRhQ5QyoX+Vr8WAJdyCzA2BxuiSsFdKqbEAwkXAgW9gplzx7tT34r/xY4OheFu1Zqj5mFVM3I1Ut0Atp3ZAY78Z2es6vOAxJQWEBgDBhK9d5qYV4SjRU0EJk7BBw+HxJXLj37LhgB68GbHJVn1ufU7udr8uaPQcKBCy2MQ4h6mDJbZYM8r5EvqmPzzQ8xV85zf5wjTcFTBSv8fk6C1hk6x92EH5sTfKI3kub5LaO4NB2HJzlI4XZZ2vJIfDoItf0yI67gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9UvsmTXgdYsMpf4uawkLnNmOwXOoF94FDXJkNd8pGDM=;
- b=fwzn7XBOkADVOCSfkGvxGqmu4Ca0oKaVLZ0y5tWKsL15RcWr8eyNfkqxW13KLlgQLnsjYIZn/m+zsmoZWj1RNg84ATUFZDaDnpVaTzzEYjDBrIWMdG7VtpiINGi0YUPxq8VcU/lakApPXJ05XVVLiRdEYYj+k2JG55XsXa2dRuRWC++DMjoE943JmRwSqedF10iYa4y8lPhqYxyFg6Ih/w4VOSwC97TVpdvfqK3qQ63hUCv3pNp8b3YsmgVbQFIxWPfaMHXaRFO+3xZjaZf178pOmNqum/j5luhUeqgfEg96ZsjqYoM+KYaGWvN4IPTKkfXWXtqRalINOz/dFSvNpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9UvsmTXgdYsMpf4uawkLnNmOwXOoF94FDXJkNd8pGDM=;
- b=PzF/CKqIstANMBa9ph7rEpgiDTXswXi/C38aZJDSbVl7BYWtz69F2oP2sDnwtjmvJR24IYhnv6QKl9BamQqerHAecTmd4iEzIAOVfg9jdiBiK6buZ9Dt5npix/O3srkAxvk72EryxHac/u54SxVeCwTzdZYxSsJRzfsCAtIs0Co=
-Received: from TY1PR01MB1769.jpnprd01.prod.outlook.com (52.133.160.138) by
- TY1PR01MB1692.jpnprd01.prod.outlook.com (52.133.160.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.19; Tue, 27 Aug 2019 10:53:54 +0000
-Received: from TY1PR01MB1769.jpnprd01.prod.outlook.com
- ([fe80::acc8:abe:6eac:76e0]) by TY1PR01MB1769.jpnprd01.prod.outlook.com
- ([fe80::acc8:abe:6eac:76e0%7]) with mapi id 15.20.2178.023; Tue, 27 Aug 2019
- 10:53:54 +0000
-From:   Phil Edworthy <phil.edworthy@renesas.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH v2] clk: Document of_parse_clkspec() some more
-Thread-Topic: [PATCH v2] clk: Document of_parse_clkspec() some more
-Thread-Index: AQHVXFQhjzSS11Xl9kyvJ1FqF5kDOqcOz06Q
-Date:   Tue, 27 Aug 2019 10:53:54 +0000
-Message-ID: <TY1PR01MB1769DCBAD9B79AA2AD36F241F5A00@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <20190826212042.48642-1-sboyd@kernel.org>
-In-Reply-To: <20190826212042.48642-1-sboyd@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=phil.edworthy@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 61374bd9-7ea1-46b5-e65e-08d72adcdaca
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1692;
-x-ms-traffictypediagnostic: TY1PR01MB1692:
-x-microsoft-antispam-prvs: <TY1PR01MB16925873D4E3ED3E0E38FACEF5A00@TY1PR01MB1692.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(6436002)(71190400001)(71200400001)(44832011)(81166006)(81156014)(6116002)(3846002)(486006)(8936002)(316002)(478600001)(54906003)(110136005)(5660300002)(7736002)(14454004)(74316002)(305945005)(66066001)(9686003)(55016002)(256004)(4326008)(25786009)(66946007)(66446008)(8676002)(64756008)(476003)(99286004)(76176011)(7696005)(2906002)(66476007)(66556008)(446003)(76116006)(11346002)(6246003)(6506007)(102836004)(229853002)(53936002)(33656002)(26005)(86362001)(52536014)(53546011)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1692;H:TY1PR01MB1769.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C7yjRYhXbkF9RV7mpEqwE9vf6pRS8FYgykZY1jhJ7rJZL4shca4hYWJELr5ghFgYbuKUs3YQZp5ey1YcJjl3khhIeSOf4ATsjZZq9WbCG9XSGYR/PAnCU6ILOFphQAckCYuATVyHlbo658g9zrA+pbnIUi0rwfD1vk4gb0KwM5iNYZfSflMSt3yoHycso1ayqtWD2kyHlAaPxcJbCTt69aGvoH0ssDK6gIwGwqeZ77Mr2hNPkm48+5xakjfPXBKWElOuCuJn7K9WbCAEjaHJenBWSRX6uD5t3YjbDgZNkNNhZ7Fz5M3+Sxfn0dMpqi7cm+GRQ456JhxEbLKRxYxGXrAp7+2qrIYaQ5wfyjSlLg3FhJep2EGa4r4SwH81w/FlqQUo3xx/CupNhFxLRs7T1TGqD4pTKm/nabVdhHnkFZc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 06:54:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37846 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfH0Kyf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:54:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9qktllCdtWjxEHtE8pHlyd4rtHjdGpGQjQOP1g/TPOs=; b=TPJ1X3+JKBtnR3HtNFbYdvEsI
+        1FHLsfNGMTMIgopVPWK2uGBsUcafRJt5PRLALEIEe/VhNWnEVf4qbkgx7iWwBDAEA9inHC8WPBDA9
+        0cQ1b1JbzKv8UQnoJoNA5hn685cx0xK5TjqLrYjo0rXC8bppOKoTUm141+W2h4im+3wwU=;
+Received: from [92.54.175.117] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i2Z7O-0007uc-Kp; Tue, 27 Aug 2019 10:54:30 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 46D4AD02CE6; Tue, 27 Aug 2019 11:54:30 +0100 (BST)
+Date:   Tue, 27 Aug 2019 11:54:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH AUTOSEL 5.2 022/123] ASoC: dapm: Fix handling of
+ custom_stop_condition on DAPM graph walks
+Message-ID: <20190827105430.GC23391@sirena.co.uk>
+References: <20190814021047.14828-1-sashal@kernel.org>
+ <20190814021047.14828-22-sashal@kernel.org>
+ <20190814092052.GB4640@sirena.co.uk>
+ <20190826013342.GF5281@sasha-vm>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61374bd9-7ea1-46b5-e65e-08d72adcdaca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 10:53:54.6947
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dlm+9yTlIlN3AKLoe+2jmAWJtgX0Yettyn+VmaaTh3W7RWXdVH0+o/Hf8+s5MIyYiUtCxIgQ6Wl/yVqhQXW6UzAhwplhyZkRCbSQ2NSkMBs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1692
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cjVziHhGDpplWqiR"
+Content-Disposition: inline
+In-Reply-To: <20190826013342.GF5281@sasha-vm>
+X-Cookie: Don't SANFORIZE me!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
 
-On 26 August 2019 22:21 Stephen Boyd wrote:
-> The return value of of_parse_clkspec() is peculiar. If the function is
-> called with a NULL argument for 'name' it will return -ENOENT, but if
-> it's called with a non-NULL argument for 'name' it will return -EINVAL.
-> This peculiarity is documented by commit 5c56dfe63b6e ("clk: Add comment
-> about __of_clk_get_by_name() error values").
->=20
-> Let's further document this function so that it's clear what the return
-> value is and how to use the arguments to parse clk specifiers.
->=20
-> Cc: Phil Edworthy <phil.edworthy@renesas.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+--cjVziHhGDpplWqiR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, this is much better than my comment!
+On Sun, Aug 25, 2019 at 09:33:42PM -0400, Sasha Levin wrote:
+> On Wed, Aug 14, 2019 at 10:20:52AM +0100, Mark Brown wrote:
+> > On Tue, Aug 13, 2019 at 10:09:06PM -0400, Sasha Levin wrote:
+> > > From: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > >=20
+> > > [ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
+> > >=20
+> > > DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
+> > > list of the widgets connected to a specific front end DAI so it
+> > > can search through this list for available back end DAIs. The
 
-Reviewed-by: Phil Edworthy <phil.edworthy@renesas.com>
+> > The DPCM code and its users are rather fragile, if nobody noticed a
+> > problem I'd worry about causing some other problem to manifest by
+> > disturbing things.
 
-> ---
->  drivers/clk/clk.c | 43 +++++++++++++++++++++++++++++++++++++------
->  1 file changed, 37 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c0990703ce54..5c6585eb35d4 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -4316,12 +4316,43 @@ void devm_of_clk_del_provider(struct device
-> *dev)
->  }
->  EXPORT_SYMBOL(devm_of_clk_del_provider);
->=20
-> -/*
-> - * Beware the return values when np is valid, but no clock provider is f=
-ound.
-> - * If name =3D=3D NULL, the function returns -ENOENT.
-> - * If name !=3D NULL, the function returns -EINVAL. This is because
-> - * of_parse_phandle_with_args() is called even if
-> of_property_match_string()
-> - * returns an error.
-> +/**
-> + * of_parse_clkspec() - Parse a DT clock specifier for a given device no=
-de
-> + * @np: device node to parse clock specifier from
-> + * @index: index of phandle to parse clock out of. If index < 0, @name i=
-s
-> used
-> + * @name: clock name to find and parse. If name is NULL, the index is us=
-ed
-> + * @out_args: Result of parsing the clock specifier
-> + *
-> + * Parses a device node's "clocks" and "clock-names" properties to find =
-the
-> + * phandle and cells for the index or name that is desired. The resultin=
-g
-> clock
-> + * specifier is placed into @out_args, or an errno is returned when ther=
-e's a
-> + * parsing error. The @index argument is ignored if @name is non-NULL.
-> + *
-> + * Example:
-> + *
-> + * phandle1: clock-controller@1 {
-> + *	#clock-cells =3D <2>;
-> + * }
-> + *
-> + * phandle2: clock-controller@2 {
-> + *	#clock-cells =3D <1>;
-> + * }
-> + *
-> + * clock-consumer@3 {
-> + *	clocks =3D <&phandle1 1 2 &phandle2 3>;
-> + *	clock-names =3D "name1", "name2";
-> + * }
-> + *
-> + * To get a device_node for `clock-controller@2' node you may call this
-> + * function a few different ways:
-> + *
-> + *   of_parse_clkspec(clock-consumer@3, -1, "name2", &args);
-> + *   of_parse_clkspec(clock-consumer@3, 1, NULL, &args);
-> + *   of_parse_clkspec(clock-consumer@3, 1, "name2", &args);
-> + *
-> + * Return: 0 upon successfully parsing the clock specifier. Otherwise, -
-> ENOENT
-> + * if @name is NULL or -EINVAL if @name is non-NULL and it can't be foun=
-d
-> in
-> + * the "clock-names" property of @np.
->   */
->  static int of_parse_clkspec(const struct device_node *np, int index,
->  			    const char *name, struct of_phandle_args
-> *out_args)
-> --
-> Sent by a computer through tubes
+> Doesn't this patch imply that someone noticed it?
 
+During new development.
+
+> And if not, it'll just break when folks update their kernel...
+
+> If it creates other problems we should address them now rather than
+> later.
+
+Well, if we don't touch anything hopefully everything will
+continue to work just as well.  DPCM is a bit fragile so I'm
+nervous about backporting stuff without people actively working
+with it paying attention to the backports.
+
+--cjVziHhGDpplWqiR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1lC+UACgkQJNaLcl1U
+h9AxoQf/Q46Ql9GZfDxAAKQC9wcjQ+pBcOS1yBYst3p354FqEfA2OwuEjuobwP7M
+p94eSGmfdVqPCZed5jCdB15k0TjpdrB7ms3ACw8dNKW4H7MCUUGjw9HfItc0sB9E
+VXa1ZschrV55MeZfpKVmNSDzAMlqs0R1BtlNR+yYWpDw8yLMP5O2xDLXEbe5rKz9
+ig9d4b88N90tslYwOQSJAyTLR3wyAkYAKhLkBpjP8B/0kWfELlk4k2R30wgAFr4C
+ssdE3NZSjscpogP8Ftt1uc+Qq7uuggLQl5vBRjy9wSXHiWBBR3wGFd69QADZUcEo
+0jMA/EDXJBAn3vKH6Bk2XSi+Yhkkmw==
+=xQzC
+-----END PGP SIGNATURE-----
+
+--cjVziHhGDpplWqiR--
