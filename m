@@ -2,84 +2,73 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB66DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C325C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B4B206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE92206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 03:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfH0D43 (ORCPT
+        id S1729105AbfH0D6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 23:56:29 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44920 "EHLO inva020.nxp.com"
+        Mon, 26 Aug 2019 23:58:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41483 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbfH0D43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 23:56:29 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A8CA41A05A0;
-        Tue, 27 Aug 2019 05:56:27 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8DA431A009E;
-        Tue, 27 Aug 2019 05:56:19 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 92751402A5;
-        Tue, 27 Aug 2019 11:56:09 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de,
-        alsa-devel@alsa-project.org, viorel.suman@nxp.com
-Cc:     linux-imx@nxp.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ASoC: imx-audmix: register the card on a proper dev
-Date:   Tue, 27 Aug 2019 11:55:15 -0400
-Message-Id: <1566921315-23402-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728820AbfH0D6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 23:58:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2019 20:58:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,435,1559545200"; 
+   d="scan'208";a="197212700"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2019 20:58:42 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at,
+        jwboyer@gmail.com, boris.brezillon@free-electrons.com,
+        cyrille.pitchen@atmel.com, david.oberhollenzer@sigma-star.at,
+        miquel.raynal@bootlin.com, tudor.ambarus@gmail.com,
+        vigneshr@ti.com, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 0/3] dt-bindings: mtd: cadence-qspi:add support for Intel lgm-qspi
+Date:   Tue, 27 Aug 2019 11:58:24 +0800
+Message-Id: <20190827035827.21024-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This platform device is registered from "fsl_audmix", which is
-its parent device. If use pdev->dev.parent for the priv->card.dev,
-the value set by dev_set_drvdata in parent device will be covered
-by the value in child device.
+mtd: spi-nor: cadence-quadspi: disable DMA and DAC for Intel LGM
+mtd: spi-nor: cadence-quadspi: disable the auto-poll for Intel LGM
 
-Fixes: b86ef5367761 ("ASoC: fsl: Add Audio Mixer machine driver")
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/imx-audmix.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+changes from V1:
+  - many thanks to Vignesh for review comments.
+  - split 2 patches one for DMA and DAC and other one
+    is disable the auto-poll
+  - removed ahb_phy_addr and used existing trigger_address
+  - trigger_address property used.
+  
+Ramuthevar Vadivel Murugan (3):
+  dt-bindings: mtd: cadence-qspi:add support for Intel lgm-qspi
+  mtd: spi-nor: cadence-quadspi: disable DMA and DAC for Intel LGM
+  mtd: spi-nor: cadence-quadspi: disable the auto-poll for Intel LGM
 
-diff --git a/sound/soc/fsl/imx-audmix.c b/sound/soc/fsl/imx-audmix.c
-index 9e1cb18859ce..71590ca6394b 100644
---- a/sound/soc/fsl/imx-audmix.c
-+++ b/sound/soc/fsl/imx-audmix.c
-@@ -325,14 +325,14 @@ static int imx_audmix_probe(struct platform_device *pdev)
- 	priv->card.num_configs = priv->num_dai_conf;
- 	priv->card.dapm_routes = priv->dapm_routes;
- 	priv->card.num_dapm_routes = priv->num_dapm_routes;
--	priv->card.dev = pdev->dev.parent;
-+	priv->card.dev = &pdev->dev;
- 	priv->card.owner = THIS_MODULE;
- 	priv->card.name = "imx-audmix";
- 
- 	platform_set_drvdata(pdev, &priv->card);
- 	snd_soc_card_set_drvdata(&priv->card, priv);
- 
--	ret = devm_snd_soc_register_card(pdev->dev.parent, &priv->card);
-+	ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed\n");
- 		return ret;
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  1 +
+ drivers/mtd/spi-nor/Kconfig                        |  2 +-
+ drivers/mtd/spi-nor/cadence-quadspi.c              | 45 ++++++++++++++++++++--
+ 3 files changed, 44 insertions(+), 4 deletions(-)
+
 -- 
-2.21.0
+2.11.0
 
