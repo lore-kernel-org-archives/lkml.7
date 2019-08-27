@@ -2,151 +2,216 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58565C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DDAC3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6E2217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BBD20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PeDP1g4l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCkPAgRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfH0AmH (ORCPT
+        id S1728236AbfH0Amf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:42:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36623 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfH0AmH (ORCPT
+        Mon, 26 Aug 2019 20:42:35 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42689 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfH0Ame (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:42:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so1183226wme.1;
-        Mon, 26 Aug 2019 17:42:05 -0700 (PDT)
+        Mon, 26 Aug 2019 20:42:34 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j7so17036286ota.9;
+        Mon, 26 Aug 2019 17:42:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wraJLvz6EmcrQqM6J8VAkrpu9wLHEffkySlFIVb29F0=;
-        b=PeDP1g4ldCcu3fhNgWXbCJ5ZxhMa4yIWvVYGz//wgx08FfXXVI4JRs/uHjRAVe04SS
-         65Cdv45Rszv5yOevPof37G3B0Pn/7wn//QeEyDFloQpYW2/Y/BOAURqA9Jne868qQmte
-         hBMjd4H4CvHWZARjBRc7rMn/C5vnETz76kqdbHUozej0dJLy6spbc1PmRVKFUGJaqxg8
-         4hl2swVc30lPiOa3E+5E4Pi1JVdRExpUhV72++KHhEn/lwQEGO/fSq0HZlkx7OiRqtFq
-         /pdROK7/Z3zDFMSCsiQEwzW32ivzxSXjq5tzuiFu4fDuQZUz84YsMYFDXunzuAlEZBgx
-         JxmA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B546kMhKUy8z/D0dBPZWv2yG7srEpQ9xVtt3JcGHphA=;
+        b=qCkPAgRu9ZQ9liv/liUzT76kXgEIuMmU55XZcELkLfQHEFMMN33BKJLNKhKq9N0rOn
+         s/Nv3FFKF+9eZ6JBG9kzvo010hosCwInrSU8XaDJTe6YM/YXHDOsCwSkL7IeGrQ/3PlZ
+         3tky/wMW1h++0ObkUB3hxPXP5gx3eqJctCAY71Pd9/WuKjSfA1pCxwVimwBBVi910GUX
+         1LeOh7YKeQFwPCjixyJ20HoyJwxdyBIdvmhKripKj3tbE0BMh6+PEl0VoTp7JTfKr4Ar
+         /xuskAYTxrRpGr61gdmn1TnAuEbk2nE2ZHMHoFNY7XfILQzknELuWz7JY9hASvI3o6b0
+         sE4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wraJLvz6EmcrQqM6J8VAkrpu9wLHEffkySlFIVb29F0=;
-        b=Cxq4ec0HDL5seFbih/dmX/s6/cVVl5BYL02g8ANVYmCiUqRyze9zyUSWYyxLPabemq
-         vUHWMYVFNJCYyomMSDOrA0L+sz74SZ6Ww+99UbI8vy84LhYqbcst2v+qQ//85ny7cwMA
-         IEfzPmiExGVEy0qmpMLHeP0FEYF00OTT10wxpk2vCR4kW6ln50stAvcBJ1Mkt9ILtz/E
-         2IfQHX094dQl6IyWjepF3yivk0fxVk1DGrAESnPHdNTZlyC7iJji5DnsFdMQ/g4mRggf
-         AKExtzEPCQMzdxIBo8VWOVAF1qt60ohjsIVEtBAils0V2ew5v+sV+VA+wVOttlS8t2bN
-         59bw==
-X-Gm-Message-State: APjAAAWwBqccNnY3VpVGeLQN2tC/PX4pQW/QvsDsiTEhCjL4y31jJYzI
-        M9ehyDTACE8CIXA0rv3RiS/2EAgvOmm4/A==
-X-Google-Smtp-Source: APXvYqzaPp5TAOKha3Ej5wRwmqulxAgmmXuqPtFGipbQDKzIjYulEY4YpcXlTet7AGiGEH9VkEZEHg==
-X-Received: by 2002:a1c:9648:: with SMTP id y69mr22955151wmd.122.1566866524573;
-        Mon, 26 Aug 2019 17:42:04 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id 7sm882049wmj.46.2019.08.26.17.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 17:42:03 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>,
-        Joe Perches <joe@perches.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang for now
-Date:   Mon, 26 Aug 2019 17:41:55 -0700
-Message-Id: <20190827004155.11366-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190815225844.145726-1-nhuck@google.com>
-References: <20190815225844.145726-1-nhuck@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B546kMhKUy8z/D0dBPZWv2yG7srEpQ9xVtt3JcGHphA=;
+        b=c38r/rWttCdVz8oLeWZEML4ng6DGx1HbKQPLpJ17SrS8gpiE8EOQ74FKZDtHLUWwwb
+         BPF38ksjCUGVFkqfIKozUj/BbdJqKQ5Kp/NfuyK/bEv1XEU+AbgJSX2NXwVkSaA/GPHA
+         cb4K4NOBvNkFXMRNQHaiebmMYoREcRPdAVtBEZgyKtxXmlSyWLg0KNl9ZApypiGy5MsW
+         l5bo4PpaPhmV1s103FGikun4xslE1X1SoGQQEmUQzcZntaMFwhZjrmwhvb+L3otegMhK
+         VA551zrNRdyxgBGbm0ADBRKf+kN3PUmPErWfAxK/xB1iWBIoeYTfBaHvan8YLO8vDkFZ
+         whjg==
+X-Gm-Message-State: APjAAAVQvgQd6WHmi5W56zFJnaa36FtIdcGZsjBAM2drdMXP/Gru+XpK
+        K9Ca0xMeRqWZiip3IBtz3kx2hOfqnLspcO03p/GzGOyA
+X-Google-Smtp-Source: APXvYqxIHyQiKpnJItr9ft22ZV8g+cqcsYHCj7i+cceWeHSAe25OZkF+2FfCTwH+BpIsw+SthAIQtkdbz2o/e5smlu4=
+X-Received: by 2002:a05:6830:144b:: with SMTP id w11mr17874315otp.185.1566866553351;
+ Mon, 26 Aug 2019 17:42:33 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+ <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com> <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
+ <20190803202058.GA9316@amt.cnet> <CANRm+CwtHBOVWFcn+6Z3Ds7dEcNL2JP+b6hLRS=oeUW98A24MQ@mail.gmail.com>
+ <20190826204045.GA24697@amt.cnet>
+In-Reply-To: <20190826204045.GA24697@amt.cnet>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 27 Aug 2019 08:43:13 +0800
+Message-ID: <CANRm+Cx0+V67Ek7FhSs61ZqZL3MgV88Wdy17Q6UA369RH7=dgQ@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated
+ physical CPUs are available
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This functionally reverts commit bfd77145f35c ("Makefile: Convert
--Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang").
+Cc Michael S. Tsirkin,
+On Tue, 27 Aug 2019 at 04:42, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Tue, Aug 13, 2019 at 08:55:29AM +0800, Wanpeng Li wrote:
+> > On Sun, 4 Aug 2019 at 04:21, Marcelo Tosatti <mtosatti@redhat.com> wrot=
+e:
+> > >
+> > > On Thu, Aug 01, 2019 at 06:54:49PM +0200, Paolo Bonzini wrote:
+> > > > On 01/08/19 18:51, Rafael J. Wysocki wrote:
+> > > > > On 8/1/2019 9:06 AM, Wanpeng Li wrote:
+> > > > >> From: Wanpeng Li <wanpengli@tencent.com>
+> > > > >>
+> > > > >> The downside of guest side polling is that polling is performed =
+even
+> > > > >> with other runnable tasks in the host. However, even if poll in =
+kvm
+> > > > >> can aware whether or not other runnable tasks in the same pCPU, =
+it
+> > > > >> can still incur extra overhead in over-subscribe scenario. Now w=
+e can
+> > > > >> just enable guest polling when dedicated pCPUs are available.
+> > > > >>
+> > > > >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > >> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > > > >> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > >
+> > > > > Paolo, Marcelo, any comments?
+> > > >
+> > > > Yes, it's a good idea.
+> > > >
+> > > > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > >
+> > > > Paolo
+> > >
+> >
+> > Hi Marcelo,
+> >
+> > Sorry for the late response.
+> >
+> > > I think KVM_HINTS_REALTIME is being abused somewhat.
+> > > It has no clear meaning and used in different locations
+> > > for different purposes.
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > KVM_HINTS_REALTIME 0                      guest checks this feature bit=
+ to
+> >
+> > determine that vCPUs are never
+> >
+> > preempted for an unlimited time
+>
+> Unlimited time means infinite time, or unlimited time means
+> 10s ? 1s ?
 
-clang enabled support for -Wimplicit-fallthrough in C in r369414 [1],
-which causes a lot of warnings when building the kernel for two reasons:
+The former one I think. There is a discussion here
+https://lkml.org/lkml/2018/5/17/612
 
-1. Clang does not support the /* fall through */ comments. There seems
-   to be a general consensus in the LLVM community that this is not
-   something they want to support. Joe Perches wrote a script to convert
-   all of the comments to a "fallthrough" keyword that will be added to
-   compiler_attributes.h [2] [3], which catches the vast majority of the
-   comments. There doesn't appear to be any consensus in the kernel
-   community when to do this conversion.
+>
+> The previous definition was much better IMO: HINTS_DEDICATED.
+>
+>
+> > allowing optimizations
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > Now it disables pv queued spinlock,
+>
+> OK.
+>
+> > pv tlb shootdown,
+>
+> OK.
+>
+> > pv sched yield
+>
+> "The idea is from Xen, when sending a call-function IPI-many to vCPUs,
+> yield if any of the IPI target vCPUs was preempted. 17% performance
+> increasement of ebizzy benchmark can be observed in an over-subscribe
+> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
+> IPI-many since call-function is not easy to be trigged by userspace
+> workload)."
+>
+> This can probably hurt if vcpus are rarely preempted.
 
-2. Clang and GCC disagree about falling through to final case statements
-   with no content or cases that simply break:
+That's why I add the KVM_HINTS_REALTIME checking here.
 
-   https://godbolt.org/z/c8csDu
+>
+> > which are not expected present in vCPUs are never preempted for an
+> > unlimited time scenario.
+> >
+> > >
+> > > For example, i think that using pv queued spinlocks and
+> > > haltpoll is a desired scenario, which the patch below disallows.
+> >
+> > So even if dedicated pCPU is available, pv queued spinlocks should
+> > still be chose if something like vhost-kthreads are used instead of
+> > DPDK/vhost-user.
+>
+> Can't you enable the individual features you need for optimizing
+> the overcommitted case? This is how things have been done historically:
+> If a new feature is available, you enable it to get the desired
+> performance. x2apic, invariant-tsc, cpuidle haltpoll...
+>
+> So in your case: enable pv schedyield, enable pv tlb shootdown.
 
-   This difference contributes at least 50 warnings in an allyesconfig
-   build for x86, not considering other architectures. This difference
-   will need to be discussed to see which compiler is right [4] [5].
+Both of them are used to optimize function-call IPIs. pv sched yield
+for call function interrupts, and pv tlb shootdown for tlb
+invalidation. So still different here. Our latest testing against an
+80 pCPUs host, and three 80 vCPUs VMs, the number is more better than
+64 pCPUs host which I used when posting patches:
 
-[1]: https://github.com/llvm/llvm-project/commit/1e0affb6e564b7361b0aadb38805f26deff4ecfc
-[2]: https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
-[3]: https://lore.kernel.org/lkml/1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com/
-[4]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
-[5]: https://github.com/ClangBuiltLinux/linux/issues/636
+ebizzy -M
+              vanilla    optimized     boost
+1VM            31234       34489        10%
+2VM             5380       26664       396%
+3VM             2967       23140       679%
 
-Given these two problems need discussion and coordination, do not enable
--Wimplicit-fallthrough with clang right now. Add a comment to explain
-what is going on as well. This commit should be reverted once these two
-issues are fully flushed out and resolved.
+>
+> > kvm adaptive halt-polling will compete with
+> > vhost-kthreads, however, poll in guest unaware other runnable tasks in
+> > the host which will defeat vhost-kthreads.
+>
+> It depends on how much work vhost-kthreads needs to do, how successful
+> halt-poll in the guest is, and what improvement halt-polling brings.
+> The amount of polling will be reduced to zero if polling
+> is not successful.
 
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- Makefile | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+We observe vhost-kthreads compete with vCPUs adaptive halt-polling in
+kvm, it hurt performance in over-subscribe product environment,
+polling in guest can make it worse.
 
-diff --git a/Makefile b/Makefile
-index f125625efd60..6007a56bdbee 100644
---- a/Makefile
-+++ b/Makefile
-@@ -751,6 +751,11 @@ else
- # These warnings generated too much noise in a regular build.
- # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
- KBUILD_CFLAGS += -Wno-unused-but-set-variable
-+
-+# Warn about unmarked fall-throughs in switch statement.
-+# Disabled for clang while comment to attribute conversion happens and
-+# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
-+KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
- endif
- 
- KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
-@@ -845,9 +850,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
- # warn about C99 declaration after statement
- KBUILD_CFLAGS += -Wdeclaration-after-statement
- 
--# Warn about unmarked fall-throughs in switch statement.
--KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
--
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
- 
--- 
-2.23.0
-
+Regards,
+Wanpeng Li
