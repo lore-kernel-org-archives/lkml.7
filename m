@@ -1,163 +1,149 @@
-Return-Path: <SRS0=ICIc=WW=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F90C3A59F
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94911C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFA22173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 26 Aug 2019 23:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1702173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PV8EId/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfHZX5w (ORCPT
+        id S1727113AbfH0AA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 19:57:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41609 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfHZX5u (ORCPT
+        Mon, 26 Aug 2019 20:00:26 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58032 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfH0AA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 19:57:50 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1i2Orm-0007L4-6A; Tue, 27 Aug 2019 01:57:42 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: numlist API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190807222634.1723-2-john.ogness@linutronix.de>
-        <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
-Date:   Tue, 27 Aug 2019 01:57:39 +0200
-In-Reply-To: <20190823171802.eo2chwyktibeub7a@pathway.suse.cz> (Petr Mladek's
-        message of "Fri, 23 Aug 2019 19:18:02 +0200")
-Message-ID: <87sgpnmqdo.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Mon, 26 Aug 2019 20:00:26 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A0AB331B;
+        Tue, 27 Aug 2019 02:00:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566864023;
+        bh=axRmPB+ri4lYGSD+6809gJobxHmxblq+utwkj7h225s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PV8EId/PKc+Z9yzRYVpcWKQ70kOhKNJnKt7RWKXt6oTuNa9GfjNTBQuqk9bWwdv9x
+         5DAQRZf6ABMGbU27nfg8aKoF7g3liBZC1abscP5eIdV2nOnmjRzdsyqdsw0NPhCwUk
+         RbX/pFfTnQBZiKwNlf5dhKvVkZ/VV3xOGtFqyXRc=
+Date:   Tue, 27 Aug 2019 03:00:17 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: Re: [PATCH v3 13/14] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+Message-ID: <20190827000017.GB5274@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-14-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190825135154.11488-14-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-23, Petr Mladek <pmladek@suse.com> wrote:
->> --- /dev/null
->> +++ b/kernel/printk/numlist.c
->> @@ -0,0 +1,375 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/sched.h>
->> +#include "numlist.h"
->
-> struct numlist is really special variant of a list. Let me to
-> do a short summary:
->
->    + FIFO queue interface
->
->    + nodes sequentially numbered
->
->    + nodes referenced by ID instead pointers to avoid ABA problems
->      + requires custom node() callback to get pointer for given ID
->
->    + lockless access:
->      + pushed nodes must not longer get modified by push() caller
->      + pop() caller gets exclusive write access, except that they
->        must modify ID first and do smp_wmb() later
+Hi Jacopo,
 
-Only if the "numlist user" decides to recycle descriptors (which the
-printk_ringbuffer does) is ID modification of descriptors necessary. How
-that is synchronized with readers is up to the user (for example,
-whether a RELEASE or an smp_wmb() is used).
+Thank you for the patch.
 
->    + pop() does not work:
->      + tail node is "busy"
-> 	+ needs a custom callback that defines when a node is busy
+On Sun, Aug 25, 2019 at 03:51:53PM +0200, Jacopo Mondi wrote:
+> Update CMM settings at in the atomic commit tail helper method.
+> 
+> The CMM is updated with new gamma values provided to the driver
+> in the GAMMA_LUT blob property.
+> 
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> index 61ca1d3c379a..047fdb982a11 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/wait.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -368,6 +369,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+>   * Atomic Check and Update
+>   */
+>  
+> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> +					     struct drm_crtc_state *old_state)
+> +{
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct rcar_cmm_config cmm_config = {};
+> +
+> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> +		return;
+> +
+> +	if (!crtc->state->gamma_lut) {
+> +		cmm_config.lut.enable = false;
+> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +
+> +		return;
+> +	}
+> +
+> +	cmm_config.lut.enable = true;
+> +	cmm_config.lut.table = (struct drm_color_lut *)
+> +			       crtc->state->gamma_lut->data;
+> +
+> +	/* Set LUT table size to 0 if entries should not be updated. */
+> +	if (!old_state->gamma_lut ||
+> +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
+> +		cmm_config.lut.size = crtc->state->gamma_lut->length
+> +				    / sizeof(cmm_config.lut.table[0]);
 
-Note that busy() could always return false if the user has no concept of
-nodes that should not be popped.
+It has just occurred to me that the hardware only support LUTs of
+exactly 256 entries. Should we remove cmm_config.lut.size (simplifying
+the code in the CMM driver), and add a check to the CRTC .atomic_check()
+handler to reject invalid LUTs ? Sorry for not having caught this
+earlier.
 
->      + tail is the last node
-> 	+ needed for lockless sequential numbering
->
-> I will start with one inevitable question ;-) Is it realistic to find
-> another user for this API, please?
+> +	else
+> +		cmm_config.lut.size = 0;
+> +
+> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +}
+> +
+>  static int rcar_du_atomic_check(struct drm_device *dev,
+>  				struct drm_atomic_state *state)
+>  {
+> @@ -410,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+>  			rcdu->dpad1_source = rcrtc->index;
+>  	}
+>  
+> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
+> +
+>  	/* Apply the atomic update. */
+>  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+>  	drm_atomic_helper_commit_planes(dev, old_state,
 
-If someone needs a FIFO queue that supports:
+-- 
+Regards,
 
-1. multiple concurrent writers and multiple concurrent non-consuming
-   readers
-
-2. where readers are allowed to miss nodes but are able to detect how
-   many were missed
-
-3. from any context (including NMI)
-
-then I know of no other data structure available. (Otherwise I would
-have used it!)
-
-> I am not sure that all the indirections, caused by the generic API,
-> are worth the gain.
-
-IMHO the API is sane. The only bizarre rule is that the numlist must
-always have at least 1 node. But since the readers are non-consuming,
-there is no real tragedy here.
-
-My goal is not to create some fabulous abstract data structure that
-everyone should use. But I did try to minimize numlist (and dataring) to
-only be concerned with clearly defined and minimal responsibilities
-without imposing unnecessary restrictions on the user.
-
-> Well, the separate API makes sense anyway. I have some ideas that
-> might make it cleaner.
-
-[snipped the nice refactoring of the ID into the nl_node]
-
-Your idea (along with previous discussions) convinced me of the
-importance of moving the ID-related barriers into the same
-file. However, rather than pushing the ID parts into the numlist, I will
-be moving them all into the "numlist user"
-(i.e. printk_ringbuffer). Your use of the ACQUIRE to load the ID made me
-realize that I need to be doing that as well! (but in the node()
-callback)
-
-The reasons why I do not want the ID in nl_node is:
-
-- The numlist would need to implement the ID-to-node mapping. For the
-  printk_ringbuffer that mapping is simply masking to an index within an
-  array. But why should a numlist user be forced to do it that way? I
-  see no advantage to restricting numlists to being arrays of nodes.
-
-- The dataring structure also uses IDs and requires an ID-to-node
-  mapping. I do not want to bind the dataring and numlist data
-  structures together at this level because they really have nothing to
-  do with each other. Having the dataring and numlist ID-to-node
-  mappings (and their barriers) in the same place (in the
-  numlist/dataring _user_) simplifies the big picture.
-
-- ID-related barriers are only needed if node recycling is involved. The
-  numlist user decides if recycling is used and if yes, then the numlist
-  user is responsible for correctly implementing that.
-
-- By moving all the ID-related barriers to the callbacks, the numlist
-  code remains clean and (with the exception of the one smp_rmb()) does
-  not expect anything from the numlist user.
-
-I believe your main concern was having easily visible symmetric
-barriers. We can achieve that if the read-barriers are in the callbacks
-(for both numlist and dataring). I think it makes more sense to put them
-there. dataring and numlist should not care about the ID-to-node
-mapping.
-
-John Ogness
+Laurent Pinchart
