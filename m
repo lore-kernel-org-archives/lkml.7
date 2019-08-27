@@ -6,150 +6,153 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B66C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D2EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC95206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816F0206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566931285;
-	bh=VI9BziTby39My6ZtKagU4aCpOut6dHrhBT3wZJ2E6J8=;
+	s=default; t=1566931307;
+	bh=McOn7qsm+0yakbPez5HYRoow9bAdRftKP5P5zmaoBEs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b+6n9YabJkGcR2saouXkvGuykZUb/e4u618k+dLgbHPoTpGQDH8SbIg8D+Oq3Q6UG
-	 BMkMfDJEHirJ+sn5v/2f/UnVUVF6zjfj7SbAFIlTbFp1p8NGCBm2GDTVczNXPjj7K7
-	 2zRxvAleAr8rQHKzSySTkyOY5oQ3nMRKcFCFUyII=
+	b=DY7TfXK2F99dm3Xv5jmKGWBr5wPsGanX9SSHb26pUjFyNeKyScSnNi3bFcSXeUwvd
+	 mlOmURxHmQ2Yd4oVDEUnQD7TuQ0WJ1d4iSxgMJWWozH2jBxqq45nhQ8u44ekGMmk43
+	 Ggy8owIXo3HPBaofmi3vhSWU5oRtBwUiK8/OSgE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbfH0SlY (ORCPT
+        id S1730838AbfH0Slq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:41:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59978 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728312AbfH0SlY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:41:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=epG1Jj0LZAm9JsQ4dirXtSr8T+ss8OxvKfoyO3+fm7o=; b=sM2g0hijUSswGlnHykjQw5vhb
-        +nU6Ko6Hf8zMuJKHsKssVCeLZHvI91ek0A1SoM7ns98Ru2B23NI2E3movUEr8CrskL4MGyQItkPQt
-        dpl5I24ouOTA5uIUuOnhN7xMJmnb+3/cWJw2OOcOVecSPVDRqugaUfYukM3421A8tu2H4=;
-Received: from 92.41.142.151.threembb.co.uk ([92.41.142.151] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i2gOa-0000xT-5B; Tue, 27 Aug 2019 18:40:45 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 5ACE5D02CE6; Tue, 27 Aug 2019 19:40:39 +0100 (BST)
-Date:   Tue, 27 Aug 2019 19:40:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Nariman Poushin <npoushin@opensource.cirrus.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Nikesh Oswal <nikesh@opensource.cirrus.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Piotr Stankiewicz <piotrs@opensource.cirrus.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        zhong jiang <zhongjiang@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] wm8904: adapt driver for use with audio-graph-card
-Message-ID: <20190827184039.GJ23391@sirena.co.uk>
-Mail-Followup-To: =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Nariman Poushin <npoushin@opensource.cirrus.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Nikesh Oswal <nikesh@opensource.cirrus.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Piotr Stankiewicz <piotrs@opensource.cirrus.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@linutronix.de>,
-        zhong jiang <zhongjiang@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1566734630.git.mirq-linux@rere.qmqm.pl>
+        Tue, 27 Aug 2019 14:41:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59776 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730237AbfH0Slq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:41:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 37152AE2F;
+        Tue, 27 Aug 2019 18:41:44 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 20:41:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH] mm: drop mark_page_access from the unmap path
+Message-ID: <20190827184142.GK7538@dhcp22.suse.cz>
+References: <20190731054447.GB155569@google.com>
+ <20190731072101.GX9330@dhcp22.suse.cz>
+ <20190806105509.GA94582@google.com>
+ <20190809124305.GQ18351@dhcp22.suse.cz>
+ <20190809183424.GA22347@cmpxchg.org>
+ <20190812080947.GA5117@dhcp22.suse.cz>
+ <20190812150725.GA3684@cmpxchg.org>
+ <20190813105143.GG17933@dhcp22.suse.cz>
+ <20190826120630.GI7538@dhcp22.suse.cz>
+ <20190827160026.GA27686@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5PPnVwj6ulmYFu5t"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1566734630.git.mirq-linux@rere.qmqm.pl>
-X-Cookie: Don't SANFORIZE me!!
+In-Reply-To: <20190827160026.GA27686@cmpxchg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 27-08-19 12:00:26, Johannes Weiner wrote:
+> On Mon, Aug 26, 2019 at 02:06:30PM +0200, Michal Hocko wrote:
+> > On Tue 13-08-19 12:51:43, Michal Hocko wrote:
+> > > On Mon 12-08-19 11:07:25, Johannes Weiner wrote:
+> > > > On Mon, Aug 12, 2019 at 10:09:47AM +0200, Michal Hocko wrote:
+> > [...]
+> > > > > > Maybe the refaults will be fine - but latency expectations around
+> > > > > > mapped page cache certainly are a lot higher than unmapped cache.
+> > > > > >
+> > > > > > So I'm a bit reluctant about this patch. If Minchan can be happy with
+> > > > > > the lock batching, I'd prefer that.
+> > > > > 
+> > > > > Yes, it seems that the regular lock drop&relock helps in Minchan's case
+> > > > > but this is a kind of change that might have other subtle side effects.
+> > > > > E.g. will-it-scale has noticed a regression [1], likely because the
+> > > > > critical section is shorter and the overal throughput of the operation
+> > > > > decreases. Now, the w-i-s is an artificial benchmark so I wouldn't lose
+> > > > > much sleep over it normally but we have already seen real regressions
+> > > > > when the locking pattern has changed in the past so I would by a bit
+> > > > > cautious.
+> > > > 
+> > > > I'm much more concerned about fundamentally changing the aging policy
+> > > > of mapped page cache then about the lock breaking scheme. With locking
+> > > > we worry about CPU effects; with aging we worry about additional IO.
+> > > 
+> > > But the later is observable and debuggable little bit easier IMHO.
+> > > People are quite used to watch for major faults from my experience
+> > > as that is an easy metric to compare.
+> 
+> Rootcausing additional (re)faults is really difficult. We're talking
+> about a slight trend change in caching behavior in a sea of millions
+> of pages. There could be so many factors causing this, and for most
+> you have to patch debugging stuff into the kernel to rule them out.
+> 
+> A CPU regression you can figure out with perf.
+> 
+> > > > > As I've said, this RFC is mostly to open a discussion. I would really
+> > > > > like to weigh the overhead of mark_page_accessed and potential scenario
+> > > > > when refaults would be visible in practice. I can imagine that a short
+> > > > > lived statically linked applications have higher chance of being the
+> > > > > only user unlike libraries which are often being mapped via several
+> > > > > ptes. But the main problem to evaluate this is that there are many other
+> > > > > external factors to trigger the worst case.
+> > > > 
+> > > > We can discuss the pros and cons, but ultimately we simply need to
+> > > > test it against real workloads to see if changing the promotion rules
+> > > > regresses the amount of paging we do in practice.
+> > > 
+> > > Agreed. Do you see other option than to try it out and revert if we see
+> > > regressions? We would get a workload description which would be helpful
+> > > for future regression testing when touching this area. We can start
+> > > slower and keep it in linux-next for a release cycle to catch any
+> > > fallouts early.
+> > > 
+> > > Thoughts?
+> > 
+> > ping...
+> 
+> Personally, I'm not convinced by this patch. I think it's a pretty
+> drastic change in aging heuristics just to address a CPU overhead
+> problem that has simpler, easier to verify, alternative solutions.
+> 
+> It WOULD be great to clarify and improve the aging model for mapped
+> cache, to make it a bit easier to reason about.
 
---5PPnVwj6ulmYFu5t
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I fully agree with this! Do you have any specific ideas? I am afraid I
+am unlikely to find time for a larger project that this sounds to be but
+maybe others will find this as a good fit.
 
-On Sun, Aug 25, 2019 at 02:17:30PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> This series allows to use WM8904 codec as audio-graph-card component.
-> It starts with rework of FLL handling in the codec's driver, and as an
-> example includes (untested) rework for codec with similar FLL: WM8994.
+> But this patch does
+> not really get there either. Instead of taking a serious look at
+> mapped cache lifetime and usage scenarios, the changelog is more in
+> "let's see what breaks if we take out this screw here" territory.
 
-Please make some effort to focus your CC list on only relevant
-people, many upstream developers get a lot of e-mail and cutting
-down on that helps everyone stay more productive, too many can
-also set off anti-spam software.  You've sent this to a lot of
-people and I'm struggling to figure out why most of them are on
-the list.
+You know that I tend to be quite conservative. In this case I can see
+the cost which is not negligible and likely to hit many workloads
+because it is a common path. The immediate benefit is not really clear,
+though, at least to me. We can speculate and I would really love to hear
+from Nick what exactly led him to this change.
+ 
+> So I'm afraid I don't think the patch & changelog in its current shape
+> should go upstream.
 
---5PPnVwj6ulmYFu5t
-Content-Type: application/pgp-signature; name="signature.asc"
+I will not insist of course but it would be really great to know and
+_document_ why we are doing this. I really hate how often we keep
+different heuristics and build more complex solutions on top just
+because nobody dares to change that.
 
------BEGIN PGP SIGNATURE-----
+Our code is really hard to reason about.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1leSYACgkQJNaLcl1U
-h9D/qAf/aDKjsXpu3OV9W/YRcVKa/q4lkLirQXvzegtCjjtctGiFmmTa8hRGeaU2
-sHHo5pU4H6EDQZubuS3bnNWzE0SRout2VquNd1ddjAQoVCmRv2rfaGFpI2SelVqL
-2lAMUx2niskdB2f1YFRIBbuvwfok6C3qew9aM3DZIDhD+foqHLWuwWYNDjjbwopR
-rqLgjwGRoCwQQh9/HfhdWB7b94NQ74aPsa0xETo+dsR4z1k1PEjoThjBkckOI/eF
-8yFtAR6coVQ2DHbsAKTO7ajC43cumNyh4XhYRAxBVrCJ6wG17AQTT23HTpNaLCGy
-tYANpAltXhi4j1vd/QkH9wh3MvDFww==
-=GFP7
------END PGP SIGNATURE-----
-
---5PPnVwj6ulmYFu5t--
+-- 
+Michal Hocko
+SUSE Labs
