@@ -2,75 +2,109 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D71C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D12C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C92B204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566902311;
-	bh=rWcGSZ8cZ/fDAwG3MCvZ7EawkQ7zJoVjhoQdZUGP0bA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NCVDBP5oOUo1DjtWRLmZGNQn0vgxxJw7GjXniVgrUfXXHrfH7kjKAz+DfoYYyfK+G
-	 jo7sk/tx6/e95pfdreLgFT2cIJgUamJyUMEWYp6rAf4MtXQEFZVp08L/jv8QvIbOcV
-	 8Z/syxmBG5JBqGapx1kSRiHlMtpQbWvAJODBFpTs=
+	by mail.kernel.org (Postfix) with ESMTP id D1C4B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfH0Kia (ORCPT
+        id S1729378AbfH0Kiy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:38:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52216 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbfH0Ki3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:38:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56FC8AF2C;
-        Tue, 27 Aug 2019 10:38:28 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 12:38:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Edward Chron <echron@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
- information
-Message-ID: <20190827103827.GV7538@dhcp22.suse.cz>
-References: <20190826193638.6638-1-echron@arista.com>
- <20190827071523.GR7538@dhcp22.suse.cz>
- <5768394f-1511-5b00-f715-c0c5446a2d2a@i-love.sakura.ne.jp>
+        Tue, 27 Aug 2019 06:38:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56706 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfH0Kiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:38:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 03:38:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
+   d="scan'208";a="355732298"
+Received: from pgsmsx104.gar.corp.intel.com ([10.221.44.91])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2019 03:38:51 -0700
+Received: from pgsmsx106.gar.corp.intel.com (10.221.44.98) by
+ PGSMSX104.gar.corp.intel.com (10.221.44.91) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 27 Aug 2019 18:38:50 +0800
+Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.25]) by
+ PGSMSX106.gar.corp.intel.com ([169.254.9.10]) with mapi id 14.03.0439.000;
+ Tue, 27 Aug 2019 18:38:50 +0800
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency clk
+ support for EHL & TGL
+Thread-Topic: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency
+ clk support for EHL & TGL
+Thread-Index: AQHVXDU69zXHtb/poUqtoKXItI5YJKcNUeeAgAAFGQCAAXRAAA==
+Date:   Tue, 27 Aug 2019 10:38:50 +0000
+Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814758DB5@PGSMSX103.gar.corp.intel.com>
+References: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
+ <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
+ <7d43e0c6-6f51-0d71-0af8-89f22b0234f9@gmail.com>
+ <20190826201346.GJ2168@lunn.ch>
+In-Reply-To: <20190826201346.GJ2168@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.205]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5768394f-1511-5b00-f715-c0c5446a2d2a@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 19:10:18, Tetsuo Handa wrote:
-> On 2019/08/27 16:15, Michal Hocko wrote:
-> > All that being said, I do not think this is something we want to merge
-> > without a really _strong_ usecase to back it.
+> > > +#include <linux/clk-provider.h>
+> > >  #include <linux/pci.h>
+> > >  #include <linux/dmi.h>
+> > >
+> > > @@ -174,6 +175,19 @@ static int intel_mgbe_common_data(struct
+> pci_dev *pdev,
+> > >  	plat->axi->axi_blen[1] = 8;
+> > >  	plat->axi->axi_blen[2] = 16;
+> > >
+> > > +	plat->ptp_max_adj = plat->clk_ptp_rate;
+> > > +
+> > > +	/* Set system clock */
+> > > +	plat->stmmac_clk = clk_register_fixed_rate(&pdev->dev,
+> > > +						   "stmmac-clk", NULL, 0,
+> > > +						   plat->clk_ptp_rate);
+> > > +
+> > > +	if (IS_ERR(plat->stmmac_clk)) {
+> > > +		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
+> > > +		plat->stmmac_clk = NULL;
+> >
+> > Don't you need to propagate at least EPROBE_DEFER here?
 > 
-> Like the sender's domain "arista.com" suggests, some of information is
-> geared towards networking devices, and ability to report OOM information
-> in a way suitable for automatic recording/analyzing (e.g. without using
-> shell prompt, let alone manually typing SysRq commands) would be convenient
-> for unattended devices.
+> Hi Florian
+> 
+> Isn't a fixed rate clock a complete fake. There is no hardware behind it.
+> So can it return EPROBE_DEFER?
+> 
+>     Andrew
 
-Why cannot the remote end of the logging identify the host. It has to
-connect somewhere anyway, right? I also do assume that a log collector
-already does store each log with host id of some form.
+Yes, there is no hardware behind it. So, I don't think we need to deferred probe
+and a warning message should be sufficient. Anyhow, please point it out if I miss
+out anything.
 
--- 
-Michal Hocko
-SUSE Labs
+Thanks. 
+
