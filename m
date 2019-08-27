@@ -2,86 +2,73 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050B2C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B305C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE4020644
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E6E217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfH0SvR (ORCPT
+        id S1730817AbfH0Swl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:51:17 -0400
-Received: from correo.us.es ([193.147.175.20]:37810 "EHLO mail.us.es"
+        Tue, 27 Aug 2019 14:52:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53594 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730847AbfH0SvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:51:16 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id BB56227F8C9
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 20:51:12 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id AE5C2DA8E8
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 20:51:12 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 91A0A5B3; Tue, 27 Aug 2019 20:51:12 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 718E9DA801;
-        Tue, 27 Aug 2019 20:51:10 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 27 Aug 2019 20:51:10 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729696AbfH0Swl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:52:41 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 42DA14265A5A;
-        Tue, 27 Aug 2019 20:51:10 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 20:51:11 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Subject: Re: [PATCH v2 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
- IPv6 is disabled on boot
-Message-ID: <20190827185111.cgutfqkqwsufe2nl@salvia>
-References: <20190821141505.2394-1-leonardo@linux.ibm.com>
- <20190827103541.vzwqwg4jlbuzajxu@salvia>
- <77c43754ff72e9a2e8048ccd032351cf0186080a.camel@linux.ibm.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 5DF7A10C6354;
+        Tue, 27 Aug 2019 18:52:41 +0000 (UTC)
+Received: from flask (unknown [10.43.2.55])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 543355D6B0;
+        Tue, 27 Aug 2019 18:52:38 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Tue, 27 Aug 2019 20:52:37 +0200
+Date:   Tue, 27 Aug 2019 20:52:37 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Roman Kagan <rkagan@virtuozzo.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] KVM: x86: hyper-v: don't crash on
+ KVM_GET_SUPPORTED_HV_CPUID when kvm_intel.nested is disabled
+Message-ID: <20190827185237.GD65641@flask>
+References: <20190827160404.14098-1-vkuznets@redhat.com>
+ <20190827160404.14098-2-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <77c43754ff72e9a2e8048ccd032351cf0186080a.camel@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20190827160404.14098-2-vkuznets@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 27 Aug 2019 18:52:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 02:34:14PM -0300, Leonardo Bras wrote:
-> On Tue, 2019-08-27 at 12:35 +0200, Pablo Neira Ayuso wrote:
-[...]
-> > NFT_BREAK instead to stop evaluating this rule, this results in a
-> > mismatch, so you let the user decide what to do with packets that do
-> > not match your policy.
->
-> Ok, I will replace for v3.
+2019-08-27 18:04+0200, Vitaly Kuznetsov:
+> If kvm_intel is loaded with nested=0 parameter an attempt to perform
+> KVM_GET_SUPPORTED_HV_CPUID results in OOPS as nested_get_evmcs_version hook
+> in kvm_x86_ops is NULL (we assign it in nested_vmx_hardware_setup() and
+> this only happens in case nested is enabled).
+> 
+> Check that kvm_x86_ops->nested_get_evmcs_version is not NULL before
+> calling it. With this, we can remove the stub from svm as it is no
+> longer needed.
+> 
 
-Thanks.
+Added
 
-> > The drop case at the bottom of the fib eval function never actually
-> > never happens.
->
-> Which one do you mean?
+Cc: <stable@vger.kernel.org>
 
-Line 31 of net/netfilter/nft_fib_inet.c.
+> Fixes: e2e871ab2f02 ("x86/kvm/hyper-v: Introduce nested_get_evmcs_version() helper")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+and applied, thanks.
