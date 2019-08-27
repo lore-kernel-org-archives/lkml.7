@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625C3C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9511C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3806D2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86732206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893649;
-	bh=J5lnnaoGht24ngfs5Mv6fMDuHPifdiMPBV5Df3X7NiU=;
+	s=default; t=1566893660;
+	bh=6lik4SAk42Yf2+cXQRSR4oaTe0Oeuxd5mCYXhhZbWWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZzHt5PcRJjevnWvRDQbD0yfPyeUBFbECI1lITplC59H6cDhK3I/khn06Cp6qN8z4
-	 2WzkqN6+UPfTo2UPJKoR49YplZCgw6WSWm3CAv7C1OWuQA3xfqbXUIfhRQAlFlAe23
-	 xvGHsmx7nk1iN7Tjoo/VFnlymOSCRrffIUKpK7bc=
+	b=y59N8hlP6jCoPns5II23C+MP/IUShz8T/A4yHmWziQ1YfZA0enxfGr/63VFugQd2m
+	 Ag+c0EchIn30GYhsIoxat3a8tsWI19naN3KPQ0bZT4obRwr1Vnwi108jooTNhQrxOr
+	 LFlQSBM0SN0nHUM1AqKzhv7I1jzGwfP26h22vI/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfH0IOI (ORCPT
+        id S1730595AbfH0H43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49010 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbfH0H4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:53 -0400
+        id S1730584AbfH0H4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A57F9206BF;
-        Tue, 27 Aug 2019 07:56:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B99CF206BA;
+        Tue, 27 Aug 2019 07:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892613;
-        bh=J5lnnaoGht24ngfs5Mv6fMDuHPifdiMPBV5Df3X7NiU=;
+        s=default; t=1566892584;
+        bh=6lik4SAk42Yf2+cXQRSR4oaTe0Oeuxd5mCYXhhZbWWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1VGDdiLb4cbMgYk8OFNkr3cHBKfcjqPMyYcwsaCirBTAW6yz0zpxuB3etKLFp2nc5
-         zKvABZGeiV6K5V1WHCHSimgf+/GKfenPCzIKg4nZJO9HFqeIkpzFPWv6QVHO3G15fe
-         FymBo/O6EFSQAHUC5uddo7pwwAXxB6oefNX+5tAU=
+        b=GyP8If/06+AtSgFsOxx7DvtbTHP7CzDDv6bV7nSTEIGn5X7rq6QU0vPb7I9a0L5dJ
+         gxWzFXtGLp8V9U0ighoCp91Js0aRJxL1sbXVqkpGD1xU4Pb6q9mzzQ6YTIyRv6NnNE
+         /wO+4cdLU/cvLqIcv+ZgefG8uwELemWZHMa73/GY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 13/98] can: gw: Fix error path of cgw_module_init
-Date:   Tue, 27 Aug 2019 09:49:52 +0200
-Message-Id: <20190827072719.033233455@linuxfoundation.org>
+Subject: [PATCH 4.19 42/98] net: cxgb3_main: Fix a resource leak in a error path in init_one()
+Date:   Tue, 27 Aug 2019 09:50:21 +0200
+Message-Id: <20190827072720.419732222@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,90 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b7a14297f102b6e2ce6f16feffebbb9bde1e9b55 ]
+[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
 
-This patch add error path for cgw_module_init to avoid possible crash if
-some error occurs.
+A call to 'kfree_skb()' is missing in the error handling path of
+'init_one()'.
+This is already present in 'remove_one()' but is missing here.
 
-Fixes: c1aabdf379bc ("can-gw: add netlink based CAN routing")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/gw.c | 48 +++++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/can/gw.c b/net/can/gw.c
-index 53859346dc9a9..bd2161470e456 100644
---- a/net/can/gw.c
-+++ b/net/can/gw.c
-@@ -1046,32 +1046,50 @@ static __init int cgw_module_init(void)
- 	pr_info("can: netlink gateway (rev " CAN_GW_VERSION ") max_hops=%d\n",
- 		max_hops);
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+index c34ea385fe4a5..6be6de0774b61 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -3270,7 +3270,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (!adapter->regs) {
+ 		dev_err(&pdev->dev, "cannot map device registers\n");
+ 		err = -ENOMEM;
+-		goto out_free_adapter;
++		goto out_free_adapter_nofail;
+ 	}
  
--	register_pernet_subsys(&cangw_pernet_ops);
-+	ret = register_pernet_subsys(&cangw_pernet_ops);
-+	if (ret)
-+		return ret;
+ 	adapter->pdev = pdev;
+@@ -3398,6 +3398,9 @@ out_free_dev:
+ 		if (adapter->port[i])
+ 			free_netdev(adapter->port[i]);
+ 
++out_free_adapter_nofail:
++	kfree_skb(adapter->nofail_skb);
 +
-+	ret = -ENOMEM;
- 	cgw_cache = kmem_cache_create("can_gw", sizeof(struct cgw_job),
- 				      0, 0, NULL);
--
- 	if (!cgw_cache)
--		return -ENOMEM;
-+		goto out_cache_create;
+ out_free_adapter:
+ 	kfree(adapter);
  
- 	/* set notifier */
- 	notifier.notifier_call = cgw_notifier;
--	register_netdevice_notifier(&notifier);
-+	ret = register_netdevice_notifier(&notifier);
-+	if (ret)
-+		goto out_register_notifier;
- 
- 	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_GETROUTE,
- 				   NULL, cgw_dump_jobs, 0);
--	if (ret) {
--		unregister_netdevice_notifier(&notifier);
--		kmem_cache_destroy(cgw_cache);
--		return -ENOBUFS;
--	}
--
--	/* Only the first call to rtnl_register_module can fail */
--	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
--			     cgw_create_job, NULL, 0);
--	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
--			     cgw_remove_job, NULL, 0);
-+	if (ret)
-+		goto out_rtnl_register1;
-+
-+	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
-+				   cgw_create_job, NULL, 0);
-+	if (ret)
-+		goto out_rtnl_register2;
-+	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
-+				   cgw_remove_job, NULL, 0);
-+	if (ret)
-+		goto out_rtnl_register3;
- 
- 	return 0;
-+
-+out_rtnl_register3:
-+	rtnl_unregister(PF_CAN, RTM_NEWROUTE);
-+out_rtnl_register2:
-+	rtnl_unregister(PF_CAN, RTM_GETROUTE);
-+out_rtnl_register1:
-+	unregister_netdevice_notifier(&notifier);
-+out_register_notifier:
-+	kmem_cache_destroy(cgw_cache);
-+out_cache_create:
-+	unregister_pernet_subsys(&cangw_pernet_ops);
-+
-+	return ret;
- }
- 
- static __exit void cgw_module_exit(void)
 -- 
 2.20.1
 
