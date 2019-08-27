@@ -2,126 +2,180 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F6CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E24C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B335A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ou24idic"
+	by mail.kernel.org (Postfix) with ESMTP id DDA3A217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566893545;
+	bh=4SXE3u17cW/vios+tf7ONzbZdajlNUm1nl86PBM+ESo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fX9AkfreKQKc41mrhbxgh5QQeLl+JfSZ/i+4edVfgSn/hv/6lPke2kemSU1c5aC0d
+	 E2ezm6zbAPytxQc0e/GFEG8CO9fcGz6I+6kxUgIUfpHKlo2+7KZcWwaJxf2G5H/jLP
+	 IPv5JEs/ZqWWHv4TaAWAtKos5Uh3k92G9Fx9yPUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbfH0IMU (ORCPT
+        id S1728464AbfH0IMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:12:20 -0400
-Received: from mail-eopbgr20054.outbound.protection.outlook.com ([40.107.2.54]:28775
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730285AbfH0IMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:12:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bLO0X5ryPLkudFuyQrDR/7Tb9JS/Jm4oLpnZhatDWJ/+N/axw3CP6KPp/ntDhMAqfbNLwdt2jQ8IrFP0DOhGvY9bOXJ4rx4q8M5WOlQnJ82z7aTOcT53vQjtQ0bgmkaVItjqBDjqLgDnTqvxbXVBt3o1Qy/Y+GnvNgzCnyCgo5Ui3w05AZiSDn4sWSE2o44AyhLPYUCzhDc3J4q75tDeSrzTWipdk5LMii3sr/F0pCn9utEyBu46W657G7YsHi+/mlfF5IwDzmQsQH8eLClrTBZjO9R1lCnmYjXFYU9zPxAWcDJHXfU6qhvGNLOqvsQ9cjU7gnFSPw3lpYCyP0w0NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2ARKlJkhbpcUc/LcscdFIYHYj0orvOhKJY4M1p/Hck=;
- b=doXVegem/mNNpm5sgU3Qz3zjemPCKbcFlnzf2F7nICpgVotH/DOaLkzWEjdk4p8YFBDsaermavs1rxf3pOUDqb92pmWNV5oU4zZQCtzseCh+7IJXv//FAox2QxQnqOWsiy8b6UmgTlNZuZ8deg8WMZDL/D+OkK0d2OPj26hcq4/FNgV3jDb6pg/bVO1gS1CcJzVLji8AgUM24dfNAST7yG1LyosrGA/9SrUbtPqU0zETwPb+GjIOZM/iV9GMBmAMYT0oVUpCpL8ztSwVGqphRMccXYH7aPV1n2Ux/89cnDiE0ifKngG3RUEUZC17mSvDR6FgyCRrbh1RtY/ajqTi8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2ARKlJkhbpcUc/LcscdFIYHYj0orvOhKJY4M1p/Hck=;
- b=ou24idicBedA7nTfpkSNAKEBOflCeuWq0yWz20BfPrTml4YfZ0f+ctOJro2yh3C/eFCbqZxwbA1AmOL62YppL4/B3ZwW3vTVpr7q7LMLUSblUqZiMCk7aMJZgjfD2YLUvmdnzZYJsG+uYkqFY6Eqx67LY5IbnXGiLnohLbuQQmk=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4153.eurprd04.prod.outlook.com (52.134.111.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Tue, 27 Aug 2019 08:12:14 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::3cd8:4bcf:8626:4254]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::3cd8:4bcf:8626:4254%3]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
- 08:12:12 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Nandor Han <nandor.han@vaisala.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [v4] rtc: pcf85363/pcf85263: fix error that failed to
- run hwclock -w
-Thread-Topic: [EXT] Re: [v4] rtc: pcf85363/pcf85263: fix error that failed to
- run hwclock -w
-Thread-Index: AQHVXJKQHF/rfq3lnkKORRBaxuIvrKcOo8UAgAABInA=
-Date:   Tue, 27 Aug 2019 08:12:12 +0000
-Message-ID: <DB7PR04MB4490EEEEF3E813A1EC34D1C68FA00@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190827043735.31231-1-biwen.li@nxp.com>
- <2b49e282-fc03-ee59-2719-5a3c1ce573ce@vaisala.com>
-In-Reply-To: <2b49e282-fc03-ee59-2719-5a3c1ce573ce@vaisala.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f994cc01-333a-4151-7ef2-08d72ac643f3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4153;
-x-ms-traffictypediagnostic: DB7PR04MB4153:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB415399811BB521400EA328048FA00@DB7PR04MB4153.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(346002)(39860400002)(136003)(199004)(189003)(53936002)(54906003)(110136005)(76176011)(44832011)(86362001)(14454004)(7696005)(4326008)(6506007)(25786009)(316002)(3846002)(2201001)(99286004)(66476007)(66946007)(64756008)(71190400001)(6116002)(76116006)(66446008)(66556008)(229853002)(478600001)(55016002)(6246003)(71200400001)(52536014)(305945005)(2906002)(33656002)(102836004)(6436002)(26005)(186003)(476003)(486006)(11346002)(7736002)(2501003)(14444005)(256004)(5660300002)(81156014)(81166006)(9686003)(8936002)(66066001)(8676002)(53546011)(446003)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4153;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: F1NDSbbe5sEOzL9NKeB4+DjmaVDNcxHBW5FmR6nz+gDkNB8ltPuppO3+t+QOIhqrC68ssQP9wsbRCJG9fnGtNvz3kShqAyum312Xnjd1vanogJzF+FrHUg8OuTjv7KuylIMqlNQJ5TlpGy5TRCZlJZ9+iTew4YY/LFsgtBLJlIOaMaYBkBzVTgM5hUM53VQPUeS2fJOSMVBRRVyin8uDpd6EbHHhZBlAizZlxD/NVAcsNNzzTjmFFrU8I4co7E4e2qns+zZpr1XlEqgpBOX920RwAsaE2YdoeYe0FC2qd6cCZds/iSV55lupH80kINM3cnovURqRm9RbzcBVP9swhGAA/7GlYj7Lies/7DqFHN5UynQzCIzqMq6+TbS6UpzWErl7Mqn87GbtAzpp3AR1hVbX22Zxkirw9LigSzTscmk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 27 Aug 2019 04:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731169AbfH0H71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:59:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7FF206BA;
+        Tue, 27 Aug 2019 07:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892766;
+        bh=4SXE3u17cW/vios+tf7ONzbZdajlNUm1nl86PBM+ESo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bDRswvR+mv8vnwsdNBYMUygmCiZArx52CsOI9J6JeCJ6k8Ew1aroU0AADMD+Gc1w4
+         xj7Mj7pyf1q5R1FZDUhkojvmLAgh3sCmUD4riGm2r6KuybrouhS5z8I14/IE6RzpuL
+         J4LqedkcrSlbrBRIDLlQxcSSsQ+//mF/HqBzckJY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.19 98/98] rxrpc: Fix read-after-free in rxrpc_queue_local()
+Date:   Tue, 27 Aug 2019 09:51:17 +0200
+Message-Id: <20190827072723.427504193@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
+References: <20190827072718.142728620@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f994cc01-333a-4151-7ef2-08d72ac643f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 08:12:12.6667
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7ScnTmrSYeJNO1LcGyQ8xQIxq2UCW5AZ13YLNl5YTrJf+B2zfH0656IOvXBGXzpeIysq4EZ7qmJ5V+0ldTPL9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4153
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gT24gOC8yNy8xOSA3OjM3IEFNLCBCaXdlbiBMaSB3cm90ZToNCj4gPiAgIC0gSW4gZHJp
-dmVycy9ydGMvcnRjLXBjZjg1MzYzLmMsIENUUkxfU1RPUF9FTiBpcyAweDJlLCBidXQgRFRfMTAw
-VEhTDQo+ID4gICAgICAgIGlzIDAsIG1heF9yZWdpdGVyIGlzIDB4MmYsIHRoZW4gcmVnIHdpbGwg
-YmUgZXF1YWwgdG8gMHgzMCwNCj4gPiAgICAgICAgJzB4MzAgPCAweDJmJyBpcyBmYWxzZSxzbyBy
-ZWdtYXBfd3JpdGVhYmxlIHdpbGwgcmV0dXJuIGZhbHNlLg0KPiA+DQo+ID4gICAgICAtIFRoZSBw
-Y2Y4NTM2My9wY2Y4NTI2MyBoYXMgdGhlIGNhcGFiaWxpdHkgb2YgYWRkcmVzcyB3cmFwcGluZw0K
-PiA+ICAgICAgICB3aGljaCBtZWFucyBpZiB5b3UgYWNjZXNzIGEgY29udGludW91cyBhZGRyZXNz
-IHJhbmdlIGFjcm9zcyBhDQo+ID4gICAgICAgIGNlcnRhaW4gYm91bmRhcnkobWF4X3JlZ2lzdGVy
-IG9mIHN0cnVjdCByZWdtYXBfY29uZmlnKSB0aGUNCj4gPiAgICAgICAgaGFyZHdhcmUgYWN0dWFs
-bHkgd3JhcHMgdGhlIGFjY2VzcyB0byBhIGxvd2VyIGFkZHJlc3MuIEJ1dCB0aGUNCj4gPiAgICAg
-ICAgYWRkcmVzcyB2aW9sYXRpb24gY2hlY2sgb2YgcmVnbWFwIHJlamVjdHMgc3VjaCBhY2Nlc3Mu
-DQo+IA0KPiBuaXRwaWNrOiBUaGlzIDIgcGFyYWdyYXBocyBjb3VsZCBiZSBjb21iaW5lZCB0byBj
-bGVhciB1cCB0aGUgaXNzdWU6DQo+IA0KPiBgDQo+IFRoZSBwY2Y4NTM2My9wY2Y4NTI2MyBoYXMg
-dGhlIGNhcGFiaWxpdHkgb2YgYWRkcmVzcyB3cmFwcGluZyB3aGljaCBtZWFucyBpZg0KPiB5b3Ug
-YWNjZXNzIGFuIGFkZHJlc3Mgb3V0c2lkZSB0aGUgYWxsb3dlZCByYW5nZQ0KPiAoMHgwMC0weDJm
-KSB0aGUgaGFyZHdhcmUgYWN0dWFsbHkgd3JhcHMgdGhlIGFjY2VzcyB0byBhIGxvd2VyIGFkZHJl
-c3MuDQo+IFRoZSBydGMtcGY4NTM2MyBkcml2ZXIgd2lsbCB1c2UgdGhpcyBmZWF0dXJlIHRvIGNv
-bmZpZ3VyZSB0aGUgdGltZSBhbmQgZXhlY3V0ZSAyDQo+IGFjdGlvbnMgaW4gdGhlIHNhbWUgaTJj
-IHdyaXRlIG9wZXJhdGlvbiAoc3RvcHBpbmcgdGhlIGNsb2NrIGFuZCBjb25maWd1cmUgdGhlDQo+
-IHRpbWUpLiBIb3dldmVyIHRoZSBkcml2ZXIgaGFzIGFsc28gY29uZmlndXJlZCB0aGUgYHJlZ21h
-cCBtYXhyZWdpc3RlcmANCj4gcHJvdGVjdGlvbiBtZWNoYW5pc20gdGhhdCB3aWxsIGJsb2NrIGFj
-Y2Vzc2luZyBhZGRyZXNzZXMgb3V0c2lkZSB2YWxpZCByYW5nZQ0KPiAoMHgwMC0weDJmKS4NCj4g
-YA0KPiANCj4gbml0cGljazogSSB3b3VsZCBhbHNvIHVzZSBzZXBhcmF0ZSBidWZmZXJzIGZvciB0
-aGlzIGFjdGlvbnMuIFVwIHRvIHlvdSA6KQ0KPiANCj4gT3RoZXJ3aXNlIExHVE0gKzENClRoYW5r
-cywgaXQncyBhIGJlYXV0aWZ1bCBleHBsYW5hdGlvbi4NCj4gDQo+IE5hbmRvcg0K
+From: David Howells <dhowells@redhat.com>
+
+commit 06d9532fa6b34f12a6d75711162d47c17c1add72 upstream.
+
+rxrpc_queue_local() attempts to queue the local endpoint it is given and
+then, if successful, prints a trace line.  The trace line includes the
+current usage count - but we're not allowed to look at the local endpoint
+at this point as we passed our ref on it to the workqueue.
+
+Fix this by reading the usage count before queuing the work item.
+
+Also fix the reading of local->debug_id for trace lines, which must be done
+with the same consideration as reading the usage count.
+
+Fixes: 09d2bf595db4 ("rxrpc: Add a tracepoint to track rxrpc_local refcounting")
+Reported-by: syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/trace/events/rxrpc.h |    6 +++---
+ net/rxrpc/local_object.c     |   19 ++++++++++---------
+ 2 files changed, 13 insertions(+), 12 deletions(-)
+
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -500,10 +500,10 @@ rxrpc_tx_points;
+ #define E_(a, b)	{ a, b }
+ 
+ TRACE_EVENT(rxrpc_local,
+-	    TP_PROTO(struct rxrpc_local *local, enum rxrpc_local_trace op,
++	    TP_PROTO(unsigned int local_debug_id, enum rxrpc_local_trace op,
+ 		     int usage, const void *where),
+ 
+-	    TP_ARGS(local, op, usage, where),
++	    TP_ARGS(local_debug_id, op, usage, where),
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field(unsigned int,	local		)
+@@ -513,7 +513,7 @@ TRACE_EVENT(rxrpc_local,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->local = local->debug_id;
++		    __entry->local = local_debug_id;
+ 		    __entry->op = op;
+ 		    __entry->usage = usage;
+ 		    __entry->where = where;
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -97,7 +97,7 @@ static struct rxrpc_local *rxrpc_alloc_l
+ 		local->debug_id = atomic_inc_return(&rxrpc_debug_id);
+ 		memcpy(&local->srx, srx, sizeof(*srx));
+ 		local->srx.srx_service = 0;
+-		trace_rxrpc_local(local, rxrpc_local_new, 1, NULL);
++		trace_rxrpc_local(local->debug_id, rxrpc_local_new, 1, NULL);
+ 	}
+ 
+ 	_leave(" = %p", local);
+@@ -325,7 +325,7 @@ struct rxrpc_local *rxrpc_get_local(stru
+ 	int n;
+ 
+ 	n = atomic_inc_return(&local->usage);
+-	trace_rxrpc_local(local, rxrpc_local_got, n, here);
++	trace_rxrpc_local(local->debug_id, rxrpc_local_got, n, here);
+ 	return local;
+ }
+ 
+@@ -339,7 +339,8 @@ struct rxrpc_local *rxrpc_get_local_mayb
+ 	if (local) {
+ 		int n = atomic_fetch_add_unless(&local->usage, 1, 0);
+ 		if (n > 0)
+-			trace_rxrpc_local(local, rxrpc_local_got, n + 1, here);
++			trace_rxrpc_local(local->debug_id, rxrpc_local_got,
++					  n + 1, here);
+ 		else
+ 			local = NULL;
+ 	}
+@@ -347,16 +348,16 @@ struct rxrpc_local *rxrpc_get_local_mayb
+ }
+ 
+ /*
+- * Queue a local endpoint unless it has become unreferenced and pass the
+- * caller's reference to the work item.
++ * Queue a local endpoint and pass the caller's reference to the work item.
+  */
+ void rxrpc_queue_local(struct rxrpc_local *local)
+ {
+ 	const void *here = __builtin_return_address(0);
++	unsigned int debug_id = local->debug_id;
++	int n = atomic_read(&local->usage);
+ 
+ 	if (rxrpc_queue_work(&local->processor))
+-		trace_rxrpc_local(local, rxrpc_local_queued,
+-				  atomic_read(&local->usage), here);
++		trace_rxrpc_local(debug_id, rxrpc_local_queued, n, here);
+ 	else
+ 		rxrpc_put_local(local);
+ }
+@@ -371,7 +372,7 @@ void rxrpc_put_local(struct rxrpc_local
+ 
+ 	if (local) {
+ 		n = atomic_dec_return(&local->usage);
+-		trace_rxrpc_local(local, rxrpc_local_put, n, here);
++		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
+ 
+ 		if (n == 0)
+ 			call_rcu(&local->rcu, rxrpc_local_rcu);
+@@ -458,7 +459,7 @@ static void rxrpc_local_processor(struct
+ 		container_of(work, struct rxrpc_local, processor);
+ 	bool again;
+ 
+-	trace_rxrpc_local(local, rxrpc_local_processing,
++	trace_rxrpc_local(local->debug_id, rxrpc_local_processing,
+ 			  atomic_read(&local->usage), NULL);
+ 
+ 	do {
+
+
