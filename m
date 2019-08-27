@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE98C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB53AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09CA206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33AD206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892583;
-	bh=Nk/rjZVOpy6/x/zI+r3iu7QrtVVzTdoyk3cX/tQ90/k=;
+	s=default; t=1566892586;
+	bh=IMouhFbAtyRnrffhXqdRzpnr6dJAf9xPKL2fxq5ru5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=foS/XNMGo4OJPfwTHDvjE1A5d7sfuC4WDu3NMqi3murXLxpJnUUOO7ryZaJrFlCTl
-	 k/hbclN5gvPbUZOIzKfVUgSNNl0itxcJb7Wo7kHfXeKnXTW7LTV1CLmhHj7OIAcfbI
-	 ZZ2LPGCU9bgB5/JsZSvdQpo67r6cZzu/T/uBJEgw=
+	b=JOKQ6+G2YTqpS2ABIb6nkIsQ9Gl77ezFLiP9EkHKGR1kXo2KN4+DelI2gd7PwBnbv
+	 e/ajxighX5F0BlndYutlromjskKQeT7/aW/LEd1qNZkNrCEAe4FAHHZCbLn+EQBsWQ
+	 588Y07qz0HKBQaU9Rqr7aA3jXJxyasyu8aFAgD4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730578AbfH0H4V (ORCPT
+        id S1730592AbfH0H4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729988AbfH0H4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:19 -0400
+        id S1730574AbfH0H4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27DEB206BA;
-        Tue, 27 Aug 2019 07:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88D0206BF;
+        Tue, 27 Aug 2019 07:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892578;
-        bh=Nk/rjZVOpy6/x/zI+r3iu7QrtVVzTdoyk3cX/tQ90/k=;
+        s=default; t=1566892581;
+        bh=IMouhFbAtyRnrffhXqdRzpnr6dJAf9xPKL2fxq5ru5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2LVgwEM0qwNpFgaazHuAIy9gPfugDEdIVl1H7jP6MsmlPwWXlhHI/iee97Z0Miy1
-         +6UEG5AtuQW0I3+wm/GKXBR5iuMfjYYj0hF91Sqc74HTH3XHn5zbv9jR/k4DB3zdkG
-         /e1KiSliXNNNULWjA6cO57nGTgHmY72HyjhNiHvk=
+        b=kCk4XJ0PopMCAmwlHh/ow2TnReX3NG8poNWX4cPgKKN8GRv1Nfl+DTIuM3LIdcZ4s
+         XdDlu/cE9AaSFa2208iE+yj6GFQ2TruiBhO+6qIMrwXvlz4HMEedL8wGCKKlOfltJX
+         7l/Gq96UVxuyhzpg2poOgHVx86qZSDRivhYVzg/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastien Tisserant <stisserant@wallix.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 40/98] SMB3: Kernel oops mounting a encryptData share with CONFIG_DEBUG_VIRTUAL
-Date:   Tue, 27 Aug 2019 09:50:19 +0200
-Message-Id: <20190827072720.303622823@linuxfoundation.org>
+Subject: [PATCH 4.19 41/98] s390: put _stext and _etext into .text section
+Date:   Tue, 27 Aug 2019 09:50:20 +0200
+Message-Id: <20190827072720.380385106@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -62,40 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ee9d66182392695535cc9fccfcb40c16f72de2a9 ]
+[ Upstream commit 24350fdadbdec780406a1ef988e6cd3875e374a8 ]
 
-Fix kernel oops when mounting a encryptData CIFS share with
-CONFIG_DEBUG_VIRTUAL
+Perf relies on _etext and _stext symbols being one of 't', 'T', 'v' or
+'V'. Put them into .text section to guarantee that.
 
-Signed-off-by: Sebastien Tisserant <stisserant@wallix.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Also moves padding to page boundary inside .text which has an effect that
+.text section is now padded with nops rather than 0's, which apparently
+has been the initial intention for specifying 0x0700 fill expression.
+
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/s390/kernel/vmlinux.lds.S | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 97fdbec54db97..cc9e846a38658 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -2545,7 +2545,15 @@ fill_transform_hdr(struct smb2_transform_hdr *tr_hdr, unsigned int orig_len,
- static inline void smb2_sg_set_buf(struct scatterlist *sg, const void *buf,
- 				   unsigned int buflen)
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index b43f8d33a3697..18ede6e806b91 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -31,10 +31,9 @@ PHDRS {
+ SECTIONS
  {
--	sg_set_page(sg, virt_to_page(buf), buflen, offset_in_page(buf));
-+	void *addr;
-+	/*
-+	 * VMAP_STACK (at least) puts stack into the vmalloc address space
-+	 */
-+	if (is_vmalloc_addr(buf))
-+		addr = vmalloc_to_page(buf);
-+	else
-+		addr = virt_to_page(buf);
-+	sg_set_page(sg, addr, buflen, offset_in_page(buf));
- }
+ 	. = 0x100000;
+-	_stext = .;		/* Start of text section */
+ 	.text : {
+-		/* Text and read-only data */
+-		_text = .;
++		_stext = .;		/* Start of text section */
++		_text = .;		/* Text and read-only data */
+ 		HEAD_TEXT
+ 		TEXT_TEXT
+ 		SCHED_TEXT
+@@ -46,11 +45,10 @@ SECTIONS
+ 		*(.text.*_indirect_*)
+ 		*(.fixup)
+ 		*(.gnu.warning)
++		. = ALIGN(PAGE_SIZE);
++		_etext = .;		/* End of text section */
+ 	} :text = 0x0700
  
- /* Assumes the first rqst has a transform header as the first iov.
+-	. = ALIGN(PAGE_SIZE);
+-	_etext = .;		/* End of text section */
+-
+ 	NOTES :text :note
+ 
+ 	.dummy : { *(.dummy) } :data
 -- 
 2.20.1
 
