@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A826DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B11EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE6D22CED
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73E9206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892967;
-	bh=XggU+zeG8dIlkxxfLnrwanGtmdueLn1I1rN1AMZpw3U=;
+	s=default; t=1566892975;
+	bh=Ukv4brZdGM42HfUZT6W8kPNYBms1FG4tRRvHta1or4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EE4Us/IpsR+bwkY4LF6a091euwU3Yp8e9qOVg/067UJlGYtrS4JtSdwDI6jGoUgmJ
-	 tsJavvd2G8tnbi3jMDOa3z+y8uG0/bpQamKz0yn6e0V3McyZkOjZxbv4JVclFMJwbz
-	 OVNftCwUKtvhBdGo9PlXQ7uZGnW5kTkOJxcRjwfk=
+	b=B3umC8bjlbPkiYVD/cYwuK3Oc0vKv6QX2NWRGHhFAXvqp8jgX65VNHyCRR8XZXbTH
+	 h6QNMjz4hRxSET13oogOLE7N8CnaxXskeOxHFnr2wjUbynV57Yjp3jRd4r/QI9m8ga
+	 FtGBwa5VRK+1MLGbPTS4p2it71Wsq4pzMTsBGz88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbfH0ICq (ORCPT
+        id S1732127AbfH0ICy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59912 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731361AbfH0ICo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:44 -0400
+        id S1732105AbfH0ICw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59E71206BA;
-        Tue, 27 Aug 2019 08:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C575A206BA;
+        Tue, 27 Aug 2019 08:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892962;
-        bh=XggU+zeG8dIlkxxfLnrwanGtmdueLn1I1rN1AMZpw3U=;
+        s=default; t=1566892971;
+        bh=Ukv4brZdGM42HfUZT6W8kPNYBms1FG4tRRvHta1or4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B93Lfs981GAUPRhdb2zoJnfsjKHfPPTE0dSyMTK1Fo+YKeLhYJdEpjEIIC98MCe5z
-         WMjY/MnRN683+tlFJDQVayjhxTHznjjKcrNhNhQxicN8AnsZqq3Y0RjtKxycbAGRq9
-         6HFTYOiP6fZQY+P0BiiUd91jWsTZ4LTPH3jWBrhg=
+        b=ltY9rHUks82CvpRzq567HkC9bzvW17L5TThmzZhtL5D/I3qAsbbimlDhZPDUyTkcq
+         lBpODAIlLMcYugtWQ9iobGh/9hFuVCk4yjHedtP467SgQaOmKH8/sliWQjbFd5AJ9w
+         SU9GjlhPdq5FxIkfDiz6FoOGXFvU1VET1ay9XELs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Steve Dickson <steved@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 076/162] NFS: Fix regression whereby fscache errors are appearing on nofsc mounts
-Date:   Tue, 27 Aug 2019 09:50:04 +0200
-Message-Id: <20190827072740.760244501@linuxfoundation.org>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 078/162] HID: input: fix a4tech horizontal wheel custom usage
+Date:   Tue, 27 Aug 2019 09:50:06 +0200
+Message-Id: <20190827072740.828534419@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -62,83 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dea1bb35c5f35e0577cfc61f79261d80b8715221 ]
+[ Upstream commit 1c703b53e5bfb5c2205c30f0fb157ce271fd42fb ]
 
-People are reporing seeing fscache errors being reported concerning
-duplicate cookies even in cases where they are not setting up fscache
-at all. The rule needs to be that if fscache is not enabled, then it
-should have no side effects at all.
+Some a4tech mice use the 'GenericDesktop.00b8' usage to inform whether
+the previous wheel report was horizontal or vertical. Before
+c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
+usage was being mapped to 'Relative.Misc'. After the patch it's simply
+ignored (usage->type == 0 & usage->code == 0). Which ultimately makes
+hid-a4tech ignore the WHEEL/HWHEEL selection event, as it has no
+usage->type.
 
-To ensure this is the case, we disable fscache completely on all superblocks
-for which the 'fsc' mount option was not set. In order to avoid issues
-with '-oremount', we also disable the ability to turn fscache on via
-remount.
+We shouldn't rely on a mapping for that usage as it's nonstandard and
+doesn't really map to an input event. So we bypass the mapping and make
+sure the custom event handling properly handles both reports.
 
-Fixes: f1fe29b4a02d ("NFS: Use i_writecount to control whether...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Steve Dickson <steved@redhat.com>
-Cc: David Howells <dhowells@redhat.com>
+Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/fscache.c | 7 ++++++-
- fs/nfs/fscache.h | 2 +-
- fs/nfs/super.c   | 1 +
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/hid/hid-a4tech.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 53507aa96b0b6..3800ab6f08fa8 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -114,6 +114,10 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
- 	struct rb_node **p, *parent;
- 	int diff;
+diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+index 98bf694626f71..3a8c4a5971f70 100644
+--- a/drivers/hid/hid-a4tech.c
++++ b/drivers/hid/hid-a4tech.c
+@@ -23,12 +23,36 @@
+ #define A4_2WHEEL_MOUSE_HACK_7	0x01
+ #define A4_2WHEEL_MOUSE_HACK_B8	0x02
  
-+	nfss->fscache_key = NULL;
-+	nfss->fscache = NULL;
-+	if (!(nfss->options & NFS_OPTION_FSCACHE))
-+		return;
- 	if (!uniq) {
- 		uniq = "";
- 		ulen = 1;
-@@ -226,10 +230,11 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
- void nfs_fscache_init_inode(struct inode *inode)
- {
- 	struct nfs_fscache_inode_auxdata auxdata;
-+	struct nfs_server *nfss = NFS_SERVER(inode);
- 	struct nfs_inode *nfsi = NFS_I(inode);
++#define A4_WHEEL_ORIENTATION	(HID_UP_GENDESK | 0x000000b8)
++
+ struct a4tech_sc {
+ 	unsigned long quirks;
+ 	unsigned int hw_wheel;
+ 	__s32 delayed_value;
+ };
  
- 	nfsi->fscache = NULL;
--	if (!S_ISREG(inode->i_mode))
-+	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
- 		return;
++static int a4_input_mapping(struct hid_device *hdev, struct hid_input *hi,
++			    struct hid_field *field, struct hid_usage *usage,
++			    unsigned long **bit, int *max)
++{
++	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
++
++	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8 &&
++	    usage->hid == A4_WHEEL_ORIENTATION) {
++		/*
++		 * We do not want to have this usage mapped to anything as it's
++		 * nonstandard and doesn't really behave like an HID report.
++		 * It's only selecting the orientation (vertical/horizontal) of
++		 * the previous mouse wheel report. The input_events will be
++		 * generated once both reports are recorded in a4_event().
++		 */
++		return -1;
++	}
++
++	return 0;
++
++}
++
+ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+@@ -52,8 +76,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+ 	struct input_dev *input;
  
- 	memset(&auxdata, 0, sizeof(auxdata));
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index 25a75e40d91d9..ad041cfbf9ec0 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -182,7 +182,7 @@ static inline void nfs_fscache_wait_on_invalidate(struct inode *inode)
-  */
- static inline const char *nfs_server_fscache_state(struct nfs_server *server)
- {
--	if (server->fscache && (server->options & NFS_OPTION_FSCACHE))
-+	if (server->fscache)
- 		return "yes";
- 	return "no ";
- }
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index f88ddac2dcdf3..4d375b517eda8 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2239,6 +2239,7 @@ nfs_compare_remount_data(struct nfs_server *nfss,
- 	    data->acdirmin != nfss->acdirmin / HZ ||
- 	    data->acdirmax != nfss->acdirmax / HZ ||
- 	    data->timeo != (10U * nfss->client->cl_timeout->to_initval / HZ) ||
-+	    (data->options & NFS_OPTION_FSCACHE) != (nfss->options & NFS_OPTION_FSCACHE) ||
- 	    data->nfs_server.port != nfss->port ||
- 	    data->nfs_server.addrlen != nfss->nfs_client->cl_addrlen ||
- 	    !rpc_cmp_addr((struct sockaddr *)&data->nfs_server.address,
+-	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput ||
+-			!usage->type)
++	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput)
+ 		return 0;
+ 
+ 	input = field->hidinput->input;
+@@ -64,7 +87,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 			return 1;
+ 		}
+ 
+-		if (usage->hid == 0x000100b8) {
++		if (usage->hid == A4_WHEEL_ORIENTATION) {
+ 			input_event(input, EV_REL, value ? REL_HWHEEL :
+ 					REL_WHEEL, a4->delayed_value);
+ 			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
+@@ -131,6 +154,7 @@ MODULE_DEVICE_TABLE(hid, a4_devices);
+ static struct hid_driver a4_driver = {
+ 	.name = "a4tech",
+ 	.id_table = a4_devices,
++	.input_mapping = a4_input_mapping,
+ 	.input_mapped = a4_input_mapped,
+ 	.event = a4_event,
+ 	.probe = a4_probe,
 -- 
 2.20.1
 
