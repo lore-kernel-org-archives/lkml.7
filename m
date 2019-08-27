@@ -2,89 +2,111 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1449FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADFDC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BA5217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566886776;
-	bh=gcxXUgEVmD3tszbvz3/XBtWwmU2RW47+E5iLJXT9x6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zGqIMGOKhq0fHV5AkBjpOkIQ9SQjVdl6upCl9dIL8q2erBuokg+4A7ReA62uWTiGi
-	 84MJEgLsLXKhj5TsNquFndcdk/y/bL8SxKDzzjCSM8mEwjC/T4v2n8yqIteH7Wck0h
-	 2rhJARKi5SVU/T7oj0ouLYX2tUM7Dnt/qKifpDrQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1F2F92184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:20:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O8smOB3N";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O8smOB3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfH0GTg (ORCPT
+        id S1727385AbfH0GUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfH0GTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:19:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 27 Aug 2019 02:20:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56302 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfH0GUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:20:01 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A6AC060DA8; Tue, 27 Aug 2019 06:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566886799;
+        bh=KMjZiOdzmbnjnMgXMNbNCaJx4QZVSnJaRQ9vtG4LnT0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O8smOB3NzGs27MSqejTJY2ity28oh3e6AZnR8V4mVY4JDGbF7JNkgSUyMN5fQ0xSW
+         wnkAfKycRcuWcYfJtoiFcHa4OdY6n/Xyq//Fdp9hTyt/BFIgdWPQA45EHdKUk+wbPC
+         6lV3KIPu8jTxZXz9iYuimA8Cs69RKbvZyK9i48js=
+Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3DD206BB;
-        Tue, 27 Aug 2019 06:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566886775;
-        bh=gcxXUgEVmD3tszbvz3/XBtWwmU2RW47+E5iLJXT9x6Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jR85DFUH7lu3yeWJekLjv4K1HEeClksUtBYq4aFtdESGepJ3YYC5/T7Fc0tNR9NPG
-         x9zoQbynhMYyM8ImlzqKZrrg4lv4Diw0TSTuUQdntzN8PkHfx9nTwVxtox6O/KEwL8
-         pYxcJBdbgNUYp3pLq+uNPOnrRwvOuQ5eAVIKN7ao=
-Date:   Tue, 27 Aug 2019 08:19:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc: Allow flush_(inval_)dcache_range to work
- across ranges >4GB
-Message-ID: <20190827061933.GA29250@kroah.com>
-References: <20190821001929.4253-1-alastair@au1.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821001929.4253-1-alastair@au1.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        (Authenticated sender: amasule@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 248916090F;
+        Tue, 27 Aug 2019 06:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566886799;
+        bh=KMjZiOdzmbnjnMgXMNbNCaJx4QZVSnJaRQ9vtG4LnT0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O8smOB3NzGs27MSqejTJY2ity28oh3e6AZnR8V4mVY4JDGbF7JNkgSUyMN5fQ0xSW
+         wnkAfKycRcuWcYfJtoiFcHa4OdY6n/Xyq//Fdp9hTyt/BFIgdWPQA45EHdKUk+wbPC
+         6lV3KIPu8jTxZXz9iYuimA8Cs69RKbvZyK9i48js=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 248916090F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
+From:   Aniket Masule <amasule@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
+Subject: [PATCH 0/3] media: venus: Update clock scaling
+Date:   Tue, 27 Aug 2019 11:49:39 +0530
+Message-Id: <1566886782-9406-1-git-send-email-amasule@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:19:27AM +1000, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> The upstream commit:
-> 22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
-> has a similar effect, but since it is a rewrite of the assembler to C, is
-> too invasive for stable. This patch is a minimal fix to address the issue in
-> assembler.
-> 
-> This patch applies cleanly to v5.2, v4.19 & v4.14.
-> 
-> When calling flush_(inval_)dcache_range with a size >4GB, we were masking
-> off the upper 32 bits, so we would incorrectly flush a range smaller
-> than intended.
-> 
-> This patch replaces the 32 bit shifts with 64 bit ones, so that
-> the full size is accounted for.
-> 
-> Changelog:
-> v2
->   - Add related upstream commit
+In this patch series, clock scaling and core selection methods are
+updated. Current clock scaling is same for vpu4 and previous versions.
+Introducing load calculations using vpp cycles, which indicates the
+cycles required by video hardware to process each macroblock. Also
+adding vsp cycles, cycles require by stream processor. Clock scaling
+is now done more precisely using vpp and vsp cycles.
+Removing core selection from this series, there will be separate patch
+once issue related to power domain is fixed.
 
-Now applied, thanks.
+This patch depends on the following patches:
+https://lore.kernel.org/patchwork/patch/1114762/ - Venus interconnect support for sdm845
+https://lore.kernel.org/patchwork/patch/1114761/ - Venus interconnect support for sdm845
 
-greg k-h
+Changes since v6:
+ - Removed core selection.
+ - Corrected frequency calculations.
+ - Removed instance lock used while iterating over buffers.
+ 
+Changes since v5:
+ - Corrected load_per_core calculations.
+
+Changes since v4:
+ - Added call to load_scale_clocks from venus_helper_vb2_buf_queue.
+ - Modified check to match core_id in core_selection.
+
+Changes since v3:
+ - vsp_cycles and vpp_cyles are now unsigned long.
+ - Core number counting aligned with VIDC_CORE_ID_.
+ - Aligned hardware overload handling of scale_clocks_v4 with scale_clocks.
+ - Added bitrate based clock scaling patch in this patch series.
+ - Instance state check is now moved from scale_clocks to load_scale_clocks.
+
+Aniket Masule (3):
+  media: venus: Add codec data table
+  media: venus: Update clock scaling
+  media: venus: Update to bitrate based clock scaling
+
+ drivers/media/platform/qcom/venus/core.c    |  13 ++
+ drivers/media/platform/qcom/venus/core.h    |  16 +++
+ drivers/media/platform/qcom/venus/helpers.c | 188 +++++++++++++++++++++++++---
+ drivers/media/platform/qcom/venus/helpers.h |   3 +-
+ drivers/media/platform/qcom/venus/vdec.c    |   8 +-
+ drivers/media/platform/qcom/venus/venc.c    |   4 +
+ 6 files changed, 209 insertions(+), 23 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
