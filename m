@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4A8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F203C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B652184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C662184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="PeSrTtWH"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="gMdBm7HV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfH0Qy6 (ORCPT
+        id S1730471AbfH0QzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:54:58 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:40004 "EHLO mta-01.yadro.com"
+        Tue, 27 Aug 2019 12:55:00 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:40052 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730378AbfH0Qyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:54:54 -0400
+        id S1730413AbfH0Qy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:54:56 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 4F2FC42ECD;
-        Tue, 27 Aug 2019 16:54:52 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 3774F41209;
+        Tue, 27 Aug 2019 16:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1566924891; x=1568739292; bh=GCxrgga2ACU49JHMFa9Qm+9SSWX1i4ngDP9
-        HAa9kUNA=; b=PeSrTtWHlfVd34xdod3NoD5BkcVs+NOqWEumOJ5pJQ5/lYX+8jb
-        2v07LeuNAJXX2Ax+YhMpKetKwAsDhKEABNtT2eMGtlujedzMdOBgojByqNLUh+1J
-        EBsN0cXh/LKo1kP8K7lSdWjFnvFTm5MgO5qDi2N1ACLeZPsGUf2fE1ZQ=
+        1566924893; x=1568739294; bh=87VA5h5waSDTUF2CVQN/4Wwh9JYi5VNM4bl
+        aFGLhSMY=; b=gMdBm7HVXlGC8jRakgwY2WAmkhPtPeYsZxpqkbunuWfvgC23B86
+        B6SKzMVsvtgEgU8t7dTVDIU71OEUnd34+SzHiHqNMDwJJVbxdyoVSDttK8S7y803
+        dv+JmJcjATJuvoLmntstZDQFdUu00tZPXMju/cdk4igODmobcHHGY6eQ=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 484lRlM42xDh; Tue, 27 Aug 2019 19:54:51 +0300 (MSK)
+        with ESMTP id DE_cOhyTE2_a; Tue, 27 Aug 2019 19:54:53 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 3BD8642ECA;
-        Tue, 27 Aug 2019 19:54:50 +0300 (MSK)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 0C98E42ECA;
+        Tue, 27 Aug 2019 19:54:53 +0300 (MSK)
 Received: from localhost.dev.yadro.com (172.17.15.69) by
  T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Tue, 27 Aug 2019 19:54:50 +0300
+ 15.1.669.32; Tue, 27 Aug 2019 19:54:52 +0300
 From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>
@@ -58,9 +58,9 @@ CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
         Mark Rutland <mark.rutland@arm.com>,
         <devicetree@vger.kernel.org>,
         Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Subject: [PATCH v3 2/4] vesnin: add secondary SPI flash chip
-Date:   Tue, 27 Aug 2019 19:54:24 +0300
-Message-ID: <20190827165426.17037-3-i.mikhaylov@yadro.com>
+Subject: [PATCH v3 4/4] aspeed/watchdog: Add access_cs0 option for alt-boot
+Date:   Tue, 27 Aug 2019 19:54:26 +0300
+Message-ID: <20190827165426.17037-5-i.mikhaylov@yadro.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190827165426.17037-1-i.mikhaylov@yadro.com>
 References: <20190827165426.17037-1-i.mikhaylov@yadro.com>
@@ -75,32 +75,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds secondary SPI flash chip into dts for vesnin.
+The option for the ast2400/2500 to get access to CS0 at runtime.
 
 Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../ABI/testing/sysfs-class-watchdog          | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-index 2ee26c86a32e..db4cc3df61ce 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -81,6 +81,14 @@
-         label = "bmc";
- #include "openbmc-flash-layout.dtsi"
- 	};
+diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
+index 6317ade5ad19..675f9b537661 100644
+--- a/Documentation/ABI/testing/sysfs-class-watchdog
++++ b/Documentation/ABI/testing/sysfs-class-watchdog
+@@ -72,3 +72,37 @@ Description:
+ 		It is a read/write file. When read, the currently assigned
+ 		pretimeout governor is returned.  When written, it sets
+ 		the pretimeout governor.
 +
-+	flash@1 {
-+		status = "okay";
-+		reg = < 1 >;
-+		compatible = "jedec,spi-nor";
-+		m25p,fast-read;
-+		label = "alt";
-+	};
- };
- 
- &spi {
++What:		/sys/class/watchdog/watchdog1/access_cs0
++Date:		August 2019
++Contact:	Ivan Mikhaylov <i.mikhaylov@yadro.com>,
++		Alexander Amelkin <a.amelkin@yadro.com>
++Description:
++		It is a read/write file. This attribute exists only if the
++		system has booted from the alternate flash chip due to
++		expiration of a watchdog timer of AST2400/AST2500 when
++		alternate boot function was enabled with 'aspeed,alt-boot'
++		devicetree option for that watchdog or with an appropriate
++		h/w strapping (for WDT2 only).
++
++		At alternate flash the 'access_cs0' sysfs node provides:
++			ast2400: a way to get access to the primary SPI flash
++				chip at CS0 after booting from the alternate
++				chip at CS1.
++			ast2500: a way to restore the normal address mapping
++				from (CS0->CS1, CS1->CS0) to (CS0->CS0,
++				CS1->CS1).
++
++		Clearing the boot code selection and timeout counter also
++		resets to the initial state the chip select line mapping. When
++		the SoC is in normal mapping state (i.e. booted from CS0),
++		clearing those bits does nothing for both versions of the SoC.
++		For alternate boot mode (booted from CS1 due to wdt2
++		expiration) the behavior differs as described above.
++
++		This option can be used with wdt2 (watchdog1) only.
++
++		When read, the current status of the boot code selection is
++		shown. When written with any non-zero value, it clears
++		the boot code selection and the timeout counter, which results
++		in chipselect reset for AST2400/AST2500.
 -- 
 2.20.1
 
