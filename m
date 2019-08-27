@@ -2,52 +2,51 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE10C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9075EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F9F206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B702173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893169;
-	bh=BQoWxrPXHX8BCycKMjfBLqvZlT824d107z5VBJa1TOE=;
+	s=default; t=1566893174;
+	bh=FBRDtcqFIDVcWQpAbDY2o0oMur4mGzeQE00WfLqTOIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mtChzXOKMc0RkZMLSZCWr/vcyMXOatdgBku8aSi1M1EnPJWASoWpKqJYFuQxCYg4U
-	 Pkd5/YBoHeP22pkyXadyhqDGqmsxn/bJIIBriADjYcCazpOdevHB5vLTZVY6SCfApH
-	 HMHqTHpkCkq3uIPF0UlKl2GynoWyjIARY2wY6nks=
+	b=iZKy6wi3ixflYf4gqCPu1CJ7qnOFIVSF5kpi6qTqJeu8mkD3onmxyWONVOdbN5Gkq
+	 hAX7fclXPq3aQDubgukkf6qp949nKypVzxhW12Vy3ai95heZScFVr7w1lxmHBHBUb+
+	 2ebVuq2+22Py5rgFUuYQOHVPtU7l/C0yxIbAcTBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732987AbfH0IGH (ORCPT
+        id S1731453AbfH0IGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36086 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731883AbfH0IGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:07 -0400
+        id S1729743AbfH0IGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49A162186A;
-        Tue, 27 Aug 2019 08:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1806D2173E;
+        Tue, 27 Aug 2019 08:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893165;
-        bh=BQoWxrPXHX8BCycKMjfBLqvZlT824d107z5VBJa1TOE=;
+        s=default; t=1566893168;
+        bh=FBRDtcqFIDVcWQpAbDY2o0oMur4mGzeQE00WfLqTOIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AhyX7PJkamthRWjfQXo8xOp2/rOIiBQ3XfSyiYhMzwe1cg3Mjo/U7vNKCwvy5y10u
-         eD+a1CRXWwYOCq7+HsvbHQ5YjM+53umDqrfjGlKKfToGouTbzUjycljMLodVAgbD5o
-         EdMwPVirBZV3ENkr3bKTHrrfBD+E34uJiOKRdrEM=
+        b=arfo72LPQPMSx9SKfdnUinqXI0Je52OZE0diukftF4q1g9ybuhfZc3KyGs5/uUjPM
+         MK/rGtKRaH9PSfhUq941xFgpPQKEMNlQwt8tDKVko8gSiWa6tbdeKMFk9/PORe8fzZ
+         MGIv8x0Kk5R7vJLV56ncpHAo00BY9zM8yxvbkqBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.2 142/162] dm zoned: improve error handling in reclaim
-Date:   Tue, 27 Aug 2019 09:51:10 +0200
-Message-Id: <20190827072743.608788328@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 107/162] KVM: arm64: Dont write junk to sysregs on reset
+Date:   Tue, 27 Aug 2019 09:50:35 +0200
+Message-Id: <20190827072742.050613533@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,153 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+[ Upstream commit 03fdfb2690099c19160a3f2c5b77db60b3afeded ]
 
-commit b234c6d7a703661b5045c5bf569b7c99d2edbf88 upstream.
+At the moment, the way we reset system registers is mildly insane:
+We write junk to them, call the reset functions, and then check that
+we have something else in them.
 
-There are several places in reclaim code where errors are not
-propagated to the main function, dmz_reclaim(). This function
-is responsible for unlocking zones that might be still locked
-at the end of any failed reclaim iterations. As the result,
-some device zones may be left permanently locked for reclaim,
-degrading target's capability to reclaim zones.
+The "fun" thing is that this can happen while the guest is running
+(PSCI, for example). If anything in KVM has to evaluate the state
+of a system register while junk is in there, bad thing may happen.
 
-This patch fixes these issues as follows -
+Let's stop doing that. Instead, we track that we have called a
+reset function for that register, and assume that the reset
+function has done something. This requires fixing a couple of
+sysreg refinition in the trap table.
 
-Make sure that dmz_reclaim_buf(), dmz_reclaim_seq_data() and
-dmz_reclaim_rnd_data() return error codes to the caller.
+In the end, the very need of this reset check is pretty dubious,
+as it doesn't check everything (a lot of the sysregs leave outside of
+the sys_regs[] array). It may well be axed in the near future.
 
-dmz_reclaim() function is renamed to dmz_do_reclaim() to avoid
-clashing with "struct dmz_reclaim" and is modified to return the
-error to the caller.
-
-dmz_get_zone_for_reclaim() now returns an error instead of NULL
-pointer and reclaim code checks for that error.
-
-Error logging/debug messages are added where necessary.
-
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Tested-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-zoned-metadata.c |    4 ++--
- drivers/md/dm-zoned-reclaim.c  |   28 +++++++++++++++++++---------
- 2 files changed, 21 insertions(+), 11 deletions(-)
+ arch/arm64/kvm/sys_regs.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1534,7 +1534,7 @@ static struct dm_zone *dmz_get_rnd_zone_
- 	struct dm_zone *zone;
- 
- 	if (list_empty(&zmd->map_rnd_list))
--		return NULL;
-+		return ERR_PTR(-EBUSY);
- 
- 	list_for_each_entry(zone, &zmd->map_rnd_list, link) {
- 		if (dmz_is_buf(zone))
-@@ -1545,7 +1545,7 @@ static struct dm_zone *dmz_get_rnd_zone_
- 			return dzone;
- 	}
- 
--	return NULL;
-+	return ERR_PTR(-EBUSY);
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index ce933f2960496..5b7085ca213df 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -632,7 +632,7 @@ static void reset_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
+ 	 */
+ 	val = ((pmcr & ~ARMV8_PMU_PMCR_MASK)
+ 	       | (ARMV8_PMU_PMCR_MASK & 0xdecafbad)) & (~ARMV8_PMU_PMCR_E);
+-	__vcpu_sys_reg(vcpu, PMCR_EL0) = val;
++	__vcpu_sys_reg(vcpu, r->reg) = val;
  }
  
- /*
---- a/drivers/md/dm-zoned-reclaim.c
-+++ b/drivers/md/dm-zoned-reclaim.c
-@@ -215,7 +215,7 @@ static int dmz_reclaim_buf(struct dmz_re
+ static bool check_pmu_access_disabled(struct kvm_vcpu *vcpu, u64 flags)
+@@ -981,13 +981,13 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+ /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+ #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+ 	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+-	  trap_bvr, reset_bvr, n, 0, get_bvr, set_bvr },		\
++	  trap_bvr, reset_bvr, 0, 0, get_bvr, set_bvr },		\
+ 	{ SYS_DESC(SYS_DBGBCRn_EL1(n)),					\
+-	  trap_bcr, reset_bcr, n, 0, get_bcr, set_bcr },		\
++	  trap_bcr, reset_bcr, 0, 0, get_bcr, set_bcr },		\
+ 	{ SYS_DESC(SYS_DBGWVRn_EL1(n)),					\
+-	  trap_wvr, reset_wvr, n, 0,  get_wvr, set_wvr },		\
++	  trap_wvr, reset_wvr, 0, 0,  get_wvr, set_wvr },		\
+ 	{ SYS_DESC(SYS_DBGWCRn_EL1(n)),					\
+-	  trap_wcr, reset_wcr, n, 0,  get_wcr, set_wcr }
++	  trap_wcr, reset_wcr, 0, 0,  get_wcr, set_wcr }
  
- 	dmz_unlock_flush(zmd);
+ /* Macro to expand the PMEVCNTRn_EL0 register */
+ #define PMU_PMEVCNTR_EL0(n)						\
+@@ -1540,7 +1540,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
+ 	{ SYS_DESC(SYS_CTR_EL0), access_ctr },
  
--	return 0;
-+	return ret;
+-	{ SYS_DESC(SYS_PMCR_EL0), access_pmcr, reset_pmcr, },
++	{ SYS_DESC(SYS_PMCR_EL0), access_pmcr, reset_pmcr, PMCR_EL0 },
+ 	{ SYS_DESC(SYS_PMCNTENSET_EL0), access_pmcnten, reset_unknown, PMCNTENSET_EL0 },
+ 	{ SYS_DESC(SYS_PMCNTENCLR_EL0), access_pmcnten, NULL, PMCNTENSET_EL0 },
+ 	{ SYS_DESC(SYS_PMOVSCLR_EL0), access_pmovs, NULL, PMOVSSET_EL0 },
+@@ -2254,13 +2254,19 @@ static int emulate_sys_reg(struct kvm_vcpu *vcpu,
  }
  
- /*
-@@ -259,7 +259,7 @@ static int dmz_reclaim_seq_data(struct d
- 
- 	dmz_unlock_flush(zmd);
- 
--	return 0;
-+	return ret;
- }
- 
- /*
-@@ -312,7 +312,7 @@ static int dmz_reclaim_rnd_data(struct d
- 
- 	dmz_unlock_flush(zmd);
- 
--	return 0;
-+	return ret;
- }
- 
- /*
-@@ -334,7 +334,7 @@ static void dmz_reclaim_empty(struct dmz
- /*
-  * Find a candidate zone for reclaim and process it.
-  */
--static void dmz_reclaim(struct dmz_reclaim *zrc)
-+static int dmz_do_reclaim(struct dmz_reclaim *zrc)
+ static void reset_sys_reg_descs(struct kvm_vcpu *vcpu,
+-			      const struct sys_reg_desc *table, size_t num)
++				const struct sys_reg_desc *table, size_t num,
++				unsigned long *bmap)
  {
- 	struct dmz_metadata *zmd = zrc->metadata;
- 	struct dm_zone *dzone;
-@@ -344,8 +344,8 @@ static void dmz_reclaim(struct dmz_recla
+ 	unsigned long i;
  
- 	/* Get a data zone */
- 	dzone = dmz_get_zone_for_reclaim(zmd);
--	if (!dzone)
--		return;
-+	if (IS_ERR(dzone))
-+		return PTR_ERR(dzone);
+ 	for (i = 0; i < num; i++)
+-		if (table[i].reset)
++		if (table[i].reset) {
++			int reg = table[i].reg;
++
+ 			table[i].reset(vcpu, &table[i]);
++			if (reg > 0 && reg < NR_SYS_REGS)
++				set_bit(reg, bmap);
++		}
+ }
  
- 	start = jiffies;
+ /**
+@@ -2774,18 +2780,16 @@ void kvm_reset_sys_regs(struct kvm_vcpu *vcpu)
+ {
+ 	size_t num;
+ 	const struct sys_reg_desc *table;
+-
+-	/* Catch someone adding a register without putting in reset entry. */
+-	memset(&vcpu->arch.ctxt.sys_regs, 0x42, sizeof(vcpu->arch.ctxt.sys_regs));
++	DECLARE_BITMAP(bmap, NR_SYS_REGS) = { 0, };
  
-@@ -391,13 +391,20 @@ static void dmz_reclaim(struct dmz_recla
- out:
- 	if (ret) {
- 		dmz_unlock_zone_reclaim(dzone);
--		return;
-+		return ret;
+ 	/* Generic chip reset first (so target could override). */
+-	reset_sys_reg_descs(vcpu, sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
++	reset_sys_reg_descs(vcpu, sys_reg_descs, ARRAY_SIZE(sys_reg_descs), bmap);
+ 
+ 	table = get_target_table(vcpu->arch.target, true, &num);
+-	reset_sys_reg_descs(vcpu, table, num);
++	reset_sys_reg_descs(vcpu, table, num, bmap);
+ 
+ 	for (num = 1; num < NR_SYS_REGS; num++) {
+-		if (WARN(__vcpu_sys_reg(vcpu, num) == 0x4242424242424242,
++		if (WARN(!test_bit(num, bmap),
+ 			 "Didn't reset __vcpu_sys_reg(%zi)\n", num))
+ 			break;
  	}
- 
--	(void) dmz_flush_metadata(zrc->metadata);
-+	ret = dmz_flush_metadata(zrc->metadata);
-+	if (ret) {
-+		dmz_dev_debug(zrc->dev,
-+			      "Metadata flush for zone %u failed, err %d\n",
-+			      dmz_id(zmd, rzone), ret);
-+		return ret;
-+	}
- 
- 	dmz_dev_debug(zrc->dev, "Reclaimed zone %u in %u ms",
- 		      dmz_id(zmd, rzone), jiffies_to_msecs(jiffies - start));
-+	return 0;
- }
- 
- /*
-@@ -442,6 +449,7 @@ static void dmz_reclaim_work(struct work
- 	struct dmz_metadata *zmd = zrc->metadata;
- 	unsigned int nr_rnd, nr_unmap_rnd;
- 	unsigned int p_unmap_rnd;
-+	int ret;
- 
- 	if (!dmz_should_reclaim(zrc)) {
- 		mod_delayed_work(zrc->wq, &zrc->work, DMZ_IDLE_PERIOD);
-@@ -471,7 +479,9 @@ static void dmz_reclaim_work(struct work
- 		      (dmz_target_idle(zrc) ? "Idle" : "Busy"),
- 		      p_unmap_rnd, nr_unmap_rnd, nr_rnd);
- 
--	dmz_reclaim(zrc);
-+	ret = dmz_do_reclaim(zrc);
-+	if (ret)
-+		dmz_dev_debug(zrc->dev, "Reclaim error %d\n", ret);
- 
- 	dmz_schedule_reclaim(zrc);
- }
+-- 
+2.20.1
+
 
 
