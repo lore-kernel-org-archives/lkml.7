@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78635C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6084C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5AF206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A81F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892537;
-	bh=4kEUMuW6OXPM66Sw1yyvHNwkIJ9bATYrDhZ7AK6o3Nc=;
+	s=default; t=1566892539;
+	bh=qB3BRxQO9fiCu0Wd3YThpUV/JWI3D7Si2wgDS2tL1KQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VxrrNsZFtMg745swxSozYvxUWJrBtEg9LECA3AwdXlyErgFG6eZAUe+EbPfU+GGpj
-	 8kONIvuZ3Wq8HqFKBAGXMAt6vHxrcblSYGwmB48Qj0WCz050K9fZHhRBmK+dwgygtF
-	 u2Ru98vettmAa91SYwok0MuKysPKMKaEUxlVfU8I=
+	b=14nXXRABW5YWvxubcMnHuAx0vBAFE4KLrV5/x8Jjfp27uauDMxUyVoHRQy5xbw3PJ
+	 /eNIk8lB0Ohs5L0NIrPmwUVJh8HC8jTiyskIvE+9kTBS5emjA98G3q0owMG6xXUofb
+	 vEwrfjnwJbJujP7pIbaH+BrngYSwTQNb07pUYGUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbfH0Hzf (ORCPT
+        id S1730398AbfH0Hzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729563AbfH0Hzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:33 -0400
+        id S1729563AbfH0Hzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3192206BA;
-        Tue, 27 Aug 2019 07:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D5102173E;
+        Tue, 27 Aug 2019 07:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892532;
-        bh=4kEUMuW6OXPM66Sw1yyvHNwkIJ9bATYrDhZ7AK6o3Nc=;
+        s=default; t=1566892535;
+        bh=qB3BRxQO9fiCu0Wd3YThpUV/JWI3D7Si2wgDS2tL1KQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ug7Ypv4RTJc3HqFyVv77nfI0NxWxrJC8SofZNgU4M3BbzQwv7cEQv8hZQDpZIC//0
-         OLiHliQ3EsvUCDj4k4sd/1CKLpTM4EIeCKsZTrmiHK4E5tyskSZTbMqQxa/x3CG3oJ
-         lKmd2HM64K6r/HXhw7a6cAsXF8PojjpEdMQD3s1Q=
+        b=af1/SAFUNht7VQEfqaSt6eOmgPymGyVCM8XjMIk4BKkB8oXHFST9p+KjI2IweUyNC
+         Mw1Jd/RBxli90T8WeLcwvSUgXE4QEOJUStwIpTmh8UxDusUxI96QBphJYOD5THkgzP
+         R1Jf4cRcnRgWae1yf/jtHQPARs77Ee/6YpaU4OW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+72af434e4b3417318f84@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Jeffrey Altman <jaltman@auristor.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/98] rxrpc: Fix potential deadlock
-Date:   Tue, 27 Aug 2019 09:50:05 +0200
-Message-Id: <20190827072719.644782598@linuxfoundation.org>
+Subject: [PATCH 4.19 09/98] selftests: forwarding: gre_multipath: Enable IPv4 forwarding
+Date:   Tue, 27 Aug 2019 09:49:48 +0200
+Message-Id: <20190827072718.667038945@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -63,104 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 60034d3d146b11922ab1db613bce062dddc0327a ]
+[ Upstream commit efa7b79f675da0efafe3f32ba0d6efe916cf4867 ]
 
-There is a potential deadlock in rxrpc_peer_keepalive_dispatch() whereby
-rxrpc_put_peer() is called with the peer_hash_lock held, but if it reduces
-the peer's refcount to 0, rxrpc_put_peer() calls __rxrpc_put_peer() - which
-the tries to take the already held lock.
+The test did not enable IPv4 forwarding during its setup phase, which
+causes the test to fail on machines where IPv4 forwarding is disabled.
 
-Fix this by providing a version of rxrpc_put_peer() that can be called in
-situations where the lock is already held.
-
-The bug may produce the following lockdep report:
-
-============================================
-WARNING: possible recursive locking detected
-5.2.0-next-20190718 #41 Not tainted
---------------------------------------------
-kworker/0:3/21678 is trying to acquire lock:
-00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at: spin_lock_bh
-/./include/linux/spinlock.h:343 [inline]
-00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-__rxrpc_put_peer /net/rxrpc/peer_object.c:415 [inline]
-00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-rxrpc_put_peer+0x2d3/0x6a0 /net/rxrpc/peer_object.c:435
-
-but task is already holding lock:
-00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at: spin_lock_bh
-/./include/linux/spinlock.h:343 [inline]
-00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-rxrpc_peer_keepalive_dispatch /net/rxrpc/peer_event.c:378 [inline]
-00000000aa5eecdf (&(&rxnet->peer_hash_lock)->rlock){+.-.}, at:
-rxrpc_peer_keepalive_worker+0x6b3/0xd02 /net/rxrpc/peer_event.c:430
-
-Fixes: 330bdcfadcee ("rxrpc: Fix the keepalive generator [ver #2]")
-Reported-by: syzbot+72af434e4b3417318f84@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+Fixes: 54818c4c4b93 ("selftests: forwarding: Test multipath tunneling")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Tested-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/ar-internal.h |  1 +
- net/rxrpc/peer_event.c  |  2 +-
- net/rxrpc/peer_object.c | 18 ++++++++++++++++++
- 3 files changed, 20 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/forwarding/gre_multipath.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 03e0fc8c183f0..a4c341828b72f 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -1057,6 +1057,7 @@ void rxrpc_destroy_all_peers(struct rxrpc_net *);
- struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *);
- struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *);
- void rxrpc_put_peer(struct rxrpc_peer *);
-+void rxrpc_put_peer_locked(struct rxrpc_peer *);
- 
- /*
-  * proc.c
-diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
-index bd2fa3b7caa7e..dc7fdaf20445b 100644
---- a/net/rxrpc/peer_event.c
-+++ b/net/rxrpc/peer_event.c
-@@ -375,7 +375,7 @@ static void rxrpc_peer_keepalive_dispatch(struct rxrpc_net *rxnet,
- 		spin_lock_bh(&rxnet->peer_hash_lock);
- 		list_add_tail(&peer->keepalive_link,
- 			      &rxnet->peer_keepalive[slot & mask]);
--		rxrpc_put_peer(peer);
-+		rxrpc_put_peer_locked(peer);
- 	}
- 
- 	spin_unlock_bh(&rxnet->peer_hash_lock);
-diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
-index 5691b7d266ca0..71547e8673b99 100644
---- a/net/rxrpc/peer_object.c
-+++ b/net/rxrpc/peer_object.c
-@@ -440,6 +440,24 @@ void rxrpc_put_peer(struct rxrpc_peer *peer)
- 	}
+diff --git a/tools/testing/selftests/net/forwarding/gre_multipath.sh b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+index cca2baa03fb81..37d7297e1cf8a 100755
+--- a/tools/testing/selftests/net/forwarding/gre_multipath.sh
++++ b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+@@ -187,12 +187,16 @@ setup_prepare()
+ 	sw1_create
+ 	sw2_create
+ 	h2_create
++
++	forwarding_enable
  }
  
-+/*
-+ * Drop a ref on a peer record where the caller already holds the
-+ * peer_hash_lock.
-+ */
-+void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
-+{
-+	const void *here = __builtin_return_address(0);
-+	int n;
+ cleanup()
+ {
+ 	pre_cleanup
+ 
++	forwarding_restore
 +
-+	n = atomic_dec_return(&peer->usage);
-+	trace_rxrpc_peer(peer, rxrpc_peer_put, n, here);
-+	if (n == 0) {
-+		hash_del_rcu(&peer->hash_link);
-+		list_del_init(&peer->keepalive_link);
-+		kfree_rcu(peer, rcu);
-+	}
-+}
-+
- /*
-  * Make sure all peer records have been discarded.
-  */
+ 	h2_destroy
+ 	sw2_destroy
+ 	sw1_destroy
 -- 
 2.20.1
 
