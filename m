@@ -2,79 +2,117 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CC2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF7CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E2E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D839205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbfH0LZl (ORCPT
+        id S1728094AbfH0L3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:25:41 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33501 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfH0LZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:25:41 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l2so14645487oil.0;
-        Tue, 27 Aug 2019 04:25:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sbe+mD9TjSIALmM4jOBGJ1BaowYoqtIQG+RaLF5qQhI=;
-        b=eTXK9izBdwTlFWv0RU23WWahbCd+EPJ0V9Au7L01EW5caynzj9QUh/T0uQsnaO1gsF
-         9cnXxNhKk6e+O3B0D+O3oBK1zEM2x7kkrHMI7oINmHh6gO0gcwvK+o7ADBThEN0GeV1g
-         dyiMTu/lN1uACbHBhqwGlHoshPP/8ABQE/op3BbWHhBukmTBwwIlFSlRcixTn5YeQeZt
-         +M6GfwyKOJECZnyoaW/QplzvDA1rGiO72szZ3Ta/vNhB/YN274BIdtoFXy3mYjmDR1aA
-         BGrY3dfpd0CFCvziE7EKZ94wLNQ9HniAPEI8RfK/vpUrJsQHU14vjIKi+IGAeqkd1ygl
-         7GGA==
-X-Gm-Message-State: APjAAAWRoAkschgcPOKbMmac3Pntfb+19Zc+J1bNZBzHdHBOSpYarA41
-        T93RNM/oif1Mkt7ED4waU7+SA2Sa7sLSyGTUwiQ=
-X-Google-Smtp-Source: APXvYqyBmLm+aF54MGwelCc+w4hkzT2alLYfQdaYjb4e9WDwRSce6dti3GUc+LGiArPFcvFQ7bgcck/G/b9VD42wTiI=
-X-Received: by 2002:a54:478d:: with SMTP id o13mr15817144oic.54.1566905140208;
- Tue, 27 Aug 2019 04:25:40 -0700 (PDT)
+        Tue, 27 Aug 2019 07:29:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41162 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfH0L3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:29:52 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3515EC04959E;
+        Tue, 27 Aug 2019 11:29:52 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D97610018F9;
+        Tue, 27 Aug 2019 11:29:48 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 13:29:46 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Message-ID: <20190827132946.0b92d259.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-3-parav@mellanox.com>
+        <20190827122928.752e763b.cohuck@redhat.com>
+        <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190827110854.12574-1-peda@axentia.se> <20190827110854.12574-3-peda@axentia.se>
-In-Reply-To: <20190827110854.12574-3-peda@axentia.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 27 Aug 2019 13:25:29 +0200
-Message-ID: <CAMuHMdU1PEyqh8e5n3_xp1NT8YdPYXEyHDiaVQYOYKYKCm8y1A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] fbdev: fbmem: allow overriding the number of
- bootup logos
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 27 Aug 2019 11:29:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 1:09 PM Peter Rosin <peda@axentia.se> wrote:
-> Probably most useful if you want no logo at all, or if you only want one
-> logo regardless of how many CPU cores you have.
->
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+On Tue, 27 Aug 2019 11:08:59 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Tuesday, August 27, 2019 3:59 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+> > 
+> > On Mon, 26 Aug 2019 15:41:17 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > Mdev alias should be unique among all the mdevs, so that when such
+> > > alias is used by the mdev users to derive other objects, there is no
+> > > collision in a given system.
+> > >
+> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > ---
+> > >  drivers/vfio/mdev/mdev_core.c | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/vfio/mdev/mdev_core.c
+> > > b/drivers/vfio/mdev/mdev_core.c index e825ff38b037..6eb37f0c6369
+> > > 100644
+> > > --- a/drivers/vfio/mdev/mdev_core.c
+> > > +++ b/drivers/vfio/mdev/mdev_core.c
+> > > @@ -375,6 +375,11 @@ int mdev_device_create(struct kobject *kobj, struct  
+> > device *dev,  
+> > >  			ret = -EEXIST;
+> > >  			goto mdev_fail;
+> > >  		}
+> > > +		if (tmp->alias && strcmp(tmp->alias, alias) == 0) {  
+> > 
+> > Any way we can relay to the caller that the uuid was fine, but that we had a
+> > hash collision? Duplicate uuids are much more obvious than a collision here.
+> >   
+> How do you want to relay this rare event?
+> Netlink interface has way to return the error message back, but sysfs is limited due to its error code based interface.
 
-Gr{oetje,eeting}s,
+I don't know, that's why I asked :)
 
-                        Geert
+The problem is that "uuid already used" and "hash collision" are
+indistinguishable. While "use a different uuid" will probably work in
+both cases, "increase alias length" might be a good alternative in some
+cases.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+But if there is no good way to relay the problem, we can live with it.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> > > +			mutex_unlock(&mdev_list_lock);
+> > > +			ret = -EEXIST;
+> > > +			goto mdev_fail;
+> > > +		}
+> > >  	}
+> > >
+> > >  	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);  
+> 
+
