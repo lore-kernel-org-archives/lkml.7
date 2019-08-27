@@ -2,199 +2,225 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA369C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B67B20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqyny0s9"
+	by mail.kernel.org (Postfix) with ESMTP id 5948F2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbfH0Vex (ORCPT
+        id S1730672AbfH0VgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:34:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33005 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728834AbfH0Vew (ORCPT
+        Tue, 27 Aug 2019 17:36:05 -0400
+Received: from antares.kleine-koenig.org ([94.130.110.236]:48518 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfH0VgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:34:52 -0400
-Received: by mail-wr1-f65.google.com with SMTP id u16so313403wrr.0;
-        Tue, 27 Aug 2019 14:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X7Gmk5o9VsuM2I/A4OdM4iPlEY6vJ+afjmkhaM1iGLM=;
-        b=cqyny0s9Qfef7JPSUYLKgSkxJBLcSUdRwm6oEIBfbEl2MKMUMLLDz1e9lR71rkJ62T
-         aRXOmvTCapNIne36rXug6ROVXzmPOOiO6rDxQRTZummUP391iBtYFyDJsyJBnS3yFsUS
-         A+uYGsT5v0moHaAfNSsOfvcXanQ9HeTVaFyy0gUMi+itwLQ5vne+BhXTUxtbHutQuR8W
-         D44wokcD3ELRYRYpZqQHul/czQuvo6twWnJStWgV2m21lhQVsyT1uVptKTspgAcd+YVV
-         Mbl3z4qH+oFJQ0v3WwpStgjJD9YfNT+f9Clfft/OMFRq1ZFgsbJA/x7vzv7coP3MvR9p
-         F1wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X7Gmk5o9VsuM2I/A4OdM4iPlEY6vJ+afjmkhaM1iGLM=;
-        b=AtP4+C279BQhFfP++oMrAGAJ4O34Z75Wt07y7yCB396XoJVjWUg9rJ6LxWmAu6pRr3
-         9m6UM5TbM4ZKzOK2uVpWp1B+vFdF9iTWarjPInRcZNGZW148ivZpIV4NjEIhgA20RYOu
-         oCVvTMYKQZbiy9Mikw77VxBQMO3y7wg4bqcJd1K+xypua521Mj3wIB55Mm6ekoHWKVs+
-         ajMJUD7bHmifT3fJW1+Zs0AdRHuRlhTaddj8/y8Z3rWEhh4QH+wQeApqi3Tx3fOZF8uQ
-         AXq9CJ3WGCzaN0vGiXi4fYUcxpRGFT9aXC93R5pq45KtMBGieOtep1GiAuVFVANcKToR
-         J8jQ==
-X-Gm-Message-State: APjAAAXP0FBPGmgPz7tcNAuiOWlUzJZxfmGYpINQ9cETG1DfnPiTNJki
-        VHjqliJF7cXeeeFB+IF80Sk=
-X-Google-Smtp-Source: APXvYqwa3BN3OtVjpRtZkGnQVPMF1KMLehuI6JktOQ6BXfYa/jl/3r3w/FRuqVUpdy68FAcHDrHCtg==
-X-Received: by 2002:a5d:480e:: with SMTP id l14mr290257wrq.96.1566941689543;
-        Tue, 27 Aug 2019 14:34:49 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id h8sm188418wrq.49.2019.08.27.14.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 14:34:48 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 14:34:47 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] kbuild: enable unused-function warnings for W= build
- with Clang
-Message-ID: <20190827213447.GA26954@archlinux-threadripper>
-References: <20190827103621.1073-1-yamada.masahiro@socionext.com>
- <20190827192811.GA24626@archlinux-threadripper>
- <CAKwvOd=7Jf13PDC9Q1FMhZUJQsq7Ggn=wRz5xpRY0YrU6tP9Kw@mail.gmail.com>
+        Tue, 27 Aug 2019 17:36:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by antares.kleine-koenig.org (Postfix) with ESMTP id 4D42C7860E7;
+        Tue, 27 Aug 2019 23:36:00 +0200 (CEST)
+Received: from antares.kleine-koenig.org ([127.0.0.1])
+        by localhost (antares.kleine-koenig.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ogGPutiTK-Yk; Tue, 27 Aug 2019 23:35:59 +0200 (CEST)
+Received: from [IPv6:2a02:8071:b5c2:53f8:3192:99d7:1d59:986] (unknown [IPv6:2a02:8071:b5c2:53f8:3192:99d7:1d59:986])
+        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
+        Tue, 27 Aug 2019 23:35:59 +0200 (CEST)
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+To:     Joe Perches <joe@perches.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
+From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
+ 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
+ kC8vBDJg
+Message-ID: <59bfcf90-f7f8-4d55-b5bf-211f6ca67917@kleine-koenig.org>
+Date:   Tue, 27 Aug 2019 23:35:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=7Jf13PDC9Q1FMhZUJQsq7Ggn=wRz5xpRY0YrU6tP9Kw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:58:05PM -0700, Nick Desaulniers wrote:
-> On Tue, Aug 27, 2019 at 12:28 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Tue, Aug 27, 2019 at 07:36:21PM +0900, Masahiro Yamada wrote:
-> > > GCC and Clang have different policy for -Wunused-function; GCC never
-> > > reports unused-function warnings for 'static inline' functions whereas
-> > > Clang reports them if they are defined in source files instead of
-> > > included headers although it has been suppressed since commit
-> > > abb2ea7dfd82 ("compiler, clang: suppress warning for unused static
-> > > inline functions").
-> > >
-> > > We often miss to remove unused functions where 'static inline' is used
-> > > in .c files since there is no tool to detect them. Unused code remains
-> > > until somebody notices. For example, commit 075ddd75680f ("regulator:
-> > > core: remove unused rdev_get_supply()").
-> > >
-> > > Let's remove __maybe_unused from the inline macro to allow Clang to
-> > > start finding unused static inline functions. As always, it is not a
-> > > good idea to sprinkle warnings for the normal build, so I added
-> > > -Wno-unsued-function for no W= build.
-> 
-> s/unsued/unused/
-> 
-> > >
-> > > Per the documentation [1], -Wno-unused-function will also disable
-> > > -Wunneeded-internal-declaration, which can help find bugs like
-> > > commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
-> > > mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
-> > > I added -Wunneeded-internal-declaration to address it.
-> > >
-> > > If you contribute to code clean-up, please run "make CC=clang W=1"
-> > > and check -Wunused-function warnings. You will find lots of unused
-> > > functions.
-> > >
-> > > Some of them are false-positives because the call-sites are disabled
-> > > by #ifdef. I do not like to abuse the inline keyword for suppressing
-> > > unused-function warnings because it is intended to be a hint for the
-> > > compiler's optimization. I prefer __maybe_unused or #ifdef around the
-> > > definition.
-> 
-> I'd say __maybe_unused for function parameters that are used depending
-> of ifdefs in the body of the function, otherwise strictly ifdefs.
-> 
-> > >
-> > > [1]: https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-function
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> >
-> > I am still not a big fan of this as I think it weakens clang as a
-> > standalone compiler but the change itself looks good so if it is going
-> > in anyways:
-> >
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> >
-> > I'm sure Nick would like to weigh in as well before this gets merged.
-> 
-> So right away for an x86_64 defconfig w/ this patch, clang points out:
-> 
-> drivers/gpu/drm/i915/i915_sw_fence.c:84:20: warning: unused function
-> 'debug_fence_init_onstack' [-Wunused-function]
-> static inline void debug_fence_init_onstack(struct i915_sw_fence *fence)
->                    ^
-> drivers/gpu/drm/i915/i915_sw_fence.c:105:20: warning: unused function
-> 'debug_fence_free' [-Wunused-function]
-> static inline void debug_fence_free(struct i915_sw_fence *fence)
->                    ^
-> 
-> The first looks fishy (grep -r debug_fence_init_onstack), the second
-> only has a callsite ifdef CONFIG_DRM_I915_SW_FENCE_DEBUG_OBJECTS.
-> 
-> drivers/gpu/drm/i915/intel_guc_submission.c:1117:20: warning: unused
-> function 'ctx_save_restore_disabled' [-Wunused-function]
-> static inline bool ctx_save_restore_disabled(struct intel_context *ce)
->                    ^
-> drivers/gpu/drm/i915/display/intel_hdmi.c:1696:26: warning: unused
-> function 'intel_hdmi_hdcp2_protocol' [-Wunused-function]
-> enum hdcp_wired_protocol intel_hdmi_hdcp2_protocol(void)
->                          ^
-> arm64 defconfig builds cleanly, same with arm.  Things might get more
-> hairy with all{yes|mod}config, but the existing things it finds don't
-> look insurmountable to me.  In fact, I'll file bugs in our issue
-> tracker (https://github.com/ClangBuiltLinux/linux/issues) for the
-> above.
-> 
-> So I'm not certain this patch weakens existing checks.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym
+Content-Type: multipart/mixed; boundary="OibJTfYqSb8ZYpRBIfcgkpdEmi3BwmzKy";
+ protected-headers="v1"
+From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+To: Joe Perches <joe@perches.com>,
+ Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <59bfcf90-f7f8-4d55-b5bf-211f6ca67917@kleine-koenig.org>
+Subject: Re: [PATCH v2] vsprintf: introduce %dE for error constants
+References: <20190827211244.7210-1-uwe@kleine-koenig.org>
+ <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
+In-Reply-To: <04b021b263465c62628964ac402e15fd4cdc13a0.camel@perches.com>
 
-Well, we no longer get -Wunused-function warnings without W=1.
-Sometimes, that warning is just a result of missed clean up but there
-have been instances where it was a real bug:
+--OibJTfYqSb8ZYpRBIfcgkpdEmi3BwmzKy
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-https://lore.kernel.org/lkml/20190523010235.GA105588@archlinux-epyc/
+Hello Joe,
 
-https://lore.kernel.org/lkml/1558574945-19275-1-git-send-email-skomatineni@nvidia.com/
+On 8/27/19 11:22 PM, Joe Perches wrote:
+> On Tue, 2019-08-27 at 23:12 +0200, Uwe Kleine-K=C3=B6nig wrote:
+>> The new format specifier %dE introduced with this patch pretty-prints
+>> the typical negative error values. So
+>>
+>> 	pr_info("probing failed (%dE)\n", ret);
+>>
+>> yields
+>>
+>> 	probing failed (EIO)
+>>
+>> if ret holds -EIO. This is easier to understand than the for now commo=
+n
+>>
+>> 	probing failed (-5)
+>=20
+> I suggest using both outputs like '-5 -EIO'
+> rather than a single string
 
-Having warnings not be equal between compilers out of the box causes
-confusion and irritation: https://crbug.com/974884
+I like it the way it is implemented as it is more flexible. If you want
+to see both, you can still do
 
-Is not the objective of ClangBuiltLinux to rely on GCC less?
+	pr_info("probing failed (%d %dE)\n", ret, ret);
 
-The only reason that we see the warnings crop up in i915 is because
-they add -Wall after all of the warnings get disabled (i.e.
--Wno-unused-function -Wall so -Wunused-function gets enabled again).
+and people (like me) who think that giving only EIO can still do just tha=
+t.
 
-To get these warnings after this patch, W=1 has to be used and that
-results in a lot of extra warnings. x86_64 defconfig has one objtool
-warning right now, W=1 adds plenty more (from both -W flags and lack of
-kerneldoc annotations):
+Best regards
+Uwe
 
-https://gist.github.com/175afbca29ead14bd039ad46f4ab0ded
 
-This is just food for thought though.
+--OibJTfYqSb8ZYpRBIfcgkpdEmi3BwmzKy--
 
-Cheers,
-Nathan
+--JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl1lojsACgkQwfwUeK3K
+7An5Rwf/cDKkW9zVOCTTnyhlRHfVJNZRfCsCPtmZyRRcvtgoC6kTCVolTwThZx5X
+aZRpgCXOjwbqPTzK5w9xk5ved15f8eGQmcq02KQqkNkk/bds72l4y/QJcQIXvdXJ
+o40Oi6m9PplDh7GudbHeJEhKIFL9GlIJde2Y8M6zYNOP5FJQbr9oBRbhrnVubMX9
+fgu2pyy8VNNYvf0nBW1RKptHv0rXHMfKLNEFDaQY+Qi//wQx0FE6HjfMu1hDlTM4
+bFYgdUnYsIDiT9z+tCFGj368P8G/almHOqFtxKqzaFjiRHkSmmsvz+uvLHy7275Y
+mEhXyCNyq88FXrPhtBSLcZj6+R3dYQ==
+=TW0X
+-----END PGP SIGNATURE-----
+
+--JlbZvlgxaHVKm5ZzU4aQKmhbuU32i0jym--
