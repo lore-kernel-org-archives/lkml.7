@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0F4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6533C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9429E217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8928F2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892824;
-	bh=CyQiZCHrxKPp35lufizinN8SC1zCuJm7rkjhjD/lPqg=;
+	s=default; t=1566892829;
+	bh=qB3BRxQO9fiCu0Wd3YThpUV/JWI3D7Si2wgDS2tL1KQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLWd2geX0vWmszHFXjnkuJn60x1KWh5Ndk14vwlpuIGQFMrB+YqPzqjxUSe58yzIt
-	 C38cRdpsMIBgDSS0o/NAlJFRFtn6h1zq9YjrH2R/pSSAoBaheV1SVB0KY75lronOh+
-	 1HzZddo0HpX9/EPzBLmTppxSwgMv90r+TeOJCAYI=
+	b=zSngOCHW3QWwTd+b4+AOW6Zkb7Z1ybAtDwlq2LFZ1z8fP/K3t+dTvL+rVtnTUKcr2
+	 vxoreNZTqJk0ydYvp0QuxCin3U5dg9jmLqloxEfM35NaZO5SIh22vL8ivmkUsMhycL
+	 Vw5BUAXM0o1WiMbFJElrv2e3bGCS3QzzK69GNUy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfH0IAX (ORCPT
+        id S1731487AbfH0IA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55140 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731449AbfH0IAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:00:21 -0400
+        id S1731043AbfH0IA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80F8123405;
-        Tue, 27 Aug 2019 08:00:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E431F22CED;
+        Tue, 27 Aug 2019 08:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892820;
-        bh=CyQiZCHrxKPp35lufizinN8SC1zCuJm7rkjhjD/lPqg=;
+        s=default; t=1566892826;
+        bh=qB3BRxQO9fiCu0Wd3YThpUV/JWI3D7Si2wgDS2tL1KQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FbnAA0xiTmi3YdXJxeSvuhhqjeNvfOWqK0K7/rWdlfXp1fWK+vffkbAEiCatnvDl0
-         IOfDVEQXFvg1zVDLwVyBNvlcl9OZXkzY08wZF/1xqi6AFUThohpF268uGEG9e9ub4R
-         k+YNlMGi2NjwcFHx96pMNT4CZoEMJjjZ+A0QwEvI=
+        b=BWyHly9U14Jq3utBhaYwxwj7G88KUpRVsXWBtXyTGCz226AhCkVTIqnPtyK3zVzVh
+         MKVSvkSLlr8gEX+7l4qF/09pxeIafzBhNoQXFlVUdsZMJittxcHgoOgR8hf/EMCC5A
+         tzJWaav6ImMYtdr+C+RaOMdGvVono4bW5EkW7JNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 026/162] bonding: Force slave speed check after link state recovery for 802.3ad
-Date:   Tue, 27 Aug 2019 09:49:14 +0200
-Message-Id: <20190827072739.215758687@linuxfoundation.org>
+Subject: [PATCH 5.2 028/162] selftests: forwarding: gre_multipath: Enable IPv4 forwarding
+Date:   Tue, 27 Aug 2019 09:49:16 +0200
+Message-Id: <20190827072739.275028265@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -64,70 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
+[ Upstream commit efa7b79f675da0efafe3f32ba0d6efe916cf4867 ]
 
-The following scenario was encountered during testing of logical
-partition mobility on pseries partitions with bonded ibmvnic
-adapters in LACP mode.
+The test did not enable IPv4 forwarding during its setup phase, which
+causes the test to fail on machines where IPv4 forwarding is disabled.
 
-1. Driver receives a signal that the device has been
-   swapped, and it needs to reset to initialize the new
-   device.
-
-2. Driver reports loss of carrier and begins initialization.
-
-3. Bonding driver receives NETDEV_CHANGE notifier and checks
-   the slave's current speed and duplex settings. Because these
-   are unknown at the time, the bond sets its link state to
-   BOND_LINK_FAIL and handles the speed update, clearing
-   AD_PORT_LACP_ENABLE.
-
-4. Driver finishes recovery and reports that the carrier is on.
-
-5. Bond receives a new notification and checks the speed again.
-   The speeds are valid but miimon has not altered the link
-   state yet.  AD_PORT_LACP_ENABLE remains off.
-
-Because the slave's link state is still BOND_LINK_FAIL,
-no further port checks are made when it recovers. Though
-the slave devices are operational and have valid speed
-and duplex settings, the bond will not send LACPDU's. The
-simplest fix I can see is to force another speed check
-in bond_miimon_commit. This way the bond will update
-AD_PORT_LACP_ENABLE if needed when transitioning from
-BOND_LINK_FAIL to BOND_LINK_UP.
-
-CC: Jarod Wilson <jarod@redhat.com>
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Fixes: 54818c4c4b93 ("selftests: forwarding: Test multipath tunneling")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Tested-by: Stephen Suryaputra <ssuryaextr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/testing/selftests/net/forwarding/gre_multipath.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index f183cadd14e3d..e8f48f3cdf948 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2205,6 +2205,15 @@ static void bond_miimon_commit(struct bonding *bond)
- 	bond_for_each_slave(bond, slave, iter) {
- 		switch (slave->new_link) {
- 		case BOND_LINK_NOCHANGE:
-+			/* For 802.3ad mode, check current slave speed and
-+			 * duplex again in case its port was disabled after
-+			 * invalid speed/duplex reporting but recovered before
-+			 * link monitoring could make a decision on the actual
-+			 * link status
-+			 */
-+			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
-+			    slave->link == BOND_LINK_UP)
-+				bond_3ad_adapter_speed_duplex_changed(slave);
- 			continue;
+diff --git a/tools/testing/selftests/net/forwarding/gre_multipath.sh b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+index cca2baa03fb81..37d7297e1cf8a 100755
+--- a/tools/testing/selftests/net/forwarding/gre_multipath.sh
++++ b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+@@ -187,12 +187,16 @@ setup_prepare()
+ 	sw1_create
+ 	sw2_create
+ 	h2_create
++
++	forwarding_enable
+ }
  
- 		case BOND_LINK_UP:
+ cleanup()
+ {
+ 	pre_cleanup
+ 
++	forwarding_restore
++
+ 	h2_destroy
+ 	sw2_destroy
+ 	sw1_destroy
 -- 
 2.20.1
 
