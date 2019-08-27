@@ -2,152 +2,157 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C55C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DDFC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D1B206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893840;
-	bh=ao2XvC2Me3+PmikKc782pXteFXByHv/aYc6+AST064E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XrSRdu8iWEEZhD0HL+MMvMbSXQt6f4c1gKPT81BbKW1efPqDI1OZx+WVIRkElld5r
-	 XlfgWKFAwVK0O+b81wjoQTRS5ae011SVzN9TJeM9ZYlv/45/8V3j4i67q9MMFWcaB3
-	 pStaSFMM1BhYQ33hyWM6yOevCK8M//thAZrr9jdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1FCD0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:17:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rGN9XdhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfH0Hwe (ORCPT
+        id S1729986AbfH0IRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729408AbfH0Hw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C46A8206BF;
-        Tue, 27 Aug 2019 07:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892348;
-        bh=ao2XvC2Me3+PmikKc782pXteFXByHv/aYc6+AST064E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRjbOUZRuQefrkrq2b4iqI5gSyeE2rTdP6vg/QAd5xzy4aaTaw35QV8KakEa6grb1
-         uamsHjd9YL7rULq4N9t1Rz3UURcCDuA4S35QQmMDwztke6AgrCF2WYDqojL9KBKV7i
-         SSP6Cd/DrfNIeg2oeabsTGfoGDlDDpIVmleO+0XI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/62] net: hisilicon: make hip04_tx_reclaim non-reentrant
-Date:   Tue, 27 Aug 2019 09:50:30 +0200
-Message-Id: <20190827072701.868386004@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
-References: <20190827072659.803647352@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 27 Aug 2019 04:17:54 -0400
+Received: from mail-eopbgr60053.outbound.protection.outlook.com ([40.107.6.53]:14917
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727788AbfH0IRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:17:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mC6SGfUGcj5qfowVWSJ996L5OzXYwktpH8iMQC2pLbM1ADZOtA4ZTllXCzGeYxZ/q49PldKvlaKqln3FVYJAa+fzFzYF9kPN88P3Hx8YIQxLGS0VZ3IJ7Nd4HKdczSBuEjqW//KTCy9iUz7UmRcCEEllnwR/Sv0pbw033bWRUPSvanRzuX+PJ5dUZTFAKM3eEQ7z5Ur73VdXQsuaD2nnTvpDZT4msP1e5mmzUS4BloKxEYd2y4Up/KHk0XQl/sGjq7gt9avOkpKSrWOWh8odLGNUzmeXnVgZyju3dfeGWiO/4kBHvDxPvgzG6X2qGVVwXW/Ch837WE/eCPoRjYFetQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6tLgUOAdcUK2g4ZMA3HdTrrSdjZWSUZVsh5luoh4dMA=;
+ b=EWit/mVuTId+PLQDdfPdFEklX278AjaUp4K/eCE/D0p2/6zO9e+xIsNgdyC/Wp/guukcq1BtZ4OK4jPh/gVED1YAZY4hS8KAyfThYtv2i4WvTkP1rs1pY0s1Hfza1ppPezXbpAiJ1IlEkBxLXlWDjr09fIM/TliuY8qtlaaTU86f9WKEzJn38xI0F9uZWgDWuKAhbI+9DW8D9WoCOk54+3ejzLl/ch9m7MB2wYMsLXTg/f+IcivJkFbW/lQXA2PCVof87Ejs5U01uJjbU0F/vIdDpws31h+ANS9sgEWo+rWhkjQSkC0DalI7U35pmkLsg4GFOT/3DfR4ELPJptanKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6tLgUOAdcUK2g4ZMA3HdTrrSdjZWSUZVsh5luoh4dMA=;
+ b=rGN9XdhVXSK6FQKzLQd1oOON8o4jwQSZnErHFROQIbdG8UX5bkPRlWT9shQ1o1At85ti97MaJef3s+3g5LJ9VZr4OwpR+WYo0zM7sWGoVN3uvS2nwWTYuYzt139bOhga1adUZsIPeCSznaVi2tmIk0nRDTs10fCZpgVNIHG3VxQ=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6961.eurprd04.prod.outlook.com (52.132.214.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 08:17:50 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::5d98:e1f4:aa72:16b4]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::5d98:e1f4:aa72:16b4%4]) with mapi id 15.20.2178.022; Tue, 27 Aug 2019
+ 08:17:50 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] clk: imx: lpcg: write twice when writing lpcg regs
+Thread-Topic: [PATCH] clk: imx: lpcg: write twice when writing lpcg regs
+Thread-Index: AQHVXK/qRNohGClvt0yC94cqOwkPUA==
+Date:   Tue, 27 Aug 2019 08:17:50 +0000
+Message-ID: <1566936978-28519-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR02CA0143.apcprd02.prod.outlook.com
+ (2603:1096:202:16::27) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31915c1d-db0b-4f77-1171-08d72ac70cc4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6961;
+x-ms-traffictypediagnostic: AM0PR04MB6961:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB696121F771311C6327AA6D9C88A00@AM0PR04MB6961.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(39860400002)(366004)(346002)(199004)(189003)(71200400001)(54906003)(2501003)(8936002)(66066001)(478600001)(36756003)(64756008)(66556008)(6436002)(6486002)(66446008)(386003)(6506007)(66476007)(71190400001)(7736002)(110136005)(305945005)(2201001)(86362001)(316002)(14454004)(6636002)(81156014)(81166006)(2906002)(486006)(2616005)(476003)(26005)(4326008)(44832011)(66946007)(53936002)(186003)(14444005)(52116002)(102836004)(99286004)(25786009)(6512007)(256004)(50226002)(3846002)(6116002)(5660300002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6961;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JaamQxk4G4A+hccSgbT3aTuuAafYjkuY65ZzYnFOIQblxCbZe1qlbpJcI5cPT0nu3ofMKsAYLR9zkghodqNlY23CJx3AHW59knHEHFz2B3Zw4Gba0nCKZLuDntMoBH07iPXlWphzMbUXCga0Xn7Vtf1H3Sci2YqmQm1vNTFUT98tOATjaeWjxHR6KWd9VvaKpGpNelXetfe1pt0WXwQv3dk6dwhCC8U3/O0d52V4z9/N8cT4MMbiL882ZZ9ItppJUVIwCfmvrH3zgQcT8VUJDTHOUk9qL+fFySlcfFVJUK/J7vyg0CLJlNssDKvM9QfHNaSTnnKjCIjGRGZL6jO1zlgk+LoE1qBvBN52HN2/sYTxOHAGC5Ii/biDwf6zX/fU07nZNrOTwG7o/Rxex0hyYEGNYIabOTEEr/tZkHzG32k=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31915c1d-db0b-4f77-1171-08d72ac70cc4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 08:17:50.1446
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QAq71gkrnoh1/AcRotgSzzX5jZ0h43vi6PEuR8IzdXScqTdTeCB2PVd4YC3FLnefUqRmVumMF2pzHqetUypeaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6961
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a2c070ae805910a853b4a14818481ed2e17c727 ]
+From: Peng Fan <peng.fan@nxp.com>
 
-If hip04_tx_reclaim is interrupted while it is running
-and then __napi_schedule continues to execute
-hip04_rx_poll->hip04_tx_reclaim, reentrancy occurs
-and oops is generated. So you need to mask the interrupt
-during the hip04_tx_reclaim run.
+There is hardware issue that:
+The output clock the LPCG cell will not turn back on as expected,
+even though a read of the IPG registers in the LPCG indicates that
+the clock should be enabled.
 
-The kernel oops exception stack is as follows:
+The software workaround is to write twice to enable the LPCG clock
+output.
 
-Unable to handle kernel NULL pointer dereference
-at virtual address 00000050
-pgd = c0003000
-[00000050] *pgd=80000000a04003, *pmd=00000000
-Internal error: Oops: 206 [#1] SMP ARM
-Modules linked in: hip04_eth mtdblock mtd_blkdevs mtd
-ohci_platform ehci_platform ohci_hcd ehci_hcd
-vfat fat sd_mod usb_storage scsi_mod usbcore usb_common
-CPU: 0 PID: 0 Comm: swapper/0 Tainted: G           O    4.4.185 #1
-Hardware name: Hisilicon A15
-task: c0a250e0 task.stack: c0a00000
-PC is at hip04_tx_reclaim+0xe0/0x17c [hip04_eth]
-LR is at hip04_tx_reclaim+0x30/0x17c [hip04_eth]
-pc : [<bf30c3a4>]    lr : [<bf30c2f4>]    psr: 600e0313
-sp : c0a01d88  ip : 00000000  fp : c0601f9c
-r10: 00000000  r9 : c3482380  r8 : 00000001
-r7 : 00000000  r6 : 000000e1  r5 : c3482000  r4 : 0000000c
-r3 : f2209800  r2 : 00000000  r1 : 00000000  r0 : 00000000
-Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
-Control: 32c5387d  Table: 03d28c80  DAC: 55555555
-Process swapper/0 (pid: 0, stack limit = 0xc0a00190)
-Stack: (0xc0a01d88 to 0xc0a02000)
-[<bf30c3a4>] (hip04_tx_reclaim [hip04_eth]) from [<bf30d2e0>]
-                                                (hip04_rx_poll+0x88/0x368 [hip04_eth])
-[<bf30d2e0>] (hip04_rx_poll [hip04_eth]) from [<c04c2d9c>] (net_rx_action+0x114/0x34c)
-[<c04c2d9c>] (net_rx_action) from [<c021eed8>] (__do_softirq+0x218/0x318)
-[<c021eed8>] (__do_softirq) from [<c021f284>] (irq_exit+0x88/0xac)
-[<c021f284>] (irq_exit) from [<c0240090>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240090>] (msa_irq_exit) from [<c02677e0>] (__handle_domain_irq+0x110/0x148)
-[<c02677e0>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0551700>] (__irq_svc+0x40/0x58)
-Exception stack(0xc0a01f30 to 0xc0a01f78)
-1f20:                                     c0ae8b40 00000000 00000000 00000000
-1f40: 00000002 ffffe000 c0601f9c 00000000 ffffffff c0a2257c c0a22440 c0831a38
-1f60: c0a01ec4 c0a01f80 c0203714 c0203718 600e0213 ffffffff
-[<c0551700>] (__irq_svc) from [<c0203718>] (arch_cpu_idle+0x20/0x3c)
-[<c0203718>] (arch_cpu_idle) from [<c025bfd8>] (cpu_startup_entry+0x244/0x29c)
-[<c025bfd8>] (cpu_startup_entry) from [<c054b0d8>] (rest_init+0xc8/0x10c)
-[<c054b0d8>] (rest_init) from [<c0800c58>] (start_kernel+0x468/0x514)
-Code: a40599e5 016086e2 018088e2 7660efe6 (503090e5)
----[ end trace 1db21d6d09c49d74 ]---
-Kernel panic - not syncing: Fatal exception in interrupt
-CPU3: stopping
-CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D    O    4.4.185 #1
-
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/imx/clk-lpcg-scu.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index c27054b8ce81b..60ef6d40e4896 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -497,6 +497,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
- 	u16 len;
- 	u32 err;
- 
-+	/* clean up tx descriptors */
-+	tx_remaining = hip04_tx_reclaim(ndev, false);
-+
- 	while (cnt && !last) {
- 		buf = priv->rx_buf[priv->rx_head];
- 		skb = build_skb(buf, priv->rx_buf_size);
-@@ -557,8 +560,7 @@ refill:
- 	}
- 	napi_complete_done(napi, rx);
- done:
--	/* clean up tx descriptors and start a new timer if necessary */
--	tx_remaining = hip04_tx_reclaim(ndev, false);
-+	/* start a new timer if necessary */
- 	if (rx < budget && tx_remaining)
- 		hip04_start_tx_timer(priv);
- 
--- 
-2.20.1
-
-
+diff --git a/drivers/clk/imx/clk-lpcg-scu.c b/drivers/clk/imx/clk-lpcg-scu.=
+c
+index a73a799fb777..7391d0668ec4 100644
+--- a/drivers/clk/imx/clk-lpcg-scu.c
++++ b/drivers/clk/imx/clk-lpcg-scu.c
+@@ -54,6 +54,11 @@ static int clk_lpcg_scu_enable(struct clk_hw *hw)
+=20
+ 	reg |=3D val << clk->bit_idx;
+ 	writel(reg, clk->reg);
++	/*
++	 * There is hardware bug. When enabling the LPCG clock
++	 * output, SW can write the enabling value twice
++	 */
++	writel(reg, clk->reg);
+=20
+ 	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
+=20
+@@ -71,6 +76,11 @@ static void clk_lpcg_scu_disable(struct clk_hw *hw)
+ 	reg =3D readl_relaxed(clk->reg);
+ 	reg &=3D ~(CLK_GATE_SCU_LPCG_MASK << clk->bit_idx);
+ 	writel(reg, clk->reg);
++	/*
++	 * There is hardware bug. When enabling the LPCG clock
++	 * output, SW can write the enabling value twice
++	 */
++	writel(reg, clk->reg);
+=20
+ 	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
+ }
+--=20
+2.16.4
 
