@@ -2,95 +2,193 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45848C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB712C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8752070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821592070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CapEaCCX"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="F4gvlveW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbfH0QAn (ORCPT
+        id S1730171AbfH0QBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:00:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34067 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfH0QAm (ORCPT
+        Tue, 27 Aug 2019 12:01:16 -0400
+Received: from sonic317-20.consmr.mail.gq1.yahoo.com ([98.137.66.146]:38113
+        "EHLO sonic317-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725804AbfH0QBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:00:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id s21so47579863ioa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q9NZa6AK/DpvSoe8HSmYQoMCNusIgNDIT6bHwZKttzI=;
-        b=CapEaCCX83Vumd24d3W4ndk3MW0VfeuJYr+ixbeMxDcmrviI+wQ5tdcqrOQI66p6Oy
-         7uZPqa8igSYgAmeQIh8KNqwifhIw2WtDKg83sPNNauc4VAee9cleXh6DIPxsmKAOzdL6
-         aPhjZqbRhSN1E5tFu51cjgPDlSfLMCB3U8ipU5gUB8zKkhMg2z7ylAYs522JSQXC68FP
-         HesgE/2VRCs0+KMmjjwx9tFGuj77504cJmfqOUjK5jXZe2GvlFawkFd1WGdgixHhIKcE
-         u6oaGE4I30g3wNpqYbxVx11jVfHJP7sC5lDhNmw2ZOUpaEHIZ3wLv6t1fgeqYftq+2Yz
-         li7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q9NZa6AK/DpvSoe8HSmYQoMCNusIgNDIT6bHwZKttzI=;
-        b=HXUmCIxEEJ+q3ArJrjN0OT5xKPk11+zd4/B1zeAm6sqhSTSmvbIMlKH/m1UHLwAy4X
-         OZehoIJsoosRM0ZzHTK2mQqVtDCQNtqWPxZElTspmAkSRWpNMS59741ogI9qsIn74k/O
-         f9rvNPylNe+g9Qnrt7VhBsS3F6YkzlK42xuP2Q3TzY/OLydCr0IsAsA8+cP4TlMZQd/Y
-         CyWfpkHu+rAhARStj9EkC4fl7/krksH0HVfVhIUw8sqqiy8GXGOhv9cNSIqLT0fSQ7FR
-         xDxHfs/iIPVFKOYTfGPBk6MzfvHzDaT3/cqlrAyDRSfzAe3HgfarbhXWpuPA53y9bXNQ
-         BF8Q==
-X-Gm-Message-State: APjAAAX+kn25amXbcn6vAWR7vfWLQJwzawbf5IPAGNae6INq44turq2H
-        fMq8v7lYKodvcG8/5ifx+4xCwOlxcXukRhUI8MkHSQ==
-X-Google-Smtp-Source: APXvYqx8juL3iVgGAhOFUnJM7xRiBzWyHUrAKS9dlKfG73enRdCxa/L5pg9aUomXcKrmQQkllOZgkxTpLabtoHkLNHA=
-X-Received: by 2002:a02:487:: with SMTP id 129mr22862441jab.113.1566921641477;
- Tue, 27 Aug 2019 09:00:41 -0700 (PDT)
+        Tue, 27 Aug 2019 12:01:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566921675; bh=Va2OG6Wv03uRNYmTvJK00J7t+7d/cvOorlhT1YLsbWY=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=F4gvlveWdkHbKVyFb+OeeF2Fe8+BTVjzpoSx2Qsh0eva6UGBRqg+GeUVIs1fs4XzZh3GtDLUsZDjCidvPMpyhDgvHfxu6iqzkfD0HRlJjfdNSnJxVuwKUw0V4P/3ONWv0m3olC6fMtp7XJx0Lxaa/EKKPD8PVHpkzCezMesCD6Q+17IQdBurLwxcg0IqwHDd+y6tHNRuqccuYrt109vxf2fCyjJKYlNS+xRNFI/Dq1Cme960+4tutjGdEHOPZYoHi8Hfa/aJynBKmQpUsckTKGEN2wyCZux51dLIh6FmqhRVCWvmL0MTZIES+1+Kp/y34h2cTM1BsvboL8phezqRGQ==
+X-YMail-OSG: kTwfsoYVM1kKOYH3tMwGmZuqz8tbQCyawtzzTzVO1fVcgqeNqTC06hNPdz5STjl
+ Oluz4GjRd47QL.jrQfmYbrCF9dBHz3_j8.eCb2Qst8TrYwvRvq6MRh3Dl_.cy3m8QPVNntm24ROn
+ bhXYfFktMA9DvNywvxVeTAPwhtBHcTl.YYAveR6SZBI.qkNWJXevtqXkqHppkF8j0TBCmxGqex_g
+ j3JIVx5l5frPlT28ikkOHJGpFGwR3Xo.brjO52I32OjweaIMezoCIcbAt7O7wzEz_AsyW_aLjJS8
+ el_g2LmSpf_ZJrFfjcZxOd3jrbNEwFiHvlIw7DJSPztIyf2h9ahLYQlKkc.pSQw6gJAFTpoHiGbO
+ Buz59A.uLJwUYUBUtst.4uxpfZaxewwUqT7A1_TJXbxJ7b37wSk9HQoaPc_8uPL0Or5Neqi30Hhn
+ bOZltRy1Tdacn57HMaQ3JX.f9nWJizUNkuXMQVPN3TotipIDRqHB2jLn3ZVQEW54yXCgNv4qoqjl
+ 14huE60B7cBiG_3Cvh14EGXaT9PkdA3x4CLS0DRFIuZcbIa4.Qtg6zKn0SuNZ1ATpIZgcfl9keXS
+ Eb33Yfny3OtJEIZhW0beqyUMtONUK2HPfckjxhju6HjNkDFrEGdgvzF9frbYPI6J3nBl2EbvSq01
+ 4js6LgldBRMwd5D.yUPlG8kygrN4uM881pJnGJnp5oFvhQ2soCf0aHAY2MSTNKr10plhELeO66YJ
+ NP3QtaBUEtiQJEg1O_aFkbbnItzaMyBIs9mlvIPqPJGKEt2PYHIWXKu9GEEuz3AzUPM9.rSpNdYq
+ HdSNya_dGN8RnRseQcaHcTAh._uqN6S4GE._QDyItIExG1wUh9yHY0AbdAIzOOt8awVgyBKygpkp
+ _GFBxMVHFx0eGCJU6ZaSw4zpZ3bRIJ6qGtxQKoj69Xbj8lzXpXjoACy7VIxvgT0JZ8m.LG3sBh_l
+ _O.2L3sqbGuycBRLrD8CLVFXdjvg2mJnMY6rik64ate..eHimzv1o2loVeVzU6fVEvpDLTLt0pHg
+ KMrehpuf4s.HGhem4Dw6tD8zmtVeilEuRmxML0f8afpvmV6HZdkgmZTTQJx4o83Eg8cvXWMUAqad
+ CAkjVC3GC8nvp_PIJVNvmLKpJJfBGK3bch6uYgYhInBod1zR.dqI0kW4Q_WG3E7UxWTAbrLikwyA
+ GWKiK6NvcWLWyFbQ8f9quGqT6lyn9vtfi8be47aJxC6JnuhBUv.Od6QVAuv4rWQjIQrHlHsOwlwr
+ voU5gzpWIKprBQHXqh4y1pbE1RWI4
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.gq1.yahoo.com with HTTP; Tue, 27 Aug 2019 16:01:15 +0000
+Received: by smtp428.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 5f6ccd683c4adab0833962eb3ba498ab;
+          Tue, 27 Aug 2019 16:01:14 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 00:01:03 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
+        elder@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        yuchao0@huawei.com, johan@kernel.org, linux-kernel@vger.kernel.org,
+        greybus-dev@lists.linaro.org, Viresh Kumar <vireshk@kernel.org>
+Subject: Re: [PATCH 1/9] staging: greybus: fix up SPDX comment in .h files
+Message-ID: <20190827160059.GA21783@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+ <20190825055429.18547-2-gregkh@linuxfoundation.org>
+ <20190826055119.4pbmf5ape224giwz@vireshk-i7>
+ <20190827075802.GA29204@kroah.com>
+ <20190827092036.GA138083@architecture4>
+ <20190827154343.GE534@kroah.com>
 MIME-Version: 1.0
-References: <20190826153028.32639-1-pjones@redhat.com> <20190826162823.4mxkwhd7mbtro3zy@linux.intel.com>
- <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
- <20190827110344.4uvjppmkkaeex3mk@linux.intel.com> <20190827134155.otm6ekeb53siy6lb@linux.intel.com>
-In-Reply-To: <20190827134155.otm6ekeb53siy6lb@linux.intel.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Tue, 27 Aug 2019 09:00:29 -0700
-Message-ID: <CACdnJuszFbXONm2e9Wckuk-3VwD0hdGB9NqL-BNimX2yfaavsQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't mapped.
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Jones <pjones@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Lyude Paul <lyude@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8\""
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190827154343.GE534@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 6:42 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Tue, Aug 27, 2019 at 02:03:44PM +0300, Jarkko Sakkinen wrote:
-> > > Jarkko, these two should probably go to 5.3 if possible - I
-> > > independently had a report of a system hitting this issue last week
-> > > (Intel apparently put a surprising amount of data in the event logs on
-> > > the NUCs).
-> >
-> > OK, I can try to push them. I'll do PR today.
->
-> Ard, how do you wish these to be managed?
->
-> I'm asking this because:
->
-> 1. Neither patch was CC'd to linux-integrity.
-> 2. Neither patch has your tags ATM.
+On Tue, Aug 27, 2019 at 05:43:43PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Aug 27, 2019 at 05:20:36PM +0800, Gao Xiang wrote:
+> > Hi Greg,
+> > 
+> > On Tue, Aug 27, 2019 at 09:58:02AM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, Aug 26, 2019 at 11:21:19AM +0530, Viresh Kumar wrote:
+> > > > On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
+> > > > > When these files originally got an SPDX tag, I used // instead of /* */
+> > > > > for the .h files.  Fix this up to use // properly.
+> > > > > 
+> > > > > Cc: Viresh Kumar <vireshk@kernel.org>
+> > > > > Cc: Johan Hovold <johan@kernel.org>
+> > > > > Cc: Alex Elder <elder@kernel.org>
+> > > > > Cc: greybus-dev@lists.linaro.org
+> > > > > Cc: devel@driverdev.osuosl.org
+> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > ---
+> > > > >  drivers/staging/greybus/firmware.h               | 2 +-
+> > > > >  drivers/staging/greybus/gb-camera.h              | 2 +-
+> > > > >  drivers/staging/greybus/gbphy.h                  | 2 +-
+> > > > >  drivers/staging/greybus/greybus.h                | 2 +-
+> > > > >  drivers/staging/greybus/greybus_authentication.h | 2 +-
+> > > > >  drivers/staging/greybus/greybus_firmware.h       | 2 +-
+> > > > >  drivers/staging/greybus/greybus_manifest.h       | 2 +-
+> > > > >  drivers/staging/greybus/greybus_protocols.h      | 2 +-
+> > > > >  drivers/staging/greybus/greybus_trace.h          | 2 +-
+> > > > >  drivers/staging/greybus/hd.h                     | 2 +-
+> > > > >  drivers/staging/greybus/interface.h              | 2 +-
+> > > > >  drivers/staging/greybus/manifest.h               | 2 +-
+> > > > >  drivers/staging/greybus/module.h                 | 2 +-
+> > > > >  drivers/staging/greybus/operation.h              | 2 +-
+> > > > >  drivers/staging/greybus/spilib.h                 | 2 +-
+> > > > >  drivers/staging/greybus/svc.h                    | 2 +-
+> > > > >  16 files changed, 16 insertions(+), 16 deletions(-)
+> > > > 
+> > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > 
+> > > Thanks for all of the acks!
+> > > 
+> > > greg k-h
+> > 
+> > I found similar issues of graybus when I tested the latest staging-testing
+> > 
+> > In file included from <command-line>:0:0:
+> > ./include/linux/greybus/greybus_protocols.h:45:2: error: unknown type name ??????_le16??????
+> >   __le16 size;  /* Size in bytes of header + payload */
+> >   ^~~~~~
+> > ./include/linux/greybus/greybus_protocols.h:46:2: error: unknown type name ??????_le16??????
+> >   __le16 operation_id; /* Operation unique id */
+> >   ^~~~~~
+> > ./include/linux/greybus/greybus_protocols.h:47:2: error: unknown type name ??????_u8??????
+> >   __u8 type;  /* E.g GB_I2C_TYPE_* or GB_GPIO_TYPE_* */
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:48:2: error: unknown type name ??????_u8??????
+> >   __u8 result;  /* Result of request (in responses only) */
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:49:2: error: unknown type name ??????_u8??????
+> >   __u8 pad[2];  /* must be zero (ignore when read) */
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:58:2: error: unknown type name ??????_u8??????
+> >   __u8 phase;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:88:2: error: unknown type name ??????_u8??????
+> >   __u8 major;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:89:2: error: unknown type name ??????_u8??????
+> >   __u8 minor;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:93:2: error: unknown type name ??????_u8??????
+> >   __u8 major;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:94:2: error: unknown type name ??????_u8??????
+> >   __u8 minor;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:98:2: error: unknown type name ??????_u8??????
+> >   __u8 bundle_id;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:102:2: error: unknown type name ??????_u8??????
+> >   __u8 major;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:103:2: error: unknown type name ??????_u8??????
+> >   __u8 minor;
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:108:2: error: unknown type name ??????_le16??????
+> >   __le16   size;
+> >   ^~~~~~
+> > ./include/linux/greybus/greybus_protocols.h:113:2: error: unknown type name ??????_u8??????
+> >   __u8   data[0];
+> >   ^~~~
+> > ./include/linux/greybus/greybus_protocols.h:118:2: error: unknown type name ??????_le16??????
+> >   __le16   cport_id;
+> >   ^~~~~~
+> > ./include/linux/greybus/greybus_protocols.h:122:2: error: unknown type name ??????_le16??????
+> >   __le16   cport_id;
+> > 
+> > .. and other files...
+> > 
+> > Not very sure... but it seems it can be observed with allmodconfig or
+> > CONFIG_KERNEL_HEADER_TEST=y and fail my compilation...
+> > Hope that of some help (kind reminder...)
+> 
+> Ah, thank you so much for this, NOW that makes sense why I got that odd
+> kbuild warning that I could not figure out.
 
-Feel free to add my tags, but I don't think it's important.
+Yeah, it seems KERNEL_HEADER_TEST is a new feature which aims at ensuring
+kernel headers are self-contained... I think it can be observed by
+  CONFIG_GREYBUS and CONFIG_KERNEL_HEADER_TEST are on
+
+see commit 43c78d88036e ("kbuild: compile-test kernel headers to ensure they are self-contained")
+
+> 
+> Let me go fix this up, thank you so much.
+
+You're welcome, I was just testing my previous patch after merging as well...
+
+Thanks,
+Gao Xiang
+
+> 
+> greg k-h
