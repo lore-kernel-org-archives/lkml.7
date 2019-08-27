@@ -2,184 +2,98 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2898AC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3FBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08202186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9E42070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566947835;
-	bh=LHYP3wO1EM0CN7MZnuQ9uyPpTSuaC669PEWoJvNcjA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NCjlMyIsJ6z4XOWUHsWO44ZI5YVeGvTVtmcafybM9yF0NO39jvbqbclQoq6AWMouO
-	 PyrLgeLvwVpG7D94/blLAIqEAsDRrjIoymxOJ+mpjmkIOxVwDgWsCKy8Lb4kN9sQ/+
-	 QtHyLhU8j3K+U2+efg5ZjtR3MLD1qrBijNwkQ3Z4=
+	s=default; t=1566947930;
+	bh=wezWlEj+emEAu/Y4km3hAy77vGxp7GmMxShBOXaNH/c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iSVnw04De8cqrhsc7o73m6CXg8uY+oMoDvV2M+Zu9Iam6aQNZwG6fuOT02hYnI08X
+	 QsNtcXiZAb05CRrnJZKznbFUeYt0WJsFlfycLgncb6Bc5MNBGOxjFUORiFGAvB9fjn
+	 0Vn4iTC6/WfRSt8d4XpbgX4mKVaL69EL1aWyalyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfH0XRO (ORCPT
+        id S1726378AbfH0XSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 19:18:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfH0XRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:17:13 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726044AbfH0XSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:18:49 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F35DA20856;
-        Tue, 27 Aug 2019 23:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B37522CED
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 23:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566947832;
-        bh=LHYP3wO1EM0CN7MZnuQ9uyPpTSuaC669PEWoJvNcjA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wp2G22s2JiRw967LPOtC7TV8P1ym933f60GQCuP9jTKdhOqTI6+p5eZAJ0ic5NX6J
-         6mH+po7knLNM01dxN+2SAHO5hLA6asmWU0K7y+bFR6YVV+IX0UL+xFzf9QXIKCKS0E
-         LKK8hS8bnaKMHqrjAQF1xXI9iqvvNL0h0qE3zUUc=
-Date:   Tue, 27 Aug 2019 18:17:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Scott Murray <scott@spiteful.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] PCI: hotplug: Remove surplus return from a void function
-Message-ID: <20190827231710.GH9987@google.com>
-References: <20190826095143.21353-1-kw@linux.com>
+        s=default; t=1566947928;
+        bh=wezWlEj+emEAu/Y4km3hAy77vGxp7GmMxShBOXaNH/c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YEJFwa6DH4Bi9vKBliGQJdbs7QdCdl5CbUFaGLRDKMA7LgI6h2h2NcafiO3+IsK9o
+         tLJ8mT037k7E0TtSc5Ddk6vtN5x0csky5M7Y2YexteucMMuvtSg/dxNxE77sjWcLrC
+         6lqi1qXbkBZZ0/8rTnVXVd/qMgGk3WsfLZpdBFIA=
+Received: by mail-wr1-f41.google.com with SMTP id y19so498405wrd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:18:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAVLsUI4friSv2M7nGYkx7Irz+kOuUYY+C3mwkuuMqymSpDeOpEE
+        csemNfMkL8NFvfW0OvBQhFuSoZ1oK71C1ddwB7gRxw==
+X-Google-Smtp-Source: APXvYqwSUdp/lqhW1U0dtbF7rLBy8AT2EHKbCelREPiXzd2YDve5b2ICpPC2Dcq6/Z+AEEDJuhe1SpnESWbrbaM7Ayw=
+X-Received: by 2002:a05:6000:4f:: with SMTP id k15mr491850wrx.221.1566947926809;
+ Tue, 27 Aug 2019 16:18:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826095143.21353-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190823224635.15387-1-namit@vmware.com>
+In-Reply-To: <20190823224635.15387-1-namit@vmware.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 27 Aug 2019 16:18:35 -0700
+X-Gmail-Original-Message-ID: <CALCETrX+h7FeyY290kvYRHAjMVDrmHivc55g+o0hnXrmm-wZRw@mail.gmail.com>
+Message-ID: <CALCETrX+h7FeyY290kvYRHAjMVDrmHivc55g+o0hnXrmm-wZRw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] x86/mm/tlb: Defer TLB flushes with PTI
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:51:43AM +0200, Krzysztof Wilczynski wrote:
-> Remove unnecessary empty return statement at the end of a void
-> function in the following:
-> 
->   - drivers/pci/hotplug/cpci_hotplug_core.c: cleanup_slots()
->   - drivers/pci/hotplug/cpqphp_core.c: pci_print_IRQ_route()
->   - drivers/pci/hotplug/cpqphp_ctrl.c: cpqhp_pushbutton_thread()
->   - drivers/pci/hotplug/cpqphp_ctrl.c: interrupt_event_handler()
->   - drivers/pci/hotplug/cpqphp_nvram.h: compaq_nvram_init()
->   - drivers/pci/hotplug/rpadlpar_core.c: rpadlpar_io_init()
->   - drivers/pci/hotplug/rpaphp_core.c: cleanup_slots()
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+On Fri, Aug 23, 2019 at 11:07 PM Nadav Amit <namit@vmware.com> wrote:
+>
+> INVPCID is considerably slower than INVLPG of a single PTE, but it is
+> currently used to flush PTEs in the user page-table when PTI is used.
+>
+> Instead, it is possible to defer TLB flushes until after the user
+> page-tables are loaded. Preventing speculation over the TLB flushes
+> should keep the whole thing safe. In some cases, deferring TLB flushes
+> in such a way can result in more full TLB flushes, but arguably this
+> behavior is oftentimes beneficial.
 
-Applied to pci/trivial for v5.4, thanks!
+I have a somewhat horrible suggestion.
 
-I squashed the mediatek patch into this since they're both trivial.
+Would it make sense to refactor this so that it works for user *and*
+kernel tables?  In particular, if we flush a *kernel* mapping (vfree,
+vunmap, set_memory_ro, etc), we shouldn't need to send an IPI to a
+task that is running user code to flush most kernel mappings or even
+to free kernel pagetables.  The same trick could be done if we treat
+idle like user mode for this purpose.
 
-> ---
->  drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
->  drivers/pci/hotplug/cpqphp_core.c       | 1 -
->  drivers/pci/hotplug/cpqphp_ctrl.c       | 4 ----
->  drivers/pci/hotplug/cpqphp_nvram.h      | 5 +----
->  drivers/pci/hotplug/rpadlpar_core.c     | 1 -
->  drivers/pci/hotplug/rpaphp_core.c       | 1 -
->  6 files changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-> index 603eadf3d965..d0559d2faf50 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-> @@ -563,7 +563,6 @@ cleanup_slots(void)
->  	}
->  cleanup_null:
->  	up_write(&list_rwsem);
-> -	return;
->  }
->  
->  int
-> diff --git a/drivers/pci/hotplug/cpqphp_core.c b/drivers/pci/hotplug/cpqphp_core.c
-> index 16bbb183695a..b8aacb41a83c 100644
-> --- a/drivers/pci/hotplug/cpqphp_core.c
-> +++ b/drivers/pci/hotplug/cpqphp_core.c
-> @@ -173,7 +173,6 @@ static void pci_print_IRQ_route(void)
->  		dbg("%d %d %d %d\n", tbus, tdevice >> 3, tdevice & 0x7, tslot);
->  
->  	}
-> -	return;
->  }
->  
->  
-> diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
-> index b7f4e1f099d9..68de958a9be8 100644
-> --- a/drivers/pci/hotplug/cpqphp_ctrl.c
-> +++ b/drivers/pci/hotplug/cpqphp_ctrl.c
-> @@ -1872,8 +1872,6 @@ static void interrupt_event_handler(struct controller *ctrl)
->  			}
->  		}		/* End of FOR loop */
->  	}
-> -
-> -	return;
->  }
->  
->  
-> @@ -1943,8 +1941,6 @@ void cpqhp_pushbutton_thread(struct timer_list *t)
->  
->  		p_slot->state = STATIC_STATE;
->  	}
-> -
-> -	return;
->  }
->  
->  
-> diff --git a/drivers/pci/hotplug/cpqphp_nvram.h b/drivers/pci/hotplug/cpqphp_nvram.h
-> index 918ff8dbfe62..70e879b6a23f 100644
-> --- a/drivers/pci/hotplug/cpqphp_nvram.h
-> +++ b/drivers/pci/hotplug/cpqphp_nvram.h
-> @@ -16,10 +16,7 @@
->  
->  #ifndef CONFIG_HOTPLUG_PCI_COMPAQ_NVRAM
->  
-> -static inline void compaq_nvram_init(void __iomem *rom_start)
-> -{
-> -	return;
-> -}
-> +static inline void compaq_nvram_init(void __iomem *rom_start) { }
->  
->  static inline int compaq_nvram_load(void __iomem *rom_start, struct controller *ctrl)
->  {
-> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-> index 182f9e3443ee..977946e4e613 100644
-> --- a/drivers/pci/hotplug/rpadlpar_core.c
-> +++ b/drivers/pci/hotplug/rpadlpar_core.c
-> @@ -473,7 +473,6 @@ int __init rpadlpar_io_init(void)
->  void rpadlpar_io_exit(void)
->  {
->  	dlpar_sysfs_exit();
-> -	return;
->  }
->  
->  module_init(rpadlpar_io_init);
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index c3899ee1db99..18627bb21e9e 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -408,7 +408,6 @@ static void __exit cleanup_slots(void)
->  		pci_hp_deregister(&slot->hotplug_slot);
->  		dealloc_slot_struct(slot);
->  	}
-> -	return;
->  }
->  
->  static int __init rpaphp_init(void)
-> -- 
-> 2.22.1
-> 
+In code, this could mostly consist of changing all the "user" data
+structures involved to something like struct deferred_flush_info and
+having one for user and one for kernel.
+
+I think this is horrible because it will enable certain workloads to
+work considerably faster with PTI on than with PTI off, and that would
+be a barely excusable moral failing. :-p
+
+For what it's worth, other than register clobber issues, the whole
+"switch CR3 for PTI" logic ought to be doable in C.  I don't know a
+priori whether that would end up being an improvement.
