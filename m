@@ -3,120 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A6C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C271C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD7921872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75598214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfH0OLl (ORCPT
+        id S1728519AbfH0OMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:11:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57856 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 10:12:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:10800 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfH0OLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:11:40 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63E8118C892F;
-        Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D9555D712;
-        Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2AFAE18089C8;
-        Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 10:11:39 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     peterz@infradead.org, will@kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        dbueso@suse.de, Ingo Molnar <mingo@kernel.org>,
-        Jan Stancek <jstancek@redhat.com>
-Message-ID: <396661303.8419298.1566915099958.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190826143114.23471-1-sashal@kernel.org>
-References: <20190826143114.23471-1-sashal@kernel.org>
-Subject: Re: [PATCH v5.2 1/2] locking/rwsem: Add missing ACQUIRE to
- read_slowpath exit when queue is empty
+        id S1726125AbfH0OMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:12:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:12:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="264282374"
+Received: from xxx.igk.intel.com ([10.237.93.170])
+  by orsmga001.jf.intel.com with ESMTP; 27 Aug 2019 07:12:48 -0700
+From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH 0/6] Small fixes
+Date:   Tue, 27 Aug 2019 16:17:06 +0200
+Message-Id: <20190827141712.21015-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.204.166, 10.4.195.12]
-Thread-Topic: locking/rwsem: Add missing ACQUIRE to read_slowpath exit when queue is empty
-Thread-Index: pM7Z1VrNvE4gMqpOiVyEBizAqOeMqQ==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 27 Aug 2019 14:11:40 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Series of small fixes:
+* fixes few issues found during checking code with static checkers
+* fix few prints
+* define function in header, like it should be
+* release topology when done with it
 
------ Original Message -----
-> From: Jan Stancek <jstancek@redhat.com>
-> 
-> [ Upstream commit e1b98fa316648420d0434d9ff5b92ad6609ba6c3 ]
-> 
-> LTP mtest06 has been observed to occasionally hit "still mapped when
-> deleted" and following BUG_ON on arm64.
-> 
-> The extra mapcount originated from pagefault handler, which handled
-> pagefault for vma that has already been detached. vma is detached
-> under mmap_sem write lock by detach_vmas_to_be_unmapped(), which
-> also invalidates vmacache.
-> 
-> When the pagefault handler (under mmap_sem read lock) calls
-> find_vma(), vmacache_valid() wrongly reports vmacache as valid.
-> 
-> After rwsem down_read() returns via 'queue empty' path (as of v5.2),
-> it does so without an ACQUIRE on sem->count:
-> 
->   down_read()
->     __down_read()
->       rwsem_down_read_failed()
->         __rwsem_down_read_failed_common()
->           raw_spin_lock_irq(&sem->wait_lock);
->           if (list_empty(&sem->wait_list)) {
->             if (atomic_long_read(&sem->count) >= 0) {
->               raw_spin_unlock_irq(&sem->wait_lock);
->               return sem;
-> 
-> The problem can be reproduced by running LTP mtest06 in a loop and
-> building the kernel (-j $NCPUS) in parallel. It does reproduces since
-> v4.20 on arm64 HPE Apollo 70 (224 CPUs, 256GB RAM, 2 nodes). It
-> triggers reliably in about an hour.
-> 
-> The patched kernel ran fine for 10+ hours.
-> 
-> Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Will Deacon <will@kernel.org>
-> Acked-by: Waiman Long <longman@redhat.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: dbueso@suse.de
-> Fixes: 4b486b535c33 ("locking/rwsem: Exit read lock slowpath if queue empty &
-> no writer")
-> Link:
-> https://lkml.kernel.org/r/50b8914e20d1d62bb2dee42d342836c2c16ebee7.1563438048.git.jstancek@redhat.com
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
-> 
-> This is a backport for the v5.2 stable tree. There were multiple reports
-> of this issue being hit.
-> 
-> Given that there were a few changes to the code around this, I'd
-> appreciate an ack before pulling it in.
+Amadeusz Sławiński (6):
+  ASoC: Intel: Skylake: Use correct function to access iomem space
+  ASoC: Intel: Fix use of potentially uninitialized variable
+  ASoC: dapm: Expose snd_soc_dapm_new_control_unlocked properly
+  ASoC: Intel: Skylake: Print module type instead of id
+  ASoC: Intel: Skylake: Release topology when we are done with it
+  ASoC: Intel: NHLT: Fix debug print format
 
-ACK, both look good to me.
-I also re-ran reproducer with this series applied on top of 5.2.10, it PASS-ed.
+ include/sound/soc-dapm.h               |  3 +++
+ sound/soc/intel/common/sst-ipc.c       |  2 ++
+ sound/soc/intel/skylake/skl-debug.c    |  2 +-
+ sound/soc/intel/skylake/skl-messages.c |  5 +++--
+ sound/soc/intel/skylake/skl-nhlt.c     |  2 +-
+ sound/soc/intel/skylake/skl-topology.c | 20 ++++++++++----------
+ sound/soc/intel/skylake/skl.h          |  1 -
+ sound/soc/soc-topology.c               |  6 ------
+ 8 files changed, 20 insertions(+), 21 deletions(-)
 
-Thanks,
-Jan
+-- 
+2.17.1
+
