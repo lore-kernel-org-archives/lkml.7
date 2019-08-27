@@ -2,195 +2,93 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED7CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81DDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4950A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jvkbNv9j"
+	by mail.kernel.org (Postfix) with ESMTP id BEE9B206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566893602;
+	bh=CKYGBamWBOWK2xoHlxxOJDpskW438wqkCT5TlLo9dj0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MR8BhuwtZTRS86iMJcUdmgx4FbTdNu6lF+vvAPUZuI41vXbG4I7HBJ3WcPg5/MKxP
+	 BkY790zPrW/SlhZPgeJSIIqjElWRpvdZx9eRbKJiFrBmFyG5ggUBuIdLVgL+nfept2
+	 YiXPf/cl8mOP2jiA4N4aLkYgBNr4Af8jdmx5AAlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbfH0INQ (ORCPT
+        id S1730583AbfH0H6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:13:16 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:57857 "EHLO pegase1.c-s.fr"
+        Tue, 27 Aug 2019 03:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfH0INL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:13:11 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46HhT06QfmzB09Zv;
-        Tue, 27 Aug 2019 10:13:08 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jvkbNv9j; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7eBVHiy23uDi; Tue, 27 Aug 2019 10:13:08 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46HhT053zkzB09Zn;
-        Tue, 27 Aug 2019 10:13:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566893588; bh=yekcWG/d0H4aoizUdD+G2UyFFVKONjNMIvJn30XRWwU=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=jvkbNv9jN3Ov0/K9ifNJDh8Zpw0XKxesk5hWFsH7qYmmjxmeNZsgT6TRW8+9z3IXI
-         n2uHEZ4mZW8KatCHUT601Dj3H+Te/qoJvZ8W2Nk77TKwxDo3qhEly8f0RE6aLYsyDR
-         UXha5+UwGWkzEOLpHQDOlMLL90xYjniDirT0AH64=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BD2088B7F6;
-        Tue, 27 Aug 2019 10:13:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id DhOBYalMqP8m; Tue, 27 Aug 2019 10:13:09 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FEA88B74C;
-        Tue, 27 Aug 2019 10:13:09 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id EC1CD696D8; Tue, 27 Aug 2019 08:13:08 +0000 (UTC)
-Message-Id: <81f39fa06ae582f4a783d26abd2b310204eba8f4.1566893505.git.christophe.leroy@c-s.fr>
-In-Reply-To: <0f7e164afb5d1b022441559fe5a999bb6d3c0a23.1566893505.git.christophe.leroy@c-s.fr>
-References: <0f7e164afb5d1b022441559fe5a999bb6d3c0a23.1566893505.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 2/2] powerpc: cleanup hw_irq.h
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 27 Aug 2019 08:13:08 +0000 (UTC)
+        id S1730940AbfH0H6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:58:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A923217F5;
+        Tue, 27 Aug 2019 07:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892689;
+        bh=CKYGBamWBOWK2xoHlxxOJDpskW438wqkCT5TlLo9dj0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ePRXt3hdghbgXN+r4VlIU/JktiKRCUJxPwOoPp2FnXLN4YpvdkQlTeVZAsCfVgPij
+         J0/6VDhBtgJmRMmQpAMsT77X/sEDrSMtnA5V7CbBG2R06Sm/tuQ4QtV4zrWo3K8lIn
+         /jO6LWJ60+G+LR7I+RZAEJP3N1esMSeL7G7s0X9w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 79/98] dm space map metadata: fix missing store of apply_bops() return value
+Date:   Tue, 27 Aug 2019 09:50:58 +0200
+Message-Id: <20190827072722.249767443@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
+References: <20190827072718.142728620@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SET_MSR_EE() is just use in this file and doesn't provide
-any added value compared to mtmsr(). Drop it.
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-Add macros to use wrtee/wrteei insn.
+commit ae148243d3f0816b37477106c05a2ec7d5f32614 upstream.
 
-Replace #ifdefs by IS_ENABLED()
+In commit 6096d91af0b6 ("dm space map metadata: fix occasional leak
+of a metadata block on resize"), we refactor the commit logic to a new
+function 'apply_bops'.  But when that logic was replaced in out() the
+return value was not stored.  This may lead out() returning a wrong
+value to the caller.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 6096d91af0b6 ("dm space map metadata: fix occasional leak of a metadata block on resize")
+Cc: stable@vger.kernel.org
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/include/asm/hw_irq.h | 57 ++++++++++++++++++---------------------
- arch/powerpc/include/asm/reg.h    |  2 ++
- 2 files changed, 28 insertions(+), 31 deletions(-)
+ drivers/md/persistent-data/dm-space-map-metadata.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
-index 32a18f2f49bc..c25d57f25a8b 100644
---- a/arch/powerpc/include/asm/hw_irq.h
-+++ b/arch/powerpc/include/asm/hw_irq.h
-@@ -226,8 +226,8 @@ static inline bool arch_irqs_disabled(void)
- #endif /* CONFIG_PPC_BOOK3S */
+--- a/drivers/md/persistent-data/dm-space-map-metadata.c
++++ b/drivers/md/persistent-data/dm-space-map-metadata.c
+@@ -249,7 +249,7 @@ static int out(struct sm_metadata *smm)
+ 	}
  
- #ifdef CONFIG_PPC_BOOK3E
--#define __hard_irq_enable()	asm volatile("wrteei 1" : : : "memory")
--#define __hard_irq_disable()	asm volatile("wrteei 0" : : : "memory")
-+#define __hard_irq_enable()	wrteei(1)
-+#define __hard_irq_disable()	wrteei(0)
- #else
- #define __hard_irq_enable()	__mtmsrd(MSR_EE|MSR_RI, 1)
- #define __hard_irq_disable()	__mtmsrd(MSR_RI, 1)
-@@ -280,8 +280,6 @@ extern void force_external_irq_replay(void);
+ 	if (smm->recursion_count == 1)
+-		apply_bops(smm);
++		r = apply_bops(smm);
  
- #else /* CONFIG_PPC64 */
+ 	smm->recursion_count--;
  
--#define SET_MSR_EE(x)	mtmsr(x)
--
- static inline unsigned long arch_local_save_flags(void)
- {
- 	return mfmsr();
-@@ -289,47 +287,44 @@ static inline unsigned long arch_local_save_flags(void)
- 
- static inline void arch_local_irq_restore(unsigned long flags)
- {
--#if defined(CONFIG_BOOKE)
--	asm volatile("wrtee %0" : : "r" (flags) : "memory");
--#else
--	mtmsr(flags);
--#endif
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrtee(flags);
-+	else
-+		mtmsr(flags);
- }
- 
- static inline unsigned long arch_local_irq_save(void)
- {
- 	unsigned long flags = arch_local_save_flags();
--#ifdef CONFIG_BOOKE
--	asm volatile("wrteei 0" : : : "memory");
--#elif defined(CONFIG_PPC_8xx)
--	wrtspr(SPRN_EID);
--#else
--	SET_MSR_EE(flags & ~MSR_EE);
--#endif
-+
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrteei(0);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_EID);
-+	else
-+		mtmsr(flags & ~MSR_EE);
-+
- 	return flags;
- }
- 
- static inline void arch_local_irq_disable(void)
- {
--#ifdef CONFIG_BOOKE
--	asm volatile("wrteei 0" : : : "memory");
--#elif defined(CONFIG_PPC_8xx)
--	wrtspr(SPRN_EID);
--#else
--	arch_local_irq_save();
--#endif
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrteei(0);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_EID);
-+	else
-+		mtmsr(mfmsr() & ~MSR_EE);
- }
- 
- static inline void arch_local_irq_enable(void)
- {
--#ifdef CONFIG_BOOKE
--	asm volatile("wrteei 1" : : : "memory");
--#elif defined(CONFIG_PPC_8xx)
--	wrtspr(SPRN_EIE);
--#else
--	unsigned long msr = mfmsr();
--	SET_MSR_EE(msr | MSR_EE);
--#endif
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrteei(1);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_EIE);
-+	else
-+		mtmsr(mfmsr() | MSR_EE);
- }
- 
- static inline bool arch_irqs_disabled_flags(unsigned long flags)
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index b17ee25df226..04896dd09455 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -1361,6 +1361,8 @@ static inline void mtmsr_isync(unsigned long val)
- #endif
- #define wrtspr(rn)	asm volatile("mtspr " __stringify(rn) ",0" : \
- 				     : : "memory")
-+#define wrtee(val)	asm volatile("wrtee %0" : : "r" (val) : "memory")
-+#define wrteei(val)	asm volatile("wrteei %0" : : "i" (val) : "memory")
- 
- extern unsigned long msr_check_and_set(unsigned long bits);
- extern bool strict_msr_control;
--- 
-2.13.3
+
 
