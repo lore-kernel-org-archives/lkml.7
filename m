@@ -2,40 +2,42 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A67C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A07C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB4922CED
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494C821883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730939AbfH0TRD (ORCPT
+        id S1731033AbfH0TRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:17:03 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:38840 "EHLO
+        Tue, 27 Aug 2019 15:17:09 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:38883 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730237AbfH0TRC (ORCPT
+        with ESMTP id S1730962AbfH0TRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:17:02 -0400
+        Tue, 27 Aug 2019 15:17:08 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 27 Aug 2019 22:16:59 +0300
+        with ESMTPS (AES256-SHA encrypted); 27 Aug 2019 22:17:05 +0300
 Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x7RJGuGq026842;
-        Tue, 27 Aug 2019 22:16:57 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x7RJGuGt026842;
+        Tue, 27 Aug 2019 22:17:03 +0300
 From:   Parav Pandit <parav@mellanox.com>
 To:     alex.williamson@redhat.com, jiri@mellanox.com,
         kwankhede@nvidia.com, cohuck@redhat.com, davem@davemloft.net
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, Parav Pandit <parav@mellanox.com>
-Subject: [PATCH v1 0/5] Introduce variable length mdev alias
-Date:   Tue, 27 Aug 2019 14:16:49 -0500
-Message-Id: <20190827191654.41161-1-parav@mellanox.com>
+Subject: [PATCH v1 3/5] mdev: Expose mdev alias in sysfs tree
+Date:   Tue, 27 Aug 2019 14:16:52 -0500
+Message-Id: <20190827191654.41161-4-parav@mellanox.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190826204119.54386-1-parav@mellanox.com>
+In-Reply-To: <20190827191654.41161-1-parav@mellanox.com>
 References: <20190826204119.54386-1-parav@mellanox.com>
+ <20190827191654.41161-1-parav@mellanox.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,92 +45,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To have consistent naming for the netdevice of a mdev and to have
-consistent naming of the devlink port [1] of a mdev, which is formed using
-phys_port_name of the devlink port, current UUID is not usable because
-UUID is too long.
+Expose the optional alias for an mdev device as a sysfs attribute.
+This way, userspace tools such as udev may make use of the alias, for
+example to create a netdevice name for the mdev.
 
-UUID in string format is 36-characters long and in binary 128-bit.
-Both formats are not able to fit within 15 characters limit of netdev
-name.
-
-It is desired to have mdev device naming consistent using UUID.
-So that widely used user space framework such as ovs [2] can make use
-of mdev representor in similar way as PCIe SR-IOV VF and PF representors.
-
-Hence,
-(a) mdev alias is created which is derived using sha1 from the mdev name.
-(b) Vendor driver describes how long an alias should be for the child mdev
-created for a given parent.
-(c) Mdev aliases are unique at system level.
-(d) alias is created optionally whenever parent requested.
-This ensures that non networking mdev parents can function without alias
-creation overhead.
-
-This design is discussed at [3].
-
-An example systemd/udev extension will have,
-
-1. netdev name created using mdev alias available in sysfs.
-
-mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-mdev 12 character alias=cd5b146a80a5
-
-netdev name of this mdev = enmcd5b146a80a5
-Here en = Ethernet link
-m = mediated device
-
-2. devlink port phys_port_name created using mdev alias.
-devlink phys_port_name=pcd5b146a80a5
-
-This patchset enables mdev core to maintain unique alias for a mdev.
-
-Patch-1 Introduces mdev alias using sha1.
-Patch-2 Ensures that mdev alias is unique in a system.
-Patch-3 Exposes mdev alias in a sysfs hirerchy.
-Patch-4 Extends mtty driver to optionally provide alias generation.
-This also enables to test UUID based sha1 collision and trigger
-error handling for duplicate sha1 results.
-
-In future when networking driver wants to use mdev alias, mdev_alias()
-API will be added to derive devlink port name.
-
-[1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
-[2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
-[3] https://patchwork.kernel.org/cover/11084231/
+Signed-off-by: Parav Pandit <parav@mellanox.com>
 
 ---
 Changelog:
-
 v0->v1:
- - Addressed comments from Alex Williamson, Cornelia Hunk and Mark Bloch
- - Moved alias length check outside of the parent lock
- - Moved alias and digest allocation from kvzalloc to kzalloc
- - &alias[0] changed to alias
- - alias_length check is nested under get_alias_length callback check
- - Changed comments to start with an empty line
- - Added comment where alias memory ownership is handed over to mdev device
- - Fixed cleaunup of hash if mdev_bus_register() fails
- - Updated documentation for new sysfs alias file
- - Improved commit logs to make description more clear
- - Fixed inclusiong of alias for NULL check
- - Added ratelimited debug print for sha1 hash collision error
+ - Addressed comments from Cornelia Huck
+ - Updated commit description
+---
+ drivers/vfio/mdev/mdev_sysfs.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Parav Pandit (5):
-  mdev: Introduce sha1 based mdev alias
-  mdev: Make mdev alias unique among all mdevs
-  mdev: Expose mdev alias in sysfs tree
-  mdev: Update sysfs documentation
-  mtty: Optionally support mtty alias
-
- .../driver-api/vfio-mediated-device.rst       |   5 +
- drivers/vfio/mdev/mdev_core.c                 | 117 +++++++++++++++++-
- drivers/vfio/mdev/mdev_private.h              |   5 +-
- drivers/vfio/mdev/mdev_sysfs.c                |  26 +++-
- include/linux/mdev.h                          |   4 +
- samples/vfio-mdev/mtty.c                      |  10 ++
- 6 files changed, 157 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+index 43afe0e80b76..59f4e3cc5233 100644
+--- a/drivers/vfio/mdev/mdev_sysfs.c
++++ b/drivers/vfio/mdev/mdev_sysfs.c
+@@ -246,7 +246,20 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 
+ static DEVICE_ATTR_WO(remove);
+ 
++static ssize_t alias_show(struct device *device,
++			  struct device_attribute *attr, char *buf)
++{
++	struct mdev_device *dev = mdev_from_dev(device);
++
++	if (!dev->alias)
++		return -EOPNOTSUPP;
++
++	return sprintf(buf, "%s\n", dev->alias);
++}
++static DEVICE_ATTR_RO(alias);
++
+ static const struct attribute *mdev_device_attrs[] = {
++	&dev_attr_alias.attr,
+ 	&dev_attr_remove.attr,
+ 	NULL,
+ };
 -- 
 2.19.2
 
