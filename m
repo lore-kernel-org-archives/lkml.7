@@ -2,86 +2,124 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59749C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45B7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2B92186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7763121881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566936477;
-	bh=QZjwRdAPYWfUgbH9juLakmFXcWsOoi5vR51aUyppXwU=;
+	s=default; t=1566936539;
+	bh=9ReAXxep3hy02J0z0nU/ax3nLum+IMdJGBTl2ddAfGc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KJQ2WAmFtUZhZN0le2QjGov3/Ib6XLp/qtyJXVBXKeIYErfntaeSArB4V8rrU2T3p
-	 emBH2uzsknwRd1B+yZNusmtop8UwSuErFmGuH580JdWGintXEaYAq6hjJJ5wCH12pH
-	 0gAQE40PVZL2MogXK6ndiU7dtUrg7QFjvT/tJ9HY=
+	b=rAomR3upErI3HcfyH1G05WwVwvuEcAVhtyrkpfKBrc7FIOk/biF18botTTxjHJsXs
+	 WVFUDFXsfH9sGwqUIYKZqXEdQitH/DYn4CGATpBzzt4TJTAiTb9999+U5Fp3qV3lVs
+	 lShlhh81sSL6nxDng8e48V7gRdBB7k/gCrSmMtqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfH0UH4 (ORCPT
+        id S1731333AbfH0UI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:07:56 -0400
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:38658 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729626AbfH0UHz (ORCPT
+        Tue, 27 Aug 2019 16:08:58 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35410 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbfH0UI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:07:55 -0400
-Received: by mail-oi1-f181.google.com with SMTP id q8so256675oij.5;
-        Tue, 27 Aug 2019 13:07:55 -0700 (PDT)
+        Tue, 27 Aug 2019 16:08:57 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a127so272523oii.2;
+        Tue, 27 Aug 2019 13:08:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bWyl2iisBFJ2oYdkoeRFrWQZ6jcjMOLOjACZ2X7fsGE=;
-        b=AcoratEZIzdCRNgimmbDMSXVJ7ocXG1n1PL4M5d8oUbDFu2VcsHrGURNQAnLU9DtiV
-         qWYFV6hZo2s5HZXSYS07jfsVRnZT+4aHnhbp3+DgoTERwnEjUwXyfz9EPZqPLFsgGE1w
-         JbYqlfHg4d/cMuBnLG3coDBIMsHNKDSj8qBGLBggbBAdHajKjXP/ThCyDRvXODd0M5ed
-         0DgTmsa+bHmM0uOdk5PJmhTmXD4zBY0s/fPsZ/VqFQgLdYZ7dCN5BzFaoi08xOCS3U0v
-         dZ0e21LZOthNJB9kFBVc3XxuzwoAsJQrbUatsR4AhhlxlYR7NIP9Vqst458FFM2fSXzZ
-         p/oA==
-X-Gm-Message-State: APjAAAXRErAxK7jREZqoHRb8V4q1flq/yEvvBQ/2dyrZj/e9/fB/PAQv
-        eAiKP66g72TUXjsvOxYlQg==
-X-Google-Smtp-Source: APXvYqwncVMEJP4yiKHQbSJqXQLy47/hf6kU1kBVORl25CP99fakof14E/vcUdgsmyARx//2Z5umVw==
-X-Received: by 2002:aca:190e:: with SMTP id l14mr360835oii.20.1566936474563;
-        Tue, 27 Aug 2019 13:07:54 -0700 (PDT)
+        bh=Ng/ondwrrnfBxKPNMtYoFquttD4noee2/m3ndHQDx/0=;
+        b=Ib0+i8CMaAbtL7/7qIyHGy4Ferr4vHLU0YpAYTrdWf5gzpQy6TdLnJ1CYOpQ+U3X8e
+         zQRAo7Lnbe6KNhW8Iu6LahuZD2lcBVIzAY/7scmnGyG05Y0Xg30wPUPTMZ3iiuYti1WS
+         5UYn+6vvNxxYmQxqZm4YjOBoDi1jA7EHadn1JmI4OzmvYdq7TxqkElpXjNNkgPFf83au
+         lNo3bSh0zrcoUZOzewiaVFgSCXt1hEeGfp30f/0KLqIxsWOCTNuo8LGRSLq+TJvEKhUp
+         pttukgkE7opZtSEZAy6B8/CkCqGvPf8aAN2SF64jPM+Mf1K7+9oJHmsNJIdF6Bex2oRW
+         GUJw==
+X-Gm-Message-State: APjAAAXPXh0x97zhAhKoMLqFLB9+RMtkxYpen9sSTTpFDPJgj2957EHK
+        fFKQgaVUPPdaIVAaiv7DMA==
+X-Google-Smtp-Source: APXvYqzzs9eWBhou0aG3BlVhbCRM/HDy6khsII/8Kx06DMoap2M/MFjtTc2tykVoa1mrUGNt8UVn6A==
+X-Received: by 2002:aca:3388:: with SMTP id z130mr329140oiz.81.1566936536648;
+        Tue, 27 Aug 2019 13:08:56 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n17sm134806otl.21.2019.08.27.13.07.53
+        by smtp.gmail.com with ESMTPSA id l16sm135580otq.42.2019.08.27.13.08.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 13:07:53 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 15:07:53 -0500
+        Tue, 27 Aug 2019 13:08:56 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 15:08:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Wen He <wen.he_1@nxp.com>
-Cc:     linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
-        Wen He <wen.he_1@nxp.com>
-Subject: Re: [v4 1/2] dt/bindings: display: Add optional property node define
- for Mali DP500
-Message-ID: <20190827200753.GA5081@bogus>
-References: <20190822021135.10288-1-wen.he_1@nxp.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net, mark.rutland@arm.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br,
+        leonard.crestez@nxp.com, schnitzeltony@gmail.com,
+        u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
+Message-ID: <20190827200855.GA5260@bogus>
+References: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822021135.10288-1-wen.he_1@nxp.com>
+In-Reply-To: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 10:11:34 +0800, Wen He wrote:
-> Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
-> This property describe the ARQoS levels of DP500's QoS signaling.
+On Wed, Aug 21, 2019 at 10:37:40PM -0400, Anson Huang wrote:
+> Add the watchdog bindings for Freescale i.MX7ULP.
 > 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> No changes.
+> ---
+>  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> new file mode 100644
+> index 0000000..d83fc5c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> @@ -0,0 +1,22 @@
+> +* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx7ulp-wdt"
+> +- reg : Should contain WDT registers location and length
+> +- interrupts : Should contain WDT interrupt
+> +- clocks: Should contain a phandle pointing to the gated peripheral clock.
+> +
+> +Optional properties:
+> +- timeout-sec : Contains the watchdog timeout in seconds
+> +
+> +Examples:
+> +
+> +wdog1: wdog@403d0000 {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+watchdog@...
+
+With that,
+
+Reviewed-by: Rob Herring <rohb@kernel.org>
+
+> +	compatible = "fsl,imx7ulp-wdt";
+> +	reg = <0x403d0000 0x10000>;
+> +	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
+> +	timeout-sec = <40>;
+> +};
+> -- 
+> 2.7.4
+> 
