@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6A3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D26C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B3E2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1281206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893715;
-	bh=wmFpTMDmsRASVLtfJC54RKuVGJYmDT4P4EllHugwNwI=;
+	s=default; t=1566893726;
+	bh=qXVSr0YLceTXHfH0UDfxs8Fkzg59EqLQSN1g3fRdwZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPfpndmJBJ/bOJMaAUB7ClTXDDP3LrD4sPhzKoNZGafhaMIT5q5z5AfJWsPtAGsOe
-	 TYP2h6RBHLB6lruJ1TsO0uiDBeLDVUFzPFMoF/Dzqb4l36nwYhi9zpha4M+5QbJBIo
-	 zES4WudwC2Dzk2ccwkXA1Hn/rv5x+KQOCC0kvch8=
+	b=wCBJMd3T9XYPTHqTYB5EbDEvobsSR2BA7/q7xpvlhd8Boupc4ad+EIK8RjNn3w2zb
+	 l1P9pHPIiXveSq1qHc6KV4lLQikW2wzbOeNI3xeSJvBZLUW442GSEsopOipkVaN3ql
+	 ZEF+YDHD1GfM7NOJJC21fnLrkYq9/Gp9RI/g+s4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731634AbfH0IPO (ORCPT
+        id S1731065AbfH0IP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:15:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729585AbfH0Hzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:50 -0400
+        id S1730318AbfH0HzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B15217F5;
-        Tue, 27 Aug 2019 07:55:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87DAD206BF;
+        Tue, 27 Aug 2019 07:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892550;
-        bh=wmFpTMDmsRASVLtfJC54RKuVGJYmDT4P4EllHugwNwI=;
+        s=default; t=1566892521;
+        bh=qXVSr0YLceTXHfH0UDfxs8Fkzg59EqLQSN1g3fRdwZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YVc4C0uOesN+JTmE4nXy77GPDT4mtli1xfSr/sUnOZgBBLZ8IpeZQXdkK2pUJKSyO
-         UX2YmozrQs5S5lPTkAVIEEHYNesly2WWArUSy7jOXsSBsMFVB50hFYvYw8JSfD++04
-         qMjAX6/kdNifbG0obM0byWBZOC483lBwocWo1aek=
+        b=rb2QELoSX4GyoLNGkentA4A3Jn04E0HNBrUxkXyKa04b0GI5N1rvU7goTuQb53gdY
+         o8T8zXzTqzS6cbNHcrRLbEbrmeUoG62skzB4e8qo2TYzYJdL/pDdnyiFLed4mlexoJ
+         tosMxwHDaaodjOGbZexfeypkJ3/Be0yXoFOfaf24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/98] can: sja1000: force the string buffer NULL-terminated
-Date:   Tue, 27 Aug 2019 09:50:10 +0200
-Message-Id: <20190827072719.820113845@linuxfoundation.org>
+Subject: [PATCH 4.19 22/98] mac80211_hwsim: Fix possible null-pointer dereferences in hwsim_dump_radio_nl()
+Date:   Tue, 27 Aug 2019 09:50:01 +0200
+Message-Id: <20190827072719.418541337@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd28aa2e056cd1ea79fc5f24eed0ce868c6cab5c ]
+[ Upstream commit b55f3b841099e641bdb2701d361a4c304e2dbd6f ]
 
-strncpy() does not ensure NULL-termination when the input string size
-equals to the destination buffer size IFNAMSIZ. The output string
-'name' is passed to dev_info which relies on NULL-termination.
+In hwsim_dump_radio_nl(), when genlmsg_put() on line 3617 fails, hdr is
+assigned to NULL. Then hdr is used on lines 3622 and 3623:
+    genl_dump_check_consistent(cb, hdr);
+    genlmsg_end(skb, hdr);
 
-Use strlcpy() instead.
+Thus, possible null-pointer dereferences may occur.
 
-This issue is identified by a Coccinelle script.
+To fix these bugs, hdr is used here when it is not NULL.
 
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20190729082332.28895-1-baijiaju1990@gmail.com
+[put braces on all branches]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/sja1000/peak_pcmcia.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mac80211_hwsim.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/can/sja1000/peak_pcmcia.c b/drivers/net/can/sja1000/peak_pcmcia.c
-index b8c39ede7cd51..179bfcd541f2f 100644
---- a/drivers/net/can/sja1000/peak_pcmcia.c
-+++ b/drivers/net/can/sja1000/peak_pcmcia.c
-@@ -487,7 +487,7 @@ static void pcan_free_channels(struct pcan_pccard *card)
- 		if (!netdev)
- 			continue;
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 7cd428c0af433..ce2dd06af62e8 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3502,10 +3502,12 @@ static int hwsim_dump_radio_nl(struct sk_buff *skb,
+ 		hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
+ 				  cb->nlh->nlmsg_seq, &hwsim_genl_family,
+ 				  NLM_F_MULTI, HWSIM_CMD_GET_RADIO);
+-		if (!hdr)
++		if (hdr) {
++			genl_dump_check_consistent(cb, hdr);
++			genlmsg_end(skb, hdr);
++		} else {
+ 			res = -EMSGSIZE;
+-		genl_dump_check_consistent(cb, hdr);
+-		genlmsg_end(skb, hdr);
++		}
+ 	}
  
--		strncpy(name, netdev->name, IFNAMSIZ);
-+		strlcpy(name, netdev->name, IFNAMSIZ);
- 
- 		unregister_sja1000dev(netdev);
- 
+ done:
 -- 
 2.20.1
 
