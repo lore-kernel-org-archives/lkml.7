@@ -2,129 +2,119 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A40DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860FCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6A020856
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:35:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="erWudouu"
+	by mail.kernel.org (Postfix) with ESMTP id 53FE520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566945439;
+	bh=5hhNkPuo5zduH08jiDJRzDRXxl4ezZa7urb6ifogFS0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IbH4okJChfM0gQ+ssUvUG+VtzqOVhooBk4jtZQtcxz2YG2l/ZANjEFaO+HK6q4aFU
+	 XqS/ZLh3IEGocGThGMaPbj6YLQlSKETcNDS3/90XyhqAE2M+DsSvq5sW1PqqY0p/QJ
+	 hJDl6z18OhWM63WIUDct3UGXxNBLSQQBXXP1himQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfH0WfN (ORCPT
+        id S1726234AbfH0WhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:35:13 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35819 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfH0WfM (ORCPT
+        Tue, 27 Aug 2019 18:37:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38127 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfH0WhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:35:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d85so328709pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 15:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=jdwDMeG5Gy8r+selbq8n2uifwalgXCtHNkU64dqsTgM=;
-        b=erWudouuqQ0Yh6EkCEe6Xx4WugJd7xm8WMPsfPht6ox6w5IPtS+q29u/A3mTFBZEJH
-         LTadr2zS+89ffAaJDt+4ZaeHq8EO/BwyhyWXOdmun2Z48Yuk1NzOGRvhk8itUKqyW9qk
-         8rG/O3+euT/5hvx3SWA9cke3mhhXIEApT0fnMlDy94G+6fKTrakyFJ3JCZVaUG4VOXMI
-         ayIIGSg+l9SMXi0NnVNxx8fPKRwgOJgtg1MbMsNqzMyqSr+MwJqxSrGpYN3ymU5ZFb85
-         Q5vtcLg87ILuyBPxJBjVphvQZOQQRva8uBM4Q4mSwXZIJkpT+0bi4iFCbPRlNeCjvbpq
-         hNSg==
+        Tue, 27 Aug 2019 18:37:18 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r20so807032ota.5;
+        Tue, 27 Aug 2019 15:37:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=jdwDMeG5Gy8r+selbq8n2uifwalgXCtHNkU64dqsTgM=;
-        b=KJSVFQ7BhbHbPz2+2i3/xOqK34QO2CseMw8lE32pqoLxIzszfPRAaznCbCb38Ey7M8
-         H6B3qSVTbwKkMBEJodDS83Ops5hI5kkL3klrMA/qezCBIjClHgmHwJOkyMIh9W3+XASz
-         COKhgE9zLILiSaQ4Eho6N+ddEqXNjfxjjqdQ0QAh8ique/MCC8vS+gjmj6JA0EX8c//7
-         DOXYQY16wjxgy5kTtnmr1ySBcZEhv8kqfF/qQ77DxYk6cO3fpEvbaRkHNy2HXO9gFl1H
-         MUFK28CZkZr5TkdT2EHLEHowKJeWgtaW6e/OobwpTPWesHH92Ze7jSwU1pIqIT7LE0CQ
-         iblQ==
-X-Gm-Message-State: APjAAAVCFbGNhdeXSqK1CI0TROyTKFopJP6dx9nO0mS4DCoE3qYRF3TH
-        D+Guoja6aRyGlD+8m+y2EgHnAQ==
-X-Google-Smtp-Source: APXvYqxRh6iZPF7EBcmWzywBoXlbYwRouh4Bcrsl9kudC14pWnkhfyepcM10JRQLzhwAV0ZpX28itQ==
-X-Received: by 2002:a63:3009:: with SMTP id w9mr737348pgw.260.1566945312087;
-        Tue, 27 Aug 2019 15:35:12 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:cc35:e750:308e:47f])
-        by smtp.gmail.com with ESMTPSA id d18sm364839pgi.40.2019.08.27.15.35.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 15:35:11 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] 0/6] arm64: meson-sm1: add support for DVFS
-In-Reply-To: <7h8srexw1i.fsf@baylibre.com>
-References: <20190826072539.27725-1-narmstrong@baylibre.com> <1jblwc6wjq.fsf@starbuckisacylon.baylibre.com> <7h8srexw1i.fsf@baylibre.com>
-Date:   Tue, 27 Aug 2019 15:35:11 -0700
-Message-ID: <7h1rx6uti8.fsf@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=zauk4U8OoEi1FBo/2vpUOZ45fQEWaY7iuSdGeCHe83s=;
+        b=Lu2AZA2CjEvpqaTyPYa8p1B21lH48/VPBt6GaMqK9fp0al0gFfO7B8n2LD0IabAzjE
+         SOha1LoqMbrbzcrs4pVkzMRFG+A3E7wWSt6SQZ3Yn0gHtI9vtAPkt7kt1ikdN/B4JkUY
+         R8UC+9D1KsZL4ADPbL9ETW7OLieyyFCGW7PUphc9LcSeYNhw/S4h0yWXYeWxzj0A9XrA
+         J295WtsH1WWIFCLoLmDtDL6196XqLMabZKEWBKS4DTsXJbBFBHY4G9GPYA2Q3eVIf6St
+         dhhKztdxw/+dhW/WAZX/5/ZJ/chdAQ8QSbo4Kyr++VKzzKPmG3mf4KYZ0IhC4y2T7fW8
+         CfIQ==
+X-Gm-Message-State: APjAAAWzjc9QL8KAJrDYWzxB9InMhPDOKVb1E54Gi4Z/hapXbvtuwBQz
+        iap1ZS0H20nbRkU6BI+SFQ==
+X-Google-Smtp-Source: APXvYqwyWCyxbtq92eeNM9609mAefZjtCS/Vde8B3KkemlEEUxzPpD1Evn5Zu509yiJdHmGHVTcsHg==
+X-Received: by 2002:a05:6830:1345:: with SMTP id r5mr848280otq.158.1566945437274;
+        Tue, 27 Aug 2019 15:37:17 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q85sm200903oic.52.2019.08.27.15.37.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 15:37:16 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 17:37:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Chas Williams <3chas3@gmail.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dt-bindings: misc: atmel-ssc: LRCLK from TF/RF
+ pin option
+Message-ID: <20190827223716.GA31605@bogus>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <9b85d5a7c7e788e9ed87d020323ad9292e3aeab7.1566677788.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9b85d5a7c7e788e9ed87d020323ad9292e3aeab7.1566677788.git.mirq-linux@rere.qmqm.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+On Sat, Aug 24, 2019 at 10:26:55PM +0200, Michał Mirosław wrote:
+> Add single-pin LRCLK source options for Atmel SSC module.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> 
+> ---
+>   v2: split from implementation patch
+> 
+> ---
+>  Documentation/devicetree/bindings/misc/atmel-ssc.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> index f9fb412642fe..c98e96dbec3a 100644
+> --- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> +++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> @@ -24,6 +24,11 @@ Optional properties:
+>         this parameter to choose where the clock from.
+>       - By default the clock is from TK pin, if the clock from RK pin, this
+>         property is needed.
+> +  - atmel,lrclk-from-tf-pin: bool property.
+> +  - atmel,lrclk-from-rf-pin: bool property.
+> +     - SSC in slave mode gets LRCLK from RF for receive and TF for transmit
+> +       data direction. This property makes both use single TF (or RF) pin
+> +       as LRCLK. At most one can be present.
 
-> Jerome Brunet <jbrunet@baylibre.com> writes:
->
->> On Mon 26 Aug 2019 at 09:25, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->>> Following DVFS support for the Amlogic G12A and G12B SoCs, this serie
->>> enables DVFS on the SM1 SoC for the SEI610 board.
->>>
->>> The SM1 Clock structure is slightly different because of the Cortex-A55
->>> core used, having the capability for each core of a same cluster to run
->>> at a different frequency thanks to the newly used DynamIQ Shared Unit.
->>>
->>> This is why SM1 has a CPU clock tree for each core and for DynamIQ Shared Unit,
->>> with a bypass mux to use the CPU0 instead of the dedicated trees.
->>>
->>> The DSU uses a new GP1 PLL as default clock, thus GP1 is added as read-only.
->>>
->>> The SM1 OPPs has been taken from the Amlogic Vendor tree, and unlike
->>> G12A only a single version of the SoC is available.
->>>
->>> Dependencies:
->>> - patch 6 is based on the "arm64: meson: add support for SM1 Power Domains" serie,
->>> 	but is not a strong dependency, it will work without
->>>
->>> Changes since v1:
->>> - exposed GP1, DSU and CPU 1,2,3 clock in patch 1
->>>
->>> Neil Armstrong (5):
->>>   dt-bindings: clk: meson: add sm1 periph clock controller bindings
->>>   clk: meson: g12a: add support for SM1 GP1 PLL
->>>   clk: meson: g12a: add support for SM1 DynamIQ Shared Unit clock
->>>   clk: meson: g12a: add support for SM1 CPU 1, 2 & 3 clocks
->>>   arm64: dts: meson-sm1-sei610: enable DVFS
->>>
->>>  .../bindings/clock/amlogic,gxbb-clkc.txt      |   1 +
->>>  .../boot/dts/amlogic/meson-sm1-sei610.dts     |  59 +-
->>>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  69 +++
->>>  drivers/clk/meson/g12a.c                      | 544 ++++++++++++++++++
->>>  drivers/clk/meson/g12a.h                      |  24 +-
->>>  include/dt-bindings/clock/g12a-clkc.h         |   5 +
->>>  6 files changed, 697 insertions(+), 5 deletions(-)
->>
->> Applied 1 to 4
->
-> Will there be a stable tag I can use for that so I can apply patch 5?
+A single property taking 1 of possible 2 values would prevent the error 
+of more than 1 property present.
 
-Ah, I should've finished reading the list before asking.  I now see your
-clock PR.  I'll use this tag[1] unless there's a different one I should
-use.
-
-Kevin
-
-[1] git://github.com/BayLibre/clk-meson.git tags/clk-meson-v5.4-2
+>    - #sound-dai-cells: Should contain <0>.
+>       - This property makes the SSC into an automatically registered DAI.
+>  
+> -- 
+> 2.20.1
+> 
