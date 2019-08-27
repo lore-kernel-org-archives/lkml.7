@@ -2,186 +2,143 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C0BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022DBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E66206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98992064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BE9fQgG0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LfNIE058"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfH0Vuo (ORCPT
+        id S1726421AbfH0Vuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:50:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44261 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfH0Vuo (ORCPT
+        Tue, 27 Aug 2019 17:50:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfH0Vuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:50:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so177962plr.11;
-        Tue, 27 Aug 2019 14:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4aREPVUJAE3wJMTq0SKsAn5ZXXhvSa4MM06jPfKs0zg=;
-        b=BE9fQgG0SPdpbj1CmdPkgTysBwpST6VV/oPjvbzf+J6ngdyqpsnvWhCBjxb2cjPgRa
-         EmbwVqxEVl9utIDgXW/pB/OZXZ/Ijq6igFsDKOJCv/fk9S2D+i74UBpOL446NI4MT108
-         SZyPgDFW6E8exva9ogjC/SFMmyv5g8dvWOnzmKhEbzcEd3UMd4MWC9+CCU+vIvqS5xSE
-         lyGvm+bLHF5mLQPgli8sueMven2oLKyyORKW919bAjRwVCHxHxC2qiQy0ezAceCJ6hcU
-         ZcEjg6xnoLFozhkmy/30LZkVDx4Xi7UZxlp8ewi5c2laYqmmX4C9TtlQKAkra9FoAVZL
-         qdUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4aREPVUJAE3wJMTq0SKsAn5ZXXhvSa4MM06jPfKs0zg=;
-        b=jFzs569oG4J5yObq5MdAkVJ6bevO+k/n3Y0YjEaH/DUQOiwTCEXiepjKgujp8YCApy
-         O1oPxGGIkBLN1wimtTPiF3L1XGBBkgQMGCI0v854Bc0QijACRINbDNLOMnC6MWeGgMAa
-         LJrkoUadyQUsg3Lg5Y5dlkwvhghO7/H3lm/7Al3FDboemMJjLX1czXQ66DdZjESHH/W7
-         cgWiCkcvYPm/22x85ysRKM4SD3uzrD/8milEoTQgaI2xoEDZVjDEWMpSWgz/QaLU5/0O
-         nDad3rkEQEmCOEgiecoI2VvWbNKCGIPl8rLlpx39P9/9v6/RCzQSAXaBDPuF0AMK6WXj
-         jDwA==
-X-Gm-Message-State: APjAAAXMSDjOBSDw31o4ssCaHaULoDd7/Sr1cKNKa2X1mmUYvzwhBqjZ
-        WoQ4rDP3i+V+BjgrnhNsl7k=
-X-Google-Smtp-Source: APXvYqyZdAKl5zA4VN2QFCbDCL1mGWtSvdqVd6uaU80oAaOo819B7xX7AiPNynAkkYh+P6478UvRug==
-X-Received: by 2002:a17:902:ff16:: with SMTP id f22mr1058262plj.178.1566942213188;
-        Tue, 27 Aug 2019 14:43:33 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id l3sm171989pjq.18.2019.08.27.14.43.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 14:43:32 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/9] drm/msm/dpu: handle_frame_done() from vblank irq
-Date:   Tue, 27 Aug 2019 14:33:33 -0700
-Message-Id: <20190827213421.21917-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190827213421.21917-1-robdclark@gmail.com>
-References: <20190827213421.21917-1-robdclark@gmail.com>
+        Tue, 27 Aug 2019 17:50:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FB8pN+BfPxkb7VhVcHVNo4pDuBs87uFREFm8kjgxbXI=; b=LfNIE0589Ir9nLcNlwkc4H5Gr
+        q8+xmVwFYXlyGZIMD1twy/HYuEsVWkM29dacB5CxEQaq1LE+E7pmg0QDl8iIRE0VHaedB4giOhHJo
+        G+1tmfRtbau8m8fboQbiuo0Z8g0G7blndf4vbOs3WOTS4jVAjTsk2JkiFV2N5NndH947kxdWc5OhT
+        v2SvywIk5gES4IjtsmzvZ8FLv8b14R3I9Tv2QzchtvciiFiwBtf4rvuBzTHa4y9KaF6iJsPehkE3c
+        prqkLJ7NwyJt6aJNR1/Jt1twuPjSbhBN6XH+Tlkv8o0e8yLxawYLmTeSWnGnUwrRErTNARwt6d91a
+        9XSyawtYg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2jMN-00033M-19; Tue, 27 Aug 2019 21:50:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6036330768B;
+        Tue, 27 Aug 2019 23:50:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DA5CF203CEC05; Tue, 27 Aug 2019 23:50:35 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 23:50:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190827215035.GH2332@hirez.programming.kicks-ass.net>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, Aug 27, 2019 at 10:14:17PM +0100, Matthew Garrett wrote:
+> Apple have provided a sysctl that allows applications to indicate that 
+> specific threads should make use of core isolation while allowing 
+> the rest of the system to make use of SMT, and browsers (Safari, Firefox 
+> and Chrome, at least) are now making use of this. Trying to do something 
+> similar using cgroups seems a bit awkward. Would something like this be 
+> reasonable? 
 
-Previously the callback was called from whoever called wait_for_vblank(),
-but that isn't a great plan when wait_for_vblank() stops getting called,
-and results in frame_done_timer expiring.
+Sure; like I wrote earlier; I only did the cgroup thing because I was
+lazy and it was the easiest interface to hack on in a hurry.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      |  7 +-----
- .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  | 25 ++++++-------------
- 2 files changed, 9 insertions(+), 23 deletions(-)
+The rest of the ABI nonsense can 'trivially' be done later; if when we
+decide to actually do this.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index c3f7154017c4..e7354aef9805 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -311,12 +311,7 @@ static void dpu_crtc_frame_event_work(struct kthread_work *work)
- 				| DPU_ENCODER_FRAME_EVENT_PANEL_DEAD)) {
- 
- 		if (atomic_read(&dpu_crtc->frame_pending) < 1) {
--			/* this should not happen */
--			DRM_ERROR("crtc%d ev:%u ts:%lld frame_pending:%d\n",
--					crtc->base.id,
--					fevent->event,
--					ktime_to_ns(fevent->ts),
--					atomic_read(&dpu_crtc->frame_pending));
-+			/* ignore vblank when not pending */
- 		} else if (atomic_dec_return(&dpu_crtc->frame_pending) == 0) {
- 			/* release bandwidth and other resources */
- 			trace_dpu_crtc_frame_event_done(DRMID(crtc),
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 7c73b09894f0..b9c84fb4d4a1 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -324,6 +324,10 @@ static void dpu_encoder_phys_vid_vblank_irq(void *arg, int irq_idx)
- 
- 	/* Signal any waiting atomic commit thread */
- 	wake_up_all(&phys_enc->pending_kickoff_wq);
-+
-+	phys_enc->parent_ops->handle_frame_done(phys_enc->parent, phys_enc,
-+			DPU_ENCODER_FRAME_EVENT_DONE);
-+
- 	DPU_ATRACE_END("vblank_irq");
- }
- 
-@@ -483,8 +487,8 @@ static void dpu_encoder_phys_vid_get_hw_resources(
- 	hw_res->intfs[phys_enc->intf_idx - INTF_0] = INTF_MODE_VIDEO;
- }
- 
--static int _dpu_encoder_phys_vid_wait_for_vblank(
--		struct dpu_encoder_phys *phys_enc, bool notify)
-+static int dpu_encoder_phys_vid_wait_for_vblank(
-+		struct dpu_encoder_phys *phys_enc)
- {
- 	struct dpu_encoder_wait_info wait_info;
- 	int ret;
-@@ -499,10 +503,6 @@ static int _dpu_encoder_phys_vid_wait_for_vblank(
- 	wait_info.timeout_ms = KICKOFF_TIMEOUT_MS;
- 
- 	if (!dpu_encoder_phys_vid_is_master(phys_enc)) {
--		if (notify && phys_enc->parent_ops->handle_frame_done)
--			phys_enc->parent_ops->handle_frame_done(
--					phys_enc->parent, phys_enc,
--					DPU_ENCODER_FRAME_EVENT_DONE);
- 		return 0;
- 	}
- 
-@@ -512,20 +512,11 @@ static int _dpu_encoder_phys_vid_wait_for_vblank(
- 
- 	if (ret == -ETIMEDOUT) {
- 		dpu_encoder_helper_report_irq_timeout(phys_enc, INTR_IDX_VSYNC);
--	} else if (!ret && notify && phys_enc->parent_ops->handle_frame_done)
--		phys_enc->parent_ops->handle_frame_done(
--				phys_enc->parent, phys_enc,
--				DPU_ENCODER_FRAME_EVENT_DONE);
-+	}
- 
- 	return ret;
- }
- 
--static int dpu_encoder_phys_vid_wait_for_vblank(
--		struct dpu_encoder_phys *phys_enc)
--{
--	return _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, true);
--}
--
- static int dpu_encoder_phys_vid_wait_for_commit_done(
- 		struct dpu_encoder_phys *phys_enc)
- {
-@@ -615,7 +606,7 @@ static void dpu_encoder_phys_vid_disable(struct dpu_encoder_phys *phys_enc)
- 	 * scanout buffer) don't latch properly..
- 	 */
- 	if (dpu_encoder_phys_vid_is_master(phys_enc)) {
--		ret = _dpu_encoder_phys_vid_wait_for_vblank(phys_enc, false);
-+		ret = dpu_encoder_phys_vid_wait_for_vblank(phys_enc);
- 		if (ret) {
- 			atomic_set(&phys_enc->pending_kickoff_cnt, 0);
- 			DRM_ERROR("wait disable failed: id:%u intf:%d ret:%d\n",
--- 
-2.21.0
+And given MDS, I'm still not entirely convinced it all makes sense. If
+it were just L1TF, then yes, but now...
 
+> Having spoken to the Chrome team, I believe that the 
+> semantics we want are:
+> 
+> 1) A thread to be able to indicate that it should not run on the same 
+> core as anything not in posession of the same cookie
+> 2) Descendents of that thread to (by default) have the same cookie
+> 3) No other thread be able to obtain the same cookie
+> 4) Threads not be able to rejoin the global group (ie, threads can 
+> segregate themselves from their parent and peers, but can never rejoin 
+> that group once segregated)
+> 
+> but don't know if that's what everyone else would want.
+> 
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 094bb03b9cc2..5d411246d4d5 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -229,4 +229,5 @@ struct prctl_mm_map {
+>  # define PR_PAC_APDBKEY			(1UL << 3)
+>  # define PR_PAC_APGAKEY			(1UL << 4)
+>  
+> +#define PR_CORE_ISOLATE			55
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 12df0e5434b8..a054cfcca511 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2486,6 +2486,13 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  			return -EINVAL;
+>  		error = PAC_RESET_KEYS(me, arg2);
+>  		break;
+> +	case PR_CORE_ISOLATE:
+> +#ifdef CONFIG_SCHED_CORE
+> +		current->core_cookie = (unsigned long)current;
+
+This needs to then also force a reschedule of current. And there's the
+little issue of what happens if 'current' dies while its children live
+on, and current gets re-used for a new process and does this again.
+
+> +#else
+> +		result = -EINVAL;
+> +#endif
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+> 
+> 
+> -- 
+> Matthew Garrett | mjg59@srcf.ucam.org
