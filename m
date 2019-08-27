@@ -2,168 +2,139 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3474C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AB8206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC9C206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3RW4O/b"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="BCFXjOq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfH0NGg (ORCPT
+        id S1729765AbfH0NHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:06:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35112 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfH0NGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:06:36 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n4so12687617pgv.2;
-        Tue, 27 Aug 2019 06:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tLfakLGpMLvdTV8QFc4nFi+HIp0PsQAUDM5NCWw4kOM=;
-        b=e3RW4O/bkBNjJRXt0syqTSuQGa6iNaNuqgXq1e20CmuXTlkyv4RT1GXqxjJswj3P9n
-         /YdtWylwjfbPGSAQdoXp4eYTIbehmw1D9qGRsg1gTqCMVaKrxKQWjCdN86PKqUq51kRq
-         NR8qAB0zKrdjK75IhJeRlJgDOAXQNeFdgAjdFD4dBsx4aN9OEFmUQFHpIvf8vtA0Bj70
-         ket1ALJGUasj0Ii86eSbQCX2dj2wHIOF1zoAwi0pGp63B+/MuqFU13+jrGuTeNXLRXKG
-         6OQqyleuALUIjqcKCCtWtnbGPvmSg1mzEQWWArfw4basGrT1oA/gbONb+qvQ5t4qTte8
-         UQDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tLfakLGpMLvdTV8QFc4nFi+HIp0PsQAUDM5NCWw4kOM=;
-        b=pbHCZEAOLetKCRzGf5GsdRs6WElwESHdRdobz/kwaeb9+CxleZWf83EgnNYlTqSZmL
-         p+rMYNKNN6c2z7AZXG2EXdxzdWUN0m5Lc/P8WIgtZDGW0HuUIZY97oM/0gCjdvG5ny83
-         SCoyeAfbKWzzIJwBl+opfvQ+5ACs5rCatKMDnKhduNjYpWUhejeGvtB9zdr7S0dpWulh
-         FhVT9s5f4AYN1sxUcKBlLG0l/AZlGdPqZHMQUyhNStH9/8cx9t7fuBRD+P1iieToYSsW
-         SyKB+LI5/hrvcs9e/rONdQ5rhSifob+D5RX61vgg8wZo5jJHhYwRDF2dojZ3gZzvvKa0
-         TEDw==
-X-Gm-Message-State: APjAAAW7uHObV+ILc8VSmdcBBS9YwsHvI3phIa9NDExXdpeXH9wXrYrv
-        2XhzDbObJwtimc1xrFoDY9QBGC6p
-X-Google-Smtp-Source: APXvYqwfc3SZsT1Lj8EgzY5d72Zcg5rMHFxdArytviyXSiZ1V1oA2QmZOxx6LeKLWB7fM8fNGtzyfw==
-X-Received: by 2002:a63:c203:: with SMTP id b3mr21289785pgd.450.1566911194546;
-        Tue, 27 Aug 2019 06:06:34 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id a23sm11467191pfc.71.2019.08.27.06.06.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 06:06:32 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] watchdog/aspeed: add support for dual boot
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexander Amelkin <a.amelkin@yadro.com>,
-        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
- <20190826104636.19324-4-i.mikhaylov@yadro.com>
- <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
- <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <d46685d9-c6d2-46af-67aa-844d2b0296a9@roeck-us.net>
-Date:   Tue, 27 Aug 2019 06:06:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 27 Aug 2019 09:07:05 -0400
+Received: from mail-eopbgr30119.outbound.protection.outlook.com ([40.107.3.119]:35904
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726054AbfH0NHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:07:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jaxrAeu/92hH+I9ljpJBFUrFshz4LtBLqPwbWU2I4FuZ590iX+lkyWRSvYm3bC/EKAXpohjOj9YRCpR/BVYouMWbkP5LMRyHxRKrY3VF+2p9m6W0F2nYkqhgJQNjZ4y8PMjov6ECnhl2lfy3Kx2/odBko7Pagye1b/X4ocWvHLevsvdYjhdocbOOGZg47hg9+0q+wH2v5Vqtu8nMzMbkRQuVkfQ77nO0S0HtgG5s+EVXePEMOYgueBxEZzc4BD1OzbFuhNZqCNgnhwSvNwMa6JXhuof0v8dfEQl/2OuC/cnrRmdlzjgoapZPWXN42PIUqA+1cXzkHRiI1h9EWE51Ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pzUMO09cKYplP4IdSQB+IMq/dBJWErbTK/AcBdGhAbk=;
+ b=bO8hhM5MFhRLDW/Tjfx16UgI1ajckICMfTKv2ZiDISrMQA5TLUt2fZmzLeLnAp0NoaopNHqMHCa53aSNElZr0x0avfp454v4RBy95nXtChW0q2VH+q9KtwQkrb3QkS7mpVtJbgnq5Gt7hD1uVHjx+FVY8g2tqwMa4nDcKPlKGrRNw760u2H9n/klCoqnCAvRoF+PKwQxUgUIpuxg1dO2R6CaQy6Cwmbhmg/cQKY8ieZ7C4v4bXaetq8xh8vXr1lwWyikeL63yvAYV278UHEaV+TZSYTqjq8tWccFmbtMfzia1p9Flr06NjNVayLrJOsroGiS0Yt2+QR9R+CvXsdlcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pzUMO09cKYplP4IdSQB+IMq/dBJWErbTK/AcBdGhAbk=;
+ b=BCFXjOq9axO7P/mR1P7gHjwrf7lptRLsu3cnvF5sJsO93M5tKgwpPqCLNYv5MqqV3Icyh7jcO/AX/H8YC87VKogRL6e7XKSTJylfvEXfcOnTGjfIvFS6MLhHltqybI6V5htrM0wvPdtgndCqNxcQloZ9AdyURWiVaSQSP9q+xSM=
+Received: from VI1PR08MB2782.eurprd08.prod.outlook.com (10.170.236.143) by
+ VI1PR08MB3471.eurprd08.prod.outlook.com (20.177.59.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 13:07:01 +0000
+Received: from VI1PR08MB2782.eurprd08.prod.outlook.com
+ ([fe80::2969:e370:fb70:71a]) by VI1PR08MB2782.eurprd08.prod.outlook.com
+ ([fe80::2969:e370:fb70:71a%3]) with mapi id 15.20.2178.023; Tue, 27 Aug 2019
+ 13:07:01 +0000
+From:   Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
+        Denis Lunev <den@virtuozzo.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [PATCH 0/3] fix emulation error on Windows bootup
+Thread-Topic: [PATCH 0/3] fix emulation error on Windows bootup
+Thread-Index: AQHVXNhQlPTN3PT6WEuOH2XmT3iwQg==
+Date:   Tue, 27 Aug 2019 13:07:00 +0000
+Message-ID: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0802CA0004.eurprd08.prod.outlook.com
+ (2603:10a6:3:bd::14) To VI1PR08MB2782.eurprd08.prod.outlook.com
+ (2603:10a6:802:19::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jan.dakinevich@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.1.4
+x-originating-ip: [185.231.240.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 04175519-7c1e-494f-f058-08d72aef72d2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR08MB3471;
+x-ms-traffictypediagnostic: VI1PR08MB3471:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR08MB34717DE33508136B250D9F2C8AA00@VI1PR08MB3471.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(396003)(376002)(366004)(346002)(136003)(199004)(189003)(25786009)(54906003)(6436002)(6512007)(5660300002)(64756008)(7736002)(26005)(4744005)(66946007)(36756003)(66446008)(186003)(66556008)(102836004)(7416002)(305945005)(50226002)(2906002)(52116002)(486006)(476003)(2616005)(6506007)(386003)(44832011)(256004)(66066001)(99286004)(316002)(66476007)(53936002)(14454004)(5640700003)(2501003)(81156014)(6116002)(6486002)(71200400001)(2351001)(81166006)(6916009)(4326008)(86362001)(3846002)(8676002)(71190400001)(478600001)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB3471;H:VI1PR08MB2782.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /qrFORhe4WnyjEpah2+wjJshltj9p7PEf6pqDU38YXXyZoIzyx1eKU38HAv2he9b+0qrsU7HbgRKzNpiVv6g4zKse+nR01oSxcZyjH322nVRsqj85vIBN1U/J3BCTmyFGk1F84l+bTYd4DPTFPySAckBMUmaLvxutENWZ7oXHBPOmEt4xdbTwps7slz5aDlXqP7zzvSgR4uPrXG9PFk6rhKNozz+hyuEVgnBvNsJVXpFCaPH4f5+sZ81H4vFrNvzPJK0vsvg7hcSk8/AonA281j1fNNE3JnHe6e5G3vjEgL9jlLZMzJLm5KTz76ityNBUoOjszhwkzfToq6E6wRpLX8Ep+CNVm+sDjkmxhwDAAOOASPnq+IZPWqR+KshiYZ/XsWRf5RXMpZKadHB7NufV9VVqbJ6keLLzaV4khZ/qq0=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04175519-7c1e-494f-f058-08d72aef72d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 13:07:01.0870
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LWC8ng8kkDo/0oYWTtxBfjVtTxanGEaQUSXPZm/JI5PAdpvCrGEJrZmLpgPDFAPM15ifux2jQwyqkE3tbEyhBS4tDHzE5cv7VReX354H6Wg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3471
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 2:24 AM, Ivan Mikhaylov wrote:
-> On Mon, 2019-08-26 at 17:14 -0700, Guenter Roeck wrote:
->>> +/*
->>> + * At alternate side the 'access_cs0' sysfs node provides:
->>> + *   ast2400: a way to get access to the primary SPI flash chip at CS0
->>> + *            after booting from the alternate chip at CS1.
->>> + *   ast2500: a way to restore the normal address mapping from
->>> + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
->>> + *
->>> + * Clearing the boot code selection and timeout counter also resets to the
->>> + * initial state the chip select line mapping. When the SoC is in normal
->>> + * mapping state (i.e. booted from CS0), clearing those bits does nothing
->>> for
->>> + * both versions of the SoC. For alternate boot mode (booted from CS1 due
->>> to
->>> + * wdt2 expiration) the behavior differs as described above.
->>> + *
->> The above needs to be in the sysfs attribute documentation as well.
-> 
-> My apologies but I didn't find any suitable, only watchdog parameters with
-> dtbindings file, where should I put it? Documentation/watchdog/aspeed-wdt-
-> sysfs.rst?
-> 
+This series intended to fix (again) a bug that was a subject of the=20
+following change:
 
-Documentation/ABI/testing/sysfs-class-watchdog
+  6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
 
-Guenter
+Suddenly, that fix had a couple mistakes. First, ctxt->have_exception was=20
+not set if fault happened during instruction decoding. Second, returning=20
+value of inject_emulated_instruction was used to make the decision to=20
+reenter guest, but this could happen iff on nested page fault, that is not=
+=20
+the scope where this bug could occur.
 
->>> + * This option can be used with wdt2 (watchdog1) only.
->>
->> This implies a specific watchdog numbering which is not guaranteed.
->> Someone might implement a system with some external watchdog.
->>
->>> + */
->>> +static DEVICE_ATTR_RW(access_cs0);
->>> +
->>> +static struct attribute *bswitch_attrs[] = {
->>> +	&dev_attr_access_cs0.attr,
->>> +	NULL
->>> +};
->>> +ATTRIBUTE_GROUPS(bswitch);
->>> +
->>>    static const struct watchdog_ops aspeed_wdt_ops = {
->>>    	.start		= aspeed_wdt_start,
->>>    	.stop		= aspeed_wdt_stop,
->>> @@ -306,9 +359,16 @@ static int aspeed_wdt_probe(struct platform_device
->>> *pdev)
->>>    	}
->>>    
->>>    	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
->>> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
->>> +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
->>>    		wdt->wdd.bootstatus = WDIOF_CARDRESET;
->>>    
->>> +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
->>> +			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
->>> +			wdt->wdd.groups = bswitch_groups;
-> 
->> Kind of odd that the attribute only exists if the system booted from the
->> second flash, but if that is what you want I won't object. Just make sure
->> that this is explained properly.
-> Perhaps dts configuration option would be better solution for it then? "force-
-> cs0-switch" as example? Also, if it would be an option, dtbindings/wdt file for
+However, I have still deep doubts about 3rd commit in the series. Could
+you please, make me an advise if it is the correct handling of guest page=20
+fault?
 
-You said earlier that this can not be done automatically but _must_ be done
-from user space after the system has booted. Otherwise you could just
-automatically switch to cs0 when the driver probes.
+Jan Dakinevich (3):
+  KVM: x86: fix wrong return code
+  KVM: x86: set ctxt->have_exception in x86_decode_insn()
+  KVM: x86: always stop emulation on page fault
 
-As I said, all I am asking for is proper documentation.
+ arch/x86/kvm/emulate.c | 4 +++-
+ arch/x86/kvm/x86.c     | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Guenter
-
-> documentation will be the right place for it. Usage of this at side 0 will not
-> get any good/bad results, it just makes user confused, so I decided to put it
-> only at side 1. It works only for ast2400/2500 board unfortunately, for 2600
-> there is big difference in switching mechanism. Any other thoughts how to make
-> it better?
-> 
-> Thanks.
-> 
-> 
+--=20
+2.1.4
 
