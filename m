@@ -7,18 +7,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2CEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE7AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF6A206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3AA217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbfH0Vk6 (ORCPT
+        id S1731023AbfH0Vkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:40:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:61898 "EHLO mga03.intel.com"
+        Tue, 27 Aug 2019 17:40:55 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61893 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbfH0Vks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730773AbfH0Vks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 17:40:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,9 +26,9 @@ Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 14:40:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="182919750"
+   d="scan'208";a="182919764"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2019 14:40:45 -0700
+  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2019 14:40:46 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -38,9 +38,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v2 05/14] KVM: x86: Move #GP injection for VMware into x86_emulate_instruction()
-Date:   Tue, 27 Aug 2019 14:40:31 -0700
-Message-Id: <20190827214040.18710-6-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 09/14] KVM: x86: Handle emulation failure directly in kvm_task_switch()
+Date:   Tue, 27 Aug 2019 14:40:35 -0700
+Message-Id: <20190827214040.18710-10-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190827214040.18710-1-sean.j.christopherson@intel.com>
 References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
@@ -51,128 +51,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Immediately inject a #GP when VMware emulation fails and return
-EMULATE_DONE instead of propagating EMULATE_FAIL up the stack.  This
-helps pave the way for removing EMULATE_FAIL altogether.
+Consolidate the reporting of emulation failure into kvm_task_switch()
+so that it can return EMULATE_USER_EXIT.  This helps pave the way for
+removing EMULATE_FAIL altogether.
 
-Rename EMULTYPE_VMWARE to EMULTYPE_VMWARE_GP to document that the x86
-emulator is called to handle VMware #GP interception, e.g. why a #GP
-is injected on emulation failure for EMULTYPE_VMWARE_GP.
-
-Drop EMULTYPE_NO_UD_ON_FAIL as a standalone type.  The "no #UD on fail"
-is used only in the VMWare case and is obsoleted by having the emulator
-itself reinject #GP.
+This also fixes a theoretical bug where task switch interception could
+suppress an EMULATE_USER_EXIT return.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 +--
- arch/x86/kvm/svm.c              | 10 ++--------
- arch/x86/kvm/vmx/vmx.c          | 10 ++--------
- arch/x86/kvm/x86.c              | 14 +++++++++-----
- 4 files changed, 14 insertions(+), 23 deletions(-)
+ arch/x86/kvm/svm.c     | 11 ++---------
+ arch/x86/kvm/vmx/vmx.c | 14 +++-----------
+ arch/x86/kvm/x86.c     |  9 ++++++---
+ 3 files changed, 11 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 44a5ce57a905..d1d5b5ca1195 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1318,8 +1318,7 @@ enum emulation_result {
- #define EMULTYPE_TRAP_UD	    (1 << 1)
- #define EMULTYPE_SKIP		    (1 << 2)
- #define EMULTYPE_ALLOW_RETRY	    (1 << 3)
--#define EMULTYPE_NO_UD_ON_FAIL	    (1 << 4)
--#define EMULTYPE_VMWARE		    (1 << 5)
-+#define EMULTYPE_VMWARE_GP	    (1 << 5)
- int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
- int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
- 					void *insn, int insn_len);
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 7242142573d6..c4b72db48bc5 100644
+index 9c46031e96cc..eab01c5d59f7 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -2768,7 +2768,6 @@ static int gp_interception(struct vcpu_svm *svm)
- {
- 	struct kvm_vcpu *vcpu = &svm->vcpu;
- 	u32 error_code = svm->vmcb->control.exit_info_1;
--	int er;
+@@ -3892,17 +3892,10 @@ static int task_switch_interception(struct vcpu_svm *svm)
+ 	if (int_type != SVM_EXITINTINFO_TYPE_SOFT)
+ 		int_vec = -1;
  
- 	WARN_ON_ONCE(!enable_vmware_backdoor);
+-	if (kvm_task_switch(&svm->vcpu, tss_selector, int_vec, reason,
+-				has_error_code, error_code) == EMULATE_FAIL)
+-		goto fail;
  
-@@ -2780,13 +2779,8 @@ static int gp_interception(struct vcpu_svm *svm)
- 		kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
- 		return 1;
- 	}
--	er = kvm_emulate_instruction(vcpu,
--		EMULTYPE_VMWARE | EMULTYPE_NO_UD_ON_FAIL);
--	if (er == EMULATE_USER_EXIT)
--		return 0;
--	else if (er != EMULATE_DONE)
--		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
 -	return 1;
-+	return kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE_GP) !=
-+						EMULATE_USER_EXIT;
+ 
+-fail:
+-	svm->vcpu.run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+-	svm->vcpu.run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+-	svm->vcpu.run->internal.ndata = 0;
+-	return 0;
++	return kvm_task_switch(&svm->vcpu, tss_selector, int_vec, reason,
++			       has_error_code, error_code) != EMULATE_USER_EXIT;
  }
  
- static bool is_erratum_383(void)
+ static int cpuid_interception(struct vcpu_svm *svm)
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 8a65e1122376..c6ba452296e3 100644
+index c6ba452296e3..a80613a5921f 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4492,7 +4492,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 	u32 intr_info, ex_no, error_code;
- 	unsigned long cr2, rip, dr6;
- 	u32 vect_info;
--	enum emulation_result er;
+@@ -5073,21 +5073,13 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
+ 		       type != INTR_TYPE_NMI_INTR))
+ 		skip_emulated_instruction(vcpu);
  
- 	vect_info = vmx->idt_vectoring_info;
- 	intr_info = vmx->exit_intr_info;
-@@ -4519,13 +4518,8 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 			kvm_queue_exception_e(vcpu, GP_VECTOR, error_code);
- 			return 1;
- 		}
--		er = kvm_emulate_instruction(vcpu,
--			EMULTYPE_VMWARE | EMULTYPE_NO_UD_ON_FAIL);
--		if (er == EMULATE_USER_EXIT)
--			return 0;
--		else if (er != EMULATE_DONE)
--			kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
--		return 1;
-+		return kvm_emulate_instruction(vcpu, EMULTYPE_VMWARE_GP) !=
-+							EMULATE_USER_EXIT;
- 	}
- 
+-	if (kvm_task_switch(vcpu, tss_selector,
+-			    type == INTR_TYPE_SOFT_INTR ? idt_index : -1, reason,
+-			    has_error_code, error_code) == EMULATE_FAIL) {
+-		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+-		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+-		vcpu->run->internal.ndata = 0;
+-		return 0;
+-	}
+-
  	/*
+ 	 * TODO: What about debug traps on tss switch?
+ 	 *       Are we supposed to inject them and update dr6?
+ 	 */
+-
+-	return 1;
++	return kvm_task_switch(vcpu, tss_selector,
++			       type == INTR_TYPE_SOFT_INTR ? idt_index : -1,
++			       reason, has_error_code, error_code) != EMULATE_USER_EXIT;
+ }
+ 
+ static int handle_ept_violation(struct kvm_vcpu *vcpu)
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index fe847f8eb947..228ca71d5b01 100644
+index 1a886ec6957d..83b3c7e9fce7 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -6210,8 +6210,10 @@ static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
- 	++vcpu->stat.insn_emulation_fail;
- 	trace_kvm_emulate_insn_failed(vcpu);
+@@ -8587,9 +8587,12 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
  
--	if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
+ 	ret = emulator_task_switch(ctxt, tss_selector, idt_index, reason,
+ 				   has_error_code, error_code);
+-
+-	if (ret)
 -		return EMULATE_FAIL;
-+	if (emulation_type & EMULTYPE_VMWARE_GP) {
-+		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-+		return EMULATE_DONE;
++	if (ret) {
++		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
++		vcpu->run->internal.ndata = 0;
++		return EMULATE_USER_EXIT;
 +	}
  
- 	kvm_queue_exception(vcpu, UD_VECTOR);
- 
-@@ -6543,9 +6545,11 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
- 		}
- 	}
- 
--	if ((emulation_type & EMULTYPE_VMWARE) &&
--	    !is_vmware_backdoor_opcode(ctxt))
--		return EMULATE_FAIL;
-+	if ((emulation_type & EMULTYPE_VMWARE_GP) &&
-+	    !is_vmware_backdoor_opcode(ctxt)) {
-+		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-+		return EMULATE_DONE;
-+	}
- 
- 	if (emulation_type & EMULTYPE_SKIP) {
- 		kvm_rip_write(vcpu, ctxt->_eip);
+ 	kvm_rip_write(vcpu, ctxt->eip);
+ 	kvm_set_rflags(vcpu, ctxt->eflags);
 -- 
 2.22.0
 
