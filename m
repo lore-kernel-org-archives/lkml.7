@@ -4,41 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192B0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1DFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A782173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FC72173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="f342uDTt"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="NashDxeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfH0JBA (ORCPT
+        id S1729500AbfH0JBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:01:00 -0400
-Received: from forward100j.mail.yandex.net ([5.45.198.240]:44796 "EHLO
-        forward100j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726091AbfH0JA7 (ORCPT
+        Tue, 27 Aug 2019 05:01:12 -0400
+Received: from forward104j.mail.yandex.net ([5.45.198.247]:55692 "EHLO
+        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfH0JBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:00:59 -0400
-X-Greylist: delayed 388 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 05:00:57 EDT
-Received: from mxback5j.mail.yandex.net (mxback5j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10e])
-        by forward100j.mail.yandex.net (Yandex) with ESMTP id 35D7250E1B68;
-        Tue, 27 Aug 2019 11:54:28 +0300 (MSK)
+        Tue, 27 Aug 2019 05:01:12 -0400
+Received: from mxback15o.mail.yandex.net (mxback15o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::66])
+        by forward104j.mail.yandex.net (Yandex) with ESMTP id 7A8A14A1B5A;
+        Tue, 27 Aug 2019 11:55:15 +0300 (MSK)
 Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
-        by mxback5j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id HykKnQ8voc-sRIOZ1Ch;
-        Tue, 27 Aug 2019 11:54:28 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896068;
-        bh=G0jHcPXM+OCk44Z0PCwjREln9mLdtxprn1r5zWOEs78=;
+        by mxback15o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 3r8G3bhQvA-tE5Ogajn;
+        Tue, 27 Aug 2019 11:55:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896115;
+        bh=9x9JHKkA5s2saezMDxxt5Ql6wxmaHniD/+8n/iFpUTE=;
         h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=f342uDTtikFulBQKjxq016BGG0gvX9l22Frpnw2Ff3ZPoEbkBeLOCugfPOKsJRa9B
-         imMZKyaZfGRNXnDAboV6RYWMF+gvr7yL8Ih4+5GYR8Q+izjfwag9g8HD4O5DzD4BxM
-         cZhbXg9VyjD7BPj6rznXO6AhLnsyY09XHf5DnQlc=
-Authentication-Results: mxback5j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-sLtCjfGP;
-        Tue, 27 Aug 2019 11:54:26 +0300
+        b=NashDxeo1Tfl+b8j0QMdUXOR7BeLWTXdY8jILSaOTvTLo9cRK799i6XOwJg4sZsxZ
+         hiMCBBtYujEVUxH1hGtBN40UDAGTeVO5Wds7nbQ7nopLgsvApmMAcWu2GGlx6OP7JQ
+         ngUulvIjgzIfc9cNNDo2pQsAm288nW2UDU4oNu+4=
+Authentication-Results: mxback15o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-t9tClHm7;
+        Tue, 27 Aug 2019 11:55:13 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
@@ -47,9 +46,9 @@ Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
         jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.co,
         devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 06/13] irqchip: Add driver for Loongson-3 HyperTransport interrupt controller
-Date:   Tue, 27 Aug 2019 16:52:55 +0800
-Message-Id: <20190827085302.5197-7-jiaxun.yang@flygoat.com>
+Subject: [PATCH 13/13] MIPS: Loongson64: Load built-in dtbs
+Date:   Tue, 27 Aug 2019 16:53:02 +0800
+Message-Id: <20190827085302.5197-14-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
 References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
@@ -60,196 +59,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This controller appeared on Loongson-3 family of chips to receive interrupts
-from PCH chip.
+Load proper dtb according to firmware passed parameters and
+CPU PRID.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- drivers/irqchip/Kconfig          |   8 ++
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-ls3-htintc.c | 145 +++++++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/irqchip/irq-ls3-htintc.c
+ .../asm/mach-loongson64/builtin_dtbs.h        | 26 +++++++
+ .../include/asm/mach-loongson64/loongson64.h  |  2 +
+ arch/mips/loongson64/env.c                    | 67 +++++++++++++++++++
+ arch/mips/loongson64/setup.c                  | 15 +++++
+ 4 files changed, 110 insertions(+)
+ create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 8d9eac5fd4a7..b3ce0f3e43ae 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -480,6 +480,14 @@ config LS3_IOINTC
- 	help
- 	  Support for the Loongson-3 I/O Interrupt Controller.
- 
-+config LS3_HTINTC
-+	bool "Loongson3 HyperTransport Interrupt Controller"
-+	depends on MACH_LOONGSON64
-+	default y
-+	select IRQ_DOMAIN
-+	select GENERIC_IRQ_CHIP
-+	help
-+	  Support for the Loongson-3 HyperTransport Interrupt Controller.
- endmenu
- 
- config SIFIVE_PLIC
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 49ecb8d38138..0fda94c319e9 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -103,3 +103,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_LS3_IOINTC)			+= irq-ls3-iointc.o
-+obj-$(CONFIG_LS3_HTINTC)			+= irq-ls3-htintc.o
-diff --git a/drivers/irqchip/irq-ls3-htintc.c b/drivers/irqchip/irq-ls3-htintc.c
+diff --git a/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
 new file mode 100644
-index 000000000000..c53bbb0bd78c
+index 000000000000..234803ba9d82
 --- /dev/null
-+++ b/drivers/irqchip/irq-ls3-htintc.c
-@@ -0,0 +1,145 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
 +/*
-+ *  Copyright (C) 2019, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson-3 HyperTransport IRQ support
++ * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
++ * 
++ * Built-in Generic dtbs for MACH_LOONGSON64 
 + */
 +
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+#include <linux/ioport.h>
-+#include <linux/irqchip.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+#include <linux/irqchip/chained_irq.h>
++#ifndef __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
++#define __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
 +
-+#define HTINTC_NUM_GC  4
-+#define HTINTC_GC_SIZE  0x4
-+#define HTINTC_NUM_HANDLER  4
-+#define HTINTC_HANDLER_SIZE  0x8
-+#define HTINTC_HANDLER_IRQ  64
++extern u32 __dtb_ls3a1000_780e_1way_begin[];
++extern u32 __dtb_ls3a1000_780e_2way_begin[];
++extern u32 __dtb_ls3a1000_780e_4way_begin[];
 +
-+#define HTINTC_VECTOR_OFFSET   0x0
-+#define HTINTC_EN_OFFSET   0x20
++extern u32 __dtb_ls3b_780e_1way_begin[];
++extern u32 __dtb_ls3b_780e_2way_begin[];
 +
-+struct htintc_handler_priv {
-+	struct irq_domain	*domain;
-+	void __iomem		*handler_base;
-+};
++extern u32 __dtb_ls3a2000_780e_1way_begin[];
++extern u32 __dtb_ls3a2000_780e_2way_begin[];
++extern u32 __dtb_ls3a2000_780e_4way_begin[];
 +
-+static void htintc_chained_handle_irq(struct irq_desc *desc)
-+{
-+	struct htintc_handler_priv *priv = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	int i;
-+	bool handled;
++extern u32 __dtb_ls3a3000_780e_1way_begin[];
++extern u32 __dtb_ls3a3000_780e_2way_begin[];
++extern u32 __dtb_ls3a3000_780e_4way_begin[];
 +
-+	chained_irq_enter(chip, desc);
++#endif
+diff --git a/arch/mips/include/asm/mach-loongson64/loongson64.h b/arch/mips/include/asm/mach-loongson64/loongson64.h
+index d877adb99d33..78daa3fb3fa7 100644
+--- a/arch/mips/include/asm/mach-loongson64/loongson64.h
++++ b/arch/mips/include/asm/mach-loongson64/loongson64.h
+@@ -45,4 +45,6 @@ extern u64 loongson_freqctrl[MAX_PACKAGES];
+ 
+ extern const struct plat_smp_ops loongson3_smp_ops;
+ extern void __init prom_init_lefi(void);
++extern void *loongson_fdt_blob;
 +
-+	for (i = 0; i < HTINTC_NUM_GC; i++) {
-+		uint32_t irqs = readl(priv->handler_base + HTINTC_GC_SIZE * i);
-+
-+		while (irqs) {
-+			int bit = __ffs(irqs);
-+
-+			generic_handle_irq(irq_find_mapping(priv->domain, bit + 32 * i));
-+			irqs &= ~BIT(bit);
-+			handled = true;
+ #endif
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 93658cfbf3a6..4336bd7c1b94 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -20,6 +20,7 @@
+ 
+ #include <loongson64.h>
+ #include <boot_param.h>
++#include <builtin_dtbs.h>
+ #include <workarounds.h>
+ 
+ u32 cpu_clock_freq;
+@@ -126,6 +127,72 @@ void __init prom_init_lefi(void)
+ 		loongson_sysconf.cores_per_node - 1) /
+ 		loongson_sysconf.cores_per_node;
+ 
++	if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64) {
++		switch (read_c0_prid() & PRID_REV_MASK) {
++		case PRID_REV_LOONGSON3A_R1:
++			switch (loongson_sysconf.nr_nodes) {
++			case 4:
++				loongson_fdt_blob = __dtb_ls3a1000_780e_4way_begin;
++				break;
++			case 2:
++				loongson_fdt_blob = __dtb_ls3a1000_780e_2way_begin;
++				break;			
++			case 1:
++			default:
++				loongson_fdt_blob = __dtb_ls3a1000_780e_1way_begin;
++				break;
++			}
++			break;
++		case PRID_REV_LOONGSON3A_R2_0:
++		case PRID_REV_LOONGSON3A_R2_1:
++			switch (loongson_sysconf.nr_nodes) {
++			case 4:
++				loongson_fdt_blob = __dtb_ls3a2000_780e_4way_begin;
++				break;
++			case 2:
++				loongson_fdt_blob = __dtb_ls3a2000_780e_2way_begin;
++				break;			
++			case 1:
++			default:
++				loongson_fdt_blob = __dtb_ls3a2000_780e_1way_begin;
++				break;
++			}
++			break;
++		case PRID_REV_LOONGSON3A_R3_0:
++		case PRID_REV_LOONGSON3A_R3_1:
++			switch (loongson_sysconf.nr_nodes) {
++			case 4:
++				loongson_fdt_blob = __dtb_ls3a3000_780e_4way_begin;
++				break;
++			case 2:
++				loongson_fdt_blob = __dtb_ls3a3000_780e_2way_begin;
++				break;			
++			case 1:
++			default:
++				loongson_fdt_blob = __dtb_ls3a3000_780e_1way_begin;
++				break;
++			}
++			break;
++		case PRID_REV_LOONGSON3B_R1:
++		case PRID_REV_LOONGSON3B_R2:
++			switch (loongson_sysconf.nr_nodes) {
++			case 4:
++				loongson_fdt_blob = __dtb_ls3b_780e_2way_begin;
++				break;			
++			case 2:
++			default:
++				loongson_fdt_blob = __dtb_ls3b_780e_1way_begin;
++				break;
++			}
++			break;
++		default:
++			break;
 +		}
 +	}
 +
-+	if (!handled)
-+		spurious_interrupt();
++	if(!loongson_fdt_blob)
++		pr_err("Failed to determine built-in Loongson64 dtb\n");
 +
-+	chained_irq_exit(chip, desc);
-+}
+ 	loongson_sysconf.pci_mem_start_addr = eirq_source->pci_mem_start_addr;
+ 	loongson_sysconf.pci_mem_end_addr = eirq_source->pci_mem_end_addr;
+ 	loongson_sysconf.pci_io_base = eirq_source->pci_io_start_addr;
+diff --git a/arch/mips/loongson64/setup.c b/arch/mips/loongson64/setup.c
+index 24432adc8350..3b850b3128ea 100644
+--- a/arch/mips/loongson64/setup.c
++++ b/arch/mips/loongson64/setup.c
+@@ -7,9 +7,15 @@
+ #include <asm/setup.h>
+ #include <asm/smp-ops.h>
+ #include <asm/cacheflush.h>
++#include <linux/libfdt.h>
++#include <linux/of_fdt.h>
 +
-+int __init ls3_htintc_of_init(struct device_node *node,
-+					   struct device_node *parent)
++#include <asm/prom.h>
+ 
+ #include <loongson64.h>
+ 
++void *loongson_fdt_blob;
++
+ static void wbflush_loongson(void)
+ {
+ 	asm(".set\tpush\n\t"
+@@ -81,6 +87,8 @@ void __init prom_free_prom_memory(void)
+ 
+ void __init plat_mem_setup(void)
+ {
++	if (loongson_fdt_blob)
++		__dt_setup_arch(loongson_fdt_blob);
+ }
+ 
+ void __init plat_time_init(void)
+@@ -90,3 +98,10 @@ void __init plat_time_init(void)
+ #endif
+ }
+ 
++void __init device_tree_init(void)
 +{
-+	struct irq_chip_generic *gc;
-+	struct irq_chip_type *ct;
-+	struct htintc_handler_priv *priv;
-+	struct irq_domain *domain;
-+	void __iomem *base;
-+	int parent_irq[HTINTC_NUM_HANDLER], err = 0;
-+	int i;
++	if (!initial_boot_params)
++		return;
 +
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		err = -ENODEV;
-+		goto out_free_priv;
-+	}
-+
-+	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
-+		parent_irq[i] = irq_of_parse_and_map(node, i);
-+		if (!parent_irq[i]) {
-+			pr_err("ls3-htintc: unable to get parent irq %d\n", i);
-+			err =  -ENODEV;
-+			goto out_iounmap;
-+		}
-+	}
-+	/* Set up an IRQ domain */
-+	domain = irq_domain_add_linear(node, 32 * HTINTC_NUM_GC,
-+		&irq_generic_chip_ops, NULL);
-+	if (!domain) {
-+		pr_err("ls3-htintc: cannot add IRQ domain\n");
-+		err = -ENOMEM;
-+		goto out_iounmap;
-+	}
-+
-+	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
-+		/* Mask all interrupts */
-+		writeq(0x0, base + HTINTC_EN_OFFSET + HTINTC_HANDLER_SIZE * i);
-+	}
-+
-+	err = irq_alloc_domain_generic_chips(domain, 32, 1,
-+		node->full_name, handle_fasteoi_irq,
-+		IRQ_NOPROBE, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (err) {
-+		pr_err("ls3-htintc: unable to register IRQ domain\n");
-+		err = -ENOMEM;
-+		goto out_free_domain;
-+	}
-+
-+	for (i = 0; i < HTINTC_NUM_GC; i++) {
-+		gc = irq_get_domain_generic_chip(domain, i * 32);
-+		gc->reg_base = base + HTINTC_GC_SIZE * i;
-+		gc->domain = domain;
-+
-+		ct = gc->chip_types;
-+		ct->regs.mask = HTINTC_EN_OFFSET;
-+		ct->regs.ack = HTINTC_VECTOR_OFFSET;
-+		ct->chip.irq_unmask = irq_gc_mask_set_bit;
-+		ct->chip.irq_mask = irq_gc_mask_clr_bit;
-+		ct->chip.irq_ack = irq_gc_ack_set_bit;
-+	}
-+
-+	priv->domain = domain;
-+	priv->handler_base = base + HTINTC_VECTOR_OFFSET;
-+
-+	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
-+		irq_set_chained_handler_and_data(parent_irq[i],
-+			htintc_chained_handle_irq, priv);
-+	}
-+
-+	return 0;
-+
-+out_free_domain:
-+	irq_domain_remove(domain);
-+out_iounmap:
-+	iounmap(base);
-+out_free_priv:
-+	kfree(priv);
-+
-+	return err;
++	unflatten_and_copy_device_tree();
 +}
-+
-+IRQCHIP_DECLARE(ls3_htintc, "loongson,ls3-htintc", ls3_htintc_of_init);
 -- 
 2.22.0
 
