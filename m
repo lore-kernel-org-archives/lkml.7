@@ -2,358 +2,115 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0349C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3223C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C3A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D6C206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbfH0Ij0 (ORCPT
+        id S1729633AbfH0Ijz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:39:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37154 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726735AbfH0Ij0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:39:26 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7R8YFvC082657
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:39:24 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2umxgv63a8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:39:24 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 27 Aug 2019 09:39:22 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 27 Aug 2019 09:39:17 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7R8dGV555312578
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 08:39:16 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 860D04C040;
-        Tue, 27 Aug 2019 08:39:16 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 868B64C04E;
-        Tue, 27 Aug 2019 08:39:15 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 27 Aug 2019 08:39:15 +0000 (GMT)
-Date:   Tue, 27 Aug 2019 11:39:13 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alan Kao <alankao@andestech.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Gary Guo <gary@garyguo.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 2/2] RISC-V: Add basic support for SBI v0.2
-References: <20190826233256.32383-1-atish.patra@wdc.com>
- <20190826233256.32383-3-atish.patra@wdc.com>
- <20190827075831.GD682@rapoport-lnx>
- <CAAhSdy3gynEv1k84pghLY6+HcpBCiteUQUDbGn4_eEH_UFpbCA@mail.gmail.com>
+        Tue, 27 Aug 2019 04:39:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46644 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbfH0Ijy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:39:54 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5160F18C4272;
+        Tue, 27 Aug 2019 08:39:54 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EED1E60923;
+        Tue, 27 Aug 2019 08:39:45 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 10:39:43 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH 05/19] virtio: Implement get_shm_region for MMIO
+ transport
+Message-ID: <20190827103943.4c6c9342.cohuck@redhat.com>
+In-Reply-To: <20190821175720.25901-6-vgoyal@redhat.com>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+        <20190821175720.25901-6-vgoyal@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy3gynEv1k84pghLY6+HcpBCiteUQUDbGn4_eEH_UFpbCA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19082708-0008-0000-0000-0000030DC4B6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082708-0009-0000-0000-00004A2BFFE1
-Message-Id: <20190827083913.GG682@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908270096
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 27 Aug 2019 08:39:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:53:23PM +0530, Anup Patel wrote:
-> On Tue, Aug 27, 2019 at 1:28 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > On Mon, Aug 26, 2019 at 04:32:56PM -0700, Atish Patra wrote:
-> > > The SBI v0.2 introduces a base extension which is backward compatible
-> > > with v0.1. Implement all helper functions and minimum required SBI
-> > > calls from v0.2 for now. All other base extension function will be
-> > > added later as per need.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > ---
-> > >  arch/riscv/include/asm/sbi.h | 68 +++++++++++++++++++++++++++++-------
-> > >  arch/riscv/kernel/Makefile   |  1 +
-> > >  arch/riscv/kernel/sbi.c      | 50 ++++++++++++++++++++++++++
-> > >  arch/riscv/kernel/setup.c    |  2 ++
-> > >  4 files changed, 108 insertions(+), 13 deletions(-)
-> > >  create mode 100644 arch/riscv/kernel/sbi.c
-> > >
-> > > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> > > index 7f5ecaaaa0d7..4a4476956693 100644
-> > > --- a/arch/riscv/include/asm/sbi.h
-> > > +++ b/arch/riscv/include/asm/sbi.h
-> > > @@ -8,7 +8,6 @@
-> > >
-> > >  #include <linux/types.h>
-> > >
-> > > -
-> > >  #define SBI_EXT_LEGACY_SET_TIMER 0x0
-> > >  #define SBI_EXT_LEGACY_CONSOLE_PUTCHAR 0x1
-> > >  #define SBI_EXT_LEGACY_CONSOLE_GETCHAR 0x2
-> > > @@ -19,28 +18,61 @@
-> > >  #define SBI_EXT_LEGACY_REMOTE_SFENCE_VMA_ASID 0x7
-> > >  #define SBI_EXT_LEGACY_SHUTDOWN 0x8
-> > >
-> > > -#define SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3) ({             \
-> > > +#define SBI_EXT_BASE 0x10
-> > > +
-> > > +enum sbi_ext_base_fid {
-> > > +     SBI_EXT_BASE_GET_SPEC_VERSION = 0,
-> > > +     SBI_EXT_BASE_GET_IMP_ID,
-> > > +     SBI_EXT_BASE_GET_IMP_VERSION,
-> > > +     SBI_EXT_BASE_PROBE_EXT,
-> > > +     SBI_EXT_BASE_GET_MVENDORID,
-> > > +     SBI_EXT_BASE_GET_MARCHID,
-> > > +     SBI_EXT_BASE_GET_MIMPID,
-> > > +};
-> > > +
-> > > +#define SBI_CALL_LEGACY(ext, fid, arg0, arg1, arg2, arg3) ({ \
-> > >       register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);   \
-> > >       register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);   \
-> > >       register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);   \
-> > >       register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);   \
-> > > -     register uintptr_t a7 asm ("a7") = (uintptr_t)(which);  \
-> > > +     register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);    \
-> > > +     register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);    \
-> > >       asm volatile ("ecall"                                   \
-> > > -                   : "+r" (a0)                               \
-> > > -                   : "r" (a1), "r" (a2), "r" (a3), "r" (a7)  \
-> > > +                   : "+r" (a0), "+r" (a1)                    \
-> > > +                   : "r" (a2), "r" (a3), "r" (a6), "r" (a7) \
-> >
-> > Maybe I'm missing something, but how is this supposed to work on systems
-> > with SBI v0.1? Wouldn't this cause a mismatch in the registers?
-> 
-> The SBI v0.2 has two major changes:
-> 1. New improved calling convention which is backward compatible
-> with SBI v0.1 so older kernels with SBI v0.1 will continue to work as-is.
-> 2. Base set of mandatory SBI v0.2 calls which can be used to detect
-> SBI version, check supported SBI calls and extentions.
-> 
-> Old calling convention in SBI v0.1 was:
-> Parameters:
-> a0 -> arg0
-> a1 -> arg1
-> a2 -> arg2
-> a3 -> arg3
-> a7 -> function_id
-> Return:
-> a0 -> return value or error code
-> 
-> In SBI v0.2, we have extension and function. Each SBI extension
-> is a set of function. The new calling convention in SBI v0.2 is:
-> Parameters:
-> a0 -> arg0
-> a1 -> arg1
-> a2 -> arg2
-> a3 -> arg3
-> a6 -> function_id
-> a7 -> extension_id
-> Return:
-> a0 -> error code
-> a1 -> return value (optional)
+On Wed, 21 Aug 2019 13:57:06 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-So with this patch SBI_CALL_LEGACY() uses SBI v0.2 convention, right?
-Doesn't it mean that you cannot run a new kernel on a system with SBI v0.1?
- 
-> All legacy SBI v0.1 functions can be thought of as separate
-> extensions. That's how SBI v0.2 will be backward compatible.
+> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
 > 
-> Regards,
-> Anup
+> On MMIO a new set of registers is defined for finding SHM
+> regions.  Add their definitions and use them to find the region.
 > 
-> >
-> > >                     : "memory");                              \
-> > >       a0;                                                     \
-> > >  })
-> > >
-> > >  /* Lazy implementations until SBI is finalized */
-> > > -#define SBI_CALL_LEGACY_0(which) SBI_CALL_LEGACY(which, 0, 0, 0, 0)
-> > > -#define SBI_CALL_LEGACY_1(which, arg0) SBI_CALL_LEGACY(which, arg0, 0, 0, 0)
-> > > -#define SBI_CALL_LEGACY_2(which, arg0, arg1) \
-> > > -             SBI_CALL_LEGACY(which, arg0, arg1, 0, 0)
-> > > -#define SBI_CALL_LEGACY_3(which, arg0, arg1, arg2) \
-> > > -             SBI_CALL_LEGACY(which, arg0, arg1, arg2, 0)
-> > > -#define SBI_CALL_LEGACY_4(which, arg0, arg1, arg2, arg3) \
-> > > -             SBI_CALL_LEGACY(which, arg0, arg1, arg2, arg3)
-> > > +#define SBI_CALL_LEGACY_0(ext) SBI_CALL_LEGACY(ext, 0, 0, 0, 0, 0)
-> > > +#define SBI_CALL_LEGACY_1(ext, arg0) SBI_CALL_LEGACY(ext, 0, arg0, 0, 0, 0)
-> > > +#define SBI_CALL_LEGACY_2(ext, arg0, arg1) \
-> > > +             SBI_CALL_LEGACY(ext, 0, arg0, arg1, 0, 0)
-> > > +#define SBI_CALL_LEGACY_3(ext, arg0, arg1, arg2) \
-> > > +             SBI_CALL_LEGACY(ext, 0, arg0, arg1, arg2, 0)
-> > > +#define SBI_CALL_LEGACY_4(ext, arg0, arg1, arg2, arg3) \
-> > > +             SBI_CALL_LEGACY(ext, 0, arg0, arg1, arg2, arg3)
-> > > +
-> > > +extern unsigned long sbi_firmware_version;
-> > > +struct sbiret {
-> > > +     long error;
-> > > +     long value;
-> > > +};
-> > > +
-> > > +void riscv_sbi_init(void);
-> > > +struct sbiret riscv_sbi_ecall(int ext, int fid, int arg0, int arg1,
-> > > +                            int arg2, int arg3);
-> > > +
-> > > +#define SBI_CALL_0(ext, fid) riscv_sbi_ecall(ext, fid, 0, 0, 0, 0)
-> > > +#define SBI_CALL_1(ext, fid, arg0) riscv_sbi_ecall(ext, fid, arg0, 0, 0, 0)
-> > > +#define SBI_CALL_2(ext, fid, arg0, arg1) \
-> > > +             riscv_sbi_ecall(ext, fid, arg0, arg1, 0, 0)
-> > > +#define SBI_CALL_3(ext, fid, arg0, arg1, arg2) \
-> > > +             riscv_sbi_ecall(ext, fid, arg0, arg1, arg2, 0)
-> > > +#define SBI_CALL_4(ext, fid, arg0, arg1, arg2, arg3) \
-> > > +             riscv_sbi_ecall(ext, fid, arg0, arg1, arg2, arg3)
-> > > +
-> > >
-> > >  static inline void sbi_console_putchar(int ch)
-> > >  {
-> > > @@ -99,4 +131,14 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
-> > >                         start, size, asid);
-> > >  }
-> > >
-> > > +static inline unsigned long riscv_sbi_major_version(void)
-> > > +{
-> > > +     return (sbi_firmware_version >> 24) & 0x7f;
-> > > +}
-> > > +
-> > > +static inline unsigned long riscv_sbi_minor_version(void)
-> > > +{
-> > > +     return sbi_firmware_version & 0xffffff;
-> > > +}
-> > > +
-> > >  #endif
-> > > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> > > index 2420d37d96de..faf862d26924 100644
-> > > --- a/arch/riscv/kernel/Makefile
-> > > +++ b/arch/riscv/kernel/Makefile
-> > > @@ -17,6 +17,7 @@ obj-y       += irq.o
-> > >  obj-y        += process.o
-> > >  obj-y        += ptrace.o
-> > >  obj-y        += reset.o
-> > > +obj-y        += sbi.o
-> > >  obj-y        += setup.o
-> > >  obj-y        += signal.o
-> > >  obj-y        += syscall_table.o
-> > > diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> > > new file mode 100644
-> > > index 000000000000..457b8cc0e9d9
-> > > --- /dev/null
-> > > +++ b/arch/riscv/kernel/sbi.c
-> > > @@ -0,0 +1,50 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * SBI initialilization and base extension implementation.
-> > > + *
-> > > + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-> > > + */
-> > > +
-> > > +#include <asm/sbi.h>
-> > > +#include <linux/sched.h>
-> > > +
-> > > +unsigned long sbi_firmware_version;
-> > > +
-> > > +struct sbiret riscv_sbi_ecall(int ext, int fid, int arg0, int arg1,
-> > > +                          int arg2, int arg3)
-> > > +{
-> > > +     struct sbiret ret;
-> > > +
-> > > +     register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);
-> > > +     register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);
-> > > +     register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);
-> > > +     register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);
-> > > +     register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);
-> > > +     register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);
-> > > +     asm volatile ("ecall"
-> > > +                   : "+r" (a0), "+r" (a1)
-> > > +                   : "r" (a2), "r" (a3), "r" (a6), "r" (a7)
-> > > +                   : "memory");
-> > > +     ret.error = a0;
-> > > +     ret.value = a1;
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static struct sbiret sbi_get_spec_version(void)
-> > > +{
-> > > +     return SBI_CALL_0(SBI_EXT_BASE, SBI_EXT_BASE_GET_SPEC_VERSION);
-> > > +}
-> > > +
-> > > +void riscv_sbi_init(void)
-> > > +{
-> > > +     struct sbiret ret;
-> > > +
-> > > +     /* legacy SBI version*/
-> > > +     sbi_firmware_version = 0x1;
-> > > +     ret = sbi_get_spec_version();
-> > > +     if (!ret.error)
-> > > +             sbi_firmware_version = ret.value;
-> > > +     pr_info("SBI version implemented in firmware [%lu:%lu]\n",
-> > > +             riscv_sbi_major_version(), riscv_sbi_minor_version());
-> > > +}
-> > > diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> > > index a990a6cb184f..4c324fd398c8 100644
-> > > --- a/arch/riscv/kernel/setup.c
-> > > +++ b/arch/riscv/kernel/setup.c
-> > > @@ -21,6 +21,7 @@
-> > >  #include <asm/sections.h>
-> > >  #include <asm/pgtable.h>
-> > >  #include <asm/smp.h>
-> > > +#include <asm/sbi.h>
-> > >  #include <asm/tlbflush.h>
-> > >  #include <asm/thread_info.h>
-> > >
-> > > @@ -70,6 +71,7 @@ void __init setup_arch(char **cmdline_p)
-> > >       swiotlb_init(1);
-> > >  #endif
-> > >
-> > > +     riscv_sbi_init();
-> > >  #ifdef CONFIG_SMP
-> > >       setup_smp();
-> > >  #endif
-> > > --
-> > > 2.21.0
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-riscv mailing list
-> > > linux-riscv@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> >
-> > --
-> > Sincerely yours,
-> > Mike.
-> >
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> ---
+>  drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
+>  include/uapi/linux/virtio_mmio.h | 11 +++++++++++
+>  2 files changed, 43 insertions(+)
+> 
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index e09edb5c5e06..5c07985c8cb8 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -500,6 +500,37 @@ static const char *vm_bus_name(struct virtio_device *vdev)
+>  	return vm_dev->pdev->name;
+>  }
+>  
+> +static bool vm_get_shm_region(struct virtio_device *vdev,
+> +			      struct virtio_shm_region *region, u8 id)
+> +{
+> +	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+> +	u64 len, addr;
+> +
+> +	/* Select the region we're interested in */
+> +	writel(id, vm_dev->base + VIRTIO_MMIO_SHM_SEL);
+> +
+> +	/* Read the region size */
+> +	len = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_LOW);
+> +	len |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_HIGH) << 32;
+> +
+> +	region->len = len;
+> +
+> +	/* Check if region length is -1. If that's the case, the shared memory
+> +	 * region does not exist and there is no need to proceed further.
+> +	 */
+> +	if (len == ~(u64)0) {
+> +		return false;
+> +	}
 
--- 
-Sincerely yours,
-Mike.
+I think the curly braces should be dropped here.
 
+> +
+> +	/* Read the region base address */
+> +	addr = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_LOW);
+> +	addr |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_HIGH) << 32;
+> +
+> +	region->addr = addr;
+> +
+> +	return true;
+> +}
+> +
+>  static const struct virtio_config_ops virtio_mmio_config_ops = {
+>  	.get		= vm_get,
+>  	.set		= vm_set,
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
