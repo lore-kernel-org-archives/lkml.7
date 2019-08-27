@@ -2,125 +2,107 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF16C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F708C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309452053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5TOl98i"
+	by mail.kernel.org (Postfix) with ESMTP id DEA6D20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566929006;
+	bh=PciTZ5Spx8ahsNE/TsxI4+JUGBW8eT07skWUnAtpeTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fc8vshtq2FddGfLc9mtwZPSsliSutRpwbVb7Vva0URThAsDyHgHBOfb8NH1kqdO+j
+	 MCgj92CHcNik4HZmIhZVsKhKWCrhcrVlTTamhrpLzV0Aqr91Rs5GFuizCm/2P86Cs/
+	 2jhvy6SH8b1G0rNkXx+pEmlbfcWGnolsTLySh6hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbfH0SCk (ORCPT
+        id S1730462AbfH0SD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:02:40 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:45305 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0SCj (ORCPT
+        Tue, 27 Aug 2019 14:03:26 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52640 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0SDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:02:39 -0400
-Received: by mail-yb1-f196.google.com with SMTP id u32so8528154ybi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XR6/sqrx3cd2fMLsbifvUJ8ua+YMdiSTj/B5AHiQ/oo=;
-        b=I5TOl98iut1jtvrrC0COedDbhwBOFmzUo6dIk8ajzgy6yhTjI8CfubfiZQcp94YzPR
-         0YeziR8YP3Qi8QhuHV6XEzVgPFK7+kM4a8Q0+5an/Q+UQjDRQOVspbzmmt4B9XE9wFck
-         UKwfqXUYhDvuDFZLRCpm31LM6XIUgzLVJKbQBsL5Pfc+Vu3Xqo/flnIugVNJQI7nOsX6
-         uBdXhkB4DmMIP7dwvhYAY+fUS+9FLRbD0HMyj3/Aw6ca+Sq8HynGTxHLTeoygY1pjsg2
-         wSTZA2c6IG5PLwnNU2Zlgnr5w0RQlIK3W1Gc84n51/pm74QCrV8d2OPgRRJjxDwp0Tj7
-         cI1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XR6/sqrx3cd2fMLsbifvUJ8ua+YMdiSTj/B5AHiQ/oo=;
-        b=HBRhp1Wex8TW5wCo2HDTyxWqSroC9ZNeBOYi1qKMDkrfvmwinzIJneaJdamQBQ8Ssg
-         mel74LjKLF2jRZ8p79mOL56R2COcXjSc2A+0n1bgZhdNJNiyP4d0u2Vn6JOBlCaAqo21
-         bXXnyf6f+y88OwW0gxnwZJXzAA8UoxI27qk6DSDGvKNpUzlzxbuVMuxLBPHHV5XIom45
-         767Kpy0DnGvvpJgNc0seV7Oky9C24wq/5D8bEYHZWEa0IYILKg5+zi33wccjoKp2VbiN
-         nbyRE+byrbSTNGXSJ67meVIQ7FFgr1qlaCeKDlc4TydL6TtLIgjU7a+7Qh89spnf3cvz
-         uWiA==
-X-Gm-Message-State: APjAAAWNP3/EBwB2nQEvBTwRsNCgFl53G1P8Row1X2yGDHnN5giPG/cL
-        63QWnWQoO+d3rYOiRvI8doXEMZpXL4qOm4a9LKo=
-X-Google-Smtp-Source: APXvYqxd6NcDOYtY7Ak3XIp6fVqXbHG9XSq7Jyq7V1p+lifxpjKe5DCXK3UfYi6O9dmpCKvle1L+kvbJoVRQ2HYcryQ=
-X-Received: by 2002:a25:bec5:: with SMTP id k5mr33069ybm.259.1566928958725;
- Tue, 27 Aug 2019 11:02:38 -0700 (PDT)
+        Tue, 27 Aug 2019 14:03:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KbdXuUIb1PofA8gj3PpnmyfX3/C/zewyEqvqL3YUumE=; b=hzIztPaz4hj+uqKUNVeEA2H4S
+        LkVkxGz8+v+KyMZ8HRUurKWnprzMY74/tjUb0ckNVXo3z1yrfZ0YNLGCKedxNsAnyyB1alfNotzcU
+        HTZJz1n3eHvZVn0vV+GpFWj9N3a+3yCFFqIKeg2MC4+nOUPNYvcEk+Uf9EBgjLhFgl17A=;
+Received: from 92.41.142.151.threembb.co.uk ([92.41.142.151] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i2foP-0000rz-Ee; Tue, 27 Aug 2019 18:03:21 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 1FBBBD02CE6; Tue, 27 Aug 2019 19:03:20 +0100 (BST)
+Date:   Tue, 27 Aug 2019 19:03:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Ashish Kumar <ashish.kumar@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+Message-ID: <20190827180320.GE23391@sirena.co.uk>
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20190821110640.GC5128@sirena.co.uk>
+ <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <20190822190507.GI23391@sirena.co.uk>
+ <DB7PR04MB4011C9785D8D9CDFE9BC62DD95A10@DB7PR04MB4011.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190827162924.88524-1-rrangel@chromium.org>
-In-Reply-To: <20190827162924.88524-1-rrangel@chromium.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 27 Aug 2019 14:02:18 -0400
-Message-ID: <CADnq5_ME=erztEhDhW5Z2RYr7kpMT_OOHm2xyJDPGd8a2d3LuA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: fix struct init in update_bounding_box
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        hersen wu <hersenxs.wu@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KC8n6y+EC4k2kdZR"
+Content-Disposition: inline
+In-Reply-To: <DB7PR04MB4011C9785D8D9CDFE9BC62DD95A10@DB7PR04MB4011.eurprd04.prod.outlook.com>
+X-Cookie: Don't SANFORIZE me!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 1:33 PM Raul E Rangel <rrangel@chromium.org> wrote:
->
-> dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
->   struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
->          ^
->
-> Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
->
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> ---
->
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> index b949e202d6cb..d8dd99bfa275 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> @@ -2633,7 +2633,7 @@ static void cap_soc_clocks(
->  static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
->                 struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
->  {
-> -       struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-> +       struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {};
 
-I think it would be better to just use a memset.  Different compilers
-seems to do the wrong thing with these sort of initializations.
+--KC8n6y+EC4k2kdZR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Alex
+On Mon, Aug 26, 2019 at 06:19:53AM +0000, Ashish Kumar wrote:
 
->         int i;
->         int num_calculated_states = 0;
->         int min_dcfclk = 0;
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> For Patch-2, I intended to use this in arm64/boot/dts/freescale/fsl-ls1088a.dtsi (please see below), since both ls1088 and ls2080 has same QSPI controller.
+> So I had introduced new compatible
+> +                "fsl,ls1012a-qspi" followed by "fsl,ls1021a-qspi"
+> +                "fsl,ls1088a-qspi" followed by "fsl,ls2080a-qspi"
+
+Even if the compatible is supposed to be used in conjunction with
+other fallbacks it should still explicitly be there in case
+someone forgets or decides not to do that for some reason.
+
+--KC8n6y+EC4k2kdZR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1lcGUACgkQJNaLcl1U
+h9AO3wf+JCKT+OSIxSc0gdf/Uy1kGqqqZk0sJcNYIa8GbyIxvlUIyXI7fn0HYhs7
+HeUX5hJxYc8xodd8CTzWXCdXFeXpV6weWYidbcvBDYLAQGEhnCQY7LoKFQdWBBse
+GNwuCT4SMuAUXHutf6GZaTPv8SIXGrNaZqawtlrOg4TFzUmL74MjlCQvpMn5j15g
+v9rmk4kF310PIxuIPFKHgU0gyJdJ7gcr7uYCfUJA1/EtEWHfVoOnyZ+IG0Di9rPC
+sPa6VYx6Wv376zRTNMPBJEt0Sn87KEPnz7A0afRbmNhs5OxuK1kXXIhib5u6MvGj
+neVEamNf4Dxb+u9KverWRMgfQFCSSw==
+=mBNE
+-----END PGP SIGNATURE-----
+
+--KC8n6y+EC4k2kdZR--
