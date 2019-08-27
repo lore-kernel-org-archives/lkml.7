@@ -6,69 +6,66 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A0CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C4BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E052077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929502077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfH0LOu (ORCPT
+        id S1729252AbfH0LPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:14:50 -0400
-Received: from mga07.intel.com ([134.134.136.100]:4154 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfH0LOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:14:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 04:14:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="197290955"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2019 04:14:38 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] modpost: add guid_t type definition
-Date:   Tue, 27 Aug 2019 14:14:37 +0300
-Message-Id: <20190827111437.22000-1-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.23.0.rc1
+        Tue, 27 Aug 2019 07:15:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33240 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfH0LP3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:15:29 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i2ZRg-0000jN-0Q; Tue, 27 Aug 2019 11:15:28 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb: redundant assignment to variable tmp
+Date:   Tue, 27 Aug 2019 12:15:27 +0100
+Message-Id: <20190827111527.26337-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since guid_t is the recommended data type for UUIDs in
-kernel (and I guess uuid_le is meant to be ultimately
-replaced with it), it should be made available here as
-well.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Variable tmp is being assigned a value that is never read and tmp
+is being re-assigned a little later on. The assignment is redundant
+and hence can be removed.
+
+Addresses-Coverity: ("Ununsed value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- scripts/mod/file2alias.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/dvb-frontends/sp8870.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index e17a29ae2e97..c91eba751804 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -34,6 +34,11 @@ typedef Elf64_Addr	kernel_ulong_t;
- typedef uint32_t	__u32;
- typedef uint16_t	__u16;
- typedef unsigned char	__u8;
-+typedef struct {
-+	__u8 b[16];
-+} guid_t;
-+
-+/* backwards compatibility, don't use in new code */
- typedef struct {
- 	__u8 b[16];
- } uuid_le;
+diff --git a/drivers/media/dvb-frontends/sp8870.c b/drivers/media/dvb-frontends/sp8870.c
+index 655db8272268..f6793c9c2dc3 100644
+--- a/drivers/media/dvb-frontends/sp8870.c
++++ b/drivers/media/dvb-frontends/sp8870.c
+@@ -378,8 +378,6 @@ static int sp8870_read_ber (struct dvb_frontend* fe, u32 * ber)
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+-	tmp = ret & 0x3F;
+-
+ 	ret = sp8870_readreg(state, 0xC07);
+ 	if (ret < 0)
+ 		return -EIO;
 -- 
-2.23.0.rc1
+2.20.1
 
