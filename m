@@ -2,37 +2,69 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04300C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2763217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29E2204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cr05cDWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfH0G4z (ORCPT
+        id S1728534AbfH0G6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:56:55 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:51452 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfH0G4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:56:54 -0400
-Received: from troy.prtnl (troy.prtnl [192.168.224.29])
-        by sparta (Postfix) with ESMTP id 8E22944A00C5;
-        Tue, 27 Aug 2019 08:49:09 +0200 (CEST)
-From:   David Jander <david@protonic.nl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Jander <david@protonic.nl>
-Subject: [PATCH 2/2] gpio: pca953x.c: Use pca953x_read_regs instead of regmap_bulk_read
-Date:   Tue, 27 Aug 2019 06:46:29 +0000
-Message-Id: <20190827064629.90214-2-david@protonic.nl>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190827064629.90214-1-david@protonic.nl>
-References: <20190827064629.90214-1-david@protonic.nl>
+        Tue, 27 Aug 2019 02:58:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35438 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfH0G6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:58:08 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d85so13502881pfd.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 23:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2SjzIbZ5hnYu3S33EBe7j6jLOK8CzX1GOqeIXZJFsQM=;
+        b=cr05cDWOBWMlN9xmzk2396gJ0Yv94+bAhseFR8515+ucd/o5PzyR/Hy1HLNvvG4mlF
+         epI6WjmKO+EmWvr1mmHggLoQeumqrcjTfcv9/g7pP3GVeuhyanzhZ8C6kReraq9af7Le
+         eEY6gmqa+5F1NI3y85owS2gUSlSKv4A2ue3HQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2SjzIbZ5hnYu3S33EBe7j6jLOK8CzX1GOqeIXZJFsQM=;
+        b=aDsdWDT+hFvrDmu/h1Zd3TGvgypwEXvKjz5HgkvrHYmnHTugvLuFRnN2CL5t23zQoV
+         /qXbitHlQlvWvRiu6Bcx2lclnXV3rCLidYkcySjizz2Szt4d18Y7T4Xb2T0Y1p38rGDn
+         VD/0uvUek1jB+fAz2K/Sr0hK1NRme3Y7m2IFBeeseizg6HteSB2h/fXesBda94ixneH0
+         tjy1XNCXOAq4KMDdMV0lQv9cl/fhGMBB89OimN924b2dF2SA0s0Faz92l8Yq1QEfjlod
+         vXKkLUPsebQbldQBsBAJNfxBud1QauJccMC1jv/7xRRRqXjiadmROuoD2b7xWsP090C1
+         i+XQ==
+X-Gm-Message-State: APjAAAVIDBRBcKL9mjcbKUbp5C4GqAQ5b+psygL9BbNDUHp4T/MWRypp
+        Whm02wbTxY4pefvRArZhDIWovg==
+X-Google-Smtp-Source: APXvYqzcZ7kf4YnloLL8kQIiSagsepOrKO60rVy/s+xMJPjlrHUuOYXWh8kMuZiF4AL8PzdR9RlVTg==
+X-Received: by 2002:a65:5082:: with SMTP id r2mr19450345pgp.170.1566889087335;
+        Mon, 26 Aug 2019 23:58:07 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id b19sm12537347pgs.10.2019.08.26.23.58.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 23:58:06 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wgong@codeaurora.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Alagu Sankar <alagusankar@silex-india.com>,
+        briannorris@chromium.org, tientzu@chromium.org
+Subject: [PATCH v2] ath10k: Adjust skb length in ath10k_sdio_mbox_rx_packet
+Date:   Tue, 27 Aug 2019 14:58:02 +0800
+Message-Id: <20190827065802.167677-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,49 +72,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The register number needs to be translated for chips with more than 8
-ports. This patch fixes a bug causing all chips with more than 8 GPIO pins
-to not work correctly.
+When the FW bundles multiple packets, pkt->act_len may be incorrect
+as it refers to the first packet only (however, the FW will only
+bundle packets that fit into the same pkt->alloc_len).
 
-Signed-off-by: David Jander <david@protonic.nl>
+Before this patch, the skb length would be set (incorrectly) to
+pkt->act_len in ath10k_sdio_mbox_rx_packet, and then later manually
+adjusted in ath10k_sdio_mbox_rx_process_packet.
+
+The first problem is that ath10k_sdio_mbox_rx_process_packet does not
+use proper skb_put commands to adjust the length (it directly changes
+skb->len), so we end up with a mismatch between skb->head + skb->tail
+and skb->data + skb->len. This is quite serious, and causes corruptions
+in the TCP stack, as the stack tries to coalesce packets, and relies
+on skb->tail being correct (that is, skb_tail_pointer must point to
+the first byte_after_ the data).
+
+Instead of re-adjusting the size in ath10k_sdio_mbox_rx_process_packet,
+this moves the code to ath10k_sdio_mbox_rx_packet, and also add a
+bounds check, as skb_put would crash the kernel if not enough space is
+available.
+
+Fixes: 8530b4e7b22bc3b ("ath10k: sdio: set skb len for all rx packets")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+
 ---
- drivers/gpio/gpio-pca953x.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 30072a570bc2..48fea4c68e8d 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -606,8 +606,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	u8 invert_irq_mask[MAX_BANK];
- 	u8 reg_direction[MAX_BANK];
+One simple way to reproduce this issue is this scriplet, that sends a
+lot of small packets over SSH (it usually fails before reaching 300):
+(for i in `seq 1 300`; do echo $i; sleep 0.1; done) | ssh $IP cat
+
+I was not able to check the original use case why the code was added
+(packets > 1500 bytes), as the FW on my board crashes when sending
+such large packets.
+
+ drivers/net/wireless/ath/ath10k/sdio.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index 8ed4fbd8d6c3888..0a3ac44a13698c1 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -381,16 +381,11 @@ static int ath10k_sdio_mbox_rx_process_packet(struct ath10k *ar,
+ 	struct ath10k_htc_hdr *htc_hdr = (struct ath10k_htc_hdr *)skb->data;
+ 	bool trailer_present = htc_hdr->flags & ATH10K_HTC_FLAG_TRAILER_PRESENT;
+ 	enum ath10k_htc_ep_id eid;
+-	u16 payload_len;
+ 	u8 *trailer;
+ 	int ret;
  
--	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
--			 NBANK(chip));
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
+-	payload_len = le16_to_cpu(htc_hdr->len);
+-	skb->len = payload_len + sizeof(struct ath10k_htc_hdr);
+-
+ 	if (trailer_present) {
+-		trailer = skb->data + sizeof(*htc_hdr) +
+-			  payload_len - htc_hdr->trailer_len;
++		trailer = skb->data + skb->len - htc_hdr->trailer_len;
  
- 	if (chip->driver_data & PCA_PCAL) {
- 		/* Enable latch on interrupt-enabled inputs */
-@@ -710,8 +709,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
- 		return false;
+ 		eid = pipe_id_to_eid(htc_hdr->eid);
  
- 	/* Remove output pins from the equation */
--	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
--			 NBANK(chip));
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 	for (i = 0; i < NBANK(chip); i++)
- 		cur_stat[i] &= reg_direction[i];
+@@ -636,9 +631,23 @@ static int ath10k_sdio_mbox_rx_packet(struct ath10k *ar,
  
-@@ -789,8 +787,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- 	 * interrupt.  We have to rely on the previous read for
- 	 * this purpose.
- 	 */
--	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
--			 NBANK(chip));
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 	for (i = 0; i < NBANK(chip); i++)
- 		chip->irq_stat[i] &= reg_direction[i];
- 	mutex_init(&chip->irq_lock);
+ 	ret = ath10k_sdio_readsb(ar, ar_sdio->mbox_info.htc_addr,
+ 				 skb->data, pkt->alloc_len);
++	if (!ret) {
++		/* Update actual length. The original length may be incorrect,
++		 * as the FW will bundle multiple packets as long as their sizes
++		 * fit within the same aligned length (pkt->alloc_len).
++		 */
++		struct ath10k_htc_hdr *htc_hdr =
++			(struct ath10k_htc_hdr *)skb->data;
++		pkt->act_len = le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr);
++		if (pkt->act_len <= pkt->alloc_len) {
++			skb_put(skb, pkt->act_len);
++		} else {
++			ath10k_warn(ar, "rx_packet too large (%d > %d)\n",
++				    pkt->act_len, pkt->alloc_len);
++			ret = -EMSGSIZE;
++		}
++	}
+ 	pkt->status = ret;
+-	if (!ret)
+-		skb_put(skb, pkt->act_len);
+ 
+ 	return ret;
+ }
 -- 
-2.19.1
+2.23.0.187.g17f5b7556c-goog
 
