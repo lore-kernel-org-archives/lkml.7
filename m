@@ -2,127 +2,96 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBB4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33229C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6742184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068EA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893349;
-	bh=9XZ+Be4/yLcj+Tj426tFwAI0b4HEgWmZTt9ohu5MdwM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKm+LTbDLEMZhkSglUmMTSDCbBuuNie+MtbMU6LIyW2wRTOaHEC4FuyVPmOA7M+kM
-	 Rh7cyU2Csgjbpi6N1P6xeT+7VCmZJFO5vp5tg7lg4fHMD+F0Bi5mtC/fj0erxaBqjc
-	 CYQLJLgjNQQvd5SSOCUkgDcUvNWAi9vGfq73W6k4=
+	s=default; t=1566893354;
+	bh=8qdfPFyeI8CDcDn7hTPSj0UTJyklhXLPF/NtekcTWV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tMayCg0Q0SgxNUKETfcIwC8450/3kgYxz6TKUMTBU4+55nBW+VIHMrbeIwtybHtQr
+	 2XMCkV0edTgoIdGp0qLI2djggAzIBOOIKFtNA830T9OrGqarQXW9X84MJtkjLQ/NQK
+	 2x4OfFbjwtD4Sr+7c3JNzGZihctzpqBLN5fB6mE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbfH0IJH (ORCPT
+        id S1733066AbfH0IJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:09:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbfH0IFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:05:06 -0400
+        id S1732496AbfH0IJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:09:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54B70206BF;
-        Tue, 27 Aug 2019 08:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D64462173E;
+        Tue, 27 Aug 2019 08:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893105;
-        bh=9XZ+Be4/yLcj+Tj426tFwAI0b4HEgWmZTt9ohu5MdwM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KfWi8MAW25IHN7A03ub1bbQ93IdwuquPuY+KaWpDM+QWTTJLHgSIpGIigO6MtqdiY
-         dcDV0fOmmsBgYAnk4BJmlMriT9y6ZzIT6De9jLGbfK/eCLSnEtDUXkvkeGvIjHQUGl
-         q8Icy1fe+uprQHAQyRwlKSppXajDyYmSV3Bt0ij0=
+        s=default; t=1566893347;
+        bh=8qdfPFyeI8CDcDn7hTPSj0UTJyklhXLPF/NtekcTWV0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iLmiB1p4jVrlqPMTuppgLfFPJRN08vwXl/0QU88fB50DbeozirIJaG45L7c+m+pIH
+         EehN//eulODgGNOfbq2+zNueju1Y+2fLJ5Hf7Q0NpTi9Otw1/KcEqJZqbo8Cvvohu8
+         yuFj99eO8kjmODZxW/JQTjwdA9lIIQyEAa9+kdsI=
+Date:   Tue, 27 Aug 2019 09:58:02 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 105/162] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
-Date:   Tue, 27 Aug 2019 09:50:33 +0200
-Message-Id: <20190827072741.961103900@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
-References: <20190827072738.093683223@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org,
+        Viresh Kumar <vireshk@kernel.org>
+Subject: Re: [PATCH 1/9] staging: greybus: fix up SPDX comment in .h files
+Message-ID: <20190827075802.GA29204@kroah.com>
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+ <20190825055429.18547-2-gregkh@linuxfoundation.org>
+ <20190826055119.4pbmf5ape224giwz@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826055119.4pbmf5ape224giwz@vireshk-i7>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
+On Mon, Aug 26, 2019 at 11:21:19AM +0530, Viresh Kumar wrote:
+> On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
+> > When these files originally got an SPDX tag, I used // instead of /* */
+> > for the .h files.  Fix this up to use // properly.
+> > 
+> > Cc: Viresh Kumar <vireshk@kernel.org>
+> > Cc: Johan Hovold <johan@kernel.org>
+> > Cc: Alex Elder <elder@kernel.org>
+> > Cc: greybus-dev@lists.linaro.org
+> > Cc: devel@driverdev.osuosl.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  drivers/staging/greybus/firmware.h               | 2 +-
+> >  drivers/staging/greybus/gb-camera.h              | 2 +-
+> >  drivers/staging/greybus/gbphy.h                  | 2 +-
+> >  drivers/staging/greybus/greybus.h                | 2 +-
+> >  drivers/staging/greybus/greybus_authentication.h | 2 +-
+> >  drivers/staging/greybus/greybus_firmware.h       | 2 +-
+> >  drivers/staging/greybus/greybus_manifest.h       | 2 +-
+> >  drivers/staging/greybus/greybus_protocols.h      | 2 +-
+> >  drivers/staging/greybus/greybus_trace.h          | 2 +-
+> >  drivers/staging/greybus/hd.h                     | 2 +-
+> >  drivers/staging/greybus/interface.h              | 2 +-
+> >  drivers/staging/greybus/manifest.h               | 2 +-
+> >  drivers/staging/greybus/module.h                 | 2 +-
+> >  drivers/staging/greybus/operation.h              | 2 +-
+> >  drivers/staging/greybus/spilib.h                 | 2 +-
+> >  drivers/staging/greybus/svc.h                    | 2 +-
+> >  16 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-The events defined in pmu-events JSON are parsed and added into perf
-tool. For fixed counters, we handle the encodings between JSON and perf
-by using a static array fixed[].
+Thanks for all of the acks!
 
-But the fixed[] has missed an important event "cpu_clk_unhalted.core".
-
-For example, on the Tremont platform,
-
-  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-  event syntax error: 'cpu_clk_unhalted.core'
-                       \___ parser error
-
-With this patch, the event cpu_clk_unhalted.core can be parsed.
-
-  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4
-    size                             112
-    config                           0x3c
-    sample_type                      IDENTIFIER
-    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-    disabled                         1
-    inherit                          1
-    exclude_guest                    1
-  ------------------------------------------------------------
-...
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/pmu-events/jevents.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 58f77fd0f59fe..ed5423d8a95fd 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -450,6 +450,7 @@ static struct fixed {
- 	{ "inst_retired.any_p", "event=0xc0" },
- 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
- 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c" },
- 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
- 	{ NULL, NULL},
- };
--- 
-2.20.1
-
-
-
+greg k-h
