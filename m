@@ -2,109 +2,144 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760A0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A26FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BFE21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="t5tRKOdO"
+	by mail.kernel.org (Postfix) with ESMTP id 15D6820828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfH0Ogj (ORCPT
+        id S1727058AbfH0Ogo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:36:39 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40330 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfH0Ogi (ORCPT
+        Tue, 27 Aug 2019 10:36:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43960 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728834AbfH0Ogk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:36:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vhzf+dZDreIumgSd/qgIOrRav/zwhEMSkCEy/wY4MGU=; b=t5tRKOdOnczH2Hp+z218qFN8+
-        Q6wWgCMBppznidCK3hI63kFTn7KvDPLsVRYWSRJ3U+i7fZZbXNF6UAbbCIOyaiwNszYvHF/G8g2Rv
-        DstzRoKm5aVvHtIkRA/CD7ixm0rnM4FErN8Mj+JWDFNP5bNXO/rSEaRRi7GqoFU7r9SZj44Co6y9N
-        1JpRW8mRZFDM+uNGTnD/AKX77SlKBCDbpDhOSz1MVRnrOuHIUIYJiPyYUHmKwD6WGcxlLF8Q0Ka4R
-        NfcQGOM1W0GAQeajTvp09XKvuEpbFkyeHzyNfeIdYnc6PzkRQpeVm0rAbzu5tGXfUvr5gflfWs+C6
-        v2BBQdvQg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38660)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i2caJ-0004zg-HP; Tue, 27 Aug 2019 15:36:35 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i2caI-0005om-AW; Tue, 27 Aug 2019 15:36:34 +0100
-Date:   Tue, 27 Aug 2019 15:36:34 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Continuous SD IO causes hung task messages
-Message-ID: <20190827143634.GL13294@shell.armlinux.org.uk>
-References: <20190827134337.GK13294@shell.armlinux.org.uk>
- <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
+        Tue, 27 Aug 2019 10:36:40 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i2caJ-0008Qw-4q; Tue, 27 Aug 2019 16:36:35 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9ACE21C07DC;
+        Tue, 27 Aug 2019 16:36:34 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 14:36:34 -0000
+From:   "tip-bot2 for Ming Lei" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq/affinity: Improve __irq_build_affinity_masks()
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190816022849.14075-2-ming.lei@redhat.com>
+References: <20190816022849.14075-2-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Message-ID: <156691659442.23585.17929718097373200199.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFp7e2OD_idam3-2sEd0wJU5OcP=H04G1OvHmAUo2Y-bYw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:55:23PM +0200, Ulf Hansson wrote:
-> On Tue, 27 Aug 2019 at 15:43, Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > Hi,
-> >
-> > While dd'ing the contents of a SD card, I get hung task timeout
-> > messages as per below.  However, the dd is making progress.  Any
-> > ideas?
-> >
-> > Presumably, mmc_rescan doesn't get a look-in while IO is progressing
-> > for the card?
-> 
-> Is it a regression?
-> 
-> There not much of recent mmc core and mmc block changes, that I can
-> think of at this point.
+The following commit has been merged into the irq/core branch of tip:
 
-No idea - I just repaired the SD socket after the D2 line became
-disconnected, and decided to run that command as a test.
+Commit-ID:     53c1788b7d7720565214a466afffdc818d8c6e5f
+Gitweb:        https://git.kernel.org/tip/53c1788b7d7720565214a466afffdc818d8c6e5f
+Author:        Ming Lei <ming.lei@redhat.com>
+AuthorDate:    Fri, 16 Aug 2019 10:28:48 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 27 Aug 2019 16:31:17 +02:00
 
-> > ARM64 host, Macchiatobin, uSD card.
-> 
-> What mmc host driver is it? mmci?
+genirq/affinity: Improve __irq_build_affinity_masks()
 
-sdhci-xenon.
+One invariant of __irq_build_affinity_masks() is that all CPUs in the
+specified masks (cpu_mask AND node_to_cpumask for each node) should be
+covered during the spread. Even though all requested vectors have been
+reached, it's still required to spread vectors among remained CPUs. A
+similar policy has been taken in case of 'numvecs <= nodes' already.
 
-I'm just trying with one CPU online, then I'll try with two.  My
-suspicion is that there's a problem in the ARM64 arch code where
-unlocking a mutex doesn't get noticed on other CPUs.
+So remove the following check inside the loop:
 
-Hmm, I thought I'd try bringing another CPU online, but it seems
-like the ARM64 CPU hotplug code is broken:
+	if (done >= numvecs)
+		break;
 
-[ 3552.029689] CPU1: shutdown
-[ 3552.031099] psci: CPU1 killed.
-[ 3949.835212] CPU1: failed to come online
-[ 3949.837753] CPU1: failed in unknown state : 0x0
+Meantime assign at least 1 vector for remaining nodes if 'numvecs' vectors
+have been handled already.
 
-which means I can only take CPUs down, I can't bring them back
-online without rebooting.
+Also, if the specified cpumask for one numa node is empty, simply do not
+spread vectors on this node.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190816022849.14075-2-ming.lei@redhat.com
+
+---
+ kernel/irq/affinity.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+index 6fef480..c7cca94 100644
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -129,14 +129,26 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+ 	for_each_node_mask(n, nodemsk) {
+ 		unsigned int ncpus, v, vecs_to_assign, vecs_per_node;
+ 
+-		/* Spread the vectors per node */
+-		vecs_per_node = (numvecs - (curvec - firstvec)) / nodes;
+-
+ 		/* Get the cpus on this node which are in the mask */
+ 		cpumask_and(nmsk, cpu_mask, node_to_cpumask[n]);
+-
+-		/* Calculate the number of cpus per vector */
+ 		ncpus = cpumask_weight(nmsk);
++		if (!ncpus)
++			continue;
++
++		/*
++		 * Calculate the number of cpus per vector
++		 *
++		 * Spread the vectors evenly per node. If the requested
++		 * vector number has been reached, simply allocate one
++		 * vector for each remaining node so that all nodes can
++		 * be covered
++		 */
++		if (numvecs > done)
++			vecs_per_node = max_t(unsigned,
++					(numvecs - done) / nodes, 1);
++		else
++			vecs_per_node = 1;
++
+ 		vecs_to_assign = min(vecs_per_node, ncpus);
+ 
+ 		/* Account for rounding errors */
+@@ -156,13 +168,11 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+ 		}
+ 
+ 		done += v;
+-		if (done >= numvecs)
+-			break;
+ 		if (curvec >= last_affv)
+ 			curvec = firstvec;
+ 		--nodes;
+ 	}
+-	return done;
++	return done < numvecs ? done : numvecs;
+ }
+ 
+ /*
