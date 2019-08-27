@@ -2,146 +2,102 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79393C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A432C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484B0206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:23:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="figx/Q98"
+	by mail.kernel.org (Postfix) with ESMTP id 022E1206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbfH0PXN (ORCPT
+        id S1730192AbfH0PXj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:23:13 -0400
-Received: from mail-io1-f48.google.com ([209.85.166.48]:40258 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0PXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:23:12 -0400
-Received: by mail-io1-f48.google.com with SMTP id t6so47227779ios.7
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EialagdAgnBtYjzH6H0eO9CyoHJZ48U2U5aIVIJeUoo=;
-        b=figx/Q98kEpCBkqo3lxQ6atjRtKnOZ/vizqGhR6ya8V3vn3+aFl2oTLswEK1VjnEMg
-         An75CIk3RkB52JqKH80uhifoZiBjBgP+rPZNgE/8ipmRd77Ok9Xb6Y+4IeWDeVn8lmKd
-         ySMOZk1uc2qMWNtBcJuL843WNs9SFPe/F1JQBw+7MCJe3UdkDKvttcuwKgwAi9oppUSI
-         vRtaD9Uy56A0NEqyv6qNzLxcz1F6B3uV/Dp3f7ve6N1FqXtz+1EzyKNRy7GFif41nKI3
-         nQoC9QQViIIaBRegMiHx06KhObDFDXWzNvmgR56X0UTpzB2kBNE2KFkzbQ9//Alh90Yc
-         O4RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EialagdAgnBtYjzH6H0eO9CyoHJZ48U2U5aIVIJeUoo=;
-        b=CgWMNwxHDIvKfYLe5K/sZFGqcXozhoU+14/cLu2Q2hj4m78W3y+8BPm0vKSY2frTo5
-         oQC95ps5cybuZejGNjOHHnuKp8umI9tNeD5FNMwX6RzH+vc2eOcqB0p23LgYsLYstzTI
-         VK9Uh0uYKZoDbIXO57LiBpJFbK5Ahip2SL55/VSJut3895EmMxZlk2dvAsxC4aI7gUXq
-         1IGEXzPYsohk9u6XkGIRYjWjftn6AA1uNuC1FZZcHeqKbrsA/uBB3rkqbsV1t7b6LLFu
-         zIxb//odtObAx8TL1xzVPWZ02IqDcfCE1Y77xPTI/yYiKgbSJHPcTjXw0bOb60dpVlbs
-         cVOA==
-X-Gm-Message-State: APjAAAWgB17wPqWmJgi0sql9Ozdyjl2n2IX9xN//wZko1A7xGfOywH6a
-        5WFYIg0QVrYJZ6fNZu0kzJpkWQ==
-X-Google-Smtp-Source: APXvYqzTjEDUFcepnEf1WEiRSh5mor0Y5ZzBDG+MemPieFRR8sXBVkJz4+O2iILrDrCaJ4x8THmZFQ==
-X-Received: by 2002:a6b:3943:: with SMTP id g64mr24044809ioa.225.1566919391746;
-        Tue, 27 Aug 2019 08:23:11 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u24sm13275659iot.38.2019.08.27.08.23.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 08:23:10 -0700 (PDT)
-Subject: Re: [PATCHSET v3] writeback, memcg: Implement foreign inode flushing
-To:     Tejun Heo <tj@kernel.org>, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, guro@fb.com, akpm@linux-foundation.org
-References: <20190826160656.870307-1-tj@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <15a5a6e8-90bf-726b-f68c-db91f1afc651@kernel.dk>
-Date:   Tue, 27 Aug 2019 09:23:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190826160656.870307-1-tj@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 27 Aug 2019 11:23:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18033 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729836AbfH0PXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:23:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 08:23:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="355800525"
+Received: from pgsmsx114.gar.corp.intel.com ([10.108.55.203])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2019 08:23:35 -0700
+Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.25]) by
+ pgsmsx114.gar.corp.intel.com ([169.254.4.237]) with mapi id 14.03.0439.000;
+ Tue, 27 Aug 2019 23:23:35 +0800
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "Heiner Kallweit" <hkallweit1@gmail.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
+ cover PHY that only talks C45
+Thread-Topic: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
+ cover PHY that only talks C45
+Thread-Index: AQHVXDc1t4vgWavJu0GuD73CQMEeB6cNOWeAgAAHYgCAAdKi8A==
+Date:   Tue, 27 Aug 2019 15:23:34 +0000
+Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
+References: <1566870769-9967-1-git-send-email-weifeng.voon@intel.com>
+ <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
+ <20190826185418.GG2168@lunn.ch>
+In-Reply-To: <20190826185418.GG2168@lunn.ch>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 10:06 AM, Tejun Heo wrote:
-> Hello,
+> > > Make mdiobus_scan() to try harder to look for any PHY that only
+> talks C45.
+> > If you are not using Device Tree or ACPI, and you are letting the MDIO
+> > bus be scanned, it sounds like there should be a way for you to
+> > provide a hint as to which addresses should be scanned (that's
+> > mii_bus::phy_mask) and possibly enhance that with a mask of possible
+> > C45 devices?
 > 
-> Changes from v1[1]:
+> Yes, i don't like this unconditional c45 scanning. A lot of MDIO bus
+> drivers don't look for the MII_ADDR_C45. They are going to do a C22
+> transfer, and maybe not mask out the MII_ADDR_C45 from reg, causing an
+> invalid register write. Bad things can then happen.
 > 
-> * More comments explaining the parameters.
+> With DT and ACPI, we have an explicit indication that C45 should be used,
+> so we know on this platform C45 is safe to use. We need something
+> similar when not using DT or ACPI.
 > 
-> * 0003-writeback-Separate-out-wb_get_lookup-from-wb_get_create.patch
->    added and avoid spuriously creating missing wbs for foreign
->    flushing.
-> 
-> Changes from v2[2]:
-> 
-> * Added livelock avoidance and applied other smaller changes suggested
->    by Jan.
-> 
-> There's an inherent mismatch between memcg and writeback.  The former
-> trackes ownership per-page while the latter per-inode.  This was a
-> deliberate design decision because honoring per-page ownership in the
-> writeback path is complicated, may lead to higher CPU and IO overheads
-> and deemed unnecessary given that write-sharing an inode across
-> different cgroups isn't a common use-case.
-> 
-> Combined with inode majority-writer ownership switching, this works
-> well enough in most cases but there are some pathological cases.  For
-> example, let's say there are two cgroups A and B which keep writing to
-> different but confined parts of the same inode.  B owns the inode and
-> A's memory is limited far below B's.  A's dirty ratio can rise enough
-> to trigger balance_dirty_pages() sleeps but B's can be low enough to
-> avoid triggering background writeback.  A will be slowed down without
-> a way to make writeback of the dirty pages happen.
-> 
-> This patchset implements foreign dirty recording and foreign mechanism
-> so that when a memcg encounters a condition as above it can trigger
-> flushes on bdi_writebacks which can clean its pages.  Please see the
-> last patch for more details.
-> 
-> This patchset contains the following four patches.
-> 
->   0001-writeback-Generalize-and-expose-wb_completion.patch
->   0002-bdi-Add-bdi-id.patch
->   0003-writeback-Separate-out-wb_get_lookup-from-wb_get_create.patch
->   0004-writeback-memcg-Implement-cgroup_writeback_by_id.patch
->   0005-writeback-memcg-Implement-foreign-dirty-flushing.patch
-> 
-> 0001-0004 are prep patches which expose wb_completion and implement
-> bdi->id and flushing by bdi and memcg IDs.
-> 
-> 0005 implements foreign inode flushing.
-> 
-> Thanks.  diffstat follows.
-> 
->   fs/fs-writeback.c                |  130 ++++++++++++++++++++++++++++---------
->   include/linux/backing-dev-defs.h |   23 ++++++
->   include/linux/backing-dev.h      |    5 +
->   include/linux/memcontrol.h       |   39 +++++++++++
->   include/linux/writeback.h        |    2
->   mm/backing-dev.c                 |  120 +++++++++++++++++++++++++++++-----
->   mm/memcontrol.c                  |  134 +++++++++++++++++++++++++++++++++++++++
->   mm/page-writeback.c              |    4 +
->   8 files changed, 404 insertions(+), 53 deletions(-)
+> 	  Andrew
 
-Applied for 5.4, thanks Tejun.
+Florian and Andrew,
+The mdio c22 is using the start-of-frame ST=01 while mdio c45 is using ST=00
+as identifier. So mdio c22 device will not response to mdio c45 protocol.
+As in IEEE 802.1ae-2002 Annex 45A.3 mention that:
+" Even though the Clause 45 MDIO frames using the ST=00 frame code
+will also be driven on to the Clause 22 MII Management interface,
+the Clause 22 PHYs will ignore the frames. "
 
--- 
-Jens Axboe
+Hence, I am not seeing any concern that the c45 scanning will mess up with 
+c22 devices.
+
+Weifeng 
+
 
