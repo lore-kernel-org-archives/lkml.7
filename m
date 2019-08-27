@@ -2,124 +2,138 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D9FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E97EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F12206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA99B21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566892416;
+	bh=GeuldnW2RahsHtyZX8pg5iseW2idGOp+eakQQ2Ylqfk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YTnvTrBlQ2A/YJxurdyon+H/7nV77kdS7QHNJ26mfbYBPHN/EU9hnBR0Z7TBuwsrv
+	 KJMCextjI9Oy4AWW2UqGWR3hvHG3N/vxR1m7CoIjMKBLMQzwJ6yaRwM5WRlwhee7vY
+	 6DUBlX7bHdJ4T51L9Kn+B9wukzGWQybq41Lz9g8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfH0Hxc (ORCPT
+        id S1729825AbfH0Hxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49970 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 03:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbfH0Hx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729169AbfH0Hx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 03:53:29 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5B6E43082E25;
-        Tue, 27 Aug 2019 07:53:29 +0000 (UTC)
-Received: from [10.36.116.105] (ovpn-116-105.ams2.redhat.com [10.36.116.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B010C600D1;
-        Tue, 27 Aug 2019 07:53:25 +0000 (UTC)
-Subject: Re: [PATCH] KVM: arm/arm64: vgic: Use a single IO device per
- redistributor
-To:     Zenghui Yu <yuzenghui@huawei.com>, eric.auger.pro@gmail.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     zhang.zhanghailiang@huawei.com, wanghaibin.wang@huawei.com,
-        james.morse@arm.com, qemu-arm@nongnu.org,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        peter.maydell@linaro.org, andre.przywara@arm.com
-References: <20190823173330.23342-1-eric.auger@redhat.com>
- <f5b47614-de48-f3cb-0e6f-8a667cb951c0@redhat.com>
- <5cdcfe9e-98d8-454e-48e7-992fe3ee5eae@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <ccb49856-f958-8bea-4b27-9a808415c43d@redhat.com>
-Date:   Tue, 27 Aug 2019 09:53:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id ED239206BF;
+        Tue, 27 Aug 2019 07:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892408;
+        bh=GeuldnW2RahsHtyZX8pg5iseW2idGOp+eakQQ2Ylqfk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GWo3pSChxG79dUt1Vjsq6OKadBNElZBLmAd0VthIhH+STGAp2MjIa+5B3K0zUSLt7
+         Te2ZSYZkRpM0RT0mR0BN1go1EUWEAofGT4JBgUQYZhoBUIAjvii/fDF8I9VSGsOJPf
+         2sQ77kzRBDJ2S1F9xrGEWVkr98C+HYOHO+6p41qk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.14 44/62] x86/retpoline: Dont clobber RFLAGS during CALL_NOSPEC on i386
+Date:   Tue, 27 Aug 2019 09:50:49 +0200
+Message-Id: <20190827072703.106012532@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
+References: <20190827072659.803647352@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <5cdcfe9e-98d8-454e-48e7-992fe3ee5eae@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 27 Aug 2019 07:53:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
-On 8/27/19 9:49 AM, Zenghui Yu wrote:
-> Hi Eric,
-> 
-> Thanks for this patch!
-> 
-> On 2019/8/24 1:52, Auger Eric wrote:
->> Hi Zenghui, Marc,
->>
->> On 8/23/19 7:33 PM, Eric Auger wrote:
->>> At the moment we use 2 IO devices per GICv3 redistributor: one
->                                                              ^^^
->>> one for the RD_base frame and one for the SGI_base frame.
->   ^^^
->>>
->>> Instead we can use a single IO device per redistributor (the 2
->>> frames are contiguous). This saves slots on the KVM_MMIO_BUS
->>> which is currently limited to NR_IOBUS_DEVS (1000).
->>>
->>> This change allows to instantiate up to 512 redistributors and may
->>> speed the guest boot with a large number of VCPUs.
->>>
->>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> I tested this patch with below kernel and QEMU branches:
->> kernel: https://github.com/eauger/linux/tree/256fix-v1
->> (Marc's patch + this patch)
->> https://github.com/eauger/qemu/tree/v4.1.0-256fix-rfc1-rc0
->> (header update + kvm_arm_gic_set_irq modification)
-> 
-> I also tested these three changes on HiSi D05 (with 64 pcpus), and yes,
-> I can get a 512U guest to boot properly now.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Many thanks for the testing (and the bug report). I will formally post
-the QEMU changes asap.
+commit b63f20a778c88b6a04458ed6ffc69da953d3a109 upstream.
 
-Thanks
+Use 'lea' instead of 'add' when adjusting %rsp in CALL_NOSPEC so as to
+avoid clobbering flags.
 
-Eric
-> 
-> Tested-by: Zenghui Yu <yuzenghui@huawei.com>
-> 
->> On a machine with 224 pcpus, I was able to boot a 512 vcpu guest.
->>
->> As expected, qemu outputs warnings:
->>
->> qemu-system-aarch64: warning: Number of SMP cpus requested (512) exceeds
->> the recommended cpus supported by KVM (224)
->> qemu-system-aarch64: warning: Number of hotpluggable cpus requested
->> (512) exceeds the recommended cpus supported by KVM (224)
->>
->> on the guest: getconf _NPROCESSORS_ONLN returns 512
->>
->> Then I have no clue about what can be expected of such overcommit config
->> and I have not further exercised the guest at the moment. But at least
->> it seems to boot properly. I also tested without overcommit and it seems
->> to behave as before (boot, migration).
->>
->> I still need to look at the migration of > 256vcpu guest at qemu level.
-> 
-> Let us know if further tests are needed.
-> 
-> 
-> Thanks,
-> zenghui
-> 
+KVM's emulator makes indirect calls into a jump table of sorts, where
+the destination of the CALL_NOSPEC is a small blob of code that performs
+fast emulation by executing the target instruction with fixed operands.
+
+  adcb_al_dl:
+     0x000339f8 <+0>:   adc    %dl,%al
+     0x000339fa <+2>:   ret
+
+A major motiviation for doing fast emulation is to leverage the CPU to
+handle consumption and manipulation of arithmetic flags, i.e. RFLAGS is
+both an input and output to the target of CALL_NOSPEC.  Clobbering flags
+results in all sorts of incorrect emulation, e.g. Jcc instructions often
+take the wrong path.  Sans the nops...
+
+  asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
+     0x0003595a <+58>:  mov    0xc0(%ebx),%eax
+     0x00035960 <+64>:  mov    0x60(%ebx),%edx
+     0x00035963 <+67>:  mov    0x90(%ebx),%ecx
+     0x00035969 <+73>:  push   %edi
+     0x0003596a <+74>:  popf
+     0x0003596b <+75>:  call   *%esi
+     0x000359a0 <+128>: pushf
+     0x000359a1 <+129>: pop    %edi
+     0x000359a2 <+130>: mov    %eax,0xc0(%ebx)
+     0x000359b1 <+145>: mov    %edx,0x60(%ebx)
+
+  ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
+     0x000359a8 <+136>: mov    -0x10(%ebp),%eax
+     0x000359ab <+139>: and    $0x8d5,%edi
+     0x000359b4 <+148>: and    $0xfffff72a,%eax
+     0x000359b9 <+153>: or     %eax,%edi
+     0x000359bd <+157>: mov    %edi,0x4(%ebx)
+
+For the most part this has gone unnoticed as emulation of guest code
+that can trigger fast emulation is effectively limited to MMIO when
+running on modern hardware, and MMIO is rarely, if ever, accessed by
+instructions that affect or consume flags.
+
+Breakage is almost instantaneous when running with unrestricted guest
+disabled, in which case KVM must emulate all instructions when the guest
+has invalid state, e.g. when the guest is in Big Real Mode during early
+BIOS.
+
+Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
+Fixes: 1a29b5b7f347a ("KVM: x86: Make indirect calls in emulator speculation safe")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190822211122.27579-1-sean.j.christopherson@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/include/asm/nospec-branch.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -202,7 +202,7 @@
+ 	"    	lfence;\n"					\
+ 	"       jmp    902b;\n"					\
+ 	"       .align 16\n"					\
+-	"903:	addl   $4, %%esp;\n"				\
++	"903:	lea    4(%%esp), %%esp;\n"			\
+ 	"       pushl  %[thunk_target];\n"			\
+ 	"       ret;\n"						\
+ 	"       .align 16\n"					\
+
+
