@@ -2,82 +2,92 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E9FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11F6C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039E122CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566926732;
-	bh=PDEYODQSVBU3GBfJzim7cu6Qg3BZhxo6Xvc29aqkWLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NKaNF5Uw2cVu+V9ofkgoCmFnpOF7yKZydOdRnBvj0zzf7oVJ07b1MSyrVy2IZpnJc
-	 50KsUvYh8zwEISAxBWLlBGGP3db68LVSsfVImezqlYl8bNbuWcNccL88z5/ccJzolT
-	 UMqp9OEa4tJF+VZtMqkgJBOBGf+BFDXcuvlvxe6s=
+	by mail.kernel.org (Postfix) with ESMTP id 786102184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:25:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sKC20rPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbfH0RZb (ORCPT
+        id S1730570AbfH0RZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:25:31 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35280 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfH0RZa (ORCPT
+        Tue, 27 Aug 2019 13:25:52 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38862 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0RZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:25:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 100so8662922otn.2;
-        Tue, 27 Aug 2019 10:25:30 -0700 (PDT)
+        Tue, 27 Aug 2019 13:25:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id o70so14547171pfg.5;
+        Tue, 27 Aug 2019 10:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rRezVoilg+nffqvxCs3DF4XZQiwLzh4SLwalFGZk9Lc=;
+        b=sKC20rPMQqaiHQ3bNsYNAWMqZ5IrG43weYvUiEhEWsTHdBk4xdkWAJMtRZaqK3UEl+
+         ptieMi6oL/wqiubyeq8kttdzdb1cQoH3FL+kope2oK3QugrAQmZW0Vy2IQbiDz2dYEf3
+         c6um2LXwHarXdGQLm0SoAaTURxKNuekXzNC1py3Nt9FAIqcUgZCJu5adG8HRjNWtKUO/
+         M+ddp3CVSZ56tb6c6gyrf5qFApGUy1HRZrB24b9LcXxFdKC0bIdjk0seOwWuiOcRyBhF
+         x/e3PD/ndOjWbdM1L2bOHLcce1UvGLMJGMX6l1YwmqEdsRfsBxYqTf7YnaatnFDH2ZWE
+         Rcig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RAdx3knbJdmHJIAYuCsyCxVXwy79upfsZxSrxjBV/Fs=;
-        b=IfTN3DYKpr5XEZL7/cRXpQXN6J1zwuRISho/lEYKqz54sNvHcY34eqcH2sBNC7oI5N
-         yY7JIJKMTqH0jkkXmwqMh/7tdq1javjDkRkCfEX4Beyh34xoJ1TATFVf6+KKVdcQo/os
-         DTvm6E+4keBWl2HE5FX/X3j8r5NcGt8GF4zVbfZy9OAchYypqmancdhTggDeabuAqYJK
-         W4O7lJVWryBvezGyAWPOytI7Sq2+Tm581hxoa6K6zllGgrimCBGu8m1bYq6vqEONeAJa
-         PCc8V5zPWzIubfS1J4Z/CCg+Q7U3fqL12jLUWwS7/nA41XrVrXOnwsxVoN3AXQB9HCPH
-         hD7g==
-X-Gm-Message-State: APjAAAUMJg1vuCCOvQb7ZJHPbR3d1VMBb46moxl+5Go0DEdmF+zBesn0
-        inhss+DCLSMKrrXtdSn4YQ==
-X-Google-Smtp-Source: APXvYqzyYML6e8inoQ40na2bt0XfhvJ9YzCYogrNaMHwGOZqEiHXi8Yf1Csw2h9ooroMQd1yb4hqUA==
-X-Received: by 2002:a9d:3bcb:: with SMTP id k69mr8186736otc.182.1566926730130;
-        Tue, 27 Aug 2019 10:25:30 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z16sm4238710oic.10.2019.08.27.10.25.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 10:25:29 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 12:25:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH v5 4/4] dt-bindings: iio: imu: st_lsm6dsx: add lsm9ds1
- device bindings
-Message-ID: <20190827172529.GA16508@bogus>
-References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
- <20190821132520.28225-5-martin.kepplinger@puri.sm>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rRezVoilg+nffqvxCs3DF4XZQiwLzh4SLwalFGZk9Lc=;
+        b=CeEsYTLFck6TGNdHyux7njFXFh/jFpjKj27VtGpDBN6DI21sTirhjhB7VE16xCaaLb
+         bXGLvjksE/rqfTkwKoKrcVwTcSq5BPUzMDv+eBBcdyHLwMlXYjhcCTwcm9dHvqhhiViN
+         CAkynu5TzjgXIx+qrr97Vln99mUb5bJRNvOfUqoY3HDID3ahpvbqSig57td1UXQQSMIm
+         ajO34k3qEc+KfISv2PZ8q9MDU+1TzKynIRa0GmtduyUTu/cQ/4rOG+moA+yMfC8qj5Uh
+         6ccCv5VdctRDu3HeSFKqs7EQtsAugpAkBknkIYjPaLnuo2c17+DPxKUWrvzs4xJIxRQR
+         /8fg==
+X-Gm-Message-State: APjAAAU0ah79smf6ViiVeN7sSNW19Kd8hC2rliEZwH7A3EiFQUE3LLym
+        wnFLr/p7AfvHGB1B8vCKJoU=
+X-Google-Smtp-Source: APXvYqwS0sReW3QvGrI4E+kBPMQshS/Ndxj8vSrAZ2znKnPE0khWjfl8xlm0mJfMsBQ+vyLyX9w5ag==
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr13470528pfi.72.1566926751686;
+        Tue, 27 Aug 2019 10:25:51 -0700 (PDT)
+Received: from localhost (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id g36sm15844256pgb.78.2019.08.27.10.25.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 10:25:51 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:25:50 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 000/162] 5.2.11-stable review
+Message-ID: <20190827172550.GD31588@roeck-us.net>
+References: <20190827072738.093683223@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821132520.28225-5-martin.kepplinger@puri.sm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 15:25:20 +0200, Martin Kepplinger wrote:
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> ---
->  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Tue, Aug 27, 2019 at 09:48:48AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.11 release.
+> There are 162 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu 29 Aug 2019 07:25:02 AM UTC.
+> Anything received after that time might be too late.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Build results:
+	total: 159 pass: 159 fail: 0
+Qemu test results:
+	total: 390 pass: 390 fail: 0
+
+Guenter
