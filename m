@@ -2,400 +2,103 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94589C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84C822CBB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566929829;
-	bh=ZBaTfHEkuAN+1Jx7fuX9cS/MlQTAoKsrnn28H/muzqU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qJkZ/4M9wrlhdx5nS07nmH2UWRdGWEVLOyt6EoMMmSb5Asw4Y7HkUZqiCFVQBAD1l
-	 Vg2Wi0QHsmZwSZnLTNPTFLPWS0qpBERPD119c39lmJL8RJwQfG/VG3sotiRFo1j0f5
-	 mCrHp3Xvn44KoC2oRvdl/p2zl80df3B3j9Blai9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 70C0C21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbfH0SRJ (ORCPT
+        id S1730625AbfH0SRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:17:09 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36228 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730376AbfH0SRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:17:08 -0400
-Received: by mail-io1-f66.google.com with SMTP id o9so409087iom.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kQcP4jBJWULyHOVzAbLlgGlqZlCtw2jO2tey4T/b81M=;
-        b=dgbTu7rQ2vH2hOX89JwRCo+ZV+GJNwvo7zSanpLfh7ogVkDVzzyIrKJETuDNq5taBz
-         muxbZmbVhzt6SXg2Jxh02RW9OW0NzKj87P4OqaHpbHM6w1zaBefE/cK6Z+wOwD5p+TBi
-         jcwcXN2K7DkMkLM1E7fKZ34ZWu+B/m2YmjRhE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kQcP4jBJWULyHOVzAbLlgGlqZlCtw2jO2tey4T/b81M=;
-        b=GAreuBNeNaIMgGZ3dCgtHA1BL6U31paQRBKRGeBtlkVpqI6pTMrVkvKLXQ1AYZO4XE
-         1iPny1CwTzUPxVuC60Bx+1mBaaeUPioFugrqj4fdljv+W2phzku8Dqi/lHK6ECQaFumO
-         9CpXfqzrBYIq+ykIvaSIhoAazGZYY25b8RgxTp7j7tIt7k87g2iRZu3lKtliRoBFtWWv
-         fhkanmmyQBO4HZ3c17XjEWGmKPr2hiMkmIrPecrWfSzo1rc0Qw16C1eo8mGQqxUwZ1zO
-         V4uyLQrRPi8aU5XZ/Ww/fl1NPFsJYqqTYfkuMN08bwTDdfSwAwulE4vLoqMNc/mDjP8q
-         8THQ==
-X-Gm-Message-State: APjAAAULW6DIS78SJia6eIegRl4xkh73coy+SOgrBQeyQNZx+jfES4lu
-        HN8HJODkvARXsG+jBdI1b9jTuw==
-X-Google-Smtp-Source: APXvYqztKLNmr05qLGnGvLPiNSplBtL0GQ3ePdQWR/++z3ePNL197cXREEcbGUg3K4yWhaYqSD7Nqw==
-X-Received: by 2002:a6b:b886:: with SMTP id i128mr32440627iof.90.1566929827349;
-        Tue, 27 Aug 2019 11:17:07 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id z19sm11993225ioh.12.2019.08.27.11.17.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 11:17:06 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] media: vimc: Collapse component structure into a
- single monolithic driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
-        andrealmeid@collabora.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1566334362.git.skhan@linuxfoundation.org>
- <a7b877c08d0885fe7e8bffc9b24ef0a2d6236147.1566334363.git.skhan@linuxfoundation.org>
- <20190827165536.GD5054@pendragon.ideasonboard.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <35160afe-b9ca-7304-e8b0-d7c809c57dcc@linuxfoundation.org>
-Date:   Tue, 27 Aug 2019 12:17:05 -0600
+        Tue, 27 Aug 2019 14:17:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:1755 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728711AbfH0SRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:17:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 11:17:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="185372670"
+Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
+  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2019 11:17:33 -0700
+Subject: Re: [RFC PATCH v2 0/3] x86/mm/tlb: Defer TLB flushes with PTI
+To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20190823225248.15597-1-namit@vmware.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <f639342a-d7d9-4334-338f-5d20d67bae74@intel.com>
+Date:   Tue, 27 Aug 2019 11:17:33 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190827165536.GD5054@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190823225248.15597-1-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 10:55 AM, Laurent Pinchart wrote:
-> Hi Shuah,
-> 
-> Thank you for the patch.
-> 
-> On Tue, Aug 20, 2019 at 03:18:41PM -0600, Shuah Khan wrote:
->> vimc uses Component API to split the driver into functional components.
->> The real hardware resembles a monolith structure than component and
->> component structure added a level of complexity making it hard to
->> maintain without adding any real benefit.
->>
->> The sensor is one vimc component that would makes sense to be a separate
->> module to closely align with the real hardware. It would be easier to
->> collapse vimc into single monolithic driver first and then split the
->> sensor off as a separate module.
->>
->> Collapse it into a single monolithic driver removing the Component API.
->> This patch removes the component API and makes minimal changes to the
->> code base preserving the functional division of the code structure.
->> Preserving the functional structure allows us to split the sensor off
->> as a separate module in the future.
->>
->> Major design elements in this change are:
->> - Use existing struct vimc_ent_config and struct vimc_pipeline_config
->>    to drive the initialization of the functional components.
->> - Make vimc_device and vimc_ent_config global by moving them to
->>    vimc-common.h
->> - Add two new hooks add and rm to initialize and register, unregister
->>    and free subdevs.
->> - All component API is now gone and bind and unbind hooks are modified
->>    to do "add" and "rm" with minimal changes to just add and rm subdevs.
->> - vimc-core's bind and unbind are now register and unregister.
->> - vimc-core invokes "add" hooks from its vimc_register_devices().
->>    The "add" hooks remain the same and register subdevs. They don't
->>    create platform devices of their own and use vimc's pdev.dev as
->>    their reference device. The "add" hooks save their vimc_ent_device(s)
->>    in the corresponding vimc_ent_config.
->> - vimc-core invokes "rm" hooks from its unregister to unregister subdevs
->>    and cleanup.
->> - vimc-core invokes "add" and "rm" hooks with pointer to struct vimc_device
->>    and the corresponding struct vimc_ent_config pointer.
->>
->> The following configure and stream test works on all devices.
->>
->> media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
->> media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
->> media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
->> media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
->>
->> v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
->> v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
->> v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
->>
->> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
->> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
->> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   drivers/media/platform/vimc/Makefile       |   7 +-
->>   drivers/media/platform/vimc/vimc-capture.c |  79 ++------
->>   drivers/media/platform/vimc/vimc-common.h  |  48 +++++
->>   drivers/media/platform/vimc/vimc-core.c    | 199 ++++++++-------------
->>   drivers/media/platform/vimc/vimc-debayer.c |  67 ++-----
->>   drivers/media/platform/vimc/vimc-scaler.c  |  71 ++------
->>   drivers/media/platform/vimc/vimc-sensor.c  |  71 ++------
->>   7 files changed, 176 insertions(+), 366 deletions(-)
->>
->> diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
->> index 96d06f030c31..a53b2b532e9f 100644
->> --- a/drivers/media/platform/vimc/Makefile
->> +++ b/drivers/media/platform/vimc/Makefile
->> @@ -1,5 +1,6 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> -vimc-y := vimc-core.o vimc-common.o vimc-streamer.o
->> +vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
->> +		vimc-debayer.o vimc-scaler.o vimc-sensor.o
->> +
->> +obj-$(CONFIG_VIDEO_VIMC) += vimc.o
->>   
->> -obj-$(CONFIG_VIDEO_VIMC) += vimc.o vimc-capture.o vimc-debayer.o \
->> -                vimc-scaler.o vimc-sensor.o
->> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
->> index 1d56b91830ba..e04b60ec0738 100644
->> --- a/drivers/media/platform/vimc/vimc-capture.c
->> +++ b/drivers/media/platform/vimc/vimc-capture.c
->> @@ -5,10 +5,6 @@
->>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>    */
->>   
->> -#include <linux/component.h>
->> -#include <linux/module.h>
->> -#include <linux/mod_devicetable.h>
->> -#include <linux/platform_device.h>
->>   #include <media/v4l2-ioctl.h>
->>   #include <media/videobuf2-core.h>
->>   #include <media/videobuf2-vmalloc.h>
->> @@ -16,8 +12,6 @@
->>   #include "vimc-common.h"
->>   #include "vimc-streamer.h"
->>   
->> -#define VIMC_CAP_DRV_NAME "vimc-capture"
->> -
->>   struct vimc_cap_device {
->>   	struct vimc_ent_device ved;
->>   	struct video_device vdev;
->> @@ -340,13 +334,15 @@ static void vimc_cap_release(struct video_device *vdev)
->>   	kfree(vcap);
->>   }
->>   
->> -static void vimc_cap_comp_unbind(struct device *comp, struct device *master,
->> -				 void *master_data)
->> +void vimc_cap_rm(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->>   {
->> -	struct vimc_ent_device *ved = dev_get_drvdata(comp);
->> -	struct vimc_cap_device *vcap = container_of(ved, struct vimc_cap_device,
->> -						    ved);
->> +	struct vimc_ent_device *ved = vcfg->ved;
->> +	struct vimc_cap_device *vcap;
->> +
->> +	if (!ved)
->> +		return;
->>   
->> +	vcap = container_of(ved, struct vimc_cap_device, ved);
->>   	vb2_queue_release(&vcap->queue);
->>   	media_entity_cleanup(ved->ent);
->>   	video_unregister_device(&vcap->vdev);
->> @@ -391,11 +387,9 @@ static void *vimc_cap_process_frame(struct vimc_ent_device *ved,
->>   	return NULL;
->>   }
->>   
->> -static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->> -			      void *master_data)
->> +int vimc_cap_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->>   {
->> -	struct v4l2_device *v4l2_dev = master_data;
->> -	struct vimc_platform_data *pdata = comp->platform_data;
->> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
->>   	const struct vimc_pix_map *vpix;
->>   	struct vimc_cap_device *vcap;
->>   	struct video_device *vdev;
->> @@ -416,7 +410,7 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   	}
->>   
->>   	/* Initialize the media entity */
->> -	vcap->vdev.entity.name = pdata->entity_name;
->> +	vcap->vdev.entity.name = vcfg->name;
->>   	vcap->vdev.entity.function = MEDIA_ENT_F_IO_V4L;
->>   	ret = media_entity_pads_init(&vcap->vdev.entity,
->>   				     1, vcap->ved.pads);
->> @@ -440,8 +434,8 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   
->>   	ret = vb2_queue_init(q);
->>   	if (ret) {
->> -		dev_err(comp, "%s: vb2 queue init failed (err=%d)\n",
->> -			pdata->entity_name, ret);
->> +		dev_err(&vimc->pdev.dev, "%s: vb2 queue init failed (err=%d)\n",
->> +			vcfg->name, ret);
->>   		goto err_clean_m_ent;
->>   	}
->>   
->> @@ -460,8 +454,7 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   	vcap->ved.ent = &vcap->vdev.entity;
->>   	vcap->ved.process_frame = vimc_cap_process_frame;
->>   	vcap->ved.vdev_get_format = vimc_cap_get_format;
->> -	dev_set_drvdata(comp, &vcap->ved);
->> -	vcap->dev = comp;
->> +	vcap->dev = &vimc->pdev.dev;
->>   
->>   	/* Initialize the video_device struct */
->>   	vdev = &vcap->vdev;
->> @@ -474,17 +467,18 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   	vdev->queue = q;
->>   	vdev->v4l2_dev = v4l2_dev;
->>   	vdev->vfl_dir = VFL_DIR_RX;
->> -	strscpy(vdev->name, pdata->entity_name, sizeof(vdev->name));
->> +	strscpy(vdev->name, vcfg->name, sizeof(vdev->name));
->>   	video_set_drvdata(vdev, &vcap->ved);
->>   
->>   	/* Register the video_device with the v4l2 and the media framework */
->>   	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
->>   	if (ret) {
->> -		dev_err(comp, "%s: video register failed (err=%d)\n",
->> +		dev_err(&vimc->pdev.dev, "%s: video register failed (err=%d)\n",
->>   			vcap->vdev.name, ret);
->>   		goto err_release_queue;
->>   	}
->>   
->> +	vcfg->ved = &vcap->ved;
->>   	return 0;
->>   
->>   err_release_queue:
->> @@ -498,44 +492,3 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->>   
->>   	return ret;
->>   }
->> -
->> -static const struct component_ops vimc_cap_comp_ops = {
->> -	.bind = vimc_cap_comp_bind,
->> -	.unbind = vimc_cap_comp_unbind,
->> -};
->> -
->> -static int vimc_cap_probe(struct platform_device *pdev)
->> -{
->> -	return component_add(&pdev->dev, &vimc_cap_comp_ops);
->> -}
->> -
->> -static int vimc_cap_remove(struct platform_device *pdev)
->> -{
->> -	component_del(&pdev->dev, &vimc_cap_comp_ops);
->> -
->> -	return 0;
->> -}
->> -
->> -static const struct platform_device_id vimc_cap_driver_ids[] = {
->> -	{
->> -		.name           = VIMC_CAP_DRV_NAME,
->> -	},
->> -	{ }
->> -};
->> -
->> -static struct platform_driver vimc_cap_pdrv = {
->> -	.probe		= vimc_cap_probe,
->> -	.remove		= vimc_cap_remove,
->> -	.id_table	= vimc_cap_driver_ids,
->> -	.driver		= {
->> -		.name	= VIMC_CAP_DRV_NAME,
->> -	},
->> -};
->> -
->> -module_platform_driver(vimc_cap_pdrv);
->> -
->> -MODULE_DEVICE_TABLE(platform, vimc_cap_driver_ids);
->> -
->> -MODULE_DESCRIPTION("Virtual Media Controller Driver (VIMC) Capture");
->> -MODULE_AUTHOR("Helen Mae Koike Fornazier <helen.fornazier@gmail.com>");
->> -MODULE_LICENSE("GPL");
->> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->> index 9c2e0e216c6b..5b2282de395c 100644
->> --- a/drivers/media/platform/vimc/vimc-common.h
->> +++ b/drivers/media/platform/vimc/vimc-common.h
->> @@ -9,6 +9,7 @@
->>   #define _VIMC_COMMON_H_
->>   
->>   #include <linux/slab.h>
->> +#include <linux/platform_device.h>
->>   #include <media/media-device.h>
->>   #include <media/v4l2-device.h>
->>   
->> @@ -84,6 +85,21 @@ struct vimc_pix_map {
->>   	bool bayer;
->>   };
->>   
->> +/**
->> + * struct vimc_device - main device for vimc driver
->> + *
->> + * @pdev	pointer to the platform device
->> + * @pipe_cfg	pointer to the vimc pipeline configuration structure
->> + * @mdev	the associated media_device parent
->> + * @v4l2_dev	Internal v4l2 parent device
->> + */
->> +struct vimc_device {
->> +	struct platform_device pdev;
->> +	const struct vimc_pipeline_config *pipe_cfg;
->> +	struct media_device mdev;
->> +	struct v4l2_device v4l2_dev;
->> +};
->> +
->>   /**
->>    * struct vimc_ent_device - core struct that represents a node in the topology
->>    *
->> @@ -111,6 +127,38 @@ struct vimc_ent_device {
->>   			      struct v4l2_pix_format *fmt);
->>   };
->>   
->> +/**
->> + * struct vimc_ent_config	Structure which describes individual
->> + *				configuration for each entity
->> + *
->> + * @name			entity name
->> + * @ved				pointer to vimc_ent_device (a node in the
->> + *					topology)
->> + * @add				subdev add hook - initializes and registers
->> + *					subdev called from vimc-core
->> + * @rm				subdev rm hook - unregisters and frees
->> + *					subdev called from vimc-core
->> + */
->> +struct vimc_ent_config {
->> +	const char *name;
->> +	struct vimc_ent_device *ved;
->> +	int (*add)(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +	void (*rm)(struct vimc_device *vimc, struct vimc_ent_config *vcfg);
->> +};
-> 
-> Mixing data and function pointers in a read-write structure is a
-> security issue, as it helps an attacker who could overwrite the
-> structure to run arbitrary code :-/ I think you should split this in
-> two, with the read-only name and function pointers stored as a const
-> array, and the vimc_ent_device pointers stored separately (possibly in a
-> linked list, or worst case an array that mirrors ent_config, as I
-> suppose the configfs support will remove the ent_config array).
-> 
+On 8/23/19 3:52 PM, Nadav Amit wrote:
+> n_pages		concurrent	+deferred-pti		change
+> -------		----------	-------------		------
+>  1		2119		1986 			-6.7%
 
-Array that mirrors might be sufficient. We do all or nothing adds for
-these entities anyway. If we can't add one entity, we delete all and
-fail the probe.
-
-> This is I think the only blocker for this patch series, and fortunately
-> it shouldn't be difficult to fix.
-> 
-
-Yeah. I should have thought about that in the first place. :( Will fix
-it and send updated patch.
-
-thanks,
--- Shuah
+Is this implying that a single-page INVPCID is 133 cycles slower than
+INVLPG?  That seems a bit larger than I'd expect.
