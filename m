@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6084C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D12BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A81F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B6A21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892539;
-	bh=qB3BRxQO9fiCu0Wd3YThpUV/JWI3D7Si2wgDS2tL1KQ=;
+	s=default; t=1566892544;
+	bh=ODE7HagJVHnEY2RdSWigs1YUSge3VGPYgFpBhIb+Btc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14nXXRABW5YWvxubcMnHuAx0vBAFE4KLrV5/x8Jjfp27uauDMxUyVoHRQy5xbw3PJ
-	 /eNIk8lB0Ohs5L0NIrPmwUVJh8HC8jTiyskIvE+9kTBS5emjA98G3q0owMG6xXUofb
-	 vEwrfjnwJbJujP7pIbaH+BrngYSwTQNb07pUYGUg=
+	b=ukY5KSq9w9jZ7RdMdpf2DC8WLsBqCYn5XBNR5mx2Oyvln1TTj31yn7G0w5EgCxH2z
+	 aCM/C1TkquE7bWz++5zsQJSnaqSZyn3LWWDd/p0ECs8LIrgs2DQqRrpkuqb1GKHa4j
+	 ctfJI2H0wESRNuEvHYekC1jgWL3nn9aGEec2qBs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbfH0Hzi (ORCPT
+        id S1729567AbfH0Hzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729563AbfH0Hzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:36 -0400
+        id S1729250AbfH0Hzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5102173E;
-        Tue, 27 Aug 2019 07:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2E5206BF;
+        Tue, 27 Aug 2019 07:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892535;
-        bh=qB3BRxQO9fiCu0Wd3YThpUV/JWI3D7Si2wgDS2tL1KQ=;
+        s=default; t=1566892539;
+        bh=ODE7HagJVHnEY2RdSWigs1YUSge3VGPYgFpBhIb+Btc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=af1/SAFUNht7VQEfqaSt6eOmgPymGyVCM8XjMIk4BKkB8oXHFST9p+KjI2IweUyNC
-         Mw1Jd/RBxli90T8WeLcwvSUgXE4QEOJUStwIpTmh8UxDusUxI96QBphJYOD5THkgzP
-         R1Jf4cRcnRgWae1yf/jtHQPARs77Ee/6YpaU4OW0=
+        b=yuqU8/5Jpf8JU0PwF9Xs2idOWiBM52q+AJPtCToLg4URK5wh+Q0VZ6GJKmiWmrITA
+         dYXBmlvZnwNnoqZ6SOHlZ8WfCf7O24dHUVRTVwrnHqbpAzEP5qy4MKlUQaJlWiIP9W
+         ggsIyxcTffNqSbghP+67QNPcnYDcgT26tqiu+K88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Jeffrey Altman <jaltman@auristor.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/98] selftests: forwarding: gre_multipath: Enable IPv4 forwarding
-Date:   Tue, 27 Aug 2019 09:49:48 +0200
-Message-Id: <20190827072718.667038945@linuxfoundation.org>
+Subject: [PATCH 4.19 27/98] rxrpc: Fix the lack of notification when sendmsg() fails on a DATA packet
+Date:   Tue, 27 Aug 2019 09:50:06 +0200
+Message-Id: <20190827072719.685181813@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit efa7b79f675da0efafe3f32ba0d6efe916cf4867 ]
+[ Upstream commit c69565ee6681e151e2bb80502930a16e04b553d1 ]
 
-The test did not enable IPv4 forwarding during its setup phase, which
-causes the test to fail on machines where IPv4 forwarding is disabled.
+Fix the fact that a notification isn't sent to the recvmsg side to indicate
+a call failed when sendmsg() fails to transmit a DATA packet with the error
+ENETUNREACH, EHOSTUNREACH or ECONNREFUSED.
 
-Fixes: 54818c4c4b93 ("selftests: forwarding: Test multipath tunneling")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Tested-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Without this notification, the afs client just sits there waiting for the
+call to complete in some manner (which it's not now going to do), which
+also pins the rxrpc call in place.
+
+This can be seen if the client has a scope-level IPv6 address, but not a
+global-level IPv6 address, and we try and transmit an operation to a
+server's IPv6 address.
+
+Looking in /proc/net/rxrpc/calls shows completed calls just sat there with
+an abort code of RX_USER_ABORT and an error code of -ENETUNREACH.
+
+Fixes: c54e43d752c7 ("rxrpc: Fix missing start of call timeout")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/gre_multipath.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/rxrpc/sendmsg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/forwarding/gre_multipath.sh b/tools/testing/selftests/net/forwarding/gre_multipath.sh
-index cca2baa03fb81..37d7297e1cf8a 100755
---- a/tools/testing/selftests/net/forwarding/gre_multipath.sh
-+++ b/tools/testing/selftests/net/forwarding/gre_multipath.sh
-@@ -187,12 +187,16 @@ setup_prepare()
- 	sw1_create
- 	sw2_create
- 	h2_create
-+
-+	forwarding_enable
- }
- 
- cleanup()
- {
- 	pre_cleanup
- 
-+	forwarding_restore
-+
- 	h2_destroy
- 	sw2_destroy
- 	sw1_destroy
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index be01f9c5d963d..5d6ab4f6fd7ab 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -230,6 +230,7 @@ static void rxrpc_queue_packet(struct rxrpc_sock *rx, struct rxrpc_call *call,
+ 			rxrpc_set_call_completion(call,
+ 						  RXRPC_CALL_LOCAL_ERROR,
+ 						  0, ret);
++			rxrpc_notify_socket(call);
+ 			goto out;
+ 		}
+ 		_debug("need instant resend %d", ret);
 -- 
 2.20.1
 
