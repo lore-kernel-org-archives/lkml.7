@@ -2,90 +2,106 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99762C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC54C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCFE2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591DB20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbfH0O2j (ORCPT
+        id S1729810AbfH0O3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:28:39 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:35112 "EHLO gloria.sntech.de"
+        Tue, 27 Aug 2019 10:29:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58420 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfH0O2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:28:39 -0400
-Received: from c-73-71-116-68.hsd1.ca.comcast.net ([73.71.116.68] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1i2cSP-0002Ds-GB; Tue, 27 Aug 2019 16:28:25 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Elon Zhang <zhangzj@rock-chips.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v1 1/1] ARM: dts: rockchip: set crypto default disabled on rk3288
-Date:   Tue, 27 Aug 2019 16:28:21 +0200
-Message-ID: <4806912.UyKsYhR33o@phil>
-In-Reply-To: <20190827071439.14767-1-zhangzj@rock-chips.com>
-References: <20190827071439.14767-1-zhangzj@rock-chips.com>
+        id S1726522AbfH0O3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:29:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:29:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="331836540"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 27 Aug 2019 07:28:56 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i2cSt-0004w9-C4; Tue, 27 Aug 2019 17:28:55 +0300
+Date:   Tue, 27 Aug 2019 17:28:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        eswara.kota@linux.intel.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        hch@infradead.org, jingoohan1@gmail.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Message-ID: <20190827142855.GG2680@smile.fi.intel.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 26, 2019 at 11:15:48PM +0200, Martin Blumenstingl wrote:
+> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
 
-Am Dienstag, 27. August 2019, 09:14:39 CEST schrieb Elon Zhang:
-> Not every board needs to enable crypto node, so the node should
-> be set default disabled in rk3288.dtsi and enabled in specific
-> board dts file.
-
-Can you give a bit more rationale here? There would need to be a very
-specific reason because of the following:
-
-The crypto module is not wired to some board-specific components,
-so its usability does not depend on the specific board at all.
-Instead every board can just use it out of the box and the devicetree
-is supposed to describe the hardware and is _not_ meant as a space
-for user configuration.
-
-So in fact the status property should probably go away completely from
-the crypto node, as it's usable out of the box in all cases.
-
-
-Heiko
-
-
-
-> Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
+> > SoC Lightning
+> >
+> > Mountain, we are using synopsys controller 5.20/5.50a. We support
+> > Gen2(XRX350/550),
+> >
+> > Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
+> > single lane.
+> >
+> > Some of the above registers are needed to control FTS, link width and
+> > link speed.
+> only now I noticed that I didn't explain why I was asking whether all
+> these registers are needed
+> my understanding of the DWC PCIe controller driver "library" is that:
+> - all functionality which is provided by the DesignWare PCIe core
+> should be added to drivers/pci/controller/dwc/pcie-designware*
+> - functionality which is built on top/around the DWC PCIe core should
+> be added to <vendor specific driver>
 > 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index cc893e154fe5..d509aa24177c 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -984,7 +984,7 @@
->  		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
->  		resets = <&cru SRST_CRYPTO>;
->  		reset-names = "crypto-rst";
-> -		status = "okay";
-> +		status = "disabled";
->  	};
->  
->  	iep_mmu: iommu@ff900800 {
-> 
+> the link width and link speed settings (I don't know about "FTS")
+> don't seem Intel/Lantiq controller specific to me
+> so the register setup for these bits should be moved to
+> drivers/pci/controller/dwc/pcie-designware*
 
+I think it may be done this way. We have already example with stmmac
+(DWC network card IP) driver which split in similar way.
 
+> > We can support up to XRX350/XRX500/PRX300 for MIPS SoC since we still
+> > sell these products.
+> OK, I understand this.
+> switching to regmap will give you two benefits:
+> - big endian registers writes (without additional code) on the MIPS SoCs
+> - you can drop the pcie_app_* helper functions and use
+> regmap_{read,write,update_bits} instead
+
+Actually one more, i.e. dump of the registers by request via debugfs, which
+I found very helpful.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
