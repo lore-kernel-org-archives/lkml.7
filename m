@@ -2,115 +2,172 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5DAC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96A8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89272204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7881B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XqTQhyCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfH0Qif (ORCPT
+        id S1730433AbfH0Qit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:38:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56144 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbfH0Qie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:38:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1F11E3082E55;
-        Tue, 27 Aug 2019 16:38:34 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 087345D70D;
-        Tue, 27 Aug 2019 16:38:29 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9207122017B; Tue, 27 Aug 2019 12:38:28 -0400 (EDT)
-Date:   Tue, 27 Aug 2019 12:38:28 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-Message-ID: <20190827163828.GA6859@redhat.com>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
- <20190821175720.25901-2-vgoyal@redhat.com>
- <20190826115152.GA21051@infradead.org>
+        Tue, 27 Aug 2019 12:38:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50728 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730333AbfH0Qij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:38:39 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1022454B;
+        Tue, 27 Aug 2019 18:38:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566923917;
+        bh=g/Tjvn2DJDTw4Wdp/39XvKehIUZyBqKZl1Ba/0TXUsM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XqTQhyCP23qEfCucpDWRlBFXc/U9Ecjgx+lsHlQgdBro2Nu5KxYvl6FAqfG31IN+K
+         WATOGrlFp4J1xl7q0TwTdNSAMrTNeMcRyHzpncX1phGKHqMUROxSyLy02r4+w9k8NP
+         KqCAEkyNdge+qq7v5b/TqYOA/mekO/XmZMg9yHbs=
+Date:   Tue, 27 Aug 2019 19:38:30 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: Re: [PATCH v3 13/14] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+Message-ID: <20190827163830.GC5054@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-14-jacopo+renesas@jmondi.org>
+ <20190827000017.GB5274@pendragon.ideasonboard.com>
+ <20190827001927.GA5926@pendragon.ideasonboard.com>
+ <20190827144421.vbcoizfjxj5ashv2@uno.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190826115152.GA21051@infradead.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 27 Aug 2019 16:38:34 +0000 (UTC)
+In-Reply-To: <20190827144421.vbcoizfjxj5ashv2@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:51:52AM -0700, Christoph Hellwig wrote:
-> On Wed, Aug 21, 2019 at 01:57:02PM -0400, Vivek Goyal wrote:
-> > From: Stefan Hajnoczi <stefanha@redhat.com>
-> > 
-> > Although struct dax_device itself is not tied to a block device, some
-> > DAX code assumes there is a block device.  Make block devices optional
-> > by allowing bdev to be NULL in commonly used DAX APIs.
-> > 
-> > When there is no block device:
-> >  * Skip the partition offset calculation in bdev_dax_pgoff()
-> >  * Skip the blkdev_issue_zeroout() optimization
-> > 
-> > Note that more block device assumptions remain but I haven't reach those
-> > code paths yet.
+Hi Jacopo,
+
+On Tue, Aug 27, 2019 at 04:44:21PM +0200, Jacopo Mondi wrote:
+> On Tue, Aug 27, 2019 at 03:19:27AM +0300, Laurent Pinchart wrote:
+> > On Tue, Aug 27, 2019 at 03:00:17AM +0300, Laurent Pinchart wrote:
+> >> On Sun, Aug 25, 2019 at 03:51:53PM +0200, Jacopo Mondi wrote:
+> >>> Update CMM settings at in the atomic commit tail helper method.
+> >>>
+> >>> The CMM is updated with new gamma values provided to the driver
+> >>> in the GAMMA_LUT blob property.
+> >>>
+> >>> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>> ---
+> >>>  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
+> >>>  1 file changed, 35 insertions(+)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> >>> index 61ca1d3c379a..047fdb982a11 100644
+> >>> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> >>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> >>> @@ -22,6 +22,7 @@
+> >>>  #include <linux/of_platform.h>
+> >>>  #include <linux/wait.h>
+> >>>
+> >>> +#include "rcar_cmm.h"
+> >>>  #include "rcar_du_crtc.h"
+> >>>  #include "rcar_du_drv.h"
+> >>>  #include "rcar_du_encoder.h"
+> >>> @@ -368,6 +369,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+> >>>   * Atomic Check and Update
+> >>>   */
+> >>>
+> >>> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> >>> +					     struct drm_crtc_state *old_state)
+> >>> +{
+> >>> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> >>> +	struct rcar_cmm_config cmm_config = {};
+> >>> +
+> >>> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> >>> +		return;
+> >>> +
+> >>> +	if (!crtc->state->gamma_lut) {
+> >>> +		cmm_config.lut.enable = false;
+> >>> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> >>> +
+> >>> +		return;
+> >>> +	}
+> >>> +
+> >>> +	cmm_config.lut.enable = true;
+> >>> +	cmm_config.lut.table = (struct drm_color_lut *)
+> >>> +			       crtc->state->gamma_lut->data;
+> >>> +
+> >>> +	/* Set LUT table size to 0 if entries should not be updated. */
+> >>> +	if (!old_state->gamma_lut ||
+> >>> +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
+> >>> +		cmm_config.lut.size = crtc->state->gamma_lut->length
+> >>> +				    / sizeof(cmm_config.lut.table[0]);
+> >>
+> >> It has just occurred to me that the hardware only support LUTs of
 > 
-> I think this should be split into two patches.
+> Where did you find this strict requirement ? I have tried programming
+> less than 256 entries in the 1-D LUT table, and it seems to me things
+> are working fine (from a visual inspection of the output image, I
+> don't see much differences from when I program the full table, maybe
+> that's an indication something is bad?)
 
-Hi Christoph,
+Or maybe a previous write of the full 256 entries has initialised the
+LUT correctly ?
 
-Ok, will split in two patches. In fact, I think will completley drop
-the second change right now as I think we might not be hitting that
-path yet.
+There's no hardware register telling how many LUT entries the hardware
+should use, and the documentation makes it quite clear that the LUT
+contains 256 entries. It is indexed by the values of the 8-bit pixel
+components, so it has to be written fully.
 
-> For bdev_dax_pgoff
-> I'd much rather have the partition offset if there is on in the daxdev
-> somehow so that we can get rid of the block device entirely.
+> >> exactly 256 entries. Should we remove cmm_config.lut.size (simplifying
+> >> the code in the CMM driver), and add a check to the CRTC .atomic_check()
+> >> handler to reject invalid LUTs ? Sorry for not having caught this
+> >> earlier.
+> >
+> > Just an additional comment, if we drop the size field, then the
+> > cmm_config.lut.table pointer should be set to NULL when the LUT contents
+> > don't need to be updated.
+> >
+> >>> +	else
+> >>> +		cmm_config.lut.size = 0;
+> >>> +
+> >>> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> >>> +}
+> >>> +
+> >>>  static int rcar_du_atomic_check(struct drm_device *dev,
+> >>>  				struct drm_atomic_state *state)
+> >>>  {
+> >>> @@ -410,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+> >>>  			rcdu->dpad1_source = rcrtc->index;
+> >>>  	}
+> >>>
+> >>> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> >>> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
+> >>> +
+> >>>  	/* Apply the atomic update. */
+> >>>  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> >>>  	drm_atomic_helper_commit_planes(dev, old_state,
 
-IIUC, there is one block_device per partition while there is only one
-dax_device for the whole disk. So we can't directly move bdev logical
-offset into dax_device.
+-- 
+Regards,
 
-We probably could put this in "iomap" and leave it to filesystems to
-report offset into dax_dev in iomap that way dax generic code does not
-have to deal with it. But that probably will be a bigger change.
-
-Did I misunderstand your suggestion.
-
-> 
-> Similarly for dax_range_is_aligned I'd rather have a pure dax way
-> to offload zeroing rather than this bdev hack.
-
-Following commig introduced the change to write zeros through block
-device path.
-
-commit 4b0228fa1d753f77fe0e6cf4c41398ec77dfbd2a
-Author: Vishal Verma <vishal.l.verma@intel.com>
-Date:   Thu Apr 21 15:13:46 2016 -0400
-
- dax: for truncate/hole-punch, do zeroing through the driver if possible
-
-IIUC, they are doing it so that they can clear gendisk->badblocks list.
-
-So even if there is pure dax way to do it, there will have to some
-involvment of block layer to clear gendisk->badblocks list.
-
-I am not sure I fully understand your suggestion. But I am hoping its
-not a must for these changes to make a progress. For now, I will drop
-change to dax_range_is_aligned().
-
-Thanks
-Vivek
+Laurent Pinchart
