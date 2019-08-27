@@ -2,137 +2,230 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9073C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3752EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAF820656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040CF20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:02:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OX/7aKso";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k+vLdchK"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="s6DFBTmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfH0LCF (ORCPT
+        id S1729419AbfH0LCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:02:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47916 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfH0LCF (ORCPT
+        Tue, 27 Aug 2019 07:02:12 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33870 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfH0LCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:02:05 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6F69861B92; Tue, 27 Aug 2019 11:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566903723;
-        bh=HBOH1XABa0OlbCN7UErs6f15J5xizk15eoDOXzYC0F8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OX/7aKsoQCto2kTIG3zypyJrHO15lwl3VcsUWo0rBHKtRhZZXApS3wAS4wBXPyhTI
-         U/dQ+vSbA9oAMNeNUuR0c2BpZ47ozQCvhOerWoINdmTb8SEsNFbBInFgbGAX/rOEnu
-         qkIw26+HuKbr4r7+h0TABboK3Jqil9Y9cvsWbAU8=
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F383661B73;
-        Tue, 27 Aug 2019 11:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566903710;
-        bh=HBOH1XABa0OlbCN7UErs6f15J5xizk15eoDOXzYC0F8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=k+vLdchK6dL8EXnEyeSf6RMcWDpNznu2Il7v1crfcK/9CSSJDjLYazhdD6M9DkGW4
-         CTCgO3arWsWij4gOke/uzmoD4YTWKZz5/N9RruEooiqmXDyCZ54C0rY2g6Ooe8ZRE4
-         wDszipVswMlsn1UzQ8l3u1raIxd50lB+9b9LkW4k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F383661B73
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f41.google.com with SMTP id g24so3511451edu.3;
-        Tue, 27 Aug 2019 04:01:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAV+OPL864JMdbfTft3NIVp0W6SQnNYF4QBd8uqvCTGnRIUbjeI1
-        8e5sp53eT8eSyPSA6VKksEU0h4mZ5/DkwNsvvvc=
-X-Google-Smtp-Source: APXvYqygiRM4MxL2WPdv7UpRhp6QYvBk0IZYLUl6NwzaXdl6K30D2aLg8Brqrm8t7RzK8+J/RN9F6TOprM9nBp0qNzI=
-X-Received: by 2002:a50:9ac3:: with SMTP id p61mr23675967edb.2.1566903708566;
- Tue, 27 Aug 2019 04:01:48 -0700 (PDT)
+        Tue, 27 Aug 2019 07:02:11 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s49so30843034edb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7fnPfQvHdj0cCNP+7IEvEZfVCE/dpJFzoNujaWzCQQQ=;
+        b=s6DFBTmgS6Yc0h0SlDz+odoUsq7fVE6ckLWOQ9B4676EawP55OiesX/CkBb2PcaSqx
+         4II3rHil2BZinimKMh7NnIYRqQuMh1dtHXD8fu09KgJrrb4dMj50RNDsXrKb15XLIPcJ
+         fDtRdYmszY76Z7L82+sJ/S9VAOGUbVAVMMyu9wXMyYMIj2NcjLGGerWy2B7S74N/XrcT
+         W6u1ueehHlNJoIYcnzb27i6FAQoj7FWy+C7Iome07z++tCj3h51lAAaV9/fCODgeEd0r
+         +qTx8YM+vRuEJddtY1iQBq0V3t58xtdyn5ccHLDne8wYGnbUeivy36XxEt1ITDZg1wJn
+         XLng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7fnPfQvHdj0cCNP+7IEvEZfVCE/dpJFzoNujaWzCQQQ=;
+        b=VGLY4quvpt6UTu3KqklhmLkcBKfMJKIWUwzIB4J7YDSUd23vYbPPQL6nDzrWOjeyW+
+         olXaBwREbbHdpzqYJwvjiTlfGNo/FueKVixhsmAjgMhBi9Jcd1Fsc5obsyBTYDLpjUJK
+         ulG+PmGXPxaWntUBN/BLsCpXq/WI+TzBpzttk5USJcnBskLyJMuWuCJbuBb8JdkY6PJf
+         e4CiEyU8ryhYZWlRFrZRcF1v0PDsDFPCRHM2b6AQ8rXLwR2kpxirYR0SXJ2v1t/w020+
+         DvwxVkg3x5J7XQPRoXr4sLc5o6T6cB8bQ+tswzuGCD8hhtk3J7nOFABlRI/dpSKvBnu3
+         pLTQ==
+X-Gm-Message-State: APjAAAVoRxCmivfR+t7+YWOooAK1+V9wYDerJSHYVYvMtWzLoKzi0pO9
+        k8LKcUZcIG0skFAwot0nCkkh1A==
+X-Google-Smtp-Source: APXvYqw1xRlVWnZVVSBchXgBbxOyJjGLDPVUV8uy23WlamQ1eK8AXx5ktvNpSgsNEg2R7DkbIsMpyw==
+X-Received: by 2002:a17:906:4d8d:: with SMTP id s13mr20130220eju.86.1566903729183;
+        Tue, 27 Aug 2019 04:02:09 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id c6sm1933149edx.20.2019.08.27.04.02.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 04:02:08 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 5F8AE100746; Tue, 27 Aug 2019 14:02:10 +0300 (+03)
+Date:   Tue, 27 Aug 2019 14:02:10 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, kirill.shutemov@linux.intel.com,
+        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190827110210.lpe36umisqvvesoa@box>
+References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190822080434.GF12785@dhcp22.suse.cz>
+ <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
+ <20190822152934.w6ztolutdix6kbvc@box>
+ <20190826074035.GD7538@dhcp22.suse.cz>
+ <20190826131538.64twqx3yexmhp6nf@box>
+ <20190827060139.GM7538@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190718130238.11324-1-vivek.gautam@codeaurora.org> <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
-In-Reply-To: <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Tue, 27 Aug 2019 16:31:37 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iE6zwrOUoCoOJO0mgYJGrWj+wUjXQ7RnxSPsV34ndYGbw@mail.gmail.com>
-Message-ID: <CAFp+6iE6zwrOUoCoOJO0mgYJGrWj+wUjXQ7RnxSPsV34ndYGbw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] soc: qcom: llcc cleanups
-To:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>, rishabhb@codeaurora.org,
-        Evan Green <evgreen@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827060139.GM7538@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 11:43 AM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> On Thu, Jul 18, 2019 at 6:33 PM Vivek Gautam
-> <vivek.gautam@codeaurora.org> wrote:
-> >
-> > To better support future versions of llcc, consolidating the
-> > driver to llcc-qcom driver file, and taking care of the dependencies.
-> > v1 series is availale at:
-> > https://lore.kernel.org/patchwork/patch/1099573/
-> >
-> > Changes since v1:
-> > Addressing Bjorn's comments -
-> >  * Not using llcc-plat as the platform driver rather using a single
-> >    driver file now - llcc-qcom.
-> >  * Removed SCT_ENTRY macro.
-> >  * Moved few structure definitions from include/linux path to llcc-qcom
-> >    driver as they are not exposed to other subsystems.
->
-> Hi Bjorn,
->
-> How does this cleanup look now? Let me know if there are any
-> improvements to make here.
->
+On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
+> On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
+> > On Mon, Aug 26, 2019 at 09:40:35AM +0200, Michal Hocko wrote:
+> > > On Thu 22-08-19 18:29:34, Kirill A. Shutemov wrote:
+> > > > On Thu, Aug 22, 2019 at 02:56:56PM +0200, Vlastimil Babka wrote:
+> > > > > On 8/22/19 10:04 AM, Michal Hocko wrote:
+> > > > > > On Thu 22-08-19 01:55:25, Yang Shi wrote:
+> > > > > >> Available memory is one of the most important metrics for memory
+> > > > > >> pressure.
+> > > > > > 
+> > > > > > I would disagree with this statement. It is a rough estimate that tells
+> > > > > > how much memory you can allocate before going into a more expensive
+> > > > > > reclaim (mostly swapping). Allocating that amount still might result in
+> > > > > > direct reclaim induced stalls. I do realize that this is simple metric
+> > > > > > that is attractive to use and works in many cases though.
+> > > > > > 
+> > > > > >> Currently, the deferred split THPs are not accounted into
+> > > > > >> available memory, but they are reclaimable actually, like reclaimable
+> > > > > >> slabs.
+> > > > > >> 
+> > > > > >> And, they seems very common with the common workloads when THP is
+> > > > > >> enabled.  A simple run with MariaDB test of mmtest with THP enabled as
+> > > > > >> always shows it could generate over fifteen thousand deferred split THPs
+> > > > > >> (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
+> > > > > >> It looks worth accounting in MemAvailable.
+> > > > > > 
+> > > > > > OK, this makes sense. But your above numbers are really worrying.
+> > > > > > Accumulating such a large amount of pages that are likely not going to
+> > > > > > be used is really bad. They are essentially blocking any higher order
+> > > > > > allocations and also push the system towards more memory pressure.
+> > > > > > 
+> > > > > > IIUC deferred splitting is mostly a workaround for nasty locking issues
+> > > > > > during splitting, right? This is not really an optimization to cache
+> > > > > > THPs for reuse or something like that. What is the reason this is not
+> > > > > > done from a worker context? At least THPs which would be freed
+> > > > > > completely sound like a good candidate for kworker tear down, no?
+> > > > > 
+> > > > > Agreed that it's a good question. For Kirill :) Maybe with kworker approach we
+> > > > > also wouldn't need the cgroup awareness?
+> > > > 
+> > > > I don't remember a particular locking issue, but I cannot say there's
+> > > > none :P
+> > > > 
+> > > > It's artifact from decoupling PMD split from compound page split: the same
+> > > > page can be mapped multiple times with combination of PMDs and PTEs. Split
+> > > > of one PMD doesn't need to trigger split of all PMDs and underlying
+> > > > compound page.
+> > > > 
+> > > > Other consideration is the fact that page split can fail and we need to
+> > > > have fallback for this case.
+> > > > 
+> > > > Also in most cases THP split would be just waste of time if we would do
+> > > > them at the spot. If you don't have memory pressure it's better to wait
+> > > > until process termination: less pages on LRU is still beneficial.
+> > > 
+> > > This might be true but the reality shows that a lot of THPs might be
+> > > waiting for the memory pressure that is essentially freeable on the
+> > > spot. So I am not really convinced that "less pages on LRUs" is really a
+> > > plausible justification. Can we free at least those THPs which are
+> > > unmapped completely without any pte mappings?
+> > 
+> > Unmapped completely pages will be freed with current code. Deferred split
+> > only applies to partly mapped THPs: at least on 4k of the THP is still
+> > mapped somewhere.
+> 
+> Hmm, I am probably misreading the code but at least current Linus' tree
+> reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
+> for fully mapped THP.
 
-Hi Bjorn,
+Well, you read correctly, but it was not intended. I screwed it up at some
+point.
 
-Are you planning to pull this series in the next merge window?
-There's a dt patch as well for llcc on sdm845 [1] that has been lying around.
+See the patch below. It should make it work as intened.
 
-Let me know if you have concerns with this series. I will be happy to
-incorporate the suggestions.
+It's not bug as such, but inefficientcy. We add page to the queue where
+it's not needed.
 
-[1] https://lore.kernel.org/patchwork/patch/1099318/
+> > > > Main source of partly mapped THPs comes from exit path. When PMD mapping
+> > > > of THP got split across multiple VMAs (for instance due to mprotect()),
+> > > > in exit path we unmap PTEs belonging to one VMA just before unmapping the
+> > > > rest of the page. It would be total waste of time to split the page in
+> > > > this scenario.
+> > > > 
+> > > > The whole deferred split thing still looks as a reasonable compromise
+> > > > to me.
+> > > 
+> > > Even when it leads to all other problems mentioned in this and memcg
+> > > deferred reclaim series?
+> > 
+> > Yes.
+> > 
+> > You would still need deferred split even if you *try* to split the page on
+> > the spot. split_huge_page() can fail (due to pin on the page) and you will
+> > need to have a way to try again later.
+> > 
+> > You'll not win anything in complexity by trying split_huge_page()
+> > immediately. I would ague you'll create much more complexity.
+> 
+> I am not arguing for in place split. I am arguing to do it ASAP rather
+> than to wait for memory pressure which might be in an unbound amount of
+> time. So let me ask again. Why cannot we do that in the worker context?
+> Essentially schedure the work item right away?
 
-Thanks & Regards
-Vivek
+Let me look into it.
 
-> Best Regards
-> Vivek
-> >
-> > Vivek Gautam (3):
-> >   soc: qcom: llcc cleanup to get rid of sdm845 specific driver file
-> >   soc: qcom: Rename llcc-slice to llcc-qcom
-> >   soc: qcom: Make llcc-qcom a generic driver
-> >
-> >  drivers/soc/qcom/Kconfig                       |  14 +--
-> >  drivers/soc/qcom/Makefile                      |   3 +-
-> >  drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} | 155 +++++++++++++++++++++++--
-> >  drivers/soc/qcom/llcc-sdm845.c                 | 100 ----------------
-> >  include/linux/soc/qcom/llcc-qcom.h             | 104 -----------------
-> >  5 files changed, 152 insertions(+), 224 deletions(-)
-> >  rename drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} (64%)
-> >  delete mode 100644 drivers/soc/qcom/llcc-sdm845.c
-> >
-
-
-
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 003377e24232..45388f1bf317 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
+ 	if (TestClearPageDoubleMap(page)) {
+ 		/*
+ 		 * Subpages can be mapped with PTEs too. Check how many of
+-		 * themi are still mapped.
++		 * them are still mapped.
+ 		 */
+ 		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
+ 			if (atomic_add_negative(-1, &page[i]._mapcount))
+ 				nr++;
+ 		}
++
++		/*
++		 * Queue the page for deferred split if at least one small
++		 * page of the compound page is unmapped, but at least one
++		 * small page is still mapped.
++		 */
++		if (nr && nr < HPAGE_PMD_NR)
++			deferred_split_huge_page(page);
+ 	} else {
+ 		nr = HPAGE_PMD_NR;
+ 	}
+@@ -1284,10 +1292,8 @@ static void page_remove_anon_compound_rmap(struct page *page)
+ 	if (unlikely(PageMlocked(page)))
+ 		clear_page_mlock(page);
+ 
+-	if (nr) {
++	if (nr)
+ 		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
+-		deferred_split_huge_page(page);
+-	}
+ }
+ 
+ /**
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+ Kirill A. Shutemov
