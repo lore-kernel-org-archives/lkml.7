@@ -2,51 +2,56 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7C2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F84C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B49206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1824E206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893192;
-	bh=kkWKgMSn2++kQcHs6rrtBwWij9MF5eoi/UPReTyw1to=;
+	s=default; t=1566893198;
+	bh=8HOcoIqM+xupIrDU6PtPTFta0MQBFueMPaSNpe1xc00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a6hv2xuWHMgNipBdGuvcpEPJAPiluz1jVLJ55kP55PnkMwW0SGZl7dp+CcjYo5Jdr
-	 UceWRcxxOuyEGkkStYvA4ucCGVWo4WUb2BBjJF10YfNOJN+Z0/YUVEQGn62tCCUYW7
-	 mxadUlh2YdwEm+G+/B/cy/yrHZHKQnaCy6JMtCYM=
+	b=XXfxTyyyLVnOlInGivv2FKbyI8lq2KjSsTxc08yfHLFJ6K8FsCXhmwJHfpoTZuILr
+	 U3XVYbz5wmZKjQoStFP/MDvsEpxn93VjyoY5nQMyto2o8ThR2+y3vNiPSHDmyKxpgA
+	 d3rkx9zw0YTUOkRdaI9H9Leq0qN8qucBRsnhZOAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731665AbfH0IGb (ORCPT
+        id S1733040AbfH0IGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:06:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36486 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731822AbfH0IG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:27 -0400
+        id S1732242AbfH0IGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DBFF2189D;
-        Tue, 27 Aug 2019 08:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB1A3206BF;
+        Tue, 27 Aug 2019 08:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893186;
-        bh=kkWKgMSn2++kQcHs6rrtBwWij9MF5eoi/UPReTyw1to=;
+        s=default; t=1566893181;
+        bh=8HOcoIqM+xupIrDU6PtPTFta0MQBFueMPaSNpe1xc00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ABTJCpOk0mdQTF/1rY+UgDc40bZdM435E1oneynAmfY1OEx6DH3QXL6FCnjsgRu2l
-         tqpWNi3SwyY1ldsv+31YkiSuVO76dBuEeF6tgm3TyJfoZslw6bI39eX8KzhyRR7qQ7
-         GoDZCGsqIEiLvAOLrwqvBo6XDdscIcN63zPU52rk=
+        b=rOPv7XqDnEE/0y1mD7qSQCFBEGKj7/DGd1yxkCUDi/RCcPjjtj3SoXSJQoie0B6fW
+         ryawj27rInjiifKxEauGXGGijZjVpVlC+vaTb6A7HTydOQmM3agCKsIg7GgASoLFQ9
+         wpKTvw1rp0z5WuVGpJUnkTvHiXAHxE03ykdA+DtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 108/162] KVM: arm: Dont write junk to CP15 registers on reset
-Date:   Tue, 27 Aug 2019 09:50:36 +0200
-Message-Id: <20190827072742.092102786@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
+        Vitaly Wool <vitalywool@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 146/162] mm/z3fold.c: fix race between migration and destruction
+Date:   Tue, 27 Aug 2019 09:51:14 +0200
+Message-Id: <20190827072743.798323282@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,83 +64,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c69509c70aa45a8c4954c88c629a64acf4ee4a36 ]
+From: Henry Burns <henryburns@google.com>
 
-At the moment, the way we reset CP15 registers is mildly insane:
-We write junk to them, call the reset functions, and then check that
-we have something else in them.
+commit d776aaa9895eb6eb770908e899cb7f5bd5025b3c upstream.
 
-The "fun" thing is that this can happen while the guest is running
-(PSCI, for example). If anything in KVM has to evaluate the state
-of a CP15 register while junk is in there, bad thing may happen.
+In z3fold_destroy_pool() we call destroy_workqueue(&pool->compact_wq).
+However, we have no guarantee that migration isn't happening in the
+background at that time.
 
-Let's stop doing that. Instead, we track that we have called a
-reset function for that register, and assume that the reset
-function has done something.
+Migration directly calls queue_work_on(pool->compact_wq), if destruction
+wins that race we are using a destroyed workqueue.
 
-In the end, the very need of this reset check is pretty dubious,
-as it doesn't check everything (a lot of the CP15 reg leave outside
-of the cp15_regs[] array). It may well be axed in the near future.
+Link: http://lkml.kernel.org/r/20190809213828.202833-1-henryburns@google.com
+Signed-off-by: Henry Burns <henryburns@google.com>
+Cc: Vitaly Wool <vitalywool@gmail.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Jonathan Adams <jwadams@google.com>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/coproc.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ mm/z3fold.c |   89 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
-diff --git a/arch/arm/kvm/coproc.c b/arch/arm/kvm/coproc.c
-index d2806bcff8bbb..07745ee022a12 100644
---- a/arch/arm/kvm/coproc.c
-+++ b/arch/arm/kvm/coproc.c
-@@ -651,13 +651,22 @@ int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -41,6 +41,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/wait.h>
+ #include <linux/zpool.h>
+ 
+ /*
+@@ -144,6 +145,8 @@ struct z3fold_header {
+  * @release_wq:	workqueue for safe page release
+  * @work:	work_struct for safe page release
+  * @inode:	inode for z3fold pseudo filesystem
++ * @destroying: bool to stop migration once we start destruction
++ * @isolated: int to count the number of pages currently in isolation
+  *
+  * This structure is allocated at pool creation time and maintains metadata
+  * pertaining to a particular z3fold pool.
+@@ -162,8 +165,11 @@ struct z3fold_pool {
+ 	const struct zpool_ops *zpool_ops;
+ 	struct workqueue_struct *compact_wq;
+ 	struct workqueue_struct *release_wq;
++	struct wait_queue_head isolate_wait;
+ 	struct work_struct work;
+ 	struct inode *inode;
++	bool destroying;
++	int isolated;
+ };
+ 
+ /*
+@@ -771,6 +777,7 @@ static struct z3fold_pool *z3fold_create
+ 		goto out_c;
+ 	spin_lock_init(&pool->lock);
+ 	spin_lock_init(&pool->stale_lock);
++	init_waitqueue_head(&pool->isolate_wait);
+ 	pool->unbuddied = __alloc_percpu(sizeof(struct list_head)*NCHUNKS, 2);
+ 	if (!pool->unbuddied)
+ 		goto out_pool;
+@@ -810,6 +817,15 @@ out:
+ 	return NULL;
  }
  
- static void reset_coproc_regs(struct kvm_vcpu *vcpu,
--			      const struct coproc_reg *table, size_t num)
-+			      const struct coproc_reg *table, size_t num,
-+			      unsigned long *bmap)
- {
- 	unsigned long i;
- 
- 	for (i = 0; i < num; i++)
--		if (table[i].reset)
-+		if (table[i].reset) {
-+			int reg = table[i].reg;
++static bool pool_isolated_are_drained(struct z3fold_pool *pool)
++{
++	bool ret;
 +
- 			table[i].reset(vcpu, &table[i]);
-+			if (reg > 0 && reg < NR_CP15_REGS) {
-+				set_bit(reg, bmap);
-+				if (table[i].is_64bit)
-+					set_bit(reg + 1, bmap);
-+			}
-+		}
- }
- 
- static struct coproc_params decode_32bit_hsr(struct kvm_vcpu *vcpu)
-@@ -1432,17 +1441,15 @@ void kvm_reset_coprocs(struct kvm_vcpu *vcpu)
++	spin_lock(&pool->lock);
++	ret = pool->isolated == 0;
++	spin_unlock(&pool->lock);
++	return ret;
++}
+ /**
+  * z3fold_destroy_pool() - destroys an existing z3fold pool
+  * @pool:	the z3fold pool to be destroyed
+@@ -819,6 +835,22 @@ out:
+ static void z3fold_destroy_pool(struct z3fold_pool *pool)
  {
- 	size_t num;
- 	const struct coproc_reg *table;
--
--	/* Catch someone adding a register without putting in reset entry. */
--	memset(vcpu->arch.ctxt.cp15, 0x42, sizeof(vcpu->arch.ctxt.cp15));
-+	DECLARE_BITMAP(bmap, NR_CP15_REGS) = { 0, };
+ 	kmem_cache_destroy(pool->c_handle);
++	/*
++	 * We set pool-> destroying under lock to ensure that
++	 * z3fold_page_isolate() sees any changes to destroying. This way we
++	 * avoid the need for any memory barriers.
++	 */
++
++	spin_lock(&pool->lock);
++	pool->destroying = true;
++	spin_unlock(&pool->lock);
++
++	/*
++	 * We need to ensure that no pages are being migrated while we destroy
++	 * these workqueues, as migration can queue work on either of the
++	 * workqueues.
++	 */
++	wait_event(pool->isolate_wait, !pool_isolated_are_drained(pool));
  
- 	/* Generic chip reset first (so target could override). */
--	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs));
-+	reset_coproc_regs(vcpu, cp15_regs, ARRAY_SIZE(cp15_regs), bmap);
- 
- 	table = get_target_table(vcpu->arch.target, &num);
--	reset_coproc_regs(vcpu, table, num);
-+	reset_coproc_regs(vcpu, table, num, bmap);
- 
- 	for (num = 1; num < NR_CP15_REGS; num++)
--		WARN(vcpu_cp15(vcpu, num) == 0x42424242,
-+		WARN(!test_bit(num, bmap),
- 		     "Didn't reset vcpu_cp15(vcpu, %zi)", num);
+ 	/*
+ 	 * We need to destroy pool->compact_wq before pool->release_wq,
+@@ -1309,6 +1341,28 @@ static u64 z3fold_get_pool_size(struct z
+ 	return atomic64_read(&pool->pages_nr);
  }
--- 
-2.20.1
-
+ 
++/*
++ * z3fold_dec_isolated() expects to be called while pool->lock is held.
++ */
++static void z3fold_dec_isolated(struct z3fold_pool *pool)
++{
++	assert_spin_locked(&pool->lock);
++	VM_BUG_ON(pool->isolated <= 0);
++	pool->isolated--;
++
++	/*
++	 * If we have no more isolated pages, we have to see if
++	 * z3fold_destroy_pool() is waiting for a signal.
++	 */
++	if (pool->isolated == 0 && waitqueue_active(&pool->isolate_wait))
++		wake_up_all(&pool->isolate_wait);
++}
++
++static void z3fold_inc_isolated(struct z3fold_pool *pool)
++{
++	pool->isolated++;
++}
++
+ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ {
+ 	struct z3fold_header *zhdr;
+@@ -1335,6 +1389,33 @@ static bool z3fold_page_isolate(struct p
+ 		spin_lock(&pool->lock);
+ 		if (!list_empty(&page->lru))
+ 			list_del(&page->lru);
++		/*
++		 * We need to check for destruction while holding pool->lock, as
++		 * otherwise destruction could see 0 isolated pages, and
++		 * proceed.
++		 */
++		if (unlikely(pool->destroying)) {
++			spin_unlock(&pool->lock);
++			/*
++			 * If this page isn't stale, somebody else holds a
++			 * reference to it. Let't drop our refcount so that they
++			 * can call the release logic.
++			 */
++			if (unlikely(kref_put(&zhdr->refcount,
++					      release_z3fold_page_locked))) {
++				/*
++				 * If we get here we have kref problems, so we
++				 * should freak out.
++				 */
++				WARN(1, "Z3fold is experiencing kref problems\n");
++				return false;
++			}
++			z3fold_page_unlock(zhdr);
++			return false;
++		}
++
++
++		z3fold_inc_isolated(pool);
+ 		spin_unlock(&pool->lock);
+ 		z3fold_page_unlock(zhdr);
+ 		return true;
+@@ -1408,6 +1489,10 @@ static int z3fold_page_migrate(struct ad
+ 
+ 	queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
+ 
++	spin_lock(&pool->lock);
++	z3fold_dec_isolated(pool);
++	spin_unlock(&pool->lock);
++
+ 	page_mapcount_reset(page);
+ 	unlock_page(page);
+ 	put_page(page);
+@@ -1428,10 +1513,14 @@ static void z3fold_page_putback(struct p
+ 	INIT_LIST_HEAD(&page->lru);
+ 	if (kref_put(&zhdr->refcount, release_z3fold_page_locked)) {
+ 		atomic64_dec(&pool->pages_nr);
++		spin_lock(&pool->lock);
++		z3fold_dec_isolated(pool);
++		spin_unlock(&pool->lock);
+ 		return;
+ 	}
+ 	spin_lock(&pool->lock);
+ 	list_add(&page->lru, &pool->lru);
++	z3fold_dec_isolated(pool);
+ 	spin_unlock(&pool->lock);
+ 	z3fold_page_unlock(zhdr);
+ }
 
 
