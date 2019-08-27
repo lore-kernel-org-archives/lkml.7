@@ -2,93 +2,81 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695F4C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76390C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47756206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA8E206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 01:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfH0Bxv (ORCPT
+        id S1728752AbfH0BzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 21:53:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46056 "EHLO mx1.redhat.com"
+        Mon, 26 Aug 2019 21:55:02 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40765 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbfH0Bxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 21:53:50 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727646AbfH0BzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 21:55:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C297C5945E;
-        Tue, 27 Aug 2019 01:53:50 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 394746092D;
-        Tue, 27 Aug 2019 01:53:50 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 19:53:49 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     jiri@mellanox.com, kwankhede@nvidia.com, cohuck@redhat.com,
-        davem@davemloft.net, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 3/4] mdev: Expose mdev alias in sysfs tree
-Message-ID: <20190826195349.2ed6c1dc@x1.home>
-In-Reply-To: <20190826204119.54386-4-parav@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-4-parav@mellanox.com>
-Organization: Red Hat
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46HX4f0vmjz9s00;
+        Tue, 27 Aug 2019 11:54:58 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     David Sterba <dsterba@suse.cz>, Nikolay Borisov <nborisov@suse.com>
+Cc:     dsterba@suse.cz, Christophe Leroy <christophe.leroy@c-s.fr>,
+        erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: fix allocation of bitmap pages.
+In-Reply-To: <20190826164646.GX2752@twin.jikos.cz>
+References: <c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr> <20190826153757.GW2752@twin.jikos.cz> <a096d653-8b64-be15-3e81-581536a88e8a@suse.com> <20190826164646.GX2752@twin.jikos.cz>
+Date:   Tue, 27 Aug 2019 11:54:57 +1000
+Message-ID: <871rx74bke.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 27 Aug 2019 01:53:50 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019 15:41:18 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+David Sterba <dsterba@suse.cz> writes:
+> On Mon, Aug 26, 2019 at 06:40:24PM +0300, Nikolay Borisov wrote:
+>> >> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
+>> >> Fixes: 69d2480456d1 ("btrfs: use copy_page for copying pages instead of memcpy")
+>> >> Cc: stable@vger.kernel.org
+>> >> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> >> ---
+>> >> v2: Using kmem_cache instead of get_zeroed_page() in order to benefit from SLAB debugging features like redzone.
+>> > 
+>> > I'll take this version, thanks. Though I'm not happy about the allocator
+>> > behaviour. The kmem cache based fix can be backported independently to
+>> > 4.19 regardless of the SL*B fixes.
+>> > 
+>> >> +extern struct kmem_cache *btrfs_bitmap_cachep;
+>> > 
+>> > I've renamed the cache to btrfs_free_space_bitmap_cachep
+>> > 
+>> > Reviewed-by: David Sterba <dsterba@suse.com>
+>> 
+>> Isn't this obsoleted by
+>> 
+>> '[PATCH v2 0/2] guarantee natural alignment for kmalloc()' ?
+>
+> Yeah, but this would add maybe another whole dev cycle to merge and
+> release. The reporters of the bug seem to care enough to identify the
+> problem and propose the fix so I feel like adding the btrfs-specific fix
+> now is a little favor we can afford.
+>
+> The bug is reproduced on an architecture that's not widely tested so
+> from practical POV I think this adds more coverage which is desirable.
 
-> Expose mdev alias as string in a sysfs tree so that such attribute can
-> be used to generate netdevice name by systemd/udev or can be used to
-> match other kernel objects based on the alias of the mdev.
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_sysfs.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-> index 43afe0e80b76..59f4e3cc5233 100644
-> --- a/drivers/vfio/mdev/mdev_sysfs.c
-> +++ b/drivers/vfio/mdev/mdev_sysfs.c
-> @@ -246,7 +246,20 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->  
->  static DEVICE_ATTR_WO(remove);
->  
-> +static ssize_t alias_show(struct device *device,
-> +			  struct device_attribute *attr, char *buf)
-> +{
-> +	struct mdev_device *dev = mdev_from_dev(device);
-> +
-> +	if (!dev->alias)
-> +		return -EOPNOTSUPP;
+Thanks.
 
-Wouldn't it be better to not create the alias at all?  Thanks,
-
-Alex
-
-> +
-> +	return sprintf(buf, "%s\n", dev->alias);
-> +}
-> +static DEVICE_ATTR_RO(alias);
-> +
->  static const struct attribute *mdev_device_attrs[] = {
-> +	&dev_attr_alias.attr,
->  	&dev_attr_remove.attr,
->  	NULL,
->  };
-
+cheers
