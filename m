@@ -2,217 +2,169 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B39C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A269C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADD82077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231B42077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:15:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sr8I+2Kr"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="JJwFWRGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfH0VOu (ORCPT
+        id S1730723AbfH0VPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:14:50 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51116 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfH0VOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:14:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v15so523253wml.0;
-        Tue, 27 Aug 2019 14:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yECDAiuiu9jr/nOshuFbg5LajN45t3Fqtc32iDnnNj4=;
-        b=Sr8I+2KrGyakUbO16mBUGkqZiojwSQosnNXEu++6pvuqEd2dILfMv07vZ5Vv6B1SRE
-         Sj/YcVhxpAEHDFUE6X7GhDm1PKeOT2n8pI+WKkv9nWakvjrpjBbNNzBUseIVO26sR1Y4
-         IjrLf0I0/o2Psz/kGa0Z/P8hBAmT7egPD6OyhYKabAmqTr7iPJ/DDC9bOCny6+mgMKnK
-         7lwegQvki8ESjOzqXKYZJ0sDl1HBbMR0Je0MgArIWWTrT3qTMDaEFArrlqRduojp/TYZ
-         YXnJtU7A40rEexCsw7zr3cyhG8l6yC0PwysxJ12knlGsKWQg4XHQP4q1zZVYXgNV3zzv
-         Lckw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yECDAiuiu9jr/nOshuFbg5LajN45t3Fqtc32iDnnNj4=;
-        b=X+2pwS4220YbviKGz2I3l6KyAxOE3tvVQa3mbL10LI1IfQ+AmjswPlYB3FOVd5LpA2
-         im2IAA8QTlMRXyingA7HpTMb5UHgBVaCaCKJoL+Ml0g4eAyOZJxD/Bbm7ie+w7uw9DiC
-         mpDcvojQNxAbgLsRd0GzSAOplQM/xgKGTifJYYgeOT+jEnPlPOndOgOYp86Uv5SEMfMo
-         EpYi2VF+iqU5wehJER1Fxng8Y1E3/RXh+9ed1476zdRVt5DkA1K4d0owzjEGav3pKe3t
-         6VVyYu1lnqZVlXzSU0oKTATIaMiWT9rem1dk2W06GTpfisNL54unqyGTNYxpGPH1EG9i
-         sTuA==
-X-Gm-Message-State: APjAAAWfEF5KYpudE2Bgb5GzxfViceyGYP8Oq8tcJ7Qu9NsRBLO2sqyz
-        PRlSrtqa7VKTzIzLdSatmdh2GDYV
-X-Google-Smtp-Source: APXvYqyUoeQFl82ZnGfYrHaOq3DoQDbcX2FuP3GBcJZEA+74Q64a4WWlsP5iy45x4x1AQL0eBYCsmg==
-X-Received: by 2002:a05:600c:254a:: with SMTP id e10mr568638wma.113.1566940485789;
-        Tue, 27 Aug 2019 14:14:45 -0700 (PDT)
-Received: from [192.168.1.19] (ckl27.neoplus.adsl.tpnet.pl. [83.31.87.27])
-        by smtp.gmail.com with ESMTPSA id b18sm149395wro.34.2019.08.27.14.14.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 14:14:45 -0700 (PDT)
-Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
-To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     sre@kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
-        merlijn@wizzup.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190820195307.27590-1-dmurphy@ti.com>
- <20190826215822.GY52127@atomide.com> <20190826221413.GA19124@amd>
- <20190826224437.GZ52127@atomide.com> <20190827121818.GB19927@amd>
- <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <69925382-d8f4-4916-f121-0184a4219354@gmail.com>
-Date:   Tue, 27 Aug 2019 23:14:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
-Content-Type: text/plain; charset=windows-1252
+        Tue, 27 Aug 2019 17:15:31 -0400
+Received: from mail-eopbgr50078.outbound.protection.outlook.com ([40.107.5.78]:32854
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726735AbfH0VPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 17:15:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c8inNN7SSy2ryNVmTEoulz27RaEKEamqu0NbKn8X2cLR9Cqdc0/ThY/ztaToE3U5AWoVZ3hfiMbB1lECjDuITyNXU3VI59xEm0fGY5eAAXJPmNFyqpC8qp36So4sZ2f3da/1yVI/jAl1DRcRPF+aat8LT65aJyJ2EclzJVSO3cEBkxEHIByw5KPYPMJ4D2ix0I2wG63rEa6may1GhLlvP0aGvetpBLn+dScSXEjqbpj2J7EGzotVKM8jJTGQPYrfED01gD5dAq/rVjw7BMbQ9O3k2/zriRt3aeYHxhU+QrD3lT/Mj+6OetyRk3x29+Y68IDa7j6QJY8wQV3USr5Kaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWfSOPyezsy/SZF1bJ70tjQdz1ZgE0SUo63k/RpGuis=;
+ b=jLiZnbYtAMBXMQsrG+Cgbq37vPmV92rRUPZIYb3fEdKNju8q2UvMvJy9BTqt3Z9bvk/xeC6fjWjbHOObp0vEwq5oEEA5HCbaB2ahcQdzhnBkrIuHaSmSfxNNfcu0SPVtqj2a6QpEnf/BMkbEx69hbjrGoIKel/fTHHVsxibR3/ko7T5O149qFCe/LLo4MGNUwULZy18BODhQPLXwchqQrUUy8ja4gXkCe5anFB68R0RUEvwpT0Ubu/bah7upf0U/gm4HzcS06cOQl0gw2NbWoB7j2EpWJzhV4cOTK1CcMb79b47ODKeLLmZ1DPyZ4CiYgsgrk5NcPJq9EFSnNR1tyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWfSOPyezsy/SZF1bJ70tjQdz1ZgE0SUo63k/RpGuis=;
+ b=JJwFWRGq0T3oiwyCCRwMgaFQDf2FG5cp7AIdd5X1QcA6xH/A9MNvxGVMovKyhwu8uM/YIiLg+vRyZB/Yk6OIlE2GzwPyoVa5ikuo2zkhfxd2nYf4E0mzXrudKNZ5WULP0mQDzmnKMBrNOafRJrByHuU3+l+mhe6KdNDUs0+bEXA=
+Received: from VI1PR0501MB2765.eurprd05.prod.outlook.com (10.172.11.140) by
+ VI1PR0501MB2621.eurprd05.prod.outlook.com (10.172.12.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.19; Tue, 27 Aug 2019 21:15:23 +0000
+Received: from VI1PR0501MB2765.eurprd05.prod.outlook.com
+ ([fe80::5cab:4f5c:d7ed:5e27]) by VI1PR0501MB2765.eurprd05.prod.outlook.com
+ ([fe80::5cab:4f5c:d7ed:5e27%6]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
+ 21:15:23 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "wharms@bfs.de" <wharms@bfs.de>,
+        "maowenan@huawei.com" <maowenan@huawei.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] net: mlx5: Kconfig: Fix MLX5_CORE_EN dependencies
+Thread-Topic: [PATCH -next] net: mlx5: Kconfig: Fix MLX5_CORE_EN dependencies
+Thread-Index: AQHVXITcCNibTH++QEWLgS4IcRgEMqcOl/iAgAAo/4CAAL8OgA==
+Date:   Tue, 27 Aug 2019 21:15:23 +0000
+Message-ID: <5b838b204d96482cdff006b872146cb492917475.camel@mellanox.com>
+References: <20190827031251.98881-1-maowenan@huawei.com>
+         <5D64DABF.4010601@bfs.de> <092f56bf-3e94-a3b6-926c-da33ba26ee37@huawei.com>
+In-Reply-To: <092f56bf-3e94-a3b6-926c-da33ba26ee37@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 18c98c3e-32f0-4925-1ce5-08d72b33acbb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2621;
+x-ms-traffictypediagnostic: VI1PR0501MB2621:
+x-microsoft-antispam-prvs: <VI1PR0501MB2621B675DD941A63D74040E3BEA00@VI1PR0501MB2621.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1186;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(199004)(189003)(6512007)(229853002)(53936002)(2906002)(7736002)(486006)(6116002)(8936002)(3846002)(71200400001)(305945005)(71190400001)(478600001)(2501003)(36756003)(54906003)(5660300002)(6436002)(6246003)(6486002)(66066001)(14454004)(14444005)(58126008)(256004)(81166006)(81156014)(4326008)(66556008)(76116006)(66946007)(11346002)(2616005)(66476007)(446003)(91956017)(99286004)(76176011)(66446008)(64756008)(476003)(110136005)(102836004)(6506007)(8676002)(25786009)(26005)(316002)(86362001)(118296001)(186003)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2621;H:VI1PR0501MB2765.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mx+jRm6ysPyH9GA3xDBajhSvv18cujPHHKzo644ZgSOTL1TMV6URcp6xXGZCQr+KnLY10U/KlXHPzbHHAjhZJXnvFPJosgVBVBUMoSp7Lp6y2Ri7idEE4ty5yYou/fzBmup97UBvFSKOkyay/tMnpbnsBe0xKnl5SSGGJh9M8qltWgI6nfSLTLMafYYWOuuALIUci5pzR4PPX/nIVDwJZ1ptEXoAeSiuv3ABGFmdoU4nwFC2Z4Ybt5wpEPFHuuy1g55AiFc88ldwjWEqZeUIi74zt7htq0Z/ZG8hlx5iV6zGQpqlTrV1FcZ9WAgwwqF8TN9srHGb/2gDhWQqCySBLtm4pXdMOVtibdJ6SnAo4r4sijlU5kAGA1UknpyeRKyLtXj/aNlIF5FAzTUrQaiSWgh9RcYoZNutRvrJ56mgsYE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <576E5DF6BB1C494D9C555542872C1337@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18c98c3e-32f0-4925-1ce5-08d72b33acbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 21:15:23.5985
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iontQIelaVu3OXY6XT8i1esDJWxO+O3fyX5IdYFohevKNAd0eGiRaG0caRCScZG4edDSJwDel7gM4LELuTgPZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2621
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
-
-On 8/27/19 2:44 PM, Dan Murphy wrote:
-> Tony
-> 
-> On 8/27/19 7:18 AM, Pavel Machek wrote:
->> On Mon 2019-08-26 15:44:37, Tony Lindgren wrote:
->>> * Pavel Machek <pavel@ucw.cz> [190826 22:14]:
->>>> On Mon 2019-08-26 14:58:22, Tony Lindgren wrote:
->>>>> Hi,
->>>>>
->>>>> * Dan Murphy <dmurphy@ti.com> [190820 19:53]:
->>>>>> Fix the brightness control for I2C mode.  Instead of
->>>>>> changing the full scale current register update the ALS target
->>>>>> register for the appropriate banks.
->>>>>>
->>>>>> In addition clean up some code errors and random misspellings found
->>>>>> during coding.
->>>>>>
->>>>>> Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
->>>>>>
->>>>>> Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
->>>>>> Reported-by: Pavel Machek <pavel@ucw.cz>
->>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>> ---
->>>>>>
->>>>>> v3 - Removed register define updates -
->>>>>> https://lore.kernel.org/patchwork/patch/1114542/
->>>>> Looks like starting with this patch in Linux next the LCD on droid4
->>>>> is so dim it's unreadable even with brightness set to 255. Setting
->>>>> brightness to 0 does blank it completely though.
->>>>>
->>>>> Did something maybe break with the various patch revisions or are
->>>>> we now missing some dts patch?
->>>> Maybe missing dts patch. We should provide maximum current the LED can
->>>> handle...
->>> Or i2c control is somehow broken and only als control now works?
-> 
-> With only setting CONFIG_LEDS_LM3532=m to the next branch I get full
-> brightness with 255.
-> 
-> I also see half brightness at 128 with the ramp down working.
-> 
-> I am not able to reproduce this issue on my device.
-> 
->> Well, max current led is obviously missing. Plus code does not check
->> the return from reading led-max-microamp.
-> 
-> led-max-microamp is optional so there is no need to check the return.
-
-It's also ugly to not check it when you have it assigned.
-We'll soon receive complaints from static checkers about pointless
-assignment.
-
-I'd distinguish between cases when parsing failed,
-and when property has not been provided.
-
-if (fwnode_property_present(child, "led-max-microamp")) {
-	if (fwnode_property_read_u32(child, "led-max-microamp",
-				&led->full_scale_current);
-		dev_err(&priv->client->dev,
-                         "Failed to parse led-max-microamp property\n")
-} else {
-	dev_info(&priv->client->dev,
-		 led-max-microamp property is missing\n")
-}
-
-> full_scale_current should be 0 if not populated and in the init only if
-> this variable is set does
-> 
-> the code program the register otherwise it is default of 20.2 mA.
-
--- 
-Best regards,
-Jacek Anaszewski
+T24gVHVlLCAyMDE5LTA4LTI3IGF0IDE3OjUxICswODAwLCBtYW93ZW5hbiB3cm90ZToNCj4gDQo+
+IE9uIDIwMTkvOC8yNyAxNToyNCwgd2FsdGVyIGhhcm1zIHdyb3RlOg0KPiA+IA0KPiA+IEFtIDI3
+LjA4LjIwMTkgMDU6MTIsIHNjaHJpZWIgTWFvIFdlbmFuOg0KPiA+ID4gV2hlbiBNTFg1X0NPUkVf
+RU49eSBhbmQgUENJX0hZUEVSVl9JTlRFUkZBQ0UgaXMgbm90IHNldCwgYmVsb3cNCj4gPiA+IGVy
+cm9ycyBhcmUgZm91bmQ6DQo+ID4gPiBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1
+L2NvcmUvZW5fbWFpbi5vOiBJbiBmdW5jdGlvbg0KPiA+ID4gYG1seDVlX25pY19lbmFibGUnOg0K
+PiA+ID4gZW5fbWFpbi5jOigudGV4dCsweGI2NDkpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvDQo+
+ID4gPiBgbWx4NWVfaHZfdmhjYV9zdGF0c19jcmVhdGUnDQo+ID4gPiBkcml2ZXJzL25ldC9ldGhl
+cm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZW5fbWFpbi5vOiBJbiBmdW5jdGlvbg0KPiA+ID4gYG1s
+eDVlX25pY19kaXNhYmxlJzoNCj4gPiA+IGVuX21haW4uYzooLnRleHQrMHhiOGM0KTogdW5kZWZp
+bmVkIHJlZmVyZW5jZSB0bw0KPiA+ID4gYG1seDVlX2h2X3ZoY2Ffc3RhdHNfZGVzdHJveScNCj4g
+PiA+IA0KPiA+ID4gVGhpcyBiZWNhdXNlIENPTkZJR19QQ0lfSFlQRVJWX0lOVEVSRkFDRSBpcyBu
+ZXdseSBpbnRyb2R1Y2VkIGJ5DQo+ID4gPiAnY29tbWl0IDM0OGRkOTNlNDBjMQ0KPiA+ID4gKCJQ
+Q0k6IGh2OiBBZGQgYSBIeXBlci1WIFBDSSBpbnRlcmZhY2UgZHJpdmVyIGZvciBzb2Z0d2FyZQ0K
+PiA+ID4gYmFja2NoYW5uZWwgaW50ZXJmYWNlIiksDQo+ID4gPiBGaXggdGhpcyBieSBtYWtpbmcg
+TUxYNV9DT1JFX0VOIGltcGx5IFBDSV9IWVBFUlZfSU5URVJGQUNFLg0KPiA+ID4gDQo+ID4gPiBG
+aXhlczogY2VmMzVhZjM0ZDZkICgibmV0L21seDVlOiBBZGQgbWx4NWUgSFYgVkhDQSBzdGF0cyBh
+Z2VudCIpDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYW8gV2VuYW4gPG1hb3dlbmFuQGh1YXdlaS5j
+b20+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1
+L2NvcmUvS2NvbmZpZyB8IDEgKw0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KQ0KPiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFu
+b3gvbWx4NS9jb3JlL0tjb25maWcNCj4gPiA+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFu
+b3gvbWx4NS9jb3JlL0tjb25maWcNCj4gPiA+IGluZGV4IDM3ZmVmOGMuLmE2YTcwY2UgMTAwNjQ0
+DQo+ID4gPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvS2Nv
+bmZpZw0KPiA+ID4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3Jl
+L0tjb25maWcNCj4gPiA+IEBAIC0zNSw2ICszNSw3IEBAIGNvbmZpZyBNTFg1X0NPUkVfRU4NCj4g
+PiA+ICAJZGVwZW5kcyBvbiBJUFY2PXkgfHwgSVBWNj1uIHx8IE1MWDVfQ09SRT1tDQo+ID4gDQo+
+ID4gT1QgYnV0IC4uLg0KPiA+IGlzIHRoYXQgSVBWNiBuZWVkZWQgYXQgYWxsID8gY2FuIHRoZXJl
+IGJlIHNvbWV0aGluZyBlbHNlIHRoYXQgeWVzDQo+ID4gb3Igbm8gPw0KDQpvbmx5IG5lZWRlZCBm
+b3IgZW5fcmVwLmMvZW5fdGMuYyB3aGljaCBhcmUgb25seSBjb21waWxlZCB3aGVuDQpNTFg1X0VT
+V0lUQ0ggaXMgc2VsZWN0ZWQsIHNvIGFjdHVhbGx5IHN1Y2ggY29uZGl0aW9uIHNob3VsZCBiZSBm
+b3INCk1MWDVfRVNXSVRDSCBhbmQgbm90IE1MWDVfQ09SRV9FTg0KDQp0ZXN0ZWQgd2l0aDoNCk1M
+WDVfQ09SRT15DQpNTFg1X0NPUkVfRU49eQ0KSVBWNj1tDQoNCmFuZCByZW1vdmVkIHRoZSBkZXBl
+bmRlbmN5Lg0Kc28gaWYgaXB2NiBpcyBhIG1vZHVsZSBidXQgbWx4NSBpcyBidWlsdGluIHRoaXMg
+d2lsbCBoYXBwZW4uLiANCg0KbGQ6IGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUv
+Y29yZS9lbl9yZXAubzogaW4gZnVuY3Rpb24NCmBtbHg1ZV9yZXBfbmVpZ2hfdXBkYXRlX2luaXRf
+aW50ZXJ2YWwnOg0KL2hvbWUvc2FlZWRtL2RldmVsL2xpbnV4L2RyaXZlcnMvbmV0L2V0aGVybmV0
+L21lbGxhbm94L21seDUvY29yZS9lbl9yZXANCi5jOjUwNTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0
+byBgbmRfdGJsJw0KbGQ6IGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9l
+bl9yZXAubzogaW4gZnVuY3Rpb24NCmBtbHg1ZV9yZXBfbmV0ZXZlbnRfZXZlbnQnOg0KL2hvbWUv
+c2FlZWRtL2RldmVsL2xpbnV4L2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29y
+ZS9lbl9yZXANCi5jOjk0NjogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbmRfdGJsJw0KbGQ6DQov
+aG9tZS9zYWVlZG0vZGV2ZWwvbGludXgvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4
+NS9jb3JlL2VuX3JlcA0KLmM6OTE5OiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBuZF90YmwnDQps
+ZDogZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX3RjLm86IGluIGZ1
+bmN0aW9uDQpgbWx4NWVfdGNfdXBkYXRlX25laWdoX3VzZWRfdmFsdWUnOg0KL2hvbWUvc2FlZWRt
+L2RldmVsL2xpbnV4L2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbl90
+Yy4NCmM6MTQ5NzogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbmRfdGJsJw0KDQp0aGUgcHJvYmxl
+bSBpcyB0aGF0IG1seDVfY29yZSBjYW4ndCBiZSBidWlsdGluIGlmIGlwdjYgaXMgYSBtb2R1bGUg
+ZHVlDQp0byB0aGlzIG5kX3RibCBkZXBlbmRlbmN5IA0KDQpJIHRoaW5rIHRoaXMgaXMgc29sdmFi
+bGUgYnkgdXNpbmcgaXB2Nl9zdHViLT5uZF90YmwsIGluc3RlYWQgb2YNCnJlZmVyZW5jaW5nIG1k
+X3RibCBkaXJlY3RseSBmcm9tIG1seDUuDQoNCj4gDQo+IElmIEkgc2V0IElQVjY9bSwgZXJyb3Jz
+IGFyZSBmb3VuZCBhcyBiZWxvdzoNCj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4
+NS9jb3JlL21haW4ubzogSW4gZnVuY3Rpb24NCj4gYG1seDVfdW5sb2FkJzoNCj4gbWFpbi5jOigu
+dGV4dCsweDI3NSk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG1seDVfaHZfdmhjYV9jbGVhbnVw
+Jw0KPiBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbWFpbi5vOiBJbiBm
+dW5jdGlvbg0KPiBgbWx4NV9jbGVhbnVwX29uY2UnOg0KPiBtYWluLmM6KC50ZXh0KzB4MmU4KTog
+dW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbWx4NV9odl92aGNhX2Rlc3Ryb3knDQo+IGRyaXZlcnMv
+bmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9tYWluLm86IEluIGZ1bmN0aW9uDQo+IGBt
+bHg1X2xvYWRfb25lJzoNCj4gbWFpbi5jOigudGV4dCsweDIzYzEpOiB1bmRlZmluZWQgcmVmZXJl
+bmNlIHRvIGBtbHg1X2h2X3ZoY2FfY3JlYXRlJw0KPiBtYWluLmM6KC50ZXh0KzB4MjQ4Zik6IHVu
+ZGVmaW5lZCByZWZlcmVuY2UgdG8gYG1seDVfaHZfdmhjYV9pbml0Jw0KPiBtYWluLmM6KC50ZXh0
+KzB4MjVlMCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG1seDVfaHZfdmhjYV9jbGVhbnVwDQoN
+CnRoaXMgaXMgbm90IHJlbGF0ZWQsIGkgdGhpbmsgdGhlcmUgaXMgc29tZXRoaW5nIHdyb25nIHdp
+dGggeW91ciBsb2NhbA0KcmVwb3NpdG9yeS4NCg0K
