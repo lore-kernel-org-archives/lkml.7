@@ -2,329 +2,109 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EDAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4720AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA27206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC7A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p0YzT8Vu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2qheXhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfH0OlY (ORCPT
+        id S1729873AbfH0Omf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:41:24 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54339 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbfH0OlY (ORCPT
+        Tue, 27 Aug 2019 10:42:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34355 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfH0Ome (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:41:24 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p74so3383955wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 07:41:22 -0700 (PDT)
+        Tue, 27 Aug 2019 10:42:34 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s18so19110999wrn.1;
+        Tue, 27 Aug 2019 07:42:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7diyQC6Ra4+NFHhs8549xmFWYt9LcIpwPAa6izWd3FM=;
-        b=p0YzT8VudLkN6MHPw4ymN8ATLoAsztm3yREIaRQpxCpwqtDb5nFpksF3M/40Q7xfQg
-         hEsVta3ycn9tcp4mtficor5SFmJYSl1wERgLxBnHPQikWuindVAV8WoIzeUqeyrxKSRW
-         NOa+WRmrriK4//PnJSsD01rjOf9sdtiOgO4foF5kp7/abaoayBqT1/7eMsShz5J15o7t
-         sou2PxK6Ccuy5uGdNzcJKufOCUG8u3ddn40HxQ1iypxQXUFLlDKgqFhxlX8Bv1KQWZf1
-         7Cb0VzLqOcVNzcK066EWwKlS+cF3yhXFPqjrcD62vGWvOTzZ/y50vLv+1VHzkrLnnqZ6
-         Kn6Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ca2+YahgUJ7d9DaNm5wUyN4mWXrxesbHToiPd/b8GMg=;
+        b=C2qheXhAmjKS0CqUVWH8ElAcQta++ZhTzCK3fuMBVVMqOKIvfuAgqBDNobOOFJTDJ7
+         5qMmdVXhOndsKAy1vGHNdAT06Rq74c3cpT+naCVGcWB0/c+/1L1YA6/TNrox0egMMmyD
+         H6me2J6xiSWEV32noukVqvry6bX7cEmkZaubXoNM8LGnNYrnL1Vb/zmi83EnBiAAr2+P
+         nXe35atVZWeeqZlIHICGj/MkW/hrbGjHgD2U/4WfNw5aLSaPXGbUwhH2dYMPt/qo28eQ
+         Vj1tbiSW3jOEXFviowj8nRxUzfz543cCiVW4WyoRngkRVWWIp5pqYLoqdEUX4Z3RRYAB
+         lwFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7diyQC6Ra4+NFHhs8549xmFWYt9LcIpwPAa6izWd3FM=;
-        b=mQNJg86qvRRcxbI/+IolocRys+LyNj3QU2iSFXPJ7I9tVFjZkujJzksZsL5rwVvIFV
-         wndP+sdTzwE2FQaBmc8Fvst86A3d+0ymRQoxOR/czjX5EaVk2qRRx2IiEwHqp3ILcpUl
-         B17Vvlu4bnSx+OLNPERwED5CTKkUFfRQAKWUJbxMKmfrSHZN4JAuUtu9TPqEDggKZ2m4
-         2QF55GjMTCBCDZzZI+pLOH+ZMY1kz6melK3TPE4glb5b8aAW1mbzXpywmNQmd4Sm9hHD
-         kCe5qDgzKNKlzRi+YHN45C5yqd03Anu/1AJFNv4HeTvjnuZ6pLax2QA8p8z+q8Kk5o1V
-         Qxxg==
-X-Gm-Message-State: APjAAAVf8ND5z8fts/WUTQWNC0mgAUOBLCxBry6KmjmKnXDJKyxGvwHf
-        bEFYk60k0S63XMjGebNAOFcGkg==
-X-Google-Smtp-Source: APXvYqxIK2wLu2K9HXTe7PqjJ7lnmkKiVGQi1TCLtXD8tzPRDHSUgPFIJMB2yNir/S8IWKhSkmANXw==
-X-Received: by 2002:a1c:c706:: with SMTP id x6mr29541988wmf.104.1566916881354;
-        Tue, 27 Aug 2019 07:41:21 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id o14sm26888491wrg.64.2019.08.27.07.41.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ca2+YahgUJ7d9DaNm5wUyN4mWXrxesbHToiPd/b8GMg=;
+        b=aKQGeXgAv0zS1Pdtc1Ufenu/lUAuEqcB1IiQoZLVP6y56vOlFEN9TdT75ulpGIGS0i
+         +fktjBKvqXHdKAMyp8q2MZ5nLTcegmzJZrYcqZwToQruXUk6KluSfngrGqIXHXuE6nQS
+         bAF8x92zNFTMwM+++7KmP8vWoym78mcPfnNL+cH2ltM1WmYgn86lZYRozgYHUDwqsJJF
+         2sC8RXwCa2dTeTfR61RqCVONj7EOroZt9P0tfdaJYkKuHBYD0lrsdA/Pv/zx/suTdWrw
+         FY8gAm3z3N9Sle7HffmEoFi4rocQKdjvs8NZDFT4RNGQfQuIeYWtm+Pa1sEt7U9BoGHK
+         Vi0w==
+X-Gm-Message-State: APjAAAUg/N01lExAO/nKLmaDkcLhwzfIFdsGAZKgSKbFJQjPEq2LIwTY
+        qqQcHRgXUZM2jt7korKVzcZBvc0g5hc=
+X-Google-Smtp-Source: APXvYqyLy6WA/c8mkgNmIc0Q+m6JLYADsiirtzRg20Ten7Hc+d8Lg1jBonOAtvjmv5BGzxvhcQo2Kg==
+X-Received: by 2002:adf:f507:: with SMTP id q7mr29777786wro.210.1566916952672;
+        Tue, 27 Aug 2019 07:42:32 -0700 (PDT)
+Received: from bfk-3-vm8-e4.cs.niisi.ras.ru (t109.niisi.ras.ru. [193.232.173.109])
+        by smtp.gmail.com with ESMTPSA id e9sm2799413wmd.25.2019.08.27.07.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 07:41:20 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 15:41:17 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        hpa@zytor.com, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@android.com, maco@google.com, michal.lkml@markovi.net,
-        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
-        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
-        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH v3 04/11] modpost: add support for symbol namespaces
-Message-ID: <20190827144117.GB102829@google.com>
-References: <20190813121733.52480-1-maennich@google.com>
- <20190821114955.12788-1-maennich@google.com>
- <20190821114955.12788-5-maennich@google.com>
- <20190826162138.GA31739@linux-8ccs>
+        Tue, 27 Aug 2019 07:42:32 -0700 (PDT)
+From:   Peter Mamonov <pmamonov@gmail.com>
+To:     rui.zhang@intel.com
+Cc:     Peter Mamonov <pmamonov@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: make thermal_zone_of_sensor_register return -ENODEV if a sensor OF node is missing
+Date:   Tue, 27 Aug 2019 17:39:52 +0300
+Message-Id: <20190827143952.19591-1-pmamonov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190826162138.GA31739@linux-8ccs>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 06:21:38PM +0200, Jessica Yu wrote:
->+++ Matthias Maennich [21/08/19 12:49 +0100]:
->>Add support for symbols that are exported into namespaces. For that,
->>extract any namespace suffix from the symbol name. In addition, emit a
->>warning whenever a module refers to an exported symbol without
->>explicitly importing the namespace that it is defined in. This patch
->>consistently adds the namespace suffix to symbol names exported into
->>Module.symvers.
->>
->>Example warning emitted by modpost in case of the above violation:
->>
->>WARNING: module ums-usbat uses symbol usb_stor_resume from namespace
->>USB_STORAGE, but does not import it.
->>
->>Co-developed-by: Martijn Coenen <maco@android.com>
->>Signed-off-by: Martijn Coenen <maco@android.com>
->>Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>Signed-off-by: Matthias Maennich <maennich@google.com>
->>---
->>scripts/mod/modpost.c | 91 +++++++++++++++++++++++++++++++++++++------
->>scripts/mod/modpost.h |  7 ++++
->>2 files changed, 87 insertions(+), 11 deletions(-)
->>
->>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->>index f277e116e0eb..538bb24ffee3 100644
->>--- a/scripts/mod/modpost.c
->>+++ b/scripts/mod/modpost.c
->>@@ -164,6 +164,7 @@ struct symbol {
->>	struct module *module;
->>	unsigned int crc;
->>	int crc_valid;
->>+	const char *namespace;
->>	unsigned int weak:1;
->>	unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
->>	unsigned int kernel:1;     /* 1 if symbol is from kernel
->>@@ -233,6 +234,37 @@ static struct symbol *find_symbol(const char *name)
->>	return NULL;
->>}
->>
->>+static bool contains_namespace(struct namespace_list *list,
->>+			       const char *namespace)
->>+{
->>+	struct namespace_list *ns_entry;
->>+
->>+	for (ns_entry = list; ns_entry != NULL; ns_entry = ns_entry->next)
->>+		if (strcmp(ns_entry->namespace, namespace) == 0)
->>+			return true;
->>+
->>+	return false;
->>+}
->>+
->>+static void add_namespace(struct namespace_list **list, const char *namespace)
->>+{
->>+	struct namespace_list *ns_entry;
->>+
->>+	if (!contains_namespace(*list, namespace)) {
->>+		ns_entry = NOFAIL(malloc(sizeof(struct namespace_list) +
->>+					 strlen(namespace) + 1));
->>+		strcpy(ns_entry->namespace, namespace);
->>+		ns_entry->next = *list;
->>+		*list = ns_entry;
->>+	}
->>+}
->>+
->>+static bool module_imports_namespace(struct module *module,
->>+				     const char *namespace)
->>+{
->>+	return contains_namespace(module->imported_namespaces, namespace);
->>+}
->>+
->>static const struct {
->>	const char *str;
->>	enum export export;
->>@@ -312,6 +344,22 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
->>		return export_unknown;
->>}
->>
->>+static const char *sym_extract_namespace(const char **symname)
->>+{
->>+	size_t n;
->>+	char *dupsymname;
->>+
->>+	n = strcspn(*symname, ".");
->>+	if (n < strlen(*symname) - 1) {
->>+		dupsymname = NOFAIL(strdup(*symname));
->>+		dupsymname[n] = '\0';
->>+		*symname = dupsymname;
->>+		return dupsymname + n + 1;
->>+	}
->>+
->>+	return NULL;
->>+}
->>+
->>/**
->> * Add an exported symbol - it may have already been added without a
->> * CRC, in this case just update the CRC
->>@@ -319,16 +367,18 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
->>static struct symbol *sym_add_exported(const char *name, struct module *mod,
->>				       enum export export)
->>{
->>-	struct symbol *s = find_symbol(name);
->>+	const char *symbol_name = name;
->>+	const char *namespace = sym_extract_namespace(&symbol_name);
->>+	struct symbol *s = find_symbol(symbol_name);
->>
->>	if (!s) {
->>-		s = new_symbol(name, mod, export);
->>+		s = new_symbol(symbol_name, mod, export);
->>+		s->namespace = namespace;
->>	} else {
->>		if (!s->preloaded) {
->>-			warn("%s: '%s' exported twice. Previous export "
->>-			     "was in %s%s\n", mod->name, name,
->>-			     s->module->name,
->>-			     is_vmlinux(s->module->name) ?"":".ko");
->>+			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
->>+			     mod->name, symbol_name, s->module->name,
->>+			     is_vmlinux(s->module->name) ? "" : ".ko");
->>		} else {
->>			/* In case Module.symvers was out of date */
->>			s->module = mod;
->>@@ -1943,6 +1993,7 @@ static void read_symbols(const char *modname)
->>	const char *symname;
->>	char *version;
->>	char *license;
->>+	char *namespace;
->>	struct module *mod;
->>	struct elf_info info = { };
->>	Elf_Sym *sym;
->>@@ -1974,6 +2025,12 @@ static void read_symbols(const char *modname)
->>		license = get_next_modinfo(&info, "license", license);
->>	}
->>
->>+	namespace = get_modinfo(&info, "import_ns");
->>+	while (namespace) {
->>+		add_namespace(&mod->imported_namespaces, namespace);
->>+		namespace = get_next_modinfo(&info, "import_ns", namespace);
->>+	}
->>+
->>	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
->>		symname = remove_dot(info.strtab + sym->st_name);
->>
->>@@ -2118,6 +2175,13 @@ static int check_exports(struct module *mod)
->>			basename++;
->>		else
->>			basename = mod->name;
->>+
->>+		if (exp->namespace &&
->>+		    !module_imports_namespace(mod, exp->namespace)) {
->>+			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
->>+			     basename, exp->name, exp->namespace);
->>+		}
->>+
->>		if (!mod->gpl_compatible)
->>			check_for_gpl_usage(exp->export, basename, exp->name);
->>		check_for_unused(exp->export, basename, exp->name);
->>@@ -2395,16 +2459,21 @@ static void write_dump(const char *fname)
->>{
->>	struct buffer buf = { };
->>	struct symbol *symbol;
->>+	const char *namespace;
->>	int n;
->>
->>	for (n = 0; n < SYMBOL_HASH_SIZE ; n++) {
->>		symbol = symbolhash[n];
->>		while (symbol) {
->>-			if (dump_sym(symbol))
->>-				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\n",
->>-					symbol->crc, symbol->name,
->>-					symbol->module->name,
->>-					export_str(symbol->export));
->>+			if (dump_sym(symbol)) {
->>+				namespace = symbol->namespace;
->>+				buf_printf(&buf, "0x%08x\t%s%s%s\t%s\t%s\n",
->>+					   symbol->crc, symbol->name,
->>+					   namespace ? "." : "",
->>+					   namespace ? namespace : "",
->
->I think it might be cleaner to just have namespace be a separate
->field in Module.symvers, rather than appending a dot and the
->namespace at the end of a symbol name. Maybe something like
->
->   <crc> <symbol_name> <namespace> <module>
->
->For symbols without a namespace, we could just have "", with all
->fields delimited by tabs. This is just a stylistic suggestion, what do
->you think?
+When devm_thermal_zone_of_sensor_register() is called from
+hwmon_thermal_add_sensor() it is possible that the relevant sensor is
+missing an OF node. In this case thermal_zone_of_sensor_register() returns
+-EINVAL which causes hwmon_thermal_add_sensor() to fail as well. This patch
+changes relevant return code of thermal_zone_of_sensor_register() to
+-ENODEV, which is tolerated by hwmon_thermal_add_sensor().
 
-I thought of something like that initially, but did not do it to not
-break users of this file. But as I am anyway breaking users by changing
-the symbol name into symbol.NS, I might as well do it as you suggested.
-Since read_dump() also knew already how to extract the namespaces from
-symbol.NS, it had already worked without a change to the reading code
-of modpost. Are there any other consumers of Module.symvers that we
-should be aware of?
+Here is a particular case of such behaviour: the Marvell ethernet PHYs
+driver registers hwmon device for the built-in temperature sensor (see
+drivers/net/phy/marvell.c). Since the sensor doesn't have associated OF
+node devm_hwmon_device_register() returns error which ultimately causes
+failure of the PHY driver's probe function.
 
->Regardless of the chosen format, I think we need to document how
->namespaces are represented in Documentation/kbuild/modules.rst, where
->it describes the Module.symvers format.
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+---
+ drivers/thermal/of-thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Agreed. I will update the documentation. It anyway needs an update.
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index dc5093be553e..34b0cc173f4a 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -493,7 +493,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+ 
+ 	if (!dev || !dev->of_node) {
+ 		of_node_put(np);
+-		return ERR_PTR(-EINVAL);
++		return ERR_PTR(-ENODEV);
+ 	}
+ 
+ 	sensor_np = of_node_get(dev->of_node);
+-- 
+2.20.1
 
-Cheers,
-Matthias
-
->>+					   symbol->module->name,
->>+					   export_str(symbol->export));
->>+			}
->>			symbol = symbol->next;
->>		}
->>	}
->>diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
->>index 8453d6ac2f77..9626bf3e7424 100644
->>--- a/scripts/mod/modpost.h
->>+++ b/scripts/mod/modpost.h
->>@@ -109,6 +109,11 @@ buf_printf(struct buffer *buf, const char *fmt, ...);
->>void
->>buf_write(struct buffer *buf, const char *s, int len);
->>
->>+struct namespace_list {
->>+	struct namespace_list *next;
->>+	char namespace[0];
->>+};
->>+
->>struct module {
->>	struct module *next;
->>	const char *name;
->>@@ -121,6 +126,8 @@ struct module {
->>	struct buffer dev_table_buf;
->>	char	     srcversion[25];
->>	int is_dot_o;
->>+	// Actual imported namespaces
->>+	struct namespace_list *imported_namespaces;
->>};
->>
->>struct elf_info {
->>-- 
->>2.23.0.rc1.153.gdeed80330f-goog
->>
