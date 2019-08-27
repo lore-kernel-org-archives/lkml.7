@@ -2,80 +2,171 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF479C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5A8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC5B2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C477121883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="i4yWR/AG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOn/Th1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfH0RtC (ORCPT
+        id S1730521AbfH0Rts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:49:02 -0400
-Received: from cavan.codon.org.uk ([93.93.128.6]:38406 "EHLO
-        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbfH0Rs6 (ORCPT
+        Tue, 27 Aug 2019 13:49:48 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:35864 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfH0Rtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:48:58 -0400
-X-Greylist: delayed 2265 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 13:48:57 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lLYloM0Ywjig+ulU3rxirWB2hunInBTjYfHlRq1yag0=; b=i4yWR/AGXeNk0efti4p+I0xxR
-        He1mnoWyZPL4x55cesht2sxmTyNiXHwOuyL7xB8q7GvUg6p1hZTfzm6vrlxwxsP1almCB6XTL6qQX
-        mNAr7uZ6CkFnOz2D9Rv+/voSIbzTRnLqlT1cD7Ggd9yTJu/17YA07WnjiesVVv023Nins=;
-Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
-        (envelope-from <mjg59@cavan.codon.org.uk>)
-        id 1i2ezq-00079w-HA; Tue, 27 Aug 2019 18:11:06 +0100
-Date:   Tue, 27 Aug 2019 18:11:06 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Seunghun Han <kkamagui@gmail.com>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
- supporting AMD's fTPM
-Message-ID: <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org>
-References: <20190826081752.57258-1-kkamagui@gmail.com>
- <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
- <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
- <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
- <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
+        Tue, 27 Aug 2019 13:49:47 -0400
+Received: by mail-pl1-f202.google.com with SMTP id z7so1046685plo.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 10:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kBdnxSxfNrFWkVEGyrNiJF2qYM16TCNtAyDwbg8s3Rk=;
+        b=HOn/Th1QKNcSzNR3M0ivHvPiRM2bzQGo8BrsuGTsP0yVKcaY9EThjCVmrGsqv68SRl
+         08AFZc+Ve9nLv+iuxMWWoQ8TfuoczhlgUagEpq4zf93CTKd5WfjAM71R3eFW1bl8x2kv
+         a/If01mUOn+T/zWriHxXPvCBW8ssCgL7q7AQF+09Dzd8dYLWrmJQrx6Fr4RYWfa9nqr4
+         fHQiDDcS7vc9ks9Y0T0YBiDTEyShWi/5rmpo4XF6r+rl1EdZOn8wwU5cJSG0qA+IYNtL
+         7DxPEE9WqIzJhTBvuCB2Y9gMYcXYLFadNIklLwxHR7pfGvIJdBAaoSAsh5dWfLh2K7W1
+         Ihjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kBdnxSxfNrFWkVEGyrNiJF2qYM16TCNtAyDwbg8s3Rk=;
+        b=cR1kZdZDW4OPLLQSZA1hKC5bZMtxBReIt5RughMsKPF3RgYsKYQ3TrF2F4jAJjMuPp
+         JEY32LFFr3xEjJkZhzHqwhbNTyBz/T4a6TGY7gCT33Wu2VlFQfjWEoCsMxz69ulOpuT7
+         UWfH4wbXoKaKhc8E8Mh33ezaannUmD7nrSVx/JBrE/rsH64KLyzH8/gvaI8DXSIZ1pAK
+         822xpmDA6hQkUvrF2MHxzv0t5cJgdUfWTHjtQdA2473ac2h3GkEueJmVvChw5F5hvl2t
+         ZxRfXPki2ghnIJL2I+0zze44Vjj8Nln3WdtotX1jCvG60sAuQlLrcXqOG7Dfs43g5H58
+         G+ZQ==
+X-Gm-Message-State: APjAAAXi7IZOB+jLU02XSbVlDWsmsIh93sotZaIZw+dVJE1MwWEdnVs+
+        RCcVaLTDx2tblNxHs9V7FJkrrFniDN9lliKquCSkKg==
+X-Google-Smtp-Source: APXvYqzuY3DB3JPKTCk1lSTX1WmoxGNBIKvHThp1bwIkRjN5dpabp0rDjmzoCO0QjJ5fmhmmeC4w2szCM4IP8kr+EoqdCg==
+X-Received: by 2002:a63:595d:: with SMTP id j29mr22734669pgm.134.1566928186602;
+ Tue, 27 Aug 2019 10:49:46 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:49:32 -0700
+Message-Id: <20190827174932.44177-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v1] kunit: fix failure to build without printk
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     shuah@kernel.org
+Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
+        sboyd@kernel.org, Brendan Higgins <brendanhiggins@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:36:30AM +0900, Seunghun Han wrote:
+Previously KUnit assumed that printk would always be present, which is
+not a valid assumption to make. Fix that by ifdefing out functions which
+directly depend on printk core functions similar to what dev_printk
+does.
 
-> I got your point. Is there any problem if some regions which don't
-> need to be handled in NVS area are saved and restored? If there is a
-> problem, how about adding code for ignoring the regions in NVS area to
-> the nvs.c file like Jarkko said? If we add the code, we can save and
-> restore NVS area without driver's interaction.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ include/kunit/test.h |  7 +++++++
+ kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
+ 2 files changed, 31 insertions(+), 17 deletions(-)
 
-The only thing that knows which regions should be skipped by the NVS 
-driver is the hardware specific driver, so the TPM driver needs to ask 
-the NVS driver to ignore that region and grant control to the TPM 
-driver.
-
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 8b7eb03d4971..339af5f95c4a 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+ 
+ void kunit_cleanup(struct kunit *test);
+ 
++#ifdef CONFIG_PRINTK
+ void __printf(3, 4) kunit_printk(const char *level,
+ 				 const struct kunit *test,
+ 				 const char *fmt, ...);
++#else
++static inline void __printf(3, 4) kunit_printk(const char *level,
++					       const struct kunit *test,
++					       const char *fmt, ...)
++{}
++#endif
+ 
+ /**
+  * kunit_info() - Prints an INFO level message associated with @test.
+diff --git a/kunit/test.c b/kunit/test.c
+index b2ca9b94c353..0aa1caf07a6b 100644
+--- a/kunit/test.c
++++ b/kunit/test.c
+@@ -16,6 +16,7 @@ static void kunit_set_failure(struct kunit *test)
+ 	WRITE_ONCE(test->success, false);
+ }
+ 
++#ifdef CONFIG_PRINTK
+ static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+ {
+ 	return vprintk_emit(0, level, NULL, 0, fmt, args);
+@@ -40,6 +41,29 @@ static void kunit_vprintk(const struct kunit *test,
+ 	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
+ }
+ 
++void kunit_printk(const char *level,
++		  const struct kunit *test,
++		  const char *fmt, ...)
++{
++	struct va_format vaf;
++	va_list args;
++
++	va_start(args, fmt);
++
++	vaf.fmt = fmt;
++	vaf.va = &args;
++
++	kunit_vprintk(test, level, &vaf);
++
++	va_end(args);
++}
++#else /* CONFIG_PRINTK */
++static inline int kunit_printk_emit(int level, const char *fmt, ...)
++{
++	return 0;
++}
++#endif /* CONFIG_PRINTK */
++
+ static void kunit_print_tap_version(void)
+ {
+ 	static bool kunit_has_printed_tap_version;
+@@ -504,20 +528,3 @@ void kunit_cleanup(struct kunit *test)
+ 		kunit_resource_free(test, resource);
+ 	}
+ }
+-
+-void kunit_printk(const char *level,
+-		  const struct kunit *test,
+-		  const char *fmt, ...)
+-{
+-	struct va_format vaf;
+-	va_list args;
+-
+-	va_start(args, fmt);
+-
+-	vaf.fmt = fmt;
+-	vaf.va = &args;
+-
+-	kunit_vprintk(test, level, &vaf);
+-
+-	va_end(args);
+-}
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+2.23.0.187.g17f5b7556c-goog
+
