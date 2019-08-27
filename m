@@ -2,407 +2,93 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836A6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE49C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5BF206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26B8206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="n8x/MtO8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="scgDvIvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbfH0KDC (ORCPT
+        id S1728880AbfH0KDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:03:02 -0400
-Received: from mail-eopbgr690100.outbound.protection.outlook.com ([40.107.69.100]:47047
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbfH0KDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:03:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mwUxhivcOsiFLdINMfYJ9ZpC9g45Xso+KWNNR//IsofxhQpnofC2Fg0yppF6YlfNSdCAyqtA5buQEwAE48BtptR/DPLczlhG+EYk8HNxmZj39pvL53Uur3Mx2YtTX8vjtQSKtSzyXweynGhgP9b4xoZFAGozLLAb2m4aMCPLN/J8Erxz2MWVEzjYqIaXlHiscvGw5VilgXbNnGGFKwstx6rXMTl8swT6J5xxEuzpixgBJCfnqy/IX6K6KCa0V+Aeyhk5SzS8UQgo1EEF2mIcN93UE26KhtOSmSxTC6115Qoy8ZrSapQX05E91ZZneCC910IDS8dZeeS7KpHZZdMmaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4bZCVpPkOjw/sOBKGcHKXBQbaTUGDnO73l5yTovPOe8=;
- b=Hol8Fmhd9DjCPUSsbbirIdQismQ4rjsEIOMUON8cbpxDnisl8SfKr9zBJV7UIecQRL2jaMPFoWuHdCNf4abF2fX1HxgeciYcSciA0Mk953+PJi1TIsxN6Cowe3Oh3Ibq8BnST1KHWnj0/ntSoffgGDZ1C3ncsZ5LhXmCKHMMysXFOHI2sjAxDpbQttFKwjjbLzcqL7+VomQd7v8s21XGSPyrERtZihlOj5klrFUg4xm+B18YHxF8gFqi8R1gU1iMNEbqNbB5DPT1WtkxWoOVy58kimQz8g3KQVaCdNO/l85vFtegYG2yC6s8wS27UYi4ebjtxsk/LoyEG9+bXHaJcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4bZCVpPkOjw/sOBKGcHKXBQbaTUGDnO73l5yTovPOe8=;
- b=n8x/MtO8V64rZJiNikLzKdfGAnGwMBv9bI/hrNlPxx4jS4tGq7lv8c6JY3wdk3MaZ3HQwAR5i6dpUGUU4W/N8HYQFzSPCqm7KR7rc9us0X/m/4gJGWoVsfGkEO/Zm43XdD/Vuv4kAa0VTsPb6kval3CN8DzMCDtexN4JJvSSoRE=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1390.namprd22.prod.outlook.com (10.174.162.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Tue, 27 Aug 2019 10:02:52 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2199.021; Tue, 27 Aug
- 2019 10:02:52 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] dma-mapping: remove arch_dma_mmap_pgprot
-Thread-Topic: [PATCH 3/6] dma-mapping: remove arch_dma_mmap_pgprot
-Thread-Index: AQHVXL6W4q15Kq6fKUqaVULtpP6zpQ==
-Date:   Tue, 27 Aug 2019 10:02:51 +0000
-Message-ID: <20190827100245.dczrrixvgrmbrb42@pburton-laptop>
-References: <20190826132553.4116-1-hch@lst.de>
- <20190826132553.4116-4-hch@lst.de>
-In-Reply-To: <20190826132553.4116-4-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0401.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:f::29) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.118.89.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fa6f4199-37f8-437c-f7df-08d72ad5b8b7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1390;
-x-ms-traffictypediagnostic: MWHPR2201MB1390:
-x-microsoft-antispam-prvs: <MWHPR2201MB13909FBB7E045A1D214C6DA8C1A00@MWHPR2201MB1390.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(39850400004)(376002)(136003)(396003)(346002)(189003)(199004)(71200400001)(486006)(102836004)(186003)(476003)(386003)(26005)(8676002)(42882007)(478600001)(6246003)(2906002)(305945005)(5660300002)(66066001)(53936002)(8936002)(9686003)(1076003)(446003)(14444005)(81156014)(6486002)(7736002)(81166006)(256004)(11346002)(4326008)(25786009)(14454004)(44832011)(52116002)(6512007)(58126008)(7416002)(6916009)(54906003)(76176011)(6116002)(3846002)(66946007)(66446008)(66476007)(66556008)(64756008)(33716001)(99286004)(71190400001)(316002)(6436002)(6506007)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1390;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SYpkpt6z9VR18IKvPYfxsQWI5AsD799BjXcAJOtlR3YKgAQ6Gp23O9beX8OwV7tAAZmQIVAYeAcbxI4jG0Xkqa8j6z2uWdP894vl2Oy+T22mUhXQfKQUeAFdz2eSkEX6Wtx5nP8EAjwml39IT1lW0wsixlkNW02QzixYcdl3TeJzN9Tu71GDmE1pPr164frTBJZi3poZoXt1yfKpUGclhucliYyRN/BoS2jWNRwwG0r9ZZ6l7MAQ0Yc6XdOrh8nB7BOoZM1LDuwtwQMvm0GfsbFl+1fApZlWllcoD7Lq+zvFgeryMDT8JbV+SZEaA3RSW7aUZ6MJGhxAxBxmZNIz4VlO2BPLte35+BK90Mrs2McY62YxrZwwNVRqL+3ETmjRRJC9x5E7A716zYoVd9IzSOdXaU+EmnVqMhxpJ2POCS4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FD34176D9B58E64093A09E7E3A0592BE@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 27 Aug 2019 06:03:13 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54558 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfH0KDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:03:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so2408905wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 03:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dfpmBSGlcGs38lFamRyhz8Fa4xFl9r4NMSFw+nilf+4=;
+        b=scgDvIvYRNMAtfMsmF6Kh5SAZnT0KCRLs+0S/9i8oDKab6se5Z5PPJmdgM3hUyWwGg
+         oNRzD2ab73hMIsdjPOhvy4BfuCYiK8X+yPGeNIdkDm9M/x70PxQshaNZDT+G+vDhcOqA
+         Sbs+LOEBKDPBuAoicHDF1b1lMFVhvFxYBwUZFhKOLEYmWgOa40f7sR+Q9M/Fn1A5MkOL
+         ItsxIMys3gGfraHcxeYWYf0RW3cuF2b4GnrvbBfV7AJgK1W8JmZMKJ7porS1vak4FIBV
+         w1XS3t8Fey0CM3EXuWJ5D9MaSppcUh/au6vtXwF1eb9vqJ89JtMhN9nh5qXLRwBkSrw6
+         zujw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dfpmBSGlcGs38lFamRyhz8Fa4xFl9r4NMSFw+nilf+4=;
+        b=W0zJNU8I7aNvf7qmBZF80Cuf0Cq3jgx34k9pQ63sggyA3s7VVMJI+m8/5gYF7QjN6Q
+         aY1voKy2aBp4ajkd77EvmT+Ls3Ek+uXYEU0odoLJt7XN7f0UMfHP5nl2LCLhLV9iU/uD
+         0/+xyhicTYCrKyT6KqO9XAFRO8yrsFIpnCCQBAk/ua4KsVwHz9bjPlgEW3fknb0qnxcN
+         W/DgPq+1mCBZFRRsYWGj+m1/bgtuyR1rmN012u7TRrePibLRAZO/5a8a1Z0bmhSExZEW
+         FoeqKvPsOUQBGorV1AJCN7clOoEjQ7ZwhxcIWiJa5YhUl2A0rwf1x64XnU+alra02ZS6
+         cwEg==
+X-Gm-Message-State: APjAAAVmOvQSU36k0HvMVK+lmqegF7pIKRwEdu7QpzSQs/HVEwp+ALR3
+        3nR2SuoDI37coOlDLpv8qzrk8zk7CT/GrQ==
+X-Google-Smtp-Source: APXvYqwSlvXctj1/5N+lx0316n3C/TFLI2SVBe9G3fCjk/sXsHm1IWI8Id8tmjD/QhJB0i02kSVDGA==
+X-Received: by 2002:a1c:a481:: with SMTP id n123mr25414549wme.123.1566900190939;
+        Tue, 27 Aug 2019 03:03:10 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o25sm1816289wmc.36.2019.08.27.03.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 03:03:10 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/3] arm64: dts: meson-g12: specify suspend OPP
+Date:   Tue, 27 Aug 2019 12:03:04 +0200
+Message-Id: <20190827100307.21661-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa6f4199-37f8-437c-f7df-08d72ad5b8b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 10:02:51.4658
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: arKpiCDLk6ip53O51O1woD9sV+kusnx/6Nuk5DzIrbcTRz7Wmw2zTmlYlGt1Uw0LEGhpx6x823lTp0yt1usXJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1390
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Tag the 1,2GHz OPP as suspend OPP to be set before going in suspend mode,
+for the G12A, G12B and SM1 SoCs.
 
-On Mon, Aug 26, 2019 at 03:25:50PM +0200, Christoph Hellwig wrote:
-> arch_dma_mmap_pgprot is used for two things:
->=20
->  1) to override the "normal" uncached page attributes for mapping
->     memory coherent to devices that can't snoop the CPU caches
->  2) to provide the special DMA_ATTR_WRITE_COMBINE semantics on older
->     arm systems and some mips platforms
->=20
-> Replace one with the pgprot_dmacoherent macro that is already provided
-> by arm and much simpler to use, and lift the DMA_ATTR_WRITE_COMBINE
-> handling to common code with an explicit arch opt-in.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+It has been reported that using various OPPs can lead to error or
+resume with a different OPP from the ROM, thus use this safe OPP as
+it is the default OPP used by the BL2 boot firmware.
 
-For the MIPS bits:
+Neil Armstrong (3):
+  arm64: dts: meson-g12a: specify suspend OPP
+  arm64: dts: meson-sm1: specify suspend OPP
+  arm64: dts: meson-g12b: specify suspend OPP
 
-    Acked-by: Paul Burton <paul.burton@mips.com>
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi       | 1 +
+ arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi        | 1 +
+ 4 files changed, 6 insertions(+)
 
-Thanks,
-    Paul
+-- 
+2.22.0
 
-> ---
->  arch/arm/Kconfig                   |  2 +-
->  arch/arm/mm/dma-mapping.c          |  6 ------
->  arch/arm64/Kconfig                 |  1 -
->  arch/arm64/include/asm/pgtable.h   |  4 ++++
->  arch/arm64/mm/dma-mapping.c        |  6 ------
->  arch/m68k/Kconfig                  |  1 -
->  arch/m68k/include/asm/pgtable_mm.h |  3 +++
->  arch/m68k/kernel/dma.c             |  3 +--
->  arch/mips/Kconfig                  |  2 +-
->  arch/mips/mm/dma-noncoherent.c     |  8 --------
->  include/linux/dma-noncoherent.h    | 13 +++++++++++--
->  kernel/dma/Kconfig                 | 12 +++++++++---
->  kernel/dma/mapping.c               |  8 +++++---
->  13 files changed, 35 insertions(+), 34 deletions(-)
->=20
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 24360211534a..217083caeabd 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -8,7 +8,7 @@ config ARM
->  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
->  	select ARCH_HAS_DEVMEM_IS_ALLOWED
->  	select ARCH_HAS_DMA_COHERENT_TO_PFN if SWIOTLB
-> -	select ARCH_HAS_DMA_MMAP_PGPROT if SWIOTLB
-> +	select ARCH_HAS_DMA_WRITE_COMBINE if !ARM_DMA_MEM_BUFFERABLE
->  	select ARCH_HAS_ELF_RANDOMIZE
->  	select ARCH_HAS_FORTIFY_SOURCE
->  	select ARCH_HAS_KEEPINITRD
-> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-> index d42557ee69c2..d27b12f61737 100644
-> --- a/arch/arm/mm/dma-mapping.c
-> +++ b/arch/arm/mm/dma-mapping.c
-> @@ -2402,12 +2402,6 @@ long arch_dma_coherent_to_pfn(struct device *dev, =
-void *cpu_addr,
->  	return dma_to_pfn(dev, dma_addr);
->  }
-> =20
-> -pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
-> -		unsigned long attrs)
-> -{
-> -	return __get_dma_pgprot(attrs, prot);
-> -}
-> -
->  void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_ha=
-ndle,
->  		gfp_t gfp, unsigned long attrs)
->  {
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 3adcec05b1f6..dab9dda34206 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -13,7 +13,6 @@ config ARM64
->  	select ARCH_HAS_DEBUG_VIRTUAL
->  	select ARCH_HAS_DEVMEM_IS_ALLOWED
->  	select ARCH_HAS_DMA_COHERENT_TO_PFN
-> -	select ARCH_HAS_DMA_MMAP_PGPROT
->  	select ARCH_HAS_DMA_PREP_COHERENT
->  	select ARCH_HAS_ACPI_TABLE_UPGRADE if ACPI
->  	select ARCH_HAS_ELF_RANDOMIZE
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
-table.h
-> index e09760ece844..6700371227d1 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -435,6 +435,10 @@ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
->  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | P=
-TE_PXN | PTE_UXN)
->  #define pgprot_device(prot) \
->  	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) =
-| PTE_PXN | PTE_UXN)
-> +#define pgprot_dmacoherent(prot) \
-> +	__pgprot_modify(prot, PTE_ATTRINDX_MASK, \
-> +			PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
-> +
->  #define __HAVE_PHYS_MEM_ACCESS_PROT
->  struct file;
->  extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pf=
-n,
-> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-> index bd2b039f43a6..676efcda51e6 100644
-> --- a/arch/arm64/mm/dma-mapping.c
-> +++ b/arch/arm64/mm/dma-mapping.c
-> @@ -11,12 +11,6 @@
-> =20
->  #include <asm/cacheflush.h>
-> =20
-> -pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
-> -		unsigned long attrs)
-> -{
-> -	return pgprot_writecombine(prot);
-> -}
-> -
->  void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
->  		size_t size, enum dma_data_direction dir)
->  {
-> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-> index c518d695c376..a9e564306d3e 100644
-> --- a/arch/m68k/Kconfig
-> +++ b/arch/m68k/Kconfig
-> @@ -4,7 +4,6 @@ config M68K
->  	default y
->  	select ARCH_32BIT_OFF_T
->  	select ARCH_HAS_BINFMT_FLAT
-> -	select ARCH_HAS_DMA_MMAP_PGPROT if MMU && !COLDFIRE
->  	select ARCH_HAS_DMA_PREP_COHERENT if HAS_DMA && MMU && !COLDFIRE
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
->  	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
-> diff --git a/arch/m68k/include/asm/pgtable_mm.h b/arch/m68k/include/asm/p=
-gtable_mm.h
-> index fe3ddd73a0cc..fde4534b974f 100644
-> --- a/arch/m68k/include/asm/pgtable_mm.h
-> +++ b/arch/m68k/include/asm/pgtable_mm.h
-> @@ -169,6 +169,9 @@ static inline void update_mmu_cache(struct vm_area_st=
-ruct *vma,
->  	    ? (__pgprot((pgprot_val(prot) & _CACHEMASK040) | _PAGE_NOCACHE_S))	=
-\
->  	    : (prot)))
-> =20
-> +pgprot_t pgprot_dmacoherent(pgprot_t prot);
-> +#define pgprot_dmacoherent(prot)	pgprot_dmacoherent(prot)
-> +
->  #endif /* CONFIG_COLDFIRE */
->  #include <asm-generic/pgtable.h>
->  #endif /* !__ASSEMBLY__ */
-> diff --git a/arch/m68k/kernel/dma.c b/arch/m68k/kernel/dma.c
-> index 30cd59caf037..35064150e348 100644
-> --- a/arch/m68k/kernel/dma.c
-> +++ b/arch/m68k/kernel/dma.c
-> @@ -23,8 +23,7 @@ void arch_dma_prep_coherent(struct page *page, size_t s=
-ize)
->  	cache_push(page_to_phys(page), size);
->  }
-> =20
-> -pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
-> -		unsigned long attrs)
-> +pgprot_t pgprot_dmacoherent(pgprot_t prot)
->  {
->  	if (CPU_IS_040_OR_060) {
->  		pgprot_val(prot) &=3D ~_PAGE_CACHE040;
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index d50fafd7bf3a..fc88f68ea1ee 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -1119,7 +1119,7 @@ config DMA_PERDEV_COHERENT
-> =20
->  config DMA_NONCOHERENT
->  	bool
-> -	select ARCH_HAS_DMA_MMAP_PGPROT
-> +	select ARCH_HAS_DMA_WRITE_COMBINE
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->  	select ARCH_HAS_UNCACHED_SEGMENT
->  	select NEED_DMA_MAP_STATE
-> diff --git a/arch/mips/mm/dma-noncoherent.c b/arch/mips/mm/dma-noncoheren=
-t.c
-> index ed56c6fa7be2..1d4d57dd9acf 100644
-> --- a/arch/mips/mm/dma-noncoherent.c
-> +++ b/arch/mips/mm/dma-noncoherent.c
-> @@ -65,14 +65,6 @@ long arch_dma_coherent_to_pfn(struct device *dev, void=
- *cpu_addr,
->  	return page_to_pfn(virt_to_page(cached_kernel_address(cpu_addr)));
->  }
-> =20
-> -pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
-> -		unsigned long attrs)
-> -{
-> -	if (attrs & DMA_ATTR_WRITE_COMBINE)
-> -		return pgprot_writecombine(prot);
-> -	return pgprot_noncached(prot);
-> -}
-> -
->  static inline void dma_sync_virt(void *addr, size_t size,
->  		enum dma_data_direction dir)
->  {
-> diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoher=
-ent.h
-> index 0bff3d7fac92..dd3de6d88fc0 100644
-> --- a/include/linux/dma-noncoherent.h
-> +++ b/include/linux/dma-noncoherent.h
-> @@ -3,6 +3,7 @@
->  #define _LINUX_DMA_NONCOHERENT_H 1
-> =20
->  #include <linux/dma-mapping.h>
-> +#include <asm/pgtable.h>
-> =20
->  #ifdef CONFIG_ARCH_HAS_DMA_COHERENCE_H
->  #include <asm/dma-coherence.h>
-> @@ -42,10 +43,18 @@ void arch_dma_free(struct device *dev, size_t size, v=
-oid *cpu_addr,
->  		dma_addr_t dma_addr, unsigned long attrs);
->  long arch_dma_coherent_to_pfn(struct device *dev, void *cpu_addr,
->  		dma_addr_t dma_addr);
-> -pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
-> -		unsigned long attrs);
-> =20
->  #ifdef CONFIG_MMU
-> +/*
-> + * Page protection so that devices that can't snoop CPU caches can use t=
-he
-> + * memory coherently.  We default to pgprot_noncached which is usually u=
-sed
-> + * for ioremap as a safe bet, but architectures can override this with l=
-ess
-> + * strict semantics if possible.
-> + */
-> +#ifndef pgprot_dmacoherent
-> +#define pgprot_dmacoherent(prot)	pgprot_noncached(prot)
-> +#endif
-> +
->  pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long att=
-rs);
->  #else
->  static inline pgprot_t dma_pgprot(struct device *dev, pgprot_t prot,
-> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> index 9decbba255fc..73c5c2b8e824 100644
-> --- a/kernel/dma/Kconfig
-> +++ b/kernel/dma/Kconfig
-> @@ -20,6 +20,15 @@ config ARCH_HAS_DMA_COHERENCE_H
->  config ARCH_HAS_DMA_SET_MASK
->  	bool
-> =20
-> +#
-> +# Select this option if the architecture needs special handling for
-> +# DMA_ATTR_WRITE_COMBINE.  Normally the "uncached" mapping should be wha=
-t
-> +# people thing of when saying write combine, so very few platforms shoul=
-d
-> +# need to enable this.
-> +#
-> +config ARCH_HAS_DMA_WRITE_COMBINE
-> +	bool
-> +
->  config DMA_DECLARE_COHERENT
->  	bool
-> =20
-> @@ -45,9 +54,6 @@ config ARCH_HAS_DMA_PREP_COHERENT
->  config ARCH_HAS_DMA_COHERENT_TO_PFN
->  	bool
-> =20
-> -config ARCH_HAS_DMA_MMAP_PGPROT
-> -	bool
-> -
->  config ARCH_HAS_FORCE_DMA_UNENCRYPTED
->  	bool
-> =20
-> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-> index b0038ca3aa92..1b96616c9f20 100644
-> --- a/kernel/dma/mapping.c
-> +++ b/kernel/dma/mapping.c
-> @@ -161,9 +161,11 @@ pgprot_t dma_pgprot(struct device *dev, pgprot_t pro=
-t, unsigned long attrs)
->  	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
->               (attrs & DMA_ATTR_NON_CONSISTENT)))
->  		return prot;
-> -	if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_MMAP_PGPROT))
-> -		return arch_dma_mmap_pgprot(dev, prot, attrs);
-> -	return pgprot_noncached(prot);
-> +#ifdef CONFIG_ARCH_HAS_DMA_WRITE_COMBINE
-> +	if (attrs & DMA_ATTR_WRITE_COMBINE)
-> +		return pgprot_writecombine(prot);
-> +#endif
-> +	return pgprot_dmacoherent(prot);
->  }
->  #endif /* CONFIG_MMU */
-> =20
-> --=20
-> 2.20.1
->=20
