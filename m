@@ -2,85 +2,168 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF30DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E966FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918F02070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2C8206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:22:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4/qrorN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfH0PTT (ORCPT
+        id S1729636AbfH0PWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:19:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49780 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfH0PTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:19:19 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 08:19:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="180256291"
-Received: from jsakkine-mobl1.fi.intel.com (HELO localhost) ([10.237.66.169])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Aug 2019 08:19:16 -0700
-Date:   Tue, 27 Aug 2019 18:19:15 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH] tpm_tis: Fix interrupt probing
-Message-ID: <20190827151915.hb4xwr2vik2i5ryb@linux.intel.com>
-References: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
- <20190827131400.qchcwa2act24c47b@linux.intel.com>
+        Tue, 27 Aug 2019 11:22:39 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35254 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfH0PWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:22:38 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so3505500wmg.0;
+        Tue, 27 Aug 2019 08:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Spk/7nyE/nT+VZarCTcJww4THetyUEU/waY4Rm0/gF4=;
+        b=J4/qrorNAUBgXfuvu3IwAqPkSje/x/d8mwImUgF/C2Mac0PhX3/mv0uWlvmpSb8aH4
+         TfF4wg1MPJjTD2Z+C8uljmIll1IG/wWJ1v1fDad4aNNx84ebIRM7sYb+UJQ/D58FEW95
+         PuIxC+kDGjFl1fXUPVu1BqrkICY2oCGTGYa1oAlMEcVPmFWvA7UpKmKOfQBo1tWNIVVu
+         F7rmr13jbqb9MbLE//ZmTHmtJjBwMbQO7uxIUWAoTB7AgZrzE4jCXkGZ7+kL34O4KwFw
+         rMy4oerEOhVpJkDxbc2gAPK/HCRsz9GVJ+5GZkpN3hmA5fu0x6hhBwNduGxeKxpxJxjn
+         6PCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Spk/7nyE/nT+VZarCTcJww4THetyUEU/waY4Rm0/gF4=;
+        b=dsFwfCa2+8vvV8mdVbfdHLKOUFzV8CBuupLzf/VI79P6T7fjiezXWInz/vO7Wcfw29
+         EYIiO1ntFvjq8azCvD0qzsa1poJVjVXb6rDZews5Tsu9eS2G0Bd89P2Ly2TJVWiEGrcP
+         xKDlGjf+YlybXDCgRgoX4TbrVWJSFel/2sG0TeQnZ0HRJ4DvSdxvUENzEPMTtj9HoSuY
+         JZN/YIcq00C1k8mrakp/d+nKhVrtFA9sQXdeJrEJTFQa13Q7eKwfwsoKRiAO9gnm+xds
+         G1eVeLe1ImFIFHUEUoefRQlNvvPGRNzrSLC1ijvqglHGp3B8na1Z0ddmZp/ssU8xNyuV
+         D/Ow==
+X-Gm-Message-State: APjAAAVkspQmYdW260nUFk4v4Pxx6bt6QN7Rup+FI5KVsF2IhPYuhRJo
+        601fLWZDV2gLR3QeKQqmpJI=
+X-Google-Smtp-Source: APXvYqzBtu8qQSzftoBoGEPWKov5NjItQxZ9Gts4hY/9P75nGx6LHF01ME5A6BqdidKm85ow9PlN3Q==
+X-Received: by 2002:a1c:a514:: with SMTP id o20mr30113350wme.149.1566919356319;
+        Tue, 27 Aug 2019 08:22:36 -0700 (PDT)
+Received: from [192.168.8.147] (212.160.185.81.rev.sfr.net. [81.185.160.212])
+        by smtp.gmail.com with ESMTPSA id t198sm4822597wmt.39.2019.08.27.08.22.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Aug 2019 08:22:35 -0700 (PDT)
+Subject: Re: [PATCH] ipv6: Not to probe neighbourless routes
+To:     Yi Wang <wang.yi59@zte.com.cn>, davem@davemloft.net
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.liang82@zte.com.cn,
+        Cheng Lin <cheng.lin130@zte.com.cn>
+References: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <7788439f-6207-6da0-a6f8-db2d2fc61fe4@gmail.com>
+Date:   Tue, 27 Aug 2019 17:22:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827131400.qchcwa2act24c47b@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 04:14:00PM +0300, Jarkko Sakkinen wrote:
-> On Tue, Aug 20, 2019 at 08:25:17AM -0400, Stefan Berger wrote:
-> > From: Stefan Berger <stefanb@linux.ibm.com>
-> > 
-> > The interrupt probing of the TPM TIS was broken since we are trying to
-> > run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
-> > 
-> > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+
+
+On 8/27/19 11:08 AM, Yi Wang wrote:
+> From: Cheng Lin <cheng.lin130@zte.com.cn>
 > 
-> Need these:
+> Originally, Router Reachability Probing require a neighbour entry
+> existed. Commit 2152caea7196 ("ipv6: Do not depend on rt->n in
+> rt6_probe().") removed the requirement for a neighbour entry. And
+> commit f547fac624be ("ipv6: rate-limit probes for neighbourless
+> routes") adds rate-limiting for neighbourless routes.
 > 
-> Cc: linux-stable@vger.kernel.org
-> Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> And, the Neighbor Discovery for IP version 6 (IPv6)(rfc4861) says,
+> "
+> 7.2.5.  Receipt of Neighbor Advertisements
 > 
-> Thank you. I'll apply this to my tree.
+> When a valid Neighbor Advertisement is received (either solicited or
+> unsolicited), the Neighbor Cache is searched for the target's entry.
+> If no entry exists, the advertisement SHOULD be silently discarded.
+> There is no need to create an entry if none exists, since the
+> recipient has apparently not initiated any communication with the
+> target.
+> ".
 > 
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> In rt6_probe(), just a Neighbor Solicitation message are transmited.
+> When receiving a Neighbor Advertisement, the node does nothing in a
+> Neighborless condition.
+> 
+> Not sure it's needed to create a neighbor entry in Router
+> Reachability Probing. And the Original way may be the right way.
+> 
+> This patch recover the requirement for a neighbour entry.
+> 
+> Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
+> ---
+>  include/net/ip6_fib.h | 5 -----
+>  net/ipv6/route.c      | 5 +----
+>  2 files changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+> index 4b5656c..8c2e022 100644
+> --- a/include/net/ip6_fib.h
+> +++ b/include/net/ip6_fib.h
+> @@ -124,11 +124,6 @@ struct rt6_exception {
+>  
+>  struct fib6_nh {
+>  	struct fib_nh_common	nh_common;
+> -
+> -#ifdef CONFIG_IPV6_ROUTER_PREF
+> -	unsigned long		last_probe;
+> -#endif
+> -
+>  	struct rt6_info * __percpu *rt6i_pcpu;
+>  	struct rt6_exception_bucket __rcu *rt6i_exception_bucket;
+>  };
+> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+> index fd059e0..c4bcffc 100644
+> --- a/net/ipv6/route.c
+> +++ b/net/ipv6/route.c
+> @@ -639,12 +639,12 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
+>  	nh_gw = &fib6_nh->fib_nh_gw6;
+>  	dev = fib6_nh->fib_nh_dev;
+>  	rcu_read_lock_bh();
+> -	idev = __in6_dev_get(dev);
+>  	neigh = __ipv6_neigh_lookup_noref(dev, nh_gw);
+>  	if (neigh) {
+>  		if (neigh->nud_state & NUD_VALID)
+>  			goto out;
+>  
+> +		idev = __in6_dev_get(dev);
+>  		write_lock(&neigh->lock);
+>  		if (!(neigh->nud_state & NUD_VALID) &&
+>  		    time_after(jiffies,
+> @@ -654,9 +654,6 @@ static void rt6_probe(struct fib6_nh *fib6_nh)
+>  				__neigh_set_probe_once(neigh);
+>  		}
+>  		write_unlock(&neigh->lock);
+> -	} else if (time_after(jiffies, fib6_nh->last_probe +
+> -				       idev->cnf.rtr_probe_interval)) {
+> -		work = kmalloc(sizeof(*work), GFP_ATOMIC);
+>  	}
+>  
+>  	if (work) {
+> 
 
-The commit went in the following form:
+Have you really compiled this patch ?
 
-http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/9b558deab2c5d7dc23d5f7a4064892ede482ad32
 
-I refined the long description as they should be written in imperative
-form. I also changed it to consistently to speak about tpm_tis_core
-instead of using two differing spellings (tpm_tis and TPM TIS). tpm_tis
-is a different module than tpm_tis_core.
-
-Unfortunately I had to drop the assignment statement because:
-
-1. Generally speaking, two separate bug fixes should never reside in the
-   same commit. They even need their own fixes tags in this case.
-2. The commit message did not reason the assignment statement.
-
-/Jarkko
