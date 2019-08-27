@@ -2,214 +2,168 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FFAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87154206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AB8206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3RW4O/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfH0NDz (ORCPT
+        id S1728965AbfH0NGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:03:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42108 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726054AbfH0NDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:03:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B883EB016;
-        Tue, 27 Aug 2019 13:03:51 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 15:03:49 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: numlist API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk
- ringbuffer implementation
-Message-ID: <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
- <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
- <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
- <87sgpnmqdo.fsf@linutronix.de>
+        Tue, 27 Aug 2019 09:06:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35112 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfH0NGg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:06:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n4so12687617pgv.2;
+        Tue, 27 Aug 2019 06:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tLfakLGpMLvdTV8QFc4nFi+HIp0PsQAUDM5NCWw4kOM=;
+        b=e3RW4O/bkBNjJRXt0syqTSuQGa6iNaNuqgXq1e20CmuXTlkyv4RT1GXqxjJswj3P9n
+         /YdtWylwjfbPGSAQdoXp4eYTIbehmw1D9qGRsg1gTqCMVaKrxKQWjCdN86PKqUq51kRq
+         NR8qAB0zKrdjK75IhJeRlJgDOAXQNeFdgAjdFD4dBsx4aN9OEFmUQFHpIvf8vtA0Bj70
+         ket1ALJGUasj0Ii86eSbQCX2dj2wHIOF1zoAwi0pGp63B+/MuqFU13+jrGuTeNXLRXKG
+         6OQqyleuALUIjqcKCCtWtnbGPvmSg1mzEQWWArfw4basGrT1oA/gbONb+qvQ5t4qTte8
+         UQDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tLfakLGpMLvdTV8QFc4nFi+HIp0PsQAUDM5NCWw4kOM=;
+        b=pbHCZEAOLetKCRzGf5GsdRs6WElwESHdRdobz/kwaeb9+CxleZWf83EgnNYlTqSZmL
+         p+rMYNKNN6c2z7AZXG2EXdxzdWUN0m5Lc/P8WIgtZDGW0HuUIZY97oM/0gCjdvG5ny83
+         SCoyeAfbKWzzIJwBl+opfvQ+5ACs5rCatKMDnKhduNjYpWUhejeGvtB9zdr7S0dpWulh
+         FhVT9s5f4AYN1sxUcKBlLG0l/AZlGdPqZHMQUyhNStH9/8cx9t7fuBRD+P1iieToYSsW
+         SyKB+LI5/hrvcs9e/rONdQ5rhSifob+D5RX61vgg8wZo5jJHhYwRDF2dojZ3gZzvvKa0
+         TEDw==
+X-Gm-Message-State: APjAAAW7uHObV+ILc8VSmdcBBS9YwsHvI3phIa9NDExXdpeXH9wXrYrv
+        2XhzDbObJwtimc1xrFoDY9QBGC6p
+X-Google-Smtp-Source: APXvYqwfc3SZsT1Lj8EgzY5d72Zcg5rMHFxdArytviyXSiZ1V1oA2QmZOxx6LeKLWB7fM8fNGtzyfw==
+X-Received: by 2002:a63:c203:: with SMTP id b3mr21289785pgd.450.1566911194546;
+        Tue, 27 Aug 2019 06:06:34 -0700 (PDT)
+Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id a23sm11467191pfc.71.2019.08.27.06.06.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 06:06:32 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] watchdog/aspeed: add support for dual boot
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexander Amelkin <a.amelkin@yadro.com>,
+        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+ <20190826104636.19324-4-i.mikhaylov@yadro.com>
+ <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
+ <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <d46685d9-c6d2-46af-67aa-844d2b0296a9@roeck-us.net>
+Date:   Tue, 27 Aug 2019 06:06:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgpnmqdo.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-08-27 01:57:39, John Ogness wrote:
-> On 2019-08-23, Petr Mladek <pmladek@suse.com> wrote:
-> >> --- /dev/null
-> >> +++ b/kernel/printk/numlist.c
-> >> @@ -0,0 +1,375 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +#include <linux/sched.h>
-> >> +#include "numlist.h"
-> >
-> > struct numlist is really special variant of a list. Let me to
-> > do a short summary:
-> >
-> >    + FIFO queue interface
-> >
-> >    + nodes sequentially numbered
-> >
-> >    + nodes referenced by ID instead pointers to avoid ABA problems
-> >      + requires custom node() callback to get pointer for given ID
-> >
-> >    + lockless access:
-> >      + pushed nodes must not longer get modified by push() caller
-> >      + pop() caller gets exclusive write access, except that they
-> >        must modify ID first and do smp_wmb() later
+On 8/27/19 2:24 AM, Ivan Mikhaylov wrote:
+> On Mon, 2019-08-26 at 17:14 -0700, Guenter Roeck wrote:
+>>> +/*
+>>> + * At alternate side the 'access_cs0' sysfs node provides:
+>>> + *   ast2400: a way to get access to the primary SPI flash chip at CS0
+>>> + *            after booting from the alternate chip at CS1.
+>>> + *   ast2500: a way to restore the normal address mapping from
+>>> + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
+>>> + *
+>>> + * Clearing the boot code selection and timeout counter also resets to the
+>>> + * initial state the chip select line mapping. When the SoC is in normal
+>>> + * mapping state (i.e. booted from CS0), clearing those bits does nothing
+>>> for
+>>> + * both versions of the SoC. For alternate boot mode (booted from CS1 due
+>>> to
+>>> + * wdt2 expiration) the behavior differs as described above.
+>>> + *
+>> The above needs to be in the sysfs attribute documentation as well.
 > 
-> Only if the "numlist user" decides to recycle descriptors (which the
-> printk_ringbuffer does) is ID modification of descriptors necessary. How
-> that is synchronized with readers is up to the user (for example,
-> whether a RELEASE or an smp_wmb() is used).
-
-IMHO, the most tricky part of numlist API is handling of IDs.
-The IDs are there to avoid ABA races when reusing the nodes.
-
-I want to say that this API is useful only when the nodes are reused.
-All other users would want anything easier.
-
-> >    + pop() does not work:
-> >      + tail node is "busy"
-> > 	+ needs a custom callback that defines when a node is busy
+> My apologies but I didn't find any suitable, only watchdog parameters with
+> dtbindings file, where should I put it? Documentation/watchdog/aspeed-wdt-
+> sysfs.rst?
 > 
-> Note that busy() could always return false if the user has no concept of
-> nodes that should not be popped.
 
-This would be append only list. Again the is no need for IDs
-and other complexities.
+Documentation/ABI/testing/sysfs-class-watchdog
 
+Guenter
 
-> >      + tail is the last node
-> > 	+ needed for lockless sequential numbering
-> >
-> > I will start with one inevitable question ;-) Is it realistic to find
-> > another user for this API, please?
+>>> + * This option can be used with wdt2 (watchdog1) only.
+>>
+>> This implies a specific watchdog numbering which is not guaranteed.
+>> Someone might implement a system with some external watchdog.
+>>
+>>> + */
+>>> +static DEVICE_ATTR_RW(access_cs0);
+>>> +
+>>> +static struct attribute *bswitch_attrs[] = {
+>>> +	&dev_attr_access_cs0.attr,
+>>> +	NULL
+>>> +};
+>>> +ATTRIBUTE_GROUPS(bswitch);
+>>> +
+>>>    static const struct watchdog_ops aspeed_wdt_ops = {
+>>>    	.start		= aspeed_wdt_start,
+>>>    	.stop		= aspeed_wdt_stop,
+>>> @@ -306,9 +359,16 @@ static int aspeed_wdt_probe(struct platform_device
+>>> *pdev)
+>>>    	}
+>>>    
+>>>    	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+>>> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
+>>> +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
+>>>    		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>>>    
+>>> +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
+>>> +			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
+>>> +			wdt->wdd.groups = bswitch_groups;
 > 
-> If someone needs a FIFO queue that supports:
+>> Kind of odd that the attribute only exists if the system booted from the
+>> second flash, but if that is what you want I won't object. Just make sure
+>> that this is explained properly.
+> Perhaps dts configuration option would be better solution for it then? "force-
+> cs0-switch" as example? Also, if it would be an option, dtbindings/wdt file for
+
+You said earlier that this can not be done automatically but _must_ be done
+from user space after the system has booted. Otherwise you could just
+automatically switch to cs0 when the driver probes.
+
+As I said, all I am asking for is proper documentation.
+
+Guenter
+
+> documentation will be the right place for it. Usage of this at side 0 will not
+> get any good/bad results, it just makes user confused, so I decided to put it
+> only at side 1. It works only for ast2400/2500 board unfortunately, for 2600
+> there is big difference in switching mechanism. Any other thoughts how to make
+> it better?
 > 
-> 1. multiple concurrent writers and multiple concurrent non-consuming
->    readers
+> Thanks.
 > 
-> 2. where readers are allowed to miss nodes but are able to detect how
->    many were missed
 > 
-> 3. from any context (including NMI)
->
-> then I know of no other data structure available. (Otherwise I would
-> have used it!)
 
-It might be also because nobody else needed structure with
-our numlist semantic. I guess that lockless read/write
-structures are usually implemented using RCU.
-
-
-> > I am not sure that all the indirections, caused by the generic API,
-> > are worth the gain.
->
-> IMHO the API is sane. The only bizarre rule is that the numlist must
-> always have at least 1 node. But since the readers are non-consuming,
-> there is no real tragedy here.
->
-> My goal is not to create some fabulous abstract data structure that
-> everyone should use. But I did try to minimize numlist (and dataring) to
-> only be concerned with clearly defined and minimal responsibilities
-> without imposing unnecessary restrictions on the user.
-
-The API is complicated because of the callbacks. It depends on a logic
-that is implemented externally. It makes it abstract to some extent.
-
-My view is that the API would be much cleaner and easier to review
-when the ID handling is "hardcoded" (helper functions). It could be
-made abstract anytime later when there is another user.
-
-There should always be a reason why to make a code more complicated
-than necessary. It seems that the only reason is some theoretical
-future user and its theoretical requirements.
-
-
-> > Well, the separate API makes sense anyway. I have some ideas that
-> > might make it cleaner.
-> 
-> [snipped the nice refactoring of the ID into the nl_node]
-> 
-> Your idea (along with previous discussions) convinced me of the
-> importance of moving the ID-related barriers into the same
-> file. However, rather than pushing the ID parts into the numlist, I will
-> be moving them all into the "numlist user"
-> (i.e. printk_ringbuffer). Your use of the ACQUIRE to load the ID made me
-> realize that I need to be doing that as well! (but in the node()
-> callback)
-> 
-> The reasons why I do not want the ID in nl_node is:
-> 
-> - The numlist would need to implement the ID-to-node mapping. For the
->   printk_ringbuffer that mapping is simply masking to an index within an
->   array. But why should a numlist user be forced to do it that way? I
->   see no advantage to restricting numlists to being arrays of nodes.
-
-It might be done a generic way when there is a user with another need.
-
-Honestly, I have big troubles to imagine another reasonable mapping
-between id and pointer than masking. We are talking about lockless
-code. Anything more complicated might become a nightmare.
-
-
-> - The dataring structure also uses IDs and requires an ID-to-node
->   mapping. I do not want to bind the dataring and numlist data
->   structures together at this level because they really have nothing to
->   do with each other. Having the dataring and numlist ID-to-node
->   mappings (and their barriers) in the same place (in the
->   numlist/dataring _user_) simplifies the big picture.
-
-The ID is used in all three APIs. Then it might be only a matter of
-taste where it is stored.
-
-I still feel that struct nl_node is better place because:
-
-    + already includes next_id
-    + includes seq that identifies the structure another way
-    + id describes the node
-
-I still need to think more about the other APIs. Well, id
-substitutes a pointer here. It is like struct list_head
-pointer. It is normal that it is passed as parameter
-by a list API user.
-
-
-> I believe your main concern was having easily visible symmetric
-> barriers. We can achieve that if the read-barriers are in the callbacks
-> (for both numlist and dataring). I think it makes more sense to put them
-> there. dataring and numlist should not care about the ID-to-node
-> mapping.
-
-Symmetry is really important. It is often sign of a good design.
-
-Simple and straightforward code is another important thing at
-this stage. The code is complicated and we need to make sure
-that it works. Any optimizations and generalization might
-be done later when needed.
-
-Best Regards,
-Petr
