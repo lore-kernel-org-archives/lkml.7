@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9511C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ECFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86732206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A110206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893660;
-	bh=6lik4SAk42Yf2+cXQRSR4oaTe0Oeuxd5mCYXhhZbWWI=;
+	s=default; t=1566893667;
+	bh=MUIcTWJ/nQc3kOxlYLVxWaob9x9FWvs1EU/9x9YOFck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y59N8hlP6jCoPns5II23C+MP/IUShz8T/A4yHmWziQ1YfZA0enxfGr/63VFugQd2m
-	 Ag+c0EchIn30GYhsIoxat3a8tsWI19naN3KPQ0bZT4obRwr1Vnwi108jooTNhQrxOr
-	 LFlQSBM0SN0nHUM1AqKzhv7I1jzGwfP26h22vI/4=
+	b=S8f2NGyqMtEzp+IafTPkIuf0t6ZEFht57AdiLuqS2c4INnNY1Bo9fNOpLuaA96iAS
+	 8cz48rTIS96m2rNwXUKRvByJ2tlTGlMKkou+BygT9Unzj26FPn4OfbnSwaEmTZM96B
+	 qLcKRz1RwKokuuBz39NMdSRRZ8Pg4NXVYJYVPMo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbfH0H43 (ORCPT
+        id S1729984AbfH0H4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:56:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48386 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730584AbfH0H4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:25 -0400
+        id S1728972AbfH0H4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B99CF206BA;
-        Tue, 27 Aug 2019 07:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C54F1206BA;
+        Tue, 27 Aug 2019 07:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892584;
-        bh=6lik4SAk42Yf2+cXQRSR4oaTe0Oeuxd5mCYXhhZbWWI=;
+        s=default; t=1566892567;
+        bh=MUIcTWJ/nQc3kOxlYLVxWaob9x9FWvs1EU/9x9YOFck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyP8If/06+AtSgFsOxx7DvtbTHP7CzDDv6bV7nSTEIGn5X7rq6QU0vPb7I9a0L5dJ
-         gxWzFXtGLp8V9U0ighoCp91Js0aRJxL1sbXVqkpGD1xU4Pb6q9mzzQ6YTIyRv6NnNE
-         /wO+4cdLU/cvLqIcv+ZgefG8uwELemWZHMa73/GY=
+        b=rSg5O4OWYADa0XYAArc25CaEorRJu7No8gda8y3w3aS3zb/qj8Pg22T7Q1pOeSTt8
+         lHJOpJGA1q9YWzQSmOPacEPI/s0PFzPMpwO5p228MBZ6K6Q2x3RCwz9fLFRrjDQJZP
+         eAKncRqaUSNcJFdSFjGb59+m2UrUnaywgGKdce3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 42/98] net: cxgb3_main: Fix a resource leak in a error path in init_one()
-Date:   Tue, 27 Aug 2019 09:50:21 +0200
-Message-Id: <20190827072720.419732222@linuxfoundation.org>
+Subject: [PATCH 4.19 10/98] selftests: forwarding: gre_multipath: Fix flower filters
+Date:   Tue, 27 Aug 2019 09:49:49 +0200
+Message-Id: <20190827072718.711893415@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,42 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
+[ Upstream commit 1be79d89b7ae96e004911bd228ce8c2b5cc6415f ]
 
-A call to 'kfree_skb()' is missing in the error handling path of
-'init_one()'.
-This is already present in 'remove_one()' but is missing here.
+The TC filters used in the test do not work with veth devices because the
+outer Ethertype is 802.1Q and not IPv4. The test passes with mlxsw
+netdevs since the hardware always looks at "The first Ethertype that
+does not point to either: VLAN, CNTAG or configurable Ethertype".
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fix this by matching on the VLAN ID instead, but on the ingress side.
+The reason why this is not performed at egress is explained in the
+commit cited below.
+
+Fixes: 541ad323db3a ("selftests: forwarding: gre_multipath: Update next-hop statistics match criteria")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Tested-by: Stephen Suryaputra <ssuryaextr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ .../selftests/net/forwarding/gre_multipath.sh | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-index c34ea385fe4a5..6be6de0774b61 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-@@ -3270,7 +3270,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (!adapter->regs) {
- 		dev_err(&pdev->dev, "cannot map device registers\n");
- 		err = -ENOMEM;
--		goto out_free_adapter;
-+		goto out_free_adapter_nofail;
- 	}
+diff --git a/tools/testing/selftests/net/forwarding/gre_multipath.sh b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+index 37d7297e1cf8a..a8d8e8b3dc819 100755
+--- a/tools/testing/selftests/net/forwarding/gre_multipath.sh
++++ b/tools/testing/selftests/net/forwarding/gre_multipath.sh
+@@ -93,18 +93,10 @@ sw1_create()
+ 	ip route add vrf v$ol1 192.0.2.16/28 \
+ 	   nexthop dev g1a \
+ 	   nexthop dev g1b
+-
+-	tc qdisc add dev $ul1 clsact
+-	tc filter add dev $ul1 egress pref 111 prot ipv4 \
+-	   flower dst_ip 192.0.2.66 action pass
+-	tc filter add dev $ul1 egress pref 222 prot ipv4 \
+-	   flower dst_ip 192.0.2.82 action pass
+ }
  
- 	adapter->pdev = pdev;
-@@ -3398,6 +3398,9 @@ out_free_dev:
- 		if (adapter->port[i])
- 			free_netdev(adapter->port[i]);
+ sw1_destroy()
+ {
+-	tc qdisc del dev $ul1 clsact
+-
+ 	ip route del vrf v$ol1 192.0.2.16/28
  
-+out_free_adapter_nofail:
-+	kfree_skb(adapter->nofail_skb);
+ 	ip route del vrf v$ol1 192.0.2.82/32 via 192.0.2.146
+@@ -139,10 +131,18 @@ sw2_create()
+ 	ip route add vrf v$ol2 192.0.2.0/28 \
+ 	   nexthop dev g2a \
+ 	   nexthop dev g2b
 +
- out_free_adapter:
- 	kfree(adapter);
++	tc qdisc add dev $ul2 clsact
++	tc filter add dev $ul2 ingress pref 111 prot 802.1Q \
++	   flower vlan_id 111 action pass
++	tc filter add dev $ul2 ingress pref 222 prot 802.1Q \
++	   flower vlan_id 222 action pass
+ }
  
+ sw2_destroy()
+ {
++	tc qdisc del dev $ul2 clsact
++
+ 	ip route del vrf v$ol2 192.0.2.0/28
+ 
+ 	ip route del vrf v$ol2 192.0.2.81/32 via 192.0.2.145
+@@ -215,15 +215,15 @@ multipath4_test()
+ 	   nexthop dev g1a weight $weight1 \
+ 	   nexthop dev g1b weight $weight2
+ 
+-	local t0_111=$(tc_rule_stats_get $ul1 111 egress)
+-	local t0_222=$(tc_rule_stats_get $ul1 222 egress)
++	local t0_111=$(tc_rule_stats_get $ul2 111 ingress)
++	local t0_222=$(tc_rule_stats_get $ul2 222 ingress)
+ 
+ 	ip vrf exec v$h1 \
+ 	   $MZ $h1 -q -p 64 -A 192.0.2.1 -B 192.0.2.18 \
+ 	       -d 1msec -t udp "sp=1024,dp=0-32768"
+ 
+-	local t1_111=$(tc_rule_stats_get $ul1 111 egress)
+-	local t1_222=$(tc_rule_stats_get $ul1 222 egress)
++	local t1_111=$(tc_rule_stats_get $ul2 111 ingress)
++	local t1_222=$(tc_rule_stats_get $ul2 222 ingress)
+ 
+ 	local d111=$((t1_111 - t0_111))
+ 	local d222=$((t1_222 - t0_222))
 -- 
 2.20.1
 
