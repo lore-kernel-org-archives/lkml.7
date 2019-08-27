@@ -2,125 +2,127 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFBFC3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E9FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7142053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566864478;
-	bh=NE1G0Bx9TJw9inCyxktGf5l0UYlWsl/XTdOOCNn0F+k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KYfn9OjCQAe9qJjQPSwdWA7kcauoQifADQ1Z5GHDh+1f3fuHA5/PqJXoWNCOqGzFx
-	 z2mDlIrRqnkUNgCXtaeAyJ3izGzTvQbPEPr5AJER2xuAgDCF2euvBHMN758SBiY1Df
-	 M08oKuHng21RFmC3l4vLm4xlukemIchmxsLaQyPk=
+	by mail.kernel.org (Postfix) with ESMTP id 1D99620850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RX9x+6Dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfH0AH5 (ORCPT
+        id S1727754AbfH0AIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:07:57 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38156 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfH0AH4 (ORCPT
+        Mon, 26 Aug 2019 20:08:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43263 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfH0AIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:07:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id p12so41979492iog.5
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:07:56 -0700 (PDT)
+        Mon, 26 Aug 2019 20:08:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k3so11546097pgb.10;
+        Mon, 26 Aug 2019 17:08:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a5z2pwdyiPujj+zyGVyLnpKnSEToBkmyR8roMplmnXw=;
-        b=F7BmUN+QmTsdUsQeCw8YeegWM0cNlrWFyAIOl5L9NAle+JqTUOdkwRelba5mvU1WTJ
-         nlHOEuEZQQQ3GNuW4Ig+plu6no6vRqFHLyN4NyYdqmT9nAY9yreQXj2f1JmdsxgvQoyI
-         6pUYSXPdJZ99uKo0LKgiHVktu3trX2JhLmZak=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=op+KI7TlBsB6S6sFewOJ0t706uisxtkweddZPva/XUs=;
+        b=RX9x+6DtGafaHO1iuCX95LpTQasZh6Epfv1c1WbVTDYTdGMgc1MTuuAunpoIXNNQhd
+         dyvTNYlk5n1nkTqY721ASC09AaF3Jd2PeyOINmfcUce/x/U0YrVO2OGxhy1eJkkIdVcy
+         TrypAKXyYIZgYBYIgWvMufNafmydykIbS4ktkSRekVFf1BscbukfP/gaj1ctYHrHIdI/
+         W2Mu0iyEX6/umnjyUCn9Ad/wL0b0RAXM5UjjCAMWeg1lV/NxmqX4SSqS6TOZJnhVTtps
+         aBxZY57njSC06peMlK8cO24ROLSbspHwy4OMMx2ogZIgS5YEKWUSUpoc/lhDEs5fUsfy
+         oF8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=a5z2pwdyiPujj+zyGVyLnpKnSEToBkmyR8roMplmnXw=;
-        b=Oc2flIzuBqzZO8JbqzRSj5sm12AKCTtdF9hkOza7shnytOPMhklf3YmLRKjXbfVwpb
-         6NR/deFVRZ1cvgx5f1goxsn8Xs5nVVAAtAxEOnK7mgjtixAfRcTsz0Ry8EhrJyXHiJ51
-         kLb4xVZb7dXcLatNBoWvdnFzmapsbzNSOo480GL9G7BtSyzPrxP8gS4oDqN9G9xlUWq5
-         7VXWbY7ngoNr7dVcq3xO9rw33/snQDvzLLWFBrAYFIt6Sk8yDOHoUqRNrtJMmMKVeqiC
-         SPNPCwbja3M4y7MMiBvQO9TD9j/3ckBz06doxDCjUFtwDT98UnGHnURvxnfEsnQ99g7l
-         AcNg==
-X-Gm-Message-State: APjAAAUsN8WEPtVhp3xi+2T0SfcQXODydARJQ3xEQgb9czX4I79PNsNT
-        lNPUW4gP5+XjaY5uslDewwAwdw==
-X-Google-Smtp-Source: APXvYqwZXQTYcLqLmGjeo3QU1lIjgbyL1qWx8uhRds422nNNmVUSG9ZPkZS7URWw5OLsPs8YCbVZpQ==
-X-Received: by 2002:a6b:5d0d:: with SMTP id r13mr825424iob.89.1566864476030;
-        Mon, 26 Aug 2019 17:07:56 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id k9sm12164773ioa.10.2019.08.26.17.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 17:07:55 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     shuah@kernel.org, corbet@lwn.net
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.rue@linaro.org,
-        anders.roxell@linaro.org
-Subject: [PATCH] doc: kselftest: update for clarity on running kselftests in CI rings
-Date:   Mon, 26 Aug 2019 18:07:53 -0600
-Message-Id: <20190827000753.25081-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        bh=op+KI7TlBsB6S6sFewOJ0t706uisxtkweddZPva/XUs=;
+        b=dGN1RwPGW0ZZ6Z/3Xodq/LbksOlDLCJGVXP2EMQLik5UoFvp5fv/NYWKvnfaxOT31e
+         C/eqswk1ttqqrsVi1Y8V8mTtFY5ZqWkUQ0pExNkSR0ML2HUgyPjgmeJy0WvYsj+5OH74
+         UM4vX9yYc01JbzvNmg1dgxippFnLdcRSIFgZc97OnvuHtiXECp5m3QMQmY2QIvvDtjVq
+         4G2adFp6gwlUmwFn+VZI4tz5qhRHQWf6lEhm6V0sEVq1x8l+NGFxJgemc5l1TA39LapH
+         pn4xNo7kyuWiaWFgeMIxOavOJiY9rmJ5Iui1S6YilPADT+n9UeNSDCkbD7erqGO8CEwA
+         6AKA==
+X-Gm-Message-State: APjAAAX5d3x4/uke9q5awvBLOzOsb4KETHGX0KtI+2IWy9t7wEZBxZox
+        953OifCcssBV9G08TCojd64zOUcv
+X-Google-Smtp-Source: APXvYqyCOpJkfY8Cd0SdDE6aYRxO1Pg9WhbY61Aef8FokG+LaTjhPfxqLF8Bp0gzFOPMpKEYS54c7Q==
+X-Received: by 2002:a62:7789:: with SMTP id s131mr23022125pfc.50.1566864493131;
+        Mon, 26 Aug 2019 17:08:13 -0700 (PDT)
+Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
+        by smtp.gmail.com with ESMTPSA id b126sm17923109pfb.110.2019.08.26.17.08.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Aug 2019 17:08:12 -0700 (PDT)
+Subject: Re: [PATCH v2 4/4] dt-bindings/watchdog: Add access_cs0 option for
+ alt-boot
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     Joel Stanley <joel@jms.id.au>, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexander Amelkin <a.amelkin@yadro.com>,
+        openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+ <20190826104636.19324-5-i.mikhaylov@yadro.com>
+ <f33aa4b8-6d06-4226-8859-ce21a4b8728b@www.fastmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <d040fee1-d12d-9ac9-a72a-e76137a4579f@roeck-us.net>
+Date:   Mon, 26 Aug 2019 17:08:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f33aa4b8-6d06-4226-8859-ce21a4b8728b@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update to add clarity and recommendations on running newer kselftests
-on older kernels vs. matching the kernel and kselftest revisions.
+On 8/26/19 4:57 PM, Andrew Jeffery wrote:
+> 
+> 
+> On Mon, 26 Aug 2019, at 20:17, Ivan Mikhaylov wrote:
+>> The option for the ast2400/2500 to get access to CS0 at runtime.
+>>
+>> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+>> ---
+>>   Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>> b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>> index c5077a1f5cb3..023a9b578df6 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>> @@ -34,6 +34,13 @@ Optional properties:
+>>                   engine is responsible for this.
+>>   
+>>    - aspeed,alt-boot:    If property is present then boot from alternate
+>> block.
+>> +                       At alternate side 'access_cs0' sysfs file
+>> provides:
+> 
+> Why are we talking about sysfs in the devicetree binding? This patch
+> doesn't seem right to me.
+> 
 
-The recommendation is "Match kernel revision and kselftest."
+Correct; this is the wrong document. The attribute also will need
+to be better explained. "At alternate side" does not explain (at
+least not at all clearly enough) that the attribute only exists
+if the system has booted from the alternate flash / block.
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- Documentation/dev-tools/kselftest.rst | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> Also if we're not supporting the aspeed,alt-boot property we should
+> probably document it as deprecated rather than making it disappear,
+> unless you're going to fix the systems that are using it.
+> 
+Sorry, you lost me here. Where is it made to disappear ?
 
-diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-index 25604904fa6e..e55d9229fa8c 100644
---- a/Documentation/dev-tools/kselftest.rst
-+++ b/Documentation/dev-tools/kselftest.rst
-@@ -12,6 +12,31 @@ write new tests using the framework on Kselftest wiki:
- 
- https://kselftest.wiki.kernel.org/
- 
-+Recommendations on running kselftests in Continuous Integration test rings
-+=========================================================================
-+
-+It is recommended that users run Kselftest from the same release. Running
-+newer Kselftest on older kernels isn't recommended for the following
-+reasons:
-+
-+- Kselftest from mainline and linux-next might not be stable enough to run
-+  on stable kernels.
-+- Kselftests detect feature dependencies at run-time and skip tests if a
-+  feature and/or configuration they test aren't enabled. Running newer
-+  tests on older kernels could result in a few too many skipped/failed
-+  conditions. It becomes difficult to evaluate the results.
-+- Newer tests provide better coverage. However, users should make a judgement
-+  call on coverage vs. run to run consistency and being able to compare
-+  run to run results on older kernels.
-+
-+Recommendations:
-+
-+Match kernel revision and kselftest. Especially important for LTS and
-+Stable kernel Continuous Integration test rings.
-+
-+Hot-plug tests
-+==============
-+
- On some systems, hot-plug tests could hang forever waiting for cpu and
- memory to be ready to be offlined. A special hot-plug target is created
- to run the full range of hot-plug tests. In default mode, hot-plug tests run
--- 
-2.20.1
-
+Guenter
