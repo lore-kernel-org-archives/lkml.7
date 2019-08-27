@@ -2,59 +2,52 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCEEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641DAC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D112173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395D020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892703;
-	bh=S83z92L/pXYvwMOEmE0T89wwCum+IYTdUN0W5Rnk1Bc=;
+	s=default; t=1566892707;
+	bh=zBFIuOVncQ0mQk1/RZt6zBngG9P9fsV2Cwm1yrUWVrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hgvi+RQW0dtkqawluLcqcVpjdAVRLYt1brl+magXxY/lhonle8ols4Q0aA2D8p7rf
-	 mPFThBx0Rzl4cd6jkpUtL5TitTofKFvHh61JOggC8twCpTUBCMykBjBFPu5YHF2Dkn
-	 9/F5mopx7KiDSaeOwYSnuKuKKe1/L62HnDLxLdH8=
+	b=0hJPYLY04RpqnUghXzMEOCz6x4NEj9L7ZLO4Wn5oi3PqAnjEjY2QJtM2vczCoFr4b
+	 HhajAL/hPd1kdxVHqX1TT1hYJ5Ny3zBrx4qXivXfbS2mLNAzi65tUsL4GfYSnPZi6R
+	 6cBSaC68S5TtUWPplfOB2lcDx+mb89fjW6Sc97G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbfH0H6W (ORCPT
+        id S1730998AbfH0H60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730960AbfH0H6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:58:13 -0400
+        id S1730627AbfH0H6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:58:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D65FC20828;
-        Tue, 27 Aug 2019 07:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 833C5206BF;
+        Tue, 27 Aug 2019 07:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892692;
-        bh=S83z92L/pXYvwMOEmE0T89wwCum+IYTdUN0W5Rnk1Bc=;
+        s=default; t=1566892701;
+        bh=zBFIuOVncQ0mQk1/RZt6zBngG9P9fsV2Cwm1yrUWVrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PcrhXETxwFziW+TD6uTJMvOAI/DL12T+Tt+m6H4mBN2smKt4e8iUV77ygkfr3kdRo
-         11YJRHZ7mr7Ndhp4eK2oDX2BqrydvRkgD6WjPnh6+37oMrCJkWQ9AKlGFKBTjNmtMt
-         sVVlABz3SPtaDtkHnInmvrMzSU2ItTUcWszyzl88=
+        b=K51Zyklye+x0zSaHMBe0dO69wgfJ7zr06a9ry9Kq5tOGUeeECXUB3ZZbp5O3yug6k
+         2jeJjnV/tnVV1yBtY9ii1+5ZUy+WwbvVQFlSRCOWgg4p+RApuYa+y8iKQ4kf7ToW12
+         Ith+r1l+sxAIK8w0a8JPUv7LzU7UaHrNsVaHcI48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/98] perf ftrace: Fix failure to set cpumask when only one cpu is present
-Date:   Tue, 27 Aug 2019 09:50:32 +0200
-Message-Id: <20190827072721.130822718@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 82/98] dm zoned: improve error handling in i/o map code
+Date:   Tue, 27 Aug 2019 09:51:01 +0200
+Message-Id: <20190827072722.351038993@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -67,52 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf30ae726c011e0372fd4c2d588466c8b50a8907 ]
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-The buffer containing the string used to set cpumask is overwritten at
-the end of the string later in cpu_map__snprint_mask due to not enough
-memory space, when there is only one cpu.
+commit d7428c50118e739e672656c28d2b26b09375d4e0 upstream.
 
-And thus causes the following failure:
+Some errors are ignored in the I/O path during queueing chunks
+for processing by chunk works. Since at least these errors are
+transient in nature, it should be possible to retry the failed
+incoming commands.
 
-  $ perf ftrace ls
-  failed to reset ftrace
-  $
+The fix -
 
-This patch fixes the calculation of the cpumask string size.
+Errors that can happen while queueing chunks are carried upwards
+to the main mapping function and it now returns DM_MAPIO_REQUEUE
+for any incoming requests that can not be properly queued.
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
-Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Error logging/debug messages are added where needed.
+
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/builtin-ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-zoned-target.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index f42f228e88992..137955197ba8d 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -174,7 +174,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
- 	int last_cpu;
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -513,22 +513,24 @@ static void dmz_flush_work(struct work_s
+  * Get a chunk work and start it to process a new BIO.
+  * If the BIO chunk has no work yet, create one.
+  */
+-static void dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
++static int dmz_queue_chunk_work(struct dmz_target *dmz, struct bio *bio)
+ {
+ 	unsigned int chunk = dmz_bio_chunk(dmz->dev, bio);
+ 	struct dm_chunk_work *cw;
++	int ret = 0;
  
- 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
--	mask_size = (last_cpu + 3) / 4 + 1;
-+	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
- 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
+ 	mutex_lock(&dmz->chunk_lock);
  
- 	cpumask = malloc(mask_size);
--- 
-2.20.1
-
+ 	/* Get the BIO chunk work. If one is not active yet, create one */
+ 	cw = radix_tree_lookup(&dmz->chunk_rxtree, chunk);
+ 	if (!cw) {
+-		int ret;
+ 
+ 		/* Create a new chunk work */
+ 		cw = kmalloc(sizeof(struct dm_chunk_work), GFP_NOIO);
+-		if (!cw)
++		if (unlikely(!cw)) {
++			ret = -ENOMEM;
+ 			goto out;
++		}
+ 
+ 		INIT_WORK(&cw->work, dmz_chunk_work);
+ 		atomic_set(&cw->refcount, 0);
+@@ -539,7 +541,6 @@ static void dmz_queue_chunk_work(struct
+ 		ret = radix_tree_insert(&dmz->chunk_rxtree, chunk, cw);
+ 		if (unlikely(ret)) {
+ 			kfree(cw);
+-			cw = NULL;
+ 			goto out;
+ 		}
+ 	}
+@@ -547,10 +548,12 @@ static void dmz_queue_chunk_work(struct
+ 	bio_list_add(&cw->bio_list, bio);
+ 	dmz_get_chunk_work(cw);
+ 
++	dmz_reclaim_bio_acc(dmz->reclaim);
+ 	if (queue_work(dmz->chunk_wq, &cw->work))
+ 		dmz_get_chunk_work(cw);
+ out:
+ 	mutex_unlock(&dmz->chunk_lock);
++	return ret;
+ }
+ 
+ /*
+@@ -564,6 +567,7 @@ static int dmz_map(struct dm_target *ti,
+ 	sector_t sector = bio->bi_iter.bi_sector;
+ 	unsigned int nr_sectors = bio_sectors(bio);
+ 	sector_t chunk_sector;
++	int ret;
+ 
+ 	dmz_dev_debug(dev, "BIO op %d sector %llu + %u => chunk %llu, block %llu, %u blocks",
+ 		      bio_op(bio), (unsigned long long)sector, nr_sectors,
+@@ -601,8 +605,14 @@ static int dmz_map(struct dm_target *ti,
+ 		dm_accept_partial_bio(bio, dev->zone_nr_sectors - chunk_sector);
+ 
+ 	/* Now ready to handle this BIO */
+-	dmz_reclaim_bio_acc(dmz->reclaim);
+-	dmz_queue_chunk_work(dmz, bio);
++	ret = dmz_queue_chunk_work(dmz, bio);
++	if (ret) {
++		dmz_dev_debug(dmz->dev,
++			      "BIO op %d, can't process chunk %llu, err %i\n",
++			      bio_op(bio), (u64)dmz_bio_chunk(dmz->dev, bio),
++			      ret);
++		return DM_MAPIO_REQUEUE;
++	}
+ 
+ 	return DM_MAPIO_SUBMITTED;
+ }
 
 
