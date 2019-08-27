@@ -2,84 +2,117 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBCFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CACC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA9D20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF62206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAEHqRPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfH0Jlm (ORCPT
+        id S1729136AbfH0JpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:41:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5222 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728806AbfH0Jlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:41:42 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D708052352A06A23A45C;
-        Tue, 27 Aug 2019 17:41:38 +0800 (CST)
-Received: from [10.177.253.249] (10.177.253.249) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 17:41:38 +0800
-Subject: Re: [Virtio-fs] [PATCH 04/19] virtio: Implement get_shm_region for
- PCI transport
-To:     Vivek Goyal <vgoyal@redhat.com>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
- <20190821175720.25901-5-vgoyal@redhat.com> <5D63392C.3030404@huawei.com>
- <20190826130607.GB3561@redhat.com>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, kbuild test robot <lkp@intel.com>,
-        <kvm@vger.kernel.org>, <miklos@szeredi.hu>, <virtio-fs@redhat.com>,
-        "Sebastien Boeuf" <sebastien.boeuf@intel.com>
-From:   piaojun <piaojun@huawei.com>
-Message-ID: <5D64FAD2.2050906@huawei.com>
-Date:   Tue, 27 Aug 2019 17:41:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Tue, 27 Aug 2019 05:45:04 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37952 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbfH0JpD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 05:45:03 -0400
+Received: by mail-wr1-f65.google.com with SMTP id e16so1003074wro.5
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 02:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6f+Icsxz68/2WUOQOXJPlnmhND3c9kjk7Qbbyj0A0kg=;
+        b=DAEHqRPgmw98bL/haImN9fD6UfMYR1/S2NnQjdEW81PFCu9T2dceMxS2vBYT+J/OLc
+         t2sru5JRJ0GKU0Zg8KmLGV4Rl/1mnBt8AMc4VqoVzpP4Bkq+eNnmp5LyyEsyu0HI+gAE
+         I62570EvJBOCoNiTRpNvR+H7ZpvBO6rqAvAQ6Ao7dUAIRV6gvPmGQsXt5uQcy+M0MAO8
+         ZD6MvYoxL4JxOwg1W7lDM6k59M+/nFzr1vEiYlrKUCGp4+bNnquLtb5hJOzbAxX/qXDQ
+         ZjaRJMCJJ9YOQJwIFZhpn7xBIG+rUxC3uNxq+C2cOxRgHVL9QDNuse/CwpjGabaHxouc
+         s6RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6f+Icsxz68/2WUOQOXJPlnmhND3c9kjk7Qbbyj0A0kg=;
+        b=TDBjzrCta1WRuqlDTGtQb4C/wNr2p22rRnuY3A6+gOWAWsQbi7aMhcsna0ZMkQXvVh
+         ShjGuiCox/8swCIP/NUHiCpYsA9BL0M0sUQRWNKLGKTaxhYEqVn0L7FuIIFETq32xP7R
+         aGMvjti5hq+BBFMZjE+jBWHPbqeS9Pg3YQ3g5Oyvwf/MAS9m75L6jXZy8ooVkUZQLHKD
+         hzOQGg54dHt08X2Frc1osZ4/xlXHxpSFgYQWMuWr3U+cSvz5AGIiWzkZsoN4q0oeTxYg
+         pQZt5hU6CJ0gN0UkLPwfWxWHpfvH09HPJtuah6KeQ0p+3vcVE8n0phlOAPBniQG1I0MQ
+         z6YA==
+X-Gm-Message-State: APjAAAXJTGeJ1+qpO9JspPbugngPVPk8wDnWme5wAePp7d45Zu5DozvV
+        ryg+6lIN1KE8UC24XEnLvUHX3w==
+X-Google-Smtp-Source: APXvYqzj0vKC3iOhGGKsmddO0sx2ggiSMWTkca88AucPIDge5HC2ZDkK0IXCRr00WWZ8LAlMeqxRXw==
+X-Received: by 2002:adf:f5c5:: with SMTP id k5mr6828393wrp.42.1566899101785;
+        Tue, 27 Aug 2019 02:45:01 -0700 (PDT)
+Received: from dell ([2.27.35.174])
+        by smtp.gmail.com with ESMTPSA id f24sm2510743wmc.25.2019.08.27.02.45.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 02:45:01 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:44:59 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190827094459.GB4804@dell>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190807201528.GO250418@google.com>
+ <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
+ <20190816175317.GU250418@google.com>
+ <20190819100241.5pctjxmsq6crlale@holly.lan>
+ <20190819185049.GZ250418@google.com>
+ <20190820135617.64urowbu2kwdynib@holly.lan>
 MIME-Version: 1.0
-In-Reply-To: <20190826130607.GB3561@redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.253.249]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820135617.64urowbu2kwdynib@holly.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[...]
 
-
-On 2019/8/26 21:06, Vivek Goyal wrote:
-> On Mon, Aug 26, 2019 at 09:43:08AM +0800, piaojun wrote:
+> > IIUC the conclusion is that there is no need for a string attribute
+> > because we only need to distinguish between 'perceptual' and
+> > 'non-perceptual'. If that is correct, do you have any preference for
+> > the attribute name ('perceptual_scale', 'perceptual', ...)?
 > 
-> [..]
->>> +static bool vp_get_shm_region(struct virtio_device *vdev,
->>> +			      struct virtio_shm_region *region, u8 id)
->>> +{
->>> +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
->>> +	struct pci_dev *pci_dev = vp_dev->pci_dev;
->>> +	u8 bar;
->>> +	u64 offset, len;
->>> +	phys_addr_t phys_addr;
->>> +	size_t bar_len;
->>> +	char *bar_name;
->>
->> 'char *bar_name' should be cleaned up to avoid compiling warning. And I
->> wonder if you mix tab and blankspace for code indent? Or it's just my
->> email display problem?
+> More a summary than a conclusion! There is a reason I have left a bit or
+> space for others to comment on this over the last month (and a bit).
 > 
-> Will get rid of now unused bar_name. 
+> To be clear my Reviewed-by: means that I believe that the kernel is better
+> with "non-linear/linear/unknown" than without it and that I am comfortable
+> the API isn't likely to be a millstone for us.
 > 
-OK
+> Lee, Jingoo: Either of you care to offer $0.02
 
-> Generally git flags if there are tab/space issues. I did not see any. So
-> if you see something, point it out and I will fix it.
-> 
+No, not really.  Happy to leave it to your good judgement.
 
-cohuck found the same indent problem and pointed them in another email.
-
-Jun
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
