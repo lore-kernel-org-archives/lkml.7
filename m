@@ -2,92 +2,101 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151DDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2EEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5FF217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566909386;
-	bh=dAxS1WqRV4b7iS74EzUk2CY6pRW9CCrAG7RucQHWt7g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A/PAcK9U9cfm1MbEGY+A2TzJwTd+po5MjWzXZZ/hnsFJ1EhZe5367KV396x/7hytB
-	 2S/Gk14O/x8+YDriuFlBtLl9hcpSnK225vNcuQlAcXcdUVO2iThFCyyxjdvQENcl+3
-	 +/EYM4V6b7tKGLtkAGK1Icid6UVFXh7xIXNIwEM0=
+	by mail.kernel.org (Postfix) with ESMTP id 8C97821872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfH0Mg0 (ORCPT
+        id S1729437AbfH0Mgc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:36:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfH0MgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:36:25 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB31B21883;
-        Tue, 27 Aug 2019 12:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566909384;
-        bh=dAxS1WqRV4b7iS74EzUk2CY6pRW9CCrAG7RucQHWt7g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j2dZVEnx8ktgPjH/Vaf3xrdEzSnGNtSFvQb0SfS1RJp1Yw9C5pQQz94rLgPcHRpLf
-         m7WTkmYD4w13R0zNQJGb0uqtomWErkOaQXu4YeTNlw29sJP3iq4BPmH4EU6v+ms0NV
-         w1MKxTKsFpWKD6IwEwRK6gMlCs/hAjpvxJHiQfYY=
-Received: by mail-qt1-f172.google.com with SMTP id b11so21036150qtp.10;
-        Tue, 27 Aug 2019 05:36:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAWL5L431X03ql6VgPxk65BZD7V6tj2kTYCHG6bGNpgy858q4Wwj
-        tH7SQcQl1hjYkXH4rXKuV3VAPERYnB/qtcI36g==
-X-Google-Smtp-Source: APXvYqyqEKW+TR5bJFFladOyjiCxYJlVjy2VJ+VJSQICBWMQEZulSFTqlCQVzHkPkq4vL9h4hPWYtKn93pLIWauILws=
-X-Received: by 2002:aed:24f4:: with SMTP id u49mr22819140qtc.110.1566909383931;
- Tue, 27 Aug 2019 05:36:23 -0700 (PDT)
+        Tue, 27 Aug 2019 08:36:32 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:63256 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728702AbfH0Mgb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:36:31 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 18277524-1500050 
+        for multiple; Tue, 27 Aug 2019 13:36:28 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190826021620.11915-1-andrew@aj.id.au>
-In-Reply-To: <20190826021620.11915-1-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 27 Aug 2019 07:36:12 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJsLt5FjKayO9ksksrpXDFs3cbAngcQ21xhZYz3JLG=7g@mail.gmail.com>
-Message-ID: <CAL_JsqJsLt5FjKayO9ksksrpXDFs3cbAngcQ21xhZYz3JLG=7g@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mmc: aspeed: Update example ranges property
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <CAMuHMdUk9G22rDfUrX3CZ=st3_bSehyaW_URtCk0ZfJqFTmLuQ@mail.gmail.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <CAMuHMdUk9G22rDfUrX3CZ=st3_bSehyaW_URtCk0ZfJqFTmLuQ@mail.gmail.com>
+Message-ID: <156690938679.15406.15977840485564172260@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: dma-buf: Add selftests for dma-fence
+Date:   Tue, 27 Aug 2019 13:36:26 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 9:15 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The example node in the binding uses the AST2500 compatible string for
-> the SD controller with a 64kiB ranges property, but the SD controller is
-> allocated 128kiB of MMIO space according to the AST2500 datasheet. Fix
-> the example to correctly reflect the hardware in the AST2500, however it
-> should be noted that the MMIO region is reduced to 64kiB in the AST2600
-> where a second SD controller block has been introduced into the address
-> space.
->
-> Also add the IBM copyright header that I left out of the initial patch.
->
-> Suggested-by: Joel Stanley <joel@jms.id.au>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> Hi Ulf, this is the follow-up fix as discussed here:
->
-> http://patchwork.ozlabs.org/patch/1143090/
->
->  Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Quoting Geert Uytterhoeven (2019-08-27 13:30:04)
+> Hi Chris,
+> 
+> When running the new dmabuf-selftests on two different systems, I get:
+> 
+>     dma-buf: Running sanitycheck
+>     dma-buf: Running dma_fence
+>     sizeof(dma_fence)=48
+>     dma-buf: Running dma_fence/sanitycheck
+>     dma-buf: Running dma_fence/test_signaling
+>     dma-buf: Running dma_fence/test_add_callback
+>     dma-buf: Running dma_fence/test_late_add_callback
+>     dma-buf: Running dma_fence/test_rm_callback
+>     dma-buf: Running dma_fence/test_late_rm_callback
+>     dma-buf: Running dma_fence/test_status
+>     dma-buf: Running dma_fence/test_error
+>     dma-buf: Running dma_fence/test_wait
+>     dma-buf: Running dma_fence/test_wait_timeout
+>     dma-buf: Running dma_fence/test_stub
+>     dma-buf: Running dma_fence/race_signal_callback
+>     thread_signal_callback[0] completed 28855 passes, 3929 misses
+>     thread_signal_callback[1] completed 28846 passes, 3918 misses
+>     thread_signal_callback[0] completed 37179 passes, 37179 misses
+>     thread_signal_callback[1] completed 37184 passes, 37183 misses
+> 
+> and
+> 
+>     dma-buf: Running sanitycheck
+>     dma-buf: Running dma_fence
+>     sizeof(dma_fence)=64
+>     dma-buf: Running dma_fence/sanitycheck
+>     dma-buf: Running dma_fence/test_signaling
+>     dma-buf: Running dma_fence/test_add_callback
+>     dma-buf: Running dma_fence/test_late_add_callback
+>     dma-buf: Running dma_fence/test_rm_callback
+>     dma-buf: Running dma_fence/test_late_rm_callback
+>     dma-buf: Running dma_fence/test_status
+>     dma-buf: Running dma_fence/test_error
+>     dma-buf: Running dma_fence/test_wait
+>     dma-buf: Running dma_fence/test_wait_timeout
+>     dma-buf: Running dma_fence/test_stub
+>     dma-buf: Running dma_fence/race_signal_callback
+>     thread_signal_callback[0] completed 3423 passes, 2148 misses
+>     thread_signal_callback[1] completed 2360 passes, 9 misses
+>     thread_signal_callback[0] completed 4028 passes, 4028 misses
+>     thread_signal_callback[1] completed 8080 passes, 8079 misses
+> 
+> Unfortunately it is not clear to me if this is good or bad?
+> Perhaps the test output can be improved, e.g. with a clear PASS/FAIL output?
 
-Acked-by: Rob Herring <robh@kernel.org>
+It's communicated via the error code, along with failure messages. For
+more complex persistent selftest modules, we use an modparam to report
+the error code.
+
+See igt/dmabuf for the test runner.
+-Chris
