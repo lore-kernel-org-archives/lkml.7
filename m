@@ -2,110 +2,117 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345DBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40288C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F5721881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A3421881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3nYAYtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfH0QlM (ORCPT
+        id S1730176AbfH0QmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:41:12 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52634 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727401AbfH0QlL (ORCPT
+        Tue, 27 Aug 2019 12:42:22 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46857 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfH0QmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:41:11 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7RGeCWG021084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Aug 2019 12:40:13 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 70A4F42049E; Tue, 27 Aug 2019 12:40:12 -0400 (EDT)
-Date:   Tue, 27 Aug 2019 12:40:12 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     "boojin.kim" <boojin.kim@samsung.com>
-Cc:     "'Satya Tangirala'" <satyat@google.com>,
-        "'Herbert Xu'" <herbert@gondor.apana.org.au>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Eric Biggers'" <ebiggers@kernel.org>,
-        "'Chao Yu'" <chao@kernel.org>,
-        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
-        "'Andreas Dilger'" <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
-        "'Mike Snitzer'" <snitzer@redhat.com>,
-        "'Alasdair Kergon'" <agk@redhat.com>,
-        "'Jens Axboe'" <axboe@kernel.dk>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Kukjin Kim'" <kgene@kernel.org>,
-        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
-        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 5/9] block: support diskcipher
-Message-ID: <20190827164012.GN28066@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "boojin.kim" <boojin.kim@samsung.com>,
-        'Satya Tangirala' <satyat@google.com>,
-        'Herbert Xu' <herbert@gondor.apana.org.au>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        'Eric Biggers' <ebiggers@kernel.org>, 'Chao Yu' <chao@kernel.org>,
-        'Jaegeuk Kim' <jaegeuk@kernel.org>,
-        'Andreas Dilger' <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
-        'Mike Snitzer' <snitzer@redhat.com>,
-        'Alasdair Kergon' <agk@redhat.com>, 'Jens Axboe' <axboe@kernel.dk>,
-        'Krzysztof Kozlowski' <krzk@kernel.org>,
-        'Kukjin Kim' <kgene@kernel.org>,
-        'Jaehoon Chung' <jh80.chung@samsung.com>,
-        'Ulf Hansson' <ulf.hansson@linaro.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-References: <CGME20190827083334epcas2p115d479190b9a72c886f66569add78203@epcas2p1.samsung.com>
- <03b201d55cb2$1d4d31b0$57e79510$@samsung.com>
+        Tue, 27 Aug 2019 12:42:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id x4so47675611iog.13
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 09:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t4/d9H3zPkehGO8WMS+e05TTbEwolWCKrpo3GXlSVME=;
+        b=E3nYAYtY8RBL7TmxP9S3fiLiAcsYg7WuNXOm+m9k8DduShri7h2su9ajoHi6oUGylN
+         VZIfblgWGCzQwUbLfLOAbAZ4WRgIKwjB8AwkAPXJjXnj4SmfatFc0doTITMXScMYrK3s
+         GyObWXB0qMDySutmj+YtBFWw27p9DjDkKoc7Z18/owXeKbazPgV0WP9DyUiJTp9pbWfW
+         J7hGi47WdgAmeXKYkaMX0TOMT9VnJxUvsxgSnCJIJayVgzulry+kv4gNdCLD8k5FQ66O
+         g2lcR7zSBGJc9xwMA2txLnLfLWLXIgZv3D4x6kPkxEFxuOwpNzUUQ8Ju687Z7TVcMUE9
+         ZGrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t4/d9H3zPkehGO8WMS+e05TTbEwolWCKrpo3GXlSVME=;
+        b=gbrfD7eqfmzaYmJItGSo+J3uZ6wMFDcXC7eRsV+HzE0kH96kqYBhUyuCEK++yun9pE
+         maLZM+yl6nL5B8fw/8GoOIXEVMeC4Z/t/JkXPVyRpC8Dg6xsrnU1CL4heWWbeQDT90O3
+         D0l/C5tFwl4etx/SKN5FggQFbiscnxnfZ8eoM+vvsBogEgYS/FOgtoVa1p269k/xjYnp
+         GCj6ObeRjioJvOiMhEhnRmmkuRKfcHAvv4J9odE7aEKakGYJJiUDf076c+I+IVEuva0x
+         5Hl90ZTI8OEsKSgZfeKb2eJX2S2VNVZq4c6uEoJ5PulOjxcpr4fClH57aztEcyIX3piw
+         tRqA==
+X-Gm-Message-State: APjAAAWHdVxV3vOsPnyNaFWYgdsbFSpCcTyyc2COUrCtDmHZGVOlI7TT
+        OhX81Ughnbv6z2Aotv4CTmiaOE62vENMlCBWQ1k=
+X-Google-Smtp-Source: APXvYqyi2cOM6Eact6tIpG5HHBBQxrZq1Jezmt2L9lMrVOzSsV6IBQEOwioAbt80b/i/IBxMdWxMaXHUhAJQ4n/kxBg=
+X-Received: by 2002:a6b:720e:: with SMTP id n14mr28333793ioc.139.1566924141570;
+ Tue, 27 Aug 2019 09:42:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03b201d55cb2$1d4d31b0$57e79510$@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190822094657.27483-1-kraxel@redhat.com> <CAPaKu7S_He9RYsxDi0Qco4u=Xnc3FjB5nvFT_Zh+o7pvFzCvRQ@mail.gmail.com>
+ <20190827052154.etk4jbx45hsrl7z5@sirius.home.kraxel.org>
+In-Reply-To: <20190827052154.etk4jbx45hsrl7z5@sirius.home.kraxel.org>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Tue, 27 Aug 2019 09:42:10 -0700
+Message-ID: <CAPaKu7TrPvsiy2EyC4a_tOyi7oAV-Npk+2fqkZwNUfjwNE3AeA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/virtio: add plane check
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 05:33:33PM +0900, boojin.kim wrote:
-> 
-> Dear Satya.
-> Keyslot manager is a good solution for ICE. And probably no issue for FMP.
-> But, I think it's complicated for FMP because FMP doesn't need
-> any keyslot control.
+On Mon, Aug 26, 2019 at 10:21 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> On Mon, Aug 26, 2019 at 03:34:56PM -0700, Chia-I Wu wrote:
+> > On Thu, Aug 22, 2019 at 2:47 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> > >
+> > > Use drm_atomic_helper_check_plane_state()
+> > > to sanity check the plane state.
+> > >
+> > > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > > ---
+> > >  drivers/gpu/drm/virtio/virtgpu_plane.c | 17 ++++++++++++++++-
+> > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> > > index a492ac3f4a7e..fe5efb2de90d 100644
+> > > --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> > > +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> > > @@ -84,7 +84,22 @@ static const struct drm_plane_funcs virtio_gpu_plane_funcs = {
+> > >  static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
+> > >                                          struct drm_plane_state *state)
+> > >  {
+> > > -       return 0;
+> > > +       bool is_cursor = plane->type == DRM_PLANE_TYPE_CURSOR;
+> > > +       struct drm_crtc_state *crtc_state;
+> > > +       int ret;
+> > > +
+> > > +       if (!state->fb || !state->crtc)
+> > > +               return 0;
+> > > +
+> > > +       crtc_state = drm_atomic_get_crtc_state(state->state, state->crtc);
+> > > +       if (IS_ERR(crtc_state))
+> > > +                return PTR_ERR(crtc_state);
+> > Is drm_atomic_get_new_crtc_state better here?
+>
+> We don't have to worry about old/new state here.  The drm_plane_state we
+> get passed is the state we should check in this callback (and I think
+> this always is the new state).
+Acked-by: Chia-I Wu <olvaffe@gmail.com> (because I am not familiar
+with the atomic code to give an r-b)
 
-Hi Boojin,
-
-I think the important thing to realize here is that there are a large
-number of hardware devices for which the keyslot manager *is* needed.
-And from the upstream kernel's perspective, supporting two different
-schemes for supporting the inline encryption feature is more
-complexity than just supporting one which is general enough to support
-a wider variety of hardware devices.
-
-If you want somethig which is only good for the hardware platform you
-are charged to support, that's fine if it's only going to be in a
-Samsung-specific kernel.  But if your goal is to get something that
-works upstream, especially if it requires changes in core layers of
-the kernel, it's important that it's general enough to support most,
-if not all, if the hardware devices in the industry.
-
-Regards,
-
-					- Ted
+>
+> cheers,
+>   Gerd
+>
