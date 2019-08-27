@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47270C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F50C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2773321872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2452D21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfH0GaL (ORCPT
+        id S1729410AbfH0GaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:30:11 -0400
+        Tue, 27 Aug 2019 02:30:17 -0400
 Received: from esa3.mentor.iphmx.com ([68.232.137.180]:48242 "EHLO
         esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728711AbfH0GaI (ORCPT
+        with ESMTP id S1728939AbfH0GaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:30:08 -0400
-IronPort-SDR: +oekr0JulOFpes2ePCKH0YjDmtqhqD0c6QZk5shLwlSBQnx92chAKGQKEJpu6RsK1dbQntzdwU
- UKVwfpwXwlsSLQHbR2S1LCntbu0BuTY0Dzk2AxqdKBETswzd19jlICPlINg/ngAsu2WdEmEZhy
- hgsXqMEMJfMHfwSmI6ZZytUhlfvk25zRhimQs+BO0EsfKskT9DwKmHY8xJO6pVV7jtjIXJSPRH
- /krtJsaJGI3Dv056LDqQHpgOvWiPo3DmIt5kSDnf5xbdQWuVrqOgOZqe61Q7ayLlUsoerRrlsz
- JcY=
+        Tue, 27 Aug 2019 02:30:14 -0400
+IronPort-SDR: daNDSYQx/lN6RtKurTQ7qBC0n+l+Wmr45tpFlTrVQvYA6osX2uoNNCZ72Yoii46MxBgzRdPV2W
+ qdzwMyntBVfMgAhFfxX2wy+OokJUEBLnP8hWtChbSByZTi7LxgD0kIWThLSAZ+jZ7twemf6r1M
+ ncquLWOFH0hHJr7EHgH5YdPUFiag1Ebvhng2IZ/H9sSNRo9YMdt92ZAsD9TO8TwmhGVg5waQWV
+ olNy2+l4rL9TC37gjW3lHAfGXFNnfTCSoakkCezdMiRfUValAP3tfoOwY/c2Ly2J/tl4gX5tbR
+ DZE=
 X-IronPort-AV: E=Sophos;i="5.64,436,1559548800"; 
-   d="scan'208";a="40784570"
+   d="scan'208";a="40784600"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 26 Aug 2019 22:30:07 -0800
-IronPort-SDR: 8g7fxdg565sJYW3F5YUXm4bpz1G11DH6wdG1q/PjK/A/sc+SjYXyVcAYdV4oUQ+SYt8F3zKUXp
- DbBq8uh0HB4ENum5CuIZtk1Yo8Du2K25ETirsT8St6RBudihkYKmr4hThnO6+zLAjpMaTTKDSF
- aTK/De3n8sFDrYlSYa/nH0Y4e/S/XE7hQmXiTGrsWrBEKNHpGpqhYnaCXmnNGSixVdmfmGFfJb
- eQiQFdYYOISYgwf+6q+NBaQ6S1fGrtcVP18QTfEXuQvw+LAANBJ6pTPVobQvRew4xeP5a83Qwb
- x4Y=
+  by esa3.mentor.iphmx.com with ESMTP; 26 Aug 2019 22:30:14 -0800
+IronPort-SDR: pNa18eu/W8KCU8LAsC5+nYJ6P6ykHV5jh2j5AtDwYps+itOgDwqPnaUpTNDrblRi4THrfHygwV
+ VXGID2ipp5yJ1t79+opjLa4mWjr3pCmbVGZtUYsPl4Xv6v4z/MJTrfHZzwxOyZ0uhG/NSQD3Tp
+ g60wKj7dY8sm0nkqP+fxjOG/inGlLhNVqYtpx45u2zwF6lh1D4ubTWeSD77NShQJjSPAfkkNUY
+ SbYxdHrvwUYHBdHx0j21BVavZIclShju5t3Msz+hLoq3M21b0xyrGJJzlGBu7v4Zaw+BK737Id
+ +8A=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <george_davis@mentor.com>
-Subject: [PATCH v2 31/49] Input: atmel_mxt_ts - eliminate data->raw_info_block
-Date:   Tue, 27 Aug 2019 15:29:57 +0900
-Message-ID: <20190827063015.20794-2-jiada_wang@mentor.com>
+Subject: [PATCH v2 33/49] Input: atmel_mxt_ts - rely on calculated_crc rather than file config_crc
+Date:   Tue, 27 Aug 2019 15:29:59 +0900
+Message-ID: <20190827063015.20794-4-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190827063015.20794-1-jiada_wang@mentor.com>
 References: <20190827063015.20794-1-jiada_wang@mentor.com>
@@ -54,59 +54,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dynamically allocated in mxt_read_info_block() buffer buf is assigned
-both to data->info and data->raw_info_block, having both data->info
-and data->raw_info_block is redundant and confusing.
+From: Kautuk Consul <kautuk_consul@mentor.com>
 
-This patch eliminates data->raw_info_block.
+We now prefer to rely on the calculated CRC and not on the CRC stored in
+the file.
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+The new logic is as follows:
+1) stored CRC of file != calculated CRC of file, then refuse the possible
+   corrupted file
+2) calculated CRC of file != CRC of configuration in controller, then
+   update configuration in controller
+3) calculated CRC of file == CRC of configuration in controller, then
+   ignore configuration file
+
+Signed-off-by: Kautuk Consul <kautuk_consul@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 65 +++++++++++++-----------
+ 1 file changed, 36 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 2d9d2c1e39dd..f6d65930885a 100644
+index f8e80471be8a..560d46634bae 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -323,7 +323,6 @@ struct mxt_data {
- 	char phys[64];		/* device physical location */
- 	struct mxt_object *object_table;
- 	struct mxt_info *info;
--	void *raw_info_block;
- 	unsigned int irq;
- 	unsigned int max_x;
- 	unsigned int max_y;
-@@ -2067,9 +2066,8 @@ static void mxt_free_object_table(struct mxt_data *data)
- 	v4l2_device_unregister(&data->dbg.v4l2);
- #endif
- 	data->object_table = NULL;
-+	kfree(data->info);
- 	data->info = NULL;
--	kfree(data->raw_info_block);
--	data->raw_info_block = NULL;
- 	kfree(data->msg_buf);
- 	data->msg_buf = NULL;
- 	data->T5_address = 0;
-@@ -2238,7 +2236,7 @@ static int mxt_read_info_block(struct mxt_data *data)
- 	u8 *crc_ptr;
+@@ -1905,7 +1905,7 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
+ 	int ret;
+ 	int offset;
+ 	int i;
+-	u32 info_crc, config_crc, calculated_crc;
++	u32 info_crc, config_crc, calculated_crc = 0;
+ 	u16 crc_start = 0;
  
- 	/* If info block already allocated, free it */
--	if (data->raw_info_block)
-+	if (data->info)
- 		mxt_free_object_table(data);
+ 	/* Make zero terminated copy of the OBP_RAW file */
+@@ -1968,30 +1968,6 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
+ 	}
+ 	cfg.raw_pos += offset;
  
- 	/* Read 7-byte ID information block starting at address 0 */
-@@ -2289,7 +2287,6 @@ static int mxt_read_info_block(struct mxt_data *data)
- 		goto err_free_mem;
+-	/*
+-	 * The Info Block CRC is calculated over mxt_info and the object
+-	 * table. If it does not match then we are trying to load the
+-	 * configuration from a different chip or firmware version, so
+-	 * the configuration CRC is invalid anyway.
+-	 */
+-	if (info_crc == data->info_crc) {
+-		if (config_crc == 0 || data->config_crc == 0) {
+-			dev_info(dev, "CRC zero, attempting to apply config\n");
+-		} else if (config_crc == data->config_crc) {
+-			dev_dbg(dev, "Config CRC 0x%06X: OK\n",
+-				 data->config_crc);
+-			ret = 0;
+-			goto release_raw;
+-		} else {
+-			dev_info(dev, "Config CRC 0x%06X: does not match file 0x%06X\n",
+-				 data->config_crc, config_crc);
+-		}
+-	} else {
+-		dev_warn(dev,
+-			 "Warning: Info CRC error - device=0x%06X file=0x%06X\n",
+-			 data->info_crc, info_crc);
+-	}
+-
+ 	/* Malloc memory to store configuration */
+ 	cfg.start_ofs = MXT_OBJECT_START +
+ 			data->info->object_num * sizeof(struct mxt_object) +
+@@ -2015,14 +1991,45 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
+ 	else
+ 		dev_warn(dev, "Could not find CRC start\n");
+ 
+-	if (crc_start > cfg.start_ofs) {
++	if (crc_start > cfg.start_ofs)
+ 		calculated_crc = mxt_calculate_crc(cfg.mem,
+ 						   crc_start - cfg.start_ofs,
+ 						   cfg.mem_size);
+ 
+-		if (config_crc > 0 && config_crc != calculated_crc)
+-			dev_warn(dev, "Config CRC in file inconsistent, calculated=%06X, file=%06X\n",
+-				 calculated_crc, config_crc);
++	/* If the CRC stored in the file is not the same as what
++	 * was calculated by mxt_calculate_crc, this means we
++	 * have to refuse the config file and abort download.
++	 */
++	if (config_crc != calculated_crc) {
++		dev_warn(dev,
++			 "Config CRC in file inconsistent, calculated=%06X, file=%06X\n",
++			 calculated_crc, config_crc);
++		ret = 0;
++		goto release_mem;
++	}
++
++	/*
++	 * The Info Block CRC is calculated over mxt_info and the object
++	 * table. If it does not match then we are trying to load the
++	 * configuration from a different chip or firmware version, so
++	 * the configuration CRC is invalid anyway.
++	 */
++	if (info_crc == data->info_crc) {
++		if (config_crc == 0 || data->config_crc == 0) {
++			dev_info(dev, "CRC zero, attempting to apply config\n");
++		} else if (config_crc == data->config_crc) {
++			dev_dbg(dev, "Config CRC 0x%06X: OK\n",
++				data->config_crc);
++			ret = 0;
++			goto release_mem;
++		} else {
++			dev_info(dev, "Config CRC 0x%06X: does not match file 0x%06X\n",
++				 data->config_crc, config_crc);
++		}
++	} else {
++		dev_warn(dev,
++			 "Warning: Info CRC error - device=0x%06X file=0x%06X\n",
++			 data->info_crc, info_crc);
  	}
  
--	data->raw_info_block = id_buf;
- 	data->info = (struct mxt_info *)id_buf;
- 
- 	dev_info(&client->dev,
+ 	ret = mxt_upload_cfg_mem(data, &cfg);
 -- 
 2.19.2
 
