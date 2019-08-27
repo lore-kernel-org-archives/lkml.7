@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A8EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21484C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702AA217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94352173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893164;
-	bh=CKYGBamWBOWK2xoHlxxOJDpskW438wqkCT5TlLo9dj0=;
+	s=default; t=1566893166;
+	bh=0DycLuveW5FDNilqnGAQJPiUrr9aDswSq/e6SVSBy+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jahBjfLG6Oq4pz4O+Z3pS0UMb6Ed/ffHbl5Wecxuayt7mT4eKhTTCn4H3eWP7Kzh4
-	 D5Ih4n71UHZwhHs64ozvSeNpK7bmikIgknoaddLNpBfQHeezGiyxZGjRSEp1JjokD7
-	 D7RPscZ5fmxvOFxp0rUzMV3Axrl/DPpterb8XFbE=
+	b=r4Y/rsmNJP7/U+bd507a98bp/W8pdcPacs261tI00yOnzBmdXrJmsZECxhp8a9rq2
+	 oWt7pgLGdDzHOejmjb87PYeWb3Kz8FCMnjdZ+Riwi0LFZ1hSze7hLTgdraKx1OE5mn
+	 +nXHsA2/8atVH/7qp+9TY76FvVpPWPfzrityCg30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732956AbfH0IGD (ORCPT
+        id S1732973AbfH0IGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35956 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbfH0IGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:06:00 -0400
+        id S1732950AbfH0IGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D0D206BF;
-        Tue, 27 Aug 2019 08:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7978E2173E;
+        Tue, 27 Aug 2019 08:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893160;
-        bh=CKYGBamWBOWK2xoHlxxOJDpskW438wqkCT5TlLo9dj0=;
+        s=default; t=1566893163;
+        bh=0DycLuveW5FDNilqnGAQJPiUrr9aDswSq/e6SVSBy+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXDIeffGsTrr7zrpM6kM/EtJdKm//5pVCmVRSQl+pgGIr6K1JNUWHFHxtlhZE30GI
-         YwT7i+D2mPLXkGW/7aK9ccybvPkgXzQvn7iyM6urO2pdzl32zippVdvkJXp/eLioZh
-         eIyuABuzCynr3FErbnsfXfERhkMg8kaaYWsp0clk=
+        b=SZQeaAhYKkDd0MG1r1T0LekVP6dt/NPr7zABcpXOLaxVSrRQeM7HiBDiPD1Mp55Mm
+         xB6re7Gs6O8ZJBHRLL8B5GU8AsNOon1ajxI2m+Yuk0GfkvzlIweIuR4Hm91gSn5qai
+         WsZf34DBOLWDrZ4hHJtUb7jRnhsEqE+3PX3buRZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        stable@vger.kernel.org, Zhang Tao <kontais@zoho.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.2 140/162] dm space map metadata: fix missing store of apply_bops() return value
-Date:   Tue, 27 Aug 2019 09:51:08 +0200
-Message-Id: <20190827072743.516656569@linuxfoundation.org>
+Subject: [PATCH 5.2 141/162] dm table: fix invalid memory accesses with too high sector number
+Date:   Tue, 27 Aug 2019 09:51:09 +0200
+Message-Id: <20190827072743.560713694@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit ae148243d3f0816b37477106c05a2ec7d5f32614 upstream.
+commit 1cfd5d3399e87167b7f9157ef99daa0e959f395d upstream.
 
-In commit 6096d91af0b6 ("dm space map metadata: fix occasional leak
-of a metadata block on resize"), we refactor the commit logic to a new
-function 'apply_bops'.  But when that logic was replaced in out() the
-return value was not stored.  This may lead out() returning a wrong
-value to the caller.
+If the sector number is too high, dm_table_find_target() should return a
+pointer to a zeroed dm_target structure (the caller should test it with
+dm_target_is_valid).
 
-Fixes: 6096d91af0b6 ("dm space map metadata: fix occasional leak of a metadata block on resize")
+However, for some table sizes, the code in dm_table_find_target() that
+performs btree lookup will access out of bound memory structures.
+
+Fix this bug by testing the sector number at the beginning of
+dm_table_find_target(). Also, add an "inline" keyword to the function
+dm_table_get_size() because this is a hot path.
+
+Fixes: 512875bd9661 ("dm: table detect io beyond device")
 Cc: stable@vger.kernel.org
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Reported-by: Zhang Tao <kontais@zoho.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-space-map-metadata.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-table.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-space-map-metadata.c
-+++ b/drivers/md/persistent-data/dm-space-map-metadata.c
-@@ -249,7 +249,7 @@ static int out(struct sm_metadata *smm)
- 	}
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1334,7 +1334,7 @@ void dm_table_event(struct dm_table *t)
+ }
+ EXPORT_SYMBOL(dm_table_event);
  
- 	if (smm->recursion_count == 1)
--		apply_bops(smm);
-+		r = apply_bops(smm);
+-sector_t dm_table_get_size(struct dm_table *t)
++inline sector_t dm_table_get_size(struct dm_table *t)
+ {
+ 	return t->num_targets ? (t->highs[t->num_targets - 1] + 1) : 0;
+ }
+@@ -1359,6 +1359,9 @@ struct dm_target *dm_table_find_target(s
+ 	unsigned int l, n = 0, k = 0;
+ 	sector_t *node;
  
- 	smm->recursion_count--;
- 
++	if (unlikely(sector >= dm_table_get_size(t)))
++		return &t->targets[t->num_targets];
++
+ 	for (l = 0; l < t->depth; l++) {
+ 		n = get_child(n, k);
+ 		node = get_node(t, l, n);
 
 
