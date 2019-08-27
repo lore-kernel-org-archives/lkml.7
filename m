@@ -2,127 +2,187 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77049C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9E3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDC9217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566886692;
-	bh=P+7c+SOkIcjtW+gFnv22eSWwVM7bOePpYYZ/INu5lX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w8Nqht82xevKxPIZsjUXocAT3EtJ5Z2lnVwkhonrXAGWU8h4kcnfWkTyyFA536bID
-	 oUed4bv8MIYwcVIjgAX4JSeOv4bsO7CUvP2d0ZxrzcZsXEtYSeVRTGYTCCt7Nf5nna
-	 eP1YflvGdw9IO0OihzVGGZqWjYTZ2oPfXSK1OzQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 940AD23405
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BFY/tA9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfH0GSL (ORCPT
+        id S1728509AbfH0GSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfH0GSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:18:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704F7206BB;
-        Tue, 27 Aug 2019 06:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566886689;
-        bh=P+7c+SOkIcjtW+gFnv22eSWwVM7bOePpYYZ/INu5lX0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xc0Nj5EfIp0aLHYqY+GHhZLjgmFSXOIUEPvDDea0dSSdEz6UGYlOFRfi5Pzxjy0oH
-         h/oHfa8zw5Wi8Zb5VLLuVUTKTFYfdKuYXQ0VqRWsHN3/KqHFajwo3Gl+vlYQP6CsAn
-         Mtce2q3AJYQZArzo/28uzaNX3RN2AcvoD6zde+8M=
-Date:   Tue, 27 Aug 2019 08:18:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v2] powerpc: Allow flush_(inval_)dcache_range to work
- across ranges >4GB
-Message-ID: <20190827061806.GA29034@kroah.com>
-References: <20190821001929.4253-1-alastair@au1.ibm.com>
- <20190826165021.GB9305@kroah.com>
- <bae6de93-f135-68c5-9118-a0732e6de301@c-s.fr>
+        Tue, 27 Aug 2019 02:18:37 -0400
+Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:18780
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfH0GSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:18:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ajehQUUlW/5Goap9q643tNGjL1BbLSIJUDFKEjpnvF27tK8rXBKfZlqEsq25o3Jh4LElF8HmbW7ecZ+8ceb4WJ19FdHQGfvrkkACkcMfD0Rvj1P1XFpBU9CkGu45b/wrLi6cR//IjJxUpCHoMAiVIO3xlEUuQk1C5X4J2qN2s4hLY7TB2L+FMU8ZeHDAsB2K8porABklJHXVBcopqVW0ydOiLEfB0nxwJHL05dlEaBCAbqqXrFzsxIxSE9DaO9al2jDZxjt8kvXBMriQQz+xsKJhejpJR1ac7596R5m+ty3CFlg/3m5AgcCH3mT9YJE77Fq72ml1WNZXOT684Q3xlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bh8Y7POGQExJuCAZLqVXeYBNrtw6e7YdTml3Dludo+w=;
+ b=TKYn3mcbBV+dNw3zA30WLDIxYMiKnH6SDXo4DY2861+zFeEGX0r1IefO4KWUmFFd/NOv0XF1Jqtzttj47UfTmFRx9nQXOIlSXhOQnVVhXD8lCH3Uwq4SYxWTQRF8vKQQhnPZDBPhAGRyaBCFLUi6fE/4/sXMiwT4rhXF2y5y8O5rg2BkXtSoXsyt/ou3mkGj9uqyISp+nLb3rthoBujrwhOQQg/5rIHXIWtYhlm5ri1BEkAElFlYe9xyVLenC7f+AadgWVGnqOIRze+3YYvm0OiFCGRjQxlafYiZQYRA5pl/UYjKVIQYf3v42S5Y/3SPSrrVigMljwuT7jWZyguyPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bh8Y7POGQExJuCAZLqVXeYBNrtw6e7YdTml3Dludo+w=;
+ b=BFY/tA9shlLD/v5c2JzBHg+fPvS2fe53eHlrlj6nq+OonodofGFhkmUYhgfc5l19K0oO233bhPqKT81natxRT+37caGUylKY/pwA3QS+rKlg91ybYGuQQt4o7WsxIROHgnQOsN1xJRsHAuBH93H83sytRpXiD/XNpDpa3j2WHGE=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 06:17:53 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::8f2:412c:88c6:a365]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::8f2:412c:88c6:a365%7]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
+ 06:17:53 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Robin van der Gracht <robin@protonic.nl>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>
+Subject: RE: [PATCH] input: keyboard: snvs_pwrkey: Send press and release
+ event for i.MX6 S,DL and Q
+Thread-Topic: [PATCH] input: keyboard: snvs_pwrkey: Send press and release
+ event for i.MX6 S,DL and Q
+Thread-Index: AQHVWa5ZFk23j3f7OEWRDzQvDh9iTqcOfq3w
+Date:   Tue, 27 Aug 2019 06:17:52 +0000
+Message-ID: <VE1PR04MB6638754916357F551502102589A00@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190823123002.10448-1-robin@protonic.nl>
+In-Reply-To: <20190823123002.10448-1-robin@protonic.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8f6b6e0a-19a3-4317-a10d-08d72ab64b40
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6638;
+x-ms-traffictypediagnostic: VE1PR04MB6638:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB66387E91505A7CBB3D122D1C89A00@VE1PR04MB6638.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(199004)(189003)(6506007)(446003)(7416002)(102836004)(6116002)(6436002)(11346002)(3846002)(26005)(186003)(486006)(66066001)(99286004)(86362001)(2906002)(229853002)(76116006)(33656002)(478600001)(256004)(14444005)(66476007)(66946007)(54906003)(476003)(8676002)(53936002)(81166006)(81156014)(55016002)(8936002)(4326008)(6916009)(305945005)(7736002)(9686003)(74316002)(71190400001)(71200400001)(76176011)(316002)(66556008)(64756008)(7696005)(66446008)(6246003)(14454004)(52536014)(5660300002)(25786009)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6638;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oa92eBpqcOwClrchIzJ8XsWmQRh/4avcISNwo8v3EFZWqAtJT/kpB3BlyzWSPzFSxwbY83SblKR2v27Ah6VUqdlpqLXoCpd8mgCMDo8fxu4nOYrSYEGRzhubR/MbZDv/ful2hVSNxmwncQG4Is5wuo2ygGYv0o7bZG6Tg31lF10yYOpOgAIdq0iL7x1Prw8F8A4l1Sw/F6KXhAqjAPT0md9QdPkwVxL8TMgI8j2eJNVaBYK82EpXlAMUE1nnqQY1kLLC5emXECodOk2BkDNtKaEvw264YJ+E+6yuoWWuyXwcbSMB0H2r02YpMMawHaET4GZU3m0d6/4CA+PxuVodnKq0ihGbSZPbzls0egcRvoCcHTF21oEaiVB/QU0uASDrlkF0P3TyQnRFquS9MyuzJQZmeofAS9v7+VVTXSpnA1I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bae6de93-f135-68c5-9118-a0732e6de301@c-s.fr>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f6b6e0a-19a3-4317-a10d-08d72ab64b40
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 06:17:52.9726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +/XtjRz0VVFRYrVLkWVXbf5U9772++bqT/D0GKEaAlazE1VzXnmPk4R0u7FwMP2PYVVctoPw1adsF/GeShXuaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6638
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:08:26PM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 26/08/2019 à 18:50, Greg Kroah-Hartman a écrit :
-> > On Wed, Aug 21, 2019 at 10:19:27AM +1000, Alastair D'Silva wrote:
-> > > From: Alastair D'Silva <alastair@d-silva.org>
-> > > 
-> > > The upstream commit:
-> > > 22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
-> > > has a similar effect, but since it is a rewrite of the assembler to C, is
-> > > too invasive for stable. This patch is a minimal fix to address the issue in
-> > > assembler.
-> > > 
-> > > This patch applies cleanly to v5.2, v4.19 & v4.14.
-> > > 
-> > > When calling flush_(inval_)dcache_range with a size >4GB, we were masking
-> > > off the upper 32 bits, so we would incorrectly flush a range smaller
-> > > than intended.
-> > > 
-> > > This patch replaces the 32 bit shifts with 64 bit ones, so that
-> > > the full size is accounted for.
-> > > 
-> > > Changelog:
-> > > v2
-> > >    - Add related upstream commit
-> > > 
-> > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > > ---
-> > >   arch/powerpc/kernel/misc_64.S | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-> > > index 1ad4089dd110..d4d096f80f4b 100644
-> > > --- a/arch/powerpc/kernel/misc_64.S
-> > > +++ b/arch/powerpc/kernel/misc_64.S
-> > > @@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
-> > >   	subf	r8,r6,r4		/* compute length */
-> > >   	add	r8,r8,r5		/* ensure we get enough */
-> > >   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
-> > > -	srw.	r8,r8,r9		/* compute line count */
-> > > +	srd.	r8,r8,r9		/* compute line count */
-> > >   	beqlr				/* nothing to do? */
-> > >   	mtctr	r8
-> > >   0:	dcbst	0,r6
-> > > @@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
-> > >   	subf	r8,r6,r4		/* compute length */
-> > >   	add	r8,r8,r5		/* ensure we get enough */
-> > >   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
-> > > -	srw.	r8,r8,r9		/* compute line count */
-> > > +	srd.	r8,r8,r9		/* compute line count */
-> > >   	beqlr				/* nothing to do? */
-> > >   	sync
-> > >   	isync
-> > 
-> > I need an ack from the powerpc maintainer(s) before I can take this.
-> 
-> I think you already got an ack (on v1). See
-> https://patchwork.ozlabs.org/patch/1147403/#2239663
+On Fri, Aug 23, 2019 at 02:30:02PM +0200, Robin van der Gracht wrote:>=20
+> The older generation i.MX6 processors send a powerdown request interrupt
+> if the powerkey is released before a hard shutdown (5 second press). This
+> should allow software to bring down the SoC safely.
+>=20
+> For this driver to work as a regular powerkey with the older SoCs, we nee=
+d to
+> send a keypress AND release when we get the powerdown request interrupt.
+Please clarify here more clearly that because there is NO press interrupt t=
+riggered
+but only release interrupt on elder i.mx6 processors and that HW issue fixe=
+d from
+i.mx6sx.
+>=20
+> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+> ---
+>  arch/arm/boot/dts/imx6qdl.dtsi       |  2 +-
+>  arch/arm/boot/dts/imx6sll.dtsi       |  2 +-
+>  arch/arm/boot/dts/imx6sx.dtsi        |  2 +-
+>  arch/arm/boot/dts/imx6ul.dtsi        |  2 +-
+>  arch/arm/boot/dts/imx7s.dtsi         |  2 +-
+As Shawn talked, please keep the original "fsl,sec-v4.0-pwrkey", just add
+'imx6qdl-snvs-pwrkey' for elder i.mx6 processor i.mx6q/dl/sl, thus no need
+to touch other newer processor's dts.
 
-How am I supposed to remember that?  :)
+>=20
+>  static void imx_imx_snvs_check_for_events(struct timer_list *t) @@ -67,1=
+3
+> +85,23 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
+> *dev_id)  {
+>  	struct platform_device *pdev =3D dev_id;
+>  	struct pwrkey_drv_data *pdata =3D platform_get_drvdata(pdev);
+> +	struct input_dev *input =3D pdata->input;
+>  	u32 lp_status;
+>=20
+> -	pm_wakeup_event(pdata->input->dev.parent, 0);
+> +	pm_wakeup_event(input->dev.parent, 0);
+>=20
+>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+> -	if (lp_status & SNVS_LPSR_SPO)
+> -		mod_timer(&pdata->check_timer, jiffies +
+> msecs_to_jiffies(DEBOUNCE_TIME));
+> +	if (lp_status & SNVS_LPSR_SPO) {
+> +		if (pdata->hwtype =3D=3D IMX6QDL_SNVS) {
+> +			input_report_key(input, pdata->keycode, 1);
+> +			input_report_key(input, pdata->keycode, 0);
+> +			input_sync(input);
+> +			pm_relax(input->dev.parent);
+Could you move the above input event report steps into imx_imx_snvs_check_f=
+or_events()
+as before? That make code better to understand and less operation in ISR.
+> +		} else {
+> +			mod_timer(&pdata->check_timer,
+> +				jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
+> +		}
+> +	}
+>=20
+>  	/* clear SPO status */
+>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO); @@
+> -88,11 +116,24 @@ static void imx_snvs_pwrkey_act(void *pdata)
+>  	del_timer_sync(&pd->check_timer);
+>  }
+>=20
+> +static const struct of_device_id imx_snvs_pwrkey_ids[] =3D {
+> +	{
+> +		.compatible =3D "fsl,imx6sx-sec-v4.0-pwrkey",
+> +		.data =3D &imx_snvs_devtype[IMX6SX_SNVS],
+> +	}, {
+> +		.compatible =3D "fsl,imx6qdl-sec-v4.0-pwrkey",
+> +		.data =3D &imx_snvs_devtype[IMX6QDL_SNVS],
+No ' IMX6QDL_SNVS ' defined in your patch or am I missing?
+> +	},
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
+> --
+> 2.20.1
 
-greg k-h
