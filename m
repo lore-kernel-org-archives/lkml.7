@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD54C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2DBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451D92186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D932186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892447;
-	bh=TpboywqHr8Vos/+DQNJacqxYRvYbP+y0hh4/PGICnIQ=;
+	s=default; t=1566892450;
+	bh=CHPUc+8YmOyDGILc8fRBA/IrdQfyFvT+TJty6ANtTvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYV2rE7PPwxC8CX6v4N/07DVIjS8aAYMpSO2J9r5d9hrblzr//2gPrc+w73fTlTwI
-	 3FZ6B77uiF2xENXKlKqlyRFl6V3KoLWhZzvw7054Ekj09Ifq87iOBj02nC1j6Ha/4Z
-	 YbgRpr4rCrRjn4cQ0ka4BPkWedxvgMO3TsSpU450=
+	b=k8rOKrkZrj4J11O0qQCBMJFJgOlsbbyDu2WCgG+4fr1QaLcR74dtrlGndsv/c6fPL
+	 SY1kpmJbPXHOZf/9RR0xB9akmTJp71AqrzpD5rreFphbr+dUA756mlrobXVaDIWoeE
+	 qISWuSQAUE4M8Uhuofx6VBde5jL7OiYOfkA3nSog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfH0HyG (ORCPT
+        id S1729991AbfH0HyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:54:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45630 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:54:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbfH0HyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:54:03 -0400
+        id S1729374AbfH0HyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:54:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5ED6206BF;
-        Tue, 27 Aug 2019 07:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF2C2173E;
+        Tue, 27 Aug 2019 07:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892441;
-        bh=TpboywqHr8Vos/+DQNJacqxYRvYbP+y0hh4/PGICnIQ=;
+        s=default; t=1566892447;
+        bh=CHPUc+8YmOyDGILc8fRBA/IrdQfyFvT+TJty6ANtTvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRuSdoJ44EvCztqyQyZRUmm5RyUnC43bwpCZRwHgan8e611CpXbSyI7iAJHVK0TiS
-         exLBJf9jhmn0nK9xjU2nHXXNgtWDp5lxjZidnLHz+mSGkha94TeaQh3J1X3rRflbqg
-         BWRtorcSCoEjuIeMoJPa7sS/RNp79L/7ghFq8R2M=
+        b=VEGLLcmsvs1mhAebduK7WPKZXZGBdt1HNMri8KMFkiVYeY6ajBnL5YSuFnCclzesy
+         XTU9NVkH3a0ps9YlR26evAzOmyn3lC3p7jbTCCW/oeijlf2uYQHoJsqBIoZMFxJZVj
+         iNH2ispCBmVpF7XCM/IliyUyN/TK93b8bkhqXI6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/62] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
-Date:   Tue, 27 Aug 2019 09:50:19 +0200
-Message-Id: <20190827072701.183544951@linuxfoundation.org>
+Subject: [PATCH 4.14 16/62] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
+Date:   Tue, 27 Aug 2019 09:50:21 +0200
+Message-Id: <20190827072701.285285273@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,46 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
+[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
 
-In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
-and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
+Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
 
-Then, fifo->iso[i].urb is used at some places, such as:
-LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
-                  urb->number_of_packets = num_packets;
-                  urb->transfer_flags = URB_ISO_ASAP;
-                  urb->actual_length = 0;
-                  urb->interval = interval;
-LINE 1416:    fifo->iso[i].urb->...
-LINE 1419:    fifo->iso[i].urb->...
+During usb probe the driver crashes with "transfer buffer is on stack" message.
 
-Thus, possible null-pointer dereferences may occur.
+This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
+that calls "usb_control_msg" under the hood.
 
-To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
-when it is NULL.
+Kernel 4.19 backtrace:
 
-These bugs are found by a static analysis tool STCheck written by us.
+usb_hcd_submit_urb+0x3e5/0x900
+? sched_clock+0x9/0x10
+? log_store+0x203/0x270
+? get_random_u32+0x6f/0x90
+? cache_alloc_refill+0x784/0x8a0
+usb_submit_urb+0x3b4/0x550
+usb_start_wait_urb+0x4e/0xd0
+usb_control_msg+0xb8/0x120
+hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
+usb_probe_interface+0xc2/0x260
+really_probe+0x176/0x280
+driver_probe_device+0x49/0x130
+__driver_attach+0xa9/0xb0
+? driver_probe_device+0x130/0x130
+bus_for_each_dev+0x5a/0x90
+driver_attach+0x14/0x20
+? driver_probe_device+0x130/0x130
+bus_add_driver+0x157/0x1e0
+driver_register+0x51/0xe0
+usb_register_driver+0x5d/0x120
+? 0xf81ed000
+hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
+do_one_initcall+0x44/0x190
+? free_unref_page_commit+0x6a/0xd0
+do_init_module+0x46/0x1c0
+load_module+0x1dc1/0x2400
+sys_init_module+0xed/0x120
+do_fast_syscall_32+0x7a/0x200
+entry_SYSENTER_32+0x6b/0xbe
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 35983c7c31375..163bc482b2a78 100644
+index 163bc482b2a78..87588198d68fc 100644
 --- a/drivers/isdn/hardware/mISDN/hfcsusb.c
 +++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1402,6 +1402,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
- 				printk(KERN_DEBUG
- 				       "%s: %s: alloc urb for fifo %i failed",
- 				       hw->name, __func__, fifo->fifonum);
-+				continue;
- 			}
- 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
- 			fifo->iso[i].indx = i;
+@@ -1701,13 +1701,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
+ static int
+ setup_hfcsusb(struct hfcsusb *hw)
+ {
++	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
+ 	u_char b;
++	int ret;
+ 
+ 	if (debug & DBG_HFC_CALL_TRACE)
+ 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 
++	if (!dmabuf)
++		return -ENOMEM;
++
++	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
++
++	memcpy(&b, dmabuf, sizeof(u_char));
++	kfree(dmabuf);
++
+ 	/* check the chip id */
+-	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
++	if (ret != 1) {
+ 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
+ 		       hw->name, __func__);
+ 		return 1;
 -- 
 2.20.1
 
