@@ -2,208 +2,211 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D578FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6D4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B37242070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE162070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BNoJCtJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfH0Vz4 (ORCPT
+        id S1726586AbfH0V4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:55:56 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27694 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbfH0Vzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:55:55 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 14:55:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="185426781"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2019 14:55:53 -0700
-Date:   Wed, 28 Aug 2019 05:38:29 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org
-Subject: Re: [PATCH v5 3/9] fpga: dfl: afu: convert platform_driver to use
- dev_groups
-Message-ID: <20190827213829.GA4237@hao-dev>
-References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
- <1565578204-13969-4-git-send-email-hao.wu@intel.com>
- <20190822150701.GB22556@archbox>
+        Tue, 27 Aug 2019 17:56:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46992 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfH0V4V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 17:56:21 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m3so185576pgv.13
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:56:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cgrXiX6w+iXAJx451uKI5IvGXQ8JzxadwvN8II0tDoE=;
+        b=BNoJCtJR9DudUn5uIPXEstToXgIyaeuQKR8gPCMk32BwoLZ3w+Bq0EcyxwGluhWtrT
+         N61JFyt/usomSRCx1GADBeEqDWHq4/88rlPVf0x/eDnEyMqIPl1qK1QMTZTjOqCHnkj8
+         wrBP1Ly28xFm9WHlxqhpg6fyxD8AZd/D/u10HDmnmv6AwK2q9J2XUEvE50evh7EQQrPA
+         M/G5iQ7RCfP1GGZZ8RqvGqroXqBktdOTzIqYem2OOFsiRxSvVdeTXcYliA8oFfi+anav
+         khxlF58mako4lJsz7h3+PfJ9K3+IYMqzgxbqEXTpEFPqyUns4uX5xakK00sIZe+S4vaM
+         54vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cgrXiX6w+iXAJx451uKI5IvGXQ8JzxadwvN8II0tDoE=;
+        b=nOT4+YnArzd9fCpjFKJZ+wW4nXtnRXSe2XZ3QFCSMIVYCKIRvknOMs+Qc1TxiAu71e
+         9kU6huxnLJr5w6d7mvIoJ9tZAro7VwSfzY4FSGnpETsiXAn9bjDjJ2V6AwGDnyaZScWc
+         Bixu4Qe2OUuoXfpP4SEOrrmhT1jkamzR7cfmoYF5CJDpQqxG2oWfx9hb45PzbzeTtMHT
+         tz7hr6uYZB9Sg7UIiEce4OlO8mpw+400PPcvvvtSIZQxbaQHR7Udso5M0A3vu5IWg2NG
+         GYceQMU9QFYdlrjSAJnPrIk83hLAh3l57a+Qr6qHuY1D/2NY3Dc7kqps0bojHLn2eNXi
+         i2nA==
+X-Gm-Message-State: APjAAAWdsMpKswuk7T+Az94DlkACGJiFs8Xl+9h8aDOwocS4+Q/H8pkz
+        BOm3/rn9Nn7lHJq3QZ6g3IBI8XMOpmp5kjUBcncrKw==
+X-Google-Smtp-Source: APXvYqyLXu8oCvZW+1b5S65SZDsQkreDEfq4D9XrqvMgvpefkLpjNcNf3isA6dhIzL9TGBYSa1flhyqbql93k4uReWk=
+X-Received: by 2002:a65:690b:: with SMTP id s11mr573264pgq.10.1566942980152;
+ Tue, 27 Aug 2019 14:56:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822150701.GB22556@archbox>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190827103621.1073-1-yamada.masahiro@socionext.com>
+ <20190827192811.GA24626@archlinux-threadripper> <CAKwvOd=7Jf13PDC9Q1FMhZUJQsq7Ggn=wRz5xpRY0YrU6tP9Kw@mail.gmail.com>
+ <20190827213447.GA26954@archlinux-threadripper>
+In-Reply-To: <20190827213447.GA26954@archlinux-threadripper>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 27 Aug 2019 14:56:07 -0700
+Message-ID: <CAKwvOd=pQm7ytZSJeRzXoWwzouDADOYkO8S_+zSPtXOAO3Jc5g@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: enable unused-function warnings for W= build
+ with Clang
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 08:07:01AM -0700, Moritz Fischer wrote:
-> Hi Hao,
-> 
-> On Mon, Aug 12, 2019 at 10:49:58AM +0800, Wu Hao wrote:
-> > This patch takes advantage of driver core which helps to create
-> > and remove sysfs attribute files, so there is no need to register
-> > sysfs entries manually in dfl-afu platform river code.
-> Same nit: s/river/driver
-> > 
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Acked-by: Moritz Fischer <mdf@kernel.org>
+On Tue, Aug 27, 2019 at 2:34 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Tue, Aug 27, 2019 at 01:58:05PM -0700, Nick Desaulniers wrote:
+> > On Tue, Aug 27, 2019 at 12:28 PM Nathan Chancellor
+> > <natechancellor@gmail.com> wrote:
+> > >
+> > > On Tue, Aug 27, 2019 at 07:36:21PM +0900, Masahiro Yamada wrote:
+> > > > GCC and Clang have different policy for -Wunused-function; GCC never
+> > > > reports unused-function warnings for 'static inline' functions whereas
+> > > > Clang reports them if they are defined in source files instead of
+> > > > included headers although it has been suppressed since commit
+> > > > abb2ea7dfd82 ("compiler, clang: suppress warning for unused static
+> > > > inline functions").
+> > > >
+> > > > We often miss to remove unused functions where 'static inline' is used
+> > > > in .c files since there is no tool to detect them. Unused code remains
+> > > > until somebody notices. For example, commit 075ddd75680f ("regulator:
+> > > > core: remove unused rdev_get_supply()").
+> > > >
+> > > > Let's remove __maybe_unused from the inline macro to allow Clang to
+> > > > start finding unused static inline functions. As always, it is not a
+> > > > good idea to sprinkle warnings for the normal build, so I added
+> > > > -Wno-unsued-function for no W= build.
+> >
+> > s/unsued/unused/
+> >
+> > > >
+> > > > Per the documentation [1], -Wno-unused-function will also disable
+> > > > -Wunneeded-internal-declaration, which can help find bugs like
+> > > > commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
+> > > > mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
+> > > > I added -Wunneeded-internal-declaration to address it.
+> > > >
+> > > > If you contribute to code clean-up, please run "make CC=clang W=1"
+> > > > and check -Wunused-function warnings. You will find lots of unused
+> > > > functions.
+> > > >
+> > > > Some of them are false-positives because the call-sites are disabled
+> > > > by #ifdef. I do not like to abuse the inline keyword for suppressing
+> > > > unused-function warnings because it is intended to be a hint for the
+> > > > compiler's optimization. I prefer __maybe_unused or #ifdef around the
+> > > > definition.
+> >
+> > I'd say __maybe_unused for function parameters that are used depending
+> > of ifdefs in the body of the function, otherwise strictly ifdefs.
+> >
+> > > >
+> > > > [1]: https://clang.llvm.org/docs/DiagnosticsReference.html#wunused-function
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > >
+> > > I am still not a big fan of this as I think it weakens clang as a
+> > > standalone compiler but the change itself looks good so if it is going
+> > > in anyways:
+> > >
+> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > >
+> > > I'm sure Nick would like to weigh in as well before this gets merged.
+> >
+> > So right away for an x86_64 defconfig w/ this patch, clang points out:
+> >
+> > drivers/gpu/drm/i915/i915_sw_fence.c:84:20: warning: unused function
+> > 'debug_fence_init_onstack' [-Wunused-function]
+> > static inline void debug_fence_init_onstack(struct i915_sw_fence *fence)
+> >                    ^
+> > drivers/gpu/drm/i915/i915_sw_fence.c:105:20: warning: unused function
+> > 'debug_fence_free' [-Wunused-function]
+> > static inline void debug_fence_free(struct i915_sw_fence *fence)
+> >                    ^
+> >
+> > The first looks fishy (grep -r debug_fence_init_onstack), the second
+> > only has a callsite ifdef CONFIG_DRM_I915_SW_FENCE_DEBUG_OBJECTS.
+> >
+> > drivers/gpu/drm/i915/intel_guc_submission.c:1117:20: warning: unused
+> > function 'ctx_save_restore_disabled' [-Wunused-function]
+> > static inline bool ctx_save_restore_disabled(struct intel_context *ce)
+> >                    ^
+> > drivers/gpu/drm/i915/display/intel_hdmi.c:1696:26: warning: unused
+> > function 'intel_hdmi_hdcp2_protocol' [-Wunused-function]
+> > enum hdcp_wired_protocol intel_hdmi_hdcp2_protocol(void)
+> >                          ^
+> > arm64 defconfig builds cleanly, same with arm.  Things might get more
+> > hairy with all{yes|mod}config, but the existing things it finds don't
+> > look insurmountable to me.  In fact, I'll file bugs in our issue
+> > tracker (https://github.com/ClangBuiltLinux/linux/issues) for the
+> > above.
+> >
+> > So I'm not certain this patch weakens existing checks.
+>
+> Well, we no longer get -Wunused-function warnings without W=1.
+> Sometimes, that warning is just a result of missed clean up but there
+> have been instances where it was a real bug:
+>
+> https://lore.kernel.org/lkml/20190523010235.GA105588@archlinux-epyc/
+>
+> https://lore.kernel.org/lkml/1558574945-19275-1-git-send-email-skomatineni@nvidia.com/
+>
+> Having warnings not be equal between compilers out of the box causes
+> confusion and irritation: https://crbug.com/974884
+>
+> Is not the objective of ClangBuiltLinux to rely on GCC less?
+>
+> The only reason that we see the warnings crop up in i915 is because
+> they add -Wall after all of the warnings get disabled (i.e.
+> -Wno-unused-function -Wall so -Wunused-function gets enabled again).
+>
+> To get these warnings after this patch, W=1 has to be used and that
+> results in a lot of extra warnings. x86_64 defconfig has one objtool
+> warning right now, W=1 adds plenty more (from both -W flags and lack of
+> kerneldoc annotations):
+>
+> https://gist.github.com/175afbca29ead14bd039ad46f4ab0ded
+>
+> This is just food for thought though.
 
+So if we took just the hunk against include/linux/compiler_types.h
+from this patch, we'd be back in a situation pre-commit-abb2ea7dfd82
+("compiler, clang: suppress warning for unused static inline
+functions").  Hmm...
 
-Hi Moritz
+I would like to minimize the number of Clang specific warnings that
+are disabled in scripts/Makefile.extrawarn.
 
-Thanks a lot for the review. : )
-
-Have you got a chance to look into the other patches in this patchset?
-
-Thanks
-Hao
-
-> > ---
-> >  drivers/fpga/dfl-afu-main.c | 69 +++++++++++++++++++++++----------------------
-> >  1 file changed, 36 insertions(+), 33 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> > index e50c45e..e955149 100644
-> > --- a/drivers/fpga/dfl-afu-main.c
-> > +++ b/drivers/fpga/dfl-afu-main.c
-> > @@ -282,24 +282,17 @@ static int port_get_id(struct platform_device *pdev)
-> >  	&dev_attr_power_state.attr,
-> >  	NULL,
-> >  };
-> > -ATTRIBUTE_GROUPS(port_hdr);
-> > +
-> > +static const struct attribute_group port_hdr_group = {
-> > +	.attrs = port_hdr_attrs,
-> > +};
-> >  
-> >  static int port_hdr_init(struct platform_device *pdev,
-> >  			 struct dfl_feature *feature)
-> >  {
-> > -	dev_dbg(&pdev->dev, "PORT HDR Init.\n");
-> > -
-> >  	port_reset(pdev);
-> >  
-> > -	return device_add_groups(&pdev->dev, port_hdr_groups);
-> > -}
-> > -
-> > -static void port_hdr_uinit(struct platform_device *pdev,
-> > -			   struct dfl_feature *feature)
-> > -{
-> > -	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
-> > -
-> > -	device_remove_groups(&pdev->dev, port_hdr_groups);
-> > +	return 0;
-> >  }
-> >  
-> >  static long
-> > @@ -330,7 +323,6 @@ static void port_hdr_uinit(struct platform_device *pdev,
-> >  
-> >  static const struct dfl_feature_ops port_hdr_ops = {
-> >  	.init = port_hdr_init,
-> > -	.uinit = port_hdr_uinit,
-> >  	.ioctl = port_hdr_ioctl,
-> >  };
-> >  
-> > @@ -361,32 +353,37 @@ static void port_hdr_uinit(struct platform_device *pdev,
-> >  	&dev_attr_afu_id.attr,
-> >  	NULL
-> >  };
-> > -ATTRIBUTE_GROUPS(port_afu);
-> >  
-> > -static int port_afu_init(struct platform_device *pdev,
-> > -			 struct dfl_feature *feature)
-> > +static umode_t port_afu_attrs_visible(struct kobject *kobj,
-> > +				      struct attribute *attr, int n)
-> >  {
-> > -	struct resource *res = &pdev->resource[feature->resource_index];
-> > -	int ret;
-> > -
-> > -	dev_dbg(&pdev->dev, "PORT AFU Init.\n");
-> > +	struct device *dev = kobj_to_dev(kobj);
-> >  
-> > -	ret = afu_mmio_region_add(dev_get_platdata(&pdev->dev),
-> > -				  DFL_PORT_REGION_INDEX_AFU, resource_size(res),
-> > -				  res->start, DFL_PORT_REGION_READ |
-> > -				  DFL_PORT_REGION_WRITE | DFL_PORT_REGION_MMAP);
-> > -	if (ret)
-> > -		return ret;
-> > +	/*
-> > +	 * sysfs entries are visible only if related private feature is
-> > +	 * enumerated.
-> > +	 */
-> > +	if (!dfl_get_feature_by_id(dev, PORT_FEATURE_ID_AFU))
-> > +		return 0;
-> >  
-> > -	return device_add_groups(&pdev->dev, port_afu_groups);
-> > +	return attr->mode;
-> >  }
-> >  
-> > -static void port_afu_uinit(struct platform_device *pdev,
-> > -			   struct dfl_feature *feature)
-> > +static const struct attribute_group port_afu_group = {
-> > +	.attrs      = port_afu_attrs,
-> > +	.is_visible = port_afu_attrs_visible,
-> > +};
-> > +
-> > +static int port_afu_init(struct platform_device *pdev,
-> > +			 struct dfl_feature *feature)
-> >  {
-> > -	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
-> Thanks.
-> > +	struct resource *res = &pdev->resource[feature->resource_index];
-> >  
-> > -	device_remove_groups(&pdev->dev, port_afu_groups);
-> > +	return afu_mmio_region_add(dev_get_platdata(&pdev->dev),
-> > +				   DFL_PORT_REGION_INDEX_AFU,
-> > +				   resource_size(res), res->start,
-> > +				   DFL_PORT_REGION_MMAP | DFL_PORT_REGION_READ |
-> > +				   DFL_PORT_REGION_WRITE);
-> >  }
-> >  
-> >  static const struct dfl_feature_id port_afu_id_table[] = {
-> > @@ -396,7 +393,6 @@ static void port_afu_uinit(struct platform_device *pdev,
-> >  
-> >  static const struct dfl_feature_ops port_afu_ops = {
-> >  	.init = port_afu_init,
-> > -	.uinit = port_afu_uinit,
-> >  };
-> >  
-> >  static struct dfl_feature_driver port_feature_drvs[] = {
-> > @@ -748,9 +744,16 @@ static int afu_remove(struct platform_device *pdev)
-> >  	return 0;
-> >  }
-> >  
-> > +static const struct attribute_group *afu_dev_groups[] = {
-> > +	&port_hdr_group,
-> > +	&port_afu_group,
-> > +	NULL
-> > +};
-> > +
-> >  static struct platform_driver afu_driver = {
-> >  	.driver	= {
-> > -		.name    = DFL_FPGA_FEATURE_DEV_PORT,
-> > +		.name	    = DFL_FPGA_FEATURE_DEV_PORT,
-> > +		.dev_groups = afu_dev_groups,
-> >  	},
-> >  	.probe   = afu_probe,
-> >  	.remove  = afu_remove,
-> > -- 
-> > 1.8.3.1
-> > 
-> 
-> Thanks,
-> Moritz
+Masahiro, does your patch correctly make -Wunused-function work for
+clang at W=1?  It looks like -Wunused gets added to warning-1, but
+then -Wno-unused-function gets added to KBUILD_CFLAGS after `warning`
+does.  Will that work correctly?  I'd imagine that at W=1,
+KBUILD_CFLAGS for clang will look like:
+... -Wunused -Wno-unused-function ...
+which is probably not what we want?
+-- 
+Thanks,
+~Nick Desaulniers
