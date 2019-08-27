@@ -2,143 +2,103 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A58C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ED7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12132173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566906493;
-	bh=MrKDfdqUKLOalyQRYWebx1+K74fJ07IYwM1NCPWqfd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vj7kTB+RUqYHZTOA3KNFAPRo6lYDaWHXwnjAV+GQfoayKTV0UiT83W19laydSqVLT
-	 K/i75/rbSJOiS9m6BFDa3KG2ntciE5A2z6EzCw/xUN829/B5fjZUVH7TE6IDWKbchQ
-	 OOOsusjQk2qbgbkQzjTLIc505Cs2dD60tLGPchdM=
+	by mail.kernel.org (Postfix) with ESMTP id 65D822173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfH0LsL (ORCPT
+        id S1728772AbfH0LtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:48:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42684 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726522AbfH0LsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:48:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E947AF19;
-        Tue, 27 Aug 2019 11:48:09 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 13:48:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, kirill.shutemov@linux.intel.com,
-        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Message-ID: <20190827114808.GY7538@dhcp22.suse.cz>
-References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190822080434.GF12785@dhcp22.suse.cz>
- <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
- <20190822152934.w6ztolutdix6kbvc@box>
- <20190826074035.GD7538@dhcp22.suse.cz>
- <20190826131538.64twqx3yexmhp6nf@box>
- <20190827060139.GM7538@dhcp22.suse.cz>
- <20190827110210.lpe36umisqvvesoa@box>
+        Tue, 27 Aug 2019 07:49:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9615 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbfH0LtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:49:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 04:49:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="197296588"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2019 04:49:18 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] uuid: Add helpers for finding UUID from an array
+Date:   Tue, 27 Aug 2019 14:49:18 +0300
+Message-Id: <20190827114918.25090-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827110210.lpe36umisqvvesoa@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 14:02:10, Kirill A. Shutemov wrote:
-> On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
-> > On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
-> > > On Mon, Aug 26, 2019 at 09:40:35AM +0200, Michal Hocko wrote:
-> > > > On Thu 22-08-19 18:29:34, Kirill A. Shutemov wrote:
-> > > > > On Thu, Aug 22, 2019 at 02:56:56PM +0200, Vlastimil Babka wrote:
-> > > > > > On 8/22/19 10:04 AM, Michal Hocko wrote:
-> > > > > > > On Thu 22-08-19 01:55:25, Yang Shi wrote:
-> > > > > > >> Available memory is one of the most important metrics for memory
-> > > > > > >> pressure.
-> > > > > > > 
-> > > > > > > I would disagree with this statement. It is a rough estimate that tells
-> > > > > > > how much memory you can allocate before going into a more expensive
-> > > > > > > reclaim (mostly swapping). Allocating that amount still might result in
-> > > > > > > direct reclaim induced stalls. I do realize that this is simple metric
-> > > > > > > that is attractive to use and works in many cases though.
-> > > > > > > 
-> > > > > > >> Currently, the deferred split THPs are not accounted into
-> > > > > > >> available memory, but they are reclaimable actually, like reclaimable
-> > > > > > >> slabs.
-> > > > > > >> 
-> > > > > > >> And, they seems very common with the common workloads when THP is
-> > > > > > >> enabled.  A simple run with MariaDB test of mmtest with THP enabled as
-> > > > > > >> always shows it could generate over fifteen thousand deferred split THPs
-> > > > > > >> (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
-> > > > > > >> It looks worth accounting in MemAvailable.
-> > > > > > > 
-> > > > > > > OK, this makes sense. But your above numbers are really worrying.
-> > > > > > > Accumulating such a large amount of pages that are likely not going to
-> > > > > > > be used is really bad. They are essentially blocking any higher order
-> > > > > > > allocations and also push the system towards more memory pressure.
-> > > > > > > 
-> > > > > > > IIUC deferred splitting is mostly a workaround for nasty locking issues
-> > > > > > > during splitting, right? This is not really an optimization to cache
-> > > > > > > THPs for reuse or something like that. What is the reason this is not
-> > > > > > > done from a worker context? At least THPs which would be freed
-> > > > > > > completely sound like a good candidate for kworker tear down, no?
-> > > > > > 
-> > > > > > Agreed that it's a good question. For Kirill :) Maybe with kworker approach we
-> > > > > > also wouldn't need the cgroup awareness?
-> > > > > 
-> > > > > I don't remember a particular locking issue, but I cannot say there's
-> > > > > none :P
-> > > > > 
-> > > > > It's artifact from decoupling PMD split from compound page split: the same
-> > > > > page can be mapped multiple times with combination of PMDs and PTEs. Split
-> > > > > of one PMD doesn't need to trigger split of all PMDs and underlying
-> > > > > compound page.
-> > > > > 
-> > > > > Other consideration is the fact that page split can fail and we need to
-> > > > > have fallback for this case.
-> > > > > 
-> > > > > Also in most cases THP split would be just waste of time if we would do
-> > > > > them at the spot. If you don't have memory pressure it's better to wait
-> > > > > until process termination: less pages on LRU is still beneficial.
-> > > > 
-> > > > This might be true but the reality shows that a lot of THPs might be
-> > > > waiting for the memory pressure that is essentially freeable on the
-> > > > spot. So I am not really convinced that "less pages on LRUs" is really a
-> > > > plausible justification. Can we free at least those THPs which are
-> > > > unmapped completely without any pte mappings?
-> > > 
-> > > Unmapped completely pages will be freed with current code. Deferred split
-> > > only applies to partly mapped THPs: at least on 4k of the THP is still
-> > > mapped somewhere.
-> > 
-> > Hmm, I am probably misreading the code but at least current Linus' tree
-> > reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
-> > for fully mapped THP.
-> 
-> Well, you read correctly, but it was not intended. I screwed it up at some
-> point.
-> 
-> See the patch below. It should make it work as intened.
+Matching function that compares every UUID in an array to a
+given UUID with guid_equal().
 
-OK, this would be indeed much better indeed. I was really under
-impression that the deferred splitting is required due to locking.
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+Hi,
 
-Anyway this should take care of the most common usecase. If we can make
-the odd cases of partially mapped THPs be handled deferred&earlier than
-maybe do not really need the whole memcg deferred shrinkers and other
-complications. So let's see.
+I don't have a user for these helpers, but since they are pretty
+trivial, I figured that might as well propose them in any case.
+Though, I think there was somebody proposing of doing the same thing
+that these helpers do at one point, but just the hard way in the
+drivers, right Andy?
+
+thanks,
+---
+ include/linux/uuid.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/include/linux/uuid.h b/include/linux/uuid.h
+index 0c631e2a73b6..13e4d99f26dd 100644
+--- a/include/linux/uuid.h
++++ b/include/linux/uuid.h
+@@ -48,6 +48,16 @@ static inline bool guid_is_null(const guid_t *guid)
+ 	return guid_equal(guid, &guid_null);
+ }
+ 
++static inline bool guid_match(const guid_t *guids, const guid_t *guid)
++{
++	const guid_t *id;
++
++	for (id = guids; !guid_is_null(id); id++)
++		if (guid_equal(id, guid))
++			return true;
++	return false;
++}
++
+ static inline bool uuid_equal(const uuid_t *u1, const uuid_t *u2)
+ {
+ 	return memcmp(u1, u2, sizeof(uuid_t)) == 0;
+@@ -63,6 +73,16 @@ static inline bool uuid_is_null(const uuid_t *uuid)
+ 	return uuid_equal(uuid, &uuid_null);
+ }
+ 
++static inline bool uuid_match(const uuid_t *uuids, const uuid_t *uuid)
++{
++	const uuid_t *id;
++
++	for (id = uuids; !uuid_is_null(id); id++)
++		if (uuid_equal(id, uuid))
++			return true;
++	return false;
++}
++
+ void generate_random_uuid(unsigned char uuid[16]);
+ 
+ extern void guid_gen(guid_t *u);
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0.rc1
+
