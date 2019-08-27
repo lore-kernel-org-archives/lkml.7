@@ -2,170 +2,342 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B04C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E63C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0134B217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ACB2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FEJO9C78"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="qQlrn8nh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfH0JEL (ORCPT
+        id S1729114AbfH0JEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:04:11 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63086 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfH0JEK (ORCPT
+        Tue, 27 Aug 2019 05:04:31 -0400
+Received: from forward105o.mail.yandex.net ([37.140.190.183]:37335 "EHLO
+        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfH0JEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:04:10 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x7R93pZ7014817;
-        Tue, 27 Aug 2019 18:03:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x7R93pZ7014817
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566896632;
-        bh=9QFLgDLrDq6oYc9M2pjMIY7wPViunYCOH8ybzE+CYKY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FEJO9C78f6r58lBL+oGJOTJPxQoEb2F5p+8zzLKT0aTGj9HnOH4wJZVO7i4XZ0lrD
-         JRaPKKWvcXsmkwHjPM/DC2pmwp6QBq7gDAmbILjLCjSDfTAmzpxI18l4qqL/9MM1QI
-         OiW+casOVnjgaTJgg1MrMs/Zcc2ogoWZAiwnNaodtf06YkWFxWxTc4qTTqDJa1Xvat
-         Rj4ih6nduKisiJwSs13yNxmV7fiRExk2+Nmcqx0BGve6cl7RqKiflQILfKi43Q6Cyn
-         nCnpIRLy2Jlp05lHYh8OR+eckJYKfIMmJbAHTZeExVX6xDHePofUOhPK2vaX5e22WV
-         IvohYpkXZw8zw==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id 62so12936983vsl.5;
-        Tue, 27 Aug 2019 02:03:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/Rwe792cSkCLetbjB5wNfFtpFXg88jCfIn7NG+XlBfaCR5/2y
-        h8EYU/nbVjxCSEdivMZzFIYxsPNy4ElOql0htGk=
-X-Google-Smtp-Source: APXvYqwricK86V/H4mlXnBje+CLjj05rUISZsABUzE/wYSQ2E+9R0KKypcnkK7mnt6KPt7U5OLwH2hsMH6JJJTu7VOI=
-X-Received: by 2002:a67:fe12:: with SMTP id l18mr12998082vsr.54.1566896631370;
- Tue, 27 Aug 2019 02:03:51 -0700 (PDT)
+        Tue, 27 Aug 2019 05:04:30 -0400
+Received: from mxback18o.mail.yandex.net (mxback18o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::69])
+        by forward105o.mail.yandex.net (Yandex) with ESMTP id A0D1142018CE;
+        Tue, 27 Aug 2019 11:54:54 +0300 (MSK)
+Received: from smtp1p.mail.yandex.net (smtp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:6])
+        by mxback18o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id JAtSOct50N-srhm5duN;
+        Tue, 27 Aug 2019 11:54:54 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1566896094;
+        bh=tqrCk2lHh7uLbBYfb1q4A+xs3HDXcUI81jcco/99ZUo=;
+        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
+        b=qQlrn8nh0uhQu7x5F4meGSuarFZ/WQGcBpLHs2SMXW8ZFcYjU08BrM3g75+t1UPH5
+         DXmt7f8B9DTgkEwKMQJbXWoG6CPe4Hu1N8yG7wrW+r8BGJKMfX3C3W+kyglym34Oj2
+         WTPAJPCvtIJbpHNPVnZuRfnKdwHNe/FtqzFFQEZ0=
+Authentication-Results: mxback18o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JOqUfE8LDO-smtCFZv9;
+        Tue, 27 Aug 2019 11:54:52 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.co,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 10/13] MIPS: Loongson64: Drop legacy IRQ code
+Date:   Tue, 27 Aug 2019 16:52:59 +0800
+Message-Id: <20190827085302.5197-11-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-3-nicoleotsuka@gmail.com>
- <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com>
- <CAK7LNAQfYBCoChMV=MOwcUyVoqRkrPWs7DaWdzDqjBe18gGiAQ@mail.gmail.com>
- <20190825011025.GA23410@lst.de> <CAK7LNAQb1ZHr=DiHLNeNRaQExMuXdDOV4sFghoGbco_Q=Qzb8g@mail.gmail.com>
- <20190826073320.GA11712@lst.de> <CAK7LNATYOLEboUTO4qPx2z7cqwDrHBO1HFHG8VzZEJ15STv+nw@mail.gmail.com>
- <20190827075021.GA953@lst.de>
-In-Reply-To: <20190827075021.GA953@lst.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 27 Aug 2019 18:03:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQZ+bueZZzSoMADmgLjWNvijHRV=wLQzN_kvLG3b5Uu+w@mail.gmail.com>
-Message-ID: <CAK7LNAQZ+bueZZzSoMADmgLjWNvijHRV=wLQzN_kvLG3b5Uu+w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for
- single pages
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thierry Reding <treding@nvidia.com>,
-        Kees Cook <keescook@chromium.org>, iamjoonsoo.kim@lge.com,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 4:50 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Tue, Aug 27, 2019 at 04:45:20PM +0900, Masahiro Yamada wrote:
-> > On Mon, Aug 26, 2019 at 4:33 PM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > On Mon, Aug 26, 2019 at 11:05:00AM +0900, Masahiro Yamada wrote:
-> > > > This is included in v5.3-rc6
-> > > > so I tested it.
-> > >
-> > > So there is no allocation failure, but you get I/O errors later?
-> >
-> > Right.
-> >
-> > >
-> > > Does the device use a device-private CMA area?
-> >
-> > Not sure.
-> > My driver is drivers/mmc/host/sdhci-cadence.c
-> > It reuses routines in drivers/mmc/host/sdhci.c
-> >
-> >
-> >
-> > >  Does it work with Linux
-> > > 5.2 if CONFIG_DMA_CMA is disabled?
-> >
-> > No.
-> > 5.2 + disable CONFIG_DMA_CMA
-> > failed in the same way.
->
-> So it seems like the device wants CMA memory.   I guess the patch
-> below will fix it, but that isn't the solution.  Can you try it
-> to confirm?  In the end it probably assumes a dma mask it doesn't
-> set that the CMA memory satisfies or something similar.
+We've made generic irqchip drivers for Loongson-3 platform, it's time
+to say goodbye to these legacy code.
 
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/include/asm/mach-loongson64/irq.h |   1 -
+ arch/mips/loongson64/irq.c                  | 167 +-------------------
+ arch/mips/loongson64/smp.c                  |  26 ++-
+ 3 files changed, 11 insertions(+), 183 deletions(-)
 
-Thanks for the pointer.
-
-
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index 69cfb4345388..bd2f24aa7f19 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -236,7 +236,7 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->
->         if (dev && dev->cma_area)
->                 cma = dev->cma_area;
-> -       else if (count > 1)
-> +       else
->                 cma = dma_contiguous_default_area;
->
->         /* CMA can be used only in the context which permits sleeping */
-
-Yes, this makes my driver working again
-when CONFIG_DMA_CMA=y.
-
-
-If I apply the following, my driver gets back working
-irrespective of CONFIG_DMA_CMA.
-
-
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index 163d1cf4367e..504459395c39 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -237,6 +237,7 @@ static const struct sdhci_ops sdhci_cdns_ops = {
-
- static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
-        .ops = &sdhci_cdns_ops,
-+       .quirks2 = SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
- };
-
- static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
-
-
-
-
-
-
-
+diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/include/asm/mach-loongson64/irq.h
+index baed43285163..e57a21fc581c 100644
+--- a/arch/mips/include/asm/mach-loongson64/irq.h
++++ b/arch/mips/include/asm/mach-loongson64/irq.h
+@@ -35,7 +35,6 @@
+ #define LOONGSON_INT_COREx_INTy(x, y)	(1<<(x) | 1<<(y+4))	/* route to int y of core x */
+ 
+ extern void fixup_irqs(void);
+-extern void loongson3_ipi_interrupt(void);
+ 
+ #include_next <irq.h>
+ #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
+diff --git a/arch/mips/loongson64/irq.c b/arch/mips/loongson64/irq.c
+index 4d7b80a0ffb9..78cd824cc84e 100644
+--- a/arch/mips/loongson64/irq.c
++++ b/arch/mips/loongson64/irq.c
+@@ -3,180 +3,17 @@
+ #include <irq.h>
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
++#include <linux/irqchip.h>
+ 
+ #include <asm/irq_cpu.h>
+-#include <asm/i8259.h>
+ #include <asm/mipsregs.h>
+ 
+ #include "smp.h"
+ 
+-/* ICU Configuration Regs - r/w */
+-
+-#define LOONGSON_INTEDGE		LOONGSON_REG(LOONGSON_REGBASE + 0x24)
+-#define LOONGSON_INTSTEER		LOONGSON_REG(LOONGSON_REGBASE + 0x28)
+-#define LOONGSON_INTPOL			LOONGSON_REG(LOONGSON_REGBASE + 0x2c)
+-
+-/* ICU Enable Regs - IntEn & IntISR are r/o. */
+-
+-#define LOONGSON_INTENSET		LOONGSON_REG(LOONGSON_REGBASE + 0x30)
+-#define LOONGSON_INTENCLR		LOONGSON_REG(LOONGSON_REGBASE + 0x34)
+-#define LOONGSON_INTEN			LOONGSON_REG(LOONGSON_REGBASE + 0x38)
+-#define LOONGSON_INTISR			LOONGSON_REG(LOONGSON_REGBASE + 0x3c)
+-
+-extern void loongson3_send_irq_by_ipi(int cpu, int irqs);
+-
+-unsigned int irq_cpu[16] = {[0 ... 15] = -1};
+-unsigned int ht_irq[] = {0, 1, 3, 4, 5, 6, 7, 8, 12, 14, 15};
+-unsigned int local_irq = 1<<0 | 1<<1 | 1<<2 | 1<<7 | 1<<8 | 1<<12;
+-
+-int plat_set_irq_affinity(struct irq_data *d, const struct cpumask *affinity,
+-			  bool force)
+-{
+-	unsigned int cpu;
+-	struct cpumask new_affinity;
+-
+-	/* I/O devices are connected on package-0 */
+-	cpumask_copy(&new_affinity, affinity);
+-	for_each_cpu(cpu, affinity)
+-		if (cpu_data[cpu].package > 0)
+-			cpumask_clear_cpu(cpu, &new_affinity);
+-
+-	if (cpumask_empty(&new_affinity))
+-		return -EINVAL;
+-
+-	cpumask_copy(d->common->affinity, &new_affinity);
+-
+-	return IRQ_SET_MASK_OK_NOCOPY;
+-}
+-
+-static void ht_irqdispatch(void)
+-{
+-	unsigned int i, irq;
+-	struct irq_data *irqd;
+-	struct cpumask affinity;
+-
+-	irq = LOONGSON_HT1_INT_VECTOR(0);
+-	LOONGSON_HT1_INT_VECTOR(0) = irq; /* Acknowledge the IRQs */
+-
+-	for (i = 0; i < ARRAY_SIZE(ht_irq); i++) {
+-		if (!(irq & (0x1 << ht_irq[i])))
+-			continue;
+-
+-		/* handled by local core */
+-		if (local_irq & (0x1 << ht_irq[i])) {
+-			do_IRQ(ht_irq[i]);
+-			continue;
+-		}
+-
+-		irqd = irq_get_irq_data(ht_irq[i]);
+-		cpumask_and(&affinity, irqd->common->affinity, cpu_active_mask);
+-		if (cpumask_empty(&affinity)) {
+-			do_IRQ(ht_irq[i]);
+-			continue;
+-		}
+-
+-		irq_cpu[ht_irq[i]] = cpumask_next(irq_cpu[ht_irq[i]], &affinity);
+-		if (irq_cpu[ht_irq[i]] >= nr_cpu_ids)
+-			irq_cpu[ht_irq[i]] = cpumask_first(&affinity);
+-
+-		if (irq_cpu[ht_irq[i]] == 0) {
+-			do_IRQ(ht_irq[i]);
+-			continue;
+-		}
+-
+-		/* balanced by other cores */
+-		loongson3_send_irq_by_ipi(irq_cpu[ht_irq[i]], (0x1 << ht_irq[i]));
+-	}
+-}
+-
+-#define UNUSED_IPS (CAUSEF_IP5 | CAUSEF_IP4 | CAUSEF_IP1 | CAUSEF_IP0)
+-
+-asmlinkage void plat_irq_dispatch(void)
+-{
+-	unsigned int pending;
+-
+-	pending = read_c0_cause() & read_c0_status() & ST0_IM;
+-
+-	if (pending & CAUSEF_IP7)
+-		do_IRQ(LOONGSON_TIMER_IRQ);
+-#if defined(CONFIG_SMP)
+-	if (pending & CAUSEF_IP6)
+-		loongson3_ipi_interrupt();
+-#endif
+-	if (pending & CAUSEF_IP3)
+-		ht_irqdispatch();
+-	if (pending & CAUSEF_IP2)
+-		do_IRQ(LOONGSON_UART_IRQ);
+-	if (pending & UNUSED_IPS) {
+-		pr_err("%s : spurious interrupt\n", __func__);
+-		spurious_interrupt();
+-	}
+-}
+-
+-static inline void mask_loongson_irq(struct irq_data *d) { }
+-static inline void unmask_loongson_irq(struct irq_data *d) { }
+-
+- /* For MIPS IRQs which shared by all cores */
+-static struct irq_chip loongson_irq_chip = {
+-	.name		= "Loongson",
+-	.irq_ack	= mask_loongson_irq,
+-	.irq_mask	= mask_loongson_irq,
+-	.irq_mask_ack	= mask_loongson_irq,
+-	.irq_unmask	= unmask_loongson_irq,
+-	.irq_eoi	= unmask_loongson_irq,
+-};
+-
+-void irq_router_init(void)
+-{
+-	int i;
+-
+-	/* route LPC int to cpu core0 int 0 */
+-	LOONGSON_INT_ROUTER_LPC =
+-		LOONGSON_INT_COREx_INTy(loongson_sysconf.boot_cpu_id, 0);
+-	/* route HT1 int0 ~ int7 to cpu core0 INT1*/
+-	for (i = 0; i < 8; i++)
+-		LOONGSON_INT_ROUTER_HT1(i) =
+-			LOONGSON_INT_COREx_INTy(loongson_sysconf.boot_cpu_id, 1);
+-	/* enable HT1 interrupt */
+-	LOONGSON_HT1_INTN_EN(0) = 0xffffffff;
+-	/* enable router interrupt intenset */
+-	LOONGSON_INT_ROUTER_INTENSET =
+-		LOONGSON_INT_ROUTER_INTEN | (0xffff << 16) | 0x1 << 10;
+-}
+ 
+ void __init arch_init_irq(void)
+ {
+-	struct irq_chip *chip;
+-
+-	/*
+-	 * Clear all of the interrupts while we change the able around a bit.
+-	 * int-handler is not on bootstrap
+-	 */
+-	clear_c0_status(ST0_IM | ST0_BEV);
+-
+-	/* no steer */
+-	LOONGSON_INTSTEER = 0;
+-
+-	/*
+-	 * Mask out all interrupt by writing "1" to all bit position in
+-	 * the interrupt reset reg.
+-	 */
+-	LOONGSON_INTENCLR = ~0;
+-
+-	clear_c0_status(ST0_IM | ST0_BEV);
+-
+-	irq_router_init();
+-	mips_cpu_irq_init();
+-	init_i8259_irqs();
+-	chip = irq_get_chip(I8259A_IRQ_BASE);
+-	chip->irq_set_affinity = plat_set_irq_affinity;
+-
+-	irq_set_chip_and_handler(LOONGSON_UART_IRQ,
+-			&loongson_irq_chip, handle_percpu_irq);
+-	irq_set_chip_and_handler(LOONGSON_BRIDGE_IRQ,
+-			&loongson_irq_chip, handle_percpu_irq);
+-
+-	set_c0_status(STATUSF_IP2 | STATUSF_IP3 | STATUSF_IP6);
++	irqchip_init();
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
+index 8ad845e522fb..d53942c56a16 100644
+--- a/arch/mips/loongson64/smp.c
++++ b/arch/mips/loongson64/smp.c
+@@ -4,6 +4,7 @@
+  * Author: Chen Huacai, chenhc@lemote.com
+  */
+ 
++#include <irq.h>
+ #include <linux/init.h>
+ #include <linux/cpu.h>
+ #include <linux/sched.h>
+@@ -24,6 +25,8 @@
+ 
+ DEFINE_PER_CPU(int, cpu_state);
+ 
++#define LS_IPI_IRQ (MIPS_CPU_IRQ_BASE + 6)
++
+ static void *ipi_set0_regs[16];
+ static void *ipi_clear0_regs[16];
+ static void *ipi_status0_regs[16];
+@@ -245,21 +248,13 @@ loongson3_send_ipi_mask(const struct cpumask *mask, unsigned int action)
+ 		loongson3_ipi_write32((u32)action, ipi_set0_regs[cpu_logical_map(i)]);
+ }
+ 
+-#define IPI_IRQ_OFFSET 6
+-
+-void loongson3_send_irq_by_ipi(int cpu, int irqs)
+-{
+-	loongson3_ipi_write32(irqs << IPI_IRQ_OFFSET, ipi_set0_regs[cpu_logical_map(cpu)]);
+-}
+-
+-void loongson3_ipi_interrupt()
++static irqreturn_t loongson3_ipi_interrupt(int irq, void *dev_id)
+ {
+ 	int i, cpu = smp_processor_id();
+-	unsigned int action, c0count, irqs;
++	unsigned int action, c0count;
+ 
+ 	/* Load the ipi register to figure out what we're supposed to do */
+ 	action = loongson3_ipi_read32(ipi_status0_regs[cpu_logical_map(cpu)]);
+-	irqs = action >> IPI_IRQ_OFFSET;
+ 
+ 	/* Clear the ipi register to clear the interrupt */
+ 	loongson3_ipi_write32((u32)action, ipi_clear0_regs[cpu_logical_map(cpu)]);
+@@ -282,13 +277,7 @@ void loongson3_ipi_interrupt()
+ 		__wbflush(); /* Let others see the result ASAP */
+ 	}
+ 
+-	if (irqs) {
+-		int irq;
+-		while ((irq = ffs(irqs))) {
+-			do_IRQ(irq-1);
+-			irqs &= ~(1<<(irq-1));
+-		}
+-	}
++	return IRQ_HANDLED;
+ }
+ 
+ #define MAX_LOOPS 800
+@@ -384,6 +373,9 @@ static void __init loongson3_smp_setup(void)
+ 
+ static void __init loongson3_prepare_cpus(unsigned int max_cpus)
+ {
++	if (request_irq(LS_IPI_IRQ, loongson3_ipi_interrupt,
++			IRQF_PERCPU | IRQF_NO_SUSPEND, "SMP_IPI", NULL))
++			pr_err("Failed to request IPI IRQ\n");
+ 	init_cpu_present(cpu_possible_mask);
+ 	per_cpu(cpu_state, smp_processor_id()) = CPU_ONLINE;
+ }
 -- 
-Best Regards
-Masahiro Yamada
+2.22.0
+
