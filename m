@@ -2,230 +2,83 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3752EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0516C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040CF20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:02:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="s6DFBTmg"
+	by mail.kernel.org (Postfix) with ESMTP id 918DB20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfH0LCM (ORCPT
+        id S1729169AbfH0LDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:02:12 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33870 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfH0LCL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:02:11 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so30843034edb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 04:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7fnPfQvHdj0cCNP+7IEvEZfVCE/dpJFzoNujaWzCQQQ=;
-        b=s6DFBTmgS6Yc0h0SlDz+odoUsq7fVE6ckLWOQ9B4676EawP55OiesX/CkBb2PcaSqx
-         4II3rHil2BZinimKMh7NnIYRqQuMh1dtHXD8fu09KgJrrb4dMj50RNDsXrKb15XLIPcJ
-         fDtRdYmszY76Z7L82+sJ/S9VAOGUbVAVMMyu9wXMyYMIj2NcjLGGerWy2B7S74N/XrcT
-         W6u1ueehHlNJoIYcnzb27i6FAQoj7FWy+C7Iome07z++tCj3h51lAAaV9/fCODgeEd0r
-         +qTx8YM+vRuEJddtY1iQBq0V3t58xtdyn5ccHLDne8wYGnbUeivy36XxEt1ITDZg1wJn
-         XLng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7fnPfQvHdj0cCNP+7IEvEZfVCE/dpJFzoNujaWzCQQQ=;
-        b=VGLY4quvpt6UTu3KqklhmLkcBKfMJKIWUwzIB4J7YDSUd23vYbPPQL6nDzrWOjeyW+
-         olXaBwREbbHdpzqYJwvjiTlfGNo/FueKVixhsmAjgMhBi9Jcd1Fsc5obsyBTYDLpjUJK
-         ulG+PmGXPxaWntUBN/BLsCpXq/WI+TzBpzttk5USJcnBskLyJMuWuCJbuBb8JdkY6PJf
-         e4CiEyU8ryhYZWlRFrZRcF1v0PDsDFPCRHM2b6AQ8rXLwR2kpxirYR0SXJ2v1t/w020+
-         DvwxVkg3x5J7XQPRoXr4sLc5o6T6cB8bQ+tswzuGCD8hhtk3J7nOFABlRI/dpSKvBnu3
-         pLTQ==
-X-Gm-Message-State: APjAAAVoRxCmivfR+t7+YWOooAK1+V9wYDerJSHYVYvMtWzLoKzi0pO9
-        k8LKcUZcIG0skFAwot0nCkkh1A==
-X-Google-Smtp-Source: APXvYqw1xRlVWnZVVSBchXgBbxOyJjGLDPVUV8uy23WlamQ1eK8AXx5ktvNpSgsNEg2R7DkbIsMpyw==
-X-Received: by 2002:a17:906:4d8d:: with SMTP id s13mr20130220eju.86.1566903729183;
-        Tue, 27 Aug 2019 04:02:09 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id c6sm1933149edx.20.2019.08.27.04.02.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 04:02:08 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 5F8AE100746; Tue, 27 Aug 2019 14:02:10 +0300 (+03)
-Date:   Tue, 27 Aug 2019 14:02:10 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, kirill.shutemov@linux.intel.com,
-        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Message-ID: <20190827110210.lpe36umisqvvesoa@box>
-References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190822080434.GF12785@dhcp22.suse.cz>
- <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
- <20190822152934.w6ztolutdix6kbvc@box>
- <20190826074035.GD7538@dhcp22.suse.cz>
- <20190826131538.64twqx3yexmhp6nf@box>
- <20190827060139.GM7538@dhcp22.suse.cz>
+        Tue, 27 Aug 2019 07:03:49 -0400
+Received: from mga03.intel.com ([134.134.136.65]:7587 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfH0LDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:03:49 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 04:03:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
+   d="scan'208";a="180194738"
+Received: from jsakkine-mobl1.fi.intel.com (HELO localhost) ([10.237.66.169])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Aug 2019 04:03:45 -0700
+Date:   Tue, 27 Aug 2019 14:03:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Lyude Paul <lyude@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't
+ mapped.
+Message-ID: <20190827110344.4uvjppmkkaeex3mk@linux.intel.com>
+References: <20190826153028.32639-1-pjones@redhat.com>
+ <20190826162823.4mxkwhd7mbtro3zy@linux.intel.com>
+ <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827060139.GM7538@dhcp22.suse.cz>
+In-Reply-To: <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
-> On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
-> > On Mon, Aug 26, 2019 at 09:40:35AM +0200, Michal Hocko wrote:
-> > > On Thu 22-08-19 18:29:34, Kirill A. Shutemov wrote:
-> > > > On Thu, Aug 22, 2019 at 02:56:56PM +0200, Vlastimil Babka wrote:
-> > > > > On 8/22/19 10:04 AM, Michal Hocko wrote:
-> > > > > > On Thu 22-08-19 01:55:25, Yang Shi wrote:
-> > > > > >> Available memory is one of the most important metrics for memory
-> > > > > >> pressure.
-> > > > > > 
-> > > > > > I would disagree with this statement. It is a rough estimate that tells
-> > > > > > how much memory you can allocate before going into a more expensive
-> > > > > > reclaim (mostly swapping). Allocating that amount still might result in
-> > > > > > direct reclaim induced stalls. I do realize that this is simple metric
-> > > > > > that is attractive to use and works in many cases though.
-> > > > > > 
-> > > > > >> Currently, the deferred split THPs are not accounted into
-> > > > > >> available memory, but they are reclaimable actually, like reclaimable
-> > > > > >> slabs.
-> > > > > >> 
-> > > > > >> And, they seems very common with the common workloads when THP is
-> > > > > >> enabled.  A simple run with MariaDB test of mmtest with THP enabled as
-> > > > > >> always shows it could generate over fifteen thousand deferred split THPs
-> > > > > >> (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
-> > > > > >> It looks worth accounting in MemAvailable.
-> > > > > > 
-> > > > > > OK, this makes sense. But your above numbers are really worrying.
-> > > > > > Accumulating such a large amount of pages that are likely not going to
-> > > > > > be used is really bad. They are essentially blocking any higher order
-> > > > > > allocations and also push the system towards more memory pressure.
-> > > > > > 
-> > > > > > IIUC deferred splitting is mostly a workaround for nasty locking issues
-> > > > > > during splitting, right? This is not really an optimization to cache
-> > > > > > THPs for reuse or something like that. What is the reason this is not
-> > > > > > done from a worker context? At least THPs which would be freed
-> > > > > > completely sound like a good candidate for kworker tear down, no?
-> > > > > 
-> > > > > Agreed that it's a good question. For Kirill :) Maybe with kworker approach we
-> > > > > also wouldn't need the cgroup awareness?
-> > > > 
-> > > > I don't remember a particular locking issue, but I cannot say there's
-> > > > none :P
-> > > > 
-> > > > It's artifact from decoupling PMD split from compound page split: the same
-> > > > page can be mapped multiple times with combination of PMDs and PTEs. Split
-> > > > of one PMD doesn't need to trigger split of all PMDs and underlying
-> > > > compound page.
-> > > > 
-> > > > Other consideration is the fact that page split can fail and we need to
-> > > > have fallback for this case.
-> > > > 
-> > > > Also in most cases THP split would be just waste of time if we would do
-> > > > them at the spot. If you don't have memory pressure it's better to wait
-> > > > until process termination: less pages on LRU is still beneficial.
-> > > 
-> > > This might be true but the reality shows that a lot of THPs might be
-> > > waiting for the memory pressure that is essentially freeable on the
-> > > spot. So I am not really convinced that "less pages on LRUs" is really a
-> > > plausible justification. Can we free at least those THPs which are
-> > > unmapped completely without any pte mappings?
-> > 
-> > Unmapped completely pages will be freed with current code. Deferred split
-> > only applies to partly mapped THPs: at least on 4k of the THP is still
-> > mapped somewhere.
+On Mon, Aug 26, 2019 at 10:44:31AM -0700, Matthew Garrett wrote:
+> On Mon, Aug 26, 2019 at 9:28 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Mon, Aug 26, 2019 at 11:30:27AM -0400, Peter Jones wrote:
+> > > Some machines generate a lot of event log entries.  When we're
+> > > iterating over them, the code removes the old mapping and adds a
+> > > new one, so once we cross the page boundary we're unmapping the page
+> > > with the count on it.  Hilarity ensues.
+> > >
+> > > This patch keeps the info from the header in local variables so we don't
+> > > need to access that page again or keep track of if it's mapped.
+> > >
+> > > Signed-off-by: Peter Jones <pjones@redhat.com>
+> > > Tested-by: Lyude Paul <lyude@redhat.com>
+> >
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Acked-by: Matthew Garrett <mjg59@google.com>
 > 
-> Hmm, I am probably misreading the code but at least current Linus' tree
-> reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
-> for fully mapped THP.
+> Jarkko, these two should probably go to 5.3 if possible - I
+> independently had a report of a system hitting this issue last week
+> (Intel apparently put a surprising amount of data in the event logs on
+> the NUCs).
 
-Well, you read correctly, but it was not intended. I screwed it up at some
-point.
+OK, I can try to push them. I'll do PR today.
 
-See the patch below. It should make it work as intened.
-
-It's not bug as such, but inefficientcy. We add page to the queue where
-it's not needed.
-
-> > > > Main source of partly mapped THPs comes from exit path. When PMD mapping
-> > > > of THP got split across multiple VMAs (for instance due to mprotect()),
-> > > > in exit path we unmap PTEs belonging to one VMA just before unmapping the
-> > > > rest of the page. It would be total waste of time to split the page in
-> > > > this scenario.
-> > > > 
-> > > > The whole deferred split thing still looks as a reasonable compromise
-> > > > to me.
-> > > 
-> > > Even when it leads to all other problems mentioned in this and memcg
-> > > deferred reclaim series?
-> > 
-> > Yes.
-> > 
-> > You would still need deferred split even if you *try* to split the page on
-> > the spot. split_huge_page() can fail (due to pin on the page) and you will
-> > need to have a way to try again later.
-> > 
-> > You'll not win anything in complexity by trying split_huge_page()
-> > immediately. I would ague you'll create much more complexity.
-> 
-> I am not arguing for in place split. I am arguing to do it ASAP rather
-> than to wait for memory pressure which might be in an unbound amount of
-> time. So let me ask again. Why cannot we do that in the worker context?
-> Essentially schedure the work item right away?
-
-Let me look into it.
-
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 003377e24232..45388f1bf317 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
- 	if (TestClearPageDoubleMap(page)) {
- 		/*
- 		 * Subpages can be mapped with PTEs too. Check how many of
--		 * themi are still mapped.
-+		 * them are still mapped.
- 		 */
- 		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
- 			if (atomic_add_negative(-1, &page[i]._mapcount))
- 				nr++;
- 		}
-+
-+		/*
-+		 * Queue the page for deferred split if at least one small
-+		 * page of the compound page is unmapped, but at least one
-+		 * small page is still mapped.
-+		 */
-+		if (nr && nr < HPAGE_PMD_NR)
-+			deferred_split_huge_page(page);
- 	} else {
- 		nr = HPAGE_PMD_NR;
- 	}
-@@ -1284,10 +1292,8 @@ static void page_remove_anon_compound_rmap(struct page *page)
- 	if (unlikely(PageMlocked(page)))
- 		clear_page_mlock(page);
- 
--	if (nr) {
-+	if (nr)
- 		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
--		deferred_split_huge_page(page);
--	}
- }
- 
- /**
--- 
- Kirill A. Shutemov
+/Jarkko
