@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48625C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE56C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1334521881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5429D21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893017;
-	bh=Rlkn9OqUpPLD+i1nh7Rz33VsZWnKtp4NRAQDgHStGEQ=;
+	s=default; t=1566893020;
+	bh=1KOunPuokLRF00R6WfX4KEPxteQidVVs3eZ39euy99g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAPgAHUI8Qw9IfG1PQygqZ/blj4uqCO1Ft8O+mnaOtcvHNRj9gOX5J+BRqtkopeXO
-	 J9xqA5xSDkP3wQbr4reXCKYYglz1WFb4AfjYSWDcg6F8m06wULTRQ0HOo1hoj0jNad
-	 UnCiRXLbfPq8WBQ0/MbWr7KYxqy+zDFKmSiGkpVQ=
+	b=sHA1hP+CAt6erqJNemZJ9fakbjsxuGTKHdmqKBMnOqN7vL0uzeXN7b5SjvONFqS/Q
+	 0g/pcgIzrRXLFmoR1GN90QeAHo1bBbwKv6Fv4UgNC/WmscR6rl+/jG8X9R2XX9//Hu
+	 2xFe8G2LNQ74YztXI8x0d67KiFLslrD08fy6LrYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbfH0IDf (ORCPT
+        id S1732316AbfH0IDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:03:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732262AbfH0IDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:03:31 -0400
+        id S1732276AbfH0IDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:03:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC9752186A;
-        Tue, 27 Aug 2019 08:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9A02189D;
+        Tue, 27 Aug 2019 08:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893010;
-        bh=Rlkn9OqUpPLD+i1nh7Rz33VsZWnKtp4NRAQDgHStGEQ=;
+        s=default; t=1566893013;
+        bh=1KOunPuokLRF00R6WfX4KEPxteQidVVs3eZ39euy99g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyJAMZY87MQ1TwrpRMBhBRFthywY72LYIZAtMRY2c3NKAs7rz+hBmCPnuqzrGUy28
-         VSq2ySrovEnK3gJyttUyCdr1EVsDYmWIIqXmLDm7+vUQpuJAc5m5Nfd+z4owXvazfw
-         GcvB+uKjEI+d6EB3qKAFZiQeZM5DFYmCPCoegzbA=
+        b=KwAGke2zL7txTPRquX/ew/RqZ7VMfCuNxzx4aQnFm17pCrRHQb4jV6jKyeJ7R4DBq
+         gXpu838n5GzM1g3CF+RKe7EIx+vFKXqJ8kQC8UTp1JvRDmrwRoD8ULD5dQUdwo58Z7
+         zSw1bUjmBZjz/JMNb3ddd/i0DvryPuOnf+y79SKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 088/162] ata: rb532_cf: Fix unused variable warning in rb532_pata_driver_probe
-Date:   Tue, 27 Aug 2019 09:50:16 +0200
-Message-Id: <20190827072741.214929774@linuxfoundation.org>
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 089/162] net: cxgb3_main: Fix a resource leak in a error path in init_one()
+Date:   Tue, 27 Aug 2019 09:50:17 +0200
+Message-Id: <20190827072741.255456016@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,34 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db341a049ec7e87053c91008cb452d0bfa6dde72 ]
+[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
 
-Fix the following warning (Building: rb532_defconfig mips):
+A call to 'kfree_skb()' is missing in the error handling path of
+'init_one()'.
+This is already present in 'remove_one()' but is missing here.
 
-drivers/ata/pata_rb532_cf.c: In function ‘rb532_pata_driver_remove’:
-drivers/ata/pata_rb532_cf.c:161:24: warning: unused variable ‘info’ [-Wunused-variable]
-  struct rb532_cf_info *info = ah->private_data;
-                        ^~~~
-
-Fixes: cd56f35e52d9 ("ata: rb532_cf: Convert to use GPIO descriptors")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/pata_rb532_cf.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/pata_rb532_cf.c b/drivers/ata/pata_rb532_cf.c
-index 7c37f2ff09e41..deae466395de1 100644
---- a/drivers/ata/pata_rb532_cf.c
-+++ b/drivers/ata/pata_rb532_cf.c
-@@ -158,7 +158,6 @@ static int rb532_pata_driver_probe(struct platform_device *pdev)
- static int rb532_pata_driver_remove(struct platform_device *pdev)
- {
- 	struct ata_host *ah = platform_get_drvdata(pdev);
--	struct rb532_cf_info *info = ah->private_data;
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+index 1e82b9efe4471..58f89f6a040fe 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -3269,7 +3269,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (!adapter->regs) {
+ 		dev_err(&pdev->dev, "cannot map device registers\n");
+ 		err = -ENOMEM;
+-		goto out_free_adapter;
++		goto out_free_adapter_nofail;
+ 	}
  
- 	ata_host_detach(ah);
+ 	adapter->pdev = pdev;
+@@ -3397,6 +3397,9 @@ out_free_dev:
+ 		if (adapter->port[i])
+ 			free_netdev(adapter->port[i]);
+ 
++out_free_adapter_nofail:
++	kfree_skb(adapter->nofail_skb);
++
+ out_free_adapter:
+ 	kfree(adapter);
  
 -- 
 2.20.1
