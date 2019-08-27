@@ -2,159 +2,164 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D533C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846B4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24140206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D08B206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M35G+69K"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XisjNBZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfH0MoW (ORCPT
+        id S1729650AbfH0Mo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:44:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52476 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfH0MoV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:44:21 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7RCiAB8094171;
-        Tue, 27 Aug 2019 07:44:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566909850;
-        bh=mL9PuE7SnaQPkLqAoz369d1U3pcy+VQSeEdo39hM018=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=M35G+69K3dVMR8TlTMsz+QVDhP3kt3/+t+MxyHn5I9lx2EyM0206dPD1L1Y+3OH50
-         ++gS1741dz2nxPWJ8sJ9sjkpUZDPfGLVvf5LTgKHZCHxEkNBWwvczcu0tMuG0SlNAP
-         ypGH2FvGokQLmU4Eq4iEOp+9Uo0IVo0NetVNDNnM=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7RCiAgt020612
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Aug 2019 07:44:10 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
- Aug 2019 07:44:10 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 27 Aug 2019 07:44:10 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7RCi9lx000924;
-        Tue, 27 Aug 2019 07:44:09 -0500
-Subject: Re: [PATCH v3 1/5] leds: lm3532: Fix brightness control for i2c mode
-To:     Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
-CC:     <jacek.anaszewski@gmail.com>, <sre@kernel.org>,
-        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190820195307.27590-1-dmurphy@ti.com>
- <20190826215822.GY52127@atomide.com> <20190826221413.GA19124@amd>
- <20190826224437.GZ52127@atomide.com> <20190827121818.GB19927@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0eab6f72-ddb7-3da7-e90e-888374531f86@ti.com>
-Date:   Tue, 27 Aug 2019 07:44:09 -0500
+        Tue, 27 Aug 2019 08:44:58 -0400
+Received: from mout.web.de ([212.227.17.12]:46483 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbfH0Mo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:44:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1566909878;
+        bh=Zl705TxJ8OTiSJaTO/uNmvnIN8rPHaMxkAQRT6rw9Ls=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=XisjNBZo7fdPVkK6UrnXece09zLZn9X3xEiozHXnQlxaCQqhUQQH1mNIJ857kqg3v
+         lZvDUSxMY3qsEcf99AwpNS9r0o/u02tOehz1op0REC/lZyCEdBa/Oo9SAwzuuqFCIn
+         0GRxsdsGvN9pPfRwI0nZ7ltR83ndcJBXi3/6TPr8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.143.232]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M8iH2-1huraz3jhc-00CBAr; Tue, 27
+ Aug 2019 14:44:38 +0200
+Subject: [PATCH 2/2] powerpc/pseries: Delete an error message for a failed
+ string duplication in dlpar_store()
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     linuxppc-dev@lists.ozlabs.org,
+        Allison Randal <allison@lohutok.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Gen Zhang <blackgod016574@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <db28c84d-ac07-6d9a-a371-c97ab72bf763@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <535cfec2-782f-61ec-f6fb-c50186ead2af@web.de>
+Date:   Tue, 27 Aug 2019 14:44:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190827121818.GB19927@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <db28c84d-ac07-6d9a-a371-c97ab72bf763@web.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IeKF7aaoShfZTIhKH5bi7ZBjC3Rau2OxHJWecP4M8+nxkKqwcPa
+ C5iXYKWmudtfXJ8vD84hGusc/bUgbD0pr11Yms97UuKzjK/T2dTPnDnZoxlRlRbvKoeteIQ
+ 959bNgb6Kkn9e7KJ2CSo/5rOAjpePQraseo5jBS+kHFcbsAoTs4uuqXQyRCddU4Z9l+8/qV
+ uq0+UrmWNJBP0nJuwheQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hXQ3nD+jrh0=:XUgUIGQ9HyOB0+93btQ8QH
+ sRaaUY1D77ExgfWO3W2v3S9kdhLMO4VqjGB6PLeAlU1V1RYkmFukFV3uEAo1KraQV18/GMmKf
+ lHHtthavgEi9eio9gPEI5uQhe+1QKf/41N/26g9l/u0qdo0ME8BPHNPZj37ICZZdex8DrCFX3
+ HamMWDuJKKKzxdQ4aXeO+jHkTgC6+ny2hy73KGVR1uk10nixcVCdAbfeaCpHPD6CcYrHfPIr6
+ paixAiYof66i7V3ydpNGacTH3fsT/ho8f76jb5bAk5VmI72OZ/VsveeEUivetgay4My/R7HYU
+ /4cyC5FnC7bdCuYRqQUCV25a+iU3+0n8zw9/G4uMK5CFlbKwfwdVEQgbfESUfoh/dfvdx+eXF
+ 0OQZAWo23280CZiwCTJWGsKzR7lKRZdAetahGyQGAUjnMqhVfUNyUfZ5NScfcMcKNbjP8i6VV
+ e48PFwFEp8CN7FEeWu3udbxlgMRPdxTyTKXY83ZZFm/cH4FYxbYF79SX0N8RqH41xRXavLLWk
+ C2biDQoHlVGqcc1J42EAQlsGgqPM1yfz9tpTO8TvhXUIZG3tsCEni6eHXD3UiW2SinB+ukq/r
+ 2FneGezPNhhkmDbvCxvJxo6zLh7LBVyD6zXaOfvBKP55ZVbOXpR5QnCb8fo9kag0P+MTW1lHw
+ UKWTP4r3wMrRLMe+soBjqMO9bhMZWmpyT1QXIeL7jASR7fkj1/PefYsU6g0rtph9GmfGtvTJy
+ dwwu86wcJaXfs1mnFyV1aWhM1VwXWkmqobDMkPjFa5DF97R2giaI4eJ7/cmGqQpVrxV+cl7cV
+ ij0g9KgTwhWWxGS5ON9mhD6LsPD0+rdzesxT+BmXkzt+bZFJYCUr1VwVUrhTaxvWqmrO8Q0uj
+ oB2JuX31oxVlxdLT/MMvJMDISo2xlU8fGlSiGXOnY19bGpisEggcW4V10ZjdUk4iqF/4k2Szb
+ umAKmAWwsGTHyyDsmHDtUHs3qqqCqzNeGvvwJSLlJk2I61LdsevFrTFy3qtRGL/7kJto1Y5hb
+ PQ9PpKZcMUhcBrul41ypCbulgsJ/BtSZJCykPajf5VjuGDDqgAUvnGqhyN4r3CH4gpdMFIM5S
+ Aw7u+PlQpE3VUHc7O4Gk+mo0FE/D6W+X9JwQ+LW8I3e8iPnehRQY5OaX/dH9cWaqONATDcpwf
+ pnEcw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 27 Aug 2019 13:37:56 +0200
 
-On 8/27/19 7:18 AM, Pavel Machek wrote:
-> On Mon 2019-08-26 15:44:37, Tony Lindgren wrote:
->> * Pavel Machek <pavel@ucw.cz> [190826 22:14]:
->>> On Mon 2019-08-26 14:58:22, Tony Lindgren wrote:
->>>> Hi,
->>>>
->>>> * Dan Murphy <dmurphy@ti.com> [190820 19:53]:
->>>>> Fix the brightness control for I2C mode.  Instead of
->>>>> changing the full scale current register update the ALS target
->>>>> register for the appropriate banks.
->>>>>
->>>>> In addition clean up some code errors and random misspellings found
->>>>> during coding.
->>>>>
->>>>> Tested on Droid4 as well as LM3532 EVM connected to a BeagleBoneBlack
->>>>>
->>>>> Fixes: e37a7f8d77e1 ("leds: lm3532: Introduce the lm3532 LED driver")
->>>>> Reported-by: Pavel Machek <pavel@ucw.cz>
->>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>> ---
->>>>>
->>>>> v3 - Removed register define updates - https://lore.kernel.org/patchwork/patch/1114542/
->>>> Looks like starting with this patch in Linux next the LCD on droid4
->>>> is so dim it's unreadable even with brightness set to 255. Setting
->>>> brightness to 0 does blank it completely though.
->>>>
->>>> Did something maybe break with the various patch revisions or are
->>>> we now missing some dts patch?
->>> Maybe missing dts patch. We should provide maximum current the LED can
->>> handle...
->> Or i2c control is somehow broken and only als control now works?
+Omit an extra message for a memory allocation failure in this function.
 
-With only setting CONFIG_LEDS_LM3532=m to the next branch I get full 
-brightness with 255.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ arch/powerpc/platforms/pseries/dlpar.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I also see half brightness at 128 with the ramp down working.
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platfor=
+ms/pseries/dlpar.c
+index 2a783dc0cfa7..deb48b41d488 100644
+=2D-- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -521,10 +521,8 @@ static ssize_t dlpar_store(struct class *class, struc=
+t class_attribute *attr,
+ 	int rc;
 
-I am not able to reproduce this issue on my device.
+ 	args =3D argbuf =3D kstrdup(buf, GFP_KERNEL);
+-	if (!argbuf) {
+-		pr_info("Could not allocate resources for DLPAR operation\n");
++	if (!argbuf)
+ 		return -ENOMEM;
+-	}
 
-> Well, max current led is obviously missing. Plus code does not check
-> the return from reading led-max-microamp.
+ 	/*
+ 	 * Parse out the request from the user, this will be in the form:
+=2D-
+2.23.0
 
-led-max-microamp is optional so there is no need to check the return.
-
-full_scale_current should be 0 if not populated and in the init only if 
-this variable is set does
-
-the code program the register otherwise it is default of 20.2 mA.
-
-Dan
-
-
->
-> ret = fwnode_property_read_u32(child, "led-max-microamp",
->                                                 &led->full_scale_current);
->
-> Untested, but something like this is neccessary according to code
-> review.
->
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 								Pavel
->
-> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> index 4454449..b883b84 100644
-> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> @@ -395,6 +395,7 @@
->   			ti,led-mode = <0>;
->   			label = ":backlight";
->   			linux,default-trigger = "backlight";
-> +			led-max-microamp = 29800;
->   		};
->   
->   		led@1 {
-> @@ -402,6 +403,7 @@
->   			led-sources = <1>;
->   			ti,led-mode = <0>;
->   			label = ":kbd_backlight";
-> +			led-max-microamp = 29800;
->   		};
->   	};
->   };
->
->
