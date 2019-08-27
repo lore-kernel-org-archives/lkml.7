@@ -2,99 +2,291 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCEFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E259AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3D3206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD0121872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566907767;
-	bh=xL0uM8v0dqTgHoUnm7gOJ8WwzNbr6s7SULZgXjK8t/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=waw3kwWvPlcovKffgPeAhz4JxC72dNOBaxmyLaGIgqtewRyoJ8vx5LnP1HqU5Aleh
-	 mHS2hD4Fpb5G8cZOChwUIdxB0ztTpjXxrGYuI24BXoC0X5+QNUXd/iClcdsOke0KKV
-	 dPeVVpk9sKUkrFUvv4gXdNyMkpQ0fP91jD6OdEcE=
+	s=default; t=1566907775;
+	bh=fUcUeDsVMM74MJ34Ry+nmElbDrbiFBZpMPM2hzgixd0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wDTyLMX4YhRbdiH81nuVtLT21YluFt911LOcomlomRAeFFA7rjgl+TCFBIEFW6lKX
+	 qG748xxz4d2KcxYVyZiTlEtE6dmtib/6BPEl6kzN2hsOia+5nRED8h9fmcrlHJVWsl
+	 2XPMBSxcnNz16FvZdaXcOHfpKxW4d2IiPKUNU6q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfH0MJ0 (ORCPT
+        id S1728928AbfH0MJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:09:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47836 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725850AbfH0MJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:09:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 284E9AF19;
-        Tue, 27 Aug 2019 12:09:25 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 14:09:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        kirill.shutemov@linux.intel.com,
-        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Message-ID: <20190827120923.GB7538@dhcp22.suse.cz>
-References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190822080434.GF12785@dhcp22.suse.cz>
- <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
- <20190822152934.w6ztolutdix6kbvc@box>
- <20190826074035.GD7538@dhcp22.suse.cz>
- <20190826131538.64twqx3yexmhp6nf@box>
- <20190827060139.GM7538@dhcp22.suse.cz>
- <20190827110210.lpe36umisqvvesoa@box>
- <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
+        Tue, 27 Aug 2019 08:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbfH0MJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:09:34 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 912AA23407;
+        Tue, 27 Aug 2019 12:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566907772;
+        bh=fUcUeDsVMM74MJ34Ry+nmElbDrbiFBZpMPM2hzgixd0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a/HU21B1cyQ6s40aeFD4kglNlgx/8tu55rjKwGr1G3GYTZwUzCWGnPKMfw7u3icX6
+         lg9PzWKcnnP3PvbousMWaYQLUOR4BFPYNU1XJ57UIy2rxgYRhPrRY3RZPAkCycs07A
+         mZiI8mDd73MKcYwA2EC9W5/61ATgG6Q4muAxpEMM=
+Received: by mail-qt1-f178.google.com with SMTP id y26so21024219qto.4;
+        Tue, 27 Aug 2019 05:09:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAWSwajLxqZMq+KJxMH1hpiFeW+QPdOWQ7CsqddYqm2u4IV7cbR8
+        E+CfDDoR762oHoIAdCKEppXxMots69Ab2rMTbg==
+X-Google-Smtp-Source: APXvYqwITMYFg2CYFwhIyWqxLZ/aKw9ADPAqPzY//V2prhlPF7exrU3jWDce1/49wEhaqDxEIWNDGyMlSPrc6zzUzds=
+X-Received: by 2002:aed:24f4:: with SMTP id u49mr22702194qtc.110.1566907771556;
+ Tue, 27 Aug 2019 05:09:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aaaf9742-56f7-44b7-c3db-ad078b7b2220@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1566470526.git.agx@sigxcpu.org> <36f62b431f32bc76e92d21e04dc48464aef43869.1566470526.git.agx@sigxcpu.org>
+In-Reply-To: <36f62b431f32bc76e92d21e04dc48464aef43869.1566470526.git.agx@sigxcpu.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 27 Aug 2019 07:09:20 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLOa9yg+oWHM4o8b8b=4DGYC40b3o7YB_pKHSOTBEuvTA@mail.gmail.com>
+Message-ID: <CAL_JsqLOa9yg+oWHM4o8b8b=4DGYC40b3o7YB_pKHSOTBEuvTA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 14:01:56, Vlastimil Babka wrote:
-> On 8/27/19 1:02 PM, Kirill A. Shutemov wrote:
-> > On Tue, Aug 27, 2019 at 08:01:39AM +0200, Michal Hocko wrote:
-> >> On Mon 26-08-19 16:15:38, Kirill A. Shutemov wrote:
-> >>>
-> >>> Unmapped completely pages will be freed with current code. Deferred split
-> >>> only applies to partly mapped THPs: at least on 4k of the THP is still
-> >>> mapped somewhere.
-> >>
-> >> Hmm, I am probably misreading the code but at least current Linus' tree
-> >> reads page_remove_rmap -> [page_remove_anon_compound_rmap ->\ deferred_split_huge_page even
-> >> for fully mapped THP.
-> > 
-> > Well, you read correctly, but it was not intended. I screwed it up at some
-> > point.
-> > 
-> > See the patch below. It should make it work as intened.
-> > 
-> > It's not bug as such, but inefficientcy. We add page to the queue where
-> > it's not needed.
-> 
-> But that adding to queue doesn't affect whether the page will be freed
-> immediately if there are no more partial mappings, right? I don't see
-> deferred_split_huge_page() pinning the page.
-> So your patch wouldn't make THPs freed immediately in cases where they
-> haven't been freed before immediately, it just fixes a minor
-> inefficiency with queue manipulation?
+On Thu, Aug 22, 2019 at 5:44 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+>
+> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+>
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> ---
+>  .../bindings/display/bridge/nwl-dsi.yaml      | 155 ++++++++++++++++++
+>  1 file changed, 155 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-=
+dsi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yam=
+l b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> new file mode 100644
+> index 000000000000..24d17a6310dc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> @@ -0,0 +1,155 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Ohh, right. I can see that in free_transhuge_page now. So fully mapped
-THPs really do not matter and what I have considered an odd case is
-really happening more often.
+(GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
 
-That being said this will not help at all for what Yang Shi is seeing
-and we need a more proactive deferred splitting as I've mentioned
-earlier.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
+> +
+> +maintainers:
+> +  - Guido G=C3=BAnther <agx@sigxcpu.org>
+> +  - Robert Chiras <robert.chiras@nxp.com>
+> +
+> +description: |
+> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi b=
+ridge for
+> +  the SOCs NWL MIPI-DSI host controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx8mq-nwl-dsi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: DSI core clock
+> +      - description: RX_ESC clock (used in escape mode)
+> +      - description: TX_ESC clock (used in escape mode)
+> +      - description: PHY_REF clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: rx_esc
+> +      - const: tx_esc
+> +      - const: phy_ref
+> +
+> +  mux-controls:
+> +    description:
+> +      mux controller node to use for operating the input mux
+> +
+> +  phys:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to the phy module representing the DPHY
+> +
+> +  phy-names:
+> +    items:
+> +      - const: dphy
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to the power domain
 
--- 
-Michal Hocko
-SUSE Labs
+Don't need a description for common properties unless you have
+something specific about this device to say.
+
+> +
+> +  resets:
+> +    description:
+> +      phandles to the reset controller
+
+Same here.
+
+> +    items:
+> +      - description: dsi byte reset line
+> +      - description: dsi dpi reset line
+> +      - description: dsi esc reset line
+> +      - description: dsi pclk reset line
+> +
+> +  reset-names:
+> +    items:
+> +      - const: byte
+> +      - const: dpi
+> +      - const: esc
+> +      - const: pclk
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/graph.txt.
+> +
+> +  port@0:
+
+These are child nodes of ports. So under ports you need 'properties'
+with these. And 'required'.
+
+> +    type: object
+> +    description:
+> +      Input port node to receive pixel data from the
+> +      display controller
+> +
+> +  port@1:
+> +    type: object
+> +    description:
+> +      DSI output port node to the panel or the next bridge
+> +      in the chain
+> +
+> +patternProperties:
+> +  "^panel@[0-9]+$": true
+
+This is a node, so:
+
+type: object
+
+> +
+> +required:
+> +  - clock-names
+> +  - clocks
+> +  - compatible
+> +  - interrupts
+> +  - mux-controls
+> +  - phy-names
+> +  - phys
+> +  - ports
+> +  - reg
+> +  - reset-names
+> +  - resets
+
+Add a:
+
+additionalProperties: false
+
+> +
+> +examples:
+> + - |
+> +
+> +   mipi_dsi: mipi_dsi@30a00000 {
+> +              #address-cells =3D <1>;
+> +              #size-cells =3D <0>;
+
+These need to be listed above.
+
+> +              compatible =3D "fsl,imx8mq-nwl-dsi";
+> +              reg =3D <0x30A00000 0x300>;
+> +              clocks =3D <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
+> +              clock-names =3D "core", "rx_esc", "tx_esc", "phy_ref";
+> +              interrupts =3D <0 34 4>;
+> +              mux-controls =3D <&mux 0>;
+> +              power-domains =3D <&pgc_mipi>;
+> +              resets =3D <&src 0>, <&src 1>, <&src 2>, <&src 3>;
+> +              reset-names =3D "byte", "dpi", "esc", "pclk";
+> +              phys =3D <&dphy>;
+> +              phy-names =3D "dphy";
+> +
+> +              panel@0 {
+> +                      compatible =3D "rocktech,jh057n00900";
+> +                      reg =3D <0>;
+> +                      port@0 {
+> +                           panel_in: endpoint {
+> +                                     remote-endpoint =3D <&mipi_dsi_out>=
+;
+> +                           };
+> +                      };
+> +              };
+> +
+> +              ports {
+> +                    #address-cells =3D <1>;
+> +                    #size-cells =3D <0>;
+> +
+> +                    port@0 {
+> +                           reg =3D <0>;
+> +                           mipi_dsi_in: endpoint {
+> +                                        remote-endpoint =3D <&lcdif_mipi=
+_dsi>;
+> +                           };
+> +                    };
+> +                    port@1 {
+> +                           reg =3D <1>;
+> +                           mipi_dsi_out: endpoint {
+> +                                         remote-endpoint =3D <&panel_in>=
+;
+> +                           };
+> +                    };
+> +              };
+> +      };
+> --
+> 2.20.1
+>
