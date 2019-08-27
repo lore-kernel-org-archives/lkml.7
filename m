@@ -2,150 +2,96 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A3EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4779C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A688C2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741112184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d+hFDYAv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d+hFDYAv"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="KArX4Xqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfH0GXe (ORCPT
+        id S1728524AbfH0GXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:23:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59696 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfH0GXd (ORCPT
+        Tue, 27 Aug 2019 02:23:51 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:38493 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfH0GXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:23:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B67A060F38; Tue, 27 Aug 2019 06:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566887012;
-        bh=DWiUZ0h0oKq+88OUYVKweLryQ+oqXke10jLm3RzR10s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+hFDYAv4ew9GCxLPdp/AFrwCNQUN6HIaZCAciVhYLxPNXEZnHAcGUy/3U29hk4wG
-         56qXsrGEql38MXde5WS2z9rAX7PoAn875H495k2CrXbwQz4ryy8ze6ovuqEiHJgyz3
-         p+SIb9+iTdCzlw58kBRGRQm6NV7qGC+9bOZ6Cwco=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC54760E5A;
-        Tue, 27 Aug 2019 06:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566887012;
-        bh=DWiUZ0h0oKq+88OUYVKweLryQ+oqXke10jLm3RzR10s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+hFDYAv4ew9GCxLPdp/AFrwCNQUN6HIaZCAciVhYLxPNXEZnHAcGUy/3U29hk4wG
-         56qXsrGEql38MXde5WS2z9rAX7PoAn875H495k2CrXbwQz4ryy8ze6ovuqEiHJgyz3
-         p+SIb9+iTdCzlw58kBRGRQm6NV7qGC+9bOZ6Cwco=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AC54760E5A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH v7 3/3] media: venus: Update to bitrate based clock scaling
-Date:   Tue, 27 Aug 2019 11:53:06 +0530
-Message-Id: <1566886986-10329-4-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566886986-10329-1-git-send-email-amasule@codeaurora.org>
-References: <1566886986-10329-1-git-send-email-amasule@codeaurora.org>
+        Tue, 27 Aug 2019 02:23:51 -0400
+Received: by mail-qk1-f177.google.com with SMTP id u190so16160668qkh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 23:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0/hxD6Hr7ptf3a0nm0wbNiKDwCnbC2CQ3RkjlONhTig=;
+        b=KArX4XqmEObsHnaBm4GjJXAaKYPwjDKAogelYpBiv9dFe6ZsED4vHJZhoudhagRq1W
+         5r8RB28TQGkYfHmdt6aypcTB6kGnkxs9+5gsCwlowKkBHWVzytbsTCdfOsBOh8FpJT4f
+         rh4pKTU95hwocUpqRKimsgOR3E9G+xBFPhlB3iezYeBu/UUO+CG7ODlXN5iESTcbLA0A
+         /QUuUdbjBhrRTXqKkdyy7ndpbSbV1YJyzrfA8ELJPe8zfv7BqKktY+EDY9tdoWHfQYjC
+         2wcyoOrtbMiP23RnT+T2kIxtSIdgd7H+fZm+oscWtJ5ECPFMfY/YSJm/tHiLoemwmppJ
+         dToQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0/hxD6Hr7ptf3a0nm0wbNiKDwCnbC2CQ3RkjlONhTig=;
+        b=WVVJVVh4Q1/44F0PLmhuZprg4MIcG0NCxXsDvhO0FMfcEjSgyN6NFRHoJAXHwootLs
+         T0wqp5mEQYPmc2sm42ZQzj7i7lpAQ4/VaNlLBDUWDEUYHZI34MVaa7gPTAgxbC5oMFdf
+         btnYsnjZUQIzWT8wAC0lfsAE8KbcdnyCHYABmPEC7p/qE6ak7/KLB2XpxPR3ZPufkizI
+         /GB1gy1hIWBuMjj/1z8oa5ULfV3M6S5X07o7/3zxLVGUT9qOymVjSNyEEt9LTi+AjXzs
+         ZCpqxP1hdNnheprp3nEIya4jBTZcJALYk3j7x/XEz0dwecUQRD5X+o2e0bk9y5G1UTxJ
+         Mg3g==
+X-Gm-Message-State: APjAAAWvd4vu9UXt7LWi2G5O2jnd9CmSyMjkEjUNpfJoHAkqblG6Bwap
+        DSFdkEGrvuB2YD6sUjI+vQyeSVsKZ+LF7r+9QpH//w==
+X-Google-Smtp-Source: APXvYqym5CmRL8vHwAZrqeyLTETMdDqFYUYLDO9U8NmrNR74AAMhTnAm/keGm3idiJ+yi5+UHPn6k+e3XVxzLhF0Mxc=
+X-Received: by 2002:a37:4ed3:: with SMTP id c202mr20171340qkb.457.1566887030069;
+ Mon, 26 Aug 2019 23:23:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAD8Lp47V5G+3UfEzt9wNRr7U-RdLAdCO7JFLQ+QF1JbkuhCcPg@mail.gmail.com>
+In-Reply-To: <CAD8Lp47V5G+3UfEzt9wNRr7U-RdLAdCO7JFLQ+QF1JbkuhCcPg@mail.gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Tue, 27 Aug 2019 14:23:39 +0800
+Message-ID: <CAD8Lp44Z8ZsPoxTrsXkvRg80FNyMfGH7jN-pdWjjVTdHWXcB5A@mail.gmail.com>
+Subject: Re: Early EFI-related boot freeze in parse_setup_data()
+To:     linux-efi@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>, x86@kernel.org
+Cc:     Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduced clock scaling using bitrate, preavious
-calculations consider only the cycles per mb.
-Also, clock scaling is now triggered before every
-buffer being queued to the device. This helps in
-deciding precise clock cycles required.
+On Fri, Aug 16, 2019 at 2:14 PM Daniel Drake <drake@endlessm.com> wrote:
+> Anyway, the system freeze occurs in parse_setup_data(), specifically:
+>
+>         data = early_memremap(pa_data, sizeof(*data));
+>         data_len = data->len + sizeof(struct setup_data);
+>
+> Dereferencing data->len causes the system to hang. I presume it
+> triggers an exception handler due to some kind of invalid memory
+> access.
+>
+> By returning early in that function, boot continues basically fine. So
+> I could then log the details: pa_data has value 0x892bb018 and
+> early_memremap returns address 0xffffffffff200018. Accessing just a
+> single byte at that address causes the system hang.
 
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
----
- drivers/media/platform/qcom/venus/helpers.c | 33 ++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+I noticed a complaint about NX in the logs, right where it does the
+early_memremap of this data (which is now at address 0x893c0018):
 
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 4ed630b..8fee0ef 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -516,17 +516,26 @@ static int scale_clocks(struct venus_inst *inst)
- 	return 0;
- }
- 
--static unsigned long calculate_vpp_freq(struct venus_inst *inst)
-+static unsigned long calculate_inst_freq(struct venus_inst *inst,
-+					 unsigned long filled_len)
- {
--	unsigned long vpp_freq = 0;
-+	unsigned long vpp_freq = 0, vsp_freq = 0;
-+	u64 fps = inst->fps;
- 	u32 mbs_per_sec;
- 
--	mbs_per_sec = load_per_instance(inst);
-+	mbs_per_sec = load_per_instance(inst) / inst->fps;
- 	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
- 	/* 21 / 20 is overhead factor */
- 	vpp_freq += vpp_freq / 20;
-+	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
- 
--	return vpp_freq;
-+	/* 10 / 7 is overhead factor */
-+	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
-+		vsp_freq += (inst->controls.enc.bitrate * 10) / 7;
-+	else
-+		vsp_freq += ((fps * filled_len * 8) * 10) / 7;
-+
-+	return max(vpp_freq, vsp_freq);
- }
- 
- static int scale_clocks_v4(struct venus_inst *inst)
-@@ -534,12 +543,24 @@ static int scale_clocks_v4(struct venus_inst *inst)
- 	struct venus_core *core = inst->core;
- 	const struct freq_tbl *table = core->res->freq_tbl;
- 	unsigned int num_rows = core->res->freq_tbl_size;
-+	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
- 	struct device *dev = core->dev;
- 	unsigned int i;
- 	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
-+	unsigned long filled_len = 0;
-+	struct venus_buffer *buf, *n;
-+	struct vb2_buffer *vb;
- 	int ret;
- 
--	freq = calculate_vpp_freq(inst);
-+	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
-+		vb = &buf->vb.vb2_buf;
-+		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
-+	}
-+
-+	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
-+		return 0;
-+
-+	freq = calculate_inst_freq(inst, filled_len);
- 	inst->clk_data.freq = freq;
- 
- 	mutex_lock(&core->lock);
-@@ -701,6 +722,8 @@ void venus_helper_get_ts_metadata(struct venus_inst *inst, u64 timestamp_us,
- 
- 		if (inst->session_type == VIDC_SESSION_TYPE_DEC)
- 			put_ts_metadata(inst, vbuf);
-+
-+		venus_helper_load_scale_clocks(inst);
- 	} else if (type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		if (inst->session_type == VIDC_SESSION_TYPE_ENC)
- 			fdata.buffer_type = HFI_BUFFER_OUTPUT;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ Notice: NX (Execute Disable) protection missing in CPU!
+ e820: update [mem 0x893c0018-0x893cec57] usable ==> usable
+ e820: update [mem 0x893c0018-0x893cec57] usable ==> usable
+ e820: update [mem 0x893b3018-0x893bf057] usable ==> usable
+ e820: update [mem 0x893b3018-0x893bf057] usable ==> usable
 
+Indeed, in the BIOS setup menu, "NX Mode" was Disabled.
+Setting it to Enabled avoids the hang and Linux boots as normal. Weird!
+
+Daniel
