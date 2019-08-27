@@ -2,138 +2,145 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A39C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3D5C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB202206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7627B214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="B3p8egJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfH0OBA (ORCPT
+        id S1729691AbfH0OBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:01:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39706 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfH0OA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:00:59 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 85F9A81F19;
-        Tue, 27 Aug 2019 14:00:59 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E794F60BF7;
-        Tue, 27 Aug 2019 14:00:56 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 27 Aug 2019 16:00:58 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 16:00:55 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sebastian Mayr <me@sam.st>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Safonov <dsafonov@virtuozzo.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: get_unmapped_area && in_ia32_syscall (Was: [PATCH] uprobes/x86: fix
- detection of 32-bit user mode)
-Message-ID: <20190827140055.GA6291@redhat.com>
-References: <20190728152617.7308-1-me@sam.st>
- <alpine.DEB.2.21.1908232343470.1939@nanos.tec.linutronix.de>
+        Tue, 27 Aug 2019 10:01:32 -0400
+Received: from mail-eopbgr760089.outbound.protection.outlook.com ([40.107.76.89]:13891
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726522AbfH0OBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:01:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rqrj1iCIL1StmuBOjsl/CN6/mLYvm0qwZmyBgVvWOtmYWVAT7nsFRgDPkGQkTJKpxFgGDeWLTyoChqn+ME/e1j/ngGKnJJHiDTeg9BmHKXa4lS6rfqXjnxWIdoXmDSXV3Ah232M7LO6+r5D/0SivRDCRtcQk64L3t1ObtYn8PelDF+C02778aIS5Rm0qb7+XYit6rJLWEFi5VeGj+bSRUTQiNgX5nqUogMktEohKMIQHKXMVZyWkFiwMTrmCy7sF8k3knz72s43MqMiRoNX5J01hhWAp3con6P9EN25VnkNbaCl/beld/SJrlpZ/fda34Gum0hVysllfgLauJ9GKIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3FpO9otzaXcT3b8Blfu03PzLDpcrB5CsTj2qQZK3xxI=;
+ b=NpUclHXZH5ZaZkgjxGqfAciOnabbLZNygoQnIGd5ImXvck9bpDPoeLhMMTIve5R951KWXUYZR0evX80X+q7H0H31I+WKUfLfrR9UtmiLDUCUns8q/B3JEhCLcbH2kTaXoWnMxGJ6A5PQ7EoCxSv3ZMEmBpTOznrpJXybgYeP3m/eCFyeurto0pr3mvNnqLQNG0ggZ8sPmh0LukxtdiKxbBcjLGwaE8ympaIfkKj6PQwod17XDS7CGo+M7S20+4AfgXDy+gUwspdJxk5d8KgqtzfE4B02Wsv30TM7zBlOa/hUs85ajZ0E5PxIPayV+0ShgG0GvpUnZtNAjnzkQI3Klg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3FpO9otzaXcT3b8Blfu03PzLDpcrB5CsTj2qQZK3xxI=;
+ b=B3p8egJ6AM4XxkT6v9EFtyFkNznyg0HnFNv2lHwqznkIZPb37ammMKOxDtlBde1XoTWLtLpgXgkno1cLUmtrzk2X0fQYc0SaZQVgs7+JxFSWq/GoF0Qn3hB51qQHEnIrSk9N1hycb5X6Vd+/pyzw0SDPuxIS+I7iTteslnDPnvw=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB2548.namprd12.prod.outlook.com (10.172.120.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 14:01:25 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2199.021; Tue, 27 Aug
+ 2019 14:01:25 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Koo, Anthony" <Anthony.Koo@amd.com>,
+        "Othman, Ahmad" <Ahmad.Othman@amd.com>,
+        "Bernstein, Eric" <Eric.Bernstein@amd.com>,
+        "Cyr, Aric" <Aric.Cyr@amd.com>,
+        "alvin.lee3@amd.com" <alvin.lee3@amd.com>,
+        "Tatla, Harmanprit" <Harmanprit.Tatla@amd.com>
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] drm/amd/display: remove unused function
+ setFieldWithMask
+Thread-Topic: [PATCH 2/3] drm/amd/display: remove unused function
+ setFieldWithMask
+Thread-Index: AQHVXKZr8rbdd/0oU0eIgB1sE0Ruk6cPBoMA
+Date:   Tue, 27 Aug 2019 14:01:24 +0000
+Message-ID: <fb49a1d9-8405-4f88-6f9a-af863bd0f657@amd.com>
+References: <20190827070925.16080-1-yuehaibing@huawei.com>
+In-Reply-To: <20190827070925.16080-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.250]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: YTXPR0101CA0031.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00::44) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d3fe0bb5-76af-4305-00b8-08d72af70c2c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB2548;
+x-ms-traffictypediagnostic: CY4PR1201MB2548:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB2548B15632DB2E5127B118C18CA00@CY4PR1201MB2548.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:133;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(39860400002)(366004)(136003)(199004)(189003)(71190400001)(478600001)(53936002)(65806001)(71200400001)(66066001)(65956001)(31686004)(81156014)(81166006)(8676002)(5660300002)(6512007)(66946007)(6116002)(66556008)(66446008)(36756003)(8936002)(3846002)(6486002)(6506007)(6436002)(64756008)(186003)(52116002)(2501003)(19627235002)(31696002)(2906002)(386003)(6636002)(486006)(66476007)(6246003)(2201001)(2616005)(26005)(25786009)(476003)(110136005)(102836004)(446003)(14454004)(4326008)(99286004)(11346002)(54906003)(305945005)(229853002)(76176011)(256004)(316002)(58126008)(53546011)(7736002)(145543001)(145603002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2548;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4GUjn+sP0zfbw4CUk/Ie6gvpmHBx0WRwtDC+yz5lfvo5lSccWsxfKZsNoKOSNEVgxKhrjw3EZVYlAYHo/Kxea2BG+biJc0AFzEePbNhbm67DEwl6KS5eYgacf1uPlv1/OfQqK9GKgy5VNoJchp3l+BKCe3YjVw1W85651dv83AlzBckiV+AtMD0QtbLgqt0/IgIlP9bXzZKmWj4BShz4CG5dLXC+tGJDa94hzmhO9j3mqTbe9izkzUNNFe7AIG0wAiHjmhoG2fQAXQTnkaHD5WWSXs/eoySbRtYuC+/96smZ5vh4NNk0Jm5cYWER8TEfdtefgv+AsnSGWxSIAhi/RoUsQ8wgKRsmMxPgJIlqdMIknTakp6aZdf1hEofLzGAwT7ddoZ0+XcSfST3wmHO0wlV4MvP7IJ+iE1OIlNDXZJs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8B18C0D47B26414C958DE53BABAACDFA@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908232343470.1939@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 27 Aug 2019 14:00:59 +0000 (UTC)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3fe0bb5-76af-4305-00b8-08d72af70c2c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 14:01:24.8432
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pqcuPiZPCLtQSRO00aqx/bThYpYhOaFeBXcDp0DOKfacJN6Z/vaj7pXhyh+4AIAd+ZuDnxT4mkK+w/GsAd0goQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2548
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for delay, vacation.
-
-On 08/24, Thomas Gleixner wrote:
->
-> And sadly this was already mentioned here:
->
->    8faaed1b9f50 ("uprobes/x86: Introduce sizeof_long(), cleanup adjust_ret_addr() and arch_uretprobe_hijack_return_addr()")
-
-Yes, and I even posted a similar fix but forgot to send it officially ...
-
-Thanks Sebastian! I am sure it was not easy to debug this problem.
-
-
-But to remind, there is another problem with in_ia32_syscall() && uprobes.
-
-get_unmapped_area() paths use in_ia32_syscall() and this is wrong in case
-when the caller is xol_add_vma(), in this case TS_COMPAT won't be set.
-
-Usually the addr = TASK_SIZE - PAGE_SIZE passed to get_unmapped_area() should
-work, mm->get_unmapped_area() won't be even called. But if this addr is already
-occupied get_area() can return addr > TASK_SIZE.
-
-Test-case:
-
-	#include <sys/mman.h>
-
-	void func(void)
-	{
-	}
-
-	int main(void)
-	{
-		// 0xffffd000 == TASK_SIZE - PAGE_SIZE
-		mmap((void*)0xffffd000, 4096, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS, -1,0);
-
-		func();
-
-		return 0;
-	}
-
-	$ cc -m32 -Wall -g T.c -o ./t
-	$ perf probe -x ./t func+1		# +1 to avoid push_emulate_op()
-	$ perf record -e probe_t:func -aR ./t
-
-perf-record "hangs" because ./t endlessly restarts the probed insn while
-get_xol_area() can't succeed.
-
-I verified that the "patch" below fixes the problem, any idea how to fix
-it properly?
-
-Oleg.
-
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1387,6 +1387,8 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
- 		set_bit(MMF_RECALC_UPROBES, &vma->vm_mm->flags);
- }
- 
-+#include <asm/mmu_context.h>
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1402,9 +1404,13 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
-+		if(!is_64bit_mm(mm))
-+			current_thread_info()->status |= TS_COMPAT;
- 		/* Try to map as high as possible, this is only a hint. */
- 		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
- 						PAGE_SIZE, 0, 0);
-+		if(!is_64bit_mm(mm))
-+			current_thread_info()->status &= ~TS_COMPAT;;
- 		if (area->vaddr & ~PAGE_MASK) {
- 			ret = area->vaddr;
- 			goto fail;
-
-
+T24gMjAxOS0wOC0yNyAzOjA5IGEubS4sIFl1ZUhhaWJpbmcgd3JvdGU6DQo+IEFmdGVyIGNvbW1p
+dCBhOWY1NGNlM2M2MDMgKCJkcm0vYW1kL2Rpc3BsYXk6IFJlZmFjdG9yaW5nIFZURU0iKSwNCj4g
+dGhlcmUgaXMgbm8gY2FsbGVyIGluIHRyZWUuDQo+IA0KPiBSZXBvcnRlZC1ieTogSHVsayBSb2Jv
+dCA8aHVsa2NpQGh1YXdlaS5jb20+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJp
+bmdAaHVhd2VpLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IEhhcnJ5IFdlbnRsYW5kIDxoYXJyeS53ZW50
+bGFuZEBhbWQuY29tPg0KDQpIYXJyeQ0KDQo+IC0tLQ0KPiAgLi4uL2RybS9hbWQvZGlzcGxheS9t
+b2R1bGVzL2luZm9fcGFja2V0L2luZm9fcGFja2V0LmMgfCAxOSAtLS0tLS0tLS0tLS0tLS0tLS0t
+DQo+ICAxIGZpbGUgY2hhbmdlZCwgMTkgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L21vZHVsZXMvaW5mb19wYWNrZXQvaW5mb19wYWNr
+ZXQuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9tb2R1bGVzL2luZm9fcGFja2V0L2lu
+Zm9fcGFja2V0LmMNCj4gaW5kZXggNWY0Yjk4ZC4uZDg4NWQ2NCAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L21vZHVsZXMvaW5mb19wYWNrZXQvaW5mb19wYWNrZXQu
+Yw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvbW9kdWxlcy9pbmZvX3BhY2tl
+dC9pbmZvX3BhY2tldC5jDQo+IEBAIC0xMTQsMjUgKzExNCw2IEBAIGVudW0gQ29sb3JpbWV0cnlZ
+Q0NEUCB7DQo+ICAJQ29sb3JpbWV0cnlZQ0NfRFBfSVRVMjAyMFlDYkNyICA9IDcsDQo+ICB9Ow0K
+PiAgDQo+IC12b2lkIHNldEZpZWxkV2l0aE1hc2sodW5zaWduZWQgY2hhciAqZGVzdCwgdW5zaWdu
+ZWQgaW50IG1hc2ssIHVuc2lnbmVkIGludCB2YWx1ZSkNCj4gLXsNCj4gLQl1bnNpZ25lZCBpbnQg
+c2hpZnQgPSAwOw0KPiAtDQo+IC0JaWYgKCFtYXNrIHx8ICFkZXN0KQ0KPiAtCQlyZXR1cm47DQo+
+IC0NCj4gLQl3aGlsZSAoISgobWFzayA+PiBzaGlmdCkgJiAxKSkNCj4gLQkJc2hpZnQrKzsNCj4g
+LQ0KPiAtCS8vcmVzZXQNCj4gLQkqZGVzdCA9ICpkZXN0ICYgfm1hc2s7DQo+IC0JLy9zZXQNCj4g
+LQkvL2RvbnQgbGV0IHZhbHVlIHNwYW4gcGFzdCBtYXNrDQo+IC0JdmFsdWUgPSB2YWx1ZSAmICht
+YXNrID4+IHNoaWZ0KTsNCj4gLQkvL2luc2VydCB2YWx1ZQ0KPiAtCSpkZXN0ID0gKmRlc3QgfCAo
+dmFsdWUgPDwgc2hpZnQpOw0KPiAtfQ0KPiAtDQo+ICB2b2lkIG1vZF9idWlsZF92c2NfaW5mb3Bh
+Y2tldChjb25zdCBzdHJ1Y3QgZGNfc3RyZWFtX3N0YXRlICpzdHJlYW0sDQo+ICAJCXN0cnVjdCBk
+Y19pbmZvX3BhY2tldCAqaW5mb19wYWNrZXQpDQo+ICB7DQo+IA0K
