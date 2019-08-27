@@ -2,161 +2,101 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F2C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFEC20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B5A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566892528;
+	bh=aimADWB5OgIOc5sLzaEkIzomgJn1WltzuzYQ57rN0PM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XCFPlmQVN9zXHfoew1Hp6jSrfsMC8OerNKJObYvRc5fCKbgeowwFt/CHWg9I8GYTW
+	 4twyztaZo2BpW+3kUmX91vkiYSLs2jxr82Itn3n2cNGL5rN+xOk7LnjkXWwEqwu9w3
+	 Oo4QosRXR2wX1oigNLHq9kUxmUZthY9Ex+no2VgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbfH0HzY (ORCPT
+        id S1730342AbfH0Hz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:55:24 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:51731 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730303AbfH0HzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:20 -0400
-Received: from webmail.promanet.nl (edge2.prtnl [192.168.1.170])
-        by sparta (Postfix) with ESMTP id EE15344A009E;
-        Tue, 27 Aug 2019 09:57:15 +0200 (CEST)
+        Tue, 27 Aug 2019 03:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728984AbfH0HzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81BD0206BF;
+        Tue, 27 Aug 2019 07:55:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892524;
+        bh=aimADWB5OgIOc5sLzaEkIzomgJn1WltzuzYQ57rN0PM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jf5NekpAIGTxH5B/jRQyNUA/vGm4OhFP7ofQLvXhLyAuLJRPGTCWasFzaGimXsnbT
+         6BymIpLz5Q91sgBIGs4Yvz4oSe6Id4X6nHtY0o97kntVJKTGMI4KvlByb3GV2+sllt
+         cXe93HPSHx4v3gCmoDpWoPw2weKN442egVlK8WUg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chen Yi <yiche@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 23/98] netfilter: ipset: Actually allow destination MAC address for hash:ip,mac sets too
+Date:   Tue, 27 Aug 2019 09:50:02 +0200
+Message-Id: <20190827072719.489972268@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
+References: <20190827072718.142728620@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 27 Aug 2019 09:55:18 +0200
-From:   robin <robin@protonic.nl>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] input: keyboard: snvs_pwrkey: Send press and release
- event for i.MX6 S,DL and Q
-In-Reply-To: <VE1PR04MB6638754916357F551502102589A00@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190823123002.10448-1-robin@protonic.nl>
- <VE1PR04MB6638754916357F551502102589A00@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Message-ID: <83c033a20f5f2e3ce15525a1efd072bb@protonic.nl>
-X-Sender: robin@protonic.nl
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-27 08:17, Robin Gong wrote:
-> On Fri, Aug 23, 2019 at 02:30:02PM +0200, Robin van der Gracht wrote:>
->> The older generation i.MX6 processors send a powerdown request 
->> interrupt
->> if the powerkey is released before a hard shutdown (5 second press). 
->> This
->> should allow software to bring down the SoC safely.
->> 
->> For this driver to work as a regular powerkey with the older SoCs, we 
->> need to
->> send a keypress AND release when we get the powerdown request 
->> interrupt.
-> Please clarify here more clearly that because there is NO press
-> interrupt triggered
-> but only release interrupt on elder i.mx6 processors and that HW issue
-> fixed from
-> i.mx6sx.
+[ Upstream commit b89d15480d0cacacae1a0fe0b3da01b529f2914f ]
 
-ACK
+In commit 8cc4ccf58379 ("ipset: Allow matching on destination MAC address
+for mac and ipmac sets"), ipset.git commit 1543514c46a7, I removed the
+KADT check that prevents matching on destination MAC addresses for
+hash:mac sets, but forgot to remove the same check for hash:ip,mac set.
 
->> 
->> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
->> ---
->>  arch/arm/boot/dts/imx6qdl.dtsi       |  2 +-
->>  arch/arm/boot/dts/imx6sll.dtsi       |  2 +-
->>  arch/arm/boot/dts/imx6sx.dtsi        |  2 +-
->>  arch/arm/boot/dts/imx6ul.dtsi        |  2 +-
->>  arch/arm/boot/dts/imx7s.dtsi         |  2 +-
-> As Shawn talked, please keep the original "fsl,sec-v4.0-pwrkey", just 
-> add
-> 'imx6qdl-snvs-pwrkey' for elder i.mx6 processor i.mx6q/dl/sl, thus no 
-> need
-> to touch other newer processor's dts.
+Drop this check: functionality is now commented in man pages and there's
+no reason to restrict to source MAC address matching anymore.
 
-ACK
+Reported-by: Chen Yi <yiche@redhat.com>
+Fixes: 8cc4ccf58379 ("ipset: Allow matching on destination MAC address for mac and ipmac sets")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/ipset/ip_set_hash_ipmac.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> 
->> 
->>  static void imx_imx_snvs_check_for_events(struct timer_list *t) @@ 
->> -67,13
->> +85,23 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
->> *dev_id)  {
->>  	struct platform_device *pdev = dev_id;
->>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
->> +	struct input_dev *input = pdata->input;
->>  	u32 lp_status;
->> 
->> -	pm_wakeup_event(pdata->input->dev.parent, 0);
->> +	pm_wakeup_event(input->dev.parent, 0);
->> 
->>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
->> -	if (lp_status & SNVS_LPSR_SPO)
->> -		mod_timer(&pdata->check_timer, jiffies +
->> msecs_to_jiffies(DEBOUNCE_TIME));
->> +	if (lp_status & SNVS_LPSR_SPO) {
->> +		if (pdata->hwtype == IMX6QDL_SNVS) {
->> +			input_report_key(input, pdata->keycode, 1);
->> +			input_report_key(input, pdata->keycode, 0);
->> +			input_sync(input);
->> +			pm_relax(input->dev.parent);
-> Could you move the above input event report steps into
-> imx_imx_snvs_check_for_events()
-> as before? That make code better to understand and less operation in 
-> ISR.
+diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
+index fd87de3ed55b3..75c21c8b76514 100644
+--- a/net/netfilter/ipset/ip_set_hash_ipmac.c
++++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
+@@ -95,10 +95,6 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
+ 	struct hash_ipmac4_elem e = { .ip = 0, { .foo[0] = 0, .foo[1] = 0 } };
+ 	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+ 
+-	 /* MAC can be src only */
+-	if (!(opt->flags & IPSET_DIM_TWO_SRC))
+-		return 0;
+-
+ 	if (skb_mac_header(skb) < skb->head ||
+ 	    (skb_mac_header(skb) + ETH_HLEN) > skb->data)
+ 		return -EINVAL;
+-- 
+2.20.1
 
-I placed it here to avoid the unnessesairy debounce delay (since thats 
-already
-implemented in hardware).
 
-I do agree with your arguments so I'll move emitting the events to
-imx_imx_snvs_check_for_events().
 
-Is it ok if I keep the conditional, but instead of emitting the events,
-schedule imx_imx_snvs_check_for_events() immidiatly to avoid the 
-debounce,
-or should I choose clarity over the 30 ms delay?
-
->> +		} else {
->> +			mod_timer(&pdata->check_timer,
->> +				jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
->> +		}
->> +	}
->> 
->>  	/* clear SPO status */
->>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO); @@
->> -88,11 +116,24 @@ static void imx_snvs_pwrkey_act(void *pdata)
->>  	del_timer_sync(&pd->check_timer);
->>  }
->> 
->> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
->> +	{
->> +		.compatible = "fsl,imx6sx-sec-v4.0-pwrkey",
->> +		.data = &imx_snvs_devtype[IMX6SX_SNVS],
->> +	}, {
->> +		.compatible = "fsl,imx6qdl-sec-v4.0-pwrkey",
->> +		.data = &imx_snvs_devtype[IMX6QDL_SNVS],
-> No ' IMX6QDL_SNVS ' defined in your patch or am I missing?
-
-I added an enum 'imx_snvs_hwtype' that defines both IMX6SX_SNVS and 
-IMX6QDL_SNVS.
-
->> +	},
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
->> --
->> 2.20.1
