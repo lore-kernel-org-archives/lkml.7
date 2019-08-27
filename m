@@ -2,27 +2,27 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DC3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B46DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB9D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3232070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbfH0UVV (ORCPT
+        id S1731424AbfH0UVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:21:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47008 "EHLO mx1.suse.de"
+        Tue, 27 Aug 2019 16:21:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47094 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731237AbfH0UVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731178AbfH0UVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 27 Aug 2019 16:21:21 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0A9AB0E5;
-        Tue, 27 Aug 2019 20:21:18 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id A53C3B61F;
+        Tue, 27 Aug 2019 20:21:19 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -48,10 +48,12 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         David Hildenbrand <david@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 0/4] Disable compat cruft on ppc64le
-Date:   Tue, 27 Aug 2019 22:21:05 +0200
-Message-Id: <cover.1566936688.git.msuchanek@suse.de>
+Subject: [PATCH 1/4] fs: always build llseek.
+Date:   Tue, 27 Aug 2019 22:21:06 +0200
+Message-Id: <80b1955b86fb81e4642881d498068b5a540ef029.1566936688.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <cover.1566936688.git.msuchanek@suse.de>
+References: <cover.1566936688.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,44 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With endian switch disabled by default the ppc64le compat supports
-ppc32le only which is something next to nobody has binaries for.
+64bit !COMPAT does not build because the llseek syscall is in the tables.
 
-Less code means less bugs so drop the compat stuff.
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ fs/read_write.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-I am not particularly sure about the best way to resolve the llseek
-situation. I don't see anything in the syscal tables making it
-32bit-only so I suppose it should be available on 64bit as well.
-
-This is tested on ppc64le top of
-
-https://patchwork.ozlabs.org/cover/1141078/
-https://patchwork.ozlabs.org/cover/1153556/
-https://patchwork.ozlabs.org/cover/1150815/
-
-Thanks
-
-Michal
-
-Michal Suchanek (4):
-  fs: always build llseek.
-  powerpc: move common register copy functions from signal_32.c to
-    signal.c
-  powerpc/64: make buildable without CONFIG_COMPAT
-  powerpc/64: Disable COMPAT if littleendian.
-
- arch/powerpc/Kconfig               |   2 +-
- arch/powerpc/include/asm/syscall.h |   2 +
- arch/powerpc/kernel/Makefile       |  15 ++-
- arch/powerpc/kernel/entry_64.S     |   2 +
- arch/powerpc/kernel/signal.c       | 146 ++++++++++++++++++++++++++++-
- arch/powerpc/kernel/signal_32.c    | 140 ---------------------------
- arch/powerpc/kernel/syscall_64.c   |   5 +-
- arch/powerpc/kernel/vdso.c         |   4 +-
- arch/powerpc/perf/callchain.c      |  14 ++-
- fs/read_write.c                    |   2 -
- 10 files changed, 177 insertions(+), 155 deletions(-)
-
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 5bbf587f5bc1..9db56931eb26 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -331,7 +331,6 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
+ }
+ #endif
+ 
+-#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
+ SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
+ 		unsigned long, offset_low, loff_t __user *, result,
+ 		unsigned int, whence)
+@@ -360,7 +359,6 @@ SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
+ 	fdput_pos(f);
+ 	return retval;
+ }
+-#endif
+ 
+ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t count)
+ {
 -- 
 2.22.0
 
