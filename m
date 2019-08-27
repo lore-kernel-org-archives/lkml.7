@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2F6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568A8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B27217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EC4206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892831;
-	bh=WgDy+uVCBdzTsaGgiMEMgF5W1wpMhxq1sBHX9lo91jo=;
+	s=default; t=1566892836;
+	bh=/1ggGKG6R9qFZgUoKcGccH4o7kaImZSKokgM6jrCZHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+zP4RexlRrasgplAO0JwyDoQbKo1W1AvkpBjEEhLBAG/rQM0Eeu1frMTYT8hTh2R
-	 LL/6nU8sPdwx7JnfYp6pyAS4/yxZCBrQHOw5iEVyTMKxMfgt13hq3DuS8W1nazGlMT
-	 fLx5gjrTVXL+noPQCBtWkAE21Rike1cfijQ92FvQ=
+	b=Yj6ql0iC0q6oM8QRqN1sICK0vsbbs5Llmwijin3XguVXmAWQuNwvqZHhdjhsrKeEn
+	 Dfuh3C7YL5FKpVfNiZIF2HnAcxkGYvgN4VGMcPXMzmYEMvr83KiA+PYMzHkay7Vd4n
+	 tVIatt0zapUy19DInSXaLWejx1oAaqYSPWQ4EBOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbfH0IAa (ORCPT
+        id S1731535AbfH0IAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731449AbfH0IAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:00:24 -0400
+        id S1731510AbfH0IAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:00:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EE4920828;
-        Tue, 27 Aug 2019 08:00:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 851452186A;
+        Tue, 27 Aug 2019 08:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892823;
-        bh=WgDy+uVCBdzTsaGgiMEMgF5W1wpMhxq1sBHX9lo91jo=;
+        s=default; t=1566892832;
+        bh=/1ggGKG6R9qFZgUoKcGccH4o7kaImZSKokgM6jrCZHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxvcwaeRUdqmLYXciSIULonO9AE8XL5ZiUAJlBbhcmNPv8lB7MPVopcCaAw+CG992
-         J0OXwi71z+GTH1Ec8Sf0ZDWFQ3i9pYT/uhl81kIeWsl/2hzwFgnDpUPngya8sBNhS2
-         bVxBqagD8d5+rUpmu9ov5W77ytmBmjzCxML88A5g=
+        b=DR04/dyc128F273VOt/hmIDUcMgEOMOnPEnuJD18/Oyhjqz7QgpRezBzuccaU1dbA
+         xraObcOQlMZ3SBUftWuvxgehZeLkj/qn9s5el9j3GqXEPpT3ys7QgYxHcKdD7TUsNp
+         ewZmyRxQHukbRw7waQXujnAx2lVBL06W35+jrvNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 027/162] net: mvpp2: Dont check for 3 consecutive Idle frames for 10G links
-Date:   Tue, 27 Aug 2019 09:49:15 +0200
-Message-Id: <20190827072739.245673066@linuxfoundation.org>
+Subject: [PATCH 5.2 030/162] selftests/bpf: add another gso_segs access
+Date:   Tue, 27 Aug 2019 09:49:18 +0200
+Message-Id: <20190827072739.343508012@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,37 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bba18318e7d1d5c8b0bbafd65010a0cee3c65608 ]
+[ Upstream commit be69483bf4f3abaaca5d5ba460dbb50239463552 ]
 
-PPv2's XLGMAC can wait for 3 idle frames before triggering a link up
-event. This can cause the link to be stuck low when there's traffic on
-the interface, so disable this feature.
+Use BPF_REG_1 for source and destination of gso_segs read,
+to exercise "bpf: fix access to skb_shared_info->gso_segs" fix.
 
-Fixes: 4bb043262878 ("net: mvpp2: phylink support")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Suggested-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/bpf/verifier/ctx_skb.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 50ed1bdb632db..885529701de90 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4580,9 +4580,9 @@ static void mvpp2_xlg_config(struct mvpp2_port *port, unsigned int mode,
- 	else
- 		ctrl0 &= ~MVPP22_XLG_CTRL0_RX_FLOW_CTRL_EN;
- 
--	ctrl4 &= ~MVPP22_XLG_CTRL4_MACMODSELECT_GMAC;
--	ctrl4 |= MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC |
--		 MVPP22_XLG_CTRL4_EN_IDLE_CHECK;
-+	ctrl4 &= ~(MVPP22_XLG_CTRL4_MACMODSELECT_GMAC |
-+		   MVPP22_XLG_CTRL4_EN_IDLE_CHECK);
-+	ctrl4 |= MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC;
- 
- 	if (old_ctrl0 != ctrl0)
- 		writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
+diff --git a/tools/testing/selftests/bpf/verifier/ctx_skb.c b/tools/testing/selftests/bpf/verifier/ctx_skb.c
+index b0fda2877119c..d438193804b21 100644
+--- a/tools/testing/selftests/bpf/verifier/ctx_skb.c
++++ b/tools/testing/selftests/bpf/verifier/ctx_skb.c
+@@ -974,6 +974,17 @@
+ 	.result = ACCEPT,
+ 	.prog_type = BPF_PROG_TYPE_CGROUP_SKB,
+ },
++{
++	"read gso_segs from CGROUP_SKB",
++	.insns = {
++	BPF_LDX_MEM(BPF_W, BPF_REG_1, BPF_REG_1,
++		    offsetof(struct __sk_buff, gso_segs)),
++	BPF_MOV64_IMM(BPF_REG_0, 0),
++	BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.prog_type = BPF_PROG_TYPE_CGROUP_SKB,
++},
+ {
+ 	"write gso_segs from CGROUP_SKB",
+ 	.insns = {
 -- 
 2.20.1
 
