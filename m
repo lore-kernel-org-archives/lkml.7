@@ -2,196 +2,125 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B34C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42F2C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6D620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BACC2206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="Jy8rVNx2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIgfNMS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfH0MOH (ORCPT
+        id S1729523AbfH0MOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:14:07 -0400
-Received: from mail-io1-f47.google.com ([209.85.166.47]:40863 "EHLO
-        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfH0MOG (ORCPT
+        Tue, 27 Aug 2019 08:14:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41685 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729313AbfH0MOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:14:06 -0400
-Received: by mail-io1-f47.google.com with SMTP id t6so45738369ios.7
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:14:05 -0700 (PDT)
+        Tue, 27 Aug 2019 08:14:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so12603752pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:14:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=H0oh2nokjXdEAdHLvSc07df1Vwg+DF4MMz66Wx4tFtA=;
-        b=Jy8rVNx2TzxAfDy0auKWAphmlk/SpL5WXW81sWdEnur+pDRhIQHvwdUrRCo0wRU3rD
-         FEgOpvqQGVg10bxvm+hBqGyAYMaNazn+I4r666kaOCLHzF/8QGt9jxe0NzVRr4lCMsoG
-         H/95aFym6Y7+arOH3j1vBfc36D5BlvJ5fhZzs=
+        bh=4wcazYDkpL0duARs99jL9aMnOJv1Px99rhHjbxqeKAs=;
+        b=cIgfNMS9Y89X0ZTePhVRGhyzjprNxkg12d7CxOIay09vvWQ7pVobVStnxSO26gJvk1
+         S/MIaLSZTP/FjdrAvjSMT/AoNgVnfKrpnivkArmqpkkQHyNW8K60XuBDXLQCZBJO9Swd
+         9UApfN32eAlqF7F6IeEJeJ4e6X83cl82o7L93atoHWeyrSFIFn/3EWi+ZFAjHW2a93Xs
+         3TTRv0kz8QSOr/TKs9TEIl9KIZ4Y/2FS5HX+DVwbL96YoErvDA/9xS1QEu5jcFvDkMII
+         Ow2mykWpg05txO9FQ/potL4EJanVMLc9b9ACki9YjX0dqUHfitZM+n65CPiNfJ4KFqNt
+         VymA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H0oh2nokjXdEAdHLvSc07df1Vwg+DF4MMz66Wx4tFtA=;
-        b=tV+F6YC3Y13yQuQSQ0CEGwzRFivsN7DHux+t3Qsq/DIiIQRrUjWV5RHecIzeL1mwDm
-         ES7Tin9+nJTlnLXLxz26i8sSR3PdcPDabXwy95M0H7ht1CCBYbHBur2IhcL5yMbaryoE
-         /JaoaRsL3vUUrUtMEaHlHUborgkRvWiTvRfcXaU/WB7Ldj/3Ji/6S0Ai/rdT8/4rAcZM
-         Dwn7JcOGyWjjib5bdM42MOLRpmsK8Cdo0Bo1SorE2NSj6VpFQiHpvFO/wZTAstk3tzro
-         GVX4o56HoVhYyPGQaygKgRkZHNpLUF1CL4Rm4SU5Mc7vkozYy4RiJisUewo98eNhInwA
-         RArA==
-X-Gm-Message-State: APjAAAW12T/dn2RTmWoGUizv6OjF5SReePXy3iYK8MaTMIqAAExZhYGJ
-        1lI36uMkUM0e+xp3cw+4+dhJ3g==
-X-Google-Smtp-Source: APXvYqyWy4k7GbJREqoUvcHfn+Ju51hGtGCLquSKlQiF8TS6j+EOz9fMPyzuiwNuj7mJegedbd7mnA==
-X-Received: by 2002:a5d:9ec6:: with SMTP id a6mr23853869ioe.256.1566908045279;
-        Tue, 27 Aug 2019 05:14:05 -0700 (PDT)
-Received: from iscandar.digidescorp.com ([50.73.98.161])
-        by smtp.googlemail.com with ESMTPSA id q5sm13389061iot.5.2019.08.27.05.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 05:14:04 -0700 (PDT)
-From:   "Steven J. Magnani" <steve.magnani@digidescorp.com>
-X-Google-Original-From: "Steven J. Magnani" <steve@digidescorp.com>
-To:     Jan Kara <jack@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Steven J . Magnani" <steve@digidescorp.com>
-Subject: [PATCH v2] udf: augment UDF permissions on new inodes
-Date:   Tue, 27 Aug 2019 07:13:59 -0500
-Message-Id: <20190827121359.9954-1-steve@digidescorp.com>
+        bh=4wcazYDkpL0duARs99jL9aMnOJv1Px99rhHjbxqeKAs=;
+        b=C2w7D7Rg3aaMGALyuqDTPZT0G4ZllcL2FrAhytBQPHqkW9vVv/c1mn+6e3Fg2b9Is/
+         /7WcTC8EGATatPWrtPRmWUf+7zsYoOU8O/5/Ec5QjLbzVGCVsmneUdpSDQ17CIJmlkjD
+         /JFOjPDTgFAIZ8owQTjpxXZRY4zLaI4sgK8z7tVvQglhEkZKPP7e+iYXNfzbuKqcf6mJ
+         AP3eMLk5QWzLS0zXjoFrH3LTQNtVNAfCcJ9NoWkE/80H3Ylzqn2tA7gyj/TeZZWCC1hP
+         oaOYAJ0ud8us81CUS3PO1wJN69kWYNTy5PF/MFgMWOl37IgxPz5Hoi6GEVMYoYYq57DG
+         21Lw==
+X-Gm-Message-State: APjAAAVlGLlcf+jZe+Y5F9D6quqaadDyWXYBwans+kS2DIgBIKAmA0no
+        221yrKJFYqMmUyMMhY7Xe6+2xHYF22hGlQ==
+X-Google-Smtp-Source: APXvYqySuJMvr50yVLa9Q+m8dsjJ0euzRJ/Qgw6e9jts/v+QxNAsjYeS/M3MgQw692ynNmbMHDFf7Q==
+X-Received: by 2002:a17:90a:a00b:: with SMTP id q11mr2396118pjp.91.1566908061427;
+        Tue, 27 Aug 2019 05:14:21 -0700 (PDT)
+Received: from localhost ([49.248.54.193])
+        by smtp.gmail.com with ESMTPSA id d3sm3148595pjz.31.2019.08.27.05.14.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Aug 2019 05:14:20 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        sboyd@kernel.org, masneyb@onstation.org, marc.w.gonzalez@free.fr,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v2 00/15] thermal: qcom: tsens: Add interrupt support
+Date:   Tue, 27 Aug 2019 17:43:56 +0530
+Message-Id: <cover.1566907161.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Windows presents files created within Linux as read-only, even when
-permissions in Linux indicate the file should be writable.
+Changes since v1:
+- Collected reviews and acks
+- Addressed Stephen's review comments (hopefully I got them all).
+- Completely removed critical interrupt infrastructure from this series.
+  Will post that separately.
+- Fixed a bug in sign-extension of temperature.
+- Fixed DT bindings to use the name of the interrupt e.g. "uplow" and use
+  platform_get_irq_byname().
 
+Add interrupt support to TSENS. The first 6 patches are general fixes and
+cleanups to the driver before interrupt support is introduced.
 
-UDF defines a slightly different set of basic file permissions than Linux.
-Specifically, UDF has "delete" and "change attribute" permissions for each
-access class (user/group/other). Linux has no equivalents for these.
+This series has been developed against qcs404 and sdm845 and then tested on
+msm8916 and msm8974 (Thanks Brian). Testing on msm8998 would be appreciated since I don't
+have hardware handy.
 
-When the Linux UDF driver creates a file (or directory), no UDF delete or
-change attribute permissions are granted. The lack of delete permission
-appears to cause Windows to mark an item read-only when its permissions
-otherwise indicate that it should be read-write.
+Amit Kucheria (15):
+  drivers: thermal: tsens: Get rid of id field in tsens_sensor
+  drivers: thermal: tsens: Simplify code flow in tsens_probe
+  drivers: thermal: tsens: Add __func__ identifier to debug statements
+  drivers: thermal: tsens: Add debugfs support
+  arm: dts: msm8974: thermal: Add thermal zones for each sensor
+  arm64: dts: msm8916: thermal: Fixup HW ids for cpu sensors
+  dt: thermal: tsens: Document interrupt support in tsens driver
+  arm64: dts: sdm845: thermal: Add interrupt support
+  arm64: dts: msm8996: thermal: Add interrupt support
+  arm64: dts: msm8998: thermal: Add interrupt support
+  arm64: dts: qcs404: thermal: Add interrupt support
+  arm: dts: msm8974: thermal: Add interrupt support
+  arm64: dts: msm8916: thermal: Add interrupt support
+  drivers: thermal: tsens: Create function to return sign-extended
+    temperature
+  drivers: thermal: tsens: Add interrupt support
 
-Fix this by having UDF delete permissions track Linux write permissions.
-Also grant UDF change attribute permission to the owner when creating a
-new inode.
+ .../bindings/thermal/qcom-tsens.txt           |   8 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi           | 108 +++-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  26 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  60 +-
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |  82 +--
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  42 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  88 +--
+ drivers/thermal/qcom/tsens-8960.c             |   4 +-
+ drivers/thermal/qcom/tsens-common.c           | 528 ++++++++++++++++--
+ drivers/thermal/qcom/tsens-v0_1.c             |  11 +
+ drivers/thermal/qcom/tsens-v1.c               |  29 +
+ drivers/thermal/qcom/tsens-v2.c               |  13 +
+ drivers/thermal/qcom/tsens.c                  |  59 +-
+ drivers/thermal/qcom/tsens.h                  | 288 ++++++++--
+ 14 files changed, 1089 insertions(+), 257 deletions(-)
 
-Reported by: Ty Young
-Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
----
+-- 
+2.17.1
 
-Changes since rev 1:
-UDF delete permission tracks with Linux write permission instead
-of being unconditionally granted to the owner at inode creation
-
---- a/fs/udf/udf_i.h	2019-08-14 07:24:05.029508342 -0500
-+++ b/fs/udf/udf_i.h	2019-08-26 21:33:05.064410067 -0500
-@@ -38,6 +38,7 @@ struct udf_inode_info {
- 	__u32			i_next_alloc_block;
- 	__u32			i_next_alloc_goal;
- 	__u32			i_checkpoint;
-+	__u32			i_extraPerms;
- 	unsigned		i_alloc_type : 3;
- 	unsigned		i_efe : 1;	/* extendedFileEntry */
- 	unsigned		i_use : 1;	/* unallocSpaceEntry */
---- a/fs/udf/udfdecl.h	2019-08-26 21:38:12.138562583 -0500
-+++ b/fs/udf/udfdecl.h	2019-08-26 21:09:19.465000110 -0500
-@@ -178,6 +178,7 @@ extern int8_t udf_next_aext(struct inode
- 			    struct kernel_lb_addr *, uint32_t *, int);
- extern int8_t udf_current_aext(struct inode *, struct extent_position *,
- 			       struct kernel_lb_addr *, uint32_t *, int);
-+extern void udf_update_extra_perms(struct inode *inode, umode_t mode);
- 
- /* misc.c */
- extern struct buffer_head *udf_tgetblk(struct super_block *sb,
---- a/fs/udf/ialloc.c	2019-08-14 07:24:05.029508342 -0500
-+++ b/fs/udf/ialloc.c	2019-08-26 21:16:43.379449924 -0500
-@@ -125,6 +125,9 @@ struct inode *udf_new_inode(struct inode
- 	iinfo->i_lenAlloc = 0;
- 	iinfo->i_use = 0;
- 	iinfo->i_checkpoint = 1;
-+	iinfo->i_extraPerms = FE_PERM_U_CHATTR;
-+	udf_update_extra_perms(inode, mode);
-+
- 	if (UDF_QUERY_FLAG(inode->i_sb, UDF_FLAG_USE_AD_IN_ICB))
- 		iinfo->i_alloc_type = ICBTAG_FLAG_AD_IN_ICB;
- 	else if (UDF_QUERY_FLAG(inode->i_sb, UDF_FLAG_USE_SHORT_AD))
---- a/fs/udf/inode.c	2019-08-14 07:24:05.029508342 -0500
-+++ b/fs/udf/inode.c	2019-08-26 21:40:17.865649383 -0500
-@@ -45,6 +45,13 @@
- 
- #define EXTENT_MERGE_SIZE 5
- 
-+#define FE_MAPPED_PERMS	(FE_PERM_U_READ | FE_PERM_U_WRITE | FE_PERM_U_EXEC | \
-+			 FE_PERM_G_READ | FE_PERM_G_WRITE | FE_PERM_G_EXEC | \
-+			 FE_PERM_O_READ | FE_PERM_O_WRITE | FE_PERM_O_EXEC)
-+
-+#define FE_DELETE_PERMS	(FE_PERM_U_DELETE | FE_PERM_G_DELETE | \
-+			 FE_PERM_O_DELETE)
-+
- static umode_t udf_convert_permissions(struct fileEntry *);
- static int udf_update_inode(struct inode *, int);
- static int udf_sync_inode(struct inode *inode);
-@@ -1458,6 +1465,8 @@ reread:
- 	else
- 		inode->i_mode = udf_convert_permissions(fe);
- 	inode->i_mode &= ~sbi->s_umask;
-+	iinfo->i_extraPerms = le32_to_cpu(fe->permissions) & ~FE_MAPPED_PERMS;
-+
- 	read_unlock(&sbi->s_cred_lock);
- 
- 	link_count = le16_to_cpu(fe->fileLinkCount);
-@@ -1631,6 +1640,23 @@ static umode_t udf_convert_permissions(s
- 	return mode;
- }
- 
-+void udf_update_extra_perms(struct inode *inode, umode_t mode)
-+{
-+	struct udf_inode_info *iinfo = UDF_I(inode);
-+
-+	/*
-+	 * UDF 2.01 sec. 3.3.3.3 Note 2:
-+	 * In Unix, delete permission tracks write
-+	 */
-+	iinfo->i_extraPerms &= ~FE_DELETE_PERMS;
-+	if (mode & 0200)
-+		iinfo->i_extraPerms |= FE_PERM_U_DELETE;
-+	if (mode & 0020)
-+		iinfo->i_extraPerms |= FE_PERM_G_DELETE;
-+	if (mode & 0002)
-+		iinfo->i_extraPerms |= FE_PERM_O_DELETE;
-+}
-+
- int udf_write_inode(struct inode *inode, struct writeback_control *wbc)
- {
- 	return udf_update_inode(inode, wbc->sync_mode == WB_SYNC_ALL);
-@@ -1703,10 +1729,7 @@ static int udf_update_inode(struct inode
- 		   ((inode->i_mode & 0070) << 2) |
- 		   ((inode->i_mode & 0700) << 4);
- 
--	udfperms |= (le32_to_cpu(fe->permissions) &
--		    (FE_PERM_O_DELETE | FE_PERM_O_CHATTR |
--		     FE_PERM_G_DELETE | FE_PERM_G_CHATTR |
--		     FE_PERM_U_DELETE | FE_PERM_U_CHATTR));
-+	udfperms |= iinfo->i_extraPerms;
- 	fe->permissions = cpu_to_le32(udfperms);
- 
- 	if (S_ISDIR(inode->i_mode) && inode->i_nlink > 0)
---- a/fs/udf/file.c	2019-08-26 21:38:12.138562583 -0500
-+++ b/fs/udf/file.c	2019-08-26 21:12:44.664536308 -0500
-@@ -280,6 +280,9 @@ static int udf_setattr(struct dentry *de
- 			return error;
- 	}
- 
-+	if (attr->ia_valid & ATTR_MODE)
-+		udf_update_extra_perms(inode, attr->ia_mode);
-+
- 	setattr_copy(inode, attr);
- 	mark_inode_dirty(inode);
- 	return 0;
