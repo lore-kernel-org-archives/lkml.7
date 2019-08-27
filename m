@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33CBC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7624C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782142186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE2D206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892555;
-	bh=s5JGwI8J3HR14PBlAg/Anp4qqkNePYR7n3IVSRGcbKA=;
+	s=default; t=1566892557;
+	bh=1Eir6p1IJc3GuA2YZmW8Q30KvMsKNY/uEj1b4mVJxhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hBXaOQvkzlrtpFuYJB+MTDmxRDXZzrgR98/UK01kQkr3aRVEpHKO10aoOLx41ZLeV
-	 iPLjNvSuht8HatbT2JR2NGsdzy6W2kJpVFAHMvyNHruOgBNuodl/+1oI/sLZZWPpMu
-	 QkFIX0ci0xp2be7zzR0skwvbiN5uWQAD0ysa1xxk=
+	b=mBXmJZMzgnRAYoODFYimBAPTzQBTAo9pXG1GSAWYxQT1Sg/lW8Y7bUaDVkD6gsIZq
+	 ezjXir/kuuGLZPKw1WrroX1TB/WYYIjvzw0hpmGl7RUVvQ6Z1B3qL7dYmkA0qm+RQI
+	 y1GhO++zKyowwAs2xDMvHv9Y6S7AjFcmfrggBllc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfH0Hzy (ORCPT
+        id S1730455AbfH0Hz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730417AbfH0Hzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:55:47 -0400
+        id S1729882AbfH0Hzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6B42173E;
-        Tue, 27 Aug 2019 07:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 655B22173E;
+        Tue, 27 Aug 2019 07:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892547;
-        bh=s5JGwI8J3HR14PBlAg/Anp4qqkNePYR7n3IVSRGcbKA=;
+        s=default; t=1566892552;
+        bh=1Eir6p1IJc3GuA2YZmW8Q30KvMsKNY/uEj1b4mVJxhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ztG6idajiy67VglpGSPdl1pTBRAcFtlfHZPQ0MEnZ7WihzKErTmjB6SctCyZQyC30
-         u/h3VhgputTG8NbDpAi0xk/bIYa9Ro0gg6MPYHLQtTgVa4QEpdAnB8BlaU4Ir/0bWt
-         pHv35UCEE00TpEhwPVfJY/dE3rdKHozWolTtKflY=
+        b=0FrP7qabd6+3CSwL29xaJFXxaJ5V4F0va3FayK+3dDk8tTtW+El/U31lNd9mvUzC/
+         ju9YDVELrvxRmeBCmJ12vDU2v7/su1tpiO1nrnfPH3hKr2k+XQN8Nm3oPFH05cDtx9
+         mr3BPlOlLSzysHaNo6OO+OeIlwVJzLthEc0m60Bo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/98] perf bench numa: Fix cpu0 binding
-Date:   Tue, 27 Aug 2019 09:50:09 +0200
-Message-Id: <20190827072719.789936264@linuxfoundation.org>
+Subject: [PATCH 4.19 32/98] can: peak_usb: force the string buffer NULL-terminated
+Date:   Tue, 27 Aug 2019 09:50:11 +0200
+Message-Id: <20190827072719.856511677@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -66,55 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
+[ Upstream commit e787f19373b8a5fa24087800ed78314fd17b984a ]
 
-Michael reported an issue with perf bench numa failing with binding to
-cpu0 with '-0' option.
+strncpy() does not ensure NULL-termination when the input string size
+equals to the destination buffer size IFNAMSIZ. The output string is
+passed to dev_info() which relies on the NULL-termination.
 
-  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
-  # Running 'numa/mem' benchmark:
+Use strlcpy() instead.
 
-   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
-  binding to node 0, mask: 0000000000000001 => -1
-  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
-  Aborted (core dumped)
+This issue is identified by a Coccinelle script.
 
-This happens when the cpu0 is not part of node0, which is the benchmark
-assumption and we can see that's not the case for some powerpc servers.
-
-Using correct node for cpu0 binding.
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index fa56fde6e8d80..91c0a4434da27 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -378,8 +378,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+index 740ef47eab017..43b0fa2b99322 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -863,7 +863,7 @@ static void peak_usb_disconnect(struct usb_interface *intf)
  
- 	/* Allocate and initialize all memory on CPU#0: */
- 	if (init_cpu0) {
--		orig_mask = bind_to_node(0);
--		bind_to_memnode(0);
-+		int node = numa_node_of_cpu(0);
-+
-+		orig_mask = bind_to_node(node);
-+		bind_to_memnode(node);
- 	}
+ 		dev_prev_siblings = dev->prev_siblings;
+ 		dev->state &= ~PCAN_USB_STATE_CONNECTED;
+-		strncpy(name, netdev->name, IFNAMSIZ);
++		strlcpy(name, netdev->name, IFNAMSIZ);
  
- 	bytes = bytes0 + HPSIZE;
+ 		unregister_netdev(netdev);
+ 
 -- 
 2.20.1
 
