@@ -2,130 +2,131 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8ABC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6776BC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2201122DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D377217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkEpZvJb"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="v84wXD4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbfH0PIi (ORCPT
+        id S1730233AbfH0PI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:08:38 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43380 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfH0PIh (ORCPT
+        Tue, 27 Aug 2019 11:08:56 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58774 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726054AbfH0PI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:08:37 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e12so18969470otp.10;
-        Tue, 27 Aug 2019 08:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Rywry/EHGhMrNPdqvNtIfK/gHo0RAsE7TRS/X80Y4s4=;
-        b=VkEpZvJb0gmx+7uEdng+y2kJ9ScaXxfV8P2tzCCurLOrBzXS8D3C5dwSTu0EVe69ZS
-         krPbXIwB3sKs2qjJ4p8AFOdoUmzHIn2CBszY11Cvlv472+CJSiqox1kGs8N7mlIdt+vf
-         +tFoaRD6B9Cm+NJ1Fg7+XLSJXpJRt9K9KWjM6qWr4zgk2WVIrZzYEWkeCXwHdlWqb71M
-         H5AKajXXVriEPiYfJat9EC1SPVjxfDbC4Sfqc2Y8xqrkm971/31ePysWUhk3C4KWpGzY
-         hhNWwdNgjEInlPPf4V68rffEVlRk/fOvgsKBDPURlj3Tna4PteRmh0O8RUFTDQ0A/EFG
-         7mqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rywry/EHGhMrNPdqvNtIfK/gHo0RAsE7TRS/X80Y4s4=;
-        b=G0lOED8suTaVodAD/sP9O9P+zdmtKSctUOpbxAdU3w2sXwYh1bHfSi1ZN8toC4rdZD
-         hyFTeehi2qbbDXBYw8Xa2sRsVAyO+J6vQmZXPAGXPkNa31RyWDkn8aZ1lhDKYH59g4i8
-         mQqrMGhzLT0qcH4iUvgP3sc5y7CcHBSx9K5U8E/Zd/UHZpAaLFUhXwWKxGahbhGLuPoe
-         MQwduRIrXYYfDnntDM/zFP1v7SZ1aIWovzTLBw7Lw4fVVYZHieNy2ZQT5k7craVvvGBF
-         wvD01kChXYvkswoT/B+0UDOQgdri8ONx3f+JlK2ZM9aW2SVV4J9V1wd5Oa+GbU8YmtCH
-         ObVQ==
-X-Gm-Message-State: APjAAAVvhFJ+aWCbzzzxL/NEC4tJ8C8N6J3Ci+cmgJNSEjNAktMxcTgv
-        oBkRM07i1EiEmA65mwIUe1E=
-X-Google-Smtp-Source: APXvYqwwpfSNQV0d79ewTSzoXmpjC+BUdGsqjBOlWIoOpw5l5bLSC7WYnAWjzKmutUoji/llHQz9DQ==
-X-Received: by 2002:a9d:77cc:: with SMTP id w12mr13034784otl.207.1566918516092;
-        Tue, 27 Aug 2019 08:08:36 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 20sm5690300otd.71.2019.08.27.08.08.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 08:08:35 -0700 (PDT)
-Subject: Re: [PATCH v1 net-next 4/4] net: stmmac: setup higher frequency clk
- support for EHL & TGL
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tue, 27 Aug 2019 11:08:56 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RF27Ps026516;
+        Tue, 27 Aug 2019 17:08:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=WCVwMfXR8g1j5Zrd8gSemrcYNLfQjqC+GHfOy9t5zVo=;
+ b=v84wXD4zkDFkoWgr/paZtKm5VOcO5Nrnzm7i0EE2WfaYqJa3fi7e2mIQ4iIz+sLvtCvr
+ 5/ewb5Q4At/B/iv1d+9B1wSTKn3U39s/W1ipI9+0A+tIJ/6Q+NZLvC1iDmrf5Qvi6MuO
+ fgD7nXic52Sre8I0aymQ/tj8WU7dkiBBRymnEWeqThDHfCXw5rvfKTDCJykbj5pdNGyM
+ NRjeE8FlDpMjzCLNMbYWjDVB0sXIlVhdr5nIMdOP1oyq7/py2u304A9hR0RibjYzeL1G
+ iZZ6eMbS/XXEy/WayuibsrKp/Utelpdr+pITnYWg1YY/gFVDrzMrJrqyH35TQccFqP7C gQ== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ujv4kt4as-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 27 Aug 2019 17:08:29 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CB53B52;
+        Tue, 27 Aug 2019 15:08:20 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7AFAE2B6ABC;
+        Tue, 27 Aug 2019 17:08:20 +0200 (CEST)
+Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 27 Aug
+ 2019 17:08:20 +0200
+Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
+ SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
+ 15.00.1473.003; Tue, 27 Aug 2019 17:08:19 +0200
+From:   Gerald BAEZA <gerald.baeza@st.com>
+To:     "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-References: <1566869891-29239-1-git-send-email-weifeng.voon@intel.com>
- <1566869891-29239-5-git-send-email-weifeng.voon@intel.com>
- <7d43e0c6-6f51-0d71-0af8-89f22b0234f9@gmail.com>
- <20190826201346.GJ2168@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC814758DB5@PGSMSX103.gar.corp.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <7da534fa-9b7e-9980-e801-3c3e0429b885@gmail.com>
-Date:   Tue, 27 Aug 2019 08:08:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC814758DB5@PGSMSX103.gar.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+CC:     Gerald BAEZA <gerald.baeza@st.com>
+Subject: [PATCH v3 2/5] dt-bindings: perf: stm32: ddrperfm support
+Thread-Topic: [PATCH v3 2/5] dt-bindings: perf: stm32: ddrperfm support
+Thread-Index: AQHVXOlCMu3qbdWcXEe5CqPZR/zfNQ==
+Date:   Tue, 27 Aug 2019 15:08:19 +0000
+Message-ID: <1566918464-23927-3-git-send-email-gerald.baeza@st.com>
+References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
+In-Reply-To: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
 
+This documentation indicates how to enable stm32-ddr-pmu driver on
+DDRPERFM peripheral, via the device tree.
 
-On 8/27/2019 3:38 AM, Voon, Weifeng wrote:
->>>> +#include <linux/clk-provider.h>
->>>>  #include <linux/pci.h>
->>>>  #include <linux/dmi.h>
->>>>
->>>> @@ -174,6 +175,19 @@ static int intel_mgbe_common_data(struct
->> pci_dev *pdev,
->>>>  	plat->axi->axi_blen[1] = 8;
->>>>  	plat->axi->axi_blen[2] = 16;
->>>>
->>>> +	plat->ptp_max_adj = plat->clk_ptp_rate;
->>>> +
->>>> +	/* Set system clock */
->>>> +	plat->stmmac_clk = clk_register_fixed_rate(&pdev->dev,
->>>> +						   "stmmac-clk", NULL, 0,
->>>> +						   plat->clk_ptp_rate);
->>>> +
->>>> +	if (IS_ERR(plat->stmmac_clk)) {
->>>> +		dev_warn(&pdev->dev, "Fail to register stmmac-clk\n");
->>>> +		plat->stmmac_clk = NULL;
->>>
->>> Don't you need to propagate at least EPROBE_DEFER here?
->>
->> Hi Florian
->>
->> Isn't a fixed rate clock a complete fake. There is no hardware behind it.
->> So can it return EPROBE_DEFER?
->>
->>     Andrew
-> 
-> Yes, there is no hardware behind it. So, I don't think we need to deferred probe
-> and a warning message should be sufficient. Anyhow, please point it out if I miss
-> out anything.
+Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+---
+ Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt | 16 ++++++++++++=
+++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
+t
 
-Looks good to me, thanks both for clarifying.
--- 
-Florian
+diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
+umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+new file mode 100644
+index 0000000..87ab12e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+@@ -0,0 +1,16 @@
++* STM32 DDR Performance Monitor (DDRPERFM)
++
++Required properties:
++- compatible: must be "st,stm32-ddr-pmu".
++- reg: physical address and length of the registers set.
++- clocks: phandle and specifier for DDRPERFM input clock
++- resets: phandle and specifier for DDRPERFM reset
++
++Example:
++	ddrperfm: perf@5a007000 {
++		compatible =3D "st,stm32-ddr-pmu";
++		reg =3D <0x5a007000 0x400>;
++		clocks =3D <&rcc DDRPERFM>;
++		resets =3D <&rcc DDRPERFM_R>;
++	};
++
+--=20
+2.7.4
