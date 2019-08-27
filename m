@@ -2,53 +2,107 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0553CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F995C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D235720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507AE214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="xGg/ts7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbfH0Ut0 (ORCPT
+        id S1730683AbfH0Utj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:49:26 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50602 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfH0UtZ (ORCPT
+        Tue, 27 Aug 2019 16:49:39 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60168 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfH0Uti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:49:25 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        Tue, 27 Aug 2019 16:49:38 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0AA3E152804BA;
-        Tue, 27 Aug 2019 13:49:25 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 13:49:22 -0700 (PDT)
-Message-Id: <20190827.134922.1122516005541933425.davem@davemloft.net>
-To:     wang.yi59@zte.com.cn
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.liang82@zte.com.cn,
-        cheng.lin130@zte.com.cn
-Subject: Re: [PATCH] ipv6: Not to probe neighbourless routes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
-References: <1566896907-5121-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 27 Aug 2019 13:49:25 -0700 (PDT)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1A0AD80719;
+        Wed, 28 Aug 2019 08:49:37 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1566938977;
+        bh=PIfUy1UaDG+Bm4sZignWk5XvEQ/zp3pqmJ+geIdmjL0=;
+        h=From:To:Cc:Subject:Date;
+        b=xGg/ts7PoziI5S+5a9MLyXR3CXvJXGUTj1L669GdIu/XYGn9r6xjslEF1ZpHJ6wk7
+         09FJ5rvsIAhkQhhcArglrzLanf+/ONLRyfR9tRQbspU9rRjfypE33+YZHL2zLDmBoY
+         Eb923LYCdI5Fbphyg/OVRr6krgmwFRGMvfG79CGWT5OnF5Azu+oTxMZcw229KnUr8Z
+         PxeH8XEUygujBPGdKTt1kx2LGQwMQUFwMfgUBYrPKpO3M38FAVdJwtHc/kpLoRc4T5
+         VjiD4jy6adYRjyH4+KfwtwND99baR7B8xKE5nLjyE+hq6NE3BbLH96I+LDV66Sbmd5
+         9wMLGdUlJsACw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d6597610000>; Wed, 28 Aug 2019 08:49:37 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 7C09C13EECA;
+        Wed, 28 Aug 2019 08:49:39 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 7BBD8289DE2; Wed, 28 Aug 2019 08:49:36 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     patches@armlinux.org.uk, linux@armlinux.org.uk,
+        mark.rutland@arm.com, jlu@pengutronix.de,
+        gregory.clement@free-electrons.com, bp@alien8.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] ARM: l2c: move cache-aurora-l2.h to asm/hardware
+Date:   Wed, 28 Aug 2019 08:49:22 +1200
+Message-Id: <20190827204922.14832-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpOb3RoaW5nIHNheXMgImxvdyBxdWFsaXR5IHBhdGNoIHN1Ym1pc3Npb24iIGxpa2U6DQoNCm5l
-dC9pcHY2L3JvdXRlLmM6IEluIGZ1bmN0aW9uIKFydDZfcHJvYmWiOg0KbmV0L2lwdjYvcm91dGUu
-Yzo2NjA6MTA6IGVycm9yOiChc3RydWN0IGZpYjZfbmiiIGhhcyBubyBtZW1iZXIgbmFtZWQgoWxh
-c3RfcHJvYmWiDQogICBmaWI2X25oLT5sYXN0X3Byb2JlID0gamlmZmllczsNCg0KIkkgZGlkIG5v
-dCBldmVuIHRyeSB0byBjb21waWxlIHRoaXMiDQo=
+From: Jan Luebbe <jlu@pengutronix.de>
+
+This include file will be used by the AURORA EDAC code.
+
+Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+KernelVersion: 5.3rc
+
+Hi Russell,
+
+This is the missing first patch for the Armada EDAC series
+https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=3D8885/1
+
+ arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h | 0
+ arch/arm/mm/cache-l2x0.c                                | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (100%)
+
+diff --git a/arch/arm/mm/cache-aurora-l2.h b/arch/arm/include/asm/hardwar=
+e/cache-aurora-l2.h
+similarity index 100%
+rename from arch/arm/mm/cache-aurora-l2.h
+rename to arch/arm/include/asm/hardware/cache-aurora-l2.h
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 5b251c8ecd45..428d08718107 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -18,8 +18,8 @@
+ #include <asm/cp15.h>
+ #include <asm/cputype.h>
+ #include <asm/hardware/cache-l2x0.h>
++#include <asm/hardware/cache-aurora-l2.h>
+ #include "cache-tauros3.h"
+-#include "cache-aurora-l2.h"
+=20
+ struct l2c_init_data {
+ 	const char *type;
+--=20
+2.23.0
+
