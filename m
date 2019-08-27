@@ -2,135 +2,219 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6504C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36907C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35E9204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566902597;
-	bh=DgzBwafkcWP7vXvi0ntkF77ZVB19ePV2F8i3vcXt+uo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IGJ0zNbXAoKBait0OwzLPqd8b1YVOirkPhPTXWcXkwEfftrQk6eZ11E/7kH+DyOyj
-	 0pOx+j43+Fqg3IWT/06DwmSf9l/2p+rTeAvhcOINFOKdCJUgFGujy1li5AipslrYQ4
-	 B3l4oQiuWi10OVybVLEOUPYGBV0zudx06bjBLIQg=
+	by mail.kernel.org (Postfix) with ESMTP id EA687204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 10:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x30t4cw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfH0KnQ (ORCPT
+        id S1728999AbfH0KnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 06:43:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53470 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfH0KnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 06:43:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C68BAFD4;
-        Tue, 27 Aug 2019 10:43:15 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 12:43:13 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Adric Blake <promarbler14@gmail.com>, akpm@linux-foundation.org,
-        ktkhai@virtuozzo.com, hannes@cmpxchg.org,
-        daniel.m.jordan@oracle.com, laoar.shao@gmail.com,
-        mgorman@techsingularity.net, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: WARNINGs in set_task_reclaim_state with memory cgroup and full
- memory usage
-Message-ID: <20190827104313.GW7538@dhcp22.suse.cz>
-References: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
- <b9cd7603-2441-d351-156a-57d6c13b2c79@linux.alibaba.com>
- <20190826105521.GF7538@dhcp22.suse.cz>
+        Tue, 27 Aug 2019 06:43:22 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44016 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfH0KnW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 06:43:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id 18so45093892ioe.10
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 03:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sjClOQSteKx3LTWXyZm2UxHSv44w/eVm8luVhmJVsLc=;
+        b=x30t4cw8Bod4Suf0i3x6+dEcpVZy+FEINp/w28MjgKsyeVq8aqCqiSjpdeXV/thD92
+         7aCyofF4mI5y3xQUoZmz13sn8swF3C9l5YT1rRlKYy9G++w5r1mwA/p2BA37Q13bWQHa
+         yvpxwuAVKhoCdJauTC/qNPhtO3rLJvEo1VS9VuAsr8zsTkpUC5nXONp58F5ht34h9HxG
+         VdsDrCwlrfL2eGj+8XBkX2yqUVZZpft0tCTzYBsESMwGYBeaT/0Dc87tv1p9Paisv3aS
+         iNsdTFuLv6SL28OpJ4aBF59SUk8gvI3eIKTqnpx1Tpl1VRWKDmuQAGr3chQ3L2QUXQX3
+         86QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sjClOQSteKx3LTWXyZm2UxHSv44w/eVm8luVhmJVsLc=;
+        b=S2p0+o5AAGwVv9yx2tGEv2rcU0vMeqUd0ynTSLYGAkwjI2Y4jBkX5XSIjS2ZrH3LD3
+         4s/iif/qdQ1eJa7xRT1MjKNg+0RbMuQjDJWNGllKbN1IavVyk8OjykPp3OyJ/PXykoaO
+         UDCS8a3+06R2OH5k/Xx3NZR4r+9Zsvfe0TvBiNoW6XA0l++PqdDD4GhiXJoyPgYMmb75
+         xs/KiZxDtx9QX4WNX1Vvn8ToPM1JBLqHUJKpTnaRecae2MT6HyPoKlFRkB+UIfHERnkC
+         KtSPmudLfUBiFfxbQpEhnAiqPExGQ+3v5uc8QtZWJ9+z5rifspjq9zBRgyAHqTActN2r
+         43NQ==
+X-Gm-Message-State: APjAAAUzmx79NjVw3LmqiVtCEmcNsziPa0O/bjNAGPOdivjH08GuUEY7
+        2vC2z0Mfb10bmZ1SKeyP++JvPBmyL8C7dw==
+X-Google-Smtp-Source: APXvYqwx2skeXxsBsHH1/asDzS6jePJzxwp8K/Ce3dr/hTg4mIs0xD9+FHr3B6i3ZaeGES4AHWcFfg==
+X-Received: by 2002:a02:6914:: with SMTP id e20mr17833128jac.83.1566902600611;
+        Tue, 27 Aug 2019 03:43:20 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id h9sm14002888ior.9.2019.08.27.03.43.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 03:43:19 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH 0/9] staging: move greybus core out of
+ staging
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        elder@kernel.org, johan@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <cfefa25a-9ee5-6011-a41c-ce09dd9608e6@linaro.org>
+Date:   Tue, 27 Aug 2019 05:43:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826105521.GF7538@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there are no objection to the patch I will post it as a standalong
-one.
+On 8/25/19 12:54 AM, Greg Kroah-Hartman wrote:
+> The Greybus code has long been "stable" but was living in the
+> drivers/staging/ directory to see if there really was going to be
+> devices using this protocol over the long-term.  With the success of
+> millions of phones with this hardware and code in it, and the recent
+> Google Summer of Code project, and a number of of new devices in the
+> works from various companies, it is time to finally move this code out
+> of staging into the "real" portion of the kernel so that people know
+> they can rely on it.
+> 
+> This series first does a little bit of checkpatch cleanups for some
+> basic remaining issues in the greybus files, and then moves the include
+> directory, the greybus core code, and the es2 greybus host controller
+> driver into drivers/greybus.
+> 
+> To come after this is the movement of the Documentation entries and a
+> number of the module drivers that are stable.
 
-On Mon 26-08-19 12:55:21, Michal Hocko wrote:
-> From 59d128214a62bf2d83c2a2a9cde887b4817275e7 Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Mon, 26 Aug 2019 12:43:15 +0200
-> Subject: [PATCH] mm, memcg: do not set reclaim_state on soft limit reclaim
-> 
-> Adric Blake has noticed the following warning:
-> [38491.963105] WARNING: CPU: 7 PID: 175 at mm/vmscan.c:245 set_task_reclaim_state+0x1e/0x40
-> [...]
-> [38491.963239] Call Trace:
-> [38491.963246]  mem_cgroup_shrink_node+0x9b/0x1d0
-> [38491.963250]  mem_cgroup_soft_limit_reclaim+0x10c/0x3a0
-> [38491.963254]  balance_pgdat+0x276/0x540
-> [38491.963258]  kswapd+0x200/0x3f0
-> [38491.963261]  ? wait_woken+0x80/0x80
-> [38491.963265]  kthread+0xfd/0x130
-> [38491.963267]  ? balance_pgdat+0x540/0x540
-> [38491.963269]  ? kthread_park+0x80/0x80
-> [38491.963273]  ret_from_fork+0x35/0x40
-> [38491.963276] ---[ end trace 727343df67b2398a ]---
-> 
-> which tells us that soft limit reclaim is about to overwrite the
-> reclaim_state configured up in the call chain (kswapd in this case but
-> the direct reclaim is equally possible). This means that reclaim stats
-> would get misleading once the soft reclaim returns and another reclaim
-> is done.
-> 
-> Fix the warning by dropping set_task_reclaim_state from the soft reclaim
-> which is always called with reclaim_state set up.
-> 
-> Reported-by: Adric Blake <promarbler14@gmail.com>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/vmscan.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index c77d1e3761a7..a6c5d0b28321 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -3220,6 +3220,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
->  
->  #ifdef CONFIG_MEMCG
->  
-> +/* Only used by soft limit reclaim. Do not reuse for anything else. */
->  unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->  						gfp_t gfp_mask, bool noswap,
->  						pg_data_t *pgdat,
-> @@ -3235,7 +3236,8 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->  	};
->  	unsigned long lru_pages;
->  
-> -	set_task_reclaim_state(current, &sc.reclaim_state);
-> +	WARN_ON_ONCE(!current->reclaim_state);
-> +
->  	sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
->  			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
->  
-> @@ -3253,7 +3255,6 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
->  
->  	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
->  
-> -	set_task_reclaim_state(current, NULL);
->  	*nr_scanned = sc.nr_scanned;
->  
->  	return sc.nr_reclaimed;
-> -- 
-> 2.20.1
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+They all look good to me.  (I don't always agree with checkpatch,
+but standardization is good.)  Thanks Greg.
 
--- 
-Michal Hocko
-SUSE Labs
+Acked-by: Alex Elder <elder@kernel.org>
+
+> Greg Kroah-Hartman (9):
+>   staging: greybus: fix up SPDX comment in .h files
+>   staging: greybus: remove license "boilerplate"
+>   staging: greybus: hd: Fix up some alignment checkpatch issues
+>   staging: greybus: manifest: Fix up some alignment checkpatch issues
+>   staging: greybus: log: Fix up some alignment checkpatch issues
+>   staging: greybus: loopback: Fix up some alignment checkpatch issues
+>   staging: greybus: move core include files to include/linux/greybus/
+>   staging: greybus: move the greybus core to drivers/greybus
+>   staging: greybus: move es2 to drivers/greybus/
+> 
+>  MAINTAINERS                                   |   3 +
+>  drivers/Kconfig                               |   2 +
+>  drivers/Makefile                              |   1 +
+>  drivers/greybus/Kconfig                       |  32 +++++
+>  drivers/greybus/Makefile                      |  26 +++++
+>  drivers/greybus/arpc.h                        |  63 ++++++++++
+>  drivers/{staging => }/greybus/bundle.c        |   2 +-
+>  drivers/{staging => }/greybus/connection.c    |   2 +-
+>  drivers/{staging => }/greybus/control.c       |   2 +-
+>  drivers/{staging => }/greybus/core.c          |   2 +-
+>  drivers/{staging => }/greybus/debugfs.c       |   3 +-
+>  drivers/{staging => }/greybus/es2.c           |   3 +-
+>  drivers/{staging => }/greybus/greybus_trace.h |   2 +-
+>  drivers/{staging => }/greybus/hd.c            |  12 +-
+>  drivers/{staging => }/greybus/interface.c     |   2 +-
+>  drivers/{staging => }/greybus/manifest.c      |  41 ++++---
+>  drivers/{staging => }/greybus/module.c        |   2 +-
+>  drivers/{staging => }/greybus/operation.c     |   2 +-
+>  drivers/{staging => }/greybus/svc.c           |   3 +-
+>  drivers/{staging => }/greybus/svc_watchdog.c  |   2 +-
+>  .../Documentation/firmware/authenticate.c     |  46 --------
+>  .../greybus/Documentation/firmware/firmware.c |  46 --------
+>  drivers/staging/greybus/Kconfig               |  27 -----
+>  drivers/staging/greybus/Makefile              |  22 ----
+>  drivers/staging/greybus/arche-platform.c      |   2 +-
+>  drivers/staging/greybus/arpc.h                | 109 ------------------
+>  drivers/staging/greybus/audio_apbridgea.c     |   3 +-
+>  drivers/staging/greybus/audio_apbridgea.h     |  26 +----
+>  drivers/staging/greybus/audio_codec.h         |   4 +-
+>  drivers/staging/greybus/audio_gb.c            |   4 +-
+>  drivers/staging/greybus/authentication.c      |   3 +-
+>  drivers/staging/greybus/bootrom.c             |   2 +-
+>  drivers/staging/greybus/camera.c              |   2 +-
+>  drivers/staging/greybus/firmware.h            |   4 +-
+>  drivers/staging/greybus/fw-core.c             |   2 +-
+>  drivers/staging/greybus/fw-download.c         |   2 +-
+>  drivers/staging/greybus/fw-management.c       |   2 +-
+>  drivers/staging/greybus/gb-camera.h           |   2 +-
+>  drivers/staging/greybus/gbphy.c               |   2 +-
+>  drivers/staging/greybus/gbphy.h               |   2 +-
+>  drivers/staging/greybus/gpio.c                |   2 +-
+>  .../staging/greybus/greybus_authentication.h  |  48 +-------
+>  drivers/staging/greybus/greybus_firmware.h    |  48 +-------
+>  drivers/staging/greybus/hid.c                 |   3 +-
+>  drivers/staging/greybus/i2c.c                 |   2 +-
+>  drivers/staging/greybus/light.c               |   4 +-
+>  drivers/staging/greybus/log.c                 |   9 +-
+>  drivers/staging/greybus/loopback.c            |   9 +-
+>  drivers/staging/greybus/power_supply.c        |   3 +-
+>  drivers/staging/greybus/pwm.c                 |   2 +-
+>  drivers/staging/greybus/raw.c                 |   3 +-
+>  drivers/staging/greybus/sdio.c                |   2 +-
+>  drivers/staging/greybus/spi.c                 |   2 +-
+>  drivers/staging/greybus/spilib.c              |   2 +-
+>  drivers/staging/greybus/spilib.h              |   2 +-
+>  drivers/staging/greybus/tools/loopback_test.c |   2 -
+>  drivers/staging/greybus/uart.c                |   2 +-
+>  drivers/staging/greybus/usb.c                 |   2 +-
+>  drivers/staging/greybus/vibrator.c            |   3 +-
+>  .../greybus => include/linux}/greybus.h       |  26 ++---
+>  .../linux}/greybus/bundle.h                   |   0
+>  .../linux}/greybus/connection.h               |   0
+>  .../linux}/greybus/control.h                  |   0
+>  .../linux}/greybus/greybus_id.h               |   0
+>  .../linux}/greybus/greybus_manifest.h         |   2 +-
+>  .../linux}/greybus/greybus_protocols.h        |  48 +-------
+>  .../staging => include/linux}/greybus/hd.h    |   2 +-
+>  .../linux}/greybus/interface.h                |   2 +-
+>  .../linux}/greybus/manifest.h                 |   2 +-
+>  .../linux}/greybus/module.h                   |   2 +-
+>  .../linux}/greybus/operation.h                |   2 +-
+>  .../staging => include/linux}/greybus/svc.h   |   2 +-
+>  72 files changed, 225 insertions(+), 532 deletions(-)
+>  create mode 100644 drivers/greybus/Kconfig
+>  create mode 100644 drivers/greybus/Makefile
+>  create mode 100644 drivers/greybus/arpc.h
+>  rename drivers/{staging => }/greybus/bundle.c (99%)
+>  rename drivers/{staging => }/greybus/connection.c (99%)
+>  rename drivers/{staging => }/greybus/control.c (99%)
+>  rename drivers/{staging => }/greybus/core.c (99%)
+>  rename drivers/{staging => }/greybus/debugfs.c (94%)
+>  rename drivers/{staging => }/greybus/es2.c (99%)
+>  rename drivers/{staging => }/greybus/greybus_trace.h (99%)
+>  rename drivers/{staging => }/greybus/hd.c (96%)
+>  rename drivers/{staging => }/greybus/interface.c (99%)
+>  rename drivers/{staging => }/greybus/manifest.c (95%)
+>  rename drivers/{staging => }/greybus/module.c (99%)
+>  rename drivers/{staging => }/greybus/operation.c (99%)
+>  rename drivers/{staging => }/greybus/svc.c (99%)
+>  rename drivers/{staging => }/greybus/svc_watchdog.c (99%)
+>  delete mode 100644 drivers/staging/greybus/arpc.h
+>  rename {drivers/staging/greybus => include/linux}/greybus.h (88%)
+>  rename {drivers/staging => include/linux}/greybus/bundle.h (100%)
+>  rename {drivers/staging => include/linux}/greybus/connection.h (100%)
+>  rename {drivers/staging => include/linux}/greybus/control.h (100%)
+>  rename {drivers/staging => include/linux}/greybus/greybus_id.h (100%)
+>  rename {drivers/staging => include/linux}/greybus/greybus_manifest.h (99%)
+>  rename {drivers/staging => include/linux}/greybus/greybus_protocols.h (96%)
+>  rename {drivers/staging => include/linux}/greybus/hd.h (98%)
+>  rename {drivers/staging => include/linux}/greybus/interface.h (98%)
+>  rename {drivers/staging => include/linux}/greybus/manifest.h (87%)
+>  rename {drivers/staging => include/linux}/greybus/module.h (94%)
+>  rename {drivers/staging => include/linux}/greybus/operation.h (99%)
+>  rename {drivers/staging => include/linux}/greybus/svc.h (98%)
+> 
+
