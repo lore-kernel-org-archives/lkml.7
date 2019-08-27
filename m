@@ -2,96 +2,108 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8810EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD278C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5745022CED
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566923599;
-	bh=YIsOsPzxZ5vCTU8D+1BFsW6YJYvs+tEzN/0YR3KZin8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QTF09XntEDdpn+1GQ3ttjrGYmq9gyxN/6XrT8ZsTV3aU1eqxIaGv4juyqRHCgksyS
-	 6S1zf5bvcV61sXt4wxdvCmjtZttocfXpIhmjVMyKeDnG4LeayYfTv57/dMIJfJuRDG
-	 UtKXNV7Ou1+K9XnxZbJ5vnoCHSbM0+hWc1+3uJp0=
+	by mail.kernel.org (Postfix) with ESMTP id BE0AD2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbfH0QdS (ORCPT
+        id S1730491AbfH0QdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:33:18 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46450 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfH0QdS (ORCPT
+        Tue, 27 Aug 2019 12:33:20 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43584 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbfH0QdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:33:18 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t24so15416982oij.13;
-        Tue, 27 Aug 2019 09:33:17 -0700 (PDT)
+        Tue, 27 Aug 2019 12:33:19 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m2so17499736qkd.10;
+        Tue, 27 Aug 2019 09:33:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UzdCUGlHV5X682Kzeexag26wntDzMS6Jj26RZbJJmdQ=;
-        b=BdBgoyaR8PAoM7ztTiOkM/BsFVE4odcwQMvkOfc2924P3OEikfN8zgjfj5lzCAV68s
-         5znodeKuWxXFN1Udym0XIQiCx3wTp50/5QVJPMK0DRPrtqAQpQ8WAolRiC1Xv2NHFuY0
-         R7nrzCfrputzgbhWcnAzhng2o28I+z7yLoGORKQHk6y6DJ18fsGtUBPp0CrszY0ghJ6Z
-         9S42eg43eX55PcFmk4Zr/y69pWCa2KV4bz336SvkKbNjQyANfimY8t4mxHC0CoR6du3O
-         KuMQPg13HfEoetjxCduEjCqGAmtj+YLUHBC0lLjXpS2MOdxNDqJS3VldbE33EZB7bNdK
-         NJag==
-X-Gm-Message-State: APjAAAUUqeGbsMIe084LBudW6qncJdLrlvuS5dfs4jKgeuXDCKNjAAUx
-        Dw0BbV8sHgC/l9uGW+Z4ZQ==
-X-Google-Smtp-Source: APXvYqyLYFFzwrl9JxWS98fBy8t+nwRyuksVVJLjy7fG7gUGnBOGgC7pm9hA0aqSzS12hgYwHLc/rQ==
-X-Received: by 2002:aca:f5c1:: with SMTP id t184mr17262932oih.25.1566923597041;
-        Tue, 27 Aug 2019 09:33:17 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z9sm4341038oid.39.2019.08.27.09.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:33:16 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 11:33:16 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        devicetree@vger.kernel.org,
-        "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" 
-        <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tianping Fang <tianping.fang@mediatek.com>
-Subject: Re: [PATCH v6 01/13] dt-bindings: mfd: mediatek: mt6397: change to
- relative paths
-Message-ID: <20190827163316.GA31496@bogus>
-References: <20190818135611.7776-1-frank-w@public-files.de>
- <20190818135611.7776-2-frank-w@public-files.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/zg0bV3qxRrrZ8M4aU2pwZR/A1NqBI7vpxBYLuL1/5c=;
+        b=j3Jiius+Z8WuK32G/Nqm5EWD7Hu04KbAui3teuc2W9F3B33LNQ3x0Qyq2DY4/aAxJz
+         Rb8KSp090PhHShKf9HUSSgqHF8cQhqrKNcxhJhkicAWAvTn4CGUTHd/SDyCvu3PP27k4
+         m5kz6L0SbhFspLVvpbxjPU3hlesg67K4+c/az440bca6KKR1SI/e8Bw0Srt0CnNP8hn8
+         s5SjsSt+DFuP3fKKBiWejb+JQ08Sl9xtJUPkwcB33FN5zxHc1DcRwBQqGA5MVGg9K4ji
+         OViPaEA5rlXsEo6qz8GdIBqHFwYnxJj3B+ZL6m6YVz5aOGunDS/5K7tpu3vdrLUzPtyl
+         dX9g==
+X-Gm-Message-State: APjAAAWxCWbCu4BMq6/ZeT4KRa86f0V9+RyTA59el84cAJKtI+lM0A+W
+        aHq507TKYmzcNN6ZKiAEn/a1+0dcKWPQnolv4Pw=
+X-Google-Smtp-Source: APXvYqxmXX+KSa+dqu82Y9804plYSWjLPoR2eL0zXepUxEM9uaGcvZ5C/ITNAAIVCt20lQg/KUKT+p99sfbOHZrATd8=
+X-Received: by 2002:a37:4b0d:: with SMTP id y13mr22291349qka.3.1566923597978;
+ Tue, 27 Aug 2019 09:33:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818135611.7776-2-frank-w@public-files.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190808212234.2213262-1-arnd@arndb.de> <20190808212234.2213262-15-arnd@arndb.de>
+ <20190813103605.GL52127@atomide.com> <CAK8P3a0E+QUn9wcP5Obv-FitWyXCFwcp+oPConeO2p-NV1rqsw@mail.gmail.com>
+ <20190813181158.GA26798@darkstar.musicnaut.iki.fi> <CAK8P3a0LjKrc+7c5Ht9OL7LfYyLnG9=y7u+w24ujA1xAid_yCQ@mail.gmail.com>
+ <20190814074918.GA52127@atomide.com> <CAK8P3a3k_HOGqzMGjtc+7NSaK0Bsa_vxxRFLzY8aP6ev4wa9iA@mail.gmail.com>
+ <20190816083403.GB1952@darkstar.musicnaut.iki.fi>
+In-Reply-To: <20190816083403.GB1952@darkstar.musicnaut.iki.fi>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 27 Aug 2019 18:33:01 +0200
+Message-ID: <CAK8P3a3jqNxoihQ+UFvOZMg=AcF2yzHXs5ay6X1TZX8L3zQ3rg@mail.gmail.com>
+Subject: Re: [PATCH 14/22] ARM: omap1: use pci_ioremap_io() for omap_cf
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 18 Aug 2019 15:55:59 +0200, Frank Wunderlich wrote:
-> paths in dt-bindings should be relative as suggested by Lee Johnes
-> 
-> Suggested-By: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> changes since v5: splitted from dt-bindings: add powercontroller
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
+On Fri, Aug 16, 2019 at 10:34 AM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> On Wed, Aug 14, 2019 at 12:36:40PM +0200, Arnd Bergmann wrote:
+> > On Wed, Aug 14, 2019 at 9:49 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > * Arnd Bergmann <arnd@arndb.de> [190813 19:34]:
+> > > > -#define OMAP1_IO_OFFSET                0x01000000      /* Virtual IO
+> > > > = 0xfefb0000 */
+> > > > +#define OMAP1_IO_OFFSET                0x00fb0000      /* Virtual IO
+> > > > = 0xff000000 */
+> > > >  #define OMAP1_IO_ADDRESS(pa)   IOMEM((pa) - OMAP1_IO_OFFSET)
+> > >
+> > > Oh OK yeah sounds like that's the issue.
+> > >
+> > > > There may be additional locations that hardcode the virtual address.
+> > >
+> > > Those should be in mach-omap1/io.c, and I recall innovator had some
+> > > hardcoded fpga address that should also be checked.
+> >
+> > I see four boards with hardcoded I/O addresses, but they are all below
+> > the PCI I/O virtual address range, and are not affected by that change.
+> >
+> > For the innovator FPGA access, this was ok, it uses the correct address
+> > in the OMAP1_IO_OFFSET range.
+>
+> I tried testing this on OSK board. If I boot with earlyprintk disabled,
+> it boots OK and everything works (also CF card) with your playground
+> commit 5723b6686943.
+>
+> However with earlyprintk it seems to hang as soon as kernel tries to print
+> something. So something goes wrong with early DEBUG_LL mapping code when
+> CONFIG_DEBUG_UART_VIRT=0xff000000 is used?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I just redid the calculation and came out with the same address, so I
+don't think I put the wrong one there. The address also does not
+conflict with the PCI mapping, and the address is the same one that
+is installed later, so that should also be fine.
+
+Are you sure you used the correct address in the .config file? If you
+ran 'make oldconfig', the virtual address would not be changed here
+as I just modify the default for a fresh 'make omap1_defconfig'
+run or similar.
+
+        Arnd
