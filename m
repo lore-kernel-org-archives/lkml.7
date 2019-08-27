@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DFFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B30C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88991206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A639206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892602;
-	bh=wBDTt3QJeNyBbFdPFFDHHbJOAO4Y4cMJPz8/cwlUn7M=;
+	s=default; t=1566892606;
+	bh=WVQ09TaCiGTx6omFMkKDW+0+BXOfbc/tPQT8v3lg+gA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9dO8p3/hVAF7iQG4Es/Rj2zm8fPHSYF9SU4+o/FworRNFEI68Wdb0Sj7DwfN28WS
-	 3WgcLIPUwDkwGREwGAEpHxqcjN2HVBzysoLZYCVx/F2KKB628Df83BEgwBwP8+Nvkx
-	 Zv2XG1nsjU13GKWO25x2j8MmP1vxDY7Xgn5/n4ak=
+	b=w3oUV9p/SBQWFtoIjLNfn50anYZfKfOKmt2T5/guDIaZF3kNul+HfOVMqtA4R8Fcp
+	 UbZFXlYFFTYJqy36EMvVOtUB02obd+l+PP2JlRZ3VEqsi0b0IZ68xUd8We2/jtvQPF
+	 F6pwNQQHww40XjQyWyxFPUdZpPpbALQwwlzbrb7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbfH0H4l (ORCPT
+        id S1730680AbfH0H4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbfH0H4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:39 -0400
+        id S1730097AbfH0H4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA58217F5;
-        Tue, 27 Aug 2019 07:56:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF40206BA;
+        Tue, 27 Aug 2019 07:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892599;
-        bh=wBDTt3QJeNyBbFdPFFDHHbJOAO4Y4cMJPz8/cwlUn7M=;
+        s=default; t=1566892601;
+        bh=WVQ09TaCiGTx6omFMkKDW+0+BXOfbc/tPQT8v3lg+gA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NG7H+U8pZa1ML8TuivjZCoLOkruC3UC3iRGNvsZn3/9aVc9Aw4c/vJYsYlQsNMDk7
-         kyy4HbJSfAmffSh4bRKKyelBjZL+n+bqijye+rZn3DMZ50HMsBMyynV9SHeTZTlLLy
-         A8sUUyW8xHbrzYogWhK3XbAPLOgm1g5rSPI6rjKo=
+        b=MdumKu7q3ljZKAnON39qBCwksv6KPA96LJedTh3YG3Rp8DNl/sJollkbQgU7gmwTh
+         JNeYwDYTzGwdnUZQsehkHXrqkTPyKsjY8qztnV6NvpU034dmtNvjdSeNvpvC5DwPDI
+         VIv+rK0PdhhvEAs6QogxgWbh+dtfwlpQyEw9VrXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Willem de Bruijn <willemb@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/98] can: dev: call netif_carrier_off() in register_candev()
-Date:   Tue, 27 Aug 2019 09:49:50 +0200
-Message-Id: <20190827072718.817559293@linuxfoundation.org>
+Subject: [PATCH 4.19 47/98] net: hisilicon: Fix dma_map_single failed on arm64
+Date:   Tue, 27 Aug 2019 09:50:26 +0200
+Message-Id: <20190827072720.829819943@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -62,36 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
+[ Upstream commit 96a50c0d907ac8f5c3d6b051031a19eb8a2b53e3 ]
 
-CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
-trigger as suggested, there's a small inconsistency with the link
-property: The LED is on initially, stays on when the device is brought
-up, and then turns off (as expected) when the device is brought down.
+On the arm64 platform, executing "ifconfig eth0 up" will fail,
+returning "ifconfig: SIOCSIFFLAGS: Input/output error."
 
-Make sure the LED always reflects the state of the CAN device.
+ndev->dev is not initialized, dma_map_single->get_dma_ops->
+dummy_dma_ops->__dummy_map_page will return DMA_ERROR_CODE
+directly, so when we use dma_map_single, the first parameter
+is to use the device of platform_device.
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/dev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-index c05e4d50d43d7..bd127ce3aba24 100644
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -1260,6 +1260,8 @@ int register_candev(struct net_device *dev)
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index fe3b1637fd5f4..a91d49dd92ea6 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -157,6 +157,7 @@ struct hip04_priv {
+ 	unsigned int reg_inten;
  
- 	dev->rtnl_link_ops = &can_link_ops;
-+	netif_carrier_off(dev);
-+
- 	return register_netdev(dev);
- }
- EXPORT_SYMBOL_GPL(register_candev);
+ 	struct napi_struct napi;
++	struct device *dev;
+ 	struct net_device *ndev;
+ 
+ 	struct tx_desc *tx_desc;
+@@ -387,7 +388,7 @@ static int hip04_tx_reclaim(struct net_device *ndev, bool force)
+ 		}
+ 
+ 		if (priv->tx_phys[tx_tail]) {
+-			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
++			dma_unmap_single(priv->dev, priv->tx_phys[tx_tail],
+ 					 priv->tx_skb[tx_tail]->len,
+ 					 DMA_TO_DEVICE);
+ 			priv->tx_phys[tx_tail] = 0;
+@@ -437,8 +438,8 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
+-	phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+-	if (dma_mapping_error(&ndev->dev, phys)) {
++	phys = dma_map_single(priv->dev, skb->data, skb->len, DMA_TO_DEVICE);
++	if (dma_mapping_error(priv->dev, phys)) {
+ 		dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
+ 	}
+@@ -508,7 +509,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 			goto refill;
+ 		}
+ 
+-		dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
++		dma_unmap_single(priv->dev, priv->rx_phys[priv->rx_head],
+ 				 RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 		priv->rx_phys[priv->rx_head] = 0;
+ 
+@@ -537,9 +538,9 @@ refill:
+ 		buf = netdev_alloc_frag(priv->rx_buf_size);
+ 		if (!buf)
+ 			goto done;
+-		phys = dma_map_single(&ndev->dev, buf,
++		phys = dma_map_single(priv->dev, buf,
+ 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
+-		if (dma_mapping_error(&ndev->dev, phys))
++		if (dma_mapping_error(priv->dev, phys))
+ 			goto done;
+ 		priv->rx_buf[priv->rx_head] = buf;
+ 		priv->rx_phys[priv->rx_head] = phys;
+@@ -642,9 +643,9 @@ static int hip04_mac_open(struct net_device *ndev)
+ 	for (i = 0; i < RX_DESC_NUM; i++) {
+ 		dma_addr_t phys;
+ 
+-		phys = dma_map_single(&ndev->dev, priv->rx_buf[i],
++		phys = dma_map_single(priv->dev, priv->rx_buf[i],
+ 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
+-		if (dma_mapping_error(&ndev->dev, phys))
++		if (dma_mapping_error(priv->dev, phys))
+ 			return -EIO;
+ 
+ 		priv->rx_phys[i] = phys;
+@@ -678,7 +679,7 @@ static int hip04_mac_stop(struct net_device *ndev)
+ 
+ 	for (i = 0; i < RX_DESC_NUM; i++) {
+ 		if (priv->rx_phys[i]) {
+-			dma_unmap_single(&ndev->dev, priv->rx_phys[i],
++			dma_unmap_single(priv->dev, priv->rx_phys[i],
+ 					 RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 			priv->rx_phys[i] = 0;
+ 		}
+@@ -822,6 +823,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	priv = netdev_priv(ndev);
++	priv->dev = d;
+ 	priv->ndev = ndev;
+ 	platform_set_drvdata(pdev, ndev);
+ 	SET_NETDEV_DEV(ndev, &pdev->dev);
 -- 
 2.20.1
 
