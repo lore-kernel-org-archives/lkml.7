@@ -2,150 +2,118 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBA9C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEC1C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9731621883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73152186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ERL0kigP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wMTir3CH"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BbRmSYYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfH0Sjq (ORCPT
+        id S1730679AbfH0Sjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:39:46 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50555 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729779AbfH0Sjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:39:46 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 101C528AD;
-        Tue, 27 Aug 2019 14:39:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 27 Aug 2019 14:39:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=2Pi2UrTYWIZeSLhHDsmgNc73uGU
-        Eowqv9oRu+ZwsHGA=; b=ERL0kigPYO3OOz4tGQ+vEqkqh0JtqzICMMQfqdWbcU/
-        rytJcRaMGrU/T8owYvdVPhUKoDWhD0/ZOr1Z5wHQJE4Ug5/TmRzTt9/72pfzgiuL
-        Du1v8YcF7vi673FsOfHS3CwrD8BfytsPXZ9rD/wJe94ok9QIYzCYWXR7DkiwCU+T
-        cV7GGZDxvYZilkzclYwbHDf0a2VdjdCZJAOfJmPhaSHd7Yy1qGF3j1/edzsYmCHx
-        2DK47P8o90y3AcG9b8cWDMNx+XtBlahTB7SptqEo+PDdnYp+1uBj4YlurE/1aSjD
-        PmGDvqUtiNwcDXRucyXs/4vxz96WbU2QwLrkUr3ue8w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=2Pi2Ur
-        TYWIZeSLhHDsmgNc73uGUEowqv9oRu+ZwsHGA=; b=wMTir3CHsmW0knAj4jGavl
-        VA3aikjJIy/f6GBK9UNZuaKk7Whb35zv9Tk7sPLWnTsxGrI/w9jAcAVbOeOqD750
-        He9Pkdwp7mNCVN8qZkuPyI0wdsF6fDD5JzpVr4UpietVo1Y8/i8mJp18D3vHWjp0
-        ixBpcqJ6z8LZs5sO64y3Tq0eRdmn5Pnx2SdtHcU10vOqzSqDsmmDnkua58OkiGfG
-        ZOPrWiV2J2joUvQdfOpEItP3AXgoZ0Y2O6/rdVMJwsr3K180qg3c4xztZP35Yr+k
-        Vqw3ZcjK5GLwNwr1XwKnIfqUg1+UXhYgQDMur9W1zUXeq4WHy1Ju17TUrV8UY+Sw
-        ==
-X-ME-Sender: <xms:73hlXfX7Vchuz9zmlBM56kYVBLGIQJHubf8MIvFsRBXXNJGdbaMu8Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehkedgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:73hlXdH7YI8jCFkiLHviNcu0jCeAgL0xjiUisNijqqGoGNn19CErzw>
-    <xmx:73hlXafPM7yZFn7IJWAJdeE7G0lRiGGdAvdsBfdJhywjJDDgktYWtA>
-    <xmx:73hlXeqBLLjyr1V-zR_NyQdKihMQgf4PAihzAUEF3FGUVfCLeoENlQ>
-    <xmx:8XhlXTfghgODvyWc3J-F8F6rCiKefmXMXzgzjeMopFsEt6l7CsM9uw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id ABAA580063;
-        Tue, 27 Aug 2019 14:39:42 -0400 (EDT)
-Date:   Tue, 27 Aug 2019 20:39:40 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Sasha Levin <sashal@kernel.org>, Michal Hocko <mhocko@kernel.org>
-Cc:     Thomas Backlund <tmb@mageia.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM
- counters in sync with the hierarchical ones"
-Message-ID: <20190827183940.GA2924@kroah.com>
-References: <20190817004726.2530670-1-guro@fb.com>
- <20190817063616.GA11747@kroah.com>
- <20190817191518.GB11125@castle>
- <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
- <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
- <20190827141016.GH7538@dhcp22.suse.cz>
- <20190827170618.GC21369@kroah.com>
- <20190827173950.GJ7538@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827173950.GJ7538@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 27 Aug 2019 14:39:51 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12122 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729779AbfH0Sjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:39:51 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46HyN60RWjz9tyVK;
+        Tue, 27 Aug 2019 20:39:50 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=BbRmSYYe; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id WFLIWcemWyoq; Tue, 27 Aug 2019 20:39:49 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46HyN56Q8jz9tyVG;
+        Tue, 27 Aug 2019 20:39:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566931189; bh=gbTdZZUEM4dYfdN/z9H+CPNs7FFPw8gO2bAdbVyB4Lw=;
+        h=From:Subject:To:Cc:Date:From;
+        b=BbRmSYYeylPErAIhEF79/tIKpW8s9or49MxJESVKAjBW/Q+pxKMLBxg/hfLTuDsgy
+         ADirKPfRBj6hcxyKq/LccQ+WaWszXDCchH5XC6Lb3TfgJOZ11ERSaZuUkJMqJvEHaY
+         7nQpAjpNFsxOodV8Czod2c0/naVelMy/N4tzGveQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D96848B847;
+        Tue, 27 Aug 2019 20:39:49 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id YSBB_GfZP5P4; Tue, 27 Aug 2019 20:39:49 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A37FA8B842;
+        Tue, 27 Aug 2019 20:39:49 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 77308696EA; Tue, 27 Aug 2019 18:39:49 +0000 (UTC)
+Message-Id: <e3de2a60198c1b648a5da19ba29938a1e365d1f3.1566931178.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 1/2] powerpc: permanently include 8xx registers in reg.h
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org, npiggin@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 27 Aug 2019 18:39:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 07:39:50PM +0200, Michal Hocko wrote:
-> On Tue 27-08-19 19:06:18, Greg KH wrote:
-> > On Tue, Aug 27, 2019 at 04:10:16PM +0200, Michal Hocko wrote:
-> > > On Sat 24-08-19 23:23:07, Thomas Backlund wrote:
-> > > > Den 24-08-2019 kl. 22:57, skrev Andrew Morton:
-> > > > > On Sat, 17 Aug 2019 19:15:23 +0000 Roman Gushchin <guro@fb.com> wrote:
-> > > > > 
-> > > > > > > > Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
-> > > > > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > > > > > > Cc: Yafang Shao <laoar.shao@gmail.com>
-> > > > > > > > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > > > > > > > ---
-> > > > > > > >   mm/memcontrol.c | 8 +++-----
-> > > > > > > >   1 file changed, 3 insertions(+), 5 deletions(-)
-> > > > > > > 
-> > > > > > > <formletter>
-> > > > > > > 
-> > > > > > > This is not the correct way to submit patches for inclusion in the
-> > > > > > > stable kernel tree.  Please read:
-> > > > > > >      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > > > > > > for how to do this properly.
-> > > > > > 
-> > > > > > Oh, I'm sorry, will read and follow next time. Thanks!
-> > > > > 
-> > > > > 766a4c19d880 is not present in 5.2 so no -stable backport is needed, yes?
-> > > > > 
-> > > > 
-> > > > Unfortunately it got added in 5.2.7, so backport is needed.
-> > > 
-> > > yet another example of patch not marked for stable backported to the
-> > > stable tree. yay...
-> > 
-> > If you do not want autobot to pick up patches for specific
-> > subsystems/files, just let us know and we will add them to the
-> > blacklist.
-> 
-> Done that on several occasions over last year and so. I always get "yep
-> we are going to black list" and whoops and we are back there with
-> patches going to stable like nothing happened. We've been through this
-> discussion so many times I am tired of it and to be honest I simply do
-> not care anymore.
-> 
-> I will keep encouraging people to mark patches for stable but I do not
-> give a wee bit about any reports for the stable tree. Nor do I care
-> whether something made it in and we should be careful to mark another
-> patch for stable as a fixup like this one.
+Most 8xx registers have specific names, so just include
+reg_8xx.h all the time in reg.h in order to have them defined
+even when CONFIG_PPC_8xx is not selected. This will avoid
+the need for #ifdefs in C code.
 
-Sasha, can you add these to the blacklist for autosel?
+Guard SPRN_ICTRL in an #ifdef CONFIG_PPC_8xx as this register
+has same name but different meaning and different spr number as
+another register in the mpc7450.
 
-thanks,
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-greg k-h
+---
+v2: no change
+---
+ arch/powerpc/include/asm/reg.h     | 2 --
+ arch/powerpc/include/asm/reg_8xx.h | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index 10caa145f98b..b17ee25df226 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -25,9 +25,7 @@
+ #include <asm/reg_fsl_emb.h>
+ #endif
+ 
+-#ifdef CONFIG_PPC_8xx
+ #include <asm/reg_8xx.h>
+-#endif /* CONFIG_PPC_8xx */
+ 
+ #define MSR_SF_LG	63              /* Enable 64 bit mode */
+ #define MSR_ISF_LG	61              /* Interrupt 64b mode valid on 630 */
+diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
+index 7192eece6c3e..abc663c0f1db 100644
+--- a/arch/powerpc/include/asm/reg_8xx.h
++++ b/arch/powerpc/include/asm/reg_8xx.h
+@@ -38,7 +38,9 @@
+ #define SPRN_CMPF	153
+ #define SPRN_LCTRL1	156
+ #define SPRN_LCTRL2	157
++#ifdef CONFIG_PPC_8xx
+ #define SPRN_ICTRL	158
++#endif
+ #define SPRN_BAR	159
+ 
+ /* Commands.  Only the first few are available to the instruction cache.
+-- 
+2.13.3
+
