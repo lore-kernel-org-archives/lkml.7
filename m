@@ -2,71 +2,192 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044ACC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211AFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB65F206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A90206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oQAowJpw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfH0Vpq (ORCPT
+        id S1726663AbfH0Vpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:45:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:33535 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfH0Vpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:45:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 14:45:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="209903706"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Aug 2019 14:45:45 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id C2D09301872; Tue, 27 Aug 2019 14:45:45 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 14:45:45 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: perf/core] perf script: Fix memory leaks in list_scripts()
-Message-ID: <20190827214545.GM5447@tassilo.jf.intel.com>
-References: <20190408162748.GA21008@embeddedor>
- <156689437793.24518.1210962260082729908.tip-bot2@tip-bot2>
- <b660a320-6b32-cc24-d829-1527dfc16e5d@embeddedor.com>
+        Tue, 27 Aug 2019 17:45:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39687 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbfH0Vpu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 17:45:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t16so310765wra.6
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UKwNCZ3kYbqKK0CEnypD41umaTIfpON2HwG6q7KFDlI=;
+        b=oQAowJpwokGyA7CyiOV+GSrCQJvxChQfZevZu1BLUnGoxo609uYzfiHOohYW+2Go3s
+         xir3yP2cD30zuXAkniV6fA/YXpyekCxqLfDVhB53xEMSQC4dRvv5psVbnEgIK3BRIk4a
+         6BBmkDS/PIVst70jZCVj/KQ+7XtmdW9do8OPuT2LiJGR6Lg9gu6Z7NeAkQok5Kzv1+A5
+         65GTrcwSe1W8UW3+dHIVW6RXQX4OP9/KHeXPCeaEaYK+10iGHDA8SCYxFLrbeIqNFyCz
+         NwN/wQn2S3FqsdHzfat4o21Jw/NbIgEOpIhIje4bbw/lTFmd/2bEuKkDiq6ewqx5rtx+
+         5xPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UKwNCZ3kYbqKK0CEnypD41umaTIfpON2HwG6q7KFDlI=;
+        b=A1U1ocJ6RqzqckJDFtXacJAtAAVb6UaEmkFPohgX6yTZ015NJ7fx87AaFCzUWCz3+T
+         fXlJbJqAJpkDhS9a2kYFdKCT/3AHlFsK4IxmFlHN4FKyakPA0/aPea+eDaw3GnRX1F8D
+         hMW3ay2xjMfmcJSAHwJaokJxxaUTfJsQ0LpTZ/qCYMrLPS4D9BT/BkJLiZb2QR38V9pr
+         XKkgcCgDrXuRX+CFDX2B/JFWCPwvZPZTjM3yyk6Z9JsMX1bhjcuRrlYf5TpP0WddYXaU
+         CRT3Hf8PZ18+ID1THQgL9usncE54mFi1pFiBmGYYlkZeC47ZO7fpLkScEtxpfv86e+Mp
+         +tBw==
+X-Gm-Message-State: APjAAAWLNrucWYWrO6V8OQ5NDU+jYRQROQhQtmiTcXXMW/g1HZtPD9sa
+        ayZZSVm4a83EZCMNnYsyOnUDsQ==
+X-Google-Smtp-Source: APXvYqziAisOZLDMdT1NhbUMLZb+6dgffb+3qITgnWys+YhakxZqpmI/s8VFsjAs/reQoaQnTB+/hA==
+X-Received: by 2002:a5d:5388:: with SMTP id d8mr262118wrv.299.1566942348151;
+        Tue, 27 Aug 2019 14:45:48 -0700 (PDT)
+Received: from [192.168.86.29] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id c11sm186282wrs.86.2019.08.27.14.45.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 14:45:47 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 4/5] misc: fastrpc: fix double refcounting on dmabuf
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, arnd@arndb.de,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mayank Chopra <mak.chopra@codeaurora.org>
+References: <20190823100622.3892-1-srinivas.kandagatla@linaro.org>
+ <20190823100622.3892-5-srinivas.kandagatla@linaro.org>
+ <CAC8LzUAnz+RZYh+bBbJbXJYP3QDq4H1847W8rJxj-aF1B1J9QQ@mail.gmail.com>
+Message-ID: <cb003c11-d331-a2c7-1eb4-a89ba025f4c6@linaro.org>
+Date:   Tue, 27 Aug 2019 22:45:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b660a320-6b32-cc24-d829-1527dfc16e5d@embeddedor.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <CAC8LzUAnz+RZYh+bBbJbXJYP3QDq4H1847W8rJxj-aF1B1J9QQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+On 23/08/2019 16:23, Jorge Ramirez-Ortiz wrote:
+> can you add me as a co-author to this patch please?
+
+No problem I can do that if you feel so!
+
+> since I spent about a day doing the analysis, sent you  a fix that 
+> maintained the API used by the library and explained you how to 
+> reproduce the issue I think it is just fair. > the  fact that the api could be be modified and the fix be done a bit
+> differently- free dma buf ioctl removed- seems just a minor 
+> implementation detail to me.
+
+No, that's not true, this is a clear fastrpc design issue.
+
+Userspace is already doing a refcount via mmap/unmap on that dmabuf fd, 
+having an additional api adds another level of refcount which is totally 
+redundant and is the root cause for this leak.
+
+
+--srini
+
 > 
-> This should be tagged for stable:
+> also you can add my tested-by if you want
 > 
-> Cc: stable@vger.kernel.org
-
-It's a theoretical problem (which are explicitely ruled out by stable rules)
-because if you ever see user space malloc() returning NULL the system is likely
-already randomly killing your processes in OOM, including eventually perf.
-
-I can see the value of shutting up coverity though, but that's not something
-that needs to be in stable.
-
--Andi
+> TIA
+> 
+> On Fri, 23 Aug 2019 at 12:07, Srinivas Kandagatla 
+> <srinivas.kandagatla@linaro.org <mailto:srinivas.kandagatla@linaro.org>> 
+> wrote:
+> 
+>     dma buf refcount has to be done by the driver which is going to use
+>     the fd.
+>     This driver already does refcount on the dmabuf fd if its actively
+>     using it
+>     but also does an additional refcounting via extra ioctl.
+>     This additional refcount can lead to memory leak in cases where the
+>     applications fail to call the ioctl to decrement the refcount.
+> 
+>     So remove this extra refcount in the ioctl
+> 
+>     More info of dma buf usage at drivers/dma-buf/dma-buf.c
+> 
+>     Reported-by: Mayank Chopra <mak.chopra@codeaurora.org
+>     <mailto:mak.chopra@codeaurora.org>>
+>     Reported-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org
+>     <mailto:jorge.ramirez-ortiz@linaro.org>>
+>     Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org
+>     <mailto:srinivas.kandagatla@linaro.org>>
+>     ---
+>       drivers/misc/fastrpc.c | 25 -------------------------
+>       1 file changed, 25 deletions(-)
+> 
+>     diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+>     index 38829fa74f28..eee2bb398947 100644
+>     --- a/drivers/misc/fastrpc.c
+>     +++ b/drivers/misc/fastrpc.c
+>     @@ -1198,26 +1198,6 @@ static int fastrpc_device_open(struct inode
+>     *inode, struct file *filp)
+>              return 0;
+>       }
+> 
+>     -static int fastrpc_dmabuf_free(struct fastrpc_user *fl, char __user
+>     *argp)
+>     -{
+>     -       struct dma_buf *buf;
+>     -       int info;
+>     -
+>     -       if (copy_from_user(&info, argp, sizeof(info)))
+>     -               return -EFAULT;
+>     -
+>     -       buf = dma_buf_get(info);
+>     -       if (IS_ERR_OR_NULL(buf))
+>     -               return -EINVAL;
+>     -       /*
+>     -        * one for the last get and other for the ALLOC_DMA_BUFF ioctl
+>     -        */
+>     -       dma_buf_put(buf);
+>     -       dma_buf_put(buf);
+>     -
+>     -       return 0;
+>     -}
+>     -
+>       static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char
+>     __user *argp)
+>       {
+>              struct fastrpc_alloc_dma_buf bp;
+>     @@ -1253,8 +1233,6 @@ static int fastrpc_dmabuf_alloc(struct
+>     fastrpc_user *fl, char __user *argp)
+>                      return -EFAULT;
+>              }
+> 
+>     -       get_dma_buf(buf->dmabuf);
+>     -
+>              return 0;
+>       }
+> 
+>     @@ -1322,9 +1300,6 @@ static long fastrpc_device_ioctl(struct file
+>     *file, unsigned int cmd,
+>              case FASTRPC_IOCTL_INIT_CREATE:
+>                      err = fastrpc_init_create_process(fl, argp);
+>                      break;
+>     -       case FASTRPC_IOCTL_FREE_DMA_BUFF:
+>     -               err = fastrpc_dmabuf_free(fl, argp);
+>     -               break;
+>              case FASTRPC_IOCTL_ALLOC_DMA_BUFF:
+>                      err = fastrpc_dmabuf_alloc(fl, argp);
+>                      break;
+>     -- 
+>     2.21.0
+> 
