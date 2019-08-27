@@ -2,73 +2,100 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63615C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2A0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA1B206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A072173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfH0Nl7 (ORCPT
+        id S1729208AbfH0NmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:41:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64187 "EHLO mga01.intel.com"
+        Tue, 27 Aug 2019 09:42:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18721 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfH0Nl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:41:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1725811AbfH0NmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:42:03 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 06:41:57 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 06:42:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
-   d="scan'208";a="204973364"
-Received: from jsakkine-mobl1.fi.intel.com (HELO localhost) ([10.237.66.169])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Aug 2019 06:41:55 -0700
-Date:   Tue, 27 Aug 2019 16:41:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Matthew Garrett <mjg59@google.com>, ard.biesheuvel@linaro.org
-Cc:     Peter Jones <pjones@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Lyude Paul <lyude@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] efi+tpm: Don't access event->count when it isn't
- mapped.
-Message-ID: <20190827134155.otm6ekeb53siy6lb@linux.intel.com>
-References: <20190826153028.32639-1-pjones@redhat.com>
- <20190826162823.4mxkwhd7mbtro3zy@linux.intel.com>
- <CACdnJuuB_ExhOOtA8Uh7WO42TSNfRHuGaK4Xo=5SbdfWDKr7wA@mail.gmail.com>
- <20190827110344.4uvjppmkkaeex3mk@linux.intel.com>
+   d="scan'208";a="171199517"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 06:42:02 -0700
+Date:   Tue, 27 Aug 2019 06:42:02 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Denis Lunev <den@virtuozzo.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 1/3] KVM: x86: fix wrong return code
+Message-ID: <20190827134202.GB27459@linux.intel.com>
+References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
+ <1566911210-30059-2-git-send-email-jan.dakinevich@virtuozzo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827110344.4uvjppmkkaeex3mk@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1566911210-30059-2-git-send-email-jan.dakinevich@virtuozzo.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 02:03:44PM +0300, Jarkko Sakkinen wrote:
-> > Jarkko, these two should probably go to 5.3 if possible - I
-> > independently had a report of a system hitting this issue last week
-> > (Intel apparently put a surprising amount of data in the event logs on
-> > the NUCs).
+On Tue, Aug 27, 2019 at 01:07:04PM +0000, Jan Dakinevich wrote:
+> x86_emulate_instruction(), the caller of x86_decode_insn(), expects
+> that x86_decode_insn()'s returning value belongs to EMULATION_* name
+> space. However, this function may return value from X86EMUL_* name
+> space.
 > 
-> OK, I can try to push them. I'll do PR today.
+> Although, the code behaves properly (because both X86EMUL_CONTINUE and
+> EMULATION_OK are equal to 0) this change makes code more consistent and
+> it is required for further fixes.
+> 
+> Cc: Denis Lunev <den@virtuozzo.com>
+> Cc: Roman Kagan <rkagan@virtuozzo.com>
+> Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
+> Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+> ---
+>  arch/x86/kvm/emulate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index 718f7d9..6170ddf 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -5144,7 +5144,7 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
+>  	else {
+>  		rc = __do_insn_fetch_bytes(ctxt, 1);
+>  		if (rc != X86EMUL_CONTINUE)
+> -			return rc;
+> +			goto done;
 
-Ard, how do you wish these to be managed?
+Funny how things go unnoticed for years and then suddenly...
 
-I'm asking this because:
+https://lkml.kernel.org/r/9bf79098-703c-e82b-7e7d-1c0a6a1023c2@redhat.com
 
-1. Neither patch was CC'd to linux-integrity.
-2. Neither patch has your tags ATM.
-
-/Jarkko
+>  	}
+>  
+>  	switch (mode) {
+> -- 
+> 2.1.4
+> 
