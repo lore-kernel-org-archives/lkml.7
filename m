@@ -2,110 +2,80 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC9DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC825C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C3D2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566913768;
-	bh=t8dV1JQ6YjWzp6xWQVowBI3+h+v4134YMz5+lu9L+/A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gdyQ89EjLzfuh4tuo+Sc5Km46Cmc0XRbl6JLnaF38YC+PqQxAiZai2yhCHag6DCf8
-	 5rOtgomswmk21xRRPSQGZPj6WalyLR3D/uf59ePPpwbCG/l7qsIlhss3pu1MOMq1Z2
-	 0FrHEF5XBjbpYX94wIQSXdCXr/uwHKPWunL14yzc=
+	by mail.kernel.org (Postfix) with ESMTP id BD26A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbfH0Nt2 (ORCPT
+        id S1730293AbfH0NuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfH0Nt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:49:27 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A2522DA7;
-        Tue, 27 Aug 2019 13:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566913766;
-        bh=t8dV1JQ6YjWzp6xWQVowBI3+h+v4134YMz5+lu9L+/A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vxThKCxhmjAnNTIY32ynwA5M4uCpDxXpUzkUdSxei05qZyPP/qcipIdYdgpontZLS
-         YqQzblm7YkM8uRqS4nEl7X1l4vp8fthLL9yo5ADW17nizmtUmnpOpq4umYZW1M12Td
-         k7lg97H0TlLoWg+cDwA12rm24mMpngjjXbqBxIN4=
-Received: by mail-qk1-f169.google.com with SMTP id m2so16982196qkd.10;
-        Tue, 27 Aug 2019 06:49:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrxOReXJ7N/us0vxxpIxYuSwtegYzQ/YmtlSHiBss4grRaTBaJ
-        trm5hVqpyA+xN6UFTLFi1nirXb6/IOeDHjRJXw==
-X-Google-Smtp-Source: APXvYqyzUQ15boR9MbWaQGb4gGOqWJfi8CzSbuazLWRrpy5Me3zhwjIkil7L3eEEZiEqqtxcmVl0NXeT5X4kfIDHEnc=
-X-Received: by 2002:a37:4941:: with SMTP id w62mr19882827qka.119.1566913765684;
- Tue, 27 Aug 2019 06:49:25 -0700 (PDT)
+        Tue, 27 Aug 2019 09:50:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56910 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726596AbfH0NuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:50:01 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4594A793FE86C1EFFE65;
+        Tue, 27 Aug 2019 21:49:55 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
+ 21:49:45 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <khilman@baylibre.com>
+CC:     <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] phy: mdio-mux-meson-g12a: use devm_platform_ioremap_resource() to simplify code
+Date:   Tue, 27 Aug 2019 21:49:40 +0800
+Message-ID: <20190827134940.14944-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190805143911.12185-1-hhhawa@amazon.com> <20190805143911.12185-2-hhhawa@amazon.com>
- <20190821191704.GA32425@bogus> <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
-In-Reply-To: <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 27 Aug 2019 08:49:13 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
-Message-ID: <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
-To:     "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
->
->
->
-> On 8/21/2019 10:17 PM, Rob Herring wrote:
-> > Why is this even in DT? AFAICT, this is all just CortexA57 core features
-> > (i.e. nothing Amazon specific). The core type and the ECC capabilities
-> > are discoverable.
->
-> Added to the DT in order to easily enable/disable the driver.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-That alone is not reason enough to put it in DT. From a DT
-perspective, I have no idea what the whims of a OS maintainer are
-regarding whether they want all this to be 1 driver or 2 drivers.
-(IMO, it should be 1 as this is ECC for an A57. For a core and memory
-controller, then 2 seems appropriate.)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/phy/mdio-mux-meson-g12a.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> You are
-> correct that they are CortexA57 core features and nothing Amazon
-> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
-> cortex revisions (e.g. A57) the register bitmap may change. Because of
-> that we added an Amazon compatible which corresponds to the specific
-> core we are using.
+diff --git a/drivers/net/phy/mdio-mux-meson-g12a.c b/drivers/net/phy/mdio-mux-meson-g12a.c
+index 6644762..7a9ad54 100644
+--- a/drivers/net/phy/mdio-mux-meson-g12a.c
++++ b/drivers/net/phy/mdio-mux-meson-g12a.c
+@@ -302,7 +302,6 @@ static int g12a_mdio_mux_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct g12a_mdio_mux *priv;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -311,8 +310,7 @@ static int g12a_mdio_mux_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->regs = devm_ioremap_resource(dev, res);
++	priv->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->regs))
+ 		return PTR_ERR(priv->regs);
+ 
+-- 
+2.7.4
 
-'IMPLEMENTATION DEFINED' usually means not defined by the
-architecture. This doesn't seem like something that's going to change
-with A57 revisions. Plus, the A57 is pretty old now, so we know what's
-out there already. In any case, the revision is discoverable too, so
-we could deal with changes between revisions in any case.
 
-Rob
