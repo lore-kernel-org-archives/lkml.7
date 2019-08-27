@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B68C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01083C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4343D206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25D9206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893267;
-	bh=SVdxk6ilj4BwyVaOwvyBgAEyCIvz4LQuT1n5DJ4QGrU=;
+	s=default; t=1566893271;
+	bh=/V67JtHPVdKxfVeF4ozZ0lyfdgmUBoao63IEJRDMif4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rt2bEi+C/27pyq/WWADv6aRE8EoqsBewilmagkC5SrxLLytGWC1FHCxj2TKNbvqbP
-	 EN6lnzMzKlHljya6Zcf4rvTfFvwh/9dJsTu55Yn+WByBxKHdDhb/UghMRVkMlQ39Z1
-	 gCtKLbCTWS6emdO1fMpGpyIY1ntmaOj21gsZsI6g=
+	b=oFNltBuqek7bpjdJMTMypAexf5P5y1KEmz99IDPVbrJLIF72aIsL54jMuOVCH+mM7
+	 vnro0d+KvoBT1N8Ij9vTZqSreDNyC/6SVx/gCeZacdjQv8YlBLISPzO2G4te4L+nDp
+	 pUJc/rURBLiNjecK01XZdGmDIphrKDrkLsaM+DFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733201AbfH0IHp (ORCPT
+        id S1733207AbfH0IHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:07:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732788AbfH0IHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:07:07 -0400
+        id S1732778AbfH0IG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:06:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113F6206BF;
-        Tue, 27 Aug 2019 08:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75494206BF;
+        Tue, 27 Aug 2019 08:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893226;
-        bh=SVdxk6ilj4BwyVaOwvyBgAEyCIvz4LQuT1n5DJ4QGrU=;
+        s=default; t=1566893215;
+        bh=/V67JtHPVdKxfVeF4ozZ0lyfdgmUBoao63IEJRDMif4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XscZZAx1bomd3GUNaEmKJxoYYNsJnXC0b9JhQeVtC0OgYwR4rSR5NfhpGlLvyMTQH
-         OcHhvsQpVj7vqT5Z5EC/qFiFZRe3eoljhCpxU1VfkcXp9mw4Kq006DJzyT1jbrAG0t
-         XQj704A4gcO9adBJOmU2nZFjUp0Xwv26ZLOT186M=
+        b=a0QuBaozAEhxxYBVbsZJbZswoUv/7Vo1/0n85+wVQenUQLzTDOYGvo6DwbOhH+gTB
+         GJrxbkTCiU6vsixIIH3WEs4j0ZHZsHVicpFs75KhWGmU6mU1QIbpr7hDu41tolc3Po
+         HMbBBEVkqmXfnyCCI0rhLeiPqW8vRaVL3FuXnjFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 152/162] mm/zsmalloc.c: fix race condition in zs_destroy_pool
-Date:   Tue, 27 Aug 2019 09:51:20 +0200
-Message-Id: <20190827072744.064581197@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.2 161/162] rxrpc: Fix local endpoint refcounting
+Date:   Tue, 27 Aug 2019 09:51:29 +0200
+Message-Id: <20190827072744.448798725@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -65,171 +60,281 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 701d678599d0c1623aaf4139c03eea260a75b027 upstream.
+commit 730c5fd42c1e3652a065448fd235cb9fafb2bd10 upstream.
 
-In zs_destroy_pool() we call flush_work(&pool->free_work).  However, we
-have no guarantee that migration isn't happening in the background at
-that time.
+The object lifetime management on the rxrpc_local struct is broken in that
+the rxrpc_local_processor() function is expected to clean up and remove an
+object - but it may get requeued by packets coming in on the backing UDP
+socket once it starts running.
 
-Since migration can't directly free pages, it relies on free_work being
-scheduled to free the pages.  But there's nothing preventing an
-in-progress migrate from queuing the work *after*
-zs_unregister_migration() has called flush_work().  Which would mean
-pages still pointing at the inode when we free it.
+This may result in the assertion in rxrpc_local_rcu() firing because the
+memory has been scheduled for RCU destruction whilst still queued:
 
-Since we know at destroy time all objects should be free, no new
-migrations can come in (since zs_page_isolate() fails for fully-free
-zspages).  This means it is sufficient to track a "# isolated zspages"
-count by class, and have the destroy logic ensure all such pages have
-drained before proceeding.  Keeping that state under the class spinlock
-keeps the logic straightforward.
+	rxrpc: Assertion failed
+	------------[ cut here ]------------
+	kernel BUG at net/rxrpc/local_object.c:468!
 
-In this case a memory leak could lead to an eventual crash if compaction
-hits the leaked page.  This crash would only occur if people are
-changing their zswap backend at runtime (which eventually starts
-destruction).
+Note that if the processor comes around before the RCU free function, it
+will just do nothing because ->dead is true.
 
-Link: http://lkml.kernel.org/r/20190809181751.219326-2-henryburns@google.com
-Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Jonathan Adams <jwadams@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fix this by adding a separate refcount to count active users of the
+endpoint that causes the endpoint to be destroyed when it reaches 0.
+
+The original refcount can then be used to refcount objects through the work
+processor and cause the memory to be rcu freed when that reaches 0.
+
+Fixes: 4f95dd78a77e ("rxrpc: Rework local endpoint management")
+Reported-by: syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/zsmalloc.c |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 2 deletions(-)
+ net/rxrpc/af_rxrpc.c     |    4 +-
+ net/rxrpc/ar-internal.h  |    5 ++
+ net/rxrpc/input.c        |   16 ++++++--
+ net/rxrpc/local_object.c |   86 +++++++++++++++++++++++++++++------------------
+ 4 files changed, 72 insertions(+), 39 deletions(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -53,6 +53,7 @@
- #include <linux/zpool.h>
- #include <linux/mount.h>
- #include <linux/migrate.h>
-+#include <linux/wait.h>
- #include <linux/pagemap.h>
- #include <linux/fs.h>
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -193,7 +193,7 @@ static int rxrpc_bind(struct socket *soc
  
-@@ -267,6 +268,10 @@ struct zs_pool {
- #ifdef CONFIG_COMPACTION
- 	struct inode *inode;
- 	struct work_struct free_work;
-+	/* A wait queue for when migration races with async_free_zspage() */
-+	struct wait_queue_head migration_wait;
-+	atomic_long_t isolated_pages;
-+	bool destroying;
- #endif
- };
+ service_in_use:
+ 	write_unlock(&local->services_lock);
+-	rxrpc_put_local(local);
++	rxrpc_unuse_local(local);
+ 	ret = -EADDRINUSE;
+ error_unlock:
+ 	release_sock(&rx->sk);
+@@ -901,7 +901,7 @@ static int rxrpc_release_sock(struct soc
+ 	rxrpc_queue_work(&rxnet->service_conn_reaper);
+ 	rxrpc_queue_work(&rxnet->client_conn_reaper);
  
-@@ -1894,6 +1899,19 @@ static void putback_zspage_deferred(stru
+-	rxrpc_put_local(rx->local);
++	rxrpc_unuse_local(rx->local);
+ 	rx->local = NULL;
+ 	key_put(rx->key);
+ 	rx->key = NULL;
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -254,7 +254,8 @@ struct rxrpc_security {
+  */
+ struct rxrpc_local {
+ 	struct rcu_head		rcu;
+-	atomic_t		usage;
++	atomic_t		active_users;	/* Number of users of the local endpoint */
++	atomic_t		usage;		/* Number of references to the structure */
+ 	struct rxrpc_net	*rxnet;		/* The network ns in which this resides */
+ 	struct list_head	link;
+ 	struct socket		*socket;	/* my UDP socket */
+@@ -1002,6 +1003,8 @@ struct rxrpc_local *rxrpc_lookup_local(s
+ struct rxrpc_local *rxrpc_get_local(struct rxrpc_local *);
+ struct rxrpc_local *rxrpc_get_local_maybe(struct rxrpc_local *);
+ void rxrpc_put_local(struct rxrpc_local *);
++struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *);
++void rxrpc_unuse_local(struct rxrpc_local *);
+ void rxrpc_queue_local(struct rxrpc_local *);
+ void rxrpc_destroy_all_locals(struct rxrpc_net *);
  
- }
- 
-+static inline void zs_pool_dec_isolated(struct zs_pool *pool)
-+{
-+	VM_BUG_ON(atomic_long_read(&pool->isolated_pages) <= 0);
-+	atomic_long_dec(&pool->isolated_pages);
-+	/*
-+	 * There's no possibility of racing, since wait_for_isolated_drain()
-+	 * checks the isolated count under &class->lock after enqueuing
-+	 * on migration_wait.
-+	 */
-+	if (atomic_long_read(&pool->isolated_pages) == 0 && pool->destroying)
-+		wake_up_all(&pool->migration_wait);
-+}
-+
- static void replace_sub_page(struct size_class *class, struct zspage *zspage,
- 				struct page *newpage, struct page *oldpage)
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -1108,8 +1108,12 @@ static void rxrpc_post_packet_to_local(s
  {
-@@ -1963,6 +1981,7 @@ static bool zs_page_isolate(struct page
- 	 */
- 	if (!list_empty(&zspage->list) && !is_zspage_isolated(zspage)) {
- 		get_zspage_mapping(zspage, &class_idx, &fullness);
-+		atomic_long_inc(&pool->isolated_pages);
- 		remove_zspage(class, zspage, fullness);
- 	}
+ 	_enter("%p,%p", local, skb);
  
-@@ -2062,8 +2081,16 @@ static int zs_page_migrate(struct addres
- 	 * Page migration is done so let's putback isolated zspage to
- 	 * the list if @page is final isolated subpage in the zspage.
- 	 */
--	if (!is_zspage_isolated(zspage))
-+	if (!is_zspage_isolated(zspage)) {
-+		/*
-+		 * We cannot race with zs_destroy_pool() here because we wait
-+		 * for isolation to hit zero before we start destroying.
-+		 * Also, we ensure that everyone can see pool->destroying before
-+		 * we start waiting.
-+		 */
- 		putback_zspage_deferred(pool, class, zspage);
-+		zs_pool_dec_isolated(pool);
+-	skb_queue_tail(&local->event_queue, skb);
+-	rxrpc_queue_local(local);
++	if (rxrpc_get_local_maybe(local)) {
++		skb_queue_tail(&local->event_queue, skb);
++		rxrpc_queue_local(local);
++	} else {
++		rxrpc_free_skb(skb, rxrpc_skb_rx_freed);
 +	}
- 
- 	reset_page(page);
- 	put_page(page);
-@@ -2114,8 +2141,8 @@ static void zs_page_putback(struct page
- 		 * so let's defer.
- 		 */
- 		putback_zspage_deferred(pool, class, zspage);
-+		zs_pool_dec_isolated(pool);
- 	}
--
- 	spin_unlock(&class->lock);
  }
  
-@@ -2138,8 +2165,36 @@ static int zs_register_migration(struct
- 	return 0;
- }
- 
-+static bool pool_isolated_are_drained(struct zs_pool *pool)
-+{
-+	return atomic_long_read(&pool->isolated_pages) == 0;
-+}
-+
-+/* Function for resolving migration */
-+static void wait_for_isolated_drain(struct zs_pool *pool)
-+{
-+
-+	/*
-+	 * We're in the process of destroying the pool, so there are no
-+	 * active allocations. zs_page_isolate() fails for completely free
-+	 * zspages, so we need only wait for the zs_pool's isolated
-+	 * count to hit zero.
-+	 */
-+	wait_event(pool->migration_wait,
-+		   pool_isolated_are_drained(pool));
-+}
-+
- static void zs_unregister_migration(struct zs_pool *pool)
+ /*
+@@ -1119,8 +1123,12 @@ static void rxrpc_reject_packet(struct r
  {
-+	pool->destroying = true;
-+	/*
-+	 * We need a memory barrier here to ensure global visibility of
-+	 * pool->destroying. Thus pool->isolated pages will either be 0 in which
-+	 * case we don't care, or it will be > 0 and pool->destroying will
-+	 * ensure that we wake up once isolation hits 0.
-+	 */
-+	smp_mb();
-+	wait_for_isolated_drain(pool); /* This can block */
- 	flush_work(&pool->free_work);
- 	iput(pool->inode);
+ 	CHECK_SLAB_OKAY(&local->usage);
+ 
+-	skb_queue_tail(&local->reject_queue, skb);
+-	rxrpc_queue_local(local);
++	if (rxrpc_get_local_maybe(local)) {
++		skb_queue_tail(&local->reject_queue, skb);
++		rxrpc_queue_local(local);
++	} else {
++		rxrpc_free_skb(skb, rxrpc_skb_rx_freed);
++	}
  }
-@@ -2377,6 +2432,8 @@ struct zs_pool *zs_create_pool(const cha
- 	if (!pool->name)
- 		goto err;
  
-+	init_waitqueue_head(&pool->migration_wait);
+ /*
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -79,6 +79,7 @@ static struct rxrpc_local *rxrpc_alloc_l
+ 	local = kzalloc(sizeof(struct rxrpc_local), GFP_KERNEL);
+ 	if (local) {
+ 		atomic_set(&local->usage, 1);
++		atomic_set(&local->active_users, 1);
+ 		local->rxnet = rxnet;
+ 		INIT_LIST_HEAD(&local->link);
+ 		INIT_WORK(&local->processor, rxrpc_local_processor);
+@@ -266,11 +267,8 @@ struct rxrpc_local *rxrpc_lookup_local(s
+ 		 * bind the transport socket may still fail if we're attempting
+ 		 * to use a local address that the dying object is still using.
+ 		 */
+-		if (!rxrpc_get_local_maybe(local)) {
+-			cursor = cursor->next;
+-			list_del_init(&local->link);
++		if (!rxrpc_use_local(local))
+ 			break;
+-		}
+ 
+ 		age = "old";
+ 		goto found;
+@@ -284,7 +282,10 @@ struct rxrpc_local *rxrpc_lookup_local(s
+ 	if (ret < 0)
+ 		goto sock_error;
+ 
+-	list_add_tail(&local->link, cursor);
++	if (cursor != &rxnet->local_endpoints)
++		list_replace(cursor, &local->link);
++	else
++		list_add_tail(&local->link, cursor);
+ 	age = "new";
+ 
+ found:
+@@ -342,7 +343,8 @@ struct rxrpc_local *rxrpc_get_local_mayb
+ }
+ 
+ /*
+- * Queue a local endpoint.
++ * Queue a local endpoint unless it has become unreferenced and pass the
++ * caller's reference to the work item.
+  */
+ void rxrpc_queue_local(struct rxrpc_local *local)
+ {
+@@ -351,15 +353,8 @@ void rxrpc_queue_local(struct rxrpc_loca
+ 	if (rxrpc_queue_work(&local->processor))
+ 		trace_rxrpc_local(local, rxrpc_local_queued,
+ 				  atomic_read(&local->usage), here);
+-}
+-
+-/*
+- * A local endpoint reached its end of life.
+- */
+-static void __rxrpc_put_local(struct rxrpc_local *local)
+-{
+-	_enter("%d", local->debug_id);
+-	rxrpc_queue_work(&local->processor);
++	else
++		rxrpc_put_local(local);
+ }
+ 
+ /*
+@@ -375,11 +370,46 @@ void rxrpc_put_local(struct rxrpc_local
+ 		trace_rxrpc_local(local, rxrpc_local_put, n, here);
+ 
+ 		if (n == 0)
+-			__rxrpc_put_local(local);
++			call_rcu(&local->rcu, rxrpc_local_rcu);
+ 	}
+ }
+ 
+ /*
++ * Start using a local endpoint.
++ */
++struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *local)
++{
++	unsigned int au;
 +
- 	if (create_cache(pool))
- 		goto err;
++	local = rxrpc_get_local_maybe(local);
++	if (!local)
++		return NULL;
++
++	au = atomic_fetch_add_unless(&local->active_users, 1, 0);
++	if (au == 0) {
++		rxrpc_put_local(local);
++		return NULL;
++	}
++
++	return local;
++}
++
++/*
++ * Cease using a local endpoint.  Once the number of active users reaches 0, we
++ * start the closure of the transport in the work processor.
++ */
++void rxrpc_unuse_local(struct rxrpc_local *local)
++{
++	unsigned int au;
++
++	au = atomic_dec_return(&local->active_users);
++	if (au == 0)
++		rxrpc_queue_local(local);
++	else
++		rxrpc_put_local(local);
++}
++
++/*
+  * Destroy a local endpoint's socket and then hand the record to RCU to dispose
+  * of.
+  *
+@@ -393,16 +423,6 @@ static void rxrpc_local_destroyer(struct
  
+ 	_enter("%d", local->debug_id);
+ 
+-	/* We can get a race between an incoming call packet queueing the
+-	 * processor again and the work processor starting the destruction
+-	 * process which will shut down the UDP socket.
+-	 */
+-	if (local->dead) {
+-		_leave(" [already dead]");
+-		return;
+-	}
+-	local->dead = true;
+-
+ 	mutex_lock(&rxnet->local_mutex);
+ 	list_del_init(&local->link);
+ 	mutex_unlock(&rxnet->local_mutex);
+@@ -422,13 +442,11 @@ static void rxrpc_local_destroyer(struct
+ 	 */
+ 	rxrpc_purge_queue(&local->reject_queue);
+ 	rxrpc_purge_queue(&local->event_queue);
+-
+-	_debug("rcu local %d", local->debug_id);
+-	call_rcu(&local->rcu, rxrpc_local_rcu);
+ }
+ 
+ /*
+- * Process events on an endpoint
++ * Process events on an endpoint.  The work item carries a ref which
++ * we must release.
+  */
+ static void rxrpc_local_processor(struct work_struct *work)
+ {
+@@ -441,8 +459,10 @@ static void rxrpc_local_processor(struct
+ 
+ 	do {
+ 		again = false;
+-		if (atomic_read(&local->usage) == 0)
+-			return rxrpc_local_destroyer(local);
++		if (atomic_read(&local->active_users) == 0) {
++			rxrpc_local_destroyer(local);
++			break;
++		}
+ 
+ 		if (!skb_queue_empty(&local->reject_queue)) {
+ 			rxrpc_reject_packets(local);
+@@ -454,6 +474,8 @@ static void rxrpc_local_processor(struct
+ 			again = true;
+ 		}
+ 	} while (again);
++
++	rxrpc_put_local(local);
+ }
+ 
+ /*
 
 
