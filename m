@@ -2,102 +2,169 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E27EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323E8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3F720828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABAC20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfH0JSz (ORCPT
+        id S1729376AbfH0JUo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:18:55 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35541 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfH0JSy (ORCPT
+        Tue, 27 Aug 2019 05:20:44 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:45767 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfH0JUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:18:54 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a127so14408428oii.2;
-        Tue, 27 Aug 2019 02:18:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OVULxG89XFAHB1HH6NIasvz1p9D2uKsiFcCnfRE8CtE=;
-        b=TRxrPt8vSJP5G11IsVCYVPwBYMAgO7cBB6Ea/g2g+eOIL00XKvRYr2l/K1j40GlxqL
-         xR92uUxLb6zCEU/UdSdrmiwiPj7Md/IGkmHTOq3hPZDQno0nbjQ/1O/Ajri/4KfZJ3XA
-         XfSD56seUZ3f6Ldkgqae5DdcG4HPjIMSSk/OOs+2dYocT1x0VpgZrA2eS2FE2yX3RfiR
-         W+qQf4Nq+8DcYc8HArh4JkerEsnpitM2opeA3FjjaU/gcorEFGyEvZNtMV2QtbySg8Z7
-         RvXRkjYo400GtGdcJwUScgJ9D6oUSVCQP8XaXScboSPxc7vc2Cnu6vm6QJHCelF82fdp
-         hYwg==
-X-Gm-Message-State: APjAAAUT9PsbZiGzl6bnhUeBijEFOHChOATATVCZ2BQCEFUJG7L0frCj
-        82t/S4Wk/KFFWwq55Wt4z744EuBBiMsjkg5HVsoavg==
-X-Google-Smtp-Source: APXvYqznMhXUExLuIctyuUXvUpp1m+dbcAX8l5N1M3gPdd5A2IghYw0lD32NruIo8f1qmoDoeL8ybGZyqyyUyBwsE0I=
-X-Received: by 2002:aca:b154:: with SMTP id a81mr14710961oif.148.1566897533576;
- Tue, 27 Aug 2019 02:18:53 -0700 (PDT)
+        Tue, 27 Aug 2019 05:20:43 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7R9KWis027676, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7R9KWis027676
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 17:20:33 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Tue, 27 Aug
+ 2019 17:20:32 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>
+Subject: RE: [PATCH v4] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+Thread-Topic: [PATCH v4] rtw88: pci: Move a mass of jobs in hw IRQ to soft
+ IRQ
+Thread-Index: AQHVW93/L3LBm1nnhUKTmpJa6tAmKKcOtzHQ
+Date:   Tue, 27 Aug 2019 09:20:32 +0000
+Message-ID: <F7CD281DE3E379468C6D07993EA72F84D18AE2DA@RTITMBSVM04.realtek.com.tw>
+References: <F7CD281DE3E379468C6D07993EA72F84D18A5786@RTITMBSVM04.realtek.com.tw>
+ <20190826070827.1436-1-jian-hong@endlessm.com>
+In-Reply-To: <20190826070827.1436-1-jian-hong@endlessm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.183]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190826195740.29415-1-peda@axentia.se> <20190826195740.29415-3-peda@axentia.se>
- <CAMuHMdVx77aOyUVhZ2_N76VAP+AJ3X8w-gdHLjnjUEeRKcZmOA@mail.gmail.com> <a31ff144-f037-3580-08b5-aa368572c69d@axentia.se>
-In-Reply-To: <a31ff144-f037-3580-08b5-aa368572c69d@axentia.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 27 Aug 2019 11:18:42 +0200
-Message-ID: <CAMuHMdXTm8n=SXyRejT27Q9Vxv0hw5C8DQDXiNM=06aYXq=dgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] fbdev: fbmem: allow overriding the number of
- bootup logos
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+> From: Jian-Hong Pan 
+> Subject: [PATCH v4] rtw88: pci: Move a mass of jobs in hw IRQ to soft IRQ
+> 
+> There is a mass of jobs between spin lock and unlock in the hardware
+> IRQ which will occupy much time originally. To make system work more
+> efficiently, this patch moves the jobs to the soft IRQ (bottom half) to
+> reduce the time in hardware IRQ.
+> 
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+> v2:
+>  Change the spin_lock_irqsave/unlock_irqrestore to spin_lock/unlock in
+>  rtw_pci_interrupt_handler. Because the interrupts are already disabled
+>  in the hardware interrupt handler.
+> 
+> v3:
+>  Extend the spin lock protecting area for the TX path in
+>  rtw_pci_interrupt_threadfn by Realtek's suggestion
+> 
+> v4:
+>  Remove the WiFi running check in rtw_pci_interrupt_threadfn to avoid AP
+>  connection failed by Realtek's suggestion.
+> 
+>  drivers/net/wireless/realtek/rtw88/pci.c | 32 +++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> b/drivers/net/wireless/realtek/rtw88/pci.c
+> index 00ef229552d5..955dd6c6fb57 100644
+> --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> @@ -866,12 +866,29 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
+> void *dev)
+>  {
+>  	struct rtw_dev *rtwdev = dev;
+>  	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
+> -	u32 irq_status[4];
+> 
+>  	spin_lock(&rtwpci->irq_lock);
+>  	if (!rtwpci->irq_enabled)
+>  		goto out;
+> 
+> +	/* disable RTW PCI interrupt to avoid more interrupts before the end of
+> +	 * thread function
+> +	 */
+> +	rtw_pci_disable_interrupt(rtwdev, rtwpci);
+> +out:
+> +	spin_unlock(&rtwpci->irq_lock);
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static irqreturn_t rtw_pci_interrupt_threadfn(int irq, void *dev)
+> +{
+> +	struct rtw_dev *rtwdev = dev;
+> +	struct rtw_pci *rtwpci = (struct rtw_pci *)rtwdev->priv;
+> +	unsigned long flags;
+> +	u32 irq_status[4];
+> +
+> +	spin_lock_irqsave(&rtwpci->irq_lock, flags);
+>  	rtw_pci_irq_recognized(rtwdev, rtwpci, irq_status);
+> 
+>  	if (irq_status[0] & IMR_MGNTDOK)
+> @@ -891,8 +908,9 @@ static irqreturn_t rtw_pci_interrupt_handler(int irq,
+> void *dev)
+>  	if (irq_status[0] & IMR_ROK)
+>  		rtw_pci_rx_isr(rtwdev, rtwpci, RTW_RX_QUEUE_MPDU);
+> 
+> -out:
+> -	spin_unlock(&rtwpci->irq_lock);
+> +	/* all of the jobs for this interrupt have been done */
+> +	rtw_pci_enable_interrupt(rtwdev, rtwpci);
+> +	spin_unlock_irqrestore(&rtwpci->irq_lock, flags);
+> 
+>  	return IRQ_HANDLED;
+>  }
+> @@ -1152,8 +1170,10 @@ static int rtw_pci_probe(struct pci_dev *pdev,
+>  		goto err_destroy_pci;
+>  	}
+> 
+> -	ret = request_irq(pdev->irq, &rtw_pci_interrupt_handler,
+> -			  IRQF_SHARED, KBUILD_MODNAME, rtwdev);
+> +	ret = devm_request_threaded_irq(rtwdev->dev, pdev->irq,
+> +					rtw_pci_interrupt_handler,
+> +					rtw_pci_interrupt_threadfn,
+> +					IRQF_SHARED, KBUILD_MODNAME, rtwdev);
+>  	if (ret) {
+>  		ieee80211_unregister_hw(hw);
+>  		goto err_destroy_pci;
+> @@ -1192,7 +1212,7 @@ static void rtw_pci_remove(struct pci_dev *pdev)
+>  	rtw_pci_disable_interrupt(rtwdev, rtwpci);
+>  	rtw_pci_destroy(rtwdev, pdev);
+>  	rtw_pci_declaim(rtwdev, pdev);
+> -	free_irq(rtwpci->pdev->irq, rtwdev);
+> +	devm_free_irq(rtwdev->dev, rtwpci->pdev->irq, rtwdev);
+>  	rtw_core_deinit(rtwdev);
+>  	ieee80211_free_hw(hw);
+>  }
+> --
+> 2.20.1
 
-On Tue, Aug 27, 2019 at 10:54 AM Peter Rosin <peda@axentia.se> wrote:
-> On 2019-08-27 10:36, Geert Uytterhoeven wrote:
-> > On Mon, Aug 26, 2019 at 10:46 PM Peter Rosin <peda@axentia.se> wrote:
-> >> Probably most useful if you only want one logo regardless of how many
-> >> CPU cores you have.
-> >>
-> >> Signed-off-by: Peter Rosin <peda@axentia.se>
-> >
-> > Thanks for your patch!
-> >
-> >> --- a/Documentation/fb/fbcon.rst
-> >> +++ b/Documentation/fb/fbcon.rst
-> >> @@ -174,6 +174,11 @@ C. Boot options
-> >>         displayed due to multiple CPUs, the collected line of logos is moved
-> >>         as a whole.
-> >>
-> >> +9. fbcon=logo-count:<n>
-> >> +
-> >> +       The value 'n' overrides the number of bootup logos. Zero gives the
-> >> +       default, which is the number of online cpus.
-> >
-> > Isn't that a bit unexpected for the user?
-> > What about making -1 the default (auto), and zero meaning no logos?
->
-> I just naively assumed there was some other mechanism to disable it.
 
-That was my first thought, too, but I couldn't find one.
+Now it works fine with MSI interrupt enabled.
 
-Gr{oetje,eeting}s,
+But this patch is conflicting with MSI interrupt patch.
+Is there a better way we can make Kalle apply them more smoothly?
+I can rebase them and submit both if you're OK.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yan-Hsuan
