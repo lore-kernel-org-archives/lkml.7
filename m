@@ -2,178 +2,376 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE06C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E81C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5D52077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649FF2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="R7xHX2zR";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xZPDxari"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="J++jyIev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfH0Uhb (ORCPT
+        id S1730328AbfH0UjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:37:31 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:22051 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbfH0Uhb (ORCPT
+        Tue, 27 Aug 2019 16:39:04 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46190 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbfH0UjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:37:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1566938251; x=1598474251;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=YfzbCvOMEV5XGepibRq4aIUh+PTyodJnSlxTf7cfkzs=;
-  b=R7xHX2zRtEKKE406OhgHW6UoikSj4OFGYKYE+CxNHQtLBU8vd4vHRX6R
-   nvdavzOD5rYI2UTdDCP3h4N4iolG2PzLJgCWCq7I40hPJnqQ5WwflyQXW
-   Yyjt/g2MDJZazhJWcNYLlxdV6PZE6fMokPc02pIsQK77wcgXvzCaHpIiL
-   bogRpjLHKMnpNpJptQ8HgnjAzpiQ5yMLZtV/heSg4cmyAwEYcsnRvvtnB
-   wxGkRFPT+Zh5gONVsfA9WdG9UwcqUJkWe7Vff8LyIl8zihtd781aH7H2N
-   yAkm6QaLrjtZOL4OlfUlKwyF0Fl8Hv+YkF2SqWK4y68dS13sFAUY/SvsP
-   A==;
-IronPort-SDR: DNmIRAcO0zEPMnJnP94r1BXCZWQBR//t/PJ3JDZQNsyOkKkDpDIMxxqa276NBauoiVUCsqhLmI
- Rxf3tOmca9eZkxqMvqs1NMYcItjViY7EXZJ68kfrOozAuSLJ3pWkbWxvbjRvDFB1G8Up2C8LSq
- clgBJ8WndYy1ZL1uC5RQVcJAm/jWpVOMkYz6aOpoR52w992Zfzcf2QweUclVRXFddtLNADy9Nv
- 3qWkFCsombTilactM4+ztV3/9aMkpTKL/jDF5/hpeajhDLJ2D7DnjJt6PvbCYrkplQ/8jDa699
- FvY=
-X-IronPort-AV: E=Sophos;i="5.64,438,1559491200"; 
-   d="scan'208";a="223454885"
-Received: from mail-dm3nam05lp2051.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.51])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Aug 2019 04:37:29 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KIk5cbVZ7/Zxc+sA4C+okUuUyQrAce9BOjzy7eCgJ1UusCAX7hyJV3p43tsWosoGg5AVEgk3BQPPjN5sgQhlUcY6u/qzCbo+m7GZ1PlEZ6mPpb4RpSyxxYaRM0dIXJQzqTWNKB+h9fYYBKjYbrL48+nT3S3ww66dYyVXdCy9I7TKrJh/B3U5TsccxcndUlQZqS34eHa+Ha9QfFjOr9AbEV9JsyGjhFSWTv9klwTm7P7O+sYVvaycLQ6GtyL71fjMrKBV9UcCL7+oyiP5MHtMshIyLLEKQTIMdwxNdgYE2jFD7AbHRwiNH6k6JNMazEgJpj/t2FA9lXHjB4E/8dRUJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YfzbCvOMEV5XGepibRq4aIUh+PTyodJnSlxTf7cfkzs=;
- b=HNuMg/E3tnmfqxjiTx2e8j0B7S6o1/lGU5+VrUoLI0TSk8GWxKJiot3NoLC1yON6O+KDnBe0Lv07nRNeKLXxzCv0PWfwRGBibpAaGfDzKW0REoWvkTT8cClBk1OSYLRmPuKdzC4etZLSnM39U2oaxKkLQ9/OoYC8DAIZqOQRpo5KGGt8xrXgxWBHJ5PG3LwW6gq5LmLT+083YbzLe78q3qpcE04qHw4Hldl1++Pv+NJHndYgiVWs2GYenT/7s5pjcOCsBCCpk/ykYWBaK/L37gge/VjJgxI57mVO36SC6hqLOWmxsn1Ghp8i+8zEWddmX04/xywALaln+Qul9Fl9+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 27 Aug 2019 16:39:04 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z17so456882otk.13;
+        Tue, 27 Aug 2019 13:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YfzbCvOMEV5XGepibRq4aIUh+PTyodJnSlxTf7cfkzs=;
- b=xZPDxariGFtv/6VUDZU0D/X4SZyFm7ilUfT6SoaZaaSb3JDlgRoZ3W2TjYX1DmeIgPKFxNk+RFker23dRmDmb7IhVyXGXu1NqQWcctUqzQ9KVUMnBAqDnVN2/3No33cidSE9xl1v1F6DH4hAs8Rn7PeEDHK8/39xIJZ06D9azr4=
-Received: from BYAPR04MB3990.namprd04.prod.outlook.com (52.135.215.29) by
- BYAPR04MB5079.namprd04.prod.outlook.com (52.135.235.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Tue, 27 Aug 2019 20:37:28 +0000
-Received: from BYAPR04MB3990.namprd04.prod.outlook.com
- ([fe80::24ca:5178:5475:9a0e]) by BYAPR04MB3990.namprd04.prod.outlook.com
- ([fe80::24ca:5178:5475:9a0e%4]) with mapi id 15.20.2178.020; Tue, 27 Aug 2019
- 20:37:28 +0000
-From:   Atish Patra <Atish.Patra@wdc.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "alankao@andestech.com" <alankao@andestech.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "gary@garyguo.net" <gary@garyguo.net>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "palmer@sifive.com" <palmer@sifive.com>
-Subject: Re: [RFC PATCH 1/2] RISC-V: Mark existing SBI as legacy SBI.
-Thread-Topic: [RFC PATCH 1/2] RISC-V: Mark existing SBI as legacy SBI.
-Thread-Index: AQHVXGawW0XtdcDDakm9TmNp3/W3LacPB3wAgABuMYA=
-Date:   Tue, 27 Aug 2019 20:37:27 +0000
-Message-ID: <ac3cfe4502090354a7c49fae277adb757ad900d5.camel@wdc.com>
-References: <20190826233256.32383-1-atish.patra@wdc.com>
-         <20190826233256.32383-2-atish.patra@wdc.com>
-         <20190827140304.GA21855@infradead.org>
-In-Reply-To: <20190827140304.GA21855@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Atish.Patra@wdc.com; 
-x-originating-ip: [199.255.44.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8021e8da-861b-4715-cdf8-08d72b2e6070
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5079;
-x-ms-traffictypediagnostic: BYAPR04MB5079:
-x-microsoft-antispam-prvs: <BYAPR04MB5079680F22780F89A79DF2EEFAA00@BYAPR04MB5079.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(189003)(199004)(66946007)(5640700003)(2616005)(53936002)(6436002)(6116002)(3846002)(11346002)(446003)(76176011)(66556008)(316002)(229853002)(66476007)(66066001)(118296001)(7736002)(102836004)(6506007)(2351001)(6916009)(76116006)(478600001)(305945005)(6512007)(476003)(186003)(6246003)(36756003)(486006)(26005)(66446008)(64756008)(54906003)(2906002)(256004)(14454004)(25786009)(7416002)(86362001)(6486002)(8936002)(71190400001)(8676002)(71200400001)(1730700003)(81166006)(81156014)(5660300002)(99286004)(4326008)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5079;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: moHSN5wxX+oVwXiIMMb1VIBUa2E1EtofZdpZ+KZsG3KcQnfsAxSVYAUf/j4WWzMk+Bfg0tq7NfvmhHQvAXxmCOjwVLuNefLfUTcJE5HTA2AmyIqr5qHv+25eFMo9fmOzt1YyT244br88ZA5bY4qsxQhSbOFM9JYVbeNWBn8NfTzbB3c2P7mvDuYJwl1Yfv7QRzLElfR4iWJdGc2SeHhfY636xBOyhiIWyNNnCzOHaaJiJZkEawJWnsklyE5Ct/Lw87dAHSYLyW/WGkVyNCRr6CPMohbAWKsIrBsJ4y9XfeyU5t5ZQBiwUDVDLq/FxYUmurwYp3L1o3qXXLc/nu8IxqdW1FW9MVQiyu2TYnef7lCRLPaszND0W9znn0mAC+Ku2kHVLe9Z4xD3PR/C8zgJfNDNlCYLTS2ByLzKlP9nIaU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B08E5436C8E48840B970D5DF82DD8722@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W7khyUTsiM3qR1Xzx/Nft+umaq1FjJSbhTJg+ONo0Kg=;
+        b=J++jyIev5fvvjhtfLyVTBxSXAwjMiNXqajSDN7OBL0jVsJEbNULmM3c5LCvh+WZePG
+         XNNhjAQGHnB0+AGS+gV61V18PrWzTHJoNIiYLGmpZQsd/rq7tIpfZLkKxNadJwHK7e4M
+         eFhMzLsxqtFaZ7uwM0ZU96N9poExSZj6cdwfr2tmS8qzf1iUGqbQNgFll92zv9M6QFWn
+         9HfEDC2tCpE0OmYrBZLH/lZcxiWRIgL+ngA6gXeX2/HBX3/59MpTNEde7XmyDZHtgtdh
+         K8CIv19i27Ucp2v7OHQygWmewKp1WRcuIVxNyCl+rzSbrdTxkZc4NOYZ6XmrfdAqGSQT
+         egew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W7khyUTsiM3qR1Xzx/Nft+umaq1FjJSbhTJg+ONo0Kg=;
+        b=HcmtewxEubwv7K6I0YWE+NwY5Idh+XN7YxM2W1OhO9NUZ3XYleuOUf7H1fvnAgn7Bs
+         Wrac+ROI+g8Q0ccHCr8xNUEwVQcjB0Jwvr86jj4w0cdvwwW9AG9fvgTbio1ThNX9OXDd
+         24Awxw8J7DWl456b/p4Rdzd+bEvogpOytOxbp9Nf8xS72sM9IyS7JdXTKjOvQM/iggvO
+         JuNqlP7x5G+X/ubFhJJFY4sIpFDAsrPSFyz+oHPcbsqmFeZecFh4hukOcI/e+doudPEI
+         hRRo78G6SHG9THZkcsNQYH3l9/tIxyuLIB0xWZtexyR/Sp98PCM3TA/DeENp0a6a5zyG
+         nx7w==
+X-Gm-Message-State: APjAAAXn/vwabd39QxUZ7W/90qydMqi38NJ3Rx6jZJ1dzH5qYsFLdAHi
+        ba/+6c6rpuNRrIWFfkkUcmzZ23aozVCIvVgdNxs=
+X-Google-Smtp-Source: APXvYqy3IORLTDzRdhbvnhXJA7+RXHQfuMwYclQuwNOr5kPbh6oTIlp+c4WayHm9A+FIICY0y/3UinTvw0B9hcriGl0=
+X-Received: by 2002:a9d:7b44:: with SMTP id f4mr444516oto.42.1566938342262;
+ Tue, 27 Aug 2019 13:39:02 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8021e8da-861b-4715-cdf8-08d72b2e6070
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 20:37:27.9991
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kZDeexZVHJ1tFVtPKh7fZ3pFZthKakuPKDMc+ZW+EFfbUYjXrKdV9y2SWPzJUVzjICyz73eAC3W6oLGmwyInfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5079
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com>
+In-Reply-To: <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 27 Aug 2019 22:38:51 +0200
+Message-ID: <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+To:     "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Cc:     eswara.kota@linux.intel.com, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, hch@infradead.org,
+        jingoohan1@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTI3IGF0IDA3OjAzIC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gPiArI2RlZmluZSBTQklfRVhUX0xFR0FDWV9TRVRfVElNRVIgMHgwDQo+ID4gKyNkZWZp
-bmUgU0JJX0VYVF9MRUdBQ1lfQ09OU09MRV9QVVRDSEFSIDB4MQ0KPiA+ICsjZGVmaW5lIFNCSV9F
-WFRfTEVHQUNZX0NPTlNPTEVfR0VUQ0hBUiAweDINCj4gPiArI2RlZmluZSBTQklfRVhUX0xFR0FD
-WV9DTEVBUl9JUEkgMHgzDQo+ID4gKyNkZWZpbmUgU0JJX0VYVF9MRUdBQ1lfU0VORF9JUEkgMHg0
-DQo+ID4gKyNkZWZpbmUgU0JJX0VYVF9MRUdBQ1lfUkVNT1RFX0ZFTkNFX0kgMHg1DQo+ID4gKyNk
-ZWZpbmUgU0JJX0VYVF9MRUdBQ1lfUkVNT1RFX1NGRU5DRV9WTUEgMHg2DQo+ID4gKyNkZWZpbmUg
-U0JJX0VYVF9MRUdBQ1lfUkVNT1RFX1NGRU5DRV9WTUFfQVNJRCAweDcNCj4gPiArI2RlZmluZSBT
-QklfRVhUX0xFR0FDWV9TSFVURE9XTiAweDgNCj4gDQo+IEFzIE1pa2Ugc2FpZCBsZWdhY3kgaXMg
-YSBiaXQgb2YgYSB3ZWlyZCBuYW1lLiAgSSB0aGluayB0aGlzIHNob3VsZA0KPiBiZSBTQkkwMV8q
-IG9yIHNvLiAgQW5kIHBsZWFlIGFsaWduIHRoZSBudW1lcmljIHZhbHVlcyBhbmQgbWF5YmUgdXNl
-DQo+IGFuIGVudW0uDQo+IA0KV2lsbCBkby4NCg0KPiA+ICsNCj4gPiArI2RlZmluZSBTQklfQ0FM
-TF9MRUdBQ1kod2hpY2gsIGFyZzAsIGFyZzEsIGFyZzIsIGFyZzMpDQo+ID4gKHsgICAgICAgICAg
-ICAgXA0KPiA+ICAJcmVnaXN0ZXIgdWludHB0cl90IGEwIGFzbSAoImEwIikgPSAodWludHB0cl90
-KShhcmcwKTsJXA0KPiA+ICAJcmVnaXN0ZXIgdWludHB0cl90IGExIGFzbSAoImExIikgPSAodWlu
-dHB0cl90KShhcmcxKTsJXA0KPiA+ICAJcmVnaXN0ZXIgdWludHB0cl90IGEyIGFzbSAoImEyIikg
-PSAodWludHB0cl90KShhcmcyKTsJXA0KPiANCj4gSW5zdGVhZCBvZiB0aGUgd2VpcmQgaW5saW5l
-IGFzc2VtYmx5IHdpdGggZm9yY2VkIHJlZ2lzdGVyIGFsbG9jYXRpb24sDQo+IHdoeSBub3QgbW92
-ZSB0aGlzIHRvIHB1cmUgYXNzZW1ibHk/ICBBRkFJQ3MgdGhpcyBpcyB0aGUgd2hvbGUNCj4gYXNz
-ZW1ibHkNCj4gY29kZSB3ZSdkIG5lZWQ6DQo+IA0KPiBFTlRSWShzYmkwMV9jYWxsKQ0KPiAgICAg
-ICAgIGVjYWxsDQo+IEVORChzYmkwMV9jYWxsKQ0KPiANCg0KVGhhdCB3b3VsZCBzcGxpdCB0aGUg
-aW1wbGVtZW50YXRpb24gYmV0d2VlbiBDIGZpbGUgJiBhc3NlbWJseSBmaWxlIGZvcg0Kbm8gZ29v
-ZCByZWFzb24uDQoNCkhvdyBhYm91dCBtb3ZpbmcgZXZlcnl0aGluZyBpbiBzYmkuYyBhbmQganVz
-dCB3cml0ZSBldmVyeXRoaW5nIGlubGluZQ0KYXNzZW1ibHkgdGhlcmUuDQoNCj4gPiAgLyogTGF6
-eSBpbXBsZW1lbnRhdGlvbnMgdW50aWwgU0JJIGlzIGZpbmFsaXplZCAqLw0KPiA+IC0jZGVmaW5l
-IFNCSV9DQUxMXzAod2hpY2gpIFNCSV9DQUxMKHdoaWNoLCAwLCAwLCAwLCAwKQ0KPiA+IC0jZGVm
-aW5lIFNCSV9DQUxMXzEod2hpY2gsIGFyZzApIFNCSV9DQUxMKHdoaWNoLCBhcmcwLCAwLCAwLCAw
-KQ0KPiA+IC0jZGVmaW5lIFNCSV9DQUxMXzIod2hpY2gsIGFyZzAsIGFyZzEpIFNCSV9DQUxMKHdo
-aWNoLCBhcmcwLCBhcmcxLA0KPiA+IDAsIDApDQo+ID4gLSNkZWZpbmUgU0JJX0NBTExfMyh3aGlj
-aCwgYXJnMCwgYXJnMSwgYXJnMikgXA0KPiA+IC0JCVNCSV9DQUxMKHdoaWNoLCBhcmcwLCBhcmcx
-LCBhcmcyLCAwKQ0KPiA+IC0jZGVmaW5lIFNCSV9DQUxMXzQod2hpY2gsIGFyZzAsIGFyZzEsIGFy
-ZzIsIGFyZzMpIFwNCj4gPiAtCQlTQklfQ0FMTCh3aGljaCwgYXJnMCwgYXJnMSwgYXJnMiwgYXJn
-MykNCj4gPiArI2RlZmluZSBTQklfQ0FMTF9MRUdBQ1lfMCh3aGljaCkgU0JJX0NBTExfTEVHQUNZ
-KHdoaWNoLCAwLCAwLCAwLA0KPiA+IDApDQo+ID4gKyNkZWZpbmUgU0JJX0NBTExfTEVHQUNZXzEo
-d2hpY2gsIGFyZzApIFNCSV9DQUxMX0xFR0FDWSh3aGljaCwNCj4gPiBhcmcwLCAwLCAwLCAwKQ0K
-PiA+ICsjZGVmaW5lIFNCSV9DQUxMX0xFR0FDWV8yKHdoaWNoLCBhcmcwLCBhcmcxKSBcDQo+ID4g
-KwkJU0JJX0NBTExfTEVHQUNZKHdoaWNoLCBhcmcwLCBhcmcxLCAwLCAwKQ0KPiA+ICsjZGVmaW5l
-IFNCSV9DQUxMX0xFR0FDWV8zKHdoaWNoLCBhcmcwLCBhcmcxLCBhcmcyKSBcDQo+ID4gKwkJU0JJ
-X0NBTExfTEVHQUNZKHdoaWNoLCBhcmcwLCBhcmcxLCBhcmcyLCAwKQ0KPiA+ICsjZGVmaW5lIFNC
-SV9DQUxMX0xFR0FDWV80KHdoaWNoLCBhcmcwLCBhcmcxLCBhcmcyLCBhcmczKSBcDQo+ID4gKwkJ
-U0JJX0NBTExfTEVHQUNZKHdoaWNoLCBhcmcwLCBhcmcxLCBhcmcyLCBhcmczKQ0KPiANCj4gV2hl
-biB5b3UgdG91Y2ggdGhpcyBhbnl3YXkgSSdkIHN1Z2dlc3QgeW91IGtpbGwgdGhlc2UgcmF0aGVy
-DQo+IHBvaW50bGVzcyB3cmFwcGVycyBhcyB3ZWxsIGFzIHRoZSBjb21tZW50IGFib3ZlIHRoZW0u
-DQoNClN1cmUuIEkgZGlkIG5vdCB3YW50IG1ha2UgYmlnZ2VyIGNoYWduZXMgaW4gMXN0IFJGQyBw
-YXRjaGVzLiBCdXQNCmxvb2tpbmcgYXQgdGhlIGNvbW1lbnRzLCBJIGZlZWwgaXQgd2FzIG5vdCBh
-IGdvb2QgZGVjaXNzaW9uLg0KDQpJIHdpbGwgZ2V0IHJpZCBvZiB0aGVzZSB3cmFwcGVycyBhbmQg
-bW92ZSBuZWNlc3Nhcnkgb25lcyB0byBzYmkuYw0KDQotLSANClJlZ2FyZHMsDQpBdGlzaA0K
+Hello,
+
+On Tue, Aug 27, 2019 at 5:09 AM Chuan Hua, Lei
+<chuanhua.lei@linux.intel.com> wrote:
+>
+> Hi Martin,
+>
+> Thanks for your feedback. Please check the comments below.
+>
+> On 8/27/2019 5:15 AM, Martin Blumenstingl wrote:
+> > Hello,
+> >
+> > On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
+> > <chuanhua.lei@linux.intel.com> wrote:
+> >> Hi Martin,
+> >>
+> >> Thanks for your valuable comments. I reply some of them as below.
+> > you're welcome
+> >
+> > [...]
+> >>>> +config PCIE_INTEL_AXI
+> >>>> +        bool "Intel AHB/AXI PCIe host controller support"
+> >>> I believe that this is mostly the same IP block as it's used in Lantiq
+> >>> (xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
+> >>> (before Intel acquired Lantiq).
+> >>> This is why I would have personally called the driver PCIE_LANTIQ
+> >> VRX200 SoC(internally called VR9) was the first PCIe SoC product which
+> >> was using synopsys
+> >>
+> >> controller v3.30a. It only supports PCIe Gen1.1/1.0. The phy is internal
+> >> phy from infineon.
+> > thank you for these details
+> > I wasn't aware that the PCIe PHY on these SoCs was developed by
+> > Infineon nor is the DWC version documented anywhere
+>
+> VRX200/ARX300 PHY is internal value. There are a lot of hardcode which was
+> from hardware people. From XRX500, we switch to synopsis PHY. However, later
+> comboPHY is coming to the picture. Even though we have one same controller
+> with different versions, we most likely will have three different phy
+> drivers.
+that is a good argument for using a separate PHY driver and
+integrating that using the PHY subsystem (which is already the case in
+this patch revision)
+
+> > [...]
+> >>>> +#define PCIE_CCRID                          0x8
+> >>>> +
+> >>>> +#define PCIE_LCAP                           0x7C
+> >>>> +#define PCIE_LCAP_MAX_LINK_SPEED            GENMASK(3, 0)
+> >>>> +#define PCIE_LCAP_MAX_LENGTH_WIDTH          GENMASK(9, 4)
+> >>>> +
+> >>>> +/* Link Control and Status Register */
+> >>>> +#define PCIE_LCTLSTS                                0x80
+> >>>> +#define PCIE_LCTLSTS_ASPM_ENABLE            GENMASK(1, 0)
+> >>>> +#define PCIE_LCTLSTS_RCB128                 BIT(3)
+> >>>> +#define PCIE_LCTLSTS_LINK_DISABLE           BIT(4)
+> >>>> +#define PCIE_LCTLSTS_COM_CLK_CFG            BIT(6)
+> >>>> +#define PCIE_LCTLSTS_HW_AW_DIS                      BIT(9)
+> >>>> +#define PCIE_LCTLSTS_LINK_SPEED                     GENMASK(19, 16)
+> >>>> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH  GENMASK(25, 20)
+> >>>> +#define PCIE_LCTLSTS_SLOT_CLK_CFG           BIT(28)
+> >>>> +
+> >>>> +#define PCIE_LCTLSTS2                               0xA0
+> >>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED                GENMASK(3, 0)
+> >>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT   0x1
+> >>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT    0x2
+> >>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT    0x3
+> >>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT   0x4
+> >>>> +#define PCIE_LCTLSTS2_HW_AUTO_DIS           BIT(5)
+> >>>> +
+> >>>> +/* Ack Frequency Register */
+> >>>> +#define PCIE_AFR                            0x70C
+> >>>> +#define PCIE_AFR_FTS_NUM                    GENMASK(15, 8)
+> >>>> +#define PCIE_AFR_COM_FTS_NUM                        GENMASK(23, 16)
+> >>>> +#define PCIE_AFR_GEN12_FTS_NUM_DFT          (SZ_128 - 1)
+> >>>> +#define PCIE_AFR_GEN3_FTS_NUM_DFT           180
+> >>>> +#define PCIE_AFR_GEN4_FTS_NUM_DFT           196
+> >>>> +
+> >>>> +#define PCIE_PLCR_DLL_LINK_EN                       BIT(5)
+> >>>> +#define PCIE_PORT_LOGIC_FTS                 GENMASK(7, 0)
+> >>>> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM         (SZ_128 - 1)
+> >>>> +
+> >>>> +#define PCIE_MISC_CTRL                              0x8BC
+> >>>> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN         BIT(0)
+> >>>> +
+> >>>> +#define PCIE_MULTI_LANE_CTRL                        0x8C0
+> >>>> +#define PCIE_UPCONFIG_SUPPORT                       BIT(7)
+> >>>> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE               BIT(6)
+> >>>> +#define PCIE_TARGET_LINK_WIDTH                      GENMASK(5, 0)
+> >>>> +
+> >>>> +#define PCIE_IOP_CTRL                               0x8C4
+> >>>> +#define PCIE_IOP_RX_STANDBY_CTRL            GENMASK(6, 0)
+> >> no need for IOP
+> > with "are you sure that you need any of the registers above?" I really
+> > meant all registers above (including, but not limited to IOP)
+> >
+> > [...]
+> >> As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
+> >> SoC Lightning
+> >>
+> >> Mountain, we are using synopsys controller 5.20/5.50a. We support
+> >> Gen2(XRX350/550),
+> >>
+> >> Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
+> >> single lane.
+> >>
+> >> Some of the above registers are needed to control FTS, link width and
+> >> link speed.
+> > only now I noticed that I didn't explain why I was asking whether all
+> > these registers are needed
+> > my understanding of the DWC PCIe controller driver "library" is that:
+> > - all functionality which is provided by the DesignWare PCIe core
+> > should be added to drivers/pci/controller/dwc/pcie-designware*
+> > - functionality which is built on top/around the DWC PCIe core should
+> > be added to <vendor specific driver>
+> >
+> > the link width and link speed settings (I don't know about "FTS")
+> > don't seem Intel/Lantiq controller specific to me
+> > so the register setup for these bits should be moved to
+> > drivers/pci/controller/dwc/pcie-designware*
+>
+> FTS means fast training sequence. Different generations will have
+> different FTS. Common DWC drivers have default number for all generations
+> which are not optimized.
+I am not a DWC PCIe driver expert, but it seems to me that this is
+exactly the reason why struct dw_pcie has a "version" field (which
+you're also filling).
+same as below: I'm interested in the DWC PCIe maintainer's opinion
+
+> DWC driver handles link speed and link width during the initialization.
+> Then left link speed change and link width to device (EP) according to
+> PCIe spec. Not sure if other vendors or customers have this kind of
+> requirement. We implemented this due to customer's requirement.
+>
+> We can check with DWC maintainer about this.
+thank you for the explanation.
+I am also interested in hearing the DWC PCIe maintainer's opinion on this topic
+
+[...]
+> > now I am wondering:
+> > - if we don't have to disable the interrupt line (once it is enabled),
+> > why can't we enable all of these interrupts at initialization time
+> > (instead of doing it on-demand)?
+> Good point! we even can remote map_irq patch, directly call
+> of_irq_parse_and_map_pci as other drivers do.
+>
+> > - if the interrupts do have to be disabled again (that is what I
+> > assumed so far) then where is this supposed to happen? (my solution
+> > for this was to implement a simple interrupt controller within the
+> > PCIe driver which only supports enable/disable. disclaimer: I didn't
+> > ask the PCI or interrupt maintainers for feedback on this yet)
+> >
+> > [...]
+>
+> We can implement one interrupt controller, but personally, it has too
+> much overhead. If we follow this way, almost all modules of all old
+> lantiq SoCs can implement one interrupt controller. Maybe you can check
+> with PCI maintainer for their comments.
+if we can enable the PCI_INTA/B/C/D interrupts unconditionally then
+you can switch to the standard of_irq_parse_and_map_pci implementation
+(as you already noted above).
+in that case the extra interrupt controller won't be needed.
+
+I have no idea how to test whether unconditionally enabling these
+interrupts (in the APP registers that is) causes any problems though.
+that's why I went the interrupt-controller route in my experiment.
+if the hardware works with a simplified version then I'm more than
+happy to use that
+
+[...]
+> >>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+> >>>> +{
+> >>>> +    struct device *dev = lpp->pci->dev;
+> >>>> +    int ret = 0;
+> >>>> +
+> >>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> >>>> +    if (IS_ERR(lpp->reset_gpio)) {
+> >>>> +            ret = PTR_ERR(lpp->reset_gpio);
+> >>>> +            if (ret != -EPROBE_DEFER)
+> >>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+> >>>> +            return ret;
+> >>>> +    }
+> >>>> +    /* Make initial reset last for 100ms */
+> >>>> +    msleep(100);
+> >>> why is there lpp->rst_interval when you hardcode 100ms here?
+> >> There are different purpose. rst_interval is purely for asserted reset
+> >> pulse.
+> >>
+> >> Here 100ms is to make sure the initial state keeps at least 100ms, then we
+> >> can reset.
+> > my interpretation is that it totally depends on the board design or
+> > the bootloader setup.
+>
+> Partially, you are right. However, we should not add some dependency
+> here from
+> bootloader and board. rst_interval is just to make sure the pulse (low
+> active or high active)
+> lasts the specified the time.
++Cc Kishon
+
+he recently added support for a GPIO reset line to the
+pcie-cadence-host.c [0] and I believe he's also maintaining
+pci-keystone.c which are both using a 100uS delay (instead of 100ms).
+I don't know the PCIe spec so maybe Kishon can comment on the values
+that should be used according to the spec.
+if there's then a reason why values other than the ones from the spec
+are needed then there should be a comment explaining why different
+values are needed (what problem does it solve).
+
+> > on a board where the bootloader initializes the GPIO to logical "0"
+> > the devm_gpiod_get() call will not change the GPIO output.
+> > in this case a 100ms delay may be OK (based on your description)
+> >
+> > however, if the GPIO was a logical "1" (for example if the bootloader
+> > set it to that value - and considering the GPIOD_OUT_LOW flag) then it
+> > will be set to "0" with the devm_gpiod_get() call above.
+> > now there is a transition from "deasserted" to "asserted" which does
+> > not honor lpp->rst_interval
+> >
+> > I'm not sure if this is a problem or not - all I know is that I don't
+> > fully understand the problem yet
+> >>> [...]
+> >>>> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
+> >>>> +{
+> >>>> +    struct device *dev = lpp->pci->dev;
+> >>>> +    struct platform_device *pdev;
+> >>>> +    char *irq_name;
+> >>>> +    int irq, ret;
+> >>>> +
+> >>>> +    pdev = to_platform_device(dev);
+> >>>> +    irq = platform_get_irq(pdev, 0);
+> >>>> +    if (irq < 0) {
+> >>>> +            dev_err(dev, "missing sys integrated irq resource\n");
+> >>>> +            return irq;
+> >>>> +    }
+> >>>> +
+> >>>> +    irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
+> >>>> +    if (!irq_name) {
+> >>>> +            dev_err(dev, "failed to alloc irq name\n");
+> >>>> +            return -ENOMEM;
+> >>> you are only requesting one IRQ line for the whole driver. personally
+> >>> I would drop the custom irq_name and pass NULL to devm_request_irq
+> >>> because that will then fall-back to auto-generating an IRQ name based
+> >>> on the devicetree node. I assume it's the same for ACPI but I haven't
+> >>> tried that yet.
+> >> Not sure I understand what you mean.  As you know from the code, we have
+> >> lpp->id which means
+> >>
+> >> we have multiple instances of Root Complex(1,2,3,4,8), so we need this
+> >> for identification.
+> > sorry, I was wrong with my original statement, the name cannot be NULL
+> >
+> > I checked the other drivers (meson-gx-mmc and meson-saradc) I had in
+> > mind and they use dev_name(&pdev->dev);
+> > that will give a unique interrupt name (derived from the devicetree)
+> > in /proc/interrupts, for example: c1108680.adc, d0070000.mmc,
+> > d0072000.mmc, ...
+> >
+> > [...]
+>
+> Right. We also use dev_name in our code. However, some people like numbering
+> the interface which is easier for them to remember and discuss. I link id to
+> domain so that we can easily know what is wrong once we have issues. When we
+> tell the address to hardware people and support staff, they are totally
+> lost.
+ah, this also explains why linux,pci-domain is a mandatory property
+(while it's optional for any other PCIe controller driver that I have
+seen so far)
+
+> Again, it is ok to switch to dev_name.
+both ways will work, I just wanted to point out that you can achieve a
+similar goal with less code.
+if the current solution works best for your support team then I'm fine
+with that as well
+
+[...]
+> >>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+> >>>> +{
+> >>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+> >>>> +                        0, PCI_COMMAND);
+> >>> I expect logic like this to be part of the PCI subsystem in Linux.
+> >>> why is this needed?
+> >>>
+> >>> [...]
+> >> bind/unbind case we use this. For extreme cases, we use unbind and bind
+> >> to reset
+> >> PCI instead of rebooting.
+> > OK, but this does not seem Intel/Lantiq specific at all
+> > why isn't this managed by either pcie-designware-host.c or the generic
+> > PCI/PCIe subsystem in Linux?
+>
+> I doubt if other RC driver will support bind/unbind. We do have this
+> requirement due to power management from WiFi devices.
+pcie-designware-host.c will gain .remove() support in Linux 5.4
+I don't understand how .remove() and then .probe() again is different
+from .unbind() followed by a .bind()
+
+
+Martin
+
+[0] https://lkml.org/lkml/2019/6/4/626
