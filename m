@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBEEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634E8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCDB2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC4D217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893481;
-	bh=CXN3IUNGhMpufXJ/rIGXQZ1QkYU8q5x78RVVlCo+Aec=;
+	s=default; t=1566893494;
+	bh=zq1uNPKinyJYge4bsychB7kvd71bQAuStkyBQJMgH6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D5zdhFPhTg//E9q+BLdZlUG+zi3e/lMH4spzs1YGSiSHJcvM6x6MR4iT8O3fQUePP
-	 xNAf8ZpaN3pYTITHYsT0scL25JZTx6s/LhfQ27A+f7KOMFiWj09y+PSOjxqrRJl7bo
-	 OZ7Q2m5xt1byGuVPaXkZqCRjJZXolyD1FRFRlWWI=
+	b=FIOKsiYyTteGeiDB9pMPDhByzhTl7+1g1JgON7Hx5YqCT+x2RCUvVWHzDTXqyBYSp
+	 dKIsUJOhkQ2oAI92x+Gk4T2qhuoNgAe4ialn3xeveEERWc6GHZTYfoIixb2JMp8nL7
+	 knMFLH3cgNe10ZyYQIYaaFOJ87pSipD/yaLX7mNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbfH0IBU (ORCPT
+        id S1731148AbfH0ILc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:01:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731726AbfH0IBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:01:17 -0400
+        id S1726833AbfH0IBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:01:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 955B5217F5;
-        Tue, 27 Aug 2019 08:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E6B21872;
+        Tue, 27 Aug 2019 08:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892877;
-        bh=CXN3IUNGhMpufXJ/rIGXQZ1QkYU8q5x78RVVlCo+Aec=;
+        s=default; t=1566892866;
+        bh=zq1uNPKinyJYge4bsychB7kvd71bQAuStkyBQJMgH6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ic6cOfdKbUN1StEVKXZDxE6m3Hbyzs/ZA7MQGtDMlXVwitwiqw2C7y0zEPR+YkSbP
-         tXNuEWotYHwDuX8u1XadveLtFEjNBHSPfswozS0EmHzxneBzuOlHzB2FZfIKeSQcHq
-         NGRdL8b3NKjouNoL9X1+eS8iZNMTHipVQaWuhEGc=
+        b=eAYO3MiyUfC0QStOQKPHniuRAVXKZXTyDK0Hk0vFbQmZNiNUb7VaN0Hy6TIDSG9pt
+         VfDfJ0vZwezffm3LgRJugVkV4VKseyGtyVDCW1gDvzY70WUpxr1KHoXtqmebUzn7C0
+         DYghxx9NDfq/NlVfsWVL6ucHfn+TYhm3/3WLi82Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Ham <bob.ham@puri.sm>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 044/162] net: usb: qmi_wwan: Add the BroadMobi BM818 card
-Date:   Tue, 27 Aug 2019 09:49:32 +0200
-Message-Id: <20190827072739.776945943@linuxfoundation.org>
+Subject: [PATCH 5.2 041/162] ASoC: ti: davinci-mcasp: Fix clk PDIR handling for i2s master mode
+Date:   Tue, 27 Aug 2019 09:49:29 +0200
+Message-Id: <20190827072739.685598752@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,30 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a07406b00cdc6ec689dc142540739575c717f3c ]
+[ Upstream commit 34a2a80ff30b5d2330abfa8980c7f0cc15a8158a ]
 
-The BroadMobi BM818 M.2 card uses the QMI protocol
+When running McASP as master capture alone will not record any audio unless
+a parallel playback stream is running. As soon as the playback stops the
+captured data is going to be silent again.
 
-Signed-off-by: Bob Ham <bob.ham@puri.sm>
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In McASP master mode we need to set the PDIR for the clock pins and fix
+the mcasp_set_axr_pdir() to skip the bits in the PDIR registers above
+AMUTE.
+
+This went unnoticed as most of the boards uses McASP as slave and neither
+of these issues are visible (audible) in those setups.
+
+Fixes: ca3d9433349e ("ASoC: davinci-mcasp: Update PDIR (pin direction) register handling")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190725083423.7321-1-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/ti/davinci-mcasp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 8b4ad10cf9402..26c5207466afc 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1294,6 +1294,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
- 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
-+	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
- 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
- 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 5e8e31743a28d..dc01bbca0ff69 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -194,7 +194,7 @@ static inline void mcasp_set_axr_pdir(struct davinci_mcasp *mcasp, bool enable)
+ {
+ 	u32 bit;
+ 
+-	for_each_set_bit(bit, &mcasp->pdir, PIN_BIT_AFSR) {
++	for_each_set_bit(bit, &mcasp->pdir, PIN_BIT_AMUTE) {
+ 		if (enable)
+ 			mcasp_set_bits(mcasp, DAVINCI_MCASP_PDIR_REG, BIT(bit));
+ 		else
+@@ -222,6 +222,7 @@ static void mcasp_start_rx(struct davinci_mcasp *mcasp)
+ 	if (mcasp_is_synchronous(mcasp)) {
+ 		mcasp_set_ctl_reg(mcasp, DAVINCI_MCASP_GBLCTLX_REG, TXHCLKRST);
+ 		mcasp_set_ctl_reg(mcasp, DAVINCI_MCASP_GBLCTLX_REG, TXCLKRST);
++		mcasp_set_clk_pdir(mcasp, true);
+ 	}
+ 
+ 	/* Activate serializer(s) */
 -- 
 2.20.1
 
