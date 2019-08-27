@@ -2,68 +2,100 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3703CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DED0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176442186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24AEC22CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:16:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7Qf+zp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbfH0SPD (ORCPT
+        id S1730565AbfH0SQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:15:03 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:39296 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfH0SPD (ORCPT
+        Tue, 27 Aug 2019 14:16:53 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37455 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730376AbfH0SQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:15:03 -0400
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23992798AbfH0SPAV-MII (ORCPT
-        <rfc822;kernel-janitors@vger.kernel.org> + 2 others);
-        Tue, 27 Aug 2019 20:15:00 +0200
-Date:   Tue, 27 Aug 2019 20:14:57 +0200
-From:   Ladislav Michl <ladis@linux-mips.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kishore Kadiyala <kishore.kadiyala@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Balaji T K <balajitk@ti.com>,
-        Benoit Cousson <b-cousson@ti.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Nikolaus Schaller <hns@goldelico.com>
-Subject: Re: [PATCH] ARM: OMAP2+: Delete an unnecessary kfree() call in
- omap_hsmmc_pdata_init()
-Message-ID: <20190827181457.GA16333@lenoch>
-References: <69025c8c-8d84-6686-138b-cde59467b802@web.de>
- <20190826162050.GX52127@atomide.com>
+        Tue, 27 Aug 2019 14:16:52 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f22so32505577edt.4;
+        Tue, 27 Aug 2019 11:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=stDqyzInPfGYOHpVF5bI10tFZLqSV5SEn9H8bg2QREk=;
+        b=Z7Qf+zp8XMv2+skujmXOWkcRCbkJmDslanNr8JCOlIdszHS+juQRf0PqfLYOPgnzPt
+         8m0jH4RBvXqIZfov3d3arewtyiUgBUtORStfHZ+PjxwbOSm09p5YO+kRo8uhYorcCnQO
+         fwKYYPcWeGQP0i4WWuev/X79VIMOx4JtnmFGR9R0MOslAoh3MxjBMsCTqOI47+5qzDI7
+         2IBkWrCyYXbigQK7+YiZoHySLxmi29v1/x486GXWVTvgO2Scxtce/VD/9tgsUa9TzYUD
+         3deAIarczt9y1PtXmF1SOKqIR95ZuxxDWnL1OGHzOGFx+J+6p8sDUDYJo9xV7BifudhH
+         PXGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=stDqyzInPfGYOHpVF5bI10tFZLqSV5SEn9H8bg2QREk=;
+        b=bq9nM7oW5FByVTYmdcJZwc+Pb69sr1q7G0/abLZsnmOhfDgCv+Di2ge2EGtqFOkMKJ
+         mMhd2eLRAscs8gLJhkUnZO8ipGDfGsG+7w+fPuSCR43BOCRAYtvT9xzAs7MY2Fz23Y3b
+         gOHyBZWq1oaaQel4JF9kp89RbljfDY+34UdwGBnYZNIFs3Jgu+qeeT9c+mlFRvlTMMab
+         Bta9i7OK3VFM0bcmHGJgBiirI21gH8cWA/S2g42KjUHiOKzuuAAVMeTp9zTx+wE+lwvv
+         IA01cQy0GgLGuTQamVs9C7evRVJqtlrWr8vf5VmM0ltUa/Rs/ZDbsMoibDXQ05nY3Uxn
+         Rwfg==
+X-Gm-Message-State: APjAAAXYNltjYDK5SkYTqo2XfkLnBoygW/Kf6oGUvJWjUD3ct3XYSYjJ
+        RB8j/KS+BQAkIQDi19722uIOaouTy70DiL1VgdW2Nyj8
+X-Google-Smtp-Source: APXvYqzXM9hwqNIrlcehaL8Go4kYYYnUaNc671AUPJ4zJdosttYd+bKZ/Uno+W2/MBJYT4s7/9kKqITnEVEu09h2q5s=
+X-Received: by 2002:a17:906:4683:: with SMTP id a3mr22189723ejr.47.1566929810659;
+ Tue, 27 Aug 2019 11:16:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826162050.GX52127@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-6-olteanv@gmail.com>
+ <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
+ <20190827180502.GF23391@sirena.co.uk> <CA+h21hr3qmTG1LyWsEp+hZZW2NJFtg9Dh1k6SXVDd+A_YSQjjw@mail.gmail.com>
+ <20190827181318.GG23391@sirena.co.uk>
+In-Reply-To: <20190827181318.GG23391@sirena.co.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 27 Aug 2019 21:16:39 +0300
+Message-ID: <CA+h21hqMVdsUjBdtiHKtKGpyvuaOf25tc4h-GdDEBQqa3EB7tw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
+ poll mode
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 09:20:50AM -0700, Tony Lindgren wrote:
-> * Markus Elfring <Markus.Elfring@web.de> [190826 06:31]:
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Mon, 26 Aug 2019 15:05:31 +0200
-> > 
-> > A null pointer would be passed to a call of the function "kfree" directly
-> > after a call of the function "kzalloc" failed at one place.
-> > Remove this superfluous function call.
-> > 
-> > This issue was detected by using the Coccinelle software.
-> 
-> Applying into omap-for-v5.4/soc thanks.
+On Tue, 27 Aug 2019 at 21:13, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Aug 27, 2019 at 09:06:14PM +0300, Vladimir Oltean wrote:
+> > On Tue, 27 Aug 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
+> > > On Mon, Aug 26, 2019 at 04:10:51PM +0300, Vladimir Oltean wrote:
+>
+> > > > I noticed you skipped applying this patch, and I'm not sure that Shawn
+> > > > will review it/take it.
+> > > > Do you have a better suggestion how I can achieve putting the DSPI
+> > > > driver in poll mode for this board? A Kconfig option maybe?
+>
+> > > DT changes go through the relevant platform trees, not the
+> > > subsystem trees, so it's not something I'd expect to apply.
+>
+> > But at least is it something that you expect to see done through a
+> > device tree change?
+>
+> Well, it's not ideal - if it performs better all the time the
+> driver should probably just do it unconditionally.  If there's
+> some threashold where it tends to perform better then the driver
+> should check for that but IIRC it sounds like the interrupt just
+> isn't at all helpful here.
 
-Is it really wise touching almost dead code? Last user is pandora board, so
-+Cc: Nikolaus Schaller <hns@goldelico.com>
+I can't seem to find any situation where it performs worse. Hence my
+question on whether it's a better idea to condition this behavior on a
+Kconfig option rather than a DT blob which may or may not be in sync.
