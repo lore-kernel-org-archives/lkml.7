@@ -2,138 +2,144 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05C6C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9EDC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0756217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kraav.com header.i=@kraav.com header.b="IvnrGi97";
-	dkim=pass (1024-bit key) header.d=kraav.com header.i=@kraav.com header.b="IvnrGi97"
+	by mail.kernel.org (Postfix) with ESMTP id E8E472189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566893713;
+	bh=mabhUkFTmyOfJLBucqcm20Sjf+bkPsFlof0YMpLP4VU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dFg/x1SVB4TFmNTscZi8+PHL7lKr93G8eBr5rCMhgSAR0BCRaDFB1tKj4dbjNK9i/
+	 IxYmG315l1BynxogHAV/c8z37i00Vt53jEPgCssj+8su59PZt2WzlSkSIoIMEZ5Ck/
+	 jJynXfmk2I4WEttjVeSqgBXBsXrBWg2hCAbxwsXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfH0IPG (ORCPT
+        id S1730416AbfH0Hzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:15:06 -0400
-Received: from mail-out.elkdata.ee ([185.7.252.64]:10887 "EHLO
-        mail-out.elkdata.ee" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729635AbfH0IPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:15:02 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 04:15:01 EDT
-Received: from mail-relay2.elkdata.ee (unknown [185.7.252.69])
-        by mail-out.elkdata.ee (Postfix) with ESMTP id 1D231372A77
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:08:37 +0300 (EEST)
-Received: from mail-relay2.elkdata.ee (unknown [185.7.252.69])
-        by mail-relay2.elkdata.ee (Postfix) with ESMTP id 1B95783088C
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:08:37 +0300 (EEST)
-X-Virus-Scanned: amavisd-new at elkdata.ee
-Received: from mail-relay2.elkdata.ee ([185.7.252.69])
-        by mail-relay2.elkdata.ee (mail-relay2.elkdata.ee [185.7.252.69]) (amavisd-new, port 10024)
-        with ESMTP id yUwoLpVB-fio for <linux-kernel@vger.kernel.org>;
-        Tue, 27 Aug 2019 11:08:34 +0300 (EEST)
-Received: from mail.elkdata.ee (unknown [185.7.252.68])
-        by mail-relay2.elkdata.ee (Postfix) with ESMTP id 8F9A2830889
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:08:34 +0300 (EEST)
-Received: from mail.meie.biz (21-182-190-90.sta.estpak.ee [90.190.182.21])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 27 Aug 2019 03:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730400AbfH0Hzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:55:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: leho@jaanalind.ee)
-        by mail.elkdata.ee (Postfix) with ESMTPSA id 84F8160BF17
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:08:34 +0300 (EEST)
-Received: by mail.meie.biz (Postfix, from userid 500)
-        id 6DBAEA831AC; Tue, 27 Aug 2019 11:08:34 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kraav.com; s=mail;
-        t=1566893314; bh=c/MrxXN3t+vrxKSqHztny/pq7o/8x6ETk1RdwA+mN7Y=;
-        h=Date:From:To:Subject;
-        b=IvnrGi97/zDPekludBp3LRKk6NmHzfS+5dRb9xVJWxnsGXFatizJRMShAeC6cMarN
-         308BOjLkudsRoCb7acKmhqOybVc0dN0v7mVGQRmLX30E0Rln41saitzf+q/xJSO0Qu
-         xnDRJur0EzIlu4A9lF1Ta5l35QNJjysqDUs+Vy9s=
-Received: from papaya (papaya-vpn.meie.biz [192.168.48.157])
-        by mail.meie.biz (Postfix) with ESMTPA id 55A26A831AA
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 11:08:34 +0300 (EEST)
-Authentication-Results: mail.meie.biz; dmarc=fail (p=none dis=none) header.from=kraav.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kraav.com; s=mail;
-        t=1566893314; bh=c/MrxXN3t+vrxKSqHztny/pq7o/8x6ETk1RdwA+mN7Y=;
-        h=Date:From:To:Subject;
-        b=IvnrGi97/zDPekludBp3LRKk6NmHzfS+5dRb9xVJWxnsGXFatizJRMShAeC6cMarN
-         308BOjLkudsRoCb7acKmhqOybVc0dN0v7mVGQRmLX30E0Rln41saitzf+q/xJSO0Qu
-         xnDRJur0EzIlu4A9lF1Ta5l35QNJjysqDUs+Vy9s=
-Received: (nullmailer pid 9626 invoked by uid 1000);
-        Tue, 27 Aug 2019 08:08:34 -0000
-Date:   Tue, 27 Aug 2019 11:08:34 +0300
-From:   Leho Kraav <leho@kraav.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4152A217F5;
+        Tue, 27 Aug 2019 07:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892541;
+        bh=mabhUkFTmyOfJLBucqcm20Sjf+bkPsFlof0YMpLP4VU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TQ5Kj5Y/uixOs/QRNiT6tVSYru3G5wWhwEuJnpXCvTnFdfWbdbxc8+sZcBxG6w88q
+         qlJkZVcSuMOOOg5BIZGqgZajsbkpoddpGdnnwvLyl16Pl+trPMKfmxe9gOLxpRNTNz
+         WuRhLFLPHreSmMczwhmtZW9vqYiTiXOEBomLmFcU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Subject: 5.3.0-rc6: i915 fails at typec_displayport 5120x1440
-Message-ID: <20190827080834.GB4124@papaya>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 28/98] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
+Date:   Tue, 27 Aug 2019 09:50:07 +0200
+Message-Id: <20190827072719.719087126@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
+References: <20190827072718.142728620@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Bogosity: Unsure, tests=bogofilter, spamicity=0.500000, version=1.2.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hardware: Dell Latitude 7400 2-in-1, Whiskey Lake, Intel 620
+[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
 
-5120x1440 fails to display.
+Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
 
-Next available mode 3840x1080 displays fine.
+During usb probe the driver crashes with "transfer buffer is on stack" message.
 
-Is this a kernel, or a driver level issue? It fails both in Xorg and
-Wayland, so seems something at the lower levels. This 49" monitor worked
-fine on Latitude 7480 (Kaby Lake), so I'm thinking something with `i915`
-module layer.
+This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
+that calls "usb_control_msg" under the hood.
 
-What should I try next?
+Kernel 4.19 backtrace:
 
-```
-leho@papaya ~ $ [-] uname 
-Linux papaya 5.3.0-rc6+gentoo+ #95 SMP PREEMPT Mon Aug 26 23:50:08 EEST 2019 x86_64 Intel(R) Core(TM) i5-8365U CPU @ 1.60GHz GenuineIntel GNU/Linux
+usb_hcd_submit_urb+0x3e5/0x900
+? sched_clock+0x9/0x10
+? log_store+0x203/0x270
+? get_random_u32+0x6f/0x90
+? cache_alloc_refill+0x784/0x8a0
+usb_submit_urb+0x3b4/0x550
+usb_start_wait_urb+0x4e/0xd0
+usb_control_msg+0xb8/0x120
+hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
+usb_probe_interface+0xc2/0x260
+really_probe+0x176/0x280
+driver_probe_device+0x49/0x130
+__driver_attach+0xa9/0xb0
+? driver_probe_device+0x130/0x130
+bus_for_each_dev+0x5a/0x90
+driver_attach+0x14/0x20
+? driver_probe_device+0x130/0x130
+bus_add_driver+0x157/0x1e0
+driver_register+0x51/0xe0
+usb_register_driver+0x5d/0x120
+? 0xf81ed000
+hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
+do_one_initcall+0x44/0x190
+? free_unref_page_commit+0x6a/0xd0
+do_init_module+0x46/0x1c0
+load_module+0x1dc1/0x2400
+sys_init_module+0xed/0x120
+do_fast_syscall_32+0x7a/0x200
+entry_SYSENTER_32+0x6b/0xbe
 
-leho@papaya ~ $ [-] xrandr 
-Screen 0: minimum 8 x 8, current 5120 x 1440, maximum 32767 x 32767
-...
-DP1 disconnected (normal left inverted right x axis y axis)
-DP2 connected primary 3840x1080+0+0 (normal left inverted right x axis y axis) 1200mm x 340mm
-   5120x1440     59.98 +  29.98  
-   3840x1080     59.97*+
-   2560x1080     60.00    59.94    59.98  
-   1920x1080     60.00    60.00    50.00    59.94  
-   1920x1080i    60.00    50.00    59.94  
-   1600x1200     60.00  
-   1280x1024     75.02    60.02  
-   1280x800      59.81  
-   1152x864      75.00  
-   1280x720      60.00    50.00    59.94  
-   1024x768      75.03    60.00  
-   800x600       75.00    60.32  
-   720x576       50.00  
-   720x480       60.00    59.94  
-   640x480       75.00    60.00    59.94  
-   720x400       70.08  
-HDMI1 disconnected (normal left inverted right x axis y axis)
-HDMI2 disconnected (normal left inverted right x axis y axis)
-VIRTUAL1 disconnected (normal left inverted right x axis y axis)
+Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-leho@papaya ~ $ [-] xrandr --output DP2 --mode 5120x1440 --verbose
-crtc 0:    5120x1440  59.98 +0+0 "DP2"
-xrandr: Configure crtc 0 failed
-crtc 0: disable
-crtc 1: disable
-crtc 2: disable
-crtc 3: disable
-screen 0: revert
-crtc 0: revert
-crtc 1: revert
-crtc 2: revert
-crtc 3: revert
-```
-
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index cfdb130cb1008..c952002c6301d 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1705,13 +1705,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
+ static int
+ setup_hfcsusb(struct hfcsusb *hw)
+ {
++	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
+ 	u_char b;
++	int ret;
+ 
+ 	if (debug & DBG_HFC_CALL_TRACE)
+ 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 
++	if (!dmabuf)
++		return -ENOMEM;
++
++	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
++
++	memcpy(&b, dmabuf, sizeof(u_char));
++	kfree(dmabuf);
++
+ 	/* check the chip id */
+-	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
++	if (ret != 1) {
+ 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
+ 		       hw->name, __func__);
+ 		return 1;
 -- 
-Leho Kraav, senior technology & digital marketing architect
+2.20.1
+
+
+
