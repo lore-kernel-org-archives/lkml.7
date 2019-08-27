@@ -2,159 +2,93 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93810C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABE5214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:10:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BtxxokAd"
+	by mail.kernel.org (Postfix) with ESMTP id B97B9214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566915019;
+	bh=3zpRYWTbPpwl6YGn+l2Un1pdOq+oTQ05Ky5HBXyckwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O9qtmKR/h94FV9v2tMNvIYJt1Wrng876kuNDapdHukD2Bh7xsccyeE6yOdUImHJEB
+	 HaHL6S6OjQviUhLwnMCvDqmXFDZRB7F6ZN5PL7KAlJX3OxouG2K6nkvvj43uWgHD8j
+	 uLv2vE7+hN+sj2psFAcdGNy2zbnpb+dQZ9iHXlwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfH0OKF (ORCPT
+        id S1728808AbfH0OKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:10:05 -0400
-Received: from mout.web.de ([212.227.17.12]:39099 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfH0OKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566914984;
-        bh=l1aL+K+MTmEGnSVe+8VDSK+N6OAIqm0nzOkK7urvvyI=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=BtxxokAdOS/PJDzDIzndiCckhZUoY/2RrHRuzvBwpJGO2GNaTYiYlX3PqHZ3DaLwh
-         y6/GMya0YGRxZM/Mf1p2TEx0xR1nKgowfkcp128/Z++EVsZZLTGkns7+u/FYTg3Kgo
-         +ovoIkPM8L2mAphYhqBrE5AMWNOs124Q4Ia+FtJU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.143.232]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MMn1H-1i8Mvn1KO7-008eQ0; Tue, 27
- Aug 2019 16:09:44 +0200
-To:     linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] media: stm32-dcmi: Delete an unnecessary of_node_put() call
- in dcmi_probe()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <129a4933-2171-7ed9-c84c-8e56b6d05270@web.de>
-Date:   Tue, 27 Aug 2019 16:09:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 10:10:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45630 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725920AbfH0OKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:10:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2E2ACB022;
+        Tue, 27 Aug 2019 14:10:17 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 16:10:16 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Thomas Backlund <tmb@mageia.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Greg KH <greg@kroah.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH] Partially revert "mm/memcontrol.c: keep local VM
+ counters in sync with the hierarchical ones"
+Message-ID: <20190827141016.GH7538@dhcp22.suse.cz>
+References: <20190817004726.2530670-1-guro@fb.com>
+ <20190817063616.GA11747@kroah.com>
+ <20190817191518.GB11125@castle>
+ <20190824125750.da9f0aac47cc0a362208f9ff@linux-foundation.org>
+ <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Wr+0Yoq1oTTqd2b74+1MXlD8ChSnZMKnD9uHZyqlQ9Z/2KtKofM
- ZxklWMMNeYd4egtYrECUjV1d2hAQxLgmQbNNnTsRmoHnM9LCy9+51WA0VoEWoaJjmxGib8W
- 9aIE5rqdp/RDjJx7Mmc53U5BhA7Y9AZgHfv9YyYr08WqamvuAIfeJpk94jRpYtU0sQy+rsx
- BW21EnhBXgpRR3MlhQ3NA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3zFpzUDWfE0=:H9zsFmmkBknJO7OBxyEex8
- PHU6+T/nl8AHourGcb43Y8An0nDclKu6mMqedisfGNqvMcp/MypENT5YWmOFozONCUbeKxmjo
- mLVo5BDLJFqhB6FNefrKdMUSIxcj2NNQR46ezg2vaLMwm7sdIhb/4u8qphuFsKUd+nmV+7ic6
- oIj+tJ4Ic8p9jcKd0m4dQS0DGjio+gqKJecjvRsMCV64ceZBLZCtKBiXHtsbQKFpiBOmyqeJe
- 4SANiNcu+JinQfKSIe48JW2lmyCh8cAZxxdqqCGuh/S1XVG8p5fTYFtfQHWCG6HDEdV9q1rhc
- RFBtjecOJqGB8z+wZMxBfe1mcmcIcUMU6uXL4qVJkdca2SyjDATNwZUu6vJdC/acEp2WR8jJp
- //7B9O8h2YikTPC/A1ayQ2JARH4S29WnusSOPtWARAdQy9bCaUa+2J5R9XrJqi71W+qMBi7WA
- Yy1x91h4S6NkDm8Q8rcTSTzV24vOXZaD+yStKLVThHleAiiyDU5YtUG04GvVk5lmaEvVT8gnQ
- 18RgYWv7KfXSShkFmJejwljB47yolhYH8bwY7E0BpU2xNI2PniyRq2/XebVNM7nkYZcnMgpbs
- W2BAhQRD6IlMRKOY0OPkoYFrp60I8GA9CEcnpkMpRu1oGUosvXwZGyLxEbHD5hl/fK4WzGF7s
- 3PX6hl5z7LmGCQWzURFy3MnBBEe3I8BDJzjdh9Git0xqqZAvS7nSof3jyUjm+3WZ7LmdCaTV8
- mDVBlsZvDd3PN08yaB7VltJgpUc9EFTQ9uVUuivysZntAFNLvT8lmaieXdZAUL1X1AV9B4TEH
- C0y8STwYFbII2g3KXzBugQ4hlrwBLJNqFhZS34+at8/alizPE0YO0+AZSkLcM3UyFRkOucr7m
- X+26RAp3mVCEHbiNwDKcc+4aqbCHjfHzUMwFpfxnEV/uUbAGJTZ24TKkxjJy3yORjE83bud7b
- C21Ffbytbi1J6D6QzvLgL40KsxEla28pX9d56dZ0lV1OYXDBIIEcX4UXrxOa9yVYBSQiewnya
- TBv4B0MzO6hA8xLmOU/1GasQoSGf+my8qYOjQEReeOHqJbQjCDg4CXUefLLMVGGwqB63lKMmr
- kE0fuwAaBDM60vUG3s4I0XSuWn+9o9Qt1S4DB7UYt0XVoac2TgtLItDCyZ3D5y3MKuWoGZT0P
- Ik338=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a082485b-8241-e73d-df09-5c878d181ddc@mageia.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 27 Aug 2019 16:00:13 +0200
+On Sat 24-08-19 23:23:07, Thomas Backlund wrote:
+> Den 24-08-2019 kl. 22:57, skrev Andrew Morton:
+> > On Sat, 17 Aug 2019 19:15:23 +0000 Roman Gushchin <guro@fb.com> wrote:
+> > 
+> > > > > Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
+> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > > > Cc: Yafang Shao <laoar.shao@gmail.com>
+> > > > > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > > > > ---
+> > > > >   mm/memcontrol.c | 8 +++-----
+> > > > >   1 file changed, 3 insertions(+), 5 deletions(-)
+> > > > 
+> > > > <formletter>
+> > > > 
+> > > > This is not the correct way to submit patches for inclusion in the
+> > > > stable kernel tree.  Please read:
+> > > >      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> > > > for how to do this properly.
+> > > 
+> > > Oh, I'm sorry, will read and follow next time. Thanks!
+> > 
+> > 766a4c19d880 is not present in 5.2 so no -stable backport is needed, yes?
+> > 
+> 
+> Unfortunately it got added in 5.2.7, so backport is needed.
 
-A null pointer would be passed to a call of the function =E2=80=9Cof_node_=
-put=E2=80=9D
-immediately after a call of the function =E2=80=9Cof_graph_get_next_endpoi=
-nt=E2=80=9D
-failed at one place.
-Remove this superfluous function call.
+yet another example of patch not marked for stable backported to the
+stable tree. yay...
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/media/platform/stm32/stm32-dcmi.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/pla=
-tform/stm32/stm32-dcmi.c
-index cb1daf8217ff..9392e3409fba 100644
-=2D-- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -1861,7 +1861,6 @@ static int dcmi_probe(struct platform_device *pdev)
- 	np =3D of_graph_get_next_endpoint(np, NULL);
- 	if (!np) {
- 		dev_err(&pdev->dev, "Could not find the endpoint\n");
--		of_node_put(np);
- 		return -ENODEV;
- 	}
-
-=2D-
-2.23.0
-
+-- 
+Michal Hocko
+SUSE Labs
