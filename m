@@ -2,303 +2,132 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BBEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000AAC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EADC20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB86206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QgFajdyO"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="X6ehOSDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfH0XxC (ORCPT
+        id S1726264AbfH0XzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:53:02 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37950 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfH0XxC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:53:02 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u190so832174qkh.5;
-        Tue, 27 Aug 2019 16:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=62Da4VoiWrfMznig2bpZ/BzyHOak3Fv+Hl76QRWvvrw=;
-        b=QgFajdyOlwo7Sww75zaQ9xj8gLTKCSmVmf1qxDOHiLm5wZnv2lqBdMbnO6rEk7Q+ft
-         bKy6vh4uo5vRpOS+1NCtIWihyyw651Aurs/GErYH41DzW9HIHFwYHMONhXruZGi//IIF
-         fSb/phKHzFRfd/WTRGtzoBg5DjliZ0s5IKw4gy2Q+2BAHCr5ful82wgSEydxkiJpM3Z5
-         CdsflsVMAhOETyW2H0S7k8fTmZYmrrDeRTEa1MF2Edr2rMHtP4YW1kIVNSx2B/XQSXeI
-         CAxcIuomc8sfMj4ujaaXi8ZseVYuYDK3KCTnzDuc7a92r3B+l64IJw7prrjMTqeICOPU
-         tGnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=62Da4VoiWrfMznig2bpZ/BzyHOak3Fv+Hl76QRWvvrw=;
-        b=J30rYJHFrmxwNZM1w7cJZoJ2C6OXWWDadR4f4ZvhXnhnhdDT1OyzerZx7CbDLpX2zd
-         srtrN/CAublWVwr3I0lHyd0eTa1sRPmbc/1wIBjMRFAMOn0/3mNNLRRyF40MeLHdP9j6
-         Ntp+AIKU1pUBuawV+xMK9q0GufbUHQlcz0yWdundXMnAoOkA23Yug9h5tKSLulqd2AkF
-         QtXF3HqWYmMNCtp1fkC2VcCI/sXGQp7UtrDMh0ZZgX5oNXEk6YBSKXeWSGBMcPSlENg2
-         uEqyBKHHE6Mt65TBl85sOtPJp4SQx9VvNP2U8G9yP6oXL94i4yWVFwl6h7417qTccRSb
-         rASg==
-X-Gm-Message-State: APjAAAW6OvxzC+XPO2bDT1CqsGEpNsbxdx8CtxAH+6Ys7VwIsKWhHd4u
-        GbQwUNEz+7WlSk1voeEUIJI=
-X-Google-Smtp-Source: APXvYqyWMD4DmPS8F9zRPWw5c+G9/7g/ABg7gIVxS4xHMXn495wvUhO9Sg/dMoJzJLeenjKF7Ofp1A==
-X-Received: by 2002:a05:620a:6c3:: with SMTP id 3mr1258457qky.379.1566949980949;
-        Tue, 27 Aug 2019 16:53:00 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id q62sm475969qkb.69.2019.08.27.16.52.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 16:52:59 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 2DA2F21E44;
-        Tue, 27 Aug 2019 19:52:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 27 Aug 2019 19:52:59 -0400
-X-ME-Sender: <xms:WcJlXfSO8JHx3_BktiZaZ5KtujS5lvO7XJPUSaCk9E3vchvbO-nNJw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehledgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesghdtreertdervdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphepge
-    ehrdefvddruddvkedruddtleenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:WcJlXWAfy7Mf8XXr2Cg8UXPs1NhgUqmp8ewymkzdeuexs2xXpwWfcQ>
-    <xmx:WcJlXWg7wBDO5UOaeD1GMS-0T_Pmv2Hxlk-bAD6nsEhkAWUduCpZVw>
-    <xmx:WcJlXXOxYf8zehK0dSIGiQaXHrzbY3VQrvaheF7MMe1ge8vbLCoZVA>
-    <xmx:W8JlXdkFXHoRJTHitDY7v7MhOcxv5lcEB62qECiMy8Mvvtf7so8c4ifNjXo>
-Received: from localhost (unknown [45.32.128.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D489D80064;
-        Tue, 27 Aug 2019 19:52:56 -0400 (EDT)
-Date:   Wed, 28 Aug 2019 07:52:53 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        byungchul.park@lge.com, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH 2/5] rcu/tree: Add multiple in-flight batches of
- kfree_rcu work
-Message-ID: <20190827235253.GB30253@tardis>
-References: <5d657e35.1c69fb81.54250.01de@mx.google.com>
+        Tue, 27 Aug 2019 19:55:06 -0400
+Received: from mail-eopbgr800080.outbound.protection.outlook.com ([40.107.80.80]:59921
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726065AbfH0XzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:55:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B74RvDE4EcBurb+nbJ2Q/0qyO/piUI+DMNcogQLHo6pfT/mvYjXeGyejw6plImd94qdoqs/wOuSK6kSUF85JGcLWFPXIp0e/x8sumoFmpu8Eb02VXjxks+PZu3sOPfFwJYVSyjpz+gLi/AbpElJ3uUI0XUHdj4nMiFXw5zxwz3ihZVIZBHqjT25WIVNGVl2UENGy1a11L2LWh+rpO8K6ExWB4FhgWLnPPTtpWmbLjMuA0xtnAxfDWj+Gtjuld3weci499yARGZhsYFuoPRlbqnBBsladJqWf8OyY3gHLRCMy32ih4/jzkJjnTttnjCMLwHSKVPdUMU/kHovu3u1SGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3bputIZ0TbPZc2A4zSDCQi/bLMjxAyWl6uw2vh9BPk8=;
+ b=FptCXBjXRo3fuXkYHI+kMmZVkchvtBDBXKifMpFUtHal4KZRZ2ipmbnTYpotH+bhoFsl7N0uQzDJfLYr/By9YJEuSEdq65GnKKMtq1Jbe//IvITkw0ReatYJR8GdLxQ0+qiICVHq6qdHL9vCdLLaQgHAF42NxHqcciRWHzz/Ao9JSRcfEzCzIBhidpQiSFg8J8TT4poTWNQ/NvUUbTyN71WvoL3XKg4pvI41LVnJXenddzwaUjoxf6drOltztssTjGXWgO5cFYPJc9cZ1/UVKVvd7XJ5hO20L3hC+JyGhKDzCd6lZuPAeXIFkoqDfXe9ApwQYE+L0c456XEo8HiOrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3bputIZ0TbPZc2A4zSDCQi/bLMjxAyWl6uw2vh9BPk8=;
+ b=X6ehOSDyHaSrJY/j7ANsvzNd+YFP6dROZa3TBIBUCKfhv6SkrXAZVB/SVKXwAdR+yes+F28fyTm7eUl77eBqsuMR7T6SSDFEJR83KCDIiLWTzKkiQNcOT4QTiqh6qbGdDasAsQr9JB/pEJOTWM+qSlLTbnKp7/mTKzaKXq8oeSc=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4454.namprd05.prod.outlook.com (52.135.203.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.14; Tue, 27 Aug 2019 23:55:02 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::5163:1b6f:2d03:303d]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::5163:1b6f:2d03:303d%3]) with mapi id 15.20.2220.013; Tue, 27 Aug 2019
+ 23:55:02 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     Dave Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [RFC PATCH v2 2/3] x86/mm/tlb: Defer PTI flushes
+Thread-Topic: [RFC PATCH v2 2/3] x86/mm/tlb: Defer PTI flushes
+Thread-Index: AQHVWkMLtq80nSu65U6cmIhUDbm/8KcPpWwAgAALu4A=
+Date:   Tue, 27 Aug 2019 23:55:01 +0000
+Message-ID: <154B90AD-7EC3-4B86-8061-D737A948A77C@vmware.com>
+References: <20190823225248.15597-1-namit@vmware.com>
+ <20190823225248.15597-3-namit@vmware.com>
+ <CALCETrX91RqYsetbTjfrsMHH8LhTW=YMPuatHuo0bdTJeejP=Q@mail.gmail.com>
+In-Reply-To: <CALCETrX91RqYsetbTjfrsMHH8LhTW=YMPuatHuo0bdTJeejP=Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [2601:647:4580:b719:6d44:2c40:29b9:7215]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6ed310c8-13a3-4125-44af-08d72b49f9de
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4454;
+x-ms-traffictypediagnostic: BYAPR05MB4454:
+x-microsoft-antispam-prvs: <BYAPR05MB4454EF7232167B25C411415AD0A00@BYAPR05MB4454.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(199004)(189003)(6116002)(11346002)(2616005)(6486002)(102836004)(53546011)(6916009)(5660300002)(186003)(6512007)(6436002)(8676002)(6506007)(476003)(446003)(486006)(14454004)(46003)(76176011)(54906003)(316002)(2906002)(86362001)(66446008)(64756008)(66556008)(66476007)(76116006)(7736002)(66946007)(71200400001)(8936002)(81156014)(478600001)(33656002)(14444005)(256004)(81166006)(4326008)(53936002)(36756003)(25786009)(71190400001)(6246003)(99286004)(305945005)(229853002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4454;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AAgMxG7KcM3c5SXSjtnC8aKrldGws9+dIoB5d0lxxG7xsSMHEGwcYFVgAztot+lsFxgAj6ANAGcDK+g5Ltj7UDS4dlQzRLjZdgKXk3fgzu+R4OyVIQ5H7h5rH/M71Bx/F778IirW6tnsFAkUnLJi5vJVOIzUO6ux529qDS5ERg9oB1IgNPBlvsTsP+K8d+AujOWZ8FvBgVjIp2p6SB8NH/Zvh4K3vQ1b50+EUkCL1lL2neMYPbeFmUeDazllQpu7GiV5kvAK6zHdiODfqmejz5Vm5DT7SJYlwmcNw+uAb6ApHQjNaDSDb7UBqPYao638eGUT235PIEzEdNSNu6n/9QBF/Mx4WUuoyRKfZ7r86Y0+7JFwTrN1sMJNFgW/7EFPAVORkx2Zf6V99qXaqzyAc2PlNTcMyXVFeJDtsmr5SWk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B442341B4645FD45B3467639FB21C33A@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
-Content-Disposition: inline
-In-Reply-To: <5d657e35.1c69fb81.54250.01de@mx.google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ed310c8-13a3-4125-44af-08d72b49f9de
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 23:55:01.9215
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: olOiqPRoMsUYnnIcYcRWLpov9nyMBApDfLTnEiG0u+m7DRzSJ1/CS0Wv9uhEAcOibqM5s+CqJtLMt2u4d7B3/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4454
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---8P1HSweYDcXXzwPJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Joel,
-
-On Tue, Aug 27, 2019 at 03:01:56PM -0400, Joel Fernandes (Google) wrote:
-> During testing, it was observed that amount of memory consumed due
-> kfree_rcu() batching is 300-400MB. Previously we had only a single
-> head_free pointer pointing to the list of rcu_head(s) that are to be
-> freed after a grace period. Until this list is drained, we cannot queue
-> any more objects on it since such objects may not be ready to be
-> reclaimed when the worker thread eventually gets to drainin g the
-> head_free list.
+> On Aug 27, 2019, at 4:13 PM, Andy Lutomirski <luto@kernel.org> wrote:
 >=20
-> We can do better by maintaining multiple lists as done by this patch.
-> Testing shows that memory consumption came down by around 100-150MB with
-> just adding another list. Adding more than 1 additional list did not
-> show any improvement.
+> On Fri, Aug 23, 2019 at 11:13 PM Nadav Amit <namit@vmware.com> wrote:
+>> INVPCID is considerably slower than INVLPG of a single PTE. Using it to
+>> flush the user page-tables when PTI is enabled therefore introduces
+>> significant overhead.
+>>=20
+>> Instead, unless page-tables are released, it is possible to defer the
+>> flushing of the user page-tables until the time the code returns to
+>> userspace. These page tables are not in use, so deferring them is not a
+>> security hazard.
 >=20
-> Suggested-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 64 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 45 insertions(+), 19 deletions(-)
+> I agree and, in fact, I argued against ever using INVPCID in the
+> original PTI code.
 >=20
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 4f7c3096d786..9b9ae4db1c2d 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2688,28 +2688,38 @@ EXPORT_SYMBOL_GPL(call_rcu);
-> =20
->  /* Maximum number of jiffies to wait before draining a batch. */
->  #define KFREE_DRAIN_JIFFIES (HZ / 50)
-> +#define KFREE_N_BATCHES 2
-> +
-> +struct kfree_rcu_work {
-> +	/* The rcu_work node for queuing work with queue_rcu_work(). The work
-> +	 * is done after a grace period.
-> +	 */
-> +	struct rcu_work rcu_work;
-> +
-> +	/* The list of objects that have now left ->head and are queued for
-> +	 * freeing after a grace period.
-> +	 */
-> +	struct rcu_head *head_free;
-> +
-> +	struct kfree_rcu_cpu *krcp;
-> +};
-> +static DEFINE_PER_CPU(__typeof__(struct kfree_rcu_work)[KFREE_N_BATCHES]=
-, krw);
-> =20
+> However, I don't see what freeing page tables has to do with this.  If
+> the CPU can actually do speculative page walks based on the contents
+> of non-current-PCID TLB entries, then we have major problems, since we
+> don't actively flush the TLB for non-running mms at all.
 
-Why not
+That was not my concern.
 
-	static DEFINE_PER_CPU(struct kfree_rcu_work[KFREE_N_BATCHES], krw);
-
-here? Am I missing something?
-
-Further, given "struct kfree_rcu_cpu" is only for defining percpu
-variables, how about orginazing the data structure like:
-
-	struct kfree_rcu_cpu {
-		...
-		struct kfree_rcu_work krws[KFREE_N_BATCHES];
-		...
-	}
-
-This could save one pointer in kfree_rcu_cpu, and I think it provides
-better cache locality for accessing _cpu and _work on the same cpu.
-
-Thoughts?
-
-Regards,
-Boqun
-
-
->  /*
->   * Maximum number of kfree(s) to batch, if this limit is hit then the ba=
-tch of
->   * kfree(s) is queued for freeing after a grace period, right away.
->   */
->  struct kfree_rcu_cpu {
-> -	/* The rcu_work node for queuing work with queue_rcu_work(). The work
-> -	 * is done after a grace period.
-> -	 */
-> -	struct rcu_work rcu_work;
-> =20
->  	/* The list of objects being queued in a batch but are not yet
->  	 * scheduled to be freed.
->  	 */
->  	struct rcu_head *head;
-> =20
-> -	/* The list of objects that have now left ->head and are queued for
-> -	 * freeing after a grace period.
-> -	 */
-> -	struct rcu_head *head_free;
-> +	/* Pointer to the per-cpu array of kfree_rcu_work structures */
-> +	struct kfree_rcu_work *krwp;
-> =20
-> -	/* Protect concurrent access to this structure. */
-> +	/* Protect concurrent access to this structure and kfree_rcu_work. */
->  	spinlock_t lock;
-> =20
->  	/* The delayed work that flushes ->head to ->head_free incase ->head
-> @@ -2730,12 +2740,14 @@ static void kfree_rcu_work(struct work_struct *wo=
-rk)
->  {
->  	unsigned long flags;
->  	struct rcu_head *head, *next;
-> -	struct kfree_rcu_cpu *krcp =3D container_of(to_rcu_work(work),
-> -					struct kfree_rcu_cpu, rcu_work);
-> +	struct kfree_rcu_work *krwp =3D container_of(to_rcu_work(work),
-> +					struct kfree_rcu_work, rcu_work);
-> +	struct kfree_rcu_cpu *krcp;
-> +
-> +	krcp =3D krwp->krcp;
-> =20
->  	spin_lock_irqsave(&krcp->lock, flags);
-> -	head =3D krcp->head_free;
-> -	krcp->head_free =3D NULL;
-> +	head =3D xchg(&krwp->head_free, NULL);
->  	spin_unlock_irqrestore(&krcp->lock, flags);
-> =20
->  	/*
-> @@ -2758,19 +2770,28 @@ static void kfree_rcu_work(struct work_struct *wo=
-rk)
->   */
->  static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
->  {
-> +	int i =3D 0;
-> +	struct kfree_rcu_work *krwp =3D NULL;
-> +
->  	lockdep_assert_held(&krcp->lock);
-> +	while (i < KFREE_N_BATCHES) {
-> +		if (!krcp->krwp[i].head_free) {
-> +			krwp =3D &(krcp->krwp[i]);
-> +			break;
-> +		}
-> +		i++;
-> +	}
-> =20
-> -	/* If a previous RCU batch work is already in progress, we cannot queue
-> +	/* If both RCU batches are already in progress, we cannot queue
->  	 * another one, just refuse the optimization and it will be retried
->  	 * again in KFREE_DRAIN_JIFFIES time.
->  	 */
-> -	if (krcp->head_free)
-> +	if (!krwp)
->  		return false;
-> =20
-> -	krcp->head_free =3D krcp->head;
-> -	krcp->head =3D NULL;
-> -	INIT_RCU_WORK(&krcp->rcu_work, kfree_rcu_work);
-> -	queue_rcu_work(system_wq, &krcp->rcu_work);
-> +	krwp->head_free =3D xchg(&krcp->head, NULL);
-> +	INIT_RCU_WORK(&krwp->rcu_work, kfree_rcu_work);
-> +	queue_rcu_work(system_wq, &krwp->rcu_work);
-> =20
->  	return true;
->  }
-> @@ -3736,8 +3757,13 @@ static void __init kfree_rcu_batch_init(void)
-> =20
->  	for_each_possible_cpu(cpu) {
->  		struct kfree_rcu_cpu *krcp =3D per_cpu_ptr(&krc, cpu);
-> +		struct kfree_rcu_work *krwp =3D &(per_cpu(krw, cpu)[0]);
-> +		int i =3D KFREE_N_BATCHES;
-> =20
->  		spin_lock_init(&krcp->lock);
-> +		krcp->krwp =3D krwp;
-> +		while (i--)
-> +			krwp[i].krcp =3D krcp;
->  		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
->  	}
->  }
-> --=20
-> 2.23.0.187.g17f5b7556c-goog
 >=20
+> I suppose that, if we free a page table, then we can't activate the
+> PCID by writing to CR3 before flushing things.  But we can still defer
+> the flush and just set the flush bit when we write to CR3.
 
---8P1HSweYDcXXzwPJ
-Content-Type: application/pgp-signature; name="signature.asc"
+This was my concern. I can change the behavior so the code would flush the
+whole TLB instead. I just tried not to change the existing behavior too
+much.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAl1lwk8ACgkQSXnow7UH
-+rhalQf8DhiJrpTUoJOh4AwsvFgbpjnsVsc0ctc/kZnfs+6XpFzsip5W3R98SxrB
-grZbztfpEuQPWzfp2MUYi8IwvMSlpIHcPnmIFG053ci3z69Ia6cr8OifncYRrxN0
-4Fh9FUIElfclYtmehI58Bk+deDAnwsNpbsQU66K/BxmVfnSI3D1Ao7WrgO+Ho8ki
-cNUGmI1CaPMuQLL9mFYFdTAyZzZZnO+ksjPUV0Q77nnWLuCdo48o2yn39E7LiVnT
-3DjFLKxxm2caOQ9a4hOoKnsSNWhaaa5nJi1x6ai+7eR8txBmdXn+ge0eI2zjMt5v
-bIEf82XoWz6t0X29DOhSONb+Kzz5sw==
-=Jm0/
------END PGP SIGNATURE-----
-
---8P1HSweYDcXXzwPJ--
