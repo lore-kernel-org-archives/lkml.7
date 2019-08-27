@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4C5C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBEEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7CE42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCDB2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893477;
-	bh=KVeVnzVN+7zWwaCz8UpfKAGtCgoVXGcS7K3bV7aItGk=;
+	s=default; t=1566893481;
+	bh=CXN3IUNGhMpufXJ/rIGXQZ1QkYU8q5x78RVVlCo+Aec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0J+ewNR2K6hkZGro7B/wk8W3GltKu3w90RJDvLW7qcLwoJun7aS9b8jdnVL93nt9a
-	 Rd8C4JbuelLnvZeyNVClw19GM+j7vweFA11sZujIAdl3KESBi5Khuqz0FBOyjPm4Wk
-	 ifFHe7b/ti5c5q551kDmNHBhr9EgmRjDwvPTKL0o=
+	b=D5zdhFPhTg//E9q+BLdZlUG+zi3e/lMH4spzs1YGSiSHJcvM6x6MR4iT8O3fQUePP
+	 xNAf8ZpaN3pYTITHYsT0scL25JZTx6s/LhfQ27A+f7KOMFiWj09y+PSOjxqrRJl7bo
+	 OZ7Q2m5xt1byGuVPaXkZqCRjJZXolyD1FRFRlWWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfH0ILQ (ORCPT
+        id S1731056AbfH0IBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:01:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731770AbfH0IB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:01:29 -0400
+        id S1731726AbfH0IBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:01:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25B742186A;
-        Tue, 27 Aug 2019 08:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 955B5217F5;
+        Tue, 27 Aug 2019 08:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892888;
-        bh=KVeVnzVN+7zWwaCz8UpfKAGtCgoVXGcS7K3bV7aItGk=;
+        s=default; t=1566892877;
+        bh=CXN3IUNGhMpufXJ/rIGXQZ1QkYU8q5x78RVVlCo+Aec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBwAqaJXCsmcW6CXbuyoC1PtFCHQ+9/6gKBksivCIHrg1FrZH6jDYZlUeBmcNnZ+l
-         F29Oq/am2nJ3HpxZK+RzLP70oGMUFvVC3sbLSciXj5W1VBnVier+DS0EDtXawTk+iC
-         fmjSR4oB0g9Otoe1qwwIUXN3Fgv9VezWyyoiS0RE=
+        b=ic6cOfdKbUN1StEVKXZDxE6m3Hbyzs/ZA7MQGtDMlXVwitwiqw2C7y0zEPR+YkSbP
+         tXNuEWotYHwDuX8u1XadveLtFEjNBHSPfswozS0EmHzxneBzuOlHzB2FZfIKeSQcHq
+         NGRdL8b3NKjouNoL9X1+eS8iZNMTHipVQaWuhEGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Bob Ham <bob.ham@puri.sm>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 048/162] mac80211_hwsim: Fix possible null-pointer dereferences in hwsim_dump_radio_nl()
-Date:   Tue, 27 Aug 2019 09:49:36 +0200
-Message-Id: <20190827072739.899320014@linuxfoundation.org>
+Subject: [PATCH 5.2 044/162] net: usb: qmi_wwan: Add the BroadMobi BM818 card
+Date:   Tue, 27 Aug 2019 09:49:32 +0200
+Message-Id: <20190827072739.776945943@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,48 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b55f3b841099e641bdb2701d361a4c304e2dbd6f ]
+[ Upstream commit 9a07406b00cdc6ec689dc142540739575c717f3c ]
 
-In hwsim_dump_radio_nl(), when genlmsg_put() on line 3617 fails, hdr is
-assigned to NULL. Then hdr is used on lines 3622 and 3623:
-    genl_dump_check_consistent(cb, hdr);
-    genlmsg_end(skb, hdr);
+The BroadMobi BM818 M.2 card uses the QMI protocol
 
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, hdr is used here when it is not NULL.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20190729082332.28895-1-baijiaju1990@gmail.com
-[put braces on all branches]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Bob Ham <bob.ham@puri.sm>
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mac80211_hwsim.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 1c699a9fa8661..faec05ab42754 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3615,10 +3615,12 @@ static int hwsim_dump_radio_nl(struct sk_buff *skb,
- 		hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
- 				  cb->nlh->nlmsg_seq, &hwsim_genl_family,
- 				  NLM_F_MULTI, HWSIM_CMD_GET_RADIO);
--		if (!hdr)
-+		if (hdr) {
-+			genl_dump_check_consistent(cb, hdr);
-+			genlmsg_end(skb, hdr);
-+		} else {
- 			res = -EMSGSIZE;
--		genl_dump_check_consistent(cb, hdr);
--		genlmsg_end(skb, hdr);
-+		}
- 	}
- 
- done:
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 8b4ad10cf9402..26c5207466afc 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1294,6 +1294,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
++	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
+ 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
+ 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
+ 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
 -- 
 2.20.1
 
