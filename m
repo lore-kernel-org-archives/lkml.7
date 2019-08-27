@@ -2,131 +2,107 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BA7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21131C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591E520674
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:46:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="HzH3KFGG"
+	by mail.kernel.org (Postfix) with ESMTP id EE774205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbfH0Tq6 (ORCPT
+        id S1731166AbfH0TrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:46:58 -0400
-Received: from mail-eopbgr680079.outbound.protection.outlook.com ([40.107.68.79]:44423
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726584AbfH0Tq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:46:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=De8QesjREvh829m2qYuMukITtmszj1/h3inVixTQ32IAb7v2JVWIR115zoqRyUo0VseD/bo+vIaEGpK6jRWoDtVuRyyP8wyKsjsOvmGYjZffsChdFxkkH5J49SXsBCIhYrbWpK2VIf3IlL0qSRn2gd5dnfcWTfBK7fQFosNDDhziQHHDo+Oe7w6JwkhqEhueoSuv1Y9ey4yVHxtKiUkARm458C1xq9wk7B0G3tAcYKsCM0YDU09qEOvoT2y0DrBP29en3dVzowoGNM5z/ZpbFatwq+1Vc2IrLJDb/HWCFYrLzJgf5SXYYq6dv2LxUWMjomxBBDHcNi8RdH5PNXpbtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iMk4hWRAxYPZGjJS7x0IYFG+LwcLOygdSFWLndkYy9g=;
- b=V01gpqi7MNS9mssV8yurXgaFGLxOyDLCS9pj2YwHXlWh4Wv4ahPiN2lJNervZdFZeDWuRL4A67XaIMt0+U+OTBp9oS9aPqkP0PQni8WWGK6UR5ELODrgkH/hOETaTFk2FFP7GOwd5TpJt3n2FuJ+ZL6nfue6eIlSQuHPV2unT9aZSZo4kONUqUN0/94HKt022e0srFDOeqa10AOV6lHeP+sbLm/pHPCKKe9eMmVbGSKPLUHXSbB6TdSmQmc7Xl+rEBd/WJu93nAuYsDwbia70+yR1rmwhEVFxgq2FLRlMMczK4uhCvWamX93MBlDuytmBWwzmKzxJaRz6THnS2Df+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iMk4hWRAxYPZGjJS7x0IYFG+LwcLOygdSFWLndkYy9g=;
- b=HzH3KFGGmfYrAghSkOEARzVP7F+JQLx3v+XeSKPGiN4fRjQwOwvrt6ESG96GMcpZfGT3oJjq4Ca9b5trWppwc4C1H5ktARiROtbY3Q0BxPmsTD+l2AmQCVm3rWM2B/sy1F48K9/m/DfCGUxigraqSMTPY/rPtBAZYfS5G1VT5tQ=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB5319.namprd05.prod.outlook.com (20.177.127.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.15; Tue, 27 Aug 2019 19:46:52 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::5163:1b6f:2d03:303d]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::5163:1b6f:2d03:303d%3]) with mapi id 15.20.2220.013; Tue, 27 Aug 2019
- 19:46:52 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [RFC PATCH v2 2/3] x86/mm/tlb: Defer PTI flushes
-Thread-Topic: [RFC PATCH v2 2/3] x86/mm/tlb: Defer PTI flushes
-Thread-Index: AQHVWkMLtq80nSu65U6cmIhUDbm/8KcPVgiAgAAVyYA=
-Date:   Tue, 27 Aug 2019 19:46:52 +0000
-Message-ID: <3B6DF400-FF8B-4B9B-8F3D-8B8CB21A9CF4@vmware.com>
-References: <20190823225248.15597-1-namit@vmware.com>
- <20190823225248.15597-3-namit@vmware.com>
- <d68bef6d-d71c-7881-87e8-133f657e495a@intel.com>
-In-Reply-To: <d68bef6d-d71c-7881-87e8-133f657e495a@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [2601:647:4580:b719:cc3a:fcc:d5fc:5ff2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eda496b5-7c7e-4186-4e4d-08d72b274ef0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5319;
-x-ms-traffictypediagnostic: BYAPR05MB5319:
-x-microsoft-antispam-prvs: <BYAPR05MB5319574BCBB0E8369FB0B0B9D0A00@BYAPR05MB5319.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(376002)(136003)(396003)(189003)(199004)(476003)(6246003)(66946007)(76116006)(256004)(66476007)(66556008)(64756008)(66446008)(305945005)(54906003)(2906002)(99286004)(6486002)(6512007)(7736002)(71200400001)(71190400001)(86362001)(4326008)(8936002)(229853002)(53936002)(316002)(486006)(46003)(76176011)(102836004)(6436002)(478600001)(6506007)(53546011)(186003)(6916009)(8676002)(81166006)(81156014)(2616005)(36756003)(14454004)(11346002)(5660300002)(6116002)(25786009)(33656002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5319;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oLmtIZdd9zyuDfXWRGTn2Ao0qaqKrTd4XpMIyGf5z6+Sk8nh5yUAHY4/EBkTKEQ5zZ0Abr6WYCUeI1F11rgQNbM1d0dgPNLJ/GmdxyT06qTApoeRSzUpHfgoLF7fkexJwJian3ftwwUHZkVzlKGqYEBjrr9qS/VlbIMgkdOeWKyoCIquXrPz4Ja8Gd5RYYJEeEveJFNX8W56XMHam4m6KvBb3XUy463zyj2J7ddBBYPHAjFyslxQVEq5wbn9wb0FN9CGx9qQhBDGEi+Lp+LmFhjnVVV4/87haR4wpC+802Ic4ThM55lpikxMGN3WhurBs6N3TVKj7eSQGtdHkrg+gDpI6wLCLbrfsn5uExG8gJx/v/KB9WNd8Jz0FFB1iPFPyZFmUp2Khn3wTvdDX8C9RKLUgCSQ7H3XZUwiChliCP0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <28A9D5AF6E641A4984EB0494F8D72C12@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 27 Aug 2019 15:47:20 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45156 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfH0TrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 15:47:19 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so232665qki.12
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 12:47:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4To99pYhN71BTubz3nGrKNYdHAubr+/NI0V79/X3hJs=;
+        b=eIER/fcg/bb8CtoL5M4B+mNljjXp5kYb0V3ZF5yO7nse6FdkZsPzDBdSDaXT9QRGu+
+         P8+fkpDAHCx+UpRSRbir2PSrujt2k4/SukSqICpKycHpCilZ+VZQ3Ab7cw7iqrN6TSB2
+         IBgSuCepQV7c2Is7urtvI+/ZQtdFCczXNrcUg1MW0QrlCWrmr36CDkjNZ62rrX9oKzAV
+         beLUN4fKGUfi8hHI/acmVmRsbbwZlTFQe7n7mHiRgZfe8XSJ1lSL82yo2p9oSwcJ1NXr
+         00fOCsFWWdEtxhq5swKOBhB/shtV3Lo0xk2S17brL/3psOdE0cSK2t+qWJupsDXbeP6n
+         28OA==
+X-Gm-Message-State: APjAAAXSPOB6na06idRJK/kN/8nTWnkgh9nk59HIAMQUDu0kCS3F1AJS
+        QV1r2m6BSVonOStywpMPOjZDdJZHu8iL+UCG1nc=
+X-Google-Smtp-Source: APXvYqxgckRsvPeHZn6b1p3gkctQ9LIf08zCEsVjrFAuwpT25u3v1l2WFcylpqiWKU+fjXiK26F3oHm+fGG8s+06hRM=
+X-Received: by 2002:a37:4fcf:: with SMTP id d198mr228694qkb.394.1566935238574;
+ Tue, 27 Aug 2019 12:47:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eda496b5-7c7e-4186-4e4d-08d72b274ef0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 19:46:52.0237
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Qm4Gb4WGI3v3U9sEv7GOLH+YWPwWH8X8C4RoHIw/z/ePIEXU3REuez5OezZAvuJxEV3g/hB116G6FSgdPzWLxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5319
+References: <CAK8P3a3G=GCpLtNztuoLR4BuugAB=zpa_Jrz5BSft6Yj-nok1g@mail.gmail.com>
+ <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
+ <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com> <20190827192255.wbyn732llzckmqmq@treble>
+In-Reply-To: <20190827192255.wbyn732llzckmqmq@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 27 Aug 2019 21:47:02 +0200
+Message-ID: <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBBdWcgMjcsIDIwMTksIGF0IDExOjI4IEFNLCBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5A
-aW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9uIDgvMjMvMTkgMzo1MiBQTSwgTmFkYXYgQW1pdCB3
-cm90ZToNCj4+IElOVlBDSUQgaXMgY29uc2lkZXJhYmx5IHNsb3dlciB0aGFuIElOVkxQRyBvZiBh
-IHNpbmdsZSBQVEUuIFVzaW5nIGl0IHRvDQo+PiBmbHVzaCB0aGUgdXNlciBwYWdlLXRhYmxlcyB3
-aGVuIFBUSSBpcyBlbmFibGVkIHRoZXJlZm9yZSBpbnRyb2R1Y2VzDQo+PiBzaWduaWZpY2FudCBv
-dmVyaGVhZC4NCj4gDQo+IEknbSBub3Qgc3VyZSB0aGlzIGlzIHdvcnRoIGFsbCB0aGUgY2h1cm4s
-IGVzcGVjaWFsbHkgaW4gdGhlIGVudHJ5IGNvZGUuDQo+IEZvciBsYXJnZSBmbHVzaGVzICg+IHRs
-Yl9zaW5nbGVfcGFnZV9mbHVzaF9jZWlsaW5nKSwgd2UgZG9uJ3QgZG8NCj4gSU5WUENJRHMgaW4g
-dGhlIGZpcnN0IHBsYWNlLg0KDQpJdCBpcyBwb3NzaWJsZSB0byBqdW1wIGZyb20gZmx1c2hfdGxi
-X2Z1bmMoKSBpbnRvIHRoZSB0cmFtcG9saW5lIHBhZ2UsDQppbnN0ZWFkIG9mIGZsdXNoaW5nIHRo
-ZSBUTEIgaW4gdGhlIGVudHJ5IGNvZGUuIEhvd2V2ZXIsIGl0IGluZHVjZXMgaGlnaGVyDQpvdmVy
-aGVhZCAoc3dpdGNoaW5nIENSM3MpLCBzbyBpdCB3aWxsIG9ubHkgYmUgdXNlZnVsIGlmIG11bHRp
-cGxlIFRMQiBlbnRyaWVzDQphcmUgZmx1c2hlZCBhdCBvbmNlLiBJdCBhbHNvIHByZXZlbnRzIGV4
-cGxvaXRpbmcgb3Bwb3J0dW5pdGllcyBvZiBwcm9tb3RpbmcNCmluZGl2aWR1YWwgZW50cnkgZmx1
-c2hlcyBpbnRvIGEgZnVsbC1UTEIgZmx1c2ggd2hlbiBtdWx0aXBsZSBmbHVzaGVzIGFyZQ0KaXNz
-dWVkIG9yIHdoZW4gY29udGV4dCBzd2l0Y2ggdGFrZXMgcGxhY2UgYmVmb3JlIHJldHVybmluZy10
-by11c2VyLXNwYWNlLg0KDQpUaGVyZSBhcmUgY2FzZXMvd29ya2xvYWRzIHRoYXQgZmx1c2ggbXVs
-dGlwbGUgKGJ1dCBub3QgdG9vIG1hbnkpIFRMQiBlbnRyaWVzDQpvbiBldmVyeSBzeXNjYWxsLCBm
-b3IgaW5zdGFuY2UgaXNzdWluZyBtc3luYygpIG9yIHJ1bm5pbmcgQXBhY2hlIHdlYnNlcnZlci4N
-ClNvIEkgYW0gbm90IHN1cmUgdGhhdCB0bGJfc2luZ2xlX3BhZ2VfZmx1c2hfY2VpbGluZyBzYXZl
-cyB0aGUgZGF5LiBCZXNpZGVzLA0KeW91IG1heSB3YW50IHRvIHJlY2FsaWJyYXRlIChsb3dlcikg
-dGxiX3NpbmdsZV9wYWdlX2ZsdXNoX2NlaWxpbmcgd2hlbiBQVEkNCmlzIHVzZWQuDQoNCj4gSSdk
-IHJlYWxseSB3YW50IHRvIHVuZGVyc3RhbmQgd2hhdCB0aGUgaGVjayBpcyBnb2luZyBvbiB0aGF0
-IG1ha2VzDQo+IElOVlBDSUQgc28gc2xvdywgZmlyc3QuDQoNCklOVlBDSUQtc2luZ2xlIGlzIHNs
-b3cgKGV2ZW4gbW9yZSB0aGFuIDEzMyBjeWNsZXMgc2xvd2VyIHRoYW4gSU5WTFBHIHRoYXQNCnlv
-dSBtZW50aW9uZWQ7IEkgZG9u4oCZdCBoYXZlIHRoZSBudW1iZXJzIGlmIGZyb250IG9mIG1lKS4g
-SSB0aG91Z2h0IHRoYXQgdGhpcw0KaXMgYSBrbm93biBmYWN0LCBhbHRob3VnaCwgb2J2aW91c2x5
-LCBpdCBkb2VzIG5vdCBtYWtlIG11Y2ggc2Vuc2UuDQoNCg==
+On Tue, Aug 27, 2019 at 9:23 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Tue, Aug 27, 2019 at 09:00:52PM +0200, Arnd Bergmann wrote:
+> > On Tue, Aug 27, 2019 at 5:00 PM Ilie Halip <ilie.halip@gmail.com> wrote:
+> > >
+> > > > > $ clang-9 -c  crc32.i  -O2   ; objtool check  crc32.o
+> > > > > crc32.o: warning: objtool: fn1 uses BP as a scratch register
+> > >
+> > > Yes, I see it too. https://godbolt.org/z/N56HW1
+> > >
+> > > > Do you still see this warning with -fno-omit-frame-pointer (assuming
+> > > > clang has that option)?
+> > >
+> > > Using this makes the warning go away. Running objtool with --no-fp
+> > > also gets rid of it.
+> >
+> > I still see the warning after adding back the -fno-omit-frame-pointer
+> > in my reduced test case:
+> >
+> > $ clang-9 -c  crc32.i -Werror -Wno-address-of-packed-member -Wall
+> > -Wno-pointer-sign -Wno-unused-value -Wno-constant-logical-operand -O2
+> > -Wno-unused -fno-omit-frame-pointer
+> > $ objtool check  crc32.o
+> > crc32.o: warning: objtool: fn1 uses BP as a scratch register
+>
+> This warning most likely means that clang is clobbering RBP in leaf
+> functions.  With -fno-omit-frame-pointer, leaf functions don't need to
+> set up the frame pointer, but they at least need to leave RBP untouched,
+> so that an interrupts/exceptions can unwind through the function.
+
+Yes, that clearly matches what I see in the output where it does
+
+   0: 55                    push   %rbp
+...
+  73: 0f b6 ef              movzbl %bh,%ebp
+  76: 8b 1c 99              mov    (%rcx,%rbx,4),%ebx
+  79: 33 1c aa              xor    (%rdx,%rbp,4),%ebx
+...
+  95: 5d                    pop    %rbp
+  96: c3                    retq
+
+I just did another simple test: an x86-64 defconfig build with
+UNWINDER_FRAME_POINTER shows the exact symptom as
+my randconfig, so it sounds like any configuration with frame
+pointers would, and there is nothing else to it (this also makes
+sense given that it happens with a relatively simple test case
+outside of the kernel).
+
+       Arnd
