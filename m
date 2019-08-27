@@ -2,219 +2,226 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26AAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18065C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B322A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52B22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYPCOJDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbfH0IfK (ORCPT
+        id S1729775AbfH0IfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:35:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33420 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbfH0IfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:35:10 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7A1B610C0315;
-        Tue, 27 Aug 2019 08:35:09 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 00F935D6B7;
-        Tue, 27 Aug 2019 08:34:59 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 10:34:57 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kvm@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 04/19] virtio: Implement get_shm_region for PCI
- transport
-Message-ID: <20190827103457.35927d9d.cohuck@redhat.com>
-In-Reply-To: <20190821175720.25901-5-vgoyal@redhat.com>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
-        <20190821175720.25901-5-vgoyal@redhat.com>
-Organization: Red Hat GmbH
+        Tue, 27 Aug 2019 04:35:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41754 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729619AbfH0IfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:35:19 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j4so3598428lfh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 01:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CqjuZRe2ZHqHsJdWeZqP+8fdrbKikXqU+7SgwVIm4Ks=;
+        b=lYPCOJDKkXkSeFkNMIIYgIDe/eZ/N8HPF89r80KL/bDAq25NzKHu2Wj3YR0+xNCt5i
+         8/fdGKL5aTh7wSi6fjwxYYJUDImGjW7nD7XstOqMcVwOjFgTqa2UIKr0Dj6hsR+aOwIq
+         OwH8TLuxemD2cBSTb2GW/0vcrD1LGq/FzyNiilBtoJJJzRoj2+jot8AbgbORBmmwtl+T
+         UjogiTBlMKC5mRpHCkViyluCGdU3WG4nKR5fhJVa6n8mJRjf2Hn1xqnYpOqgps0PT3wp
+         AThiTMdx+0pYmUKdQCQSnV/nSvfAM8yeL9ZlDDEspY0Oif7ene2rllt08q/KW4rDPWEr
+         rs+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CqjuZRe2ZHqHsJdWeZqP+8fdrbKikXqU+7SgwVIm4Ks=;
+        b=c8asQL+qxIzvZru2S30GEwTuA4gevh29JpFcRxP6eGIWfF6yXvxn0mcNRrzGh4gDkl
+         w8HqhlSfGNTn+pQc/d98KBCWoVYmDwllLm4O0XsXjz0TmIT6rvLmSxdElSAj3Ik8Sdtg
+         5oUwipsOyVYyoS/tRrBy1SipHS/yAjsB2AismcIbcu/C2n4Zf/90CO+mFTseTSmSSsYa
+         X2PpqPe3VLHs13J7y18LHnLxc/FOY9EDme6CkfmgjQcsbvLkZPu+zjWXM7bfh2eM8R24
+         iRZeaz8iBfahrbCfibrAsHOwYo+K94f2iYbUS08i62KSiSRjnd1rioKPs3jrwj25s6+K
+         yArQ==
+X-Gm-Message-State: APjAAAU7YTmANeoMvmYN3gw9hw0Q3p6OWNFzx/8g81oJmUQ33c+mwQPQ
+        1/Cak45rWAy2ulZ9I+zfMU77f0aQTN0HtiLZgsQOhw==
+X-Google-Smtp-Source: APXvYqw8aLeHgVLAG5PF2WhUcbrivEwRCSw8giNdcHR+I3B03ANvMPmejXZ8GrsrjgLdLe4GB5kC+ZwvczacZpZZZ9Q=
+X-Received: by 2002:a19:7401:: with SMTP id v1mr13798131lfe.155.1566894916059;
+ Tue, 27 Aug 2019 01:35:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 27 Aug 2019 08:35:09 +0000 (UTC)
+References: <20190826180734.15801-1-codekipper@gmail.com> <20190826180734.15801-2-codekipper@gmail.com>
+ <CAGb2v651jVp+J2eyWh7vw-yHmFTVy4eaMjHV0FvOF17C5_Hswg@mail.gmail.com>
+ <CAEKpxBmCg4AkqKM-O3C76gto+mPWyEdDbviAmRJ8PxLOOMTJ7w@mail.gmail.com> <CAGb2v64VNZ0oyD_760uNccwJb7MKngSooWB72M+d1DfT4-djog@mail.gmail.com>
+In-Reply-To: <CAGb2v64VNZ0oyD_760uNccwJb7MKngSooWB72M+d1DfT4-djog@mail.gmail.com>
+From:   Code Kipper <codekipper@gmail.com>
+Date:   Tue, 27 Aug 2019 10:35:04 +0200
+Message-ID: <CAEKpxBn3g2hFaei6thAnAHX4nemrs9c_xWp1GheMfMS6+TJ7gQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v6 1/3] ASoC: sun4i-i2s: incorrect regmap
+ for A83T
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 13:57:05 -0400
-Vivek Goyal <vgoyal@redhat.com> wrote:
+On Tue, 27 Aug 2019 at 10:01, Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Tue, Aug 27, 2019 at 1:55 PM Code Kipper <codekipper@gmail.com> wrote:
+> >
+> > On Tue, 27 Aug 2019 at 06:13, Chen-Yu Tsai <wens@csie.org> wrote:
+> > >
+> > > On Tue, Aug 27, 2019 at 2:07 AM <codekipper@gmail.com> wrote:
+> > > >
+> > > > From: Marcus Cooper <codekipper@gmail.com>
+> > > >
+> > > > The regmap configuration is set up for the legacy block on the
+> > > > A83T whereas it uses the new block with a larger register map.
+> > >
+> > > Looking at the code Allwinner previously released [1], that doesn't seem to be
+> > > the case. Keep in mind that the register map shown in the user manual is for
+> > > the TDM interface, which we don't actually support right now.
+> >
+> > Should it matter what we support right now?, the block according to the user
+> > manual shows the bigger range. I don't have a A83T device and from what I
+>
+> There are a total of four I2S controllers on the A83T. Currently three of them
+> are listed in the dtsi file, which are _not_ the one shown in the user manual.
+> The one shown is the fourth one, which is the TDM controller.
 
-> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> 
-> On PCI the shm regions are found using capability entries;
-> find a region by searching for the capability.
-> 
-> Cc: kvm@vger.kernel.org
-> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
+The configuration for the A83T suggests that it's a mixture of old and
+new which I don't
+think is the case considering it was released around the same time as
+the H3. There
+is enough similarity between the blocks for it to still work. For
+example on the H6
+we referenced by mistake the H3 block and we still got audio (with
+only slight distortion).
+I would suggest to validate all of the i2s blocks we need to test
+using the internal loopback
+as that will also cover capture.
 
-An s-o-b by a test robot looks a bit odd.
+>
+> It's not like we haven't seen this before. IIRC the A64 also had two variants
+> of the I2S interface. The one coupled with the audio codec was different from
+> the others.
 
-> ---
->  drivers/virtio/virtio_pci_modern.c | 108 +++++++++++++++++++++++++++++
->  include/uapi/linux/virtio_pci.h    |  11 ++-
->  2 files changed, 118 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-> index 7abcc50838b8..1cdedd93f42a 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-> @@ -443,6 +443,112 @@ static void del_vq(struct virtio_pci_vq_info *info)
->  	vring_del_virtqueue(vq);
->  }
->  
-> +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
-> +                                   u8 required_id,
-> +                                   u8 *bar, u64 *offset, u64 *len)
-> +{
-> +	int pos;
-> +
-> +        for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
+Yes...but the i2s of the audio codec was documented in the audio codec
+section. I've used
+this device to ensure that I've not broken anything in the old block
+with these new changes.
 
-Indentation looks a bit off here.
+>
+> > gather not many users do. But the compatible for the H3 has been removed
+> > and replaced with the settings for the A83T which also has default settings in
+> > registers further up than SUNXI_RXCHMAP.
+>
+> I'll sync up with Maxime on this.
+>
+> > >
+> > > The file shows the base address as 0x01c22800, and the last defined register
+> > > is SUNXI_RXCHMAP at 0x3c.
+> > >
+> > > The I2S driver [2] also shows that it is the old register map size, but with
+> > > TX_FIFO and INT_STA swapped around. This might mean that it would need a
+> > > separate regmap_config, as the read/write callbacks need to be changed to
+> > > fit the swapped registers.
+> > >
+> > > Finally, the TDM driver [3], which matches the TDM section in the manual, shows
+> > > a larger register map.
+> > >
+> > > A83T is SUN8IW6, while SUN8IW7 refers to the H3.
+> >
+> > Since when have we trusted Allwinner code?, the TDM labelled block
+> > clearly supports
+>
+> Since they haven't listed the I2S block in the user manual, so that is what we
+> have to go by.
+>
+> The TDM section in the user manual only lists the block at 0x1c23000. The memory
+> map says DAUDIO-[012] for addresses 0x1c22000, 0x1c22400, 0x1c22800, and TDM for
+> address 0x1c23000. One would assume this meant these are somewhat different.
+>
+> > I2S. The biggest use case for this block is getting HDMI audio working
+> > on the newer
+>
+> I understand that.
+>
+> > devices(LibreELEC nightlies has a user base of over 300) and I've tested this on
+> > numerous set ups over the last couple of years.
+>
+> Tested on the H3, correct?
 
-> +             pos > 0;
-> +             pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
-> +		u8 type, cap_len, id;
-> +                u32 tmp32;
+Yes....but only with the additional changes for multi-channel with my
+LibreELEC build.
+These changes I tested on my pine64 before pushing upstream.
 
-Here as well.
+>
+> > Failing that reverting (3e9acd7ac693: "ASoC: sun4i-i2s: Remove
+> > duplicated quirks structure")
+> > would help.
+>
+> I'll take a look. IIRC it worked with the old layout, with the two registers
+> swapped, playing standard 48 KHz / 16 bit audio when I added supported for
+> the A83T. Then again maybe the stars were perfectly aligned. At the very least
+> we could separate A83T and H3 as you suggested.
 
-> +                u64 res_offset, res_length;
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +                                                         cfg_type),
-> +                                     &type);
-> +                if (type != VIRTIO_PCI_CAP_SHARED_MEMORY_CFG)
-
-And here.
-
-> +                        continue;
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +                                                         cap_len),
-> +                                     &cap_len);
-> +		if (cap_len != sizeof(struct virtio_pci_cap64)) {
-> +		        printk(KERN_ERR "%s: shm cap with bad size offset: %d size: %d\n",
-> +                               __func__, pos, cap_len);
-
-Probably better to use dev_warn() instead of printk.
-
-> +                        continue;
-> +                }
-
-Indentation looks off again (might be a space vs tabs issue; maybe
-check the whole patch for indentation problems?)
-
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +                                                         id),
-> +                                     &id);
-> +                if (id != required_id)
-> +                        continue;
-> +
-> +                /* Type, and ID match, looks good */
-> +                pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +                                                         bar),
-> +                                     bar);
-> +
-> +                /* Read the lower 32bit of length and offset */
-> +                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, offset),
-> +                                      &tmp32);
-> +                res_offset = tmp32;
-> +                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, length),
-> +                                      &tmp32);
-> +                res_length = tmp32;
-> +
-> +                /* and now the top half */
-> +                pci_read_config_dword(dev,
-> +                                      pos + offsetof(struct virtio_pci_cap64,
-> +                                                     offset_hi),
-> +                                      &tmp32);
-> +                res_offset |= ((u64)tmp32) << 32;
-> +                pci_read_config_dword(dev,
-> +                                      pos + offsetof(struct virtio_pci_cap64,
-> +                                                     length_hi),
-> +                                      &tmp32);
-> +                res_length |= ((u64)tmp32) << 32;
-> +
-> +                *offset = res_offset;
-> +                *len = res_length;
-> +
-> +                return pos;
-> +        }
-> +        return 0;
-> +}
-> +
-> +static bool vp_get_shm_region(struct virtio_device *vdev,
-> +			      struct virtio_shm_region *region, u8 id)
-> +{
-> +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-
-This whole function looks like it is indented incorrectly.
-
-> +	struct pci_dev *pci_dev = vp_dev->pci_dev;
-> +	u8 bar;
-> +	u64 offset, len;
-> +	phys_addr_t phys_addr;
-> +	size_t bar_len;
-> +	char *bar_name;
-> +	int ret;
-> +
-> +	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
-> +		return false;
-> +	}
-
-You can drop the curly braces.
-
-> +
-> +	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
-> +	if (ret < 0) {
-> +		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
-> +			__func__);
-> +		return false;
-> +	}
-> +
-> +	phys_addr = pci_resource_start(pci_dev, bar);
-> +	bar_len = pci_resource_len(pci_dev, bar);
-> +
-> +        if (offset + len > bar_len) {
-> +                dev_err(&pci_dev->dev,
-> +                        "%s: bar shorter than cap offset+len\n",
-> +                        __func__);
-> +                return false;
-> +        }
-> +
-> +	region->len = len;
-> +	region->addr = (u64) phys_addr + offset;
-> +
-> +	return true;
-> +}
-> +
->  static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
->  	.get		= NULL,
->  	.set		= NULL,
-
-Apart from the coding style nits, the logic of the patch looks sane to
-me.
-
-(...)
-
-As does the rest of the patch.
+Thanks,
+CK
+>
+> ChenYu
+>
+>
+> > BR,
+> > CK
+> > >
+> > > ChenYu
+> > >
+> > > [1] https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/hdmiaudio/sunxi-hdmipcm.h
+> > > [2] https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/i2s0/sunxi-i2s0.h
+> > > [3] https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/daudio0/sunxi-daudio0.h
+> > >
+> > > > Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+> > > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > > > ---
+> > > >  sound/soc/sunxi/sun4i-i2s.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > > > index 57bf2a33753e..34575a8aa9f6 100644
+> > > > --- a/sound/soc/sunxi/sun4i-i2s.c
+> > > > +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > > > @@ -1100,7 +1100,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
+> > > >  static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
+> > > >         .has_reset              = true,
+> > > >         .reg_offset_txdata      = SUN8I_I2S_FIFO_TX_REG,
+> > > > -       .sun4i_i2s_regmap       = &sun4i_i2s_regmap_config,
+> > > > +       .sun4i_i2s_regmap       = &sun8i_i2s_regmap_config,
+> > > >         .field_clkdiv_mclk_en   = REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
+> > > >         .field_fmt_wss          = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
+> > > >         .field_fmt_sr           = REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
+> > > > --
+> > > > 2.23.0
+> > > >
+> > > > --
+> > > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > > > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190826180734.15801-2-codekipper%40gmail.com.
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAEKpxBmCg4AkqKM-O3C76gto%2BmPWyEdDbviAmRJ8PxLOOMTJ7w%40mail.gmail.com.
