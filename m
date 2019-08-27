@@ -2,146 +2,216 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C12C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9F3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B6121881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C93121881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AJvYHzwF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UOf5q/JT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbfH0QWC (ORCPT
+        id S1728612AbfH0QY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:22:02 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43743 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbfH0QWC (ORCPT
+        Tue, 27 Aug 2019 12:24:28 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15202 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfH0QY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:22:02 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RGG0BV019934;
-        Tue, 27 Aug 2019 18:21:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=sTwTEKh7PY7xWSu6lXW3JPWtDKCZvlUhRrOtUzusNF0=;
- b=AJvYHzwFCR6O19zZZtRcXPFdYXbcTlO2jqn0zDfzYqbPiPAb7hAIgE9tSbq2GYy6IGVd
- jM+N40rxWGIA24TvZZcsJD53gP6dJz95i+vkp7JcQoVML4qSHRZaw6qPCjoJZhQcnp0m
- VoICawxzPl15pKMs4xWVmVxvE9BjmSCICDnujxoT46cglrloS4kS6n1B52E5NUdi5hCO
- cfaMMw50GuWtUR0pE15Cdoyxv4IMQ33npJak1UgZ8MeT83FImATZKCWxRuh4bdiFlPZx
- QBIynFMBi5Rh4WXTwUPeroFPun85W11NZO2q+u4A09+g+/9CZLGMGcMneN7Mx8ILYdO6 QA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2uju0vthq6-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 27 Aug 2019 18:21:51 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5BEDF4C;
-        Tue, 27 Aug 2019 16:21:47 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 900432B76DF;
-        Tue, 27 Aug 2019 18:21:46 +0200 (CEST)
-Received: from [10.48.0.131] (10.75.127.45) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
- 2019 18:21:46 +0200
-Subject: Re: [PATCH] remoteproc: Add a sysfs interface for name
-To:     Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190809222057.13924-1-s-anna@ti.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Message-ID: <01cf27f8-c586-5a9e-c361-082bb1facbb4@st.com>
-Date:   Tue, 27 Aug 2019 18:21:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 27 Aug 2019 12:24:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d65593b0000>; Tue, 27 Aug 2019 09:24:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 27 Aug 2019 09:24:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 27 Aug 2019 09:24:26 -0700
+Received: from [10.25.73.29] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
+ 2019 16:24:20 +0000
+Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190826073143.4582-1-vidyas@nvidia.com>
+ <20190826073143.4582-7-vidyas@nvidia.com>
+ <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
+Date:   Tue, 27 Aug 2019 21:54:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190809222057.13924-1-s-anna@ti.com>
+In-Reply-To: <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
- signatures=0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566923067; bh=2HdnrU28EZ0UoDqd1XHS7RWTxi3+8RJrX0DXDhdTXkQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UOf5q/JTyE7cqbJ2RVqu81ZL65HIP/RvqM8b1wP0H1VXjJebSJDsJvXXdA3VfdA1x
+         Jbr3ddj2il6lYfOFxuCYGJNMp6xxACUwmdB6GqACH8qZExBnD7xHVadBilMH29V0te
+         uJdU/li30TESP1YmrqDsAKct4j8wbJuXi33QGvUzLVIz5/JxV1ctWzJOQ5fYnBhLJa
+         i7DOxUfJkTiiqPq2+SQLT+4jzJXo0VEleuCsTH9fpqvQZ8l2EBajamhY3cFBEHMngJ
+         L7QSsuDVebiATbOuUuGU/Ze28NuAV2p2oj/cLWB2uG80hgKBVfkQxVk5Z/q6wmv9QI
+         xXMNSMo/Z0bqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suman,
+On 8/27/2019 9:17 PM, Andrew Murray wrote:
+> On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
+>> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
+>> slot from the respective controller's device-tree node and enable those
+>> supplies. This is required in platforms like p2972-0000 where the supplies
+>> to x16 slot owned by C5 controller need to be enabled before attempting to
+>> enumerate the devices.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
+>>   1 file changed, 65 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> index 8a27b25893c9..97de2151a738 100644
+>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+>>   	u32 aspm_l0s_enter_lat;
+>>   
+>>   	struct regulator *pex_ctl_supply;
+>> +	struct regulator *slot_ctl_3v3;
+>> +	struct regulator *slot_ctl_12v;
+>>   
+>>   	unsigned int phy_count;
+>>   	struct phy **phys;
+>> @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+>>   	}
+>>   }
+>>   
+>> +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+>> +{
+>> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
+>> +	if (IS_ERR(pcie->slot_ctl_3v3))
+>> +		pcie->slot_ctl_3v3 = NULL;
+>> +
+>> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
+>> +	if (IS_ERR(pcie->slot_ctl_12v))
+>> +		pcie->slot_ctl_12v = NULL;
+> 
+> Do these need to take into consideration -EPROBE_DEFER?
+Since these are devm_* APIs, isn't it taken care of automatically?
 
-Acked-by:Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>> +}
+>> +
+>> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (pcie->slot_ctl_3v3) {
+>> +		ret = regulator_enable(pcie->slot_ctl_3v3);
+>> +		if (ret < 0) {
+>> +			dev_err(pcie->dev,
+>> +				"Failed to enable 3V3 slot supply: %d\n", ret);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	if (pcie->slot_ctl_12v) {
+>> +		ret = regulator_enable(pcie->slot_ctl_12v);
+>> +		if (ret < 0) {
+>> +			dev_err(pcie->dev,
+>> +				"Failed to enable 12V slot supply: %d\n", ret);
+>> +			if (pcie->slot_ctl_3v3)
+>> +				regulator_disable(pcie->slot_ctl_3v3);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	/*
+>> +	 * According to PCI Express Card Electromechanical Specification
+>> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+>> +	 * should be a minimum of 100ms.
+>> +	 */
+>> +	msleep(100);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
+>> +{
+>> +	if (pcie->slot_ctl_12v)
+>> +		regulator_disable(pcie->slot_ctl_12v);
+>> +	if (pcie->slot_ctl_3v3)
+>> +		regulator_disable(pcie->slot_ctl_3v3);
+>> +}
+>> +
+>>   static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>>   					bool en_hw_hot_rst)
+>>   {
+>> @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>>   		return ret;
+>>   	}
+>>   
+>> +	ret = tegra_pcie_enable_slot_regulators(pcie);
+>> +	if (ret < 0)
+>> +		goto fail_slot_reg_en;
+>> +
+>>   	ret = regulator_enable(pcie->pex_ctl_supply);
+>>   	if (ret < 0) {
+>>   		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+>> @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>>   fail_core_clk:
+>>   	regulator_disable(pcie->pex_ctl_supply);
+>>   fail_reg_en:
+>> +	tegra_pcie_disable_slot_regulators(pcie);
+>> +fail_slot_reg_en:
+>>   	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>>   
+>>   	return ret;
+>> @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
+>>   		return ret;
+>>   	}
+>>   
+>> +	tegra_pcie_disable_slot_regulators(pcie);
+>> +
+>>   	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>>   	if (ret) {
+>>   		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+>> @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>>   		return ret;
+>>   	}
+>>   
+>> +	tegra_pcie_get_slot_regulators(pcie);
+>> +
+>>   	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+>>   	if (IS_ERR(pcie->pex_ctl_supply)) {
+>>   		dev_err(dev, "Failed to get regulator: %ld\n",
+>> -- 
+>> 2.17.1
+>>
 
-Thanks,
-Arnaud
-
-On 8/10/19 12:20 AM, Suman Anna wrote:
-> This patch adds a sysfs interface that provides the name of the
-> remote processor to userspace. This allows the userspace to identify
-> a remote processor as the remoteproc devices themselves are created
-> based on probe order and can change from one boot to another or
-> at runtime.
-> 
-> The name is made available in debugfs originally, and is being
-> retained for now. This can be cleaned up after couple of releases
-> once users get familiar with the new interface.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->   Documentation/ABI/testing/sysfs-class-remoteproc | 10 ++++++++++
->   drivers/remoteproc/remoteproc_sysfs.c            | 11 +++++++++++
->   2 files changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
-> index c3afe9fab646..36094fbeb974 100644
-> --- a/Documentation/ABI/testing/sysfs-class-remoteproc
-> +++ b/Documentation/ABI/testing/sysfs-class-remoteproc
-> @@ -48,3 +48,13 @@ Description:	Remote processor state
->   
->   		Writing "stop" will attempt to halt the remote processor and
->   		return it to the "offline" state.
-> +
-> +What:		/sys/class/remoteproc/.../name
-> +Date:		August 2019
-> +KernelVersion:	5.4
-> +Contact:	Suman Anna <s-anna@ti.com>
-> +Description:	Remote processor name
-> +
-> +		Reports the name of the remote processor. This can be used by
-> +		userspace in exactly identifying a remote processor and ease
-> +		up the usage in modifying the 'firmware' or 'state' files.
-> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> index fa4131930106..7f8536b73295 100644
-> --- a/drivers/remoteproc/remoteproc_sysfs.c
-> +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> @@ -113,9 +113,20 @@ static ssize_t state_store(struct device *dev,
->   }
->   static DEVICE_ATTR_RW(state);
->   
-> +/* Expose the name of the remote processor via sysfs */
-> +static ssize_t name_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct rproc *rproc = to_rproc(dev);
-> +
-> +	return sprintf(buf, "%s\n", rproc->name);
-> +}
-> +static DEVICE_ATTR_RO(name);
-> +
->   static struct attribute *rproc_attrs[] = {
->   	&dev_attr_firmware.attr,
->   	&dev_attr_state.attr,
-> +	&dev_attr_name.attr,
->   	NULL
->   };
->   
-> 
