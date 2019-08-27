@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CC2C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDF7206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B55206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892432;
-	bh=ujMaaDr4WzuuCmf7JoHceYX9DLbgB0KJ2RViiF+rfyc=;
+	s=default; t=1566892436;
+	bh=tFqCp16aNSWR277rTmCPSwFTD5kGdcp9QL3VQurlJrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0RZq7Xzv1LDwWuJSdknLkRQzDigp038Yj+M8jRxGx3xe6Oln2vLHFdTiWFyWqbNiu
-	 /G0JTm7UNCgvU90qMLpNqSVY6cx/64TjSCMJCqde25cGy6BlslwkkU4+1ykrluzcyE
-	 dRJ+bpttTUMKmeELyLHxTCL6qEiU1pyBPtt2L0CM=
+	b=Lb3saJldlkdLAFLT40poU2d1cmuhS1t1eTtkdK7DYPA2Ia/l2I4fxzBTgh3kxUxsh
+	 CEWX/d0ymgsQEtW3qNDoYycEQZ4tIte7wzbr6XPyeuZoCrzc43vTghJ2VLGB/aMI2G
+	 TixLblez8++WA8QbEocrildKSOMs6bCx1evd9Kb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfH0Hxv (ORCPT
+        id S1729939AbfH0Hxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45360 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:53:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbfH0Hxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:47 -0400
+        id S1725825AbfH0Hxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 996A8206BF;
-        Tue, 27 Aug 2019 07:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F7B120828;
+        Tue, 27 Aug 2019 07:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892427;
-        bh=ujMaaDr4WzuuCmf7JoHceYX9DLbgB0KJ2RViiF+rfyc=;
+        s=default; t=1566892432;
+        bh=tFqCp16aNSWR277rTmCPSwFTD5kGdcp9QL3VQurlJrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzMYBbpJte50L61Z5MpYQmGkUsGPXT3+F4XwsczttKyV7Lo86Igoo9FyN3MadqXzi
-         2vbtghhqnX2KdsR3K4+ruHGU6fu1cCuX3IRVV+GZioKRzCThkIpwONJtkPVNN4vHBt
-         bhSjs0rhJTRQGMxdVtp1DaRsrgLiMz6UD+FGjIfk=
+        b=uoDTvznyaNyT7UfY6054FcjQKwlzJkBRApVODWPgJLKfrOJ44Nd6d/TRwlFziG3+/
+         n2xet9yubwleEM/WTlIjVxO+4uhV834wS1ww8GfshLZop/CPDWWaqVnWD6O4w2XTpO
+         Ciac4i2wPJvWoD8sN2pm7Oniw+QRGv34DAe+zdK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 49/62] dm kcopyd: always complete failed jobs
-Date:   Tue, 27 Aug 2019 09:50:54 +0200
-Message-Id: <20190827072703.320241392@linuxfoundation.org>
+Subject: [PATCH 4.14 51/62] dm space map metadata: fix missing store of apply_bops() return value
+Date:   Tue, 27 Aug 2019 09:50:56 +0200
+Message-Id: <20190827072703.472679604@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,64 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-commit d1fef41465f0e8cae0693fb184caa6bfafb6cd16 upstream.
+commit ae148243d3f0816b37477106c05a2ec7d5f32614 upstream.
 
-This patch fixes a problem in dm-kcopyd that may leave jobs in
-complete queue indefinitely in the event of backing storage failure.
+In commit 6096d91af0b6 ("dm space map metadata: fix occasional leak
+of a metadata block on resize"), we refactor the commit logic to a new
+function 'apply_bops'.  But when that logic was replaced in out() the
+return value was not stored.  This may lead out() returning a wrong
+value to the caller.
 
-This behavior has been observed while running 100% write file fio
-workload against an XFS volume created on top of a dm-zoned target
-device. If the underlying storage of dm-zoned goes to offline state
-under I/O, kcopyd sometimes never issues the end copy callback and
-dm-zoned reclaim work hangs indefinitely waiting for that completion.
-
-This behavior was traced down to the error handling code in
-process_jobs() function that places the failed job to complete_jobs
-queue, but doesn't wake up the job handler. In case of backing device
-failure, all outstanding jobs may end up going to complete_jobs queue
-via this code path and then stay there forever because there are no
-more successful I/O jobs to wake up the job handler.
-
-This patch adds a wake() call to always wake up kcopyd job wait queue
-for all I/O jobs that fail before dm_io() gets called for that job.
-
-The patch also sets the write error status in all sub jobs that are
-failed because their master job has failed.
-
-Fixes: b73c67c2cbb00 ("dm kcopyd: add sequential write feature")
+Fixes: 6096d91af0b6 ("dm space map metadata: fix occasional leak of a metadata block on resize")
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-kcopyd.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/md/persistent-data/dm-space-map-metadata.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/dm-kcopyd.c
-+++ b/drivers/md/dm-kcopyd.c
-@@ -545,8 +545,10 @@ static int run_io_job(struct kcopyd_job
- 	 * no point in continuing.
- 	 */
- 	if (test_bit(DM_KCOPYD_WRITE_SEQ, &job->flags) &&
--	    job->master_job->write_err)
-+	    job->master_job->write_err) {
-+		job->write_err = job->master_job->write_err;
- 		return -EIO;
-+	}
+--- a/drivers/md/persistent-data/dm-space-map-metadata.c
++++ b/drivers/md/persistent-data/dm-space-map-metadata.c
+@@ -248,7 +248,7 @@ static int out(struct sm_metadata *smm)
+ 	}
  
- 	io_job_start(job->kc->throttle);
+ 	if (smm->recursion_count == 1)
+-		apply_bops(smm);
++		r = apply_bops(smm);
  
-@@ -598,6 +600,7 @@ static int process_jobs(struct list_head
- 			else
- 				job->read_err = 1;
- 			push(&kc->complete_jobs, job);
-+			wake(kc);
- 			break;
- 		}
+ 	smm->recursion_count--;
  
 
 
