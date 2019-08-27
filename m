@@ -2,89 +2,152 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504C2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF3FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CC7214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427B4206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwwkBmUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbfH0NHY (ORCPT
+        id S1730011AbfH0NHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:07:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39351 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729056AbfH0NHW (ORCPT
+        Tue, 27 Aug 2019 09:07:43 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:47058 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729770AbfH0NHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:07:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x4so18378563ljj.6;
-        Tue, 27 Aug 2019 06:07:20 -0700 (PDT)
+        Tue, 27 Aug 2019 09:07:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q139so14072552pfc.13;
+        Tue, 27 Aug 2019 06:07:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0p0/hlezeGt/XbIcoNDfHR/8GDIxHTpZEoMAoi00kVo=;
+        b=lwwkBmUDxvrSWCOKfQtDd9u6cFOILblaRkNEidKKOyHtBc3Y4yvbvqiAfXUh9n5TxK
+         tBQqsvPhhXlqFv27/EfIqNoSw+t2qirVwqVRtLAvq0fTNWgjVVVvpyrXZdxiFJ9WpKsN
+         0eA/xKIyBetTXLQg2hSC39JBJi0wrpM9HJzX+VU62MNye6pZ3X0t0ExlRrwAQRbZZG01
+         v7RWCShBtjCUsTu62FtRb/YPo3PP+tpoiJ+AwqTFC06wZfVgr7UXghWE6YBz6A4j1krm
+         7Rdq7VXhwciuSiWFHQzdrNjspRnGxpIR21uJHy30f2gDBWemnvnx6etM25pY7UzXQZ31
+         hoPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Pxkb58lbV3wi+B8lPOx80DhPe0KHCiwso2HrtND1Ksc=;
-        b=scU2g9+aFUxV9jxgnAylnl5bOrE1INDe11xAppEI53j07saNKoiRgJW7H6ekJWLV9L
-         yMgM55l0/3eT4wxM/UvUJ9WpFShvGrvdsGt0+sbXM3G0rrbcHPsJnRnZLDkRYZiVBGcQ
-         UtFPz79tZaFbRNmv/eccwVyvILdI2a7n4PmLiuzeHKrh2db0xezOkF0deT1c5PlJU52Y
-         QXdBnVKgazWN/94usms99FjwdUf2llOVAWY9RXK+kWJEGyw0Hc40h6Nhsdot/aGZDN4a
-         ZjuWk0jYMLME04kkj6Nn9cK0X8wBGJTlMfrjwEjaDGoglOz9F2lAFBHCtaxOlTP24VY3
-         E+QA==
-X-Gm-Message-State: APjAAAU7+h3+jIReFJZoj22d/dBkAYQpHyqY5cvcpljsRgUL5LjxhPP5
-        6F77TyBDbBIusLG8EHDywQp7ybj2xtB+DPicknBER5YV
-X-Google-Smtp-Source: APXvYqyuDMNG0JuiRDkktslqdVFZfaP8JIaCO6DMKJkYpYhz0RvwBbBVLPsf/FkfvNVQBquyZwpFfClR/zyPFor5DoU=
-X-Received: by 2002:a2e:9981:: with SMTP id w1mr13032457lji.155.1566911239777;
- Tue, 27 Aug 2019 06:07:19 -0700 (PDT)
+        bh=0p0/hlezeGt/XbIcoNDfHR/8GDIxHTpZEoMAoi00kVo=;
+        b=LWkXurlSpoNv23QWUS1DWgnFYto4noncFRsADRe5hTzemz12+eIAzgjzS51uw0ppfJ
+         V9e4DXv3K9npEOfPlAb5MI7p2Dy9nsk/N91ujPyhs1RbJCtLh8327arjXQB8UF3+1rHK
+         16SmKSG0qZPoeKxUgbeGEbNYIDriJ38Ad7BrRH1GINMvwK+2tK5K2MQV+Hr+X7Mpmwwr
+         jk1JG9iUc19mvXsM9dviASRdDaseDNQUciMgttE553QK3aB1z9bHRWvIxfHEot0DFR8m
+         kFSpSuPHcgjYhTsImGve3yK2yxxIDTfI4+saUzHtY9vUsNfBqHXiHmGU4kSd1WNd0N1Z
+         /cqw==
+X-Gm-Message-State: APjAAAU6xf/BAT4DJjH4ifHxkinnp0T7xpskV5woE8lGU5xcwcLFCcPB
+        ObJ02Foy5A+WI3NFL8OBSWFZSG80f7ozv0sJgw8=
+X-Google-Smtp-Source: APXvYqxAXZc5R1W4+GvI1l4xx6Dj+UN3D4K2f77cZLskNZQvJNdFEJBSLNSa8RtTkr5L5dehnyQJBOMTR9EYrEDpjOs=
+X-Received: by 2002:a62:8343:: with SMTP id h64mr24990152pfe.170.1566911262160;
+ Tue, 27 Aug 2019 06:07:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814002836.4b6aa14b@canb.auug.org.au> <CAK8P3a2q1mShg-EQhiAFUOAET8UEMHfLJV-+HoLTaSQY+M7yBQ@mail.gmail.com>
- <20190814074730.402ec3ec@canb.auug.org.au> <f4e0e924-03ea-bf63-85a0-5718874ceb38@st.com>
-In-Reply-To: <f4e0e924-03ea-bf63-85a0-5718874ceb38@st.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 27 Aug 2019 15:07:02 +0200
-Message-ID: <CAK8P3a1M94LwpVhJe8eLG-JMr+wEuACZZ=_=N3ws5x9yP9SnLg@mail.gmail.com>
-Subject: Re: linux-next: Fixes tags need some work in the arm-soc tree
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+ <87ftlnm7o8.fsf@vitty.brq.redhat.com> <CAOLK0pzXPG9tBnQoKGTSNHMwXXrEQ4zZH1uWn2F2mQ2ddVcoFA@mail.gmail.com>
+ <87v9uilr5x.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87v9uilr5x.fsf@vitty.brq.redhat.com>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Tue, 27 Aug 2019 21:07:32 +0800
+Message-ID: <CAOLK0py2rvYkLPP9uQ6Q7y31Btu4XOsWr3Vsk6GtUDWvg5uUOg@mail.gmail.com>
+Subject: Re: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm <kvm@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        michael.h.kelley@microsoft.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:44 AM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
-> On 8/13/19 11:47 PM, Stephen Rothwell wrote:
-> > Hi Arnd,
-> >
-> > On Tue, 13 Aug 2019 21:35:58 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
-> >>
-> >> On Tue, Aug 13, 2019 at 4:28 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >>
-> >>>
-> >>> Please do not split Fixes tags over more than one line.  Also, please
-> >>> keep them with the rest of the other tags.
-> >>
-> >> Thanks for the report. How bad is this? Should I undo the merge and
-> >> wait for an updated pull request?
-> >
-> > Its probably ok to leave as long as lessons are learnt :-)
-> >
+On Tue, Aug 27, 2019 at 8:38 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
-> Sorry for my late answer.
+> Tianyu Lan <lantianyu1986@gmail.com> writes:
 >
-> Thanks Stephen for information. I'll take care next time before merging
-> patches with "fixes" tag.
+> > On Tue, Aug 27, 2019 at 2:41 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> >>
+> >> lantianyu1986@gmail.com writes:
+> >>
+> >> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >> >
+> >> > This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+> >> > in L0 can delegate L1 hypervisor to handle tlb flush request from
+> >> > L2 guest when direct tlb flush is enabled in L1.
+> >> >
+> >> > Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+> >> > feature from user space. User space should enable this feature only
+> >> > when Hyper-V hypervisor capability is exposed to guest and KVM profile
+> >> > is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+> >> > We hope L2 guest doesn't use KVM hypercall when the feature is
+> >> > enabled. Detail please see comment of new API
+> >> > "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
+> >>
+> >> I was thinking about this for awhile and I think I have a better
+> >> proposal. Instead of adding this new capability let's enable direct TLB
+> >> flush when KVM guest enables Hyper-V Hypercall page (writes to
+> >> HV_X64_MSR_HYPERCALL) - this guarantees that the guest doesn't need KVM
+> >> hypercalls as we can't handle both KVM-style and Hyper-V-style
+> >> hypercalls simultaneously and kvm_emulate_hypercall() does:
+> >>
+> >>         if (kvm_hv_hypercall_enabled(vcpu->kvm))
+> >>                 return kvm_hv_hypercall(vcpu);
+> >>
+> >> What do you think?
+> >>
+> >> (and instead of adding the capability we can add kvm.ko module parameter
+> >> to enable direct tlb flush unconditionally, like
+> >> 'hv_direct_tlbflush=-1/0/1' with '-1' being the default (autoselect
+> >> based on Hyper-V hypercall enablement, '0' - permanently disabled, '1' -
+> >> permanenetly enabled)).
+> >>
+> >
+> > Hi Vitaly::
+> >      Actually, I had such idea before. But user space should check
+> > whether hv tlb flush
+> > is exposed to VM before enabling direct tlb flush. If no, user space
+> > should not direct
+> > tlb flush for guest since Hyper-V will do more check for each
+> > hypercall from nested
+> > VM with enabling the feauter..
 >
-> Arnd, no need to update the PR ?
+> If TLB Flush enlightenment is not exposed to the VM at all there's no
+> difference if we enable direct TLB flush in eVMCS or not: the guest
+> won't be using 'TLB Flush' hypercall and will do TLB flushing with
+> IPIs. And, in case the guest enables Hyper-V hypercall page, it is
+> definitelly not going to use KVM hypercalls so we can't break these.
+>
 
-No, since it's already pulled, just leave it for this time.
+Yes, this won't tigger KVM/Hyper-V hypercall conflict. My point is
+that if tlb flush enlightenment is not enabled, enabling direct tlb
+flush will not accelate anything and Hyper-V still will check each
+hypercalls from nested VM in order to intercpt tlb flush hypercall
+But guest won't use tlb flush hypercall in this case. The check
+of each hypercall in Hyper-V is redundant. We may avoid the
+overhead via checking status of tlb flush enlightenment and just
+enable direct tlb flush when it's enabled.
 
-    Arnd
+---
+Best regards
+Tianyu Lan
