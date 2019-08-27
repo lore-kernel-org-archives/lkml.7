@@ -2,371 +2,370 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88ACC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3322AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CB6206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566890129;
-	bh=npQP4YzTFi6U2jg+3LLuroJE91NAaJnA9DIq5RI5svY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oul0xaaVMF69cFy3qODFtTFNEeC6CxM9cAe1Rjgkpgz3SC9DyVI/s71vQmzHGdEj+
-	 M7LxzmPSfA4asunhHrpV4XCW/YC5zCjcwqLHT+mNVTTxV9FoDQhiyt1Dq+pdDv7Y+H
-	 zZz+0BAZujEC/RvUCHNF5epYHhVHo8jYwlzHguIA=
+	by mail.kernel.org (Postfix) with ESMTP id E5124206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfH0HP2 (ORCPT
+        id S1728816AbfH0HPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:15:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39760 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726278AbfH0HP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:15:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3231AAF37;
-        Tue, 27 Aug 2019 07:15:25 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 09:15:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Edward Chron <echron@arista.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com
-Subject: Re: [PATCH 00/10] OOM Debug print selection and additional
- information
-Message-ID: <20190827071523.GR7538@dhcp22.suse.cz>
-References: <20190826193638.6638-1-echron@arista.com>
+        Tue, 27 Aug 2019 03:15:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61428 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726278AbfH0HPd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:15:33 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7R7Ckko074234
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 03:15:31 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umy3c22ad-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 03:15:31 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Tue, 27 Aug 2019 08:15:29 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 27 Aug 2019 08:15:27 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7R7F47041353520
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 07:15:04 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B43F7AE053;
+        Tue, 27 Aug 2019 07:15:25 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5716EAE051;
+        Tue, 27 Aug 2019 07:15:24 +0000 (GMT)
+Received: from naverao1-tp.ibmuc.com (unknown [9.102.29.29])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Aug 2019 07:15:24 +0000 (GMT)
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+Subject: [PATCH] perf arch powerpc: Sync powerpc syscall.tbl
+Date:   Tue, 27 Aug 2019 12:44:58 +0530
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826193638.6638-1-echron@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082707-0020-0000-0000-000003646229
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082707-0021-0000-0000-000021B9AD2E
+Message-Id: <20190827071458.19897-1-naveen.n.rao@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908270080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 26-08-19 12:36:28, Edward Chron wrote:
-[...]
-> Extensibility using OOM debug options
-> -------------------------------------
-> What is needed is an extensible system to optionally configure
-> debug options as needed and to then dynamically enable and disable
-> them. Also for options that produce multiple lines of entry based
-> output, to configure which entries to print based on how much
-> memory they use (or optionally all the entries).
+Copy over powerpc syscall.tbl to grab changes from the below commits:
+  commit cee3536d24a1 ("powerpc: Wire up clone3 syscall")
+  commit 1a271a68e030 ("arch: mark syscall number 435 reserved for clone3")
+  commit 7615d9e1780e ("arch: wire-up pidfd_open()")
+  commit d8076bdb56af ("uapi: Wire up the mount API syscalls on non-x86 arches [ver #2]")
+  commit 39036cd27273 ("arch: add pidfd and io_uring syscalls everywhere")
+  commit 48166e6ea47d ("y2038: add 64-bit time_t syscalls to all 32-bit architectures")
+  commit d33c577cccd0 ("y2038: rename old time and utime syscalls")
+  commit 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
+  commit 8dabe7245bbc ("y2038: syscalls: rename y2038 compat syscalls")
+  commit 0d6040d46817 ("arch: add split IPC system calls where needed")
 
-With a patch this large and adding a lot of new stuff we need a more
-detailed usecases described I believe.
+Reported-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+---
+ .../arch/powerpc/entry/syscalls/syscall.tbl   | 146 ++++++++++++++----
+ 1 file changed, 119 insertions(+), 27 deletions(-)
 
-[...]
-
-> Use of debugfs to allow dynamic controls
-> ----------------------------------------
-> By providing a debugfs interface that allows options to be configured,
-> enabled and where appropriate to set a minimum size for selecting
-> entries to print, the output produced when an OOM event occurs can be
-> dynamically adjusted to produce as little or as much detail as needed
-> for a given system.
-
-Who is going to consume this information and why would that consumer be
-unreasonable to demand further maintenance of that information in future
-releases? In other words debugfs is not considered a stableAPI which is
-OK here but the side effect of any change to these files results in user
-visible behavior and we consider that more or less a stable as long as
-there are consumers.
-
-> OOM debug options can be added to the base code as needed.
-> 
-> Currently we have the following OOM debug options defined:
-> 
-> * System State Summary
->   --------------------
->   One line of output that includes:
->   - Uptime (days, hour, minutes, seconds)
-
-We do have timestamps in the log so why is this needed?
-
->   - Number CPUs
->   - Machine Type
->   - Node name
->   - Domain name
-
-why are these needed? That is a static information that doesn't really
-influence the OOM situation.
-
->   - Kernel Release
->   - Kernel Version
-
-part of the oom report
-> 
->   Example output when configured and enabled:
-> 
-> Jul 27 10:56:46 yoursystem kernel: System Uptime:0 days 00:17:27 CPUs:4 Machine:x86_64 Node:yoursystem Domain:localdomain Kernel Release:5.3.0-rc2+ Version: #49 SMP Mon Jul 27 10:35:32 PDT 2019
-> 
-> * Tasks Summary
->   -------------
->   One line of output that includes:
->   - Number of Threads
->   - Number of processes
->   - Forks since boot
->   - Processes that are runnable
->   - Processes that are in iowait
-
-We do have sysrq+t for this kind of information. Why do we need to
-duplicate it?
-
->   Example output when configured and enabled:
-> 
-> Jul 22 15:20:57 yoursystem kernel: Threads:530 Processes:279 forks_since_boot:2786 procs_runable:2 procs_iowait:0
-> 
-> * ARP Table and/or Neighbour Discovery Table Summary
->   --------------------------------------------------
->   One line of output each for ARP and ND that includes:
->   - Table name
->   - Table size (max # entries)
->   - Key Length
->   - Entry Size
->   - Number of Entries
->   - Last Flush (in seconds)
->   - hash grows
->   - entry allocations
->   - entry destroys
->   - Number lookups
->   - Number of lookup hits
->   - Resolution failures
->   - Garbage Collection Forced Runs
->   - Table Full
->   - Proxy Queue Length
-> 
->   Example output when configured and enabled (for both):
-> 
-> ... kernel: neighbour: Table: arp_tbl size:   256 keyLen:  4 entrySize: 360 entries:     9 lastFlush:  1721s hGrows:     1 allocs:     9 destroys:     0 lookups:   204 hits:   199 resFailed:    38 gcRuns/Forced: 111 /  0 tblFull:  0 proxyQlen:  0
-> 
-> ... kernel: neighbour: Table:  nd_tbl size:   128 keyLen: 16 entrySize: 368 entries:     6 lastFlush:  1720s hGrows:     0 allocs:     7 destroys:     1 lookups:     0 hits:     0 resFailed:     0 gcRuns/Forced: 110 /  0 tblFull:  0 proxyQlen:  0
-
-Again, why is this needed particularly for the OOM event? I do
-understand this might be useful system health diagnostic information but
-how does this contribute to the OOM?
-
-> * Add Select Slabs Print
->   ----------------------
->   Allow select slab entries (based on a minimum size) to be printed.
->   Minimum size is specified as a percentage of the total RAM memory
->   in tenths of a percent, consistent with existing OOM process scoring.
->   Valid values are specified from 0 to 1000 where 0 prints all slab
->   entries (all slabs that have at least one slab object in use) up
->   to 1000 which would require a slab to use 100% of memory which can't
->   happen so in that case only summary information is printed.
-> 
->   The first line of output is the standard Linux output header for
->   OOM printed Slab entries. This header looks like this:
-> 
-> Aug  6 09:37:21 egc103 yourserver: Unreclaimable slab info:
-> 
->   The output is existing slab entry memory usage limited such that only
->   entries equal to or larger than the minimum size are printed.
->   Empty slabs (no slab entries in slabs in use) are never printed.
-> 
->   Additional output consists of summary information that is printed
->   at the end of the output. This summary information includes:
->   - # entries examined
->   - # entries selected and printed
->   - minimum entry size for selection
->   - Slabs total size (kB)
->   - Slabs reclaimable size (kB)
->   - Slabs unreclaimable size (kB)
-> 
->   Example Summary output when configured and enabled:
-> 
-> Jul 23 23:26:34 yoursystem kernel: Summary: Slab entries examined: 123 printed: 83 minsize: 0kB
-> 
-> Jul 23 23:26:34 yoursystem kernel: Slabs Total: 151212kB Reclaim: 50632kB Unreclaim: 100580kB
-
-I am all for practical improvements for slab reporting. It is not really
-trivial to find a good balance though. Printing all the caches simply
-doesn't scale. So I would start by improving the current state rather
-than adding more configurability.
-
-> 
-> * Add Select Vmalloc allocations Print
->   ------------------------------------
->   Allow select vmalloc entries (based on a minimum size) to be printed.
->   Minimum size is specified as a percentage of the total RAM memory
->   in tenths of a percent, consistent with existing OOM process scoring.
->   Valid values are specified from 0 to 1000 where 0 prints all vmalloc
->   entries (all vmalloc allocations that have at least one page in use) up
->   to 1000 which would require a vmalloc to use 100% of memory which can't
->   happen so in that case only summary information is printed.
-> 
->   The first line of output is a new Vmalloc output header for
->   OOM printed Vmalloc entries. This header looks like this:
-> 
-> Aug 19 19:27:01 yourserver kernel: Vmalloc Info:
-> 
->   The output is vmalloc entry information output limited such that only
->   entries equal to or larger than the minimum size are printed.
->   Unused vmallocs (no pages assigned to the vmalloc) are never printed.
->   The vmalloc entry information includes:
->   - Size (in bytes)
->   - pages (Number pages in use)
->   - Caller Information to identify the request
-> 
->   A sample vmalloc entry output looks like this:
-> 
-> Jul 22 20:16:09 yoursystem kernel: Vmalloc size=2625536 pages=640 caller=__do_sys_swapon+0x78e/0x113
-> 
->   Additional output consists of summary information that is printed
->   at the end of the output. This summary information includes:
->   - Number of Vmalloc entries examined
->   - Number of Vmalloc entries printed
->   - minimum entry size for selection
-> 
->   A sample Vmalloc Summary output looks like this:
-> 
-> Aug 19 19:27:01 coronado kernel: Summary: Vmalloc entries examined: 1070 printed: 989 minsize: 0kB
-
-This is a lot of information. I wouldn't be surprised if this alone
-could easily overflow the ringbuffer. Besides that, it is rarely useful
-for the OOM situation debugging. The overall size of the vmalloc area
-is certainly interesting but I am not sure we have a handy counter to
-cope with constrained OOM contexts.
-
-> * Add Select Process Entries Print
->   --------------------------------
->   Allow select process entries (based on a minimum size) to be printed.
->   Minimum size is specified as a percentage totalpages (RAM + swap)
->   in tenths of a percent, consistent with existing OOM process scoring.
->   Note: user process memory can be swapped out when swap space present
->   so that is why swap space and ram memory comprise the totalpages
->   used to calculate the percentage of memory a process is using.
->   Valid values are specified from 0 to 1000 where 0 prints all user
->   processes (that have valid mm sections and aren't exiting) up to
->   1000 which would require a user process to use 100% of memory which
->   can't happen so in that case only summary information is printed.
-> 
->   The first line of output is the standard Linux output headers for
->   OOM printed User Processes. This header looks like this:
-> 
-> Aug 19 19:27:01 yourserver kernel: Tasks state (memory values in pages):
-> Aug 19 19:27:01 yourserver kernel: [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> 
->   The output is existing per user process data limited such that only
->   entries equal to or larger than the minimum size are printed.
-> 
-> Jul 21 20:07:48 yourserver kernel: [    579]     0   579     7942     1010          90112        0         -1000 systemd-udevd
-> 
->   Additional output consists of summary information that is printed
->   at the end of the output. This summary information includes:
-> 
-> Aug 19 19:27:01 yourserver kernel: Summary: OOM Tasks considered:277 printed:143 minimum size:0kB totalpages:32791608kB
-
-This sounds like a good idea to limit the eligible process list size but
-I am concerned that it might get misleading easily when there are many
-small processes contributing to the OOM in the end.
-
-> * Add Enhanced Process Print Information
->   --------------------------------------
->   Add OOM Debug code that prints additional detailed information about
->   users processes that were considered for OOM killing for any print
->   selected processes. The information is displayed for each user process
->   that OOM prints in the output.
-> 
->   This supplemental per user process information is very helpful for
->   determing how process memory is used to allow OOM event root cause
->   identifcation that might not otherwise be possible.
-> 
->   Output information for enhanced user process entrys printed includes:
->   - pid
->   - parent pid
->   - ruid
->   - euid
->   - tgid
->   - Process State (S)
->   - utime in seconds
->   - stime in seconds
->   - oom_score_adjust
->   - task comm value (name of process)
->   - Vmem KiB
->   - MaxRss KiB
->   - CurRss KiB
->   - Pte KiB
->   - Swap KiB
->   - Sock KiB
->   - Lib KiB
->   - Text KiB
->   - Heap KiB
->   - Stack KiB
->   - File KiB
->   - Shmem KiB
->   - Read Pages
->   - Fault Pages
->   - Lock KiB
->   - Pinned KiB
-
-I can see some of these being interesting but I would rather pick up
-those and add to the regular oom output rather than go over configuring
-them.
-
-> Configuring Patches:
-> -------------------
-> OOM Debug and any options you want to use must first be configured so
-> the code is included in your kernel. This requires selecting kernel
-> config file options. You will find config options to select under:
-> 
-> Kernel hacking ---> Memory Debugging --->
-> 
-> [*] Debug OOM
->     [*] Debug OOM System State
->     [*] Debug OOM System Tasks Summary
->     [*] Debug OOM ARP Table
->     [*] Debug OOM ND Table
->     [*] Debug OOM Select Slabs Print
->        [*] Debug OOM Slabs Select Always Print Enable
->        [*] Debug OOM Enhanced Slab Print
->     [*] Debug OOM Select Vmallocs Print
->     [*] Debug OOM Select Process Print
->        [*] Debug OOM Enhanced Process Print
-
-I really dislike these though. We already have zillions of debugging
-options and the config space is enormous. Different combinations of them
-make any compile testing a challenge and a lot of cpu cycles eaten.
-Besides that, who is going to configure those in without using them
-directly? Distributions are not going to enable without having all
-options being disabled by default for example.
-
->  12 files changed, 1339 insertions(+), 11 deletions(-)
-
-This must have a been a lot of work and I really appreciate that.
-
-On the other hand it is a lot of code to maintain (note that you are
-usually introspecting deep internals of subsystems so changes would
-have to be carefully considered here as well) without a very strong
-demand.
-
-Sure it is a nice to have thing in some cases. I can imagine that some
-of that information would have helped me when debugging some weird OOM
-reports but I strongly suspect I would likely not have all necessary
-pieces enabled because those were not reproducible. Having everything
-on is just not usable due to amount of data. printk is not free and
-we have seen cases where a lot of output just turned the machine into
-unsuable state. If you have a reproducible OOMs then you can trigger
-a panic and have the full state of the system to examine. So I am not
-really convinced all this is going to be used to justify the maintenance
-overhead.
-
-All that being said, I do not think this is something we want to merge
-without a really _strong_ usecase to back it.
-
-Thanks!
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index db3bbb8744af..43f736ed47f2 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -20,7 +20,9 @@
+ 10	common	unlink				sys_unlink
+ 11	nospu	execve				sys_execve			compat_sys_execve
+ 12	common	chdir				sys_chdir
+-13	common	time				sys_time			compat_sys_time
++13	32	time				sys_time32
++13	64	time				sys_time
++13	spu	time				sys_time
+ 14	common	mknod				sys_mknod
+ 15	common	chmod				sys_chmod
+ 16	common	lchown				sys_lchown
+@@ -36,14 +38,17 @@
+ 22	spu	umount				sys_ni_syscall
+ 23	common	setuid				sys_setuid
+ 24	common	getuid				sys_getuid
+-25	common	stime				sys_stime			compat_sys_stime
++25	32	stime				sys_stime32
++25	64	stime				sys_stime
++25	spu	stime				sys_stime
+ 26	nospu	ptrace				sys_ptrace			compat_sys_ptrace
+ 27	common	alarm				sys_alarm
+ 28	32	oldfstat			sys_fstat			sys_ni_syscall
+ 28	64	oldfstat			sys_ni_syscall
+ 28	spu	oldfstat			sys_ni_syscall
+ 29	nospu	pause				sys_pause
+-30	nospu	utime				sys_utime			compat_sys_utime
++30	32	utime				sys_utime32
++30	64	utime				sys_utime
+ 31	common	stty				sys_ni_syscall
+ 32	common	gtty				sys_ni_syscall
+ 33	common	access				sys_access
+@@ -157,7 +162,9 @@
+ 121	common	setdomainname			sys_setdomainname
+ 122	common	uname				sys_newuname
+ 123	common	modify_ldt			sys_ni_syscall
+-124	common	adjtimex			sys_adjtimex			compat_sys_adjtimex
++124	32	adjtimex			sys_adjtimex_time32
++124	64	adjtimex			sys_adjtimex
++124	spu	adjtimex			sys_adjtimex
+ 125	common	mprotect			sys_mprotect
+ 126	32	sigprocmask			sys_sigprocmask			compat_sys_sigprocmask
+ 126	64	sigprocmask			sys_ni_syscall
+@@ -198,8 +205,12 @@
+ 158	common	sched_yield			sys_sched_yield
+ 159	common	sched_get_priority_max		sys_sched_get_priority_max
+ 160	common	sched_get_priority_min		sys_sched_get_priority_min
+-161	common	sched_rr_get_interval		sys_sched_rr_get_interval	compat_sys_sched_rr_get_interval
+-162	common	nanosleep			sys_nanosleep			compat_sys_nanosleep
++161	32	sched_rr_get_interval		sys_sched_rr_get_interval_time32
++161	64	sched_rr_get_interval		sys_sched_rr_get_interval
++161	spu	sched_rr_get_interval		sys_sched_rr_get_interval
++162	32	nanosleep			sys_nanosleep_time32
++162	64	nanosleep			sys_nanosleep
++162	spu	nanosleep			sys_nanosleep
+ 163	common	mremap				sys_mremap
+ 164	common	setresuid			sys_setresuid
+ 165	common	getresuid			sys_getresuid
+@@ -213,7 +224,8 @@
+ 173	nospu	rt_sigaction			sys_rt_sigaction		compat_sys_rt_sigaction
+ 174	nospu	rt_sigprocmask			sys_rt_sigprocmask		compat_sys_rt_sigprocmask
+ 175	nospu	rt_sigpending			sys_rt_sigpending		compat_sys_rt_sigpending
+-176	nospu	rt_sigtimedwait			sys_rt_sigtimedwait		compat_sys_rt_sigtimedwait
++176	32	rt_sigtimedwait			sys_rt_sigtimedwait_time32	compat_sys_rt_sigtimedwait_time32
++176	64	rt_sigtimedwait			sys_rt_sigtimedwait
+ 177	nospu 	rt_sigqueueinfo			sys_rt_sigqueueinfo		compat_sys_rt_sigqueueinfo
+ 178	nospu 	rt_sigsuspend			sys_rt_sigsuspend		compat_sys_rt_sigsuspend
+ 179	common	pread64				sys_pread64			compat_sys_pread64
+@@ -260,7 +272,9 @@
+ 218	common	removexattr			sys_removexattr
+ 219	common	lremovexattr			sys_lremovexattr
+ 220	common	fremovexattr			sys_fremovexattr
+-221	common	futex				sys_futex			compat_sys_futex
++221	32	futex				sys_futex_time32
++221	64	futex				sys_futex
++221	spu	futex				sys_futex
+ 222	common	sched_setaffinity		sys_sched_setaffinity		compat_sys_sched_setaffinity
+ 223	common	sched_getaffinity		sys_sched_getaffinity		compat_sys_sched_getaffinity
+ # 224 unused
+@@ -268,7 +282,9 @@
+ 226	32	sendfile64			sys_sendfile64			compat_sys_sendfile64
+ 227	common	io_setup			sys_io_setup			compat_sys_io_setup
+ 228	common	io_destroy			sys_io_destroy
+-229	common	io_getevents			sys_io_getevents		compat_sys_io_getevents
++229	32	io_getevents			sys_io_getevents_time32
++229	64	io_getevents			sys_io_getevents
++229	spu	io_getevents			sys_io_getevents
+ 230	common	io_submit			sys_io_submit			compat_sys_io_submit
+ 231	common	io_cancel			sys_io_cancel
+ 232	nospu	set_tid_address			sys_set_tid_address
+@@ -280,19 +296,33 @@
+ 238	common	epoll_wait			sys_epoll_wait
+ 239	common	remap_file_pages		sys_remap_file_pages
+ 240	common	timer_create			sys_timer_create		compat_sys_timer_create
+-241	common	timer_settime			sys_timer_settime		compat_sys_timer_settime
+-242	common	timer_gettime			sys_timer_gettime		compat_sys_timer_gettime
++241	32	timer_settime			sys_timer_settime32
++241	64	timer_settime			sys_timer_settime
++241	spu	timer_settime			sys_timer_settime
++242	32	timer_gettime			sys_timer_gettime32
++242	64	timer_gettime			sys_timer_gettime
++242	spu	timer_gettime			sys_timer_gettime
+ 243	common	timer_getoverrun		sys_timer_getoverrun
+ 244	common	timer_delete			sys_timer_delete
+-245	common	clock_settime			sys_clock_settime		compat_sys_clock_settime
+-246	common	clock_gettime			sys_clock_gettime		compat_sys_clock_gettime
+-247	common	clock_getres			sys_clock_getres		compat_sys_clock_getres
+-248	common	clock_nanosleep			sys_clock_nanosleep		compat_sys_clock_nanosleep
++245	32	clock_settime			sys_clock_settime32
++245	64	clock_settime			sys_clock_settime
++245	spu	clock_settime			sys_clock_settime
++246	32	clock_gettime			sys_clock_gettime32
++246	64	clock_gettime			sys_clock_gettime
++246	spu	clock_gettime			sys_clock_gettime
++247	32	clock_getres			sys_clock_getres_time32
++247	64	clock_getres			sys_clock_getres
++247	spu	clock_getres			sys_clock_getres
++248	32	clock_nanosleep			sys_clock_nanosleep_time32
++248	64	clock_nanosleep			sys_clock_nanosleep
++248	spu	clock_nanosleep			sys_clock_nanosleep
+ 249	32	swapcontext			ppc_swapcontext			ppc32_swapcontext
+ 249	64	swapcontext			ppc64_swapcontext
+ 249	spu	swapcontext			sys_ni_syscall
+ 250	common	tgkill				sys_tgkill
+-251	common	utimes				sys_utimes			compat_sys_utimes
++251	32	utimes				sys_utimes_time32
++251	64	utimes				sys_utimes
++251	spu	utimes				sys_utimes
+ 252	common	statfs64			sys_statfs64			compat_sys_statfs64
+ 253	common	fstatfs64			sys_fstatfs64			compat_sys_fstatfs64
+ 254	32	fadvise64_64			ppc_fadvise64_64
+@@ -308,8 +338,10 @@
+ 261	nospu	set_mempolicy			sys_set_mempolicy		compat_sys_set_mempolicy
+ 262	nospu	mq_open				sys_mq_open			compat_sys_mq_open
+ 263	nospu	mq_unlink			sys_mq_unlink
+-264	nospu	mq_timedsend			sys_mq_timedsend		compat_sys_mq_timedsend
+-265	nospu	mq_timedreceive			sys_mq_timedreceive		compat_sys_mq_timedreceive
++264	32	mq_timedsend			sys_mq_timedsend_time32
++264	64	mq_timedsend			sys_mq_timedsend
++265	32	mq_timedreceive			sys_mq_timedreceive_time32
++265	64	mq_timedreceive			sys_mq_timedreceive
+ 266	nospu	mq_notify			sys_mq_notify			compat_sys_mq_notify
+ 267	nospu	mq_getsetattr			sys_mq_getsetattr		compat_sys_mq_getsetattr
+ 268	nospu	kexec_load			sys_kexec_load			compat_sys_kexec_load
+@@ -324,8 +356,10 @@
+ 277	nospu	inotify_rm_watch		sys_inotify_rm_watch
+ 278	nospu	spu_run				sys_spu_run
+ 279	nospu	spu_create			sys_spu_create
+-280	nospu	pselect6			sys_pselect6			compat_sys_pselect6
+-281	nospu	ppoll				sys_ppoll			compat_sys_ppoll
++280	32	pselect6			sys_pselect6_time32		compat_sys_pselect6_time32
++280	64	pselect6			sys_pselect6
++281	32	ppoll				sys_ppoll_time32		compat_sys_ppoll_time32
++281	64	ppoll				sys_ppoll
+ 282	common	unshare				sys_unshare
+ 283	common	splice				sys_splice
+ 284	common	tee				sys_tee
+@@ -334,7 +368,9 @@
+ 287	common	mkdirat				sys_mkdirat
+ 288	common	mknodat				sys_mknodat
+ 289	common	fchownat			sys_fchownat
+-290	common	futimesat			sys_futimesat			compat_sys_futimesat
++290	32	futimesat			sys_futimesat_time32
++290	64	futimesat			sys_futimesat
++290	spu	utimesat			sys_futimesat
+ 291	32	fstatat64			sys_fstatat64
+ 291	64	newfstatat			sys_newfstatat
+ 291	spu	newfstatat			sys_newfstatat
+@@ -350,15 +386,21 @@
+ 301	common	move_pages			sys_move_pages			compat_sys_move_pages
+ 302	common	getcpu				sys_getcpu
+ 303	nospu	epoll_pwait			sys_epoll_pwait			compat_sys_epoll_pwait
+-304	common	utimensat			sys_utimensat			compat_sys_utimensat
++304	32	utimensat			sys_utimensat_time32
++304	64	utimensat			sys_utimensat
++304	spu	utimensat			sys_utimensat
+ 305	common	signalfd			sys_signalfd			compat_sys_signalfd
+ 306	common	timerfd_create			sys_timerfd_create
+ 307	common	eventfd				sys_eventfd
+ 308	common	sync_file_range2		sys_sync_file_range2		compat_sys_sync_file_range2
+ 309	nospu	fallocate			sys_fallocate			compat_sys_fallocate
+ 310	nospu	subpage_prot			sys_subpage_prot
+-311	common	timerfd_settime			sys_timerfd_settime		compat_sys_timerfd_settime
+-312	common	timerfd_gettime			sys_timerfd_gettime		compat_sys_timerfd_gettime
++311	32	timerfd_settime			sys_timerfd_settime32
++311	64	timerfd_settime			sys_timerfd_settime
++311	spu	timerfd_settime			sys_timerfd_settime
++312	32	timerfd_gettime			sys_timerfd_gettime32
++312	64	timerfd_gettime			sys_timerfd_gettime
++312	spu	timerfd_gettime			sys_timerfd_gettime
+ 313	common	signalfd4			sys_signalfd4			compat_sys_signalfd4
+ 314	common	eventfd2			sys_eventfd2
+ 315	common	epoll_create1			sys_epoll_create1
+@@ -389,11 +431,15 @@
+ 340	common	getsockopt			sys_getsockopt			compat_sys_getsockopt
+ 341	common	sendmsg				sys_sendmsg			compat_sys_sendmsg
+ 342	common	recvmsg				sys_recvmsg			compat_sys_recvmsg
+-343	common	recvmmsg			sys_recvmmsg			compat_sys_recvmmsg
++343	32	recvmmsg			sys_recvmmsg_time32		compat_sys_recvmmsg_time32
++343	64	recvmmsg			sys_recvmmsg
++343	spu	recvmmsg			sys_recvmmsg
+ 344	common	accept4				sys_accept4
+ 345	common	name_to_handle_at		sys_name_to_handle_at
+ 346	common	open_by_handle_at		sys_open_by_handle_at		compat_sys_open_by_handle_at
+-347	common	clock_adjtime			sys_clock_adjtime		compat_sys_clock_adjtime
++347	32	clock_adjtime			sys_clock_adjtime32
++347	64	clock_adjtime			sys_clock_adjtime
++347	spu	clock_adjtime			sys_clock_adjtime
+ 348	common	syncfs				sys_syncfs
+ 349	common	sendmmsg			sys_sendmmsg			compat_sys_sendmmsg
+ 350	common	setns				sys_setns
+@@ -414,6 +460,7 @@
+ 363	spu	switch_endian			sys_ni_syscall
+ 364	common	userfaultfd			sys_userfaultfd
+ 365	common	membarrier			sys_membarrier
++# 366-377 originally left for IPC, now unused
+ 378	nospu	mlock2				sys_mlock2
+ 379	nospu	copy_file_range			sys_copy_file_range
+ 380	common	preadv2				sys_preadv2			compat_sys_preadv2
+@@ -424,4 +471,49 @@
+ 385	nospu	pkey_free			sys_pkey_free
+ 386	nospu	pkey_mprotect			sys_pkey_mprotect
+ 387	nospu	rseq				sys_rseq
+-388	nospu	io_pgetevents			sys_io_pgetevents		compat_sys_io_pgetevents
++388	32	io_pgetevents			sys_io_pgetevents_time32	compat_sys_io_pgetevents
++388	64	io_pgetevents			sys_io_pgetevents
++# room for arch specific syscalls
++392	64	semtimedop			sys_semtimedop
++393	common	semget				sys_semget
++394	common	semctl				sys_semctl			compat_sys_semctl
++395	common	shmget				sys_shmget
++396	common	shmctl				sys_shmctl			compat_sys_shmctl
++397	common	shmat				sys_shmat			compat_sys_shmat
++398	common	shmdt				sys_shmdt
++399	common	msgget				sys_msgget
++400	common	msgsnd				sys_msgsnd			compat_sys_msgsnd
++401	common	msgrcv				sys_msgrcv			compat_sys_msgrcv
++402	common	msgctl				sys_msgctl			compat_sys_msgctl
++403	32	clock_gettime64			sys_clock_gettime		sys_clock_gettime
++404	32	clock_settime64			sys_clock_settime		sys_clock_settime
++405	32	clock_adjtime64			sys_clock_adjtime		sys_clock_adjtime
++406	32	clock_getres_time64		sys_clock_getres		sys_clock_getres
++407	32	clock_nanosleep_time64		sys_clock_nanosleep		sys_clock_nanosleep
++408	32	timer_gettime64			sys_timer_gettime		sys_timer_gettime
++409	32	timer_settime64			sys_timer_settime		sys_timer_settime
++410	32	timerfd_gettime64		sys_timerfd_gettime		sys_timerfd_gettime
++411	32	timerfd_settime64		sys_timerfd_settime		sys_timerfd_settime
++412	32	utimensat_time64		sys_utimensat			sys_utimensat
++413	32	pselect6_time64			sys_pselect6			compat_sys_pselect6_time64
++414	32	ppoll_time64			sys_ppoll			compat_sys_ppoll_time64
++416	32	io_pgetevents_time64		sys_io_pgetevents		sys_io_pgetevents
++417	32	recvmmsg_time64			sys_recvmmsg			compat_sys_recvmmsg_time64
++418	32	mq_timedsend_time64		sys_mq_timedsend		sys_mq_timedsend
++419	32	mq_timedreceive_time64		sys_mq_timedreceive		sys_mq_timedreceive
++420	32	semtimedop_time64		sys_semtimedop			sys_semtimedop
++421	32	rt_sigtimedwait_time64		sys_rt_sigtimedwait		compat_sys_rt_sigtimedwait_time64
++422	32	futex_time64			sys_futex			sys_futex
++423	32	sched_rr_get_interval_time64	sys_sched_rr_get_interval	sys_sched_rr_get_interval
++424	common	pidfd_send_signal		sys_pidfd_send_signal
++425	common	io_uring_setup			sys_io_uring_setup
++426	common	io_uring_enter			sys_io_uring_enter
++427	common	io_uring_register		sys_io_uring_register
++428	common	open_tree			sys_open_tree
++429	common	move_mount			sys_move_mount
++430	common	fsopen				sys_fsopen
++431	common	fsconfig			sys_fsconfig
++432	common	fsmount				sys_fsmount
++433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
++435	nospu	clone3				ppc_clone3
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
