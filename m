@@ -2,190 +2,129 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F0FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06493C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195222070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F4C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566921203;
-	bh=ALDr8DPz8kipYUZjkPfROZGZsV1Fl4RM8So6TeuTe3Y=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DxZRxIdQCMggx9d4HAjnO/L4QlpnEO7Hgdg7xvvbk40RCUjPu7/Be+e29q+zOK7VJ
-	 kEFIbR89kOeNMkr4SrlHkbLsGfJHKFGCwlcQ8tVJCfNLd10y8sUJDDaJdt7f9CsrJF
-	 p30KTqQpq5gdUP1BjTCGyjRGiImq7ETQ0muc6KAM=
+	s=default; t=1566921390;
+	bh=fdK0Z8jsNPgC8gEk+gTbmbbEs3s5PEppR8PzsWR++vE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VX6nq5u8tLwtaK3jhsHEIMDUftXqpNOTGygyAPQXMLmqaAqLxtwTDtopWJINQr0jX
+	 1DjyzjEkc21UWqoPkLGQBTL9Tzk5A/i/RoQ2quovfL0WVFOUYOatnp5NVe+W46RZIS
+	 //mvJUDgvC311kLgg0VMJ/AKra62WvAOCI7PefJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfH0PxV (ORCPT
+        id S1728968AbfH0P43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:53:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55346 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726257AbfH0PxV (ORCPT
+        Tue, 27 Aug 2019 11:56:29 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:47094 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfH0P43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:53:21 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RFqiaP145914;
-        Tue, 27 Aug 2019 11:53:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2un74u99s1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Aug 2019 11:53:08 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7RFr7ND147435;
-        Tue, 27 Aug 2019 11:53:08 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2un74u99r7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Aug 2019 11:53:07 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7RFowvu028533;
-        Tue, 27 Aug 2019 15:53:07 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 2umpcta4nr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Aug 2019 15:53:07 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7RFr61B44368266
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 15:53:06 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D25CB2064;
-        Tue, 27 Aug 2019 15:53:06 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0F001B205F;
-        Tue, 27 Aug 2019 15:53:06 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 27 Aug 2019 15:53:05 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 5444A16C65CC; Tue, 27 Aug 2019 08:53:06 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 08:53:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Scott Wood <swood@redhat.com>, linux-rt-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to
- indicate involuntary sleep
-Message-ID: <20190827155306.GF26530@linux.ibm.com>
-Reply-To: paulmck@kernel.org
-References: <20190821231906.4224-1-swood@redhat.com>
- <20190821231906.4224-3-swood@redhat.com>
- <20190823162024.47t7br6ecfclzgkw@linutronix.de>
- <433936e4c720e6b81f9b297fefaa592fd8a961ad.camel@redhat.com>
- <20190824031014.GB2731@google.com>
- <20190826152523.dcjbsgyyir4zjdol@linutronix.de>
- <20190826162945.GE28441@linux.ibm.com>
- <20190827092333.jp3darw7teyyw67g@linutronix.de>
+        Tue, 27 Aug 2019 11:56:29 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t24so15313489oij.13;
+        Tue, 27 Aug 2019 08:56:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=496l2D/NBnu+OvAkK9jRIei3uNVRt46Ohb23zKW6VBA=;
+        b=Ip4BOgFzCmdSJc/Fj2oTurPMNEOsOCmNxXS7B9TKVMUyewmCdC3FaWNO//GgzOyalH
+         Zw66tuSK2XIB91oiMc+sZ5HxOAqLIcQ/MVV2CMTMAeenQbEbvYR0vRKyixrU7oJUwY8x
+         mjJLmxIRFc8fFh1ftQzCYGZ2Y0G/uiQyXTTPToamD4APVbUoXqg0b6Dwtm0pMdtVnl/D
+         wqXB6x6R1PXyPXWZMpYSfz6qmom8qi7b0EYeENz9q7WKy92wOwga5rlozBvmYrANow+7
+         rai58C49FldB685/szh2Z7jbD0Vxo7u3La8nIv/5MXPFxfW8CBqse283kBVUbjQKsdSv
+         kXbQ==
+X-Gm-Message-State: APjAAAUqHFl6R2yFiKMifC5AviQBHaV5ZJZwPUItWXRjX4B+c08rM40a
+        AryHwdYF+ELXspM1bHI7Xw==
+X-Google-Smtp-Source: APXvYqw99eOThTzexUEoPloxhW15jSlo6SFvfq/fyqIVqp8VzElz20lzUAUloqaV3S+Cnxsg4g40dw==
+X-Received: by 2002:aca:c6d8:: with SMTP id w207mr15904130oif.94.1566921387977;
+        Tue, 27 Aug 2019 08:56:27 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u5sm4384898oic.45.2019.08.27.08.56.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 08:56:27 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 10:56:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+Cc:     linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: imx6q-pcie: add
+ "fsl,pcie-phy-refclk-internal" for i.MX7D
+Message-ID: <20190827155626.GA29948@bogus>
+References: <20190813103759.38358-1-git@andred.net>
+ <20190813103759.38358-2-git@andred.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190827092333.jp3darw7teyyw67g@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908270158
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190813103759.38358-2-git@andred.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 11:23:33AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-08-26 09:29:45 [-0700], Paul E. McKenney wrote:
-> > > The mechanism that is used here may change in future. I just wanted to
-> > > make sure that from RCU's side it is okay to schedule here.
-> > 
-> > Good point.
-> > 
-> > The effect from RCU's viewpoint will be to split any non-rcu_read_lock()
-> > RCU read-side critical section at this point.  This alrady happens in a
-> > few places, for example, rcu_note_context_switch() constitutes an RCU
-> > quiescent state despite being invoked with interrupts disabled (as is
-> > required!).  The __schedule() function just needs to understand (and does
-> > understand) that the RCU read-side critical section that would otherwise
-> > span that call to rcu_node_context_switch() is split in two by that call.
+On Tue, Aug 13, 2019 at 11:37:59AM +0100, André Draszik wrote:
+> The i.MX7D variant of the IP can use either an external
+> crystal oscillator input or an internal clock input as
+> a reference clock input for the PCIe PHY.
 > 
-> Okay. So I read this as invoking schedule() at this point is okay. 
-
-As long as no one is relying on a non-rcu_read_lock() RCU
-read-side critical section (local_bh_disable(), preempt_disable(),
-local_irq_disable(), ...) spanning this call.  But that depends on the
-calling code and on other code it interacts with it, not on any specific
-need on the part of RCU itself.
-
-> Looking at this again, this could also happen on a PREEMPT=y kernel if
-> the kernel decides to preempt a task within a rcu_read_lock() section
-> and put it back later on another CPU.
-
-This is an rcu_read_lock() critical section, so yes, on a PREEMPT=y
-kernel, executing schedule() will cause the corresponding RCU read-side
-critical section to persist, following the preempted tasks.  Give or
-take lockdep complaints.
-
-On a PREEMPT=n kernel, schedule() within an RCU read-side critical
-section instead results in that critical section being split in two.
-And this will also results in lockdep complaints.
-
-> > However, if this was instead an rcu_read_lock() critical section within
-> > a PREEMPT=y kernel, then if a schedule() occured within stop_one_task(),
-> > RCU would consider that critical section to be preempted.  This means
-> > that any RCU grace period that is blocked by this RCU read-side critical
-> > section would remain blocked until stop_one_cpu() resumed, returned,
-> > and so on until the matching rcu_read_unlock() was reached.  In other
-> > words, RCU would consider that RCU read-side critical section to span
-> > the call to stop_one_cpu() even if stop_one_cpu() invoked schedule().
+> Document the optional property 'fsl,pcie-phy-refclk-internal'
 > 
-> Isn't that my example from above and what we do in RT? My understanding
-> is that this is the reason why we need BOOST on RT otherwise the RCU
-> critical section could remain blocked for some time.
-
-At this point, I must confess that I have lost track of whose example
-it is.  It was first reported in 2006, if I remember correctly.  ;-)
-
-But yes, you are correct, the point of RCU priority boosting is to
-cause tasks that have been preempted while within RCU read-side critical
-sections to be scheduled so that they can reach their rcu_read_unlock()
-calls, thus allowing the current grace period to end.
-
-> > On the other hand, within a PREEMPT=n kernel, the call to schedule()
-> > would split even an rcu_read_lock() critical section.  Which is why I
-> > asked earlier if sleeping_lock_inc() and sleeping_lock_dec() are no-ops
-> > in !PREEMPT_RT_BASE kernels.  We would after all want the usual lockdep
-> > complaints in that case.
+> Signed-off-by: André Draszik <git@andred.net>
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> sleeping_lock_inc() +dec() is only RT specific. It is part of RT's
-> spin_lock() implementation and used by RCU (rcu_note_context_switch())
-> to not complain if invoked within a critical section.
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index a7f5f5afa0e6..985d7083df9f 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -56,6 +56,11 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
+>  	       - "turnoff"
+>  - fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
 
-Then this is being called when we have something like this, correct?
+Not sure how this got in, but why is the phy binding not used here?
 
-	DEFINE_SPINLOCK(mylock); // As opposed to DEFINE_RAW_SPINLOCK().
+>  
+> +Additional optional properties for imx7d-pcie:
+> +- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
+> +  as PCIe PHY reference clock source. By default an external ocsillator input
+> +  is used.
 
-	...
+Can't the clock binding and maybe 'assigned-clocks' be used here? 
 
-	rcu_read_lock();
-	do_something();
-	spin_lock(&mylock); // Can block in -rt, thus needs sleeping_lock_inc()
-	...
-	rcu_read_unlock();
+Also, this is a property of the PHY, so it belongs in the PHY's node.
 
-Without sleeping_lock_inc(), lockdep would complain about a voluntary
-schedule within an RCU read-side critical section.  But in -rt, voluntary
-schedules due to sleeping on a "spinlock" are OK.
-
-Am I understanding this correctly?
-
-							Thanx, Paul
+Rob
