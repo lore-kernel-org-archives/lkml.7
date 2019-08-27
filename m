@@ -2,137 +2,105 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82520C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE3CC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F392077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:16:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eo2x2tz3"
+	by mail.kernel.org (Postfix) with ESMTP id DF65C20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566940579;
+	bh=u30Uz09Wx2ggUD73DFEm5M/io8JmvBjC1sc4Al1XFHQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=xxxy90E+QAJxU73J3PSkrbZYlINinQQaVf7NYchEBCnnah/9qGWQliKR3cCeDcC44
+	 Ffy4QyPDNR3IQcS4XrtPh2LHK0oMVEhP5lFpe2F4gscx9+PVxlg5WJBHDBQxd+DS1u
+	 se8UQt0hI84AQe+RdFdNW1+6JrvGk+PqZy2I+ro4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbfH0VQI (ORCPT
+        id S1730747AbfH0VQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:16:08 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45138 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfH0VQI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:16:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BNQgl8BXmDinA3/U5qi90mgN02ztpsNcfJjDKC7Jswk=; b=eo2x2tz3u+pHlB2Uk761ZEgQe
-        hOUhU0oDfXDzrQh5Ow4isbPRbctYV/QTHIPCdlkGF8v6IJBtNDWppbeFwBq3TXYqh5G6uSjbJFtDw
-        HL9SOsUw/41VrBvdBEgF1bRKE5um63SBrhyTvje70W3XYmJBSBlNg1119PrQfybSQ6jycpnoWf/Iz
-        IZNR63vpGwrh2kHQj77V8FK5be474OckRHvY2rxUZEhCstLANTUN97jU16pGoJEiqu/xZBiXptItJ
-        qv/6MRPCyJ9zAKpl8gOMAbnXwTegmyVouWJkCUvks63rGtTrpT9/EjEvWp/VrrLqtWBqvIh/5ZFgY
-        CEI3D5siA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55352)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i2ios-0006nH-B5; Tue, 27 Aug 2019 22:16:02 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i2ion-00063o-Pz; Tue, 27 Aug 2019 22:15:57 +0100
-Date:   Tue, 27 Aug 2019 22:15:57 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "gregory.clement@free-electrons.com" 
-        <gregory.clement@free-electrons.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "patches@armlinux.org.uk" <patches@armlinux.org.uk>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Message-ID: <20190827211557.GP13294@shell.armlinux.org.uk>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
- <20190823104621.GY13294@shell.armlinux.org.uk>
- <20190823105020.GZ13294@shell.armlinux.org.uk>
- <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
- <20190827091336.GI13294@shell.armlinux.org.uk>
- <b1e2e5b325b3c4453e2ed63c17e1e11d6b24f099.camel@alliedtelesis.co.nz>
- <20190827210713.GO13294@shell.armlinux.org.uk>
- <0e9c7c7cb17b6fdea8d49b06925badb0b3d2ff8b.camel@alliedtelesis.co.nz>
+        Tue, 27 Aug 2019 17:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbfH0VQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 17:16:17 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F052077B;
+        Tue, 27 Aug 2019 21:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566940576;
+        bh=u30Uz09Wx2ggUD73DFEm5M/io8JmvBjC1sc4Al1XFHQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IAgAkU2nr5hXEHlEhoptezUoZexB8Usy+XlQ9/QA/yLIyVcuZoLA+roUi38RfFU/0
+         mMxHWf8D+IsNFj56WNGfCFmuniMm8jEvTI/VCfyH/k/eKBQv6HTIEVmEIYiBl9Wy1s
+         hIAjsrdq8c0wPdj9++BGGhi0zQwDOZEVgKvAZymc=
+Subject: Re: [PATCH v1] kunit: fix failure to build without printk
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
+        sboyd@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        shuah <shuah@kernel.org>
+References: <20190827174932.44177-1-brendanhiggins@google.com>
+ <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org>
+ <5b626f60-8472-a97e-378e-755160e5d948@infradead.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <15c04ce1-020f-a286-07fe-c1b883c44b1b@kernel.org>
+Date:   Tue, 27 Aug 2019 15:16:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e9c7c7cb17b6fdea8d49b06925badb0b3d2ff8b.camel@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5b626f60-8472-a97e-378e-755160e5d948@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 09:13:11PM +0000, Chris Packham wrote:
-> On Tue, 2019-08-27 at 22:07 +0100, Russell King - ARM Linux admin
-> wrote:
-> > On Tue, Aug 27, 2019 at 08:56:05PM +0000, Chris Packham wrote:
-> > > On Tue, 2019-08-27 at 10:13 +0100, Russell King - ARM Linux admin
-> > > wrote:
-> > > > Just send the single patch to the patch tracker - having it against
-> > > > 5.3-rc is fine (I don't think anything has changed for a long time
-> > > > with that file.)
-> > > 
-> > > Done 
-> > > https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8902/1
-> > > 
-> > > I'm still not entirely sure what to put for the KernelVersion tag. In
-> > > hindsight think I misinterpreted your comment above and set it to 5.3rc
-> > > (where you meant a series based on 5.3-rcX should apply cleanly). It
-> > > probably should have been next or master because it's way past the
-> > > merge window for 5.3.
-> > 
-> > Think about it as "which kernel version was _this_ patch generated
-> > against" - it's a guide for me to know which kernel version it
-> > should be applied to.  The nearest Linus release (rc or final) is
-> > generally sufficient.
-> > 
-> > If it doesn't apply to my current base, then I might check out that
-> > version, apply it there, and then merge it in, resolving any
-> > conflicts during the merge.
-> > 
-> > It started off with a different purpose: when we had the older
-> > development system, such as the 2.x series kernels, we would have
-> > even x being the current stable kernels, and concurrently we'd
-> > also have x+1 as the development series.  When someone sent me a
-> > patch back then, it was important to know which kernel series it
-> > was meant for.
-> > 
-> > I decided not to get rid of it because it provides useful
-> > information when patches don't apply, and gives more options
-> > than me just discarding the patch with a comment saying it
-> > doesn't apply.
-> > 
+On 8/27/19 2:53 PM, Randy Dunlap wrote:
+> On 8/27/19 1:21 PM, shuah wrote:
+>> On 8/27/19 11:49 AM, Brendan Higgins wrote:
+>>> Previously KUnit assumed that printk would always be present, which is
+>>> not a valid assumption to make. Fix that by ifdefing out functions which
+>>> directly depend on printk core functions similar to what dev_printk
+>>> does.
+>>>
+>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>> ---
+>>>    include/kunit/test.h |  7 +++++++
+>>>    kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
+>>>    2 files changed, 31 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+>>> index 8b7eb03d4971..339af5f95c4a 100644
+>>> --- a/include/kunit/test.h
+>>> +++ b/include/kunit/test.h
+>>> @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+>>>      void kunit_cleanup(struct kunit *test);
+>>>    +#ifdef CONFIG_PRINTK
+>>
+>> Please make this #if defined(CONFIG_PRINTK)
 > 
-> Thanks for the info. So 5.3-rc is not as wrong as I thought it was.
+> explain why, please?
 > 
-> One could even summarize the above as.
+> thanks.
 > 
->   git format-patch --add-header \
->       "KernelVersion: $(git describe --abbrev=0 HEAD)"
 
-Yep, I should probably update the patch system help with that, and
-actually strip out everything about the old diff and patch way of
-working.
+This can be used to do compound logic. I have been using this style for
+that reason starting a couple of years now. I seem to work in code paths
+where I have to look for multiple config vars.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+In this case, it probably doesn't matter as much either way.
+
+thanks,
+-- Shuah
