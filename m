@@ -2,119 +2,97 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CD3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921E5C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E2020828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:46:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="B4CHip1J"
+	by mail.kernel.org (Postfix) with ESMTP id 6659F20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfH0HqA (ORCPT
+        id S1728579AbfH0HsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:46:00 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:60303 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfH0HqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:46:00 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x7R7jut7021960;
-        Tue, 27 Aug 2019 16:45:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x7R7jut7021960
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566891957;
-        bh=CCtCL19DmuvrV2VqAgkqWIfPFYfgDfnJCKU/CL8uRio=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=B4CHip1JP3uIn3+++ULwsuJ2uOqnGULQVL3hM/BRafp9nqobnzzIyBKunrsvygn8D
-         a247ywbY3uF03eT4OwDgrLwC7BTZXyGhLOlM/qGvJBsnMTxKI3/Qc8MuUB56hs+WtR
-         rzCU1oTxcbXijyWHC5/v/QL4C0a0IuM/gpxNhJmbc9NjtpaK4z9VHYw3bKuG7kLtru
-         /AYcsWLuxD34/uMMZYPulTlnNTvhWX3n6KPwBfFjjjotXcSIGng0eZWWYO4SV3Zz00
-         nqs1HM7Gcsysky1nipVLwEzdMxDrfT6bV+D5qtslbXSy1HPK2t+LindprwHN2kJSuV
-         0qhGuaKokTqug==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id y62so12815581vsb.6;
-        Tue, 27 Aug 2019 00:45:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAWzmKUYBVdL+tFu0J0FcZJTuDpOxxNVg2TP5M4BBMfBfWfXRmic
-        7rgkeatPn4O7oQYio7oaxx9sKaXcgJyE6Bzk3P4=
-X-Google-Smtp-Source: APXvYqw3kFkP7AW1Myq4vwC0HTeWHl7qNE1Xu8mQsAgOMCEnoA+VGlGvJAQBc5iBngpOl9rP3s1Rs35DhGciNkmYfkU=
-X-Received: by 2002:a67:fe12:: with SMTP id l18mr12861854vsr.54.1566891956209;
- Tue, 27 Aug 2019 00:45:56 -0700 (PDT)
+        Tue, 27 Aug 2019 03:48:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60394 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbfH0HsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:48:07 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC0342A09AC;
+        Tue, 27 Aug 2019 07:48:06 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 77E495DAAF;
+        Tue, 27 Aug 2019 07:48:03 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 09:48:02 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        "Jin, Yao" <yao.jin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jonatan Corbet <corbet@lwn.net>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: BoF on LPC 2019 : Linux Perf advancements for compute intensive
+ and server systems
+Message-ID: <20190827074802.GA22896@krava>
+References: <43216530-4410-6cc4-aa4a-51fa7e7c1b0c@linux.intel.com>
+ <20190826135536.GA24801@kernel.org>
+ <da687997-6280-2613-a389-f7b94c600c2b@linux.intel.com>
+ <20190826175758.GH5447@tassilo.jf.intel.com>
+ <20190826221021.GB21761@kernel.org>
 MIME-Version: 1.0
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com> <20190506223334.1834-3-nicoleotsuka@gmail.com>
- <CAK7LNARacEorb38mVBw_V-Zvz-znWgBma1AP1-z_5B_xZU4ogg@mail.gmail.com>
- <CAK7LNAQfYBCoChMV=MOwcUyVoqRkrPWs7DaWdzDqjBe18gGiAQ@mail.gmail.com>
- <20190825011025.GA23410@lst.de> <CAK7LNAQb1ZHr=DiHLNeNRaQExMuXdDOV4sFghoGbco_Q=Qzb8g@mail.gmail.com>
- <20190826073320.GA11712@lst.de>
-In-Reply-To: <20190826073320.GA11712@lst.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 27 Aug 2019 16:45:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATYOLEboUTO4qPx2z7cqwDrHBO1HFHG8VzZEJ15STv+nw@mail.gmail.com>
-Message-ID: <CAK7LNATYOLEboUTO4qPx2z7cqwDrHBO1HFHG8VzZEJ15STv+nw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for
- single pages
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, vdumpa@nvidia.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thierry Reding <treding@nvidia.com>,
-        Kees Cook <keescook@chromium.org>, iamjoonsoo.kim@lge.com,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826221021.GB21761@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 27 Aug 2019 07:48:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 4:33 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Aug 26, 2019 at 11:05:00AM +0900, Masahiro Yamada wrote:
-> > This is included in v5.3-rc6
-> > so I tested it.
->
-> So there is no allocation failure, but you get I/O errors later?
+On Mon, Aug 26, 2019 at 07:10:21PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Aug 26, 2019 at 10:57:58AM -0700, Andi Kleen escreveu:
+> > > 
+> > > > 
+> > > > All those are already merged, after long reviewing phases and lots of
+> > > > testing, right?
+> > > 
+> > > Right. These changes now constitute parts of the Linux kernel source tree.
+> > 
+> > Might be better to focus on future areas that haven't been merged yet.
+> 
+> Agreed, we can have a initial, short report on what has been done to
+> address these issues, and I think Alexey could take care of that, but
+> then we should try and list here what else in addition to what Ian et
+> all listed on their talk.
+> 
+> And perhaps even things that ammeliorate the problems they list there,
+> i.e. Ian, Stephane, the things that Alexey listed were already
+> tested/considered by you guys?
 
-Right.
+there's also ongoing work on adding threads to perf record:
+  https://lore.kernel.org/lkml/20180913125450.21342-1-jolsa@kernel.org/#t
 
->
-> Does the device use a device-private CMA area?
+currently being stuck on me sending the perf_sesion changes
 
-Not sure.
-My driver is drivers/mmc/host/sdhci-cadence.c
-It reuses routines in drivers/mmc/host/sdhci.c
+Alexey ran some initial benchmarks and it seems to perform nicely,
+not sure we discussed the results on list thought
 
-
-
->  Does it work with Linux
-> 5.2 if CONFIG_DMA_CMA is disabled?
-
-No.
-5.2 + disable CONFIG_DMA_CMA
-failed in the same way.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+jirka
