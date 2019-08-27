@@ -2,106 +2,134 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D71BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D400C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D252C20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1B02189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=animalcreek.com header.i=@animalcreek.com header.b="ELSPeJuL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="02pah4ul"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oebhzohk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbfH0PhG (ORCPT
+        id S1729512AbfH0Pha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:37:06 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60311 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726190AbfH0PhF (ORCPT
+        Tue, 27 Aug 2019 11:37:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40033 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728506AbfH0Ph3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:37:05 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 60AD131CF;
-        Tue, 27 Aug 2019 11:37:04 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 27 Aug 2019 11:37:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=animalcreek.com;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=mesmtp; bh=Ocl/spRCLJJ4sJasy54nTst2
-        hWRYj8SLHoluWXe3Ys4=; b=ELSPeJuLzDF9hmHn1/OQ6mqihQ9qrXMKaq89b2/R
-        Y1fxCbgDd2q5xWWUHpKMD6u5dq/dd5Iu0OrHOHRWEi0+HAtC1dR+XHZK3KOz5LIX
-        eplUpM/ZSmSKLy2QeNfg3dniSr23XVqPm1BoyMfBX6G4EGlWpJDNMqLiYh5E33bW
-        sJ8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Ocl/sp
-        RCLJJ4sJasy54nTst2hWRYj8SLHoluWXe3Ys4=; b=02pah4ulicoaApqF2DGqFH
-        doOBbC1V2YvZOH/3kCzA79De4geUsuat51JQc6H1CzB5v/vzPG6c+oKeG213yWHD
-        yyJs0phXZOS2/AWgcCGV0vXgirrDChG2M9y4m9rvEtneCSyiKIlq8skexxH+BGN/
-        Stz2d58p6F6m20IuABxON8M1t9zWziIS+Et/DqkHaqDX4E10SzBvaof87vk4OTDS
-        RqeV776t+7dKhLjr7XMhoynx3uoRioEAW0JMmQrgKnHIl8arJllFuKLkZoIQPV/Q
-        Vk3UghxZGTFewaEjQsfRbgx3q62tzmOqIKdSDa3QjrWEsjbagohA2WeUOe6D0zfg
-        ==
-X-ME-Sender: <xms:H05lXYnkQd8lwS2bE--rsSWqdnodWBByDJQB-N-IcBQuMzsABdWgmg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehkedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjohgfsehttdertddtredvnecuhfhrohhmpeforghr
-    khcuifhrvggvrhcuoehmghhrvggvrhesrghnihhmrghltghrvggvkhdrtghomheqnecukf
-    hppeeikedrvddrkedvrddujedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmghhrvggv
-    rhesrghnihhmrghltghrvggvkhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:H05lXaAlMztUzYiTTKOCWRpljwzu_E8qxMgULqPo6Hk0O5s2htmgRA>
-    <xmx:H05lXS2fkrWt6fRCTz9SfYyMXzsLLBOO0hKPnznqW_YFdxnuzd9X1g>
-    <xmx:H05lXUJd_enQGTgYD64lMgO1FH4bYFFAhiESZB2UYqHP6qgTd_oyiA>
-    <xmx:IE5lXfxNgmKDHoT7Nj6FPXGTRITOZMTiWX22bOfwt_tb4T4MGVe6Fg>
-Received: from blue.animalcreek.com (ip68-2-82-171.ph.ph.cox.net [68.2.82.171])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CF7CD8005B;
-        Tue, 27 Aug 2019 11:37:02 -0400 (EDT)
-Received: by blue.animalcreek.com (Postfix, from userid 1000)
-        id 12F9EA21E58; Tue, 27 Aug 2019 08:37:02 -0700 (MST)
-Date:   Tue, 27 Aug 2019 08:37:02 -0700
-From:   Mark Greer <mgreer@animalcreek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org,
-        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 2/9] staging: greybus: remove license "boilerplate"
-Message-ID: <20190827153702.GA26138@animalcreek.com>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190825055429.18547-3-gregkh@linuxfoundation.org>
+        Tue, 27 Aug 2019 11:37:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so12900700pgj.7;
+        Tue, 27 Aug 2019 08:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OGMX6emQR1IxpVlLVh2L9MxkhIrpMKYtuCVjN/it++Y=;
+        b=oebhzohkNVT/w7W7XTgl7/oHL17GkyFgd1KngfBfOtFeWISVFzwlw4FJ1/ilEVb1rJ
+         Vhupo0cLfir4CslrdMPm20LPcVWZOfVlPKnHqTvjUCZYds5FZICwG8mHxoX9m/b0JQUk
+         RZS7mwP93F9aV3dbAYLA+DgQlKyzs3kf4xgyeg//nWAvL/0onj4AIlq+rLMvr+UB0muD
+         vXB4teK+UIqDZsK6RTf0TtMTei8YiTX5pUrNrli/kJxFIfi0MGyavmz+rwFWm4eARzBG
+         DiQcGUUg7JCDtynbvr6XoPlYOj7db5FlRbN5xdju6VENJohNMmJNmUljX7EGm5GUqaaB
+         LvJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OGMX6emQR1IxpVlLVh2L9MxkhIrpMKYtuCVjN/it++Y=;
+        b=IXOjTRc7e81xAbQxCX1qnmz5NZ7rIHLBDKaygKn3Lwj1+124CuemTzdCSAn1gN1ce1
+         iEl6DUDGLJz5mXq241+3KeY4O9axbacoD6hzFuNyxSNL54u8QfAEnxSMsoiBANbR+gwo
+         V0bPKcSWhCtqj5KWhlIaS6s73qs14gDLgq7/cIMc7t/ZdTbg4DuKM2ujNvMnVuH6gf2u
+         K+pRDL6CkVNKNFyRQgBnduSIXeSwlOoQid0FYrGIh0CdJtLB7iNqWtZ181VQimcdCJ4o
+         xDbOdLoCINdiHRunofyx9LoS3sKhXyijnMyxRD895I++NRR4xVdKV2CzPd9qIzpWHEZC
+         vnQg==
+X-Gm-Message-State: APjAAAWQkSVG41MgWQQHDOcHOb/ag7R7XAoWJrLUuXAPYfgg6QB5RQso
+        uoMmOOYlg66UB4I45Niuht0=
+X-Google-Smtp-Source: APXvYqycqUVsu1TtUS45hUIDY1J/diKpn9XcXnmUwZ9v2pFDeU5TxAt/H+OC3jfol/Ak4mHAeMmvQQ==
+X-Received: by 2002:a17:90a:e38e:: with SMTP id b14mr13232435pjz.125.1566920248773;
+        Tue, 27 Aug 2019 08:37:28 -0700 (PDT)
+Received: from [10.230.28.130] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id e3sm2720186pjr.9.2019.08.27.08.37.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 08:37:27 -0700 (PDT)
+Subject: Re: [PATCH v1 net-next] net: phy: mdio_bus: make mdiobus_scan also
+ cover PHY that only talks C45
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+References: <1566870769-9967-1-git-send-email-weifeng.voon@intel.com>
+ <e9ece5ad-a669-6d6b-d050-c633cad15476@gmail.com>
+ <20190826185418.GG2168@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <e7548bb7-a431-748b-36a9-be2eb4c3b400@gmail.com>
+Date:   Tue, 27 Aug 2019 08:37:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190825055429.18547-3-gregkh@linuxfoundation.org>
-Organization: Animal Creek Technologies, Inc.
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC814758ED8@PGSMSX103.gar.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 07:54:22AM +0200, Greg Kroah-Hartman wrote:
-> When the greybus drivers were converted to SPDX identifiers for the
-> license text, some license boilerplate was not removed.  Clean this up
-> by removing this unneeded text now.
-> 
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: Alex Elder <elder@kernel.org>
-> Cc: Vaibhav Agarwal <vaibhav.sr@gmail.com>
-> Cc: Mark Greer <mgreer@animalcreek.com>
-> Cc: Viresh Kumar <vireshk@kernel.org>
-> Cc: "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
-> Cc: greybus-dev@lists.linaro.org
-> Cc: devel@driverdev.osuosl.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
 
-Acked-by: Mark Greer <mgreer@animalcreekk.com>
+
+On 8/27/2019 8:23 AM, Voon, Weifeng wrote:
+>>>> Make mdiobus_scan() to try harder to look for any PHY that only
+>> talks C45.
+>>> If you are not using Device Tree or ACPI, and you are letting the MDIO
+>>> bus be scanned, it sounds like there should be a way for you to
+>>> provide a hint as to which addresses should be scanned (that's
+>>> mii_bus::phy_mask) and possibly enhance that with a mask of possible
+>>> C45 devices?
+>>
+>> Yes, i don't like this unconditional c45 scanning. A lot of MDIO bus
+>> drivers don't look for the MII_ADDR_C45. They are going to do a C22
+>> transfer, and maybe not mask out the MII_ADDR_C45 from reg, causing an
+>> invalid register write. Bad things can then happen.
+>>
+>> With DT and ACPI, we have an explicit indication that C45 should be used,
+>> so we know on this platform C45 is safe to use. We need something
+>> similar when not using DT or ACPI.
+>>
+>> 	  Andrew
+> 
+> Florian and Andrew,
+> The mdio c22 is using the start-of-frame ST=01 while mdio c45 is using ST=00
+> as identifier. So mdio c22 device will not response to mdio c45 protocol.
+> As in IEEE 802.1ae-2002 Annex 45A.3 mention that:
+> " Even though the Clause 45 MDIO frames using the ST=00 frame code
+> will also be driven on to the Clause 22 MII Management interface,
+> the Clause 22 PHYs will ignore the frames. "
+> 
+> Hence, I am not seeing any concern that the c45 scanning will mess up with 
+> c22 devices.
+
+It is not so much the messing up that concerns me other than the
+increased scan time. Assuming you are making this change to support your
+stmmac PCI patch series with SGMII/RGMII, etc. cannot you introduce a
+bitmask of C45 PHY addresses that should be scanned and the logic could
+look like (pseudo code):
+
+- for each bit clear in mii_bus::phy_mask, scan it as C22
+- for each bit clear in mii_bus::phy_c45_mask, scan it as C45
+
+or something along those lines?
+--
+Florian
