@@ -2,130 +2,80 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C2BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF479C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F1C2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC5B2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="i4yWR/AG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbfH0Rs5 (ORCPT
+        id S1730489AbfH0RtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:48:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42486 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfH0Rs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:48:56 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5F8BD308FB82;
-        Tue, 27 Aug 2019 17:48:56 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B407719D7A;
-        Tue, 27 Aug 2019 17:48:55 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 11:48:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 0/4] Introduce variable length mdev alias
-Message-ID: <20190827114852.499dd8cf@x1.home>
-In-Reply-To: <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        Tue, 27 Aug 2019 13:49:02 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:38406 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbfH0Rs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:48:58 -0400
+X-Greylist: delayed 2265 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Aug 2019 13:48:57 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lLYloM0Ywjig+ulU3rxirWB2hunInBTjYfHlRq1yag0=; b=i4yWR/AGXeNk0efti4p+I0xxR
+        He1mnoWyZPL4x55cesht2sxmTyNiXHwOuyL7xB8q7GvUg6p1hZTfzm6vrlxwxsP1almCB6XTL6qQX
+        mNAr7uZ6CkFnOz2D9Rv+/voSIbzTRnLqlT1cD7Ggd9yTJu/17YA07WnjiesVVv023Nins=;
+Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
+        (envelope-from <mjg59@cavan.codon.org.uk>)
+        id 1i2ezq-00079w-HA; Tue, 27 Aug 2019 18:11:06 +0100
+Date:   Tue, 27 Aug 2019 18:11:06 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     Matthew Garrett <mjg59@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86: tpm: Remove a busy bit of the NVS area for
+ supporting AMD's fTPM
+Message-ID: <20190827171106.owkvt6slwwg5ypyl@srcf.ucam.org>
+References: <20190826081752.57258-1-kkamagui@gmail.com>
+ <CACdnJutomLNthYDzEc0wFBcBHK5iqnk0p-hkAkp57zQZ38oGPA@mail.gmail.com>
+ <CAHjaAcSFhQsDYL2iRwwhyvxh9mH4DhxZ__DNzhtk=iiZZ5JdbA@mail.gmail.com>
+ <CACdnJutfR2X-5ksXw4PNUdyH2MJs_mExNCcYPp8NLcPW2EDrYQ@mail.gmail.com>
+ <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 27 Aug 2019 17:48:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHjaAcSpU0eW5PLsEpxTkycwi+wNS67xeizb6_BMM_-qUZYAmg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 13:11:17 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On Wed, Aug 28, 2019 at 01:36:30AM +0900, Seunghun Han wrote:
 
-> Hi Alex, Cornelia,
-> 
-> > -----Original Message-----
-> > From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf
-> > Of Parav Pandit
-> > Sent: Tuesday, August 27, 2019 2:11 AM
-> > To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
-> > Subject: [PATCH 0/4] Introduce variable length mdev alias
-> > 
-> > To have consistent naming for the netdevice of a mdev and to have consistent
-> > naming of the devlink port [1] of a mdev, which is formed using
-> > phys_port_name of the devlink port, current UUID is not usable because UUID
-> > is too long.
-> > 
-> > UUID in string format is 36-characters long and in binary 128-bit.
-> > Both formats are not able to fit within 15 characters limit of netdev name.
-> > 
-> > It is desired to have mdev device naming consistent using UUID.
-> > So that widely used user space framework such as ovs [2] can make use of
-> > mdev representor in similar way as PCIe SR-IOV VF and PF representors.
-> > 
-> > Hence,
-> > (a) mdev alias is created which is derived using sha1 from the mdev name.
-> > (b) Vendor driver describes how long an alias should be for the child mdev
-> > created for a given parent.
-> > (c) Mdev aliases are unique at system level.
-> > (d) alias is created optionally whenever parent requested.
-> > This ensures that non networking mdev parents can function without alias
-> > creation overhead.
-> > 
-> > This design is discussed at [3].
-> > 
-> > An example systemd/udev extension will have,
-> > 
-> > 1. netdev name created using mdev alias available in sysfs.
-> > 
-> > mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-> > mdev 12 character alias=cd5b146a80a5
-> > 
-> > netdev name of this mdev = enmcd5b146a80a5 Here en = Ethernet link m =
-> > mediated device
-> > 
-> > 2. devlink port phys_port_name created using mdev alias.
-> > devlink phys_port_name=pcd5b146a80a5
-> > 
-> > This patchset enables mdev core to maintain unique alias for a mdev.
-> > 
-> > Patch-1 Introduces mdev alias using sha1.
-> > Patch-2 Ensures that mdev alias is unique in a system.
-> > Patch-3 Exposes mdev alias in a sysfs hirerchy.
-> > Patch-4 Extends mtty driver to optionally provide alias generation.
-> > This also enables to test UUID based sha1 collision and trigger error handling
-> > for duplicate sha1 results.
-> > 
-> > In future when networking driver wants to use mdev alias, mdev_alias() API will
-> > be added to derive devlink port name.
-> >   
-> Now that majority of above patches looks in shape and I addressed all comments,
-> In next v1 post, I was considering to include mdev_alias() and have
-> example use in mtty driver.
-> 
-> This way, subsequent series of mlx5_core who intents to use
-> mdev_alias() API makes it easy to review and merge through Dave M,
-> netdev tree. Is that ok with you?
+> I got your point. Is there any problem if some regions which don't
+> need to be handled in NVS area are saved and restored? If there is a
+> problem, how about adding code for ignoring the regions in NVS area to
+> the nvs.c file like Jarkko said? If we add the code, we can save and
+> restore NVS area without driver's interaction.
 
-What would be the timing for the mlx5_core use case?  Can we coordinate
-within the same development cycle?  I wouldn't want someone to come
-clean up the sample driver and remove the API ;)  Thanks,
+The only thing that knows which regions should be skipped by the NVS 
+driver is the hardware specific driver, so the TPM driver needs to ask 
+the NVS driver to ignore that region and grant control to the TPM 
+driver.
 
-Alex
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
