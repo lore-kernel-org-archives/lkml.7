@@ -2,117 +2,135 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CACC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E2CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF62206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568B82053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAEHqRPg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pE4dxLaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfH0JpE (ORCPT
+        id S1729585AbfH0Jpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:45:04 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37952 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbfH0JpD (ORCPT
+        Tue, 27 Aug 2019 05:45:35 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36624 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729232AbfH0Jpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:45:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e16so1003074wro.5
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 02:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6f+Icsxz68/2WUOQOXJPlnmhND3c9kjk7Qbbyj0A0kg=;
-        b=DAEHqRPgmw98bL/haImN9fD6UfMYR1/S2NnQjdEW81PFCu9T2dceMxS2vBYT+J/OLc
-         t2sru5JRJ0GKU0Zg8KmLGV4Rl/1mnBt8AMc4VqoVzpP4Bkq+eNnmp5LyyEsyu0HI+gAE
-         I62570EvJBOCoNiTRpNvR+H7ZpvBO6rqAvAQ6Ao7dUAIRV6gvPmGQsXt5uQcy+M0MAO8
-         ZD6MvYoxL4JxOwg1W7lDM6k59M+/nFzr1vEiYlrKUCGp4+bNnquLtb5hJOzbAxX/qXDQ
-         ZjaRJMCJJ9YOQJwIFZhpn7xBIG+rUxC3uNxq+C2cOxRgHVL9QDNuse/CwpjGabaHxouc
-         s6RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6f+Icsxz68/2WUOQOXJPlnmhND3c9kjk7Qbbyj0A0kg=;
-        b=TDBjzrCta1WRuqlDTGtQb4C/wNr2p22rRnuY3A6+gOWAWsQbi7aMhcsna0ZMkQXvVh
-         ShjGuiCox/8swCIP/NUHiCpYsA9BL0M0sUQRWNKLGKTaxhYEqVn0L7FuIIFETq32xP7R
-         aGMvjti5hq+BBFMZjE+jBWHPbqeS9Pg3YQ3g5Oyvwf/MAS9m75L6jXZy8ooVkUZQLHKD
-         hzOQGg54dHt08X2Frc1osZ4/xlXHxpSFgYQWMuWr3U+cSvz5AGIiWzkZsoN4q0oeTxYg
-         pQZt5hU6CJ0gN0UkLPwfWxWHpfvH09HPJtuah6KeQ0p+3vcVE8n0phlOAPBniQG1I0MQ
-         z6YA==
-X-Gm-Message-State: APjAAAXJTGeJ1+qpO9JspPbugngPVPk8wDnWme5wAePp7d45Zu5DozvV
-        ryg+6lIN1KE8UC24XEnLvUHX3w==
-X-Google-Smtp-Source: APXvYqzj0vKC3iOhGGKsmddO0sx2ggiSMWTkca88AucPIDge5HC2ZDkK0IXCRr00WWZ8LAlMeqxRXw==
-X-Received: by 2002:adf:f5c5:: with SMTP id k5mr6828393wrp.42.1566899101785;
-        Tue, 27 Aug 2019 02:45:01 -0700 (PDT)
-Received: from dell ([2.27.35.174])
-        by smtp.gmail.com with ESMTPSA id f24sm2510743wmc.25.2019.08.27.02.45.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 02:45:01 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 10:44:59 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190827094459.GB4804@dell>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190807201528.GO250418@google.com>
- <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
- <20190816175317.GU250418@google.com>
- <20190819100241.5pctjxmsq6crlale@holly.lan>
- <20190819185049.GZ250418@google.com>
- <20190820135617.64urowbu2kwdynib@holly.lan>
+        Tue, 27 Aug 2019 05:45:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=db4eeeBDxOPeQgCnxVgK0cY8TBZGLFlCe0NsKNFsxDw=; b=pE4dxLaD4wDroPGs8tQLb6wF0
+        V+nS/JucfqBwoulqP0IfXx6iiAVhPBAlNdlPeLBPz65OMFeoMqdEOkAVzaLSf4kHnFIhnr70g6yE3
+        khUUxAHxfcda9QVcxqglAMS8K8PVBqsVS6QAqd/5+KzM/Kb5j9Rkd1oD1Tm+PcypsIS+D2YBXswKN
+        10c3adRsX0Si5HSR9OoZFhhjY/dJ3G3dyIdDYqE01O2glKpBQtH5vIPwho7cjB9q7nlgAs67xH0CL
+        /U0G8hs5+Ie3mnYVJv9fabZP0c7XGDfMRW1F2KJLf+h1Vv6SeqI4hVts1ZkI/Y3A000xdMHIPGHKU
+        GRJfQ/gwQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38568)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i2Y2V-0003bW-8m; Tue, 27 Aug 2019 10:45:23 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i2Y2S-0005ek-8q; Tue, 27 Aug 2019 10:45:20 +0100
+Date:   Tue, 27 Aug 2019 10:45:20 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "julien.grall@arm.com" <julien.grall@arm.com>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
+Message-ID: <20190827094520.GJ13294@shell.armlinux.org.uk>
+References: <20190709083729.11135-1-peng.fan@nxp.com>
+ <AM0PR04MB448135E1B2C85F0B6029F7B788C70@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <AM0PR04MB44818BB69CAD35DC989A416988A00@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820135617.64urowbu2kwdynib@holly.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <AM0PR04MB44818BB69CAD35DC989A416988A00@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
+You need to find someone who is interested in Xen on 32-bit ARM, and
+who knows this code - and therefore what impact your change causes.
+That isn't me, sorry.
 
-> > IIUC the conclusion is that there is no need for a string attribute
-> > because we only need to distinguish between 'perceptual' and
-> > 'non-perceptual'. If that is correct, do you have any preference for
-> > the attribute name ('perceptual_scale', 'perceptual', ...)?
+On Tue, Aug 27, 2019 at 09:27:53AM +0000, Peng Fan wrote:
+> Ping again..
 > 
-> More a summary than a conclusion! There is a reason I have left a bit or
-> space for others to comment on this over the last month (and a bit).
+> +Julien
 > 
-> To be clear my Reviewed-by: means that I believe that the kernel is better
-> with "non-linear/linear/unknown" than without it and that I am comfortable
-> the API isn't likely to be a millstone for us.
+> > Subject: RE: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
+> > 
+> > Hi Russell, Stefano
+> > 
+> > > Subject: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
+> > 
+> > Any comments?
+> > 
+> > >
+> > > arm64 shares some code under arch/arm/xen, including mm.c.
+> > > However ZONE_DMA is removed by commit
+> > > ad67f5a6545("arm64: replace ZONE_DMA with ZONE_DMA32").
+> > > So to ARM64, need use __GFP_DMA32.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  arch/arm/xen/mm.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c index
+> > > e1d44b903dfc..a95e76d18bf9 100644
+> > > --- a/arch/arm/xen/mm.c
+> > > +++ b/arch/arm/xen/mm.c
+> > > @@ -27,7 +27,7 @@ unsigned long xen_get_swiotlb_free_pages(unsigned
+> > int
+> > > order)
+> > >
+> > >  	for_each_memblock(memory, reg) {
+> > >  		if (reg->base < (phys_addr_t)0xffffffff) {
+> > > -			flags |= __GFP_DMA;
+> > > +			flags |= __GFP_DMA | __GFP_DMA32;
+> > >  			break;
+> > >  		}
+> > >  	}
+> > 
+> > Thanks,
+> > Peng.
 > 
-> Lee, Jingoo: Either of you care to offer $0.02
-
-No, not really.  Happy to leave it to your good judgement.
+> Thanks,
+> Peng.
+> 
+> > 
+> > > --
+> > > 2.16.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
