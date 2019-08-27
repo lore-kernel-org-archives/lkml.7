@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576CFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FBEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0AA206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1D92186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892345;
-	bh=szNqJgC9d5Ndna8YoKeMJQN4lU7/tFfd7KS/NIiUoh4=;
+	s=default; t=1566892348;
+	bh=73T/ptJBL3kvKnIpgkEq6CqZQKHoTLxmRnPYjrFTyY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPpaoy6Aw6QGZd8SC8BvgEo7OtzZ+XPFEZd4jJeYmk9nbfPHp523mgJPQp2MSDlMH
-	 x181JUWubhNDJ2SrbV6M239rMlHW9flfpCoFOMkpC2rQX9I0FJRwjDIV11/ACzZF3I
-	 gA/HO240jNICPOIMgb4mOSvL7hzanlk4qDaaloIE=
+	b=do4yjlYFZFgtM56t90J5qSWjRvRvM4U2qq3hpCh1mkyeh7v8wfNOSutHZCBt/J/jM
+	 2ia+BqmwBHeqHSM4U6BShC2/74X/TQgdn4ZVe1ZNlmFLS+YIfOc6gA+3iBFzVn0U93
+	 gXWOljvgzllfHbnODNGcxabhh+MRsi4FQN3th15A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfH0HwY (ORCPT
+        id S1729440AbfH0Hw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43644 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729388AbfH0HwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:20 -0400
+        id S1729408AbfH0HwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74562173E;
-        Tue, 27 Aug 2019 07:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F63B2173E;
+        Tue, 27 Aug 2019 07:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892339;
-        bh=szNqJgC9d5Ndna8YoKeMJQN4lU7/tFfd7KS/NIiUoh4=;
+        s=default; t=1566892342;
+        bh=73T/ptJBL3kvKnIpgkEq6CqZQKHoTLxmRnPYjrFTyY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C9bG9Weekn2JPMLyjIHFJMiGRih1/Z6lLSg1QjGFigSSq7fvOlgZwx1F1hJasoQLc
-         IiPaONcLgnVWwKd6OQuCbPFKT0ChmPAtkNVxvhNr0uRYmTCOwL04wt7yDbSfzdl0R3
-         NMmziUEyjn38Io78f+o/WeeoBXxnZ3hmTeCgkjsE=
+        b=L3RSanUvxBLAHeDgdmBQo1fBV1/6IlexfOZm47myGRhdxwr/HepP+SCn3BS9I3Hr5
+         GmVHP7dD7DskRfDgbQjK+4n/OSBxu8UnaDuNgee8F3xPeu8wyaMelDGyPFel+Pz4S5
+         ljwiXG5ksSBnOgPWRFPiVlhql0vbk8zMncwonDtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/62] HID: input: fix a4tech horizontal wheel custom usage
-Date:   Tue, 27 Aug 2019 09:50:27 +0200
-Message-Id: <20190827072701.664140123@linuxfoundation.org>
+        Sebastien Tisserant <stisserant@wallix.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 23/62] SMB3: Kernel oops mounting a encryptData share with CONFIG_DEBUG_VIRTUAL
+Date:   Tue, 27 Aug 2019 09:50:28 +0200
+Message-Id: <20190827072701.705688026@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,96 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c703b53e5bfb5c2205c30f0fb157ce271fd42fb ]
+[ Upstream commit ee9d66182392695535cc9fccfcb40c16f72de2a9 ]
 
-Some a4tech mice use the 'GenericDesktop.00b8' usage to inform whether
-the previous wheel report was horizontal or vertical. Before
-c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
-usage was being mapped to 'Relative.Misc'. After the patch it's simply
-ignored (usage->type == 0 & usage->code == 0). Which ultimately makes
-hid-a4tech ignore the WHEEL/HWHEEL selection event, as it has no
-usage->type.
+Fix kernel oops when mounting a encryptData CIFS share with
+CONFIG_DEBUG_VIRTUAL
 
-We shouldn't rely on a mapping for that usage as it's nonstandard and
-doesn't really map to an input event. So we bypass the mapping and make
-sure the custom event handling properly handles both reports.
-
-Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sebastien Tisserant <stisserant@wallix.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-a4tech.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ fs/cifs/smb2ops.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
-index 9428ea7cdf8a0..c52bd163abb3e 100644
---- a/drivers/hid/hid-a4tech.c
-+++ b/drivers/hid/hid-a4tech.c
-@@ -26,12 +26,36 @@
- #define A4_2WHEEL_MOUSE_HACK_7	0x01
- #define A4_2WHEEL_MOUSE_HACK_B8	0x02
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 23326b0cd5628..58a502e622aa4 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2168,7 +2168,15 @@ fill_transform_hdr(struct smb2_transform_hdr *tr_hdr, struct smb_rqst *old_rq)
+ static inline void smb2_sg_set_buf(struct scatterlist *sg, const void *buf,
+ 				   unsigned int buflen)
+ {
+-	sg_set_page(sg, virt_to_page(buf), buflen, offset_in_page(buf));
++	void *addr;
++	/*
++	 * VMAP_STACK (at least) puts stack into the vmalloc address space
++	 */
++	if (is_vmalloc_addr(buf))
++		addr = vmalloc_to_page(buf);
++	else
++		addr = virt_to_page(buf);
++	sg_set_page(sg, addr, buflen, offset_in_page(buf));
+ }
  
-+#define A4_WHEEL_ORIENTATION	(HID_UP_GENDESK | 0x000000b8)
-+
- struct a4tech_sc {
- 	unsigned long quirks;
- 	unsigned int hw_wheel;
- 	__s32 delayed_value;
- };
- 
-+static int a4_input_mapping(struct hid_device *hdev, struct hid_input *hi,
-+			    struct hid_field *field, struct hid_usage *usage,
-+			    unsigned long **bit, int *max)
-+{
-+	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
-+
-+	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8 &&
-+	    usage->hid == A4_WHEEL_ORIENTATION) {
-+		/*
-+		 * We do not want to have this usage mapped to anything as it's
-+		 * nonstandard and doesn't really behave like an HID report.
-+		 * It's only selecting the orientation (vertical/horizontal) of
-+		 * the previous mouse wheel report. The input_events will be
-+		 * generated once both reports are recorded in a4_event().
-+		 */
-+		return -1;
-+	}
-+
-+	return 0;
-+
-+}
-+
- static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
- 		struct hid_field *field, struct hid_usage *usage,
- 		unsigned long **bit, int *max)
-@@ -53,8 +77,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
- 	struct input_dev *input;
- 
--	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput ||
--			!usage->type)
-+	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput)
- 		return 0;
- 
- 	input = field->hidinput->input;
-@@ -65,7 +88,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 			return 1;
- 		}
- 
--		if (usage->hid == 0x000100b8) {
-+		if (usage->hid == A4_WHEEL_ORIENTATION) {
- 			input_event(input, EV_REL, value ? REL_HWHEEL :
- 					REL_WHEEL, a4->delayed_value);
- 			return 1;
-@@ -129,6 +152,7 @@ MODULE_DEVICE_TABLE(hid, a4_devices);
- static struct hid_driver a4_driver = {
- 	.name = "a4tech",
- 	.id_table = a4_devices,
-+	.input_mapping = a4_input_mapping,
- 	.input_mapped = a4_input_mapped,
- 	.event = a4_event,
- 	.probe = a4_probe,
+ static struct scatterlist *
 -- 
 2.20.1
 
