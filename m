@@ -2,152 +2,143 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923FDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBA7C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64561217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566897852;
-	bh=VzCOZqtAlz+GUkyOEEKNv1LAO6m4MPFMmBZMsh1yqL8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1AjcbxMHeExwBI8aCZb9Eo/9bFQ+oVtNttI6u4BX9AxBBXVN7MonaVt1Vdiw6T/k9
-	 Ke8c/1fx0QMFaN+m5qypxQbCcyJC6Sp/ojYK0LOhmF8/bC7GvCPozkuzEkmpekNUE/
-	 N2bq2zaOR7PxYXGRsK0zo6XWnH2IYNGIE+UyImBs=
+	by mail.kernel.org (Postfix) with ESMTP id A47CF2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:25:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="QNwHTQH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfH0JYL (ORCPT
+        id S1729675AbfH0JY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:24:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:41474 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbfH0JYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:24:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FFB3337;
-        Tue, 27 Aug 2019 02:24:10 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 508D93F718;
-        Tue, 27 Aug 2019 02:24:09 -0700 (PDT)
-Subject: Re: [PATCH v1 0/6] Allow kexec reboot for GICv3 and device tree
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20190826190056.27854-1-pasha.tatashin@soleen.com>
- <20190826201313.246208e9@why>
- <CA+CK2bAS-jDwY-qKfZQD8TbvyAhS1+rBvcxGqkR4BHd5NR5BGQ@mail.gmail.com>
- <d7461fb3-0f6d-8abf-084d-ce0be1f1a18d@kernel.org>
- <CA+CK2bAk4Xb_hxh2KLxWKa8ogM-jO1MpREmc02TmUMpdJ2ZbSA@mail.gmail.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <86282c48-bc69-f745-92c2-9df2b92ad6bd@kernel.org>
-Date:   Tue, 27 Aug 2019 10:24:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 05:24:59 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:52724 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728559AbfH0JY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 05:24:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id CA33742ECC;
+        Tue, 27 Aug 2019 09:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1566897896; x=1568712297; bh=m1oceRiF1Qn5bpG3Kcq7B21nL
+        l0SDA1suLrzuRV2RYc=; b=QNwHTQH6Jdn9Kgs9RTfRZNE6geyuX8ZoE5YgCjSFv
+        zPxnaVeQA02q/7LwHDTCh233tUyfe3F1UCUOohyoG+1zO3G0Z3U6q3faEywoX/Jd
+        fivRSfSAod/yPoImQLJgOT0ef+bWyenioM7KckGVab4ZiQKOAFFSwfJjgeIE+YVk
+        uk=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id B_j679UsMczu; Tue, 27 Aug 2019 12:24:56 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 2DC3E42ECA;
+        Tue, 27 Aug 2019 12:24:55 +0300 (MSK)
+Received: from localhost.localdomain (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 27 Aug 2019 12:24:54 +0300
+Message-ID: <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
+Subject: Re: [PATCH v2 3/4] watchdog/aspeed: add support for dual boot
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        "Alexander Amelkin" <a.amelkin@yadro.com>,
+        <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Date:   Tue, 27 Aug 2019 12:24:45 +0300
+In-Reply-To: <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
+References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+         <20190826104636.19324-4-i.mikhaylov@yadro.com>
+         <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bAk4Xb_hxh2KLxWKa8ogM-jO1MpREmc02TmUMpdJ2ZbSA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/2019 09:53, Pavel Tatashin wrote:
->>> Running Linux without EFI is common, and there are scenarios which
->>> make it appropriate. As I understand most of embedded linux do not
->>> have EFI enabled, and thus I do not see a reason why we would not
->>> support a first class feature of Linux (kexec) on non-EFI bootloaders.
->>
->> Define "most". All the arm64 systems I have around (and trust me, that's
->> quite a number of them) can either use u-boot, which has more than
->> enough EFI support to use this functionality, or use EDK-II natively.
+On Mon, 2019-08-26 at 17:14 -0700, Guenter Roeck wrote:
+> > +/*
+> > + * At alternate side the 'access_cs0' sysfs node provides:
+> > + *   ast2400: a way to get access to the primary SPI flash chip at CS0
+> > + *            after booting from the alternate chip at CS1.
+> > + *   ast2500: a way to restore the normal address mapping from
+> > + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
+> > + *
+> > + * Clearing the boot code selection and timeout counter also resets to the
+> > + * initial state the chip select line mapping. When the SoC is in normal
+> > + * mapping state (i.e. booted from CS0), clearing those bits does nothing
+> > for
+> > + * both versions of the SoC. For alternate boot mode (booted from CS1 due
+> > to
+> > + * wdt2 expiration) the behavior differs as described above.
+> > + *
+> The above needs to be in the sysfs attribute documentation as well.
+
+My apologies but I didn't find any suitable, only watchdog parameters with
+dtbindings file, where should I put it? Documentation/watchdog/aspeed-wdt-
+sysfs.rst?
+
+> > + * This option can be used with wdt2 (watchdog1) only.
 > 
-> OK. Is this the most common configuration in the embedded ARM64
-> devices currently deployed: phones, cameras, consoles, players, etc?
-
-Which one of these has kexec as a requirement?
-
->>> We (Microsoft) have a small highly secure device with a high uptime
->>> requirement. The device also has PCIe and thus GICv3. The update for
->>
->> PCIe doesn't imply GICv3 at all.
+> This implies a specific watchdog numbering which is not guaranteed.
+> Someone might implement a system with some external watchdog.
 > 
-> My impression was that without PCIe GICv3 is rarely used, and this
-> could be the reason why this problem is not seen outside of larger
-> machines which normally have EFI enabled.
+> > + */
+> > +static DEVICE_ATTR_RW(access_cs0);
+> > +
+> > +static struct attribute *bswitch_attrs[] = {
+> > +	&dev_attr_access_cs0.attr,
+> > +	NULL
+> > +};
+> > +ATTRIBUTE_GROUPS(bswitch);
+> > +
+> >   static const struct watchdog_ops aspeed_wdt_ops = {
+> >   	.start		= aspeed_wdt_start,
+> >   	.stop		= aspeed_wdt_stop,
+> > @@ -306,9 +359,16 @@ static int aspeed_wdt_probe(struct platform_device
+> > *pdev)
+> >   	}
+> >   
+> >   	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+> > -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
+> > +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
+> >   		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+> >   
+> > +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
+> > +			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
+> > +			wdt->wdd.groups = bswitch_groups;
 
-Wong impression. All the combinations exist and are wildly deployed.
+> Kind of odd that the attribute only exists if the system booted from the
+> second flash, but if that is what you want I won't object. Just make sure
+> that this is explained properly.
+Perhaps dts configuration option would be better solution for it then? "force-
+cs0-switch" as example? Also, if it would be an option, dtbindings/wdt file for
+documentation will be the right place for it. Usage of this at side 0 will not
+get any good/bad results, it just makes user confused, so I decided to put it
+only at side 1. It works only for ast2400/2500 board unfortunately, for 2600
+there is big difference in switching mechanism. Any other thoughts how to make
+it better?
 
->>> this device relies on kexec. For a number of reasons, it was decided
->>> to use U-Boot and Linux without EFI enabled. One of those reasons is
->>> to improve boot performance, enabling EFI in U-Boot alone reduces the
->>> boot performance by half a second. Our total reboot budget is under a
->>> second which makes that half a second unacceptable. Also, adding EFI
->>> support to kernel increases its size and there are security
->>> implications from enabling more code both in U-Boot and Linux.
->>
->> You're are missing the point. kexec with EFI has 0 overhead (no
->> non-kernel EFI code gets executed), doesn't impact your time budget, and
->> only relies on a single in-memory table. This can be pretty trivially
->> provided by the dumbest EFI shim.
-> 
-> Thanks, this makes sense that the Linux boot time won't be affected. I
-> have not tested how u-boot was affected, but was told 0.5 second
-> longer to start.
+Thanks.
 
-So you haven't even tried? :-(
-
-> 
->> All you are describing above is a set of self imposed limitations in
->> your bootloader, which you are fully in control of. So instead of
->> reinventing a square wheel, I suggest you adopt the existing implementation.
-> 
-> I am not sure this analogy is correct, I do not think that non-EFI
-> enabled kernels became legacy.
-
-non-EFI systems always had reduced functionality, such as not being able
-to use runtime services.
-
-> 
->> Another reason not to do this is interoperability: I want to be able to
->> kexec whatever Linux kernel I want, without having to cope with all
->> flavours of the same functionality. Effectively, the EFI table is a
->> private ABI between two Linux kernels. We're not changing it.
-> 
-> This is exactly the problem: by having this region defined in signed
-> DTB file we reduce the amount of communication between the kernels.
-> Passing modified EFI Table causes us to pass more information from the
-> first kernel indefinitely through updates. Thus, increases a chance
-> for a security compromise.
-
-Nothing says that it has to be modified. For what it's worth, you could
-perform the allocation in your bootloader once and for all, configure
-the GIC redistributors and enable LPIs there, and pass the EFI
-reservation to the first kernel. The security argument is a fallacy.
-
-> We are not changing EFI ABI between
-> kernels, it will stay as is. All this code does is enables kernels
-> that do not have EFI table communication between them a way to do
-> kexec updates with reduced amount of data exchange.
-
-And to do that, you're adding yet another ABI we have to support, and
-creating havoc in the kexec chain (kernel 1 knows about the DT hack,
-kernel 2 doesn't, panic follows). My answer to this is *no*. We already
-have a flexible interface that allows you to do what you want, and I'm
-not adding another one.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
