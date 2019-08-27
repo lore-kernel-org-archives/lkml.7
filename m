@@ -2,58 +2,124 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F96CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85747C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579CC217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5841C20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566886994;
+	bh=est3wmZaSmSGcTJuKxM8cN8m1fYP8CsycRXpIl+3Uos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YpDx/UlMIqHCzuNgzYAz/Zp1D0EJksI+kxBhm2zhhRa/dBDdoRRbobZ6dx8FkUK+4
+	 +1OTL9mKGRxHrVRu280XbOH2JjeOrf1obcROXmAz/O9QOtWM3dOa8QGuowQE6yYZfe
+	 t88i33ZzIEd9/CdMrEfVyUgI16uqhuQi5T9W1ZeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfH0GVT (ORCPT
+        id S1727022AbfH0GXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:21:19 -0400
-Received: from verein.lst.de ([213.95.11.211]:53918 "EHLO verein.lst.de"
+        Tue, 27 Aug 2019 02:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfH0GVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:21:19 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2A12468AFE; Tue, 27 Aug 2019 08:21:14 +0200 (CEST)
-Date:   Tue, 27 Aug 2019 08:21:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: swiotlb-xen cleanups
-Message-ID: <20190827062113.GA31752@lst.de>
-References: <20190816130013.31154-1-hch@lst.de> <alpine.DEB.2.21.1908261859490.3428@sstabellini-ThinkPad-T480s>
+        id S1725825AbfH0GXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:23:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AA9C2054F;
+        Tue, 27 Aug 2019 06:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566886992;
+        bh=est3wmZaSmSGcTJuKxM8cN8m1fYP8CsycRXpIl+3Uos=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VL2rm9MIAHpcITPpub7LChTfs4fcMod9+jzDAtp8AIJjPL8mzSyQZXEkB7m/e1O09
+         NKd2CD0Vts/kOWTvdnrU6Bi/NdeE+LrBVQixyduwhpZobuT8YYWHqCnx92n6jHN+eC
+         y4ejXRdv8Xla9uHWXghROmKxHmcYIYIybfwBMXoE=
+Date:   Tue, 27 Aug 2019 08:23:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     gregkh@linuxfoundation.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajatxjain@gmail.com
+Subject: Re: [PATCH v2 2/2] PCI/AER: Split the AER stats into multiple sysfs
+ attributes
+Message-ID: <20190827062309.GA30987@kroah.com>
+References: <20190821231513.36454-2-rajatja@google.com>
+ <20190827005114.229726-1-rajatja@google.com>
+ <20190827005114.229726-2-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908261859490.3428@sstabellini-ThinkPad-T480s>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190827005114.229726-2-rajatja@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 07:00:44PM -0700, Stefano Stabellini wrote:
-> On Fri, 16 Aug 2019, Christoph Hellwig wrote:
-> > Hi Xen maintainers and friends,
-> > 
-> > please take a look at this series that cleans up the parts of swiotlb-xen
-> > that deal with non-coherent caches.
-> 
-> Hi Christoph,
-> 
-> I just wanted to let you know that your series is on my radar, but I
-> have been swamped the last few days. I hope to get to it by the end of
-> the week.
+On Mon, Aug 26, 2019 at 05:51:14PM -0700, Rajat Jain wrote:
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> @@ -9,89 +9,72 @@ errors may be "seen" / reported by the link partner and not the
+>  problematic endpoint itself (which may report all counters as 0 as it never
+>  saw any problems).
+>  
+> -What:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
+> -Date:		July 2018
+> -KernelVersion: 4.19.0
+> +What: Following files in /sys/bus/pci/devices/<dev>/aer_stats/
+> +correctable_bit0_RxErr
+> +correctable_bit12_Timeout
+> +correctable_bit13_NonFatalErr
+> +correctable_bit14_CorrIntErr
+> +correctable_bit15_HeaderOF
+> +correctable_bit6_BadTLP
+> +correctable_bit7_BadDLLP
+> +correctable_bit8_Rollover
+> +fatal_bit0_Undefined
+> +fatal_bit12_TLP
+> +fatal_bit13_FCP
+> +fatal_bit14_CmpltTO
+> +fatal_bit15_CmpltAbrt
+> +fatal_bit16_UnxCmplt
+> +fatal_bit17_RxOF
+> +fatal_bit18_MalfTLP
+> +fatal_bit19_ECRC
+> +fatal_bit20_UnsupReq
+> +fatal_bit21_ACSViol
+> +fatal_bit22_UncorrIntErr
+> +fatal_bit23_BlockedTLP
+> +fatal_bit24_AtomicOpBlocked
+> +fatal_bit25_TLPBlockedErr
+> +fatal_bit26_PoisonTLPBlocked
+> +fatal_bit4_DLP
+> +fatal_bit5_SDES
+> +nonfatal_bit0_Undefined
+> +nonfatal_bit12_TLP
+> +nonfatal_bit13_FCP
+> +nonfatal_bit14_CmpltTO
+> +nonfatal_bit15_CmpltAbrt
+> +nonfatal_bit16_UnxCmplt
+> +nonfatal_bit17_RxOF
+> +nonfatal_bit18_MalfTLP
+> +nonfatal_bit19_ECRC
+> +nonfatal_bit20_UnsupReq
+> +nonfatal_bit21_ACSViol
+> +nonfatal_bit22_UncorrIntErr
+> +nonfatal_bit23_BlockedTLP
+> +nonfatal_bit24_AtomicOpBlocked
+> +nonfatal_bit25_TLPBlockedErr
+> +nonfatal_bit26_PoisonTLPBlocked
+> +nonfatal_bit4_DLP
+> +nonfatal_bit5_SDES
 
-Thanks, and no rush.  Note that I posted a v2 with a few significant
-changes yesterday.
+All of those should be indented, right?
+
+Same for other entries
+
+thanks,
+
+greg k-h
