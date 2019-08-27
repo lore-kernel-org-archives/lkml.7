@@ -2,52 +2,52 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C8FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD1BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5A52184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6333C2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893361;
-	bh=mGsmKSX+IlSa1ev9wq4Chj9N3qmg7Kpn0DmErXx39i4=;
+	s=default; t=1566893376;
+	bh=RC199nhAYZRtj3va6zftvMHOLXIDuyiqPEEpAliMEkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ozmwSs1hEf1Zu8aHMsDX/nn/kQ+HBXAj2vQftEp/JPPqsvygFZvHPbZiJ4tK1LSGQ
-	 Vg+z0YYdI3df9fTxBYVb/QzmjTETLtNcP7cXO7fdEFLaUMOCeCQksxmPxa5gOw4sC8
-	 HwzrRgv2Gs8fewZiVqP1pEUXtiL0FHzkwHCcHMGc=
+	b=m0NG3LWX03/KqpmK49INf4TWyGJi05UyKeFuhrl2LMrsgS3jFocyKs4DHuK9vwR84
+	 aClYkbYQZ/6HIka0cpd9cBjsmcZ+6rXaXlwsbzxcVgPDtzhn6ImIHP6O//+phuxbCQ
+	 jODJuLb8Vc++AepLZK0YcLRc23oOhG9IlmkHBkLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfH0IJU (ORCPT
+        id S1732442AbfH0IEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:09:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729589AbfH0IEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:04:45 -0400
+        id S1730764AbfH0IDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:03:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88B55206BF;
-        Tue, 27 Aug 2019 08:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44FF8206BF;
+        Tue, 27 Aug 2019 08:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893085;
-        bh=mGsmKSX+IlSa1ev9wq4Chj9N3qmg7Kpn0DmErXx39i4=;
+        s=default; t=1566893032;
+        bh=RC199nhAYZRtj3va6zftvMHOLXIDuyiqPEEpAliMEkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wqJv62ukpiDOIPwEuBo1pWwl0Mq7llTFjmY6n+mIXclFZLw1Cp+H9qQj+kZsHWNPc
-         uLioUwrZTH3vnJbkT8B0nfLJuts9NdtZPCYOcGdMqGwPpPL2zrp9VtTZmJPZCgPZL7
-         Z4BPsVtlPvfdY83WzsQAvRkdKvKV94IlOvd7BlVA=
+        b=OoXyzm8DG395oCe1crAKyEX1RvIE1wEqAMaQmBHfmEWEOagkj9mH+E/eSFLrjll6/
+         lmtFMzwwXICfIQUPOiF6TN64AuNl8+SMHM2DYojRKJIa0YmITzbZ7z0cdYTVOVTLii
+         lNNxv9k+w00A3H9bV19pz0mfRGG2/cDf9wSWSrjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erqi Chen <chenerqi@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.2 116/162] ceph: clear page dirty before invalidate page
-Date:   Tue, 27 Aug 2019 09:50:44 +0200
-Message-Id: <20190827072742.457519086@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 096/162] NFSv4: Ensure state recovery handles ETIMEDOUT correctly
+Date:   Tue, 27 Aug 2019 09:50:24 +0200
+Message-Id: <20190827072741.557647315@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,38 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erqi Chen <chenerqi@gmail.com>
+[ Upstream commit 67e7b52d44e3d539dfbfcd866c3d3d69da23a909 ]
 
-commit c95f1c5f436badb9bb87e9b30fd573f6b3d59423 upstream.
+Ensure that the state recovery code handles ETIMEDOUT correctly,
+and also that we set RPC_TASK_TIMEOUT when recovering open state.
 
-clear_page_dirty_for_io(page) before mapping->a_ops->invalidatepage().
-invalidatepage() clears page's private flag, if dirty flag is not
-cleared, the page may cause BUG_ON failure in ceph_set_page_dirty().
-
-Cc: stable@vger.kernel.org
-Link: https://tracker.ceph.com/issues/40862
-Signed-off-by: Erqi Chen <chenerqi@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/addr.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c  | 2 ++
+ fs/nfs/nfs4state.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -912,8 +912,9 @@ get_more_pages:
- 			if (page_offset(page) >= ceph_wbc.i_size) {
- 				dout("%p page eof %llu\n",
- 				     page, ceph_wbc.i_size);
--				if (ceph_wbc.size_stable ||
--				    page_offset(page) >= i_size_read(inode))
-+				if ((ceph_wbc.size_stable ||
-+				    page_offset(page) >= i_size_read(inode)) &&
-+				    clear_page_dirty_for_io(page))
- 					mapping->a_ops->invalidatepage(page,
- 								0, PAGE_SIZE);
- 				unlock_page(page);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 74e1732a4bd01..2023011c7a8fe 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2150,6 +2150,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
+ 		case -ENOENT:
+ 		case -EAGAIN:
+ 		case -ESTALE:
++		case -ETIMEDOUT:
+ 			break;
+ 		case -NFS4ERR_BADSESSION:
+ 		case -NFS4ERR_BADSLOT:
+@@ -2470,6 +2471,7 @@ static int nfs4_run_open_task(struct nfs4_opendata *data,
+ 	if (!ctx) {
+ 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 1);
+ 		data->is_recover = true;
++		task_setup_data.flags |= RPC_TASK_TIMEOUT;
+ 	} else {
+ 		nfs4_init_sequence(&o_arg->seq_args, &o_res->seq_res, 1, 0);
+ 		pnfs_lgopen_prepare(data, ctx);
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 261de26d897f7..0e69cd846afb5 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -1528,6 +1528,7 @@ restart:
+ 		switch (status) {
+ 		case 0:
+ 			break;
++		case -ETIMEDOUT:
+ 		case -ESTALE:
+ 		case -NFS4ERR_ADMIN_REVOKED:
+ 		case -NFS4ERR_STALE_STATEID:
+@@ -1681,11 +1682,13 @@ restart:
+ 		case -NFS4ERR_EXPIRED:
+ 		case -NFS4ERR_NO_GRACE:
+ 			nfs4_state_mark_reclaim_nograce(sp->so_server->nfs_client, state);
++			/* Fall through */
+ 		case -NFS4ERR_STALE_CLIENTID:
+ 		case -NFS4ERR_BADSESSION:
+ 		case -NFS4ERR_BADSLOT:
+ 		case -NFS4ERR_BAD_HIGH_SLOT:
+ 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
++		case -ETIMEDOUT:
+ 			goto out_err;
+ 		}
+ 		nfs4_put_open_state(state);
+@@ -1970,7 +1973,6 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
+ 		return -EPERM;
+ 	case -EACCES:
+ 	case -NFS4ERR_DELAY:
+-	case -ETIMEDOUT:
+ 	case -EAGAIN:
+ 		ssleep(1);
+ 		break;
+@@ -2599,7 +2601,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 		}
+ 
+ 		/* Now recover expired state... */
+-		if (test_and_clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
++		if (test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
+ 			section = "reclaim nograce";
+ 			status = nfs4_do_reclaim(clp,
+ 				clp->cl_mvops->nograce_recovery_ops);
+@@ -2607,6 +2609,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 				continue;
+ 			if (status < 0)
+ 				goto out_error;
++			clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
+ 		}
+ 
+ 		nfs4_end_drain_session(clp);
+-- 
+2.20.1
+
 
 
