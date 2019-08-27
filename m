@@ -2,121 +2,118 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030B0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2C4C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84C720850
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B45B206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 02:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfH0Coi (ORCPT
+        id S1728879AbfH0CpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 22:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbfH0Coh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 22:44:37 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E06BF206E0;
-        Tue, 27 Aug 2019 02:44:35 +0000 (UTC)
-Date:   Mon, 26 Aug 2019 22:44:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: [PATCH] tracing: Fix histogram referencing a variable
-Message-ID: <20190826224434.385bc6b5@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 26 Aug 2019 22:45:14 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:40583 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727887AbfH0CpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 22:45:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=liangyan.peng@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TaZLKac_1566873900;
+Received: from LiangyandeMacBook-Pro.local(mailfrom:liangyan.peng@linux.alibaba.com fp:SMTPD_---0TaZLKac_1566873900)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 27 Aug 2019 10:45:00 +0800
+Subject: Re: [PATCH] sched/fair: don't assign runtime for throttled cfs_rq
+To:     bsegall@google.com, Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
+        xlpang@linux.alibaba.com
+References: <20190814180021.165389-1-liangyan.peng@linux.alibaba.com>
+ <xm26d0gvirdg.fsf@bsegall-linux.svl.corp.google.com>
+ <942ae15c-ffa5-74da-208b-7e82df917e16@arm.com>
+ <xm26k1azn7yd.fsf@bsegall-linux.svl.corp.google.com>
+From:   Liangyan <liangyan.peng@linux.alibaba.com>
+Message-ID: <5cfadb62-10b7-d16b-7f30-f3573bb04844@linux.alibaba.com>
+Date:   Tue, 27 Aug 2019 10:45:00 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <xm26k1azn7yd.fsf@bsegall-linux.svl.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-I performed a three way histogram with the following commands:
+On 19/8/27 上午1:38, bsegall@google.com wrote:
+> Valentin Schneider <valentin.schneider@arm.com> writes:
+> 
+>> On 23/08/2019 21:00, bsegall@google.com wrote:
+>> [...]
+>>> Could you mention in the message that this a throttled cfs_rq can have
+>>> account_cfs_rq_runtime called on it because it is throttled before
+>>> idle_balance, and the idle_balance calls update_rq_clock to add time
+>>> that is accounted to the task.
+>>>
+>>
+>> Mayhaps even a comment for the extra condition.
+>>
+>>> I think this solution is less risky than unthrottling
+>>> in this area, so other than that:
+>>>
+>>> Reviewed-by: Ben Segall <bsegall@google.com>
+>>>
+>>
+>> If you don't mind squashing this in:
+>>
+>> -----8<-----
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index b1d9cec9b1ed..b47b0bcf56bc 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -4630,6 +4630,10 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+>>   		if (!cfs_rq_throttled(cfs_rq))
+>>   			goto next;
+>>   
+>> +		/* By the above check, this should never be true */
+>> +		WARN_ON(cfs_rq->runtime_remaining > 0);
+>> +
+>> +		/* Pick the minimum amount to return to a positive quota state */
+>>   		runtime = -cfs_rq->runtime_remaining + 1;
+>>   		if (runtime > remaining)
+>>   			runtime = remaining;
+>> ----->8-----
+>>
+>> I'm not adamant about the extra comment, but the WARN_ON would be nice IMO.
+>>
+>>
+>> @Ben, do you reckon we want to strap
+>>
+>> Cc: <stable@vger.kernel.org>
+>> Fixes: ec12cb7f31e2 ("sched: Accumulate per-cfs_rq cpu usage and charge against bandwidth")
+>>
+>> to the thing? AFAICT the pick_next_task_fair() + idle_balance() dance you
+>> described should still be possible on that commit.
+> 
+> I'm not sure about stable policy in general, but it seems reasonable.
+> The WARN_ON might want to be WARN_ON_ONCE, and it seems fine to have it
+> or not.
 
-echo 'irq_lat u64 lat pid_t pid' > synthetic_events
-echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
-echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
-echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
-echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
-echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger 
-echo 1 > events/synthetic/wake_lat/enable 
+Thanks Ben and Valentin for all of the comments. Per Xunlei's 
+suggestion, I used SCHED_WARN_ON instead in v3. Regarding whether cc 
+stable, I'm also not sure.
 
-Basically I wanted to see:
-
- hrtimer_start (calling function tick_sched_timer)
-
-Note:
-
-  # grep tick_sched_timer /proc/kallsyms
-ffffffff81200580 t tick_sched_timer
-
-And save the time of that, and then record sched_waking if it is called
-in interrupt context and with the same pid as the hrtimer_start, it
-will record the latency between that and the waking event.
-
-I then look at when the task that is woken is scheduled in, and record
-the latency between the wakeup and the task running.
-
-At the end, the wake_lat synthetic event will show the wakeup to
-scheduled latency, as well as the irq latency in from hritmer_start to
-the wakeup. The problem is that I found this:
-
-          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
-          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
-          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
-          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
-          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
-          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
-          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
-          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
-
-The irqlat seemed quite large! Investigating this further, if I had
-enabled the irq_lat synthetic event, I noticed this:
-
-          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
-          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
-
-Notice that the timestamp of the irq_lat "249.429308" is awfully
-similar to the reported irqlat variable. In fact, all instances were
-like this. It appeared that:
-
-  irqlat=$irqlat
-
-Wasn't assigning the old $irqlat to the new irqlat variable, but
-instead was assigning the $irqts to it.
-
-The issue is that hist_field_var_ref() is using hist_field->var_ref_idx
-(the ref of the var being assigned) and not the ref of the var that is
-the value (hist_field->var.idx).
-
-Cc: stable@vger.kernel.org
-Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 65e7d071ed28..329488aeb9dd 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1858,7 +1858,7 @@ static u64 hist_field_var_ref(struct hist_field *hist_field,
- 		return var_val;
- 
- 	elt_data = elt->private_data;
--	var_val = elt_data->var_ref_vals[hist_field->var_ref_idx];
-+	var_val = elt_data->var_ref_vals[hist_field->var.idx];
- 
- 	return var_val;
- }
+> 
+>>
+>>
+>> Other than that,
+>>
+>> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+>>
+>> [...]
