@@ -7,124 +7,92 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BD0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2817C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0F92186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8434B20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 06:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566887089;
-	bh=yxWiW2mofrr3TlfEhVzDgKVojqrbyNQwTq/6PuhayOc=;
+	s=default; t=1566887135;
+	bh=VH72I9PiTcmk1XxoLpE4vk/+4bf01XJlx+noiDXAlBQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZCsyjgvSwEZbmYzwB1yh13BTfgFGuCQ2j9iWxbRjy1dty+j7Zy4aIxgg8fTfn20za
-	 IRZ3fPqKgnSX0RH+FikySuJdw1A2teE5+gQPC8gBWGy+MwWvjOlVhth8aC/aewCgTx
-	 5dgcEdO4WXgcoIRT8F4SBkjJ5utjT7HEy6EuFRY8=
+	b=Ycr0AwzrC5eW3CfT7MKu3SZcCxG3kuiP0kdG/9Wl7+T3Y6c0qSSsPxz0qowEnCtED
+	 oyzKzY11zl7xseF9gPx8/Vg9KTCC1cE5xlnmQ8ADlI+iTwb8OopUs9E+Je04cRUchZ
+	 AVU0a2/NIzlEnFtNGCghA/BxHGU5kdzLMH4NU7sY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfH0GYs (ORCPT
+        id S1727361AbfH0GZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 02:24:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55320 "EHLO mx1.suse.de"
+        Tue, 27 Aug 2019 02:25:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55450 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725825AbfH0GYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 02:24:48 -0400
+        id S1725825AbfH0GZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:25:34 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 491DDADB3;
-        Tue, 27 Aug 2019 06:24:47 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 08:24:45 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 340F7B04F;
+        Tue, 27 Aug 2019 06:25:33 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 08:25:32 +0200
 From:   Michal Hocko <mhocko@kernel.org>
 To:     Alastair D'Silva <alastair@au1.ibm.com>
 Cc:     alastair@d-silva.org, Andrew Morton <akpm@linux-foundation.org>,
         Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
         Dan Williams <dan.j.williams@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
         Wei Yang <richardw.yang@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>, Qian Cai <cai@lca.pw>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm: don't hide potentially null memmap pointer in
- sparse_remove_section
-Message-ID: <20190827062445.GO7538@dhcp22.suse.cz>
+        Qian Cai <cai@lca.pw>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm: Don't manually decrement num_poisoned_pages
+Message-ID: <20190827062532.GP7538@dhcp22.suse.cz>
 References: <20190827053656.32191-1-alastair@au1.ibm.com>
- <20190827053656.32191-3-alastair@au1.ibm.com>
+ <20190827053656.32191-2-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827053656.32191-3-alastair@au1.ibm.com>
+In-Reply-To: <20190827053656.32191-2-alastair@au1.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 27-08-19 15:36:55, Alastair D'Silva wrote:
+On Tue 27-08-19 15:36:54, Alastair D'Silva wrote:
 > From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> By adding offset to memmap before passing it in to clear_hwpoisoned_pages,
-> we hide a theoretically null memmap from the null check inside
-> clear_hwpoisoned_pages.
-
-Isn't that other way around? Calculating the offset struct page pointer
-will actually make the null check effective. Besides that I cannot
-really see how pfn_to_page would return NULL. I have to confess that I
-cannot really see how offset could lead to a NULL struct page either and
-I strongly suspect that the NULL check is not really needed. Maybe it
-used to be in the past.
-
-> This patch passes the offset to clear_hwpoisoned_pages instead, allowing
-> memmap to successfully perform it's null check.
-
-I do not see any improvement in this patch. It just adds a new argument
-unnecessarily.
-
+> Use the function written to do it instead.
+> 
 > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->  mm/sparse.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  mm/sparse.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 > diff --git a/mm/sparse.c b/mm/sparse.c
-> index e41917a7e844..3ff84e627e58 100644
+> index 72f010d9bff5..e41917a7e844 100644
 > --- a/mm/sparse.c
 > +++ b/mm/sparse.c
-> @@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->  }
+> @@ -11,6 +11,8 @@
+>  #include <linux/export.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/swap.h>
+> +#include <linux/swapops.h>
 >  
->  #ifdef CONFIG_MEMORY_FAILURE
-> -static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
-> +static void clear_hwpoisoned_pages(struct page *memmap, int start, int count)
->  {
->  	int i;
+>  #include "internal.h"
+>  #include <asm/dma.h>
+> @@ -898,7 +900,7 @@ static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
 >  
-> @@ -898,7 +898,7 @@ static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
->  	if (atomic_long_read(&num_poisoned_pages) == 0)
->  		return;
->  
-> -	for (i = 0; i < nr_pages; i++) {
-> +	for (i = start; i < start + count; i++) {
+>  	for (i = 0; i < nr_pages; i++) {
 >  		if (PageHWPoison(&memmap[i])) {
->  			num_poisoned_pages_dec();
+> -			atomic_long_sub(1, &num_poisoned_pages);
+> +			num_poisoned_pages_dec();
 >  			ClearPageHWPoison(&memmap[i]);
-> @@ -906,7 +906,8 @@ static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
+>  		}
 >  	}
->  }
->  #else
-> -static inline void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
-> +static inline void clear_hwpoisoned_pages(struct page *memmap, int start,
-> +		int count)
->  {
->  }
->  #endif
-> @@ -915,7 +916,7 @@ void sparse_remove_section(struct mem_section *ms, unsigned long pfn,
->  		unsigned long nr_pages, unsigned long map_offset,
->  		struct vmem_altmap *altmap)
->  {
-> -	clear_hwpoisoned_pages(pfn_to_page(pfn) + map_offset,
-> +	clear_hwpoisoned_pages(pfn_to_page(pfn), map_offset,
->  			nr_pages - map_offset);
->  	section_deactivate(pfn, nr_pages, altmap);
->  }
 > -- 
 > 2.21.0
-> 
 
 -- 
 Michal Hocko
