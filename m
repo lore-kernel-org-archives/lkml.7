@@ -2,130 +2,118 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC638C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFB72077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D67E2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="uksEVjX7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="W1ovLiBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbfH0VNX (ORCPT
+        id S1730302AbfH0VOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:13:23 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60241 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730467AbfH0VNX (ORCPT
+        Tue, 27 Aug 2019 17:14:38 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:40114 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfH0VOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:13:23 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 07B4A886BF;
-        Wed, 28 Aug 2019 09:13:18 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1566940398;
-        bh=nYYXFIfdeFGOegAOI6d+a0Qaz5wLVRVTNwVY6Zzetno=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=uksEVjX7i9s0JobNxb1eSSxfMp7699m2RJi4cNfKjSKLBZZkGHOnLw8MxulxT5MkC
-         ORtXEOmBNavQ6Qifmp3SYOrvM4C+NvrYmCQpzKRti6iqaaOletJL5yJnKgU2wS0GAj
-         1SN2Ld8g1EXK5JrpZ3I13YEUURtLqvtsMbFipArYX7mDgb1hN8oFTVZLhcsR32BDET
-         16sWu0JbA5v6dRS5rTPx+TDINdb26rSj+36r1d482pDBHQp5J4CmE5L2ryOHLk8TxK
-         Xmkks4a1x0YWnbvqfqJdgbx7IEzAXiUspVAkD7Ueqi3SBxfvMSFvIAgaHeFxPT+Y9S
-         JjyxOLV8Ltwqw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d659cee0000>; Wed, 28 Aug 2019 09:13:18 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 28 Aug 2019 09:13:12 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 28 Aug 2019 09:13:12 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "gregory.clement@free-electrons.com" 
-        <gregory.clement@free-electrons.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "patches@armlinux.org.uk" <patches@armlinux.org.uk>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Thread-Topic: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Thread-Index: AQHVOGTGof7sJp7iK06MfTI7WDVk4qcIBgyAgAABHQCABA5YgIACH/QAgADERoCAAAMcgIAAAauA
-Date:   Tue, 27 Aug 2019 21:13:11 +0000
-Message-ID: <0e9c7c7cb17b6fdea8d49b06925badb0b3d2ff8b.camel@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-         <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
-         <20190823104621.GY13294@shell.armlinux.org.uk>
-         <20190823105020.GZ13294@shell.armlinux.org.uk>
-         <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
-         <20190827091336.GI13294@shell.armlinux.org.uk>
-         <b1e2e5b325b3c4453e2ed63c17e1e11d6b24f099.camel@alliedtelesis.co.nz>
-         <20190827210713.GO13294@shell.armlinux.org.uk>
-In-Reply-To: <20190827210713.GO13294@shell.armlinux.org.uk>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:2872:a49:e4e9:7214]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4419FE1761C1324BB3ED319618247254@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 27 Aug 2019 17:14:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Mx9Dk0y/TBT36EVwZByK1hsTBU2mCJBn5CqiJJkzVLg=; b=W1ovLiBG+dKXEhJcPYqAthsG5
+        lO7UH68rMmm/aUW6+VJjzE5WIvCXi1esvPkkO0TnyumOoV0vJqKUJRZMm97hAsyCWTQ4zfsJsUu60
+        HWux9CGbT+LTgBwf23oijcC7MmvT/+nsPJrsNEJmMMEpKjfBMyIEPCY+pNrDVLA/bmmCI=;
+Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
+        (envelope-from <mjg59@cavan.codon.org.uk>)
+        id 1i2inB-000246-T5; Tue, 27 Aug 2019 22:14:17 +0100
+Date:   Tue, 27 Aug 2019 22:14:17 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190827211417.snpwgnhsu5t6u52y@srcf.ucam.org>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1559129225.git.vpillai@digitalocean.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTI3IGF0IDIyOjA3ICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggYWRtaW4NCndyb3RlOg0KPiBPbiBUdWUsIEF1ZyAyNywgMjAxOSBhdCAwODo1NjowNVBNICsw
-MDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOS0wOC0yNyBhdCAxMDox
-MyArMDEwMCwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IGFkbWluDQo+ID4gd3JvdGU6DQo+ID4g
-PiBKdXN0IHNlbmQgdGhlIHNpbmdsZSBwYXRjaCB0byB0aGUgcGF0Y2ggdHJhY2tlciAtIGhhdmlu
-ZyBpdCBhZ2FpbnN0DQo+ID4gPiA1LjMtcmMgaXMgZmluZSAoSSBkb24ndCB0aGluayBhbnl0aGlu
-ZyBoYXMgY2hhbmdlZCBmb3IgYSBsb25nIHRpbWUNCj4gPiA+IHdpdGggdGhhdCBmaWxlLikNCj4g
-PiANCj4gPiBEb25lIA0KPiA+IGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIv
-cGF0Y2hlcy92aWV3cGF0Y2gucGhwP2lkPTg5MDIvMQ0KPiA+IA0KPiA+IEknbSBzdGlsbCBub3Qg
-ZW50aXJlbHkgc3VyZSB3aGF0IHRvIHB1dCBmb3IgdGhlIEtlcm5lbFZlcnNpb24gdGFnLiBJbg0K
-PiA+IGhpbmRzaWdodCB0aGluayBJIG1pc2ludGVycHJldGVkIHlvdXIgY29tbWVudCBhYm92ZSBh
-bmQgc2V0IGl0IHRvIDUuM3JjDQo+ID4gKHdoZXJlIHlvdSBtZWFudCBhIHNlcmllcyBiYXNlZCBv
-biA1LjMtcmNYIHNob3VsZCBhcHBseSBjbGVhbmx5KS4gSXQNCj4gPiBwcm9iYWJseSBzaG91bGQg
-aGF2ZSBiZWVuIG5leHQgb3IgbWFzdGVyIGJlY2F1c2UgaXQncyB3YXkgcGFzdCB0aGUNCj4gPiBt
-ZXJnZSB3aW5kb3cgZm9yIDUuMy4NCj4gDQo+IFRoaW5rIGFib3V0IGl0IGFzICJ3aGljaCBrZXJu
-ZWwgdmVyc2lvbiB3YXMgX3RoaXNfIHBhdGNoIGdlbmVyYXRlZA0KPiBhZ2FpbnN0IiAtIGl0J3Mg
-YSBndWlkZSBmb3IgbWUgdG8ga25vdyB3aGljaCBrZXJuZWwgdmVyc2lvbiBpdA0KPiBzaG91bGQg
-YmUgYXBwbGllZCB0by4gIFRoZSBuZWFyZXN0IExpbnVzIHJlbGVhc2UgKHJjIG9yIGZpbmFsKSBp
-cw0KPiBnZW5lcmFsbHkgc3VmZmljaWVudC4NCj4gDQo+IElmIGl0IGRvZXNuJ3QgYXBwbHkgdG8g
-bXkgY3VycmVudCBiYXNlLCB0aGVuIEkgbWlnaHQgY2hlY2sgb3V0IHRoYXQNCj4gdmVyc2lvbiwg
-YXBwbHkgaXQgdGhlcmUsIGFuZCB0aGVuIG1lcmdlIGl0IGluLCByZXNvbHZpbmcgYW55DQo+IGNv
-bmZsaWN0cyBkdXJpbmcgdGhlIG1lcmdlLg0KPiANCj4gSXQgc3RhcnRlZCBvZmYgd2l0aCBhIGRp
-ZmZlcmVudCBwdXJwb3NlOiB3aGVuIHdlIGhhZCB0aGUgb2xkZXINCj4gZGV2ZWxvcG1lbnQgc3lz
-dGVtLCBzdWNoIGFzIHRoZSAyLnggc2VyaWVzIGtlcm5lbHMsIHdlIHdvdWxkIGhhdmUNCj4gZXZl
-biB4IGJlaW5nIHRoZSBjdXJyZW50IHN0YWJsZSBrZXJuZWxzLCBhbmQgY29uY3VycmVudGx5IHdl
-J2QNCj4gYWxzbyBoYXZlIHgrMSBhcyB0aGUgZGV2ZWxvcG1lbnQgc2VyaWVzLiAgV2hlbiBzb21l
-b25lIHNlbnQgbWUgYQ0KPiBwYXRjaCBiYWNrIHRoZW4sIGl0IHdhcyBpbXBvcnRhbnQgdG8ga25v
-dyB3aGljaCBrZXJuZWwgc2VyaWVzIGl0DQo+IHdhcyBtZWFudCBmb3IuDQo+IA0KPiBJIGRlY2lk
-ZWQgbm90IHRvIGdldCByaWQgb2YgaXQgYmVjYXVzZSBpdCBwcm92aWRlcyB1c2VmdWwNCj4gaW5m
-b3JtYXRpb24gd2hlbiBwYXRjaGVzIGRvbid0IGFwcGx5LCBhbmQgZ2l2ZXMgbW9yZSBvcHRpb25z
-DQo+IHRoYW4gbWUganVzdCBkaXNjYXJkaW5nIHRoZSBwYXRjaCB3aXRoIGEgY29tbWVudCBzYXlp
-bmcgaXQNCj4gZG9lc24ndCBhcHBseS4NCj4gDQoNClRoYW5rcyBmb3IgdGhlIGluZm8uIFNvIDUu
-My1yYyBpcyBub3QgYXMgd3JvbmcgYXMgSSB0aG91Z2h0IGl0IHdhcy4NCg0KT25lIGNvdWxkIGV2
-ZW4gc3VtbWFyaXplIHRoZSBhYm92ZSBhcy4NCg0KICBnaXQgZm9ybWF0LXBhdGNoIC0tYWRkLWhl
-YWRlciBcDQogICAgICAiS2VybmVsVmVyc2lvbjogJChnaXQgZGVzY3JpYmUgLS1hYmJyZXY9MCBI
-RUFEKSINCg0K
+Apple have provided a sysctl that allows applications to indicate that 
+specific threads should make use of core isolation while allowing 
+the rest of the system to make use of SMT, and browsers (Safari, Firefox 
+and Chrome, at least) are now making use of this. Trying to do something 
+similar using cgroups seems a bit awkward. Would something like this be 
+reasonable? Having spoken to the Chrome team, I believe that the 
+semantics we want are:
+
+1) A thread to be able to indicate that it should not run on the same 
+core as anything not in posession of the same cookie
+2) Descendents of that thread to (by default) have the same cookie
+3) No other thread be able to obtain the same cookie
+4) Threads not be able to rejoin the global group (ie, threads can 
+segregate themselves from their parent and peers, but can never rejoin 
+that group once segregated)
+
+but don't know if that's what everyone else would want.
+
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 094bb03b9cc2..5d411246d4d5 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -229,4 +229,5 @@ struct prctl_mm_map {
+ # define PR_PAC_APDBKEY			(1UL << 3)
+ # define PR_PAC_APGAKEY			(1UL << 4)
+ 
++#define PR_CORE_ISOLATE			55
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 12df0e5434b8..a054cfcca511 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2486,6 +2486,13 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+ 			return -EINVAL;
+ 		error = PAC_RESET_KEYS(me, arg2);
+ 		break;
++	case PR_CORE_ISOLATE:
++#ifdef CONFIG_SCHED_CORE
++		current->core_cookie = (unsigned long)current;
++#else
++		result = -EINVAL;
++#endif
++		break;
+ 	default:
+ 		error = -EINVAL;
+ 		break;
+
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
