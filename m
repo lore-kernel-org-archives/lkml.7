@@ -2,96 +2,96 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33229C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C8FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068EA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5A52184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893354;
-	bh=8qdfPFyeI8CDcDn7hTPSj0UTJyklhXLPF/NtekcTWV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tMayCg0Q0SgxNUKETfcIwC8450/3kgYxz6TKUMTBU4+55nBW+VIHMrbeIwtybHtQr
-	 2XMCkV0edTgoIdGp0qLI2djggAzIBOOIKFtNA830T9OrGqarQXW9X84MJtkjLQ/NQK
-	 2x4OfFbjwtD4Sr+7c3JNzGZihctzpqBLN5fB6mE8=
+	s=default; t=1566893361;
+	bh=mGsmKSX+IlSa1ev9wq4Chj9N3qmg7Kpn0DmErXx39i4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ozmwSs1hEf1Zu8aHMsDX/nn/kQ+HBXAj2vQftEp/JPPqsvygFZvHPbZiJ4tK1LSGQ
+	 Vg+z0YYdI3df9fTxBYVb/QzmjTETLtNcP7cXO7fdEFLaUMOCeCQksxmPxa5gOw4sC8
+	 HwzrRgv2Gs8fewZiVqP1pEUXtiL0FHzkwHCcHMGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfH0IJM (ORCPT
+        id S1732570AbfH0IJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38456 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732496AbfH0IJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:09:08 -0400
+        id S1729589AbfH0IEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:04:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64462173E;
-        Tue, 27 Aug 2019 08:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B55206BF;
+        Tue, 27 Aug 2019 08:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893347;
-        bh=8qdfPFyeI8CDcDn7hTPSj0UTJyklhXLPF/NtekcTWV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iLmiB1p4jVrlqPMTuppgLfFPJRN08vwXl/0QU88fB50DbeozirIJaG45L7c+m+pIH
-         EehN//eulODgGNOfbq2+zNueju1Y+2fLJ5Hf7Q0NpTi9Otw1/KcEqJZqbo8Cvvohu8
-         yuFj99eO8kjmODZxW/JQTjwdA9lIIQyEAa9+kdsI=
-Date:   Tue, 27 Aug 2019 09:58:02 +0200
+        s=default; t=1566893085;
+        bh=mGsmKSX+IlSa1ev9wq4Chj9N3qmg7Kpn0DmErXx39i4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wqJv62ukpiDOIPwEuBo1pWwl0Mq7llTFjmY6n+mIXclFZLw1Cp+H9qQj+kZsHWNPc
+         uLioUwrZTH3vnJbkT8B0nfLJuts9NdtZPCYOcGdMqGwPpPL2zrp9VtTZmJPZCgPZL7
+         Z4BPsVtlPvfdY83WzsQAvRkdKvKV94IlOvd7BlVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org,
-        Viresh Kumar <vireshk@kernel.org>
-Subject: Re: [PATCH 1/9] staging: greybus: fix up SPDX comment in .h files
-Message-ID: <20190827075802.GA29204@kroah.com>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190825055429.18547-2-gregkh@linuxfoundation.org>
- <20190826055119.4pbmf5ape224giwz@vireshk-i7>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Erqi Chen <chenerqi@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.2 116/162] ceph: clear page dirty before invalidate page
+Date:   Tue, 27 Aug 2019 09:50:44 +0200
+Message-Id: <20190827072742.457519086@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
+References: <20190827072738.093683223@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826055119.4pbmf5ape224giwz@vireshk-i7>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:21:19AM +0530, Viresh Kumar wrote:
-> On 25-08-19, 07:54, Greg Kroah-Hartman wrote:
-> > When these files originally got an SPDX tag, I used // instead of /* */
-> > for the .h files.  Fix this up to use // properly.
-> > 
-> > Cc: Viresh Kumar <vireshk@kernel.org>
-> > Cc: Johan Hovold <johan@kernel.org>
-> > Cc: Alex Elder <elder@kernel.org>
-> > Cc: greybus-dev@lists.linaro.org
-> > Cc: devel@driverdev.osuosl.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  drivers/staging/greybus/firmware.h               | 2 +-
-> >  drivers/staging/greybus/gb-camera.h              | 2 +-
-> >  drivers/staging/greybus/gbphy.h                  | 2 +-
-> >  drivers/staging/greybus/greybus.h                | 2 +-
-> >  drivers/staging/greybus/greybus_authentication.h | 2 +-
-> >  drivers/staging/greybus/greybus_firmware.h       | 2 +-
-> >  drivers/staging/greybus/greybus_manifest.h       | 2 +-
-> >  drivers/staging/greybus/greybus_protocols.h      | 2 +-
-> >  drivers/staging/greybus/greybus_trace.h          | 2 +-
-> >  drivers/staging/greybus/hd.h                     | 2 +-
-> >  drivers/staging/greybus/interface.h              | 2 +-
-> >  drivers/staging/greybus/manifest.h               | 2 +-
-> >  drivers/staging/greybus/module.h                 | 2 +-
-> >  drivers/staging/greybus/operation.h              | 2 +-
-> >  drivers/staging/greybus/spilib.h                 | 2 +-
-> >  drivers/staging/greybus/svc.h                    | 2 +-
-> >  16 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+From: Erqi Chen <chenerqi@gmail.com>
 
-Thanks for all of the acks!
+commit c95f1c5f436badb9bb87e9b30fd573f6b3d59423 upstream.
 
-greg k-h
+clear_page_dirty_for_io(page) before mapping->a_ops->invalidatepage().
+invalidatepage() clears page's private flag, if dirty flag is not
+cleared, the page may cause BUG_ON failure in ceph_set_page_dirty().
+
+Cc: stable@vger.kernel.org
+Link: https://tracker.ceph.com/issues/40862
+Signed-off-by: Erqi Chen <chenerqi@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ceph/addr.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -912,8 +912,9 @@ get_more_pages:
+ 			if (page_offset(page) >= ceph_wbc.i_size) {
+ 				dout("%p page eof %llu\n",
+ 				     page, ceph_wbc.i_size);
+-				if (ceph_wbc.size_stable ||
+-				    page_offset(page) >= i_size_read(inode))
++				if ((ceph_wbc.size_stable ||
++				    page_offset(page) >= i_size_read(inode)) &&
++				    clear_page_dirty_for_io(page))
+ 					mapping->a_ops->invalidatepage(page,
+ 								0, PAGE_SIZE);
+ 				unlock_page(page);
+
+
