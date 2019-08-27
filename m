@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE0CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19762206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4EE2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892357;
-	bh=hBhas3GVFfsi+AHYvkMyLMZf4LS7PJ9FkZl7oEb0mmc=;
+	s=default; t=1566892360;
+	bh=V1T2FamzhMWmbIN+x5SXn0ar1Ks6oD9mnMmDqzKgv44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqsDJbwgel+Rbg6Xdl4mNbSKJSHDm2+LGrudjalgZkB3XJ30sRe+iAQ5L/DX04Q6/
-	 h7/FUke+NAuGPMm3c3hKS4nqGmDNn5g7C8UsZPyl8bLfa59TnYwBkH0OtyI22H6xPG
-	 B8+cMQjC3Vpy1evcTFLCryguq4xzvpwJlr3aTiW0=
+	b=nSYXhirIe/jLJIBpROvbIjnt5V2IroSC4p3Rpd0ctaujihOxxP1YozJhD8fxdTAwX
+	 tPfI/oJ6OkLw9mGBO6Nbk/ps9RWBnn+sfKQJR+c7naglmpzuzjWsQukW1r2M+YEsv7
+	 UFIoGdEdp5G6C4tImBTCIcqmormlHl4dWFHsMJaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfH0Hwg (ORCPT
+        id S1729535AbfH0Hwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729433AbfH0Hwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:32 -0400
+        id S1729487AbfH0Hwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93155206BA;
-        Tue, 27 Aug 2019 07:52:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832972173E;
+        Tue, 27 Aug 2019 07:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892351;
-        bh=hBhas3GVFfsi+AHYvkMyLMZf4LS7PJ9FkZl7oEb0mmc=;
+        s=default; t=1566892354;
+        bh=V1T2FamzhMWmbIN+x5SXn0ar1Ks6oD9mnMmDqzKgv44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8drBjgfBDsQOiw7S+z/kXYjAgIsi2unKPDD62X/fsE9pjW6O24CcW2jVkWNAz+WN
-         ALJnPPqfjvAxR3/KQrK4gOSLN4wRv7GrK96ksosvjjkNVTyc4dQKbbwsrCQQxbrqF2
-         0q//IkXnSFxW82omNRXY1fYacgSYXlgJuc1nIC6k=
+        b=0BvVJSTDneWC6SgqDOiMuSqlZRmOBkdQ2WBOJ07y3dpaaunOCeGgsP5v+zkqborbp
+         cGSRuLiu/eihrx+8zI86wEf6ZDjc5xSY98SWKisZUFDsBZPlmXwGy6xQmmACTvANfZ
+         jnHyD1AXymkLIY124xiJwuveoW1gUzS2kZ778zP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/62] net: hisilicon: fix hip04-xmit never return TX_BUSY
-Date:   Tue, 27 Aug 2019 09:50:31 +0200
-Message-Id: <20190827072701.978277279@linuxfoundation.org>
+Subject: [PATCH 4.14 09/62] st21nfca_connectivity_event_received: null check the allocation
+Date:   Tue, 27 Aug 2019 09:50:14 +0200
+Message-Id: <20190827072700.876426554@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,39 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
+[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
 
-TX_DESC_NUM is 256, in tx_count, the maximum value of
-mod(TX_DESC_NUM - 1) is 254, the variable "count" in
-the hip04_mac_start_xmit function is never equal to
-(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
-return NETDEV_TX_BUSY.
+devm_kzalloc may fail and return null. So the null check is needed.
 
-tx_count is modified to mod(TX_DESC_NUM) so that
-the maximum value of tx_count can reach
-(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
-NETDEV_TX_BUSY.
-
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/st21nfca/se.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 60ef6d40e4896..b04fb82d7fa3e 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -185,7 +185,7 @@ struct hip04_priv {
+diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
+index 3a98563d4a121..eac608a457f03 100644
+--- a/drivers/nfc/st21nfca/se.c
++++ b/drivers/nfc/st21nfca/se.c
+@@ -326,6 +326,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
  
- static inline unsigned int tx_count(unsigned int head, unsigned int tail)
- {
--	return (head - tail) % (TX_DESC_NUM - 1);
-+	return (head - tail) % TX_DESC_NUM;
- }
+ 		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+ 						   skb->len - 2, GFP_KERNEL);
++		if (!transaction)
++			return -ENOMEM;
  
- static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
+ 		transaction->aid_len = skb->data[1];
+ 		memcpy(transaction->aid, &skb->data[2],
 -- 
 2.20.1
 
