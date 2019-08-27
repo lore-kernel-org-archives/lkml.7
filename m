@@ -2,153 +2,124 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61504C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D9FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381A32186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892410;
-	bh=LD81ViPV9Dk2D1S2A6RNmJkyDuqapNAWlR6U5vdwRso=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnlEuiz0AzPXAGx0HxaSx3+N/i0eC33EQ0ezQunbuyZOcfkhRUJlqHFCmJsZmNBs0
-	 c+VWHgAE+12rVa5ZiKsRtI0DskVSGP6LsNHLG27focng2+ALZxrh38ZMo5/uYFQy4h
-	 a3elNYis6lM1xc7GY8fm2uMJBaPFo7f9ZHWynYBU=
+	by mail.kernel.org (Postfix) with ESMTP id 57F12206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbfH0Hx2 (ORCPT
+        id S1729814AbfH0Hxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:53:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49970 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbfH0Hx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729149AbfH0Hx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:29 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E4BF206BA;
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B6E43082E25;
+        Tue, 27 Aug 2019 07:53:29 +0000 (UTC)
+Received: from [10.36.116.105] (ovpn-116-105.ams2.redhat.com [10.36.116.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B010C600D1;
         Tue, 27 Aug 2019 07:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892405;
-        bh=LD81ViPV9Dk2D1S2A6RNmJkyDuqapNAWlR6U5vdwRso=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVqdXVgJOGs9uggDq7cwYAI18Igf2289rDH/u3vVb4abkswdPyByxq3zpuJwIz7bQ
-         QBwpHyoRaJQfsuX2PtgAWxHhUszHoTKIyx1rvUZe7IYtz/clx4DQR26c7QsHCJW6gH
-         S+sIBR7x5Th1a11vdTA8+iI9Hwib7BbuhSwwOW5g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jann Horn <jannh@google.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 43/62] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
-Date:   Tue, 27 Aug 2019 09:50:48 +0200
-Message-Id: <20190827072703.069744154@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
-References: <20190827072659.803647352@linuxfoundation.org>
-User-Agent: quilt/0.66
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Use a single IO device per
+ redistributor
+To:     Zenghui Yu <yuzenghui@huawei.com>, eric.auger.pro@gmail.com,
+        maz@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     zhang.zhanghailiang@huawei.com, wanghaibin.wang@huawei.com,
+        james.morse@arm.com, qemu-arm@nongnu.org,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        peter.maydell@linaro.org, andre.przywara@arm.com
+References: <20190823173330.23342-1-eric.auger@redhat.com>
+ <f5b47614-de48-f3cb-0e6f-8a667cb951c0@redhat.com>
+ <5cdcfe9e-98d8-454e-48e7-992fe3ee5eae@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ccb49856-f958-8bea-4b27-9a808415c43d@redhat.com>
+Date:   Tue, 27 Aug 2019 09:53:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <5cdcfe9e-98d8-454e-48e7-992fe3ee5eae@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 27 Aug 2019 07:53:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+Hi Zenghui,
+On 8/27/19 9:49 AM, Zenghui Yu wrote:
+> Hi Eric,
+> 
+> Thanks for this patch!
+> 
+> On 2019/8/24 1:52, Auger Eric wrote:
+>> Hi Zenghui, Marc,
+>>
+>> On 8/23/19 7:33 PM, Eric Auger wrote:
+>>> At the moment we use 2 IO devices per GICv3 redistributor: one
+>                                                              ^^^
+>>> one for the RD_base frame and one for the SGI_base frame.
+>   ^^^
+>>>
+>>> Instead we can use a single IO device per redistributor (the 2
+>>> frames are contiguous). This saves slots on the KVM_MMIO_BUS
+>>> which is currently limited to NR_IOBUS_DEVS (1000).
+>>>
+>>> This change allows to instantiate up to 512 redistributors and may
+>>> speed the guest boot with a large number of VCPUs.
+>>>
+>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> I tested this patch with below kernel and QEMU branches:
+>> kernel: https://github.com/eauger/linux/tree/256fix-v1
+>> (Marc's patch + this patch)
+>> https://github.com/eauger/qemu/tree/v4.1.0-256fix-rfc1-rc0
+>> (header update + kvm_arm_gic_set_irq modification)
+> 
+> I also tested these three changes on HiSi D05 (with 64 pcpus), and yes,
+> I can get a 512U guest to boot properly now.
 
-commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 upstream.
+Many thanks for the testing (and the bug report). I will formally post
+the QEMU changes asap.
 
-userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
-mm->core_state != NULL.
+Thanks
 
-Otherwise a page fault can see userfaultfd_missing() == T and use an
-already freed userfaultfd_ctx.
-
-Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
-Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/userfaultfd.c |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
-
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -854,6 +854,7 @@ static int userfaultfd_release(struct in
- 	/* len == 0 means wake all */
- 	struct userfaultfd_wake_range range = { .len = 0, };
- 	unsigned long new_flags;
-+	bool still_valid;
- 
- 	ACCESS_ONCE(ctx->released) = true;
- 
-@@ -869,8 +870,7 @@ static int userfaultfd_release(struct in
- 	 * taking the mmap_sem for writing.
- 	 */
- 	down_write(&mm->mmap_sem);
--	if (!mmget_still_valid(mm))
--		goto skip_mm;
-+	still_valid = mmget_still_valid(mm);
- 	prev = NULL;
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 		cond_resched();
-@@ -881,19 +881,20 @@ static int userfaultfd_release(struct in
- 			continue;
- 		}
- 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
--		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
--				 new_flags, vma->anon_vma,
--				 vma->vm_file, vma->vm_pgoff,
--				 vma_policy(vma),
--				 NULL_VM_UFFD_CTX);
--		if (prev)
--			vma = prev;
--		else
--			prev = vma;
-+		if (still_valid) {
-+			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
-+					 new_flags, vma->anon_vma,
-+					 vma->vm_file, vma->vm_pgoff,
-+					 vma_policy(vma),
-+					 NULL_VM_UFFD_CTX);
-+			if (prev)
-+				vma = prev;
-+			else
-+				prev = vma;
-+		}
- 		vma->vm_flags = new_flags;
- 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
- 	}
--skip_mm:
- 	up_write(&mm->mmap_sem);
- 	mmput(mm);
- wakeup:
-
-
+Eric
+> 
+> Tested-by: Zenghui Yu <yuzenghui@huawei.com>
+> 
+>> On a machine with 224 pcpus, I was able to boot a 512 vcpu guest.
+>>
+>> As expected, qemu outputs warnings:
+>>
+>> qemu-system-aarch64: warning: Number of SMP cpus requested (512) exceeds
+>> the recommended cpus supported by KVM (224)
+>> qemu-system-aarch64: warning: Number of hotpluggable cpus requested
+>> (512) exceeds the recommended cpus supported by KVM (224)
+>>
+>> on the guest: getconf _NPROCESSORS_ONLN returns 512
+>>
+>> Then I have no clue about what can be expected of such overcommit config
+>> and I have not further exercised the guest at the moment. But at least
+>> it seems to boot properly. I also tested without overcommit and it seems
+>> to behave as before (boot, migration).
+>>
+>> I still need to look at the migration of > 256vcpu guest at qemu level.
+> 
+> Let us know if further tests are needed.
+> 
+> 
+> Thanks,
+> zenghui
+> 
