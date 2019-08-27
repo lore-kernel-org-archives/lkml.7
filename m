@@ -2,90 +2,99 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9131C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB5CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE16206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ek/6sU/q"
+	by mail.kernel.org (Postfix) with ESMTP id 23202206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566892429;
+	bh=Pox7UGSVc3exntObymrJZRHxDv/1qDz0hdp3/iMqotU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IxJYpRy11d3UQnHa92dpf9e3q+BCIMJM513YJw2PMb2aWRJL1nU5LV7wkgwkudbAA
+	 WTCzS3C6pAD3xDDlnMOgvzTx4DJ7ZdfjDqYaBFMqUeiKg0B0S47qYhzuEDkaQQDFvh
+	 15GBxT7XSrwpnpca30Bjf3pRvvrcNr/zkKX8C6kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfH0Hxo (ORCPT
+        id S1729889AbfH0Hxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:44 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45502 "EHLO mail.skyhub.de"
+        Tue, 27 Aug 2019 03:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbfH0Hxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:41 -0400
-Received: from zn.tnic (p200300EC2F0CD000E4ECF72BFDD79A39.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:d000:e4ec:f72b:fdd7:9a39])
+        id S1729873AbfH0Hxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 567081EC0965;
-        Tue, 27 Aug 2019 09:53:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566892420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8p1J/zPTLAzb8JP6Pzlpwjulw1RiTNpv98AQ/qRNp1A=;
-        b=Ek/6sU/qfsfjFwI81AIhXWbsw/CibP44YJzq3iiM1ULP96lzq9ngzBvVpHQTgKxXWya37u
-        +RE51/ByIrjJHM/272sv7weTWlIICuu1CW6Nt1QnXcH9T3BwNNTMAwROMtzbS7e4mEuEjz
-        xv0kJO1hEwG0Dod9hcyOj4NN1XV6GmQ=
-Date:   Tue, 27 Aug 2019 09:53:36 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Lei Wang <leiwang_git@outlook.com>
-Cc:     "james.morse@arm.com" <james.morse@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>
-Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
-Message-ID: <20190827075336.GB29752@zn.tnic>
-References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
- <20190807144016.GA24328@zn.tnic>
- <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
- <20190819093147.GE4841@zn.tnic>
- <BY5PR04MB65996BD47D541327F8F1BE4A86A00@BY5PR04MB6599.namprd04.prod.outlook.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id CF1E420828;
+        Tue, 27 Aug 2019 07:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566892424;
+        bh=Pox7UGSVc3exntObymrJZRHxDv/1qDz0hdp3/iMqotU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=adRBBCZ31prt3B01W367GPP6sNYUexX2L+XoJVRpNrnN4bCySdpUVpyRf7PTWxCMu
+         de4Jl6VGIDQOMwKsbvw/EdAO8MfOF4hV8qoDQNLZV6XYBFDDwiWvq4Se28PNDDuHhS
+         R/F1DoxpEdlcRxdeadUeXVee3dZcKDItFJPo9Mxs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Neil MacLeod <neil@nmacleod.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 4.14 48/62] x86/boot: Fix boot regression caused by bootparam sanitizing
+Date:   Tue, 27 Aug 2019 09:50:53 +0200
+Message-Id: <20190827072703.277332229@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
+References: <20190827072659.803647352@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BY5PR04MB65996BD47D541327F8F1BE4A86A00@BY5PR04MB6599.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:49:29AM +0000, Lei Wang wrote:
-> Yes, this is to help open source developers who potentially might want 
-> to expand this driver, most likely colleagues, and possibly other 
-> developers.
+From: John Hubbard <jhubbard@nvidia.com>
 
-Then please put that info in the comment at the beginning of the driver
-- not some random single sentences about what can be done, interspersed
-throughout the code. It needs to be visible at a first glance.
+commit 7846f58fba964af7cb8cf77d4d13c33254725211 upstream.
 
-Also, if you want this to be a longer doc, I wouldn't mind at all having
-it in Documentation/edac/ (which doesn't exist yet) and then point
-people to it from the comment at the beginning of the driver.
+commit a90118c445cc ("x86/boot: Save fields explicitly, zero out everything
+else") had two errors:
 
-Thx.
+    * It preserved boot_params.acpi_rsdp_addr, and
+    * It failed to preserve boot_params.hdr
 
--- 
-Regards/Gruss,
-    Boris.
+Therefore, zero out acpi_rsdp_addr, and preserve hdr.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+Reported-by: Neil MacLeod <neil@nmacleod.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Neil MacLeod <neil@nmacleod.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190821192513.20126-1-jhubbard@nvidia.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/include/asm/bootparam_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -71,6 +71,7 @@ static void sanitize_boot_params(struct
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(e820_table),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
+ 		};
+
+
