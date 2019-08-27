@@ -2,166 +2,168 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBA1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84492C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5F020828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C72205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pwG+CVZu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBAu/RLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfH0Mmw (ORCPT
+        id S1729747AbfH0MnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:42:52 -0400
-Received: from mout.web.de ([217.72.192.78]:58319 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbfH0Mmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:42:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566909753;
-        bh=VC2QvdrCbaIt/LdFIIg3zDvmOueJw0EM+bO6qh1H3L4=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=pwG+CVZucPG8JjqlnehbcRjJozmGGyTXoTkiP99gnoddZAl9GFkv/6lOpCHCKZM1E
-         3avbZof5rDBOJ3VExrH127oMHHoQLL3XQgGaGT1L9zHOe5FS6uMEvPq42KYcWlxYAh
-         /MCv3BUSJ45+XccYI82z9wG7p5ph0DNrgo7gQ15o=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.143.232]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MfYj1-1hrxpq0FXX-00P4Oc; Tue, 27
- Aug 2019 14:42:33 +0200
-Subject: [PATCH 1/2] powerpc/pseries: Delete an unnecessary kfree() call in
- dlpar_store()
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     linuxppc-dev@lists.ozlabs.org,
-        Allison Randal <allison@lohutok.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Gen Zhang <blackgod016574@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <db28c84d-ac07-6d9a-a371-c97ab72bf763@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b46cc4ff-a14c-0c10-0c0c-95573a960178@web.de>
-Date:   Tue, 27 Aug 2019 14:42:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 08:43:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44039 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfH0MnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 08:43:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c81so14032365pfc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=rycJM2D5prTLrrH7Hf0CHWcl07PTs5XDdWvVYECd+zg=;
+        b=SBAu/RLD60WBNJeJUBJxeto+d7UuFS4xT44856oUORrMm2fGMk+faZoTzV7iFbhSfq
+         m09JrtWR4/3S1yY5S6798/OnCe1uMfRTNKfKMJdp/HmYKXZxcewAoHURdJWfz0Yy5mdE
+         PbUlKQGY4E+CHf0C+LVsjYgY/skz0k8HlT+t7AQ394PQeAEiSN1Nk8Kt0Oh4U38pDMcK
+         puK76ddYhV/tpaEcsiCh3s2AeGqRWZVPoInNXGtotsQSHl7wG9fwaGC0Q6VYLOKh2IqZ
+         LT4FUdvZohQxC5X12Qmczj5aTjaBC3KHb+P87/7sVDGSJpwwXmEjx+fM7wQI3uPHPFzN
+         XYWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=rycJM2D5prTLrrH7Hf0CHWcl07PTs5XDdWvVYECd+zg=;
+        b=mbI+jvgoXJEz/8hXuYHcoPt5fxhj5gic9D0CSwKvM/kFdcDeTd8wcgD58MxZc7exL4
+         SBgUgGTomdBW/4Uvu/oAlgIU80DnjYtv6bFTadO665D3nQb9g8SiZiVhToF7aPPcYGAv
+         Sj4iRryHdQanpwbrU0fTr3OTHkI38uRaoLwSyzalXhlxFP2ELo+NHnb8ndLvRSbk4GKp
+         5K5VMr9vjwUVkthlCh9dOd/LK/2cjJQjC+ge3AYPuGw1s+WyCXlKFu0vm2vAMujcsPyy
+         HiTpV1fzLYHJqEiYBpCHBZnzfEhmOpwqq1rsN84DMPgXbMhsjalYasmsY6d9qWEQxjKz
+         mR4A==
+X-Gm-Message-State: APjAAAVz/22bMyawovpa+Pm7+lCgp6RZkZnb1CVQdMsGc+jlZBzsA2gW
+        TBKxf/Jh5xb/knzETMXGDyI=
+X-Google-Smtp-Source: APXvYqxU+6kIePxFDiIADXJobNIlHJxzyOCQhFRbglIPwBowiPcPmwAq2PZP8f1L2UQzZC9VquUL9A==
+X-Received: by 2002:a63:e807:: with SMTP id s7mr20439815pgh.194.1566909783295;
+        Tue, 27 Aug 2019 05:43:03 -0700 (PDT)
+Received: from localhost (14-202-91-55.tpgi.com.au. [14.202.91.55])
+        by smtp.gmail.com with ESMTPSA id y188sm15405719pfb.115.2019.08.27.05.43.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 05:43:02 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 22:42:20 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+References: <CAKwvOdnJAApaUhTQs7w_VjSeYBQa0c-TNxRB4xPLi0Y0sOQMMQ@mail.gmail.com>
+        <CAKwvOdkbY_XatVfRbZQ88p=nnrahZbvdjJ0OkU9m73G89_LRzg@mail.gmail.com>
+        <1566899033.o5acyopsar.astroid@bobo.none>
+        <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
+In-Reply-To: <CAK7LNARHacanVT6XjRDkFJDETWX6qHfUJCFhskCVG6aDL-bt1g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <db28c84d-ac07-6d9a-a371-c97ab72bf763@web.de>
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1566908344.dio7j9zb2h.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4WbKfj3BMvlzyZRPacSeaIx1Hkpgixn4uWiCQuxbneWkPrJ3uyx
- TOTDWsRUPVY9da5sgdHIjVoAwfYoxYUexRity68kBdvVFVHA5NIt3XrfuUpFMQgk8FcXN3Q
- mc/NVjFTFEOECc/PPRDTND9T0QyG9bV6Hgc7BkZlXMZIUQBK6QSVmM+AqZqSbxPNuwLSAoh
- SlqY/s0fgHYK2n6sjG2gw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oWUI2J2XIEU=:n++pVAsRItNYxnfeygvcpy
- jG0XfKVcVv3MGWR69K/EGv320erIJuow9YxFCL8kqY7qfm4YQpI79sXnFts+EDhkR41q6fKjI
- xvGtViLhvFjLPVfI1i8aIJ8/gKhbE1QrIYqjNfJkPKQJTTmmQHq19Z+l7f5aSwEJe35L1Reb6
- 0PeanOV6rEUVSnChLJM/CXHJ/aKFA1W5gu90L43bf2x4MPb4bTC0OvBi1xdhGw/f2AZyo6Lvd
- 0S74StwA0lYwM2TIwC6cl5lKtzW6i0NKGs138+sa4P79c7kMeTyZaWxdMjnZfDlJv/x0IPlxd
- 1NvDDRP3iHh2T5PxCKefLLX86bNQ9L4JII3x+gXxsjg1NDW9v/D5wpiCTUUb/3RoPyzgCykOL
- hbPVkMAqYKlyc0tIuW56NOdE7A7AFHyGan7SuWM/kuA41qs/bgiVKiPnEiNm3V8uaM8lpFz6m
- 6oiHDNEVf1czEsYEq66+kVCaJ+AmaIqH2XGIQk5cC7fYS/e5FLtJdwbILOx/Lvg+vqQhNPk9d
- KN8wgDocNR2Q3Ri58i+ip05mz0+DpANoADaB53X+nivjUNvouASWfGS5Vykk+AO9BI37W1ICv
- hK4Y4NnLGoJ5MnpjgQmCLuwdLtmuIwfcKuUlGaIsgr6o6palbs1WcbWS1wCOcj0EWts3M7CTC
- a333n302rgMslW/6JqNDN0T8WG735zg/PrM8Cuf7eUUDBKldJYFlzGO/+TN+odcVDTgy1EqHC
- qiFd3CV5uEV9NjwztzPKFcqFaeczHnZJkF+nObATsFS44AS/XbCi+Rf/DR36RWgKXigP+nvkO
- yL0zaBlagjgMOn+HybOn23Nfdp8W1Fwl+TFbbJkODYxWtBp9M+Ng1LLX5glHJMi7QNSBhHiFp
- ZLMgrHV012tiGf17Dcljfe2QSkC6TwMhbnSe1rDKuBfqaUxMoclPRHm/6RLN8YV8js/a0Nf5v
- QOF3rmHRg5yFT13UUswp7hx4ipCfAFtBnziSQ9Lz1KVf7oKvmr/+JSBTapAtRf9fegDmTXUgC
- IsKyFq4fUzYgddNK24DFV3pnVMrYaP0IjcExW8HAr1nQPW2NnQQ16uvGHlp0T8eo1Ukk+dSbk
- DI5r2tpEXIY3ADnjPx2dQtwUqAMdvKWlvhpbNrIme5sp9hwgN4WpGZIeqSVzWsyZflOipjp59
- nRW1A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 27 Aug 2019 13:34:02 +0200
+Masahiro Yamada's on August 27, 2019 8:49 pm:
+> Hi.
+>=20
+> On Tue, Aug 27, 2019 at 6:59 PM Nicholas Piggin <npiggin@gmail.com> wrote=
+:
+>>
+>> Nick Desaulniers's on August 27, 2019 8:57 am:
+>> > On Mon, Aug 26, 2019 at 2:22 PM Nick Desaulniers
+>> > <ndesaulniers@google.com> wrote:
+>> >>
+>> >> I'm looking into a linkage failure for one of our device kernels, and
+>> >> it seems that genksyms isn't producing a hash value correctly for
+>> >> aggregate definitions that contain __attribute__s like
+>> >> __attribute__((packed)).
+>> >>
+>> >> Example:
+>> >> $ echo 'struct foo { int bar; };' | ./scripts/genksyms/genksyms -d
+>> >> Defn for struct foo =3D=3D <struct foo { int bar ; } >
+>> >> Hash table occupancy 1/4096 =3D 0.000244141
+>> >> $ echo 'struct __attribute__((packed)) foo { int bar; };' |
+>> >> ./scripts/genksyms/genksyms -d
+>> >> Hash table occupancy 0/4096 =3D 0
+>> >>
+>> >> I assume the __attribute__ part isn't being parsed correctly (looks
+>> >> like genksyms is a lex/yacc based C parser).
+>> >>
+>> >> The issue we have in our out of tree driver (*sadface*) is basically =
+a
+>> >> EXPORT_SYMBOL'd function whose signature contains a packed struct.
+>> >>
+>> >> Theoretically, there should be nothing wrong with exporting a functio=
+n
+>> >> that requires packed structs, and this is just a bug in the lex/yacc
+>> >> based parser, right?  I assume that not having CONFIG_MODVERSIONS
+>> >> coverage of packed structs in particular could lead to potentially
+>> >> not-fun bugs?  Or is using packed structs in exported function symbol=
+s
+>> >> with CONFIG_MODVERSIONS forbidden in some documentation somewhere I
+>> >> missed?
+>> >
+>> > Ah, looks like I'm late to the party:
+>> > https://lwn.net/Articles/707520/
+>>
+>> Yeah, would be nice to do something about this.
+>=20
+> modversions is ugly, so it would be great if we could dump it.
+>=20
+>> IIRC (without re-reading it all), in theory distros would be okay
+>> without modversions if they could just provide their own explicit
+>> versioning. They take care about ABIs, so they can version things
+>> carefully if they had to change.
+>=20
+> We have not provided any alternative solution for this, haven't we?
+>=20
+> In your patch (https://lwn.net/Articles/707729/),
+> you proposed CONFIG_MODULE_ABI_EXPLICIT.
 
-A null pointer would be passed to a call of the function =E2=80=9Ckfree=E2=
-=80=9D
-immediately after a call of the function =E2=80=9Ckstrdup=E2=80=9D failed =
-at one place.
-Remove this superfluous function call.
+Right, that was just my first proposal, but I am not confident that I
+understood everybody's requirements. I don't think the distro people
+had much time to to test things out.
 
-This issue was detected by using the Coccinelle software.
+One possible shortcoming with that patch is no per-symbol version. The=20
+distro may break an ABI for a security fix, but they don't want to break
+all out of tree modules if it's an obscure ABI. The counter argument to=20
+that is they should just rename the symbol in their kernel for such=20
+cases, so I didn't implement it without somebody describing a good
+requirement.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- arch/powerpc/platforms/pseries/dlpar.c | 1 -
- 1 file changed, 1 deletion(-)
+> If it is good enough for distros, we merge it first,
+> give them time to migrate over to it, then finally remove modversions??
 
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platfor=
-ms/pseries/dlpar.c
-index 16e86ba8aa20..2a783dc0cfa7 100644
-=2D-- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -523,7 +523,6 @@ static ssize_t dlpar_store(struct class *class, struct=
- class_attribute *attr,
- 	args =3D argbuf =3D kstrdup(buf, GFP_KERNEL);
- 	if (!argbuf) {
- 		pr_info("Could not allocate resources for DLPAR operation\n");
--		kfree(argbuf);
- 		return -ENOMEM;
- 	}
+I guess. Do we really need to merge and wait? If they _really_ want it,
+and won't put in effort to convert their kernel packaging, then they
+can carry the patch and support it quite easily. The code doesn't
+change frequently so it should not be a big roadblock
 
-=2D-
-2.23.0
+I'm more concerned about developer and hobbyists etc who don't have the
+resources. But IIRC we are satisfied that git version has superseded
+the benefits of modversions for that case now.
 
+Thanks,
+Nick
+=
