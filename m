@@ -2,51 +2,57 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43034C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBB4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4ED217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6742184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893346;
-	bh=nr+XhdCJv5KdUbvjEpdXWa5YBu+SA2axb6GLhdsPhOM=;
+	s=default; t=1566893349;
+	bh=9XZ+Be4/yLcj+Tj426tFwAI0b4HEgWmZTt9ohu5MdwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GX9hN6gT2GIzX97vUuuTvMF2B867qfDhGKP9h8xCqj/M8sK+KY2NItI+/I4dHN6Bj
-	 rvAterjiu2gUqdAVzXM8DNSpwxN3krxRvP/W+rbs5gNQgUn0VjZIFzAZPr6sl9+z59
-	 YM7/ss719vljWcS3HScMwNZ8zS/zNFVl4owfA3X0=
+	b=DKm+LTbDLEMZhkSglUmMTSDCbBuuNie+MtbMU6LIyW2wRTOaHEC4FuyVPmOA7M+kM
+	 Rh7cyU2Csgjbpi6N1P6xeT+7VCmZJFO5vp5tg7lg4fHMD+F0Bi5mtC/fj0erxaBqjc
+	 CYQLJLgjNQQvd5SSOCUkgDcUvNWAi9vGfq73W6k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732685AbfH0IFD (ORCPT
+        id S1732975AbfH0IJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:05:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731444AbfH0IE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:04:58 -0400
+        id S1730129AbfH0IFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:05:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F403621872;
-        Tue, 27 Aug 2019 08:04:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54B70206BF;
+        Tue, 27 Aug 2019 08:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893097;
-        bh=nr+XhdCJv5KdUbvjEpdXWa5YBu+SA2axb6GLhdsPhOM=;
+        s=default; t=1566893105;
+        bh=9XZ+Be4/yLcj+Tj426tFwAI0b4HEgWmZTt9ohu5MdwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDjB4wUeIzQFQT79+G4Hkn800ntKwQm6dHfJE97nlRypNuXM6J2cYeQ/TdYoxDV9h
-         PUwtxAUBKLgpVQDxmSmBZ/Oh5HqX+S80l5BwogwuTjZKKS2v3eot9Puez6DNyVuwbU
-         sWplBPN/w7XdxfzweX8zywKfoGlrxATq/+eFv0bM=
+        b=KfWi8MAW25IHN7A03ub1bbQ93IdwuquPuY+KaWpDM+QWTTJLHgSIpGIigO6MtqdiY
+         dcDV0fOmmsBgYAnk4BJmlMriT9y6ZzIT6De9jLGbfK/eCLSnEtDUXkvkeGvIjHQUGl
+         q8Icy1fe+uprQHAQyRwlKSppXajDyYmSV3Bt0ij0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: [PATCH 5.2 120/162] drm/nouveau: Dont retry infinitely when receiving no data on i2c over AUX
-Date:   Tue, 27 Aug 2019 09:50:48 +0200
-Message-Id: <20190827072742.631504865@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 105/162] perf pmu-events: Fix missing "cpu_clk_unhalted.core" event
+Date:   Tue, 27 Aug 2019 09:50:33 +0200
+Message-Id: <20190827072741.961103900@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,103 +65,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+[ Upstream commit 8e6e5bea2e34c61291d00cb3f47560341aa84bc3 ]
 
-commit c358ebf59634f06d8ed176da651ec150df3c8686 upstream.
+The events defined in pmu-events JSON are parsed and added into perf
+tool. For fixed counters, we handle the encodings between JSON and perf
+by using a static array fixed[].
 
-While I had thought I had fixed this issue in:
+But the fixed[] has missed an important event "cpu_clk_unhalted.core".
 
-commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
-->fini()")
+For example, on the Tremont platform,
 
-It turns out that while I did fix the error messages I was seeing on my
-P50 when trying to access i2c busses with the GPU in runtime suspend, I
-accidentally had missed one important detail that was mentioned on the
-bug report this commit was supposed to fix: that the CPU would only lock
-up when trying to access i2c busses _on connected devices_ _while the
-GPU is not in runtime suspend_. Whoops. That definitely explains why I
-was not able to get my machine to hang with i2c bus interactions until
-now, as plugging my P50 into it's dock with an HDMI monitor connected
-allowed me to finally reproduce this locally.
+  [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
+  event syntax error: 'cpu_clk_unhalted.core'
+                       \___ parser error
 
-Now that I have managed to reproduce this issue properly, it looks like
-the problem is much simpler then it looks. It turns out that some
-connected devices, such as MST laptop docks, will actually ACK i2c reads
-even if no data was actually read:
+With this patch, the event cpu_clk_unhalted.core can be parsed.
 
-[  275.063043] nouveau 0000:01:00.0: i2c: aux 000a: 1: 0000004c 1
-[  275.063447] nouveau 0000:01:00.0: i2c: aux 000a: 00 01101000 10040000
-[  275.063759] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000001
-[  275.064024] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000000
-[  275.064285] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000000
-[  275.064594] nouveau 0000:01:00.0: i2c: aux 000a: rd 00000000
+  [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             112
+    config                           0x3c
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    exclude_guest                    1
+  ------------------------------------------------------------
+...
 
-Because we don't handle the situation of i2c ack without any data, we
-end up entering an infinite loop in nvkm_i2c_aux_i2c_xfer() since the
-value of cnt always remains at 0. This finally properly explains how
-this could result in a CPU hang like the ones observed in the
-aforementioned commit.
-
-So, fix this by retrying transactions if no data is written or received,
-and give up and fail the transaction if we continue to not write or
-receive any data after 32 retries.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190729072755.2166-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c |   24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ tools/perf/pmu-events/jevents.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-@@ -40,8 +40,7 @@ nvkm_i2c_aux_i2c_xfer(struct i2c_adapter
- 		u8 *ptr = msg->buf;
- 
- 		while (remaining) {
--			u8 cnt = (remaining > 16) ? 16 : remaining;
--			u8 cmd;
-+			u8 cnt, retries, cmd;
- 
- 			if (msg->flags & I2C_M_RD)
- 				cmd = 1;
-@@ -51,10 +50,19 @@ nvkm_i2c_aux_i2c_xfer(struct i2c_adapter
- 			if (mcnt || remaining > 16)
- 				cmd |= 4; /* MOT */
- 
--			ret = aux->func->xfer(aux, true, cmd, msg->addr, ptr, &cnt);
--			if (ret < 0) {
--				nvkm_i2c_aux_release(aux);
--				return ret;
-+			for (retries = 0, cnt = 0;
-+			     retries < 32 && !cnt;
-+			     retries++) {
-+				cnt = min_t(u8, remaining, 16);
-+				ret = aux->func->xfer(aux, true, cmd,
-+						      msg->addr, ptr, &cnt);
-+				if (ret < 0)
-+					goto out;
-+			}
-+			if (!cnt) {
-+				AUX_TRACE(aux, "no data after 32 retries");
-+				ret = -EIO;
-+				goto out;
- 			}
- 
- 			ptr += cnt;
-@@ -64,8 +72,10 @@ nvkm_i2c_aux_i2c_xfer(struct i2c_adapter
- 		msg++;
- 	}
- 
-+	ret = num;
-+out:
- 	nvkm_i2c_aux_release(aux);
--	return num;
-+	return ret;
- }
- 
- static u32
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 58f77fd0f59fe..ed5423d8a95fd 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -450,6 +450,7 @@ static struct fixed {
+ 	{ "inst_retired.any_p", "event=0xc0" },
+ 	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+ 	{ "cpu_clk_unhalted.thread", "event=0x3c" },
++	{ "cpu_clk_unhalted.core", "event=0x3c" },
+ 	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
+ 	{ NULL, NULL},
+ };
+-- 
+2.20.1
+
 
 
