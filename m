@@ -2,211 +2,148 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB20C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36A3206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3636206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:29:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xhA1kkrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbfH0M1o (ORCPT
+        id S1729750AbfH0M3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:27:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60364 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726140AbfH0M1n (ORCPT
+        Tue, 27 Aug 2019 08:29:00 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41736 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfH0M27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:27:43 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7RCMnbb077507
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:27:42 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2un4brgh0q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 08:27:41 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
-        Tue, 27 Aug 2019 13:27:40 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 27 Aug 2019 13:27:36 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7RCRZXl48300242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 12:27:36 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE46D42042;
-        Tue, 27 Aug 2019 12:27:34 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2C7B42049;
-        Tue, 27 Aug 2019 12:27:32 +0000 (GMT)
-Received: from [9.109.217.45] (unknown [9.109.217.45])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 27 Aug 2019 12:27:32 +0000 (GMT)
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Subject: Re: [PATCH rebased] powerpc/fadump: when fadump is supported register
- the fadump sysfs files.
-To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Hari Bathini <hbathini@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190820181211.14694-1-msuchanek@suse.de>
-Date:   Tue, 27 Aug 2019 17:57:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 08:28:59 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j4so4129216lfh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IrvTyiP5uOe3nkt4yyBHrThnDSmKFkgXLFlJJeQFR3o=;
+        b=xhA1kkrz9zuMoZ661z6on04LYIQa+xd0K/cfJXpljR8KT+VLM8k0Jyf7nHDehNy7r/
+         hiHA2D7Ke/OKsD7/IzFlcKniW4cUMh1tnlCpEUG7FUalFCZae6aq5ekCGEhEXY2SeelY
+         T+HtQZNKY4H25B4PYDAK+MvzvQ+In0p9RsxTWtcTHtOsObWptvWE6R67bA6cdzmYDyLA
+         FnfoElL5s2OUVf6Oi8SnQR3XW5SJU1kq+vIQeg6wf7vcYmBeSOfqiK+2IJ35HKVwNzXb
+         tk2ycU5PYcnQW5dXIaKFHeAbkyh5f+Gh7MlXFyCqnrYVknOrwq74Tbxjhv3NL5cW/mfI
+         I9/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IrvTyiP5uOe3nkt4yyBHrThnDSmKFkgXLFlJJeQFR3o=;
+        b=nqyFUlQSewpMqwShQsurM224x/9ebf8jHc3LVeYxsCzVNIFES6MANFQcPOabDY4AZ9
+         OMwwR+hgEad2fshXzTzQOR8wURd0dwrgWp8k6gBWhokA9Ysi/sBTZGAnaBG9jk3pxuyt
+         7ClYduYKrihxtQOAZx/O4AU0XooSH1mY4CL+UmfUWj71q1eJuccLs4Yszi/SxyCYz/Wl
+         T8CuAwv2daWybIVZ0IQXBeLfQu/h83wISA+RoxU+sRAk04MsDPFHpr/3lkgMNCqwPiFR
+         ZfRqztuTzoidKjJ9NZt7/qhxzBIRi25fFbCOrTXEfIzlVtiSAsTyqhYPW/yniyuoXO2s
+         rpXA==
+X-Gm-Message-State: APjAAAUlKJ+bT6sSs/G8fPowQjqrzwP6EKahgJaZ5IYf3yd6OmJx46C6
+        8yCfzXr5u3GUt5ovNZptc5jDCMqPvJE4+bOcd4N3Rw==
+X-Google-Smtp-Source: APXvYqwKc5xbpTi5UK/jpybetG3Q8v8fzsVk7UFbXP4lz3ieVaSgQhTDMzwcNzFVlt9uBZmZD+PuBjJWkmFnwa4OQBw=
+X-Received: by 2002:a19:f603:: with SMTP id x3mr12851076lfe.125.1566908937534;
+ Tue, 27 Aug 2019 05:28:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190820181211.14694-1-msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082712-0008-0000-0000-0000030DD5DD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082712-0009-0000-0000-00004A2C11ED
-Message-Id: <e7fad352-48f3-f01d-1b19-a589a3b95c07@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-27_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908270138
+References: <20190815145107.5318-1-valentin.schneider@arm.com> <20190815145107.5318-5-valentin.schneider@arm.com>
+In-Reply-To: <20190815145107.5318-5-valentin.schneider@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 27 Aug 2019 14:28:46 +0200
+Message-ID: <CAKfTPtCq3fv_ajgwnUUodnd+G_Bx6Jqod3751FnB5AASxZczYg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] sched/fair: Prevent active LB from preempting
+ higher sched classes
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Qais Yousef <qais.yousef@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 15 Aug 2019 at 16:52, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> The CFS load balancer can cause the cpu_stopper to run a function to
+> try and steal a remote rq's running task. However, it so happens
+> that while only CFS tasks will ever be migrated by that function, we
+> can end up preempting higher sched class tasks, since it is executed
+> by the cpu_stopper.
+>
+> This can potentially occur whenever a rq's running task is > CFS but
+> the rq has runnable CFS tasks.
+>
+> Check the sched class of the remote rq's running task after we've
+> grabbed its lock. If it's CFS, carry on, otherwise run
+> detach_one_task() locally since we don't need the cpu_stopper (that
+> !CFS task is doing the exact same thing).
 
-Hi Michal,
+AFAICT, this doesn't prevent from preempting !CFS task but only reduce
+the window.
+As soon as you unlock, !CFS task can preempt CFS before you start stop thread
 
-Thanks for the patch. 
+testing  busiest->cfs.h_nr_running < 1 and/or
+busiest->curr->sched_class != &fair_sched_class
+in need_active_balance() will do almost the same and is much simpler
+than this patchset IMO.
 
-On 20/08/19 11:42 PM, Michal Suchanek wrote:
-> Currently it is not possible to distinguish the case when fadump is
-> supported by firmware and disabled in kernel and completely unsupported
-> using the kernel sysfs interface. User can investigate the devicetree
-> but it is more reasonable to provide sysfs files in case we get some
-> fadumpv2 in the future.
-> 
-> With this patch sysfs files are available whenever fadump is supported
-> by firmware.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 > ---
-> Rebase on top of http://patchwork.ozlabs.org/patch/1150160/
-> [v5,31/31] powernv/fadump: support holes in kernel boot memory area
-> ---
->  arch/powerpc/kernel/fadump.c | 33 ++++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index 4b1bb3c55cf9..7ad424729e9c 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -1319,13 +1319,9 @@ static void fadump_init_files(void)
->   */
->  int __init setup_fadump(void)
->  {
-> -	if (!fw_dump.fadump_enabled)
-> -		return 0;
-> -
-> -	if (!fw_dump.fadump_supported) {
-> +	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
->  		printk(KERN_ERR "Firmware-assisted dump is not supported on"
->  			" this hardware\n");
-> -		return 0;
->  	}
->  
->  	fadump_show_config();
-> @@ -1333,19 +1329,26 @@ int __init setup_fadump(void)
->  	 * If dump data is available then see if it is valid and prepare for
->  	 * saving it to the disk.
->  	 */
-> -	if (fw_dump.dump_active) {
-> +	if (fw_dump.fadump_enabled) {
-> +		if (fw_dump.dump_active) {
-> +			/*
-> +			 * if dump process fails then invalidate the
-> +			 * registration and release memory before proceeding
-> +			 * for re-registration.
-> +			 */
-> +			if (fw_dump.ops->fadump_process(&fw_dump) < 0)
-> +				fadump_invalidate_release_mem();
-> +		}
->  		/*
-> -		 * if dump process fails then invalidate the registration
-> -		 * and release memory before proceeding for re-registration.
-> +		 * Initialize the kernel dump memory structure for FAD
-> +		 * registration.
->  		 */
-> -		if (fw_dump.ops->fadump_process(&fw_dump) < 0)
-> -			fadump_invalidate_release_mem();
-> -	}
-> -	/* Initialize the kernel dump memory structure for FAD registration. */
-> -	else if (fw_dump.reserve_dump_area_size)
-> -		fw_dump.ops->fadump_init_mem_struct(&fw_dump);
-> +		else if (fw_dump.reserve_dump_area_size)
-> +			fw_dump.ops->fadump_init_mem_struct(&fw_dump);
->  
-> -	fadump_init_files();
-> +	}
-> +	if (fw_dump.fadump_supported)
-> +		fadump_init_files();
->  
->  	return 1;
->  }
-> 
-
-
-Could you please move up fadump_init_files() call and return after it instead of
-nesting rest of the function. Also, get rid of the error message when fadump is
-not supported as it is already taken care of in fadump_reserve_mem() function.
-I mean:
-
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 2015b1f..0e9b028 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -1322,16 +1322,16 @@ static void fadump_init_files(void)
-  */
- int __init setup_fadump(void)
- {
--       if (!fw_dump.fadump_enabled)
-+       if (!fw_dump.fadump_supported)
-                return 0;
- 
--       if (!fw_dump.fadump_supported) {
--               printk(KERN_ERR "Firmware-assisted dump is not supported on"
--                       " this hardware\n");
--               return 0;
--       }
-+       fadump_init_files();
- 
-        fadump_show_config();
-+
-+       if (!fw_dump.fadump_enabled)
-+               return 0;
-+
-        /*
-         * If dump data is available then see if it is valid and prepare for
-         * saving it to the disk.
-@@ -1348,8 +1348,6 @@ int __init setup_fadump(void)
-        else if (fw_dump.reserve_dump_area_size)
-                fw_dump.ops->fadump_init_mem_struct(&fw_dump);
- 
--       fadump_init_files();
--
-        return 1;
- }
- subsys_initcall(setup_fadump);
-
-
-- Hari
-
+>  kernel/sched/fair.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 8f5f6cad5008..bf4f7f43252f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8759,6 +8759,7 @@ static inline enum alb_status active_load_balance(struct lb_env *env)
+>         enum alb_status status = cancelled;
+>         struct sched_domain *sd = env->sd;
+>         struct rq *busiest = env->src_rq;
+> +       struct task_struct *p = NULL;
+>         unsigned long flags;
+>
+>         schedstat_inc(sd->lb_failed[env->idle]);
+> @@ -8780,6 +8781,16 @@ static inline enum alb_status active_load_balance(struct lb_env *env)
+>         if (busiest->cfs.h_nr_running < 1)
+>                 goto unlock;
+>
+> +       /*
+> +        * If busiest->curr isn't CFS, then there's no point in running the
+> +        * cpu_stopper. We can try to nab one CFS task though, since they're
+> +        * all ready to be plucked.
+> +        */
+> +       if (busiest->curr->sched_class != &fair_sched_class) {
+> +               p = detach_one_task(env);
+> +               goto unlock;
+> +       }
+> +
+>         /*
+>          * Don't kick the active_load_balance_cpu_stop, if the curr task on
+>          * busiest CPU can't be moved to dst_cpu:
+> @@ -8803,7 +8814,9 @@ static inline enum alb_status active_load_balance(struct lb_env *env)
+>  unlock:
+>         raw_spin_unlock_irqrestore(&busiest->lock, flags);
+>
+> -       if (status == started)
+> +       if (p)
+> +               attach_one_task(env->dst_rq, p);
+> +       else if (status == started)
+>                 stop_one_cpu_nowait(cpu_of(busiest),
+>                                     active_load_balance_cpu_stop, busiest,
+>                                     &busiest->active_balance_work);
+> --
+> 2.22.0
+>
