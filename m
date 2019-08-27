@@ -2,237 +2,121 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A19BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9607C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3799A206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b0CrUdkQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA03206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbfH0Ott (ORCPT
+        id S1729931AbfH0OuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:49:49 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47698 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfH0Ott (ORCPT
+        Tue, 27 Aug 2019 10:50:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39645 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfH0OuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:49:49 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B56AB54B;
-        Tue, 27 Aug 2019 16:49:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566917385;
-        bh=rFgk1pvrfx+jQ2e3NBtVhCM4d/9bcGbvNX4VHdT/37A=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=b0CrUdkQCO3ydWxNsBAIld1kS9jj/8HHn3ZMvhsloLGvd7NF5IyZdM+7F4PkR7SAX
-         +I8p4fn1s6F5g3TrdwVcYGalaeCDqannrp7RmKkMGTnP66I8v+Mxvel67Sg3zl/cmD
-         J3qEFiRxU3DCUf1tpxl+uTs9PDTrQtKS1FgTaZMc=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH 5/7] bcm-vk: add bcm_vk UAPI
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-6-scott.branden@broadcom.com>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
-Organization: Ideas on Board
-Message-ID: <61c3e8a2-b230-844e-466c-ba45b42542a1@ideasonboard.com>
-Date:   Tue, 27 Aug 2019 15:49:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190822192451.5983-6-scott.branden@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 27 Aug 2019 10:50:15 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i2cnU-00040w-6I
+        for linux-kernel@vger.kernel.org; Tue, 27 Aug 2019 14:50:12 +0000
+Received: by mail-pf1-f199.google.com with SMTP id y66so14784134pfb.21
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 07:50:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=QPtHqzYE2I3K6mA1W43Ow1hu2cfsdV6r/QSBv6PmVXE=;
+        b=ZwdJpUTyWQJ7mSj/8i8BdMf1oHDQfvZpw0gitvjTAuLo2/Ri+utE5+CzgBVUMLQUhA
+         6wSAL7uvv3k8zkpnN947oPUeUdCwSDjDEVZDI/APeolziz4ZQMciSVK+TgXM3sSfzaNV
+         ttZjt17GcurVBXGQ4nmk1wTNJ88olWqWKLkpwFbikq3bmk6G3LqYbf8grNKhI3/SJhPU
+         R7Wev194kOefw9NfnEuEWaeTb1ocee627oDJZ8ZhedqieX3IFWAsZ8h1/Y6ZTDzwivAE
+         dLGtfSuQrBAXXPKx3myHG1BhnaHBnRvJYt2Fn8hBdfVQ3+mHBVt8Zv+jxKd7sf1qtgFX
+         TAKA==
+X-Gm-Message-State: APjAAAVjs6VdXJUuMqpOF5g3t5e0nGwxidBCI4jmmBGgiom44ixur+s7
+        kpNjydWy1y1zrd0UeQqAJZShJ/9/Fatu1JNG7BI0gGQU180ZDUfLXYh39V31D72fzRiylUHMSmK
+        sO7mEXH94HxXeVhLVGuBFAmQP91DagkglZwTPvfFNOw==
+X-Received: by 2002:a17:90a:3b4f:: with SMTP id t15mr26629450pjf.45.1566917410960;
+        Tue, 27 Aug 2019 07:50:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxD/9UP/HN0ldJtPRSnTlHHh4+NxXjhXptKrorWOlvZ1KnXW9fodYpfoV5J9JPcZXw61pCu5A==
+X-Received: by 2002:a17:90a:3b4f:: with SMTP id t15mr26629428pjf.45.1566917410640;
+        Tue, 27 Aug 2019 07:50:10 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-843f-e5eb-ba09-2e70.dynamic-ip6.hinet.net (2001-b011-380f-3c42-843f-e5eb-ba09-2e70.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:843f:e5eb:ba09:2e70])
+        by smtp.gmail.com with ESMTPSA id q8sm2479848pjq.20.2019.08.27.07.50.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2019 07:50:10 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when
+ dGPU is not bound
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190827134756.10807-2-kai.heng.feng@canonical.com>
+Date:   Tue, 27 Aug 2019 22:50:03 +0800
+Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <97D68761-4152-4D77-B222-14EA892503DB@canonical.com>
+References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+ <20190827134756.10807-2-kai.heng.feng@canonical.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, tiwai@suse.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
+at 21:47, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-On 22/08/2019 20:24, Scott Branden wrote:
-> Add user space api for bcm-vk driver.
-> 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  include/uapi/linux/misc/bcm_vk.h | 88 ++++++++++++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 include/uapi/linux/misc/bcm_vk.h
-> 
-> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
-> new file mode 100644
-> index 000000000000..df7dfd7f0702
-> --- /dev/null
-> +++ b/include/uapi/linux/misc/bcm_vk.h
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
-> +/*
-> + * Copyright(c) 2018 Broadcom
-> + */
-> +
-> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
-> +#define __UAPI_LINUX_MISC_BCM_VK_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +struct vk_metadata {
-> +	/* struct version, always backwards compatible */
-> +	__u32 version;
-> +
-> +	/* Version 0 fields */
-> +	__u32 card_status;
-> +#define VK_CARD_STATUS_FASTBOOT_READY BIT(0)
-> +#define VK_CARD_STATUS_FWLOADER_READY BIT(1)
-> +
-> +	__u32 firmware_version;
-> +	__u32 fw_status;
-> +	/* End version 0 fields */
-> +
-> +	__u64 reserved[14];
-> +	/* Total of 16*u64 for all versions */
-> +};
-> +
-> +struct vk_image {
-> +	__u32 type;     /* Type of image */
-> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
-> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
-> +	char filename[64]; /* Filename of image */
-> +};
-> +
-> +/* default firmware images names */
-> +#define VK_BOOT1_DEF_FILENAME	    "vk-boot1.bin"
-> +#define VK_BOOT2_DEF_FILENAME	    "vk-boot2.bin"
-> +
-> +struct vk_access {
-> +	__u8 barno;     /* BAR number to use */
-> +	__u8 type;      /* Type of access */
-> +#define VK_ACCESS_READ 0
-> +#define VK_ACCESS_WRITE 1
-> +	__u32 len;      /* length of data */
-> +	__u64 offset;   /* offset in BAR */
-> +	__u32 *data;    /* where to read/write data to */
-> +};
-> +
-> +struct vk_reset {
-> +	__u32 arg1;
-> +	__u32 arg2;
-> +};
-> +
-> +#define VK_MAGIC              0x5E
-> +
-> +/* Get metadata from Valkyrie (firmware version, card status, etc) */
-> +#define VK_IOCTL_GET_METADATA _IOR(VK_MAGIC, 0x1, struct vk_metadata)
-> +
-> +/* Load image to Valkyrie */
-> +#define VK_IOCTL_LOAD_IMAGE   _IOW(VK_MAGIC, 0x2, struct vk_image)
-> +
-> +/* Read data from Valkyrie */
-> +#define VK_IOCTL_ACCESS_BAR   _IOWR(VK_MAGIC, 0x3, struct vk_access)
-> +
-> +/* Send Reset to Valkyrie */
-> +#define VK_IOCTL_RESET        _IOW(VK_MAGIC, 0x4, struct vk_reset)
+> It's a common practice to let dGPU unbound and use PCI port PM to
+> disable its power through _PR3. When the dGPU comes with an HDA
+> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
+> power can't be disabled.
+>
+> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+> discrete GPU") only allows HDA to be runtime-suspended once GPU is
+> bound, to keep APU's HDA working.
+>
+> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
+> the runtime suspend requirement for dGPU's HDA function, to save lots of
+> power.
+>
+> BugLink: https://bugs.launchpad.net/bugs/1840835
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> —
 
-It sounds a bit like the valkyrie is a generic asynchronous coprocessor,
-does it merit using the remoteproc interfaces to control it ?
+Forgot to mention that for some platforms this issue happen after commit  
+b516ea586d71 ("PCI: Enable NVIDIA HDA controllers”) which starts to unhide  
+the “hidden” HDA.
 
-Or is it really just a single purpose cell doing video operations ?
+Kai-Heng
 
---
-Kieran
+>  sound/pci/hda/hda_intel.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index 99fc0917339b..d4ee070e1a29 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
+>  		dev_info(chip->card->dev,
+>  			 "Handle vga_switcheroo audio client\n");
+>  		hda->use_vga_switcheroo = 1;
+> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
+> +		/* cleared in gpu_bound op */
+> +		hda->need_eld_notify_link = !pci_pr3_present(p);
+>  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+>  		pci_dev_put(p);
+>  	}
+> -- 
+> 2.17.1
 
-> +
-> +/*
-> + * message block - basic unit in the message where a message's size is always
-> + *		   N x sizeof(basic_block)
-> + */
-> +struct vk_msg_blk {
-> +	__u8 function_id;
-> +#define VK_FID_TRANS_BUF 5
-> +#define VK_FID_SHUTDOWN  8
-> +	__u8 size;
-> +	__u16 queue_id:4;
-> +	__u16 msg_id:12;
-> +	__u32 context_id;
-> +	__u32 args[2];
-> +#define VK_CMD_PLANES_MASK 0x000F /* number of planes to up/download */
-> +#define VK_CMD_UPLOAD      0x0400 /* memory transfer to vk */
-> +#define VK_CMD_DOWNLOAD    0x0500 /* memory transfer from vk */
-> +#define VK_CMD_MASK        0x0F00 /* command mask */
-> +};
-> +
-> +#endif /* __UAPI_LINUX_MISC_BCM_VK_H */
-> 
 
--- 
-Regards
---
-Kieran
