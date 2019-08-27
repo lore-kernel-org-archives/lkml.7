@@ -2,142 +2,101 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E55C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C74C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2CB22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B5C20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566947225;
-	bh=WE4QEs46+F0AXHLzxSkuwUCWzJwNYQIvdKGLoOjedEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rDMMmpOeUotzWhLZTeMUbDk2Uu1CQkRI8QlDZDrdCRUU11CYugJohurh3MyEsWilN
-	 pcEwOwlDCgV47rnJs0Q3oqBegKgtX3N5m0Zf0Gzul7iok2xJIwWHdzaDENKz5STGuh
-	 sCPIYL86vNA8SmjzJ7U/yyGaBGzYyLM5nQCBpB18=
+	s=default; t=1566947292;
+	bh=esY6YjPvfKmvAp/kVRaTfdsUoSPjd12Fm5ETVPcKaGk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=duWbGBB0TxApJKAoijURnUYoVitErwSwGLdKgvxXk6ebxFmhPQ/zzNtYoU+mrNTfc
+	 e+0S2YuICFKnyFtK68uw09zB2xFKL9eRzN7A/55Q4YZGV1M5++a4Cji0PYiac8tBFT
+	 lJJHDNpD2HT1nMMCCilNb/+BA+cPDq1V4mGUU8EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfH0XHE (ORCPT
+        id S1726340AbfH0XIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 19:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfH0XHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:07:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725992AbfH0XIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:08:10 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09904214DA;
-        Tue, 27 Aug 2019 23:07:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA6422CF4
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 23:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566947222;
-        bh=WE4QEs46+F0AXHLzxSkuwUCWzJwNYQIvdKGLoOjedEQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nbk0GzfVvfIDS2w248ZujPEbSU7RmkyFzJLmfCKhInfK7r2zQ1n5pr30kuzojc1n1
-         iUk/K5GEwiUWMu8ikTnYZfkz7SG2Df3/BexhC7K6iOIijWSxbH3ARYdCgKerqaJMQE
-         RkwKbTq8PTfLbZU2WoVQnFT0U0cpKug0xXpfRtHE=
-Date:   Tue, 27 Aug 2019 18:06:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix misspelled words.
-Message-ID: <20190827230659.GF9987@google.com>
-References: <20190819115306.27338-1-kw@linux.com>
+        s=default; t=1566947289;
+        bh=esY6YjPvfKmvAp/kVRaTfdsUoSPjd12Fm5ETVPcKaGk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Tt+XgRGClLul3gO6DAKl61su1kaD7LBGAvpe/PWqJj0fKj/A4nEtdnEy04EQrIZON
+         Vikvp1KrXf6b2A9nwhDzyZPu3y0xIgiA6xLH8wa2cWE6QmoUsyNfDDmmQumT74RxJ3
+         f3AAIyaQRLJqhx9DdluNTv3jNwK/FjOWe+f9HJp4=
+Received: by mail-wm1-f49.google.com with SMTP id o4so725923wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:08:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAW7IChsUUgn2Hs0tH0gcvabIigsYJhmSMjXehZU9VoJp88ZY57o
+        eQf/61VrOxr4nN18LEXxuy0dU/6h1wC67dXTfVX8rg==
+X-Google-Smtp-Source: APXvYqxQ99MDN+RYuiEsd0bHq5VQ47EUqgy9aOdbK2Oqr33cvhPEybYXj/l6IHq77t51KsA5bWEkHrleHX/n11gMNa0=
+X-Received: by 2002:a05:600c:22d7:: with SMTP id 23mr915368wmg.0.1566947287673;
+ Tue, 27 Aug 2019 16:08:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819115306.27338-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190823225248.15597-1-namit@vmware.com> <20190823225248.15597-4-namit@vmware.com>
+In-Reply-To: <20190823225248.15597-4-namit@vmware.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 27 Aug 2019 16:07:55 -0700
+X-Gmail-Original-Message-ID: <CALCETrXjqa6pWpAgh7v-sttOwY0V2RUqQ_Vs-JQr7nFDYvrBpQ@mail.gmail.com>
+Message-ID: <CALCETrXjqa6pWpAgh7v-sttOwY0V2RUqQ_Vs-JQr7nFDYvrBpQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] x86/mm/tlb: Avoid deferring PTI flushes on shootdown
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 01:53:06PM +0200, Krzysztof Wilczynski wrote:
-> Fix misspelled words in include/linux/pci.h, drivers/pci/Kconfig,
-> and in the documentation for Freescale i.MX6 and Marvell Armada 7K/8K
-> PCIe interfaces.  No functional change intended.
-> 
-> Related commit 96291d565550 ("PCI: Fix typos and whitespace errors").
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-
-Applied with Thomas' ack and Rob's reviewed-by to pci/trivial for
-v5.4, thanks!
-
+On Fri, Aug 23, 2019 at 11:13 PM Nadav Amit <namit@vmware.com> wrote:
+>
+> When a shootdown is initiated, the initiating CPU has cycles to burn as
+> it waits for the responding CPUs to receive the IPI and acknowledge it.
+> In these cycles it is better to flush the user page-tables using
+> INVPCID, instead of deferring the TLB flush.
+>
+> The best way to figure out whether there are cycles to burn is arguably
+> to expose from the SMP layer when an acknowledgment is received.
+> However, this would break some abstractions.
+>
+> Instead, use a simpler solution: the initiating CPU of a TLB shootdown
+> would not defer PTI flushes. It is not always a win, relatively to
+> deferring user page-table flushes, but it prevents performance
+> regression.
+>
+> Signed-off-by: Nadav Amit <namit@vmware.com>
 > ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 2 +-
->  Documentation/devicetree/bindings/pci/pci-armada8k.txt   | 2 +-
->  drivers/pci/Kconfig                                      | 2 +-
->  include/linux/pci.h                                      | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index a7f5f5afa0e6..de4b2baf91e8 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -50,7 +50,7 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
->  - power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
->  - resets: Must contain phandles to PCIe-related reset lines exposed by SRC
->    IP block
-> -- reset-names: Must contain the following entires:
-> +- reset-names: Must contain the following entries:
->  	       - "pciephy"
->  	       - "apps"
->  	       - "turnoff"
-> diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> index 9e3fc15e1af8..1aaa09254001 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> @@ -11,7 +11,7 @@ Required properties:
->  - reg-names:
->     - "ctrl" for the control register region
->     - "config" for the config space region
-> -- interrupts: Interrupt specifier for the PCIe controler
-> +- interrupts: Interrupt specifier for the PCIe controller
->  - clocks: reference to the PCIe controller clocks
->  - clock-names: mandatory if there is a second clock, in this case the
->     name must be "core" for the first clock and "reg" for the second
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 2ab92409210a..46f4912a370d 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -170,7 +170,7 @@ config PCI_P2PDMA
->  
->  	  Many PCIe root complexes do not support P2P transactions and
->  	  it's hard to tell which support it at all, so at this time,
-> -	  P2P DMA transations must be between devices behind the same root
-> +	  P2P DMA transactions must be between devices behind the same root
->  	  port.
->  
->  	  If unsure, say N.
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 463486016290..5a89854bd3cb 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -961,7 +961,7 @@ resource_size_t pcibios_align_resource(void *, const struct resource *,
->  				resource_size_t,
->  				resource_size_t);
->  
-> -/* Weak but can be overriden by arch */
-> +/* Weak but can be overridden by arch */
->  void pci_fixup_cardbus(struct pci_bus *);
->  
->  /* Generic PCI functions used internally */
-> -- 
-> 2.22.0
-> 
+>  arch/x86/include/asm/tlbflush.h |  1 +
+>  arch/x86/mm/tlb.c               | 10 +++++++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+> index da56aa3ccd07..066b3804f876 100644
+> --- a/arch/x86/include/asm/tlbflush.h
+> +++ b/arch/x86/include/asm/tlbflush.h
+> @@ -573,6 +573,7 @@ struct flush_tlb_info {
+>         unsigned int            initiating_cpu;
+>         u8                      stride_shift;
+>         u8                      freed_tables;
+> +       u8                      shootdown;
+
+I find the name "shootdown" to be confusing.  How about "more_than_one_cpu"?
