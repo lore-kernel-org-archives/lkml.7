@@ -2,144 +2,157 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2380EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C114FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61B9206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2E0206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 12:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVtpiXX+"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="EQBC0OjD";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="cNmu+PFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbfH0MUM (ORCPT
+        id S1729784AbfH0MU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 08:20:12 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40830 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfH0MUL (ORCPT
+        Tue, 27 Aug 2019 08:20:26 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:19638 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727864AbfH0MU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 08:20:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id t6so45779738ios.7
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 05:20:11 -0700 (PDT)
+        Tue, 27 Aug 2019 08:20:26 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7RC9xdr027173;
+        Tue, 27 Aug 2019 05:20:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=3UJPLK5iNrLn8rhvgRovCgu4chfwXQ3C/kUoPWi56e4=;
+ b=EQBC0OjD9W1sHNSykdq6MvDvSsg2A/lDRorKrwLvTJXRPDkoaalt7iptQ6HES1uJTBOc
+ QYBhgj42sR699Gi7eXi/lDew/RB5ctC1/ya066wyCWTa/EqNQEn+Qt0xyVIAc5Jh+PK2
+ qdfHv4Extq4Qk/gz4bbGd3EF+UetFrTbCyxOZ1CVIYeEB3mNEKq5eGKKSGv8rFznYOlP
+ Yf/vwdHA+FSxAOaJX15CAbCZoN2lKVwWO97e6XiX1qHb51bf2nJS14BrMmK6wQgLxFWz
+ f8zH1GTxX0SDbJOMf7LmQOD5nQq1eSKyVD7rbXXGpUTNLByNuk7GT2RqRvqwBgpQ51H0 2Q== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2uk4rkjepy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 27 Aug 2019 05:20:09 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 27 Aug
+ 2019 05:20:07 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.54) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 27 Aug 2019 05:20:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cavuI0fSmPu4NqiO0GTiUkjbRDaPwEoozdlf+o6XMRKMavNGVWOMa4XZW0TTcFe2WG59H7rMNzC//KnXByCZdg8UcfQOm2CRJcHKSklRttpjAWj34UabN6TtZanahlCy4c9+EW7ao+O2Tx1JF0AamGa4TGIvdETA5ld8au/3xsV5I8z2nD0VyBMmPCXi2UgSLWYL8gJZDGHts1jAyH1I/D4NH7K0js9boe4zV5rNAMaRRfXX9HcuxUY3bzoI3MKMHI3csjGudszqO5gC5LK8UA13PfaDC1kvaU/6YvLy6iW9gjH1wi3MR/n++/fx8QBMDO3i8JpJuvK7OWBfiP7ziw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3UJPLK5iNrLn8rhvgRovCgu4chfwXQ3C/kUoPWi56e4=;
+ b=Ez960qlJU/5zUvxU4Z13d/gNjL9ISRXsIQVR6K8ArwrLXOLyPgpRMVenZOdvgRITmy+A/pz97jD9F2ccsb2zup+mTvJ2ZlUmFlEhHDK0Zn6zsT9gEknbFqx4wmFhgwb9v79FJDJBZAs7gOcPzMWtiEgoVDKsmPGYPfSUwyWsZG09Z3odHvhonQlfbwDgWqrldTUkAKW4IwK1ov59a+YOG+YQBH8fW+uE+cuFUSzxwIGzX0kvBMYQEaLHNtpbL/RWxJzZnpdtU0G2iw/VQ/MbXKz217Yi0uD/nLaXrLDJ/S2NVaSpN3oY7VOVcbVx2brkMLxYQl74hhpyn3CRb16PXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JZZ/56kClmUu9u3Lz2o/WyytqKT9LHvtxY62+NNR8z4=;
-        b=KVtpiXX+jnNmjybRAgMq/v2UaZwJ8TQxwMhdPAdIblUW3hTj5KDbNBE+1U8XZrrqsD
-         bvaBfzdSJd4O6jptxaZwR3veMwyukJ6IK/y9Oapht5+UPyYAcCfUpf/scv+s7NsBo8E9
-         HHshJMGjEUwMyfZKGrBij9V+05AyT+6LD2+CYd/ELmgrnLDbigilxr759mZYDFLJUijN
-         lTafxftfeIz+n2j45oT3V/WlfqrQ9YtsdZfe0aXUV38hqqetZw1YVglXySEVouRtR/nA
-         xPuhta6YMWXVVN1R4GxNy0k1DADS4JvbLj9Bvq6vCV8Q0xR8QdQT/RC3+QOYg+nUbKs3
-         6v/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JZZ/56kClmUu9u3Lz2o/WyytqKT9LHvtxY62+NNR8z4=;
-        b=gGKiTc0+hHBWjgCLF/OJY2VU1KfnKgCkrxOWrqv8tIcyvx+me4NsZd/EUpO2cUD4u2
-         zNzJ1uYcN/U0+ITPMZ4zzCQe/3J6OyS9aVG5Lcyk2qZD33n0wEt4Jq50xUysdpPCRaq2
-         ygiETtWy7LV3E87lbL4PuopaURfs2efiFEbmTz7Mn2KnqJ0hv554jDtBc/iij4hDetwn
-         roGKB1D7Tz4LVYD6iOINsYM07rAg472/SYfr94kK7r7O83sFCzJ+zrow6NdPtIO44in3
-         4rmHYQAoQ1wQniwT0p6KnwaT5w/IAWazXkJBebO//ZPyMCXT4BPDvW5REW69DkMX0iO+
-         M0bA==
-X-Gm-Message-State: APjAAAXIBK3iLpvQcqF7mPpL/EU1vdlkSi2AnDxuKYnWOqHacNIinfia
-        fMT9i6g424PYGiCpaGlOrO5bmescVGU9AsVlFII=
-X-Google-Smtp-Source: APXvYqxB8MslH6etRvDRLUd46ELBnidSNuloQ4pjR9WaeVYRpmCUEnHfXfiRR7Jcma77KFAblCBMNU0SZa/iXfGek7A=
-X-Received: by 2002:a6b:c38f:: with SMTP id t137mr8388942iof.137.1566908410262;
- Tue, 27 Aug 2019 05:20:10 -0700 (PDT)
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3UJPLK5iNrLn8rhvgRovCgu4chfwXQ3C/kUoPWi56e4=;
+ b=cNmu+PFhoUP65wrqFDqXE+15QyziB8yqhO2JaLoGG5Sa23lNbfhkA91/oNkOQkt+/Gy5GVJzqSvz4alnOTUQf+PvAcZXISykbNFozftK0yhU0bqQEalL8atHTcKHa/voPrCpFnRkiTFTBbsCRUD19ZaSP9+eBGkR+fimKhXIlTM=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2990.namprd18.prod.outlook.com (20.179.22.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 12:20:05 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2199.021; Tue, 27 Aug 2019
+ 12:20:05 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 06/24] EDAC: Kill EDAC_DIMM_PTR() macro
+Thread-Topic: [PATCH v2 06/24] EDAC: Kill EDAC_DIMM_PTR() macro
+Thread-Index: AQHVXNHCQNXmlYryY0S3iWFUnya/Og==
+Date:   Tue, 27 Aug 2019 12:20:05 +0000
+Message-ID: <20190827121956.6kitf62spfbi7pdk@rric.localdomain>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-7-rrichter@marvell.com> <20190813145947.GE16770@zn.tnic>
+In-Reply-To: <20190813145947.GE16770@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0102CA0008.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:14::21) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4e82e0ad-3873-42c0-2b62-08d72ae8e457
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2990;
+x-ms-traffictypediagnostic: MN2PR18MB2990:
+x-microsoft-antispam-prvs: <MN2PR18MB29908055C73840BF9BD14205D9A00@MN2PR18MB2990.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(136003)(376002)(366004)(189003)(199004)(54906003)(1076003)(305945005)(476003)(6436002)(486006)(53546011)(316002)(5660300002)(66066001)(3846002)(26005)(386003)(4744005)(7736002)(14454004)(53936002)(6486002)(186003)(11346002)(446003)(52116002)(76176011)(102836004)(6116002)(9686003)(25786009)(86362001)(6512007)(478600001)(8936002)(256004)(71200400001)(8676002)(6246003)(81166006)(66556008)(2906002)(64756008)(66446008)(81156014)(229853002)(66946007)(66476007)(71190400001)(6506007)(4326008)(99286004)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2990;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cgypWYzqBZBjsujBn5onJxXd4DAeFCa60PB6F2TDW4nakzw8SfEZbMa4ETxMFKD1kCHAhvw2EkrntoBdfKb0mNH66ajq0oQjSSXlfHls+R8zqLEopMyK+t7AsX/MahduGiDCYHsUK+bnD+J0cP+nYu1eeSZgSr4tqLQW1IdCLyH07ULDVgahOi3SRJXx5Yz6QtM+we0ojz6w5eWIhUG0gG/JpSCms5mtbVLz7nqyPiNi5mq20BB9fivLVGrYE6JfPt5EeeY1ZDD8Xf1ZqncaQ1jAAabfIY6tjtOUWGgO3PUpNfIDce8OQkXhPrFINZpIrMe9DLebvrF7oU+gPsupsXxrVd4gTHEGixdknq9NPXtTiLhv6np7prvBYeIf8Bu84jbSvMUNU1pURC3UMcUR5s71chJVBSiEfmsvOob9IuU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D66A4FE408AD8348AE47360DB7CAB60D@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAE1jjeePxYPvw1mw2B3v803xHVR_BNnz0hQUY_JDMN8ny29M6w@mail.gmail.com>
- <b9cd7603-2441-d351-156a-57d6c13b2c79@linux.alibaba.com> <20190826105521.GF7538@dhcp22.suse.cz>
- <20190827104313.GW7538@dhcp22.suse.cz> <CALOAHbBMWyPBw+Ciup4+YupbLrxcTW76w+Mfc-mGEm9kcWb8YQ@mail.gmail.com>
- <20190827115014.GZ7538@dhcp22.suse.cz> <CALOAHbAtuQFB=GC41ZgSLXxheaEY4yz=fO9Zr5=rvTnyOYjF3A@mail.gmail.com>
- <20190827120335.GA7538@dhcp22.suse.cz>
-In-Reply-To: <20190827120335.GA7538@dhcp22.suse.cz>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 27 Aug 2019 20:19:34 +0800
-Message-ID: <CALOAHbDbNxg1xxZAT0rf3=46DrM1PV2YEDEP6F9HMU9JvgvESA@mail.gmail.com>
-Subject: Re: WARNINGs in set_task_reclaim_state with memory cgroup and full
- memory usage
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Adric Blake <promarbler14@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e82e0ad-3873-42c0-2b62-08d72ae8e457
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 12:20:05.2279
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GCHFqDYJfDrSLJ5FWo9IuZ2aCqF8GrZrTaAnZbBPJJS58ejTu5os633GzXzK+cXS3HtGFhPZz6PEVgBub8xwUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2990
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-27_02:2019-08-27,2019-08-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 8:03 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 27-08-19 19:56:16, Yafang Shao wrote:
-> > On Tue, Aug 27, 2019 at 7:50 PM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Tue 27-08-19 19:43:49, Yafang Shao wrote:
-> > > > On Tue, Aug 27, 2019 at 6:43 PM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > >
-> > > > > If there are no objection to the patch I will post it as a standalong
-> > > > > one.
-> > > >
-> > > > I have no objection to your patch. It could fix the issue.
-> > > >
-> > > > I still think that it is not proper to use a new scan_control here as
-> > > > it breaks the global reclaim context.
-> > > >
-> > > > This context switch from global reclaim to memcg reclaim is very
-> > > > subtle change to the subsequent processing, that may cause some
-> > > > unexpected behavior.
-> > >
-> > > Why would it break it? Could you be more specific please?
-> > >
-> >
-> > Hmm, I have explained it when replying to  Hillf's patch.
-> > The most suspcious one is settting target_mem_cgroup here, because we
-> > only use it to judge whether it is in global reclaim.
-> > While the memcg softlimit reclaim is really in global reclaims.
->
-> But we are reclaim the target_mem_cgroup hierarchy. This is the whole
-> point of the soft reclaim. Push down that hierarchy below the configured
-> limit. And that is why we absolutely have to switch the reclaim context.
->
+On 13.08.19 16:59:47, Borislav Petkov wrote:
+> > + *
+> > + * For 2 layers, this macro is similar to allocate a bi-dimensional ar=
+ray
+> > + * and to return "dimms[layer0][layer1]";
+> > + *
+> > + * For 3 layers, this macro is similar to allocate a tri-dimensional a=
+rray
+> > + * and to return "dimms[layer0][layer1][layer2]";
+> > + */
+> > +static inline struct dimm_info *
+> > +edac_get_dimm(struct mem_ctl_info *mci, int layer0, int layer1, int la=
+yer2)
+> > +{
+> > +	int index =3D layer0;
+> > +
+> > +	if (index >=3D 0 && mci->n_layers > 1)
+>=20
+> Can layer0 be negative here to warrant that check?
 
-One obvious issue is the reclaim couters may not correct.
-See shrink_inactive_list().
-The pages relcaimed in memcg softlimit will not be counted to
-PGSCAN_{DIRECT, KSWAPD} and
-PGSTEAL_{DIRECT, KSWAPD}.
-That may cause some misleading. For example, if these counters are not
-changed, we will think that direct relcaim doesn't occur, while it
-really occurs.
+Yes, if a mem controller can not determine a dimm's position, this
+function can be called with layers set to -1.
 
-May issues are also in  some other code around the usage of
-global_reclaim(). I'm not sure of it.
+I have reworked the patch according to all of your comments.
 
-> > Another example the reclaim_idx, if is not same with reclaim_idx in
-> > page allocation context, the reclaimed pages may not be used by the
-> > allocator, especially in the direct reclaim.
->
-> Again, we do not care about that as well. All we care about is to
-> reclaim _some_ memory to get below the soft limit. This is the semantic
-> that is not really great but this is how the Soft reclaim has
-> traditionally worked and why we keep claiming that people shouldn't
-> really use it. It does lead to over reclaim and that is a design rather
-> than a bug.
->
-> > And some other things in scan_control.
->
-> Like?
-> --
-> Michal Hocko
-> SUSE Labs
->
+Thanks for review,
+
+-Robert
