@@ -2,126 +2,92 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5A8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD59AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91115217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803AD20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566945176;
-	bh=BZBaTFGssajv3IlbgzTXiqQlRe3Vi4EfJMlUKefgSJI=;
+	s=default; t=1566945180;
+	bh=1+QNJKUgz+gea1zCCXAK/Hc/T4SGAhK43TGzjR48Lmk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aye7cGigafqzUQa5YWWm6YAc1CcGPmn+Fz2kWV1bEt+e5OHDVy0xengijMy5J/WJ4
-	 pWBa5TBjjer73GzXyB7R2fGlAA0sEyAnpiHVBuxd55VxbKM4F401JOCBNz4L+y6Nfx
-	 KATa5sR3hY0tYmBZM+oHLaWpmLN/y87d1Ksz0nkw=
+	b=dvCelqte/6nUBYak42nzuN2Xb5lYU4y0YLhTDWA1/cMZS7sD7unLmDQ1C3ZqQH/WZ
+	 uWmsur05K7AQu2rJDunKTmNkXM0GQ6hihMv7bZZa4UaIX8Alb4HT/I1bJxsdf/o1CY
+	 jv5BNocLI5rss1TrpN3T0cuNez6YQKYMRgJjUiIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfH0Wcz (ORCPT
+        id S1726415AbfH0Wc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:32:55 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43238 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfH0Wcz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:32:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e12so762450otp.10;
-        Tue, 27 Aug 2019 15:32:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bG9bAPsPgtk0aXT02g27VLf1Saty2/UhvB2P1PQFez4=;
-        b=lFh0XojkxV22fnbW+8yeuTFoncb0V58PwmV6D1R0gHbEE8Fnl/sk3qJJbNsDFEem9S
-         IJgRLxQQenYX8WZAaUxPsCZHrsog3v12vAM+W6kzbyYl7/SRL6K4byR2nc0wa4AeBQsa
-         3+4DI+hppspWCQljpfstzZROzPbfC45xcc06SdhrATNNYp7cY5h7lVpXPWltFmHVX/0x
-         LCpyitPHpzTv1Zhk8bNEZINSOoNKRYT0FDW3A7a68cM+WSRFzCBRSbel8WrVkrXtejPj
-         +ARLIqx4jVTYuTfKRaeo5uL6cpwyKsp3tr3thFyLP2hmyZkg9DpoWHtWZT5yaGQe2AiY
-         Xzig==
-X-Gm-Message-State: APjAAAUHLRa46OaVpnGKiPC+BaXrntNieNfbix5rma9DDcQd4sfoUbRq
-        oW+qTEbiMXpYqTz3eXxSZUgLgo+FRw==
-X-Google-Smtp-Source: APXvYqxrYCEbW6Lei7IWDJP4LIXpA5Q0iwBYIAzLRZXOMhYN8gHCCf8NUNNEpuif/S+KC2JZ8UZZfg==
-X-Received: by 2002:a9d:6e93:: with SMTP id a19mr819140otr.29.1566945174143;
-        Tue, 27 Aug 2019 15:32:54 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e27sm186531oig.53.2019.08.27.15.32.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 15:32:53 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 17:32:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] dt-bindings: soc: qcom: Add RSC power domain
- specifier
-Message-ID: <20190827223252.GA26039@bogus>
-References: <20190823081703.17325-1-mkshah@codeaurora.org>
- <20190823081703.17325-4-mkshah@codeaurora.org>
+        Tue, 27 Aug 2019 18:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfH0Wc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:32:57 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D726120856;
+        Tue, 27 Aug 2019 22:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566945176;
+        bh=1+QNJKUgz+gea1zCCXAK/Hc/T4SGAhK43TGzjR48Lmk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iZn1gGeISV7sMLyJAWPA3zeSgGFzMulVtOlCichsCyw2q3fdgawfyEsHjr4KL65bz
+         wCm7gNW2nm5lFa3R90WX//Grb6qYufDlmR7iFbjWqtbOy7Cpn7x3nErLKRZxDcbq/o
+         yCwTXt4Awd8wYq48Pu5CdmDCAOnwdhW8w0TQDmvc=
+Date:   Tue, 27 Aug 2019 17:32:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
+Message-ID: <20190827223254.GC9987@google.com>
+References: <20190819160643.27998-1-efremov@linux.com>
+ <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190823081703.17325-4-mkshah@codeaurora.org>
+In-Reply-To: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 01:47:00PM +0530, Maulik Shah wrote:
-> In addition to transmitting resource state requests to the remote
-> processor, the RSC is responsible for powering off/lowering the
-> requirements from CPUs subsystem for the associated hardware like
-> buses, clocks, and regulators when all CPUs and cluster is powered down.
+On Tue, Aug 20, 2019 at 03:16:43PM +0300, Denis Efremov wrote:
+> On 8/19/19 7:06 PM, Denis Efremov wrote:
+> > PCIe defines two optional hotplug indicators: a Power indicator and an
+> > Attention indicator. Both are controlled by the same register, and each
+> > can be on, off or blinking. The current interfaces
+> > (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+> > non-uniform and require two register writes in many cases where we could
+> > do one.
+> > 
+> > This patchset introduces the new function pciehp_set_indicators(). It
+> > allows one to set two indicators with a single register write. All
+> > calls to previous interfaces (pciehp_green_led_* and
+> > pciehp_set_attention_status()) are replaced with a new one. Thus,
+> > the amount of duplicated code for setting indicators is reduced.
+> > 
+> > Changes in v3:
+> >   - Changed pciehp_set_indicators() to work with existing
+> >     PCI_EXP_SLTCTL_* macros
+> >   - Reworked the inputs validation in pciehp_set_indicators()
+> >   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+> >     completely
+> > 
+> > Denis Efremov (4):
+> >   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+> >   PCI: pciehp: Switch LED indicators with a single write
+> >   PCI: pciehp: Remove pciehp_set_attention_status()
+> >   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
 > 
-> The power domain is configured to a low power state and when all the
-> CPUs are powered down, the RSC can lower resource state requirements
-> and power down the rails that power the CPUs.
-> 
-> Add PM domain specifier property for RSC controller.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> index 9b86d1eff219..d0ab6e9b6745 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> @@ -83,6 +83,13 @@ Properties:
->  	Value type: <string>
->  	Definition: Name for the RSC. The name would be used in trace logs.
->  
-> +- #power-domain-cells:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: Number of cells in power domain specifier. Optional for
-> +		    controllers that may be in 'solver' state where they can
-> +		    be in autonomous mode executing low power modes.
+> Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
+> The changes in the last 2 patches were significant.
 
-What's the value? It's always 0?
-
-> +
->  Drivers that want to use the RSC to communicate with RPMH must specify their
->  bindings as child nodes of the RSC controllers they wish to communicate with.
->  
-> @@ -112,6 +119,7 @@ TCS-OFFSET: 0xD00
->  				  <SLEEP_TCS   3>,
->  				  <WAKE_TCS    3>,
->  				  <CONTROL_TCS 1>;
-> +		#power-domain-cells = <0>;
->  	};
->  
->  Example 2:
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
-> 
+Anybody want to review these?
