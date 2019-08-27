@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36446C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC50AC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDF2206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944E2206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892680;
-	bh=AQEVTXZQxGBQ9YFF+5HCo/xdoTw+hiPIi6RUAuY8E94=;
+	s=default; t=1566892684;
+	bh=l/ljcQ7Xg1mHTeRX5Cvd93e8nuYIhgNkK4LUpGAu6GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trulxuISqpxzNNWxzg4LEFl5T5TwAAwW5KaDBMh/QwrqzsTH7iC6OYIPYBtVJOVds
-	 4zGg/hHtf2Xhejm1dD2+3k3WLwL7Aoj8CjcCUfCPnC3OkxWEHcfnKQX50+1M9ihk5p
-	 dUdBpgt/ac0mOe/4/T8vXo+wh7T0zl5r0dOPw7xM=
+	b=xvh+VUfVZjHV8tB+oNzWyBIxuJWEne6tibbqGp0p1e6ubnwGTIAbf0GEC+DT1eti+
+	 S1ShRZ0R2BGrqeJ9gkmcayD+x3f4sc1UEdNVNDospxEHRy8j35whRhzDLaZ5Duog7a
+	 gqb5KSArVXhIOEJekmcPktj6urxg3aCb+fT7WRac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbfH0H57 (ORCPT
+        id S1729634AbfH0H6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730883AbfH0H5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:57:54 -0400
+        id S1730521AbfH0H57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:57:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25CC821883;
-        Tue, 27 Aug 2019 07:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA72F206BF;
+        Tue, 27 Aug 2019 07:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892672;
-        bh=AQEVTXZQxGBQ9YFF+5HCo/xdoTw+hiPIi6RUAuY8E94=;
+        s=default; t=1566892678;
+        bh=l/ljcQ7Xg1mHTeRX5Cvd93e8nuYIhgNkK4LUpGAu6GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DdMZauSQYYAeVSkwKrMm1thAWDlPxFlvwJiwflAYpBpXrSYeBKRWgRKRmTcTmw9uW
-         pVNnTORkh5r1PUeWi3eVbbayQlvUK/pf37Lx9PEh3vD3RRmerhyu1j+3g8lzp2lMSb
-         //CFZaJWaR7CACU0JDAw04CSvW1AkzSlDIqlD8ms=
+        b=hNVL9NPNIC9P4bfb1lAln5s8gkHyILf+qeHs+Lyb5nWxwzHJjyr+ToCRwZwu5GAAv
+         Gaa4ykgVGDMIsxIELaZSAV9lgPkyZpZ+XhS63KeaoWOyc7viBRdGFMMuVBHrA6NpYi
+         zsfN0l8ugbRZlkLd2mXxzPC4BSw1v5oZpHl4946Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 4.19 73/98] x86/boot: Save fields explicitly, zero out everything else
-Date:   Tue, 27 Aug 2019 09:50:52 +0200
-Message-Id: <20190827072722.052505070@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 75/98] dm kcopyd: always complete failed jobs
+Date:   Tue, 27 Aug 2019 09:50:54 +0200
+Message-Id: <20190827072722.114406263@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -60,106 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit a90118c445cc7f07781de26a9684d4ec58bfcfd1 upstream.
+commit d1fef41465f0e8cae0693fb184caa6bfafb6cd16 upstream.
 
-Recent gcc compilers (gcc 9.1) generate warnings about an out of bounds
-memset, if the memset goes accross several fields of a struct. This
-generated a couple of warnings on x86_64 builds in sanitize_boot_params().
+This patch fixes a problem in dm-kcopyd that may leave jobs in
+complete queue indefinitely in the event of backing storage failure.
 
-Fix this by explicitly saving the fields in struct boot_params
-that are intended to be preserved, and zeroing all the rest.
+This behavior has been observed while running 100% write file fio
+workload against an XFS volume created on top of a dm-zoned target
+device. If the underlying storage of dm-zoned goes to offline state
+under I/O, kcopyd sometimes never issues the end copy callback and
+dm-zoned reclaim work hangs indefinitely waiting for that completion.
 
-[ tglx: Tagged for stable as it breaks the warning free build there as well ]
+This behavior was traced down to the error handling code in
+process_jobs() function that places the failed job to complete_jobs
+queue, but doesn't wake up the job handler. In case of backing device
+failure, all outstanding jobs may end up going to complete_jobs queue
+via this code path and then stay there forever because there are no
+more successful I/O jobs to wake up the job handler.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+This patch adds a wake() call to always wake up kcopyd job wait queue
+for all I/O jobs that fail before dm_io() gets called for that job.
+
+The patch also sets the write error status in all sub jobs that are
+failed because their master job has failed.
+
+Fixes: b73c67c2cbb00 ("dm kcopyd: add sequential write feature")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190731054627.5627-2-jhubbard@nvidia.com
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/bootparam_utils.h |   60 +++++++++++++++++++++++++--------
- 1 file changed, 47 insertions(+), 13 deletions(-)
+ drivers/md/dm-kcopyd.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/bootparam_utils.h
-+++ b/arch/x86/include/asm/bootparam_utils.h
-@@ -18,6 +18,20 @@
-  * Note: efi_info is commonly left uninitialized, but that field has a
-  * private magic, so it is better to leave it unchanged.
-  */
-+
-+#define sizeof_mbr(type, member) ({ sizeof(((type *)0)->member); })
-+
-+#define BOOT_PARAM_PRESERVE(struct_member)				\
-+	{								\
-+		.start = offsetof(struct boot_params, struct_member),	\
-+		.len   = sizeof_mbr(struct boot_params, struct_member),	\
-+	}
-+
-+struct boot_params_to_save {
-+	unsigned int start;
-+	unsigned int len;
-+};
-+
- static void sanitize_boot_params(struct boot_params *boot_params)
- {
- 	/* 
-@@ -36,19 +50,39 @@ static void sanitize_boot_params(struct
+--- a/drivers/md/dm-kcopyd.c
++++ b/drivers/md/dm-kcopyd.c
+@@ -548,8 +548,10 @@ static int run_io_job(struct kcopyd_job
+ 	 * no point in continuing.
  	 */
- 	if (boot_params->sentinel) {
- 		/* fields in boot_params are left uninitialized, clear them */
--		memset(&boot_params->ext_ramdisk_image, 0,
--		       (char *)&boot_params->efi_info -
--			(char *)&boot_params->ext_ramdisk_image);
--		memset(&boot_params->kbd_status, 0,
--		       (char *)&boot_params->hdr -
--		       (char *)&boot_params->kbd_status);
--		memset(&boot_params->_pad7[0], 0,
--		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
--			(char *)&boot_params->_pad7[0]);
--		memset(&boot_params->_pad8[0], 0,
--		       (char *)&boot_params->eddbuf[0] -
--			(char *)&boot_params->_pad8[0]);
--		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
-+		static struct boot_params scratch;
-+		char *bp_base = (char *)boot_params;
-+		char *save_base = (char *)&scratch;
-+		int i;
-+
-+		const struct boot_params_to_save to_save[] = {
-+			BOOT_PARAM_PRESERVE(screen_info),
-+			BOOT_PARAM_PRESERVE(apm_bios_info),
-+			BOOT_PARAM_PRESERVE(tboot_addr),
-+			BOOT_PARAM_PRESERVE(ist_info),
-+			BOOT_PARAM_PRESERVE(hd0_info),
-+			BOOT_PARAM_PRESERVE(hd1_info),
-+			BOOT_PARAM_PRESERVE(sys_desc_table),
-+			BOOT_PARAM_PRESERVE(olpc_ofw_header),
-+			BOOT_PARAM_PRESERVE(efi_info),
-+			BOOT_PARAM_PRESERVE(alt_mem_k),
-+			BOOT_PARAM_PRESERVE(scratch),
-+			BOOT_PARAM_PRESERVE(e820_entries),
-+			BOOT_PARAM_PRESERVE(eddbuf_entries),
-+			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
-+			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
-+			BOOT_PARAM_PRESERVE(e820_table),
-+			BOOT_PARAM_PRESERVE(eddbuf),
-+		};
-+
-+		memset(&scratch, 0, sizeof(scratch));
-+
-+		for (i = 0; i < ARRAY_SIZE(to_save); i++) {
-+			memcpy(save_base + to_save[i].start,
-+			       bp_base + to_save[i].start, to_save[i].len);
-+		}
-+
-+		memcpy(boot_params, save_base, sizeof(*boot_params));
- 	}
- }
+ 	if (test_bit(DM_KCOPYD_WRITE_SEQ, &job->flags) &&
+-	    job->master_job->write_err)
++	    job->master_job->write_err) {
++		job->write_err = job->master_job->write_err;
+ 		return -EIO;
++	}
+ 
+ 	io_job_start(job->kc->throttle);
+ 
+@@ -601,6 +603,7 @@ static int process_jobs(struct list_head
+ 			else
+ 				job->read_err = 1;
+ 			push(&kc->complete_jobs, job);
++			wake(kc);
+ 			break;
+ 		}
  
 
 
