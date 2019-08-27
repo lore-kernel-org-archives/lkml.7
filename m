@@ -2,121 +2,134 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9607C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5E4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA03206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42CF206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfH0OuP (ORCPT
+        id S1730076AbfH0Ouc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:50:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39645 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfH0OuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:50:15 -0400
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1i2cnU-00040w-6I
-        for linux-kernel@vger.kernel.org; Tue, 27 Aug 2019 14:50:12 +0000
-Received: by mail-pf1-f199.google.com with SMTP id y66so14784134pfb.21
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 07:50:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=QPtHqzYE2I3K6mA1W43Ow1hu2cfsdV6r/QSBv6PmVXE=;
-        b=ZwdJpUTyWQJ7mSj/8i8BdMf1oHDQfvZpw0gitvjTAuLo2/Ri+utE5+CzgBVUMLQUhA
-         6wSAL7uvv3k8zkpnN947oPUeUdCwSDjDEVZDI/APeolziz4ZQMciSVK+TgXM3sSfzaNV
-         ttZjt17GcurVBXGQ4nmk1wTNJ88olWqWKLkpwFbikq3bmk6G3LqYbf8grNKhI3/SJhPU
-         R7Wev194kOefw9NfnEuEWaeTb1ocee627oDJZ8ZhedqieX3IFWAsZ8h1/Y6ZTDzwivAE
-         dLGtfSuQrBAXXPKx3myHG1BhnaHBnRvJYt2Fn8hBdfVQ3+mHBVt8Zv+jxKd7sf1qtgFX
-         TAKA==
-X-Gm-Message-State: APjAAAVjs6VdXJUuMqpOF5g3t5e0nGwxidBCI4jmmBGgiom44ixur+s7
-        kpNjydWy1y1zrd0UeQqAJZShJ/9/Fatu1JNG7BI0gGQU180ZDUfLXYh39V31D72fzRiylUHMSmK
-        sO7mEXH94HxXeVhLVGuBFAmQP91DagkglZwTPvfFNOw==
-X-Received: by 2002:a17:90a:3b4f:: with SMTP id t15mr26629450pjf.45.1566917410960;
-        Tue, 27 Aug 2019 07:50:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxD/9UP/HN0ldJtPRSnTlHHh4+NxXjhXptKrorWOlvZ1KnXW9fodYpfoV5J9JPcZXw61pCu5A==
-X-Received: by 2002:a17:90a:3b4f:: with SMTP id t15mr26629428pjf.45.1566917410640;
-        Tue, 27 Aug 2019 07:50:10 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-843f-e5eb-ba09-2e70.dynamic-ip6.hinet.net (2001-b011-380f-3c42-843f-e5eb-ba09-2e70.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:843f:e5eb:ba09:2e70])
-        by smtp.gmail.com with ESMTPSA id q8sm2479848pjq.20.2019.08.27.07.50.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 07:50:10 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] ALSA: hda: Allow HDA to be runtime suspended when
- dGPU is not bound
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190827134756.10807-2-kai.heng.feng@canonical.com>
-Date:   Tue, 27 Aug 2019 22:50:03 +0800
-Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <97D68761-4152-4D77-B222-14EA892503DB@canonical.com>
-References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
- <20190827134756.10807-2-kai.heng.feng@canonical.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, tiwai@suse.com
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 27 Aug 2019 10:50:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26254 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbfH0Ouc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:50:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:50:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="171219686"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2019 07:50:30 -0700
+Date:   Tue, 27 Aug 2019 07:50:30 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Denis Lunev <den@virtuozzo.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 3/3] KVM: x86: always stop emulation on page fault
+Message-ID: <20190827145030.GC27459@linux.intel.com>
+References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
+ <1566911210-30059-4-git-send-email-jan.dakinevich@virtuozzo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566911210-30059-4-git-send-email-jan.dakinevich@virtuozzo.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 21:47, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
++Cc Peng Hao and Yi Wang
 
-> It's a common practice to let dGPU unbound and use PCI port PM to
-> disable its power through _PR3. When the dGPU comes with an HDA
-> function, the HDA won't be suspended if the dGPU is unbound, so the dGPU
-> power can't be disabled.
->
-> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-> discrete GPU") only allows HDA to be runtime-suspended once GPU is
-> bound, to keep APU's HDA working.
->
-> However, HDA on dGPU isn't that useful if dGPU is unbound. So let relax
-> the runtime suspend requirement for dGPU's HDA function, to save lots of
-> power.
->
-> BugLink: https://bugs.launchpad.net/bugs/1840835
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> —
+On Tue, Aug 27, 2019 at 01:07:09PM +0000, Jan Dakinevich wrote:
+> inject_emulated_exception() returns true if and only if nested page
+> fault happens. However, page fault can come from guest page tables
+> walk, either nested or not nested. In both cases we should stop an
+> attempt to read under RIP and give guest to step over its own page
+> fault handler.
+> 
+> Fixes: 6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
+> Cc: Denis Lunev <den@virtuozzo.com>
+> Cc: Roman Kagan <rkagan@virtuozzo.com>
+> Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
+> Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+> ---
+>  arch/x86/kvm/x86.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 93b0bd4..45caa69 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6521,8 +6521,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+>  			if (reexecute_instruction(vcpu, cr2, write_fault_to_spt,
+>  						emulation_type))
+>  				return EMULATE_DONE;
+> -			if (ctxt->have_exception && inject_emulated_exception(vcpu))
+> +			if (ctxt->have_exception) {
+> +				inject_emulated_exception(vcpu);
+>  				return EMULATE_DONE;
+> +			}
 
-Forgot to mention that for some platforms this issue happen after commit  
-b516ea586d71 ("PCI: Enable NVIDIA HDA controllers”) which starts to unhide  
-the “hidden” HDA.
 
-Kai-Heng
+Yikes, this patch and the previous have quite the sordid history.
 
->  sound/pci/hda/hda_intel.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 99fc0917339b..d4ee070e1a29 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1285,7 +1285,8 @@ static void init_vga_switcheroo(struct azx *chip)
->  		dev_info(chip->card->dev,
->  			 "Handle vga_switcheroo audio client\n");
->  		hda->use_vga_switcheroo = 1;
-> -		hda->need_eld_notify_link = 1; /* cleared in gpu_bound op */
-> +		/* cleared in gpu_bound op */
-> +		hda->need_eld_notify_link = !pci_pr3_present(p);
->  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->  		pci_dev_put(p);
->  	}
+
+The non-void return from inject_emulated_exception() was added by commit
+
+  ef54bcfeea6c ("KVM: x86: skip writeback on injection of nested exception")
+
+for the purpose of skipping writeback.  At the time, the above blob in the
+decode flow didn't exist.
+
+
+Decode exception handling was added by commit
+
+  6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
+
+but it was dead code even then.  The patch discussion[1] even point out that
+it was dead code, i.e. the change probably should have been reverted.
+
+
+Peng Hao and Yi Wang later ran into what appears to be the same bug you're
+hitting[2][3], and even had patches temporarily queued[4][5], but the
+patches never made it to mainline as they broke kvm-unit-tests.  Fun side
+note, Radim even pointed out[4] the bug fixed by patch 1/3.
+
+So, the patches look correct, but there's the open question of why the
+hypercall test was failing for Paolo.  I've tried to reproduce the #DF to
+no avail.
+
+[1] https://lore.kernel.org/patchwork/patch/850077/
+[2] https://lkml.kernel.org/r/1537311828-4547-1-git-send-email-penghao122@sina.com.cn
+[3] https://lkml.kernel.org/r/20190111133002.GA14852@flask
+[4] https://lkml.kernel.org/r/20190111133002.GA14852@flask
+[5] https://lkml.kernel.org/r/9835d255-dd9a-222b-f4a2-93611175b326@redhat.com
+
+>  			if (emulation_type & EMULTYPE_SKIP)
+>  				return EMULATE_FAIL;
+>  			return handle_emulation_failure(vcpu, emulation_type);
 > -- 
-> 2.17.1
-
-
+> 2.1.4
+> 
