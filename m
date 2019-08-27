@@ -2,126 +2,109 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A7DC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5E4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFEC21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A8C206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ti+QgyZe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l5UooV1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbfH0OhK (ORCPT
+        id S1730148AbfH0Oht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:37:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50190 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfH0OhF (ORCPT
+        Tue, 27 Aug 2019 10:37:49 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38066 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfH0Oht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:37:05 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so3386364wml.0;
-        Tue, 27 Aug 2019 07:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JeM1To4kzuWWFQY0hurRC3bVq9JC5GR4RCbNZs8RzZc=;
-        b=ti+QgyZe92tbpaxS01GBziY1cQaCpuy3GgvXFPj1lIwEixWgdwSYSn6hWnaWzJgPmQ
-         cbxNhKIW0yuGKLhizEQY6AKW6eSdgsePvAZMAIEQ0/tYISqfOHrSlVKbcg+g4Hk6gBR8
-         w+OnFj04Y3aIBDy2d5FsfrYcumKXAIC67dtRyuw8YU9ezulwdKVfRlg9ItuE2mXiWEdx
-         5GpmRp+Dg9Dyfv+sfzy9eYFntbSrDsdNtcNWXNGVuUG5P4cBgBgNxZGa4ukEg5PGh5V/
-         mT5t9MOe6z3YDp07mbjV2egMIYuWpQN2Ui2vImJJ4uiBFkHdD1UDd+c2+oEwddJlY+0d
-         feug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JeM1To4kzuWWFQY0hurRC3bVq9JC5GR4RCbNZs8RzZc=;
-        b=kZBpekwkIf9dyrfsvl+45XzTe9Wb4gJkauVJBWwQYopsokIU9ohxKjexPJAa1gz2rG
-         3ykhL0Hh2GXRb8Iltcg4RF1sZQz9K5dtykT8Y03ZDlQDDQVLOdTNJxU1q3KEydmlYVTD
-         FI9mvizy+4Oo7gJWOxis2c1/ikMWDXUhWJHrG8unsbJ9loNp5J9QMURrrWZAuMs83xd9
-         dVJf9FIOrqJgVsk7kvDpxA48+5S0wOmFyjFpYLQjFi+t9pVzpUYYGL95hCZRO6XuQ/vy
-         hzlVUXwsUY4qqPte3KytMtlwQ2L0R16f0c4VFUEnbVL81z1a59GsAQouKAMLCVwezmUS
-         il/g==
-X-Gm-Message-State: APjAAAViOi+hJ2hxAy9G8cq6FZi7W2CA3KA2FCfAzX/iyJ209mQ+Gi0H
-        yIT6YS4YG+AFRe82dpyTTcI=
-X-Google-Smtp-Source: APXvYqzeNJHZh+dvqBYieROvuqZ8FKrs6sHJabcQR0T3U7dIQlO3JQsRUxHL5j5iSRzI+0bE6SYMbg==
-X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr29242445wmi.48.1566916623501;
-        Tue, 27 Aug 2019 07:37:03 -0700 (PDT)
-Received: from localhost.localdomain (3e6b1cc1.rev.stofanet.dk. [62.107.28.193])
-        by smtp.googlemail.com with ESMTPSA id k6sm4008309wrg.0.2019.08.27.07.37.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 07:37:02 -0700 (PDT)
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-To:     alexandre.belloni@bootlin.com, linux@roeck-us.net,
-        yuehaibing@huawei.com
-Cc:     a.zummo@towertech.it, bruno.thomsen@gmail.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] rtc: pcf2127: bugfix: watchdog build dependency
-Date:   Tue, 27 Aug 2019 16:36:56 +0200
-Message-Id: <20190827143656.4734-1-bruno.thomsen@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 27 Aug 2019 10:37:49 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7REJ2Ms056832;
+        Tue, 27 Aug 2019 14:37:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=gGnFZ51yq9RAEaysy8uvp9bvDV7zC+1crJWVSuzKqOE=;
+ b=l5UooV1qCywqyCSH6s1M+JzNpijLmUrNMCS6Dl/PLapjsfeUHtSy7++v1PKVbLHVYISC
+ 3GbI7+0Cyt7nmbCH4EokcGxnS5Z9K2X7ngh+zgBW8Brqwgl2oHcjZMm/Mlg+U6se2bak
+ 8lQ/qB3TTglNPPUXwgN+TAb7CR2ru64M743Pgt21FyXWmy+xKq5a4vTBAGDe0fyEYbR6
+ VwNhuORZf+rKRjtNKbAAFwoRzpB3as3DYUYGqGny6pXTmW6sGSY0JtIdV74PQ37/RKRT
+ mBZWUP1zn3DVGpGM39WuEOOtOC617kttzYBYw22LpI7byRW/hFVbg7tyLzwixuMIZV19 pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2un5vs0djy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 14:37:43 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7REIfhD065315;
+        Tue, 27 Aug 2019 14:37:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2umhu8u0aw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Aug 2019 14:37:42 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7REbfsM026482;
+        Tue, 27 Aug 2019 14:37:41 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 27 Aug 2019 07:37:41 -0700
+Date:   Tue, 27 Aug 2019 17:37:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
+        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] staging: move greybus core out of staging
+Message-ID: <20190827143733.GF23584@kadam>
+References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
+ <20190827133611.GE23584@kadam>
+ <20190827134557.GA25038@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827134557.GA25038@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=961
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908270153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908270153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable watchdog registation when kernel is build without
-watchdog functionality, and enable watchdog core otherwise.
-This removes compile errors like the one below:
+On Tue, Aug 27, 2019 at 03:45:57PM +0200, Greg Kroah-Hartman wrote:
+> Why can't you compile the code?
+> 
 
-drivers/rtc/rtc-pcf2127.o: in function `pcf2127_probe.constprop.3':
-rtc-pcf2127.c:(.text.unlikely+0x2c8): undefined reference to
-`devm_watchdog_register_device'
+Now that I try to investigate the compile errors, it starts to compile
+perfectly...
 
-Watchdog feature in chip will always be configured as
-this is safe to do in both cases and minimize code churn.
+> > drivers/staging/greybus/operation.c:379 gb_operation_message_alloc() warn: check 'message_size' for integer overflows 'kzalloc()'
+> 
+> That should be checked on line 368, right?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
----
- drivers/rtc/Kconfig       | 1 +
- drivers/rtc/rtc-pcf2127.c | 2 ++
- 2 files changed, 3 insertions(+)
+This is a false positive.  I assumed it was related to the compile
+problem...
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index a3bb58a08879..ab0ccf4a3247 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -874,6 +874,7 @@ config RTC_DRV_DS3232_HWMON
- config RTC_DRV_PCF2127
- 	tristate "NXP PCF2127"
- 	depends on RTC_I2C_AND_SPI
-+	select WATCHDOG_CORE if WATCHDOG
- 	help
- 	  If you say yes here you get support for the NXP PCF2127/29 RTC
- 	  chips with integrated quartz crystal for industrial applications.
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 3ec87d320766..02b069caffd5 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -475,9 +475,11 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 		return ret;
- 	}
- 
-+#ifdef CONFIG_WATCHDOG
- 	ret = devm_watchdog_register_device(dev, &pcf2127->wdd);
- 	if (ret)
- 		return ret;
-+#endif /* CONFIG_WATCHDOG */
- 
- 	/*
- 	 * Disable battery low/switch-over timestamp and interrupts.
--- 
-2.21.0
+> 
+> > drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->channels' double freed
+> > drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->name' double freed
+> 
+> I don't understand this warning, how are these potentially double freed?
+
+I will fix these.
+
+regards,
+dan carpenter
 
