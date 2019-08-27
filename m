@@ -2,186 +2,151 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25580C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58565C3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B7920850
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6E2217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PeDP1g4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfH0Ajv (ORCPT
+        id S1727929AbfH0AmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:39:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbfH0Ajv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:39:51 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B0158D1E3D01EE54B123;
-        Tue, 27 Aug 2019 08:39:47 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 27 Aug 2019
- 08:39:40 +0800
-Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190809100800.5426-1-yanaijie@huawei.com>
- <ed96199d-715c-3f1c-39db-10a569ba6601@huawei.com>
-Message-ID: <529fd908-42d6-f96f-daa2-9010f3035879@huawei.com>
-Date:   Tue, 27 Aug 2019 08:39:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 26 Aug 2019 20:42:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36623 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfH0AmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 26 Aug 2019 20:42:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g67so1183226wme.1;
+        Mon, 26 Aug 2019 17:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wraJLvz6EmcrQqM6J8VAkrpu9wLHEffkySlFIVb29F0=;
+        b=PeDP1g4ldCcu3fhNgWXbCJ5ZxhMa4yIWvVYGz//wgx08FfXXVI4JRs/uHjRAVe04SS
+         65Cdv45Rszv5yOevPof37G3B0Pn/7wn//QeEyDFloQpYW2/Y/BOAURqA9Jne868qQmte
+         hBMjd4H4CvHWZARjBRc7rMn/C5vnETz76kqdbHUozej0dJLy6spbc1PmRVKFUGJaqxg8
+         4hl2swVc30lPiOa3E+5E4Pi1JVdRExpUhV72++KHhEn/lwQEGO/fSq0HZlkx7OiRqtFq
+         /pdROK7/Z3zDFMSCsiQEwzW32ivzxSXjq5tzuiFu4fDuQZUz84YsMYFDXunzuAlEZBgx
+         JxmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wraJLvz6EmcrQqM6J8VAkrpu9wLHEffkySlFIVb29F0=;
+        b=Cxq4ec0HDL5seFbih/dmX/s6/cVVl5BYL02g8ANVYmCiUqRyze9zyUSWYyxLPabemq
+         vUHWMYVFNJCYyomMSDOrA0L+sz74SZ6Ww+99UbI8vy84LhYqbcst2v+qQ//85ny7cwMA
+         IEfzPmiExGVEy0qmpMLHeP0FEYF00OTT10wxpk2vCR4kW6ln50stAvcBJ1Mkt9ILtz/E
+         2IfQHX094dQl6IyWjepF3yivk0fxVk1DGrAESnPHdNTZlyC7iJji5DnsFdMQ/g4mRggf
+         AKExtzEPCQMzdxIBo8VWOVAF1qt60ohjsIVEtBAils0V2ew5v+sV+VA+wVOttlS8t2bN
+         59bw==
+X-Gm-Message-State: APjAAAWwBqccNnY3VpVGeLQN2tC/PX4pQW/QvsDsiTEhCjL4y31jJYzI
+        M9ehyDTACE8CIXA0rv3RiS/2EAgvOmm4/A==
+X-Google-Smtp-Source: APXvYqzaPp5TAOKha3Ej5wRwmqulxAgmmXuqPtFGipbQDKzIjYulEY4YpcXlTet7AGiGEH9VkEZEHg==
+X-Received: by 2002:a1c:9648:: with SMTP id y69mr22955151wmd.122.1566866524573;
+        Mon, 26 Aug 2019 17:42:04 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id 7sm882049wmj.46.2019.08.26.17.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2019 17:42:03 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Huckleberry <nhuck@google.com>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] kbuild: Do not enable -Wimplicit-fallthrough for clang for now
+Date:   Mon, 26 Aug 2019 17:41:55 -0700
+Message-Id: <20190827004155.11366-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190815225844.145726-1-nhuck@google.com>
+References: <20190815225844.145726-1-nhuck@google.com>
 MIME-Version: 1.0
-In-Reply-To: <ed96199d-715c-3f1c-39db-10a569ba6601@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A polite ping :)
+This functionally reverts commit bfd77145f35c ("Makefile: Convert
+-Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang").
 
-What else should I do now?
+clang enabled support for -Wimplicit-fallthrough in C in r369414 [1],
+which causes a lot of warnings when building the kernel for two reasons:
 
-Thanks
+1. Clang does not support the /* fall through */ comments. There seems
+   to be a general consensus in the LLVM community that this is not
+   something they want to support. Joe Perches wrote a script to convert
+   all of the comments to a "fallthrough" keyword that will be added to
+   compiler_attributes.h [2] [3], which catches the vast majority of the
+   comments. There doesn't appear to be any consensus in the kernel
+   community when to do this conversion.
 
-On 2019/8/19 14:12, Jason Yan wrote:
-> Hi Michael,
-> 
-> Is there anything more I should do to get this feature meeting the 
-> requirements of the mainline?
-> 
-> Thanks,
-> Jason
-> 
-> On 2019/8/9 18:07, Jason Yan wrote:
->> This series implements KASLR for powerpc/fsl_booke/32, as a security
->> feature that deters exploit attempts relying on knowledge of the location
->> of kernel internals.
->>
->> Since CONFIG_RELOCATABLE has already supported, what we need to do is
->> map or copy kernel to a proper place and relocate. Freescale Book-E
->> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
->> entries are not suitable to map the kernel directly in a randomized
->> region, so we chose to copy the kernel to a proper place and restart to
->> relocate.
->>
->> Entropy is derived from the banner and timer base, which will change 
->> every
->> build and boot. This not so much safe so additionally the bootloader may
->> pass entropy via the /chosen/kaslr-seed node in device tree.
->>
->> We will use the first 512M of the low memory to randomize the kernel
->> image. The memory will be split in 64M zones. We will use the lower 8
->> bit of the entropy to decide the index of the 64M zone. Then we chose a
->> 16K aligned offset inside the 64M zone to put the kernel in.
->>
->>      KERNELBASE
->>
->>          |-->   64M   <--|
->>          |               |
->>          +---------------+    +----------------+---------------+
->>          |               |....|    |kernel|    |               |
->>          +---------------+    +----------------+---------------+
->>          |                         |
->>          |----->   offset    <-----|
->>
->>                                kernstart_virt_addr
->>
->> We also check if we will overlap with some areas like the dtb area, the
->> initrd area or the crashkernel area. If we cannot find a proper area,
->> kaslr will be disabled and boot from the original kernel.
->>
->> Changes since v5:
->>   - Rename M_IF_NEEDED to MAS2_M_IF_NEEDED
->>   - Define some global variable as __ro_after_init
->>   - Replace kimage_vaddr with kernstart_virt_addr
->>   - Depend on RELOCATABLE, not select it
->>   - Modify the comment block below the SPDX tag
->>   - Remove some useless headers in kaslr_booke.c and move is_second_reloc
->>     declarationto mmu_decl.h
->>   - Remove DBG() and use pr_debug() and rewrite comment above 
->> get_boot_seed().
->>   - Add a patch to document the KASLR implementation.
->>   - Split a patch from patch #10 which exports kaslr offset in 
->> VMCOREINFO ELF notes.
->>   - Remove extra logic around finding nokaslr string in cmdline.
->>   - Make regions static global and __initdata
->>
->> Changes since v4:
->>   - Add Reviewed-by tag from Christophe
->>   - Remove an unnecessary cast
->>   - Remove unnecessary parenthesis
->>   - Fix checkpatch warning
->>
->> Changes since v3:
->>   - Add Reviewed-by and Tested-by tag from Diana
->>   - Change the comment in fsl_booke_entry_mapping.S to be consistent
->>     with the new code.
->>
->> Changes since v2:
->>   - Remove unnecessary #ifdef
->>   - Use SZ_64M instead of0x4000000
->>   - Call early_init_dt_scan_chosen() to init boot_command_line
->>   - Rename kaslr_second_init() to kaslr_late_init()
->>
->> Changes since v1:
->>   - Remove some useless 'extern' keyword.
->>   - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
->>   - Improve some assembly code
->>   - Use memzero_explicit instead of memset
->>   - Use boot_command_line and remove early_command_line
->>   - Do not print kaslr offset if kaslr is disabled
->>
->> Jason Yan (12):
->>    powerpc: unify definition of M_IF_NEEDED
->>    powerpc: move memstart_addr and kernstart_addr to init-common.c
->>    powerpc: introduce kernstart_virt_addr to store the kernel base
->>    powerpc/fsl_booke/32: introduce create_tlb_entry() helper
->>    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
->>    powerpc/fsl_booke/32: implement KASLR infrastructure
->>    powerpc/fsl_booke/32: randomize the kernel image offset
->>    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
->>    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
->>    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
->>    powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
->>    powerpc/fsl_booke/32: Document KASLR implementation
->>
->>   Documentation/powerpc/kaslr-booke32.rst       |  42 ++
->>   arch/powerpc/Kconfig                          |  11 +
->>   arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
->>   arch/powerpc/include/asm/page.h               |   7 +
->>   arch/powerpc/kernel/Makefile                  |   1 +
->>   arch/powerpc/kernel/early_32.c                |   2 +-
->>   arch/powerpc/kernel/exceptions-64e.S          |  12 +-
->>   arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
->>   arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
->>   arch/powerpc/kernel/kaslr_booke.c             | 393 ++++++++++++++++++
->>   arch/powerpc/kernel/machine_kexec.c           |   1 +
->>   arch/powerpc/kernel/misc_64.S                 |   7 +-
->>   arch/powerpc/kernel/setup-common.c            |  20 +
->>   arch/powerpc/mm/init-common.c                 |   7 +
->>   arch/powerpc/mm/init_32.c                     |   5 -
->>   arch/powerpc/mm/init_64.c                     |   5 -
->>   arch/powerpc/mm/mmu_decl.h                    |  11 +
->>   arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
->>   18 files changed, 572 insertions(+), 52 deletions(-)
->>   create mode 100644 Documentation/powerpc/kaslr-booke32.rst
->>   create mode 100644 arch/powerpc/kernel/kaslr_booke.c
->>
+2. Clang and GCC disagree about falling through to final case statements
+   with no content or cases that simply break:
+
+   https://godbolt.org/z/c8csDu
+
+   This difference contributes at least 50 warnings in an allyesconfig
+   build for x86, not considering other architectures. This difference
+   will need to be discussed to see which compiler is right [4] [5].
+
+[1]: https://github.com/llvm/llvm-project/commit/1e0affb6e564b7361b0aadb38805f26deff4ecfc
+[2]: https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
+[3]: https://lore.kernel.org/lkml/1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com/
+[4]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
+[5]: https://github.com/ClangBuiltLinux/linux/issues/636
+
+Given these two problems need discussion and coordination, do not enable
+-Wimplicit-fallthrough with clang right now. Add a comment to explain
+what is going on as well. This commit should be reverted once these two
+issues are fully flushed out and resolved.
+
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ Makefile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index f125625efd60..6007a56bdbee 100644
+--- a/Makefile
++++ b/Makefile
+@@ -751,6 +751,11 @@ else
+ # These warnings generated too much noise in a regular build.
+ # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
+ KBUILD_CFLAGS += -Wno-unused-but-set-variable
++
++# Warn about unmarked fall-throughs in switch statement.
++# Disabled for clang while comment to attribute conversion happens and
++# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
++KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+ endif
+ 
+ KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
+@@ -845,9 +850,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+ # warn about C99 declaration after statement
+ KBUILD_CFLAGS += -Wdeclaration-after-statement
+ 
+-# Warn about unmarked fall-throughs in switch statement.
+-KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+-
+ # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+ KBUILD_CFLAGS += -Wvla
+ 
+-- 
+2.23.0
 
