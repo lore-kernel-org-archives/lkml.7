@@ -2,109 +2,214 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5E4C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF9BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A8C206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l5UooV1q"
+	by mail.kernel.org (Postfix) with ESMTP id 83B57206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566916732;
+	bh=RX5/aRj9H2SKktSTf8FU4051RdwF0HeNoFpgZaG3paY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=0xAi/hr4z7ch6TW008s6n5y4MmIKEkhZjB0ApdViKEiZHvrLR/EFybT0Rogb6sM6Z
+	 bemfUD/MG8PONc4lLr3P66CMeHXFof6/hrkbXuSWfYGBNcm5Nt+Q2digFOw6d9X6hS
+	 QWOg8axX6RupMWzk4NGFA/UQo54YhVKqlvIgaEKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbfH0Oht (ORCPT
+        id S1729128AbfH0Oiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:37:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38066 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfH0Oht (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:37:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7REJ2Ms056832;
-        Tue, 27 Aug 2019 14:37:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=gGnFZ51yq9RAEaysy8uvp9bvDV7zC+1crJWVSuzKqOE=;
- b=l5UooV1qCywqyCSH6s1M+JzNpijLmUrNMCS6Dl/PLapjsfeUHtSy7++v1PKVbLHVYISC
- 3GbI7+0Cyt7nmbCH4EokcGxnS5Z9K2X7ngh+zgBW8Brqwgl2oHcjZMm/Mlg+U6se2bak
- 8lQ/qB3TTglNPPUXwgN+TAb7CR2ru64M743Pgt21FyXWmy+xKq5a4vTBAGDe0fyEYbR6
- VwNhuORZf+rKRjtNKbAAFwoRzpB3as3DYUYGqGny6pXTmW6sGSY0JtIdV74PQ37/RKRT
- mBZWUP1zn3DVGpGM39WuEOOtOC617kttzYBYw22LpI7byRW/hFVbg7tyLzwixuMIZV19 pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2un5vs0djy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 14:37:43 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7REIfhD065315;
-        Tue, 27 Aug 2019 14:37:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2umhu8u0aw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Aug 2019 14:37:42 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7REbfsM026482;
-        Tue, 27 Aug 2019 14:37:41 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Aug 2019 07:37:41 -0700
-Date:   Tue, 27 Aug 2019 17:37:33 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        elder@kernel.org, johan@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] staging: move greybus core out of staging
-Message-ID: <20190827143733.GF23584@kadam>
-References: <20190825055429.18547-1-gregkh@linuxfoundation.org>
- <20190827133611.GE23584@kadam>
- <20190827134557.GA25038@kroah.com>
+        Tue, 27 Aug 2019 10:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfH0Oiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:38:50 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 190D0206E0;
+        Tue, 27 Aug 2019 14:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566916729;
+        bh=RX5/aRj9H2SKktSTf8FU4051RdwF0HeNoFpgZaG3paY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qG9uFQy67Akm60dUwavk7TUHxbn/fYlzhOt0Q53wSdaEFAmTozjraqLq3ZJc5gnc3
+         3IyrTZT2rmIR5nGBgO66tnXITCLOvzDZ0rPt9YH1dFKWEWMGZhMzOzhNuBT+K4UNGV
+         LlGD+q7x6fmd8dXld//sgepI5VNnjOUH0Dy8ljaU=
+Subject: Re: [PATCH v8] usbip: Implement SG support to vhci-hcd and stub
+ driver
+To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190826172348.23353-1-suwan.kim027@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d7bc3d7c-47a9-4b8c-ede2-2ed276fe2a77@kernel.org>
+Date:   Tue, 27 Aug 2019 08:38:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827134557.GA25038@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=961
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908270153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908270153
+In-Reply-To: <20190826172348.23353-1-suwan.kim027@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:45:57PM +0200, Greg Kroah-Hartman wrote:
-> Why can't you compile the code?
+On 8/26/19 11:23 AM, Suwan Kim wrote:
+> There are bugs on vhci with usb 3.0 storage device. In USB, each SG
+> list entry buffer should be divisible by the bulk max packet size.
+> But with native SG support, this problem doesn't matter because the
+> SG buffer is treated as contiguous buffer. But without native SG
+> support, USB storage driver breaks SG list into several URBs and the
+> error occurs because of a buffer size of URB that cannot be divided
+> by the bulk max packet size. The error situation is as follows.
 > 
-
-Now that I try to investigate the compile errors, it starts to compile
-perfectly...
-
-> > drivers/staging/greybus/operation.c:379 gb_operation_message_alloc() warn: check 'message_size' for integer overflows 'kzalloc()'
+> When USB Storage driver requests 31.5 KB data and has SG list which
+> has 3584 bytes buffer followed by 7 4096 bytes buffer for some
+> reason. USB Storage driver splits this SG list into several URBs
+> because VHCI doesn't support SG and sends them separately. So the
+> first URB buffer size is 3584 bytes. When receiving data from device,
+> USB 3.0 device sends data packet of 1024 bytes size because the max
+> packet size of BULK pipe is 1024 bytes. So device sends 4096 bytes.
+> But the first URB buffer has only 3584 bytes buffer size. So host
+> controller terminates the transfer even though there is more data to
+> receive. So, vhci needs to support SG transfer to prevent this error.
 > 
-> That should be checked on line 368, right?
-
-This is a false positive.  I assumed it was related to the compile
-problem...
-
+> In this patch, vhci supports SG regardless of whether the server's
+> host controller supports SG or not, because stub driver splits SG
+> list into several URBs if the server's host controller doesn't
+> support SG.
 > 
-> > drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->channels' double freed
-> > drivers/staging/greybus/light.c:1256 gb_lights_request_handler() warn: 'light->name' double freed
+> To support SG, vhci sets URB_DMA_MAP_SG flag in transfer_flags of
+> usbip header if URB has SG list and this flag will tell stub driver
+> to use SG list.
 > 
-> I don't understand this warning, how are these potentially double freed?
+> vhci sends each SG list entry to stub driver. Then, stub driver sees
+> the total length of the buffer and allocates SG table and pages
+> according to the total buffer length calling sgl_alloc(). After stub
+> driver receives completed URB, it again sends each SG list entry to
+> vhci.
+> 
+> If the server's host controller doesn't support SG, stub driver
+> breaks a single SG request into several URBs and submits them to
+> the server's host controller. When all the split URBs are completed,
+> stub driver reassembles the URBs into a single return command and
+> sends it to vhci.
+> 
+> Moreover, in the situation where vhci supports SG, but stub driver
+> does not, or vice versa, usbip works normally. Because there is no
+> protocol modification, there is no problem in communication between
+> server and client even if the one has a kernel without SG support.
+> 
+> In the case of vhci supports SG and stub driver doesn't, because
+> vhci sends only the total length of the buffer to stub driver as
+> it did before the patch applied, stub driver only needs to allocate
+> the required length of buffers using only kmalloc() regardless of
+> whether vhci supports SG or not. But stub driver has to allocate
+> buffer with kmalloc() as much as the total length of SG buffer which
+> is quite huge when vhci sends SG request, so it has overhead in
+> buffer allocation in this situation.
+> 
+> If stub driver needs to send data buffer to vhci because of IN pipe,
+> stub driver also sends only total length of buffer as metadata and
+> then sends real data as vhci does. Then vhci receive data from stub
+> driver and store it to the corresponding buffer of SG list entry.
+> 
+> And for the case of stub driver supports SG and vhci doesn't, since
+> the USB storage driver checks that vhci doesn't support SG and sends
+> the request to stub driver by splitting the SG list into multiple
+> URBs, stub driver allocates a buffer for each URB with kmalloc() as
+> it did before this patch.
+> 
+> * Test environment
+> 
+> Test uses two difference machines and two different kernel version
+> to make mismatch situation between the client and the server where
+> vhci supports SG, but stub driver does not, or vice versa. All tests
+> are conducted in both full SG support that both vhci and stub support
+> SG and half SG support that is the mismatch situation. Test kernel
+> version is 5.3-rc6 with commit "usb: add a HCD_DMA flag instead of
+> guestimating DMA capabilities" to avoid unnecessary DMA mapping and
+> unmapping.
+> 
+>   - Test kernel version
+>      - 5.3-rc6 with SG support
+>      - 5.1.20-200.fc29.x86_64 without SG support
+> 
+> * SG support test
+> 
+>   - Test devices
+>      - Super-speed storage device - SanDisk Ultra USB 3.0
+>      - High-speed storage device - SMI corporation USB 2.0 flash drive
+> 
+>   - Test description
+> 
+> Test read and write operation of mass storage device that uses the
+> BULK transfer. In test, the client reads and writes files whose size
+> is over 1G and it works normally.
+> 
+> * Regression test
+> 
+>   - Test devices
+>      - Super-speed device - Logitech Brio webcam
+>      - High-speed device  - Logitech C920 HD Pro webcam
+>      - Full-speed device  - Logitech bluetooth mouse
+>                           - Britz BR-Orion speaker
+>      - Low-speed device   - Logitech wired mouse
+> 
+>   - Test description
+> 
+> Moving and click test for mouse. To test the webcam, use gnome-cheese.
+> To test the speaker, play music and video on the client. All works
+> normally.
+> 
+> * VUDC compatibility test
+> 
+> VUDC also works well with this patch. Tests are done with two USB
+> gadget created by CONFIGFS USB gadget. Both use the BULK pipe.
+> 
+>          1. Serial gadget
+>          2. Mass storage gadget
+> 
+>   - Serial gadget test
+> 
+> Serial gadget on the host sends and receives data using cat command
+> on the /dev/ttyGS<N>. The client uses minicom to communicate with
+> the serial gadget.
+> 
+>   - Mass storage gadget test
+> 
+> After connecting the gadget with vhci, use "dd" to test read and
+> write operation on the client side.
+> 
+> Read  - dd if=/dev/sd<N> iflag=direct of=/dev/null bs=1G count=1
+> Write - dd if=<my file path> iflag=direct of=/dev/sd<N> bs=1G count=1
+> 
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> ---
+> v7 - v8
+> - Modify the commit log which describes URB_DMA_MAP_SG flag setting.
+> 
+> v6 - v7
+> - Move the flag set in setup_cmd_submit_pdu() of vhci_tx.c and
+>    manipulate usbip header flag instead of urb->transfer_flags.
+> 
+> - Remove clearing URB_DMA_MAP_SG flag in vhci_rx.
 
-I will fix these.
+setup_cmd_submit_pdu() is just for pdu and shouldn't be concerned
+about the urb.
 
-regards,
-dan carpenter
+Please keep the URB_DMA_MAP_SG setting in urb->transfer_flags.
+That mean you are restoring v6 code change with the commit log
+updates from v8.
 
+This flag belongs with urb and not the cmd.submit. Having it in
+urb also helps when we debug and dump the urb from usbip_dump_urb()
+
+thanks,
+-- Shuah
