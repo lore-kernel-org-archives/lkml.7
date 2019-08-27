@@ -2,485 +2,176 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED06C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0C8C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8CB206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5782D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fJTzz1u/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfH0NK4 (ORCPT
+        id S1730163AbfH0NLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:10:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:44274 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbfH0NKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:10:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8166360;
-        Tue, 27 Aug 2019 06:10:50 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C5513F246;
-        Tue, 27 Aug 2019 06:10:50 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 14:10:48 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Tue, 27 Aug 2019 09:11:25 -0400
+Received: from mail-eopbgr40040.outbound.protection.outlook.com ([40.107.4.40]:28227
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727784AbfH0NLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 09:11:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gH0lY8bFP4lILtFshstE/vE+NtaIbPfblUHKGj8GUzp6atjsGTrICy9BB55oniesEW0Ao2gxusxTQJ065IsCP3WJgvXBzBHcM8PPkOZflsiQA6VTQkaMhpSEydnawtBxB9LJ4ZTugoQC/OSGLbB0zb35888gZ/5bWKfCMrri+DLqOkBX7YkjvWyAm5RxvW9ZeDIztTVWQMy0NWABHuxqxh8rY029ukNLQMEDEx/xZhpZilMho+otGfjHV2ycwYpieCfb/20iC80TPFiYAgnCX5OeleAOPfZfJ+yx3k7CC3vbvzljjlyCzzBuMw1A4cY4pLrSFAWmasOtk8Iuzxq8fA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F2sF5PmCOM3P72E+iKf+9b1pFo6P365bQaKfUnevJ7k=;
+ b=R/TGl9zkS1NfH93ud4Mnp89E1l4KWNBrbbfxmdLLGqcA/NESQcmXn7pV+SYuZxfRCSUT3FAG1FhsS7xnq2wmE9pE+nIV+bl+p5n6aVGqpAPMeUd/bUaL7rPjg74Y32ov2IRuffYXMUEcUrwgynHHhmy7bF1slSlZ/tQV+58MxU2hzxk89IChLGfrx2fC4mDAhlmr4qwPSZoB0UJymnDgnlUxTI11QAObD+SgnGYBzSctdk+eS/pvsE5Xo8fIOjdH4f87kV2Q5IhSoL2stIvk9lF1OuD0nIBz8X2q8BwEHb4/uQ0/hQuWYt12VruPUREtPN6142esQuzAO5eic3n4pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F2sF5PmCOM3P72E+iKf+9b1pFo6P365bQaKfUnevJ7k=;
+ b=fJTzz1u/yNFN0q7fIhM1r8zCyuOKwPK14ZQQE93P2ur1/0GkmJf/gn5WA5hh6ezHrHvRi7xMUjaQnbdz25Y0zQiH3Xaj6AnjP0sl7dyPKJ374RC07nWeqE5MnMXETLob6k+M+EBW8YZJoI9iBjDjaNCObpn1T4B3JB3j3YBJAYE=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB5700.eurprd05.prod.outlook.com (20.178.115.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Tue, 27 Aug 2019 13:11:18 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
+ 13:11:18 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Parav Pandit <parav@mellanox.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 01/10] PCI: designware-ep: Add multiple PFs support
- for DWC
-Message-ID: <20190827131048.GK14582@e119886-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190823132526.GD14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB32997FFCD08E2C34541D2F9BF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 0/4] Introduce variable length mdev alias
+Thread-Topic: [PATCH 0/4] Introduce variable length mdev alias
+Thread-Index: AQHVXE6oE0YRBz0PMky+S05YIDBwe6cO90Uw
+Date:   Tue, 27 Aug 2019 13:11:17 +0000
+Message-ID: <AM0PR05MB4866A24FF3D283F0F3CB3CDAD1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+In-Reply-To: <20190826204119.54386-1-parav@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.18.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 46f87e37-894b-4515-4a6f-08d72af00c39
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5700;
+x-ms-traffictypediagnostic: AM0PR05MB5700:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB5700614E2E38C6B039D5AABCD1A00@AM0PR05MB5700.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(136003)(376002)(396003)(132844002)(199004)(189003)(13464003)(446003)(8676002)(6506007)(53546011)(102836004)(7736002)(55236004)(3846002)(5660300002)(74316002)(86362001)(26005)(64756008)(6436002)(66066001)(9686003)(7696005)(71200400001)(71190400001)(76116006)(256004)(4326008)(2501003)(53936002)(478600001)(66556008)(99286004)(66476007)(76176011)(25786009)(2201001)(55016002)(33656002)(14444005)(6116002)(110136005)(316002)(54906003)(8936002)(52536014)(2906002)(229853002)(14454004)(66946007)(9456002)(186003)(81166006)(81156014)(66446008)(11346002)(476003)(305945005)(6246003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5700;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nI7DJreF3bF2kWUj4OHotDkoXRABz49wTj/brcL03qaa46USMmOC6HfHH9AzsMv5oiOxSDr02+RYADMZMEnUhuvKMMpqZqoqTUWxfveIfrfcTF3PlfkPrSpLtiz+VQpmgZCcxeB2kaDACCu4vHxs0kNwIuKpzSuGrg5ByFgkeaIzaadR2kLsQlPiY79WKTD4uKU5zEpc2PXP0R1vLvHVxHDEVy5R+8c82VTHLcHj7/Mc7P/WBvYRdSoml97iNO1VMNDRlRV7o5jPjF17XXr61qloiUTudZCCdUVHTpwSfd+grHxOUqvlGX4Ap5i3Fsxirkwyqr6sFzhtzIOj/c9gZY1tJeCsVY1q39FWFQGMEFm9nYY5jm/Fmigq9qOzwFD+ji/R0qEMHrchYrcDXdH8oIIiSrz2NWRmX95PjecJ9WY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB32997FFCD08E2C34541D2F9BF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46f87e37-894b-4515-4a6f-08d72af00c39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 13:11:18.0793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UW3nCzZU47FGjF3tDJ3S9ZfAUDKZshc9sz6bx+QM4SuVvsfUQumUsMDr39c/qx0URtgLO5NMXmBZZFfpMVgkrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:50:20PM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年8月23日 21:25
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
-> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH v2 01/10] PCI: designware-ep: Add multiple PFs support
-> > for DWC
-> > 
-> > On Thu, Aug 22, 2019 at 07:22:33PM +0800, Xiaowei Bao wrote:
-> > > Add multiple PFs support for DWC, different PF have different config
-> > > space we use pf-offset property which get from the DTS to access the
-> > > different pF config space.
-> > 
-> > It looks like you're missing a --cover-letter again.
-> > 
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > > v2:
-> > >  - Remove duplicate redundant code.
-> > >  - Reimplement the PF config space access way.
-> > >
-> > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 122
-> > ++++++++++++++++--------
-> > >  drivers/pci/controller/dwc/pcie-designware.c    |  59 ++++++++----
-> > >  drivers/pci/controller/dwc/pcie-designware.h    |  11 ++-
-> > >  3 files changed, 134 insertions(+), 58 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 2bf5a35..3e2b740 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -19,12 +19,17 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > >  	pci_epc_linkup(epc);
-> > >  }
-> > >
-> > > -static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno
-> > bar,
-> > > -				   int flags)
-> > > +static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
-> > > +				   enum pci_barno bar, int flags)
-> > >  {
-> > >  	u32 reg;
-> > > +	unsigned int func_offset = 0;
-> > > +	struct dw_pcie_ep *ep = &pci->ep;
-> > >
-> > > -	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> > > +	if (ep->ops->func_conf_select)
-> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
-> > > +
-> > > +	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
-> > 
-> > This pattern of checking if func_conf_select exists and using it to get an offset
-> > is repeated a lot throughout this file. You could move this functionality into a
-> > new function (similar to dw_pcie_read_dbi etc). Or perhaps a new variant of
-> > dw_pcie_writel_ should be created that writes takes a func_no argument.
-> 
-> Thanks for your comments, I thought about this method before, but there is a issue
-> about the method of access the different func config space, due to our platform use
-> this method that different func have different offset from dbi_base to access the
-> different config space, but others platform maybe use the way that write a register
-> to implement different func config space access, so I think reserve a callback function 
+Hi Alex, Cornelia,
 
-My point here was really to move out duplicated code to its own small function.
-I wasn't making any comment about (removing) the callback, just that the test and
-callback could be in one function.
+> -----Original Message-----
+> From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf
+> Of Parav Pandit
+> Sent: Tuesday, August 27, 2019 2:11 AM
+> To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
+> Subject: [PATCH 0/4] Introduce variable length mdev alias
+>=20
+> To have consistent naming for the netdevice of a mdev and to have consist=
+ent
+> naming of the devlink port [1] of a mdev, which is formed using
+> phys_port_name of the devlink port, current UUID is not usable because UU=
+ID
+> is too long.
+>=20
+> UUID in string format is 36-characters long and in binary 128-bit.
+> Both formats are not able to fit within 15 characters limit of netdev nam=
+e.
+>=20
+> It is desired to have mdev device naming consistent using UUID.
+> So that widely used user space framework such as ovs [2] can make use of
+> mdev representor in similar way as PCIe SR-IOV VF and PF representors.
+>=20
+> Hence,
+> (a) mdev alias is created which is derived using sha1 from the mdev name.
+> (b) Vendor driver describes how long an alias should be for the child mde=
+v
+> created for a given parent.
+> (c) Mdev aliases are unique at system level.
+> (d) alias is created optionally whenever parent requested.
+> This ensures that non networking mdev parents can function without alias
+> creation overhead.
+>=20
+> This design is discussed at [3].
+>=20
+> An example systemd/udev extension will have,
+>=20
+> 1. netdev name created using mdev alias available in sysfs.
+>=20
+> mdev UUID=3D83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
+> mdev 12 character alias=3Dcd5b146a80a5
+>=20
+> netdev name of this mdev =3D enmcd5b146a80a5 Here en =3D Ethernet link m =
+=3D
+> mediated device
+>=20
+> 2. devlink port phys_port_name created using mdev alias.
+> devlink phys_port_name=3Dpcd5b146a80a5
+>=20
+> This patchset enables mdev core to maintain unique alias for a mdev.
+>=20
+> Patch-1 Introduces mdev alias using sha1.
+> Patch-2 Ensures that mdev alias is unique in a system.
+> Patch-3 Exposes mdev alias in a sysfs hirerchy.
+> Patch-4 Extends mtty driver to optionally provide alias generation.
+> This also enables to test UUID based sha1 collision and trigger error han=
+dling
+> for duplicate sha1 results.
+>=20
+> In future when networking driver wants to use mdev alias, mdev_alias() AP=
+I will
+> be added to derive devlink port name.
+>=20
+Now that majority of above patches looks in shape and I addressed all comme=
+nts,
+In next v1 post, I was considering to include mdev_alias() and have example=
+ use in mtty driver.
 
-> to different platform to implement the own method, my point is that, if use register 
-> method they can implement the code in this function and return offset is 0, if use 
-> offset method, they can return the offset value which can be use by dw_pcie_ep driver.
-
-By the way, I haven't looked to see how many of the dw_pcie_write_xxx functions
-would benefit from a func_no argument - if there were many calls to
-dw_pcie_write_xxx that all used a reg value originated from func_conf_select
-then an approach similar to the implementation of dw_pcie_write_dbi could
-probably be justified (i.e. rather than change the value of reg) for writing to
-functions.
-
->  
-> > 
-> > 
-> > >  	dw_pcie_dbi_ro_wr_en(pci);
-> > >  	dw_pcie_writel_dbi2(pci, reg, 0x0);
-> > >  	dw_pcie_writel_dbi(pci, reg, 0x0);
-> > 
-> > 
-> > > @@ -235,7 +257,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc
-> > *epc, u8 func_no,
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >
-> > > -	ret = dw_pcie_ep_outbound_atu(ep, addr, pci_addr, size);
-> > > +	ret = dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
-> > >  	if (ret) {
-> > >  		dev_err(pci->dev, "Failed to enable address\n");
-> > >  		return ret;
-> > > @@ -249,11 +271,15 @@ static int dw_pcie_ep_get_msi(struct pci_epc
-> > *epc, u8 func_no)
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >  	u32 val, reg;
-> > > +	unsigned int func_offset = 0;
-> > > +
-> > > +	if (ep->ops->func_conf_select)
-> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
-> > >
-> > >  	if (!ep->msi_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
-> > 
-> > This makes me nervous.
-> > 
-> > From a PCI viewpoint, each function has it's own capability structure and
-> > within each function there may exist a MSI capability. Yet what we're doing
-> > here is using dw_pcie_ep_find_capability to get the list of capabilities for
-> > function 0, and then applying offsets from that for subsequent functions. I.e.
-> > we're applying DW specific knowledge to find the correct capability, rather
-> > than following the general PCI approach.
-> > 
-> > I think the above hunk shouldn't be required - but instead
-> > dw_pcie_ep_find_capability is updated to take a func_no parameter.
-> > 
-> > Have I understood this correctly?
-> 
-> Yes, this is a issue, I think the different func maybe have different capability,
-> but the dw_pcie_ep_find_capability function is called by dw_pcie_ep_init 
-> function, we can't add func_no parameter to dw_pcie_ep_find_capability,
-
-Why not?
-
-Given that 'struct dw_pcie' represents a controller - and thus potentially
-multiple functions - then the _find_capability function should be able to
-provide the correct offset for the given function. Surely it needs to know
-which function number? Unless there is some reason why we can assume that all
-functions share the same capability offset.
-
-Also the 'struct dw_pcie_ep' which represents an endpoint controller - this
-has msi_cap and msix_cap fields - given this may be a multifunction device
-what do these fields actually refer to?
-
-Perhaps Jungoo/Gustavo can comment.
-
-
-> I will try to fix it use a new patch, I think move this function to ep_init callback
-> function If better, thanks. 
-> 
-> 
-> > 
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	if (!(val & PCI_MSI_FLAGS_ENABLE))
-> > >  		return -EINVAL;
-> > > @@ -268,11 +294,15 @@ static int dw_pcie_ep_set_msi(struct pci_epc
-> > *epc, u8 func_no, u8 interrupts)
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >  	u32 val, reg;
-> > > +	unsigned int func_offset = 0;
-> > > +
-> > > +	if (ep->ops->func_conf_select)
-> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
-> > >
-> > >  	if (!ep->msi_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	val &= ~PCI_MSI_FLAGS_QMASK;
-> > >  	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK; @@ -288,11 +318,15
-> > > @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >  	u32 val, reg;
-> > > +	unsigned int func_offset = 0;
-> > > +
-> > > +	if (ep->ops->func_conf_select)
-> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
-> > >
-> > >  	if (!ep->msix_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
-> > > +	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
-> > 
-> > Same for MSIX.
-> 
-> Yes.
-> 
-> > 
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
-> > >  		return -EINVAL;
-> > > @@ -307,11 +341,15 @@ static int dw_pcie_ep_set_msix(struct pci_epc
-> > *epc, u8 func_no, u16 interrupts)
-> > >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >  	u32 val, reg;
-> > > +	unsigned int func_offset = 0;
-> > > +
-> > > +	if (ep->ops->func_conf_select)
-> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
-> > >
-> > >  	if (!ep->msix_cap)
-> > >  		return -EINVAL;
-> > >
-> > > -	reg = ep->msix_cap + PCI_MSIX_FLAGS;
-> > > +	reg = ep->msix_cap + func_offset + PCI_MSIX_FLAGS;
-> > >  	val = dw_pcie_readw_dbi(pci, reg);
-> > >  	val &= ~PCI_MSIX_FLAGS_QSIZE;
-> > >  	val |= interrupts;
-> > > @@ -398,29 +436,33 @@ int dw_pcie_ep_raise_msi_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > >  	struct pci_epc *epc = ep->epc;
-> > >  	unsigned int aligned_offset;
-> > > +	unsigned int func_offset = 0;
-> > >  	u16 msg_ctrl, msg_data;
-> > >  	u32 msg_addr_lower, msg_addr_upper, reg;
-> > >  	u64 msg_addr;
-> > >  	bool has_upper;
-> > >  	int ret;
-> > >
-> > > +	if (ep->ops->func_conf_select)
-> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
-> > > +
-> > 
-> > You could probably move this hunk below the test for msi_cap to save some
-> > cycles.
-> 
-> Sorry, I didn't understand the means, please explain it detailly, thanks a lot, ^_^
-
-If you insert the call to func_conf_select *after* the test for
-!msi_cap below - then in the case where msi_cap is NULL then you will
-save some CPU cycles by not bothering to call func_conf_select.
-
-
-> > 
-> > >  	if (!ep->msi_cap)
-> > >  		return -EINVAL;
-> > >
-> > >  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
-> > > -	reg = ep->msi_cap + PCI_MSI_FLAGS;
-> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_FLAGS;
-> > >  	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
-> > >  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
-> > > -	reg = ep->msi_cap + PCI_MSI_ADDRESS_LO;
-> > > +	reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_LO;
-> > >  	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
-> > >  	if (has_upper) {
-> > > -		reg = ep->msi_cap + PCI_MSI_ADDRESS_HI;
-> > > +		reg = ep->msi_cap + func_offset + PCI_MSI_ADDRESS_HI;
-> > >  		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
-> > > -		reg = ep->msi_cap + PCI_MSI_DATA_64;
-> > > +		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_64;
-> > >  		msg_data = dw_pcie_readw_dbi(pci, reg);
-> > >  	} else {
-> > >  		msg_addr_upper = 0;
-> > > -		reg = ep->msi_cap + PCI_MSI_DATA_32;
-> > > +		reg = ep->msi_cap + func_offset + PCI_MSI_DATA_32;
-> > >  		msg_data = dw_pcie_readw_dbi(pci, reg);
-> > >  	}
-> > >  	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
-> > 
-> > 
-> > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > > b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 7d25102..305e73d 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -158,9 +158,10 @@ static void dw_pcie_writel_ob_unroll(struct
-> > dw_pcie *pci, u32 index, u32 reg,
-> > >  	dw_pcie_writel_atu(pci, offset + reg, val);  }
-> > >
-> > > -static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int
-> > index,
-> > > -					     int type, u64 cpu_addr,
-> > > -					     u64 pci_addr, u32 size)
-> > > +static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8
-> > func_no,
-> > > +					     int index, int type,
-> > > +					     u64 cpu_addr, u64 pci_addr,
-> > > +					     u32 size)
-> > >  {
-> > >  	u32 retries, val;
-> > >
-> > > @@ -175,7 +176,7 @@ static void
-> > dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
-> > >  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> > >  				 upper_32_bits(pci_addr));
-> > >  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> > > -				 type);
-> > > +				 type | PCIE_ATU_FUNC_NUM(func_no));
-> > 
-> > Much better :)
-> 
-> Do you mean that use the expression "a? b:c"
-> 
-> > 
-> > >  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-> > >  				 PCIE_ATU_ENABLE);
-> > >
-> > > @@ -194,8 +195,9 @@ static void
-> > dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
-> > >  	dev_err(pci->dev, "Outbound iATU is not being enabled\n");  }
-> > >
-> > > -void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> > > -			       u64 cpu_addr, u64 pci_addr, u32 size)
-> > > +static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8
-> > func_no,
-> > > +					int index, int type, u64 cpu_addr,
-> > > +					u64 pci_addr, u32 size)
-> > >  {
-> > >  	u32 retries, val;
-> > >
-> > > @@ -203,8 +205,8 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie
-> > *pci, int index, int type,
-> > >  		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
-> > >
-> > >  	if (pci->iatu_unroll_enabled) {
-> > > -		dw_pcie_prog_outbound_atu_unroll(pci, index, type, cpu_addr,
-> > > -						 pci_addr, size);
-> > > +		dw_pcie_prog_outbound_atu_unroll(pci, func_no, index, type,
-> > > +						 cpu_addr, pci_addr, size);
-> > >  		return;
-> > >  	}
-> > >
-> > 
-> > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > > b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index ffed084..a0fdbf7 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -71,9 +71,11 @@
-> > >  #define PCIE_ATU_TYPE_IO		0x2
-> > >  #define PCIE_ATU_TYPE_CFG0		0x4
-> > >  #define PCIE_ATU_TYPE_CFG1		0x5
-> > > +#define PCIE_ATU_FUNC_NUM(pf)           (pf << 20)
-> > 
-> > "Macro argument 'pf' may be better as '(pf)' to avoid precedence issues"
-> > 
-> > >  #define PCIE_ATU_CR2			0x908
-> > >  #define PCIE_ATU_ENABLE			BIT(31)
-> > >  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
-> > > +#define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
-> > >  #define PCIE_ATU_LOWER_BASE		0x90C
-> > >  #define PCIE_ATU_UPPER_BASE		0x910
-> > >  #define PCIE_ATU_LIMIT			0x914
-> > > @@ -197,6 +199,7 @@ struct dw_pcie_ep_ops {
-> > >  	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
-> > >  			     enum pci_epc_irq_type type, u16 interrupt_num);
-> > >  	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep
-> > > *ep);
-> > > +	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
-> > 
-> > Given that this function will return an offset, I'm not sure the name you have
-> > is suitable. Something like get_pf_offset or similar is more descriptive.
-> 
-> As above explain, my initial view is that this function can return 0 or offset depends on
-> the platform implement mechanism, so I named it func_conf_select, I think add a
-> comment for this function, like this:
-> /*
->  * provide a method to implement the method of different func config space access,
->  * if use offset method, return the offset from dbi_base, if your register method, implement
->  * the code in this callback function and return 0.
->  */
-> How about it?
-
-This means that func_conf_select can never (easily) indicate an error to the
-caller as this would change the offset. Where func_conf_select doesn't change
-the offset there probably isn't much else it can do instead (unless it was
-responsible for doing the write as well). So I'm not sure how well this approach
-works.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >  };
-> > >
-> > >  struct dw_pcie_ep {
-> > > @@ -265,8 +268,12 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> > > void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
-> > >  			       int type, u64 cpu_addr, u64 pci_addr,
-> > >  			       u32 size);
-> > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
-> > > -			     u64 cpu_addr, enum dw_pcie_as_type as_type);
-> > > +void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
-> > index,
-> > > +				  int type, u64 cpu_addr, u64 pci_addr,
-> > > +				  u32 size);
-> > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> > > +			     int bar, u64 cpu_addr,
-> > > +			     enum dw_pcie_as_type as_type);
-> > >  void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
-> > >  			 enum dw_pcie_region_type type);
-> > >  void dw_pcie_setup(struct dw_pcie *pci);
-> > > --
-> > > 2.9.5
-> > >
+This way, subsequent series of mlx5_core who intents to use mdev_alias() AP=
+I makes it easy to review and merge through Dave M, netdev tree.
+Is that ok with you?
