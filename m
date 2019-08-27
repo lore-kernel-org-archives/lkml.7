@@ -2,304 +2,690 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DATE_IN_PAST_24_48,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE6EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D10C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E004A2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566935515;
-	bh=g52voPW02KMWFb+PZtEu9ej0gFuj3OTjw9uqyojV+XY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=E4crvM+DITtJU4LeI+9xPyjcysWQV0U2c9j34lzd9+WyazxghzjcwXj255h9/CRMU
-	 LAgaSVyJeuCXgydzGbPIzfiSzx+RRmysIAP8BUPEHkcEjo3YnZhKPtvBCv7XgYD9tr
-	 dK7/rmgTCs3NCI2sFWkP2hlae1BhdCmEnd8L976I=
+	by mail.kernel.org (Postfix) with ESMTP id 4A04E22CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 19:52:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vn9c/c6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbfH0Tvy (ORCPT
+        id S1731325AbfH0TwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 15:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfH0Tvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 15:51:52 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Tue, 27 Aug 2019 15:52:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56840 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731271AbfH0TwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 15:52:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AntrakEZuSkw6w5VnRuWPTJv9e7fkMhh0uFRp8xJycY=; b=Vn9c/c6ye4ghSFAceT0JQFaFuq
+        xkeZRiSiFOab1vSnX+zrfzA/4nVg9nCYP9uHH2pRnLeUL8wMoO8z+Ua4+7gPB/mQV4AoDCa6ez1U8
+        H1gTn+MWsw7620xo8kFFB0zn/+mkF2ZuSvyV7Kubfg1fyLtS6pzch8cr3N5IMMHIbii4VERGjHLya
+        Wx/4h0Q1crGqK0q8UG2E6mGssyr/v4i+A0CrdSYaftfbWW4XekGBzC0PIV9nwIbj8I8OfSMICZB/T
+        lhd0b/tgIefvaH8dZ7ApJ23mAC+hMEeg9fDkUUyAw+ZDA+ZtwClosTmOzrKk0TjjQtXzvEtKqt1Ci
+        Mvp4BLeQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i2hVR-0005Sb-Gy; Tue, 27 Aug 2019 19:51:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AE6A21883;
-        Tue, 27 Aug 2019 19:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566935511;
-        bh=g52voPW02KMWFb+PZtEu9ej0gFuj3OTjw9uqyojV+XY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JzcQkBhDsuIik60i9vJOkPTv0iZwsczXDRslodZfjr01XJpp4Rjvy1Wo7kYURCXtb
-         kPnCjAv10xUIKIJSUwARqn4fQ8csA+0zoh1lTrpvuzrMyCdfF8ICubUandW+uJEKcS
-         DuGQjzPlB8kS3nBm7qKM+rwt9DhFQYMR3VC7/H7E=
-Date:   Mon, 26 Aug 2019 09:13:49 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] iio: imu: st_lsm6dsx: add support for accel/gyro
- unit of lsm9sd1
-Message-ID: <20190826091349.6a464baa@archlinux>
-In-Reply-To: <20190821132520.28225-4-martin.kepplinger@puri.sm>
-References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
-        <20190821132520.28225-4-martin.kepplinger@puri.sm>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 38D8630768E;
+        Tue, 27 Aug 2019 21:51:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id E36F12022F84C; Tue, 27 Aug 2019 21:51:50 +0200 (CEST)
+Message-Id: <20190827195122.513945586@infradead.org>
+User-Agent: quilt/0.65
+Date:   Tue, 27 Aug 2019 21:48:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, x86@kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH -v2 1/5] x86/intel: Aggregate big core client naming
+References: <20190827194820.378516765@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 15:25:19 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+Currently the big core client models either have:
 
-> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
-> supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
-> on the bus.
-> 
-> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
-> 
-> Treat it just like the LSM6* devices and, despite it's name, hook it up
-> to the st_lsm6dsx driver, using it's basic functionality.
-> 
-> accelerometer and gyroscope are not independently clocked. It runs at the gyro
-> frequencies if both are enabled, see chapter 7.12 of the datasheet.
-> We could have handled this as a single IIO device but we have split
-> it up to be more consistent with the other more flexible devices.
-> 
-> Despite supporting and testing the LSM9DS1, we call the gyro channels
-> iio_chan_spec struct "st_lsm6ds0_gyro_channels" because the register
-> description is equal. This suggests that supporting LSM6DS0 should be
-> trivial to do.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+ - no OPTDIFF
+ - _CORE
+ - _DESKTOP
 
-Typo in the patch title that I've fixed up.  After a bit of thought
-I've added postfix -imu but only in minimal number of places.
+Make it uniformly: 'no OPTDIFF'.
 
-I've not bothered with the internal defines as within the driver at least
-it's obvious which part we are talking about.
+for i in `git grep -l "\(INTEL_FAM6_\|VULNWL_INTEL\|INTEL_CPU_FAM6\).*_\(CORE\|DESKTOP\)"`
+do
+	sed -i -e 's/\(\(INTEL_FAM6_\|VULNWL_INTEL\|INTEL_CPU_FAM6\).*\)_\(CORE\|DESKTOP\)/\1/g' ${i}
+done
 
-imu isn't the perfect name but having both -gyroaccel or something similar
-is also not great.  We still have time to change this if people feel
-strongly about it.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: x86@kernel.org
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/events/intel/core.c                 |   26 ++++++++++++-------------
+ arch/x86/events/intel/cstate.c               |   22 ++++++++++-----------
+ arch/x86/events/intel/pt.c                   |    2 -
+ arch/x86/events/intel/rapl.c                 |   10 ++++-----
+ arch/x86/events/intel/uncore.c               |   12 +++++------
+ arch/x86/events/msr.c                        |    8 +++----
+ arch/x86/include/asm/intel-family.h          |   10 ++++-----
+ arch/x86/kernel/apic/apic.c                  |    8 +++----
+ arch/x86/kernel/cpu/bugs.c                   |    8 +++----
+ arch/x86/kernel/cpu/intel.c                  |   10 ++++-----
+ drivers/cpufreq/intel_pstate.c               |   12 +++++------
+ drivers/idle/intel_idle.c                    |   10 ++++-----
+ drivers/platform/x86/intel_pmc_core.c        |    4 +--
+ drivers/platform/x86/intel_pmc_core_pltdrv.c |    4 +--
+ drivers/powercap/intel_rapl_common.c         |   10 ++++-----
+ tools/power/x86/turbostat/turbostat.c        |   28 +++++++++++++--------------
+ 16 files changed, 92 insertions(+), 92 deletions(-)
 
-Applied to the togreg branch of iio.git and pushed out as testing.
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3964,12 +3964,12 @@ static __init void intel_clovertown_quir
+ }
+ 
+ static const struct x86_cpu_desc isolation_ucodes[] = {
+-	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_CORE,		 3, 0x0000001f),
++	INTEL_CPU_DESC(INTEL_FAM6_HASWELL,		 3, 0x0000001f),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_ULT,		 1, 0x0000001e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_GT3E,		 1, 0x00000015),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 2, 0x00000037),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 4, 0x0000000a),
+-	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_CORE,	 4, 0x00000023),
++	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL,		 4, 0x00000023),
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_GT3E,	 1, 0x00000014),
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_XEON_D,	 2, 0x00000010),
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_XEON_D,	 3, 0x07000009),
+@@ -3979,16 +3979,16 @@ static const struct x86_cpu_desc isolati
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 3, 0x00000021),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 4, 0x00000000),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_MOBILE,	 3, 0x0000007c),
+-	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_DESKTOP,	 3, 0x0000007c),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	 9, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE,		 3, 0x0000007c),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		 9, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	 9, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	10, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	11, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	12, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	10, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	11, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	12, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	13, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		10, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		11, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		12, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		13, 0x0000004e),
+ 	{}
+ };
+ 
+@@ -4857,7 +4857,7 @@ __init int intel_pmu_init(void)
+ 		break;
+ 
+ 
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_X:
+ 	case INTEL_FAM6_HASWELL_ULT:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+@@ -4890,7 +4890,7 @@ __init int intel_pmu_init(void)
+ 		name = "haswell";
+ 		break;
+ 
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL_X:
+@@ -4956,9 +4956,9 @@ __init int intel_pmu_init(void)
+ 		pmem = true;
+ 		/* fall through */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 		x86_add_quirk(intel_pebs_isolation_quirk);
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+@@ -5006,7 +5006,7 @@ __init int intel_pmu_init(void)
+ 		pmem = true;
+ 		/* fall through */
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
+-	case INTEL_FAM6_ICELAKE_DESKTOP:
++	case INTEL_FAM6_ICELAKE:
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+ 		memcpy(hw_cache_extra_regs, skl_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -593,40 +593,40 @@ static const struct x86_cpu_id intel_cst
+ 	X86_CSTATES_MODEL(INTEL_FAM6_IVYBRIDGE,   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_IVYBRIDGE_X, snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_CORE, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL,      snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_X,	   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_GT3E, snb_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_ULT, hswult_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT, slm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT,   slm_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT_X, slm_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_AIRMONT,     slm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_AIRMONT,      slm_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_CORE,   snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL,        snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_XEON_D, snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_GT3E,   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_X,      snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_MOBILE,  snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_DESKTOP, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_MOBILE, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE,        snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X,      snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  hswult_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE,        hswult_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_MOBILE, cnl_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_XEON_PHI_KNL, knl_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_XEON_PHI_KNM, knl_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT, glm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT,   glm_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_X, glm_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_DESKTOP, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE,        snb_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -204,7 +204,7 @@ static int __init pt_pmu_hw_init(void)
+ 
+ 	/* model-specific quirks */
+ 	switch (boot_cpu_data.x86_model) {
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL_X:
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -720,27 +720,27 @@ static const struct x86_cpu_id rapl_mode
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE_X,		model_snbep),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,		model_snb),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE_X,		model_snbep),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_CORE,		model_hsw),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_X,		model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E,		model_hsw),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_CORE,		model_hsw),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_X,		model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D,	model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL,		model_knl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM,		model_knl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE,		model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_DESKTOP,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,		model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE,	model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_CANNONLAKE_MOBILE,	model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X,	model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS,	model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,		model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE,		model_skl),
+ 	{},
+ };
+ 
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1451,10 +1451,10 @@ static const struct x86_cpu_id intel_unc
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_WESTMERE_EP,	  nhm_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE,	  snb_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,	  ivb_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_CORE,	  hsw_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL,	  hsw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,	  hsw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E,	  hsw_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_CORE, bdw_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL,	  bdw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E, bdw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE_X,  snbep_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EX,	  nhmex_uncore_init),
+@@ -1465,14 +1465,14 @@ static const struct x86_cpu_id intel_unc
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D, bdx_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL,	  knl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM,	  knl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_DESKTOP,skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE,	  skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,      skx_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE,	  skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI, icl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP, icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI,	  icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_X, snr_uncore_init),
+ 	{},
+ };
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -59,12 +59,12 @@ static bool test_intel(int idx, void *da
+ 	case INTEL_FAM6_IVYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE_X:
+ 
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_X:
+ 	case INTEL_FAM6_HASWELL_ULT:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+ 
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL_X:
+@@ -85,10 +85,10 @@ static bool test_intel(int idx, void *da
+ 		break;
+ 
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
+ 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+ 			return true;
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -49,27 +49,27 @@
+ #define INTEL_FAM6_IVYBRIDGE		0x3A
+ #define INTEL_FAM6_IVYBRIDGE_X		0x3E
+ 
+-#define INTEL_FAM6_HASWELL_CORE		0x3C
++#define INTEL_FAM6_HASWELL		0x3C
+ #define INTEL_FAM6_HASWELL_X		0x3F
+ #define INTEL_FAM6_HASWELL_ULT		0x45
+ #define INTEL_FAM6_HASWELL_GT3E		0x46
+ 
+-#define INTEL_FAM6_BROADWELL_CORE	0x3D
++#define INTEL_FAM6_BROADWELL		0x3D
+ #define INTEL_FAM6_BROADWELL_GT3E	0x47
+ #define INTEL_FAM6_BROADWELL_X		0x4F
+ #define INTEL_FAM6_BROADWELL_XEON_D	0x56
+ 
+ #define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
+-#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
++#define INTEL_FAM6_SKYLAKE		0x5E
+ #define INTEL_FAM6_SKYLAKE_X		0x55
+ #define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
+-#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
++#define INTEL_FAM6_KABYLAKE		0x9E
+ 
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 
+ #define INTEL_FAM6_ICELAKE_X		0x6A
+ #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
+-#define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
++#define INTEL_FAM6_ICELAKE		0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+ #define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -593,18 +593,18 @@ static const struct x86_cpu_id deadline_
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_XEON_D,	bdx_deadline_rev),
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_SKYLAKE_X,	skx_deadline_rev),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_CORE,	0x22),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL,		0x22),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_ULT,	0x20),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_GT3E,	0x17),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_CORE,	0x25),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL,	0x25),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_GT3E,	0x17),
+ 
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_MOBILE,	0xb2),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_DESKTOP,	0xb2),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE,		0xb2),
+ 
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_MOBILE,	0x52),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_DESKTOP,	0x52),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE,		0x52),
+ 
+ 	{},
+ };
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1184,15 +1184,15 @@ static void override_cache_bits(struct c
+ 	case INTEL_FAM6_WESTMERE:
+ 	case INTEL_FAM6_SANDYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE:
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_ULT:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 		if (c->x86_cache_bits < 44)
+ 			c->x86_cache_bits = 44;
+ 		break;
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -142,21 +142,21 @@ struct sku_microcode {
+ 	u32 microcode;
+ };
+ static const struct sku_microcode spectre_bad_microcodes[] = {
+-	{ INTEL_FAM6_KABYLAKE_DESKTOP,	0x0B,	0x80 },
+-	{ INTEL_FAM6_KABYLAKE_DESKTOP,	0x0A,	0x80 },
+-	{ INTEL_FAM6_KABYLAKE_DESKTOP,	0x09,	0x80 },
++	{ INTEL_FAM6_KABYLAKE,		0x0B,	0x80 },
++	{ INTEL_FAM6_KABYLAKE,		0x0A,	0x80 },
++	{ INTEL_FAM6_KABYLAKE,		0x09,	0x80 },
+ 	{ INTEL_FAM6_KABYLAKE_MOBILE,	0x0A,	0x80 },
+ 	{ INTEL_FAM6_KABYLAKE_MOBILE,	0x09,	0x80 },
+ 	{ INTEL_FAM6_SKYLAKE_X,		0x03,	0x0100013e },
+ 	{ INTEL_FAM6_SKYLAKE_X,		0x04,	0x0200003c },
+-	{ INTEL_FAM6_BROADWELL_CORE,	0x04,	0x28 },
++	{ INTEL_FAM6_BROADWELL,		0x04,	0x28 },
+ 	{ INTEL_FAM6_BROADWELL_GT3E,	0x01,	0x1b },
+ 	{ INTEL_FAM6_BROADWELL_XEON_D,	0x02,	0x14 },
+ 	{ INTEL_FAM6_BROADWELL_XEON_D,	0x03,	0x07000011 },
+ 	{ INTEL_FAM6_BROADWELL_X,	0x01,	0x0b000025 },
+ 	{ INTEL_FAM6_HASWELL_ULT,	0x01,	0x21 },
+ 	{ INTEL_FAM6_HASWELL_GT3E,	0x01,	0x18 },
+-	{ INTEL_FAM6_HASWELL_CORE,	0x03,	0x23 },
++	{ INTEL_FAM6_HASWELL,		0x03,	0x23 },
+ 	{ INTEL_FAM6_HASWELL_X,		0x02,	0x3b },
+ 	{ INTEL_FAM6_HASWELL_X,		0x04,	0x10 },
+ 	{ INTEL_FAM6_IVYBRIDGE_X,	0x04,	0x42a },
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1867,12 +1867,12 @@ static const struct pstate_funcs knl_fun
+ 			(unsigned long)&policy }
+ 
+ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+-	ICPU(INTEL_FAM6_SANDYBRIDGE, 		core_funcs),
++	ICPU(INTEL_FAM6_SANDYBRIDGE,		core_funcs),
+ 	ICPU(INTEL_FAM6_SANDYBRIDGE_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_ATOM_SILVERMONT,	silvermont_funcs),
+ 	ICPU(INTEL_FAM6_IVYBRIDGE,		core_funcs),
+-	ICPU(INTEL_FAM6_HASWELL_CORE,		core_funcs),
+-	ICPU(INTEL_FAM6_BROADWELL_CORE,		core_funcs),
++	ICPU(INTEL_FAM6_HASWELL,		core_funcs),
++	ICPU(INTEL_FAM6_BROADWELL,		core_funcs),
+ 	ICPU(INTEL_FAM6_IVYBRIDGE_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_HASWELL_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_HASWELL_ULT,		core_funcs),
+@@ -1881,7 +1881,7 @@ static const struct x86_cpu_id intel_pst
+ 	ICPU(INTEL_FAM6_ATOM_AIRMONT,		airmont_funcs),
+ 	ICPU(INTEL_FAM6_SKYLAKE_MOBILE,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_X,		core_funcs),
+-	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP,	core_funcs),
++	ICPU(INTEL_FAM6_SKYLAKE,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_XEON_D,	core_funcs),
+ 	ICPU(INTEL_FAM6_XEON_PHI_KNL,		knl_funcs),
+ 	ICPU(INTEL_FAM6_XEON_PHI_KNM,		knl_funcs),
+@@ -1900,13 +1900,13 @@ static const struct x86_cpu_id intel_pst
+ };
+ 
+ static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[] = {
+-	ICPU(INTEL_FAM6_KABYLAKE_DESKTOP, core_funcs),
++	ICPU(INTEL_FAM6_KABYLAKE, core_funcs),
+ 	{}
+ };
+ 
+ static const struct x86_cpu_id intel_pstate_hwp_boost_ids[] = {
+ 	ICPU(INTEL_FAM6_SKYLAKE_X, core_funcs),
+-	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP, core_funcs),
++	ICPU(INTEL_FAM6_SKYLAKE, core_funcs),
+ 	{}
+ };
+ 
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -1072,19 +1072,19 @@ static const struct x86_cpu_id intel_idl
+ 	INTEL_CPU_FAM6(ATOM_AIRMONT,		idle_cpu_cht),
+ 	INTEL_CPU_FAM6(IVYBRIDGE,		idle_cpu_ivb),
+ 	INTEL_CPU_FAM6(IVYBRIDGE_X,		idle_cpu_ivt),
+-	INTEL_CPU_FAM6(HASWELL_CORE,		idle_cpu_hsw),
++	INTEL_CPU_FAM6(HASWELL,			idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(HASWELL_X,		idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(HASWELL_ULT,		idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(HASWELL_GT3E,		idle_cpu_hsw),
+ 	INTEL_CPU_FAM6(ATOM_SILVERMONT_X,	idle_cpu_avn),
+-	INTEL_CPU_FAM6(BROADWELL_CORE,		idle_cpu_bdw),
++	INTEL_CPU_FAM6(BROADWELL,		idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(BROADWELL_GT3E,		idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(BROADWELL_X,		idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(BROADWELL_XEON_D,	idle_cpu_bdw),
+ 	INTEL_CPU_FAM6(SKYLAKE_MOBILE,		idle_cpu_skl),
+-	INTEL_CPU_FAM6(SKYLAKE_DESKTOP,		idle_cpu_skl),
++	INTEL_CPU_FAM6(SKYLAKE,			idle_cpu_skl),
+ 	INTEL_CPU_FAM6(KABYLAKE_MOBILE,		idle_cpu_skl),
+-	INTEL_CPU_FAM6(KABYLAKE_DESKTOP,	idle_cpu_skl),
++	INTEL_CPU_FAM6(KABYLAKE,		idle_cpu_skl),
+ 	INTEL_CPU_FAM6(SKYLAKE_X,		idle_cpu_skx),
+ 	INTEL_CPU_FAM6(XEON_PHI_KNL,		idle_cpu_knl),
+ 	INTEL_CPU_FAM6(XEON_PHI_KNM,		idle_cpu_knl),
+@@ -1311,7 +1311,7 @@ static void intel_idle_state_table_updat
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+ 		bxt_idle_state_table_update();
+ 		break;
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 		sklh_idle_state_table_update();
+ 		break;
+ 	}
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -807,9 +807,9 @@ static inline void pmc_core_dbgfs_unregi
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
+-	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
++	INTEL_CPU_FAM6(SKYLAKE, spt_reg_map),
+ 	INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
+-	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
++	INTEL_CPU_FAM6(KABYLAKE, spt_reg_map),
+ 	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+--- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
++++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+@@ -31,9 +31,9 @@ static struct platform_device pmc_core_d
+  */
+ static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
+ 	INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
+-	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, pmc_core_device),
++	INTEL_CPU_FAM6(SKYLAKE, pmc_core_device),
+ 	INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
+-	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, pmc_core_device),
++	INTEL_CPU_FAM6(KABYLAKE, pmc_core_device),
+ 	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
+ 	INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
+ 	{}
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -957,24 +957,24 @@ static const struct x86_cpu_id rapl_ids[
+ 	INTEL_CPU_FAM6(IVYBRIDGE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(IVYBRIDGE_X, rapl_defaults_core),
+ 
+-	INTEL_CPU_FAM6(HASWELL_CORE, rapl_defaults_core),
++	INTEL_CPU_FAM6(HASWELL, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(HASWELL_ULT, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(HASWELL_GT3E, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(HASWELL_X, rapl_defaults_hsw_server),
+ 
+-	INTEL_CPU_FAM6(BROADWELL_CORE, rapl_defaults_core),
++	INTEL_CPU_FAM6(BROADWELL, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(BROADWELL_GT3E, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(BROADWELL_XEON_D, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(BROADWELL_X, rapl_defaults_hsw_server),
+ 
+-	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, rapl_defaults_core),
++	INTEL_CPU_FAM6(SKYLAKE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(SKYLAKE_MOBILE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(SKYLAKE_X, rapl_defaults_hsw_server),
+ 	INTEL_CPU_FAM6(KABYLAKE_MOBILE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, rapl_defaults_core),
++	INTEL_CPU_FAM6(KABYLAKE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(ICELAKE_MOBILE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ICELAKE_DESKTOP, rapl_defaults_core),
++	INTEL_CPU_FAM6(ICELAKE, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, rapl_defaults_core),
+ 	INTEL_CPU_FAM6(ICELAKE_X, rapl_defaults_hsw_server),
+ 	INTEL_CPU_FAM6(ICELAKE_XEON_D, rapl_defaults_hsw_server),
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3207,10 +3207,10 @@ int probe_nhm_msrs(unsigned int family,
+ 		pkg_cstate_limits = snb_pkg_cstate_limits;
+ 		has_misc_feature_control = 1;
+ 		break;
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+@@ -3403,10 +3403,10 @@ int has_config_tdp(unsigned int family,
+ 
+ 	switch (model) {
+ 	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+@@ -3840,9 +3840,9 @@ void rapl_probe_intel(unsigned int famil
+ 	switch (model) {
+ 	case INTEL_FAM6_SANDYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE:
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 		do_rapl = RAPL_PKG | RAPL_CORES | RAPL_CORE_POLICY | RAPL_GFX | RAPL_PKG_POWER_INFO;
+ 		if (rapl_joules) {
+@@ -4031,7 +4031,7 @@ void perf_limit_reasons_probe(unsigned i
+ 		return;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 		do_gfx_perf_limit_reasons = 1;
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+@@ -4249,10 +4249,10 @@ int has_snb_msrs(unsigned int family, un
+ 	case INTEL_FAM6_SANDYBRIDGE_X:
+ 	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+ 	case INTEL_FAM6_IVYBRIDGE_X:	/* IVB Xeon */
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+@@ -4284,8 +4284,8 @@ int has_hsw_msrs(unsigned int family, un
+ 		return 0;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_HASWELL_CORE:
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_HASWELL:
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+ 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+@@ -4569,16 +4569,16 @@ unsigned int intel_model_duplicates(unsi
+ 		return INTEL_FAM6_XEON_PHI_KNL;
+ 
+ 	case INTEL_FAM6_HASWELL_ULT:
+-		return INTEL_FAM6_HASWELL_CORE;
++		return INTEL_FAM6_HASWELL;
+ 
+ 	case INTEL_FAM6_BROADWELL_X:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:	/* BDX-DE */
+ 		return INTEL_FAM6_BROADWELL_X;
+ 
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 		return INTEL_FAM6_SKYLAKE_MOBILE;
+ 
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
 
-Thanks,
-
-Jonathan
-
-
-> ---
->  drivers/iio/imu/st_lsm6dsx/Kconfig           |  2 +-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 87 ++++++++++++++++++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |  5 ++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |  5 ++
->  5 files changed, 100 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> index 939058b27746..77aa0e77212d 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> @@ -12,7 +12,7 @@ config IIO_ST_LSM6DSX
->  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
->  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
->  	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
-> -	  ism330dhcx
-> +	  ism330dhcx and the accelerometer/gyroscope of lsm9ds1.
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called st_lsm6dsx.
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> index 090b7bd3c5b0..196e344301f6 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -24,6 +24,7 @@
->  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
->  #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
->  #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
-> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
->  
->  enum st_lsm6dsx_hw_id {
->  	ST_LSM6DS3_ID,
-> @@ -37,6 +38,7 @@ enum st_lsm6dsx_hw_id {
->  	ST_LSM6DSR_ID,
->  	ST_LSM6DS3TRC_ID,
->  	ST_ISM330DHCX_ID,
-> +	ST_LSM9DS1_ID,
->  	ST_LSM6DSX_MAX_ID,
->  };
->  
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 1b46d9dc2089..ad839ccf871c 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -10,6 +10,8 @@
->   * +-125/+-245/+-500/+-1000/+-2000 dps
->   * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
->   * allowing dynamic batching of sensor data.
-> + * LSM9DSx series is similar but includes an additional magnetometer, handled
-> + * by a different driver.
->   *
->   * Supported sensors:
->   * - LSM6DS3:
-> @@ -30,6 +32,13 @@
->   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
->   *   - FIFO size: 3KB
->   *
-> + * - LSM9DS1:
-> + *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
-> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-> + *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
-> + *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
-> + *   - FIFO size: 32
-> + *
->   * Copyright 2016 STMicroelectronics Inc.
->   *
->   * Lorenzo Bianconi <lorenzo.bianconi@st.com>
-> @@ -70,7 +79,85 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
->  	IIO_CHAN_SOFT_TIMESTAMP(3),
->  };
->  
-> +static const struct iio_chan_spec st_lsm6ds0_gyro_channels[] = {
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x18, IIO_MOD_X, 0),
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1a, IIO_MOD_Y, 1),
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1c, IIO_MOD_Z, 2),
-> +	IIO_CHAN_SOFT_TIMESTAMP(3),
-> +};
-> +
->  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
-> +	{
-> +		.wai = 0x68,
-> +		.int1_addr = 0x0c,
-> +		.int2_addr = 0x0d,
-> +		.reset_addr = 0x22,
-> +		.max_fifo_size = 32,
-> +		.id = {
-> +			{
-> +				.hw_id = ST_LSM9DS1_ID,
-> +				.name = ST_LSM9DS1_DEV_NAME,
-> +			},
-> +		},
-> +		.channels = {
-> +			[ST_LSM6DSX_ID_ACC] = {
-> +				.chan = st_lsm6dsx_acc_channels,
-> +				.len = ARRAY_SIZE(st_lsm6dsx_acc_channels),
-> +			},
-> +			[ST_LSM6DSX_ID_GYRO] = {
-> +				.chan = st_lsm6ds0_gyro_channels,
-> +				.len = ARRAY_SIZE(st_lsm6ds0_gyro_channels),
-> +			},
-> +		},
-> +		.odr_table = {
-> +			[ST_LSM6DSX_ID_ACC] = {
-> +				.reg = {
-> +					.addr = 0x20,
-> +					.mask = GENMASK(7, 5),
-> +				},
-> +				.odr_avl[0] = {  10, 0x01 },
-> +				.odr_avl[1] = {  50, 0x02 },
-> +				.odr_avl[2] = { 119, 0x03 },
-> +				.odr_avl[3] = { 238, 0x04 },
-> +				.odr_avl[4] = { 476, 0x05 },
-> +				.odr_avl[5] = { 952, 0x06 },
-> +			},
-> +			[ST_LSM6DSX_ID_GYRO] = {
-> +				.reg = {
-> +					.addr = 0x10,
-> +					.mask = GENMASK(7, 5),
-> +				},
-> +				.odr_avl[0] = {  15, 0x01 },
-> +				.odr_avl[1] = {  60, 0x02 },
-> +				.odr_avl[2] = { 119, 0x03 },
-> +				.odr_avl[3] = { 238, 0x04 },
-> +				.odr_avl[4] = { 476, 0x05 },
-> +				.odr_avl[5] = { 952, 0x06 },
-> +			},
-> +		},
-> +		.fs_table = {
-> +			[ST_LSM6DSX_ID_ACC] = {
-> +				.reg = {
-> +					.addr = 0x20,
-> +					.mask = GENMASK(4, 3),
-> +				},
-> +				.fs_avl[0] = {  599, 0x0 },
-> +				.fs_avl[1] = { 1197, 0x2 },
-> +				.fs_avl[2] = { 2394, 0x3 },
-> +				.fs_avl[3] = { 4788, 0x1 },
-> +			},
-> +			[ST_LSM6DSX_ID_GYRO] = {
-> +				.reg = {
-> +					.addr = 0x10,
-> +					.mask = GENMASK(4, 3),
-> +				},
-> +				.fs_avl[0] = { IIO_DEGREE_TO_RAD(245), 0x0 },
-> +				.fs_avl[1] = { IIO_DEGREE_TO_RAD(500), 0x1 },
-> +				.fs_avl[2] = { IIO_DEGREE_TO_RAD(0), 0x2 },
-> +				.fs_avl[3] = { IIO_DEGREE_TO_RAD(2000), 0x3 },
-> +			},
-> +		},
-> +	},
->  	{
->  		.wai = 0x69,
->  		.int1_addr = 0x0d,
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> index 15c6aa5b6caa..2f1b30ff083b 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> @@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
->  		.compatible = "st,ism330dhcx",
->  		.data = (void *)ST_ISM330DHCX_ID,
->  	},
-> +	{
-> +		.compatible = "st,lsm9ds1",
-> +		.data = (void *)ST_LSM9DS1_ID,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-> @@ -99,6 +103,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
->  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
->  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
->  	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
-> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> index a8430ee11310..421ce704f346 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> @@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
->  		.compatible = "st,ism330dhcx",
->  		.data = (void *)ST_ISM330DHCX_ID,
->  	},
-> +	{
-> +		.compatible = "st,lsm9ds1",
-> +		.data = (void *)ST_LSM9DS1_ID,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-> @@ -99,6 +103,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
->  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
->  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
->  	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
-> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
 
