@@ -2,71 +2,100 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18A1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F77C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D622186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727672070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 04:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YGdkrwBh"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DQOJ83ep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfH0EUu (ORCPT
+        id S1728820AbfH0EYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 00:20:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48022 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfH0EUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 00:20:50 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R4KRMC061472;
-        Mon, 26 Aug 2019 23:20:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566879627;
-        bh=mh+Mw837nSIanhXuh5pSu7hj8JRuO+0S3O+IT9eNPcs=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=YGdkrwBhImiJri7Y7Nt2PgEPp43bD1kFMOSfi6ssdXCIoB01oyt4CCujEzGZC7s0K
-         96/A7Ixfat9vKUa3oxsJe8lXRzHDg1t4y8RQJDkBiQiiKGnndk15X5Sq+EbWCD3DU9
-         rsZqVLY5eMZ9H9s1WW/HEURjBqcnRF09AsTHBRU0=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R4KRdO090562
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Aug 2019 23:20:27 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 26
- Aug 2019 23:20:27 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 26 Aug 2019 23:20:27 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R4KMri087640;
-        Mon, 26 Aug 2019 23:20:23 -0500
-Subject: Re: [RESEND PATCH v3 01/20] mtd: spi-nor: Regroup flash parameter and
- settings
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
- <20190826120821.16351-2-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <3b9e2faf-455c-28a8-52a1-bd2a49028b53@ti.com>
-Date:   Tue, 27 Aug 2019 09:51:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190826120821.16351-2-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 27 Aug 2019 00:24:22 -0400
+Received: from mail-eopbgr130055.outbound.protection.outlook.com ([40.107.13.55]:24134
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725766AbfH0EYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 00:24:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jM2PpZEr8h/+1Iztac2wzwycOJUFyRP/NAHgGuEE5ZI9jT1fFq6mBFnneu/rJi2aY0EvNJlKwcaYVKAztBcPz51pQx1bEHeZ8aQIaT4gW7jTKhriaH35RZZDHT3owoE8z5NixiopswH39g/Qhb0zgWfL3AeQJMekHMl38o1xSC+o/D22+kVf1JRYAaWjPFQTjmt4k/tdBmlW7wktVKQ0ms7oKO+U8gdP5FFIdMJOp5EBJCWbGUDI71zUwQYCNMho4VEr8bKdgyfCqDb1IGoQHq7qECVj3dox5PXkvQYSYPRIyj4mbUog9kIjMPgtXjn395BcMkC64zaHH8YFwTIdNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uOaSjvHP+LHU0gXmwtF1Z1ejwvGH8+BxuOUWMu/BS1g=;
+ b=DKpOXtiZZ8Uy2CG5sG83rycleBJHpue7yUceznvsCIVZYpjKVdMqic02C3k/9KOq3U937pR+Fhd2Ai4iO5PYf0h6ecgGhNVmrV+kNgVGfiset/TVY1d8rCsgsJO3xvA24XoZ1qusq3SEN4TYBcld6Z30+yormPHoOYgJjsCua1SB/s62mH0TXyK/1RqCTbTCeq/o8iZrMwKNLDeLegBcYZvbJNW6JwbpgZyVoNfYx22fa31y1CcZuvKG4VmZXEpdejHac5pI5MBUaHgpNCPSZkcl7q8qpemddi4Kc+UJnotmcOipWTQkzP+Oti9bz8sQ3Nxt6cnvgquIxYs8Y71uEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uOaSjvHP+LHU0gXmwtF1Z1ejwvGH8+BxuOUWMu/BS1g=;
+ b=DQOJ83epAbIPg+pE8/9MXaHAJq80oveKKDH/aMJlGL1J730m6apBHQasCRnQ97h7mxreP3nZFOmzvksESQk3ZNPKXO6TC6d7g/utuCMCMDXT/EMpX7Z68YLqF5WDItvHXhU2E2Jv97p3FLE0JmwG5O115p++l4iLllqY/HMu7CU=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB4532.eurprd05.prod.outlook.com (52.133.55.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 27 Aug 2019 04:24:16 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
+ 04:24:16 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+Thread-Topic: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+Thread-Index: AQHVXE6sjQlIhIUUgkClKEYpCVnoRKcOOXEAgAAlFCA=
+Date:   Tue, 27 Aug 2019 04:24:16 +0000
+Message-ID: <AM0PR05MB4866CC8FD2A1C52C9B2CD483D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-2-parav@mellanox.com> <20190826194456.6edef7d1@x1.home>
+In-Reply-To: <20190826194456.6edef7d1@x1.home>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.18.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 61849c4e-209c-49ed-2d06-08d72aa66c34
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4532;
+x-ms-traffictypediagnostic: AM0PR05MB4532:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB4532344EC08F547A297923E2D1A00@AM0PR05MB4532.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0142F22657
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(39860400002)(376002)(366004)(199004)(13464003)(189003)(25786009)(476003)(26005)(102836004)(446003)(76176011)(2906002)(6246003)(486006)(66476007)(7736002)(316002)(256004)(478600001)(53546011)(53936002)(6916009)(4326008)(99286004)(14454004)(11346002)(229853002)(74316002)(14444005)(305945005)(55236004)(54906003)(52536014)(66446008)(66556008)(66946007)(76116006)(6116002)(71200400001)(55016002)(66066001)(6436002)(6506007)(71190400001)(9456002)(8676002)(5660300002)(81166006)(81156014)(86362001)(186003)(9686003)(7696005)(3846002)(8936002)(33656002)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4532;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0j/Xg0ZjzkT2mHwqaO1at2BmbExG/KgBEH7+ss0KiglMMegSqfON3jWhw5rJDlvsaD/oI4ihPi2e9TqIQchXDM7WqX8aDmJDgN7Z/3INOjN0wXRql2m6trW5VdwtlpYNu6yZWXll8cCiJwdBvFB++2Dpa3VitfD37AVLRMIKYQ0DiorjFNuphGgckN24kQ1fylZxJApadaqbOdDoH3LSp4UIqEeljN+VedOG+6nKHW32szuTIzLtwbVAiqjbaBN3lt4Mi7zfVrLSigVAoKptcDX5wo/xFIryCkJLsBq7Vh34VkKgWM9rQ7Wm1/5rY9CdQauSOndGLqXYbyzAWYo6PnJ/PCf3HJeSXiMBLQ+a51BwvgmTMTAbg412qbgZY2mW2gFtu+fB8XmG7V1V38KznXPXrBwQapo4+KoZmB1EotE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61849c4e-209c-49ed-2d06-08d72aa66c34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 04:24:16.3251
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2+KK0k4RU1rbWZoR8F8PFTPltxc89389ou81DaKcR6H1shlPlRSVrCf5ZZ+IGA0RGqvtjfEFbEjUWw3tcKLeBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4532
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -74,383 +103,254 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 26/08/19 5:38 PM, Tudor.Ambarus@microchip.com wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> The scope is to move all [FLASH-SPECIFIC] parameters and settings
-> from 'struct spi_nor' to 'struct spi_nor_flash_parameter'.
-> 
-> 'struct spi_nor_flash_parameter' describes the hardware capabilities
-> and associated settings of the SPI NOR flash memory. It includes
-> legacy flash parameters and settings that can be overwritten by the
-> spi_nor_fixups hooks, or dynamically when parsing the JESD216
-> Serial Flash Discoverable Parameters (SFDP) tables. All SFDP params
-> and settings will fit inside 'struct spi_nor_flash_parameter'.
-> 
-> Move spi_nor_hwcaps related code to avoid forward declarations.
-> Add a forward declaration that we can't avoid: 'struct spi_nor' will
-> be used in 'struct spi_nor_flash_parameter'.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
+> -----Original Message-----
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Tuesday, August 27, 2019 7:15 AM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
+> cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org
+> Subject: Re: [PATCH 1/4] mdev: Introduce sha1 based mdev alias
+>=20
+> On Mon, 26 Aug 2019 15:41:16 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > Whenever a parent requests to generate mdev alias, generate a mdev
+> > alias.
+> > It is an optional attribute that parent can request to generate for
+> > each of its child mdev.
+> > mdev alias is generated using sha1 from the mdev name.
+> >
+> > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > ---
+> >  drivers/vfio/mdev/mdev_core.c    | 98
+> +++++++++++++++++++++++++++++++-
+> >  drivers/vfio/mdev/mdev_private.h |  5 +-
+> >  drivers/vfio/mdev/mdev_sysfs.c   | 13 +++--
+> >  include/linux/mdev.h             |  4 ++
+> >  4 files changed, 111 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/vfio/mdev/mdev_core.c
+> > b/drivers/vfio/mdev/mdev_core.c index b558d4cfd082..e825ff38b037
+> > 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+> > @@ -10,9 +10,11 @@
+> >  #include <linux/module.h>
+> >  #include <linux/device.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/mm.h>
+> >  #include <linux/uuid.h>
+> >  #include <linux/sysfs.h>
+> >  #include <linux/mdev.h>
+> > +#include <crypto/hash.h>
+> >
+> >  #include "mdev_private.h"
+> >
+> > @@ -27,6 +29,8 @@ static struct class_compat *mdev_bus_compat_class;
+> > static LIST_HEAD(mdev_list);  static DEFINE_MUTEX(mdev_list_lock);
+> >
+> > +static struct crypto_shash *alias_hash;
+> > +
+> >  struct device *mdev_parent_dev(struct mdev_device *mdev)  {
+> >  	return mdev->parent->dev;
+> > @@ -164,6 +168,18 @@ int mdev_register_device(struct device *dev, const
+> struct mdev_parent_ops *ops)
+> >  		goto add_dev_err;
+> >  	}
+> >
+> > +	if (ops->get_alias_length) {
+> > +		unsigned int digest_size;
+> > +		unsigned int aligned_len;
+> > +
+> > +		aligned_len =3D roundup(ops->get_alias_length(), 2);
+> > +		digest_size =3D crypto_shash_digestsize(alias_hash);
+> > +		if (aligned_len / 2 > digest_size) {
+> > +			ret =3D -EINVAL;
+> > +			goto add_dev_err;
+> > +		}
+> > +	}
+>=20
+> This looks like a sanity check, it could be done outside of the
+> parent_list_lock, even before we get a parent device reference.
+>
+Yes.
+=20
+> I think we're using a callback for get_alias_length() rather than a fixed=
+ field
+> to support the mtty module option added in patch 4, right?
+Right.
+I will move the check outside.
 
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Its utility is rather limited with no args.  I could imagine that if a pa=
+rent
+> wanted to generate an alias that could be incorporated into a string with=
+ the
+> parent device name that it would be useful to call this with the parent
+> device as an arg.  I guess we can save that until a user comes along thou=
+gh.
+>
+Right. We save until user arrives.
+I suggest you review the extra complexity I added here for vendor driven al=
+ias length, which I think we should do when an actual user comes along.
 
-Regards
-Vignesh
+ > There doesn't seem to be anything serializing use of alias_hash.
+>=20
+Each sha1 calculation is happening on the new descriptor allocated and init=
+ialized using crypto_shash_init().
+So it appears to me that each hash calculation can occur in parallel on the=
+ individual desc.
 
-> v3: collect R-b
-> 
->  drivers/mtd/spi-nor/spi-nor.c |  65 ------------
->  include/linux/mtd/spi-nor.h   | 239 +++++++++++++++++++++++++++++-------------
->  2 files changed, 164 insertions(+), 140 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 0597cb8257b0..d35dc6a97521 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -40,71 +40,6 @@
->  #define SPI_NOR_MAX_ID_LEN	6
->  #define SPI_NOR_MAX_ADDR_WIDTH	4
->  
-> -struct spi_nor_read_command {
-> -	u8			num_mode_clocks;
-> -	u8			num_wait_states;
-> -	u8			opcode;
-> -	enum spi_nor_protocol	proto;
-> -};
-> -
-> -struct spi_nor_pp_command {
-> -	u8			opcode;
-> -	enum spi_nor_protocol	proto;
-> -};
-> -
-> -enum spi_nor_read_command_index {
-> -	SNOR_CMD_READ,
-> -	SNOR_CMD_READ_FAST,
-> -	SNOR_CMD_READ_1_1_1_DTR,
-> -
-> -	/* Dual SPI */
-> -	SNOR_CMD_READ_1_1_2,
-> -	SNOR_CMD_READ_1_2_2,
-> -	SNOR_CMD_READ_2_2_2,
-> -	SNOR_CMD_READ_1_2_2_DTR,
-> -
-> -	/* Quad SPI */
-> -	SNOR_CMD_READ_1_1_4,
-> -	SNOR_CMD_READ_1_4_4,
-> -	SNOR_CMD_READ_4_4_4,
-> -	SNOR_CMD_READ_1_4_4_DTR,
-> -
-> -	/* Octal SPI */
-> -	SNOR_CMD_READ_1_1_8,
-> -	SNOR_CMD_READ_1_8_8,
-> -	SNOR_CMD_READ_8_8_8,
-> -	SNOR_CMD_READ_1_8_8_DTR,
-> -
-> -	SNOR_CMD_READ_MAX
-> -};
-> -
-> -enum spi_nor_pp_command_index {
-> -	SNOR_CMD_PP,
-> -
-> -	/* Quad SPI */
-> -	SNOR_CMD_PP_1_1_4,
-> -	SNOR_CMD_PP_1_4_4,
-> -	SNOR_CMD_PP_4_4_4,
-> -
-> -	/* Octal SPI */
-> -	SNOR_CMD_PP_1_1_8,
-> -	SNOR_CMD_PP_1_8_8,
-> -	SNOR_CMD_PP_8_8_8,
-> -
-> -	SNOR_CMD_PP_MAX
-> -};
-> -
-> -struct spi_nor_flash_parameter {
-> -	u64				size;
-> -	u32				page_size;
-> -
-> -	struct spi_nor_hwcaps		hwcaps;
-> -	struct spi_nor_read_command	reads[SNOR_CMD_READ_MAX];
-> -	struct spi_nor_pp_command	page_programs[SNOR_CMD_PP_MAX];
-> -
-> -	int (*quad_enable)(struct spi_nor *nor);
-> -};
-> -
->  struct sfdp_parameter_header {
->  	u8		id_lsb;
->  	u8		minor;
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index 3075ac73b171..77ba692d9348 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -334,6 +334,165 @@ struct spi_nor_erase_map {
->  };
->  
->  /**
-> + * struct spi_nor_hwcaps - Structure for describing the hardware capabilies
-> + * supported by the SPI controller (bus master).
-> + * @mask:		the bitmask listing all the supported hw capabilies
-> + */
-> +struct spi_nor_hwcaps {
-> +	u32	mask;
-> +};
-> +
-> +/*
-> + *(Fast) Read capabilities.
-> + * MUST be ordered by priority: the higher bit position, the higher priority.
-> + * As a matter of performances, it is relevant to use Octal SPI protocols first,
-> + * then Quad SPI protocols before Dual SPI protocols, Fast Read and lastly
-> + * (Slow) Read.
-> + */
-> +#define SNOR_HWCAPS_READ_MASK		GENMASK(14, 0)
-> +#define SNOR_HWCAPS_READ		BIT(0)
-> +#define SNOR_HWCAPS_READ_FAST		BIT(1)
-> +#define SNOR_HWCAPS_READ_1_1_1_DTR	BIT(2)
-> +
-> +#define SNOR_HWCAPS_READ_DUAL		GENMASK(6, 3)
-> +#define SNOR_HWCAPS_READ_1_1_2		BIT(3)
-> +#define SNOR_HWCAPS_READ_1_2_2		BIT(4)
-> +#define SNOR_HWCAPS_READ_2_2_2		BIT(5)
-> +#define SNOR_HWCAPS_READ_1_2_2_DTR	BIT(6)
-> +
-> +#define SNOR_HWCAPS_READ_QUAD		GENMASK(10, 7)
-> +#define SNOR_HWCAPS_READ_1_1_4		BIT(7)
-> +#define SNOR_HWCAPS_READ_1_4_4		BIT(8)
-> +#define SNOR_HWCAPS_READ_4_4_4		BIT(9)
-> +#define SNOR_HWCAPS_READ_1_4_4_DTR	BIT(10)
-> +
-> +#define SNOR_HWCAPS_READ_OCTAL		GENMASK(14, 11)
-> +#define SNOR_HWCAPS_READ_1_1_8		BIT(11)
-> +#define SNOR_HWCAPS_READ_1_8_8		BIT(12)
-> +#define SNOR_HWCAPS_READ_8_8_8		BIT(13)
-> +#define SNOR_HWCAPS_READ_1_8_8_DTR	BIT(14)
-> +
-> +/*
-> + * Page Program capabilities.
-> + * MUST be ordered by priority: the higher bit position, the higher priority.
-> + * Like (Fast) Read capabilities, Octal/Quad SPI protocols are preferred to the
-> + * legacy SPI 1-1-1 protocol.
-> + * Note that Dual Page Programs are not supported because there is no existing
-> + * JEDEC/SFDP standard to define them. Also at this moment no SPI flash memory
-> + * implements such commands.
-> + */
-> +#define SNOR_HWCAPS_PP_MASK	GENMASK(22, 16)
-> +#define SNOR_HWCAPS_PP		BIT(16)
-> +
-> +#define SNOR_HWCAPS_PP_QUAD	GENMASK(19, 17)
-> +#define SNOR_HWCAPS_PP_1_1_4	BIT(17)
-> +#define SNOR_HWCAPS_PP_1_4_4	BIT(18)
-> +#define SNOR_HWCAPS_PP_4_4_4	BIT(19)
-> +
-> +#define SNOR_HWCAPS_PP_OCTAL	GENMASK(22, 20)
-> +#define SNOR_HWCAPS_PP_1_1_8	BIT(20)
-> +#define SNOR_HWCAPS_PP_1_8_8	BIT(21)
-> +#define SNOR_HWCAPS_PP_8_8_8	BIT(22)
-> +
-> +#define SNOR_HWCAPS_X_X_X	(SNOR_HWCAPS_READ_2_2_2 |	\
-> +				 SNOR_HWCAPS_READ_4_4_4 |	\
-> +				 SNOR_HWCAPS_READ_8_8_8 |	\
-> +				 SNOR_HWCAPS_PP_4_4_4 |		\
-> +				 SNOR_HWCAPS_PP_8_8_8)
-> +
-> +#define SNOR_HWCAPS_DTR		(SNOR_HWCAPS_READ_1_1_1_DTR |	\
-> +				 SNOR_HWCAPS_READ_1_2_2_DTR |	\
-> +				 SNOR_HWCAPS_READ_1_4_4_DTR |	\
-> +				 SNOR_HWCAPS_READ_1_8_8_DTR)
-> +
-> +#define SNOR_HWCAPS_ALL		(SNOR_HWCAPS_READ_MASK |	\
-> +				 SNOR_HWCAPS_PP_MASK)
-> +
-> +struct spi_nor_read_command {
-> +	u8			num_mode_clocks;
-> +	u8			num_wait_states;
-> +	u8			opcode;
-> +	enum spi_nor_protocol	proto;
-> +};
-> +
-> +struct spi_nor_pp_command {
-> +	u8			opcode;
-> +	enum spi_nor_protocol	proto;
-> +};
-> +
-> +enum spi_nor_read_command_index {
-> +	SNOR_CMD_READ,
-> +	SNOR_CMD_READ_FAST,
-> +	SNOR_CMD_READ_1_1_1_DTR,
-> +
-> +	/* Dual SPI */
-> +	SNOR_CMD_READ_1_1_2,
-> +	SNOR_CMD_READ_1_2_2,
-> +	SNOR_CMD_READ_2_2_2,
-> +	SNOR_CMD_READ_1_2_2_DTR,
-> +
-> +	/* Quad SPI */
-> +	SNOR_CMD_READ_1_1_4,
-> +	SNOR_CMD_READ_1_4_4,
-> +	SNOR_CMD_READ_4_4_4,
-> +	SNOR_CMD_READ_1_4_4_DTR,
-> +
-> +	/* Octal SPI */
-> +	SNOR_CMD_READ_1_1_8,
-> +	SNOR_CMD_READ_1_8_8,
-> +	SNOR_CMD_READ_8_8_8,
-> +	SNOR_CMD_READ_1_8_8_DTR,
-> +
-> +	SNOR_CMD_READ_MAX
-> +};
-> +
-> +enum spi_nor_pp_command_index {
-> +	SNOR_CMD_PP,
-> +
-> +	/* Quad SPI */
-> +	SNOR_CMD_PP_1_1_4,
-> +	SNOR_CMD_PP_1_4_4,
-> +	SNOR_CMD_PP_4_4_4,
-> +
-> +	/* Octal SPI */
-> +	SNOR_CMD_PP_1_1_8,
-> +	SNOR_CMD_PP_1_8_8,
-> +	SNOR_CMD_PP_8_8_8,
-> +
-> +	SNOR_CMD_PP_MAX
-> +};
-> +
-> +/* Forward declaration that will be used in 'struct spi_nor_flash_parameter' */
-> +struct spi_nor;
-> +
-> +/**
-> + * struct spi_nor_flash_parameter - SPI NOR flash parameters and settings.
-> + * Includes legacy flash parameters and settings that can be overwritten
-> + * by the spi_nor_fixups hooks, or dynamically when parsing the JESD216
-> + * Serial Flash Discoverable Parameters (SFDP) tables.
-> + *
-> + * @size:		the flash memory density in bytes.
-> + * @page_size:		the page size of the SPI NOR flash memory.
-> + * @hwcaps:		describes the read and page program hardware
-> + *			capabilities.
-> + * @reads:		read capabilities ordered by priority: the higher index
-> + *                      in the array, the higher priority.
-> + * @page_programs:	page program capabilities ordered by priority: the
-> + *                      higher index in the array, the higher priority.
-> + * @quad_enable:	enables SPI NOR quad mode.
-> + */
-> +struct spi_nor_flash_parameter {
-> +	u64				size;
-> +	u32				page_size;
-> +
-> +	struct spi_nor_hwcaps		hwcaps;
-> +	struct spi_nor_read_command	reads[SNOR_CMD_READ_MAX];
-> +	struct spi_nor_pp_command	page_programs[SNOR_CMD_PP_MAX];
-> +
-> +	int (*quad_enable)(struct spi_nor *nor);
-> +};
-> +
-> +/**
->   * struct flash_info - Forward declaration of a structure used internally by
->   *		       spi_nor_scan()
->   */
-> @@ -379,6 +538,10 @@ struct flash_info;
->   * @quad_enable:	[FLASH-SPECIFIC] enables SPI NOR quad mode
->   * @clear_sr_bp:	[FLASH-SPECIFIC] clears the Block Protection Bits from
->   *			the SPI NOR Status Register.
-> + * @params:		[FLASH-SPECIFIC] SPI-NOR flash parameters and settings.
-> + *                      The structure includes legacy flash parameters and
-> + *                      settings that can be overwritten by the spi_nor_fixups
-> + *                      hooks, or dynamically when parsing the SFDP tables.
->   * @priv:		the private data
->   */
->  struct spi_nor {
-> @@ -418,6 +581,7 @@ struct spi_nor {
->  	int (*flash_is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
->  	int (*quad_enable)(struct spi_nor *nor);
->  	int (*clear_sr_bp)(struct spi_nor *nor);
-> +	struct spi_nor_flash_parameter params;
->  
->  	void *priv;
->  };
-> @@ -463,81 +627,6 @@ static inline struct device_node *spi_nor_get_flash_node(struct spi_nor *nor)
->  }
->  
->  /**
-> - * struct spi_nor_hwcaps - Structure for describing the hardware capabilies
-> - * supported by the SPI controller (bus master).
-> - * @mask:		the bitmask listing all the supported hw capabilies
-> - */
-> -struct spi_nor_hwcaps {
-> -	u32	mask;
-> -};
-> -
-> -/*
-> - *(Fast) Read capabilities.
-> - * MUST be ordered by priority: the higher bit position, the higher priority.
-> - * As a matter of performances, it is relevant to use Octal SPI protocols first,
-> - * then Quad SPI protocols before Dual SPI protocols, Fast Read and lastly
-> - * (Slow) Read.
-> - */
-> -#define SNOR_HWCAPS_READ_MASK		GENMASK(14, 0)
-> -#define SNOR_HWCAPS_READ		BIT(0)
-> -#define SNOR_HWCAPS_READ_FAST		BIT(1)
-> -#define SNOR_HWCAPS_READ_1_1_1_DTR	BIT(2)
-> -
-> -#define SNOR_HWCAPS_READ_DUAL		GENMASK(6, 3)
-> -#define SNOR_HWCAPS_READ_1_1_2		BIT(3)
-> -#define SNOR_HWCAPS_READ_1_2_2		BIT(4)
-> -#define SNOR_HWCAPS_READ_2_2_2		BIT(5)
-> -#define SNOR_HWCAPS_READ_1_2_2_DTR	BIT(6)
-> -
-> -#define SNOR_HWCAPS_READ_QUAD		GENMASK(10, 7)
-> -#define SNOR_HWCAPS_READ_1_1_4		BIT(7)
-> -#define SNOR_HWCAPS_READ_1_4_4		BIT(8)
-> -#define SNOR_HWCAPS_READ_4_4_4		BIT(9)
-> -#define SNOR_HWCAPS_READ_1_4_4_DTR	BIT(10)
-> -
-> -#define SNOR_HWCAPS_READ_OCTAL		GENMASK(14, 11)
-> -#define SNOR_HWCAPS_READ_1_1_8		BIT(11)
-> -#define SNOR_HWCAPS_READ_1_8_8		BIT(12)
-> -#define SNOR_HWCAPS_READ_8_8_8		BIT(13)
-> -#define SNOR_HWCAPS_READ_1_8_8_DTR	BIT(14)
-> -
-> -/*
-> - * Page Program capabilities.
-> - * MUST be ordered by priority: the higher bit position, the higher priority.
-> - * Like (Fast) Read capabilities, Octal/Quad SPI protocols are preferred to the
-> - * legacy SPI 1-1-1 protocol.
-> - * Note that Dual Page Programs are not supported because there is no existing
-> - * JEDEC/SFDP standard to define them. Also at this moment no SPI flash memory
-> - * implements such commands.
-> - */
-> -#define SNOR_HWCAPS_PP_MASK	GENMASK(22, 16)
-> -#define SNOR_HWCAPS_PP		BIT(16)
-> -
-> -#define SNOR_HWCAPS_PP_QUAD	GENMASK(19, 17)
-> -#define SNOR_HWCAPS_PP_1_1_4	BIT(17)
-> -#define SNOR_HWCAPS_PP_1_4_4	BIT(18)
-> -#define SNOR_HWCAPS_PP_4_4_4	BIT(19)
-> -
-> -#define SNOR_HWCAPS_PP_OCTAL	GENMASK(22, 20)
-> -#define SNOR_HWCAPS_PP_1_1_8	BIT(20)
-> -#define SNOR_HWCAPS_PP_1_8_8	BIT(21)
-> -#define SNOR_HWCAPS_PP_8_8_8	BIT(22)
-> -
-> -#define SNOR_HWCAPS_X_X_X	(SNOR_HWCAPS_READ_2_2_2 |	\
-> -				 SNOR_HWCAPS_READ_4_4_4 |	\
-> -				 SNOR_HWCAPS_READ_8_8_8 |	\
-> -				 SNOR_HWCAPS_PP_4_4_4 |		\
-> -				 SNOR_HWCAPS_PP_8_8_8)
-> -
-> -#define SNOR_HWCAPS_DTR		(SNOR_HWCAPS_READ_1_1_1_DTR |	\
-> -				 SNOR_HWCAPS_READ_1_2_2_DTR |	\
-> -				 SNOR_HWCAPS_READ_1_4_4_DTR |	\
-> -				 SNOR_HWCAPS_READ_1_8_8_DTR)
-> -
-> -#define SNOR_HWCAPS_ALL		(SNOR_HWCAPS_READ_MASK |	\
-> -				 SNOR_HWCAPS_PP_MASK)
-> -
-> -/**
->   * spi_nor_scan() - scan the SPI NOR
->   * @nor:	the spi_nor structure
->   * @name:	the chip type name
-> 
+> > +
+> >  	parent =3D kzalloc(sizeof(*parent), GFP_KERNEL);
+> >  	if (!parent) {
+> >  		ret =3D -ENOMEM;
+> > @@ -259,6 +275,7 @@ static void mdev_device_free(struct mdev_device
+> *mdev)
+> >  	mutex_unlock(&mdev_list_lock);
+> >
+> >  	dev_dbg(&mdev->dev, "MDEV: destroying\n");
+> > +	kvfree(mdev->alias);
+> >  	kfree(mdev);
+> >  }
+> >
+> > @@ -269,18 +286,86 @@ static void mdev_device_release(struct device
+> *dev)
+> >  	mdev_device_free(mdev);
+> >  }
+> >
+> > -int mdev_device_create(struct kobject *kobj,
+> > -		       struct device *dev, const guid_t *uuid)
+> > +static const char *
+> > +generate_alias(const char *uuid, unsigned int max_alias_len) {
+> > +	struct shash_desc *hash_desc;
+> > +	unsigned int digest_size;
+> > +	unsigned char *digest;
+> > +	unsigned int alias_len;
+> > +	char *alias;
+> > +	int ret =3D 0;
+> > +
+> > +	/* Align to multiple of 2 as bin2hex will generate
+> > +	 * even number of bytes.
+> > +	 */
+>=20
+> Comment style for non-networking code please.
+Ack.
+
+>=20
+> > +	alias_len =3D roundup(max_alias_len, 2);
+> > +	alias =3D kvzalloc(alias_len + 1, GFP_KERNEL);
+>=20
+> The size we're generating here should be small enough to just use kzalloc=
+(),
+Ack.
+
+> probably below too.
+>=20
+Descriptor size is 96 bytes long. kvzalloc is more optimal.
+
+> > +	if (!alias)
+> > +		return NULL;
+> > +
+> > +	/* Allocate and init descriptor */
+> > +	hash_desc =3D kvzalloc(sizeof(*hash_desc) +
+> > +			     crypto_shash_descsize(alias_hash),
+> > +			     GFP_KERNEL);
+> > +	if (!hash_desc)
+> > +		goto desc_err;
+> > +
+> > +	hash_desc->tfm =3D alias_hash;
+> > +
+> > +	digest_size =3D crypto_shash_digestsize(alias_hash);
+> > +
+> > +	digest =3D kvzalloc(digest_size, GFP_KERNEL);
+> > +	if (!digest) {
+> > +		ret =3D -ENOMEM;
+> > +		goto digest_err;
+> > +	}
+> > +	crypto_shash_init(hash_desc);
+> > +	crypto_shash_update(hash_desc, uuid, UUID_STRING_LEN);
+> > +	crypto_shash_final(hash_desc, digest);
+> > +	bin2hex(&alias[0], digest,
+>=20
+> &alias[0], ie. alias
+Ack.
+
+>=20
+> > +		min_t(unsigned int, digest_size, alias_len / 2));
+> > +	/* When alias length is odd, zero out and additional last byte
+> > +	 * that bin2hex has copied.
+> > +	 */
+> > +	if (max_alias_len % 2)
+> > +		alias[max_alias_len] =3D 0;
+>=20
+> Doesn't this give us a null terminated string for odd numbers but not eve=
+n
+> numbers?  Probably best to define that we always provide a null terminate=
+d
+> string then we could do this unconditionally.
+>=20
+> > +
+> > +	kvfree(digest);
+> > +	kvfree(hash_desc);
+> > +	return alias;
+> > +
+> > +digest_err:
+> > +	kvfree(hash_desc);
+> > +desc_err:
+> > +	kvfree(alias);
+> > +	return NULL;
+> > +}
+> > +
+> > +int mdev_device_create(struct kobject *kobj, struct device *dev,
+> > +		       const char *uuid_str, const guid_t *uuid)
+> >  {
+> >  	int ret;
+> >  	struct mdev_device *mdev, *tmp;
+> >  	struct mdev_parent *parent;
+> >  	struct mdev_type *type =3D to_mdev_type(kobj);
+> > +	unsigned int alias_len =3D 0;
+> > +	const char *alias =3D NULL;
+> >
+> >  	parent =3D mdev_get_parent(type->parent);
+> >  	if (!parent)
+> >  		return -EINVAL;
+> >
+> > +	if (parent->ops->get_alias_length)
+> > +		alias_len =3D parent->ops->get_alias_length();
+> > +	if (alias_len) {
+>=20
+> Why isn't this nested into the branch above?
+>
+I will nest it. No specific reason to not nest it.
+=20
+> > +		alias =3D generate_alias(uuid_str, alias_len);
+> > +		if (!alias) {
+> > +			ret =3D -ENOMEM;
+>=20
+> Could use an ERR_PTR and propagate an errno.
+>=20
+generate_alias() only returns one error type ENOMEM.
+When we add more error types, ERR_PTR is useful.
+=20
+> > +			goto alias_fail;
+> > +		}
+> > +	}
+> > +
+> >  	mutex_lock(&mdev_list_lock);
+> >
+> >  	/* Check for duplicate */
+> > @@ -300,6 +385,8 @@ int mdev_device_create(struct kobject *kobj,
+> >  	}
+> >
+> >  	guid_copy(&mdev->uuid, uuid);
+> > +	mdev->alias =3D alias;
+> > +	alias =3D NULL;
+>=20
+> A comment justifying this null'ing might help prevent it getting culled a=
+s
+> some point.  It appears arbitrary at first look.  Thanks,
+>
+Ack. I will add it.
+=20
+> Alex
