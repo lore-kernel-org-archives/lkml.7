@@ -2,143 +2,71 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59B2C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DA021881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66D0214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfH0QYh (ORCPT
+        id S1730182AbfH0Q0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:24:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41836 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfH0QYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:24:37 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 320803082126;
-        Tue, 27 Aug 2019 16:24:36 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A2295DC18;
-        Tue, 27 Aug 2019 16:24:35 +0000 (UTC)
-Date:   Tue, 27 Aug 2019 10:24:35 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-Message-ID: <20190827102435.7bd30ef3@x1.home>
-In-Reply-To: <AM0PR05MB486671BB1CD562D070F0C0F2D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190826204119.54386-3-parav@mellanox.com>
-        <20190827122928.752e763b.cohuck@redhat.com>
-        <AM0PR05MB486621458EC71973378CD5A0D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190827132946.0b92d259.cohuck@redhat.com>
-        <20190827092855.29702347@x1.home>
-        <AM0PR05MB486671BB1CD562D070F0C0F2D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        Tue, 27 Aug 2019 12:26:17 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:53387 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfH0Q0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:26:17 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7AE5924000A;
+        Tue, 27 Aug 2019 16:26:14 +0000 (UTC)
+Date:   Tue, 27 Aug 2019 18:26:11 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc:     linux@roeck-us.net, yuehaibing@huawei.com, a.zummo@towertech.it,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] rtc: pcf2127: bugfix: watchdog build dependency
+Message-ID: <20190827162611.GB21922@piout.net>
+References: <20190827143656.4734-1-bruno.thomsen@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 27 Aug 2019 16:24:36 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827143656.4734-1-bruno.thomsen@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 16:13:27 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On 27/08/2019 16:36:56+0200, Bruno Thomsen wrote:
+> Disable watchdog registation when kernel is build without
+> watchdog functionality, and enable watchdog core otherwise.
+> This removes compile errors like the one below:
+> 
+> drivers/rtc/rtc-pcf2127.o: in function `pcf2127_probe.constprop.3':
+> rtc-pcf2127.c:(.text.unlikely+0x2c8): undefined reference to
+> `devm_watchdog_register_device'
+> 
+> Watchdog feature in chip will always be configured as
+> this is safe to do in both cases and minimize code churn.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Reported-by: YueHaibing <yuehaibing@huawei.com>
+> Fixes: bbc597561ce1 ("rtc: pcf2127: add watchdog feature support")
+> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+> ---
+>  drivers/rtc/Kconfig       | 1 +
+>  drivers/rtc/rtc-pcf2127.c | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+Applied, thanks.
 
-> > -----Original Message-----
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Tuesday, August 27, 2019 8:59 PM
-> > To: Cornelia Huck <cohuck@redhat.com>
-> > Cc: Parav Pandit <parav@mellanox.com>; Jiri Pirko <jiri@mellanox.com>;
-> > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; netdev@vger.kernel.org
-> > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
-> > 
-> > On Tue, 27 Aug 2019 13:29:46 +0200
-> > Cornelia Huck <cohuck@redhat.com> wrote:
-> >   
-> > > On Tue, 27 Aug 2019 11:08:59 +0000
-> > > Parav Pandit <parav@mellanox.com> wrote:
-> > >  
-> > > > > -----Original Message-----
-> > > > > From: Cornelia Huck <cohuck@redhat.com>
-> > > > > Sent: Tuesday, August 27, 2019 3:59 PM
-> > > > > To: Parav Pandit <parav@mellanox.com>
-> > > > > Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > > > kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org;
-> > > > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org
-> > > > > Subject: Re: [PATCH 2/4] mdev: Make mdev alias unique among all
-> > > > > mdevs
-> > > > >
-> > > > > On Mon, 26 Aug 2019 15:41:17 -0500 Parav Pandit
-> > > > > <parav@mellanox.com> wrote:
-> > > > >  
-> > > > > > Mdev alias should be unique among all the mdevs, so that when
-> > > > > > such alias is used by the mdev users to derive other objects,
-> > > > > > there is no collision in a given system.
-> > > > > >
-> > > > > > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > > > > > ---
-> > > > > >  drivers/vfio/mdev/mdev_core.c | 5 +++++
-> > > > > >  1 file changed, 5 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/vfio/mdev/mdev_core.c
-> > > > > > b/drivers/vfio/mdev/mdev_core.c index e825ff38b037..6eb37f0c6369
-> > > > > > 100644
-> > > > > > --- a/drivers/vfio/mdev/mdev_core.c
-> > > > > > +++ b/drivers/vfio/mdev/mdev_core.c
-> > > > > > @@ -375,6 +375,11 @@ int mdev_device_create(struct kobject *kobj,  
-> > struct  
-> > > > > device *dev,  
-> > > > > >  			ret = -EEXIST;
-> > > > > >  			goto mdev_fail;
-> > > > > >  		}
-> > > > > > +		if (tmp->alias && strcmp(tmp->alias, alias) == 0) {  
-> > > > >
-> > > > > Any way we can relay to the caller that the uuid was fine, but
-> > > > > that we had a hash collision? Duplicate uuids are much more obvious than  
-> > a collision here.  
-> > > > >  
-> > > > How do you want to relay this rare event?
-> > > > Netlink interface has way to return the error message back, but sysfs is  
-> > limited due to its error code based interface.  
-> > >
-> > > I don't know, that's why I asked :)
-> > >
-> > > The problem is that "uuid already used" and "hash collision" are
-> > > indistinguishable. While "use a different uuid" will probably work in
-> > > both cases, "increase alias length" might be a good alternative in
-> > > some cases.
-> > >
-> > > But if there is no good way to relay the problem, we can live with it.  
-> > 
-> > It's a rare event, maybe just dev_dbg(dev, "Hash collision creating alias \"%s\"
-> > for mdev device %pUl\n",...
-> >   
-> Ok.
-> dev_dbg_once() to avoid message flood.
-
-I'd suggest a rate-limit rather than a once.  The fact that the kernel
-may have experienced a collision at some time in the past does not help
-someone debug why they can't create a device now.  The only way we're
-going to get a flood is if a user sufficiently privileged to create
-mdev devices stumbles onto a collision and continues to repeat the same
-operation.  That falls into shoot-yourself-in-the-foot behavior imo.
-Thanks,
-
-Alex
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
