@@ -2,124 +2,110 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2E9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A161C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A752184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DC72184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 15:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mvMWZvET"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0wMJypz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfH0Pkh (ORCPT
+        id S1728649AbfH0Pl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 11:40:37 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14658 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfH0Pkh (ORCPT
+        Tue, 27 Aug 2019 11:41:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44286 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfH0Plz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:40:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d654ef40000>; Tue, 27 Aug 2019 08:40:36 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 27 Aug 2019 08:40:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 27 Aug 2019 08:40:36 -0700
-Received: from [10.25.73.29] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Aug
- 2019 15:40:31 +0000
-Subject: Re: [PATCH 3/6] PCI: tegra: Add support to configure sideband pins
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190826073143.4582-4-vidyas@nvidia.com>
- <20190827153029.GO14582@e119886-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <9fe2fc1b-8fdf-e8cf-e5fd-36b536b28889@nvidia.com>
-Date:   Tue, 27 Aug 2019 21:10:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 27 Aug 2019 11:41:55 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p17so19289639wrf.11;
+        Tue, 27 Aug 2019 08:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Bxn2QHPQaoLTHaLh1S1+V6Gu5XpRhaWezO35cut4r8Q=;
+        b=m0wMJypz/tc4k1Ou0Ldau4jp2J1H1jOI6WoNCDkVdCxF+Csdl+8WkWLs44l9DRZkMf
+         acBefESXpA/28xRsiFZaLkb3/N2Qi3agh+kqbWzy73VABGuQrT74ouU+JHsx66g6yzZG
+         LSZqOkiezFpiNNpAh/gIg291QBhVNaAVfiagkbNiPmgq7ZO3YbqkAEtU05bI1AmZ9Cr/
+         Aq/0YkrProxOmI9BPqvo8AKQhVWTOHYyTcyEyOe+YnLGYbgrMJdwhnPCGlsIB4oeP4kG
+         EJT0QMPMWeEzoeqDjFEAfp/MKtz6URt/q6+jUAcBxNkQ0huvjplA4cGEi9SZf5lBJKpC
+         pTQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Bxn2QHPQaoLTHaLh1S1+V6Gu5XpRhaWezO35cut4r8Q=;
+        b=T0FB7/c5kLkucDc14TAKd2Qc1Z9DMXq/bM3uQ4U5VWIsmzmfNWGHrPXkkAYODsYbYT
+         +21pgv+3owk++rPWnGwjCVoaJmH0R7jecS5qF0pY1dIj+pV3itIxu8WjWOPOkCgA8IAg
+         rbg793BVsCaAqT2JF/2ijRaNeP3NPJYl2EWupfxsQ6CxT2ayX2RAopih4fEfkqyG8h6G
+         pNMjBywYYrUpZLYL5msJrKAMEE2R3nVVtes3xJ8YRS2GlBua5tbUhPg8dx84ASdPQNLr
+         6Wgz6JPyxBf/nM3xmwQvHpOP0LQDzf4Hp3WR/4Z4m/oXgHjQTJPEVWV7knu+iCunKX37
+         1yQQ==
+X-Gm-Message-State: APjAAAWkRxmk2FFwl/YWqpqpP5B4kNmPCLvDqMBGOzhZa5kd/uyJwnec
+        V4QXR+Gnuqt0BQBa/L0P2m2nWLhypEm/0zsGU77tWQuoIPA=
+X-Google-Smtp-Source: APXvYqwKyiFqrPlh5yDoI88FFfW2D35INgtoq/jJAH8Hvv3vnTy27JdzrBLkWuV/hqW+iv91wYtkEr18W0/Cd+GtVG4=
+X-Received: by 2002:a5d:6ccd:: with SMTP id c13mr8239699wrc.4.1566920513497;
+ Tue, 27 Aug 2019 08:41:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190827153029.GO14582@e119886-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566920436; bh=RALnJDAwbfk7yCMD7+TxIj1eEVtiHxWVO6vHKCUuBi8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mvMWZvETEIcF0IIS5rVUnIAxOSb5My1zfvk5h7A3mQQRyRJA4Mdtbv6b9G5zO32lA
-         j4AUZpoFq6IL2McN7KJ1T10QB5rfNho12CWdDXbE7EbjkJLkNThxJc/k5twNPxFUJr
-         WBNOTYWNTx5XwLJGgGxHVPJBPv0M8YgyeunmlqJXhHNvYGLNp5keRL6c5m7GuLG0sx
-         /KiNJ69Q9Kp2WpBjHCNHcteKBDy48ilm9DxtyKep3np4Oq26DMi7/E7pMhZ9pV03yV
-         wE4YjC5voMooSW8OPx6ScwI/mkncEJ/0FcUyFU7wPjj/XM/TFmvt/IuZe/YJPzX8+4
-         dPeKc4wmiaIHw==
+References: <20190827190526.6f27e763@canb.auug.org.au> <3b5936f1-e471-846a-d133-0e17d290d2f3@infradead.org>
+In-Reply-To: <3b5936f1-e471-846a-d133-0e17d290d2f3@infradead.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 27 Aug 2019 11:41:41 -0400
+Message-ID: <CADnq5_NBnovQGuhsoEsw+S-LBDU-CbWXKm=mJ3Oy6PcgUeiOQw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Aug 27 (amdgpu)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/2019 9:00 PM, Andrew Murray wrote:
-> On Mon, Aug 26, 2019 at 01:01:40PM +0530, Vidya Sagar wrote:
->> Add support to configure sideband signal pins when information is present
->> in respective controller's device-tree node.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index fc0dbeb31d78..8a27b25893c9 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -1308,6 +1308,12 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->>   		return ret;
->>   	}
->>   
->> +	ret = pinctrl_pm_select_default_state(pcie->dev);
->> +	if (ret < 0) {
->> +		dev_err(pcie->dev, "Failed to configure sideband pins\n");
-> 
-> I think you can just use dev instead of pcie->dev here.
-Yup. I can use just 'dev' here.
+On Tue, Aug 27, 2019 at 11:31 AM Randy Dunlap <rdunlap@infradead.org> wrote=
+:
+>
+> On 8/27/19 2:05 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20190826:
+> >
+>
+> on i386:
+>
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c: In funct=
+ion =E2=80=98dcn20_hw_sequencer_construct=E2=80=99:
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c:2127:28: =
+error: =E2=80=98dcn20_dsc_pg_control=E2=80=99 undeclared (first use in this=
+ function); did you mean =E2=80=98dcn20_dpp_pg_control=E2=80=99?
+>   dc->hwss.dsc_pg_control =3D dcn20_dsc_pg_control;
+>                             ^~~~~~~~~~~~~~~~~~~~
+>                             dcn20_dpp_pg_control
+>
+>
+> Full randconfig file is attached.
 
-> 
->> +		return ret;
-> 
-> Don't you need to pm_runtime_put_sync and pm_runtime_disable here?
-Yup. Thanks for catching it. I'll address it in next patch series.
+Fixed:
+https://cgit.freedesktop.org/~agd5f/linux/commit/?h=3Ddrm-next&id=3Dda26ded=
+3b2fff646d28559004195abe353bce49b
 
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
->> +	}
->> +
->>   	tegra_pcie_init_controller(pcie);
->>   
->>   	pcie->link_state = tegra_pcie_dw_link_up(&pcie->pci);
->> -- 
->> 2.17.1
->>
+Alex
 
+>
+> --
+> ~Randy
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
