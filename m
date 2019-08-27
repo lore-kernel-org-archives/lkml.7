@@ -2,205 +2,74 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBEEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD18C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60152070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566937304;
-	bh=pBt0OU1xBZ8i4okIZoN8NOx4XiV46EKgAk8Y+jV0Se0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=mRUmPKCtXIHU4X50aG1bFlKKrPNiIbLf98wpVr4lz9o8uof9wbRojeJQF4Hl6ZKbQ
-	 0G3IWv+if4U2WCa2X7oSg7fVpgHhbzWXzBwkVduLAqUmCCJt6I4YAPaXMosDUeGVxA
-	 vEL2W5tIv4kDntQqH8UT1Dl2rKISMxIc/ZkJfMdM=
+	by mail.kernel.org (Postfix) with ESMTP id 1CFB72186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731520AbfH0UVo (ORCPT
+        id S1731536AbfH0UWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:21:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 16:22:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:30408 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfH0UVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:21:42 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214E020679;
-        Tue, 27 Aug 2019 20:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566937300;
-        bh=pBt0OU1xBZ8i4okIZoN8NOx4XiV46EKgAk8Y+jV0Se0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=G3+ns0lK4iIkjaNKh0RlJ/77ofU5Dxglt4Hqw4Oje8xeQIntsypB1jIik4WAsaxcB
-         ctiTNP1rcJDop+z+fR4Wrbe5b4Xqn+hqtK43H6NHXcSB6CUmkigGJ4RYkO1zuc+VCk
-         EYqqMZt5Q/NJo6QZW+H2oOH7MRoYAiswgpOJzISY=
-Subject: Re: [PATCH v1] kunit: fix failure to build without printk
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
-        sboyd@kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        shuah <shuah@kernel.org>
-References: <20190827174932.44177-1-brendanhiggins@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org>
-Date:   Tue, 27 Aug 2019 14:21:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726871AbfH0UWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 16:22:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 13:22:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
+   d="scan'208";a="355885999"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2019 13:22:20 -0700
+Date:   Tue, 27 Aug 2019 13:22:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH 08/13] KVM: x86: Move #UD injection for failed
+ emulation into emulation code
+Message-ID: <20190827202220.GJ27459@linux.intel.com>
+References: <20190823010709.24879-1-sean.j.christopherson@intel.com>
+ <20190823010709.24879-9-sean.j.christopherson@intel.com>
+ <AB4F0E37-1E13-4735-BE9F-6C80D13D016D@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190827174932.44177-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AB4F0E37-1E13-4735-BE9F-6C80D13D016D@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/19 11:49 AM, Brendan Higgins wrote:
-> Previously KUnit assumed that printk would always be present, which is
-> not a valid assumption to make. Fix that by ifdefing out functions which
-> directly depend on printk core functions similar to what dev_printk
-> does.
+On Fri, Aug 23, 2019 at 04:48:16PM +0300, Liran Alon wrote:
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->   include/kunit/test.h |  7 +++++++
->   kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
->   2 files changed, 31 insertions(+), 17 deletions(-)
 > 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 8b7eb03d4971..339af5f95c4a 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
->   
->   void kunit_cleanup(struct kunit *test);
->   
-> +#ifdef CONFIG_PRINTK
-
-Please make this #if defined(CONFIG_PRINTK)
-
->   void __printf(3, 4) kunit_printk(const char *level,
-
-Line these two up with const char *level,
-
->   				 const struct kunit *test,
->   				 const char *fmt, ...);
-> +#else
-> +static inline void __printf(3, 4) kunit_printk(const char *level,
-> +					       const struct kunit *test,
-> +					       const char *fmt, ...)
-
-Same here.
-
-> +{}
-
-Either line this up or make it
-
-const char *fmt, ...) { }
-
-It is hard to read the way it is currently indented.
-
-> +#endif
->   
->   /**
->    * kunit_info() - Prints an INFO level message associated with @test.
-> diff --git a/kunit/test.c b/kunit/test.c
-> index b2ca9b94c353..0aa1caf07a6b 100644
-> --- a/kunit/test.c
-> +++ b/kunit/test.c
-> @@ -16,6 +16,7 @@ static void kunit_set_failure(struct kunit *test)
->   	WRITE_ONCE(test->success, false);
->   }
->   
-> +#ifdef CONFIG_PRINTK
-
-Same here - if defined
-
->   static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
->   {
->   	return vprintk_emit(0, level, NULL, 0, fmt, args);
-> @@ -40,6 +41,29 @@ static void kunit_vprintk(const struct kunit *test,
->   	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
->   }
->   
-> +void kunit_printk(const char *level,
-> +		  const struct kunit *test,
-> +		  const char *fmt, ...)
-
-Line the arguments up.
-
-> +{
-> +	struct va_format vaf;
-> +	va_list args;
-> +
-> +	va_start(args, fmt);
-> +
-> +	vaf.fmt = fmt;
-> +	vaf.va = &args;
-> +
-> +	kunit_vprintk(test, level, &vaf);
-> +
-> +	va_end(args);
-> +}
-> +#else /* CONFIG_PRINTK */
-> +static inline int kunit_printk_emit(int level, const char *fmt, ...)
-> +{
-> +	return 0;
-
-Is there a reason to not use
-> +} > +#endif /* CONFIG_PRINTK */
-> +
->   static void kunit_print_tap_version(void)
->   {
->   	static bool kunit_has_printed_tap_version;
-> @@ -504,20 +528,3 @@ void kunit_cleanup(struct kunit *test)
->   		kunit_resource_free(test, resource);
->   	}
->   }
-> -
-> -void kunit_printk(const char *level,
-> -		  const struct kunit *test,
-> -		  const char *fmt, ...) > -{
-> -	struct va_format vaf;
-> -	va_list args;
-> -
-> -	va_start(args, fmt);
-> -
-> -	vaf.fmt = fmt;
-> -	vaf.va = &args;
-> -
-> -	kunit_vprintk(test, level, &vaf);
-> -
-> -	va_end(args);
-> -}
+> > On 23 Aug 2019, at 4:07, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> > 
+> > Immediately inject a #UD and return EMULATE done if emulation fails when
+> > handling an intercepted #UD.  This helps pave the way for removing
+> > EMULATE_FAIL altogether.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
+> I suggest squashing this commit which previous one.
 
-Okay after reviewing this, I am not sure why you need to do all
-this.
+Missed this comment first time around...
 
-Why can't you just change the root function that throws the warn:
-
-  static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-{
-         return vprintk_emit(0, level, NULL, 0, fmt, args);
-}
-
-You aren'r really doing anything extra here, other than calling
-vprintk_emit()
-
-Unless I am missing something, can't you solve this problem by including
-printk.h and let it handle the !CONFIG_PRINTK case?
-
-thanks,
--- Shuah
-
+I'd like to keep the two patches separate in this case.  Adding the
+EMULTYPE_TRAP_UD_FORCED flag is a functional change, whereas this patch
+is purely a refactor.
