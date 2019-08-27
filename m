@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B8AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD24C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91B621883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5492821881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892887;
-	bh=HNlQc3oZRGT6ch+GYLl//BeUYwSDb6WieptQuj9vgxM=;
+	s=default; t=1566892891;
+	bh=Vtm0LSf/FYsGIcGYLuGcLmm0g16FWGHaQU+a0WvHkNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TrvDUvw8QG4gi1RvCmcoLVax3outydjW1NIlJeRoBj6MfFMKYjdYExM01u1IcRGjp
-	 D46wxFVD0KMAsy+5F/xXKSYsvM1mTMxqAyuk7PlMFSxdh2Lsj2ajE9Xpsv56zworpi
-	 sxpkSMgnC4clS6jaeCPv5w8ukx9qlHkKoT0NoqFw=
+	b=aVfVPRXXhwsS/X64jQraYzGYajzpgdgEWFTASQFnibupy/WAQ1gs24r3gd+BK9eDe
+	 e60wQ0DCDQkmmSubOYspFzhxw3cZ+B+PsVWhcPNG02YNBaI9wvnwutakVch2m+6pZV
+	 jidOuZQ8rXbZPLedhGAZT4siEin5UHSJMotDyPL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731764AbfH0IB0 (ORCPT
+        id S1731773AbfH0IBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730829AbfH0IBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:01:24 -0400
+        id S1730582AbfH0IB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:01:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989B7217F5;
-        Tue, 27 Aug 2019 08:01:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D5FC217F5;
+        Tue, 27 Aug 2019 08:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892883;
-        bh=HNlQc3oZRGT6ch+GYLl//BeUYwSDb6WieptQuj9vgxM=;
+        s=default; t=1566892885;
+        bh=Vtm0LSf/FYsGIcGYLuGcLmm0g16FWGHaQU+a0WvHkNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqIwMRyAJDk6E7lBWwiTyIjBdta9ePNpWGfvNNvOEL73RBI7Q0ji2+sHCNCn7NBaU
-         2DR2adDr0kjUZwUFI8jpP8mUwBLfNTKQyfie+RaNiePbeT013KW4/wAcDnLaPsVSeX
-         3tJUUFrCq9dgPvI35xRT1UKJxtlQ6kSFRvoEn1zw=
+        b=MwnFosII306HpvWi2ClvicToSB0jm75kIFKqvMl7iXjRT0l7+M9/KVaMDx/Nx6tup
+         4j79KLDRwFJWEoPReF6v5D/uiECcmVgzRCpbX5hGlXNm2t/SRMeYmKxws+SrfBzadU
+         9TmiJaxuuPjrWrQ9jaSDs1VYINAChR+L+ghAR/GA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ben Segal <bpsegal20@gmail.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 046/162] isdn: mISDN: hfcsusb: Fix possible null-pointer dereferences in start_isoc_chain()
-Date:   Tue, 27 Aug 2019 09:49:34 +0200
-Message-Id: <20190827072739.837878663@linuxfoundation.org>
+Subject: [PATCH 5.2 047/162] habanalabs: fix F/W download in BE architecture
+Date:   Tue, 27 Aug 2019 09:49:35 +0200
+Message-Id: <20190827072739.870046566@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -60,46 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0d57a552b836206ad7705a1060e6e1ce5a38203 ]
+[ Upstream commit 75035fe22b808a520e1d712ebe913684ba406e01 ]
 
-In start_isoc_chain(), usb_alloc_urb() on line 1392 may fail
-and return NULL. At this time, fifo->iso[i].urb is assigned to NULL.
+writeX macros might perform byte-swapping in BE architectures. As our F/W
+is in LE format, we need to make sure no byte-swapping will occur.
 
-Then, fifo->iso[i].urb is used at some places, such as:
-LINE 1405:    fill_isoc_urb(fifo->iso[i].urb, ...)
-                  urb->number_of_packets = num_packets;
-                  urb->transfer_flags = URB_ISO_ASAP;
-                  urb->actual_length = 0;
-                  urb->interval = interval;
-LINE 1416:    fifo->iso[i].urb->...
-LINE 1419:    fifo->iso[i].urb->...
+There is a standard kernel function (called memcpy_toio) for copying data
+to I/O area which is used in a lot of drivers to download F/W to PCIe
+adapters. That function also makes sure the data is copied "as-is",
+without byte-swapping.
 
-Thus, possible null-pointer dereferences may occur.
+This patch use that function to copy the F/W to the GOYA ASIC instead of
+writeX macros.
 
-To fix these bugs, "continue" is added to avoid using fifo->iso[i].urb
-when it is NULL.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Segal <bpsegal20@gmail.com>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/habanalabs/firmware_if.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 0e224232f7464..8fb7c5dea07fc 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1394,6 +1394,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
- 				printk(KERN_DEBUG
- 				       "%s: %s: alloc urb for fifo %i failed",
- 				       hw->name, __func__, fifo->fifonum);
-+				continue;
- 			}
- 			fifo->iso[i].owner_fifo = (struct usb_fifo *) fifo;
- 			fifo->iso[i].indx = i;
+diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
+index eda5d7fcb79f2..fe9e57a81b6fd 100644
+--- a/drivers/misc/habanalabs/firmware_if.c
++++ b/drivers/misc/habanalabs/firmware_if.c
+@@ -24,7 +24,7 @@ int hl_fw_push_fw_to_device(struct hl_device *hdev, const char *fw_name,
+ {
+ 	const struct firmware *fw;
+ 	const u64 *fw_data;
+-	size_t fw_size, i;
++	size_t fw_size;
+ 	int rc;
+ 
+ 	rc = request_firmware(&fw, fw_name, hdev->dev);
+@@ -45,22 +45,7 @@ int hl_fw_push_fw_to_device(struct hl_device *hdev, const char *fw_name,
+ 
+ 	fw_data = (const u64 *) fw->data;
+ 
+-	if ((fw->size % 8) != 0)
+-		fw_size -= 8;
+-
+-	for (i = 0 ; i < fw_size ; i += 8, fw_data++, dst += 8) {
+-		if (!(i & (0x80000 - 1))) {
+-			dev_dbg(hdev->dev,
+-				"copied so far %zu out of %zu for %s firmware",
+-				i, fw_size, fw_name);
+-			usleep_range(20, 100);
+-		}
+-
+-		writeq(*fw_data, dst);
+-	}
+-
+-	if ((fw->size % 8) != 0)
+-		writel(*(const u32 *) fw_data, dst);
++	memcpy_toio(dst, fw_data, fw_size);
+ 
+ out:
+ 	release_firmware(fw);
 -- 
 2.20.1
 
