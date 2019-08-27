@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31246C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E89C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0597A2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4845217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892944;
-	bh=6abIy+WU9xfUE0ZIkiK0oS8B9mSv4+iueYbcm3+7bpg=;
+	s=default; t=1566892946;
+	bh=lSYLQUjB0VoP5M9CNwmV9PEN0Wvx2anBrrjB04AK79I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k2dRRvlo8PIZZwoEOXLTe9tQ6mxacEmoEZtkD8yG8KHBPkFC6nKLL9LNICO1xp6dU
-	 08O0EPqyjntfTFNBL1+3bBbxv4j6on2RQMQnNT+8Kt9yfXsGadmtj3kzq694N7qYE/
-	 3Th1O6ou0ldWmxLXSyTJmM1ByW4RbxTk2PKJCszQ=
+	b=s5AddB+PsmET3Z7ScUFpO4ZaVzLbToUyBhOPmYd0H/m2rA0l+WIEC2lwYabk7dyA2
+	 hWZuLbZAkPvbSV9K6XZ8FUF/NOLndOcpZ6S3Y51scbpovg0PLxZPa2gcIpLGFFwJdg
+	 FRE6QhtfLxZ7oasv0RdTj1Ec/a5CmWGWCTXpj7HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbfH0ICX (ORCPT
+        id S1731383AbfH0ICZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731863AbfH0ICE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:02:04 -0400
+        id S1731450AbfH0ICH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:02:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3FCF20828;
-        Tue, 27 Aug 2019 08:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7881206BA;
+        Tue, 27 Aug 2019 08:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892923;
-        bh=6abIy+WU9xfUE0ZIkiK0oS8B9mSv4+iueYbcm3+7bpg=;
+        s=default; t=1566892926;
+        bh=lSYLQUjB0VoP5M9CNwmV9PEN0Wvx2anBrrjB04AK79I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PR58BmR/Ex4ZfQ8ypHTCczaQpRo4OjH/08W+IKIynmmMRgXXzL87UybUzXUf3z47L
-         OMP6bpV2demUWMAa0x1h9hP1+KOQxa8y00AVfurQfwpwKLoiqEDJy5w44bEncL5eL9
-         W5X9HQxuKTUj7PUU2JgSXvTa+Z6XWVuvHjmXvYKk=
+        b=DT6huTMfXMZEZx/sdWQQYbSjp93eehwPlkE+77sxQT0g0mOLUWleeU7tRfquWR0UG
+         3uDoTXyZv4b3kacGlcK9K+zI9tD2Y7FJM7JlPoF7MIeQCaQHcKHlJoaWDPjmEfLbfx
+         d50lJA/bCgd05NJDktgQ+ctValp/7zYNw7BjCDMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 018/162] ASoC: dapm: Fix handling of custom_stop_condition on DAPM graph walks
-Date:   Tue, 27 Aug 2019 09:49:06 +0200
-Message-Id: <20190827072738.963720616@linuxfoundation.org>
+Subject: [PATCH 5.2 019/162] ASoC: SOF: use __u32 instead of uint32_t in uapi headers
+Date:   Tue, 27 Aug 2019 09:49:07 +0200
+Message-Id: <20190827072738.995626161@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -61,74 +61,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
+[ Upstream commit 62ec3d13601bd626ca7a0edef6d45dbb753d94e8 ]
 
-DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
-list of the widgets connected to a specific front end DAI so it
-can search through this list for available back end DAIs. The
-custom_stop_condition was added to is_connected_ep to facilitate this
-list not containing more widgets than is necessary. Doing so both
-speeds up the DPCM handling as less widgets need to be searched and
-avoids issues with CODEC to CODEC links as these would be confused
-with back end DAIs if they appeared in the list of available widgets.
+When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+make sure they can be included from user-space.
 
-custom_stop_condition was implemented by aborting the graph walk
-when the condition is triggered, however there is an issue with this
-approach. Whilst walking the graph is_connected_ep should update the
-endpoints cache on each widget, if the walk is aborted the number
-of attached end points is unknown for that sub-graph. When the stop
-condition triggered, the original patch ignored the triggering widget
-and returned zero connected end points; a later patch updated this
-to set the triggering widget's cache to 1 and return that. Both of
-these approaches result in inaccurate values being stored in various
-end point caches as the values propagate back through the graph,
-which can result in later issues with widgets powering/not powering
-unexpectedly.
+Currently, header.h and fw.h are excluded from the test coverage.
+To make them join the compile-test, we need to fix the build errors
+attached below.
 
-As the original goal was to reduce the size of the widget list passed
-to the DPCM code, the simplest solution is to limit the functionality
-of the custom_stop_condition to the widget list. This means the rest
-of the graph will still be processed resulting in correct end point
-caches, but only widgets up to the stop condition will be added to the
-returned widget list.
+For a case like this, we decided to use __u{8,16,32,64} variable types
+in this discussion:
 
-Fixes: 6742064aef7f ("ASoC: dapm: support user-defined stop condition in dai_get_connected_widgets")
-Fixes: 5fdd022c2026 ("ASoC: dpcm: play nice with CODEC<->CODEC links")
-Fixes: 09464974eaa8 ("ASoC: dapm: Fix to return correct path list in is_connected_ep.")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190718084333.15598-1-ckeepax@opensource.cirrus.com
+  https://lkml.org/lkml/2019/6/5/18
+
+Build log:
+
+  CC      usr/include/sound/sof/header.h.s
+  CC      usr/include/sound/sof/fw.h.s
+In file included from <command-line>:32:0:
+./usr/include/sound/sof/header.h:19:2: error: unknown type name ‘uint32_t’
+  uint32_t magic;  /**< 'S', 'O', 'F', '\0' */
+  ^~~~~~~~
+./usr/include/sound/sof/header.h:20:2: error: unknown type name ‘uint32_t’
+  uint32_t type;  /**< component specific type */
+  ^~~~~~~~
+./usr/include/sound/sof/header.h:21:2: error: unknown type name ‘uint32_t’
+  uint32_t size;  /**< size in bytes of data excl. this struct */
+  ^~~~~~~~
+./usr/include/sound/sof/header.h:22:2: error: unknown type name ‘uint32_t’
+  uint32_t abi;  /**< SOF ABI version */
+  ^~~~~~~~
+./usr/include/sound/sof/header.h:23:2: error: unknown type name ‘uint32_t’
+  uint32_t reserved[4]; /**< reserved for future use */
+  ^~~~~~~~
+./usr/include/sound/sof/header.h:24:2: error: unknown type name ‘uint32_t’
+  uint32_t data[0]; /**< Component data - opaque to core */
+  ^~~~~~~~
+In file included from <command-line>:32:0:
+./usr/include/sound/sof/fw.h:49:2: error: unknown type name ‘uint32_t’
+  uint32_t size;  /* bytes minus this header */
+  ^~~~~~~~
+./usr/include/sound/sof/fw.h:50:2: error: unknown type name ‘uint32_t’
+  uint32_t offset; /* offset from base */
+  ^~~~~~~~
+./usr/include/sound/sof/fw.h:64:2: error: unknown type name ‘uint32_t’
+  uint32_t size;  /* bytes minus this header */
+  ^~~~~~~~
+./usr/include/sound/sof/fw.h:65:2: error: unknown type name ‘uint32_t’
+  uint32_t num_blocks; /* number of blocks */
+  ^~~~~~~~
+./usr/include/sound/sof/fw.h:73:2: error: unknown type name ‘uint32_t’
+  uint32_t file_size; /* size of file minus this header */
+  ^~~~~~~~
+./usr/include/sound/sof/fw.h:74:2: error: unknown type name ‘uint32_t’
+  uint32_t num_modules; /* number of modules */
+  ^~~~~~~~
+./usr/include/sound/sof/fw.h:75:2: error: unknown type name ‘uint32_t’
+  uint32_t abi;  /* version of header format */
+  ^~~~~~~~
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20190721142308.30306-1-yamada.masahiro@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/uapi/sound/sof/fw.h     | 16 +++++++++-------
+ include/uapi/sound/sof/header.h | 14 ++++++++------
+ 2 files changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index c91df5a9c8406..835ce1ff188d9 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -1156,8 +1156,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
- 		list_add_tail(&widget->work_list, list);
+diff --git a/include/uapi/sound/sof/fw.h b/include/uapi/sound/sof/fw.h
+index 1afca973eb097..e9f697467a861 100644
+--- a/include/uapi/sound/sof/fw.h
++++ b/include/uapi/sound/sof/fw.h
+@@ -13,6 +13,8 @@
+ #ifndef __INCLUDE_UAPI_SOF_FW_H__
+ #define __INCLUDE_UAPI_SOF_FW_H__
  
- 	if (custom_stop_condition && custom_stop_condition(widget, dir)) {
--		widget->endpoints[dir] = 1;
--		return widget->endpoints[dir];
-+		list = NULL;
-+		custom_stop_condition = NULL;
- 	}
++#include <linux/types.h>
++
+ #define SND_SOF_FW_SIG_SIZE	4
+ #define SND_SOF_FW_ABI		1
+ #define SND_SOF_FW_SIG		"Reef"
+@@ -46,8 +48,8 @@ enum snd_sof_fw_blk_type {
  
- 	if ((widget->is_ep & SND_SOC_DAPM_DIR_TO_EP(dir)) && widget->connected) {
-@@ -1194,8 +1194,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
-  *
-  * Optionally, can be supplied with a function acting as a stopping condition.
-  * This function takes the dapm widget currently being examined and the walk
-- * direction as an arguments, it should return true if the walk should be
-- * stopped and false otherwise.
-+ * direction as an arguments, it should return true if widgets from that point
-+ * in the graph onwards should not be added to the widget list.
+ struct snd_sof_blk_hdr {
+ 	enum snd_sof_fw_blk_type type;
+-	uint32_t size;		/* bytes minus this header */
+-	uint32_t offset;	/* offset from base */
++	__u32 size;		/* bytes minus this header */
++	__u32 offset;		/* offset from base */
+ } __packed;
+ 
+ /*
+@@ -61,8 +63,8 @@ enum snd_sof_fw_mod_type {
+ 
+ struct snd_sof_mod_hdr {
+ 	enum snd_sof_fw_mod_type type;
+-	uint32_t size;		/* bytes minus this header */
+-	uint32_t num_blocks;	/* number of blocks */
++	__u32 size;		/* bytes minus this header */
++	__u32 num_blocks;	/* number of blocks */
+ } __packed;
+ 
+ /*
+@@ -70,9 +72,9 @@ struct snd_sof_mod_hdr {
   */
- static int is_connected_output_ep(struct snd_soc_dapm_widget *widget,
- 	struct list_head *list,
+ struct snd_sof_fw_header {
+ 	unsigned char sig[SND_SOF_FW_SIG_SIZE]; /* "Reef" */
+-	uint32_t file_size;	/* size of file minus this header */
+-	uint32_t num_modules;	/* number of modules */
+-	uint32_t abi;		/* version of header format */
++	__u32 file_size;	/* size of file minus this header */
++	__u32 num_modules;	/* number of modules */
++	__u32 abi;		/* version of header format */
+ } __packed;
+ 
+ #endif
+diff --git a/include/uapi/sound/sof/header.h b/include/uapi/sound/sof/header.h
+index 7868990b0d6f3..5f4518e7a9723 100644
+--- a/include/uapi/sound/sof/header.h
++++ b/include/uapi/sound/sof/header.h
+@@ -9,6 +9,8 @@
+ #ifndef __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
+ #define __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
+ 
++#include <linux/types.h>
++
+ /*
+  * Header for all non IPC ABI data.
+  *
+@@ -16,12 +18,12 @@
+  * Used by any bespoke component data structures or binary blobs.
+  */
+ struct sof_abi_hdr {
+-	uint32_t magic;		/**< 'S', 'O', 'F', '\0' */
+-	uint32_t type;		/**< component specific type */
+-	uint32_t size;		/**< size in bytes of data excl. this struct */
+-	uint32_t abi;		/**< SOF ABI version */
+-	uint32_t reserved[4];	/**< reserved for future use */
+-	uint32_t data[0];	/**< Component data - opaque to core */
++	__u32 magic;		/**< 'S', 'O', 'F', '\0' */
++	__u32 type;		/**< component specific type */
++	__u32 size;		/**< size in bytes of data excl. this struct */
++	__u32 abi;		/**< SOF ABI version */
++	__u32 reserved[4];	/**< reserved for future use */
++	__u32 data[0];		/**< Component data - opaque to core */
+ }  __packed;
+ 
+ #endif
 -- 
 2.20.1
 
