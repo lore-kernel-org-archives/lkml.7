@@ -2,53 +2,52 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E97EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA99B21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C027206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892416;
-	bh=GeuldnW2RahsHtyZX8pg5iseW2idGOp+eakQQ2Ylqfk=;
+	s=default; t=1566892422;
+	bh=EF70cvt9s7OlLybKyQL8sZAeFzv3QTBh4dxWHZqbsbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTnvTrBlQ2A/YJxurdyon+H/7nV77kdS7QHNJ26mfbYBPHN/EU9hnBR0Z7TBuwsrv
-	 KJMCextjI9Oy4AWW2UqGWR3hvHG3N/vxR1m7CoIjMKBLMQzwJ6yaRwM5WRlwhee7vY
-	 6DUBlX7bHdJ4T51L9Kn+B9wukzGWQybq41Lz9g8c=
+	b=KydYj8lNqxwPLixXLJ1PPUQyd38F8Z/MI3zULjDdVenwKzzRZGx4UXCcHDYckl2c1
+	 MaWYTHumNOnKv89xqiyqHBXc6wHXoXW376c/Bj0L1PsOf04sTYmdsucjO/BX/emtGp
+	 qZiyDZk2dXzSmxWlRpLpMne8pV2fmpWB7PgnNbtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbfH0Hxf (ORCPT
+        id S1729850AbfH0Hxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:53:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbfH0Hx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:53:29 -0400
+        id S1729128AbfH0Hxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED239206BF;
-        Tue, 27 Aug 2019 07:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB0822CED;
+        Tue, 27 Aug 2019 07:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892408;
-        bh=GeuldnW2RahsHtyZX8pg5iseW2idGOp+eakQQ2Ylqfk=;
+        s=default; t=1566892416;
+        bh=EF70cvt9s7OlLybKyQL8sZAeFzv3QTBh4dxWHZqbsbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GWo3pSChxG79dUt1Vjsq6OKadBNElZBLmAd0VthIhH+STGAp2MjIa+5B3K0zUSLt7
-         Te2ZSYZkRpM0RT0mR0BN1go1EUWEAofGT4JBgUQYZhoBUIAjvii/fDF8I9VSGsOJPf
-         2sQ77kzRBDJ2S1F9xrGEWVkr98C+HYOHO+6p41qk=
+        b=dCH5SA0i81zwcb/84Q7eH6Kw1+JvoZ2RrQ7zRHkJQTe/SE4b5VRo+rtJ6KL5MHBVE
+         YeQnCX0gI1raEbjl3jXuQqJ0PT98J9IAxFaEu32lZTI4j/rjYwGn8NRshh0lvxpzFj
+         kb9TaVfqa8f83Vsuaam4jES3sYHWI9M1L16IXZhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.14 44/62] x86/retpoline: Dont clobber RFLAGS during CALL_NOSPEC on i386
-Date:   Tue, 27 Aug 2019 09:50:49 +0200
-Message-Id: <20190827072703.106012532@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 11/62] ASoC: ti: davinci-mcasp: Correct slot_width posed constraint
+Date:   Tue, 27 Aug 2019 09:50:16 +0200
+Message-Id: <20190827072701.023825678@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -61,79 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+[ Upstream commit 1e112c35e3c96db7c8ca6ddaa96574f00c06e7db ]
 
-commit b63f20a778c88b6a04458ed6ffc69da953d3a109 upstream.
+The slot_width is a property for the bus while the constraint for
+SNDRV_PCM_HW_PARAM_SAMPLE_BITS is for the in memory format.
 
-Use 'lea' instead of 'add' when adjusting %rsp in CALL_NOSPEC so as to
-avoid clobbering flags.
+Applying slot_width constraint to sample_bits works most of the time, but
+it will blacklist valid formats in some cases.
 
-KVM's emulator makes indirect calls into a jump table of sorts, where
-the destination of the CALL_NOSPEC is a small blob of code that performs
-fast emulation by executing the target instruction with fixed operands.
+With slot_width 24 we can support S24_3LE and S24_LE formats as they both
+look the same on the bus, but a a 24 constraint on sample_bits would not
+allow S24_LE as it is stored in 32bits in memory.
 
-  adcb_al_dl:
-     0x000339f8 <+0>:   adc    %dl,%al
-     0x000339fa <+2>:   ret
+Implement a simple hw_rule function to allow all formats which require less
+or equal number of bits on the bus as slot_width (if configured).
 
-A major motiviation for doing fast emulation is to leverage the CPU to
-handle consumption and manipulation of arithmetic flags, i.e. RFLAGS is
-both an input and output to the target of CALL_NOSPEC.  Clobbering flags
-results in all sorts of incorrect emulation, e.g. Jcc instructions often
-take the wrong path.  Sans the nops...
-
-  asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
-     0x0003595a <+58>:  mov    0xc0(%ebx),%eax
-     0x00035960 <+64>:  mov    0x60(%ebx),%edx
-     0x00035963 <+67>:  mov    0x90(%ebx),%ecx
-     0x00035969 <+73>:  push   %edi
-     0x0003596a <+74>:  popf
-     0x0003596b <+75>:  call   *%esi
-     0x000359a0 <+128>: pushf
-     0x000359a1 <+129>: pop    %edi
-     0x000359a2 <+130>: mov    %eax,0xc0(%ebx)
-     0x000359b1 <+145>: mov    %edx,0x60(%ebx)
-
-  ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
-     0x000359a8 <+136>: mov    -0x10(%ebp),%eax
-     0x000359ab <+139>: and    $0x8d5,%edi
-     0x000359b4 <+148>: and    $0xfffff72a,%eax
-     0x000359b9 <+153>: or     %eax,%edi
-     0x000359bd <+157>: mov    %edi,0x4(%ebx)
-
-For the most part this has gone unnoticed as emulation of guest code
-that can trigger fast emulation is effectively limited to MMIO when
-running on modern hardware, and MMIO is rarely, if ever, accessed by
-instructions that affect or consume flags.
-
-Breakage is almost instantaneous when running with unrestricted guest
-disabled, in which case KVM must emulate all instructions when the guest
-has invalid state, e.g. when the guest is in Big Real Mode during early
-BIOS.
-
-Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
-Fixes: 1a29b5b7f347a ("KVM: x86: Make indirect calls in emulator speculation safe")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190822211122.27579-1-sean.j.christopherson@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190726064244.3762-2-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/nospec-branch.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/davinci/davinci-mcasp.c | 43 ++++++++++++++++++++++++-------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -202,7 +202,7 @@
- 	"    	lfence;\n"					\
- 	"       jmp    902b;\n"					\
- 	"       .align 16\n"					\
--	"903:	addl   $4, %%esp;\n"				\
-+	"903:	lea    4(%%esp), %%esp;\n"			\
- 	"       pushl  %[thunk_target];\n"			\
- 	"       ret;\n"						\
- 	"       .align 16\n"					\
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index 9aa741d272798..0480ec4c80354 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1158,6 +1158,28 @@ static int davinci_mcasp_trigger(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
+ 
++static int davinci_mcasp_hw_rule_slot_width(struct snd_pcm_hw_params *params,
++					    struct snd_pcm_hw_rule *rule)
++{
++	struct davinci_mcasp_ruledata *rd = rule->private;
++	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
++	struct snd_mask nfmt;
++	int i, slot_width;
++
++	snd_mask_none(&nfmt);
++	slot_width = rd->mcasp->slot_width;
++
++	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
++		if (snd_mask_test(fmt, i)) {
++			if (snd_pcm_format_width(i) <= slot_width) {
++				snd_mask_set(&nfmt, i);
++			}
++		}
++	}
++
++	return snd_mask_refine(fmt, &nfmt);
++}
++
+ static const unsigned int davinci_mcasp_dai_rates[] = {
+ 	8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000,
+ 	88200, 96000, 176400, 192000,
+@@ -1251,7 +1273,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 	struct davinci_mcasp_ruledata *ruledata =
+ 					&mcasp->ruledata[substream->stream];
+ 	u32 max_channels = 0;
+-	int i, dir;
++	int i, dir, ret;
+ 	int tdm_slots = mcasp->tdm_slots;
+ 
+ 	/* Do not allow more then one stream per direction */
+@@ -1280,6 +1302,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 			max_channels++;
+ 	}
+ 	ruledata->serializers = max_channels;
++	ruledata->mcasp = mcasp;
+ 	max_channels *= tdm_slots;
+ 	/*
+ 	 * If the already active stream has less channels than the calculated
+@@ -1305,20 +1328,22 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 				   0, SNDRV_PCM_HW_PARAM_CHANNELS,
+ 				   &mcasp->chconstr[substream->stream]);
+ 
+-	if (mcasp->slot_width)
+-		snd_pcm_hw_constraint_minmax(substream->runtime,
+-					     SNDRV_PCM_HW_PARAM_SAMPLE_BITS,
+-					     8, mcasp->slot_width);
++	if (mcasp->slot_width) {
++		/* Only allow formats require <= slot_width bits on the bus */
++		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
++					  SNDRV_PCM_HW_PARAM_FORMAT,
++					  davinci_mcasp_hw_rule_slot_width,
++					  ruledata,
++					  SNDRV_PCM_HW_PARAM_FORMAT, -1);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/*
+ 	 * If we rely on implicit BCLK divider setting we should
+ 	 * set constraints based on what we can provide.
+ 	 */
+ 	if (mcasp->bclk_master && mcasp->bclk_div == 0 && mcasp->sysclk_freq) {
+-		int ret;
+-
+-		ruledata->mcasp = mcasp;
+-
+ 		ret = snd_pcm_hw_rule_add(substream->runtime, 0,
+ 					  SNDRV_PCM_HW_PARAM_RATE,
+ 					  davinci_mcasp_hw_rule_rate,
+-- 
+2.20.1
+
 
 
