@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15522C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14D220828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19762206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892352;
-	bh=Jly0xJPLcDO0et9XMg9aCAgvcZIyJiB73RIFKBqAzO8=;
+	s=default; t=1566892357;
+	bh=hBhas3GVFfsi+AHYvkMyLMZf4LS7PJ9FkZl7oEb0mmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xwBZ9vyVB5KAVUjDTXM/1h/yypfGdFRF24sae5dDIh6XlL/k1oAyrzwLlxJvhtLTA
-	 Sk5x4fdb88XvOngNNXkI6yY9ZSFMf7eD16YKmzeKcAweNerzMt32ybQ9EH63euhBkU
-	 sSPaFDGqVknEk8TL9dZ9MvEYpW84jLVho5dFEKEY=
+	b=XqsDJbwgel+Rbg6Xdl4mNbSKJSHDm2+LGrudjalgZkB3XJ30sRe+iAQ5L/DX04Q6/
+	 h7/FUke+NAuGPMm3c3hKS4nqGmDNn5g7C8UsZPyl8bLfa59TnYwBkH0OtyI22H6xPG
+	 B8+cMQjC3Vpy1evcTFLCryguq4xzvpwJlr3aTiW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfH0Hwa (ORCPT
+        id S1729507AbfH0Hwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43826 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:52:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729433AbfH0Hw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:26 -0400
+        id S1729433AbfH0Hwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:52:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF422206BA;
-        Tue, 27 Aug 2019 07:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93155206BA;
+        Tue, 27 Aug 2019 07:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892345;
-        bh=Jly0xJPLcDO0et9XMg9aCAgvcZIyJiB73RIFKBqAzO8=;
+        s=default; t=1566892351;
+        bh=hBhas3GVFfsi+AHYvkMyLMZf4LS7PJ9FkZl7oEb0mmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxgS87pfZoeB+koDUc4UKjVU5/DHRYBUyUr3oy8OXQ64EeCBzce/+pz6GzOm11Ohu
-         vzsWOppIg5QPaKDZGDbZN05DXpsr7aJLZZVkUj1Bf4D1cIPmN1FIjnuRHNPHnQ0sSf
-         2reNabuUszBCkowAtvoGhEg9d4zLxZzYiv2LC7rE=
+        b=j8drBjgfBDsQOiw7S+z/kXYjAgIsi2unKPDD62X/fsE9pjW6O24CcW2jVkWNAz+WN
+         ALJnPPqfjvAxR3/KQrK4gOSLN4wRv7GrK96ksosvjjkNVTyc4dQKbbwsrCQQxbrqF2
+         0q//IkXnSFxW82omNRXY1fYacgSYXlgJuc1nIC6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/62] net: cxgb3_main: Fix a resource leak in a error path in init_one()
-Date:   Tue, 27 Aug 2019 09:50:29 +0200
-Message-Id: <20190827072701.796451347@linuxfoundation.org>
+Subject: [PATCH 4.14 26/62] net: hisilicon: fix hip04-xmit never return TX_BUSY
+Date:   Tue, 27 Aug 2019 09:50:31 +0200
+Message-Id: <20190827072701.978277279@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -61,42 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit debea2cd3193ac868289e8893c3a719c265b0612 ]
+[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
 
-A call to 'kfree_skb()' is missing in the error handling path of
-'init_one()'.
-This is already present in 'remove_one()' but is missing here.
+TX_DESC_NUM is 256, in tx_count, the maximum value of
+mod(TX_DESC_NUM - 1) is 254, the variable "count" in
+the hip04_mac_start_xmit function is never equal to
+(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
+return NETDEV_TX_BUSY.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+tx_count is modified to mod(TX_DESC_NUM) so that
+the maximum value of tx_count can reach
+(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
+NETDEV_TX_BUSY.
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-index 79053d2ce7a36..338683e5ef1e8 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-@@ -3270,7 +3270,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (!adapter->regs) {
- 		dev_err(&pdev->dev, "cannot map device registers\n");
- 		err = -ENOMEM;
--		goto out_free_adapter;
-+		goto out_free_adapter_nofail;
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 60ef6d40e4896..b04fb82d7fa3e 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -185,7 +185,7 @@ struct hip04_priv {
  
- 	adapter->pdev = pdev;
-@@ -3390,6 +3390,9 @@ out_free_dev:
- 		if (adapter->port[i])
- 			free_netdev(adapter->port[i]);
+ static inline unsigned int tx_count(unsigned int head, unsigned int tail)
+ {
+-	return (head - tail) % (TX_DESC_NUM - 1);
++	return (head - tail) % TX_DESC_NUM;
+ }
  
-+out_free_adapter_nofail:
-+	kfree_skb(adapter->nofail_skb);
-+
- out_free_adapter:
- 	kfree(adapter);
- 
+ static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
 -- 
 2.20.1
 
