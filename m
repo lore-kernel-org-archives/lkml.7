@@ -2,221 +2,153 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF25C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4BEC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8052186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B1721881
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="dYpZIM3W"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qXeND3Fg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfH0QOY (ORCPT
+        id S1729423AbfH0QQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:14:24 -0400
-Received: from mail-eopbgr150125.outbound.protection.outlook.com ([40.107.15.125]:22699
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Tue, 27 Aug 2019 12:16:34 -0400
+Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:8768
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726678AbfH0QOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:14:23 -0400
+        id S1726522AbfH0QQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:16:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R2HfTjcN+NivObkw6zyBU3FWMHb2qTT1MUqgiIGcm4IWXLFzyGKTI8h/b27aaVVfY06RbFutoIlu3/1vjhz+k6i21KIDP25mx8bT5sUxMzR0UIyx7+e1DwbCHFogSjXNgAYugMi5wVZGhZ7z2S/d4l+2S1q1AMOZFlHNiu5VEzoTEBTs6/lkHx0CO6P4cCWxkT1BP01c3D+WViwWwGTqax6Eu+j5ZPoAT5tYQhTmk7Pmw3ouqIZM2+fTWhQVXOpoubEyZ7VqxaQ+QAABoiSa8j9zJ8wnsiogzTs+mP65MTrQJlhOr4ZjdFkEsLQ1SHQznQx2gPxoiOubHcQLrIy4vg==
+ b=Z+rhIAgDXNgiYKIWkcJ9McbfpVVIJz0ku8AK7H0D6+KWK52DjI5phpJ9UBWNrI1YWBIaNQIiAGu0ZdJncEb32C+SpGFFurO3ayGfxNYqQA38edh0arD/Xk5NvnsE/bTzMNJKWud7b3CjigbU0beglL5ziombQiRBg7yMbLHZleOvkNI1s37hLQeBmte1/d+1VZhsqn6yILTTJO7VubDzKRr7nDuQbUOyJIZbX3TYU4WfirnmcFObUOMZXiA7KHA2UUGSXfmiaUXCgWWpMbS2FXbnnrthEi2li87UK3DG5mA0iHfY8345r8uVBmBrTOcyyfMSnemfIddKpE+Uq7Gonw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UIHm18JBiV3qp4WsVuZV/UpKYJn2b4F8nGbmdGL3pQc=;
- b=BjliTYoQfrz0J5FXhikT61QuD0WDGF5J4JPpM8zCJ3JkpxRBF1RZEudhfwSa9gwoBTGa5u5UuKyggyi2NDWN2Rut/RJyAIV5UeSJ1l9BPc3fACkUAO0toeO/ysIBkNh/sZQFZDxBCJdRckwDqhspSXgyyy6fHqkQXVeKIR6wVJgE7odBiRUipQy6tLo4q3+NTbFqs1Sc/o3xD7IHVZDqSwPTc+gfYPZuQ4LYbwN/sEy/fG8mTcIWpbNPmpnisMnO6S6XJ1lEm9H5AmoHlxxbN9llTjpVzZQS+YSnsCxjrHOqqwZ40A2F59bh9bTB0x22S0pWvrkh9xSntmg4RQkN5g==
+ bh=aIJaeLXMr+YUYArp4PSY4v8NdvFu6NcbH6xow94hfCE=;
+ b=Lz7wikcdpMfCMrYpKZ29dz/3d7KRKZUUAADBqbcXuqWSjXfFl9gy3qDZnZ9jQpdVjqnlw6oqB55+zbMQU8ijUXfqph97CKgIaRu5Goj9qJ4gHzOhpof+9+htYPour92/I8cWAYI7+IdEV6dHIdYaTzc5wOi0t7KABpQEMJ/ecycEcZYIJ9c/5iNoE4rnxoqI31ltKpirHF+EijRHk9mB+nBIGHciUeoe5DriPS303qC+53ELUIKEK2Co/CWwjISda+f+qBAD0Gzr6rBw4A1nfV6sZtcsuuvT/Vju23ttjptgGTGbmjldnBS3Ev8zgniW1K0E5rjrcTNxv0XbqBohzw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UIHm18JBiV3qp4WsVuZV/UpKYJn2b4F8nGbmdGL3pQc=;
- b=dYpZIM3W7k4ehrxrzQXXrgRtzMMzGzX83NOWw76PS9rhLrAJtxko3oSiv17eF3sPDAXw08PR8t9jMBfiuLej+/hvY/gq6tbOpaLQ9YFimUgXKg8Ze80ZAFPz1XVpBJlBB+gR4O4Q0rMOtf1om5r9V90mtZ21bQt3nV5RkKhm8+o=
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
- VI1PR02MB4912.eurprd02.prod.outlook.com (20.177.203.148) with Microsoft SMTP
+ bh=aIJaeLXMr+YUYArp4PSY4v8NdvFu6NcbH6xow94hfCE=;
+ b=qXeND3FgVyUhSKkouW/BR9Km+dQGXWt7S4femVf5+b5HA1yhqA07+Uc2K1/Hi/wXebuNqMyrhxxHknT55LmxQUXOhX+klodveVSLfIkxt1UzMaZGrWgD8EjekhcgZt741CCbnCH+mjiWrJnhyapIcQGqaL7JwkOCQaSZKBI1x3A=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB5155.eurprd05.prod.outlook.com (20.178.18.16) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.21; Tue, 27 Aug 2019 16:14:18 +0000
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::7515:8be7:5f4:7392]) by VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::7515:8be7:5f4:7392%7]) with mapi id 15.20.2178.023; Tue, 27 Aug 2019
- 16:14:18 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] habanalabs: Make the Coresight timestamp perpetual
-Thread-Topic: [PATCH] habanalabs: Make the Coresight timestamp perpetual
-Thread-Index: AQHVXPJ6iBAPNBt+WU+188tjs82NjQ==
-Date:   Tue, 27 Aug 2019 16:14:18 +0000
-Message-ID: <20190827161408.20082-1-ttayar@habana.ai>
+ 15.20.2199.20; Tue, 27 Aug 2019 16:16:28 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2199.020; Tue, 27 Aug 2019
+ 16:16:28 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Mark Bloch <markb@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Thread-Topic: [PATCH 2/4] mdev: Make mdev alias unique among all mdevs
+Thread-Index: AQHVXE627FcLaFBgXUa8jSc95m92WKcOC/2AgABaVPCAALfnAIAADiQA
+Date:   Tue, 27 Aug 2019 16:16:27 +0000
+Message-ID: <AM0PR05MB4866148E1652A20E43260C35D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190826204119.54386-3-parav@mellanox.com>
+        <6601940a-4832-08d2-e0f6-f9ac24758cdc@mellanox.com>
+        <AM0PR05MB4866BB4736D265EF28280014D1A00@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190827092346.66bb73f1@x1.home>
+In-Reply-To: <20190827092346.66bb73f1@x1.home>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0230.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1e::26) To VI1PR02MB3054.eurprd02.prod.outlook.com
- (2603:10a6:802:17::27)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ttayar@habana.ai; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [31.154.190.6]
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.18.188]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ca062517-0b62-40fe-cb05-08d72b099cac
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR02MB4912;
-x-ms-traffictypediagnostic: VI1PR02MB4912:
-x-microsoft-antispam-prvs: <VI1PR02MB4912496C57BE8DC5BDFBF0D8D2A00@VI1PR02MB4912.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-office365-filtering-correlation-id: cec361c7-7880-48f2-177a-08d72b09ea7b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5155;
+x-ms-traffictypediagnostic: AM0PR05MB5155:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB5155108B6107897482D14036D1A00@AM0PR05MB5155.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 0142F22657
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(396003)(39840400004)(189003)(199004)(5640700003)(6916009)(53936002)(14454004)(6486002)(6436002)(26005)(478600001)(14444005)(256004)(5660300002)(71200400001)(71190400001)(486006)(186003)(66946007)(66476007)(66556008)(64756008)(66446008)(2906002)(66066001)(86362001)(386003)(6506007)(1076003)(2351001)(102836004)(36756003)(476003)(2616005)(52116002)(1361003)(7736002)(4326008)(81156014)(25786009)(8676002)(6512007)(81166006)(99286004)(8936002)(305945005)(3846002)(316002)(6116002)(50226002)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB4912;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(13464003)(9456002)(5660300002)(8676002)(6436002)(66946007)(66476007)(66556008)(64756008)(76116006)(6246003)(55016002)(66446008)(9686003)(53936002)(33656002)(256004)(66066001)(14444005)(186003)(2906002)(86362001)(99286004)(102836004)(486006)(11346002)(446003)(6506007)(81166006)(7696005)(52536014)(55236004)(14454004)(316002)(476003)(26005)(53546011)(54906003)(76176011)(8936002)(7736002)(74316002)(305945005)(4326008)(71200400001)(229853002)(478600001)(81156014)(71190400001)(6916009)(25786009)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5155;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zw8PNtASpEf9WUvUOGLZCw0O6LOhROD9kBrbadfMjm2aOr4nLgkydwdOfYJgIQO8A7Imn823O2mF/wqGPX34c2lRD5H2bwZoRS18FmP3e0EHb9ai8pCzy1EpXVDVUPXs7hnw3UPN8uCe3B3TwagPkJUyB6L8xqUFL2z38Nxm3LdK+ool4Q4DY4MD+4/DTXAY6UcnZOdNLcUBkVq7l+YYMJNaDWgBGQtmF3oIfeUYM5tkXH5ozyGS6sremdY8rO2yWiWerHdDE5EOt76r4tvhimsX9a0yKf1aQQSSSNTaj9iUOt6YAcFXpYNmaepfygzWST4/tQbkQIU/wo6xjkUexgMCRIw39uLFcBanFG3agauGVeaKD/bfG/8xd7fgjSp1LMvg6slSBC+WGEs4SnmKcJ7+YHVWe1jz14laKq78PI0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: ihnyds2WgWM+pQl4MLiC9Ivu5eGm/ctNU4T5/L0XlHq3Q5U6hfbzbevwEe5p+F9rntoPAWebBMMWE0s+CDDotivd3bTQHLmtvfqyMhld+fS5jVHqAm8RlSumbJPp8JOfOxT9m1ApIre7ophV/smSvqz9HRXaiLOJN6z9keGl9Ymn2EqwAn272PovWoWyx3Pl+9rHsSVs/jo6j8XZL3b2bN3MOC9/GSCkF2gv7HejI95gg7lfs04RRAltLH0DGQ/sYc89UyKO/xu65xC4gKr0kPKghKP239vqZwVdJDcL89W0SpDt+MmR37IeH+W8Yf5QOOvpNgjYq5pYgpa/Rhxgy19aVw0X7nwAJrhQKiKclKoRuwlrIpTYu4gzQC/Z9oyL8n1qwW0bTvLBvDOIOFAhCGWT+/LjITBJANHH9GmDCnU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca062517-0b62-40fe-cb05-08d72b099cac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 16:14:18.1193
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cec361c7-7880-48f2-177a-08d72b09ea7b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2019 16:16:28.1172
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KR+Qkwa2bc3njabwbV+Bhf9KrP4YPfhtvYdZ62zwuoBaj9fAWUOTRtzujpAH0ymJx/Swc+6uAPKPYG+HofnAEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB4912
+X-MS-Exchange-CrossTenant-userprincipalname: ek6AoGw7IcFdrbE1hEe63VxWEaXgEalvSi+UrB7qmy8emXGBNXOgkwMcvoKRzTQE3dNQyBeM6M57PycvxZZmcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Coresight timestamp is enabled for a specific debug session using
-the HL_DEBUG_OP_TIMESTAMP opcode of the debug IOCTL.
-In order to have a perpetual timestamp that would be comparable between
-various debug sessions, this patch moves the timestamp enablement to be
-part of the HW initialization.
-The HL_DEBUG_OP_TIMESTAMP opcode turns to be deprecated and shouldn't be
-used.
-
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
----
- drivers/misc/habanalabs/goya/goya.c           | 23 +++++++++++++++++++
- drivers/misc/habanalabs/goya/goya_coresight.c | 17 ++------------
- include/uapi/misc/habanalabs.h                |  2 +-
- 3 files changed, 26 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/=
-goya/goya.c
-index de275cb3bb98..0dd0b4429fee 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2062,6 +2062,25 @@ static void goya_disable_msix(struct hl_device *hdev=
-)
- 	goya->hw_cap_initialized &=3D ~HW_CAP_MSIX;
- }
-=20
-+static void goya_enable_timestamp(struct hl_device *hdev)
-+{
-+	/* Disable the timestamp counter */
-+	WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 0);
-+
-+	/* Zero the lower/upper parts of the 64-bit counter */
-+	WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0xC, 0);
-+	WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0x8, 0);
-+
-+	/* Enable the counter */
-+	WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 1);
-+}
-+
-+static void goya_disable_timestamp(struct hl_device *hdev)
-+{
-+	/* Disable the timestamp counter */
-+	WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 0);
-+}
-+
- static void goya_halt_engines(struct hl_device *hdev, bool hard_reset)
- {
- 	u32 wait_timeout_ms, cpu_timeout_ms;
-@@ -2102,6 +2121,8 @@ static void goya_halt_engines(struct hl_device *hdev,=
- bool hard_reset)
- 	goya_disable_external_queues(hdev);
- 	goya_disable_internal_queues(hdev);
-=20
-+	goya_disable_timestamp(hdev);
-+
- 	if (hard_reset) {
- 		goya_disable_msix(hdev);
- 		goya_mmu_remove_device_cpu_mappings(hdev);
-@@ -2504,6 +2525,8 @@ static int goya_hw_init(struct hl_device *hdev)
-=20
- 	goya_init_tpc_qmans(hdev);
-=20
-+	goya_enable_timestamp(hdev);
-+
- 	/* MSI-X must be enabled before CPU queues are initialized */
- 	rc =3D goya_enable_msix(hdev);
- 	if (rc)
-diff --git a/drivers/misc/habanalabs/goya/goya_coresight.c b/drivers/misc/h=
-abanalabs/goya/goya_coresight.c
-index 3d77b1c20336..b4d406af1bed 100644
---- a/drivers/misc/habanalabs/goya/goya_coresight.c
-+++ b/drivers/misc/habanalabs/goya/goya_coresight.c
-@@ -636,24 +636,11 @@ static int goya_config_spmu(struct hl_device *hdev,
- 	return 0;
- }
-=20
--static int goya_config_timestamp(struct hl_device *hdev,
--		struct hl_debug_params *params)
--{
--	WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 0);
--	if (params->enable) {
--		WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0xC, 0);
--		WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE + 0x8, 0);
--		WREG32(mmPSOC_TIMESTAMP_BASE - CFG_BASE, 1);
--	}
--
--	return 0;
--}
--
- int goya_debug_coresight(struct hl_device *hdev, void *data)
- {
- 	struct hl_debug_params *params =3D data;
- 	u32 val;
--	int rc;
-+	int rc =3D 0;
-=20
- 	switch (params->op) {
- 	case HL_DEBUG_OP_STM:
-@@ -675,7 +662,7 @@ int goya_debug_coresight(struct hl_device *hdev, void *=
-data)
- 		rc =3D goya_config_spmu(hdev, params);
- 		break;
- 	case HL_DEBUG_OP_TIMESTAMP:
--		rc =3D goya_config_timestamp(hdev, params);
-+		/* Do nothing as this opcode is deprecated */
- 		break;
-=20
- 	default:
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.=
-h
-index 6cf50177cd21..266bf85056d4 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -451,7 +451,7 @@ struct hl_debug_params_spmu {
- #define HL_DEBUG_OP_BMON	4
- /* Opcode for SPMU component */
- #define HL_DEBUG_OP_SPMU	5
--/* Opcode for timestamp */
-+/* Opcode for timestamp (deprecated) */
- #define HL_DEBUG_OP_TIMESTAMP	6
- /* Opcode for setting the device into or out of debug mode. The enable
-  * variable should be 1 for enabling debug mode and 0 for disabling it
---=20
-2.17.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxleCBXaWxsaWFtc29u
+IDxhbGV4LndpbGxpYW1zb25AcmVkaGF0LmNvbT4NCj4gU2VudDogVHVlc2RheSwgQXVndXN0IDI3
+LCAyMDE5IDg6NTQgUE0NCj4gVG86IFBhcmF2IFBhbmRpdCA8cGFyYXZAbWVsbGFub3guY29tPg0K
+PiBDYzogTWFyayBCbG9jaCA8bWFya2JAbWVsbGFub3guY29tPjsgSmlyaSBQaXJrbyA8amlyaUBt
+ZWxsYW5veC5jb20+Ow0KPiBrd2Fua2hlZGVAbnZpZGlhLmNvbTsgY29odWNrQHJlZGhhdC5jb207
+IGRhdmVtQGRhdmVtbG9mdC5uZXQ7DQo+IGt2bUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCAyLzRdIG1kZXY6IE1ha2UgbWRldiBhbGlhcyB1bmlxdWUgYW1vbmcgYWxsIG1kZXZz
+DQo+IA0KPiBPbiBUdWUsIDI3IEF1ZyAyMDE5IDA0OjI4OjM3ICswMDAwDQo+IFBhcmF2IFBhbmRp
+dCA8cGFyYXZAbWVsbGFub3guY29tPiB3cm90ZToNCj4gDQo+ID4gSGkgTWFyaywNCj4gPg0KPiA+
+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IE1hcmsgQmxvY2ggPG1h
+cmtiQG1lbGxhbm94LmNvbT4NCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIEF1Z3VzdCAyNywgMjAxOSA0
+OjMyIEFNDQo+ID4gPiBUbzogUGFyYXYgUGFuZGl0IDxwYXJhdkBtZWxsYW5veC5jb20+OyBhbGV4
+LndpbGxpYW1zb25AcmVkaGF0LmNvbTsNCj4gPiA+IEppcmkgUGlya28gPGppcmlAbWVsbGFub3gu
+Y29tPjsga3dhbmtoZWRlQG52aWRpYS5jb207DQo+ID4gPiBjb2h1Y2tAcmVkaGF0LmNvbTsgZGF2
+ZW1AZGF2ZW1sb2Z0Lm5ldA0KPiA+ID4gQ2M6IGt2bUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBuZXRkZXZAdmdlci5rZXJuZWwub3JnDQo+ID4g
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvNF0gbWRldjogTWFrZSBtZGV2IGFsaWFzIHVuaXF1ZSBh
+bW9uZyBhbGwNCj4gPiA+IG1kZXZzDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBPbiA4LzI2
+LzE5IDE6NDEgUE0sIFBhcmF2IFBhbmRpdCB3cm90ZToNCj4gPiA+ID4gTWRldiBhbGlhcyBzaG91
+bGQgYmUgdW5pcXVlIGFtb25nIGFsbCB0aGUgbWRldnMsIHNvIHRoYXQgd2hlbiBzdWNoDQo+ID4g
+PiA+IGFsaWFzIGlzIHVzZWQgYnkgdGhlIG1kZXYgdXNlcnMgdG8gZGVyaXZlIG90aGVyIG9iamVj
+dHMsIHRoZXJlIGlzDQo+ID4gPiA+IG5vIGNvbGxpc2lvbiBpbiBhIGdpdmVuIHN5c3RlbS4NCj4g
+PiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogUGFyYXYgUGFuZGl0IDxwYXJhdkBtZWxsYW5v
+eC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy92ZmlvL21kZXYvbWRldl9jb3Jl
+LmMgfCA1ICsrKysrDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQo+
+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZmaW8vbWRldi9tZGV2X2NvcmUu
+Yw0KPiA+ID4gPiBiL2RyaXZlcnMvdmZpby9tZGV2L21kZXZfY29yZS5jIGluZGV4IGU4MjVmZjM4
+YjAzNy4uNmViMzdmMGM2MzY5DQo+ID4gPiA+IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJz
+L3ZmaW8vbWRldi9tZGV2X2NvcmUuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3ZmaW8vbWRldi9t
+ZGV2X2NvcmUuYw0KPiA+ID4gPiBAQCAtMzc1LDYgKzM3NSwxMSBAQCBpbnQgbWRldl9kZXZpY2Vf
+Y3JlYXRlKHN0cnVjdCBrb2JqZWN0ICprb2JqLA0KPiA+ID4gc3RydWN0IGRldmljZSAqZGV2LA0K
+PiA+ID4gPiAgCQkJcmV0ID0gLUVFWElTVDsNCj4gPiA+ID4gIAkJCWdvdG8gbWRldl9mYWlsOw0K
+PiA+ID4gPiAgCQl9DQo+ID4gPiA+ICsJCWlmICh0bXAtPmFsaWFzICYmIHN0cmNtcCh0bXAtPmFs
+aWFzLCBhbGlhcykgPT0gMCkgew0KPiA+ID4NCj4gPiA+IGFsaWFzIGNhbiBiZSBOVUxMIGhlcmUg
+bm8/DQo+ID4gPg0KPiA+IElmIGFsaWFzIGlzIE5VTEwsIHRtcC0+YWxpYXMgd291bGQgYWxzbyBi
+ZSBudWxsIGJlY2F1c2UgZm9yIGdpdmVuIHBhcmVudCBlaXRoZXINCj4gd2UgaGF2ZSBhbGlhcyBv
+ciB3ZSBkb27igJl0Lg0KPiA+IFNvIGl0cyBub3QgcG9zc2libGUgdG8gaGF2ZSB0bXAtPmFsaWFz
+IGFzIG51bGwgYW5kIGFsaWFzIGFzIG5vbiBudWxsLg0KPiA+IEJ1dCBpdCBtYXkgYmUgZ29vZC9k
+ZWZlbnNpdmUgdG8gYWRkIGNoZWNrIGZvciBib3RoLg0KPiANCj4gbWRldl9saXN0IGlzIGEgZ2xv
+YmFsIGxpc3Qgb2YgYWxsIG1kZXYgZGV2aWNlcywgaG93IGNhbiB3ZSBtYWtlIGFueQ0KPiBhc3N1
+bXB0aW9ucyB0aGF0IGFuIGVsZW1lbnQgaGFzIHRoZSBzYW1lIHBhcmVudD8gIFRoYW5rcywNCj4g
+DQpPaCB5ZXMsIHJpZ2h0LiBJZiB0bXAtPmFsaWFzIGlzIG5vdF9udWxsIGJ1dCBhbGlhcyBjYW4g
+YmUgTlVMTC4NCkkgd2lsbCBmaXggdGhlIGNoZWNrLg0KDQo+IEFsZXgNCj4gDQo+ID4gPiA+ICsJ
+CQltdXRleF91bmxvY2soJm1kZXZfbGlzdF9sb2NrKTsNCj4gPiA+ID4gKwkJCXJldCA9IC1FRVhJ
+U1Q7DQo+ID4gPiA+ICsJCQlnb3RvIG1kZXZfZmFpbDsNCj4gPiA+ID4gKwkJfQ0KPiA+ID4gPiAg
+CX0NCj4gPiA+ID4NCj4gPiA+ID4gIAltZGV2ID0ga3phbGxvYyhzaXplb2YoKm1kZXYpLCBHRlBf
+S0VSTkVMKTsNCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBNYXJrDQoNCg==
