@@ -2,87 +2,105 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863A7C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C9EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C2D21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9981B21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 16:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566923523;
-	bh=Oyqg9XfbEF5K4wbPScxfrfQcryFdgidyBVES28Fahns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0GsL9V3MS67Pl1OTgLzrmwRt/C7AaBmRRGQ8hzNR5ocjvbi+1GoZ7LwovmLDEWFp/
-	 usCAy0egC+t4Jh4Y5xj1ZWgpSjGoWFFZLULs1kvnRqtFp8RNu2TeoYpw4XcYm+VgdJ
-	 ZYx/Q/1HVE5zyx7jY3HoNhlzTcpebj/04gJpw0H4=
+	s=default; t=1566923552;
+	bh=syeDJupZgVAE2WtUCwwh/CpX7PZCRSVKeOF42SJPq5o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hWTyDnzhQfWwRPoQAPb3mmgPHtAvufgP1XBWNmWVlqRrCA1ssCF+9YZ9Fm7V3Fd5x
+	 /4xU1B526h/46s74uiZzE5lfpFMgvdOPcvHtSUy+URXKfpGmHw1Dis8SaLrr5KrD3L
+	 9/ogouMnO7qFQmSZzbhrFCEmiDg1iHaLJ962to04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbfH0QcC (ORCPT
+        id S1730315AbfH0Qcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 12:32:02 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41187 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfH0QcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 12:32:02 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o101so19235797ota.8;
-        Tue, 27 Aug 2019 09:32:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dhRNd7yIwWwUIbw7R2NcCjUjJYu5UmK8SsYGxZLWQBk=;
-        b=eTuzAMeYO+6r4cXeKg9/iPscLZlK7dF7Nn98O7SdTkUspNW5zEu9YNjG8MO8cL2qrb
-         4aWs54Jy655WBHHzb8uBIODDgsT9j8ENre7Cbeu6j5+LNJECuqJ/FiniCLjAll8rKxWc
-         3w9YUy5m/ZMZDOKS1ahmFiQe4eJQ3+jADIkeLYUkUj4jpg3jUNB6wJiRinkyKjYX6Jma
-         QRIufh51/rM8ujMrhmELR7gy6lTte6YM8rDIPrqaK//U73R04kZqYYhgSST8r/vsmFRy
-         zHFNTrIEwW3hkWHYv3ldArdGMJKYCY+F7lR//UJ9uIngghlt1hRVItF+zT8AVUHKhRo4
-         xuZQ==
-X-Gm-Message-State: APjAAAV06HQ5aa1R+Y63KuR3RUH2tBkE4Oe2ebd2EGsTqrVvXolT4diG
-        mezXWI2y0GVoehJovzxWHA==
-X-Google-Smtp-Source: APXvYqxHEgD88+9WHQA+ZuC5MA2YuedZjp45HEWvzxR2iZsyZvmBVQ+6DI3nvg7v+5nqm/Z81mSFpA==
-X-Received: by 2002:a05:6830:b:: with SMTP id c11mr5630082otp.163.1566923521149;
-        Tue, 27 Aug 2019 09:32:01 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u17sm4383022oif.11.2019.08.27.09.32.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 09:32:00 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 11:31:59 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     jassisinghbrar@gmail.com
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org, robh+dt@kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-xdmac: Add Socionext
- Milbeaut XDMAC bindings
-Message-ID: <20190827163159.GA29528@bogus>
-References: <20190818052154.17789-1-jassisinghbrar@gmail.com>
- <20190818052224.17857-1-jassisinghbrar@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818052224.17857-1-jassisinghbrar@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 27 Aug 2019 12:32:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:47544 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfH0Qcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 12:32:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CE42337;
+        Tue, 27 Aug 2019 09:32:30 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 51CAB3F59C;
+        Tue, 27 Aug 2019 09:32:29 -0700 (PDT)
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: [PATCH v2 0/6] Rework REFCOUNT_FULL using atomic_fetch_* operations
+Date:   Tue, 27 Aug 2019 17:31:58 +0100
+Message-Id: <20190827163204.29903-1-will@kernel.org>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 18 Aug 2019 00:22:24 -0500, jassisinghbrar@gmail.com wrote:
-> From: Jassi Brar <jaswinder.singh@linaro.org>
-> 
-> Document the devicetree bindings for Socionext Milbeaut XDMAC
-> controller. Controller only supports Mem->Mem transfers. Number
-> of physical channels are determined by the number of irqs registered.
-> 
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> ---
->  .../bindings/dma/milbeaut-m10v-xdmac.txt      | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-xdmac.txt
-> 
+Hi all,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is version two of the patches I previously posted here:
+
+  https://lkml.kernel.org/r/20190802101000.12958-1-will@kernel.org
+
+Changes since v1 include:
+
+  * Avoid duplicate WARNs when incrementing from zero
+  * Some crude lktdm perf results to motivate the change:
+
+    # perf stat -r 3 -B -- echo {ATOMIC,REFCOUNT}_TIMING >/sys/kernel/debug/provoke-crash/DIRECT
+
+    # arm64
+    ATOMIC_TIMING:					46.50451 +- 0.00134 seconds time elapsed  ( +-  0.00% )
+    REFCOUNT_TIMING (REFCOUNT_FULL, mainline):		77.57522 +- 0.00982 seconds time elapsed  ( +-  0.01% )
+    REFCOUNT_TIMING (REFCOUNT_FULL, this series):	48.7181 +- 0.0256 seconds time elapsed  ( +-  0.05% )
+
+    # x86
+    ATOMIC_TIMING:					31.6225 +- 0.0776 seconds time elapsed  ( +-  0.25% )
+    REFCOUNT_TIMING (!REFCOUNT_FULL, mainline/x86 asm): 31.6689 +- 0.0901 seconds time elapsed  ( +-  0.28% )
+    REFCOUNT_TIMING (REFCOUNT_FULL, mainline):		53.203 +- 0.138 seconds time elapsed  ( +-  0.26% )
+    REFCOUNT_TIMING (REFCOUNT_FULL, this series):	31.7408 +- 0.0486 seconds time elapsed  ( +-  0.15% )
+
+Cheers,
+
+Will
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Jan Glauber <jglauber@marvell.com>
+
+--->8
+
+Will Deacon (6):
+  lib/refcount: Define constants for saturation and max refcount values
+  lib/refcount: Ensure integer operands are treated as signed
+  lib/refcount: Remove unused refcount_*_checked() variants
+  lib/refcount: Move bulk of REFCOUNT_FULL implementation into header
+  lib/refcount: Improve performance of generic REFCOUNT_FULL code
+  lib/refcount: Consolidate REFCOUNT_{MAX,SATURATED} definitions
+
+ drivers/misc/lkdtm/refcount.c |   8 --
+ include/linux/refcount.h      | 236 +++++++++++++++++++++++++++++++++++++----
+ lib/refcount.c                | 237 +-----------------------------------------
+ 3 files changed, 218 insertions(+), 263 deletions(-)
+
+-- 
+2.11.0
+
