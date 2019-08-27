@@ -2,211 +2,92 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2368C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4DDC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB07217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE9A2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="USGD6nB4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QlxvT4+b"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ACmTv+sL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfH0FAP (ORCPT
+        id S1729251AbfH0FGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:00:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46476 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfH0FAP (ORCPT
+        Tue, 27 Aug 2019 01:06:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35391 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbfH0FG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:00:15 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5B7DE60C72; Tue, 27 Aug 2019 05:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566882014;
-        bh=TcF1g7fa3jSfnZHKz7d+L3HUTvxu5t2aa0eb5++9aUA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=USGD6nB4Mg7yAH+645Ev9UIHaVUoniUewMlO6mKc4Vzcl20knnMf0gjDMr06AkT69
-         D29vXRK5qAICTlH0bjWbGX+wDh/oQJO3ydu9OCYNGpQhytZbTEV/WFwfPLZ00zgwol
-         +p9LG4McdDIv1+xQCxTAE63lRlbx0aQdQdrgf7NM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id CAC0960C5F;
-        Tue, 27 Aug 2019 05:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566882013;
-        bh=TcF1g7fa3jSfnZHKz7d+L3HUTvxu5t2aa0eb5++9aUA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QlxvT4+bd3DOVIMpTneGrzdy2Et61p5tudK4Z6CBBh9RrRcTCFkFA2J2egiY4rmGk
-         7wEnbsFvx/+4meAatc1lQqqNjVxVBOfC3ZE+13qdbJzGHOiZ4NU4e+JNu0h0knbXSw
-         yJdoACr0wniY9SChs/MHJcqeg7+6eUbH8NHbzI1Y=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 27 Aug 2019 10:30:13 +0530
-From:   amasule@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH v6 4/4] media: venus: Update core selection
-In-Reply-To: <d8fb8806-df3f-dd30-9d40-79667cf5cc37@linaro.org>
-References: <1563786452-22188-1-git-send-email-amasule@codeaurora.org>
- <1563786452-22188-4-git-send-email-amasule@codeaurora.org>
- <d8fb8806-df3f-dd30-9d40-79667cf5cc37@linaro.org>
-Message-ID: <3037ab0b62a67f7648d3984c3ec9ffd9@codeaurora.org>
-X-Sender: amasule@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Tue, 27 Aug 2019 01:06:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so11954834pgv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=bk+JaA9Wm7oz2NoF52hCcBz04mg8rRkowz0Je01pv/o=;
+        b=ACmTv+sLluHVTa5psjJ02RKShK7i0i9u1wgYGE7mrIr27NYnWxyVpGgxOzII3/NkyE
+         dcoF0oVkDA3ndBTXpDNr8h+v5nvKj60M9IB055E6ZLm8qKCtCdTHLKRU7m/4NeGBFukc
+         rHO7CjH0RFgBg4lMAavNeYOr7y5MuBhvmKspsGrtop7wf6QqmRhh03Wc39j197QoXCSU
+         i3XIUBDvUp73QKxExLUVdEYRU0e6OKJyjQSbc0rRVtpLYQRIjhNxX7u3Ie5e8vh8bkmB
+         BGteBb35BoV3Sd1/lVG4AnrWhtD9XuEksL6oFgBBiLn0JRaayRVtCgrnvS5UOQWJ8eI1
+         hgpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bk+JaA9Wm7oz2NoF52hCcBz04mg8rRkowz0Je01pv/o=;
+        b=I2gLAD6WK/YTL1phzITOHf2ZGNxLAiUcNv7n/pqTeHeMQNiAI6RbGCsjpWUnJA27VS
+         PDzqG6+slqK0WnDLKhMslQ7s+FE87AJ3kHOu85nHIaj4Eq9hyUwr1Mar2munR5zAR/iJ
+         RbLL7eXWE3ZPwFsaQsAKFkaYGaNxPX8u99CQeMIfSUzc2lkHm2l7ZKq+VYMovUoJCMiJ
+         JoQFNZJDyhV8XHsI9piWT3GYPrXiBZKq09gxbe5oJP31cNTkNd7pYuOwThHRT/eghvKn
+         9PUrYcNdRciNNmA9LLsgD9xNb84mUfymWrW61J09jvYf1YTzgh6BG8fmnKDurbewzMwA
+         esKg==
+X-Gm-Message-State: APjAAAWzrvrWo0mni+iEfiC8CJ4hN6Qumgq79qMc92qDCImrWlQj2+2F
+        DlDrcnrsZSJGxRs2T7HFPEZb6Fq7INg=
+X-Google-Smtp-Source: APXvYqx2+mfszF4XOEdf2VyJdPl/56BfxhDiG//VfH7sfIzgWmV7i6pR1y1dd5w9xBmLxpAPPz0suA==
+X-Received: by 2002:aa7:9e4f:: with SMTP id z15mr23349159pfq.89.1566882389075;
+        Mon, 26 Aug 2019 22:06:29 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id q8sm896414pjq.20.2019.08.26.22.06.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 26 Aug 2019 22:06:28 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, palmer@sifive.com,
+        paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2 0/2] Update ethernet compatible string for SiFive FU540
+Date:   Tue, 27 Aug 2019 10:36:02 +0530
+Message-Id: <1566882364-23891-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch series renames the compatible property to a more appropriate
+string. The patchset is based on Linux-5.3-rc6 and tested on SiFive
+Unleashed board
 
-On 2019-07-29 15:16, Stanimir Varbanov wrote:
-> Hi,
-> 
-> On 7/22/19 12:07 PM, Aniket Masule wrote:
->> Present core assignment is static. Introduced load balancing
->> across the cores. Load on earch core is calculated and core
->> with minimum load is assigned to given instance.
->> 
->> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/helpers.c    | 69 
->> +++++++++++++++++++++++---
->>  drivers/media/platform/qcom/venus/helpers.h    |  2 +-
->>  drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
->>  drivers/media/platform/qcom/venus/hfi_parser.h |  5 ++
->>  drivers/media/platform/qcom/venus/vdec.c       |  2 +-
->>  drivers/media/platform/qcom/venus/venc.c       |  2 +-
->>  6 files changed, 72 insertions(+), 9 deletions(-)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
->> b/drivers/media/platform/qcom/venus/helpers.c
->> index edf403d..3b6cbbf 100644
->> --- a/drivers/media/platform/qcom/venus/helpers.c
->> +++ b/drivers/media/platform/qcom/venus/helpers.c
->> @@ -26,6 +26,7 @@
->>  #include "helpers.h"
->>  #include "hfi_helper.h"
->>  #include "hfi_venus_io.h"
->> +#include "hfi_parser.h"
->> 
->>  struct intbuf {
->>  	struct list_head list;
->> @@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst 
->> *inst)
->>  	return mbs * inst->fps;
->>  }
->> 
->> +static u32 load_per_core(struct venus_core *core, u32 core_id)
->> +{
->> +	struct venus_inst *inst = NULL;
->> +	u32 mbs_per_sec = 0, load = 0;
->> +
->> +	mutex_lock(&core->lock);
->> +	list_for_each_entry(inst, &core->instances, list) {
->> +		if (inst->clk_data.core_id != core_id)
->> +			continue;
->> +
->> +		mbs_per_sec = load_per_instance(inst);
->> +		load += mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
->> +	}
->> +	mutex_unlock(&core->lock);
->> +
->> +	return load;
->> +}
->> +
->>  static u32 load_per_type(struct venus_core *core, u32 session_type)
->>  {
->>  	struct venus_inst *inst = NULL;
->> @@ -505,6 +524,16 @@ static int load_scale_clocks(struct venus_inst 
->> *inst)
->>  	return scale_clocks(inst);
->>  }
->> 
->> +int set_core_usage(struct venus_inst *inst, u32 usage)
->> +{
->> +	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
->> +	struct hfi_videocores_usage_type cu;
->> +
->> +	cu.video_core_enable_mask = usage;
->> +
->> +	return hfi_session_set_property(inst, ptype, &cu);
->> +}
->> +
->>  static void fill_buffer_desc(const struct venus_buffer *buf,
->>  			     struct hfi_buffer_desc *bd, bool response)
->>  {
->> @@ -808,19 +837,47 @@ int venus_helper_set_work_mode(struct venus_inst 
->> *inst, u32 mode)
->>  }
->>  EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
->> 
->> -int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
->> +int venus_helper_set_core(struct venus_inst *inst)
->>  {
->> -	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
->> -	struct hfi_videocores_usage_type cu;
->> +	struct venus_core *core = inst->core;
->> +	u32 min_core_id = 0, core1_load = 0, core2_load = 0;
->> +	unsigned long min_load, max_freq, cur_inst_load;
->> +	u32 cores_max;
->> +	int ret;
->> 
->>  	if (!IS_V4(inst->core))
->>  		return 0;
->> 
->> -	cu.video_core_enable_mask = usage;
->> +	core1_load = load_per_core(core, VIDC_CORE_ID_1);
->> +	core2_load = load_per_core(core, VIDC_CORE_ID_2);
->> +	min_core_id = core1_load < core2_load ? VIDC_CORE_ID_1 : 
->> VIDC_CORE_ID_2;
->> +	min_load = min(core1_load, core2_load);
->> +	cores_max = core_num_max(inst);
->> 
->> -	return hfi_session_set_property(inst, ptype, &cu);
->> +	if (cores_max < VIDC_CORE_ID_2) {
->> +		min_core_id = VIDC_CORE_ID_1;
->> +		min_load = core1_load;
->> +	}
->> +
->> +	cur_inst_load = load_per_instance(inst) *
->> +		inst->clk_data.codec_freq_data->vpp_freq;
->> +	max_freq = core->res->freq_tbl[0].freq;
->> +
->> +	if ((cur_inst_load + min_load) > max_freq) {
->> +		dev_warn(core->dev, "HW is overloaded, needed: %lu max: %lu\n",
->> +			 cur_inst_load, max_freq);
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret = set_core_usage(inst, min_core_id);
-> 
-> We have a problem here. Lets assume that we have only one running
-> decoder session and the code above decides that it should be handled by
-> core2, but core2 clocks presently are enabled only if there is an
-> encoder session (see DT subnodes), thus we select core2 but without
-> enabling core2 clocks and power domain.
-> 
-I will send a separate patch for core selection, once power domain issue
-is fixed.
+Change history:
+Since v1:
+- Dropped PATCH3 because it's already merged
+- Change the reference url in the patch descriptions to point to a
+  'lore.kernel.org' link instead of 'lkml.org'
 
->> +	if (ret)
->> +		return ret;
->> +
->> +	inst->clk_data.core_id = min_core_id;
->> +
->> +	return 0;
->>  }
->> -EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
->> +EXPORT_SYMBOL_GPL(venus_helper_set_core);
->> 
+Yash Shah (2):
+  macb: bindings doc: update sifive fu540-c000 binding
+  macb: Update compatibility string for SiFive FU540-C000
 
-Regards,
-Aniket
+ Documentation/devicetree/bindings/net/macb.txt | 4 ++--
+ drivers/net/ethernet/cadence/macb_main.c       | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
+
