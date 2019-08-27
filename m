@@ -2,107 +2,61 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0E8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D64EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC2520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4A420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 11:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbfH0LyQ (ORCPT
+        id S1729435AbfH0LyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 07:54:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42548 "EHLO mx1.redhat.com"
+        Tue, 27 Aug 2019 07:54:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:56363 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfH0LyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 07:54:16 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B3CD4308A9E0;
-        Tue, 27 Aug 2019 11:54:15 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5774A10018F9;
-        Tue, 27 Aug 2019 11:54:10 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id E37D622017B; Tue, 27 Aug 2019 07:54:09 -0400 (EDT)
-Date:   Tue, 27 Aug 2019 07:54:09 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH 05/19] virtio: Implement get_shm_region for MMIO transport
-Message-ID: <20190827115409.GB30873@redhat.com>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
- <20190821175720.25901-6-vgoyal@redhat.com>
- <20190827103943.4c6c9342.cohuck@redhat.com>
+        id S1725850AbfH0LyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 07:54:22 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 87DBF68B20; Tue, 27 Aug 2019 13:54:18 +0200 (CEST)
+Date:   Tue, 27 Aug 2019 13:54:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uuid: Add helpers for finding UUID from an array
+Message-ID: <20190827115418.GA5921@lst.de>
+References: <20190827114918.25090-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190827103943.4c6c9342.cohuck@redhat.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 27 Aug 2019 11:54:15 +0000 (UTC)
+In-Reply-To: <20190827114918.25090-1-heikki.krogerus@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:39:43AM +0200, Cornelia Huck wrote:
-> On Wed, 21 Aug 2019 13:57:06 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
+On Tue, Aug 27, 2019 at 02:49:18PM +0300, Heikki Krogerus wrote:
+> Matching function that compares every UUID in an array to a
+> given UUID with guid_equal().
 > 
-> > From: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> > 
-> > On MMIO a new set of registers is defined for finding SHM
-> > regions.  Add their definitions and use them to find the region.
-> > 
-> > Cc: kvm@vger.kernel.org
-> > Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> > ---
-> >  drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
-> >  include/uapi/linux/virtio_mmio.h | 11 +++++++++++
-> >  2 files changed, 43 insertions(+)
-> > 
-> > diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> > index e09edb5c5e06..5c07985c8cb8 100644
-> > --- a/drivers/virtio/virtio_mmio.c
-> > +++ b/drivers/virtio/virtio_mmio.c
-> > @@ -500,6 +500,37 @@ static const char *vm_bus_name(struct virtio_device *vdev)
-> >  	return vm_dev->pdev->name;
-> >  }
-> >  
-> > +static bool vm_get_shm_region(struct virtio_device *vdev,
-> > +			      struct virtio_shm_region *region, u8 id)
-> > +{
-> > +	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
-> > +	u64 len, addr;
-> > +
-> > +	/* Select the region we're interested in */
-> > +	writel(id, vm_dev->base + VIRTIO_MMIO_SHM_SEL);
-> > +
-> > +	/* Read the region size */
-> > +	len = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_LOW);
-> > +	len |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_HIGH) << 32;
-> > +
-> > +	region->len = len;
-> > +
-> > +	/* Check if region length is -1. If that's the case, the shared memory
-> > +	 * region does not exist and there is no need to proceed further.
-> > +	 */
-> > +	if (len == ~(u64)0) {
-> > +		return false;
-> > +	}
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+> Hi,
 > 
-> I think the curly braces should be dropped here.
+> I don't have a user for these helpers, but since they are pretty
+> trivial, I figured that might as well propose them in any case.
+> Though, I think there was somebody proposing of doing the same thing
+> that these helpers do at one point, but just the hard way in the
+> drivers, right Andy?
 
-Will do.
+XFS has something similar in xfs_uuid_mount, except that it also
+tracks empty slots.  That beeing said I'm pretty sure if you ask willy
+he's suggest to just convert the table to an xarray instead :)
 
-Thanks
-Vivek
+So I'm defintively curious what the users would be where we just check
+a table, but don't also add something to the table.
