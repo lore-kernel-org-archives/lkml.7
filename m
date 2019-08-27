@@ -2,106 +2,159 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE26EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC61EC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96CD21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566928022;
-	bh=KW4wkBtQ7sC2bdNHxFcx8NN8mz4KA55BBudFAOlxo78=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KbTSRlDNRo3jJ5uyI7UsZ64VXWVbGyBzkcp/R7Dlt9JbfWuJCnbCdba6LiTBwNYPD
-	 M+TWB7cc3NIGtsYrumeb/5k8cyNhBKSY7fr1vFsuTLO7K7gpehTO8NpLhv4SWAqGSC
-	 ZIEPR2wDAbDK/pflgZi6LyvfWn2SaBx/QKB5ISDg=
+	by mail.kernel.org (Postfix) with ESMTP id 8D3E92184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 17:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfH0RrB (ORCPT
+        id S1730439AbfH0RrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 13:47:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33921 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfH0RrB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 13:47:01 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x18so90455ljh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 10:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=csGO6rReLM1hU0UOFnxStmKvrFXOnJUlxRrEakaCEVU=;
-        b=eKX3lG1dbvgvEwsRu7rFLd4KLUPNlxQFAnCHUYhdDzrDbj6nMS6Omjsg8ib8/HjdH1
-         ZX28LSB+QxleZnpuQV1BCMVBdP+Q6Y9aSPZluIXHKfA/IssK2NQSEJrBeKEw/tzDUm4P
-         Nt8C7KEQ/3KjKGA2KQsE75z8KnKWPwyo8eirs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=csGO6rReLM1hU0UOFnxStmKvrFXOnJUlxRrEakaCEVU=;
-        b=LgunFN5OO/T53mCuwSCaXGLcNPE7x6uF4OCZKBXpwUHoMTw6vHCLRQ4NOSLaSJXr3Z
-         6lUaV/enJIDUvBR8EGmOb1IUU+Mo60IgecsIqO+FQxXF2Z/ZTz8kgFE3Db7dP1jq6Wx9
-         p68ucAUrUySvLvzHslb7Ek/Of/UHW4VRbmV+4GX+kzsiKXbO7q/hdzfuUbjLkEYXvEjV
-         HaO4qYMV71zu1ftUdlNTcIRBZNOqoFQvciQLy15NM11avh+5TY9tC4njUSdJ74hrKUGm
-         C+v+SPAGp/K4wIFdSgPqFqbu0eTs7xb7fX7Cm21niX4aW8G0q9N8we9iSut6u0W5c/ld
-         InnA==
-X-Gm-Message-State: APjAAAX7LQM7RVlE605IUqv3jpIh4G5UEO/Dw4Kji6tLujX1hS0ChZSZ
-        Ii0iPkdcNmKvLSDjFQfLVxaw6I7uSg0=
-X-Google-Smtp-Source: APXvYqwKti8dFuPY/Y2Qbm5PwrY08EcSlonIebrTE9hUNpzFUw9+SDwxZ6ihFsnc9wHvHAVV4varvQ==
-X-Received: by 2002:a2e:b174:: with SMTP id a20mr3294578ljm.108.1566928019028;
-        Tue, 27 Aug 2019 10:46:59 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id e62sm2608591ljf.82.2019.08.27.10.46.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2019 10:46:58 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id e27so58768ljb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 10:46:58 -0700 (PDT)
-X-Received: by 2002:a2e:9a84:: with SMTP id p4mr14483815lji.52.1566928017806;
- Tue, 27 Aug 2019 10:46:57 -0700 (PDT)
+        Tue, 27 Aug 2019 13:47:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34556 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbfH0RrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 13:47:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC7E410F23E8;
+        Tue, 27 Aug 2019 17:47:22 +0000 (UTC)
+Received: from flask (unknown [10.43.2.55])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 901A8194B9;
+        Tue, 27 Aug 2019 17:47:18 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Tue, 27 Aug 2019 19:47:17 +0200
+Date:   Tue, 27 Aug 2019 19:47:17 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2] KVM: LAPIC: Periodically revaluate to get
+ conservative lapic_timer_advance_ns
+Message-ID: <20190827174717.GB65641@flask>
+References: <1565841817-25982-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-References: <CAHk-=wiV54LwvWcLeATZ4q7rA5Dd9kE0Lchx=k023kgxFHySNQ@mail.gmail.com>
- <20190825182922.GC20639@zn.tnic> <CAHk-=wjhyg-MndXHZGRD+ZKMK1UrcghyLH32rqQA=YmcxV7Z0Q@mail.gmail.com>
- <20190825193218.GD20639@zn.tnic> <CAHk-=wiBqmHTFYJWOehB=k3mC7srsx0DWMCYZ7fMOC0T7v1KHA@mail.gmail.com>
- <20190825194912.GF20639@zn.tnic> <CAHk-=wjcUQjK=SqPGdZCDEKntOZEv34n9wKJhBrPzcL6J7nDqQ@mail.gmail.com>
- <20190825201723.GG20639@zn.tnic> <20190826125342.GC28610@zn.tnic>
- <CAHk-=wj_E58JskechbJyWwpzu5rwKFHEABr4dCZjS+JBvv67Uw@mail.gmail.com> <20190827173955.GI29752@zn.tnic>
-In-Reply-To: <20190827173955.GI29752@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 27 Aug 2019 10:46:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj+w5+dicacZhtUG94r4ee5zEMM4FngC8dq1bB2X+V5Xg@mail.gmail.com>
-Message-ID: <CAHk-=wj+w5+dicacZhtUG94r4ee5zEMM4FngC8dq1bB2X+V5Xg@mail.gmail.com>
-Subject: Re: [GIT pull] x86/urgent for 5.3-rc5
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Pu Wen <puwen@hygon.cn>, Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565841817-25982-1-git-send-email-wanpengli@tencent.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 27 Aug 2019 17:47:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 10:40 AM Borislav Petkov <bp@suse.de> wrote:
->
-> Do you want it this weekend, after some smoke testing on boxes or should
-> I leave it a couple of weeks in tip until the merge window opens, and
-> then queue it for 5.4 for longer exposure in linux-next?
+2019-08-15 12:03+0800, Wanpeng Li:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Even if for realtime CPUs, cache line bounces, frequency scaling, presence 
+> of higher-priority RT tasks, etc can still cause different response. These 
+> interferences should be considered and periodically revaluate whether 
+> or not the lapic_timer_advance_ns value is the best, do nothing if it is,
+> otherwise recaluate again. Set lapic_timer_advance_ns to the minimal 
+> conservative value from all the estimated values.
 
-No hurry, and I don't care deeply when this goes in. It looks safe and
-harmless, so any time as far as I'm concerned - whatever is most
-convenient for people.
+IIUC, this patch is looking for the minimal timer_advance_ns because it
+provides the best throughput:
+When every code path ran as fast as possible and we don't have to wait
+for the timer to expire, but still arrive exactly at the point when it
+would have expired.
+We always arrive late late if something delayed the execution, which
+means higher latencies, but RT shouldn't be using an adaptive algorithm
+anyway, so that is not an issue.
 
-This is more of a "let's protect against any future issues" than
-anything critical right now.
+The computed conservative timer_advance_ns will converge to the minimal
+measured timer_advance_ns as time progresses, because it can only go
+down and will do so repeatedly by small steps as even one smaller
+measurement sufficiently close is enough to decrease it.
 
-And I suspect it just means that next time somebody screws up rdrand,
-they'll screw it up to be a simple counter instead of just returning
-all-ones, and we'll miss it anyway ;)
+With that in mind, wouldn't the following patch (completely untested)
+give you about the same numbers?
 
-              Linus
+The idea is that if we have to wait, we are wasting time and therefore
+decrease timer_advance_ns to eliminate the time spent waiting.
+
+The first run is special and just sets timer_advance_ns to the latency
+we measured, regardless of what it is -- it deals with the possibility
+that the default was too low.
+
+This algorithm is also likely prone to turbo boost making few runs
+faster than what is then achieved during a more common workload, but
+we'd need to have a sliding window or some other more sophisticated
+algorithm in order to deal with that.
+
+I also like Paolo's idea of a smoothing -- if we use a moving average
+based on advance_expire_delta, we wouldn't even have to convert it into
+ns unless it reached a given threshold, which could make decently fast
+to be run every time.
+
+Something like
+
+   moving_average = (apic->lapic_timer.moving_average * (weight - 1) + advance_expire_delta) / weight
+
+   if (moving_average > threshold)
+      recompute timer_advance_ns
+
+   apic->lapic_timer.moving_average = moving_average
+
+where weight would be a of 2 to make the operation fast.
+
+This kind of moving average gives less value to old inputs and the
+weight allows us to control the reaction speed of the approximation.
+(A small number like 4 or 8 seems about right.)
+
+I don't have any information on the latency, though.
+Do you think that the added overhead isn't worth the smoothing?
+
+Thanks.
+
+---8<---
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index e904ff06a83d..d7f2af2eb3ce 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1491,23 +1491,20 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	if (advance_expire_delta < 0) {
+ 		ns = -advance_expire_delta * 1000000ULL;
+ 		do_div(ns, vcpu->arch.virtual_tsc_khz);
+-		timer_advance_ns -= min((u32)ns,
+-			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++		timer_advance_ns -= (u32)ns;
+ 	} else {
+ 	/* too late */
++		/* This branch can only be taken on the initial calibration. */
++		if (apic->lapic_timer.timer_advance_adjust_done)
++			pr_err_once("kvm: broken expectation in lapic timer_advance_ns");
++
+ 		ns = advance_expire_delta * 1000000ULL;
+ 		do_div(ns, vcpu->arch.virtual_tsc_khz);
+-		timer_advance_ns += min((u32)ns,
+-			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++		timer_advance_ns += (u32)ns;
+ 	}
+ 
+-	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+-		apic->lapic_timer.timer_advance_adjust_done = true;
+-	if (unlikely(timer_advance_ns > 5000)) {
+-		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+-		apic->lapic_timer.timer_advance_adjust_done = false;
+-	}
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
++	apic->lapic_timer.timer_advance_adjust_done = true;
+ }
+ 
+ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+@@ -1526,7 +1523,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 	if (guest_tsc < tsc_deadline)
+ 		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+ 
+-	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
++	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done) || guest_tsc < tsc_deadline)
+ 		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+ }
+ 
