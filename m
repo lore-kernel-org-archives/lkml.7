@@ -2,144 +2,125 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198B0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD76C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC012189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF5F217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:40:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lekensteyn.nl header.i=@lekensteyn.nl header.b="MGqMIq0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfH0Wjv (ORCPT
+        id S1726342AbfH0WkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 18:39:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60493 "EHLO mga02.intel.com"
+        Tue, 27 Aug 2019 18:40:00 -0400
+Received: from lekensteyn.nl ([178.21.112.251]:58661 "EHLO lekensteyn.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfH0Wju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 18:39:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 15:39:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,438,1559545200"; 
-   d="scan'208";a="192395592"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by orsmga002.jf.intel.com with ESMTP; 27 Aug 2019 15:39:50 -0700
-Date:   Tue, 27 Aug 2019 15:36:53 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI: pciehp: Switch LED indicators with a single
- write
-Message-ID: <20190827223653.GD28404@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <20190819160643.27998-1-efremov@linux.com>
- <20190819160643.27998-3-efremov@linux.com>
+        id S1725989AbfH0WkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:40:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lekensteyn.nl; s=s2048-2015-q1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date; bh=W755SOjG26JPvvqPajc576xDrzJZD3HASrkXEzOzrLI=;
+        b=MGqMIq0TngzkjMrWN5ZznKdYTGRhaljhOyJFFa+R6hRDSBkhAifGf90vBV7+/zirmtsd3rsBO7SNclUcIx4Ll+F04TZC+iFvDmAoaACRWQHBYBgEZLtyWil+tRQAHg8XJbBxWywM2XkqUw4d9tkv/vzoVzu/uhwNF+mn1UrtZBwxqfo15hEPadoZ5cHaV731KoG5hJUWNqx3k+44s1x3UbPVj0B9O9n05yQtgvFYhx6wZEE7DIb6UomxHiUuML0NEXDEzmHBZLQ1TKArcthzqo5Sg5EAlCehV9qcbpKL+pryg5irvWfM/IcTpr+iChvGGYkX2FQdT2psvHeRGqGU5Q==;
+Received: by lekensteyn.nl with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.84_2)
+        (envelope-from <peter@lekensteyn.nl>)
+        id 1i2k81-0001HF-Ng; Wed, 28 Aug 2019 00:39:54 +0200
+Date:   Tue, 27 Aug 2019 23:39:51 +0100
+From:   Peter Wu <peter@lekensteyn.nl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: Re: [PATCH 1/2] PCI: Add a helper to check Power Resource
+ Requirements _PR3 existence
+Message-ID: <20190827223951.GA27744@al>
+References: <20190827134756.10807-1-kai.heng.feng@canonical.com>
+ <s5hr2567hrd.wl-tiwai@suse.de>
+ <0379E973-651A-442C-AF74-51702388F55D@canonical.com>
+ <20190827221321.GA9987@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819160643.27998-3-efremov@linux.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190827221321.GA9987@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:06:41PM +0300, Denis Efremov wrote:
-> This patch replaces all consecutive switches of power and attention
-> indicators with pciehp_set_indicators() call. Thus, performing only
-> single write to a register.
+On Tue, Aug 27, 2019 at 05:13:21PM -0500, Bjorn Helgaas wrote:
+> [+cc Peter, Mika, Dave]
 > 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/hotplug/pciehp_ctrl.c | 19 ++++++++++---------
->  drivers/pci/hotplug/pciehp_hpc.c  |  4 ++--
->  2 files changed, 12 insertions(+), 11 deletions(-)
+> https://lore.kernel.org/r/20190827134756.10807-1-kai.heng.feng@canonical.com
 > 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 631ced0ab28a..232f7bfcfce9 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -42,8 +42,8 @@ static void set_slot_off(struct controller *ctrl)
->  		msleep(1000);
->  	}
->  
-> -	pciehp_green_led_off(ctrl);
-> -	pciehp_set_attention_status(ctrl, 1);
-> +	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-> +			      PCI_EXP_SLTCTL_ATTN_IND_ON);
->  }
->  
->  /**
-> @@ -90,8 +90,8 @@ static int board_added(struct controller *ctrl)
->  		}
->  	}
->  
-> -	pciehp_green_led_on(ctrl);
-> -	pciehp_set_attention_status(ctrl, 0);
-> +	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_ON,
-> +			      PCI_EXP_SLTCTL_ATTN_IND_OFF);
->  	return 0;
->  
->  err_exit:
-> @@ -172,8 +172,8 @@ void pciehp_handle_button_press(struct controller *ctrl)
->  				  slot_name(ctrl));
->  		}
->  		/* blink green LED and turn off amber */
-> -		pciehp_green_led_blink(ctrl);
-> -		pciehp_set_attention_status(ctrl, 0);
-> +		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
-> +				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
->  		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
->  		break;
->  	case BLINKINGOFF_STATE:
-> @@ -187,12 +187,13 @@ void pciehp_handle_button_press(struct controller *ctrl)
->  		cancel_delayed_work(&ctrl->button_work);
->  		if (ctrl->state == BLINKINGOFF_STATE) {
->  			ctrl->state = ON_STATE;
-> -			pciehp_green_led_on(ctrl);
-> +			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_ON,
-> +					      PCI_EXP_SLTCTL_ATTN_IND_OFF);
->  		} else {
->  			ctrl->state = OFF_STATE;
-> -			pciehp_green_led_off(ctrl);
-> +			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-> +					      PCI_EXP_SLTCTL_ATTN_IND_OFF);
->  		}
-> -		pciehp_set_attention_status(ctrl, 0);
->  		ctrl_info(ctrl, "Slot(%s): Action canceled due to button press\n",
->  			  slot_name(ctrl));
->  		break;
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 5474b9854a7f..aa4252d11be2 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -667,8 +667,8 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
->  	if ((events & PCI_EXP_SLTSTA_PFD) && !ctrl->power_fault_detected) {
->  		ctrl->power_fault_detected = 1;
->  		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
-> -		pciehp_set_attention_status(ctrl, 1);
-> -		pciehp_green_led_off(ctrl);
-> +		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-> +				      PCI_EXP_SLTCTL_ATTN_IND_ON);
->  	}
->  
->  	/*
-> -- 
-> 2.21.0
+> On Wed, Aug 28, 2019 at 12:58:28AM +0800, Kai-Heng Feng wrote:
+> > at 23:25, Takashi Iwai <tiwai@suse.de> wrote:
+> > > On Tue, 27 Aug 2019 15:47:55 +0200,
+> > > Kai-Heng Feng wrote:
+> > > > A driver may want to know the existence of _PR3, to choose different
+> > > > runtime suspend behavior. A user will be add in next patch.
+> > > > 
+> > > > This is mostly the same as nouveau_pr3_present().
+> > > 
+> > > Then it'd be nice to clean up the nouveau part, too?
+> > 
+> > nouveau_pr3_present() may call pci_d3cold_disable(), and my intention is to
+> > only check the presence of _PR3 (i.e. a dGPU) without touching anything.
 > 
+> It looks like Peter added that code with 279cf3f23870
+> ("drm/nouveau/acpi: use DSM if bridge does not support D3cold").
+> 
+> I don't understand the larger picture, but it is somewhat surprising
+> that nouveau_pr3_present() *looks* like a simple predicate with no
+> side-effects, but in fact it disables the use of D3cold in some cases.
 
+The reason for disabling _PR3 from that point on is because mixing the
+ACPI firmware code that uses power resources (_PR3) with the legacy
+_DSM/_PS0/_PS3 methods to manage power states could break as that
+combination is unlikely to be supported nor tested by firmware authors.
+
+If a user sets /sys/bus/pci/devices/.../d3cold_allowed to 0, then the
+pci_d3cold_disable call ensures that this action is remembered and
+prevents power resources from being used again.
+
+For example, compare this power resource _OFF code:
+https://github.com/Lekensteyn/acpi-stuff/blob/b55f6bdb/dsl/Clevo_P651RA/ssdt3.dsl#L454-L471
+
+with this legacy _PS0/_PS3 code:
+https://github.com/Lekensteyn/acpi-stuff/blob/b55f6bdb/dsl/Clevo_P651RA/ssdt7.dsl#L113-L142
+
+The power resource code checks the "MSD3" variable to check whether a
+transition to OFF is required while the legacy _PS3 checks "DGPS". The
+sequence PG00._OFF followed by _DSM (to to change "OPCE") and _PS3 might
+trigger some device-specific code twice and could lead to lockups
+(infinite loops polling for power state) or worse. I am not sure if I
+have ever tested this scenario however.
+
+> If the disable were moved to the caller, Kai-Heng's new interface
+> could be used both places.
+
+Moving the pci_d3cold_disable call to the caller looks reasonable to me.
+After the first patch gets merged, nouveau could use something like:
+
+    *has_pr3 = pci_pr3_present(pdev);
+    if (*has_pr3 && !pdev->bridge_d3) {
+        /*
+         * ...
+         */
+        pci_d3cold_disable(pdev);
+        *has_pr3 = false;
+    }
+
+
+For the 1/2 patch,
+Reviewed-by: Peter Wu <peter@lekensteyn.nl>
 -- 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Kind regards,
+Peter Wu
+https://lekensteyn.nl
