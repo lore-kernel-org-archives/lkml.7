@@ -2,154 +2,165 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5EDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D13C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C11206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:04:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="f+5hfHZV"
+	by mail.kernel.org (Postfix) with ESMTP id A4FB0214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfH0OE6 (ORCPT
+        id S1729726AbfH0OFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:04:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35930 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfH0OE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:04:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f19so11842212plr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 07:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=t9xctO/WP/vM2N5V7/AvRgZTobzXsqkZj3kzkKzY+c8=;
-        b=f+5hfHZV3TLUfwm18/n69YUcml42uyWVJgGc8yRGKvJ6GLp8HQG9luHFUXoEWzxjW0
-         O+XZZG7YHbCih0Dy6sejyDN6Z6kupVnFkKcRAermqU4rEN0pwLnKx+WS9sM/p6T7fmmU
-         L6JE3W2OMSlkM5Q39iwan4bJ/4NGnt+ah1qkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=t9xctO/WP/vM2N5V7/AvRgZTobzXsqkZj3kzkKzY+c8=;
-        b=lRMls6vpdC5Q5F6jGDyyxylVwHLh5JNMnQIrqjeEHpuJ1RCIihwpQgRC+22NRt3H9O
-         SB1wp3p2Wb6twrgKqlhI4yr9I/wv5cbn3c2nlMuRE+qS2+5dqUGjurtGKIfy3e2jBJ6n
-         BL+lPPypqxsb4n7cbl9trLM1TcXzcyr3AcwKNSQiym1uOfnw/S7/Cutla5ilOpsFJ4OR
-         pZ/m+F3Tsp4AsvLJ1RciPdhH3mwZaxhRJ0XuprTbUl7bNL0lnsaBali83WzjYmkKLzTP
-         apzZndegdo97SRWYi/k1D7DFVb5NTjGVptkRVBUCPvekgCOIf7poDy7RHCuf0u61a3Hn
-         HQEQ==
-X-Gm-Message-State: APjAAAWYfK5Wn9KLEXehHxeDxFZ7rg/aNdB/ge3sPPDyslReIrmGEWIE
-        YtZifN6N1Y1mgfJeamfVVaf0ww==
-X-Google-Smtp-Source: APXvYqyj0rYfewcCj6c1ycF9gMEuwWvzV9FIgo+OumVuJdxKjZsukAJMiIcCF0D+WMeg/csHRIWD2A==
-X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr24484244plm.306.1566914697754;
-        Tue, 27 Aug 2019 07:04:57 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id r61sm2282367pjb.7.2019.08.27.07.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 10:05:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30685 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbfH0OFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 10:05:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2019 07:05:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,437,1559545200"; 
+   d="scan'208";a="197314678"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2019 07:05:01 -0700
+Received: from [10.255.129.116] (unknown [10.255.129.116])
+        by linux.intel.com (Postfix) with ESMTP id 13641580375;
         Tue, 27 Aug 2019 07:04:56 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: powerpc asm-prototypes.h seems odd
-In-Reply-To: <CAK7LNATg7O0ZQQ4fe2maNqf0ascHU8b2Mfnqkrxzpzj8D_X7pQ@mail.gmail.com>
-References: <CAK7LNATg7O0ZQQ4fe2maNqf0ascHU8b2Mfnqkrxzpzj8D_X7pQ@mail.gmail.com>
-Date:   Wed, 28 Aug 2019 00:04:38 +1000
-Message-ID: <871rx64scp.fsf@dja-thinkpad.axtens.net>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
+ Reset controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+ <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
+ <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
+ <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <c052e984-1144-6dc1-651a-8d9c924a1da9@linux.intel.com>
+Date:   Tue, 27 Aug 2019 22:04:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+Hi Rob,
 
-> Hi.
->
-> Lots of powerpc files include <asm/asm-prototypes.h>,
-> and powerpc is the only architecture that does this.
->
-> <asm/asm-prototypes.h> exists to support modversion for asm.
-> So, it is supposed to be parsed by genksysms, not to be
-> included from other files.  Right?
+On 8/26/2019 7:23 PM, Rob Herring wrote:
+> On Mon, Aug 26, 2019 at 4:52 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>> Hi Rob,
+>>
+>> On 8/23/2019 8:25 PM, Rob Herring wrote:
+>>> On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>>>> Add YAML schemas for the reset controller on Intel
+>>>> Lightening Mountain (LGM) SoC.
+>>>>
+>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>>> ---
+>>>> Changes on v2:
+>>>>       Address review comments
+>>>>         Update the compatible property definition
+>>>>         Add description for reset-cells
+>>>>         Add 'additionalProperties: false' property
+>>>>
+>>>>    .../bindings/reset/intel,syscon-reset.yaml         | 53 ++++++++++++++++++++++
+>>>>    1 file changed, 53 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..3403a967190a
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>>> @@ -0,0 +1,53 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Intel Lightening Mountain SoC System Reset Controller
+>>>> +
+>>>> +maintainers:
+>>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    items:
+>>>> +      - const: intel,rcu-lgm
+>>>> +      - const: syscon
+>>>> +
+>>>> +  reg:
+>>>> +    description: Reset controller register base address and size
+>>>> +
+>>>> +  intel,global-reset:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +    description: Global reset register offset and bit offset.
+>>>> +
+>>>> +  "#reset-cells":
+>>>> +    const: 2
+>>>> +    description: |
+>>>> +      The 1st cell is the register offset.
+>>>> +      The 2nd cell is the bit offset in the register.
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +  - intel,global-reset
+>>>> +  - "#reset-cells"
+>>>> +
+>>>> +additionalProperties: false
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    rcu0: reset-controller@00000000 {
+>>>> +        compatible = "intel,rcu-lgm", "syscon";
+>>>> +        reg = <0x000000 0x80000>;
+>>>> +        intel,global-reset = <0x10 30>;
+>>>> +        #reset-cells = <2>;
+>>>> +    };
+>>>> +
+>>>> +    pcie_phy0: pciephy@... {
+>>>> +        ...
+>>> You need to run 'make dt_binding_check' and fix the warnings. The
+>>> example has to be buildable and it is not.
+>> Sure, i  will correct this pcie_phy0 node. But i didn't get any warnings
+>> for make dt_binding_check
+>>
+>>     CHKDT Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>> DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+>> FATAL ERROR: Unknown output format "yaml"
+>>
+>> Will DTC report about the example node errors? But, DTC is failing with
+>> FATAL_ERROR.
+>> I tried it even after installing libyaml and headers in my local
+>> directory and export the path, but no luck.(ref:
+>> https://lkml.org/lkml/2018/12/3/951)
+>> Could you please let me know if i miss anything and help me to proceed
+>> further.
+> See Documentation/devicetree/writing-schema.md
 
-It exists to support sparse, squashing a bunch of sparse warnings.
-
-From the commit where I introduced it:
-
-commit 42f5b4cacd783faf05e3ff8bf85e8be31f3dfa9d
-Author: Daniel Axtens <dja@axtens.net>
-Date:   Wed May 18 11:16:50 2016 +1000
-
-    powerpc: Introduce asm-prototypes.h
-    
-    Sparse picked up a number of functions that are implemented in C and
-    then only referred to in asm code.
-    
-    This introduces asm-prototypes.h, which provides a place for
-    prototypes of these functions.
-    
-    This silences some sparse warnings.
-    
-    Signed-off-by: Daniel Axtens <dja@axtens.net>
-    [mpe: Add include guards, clean up copyright & GPL text]
-    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+I have followed all the steps mentioned in the document before keeping 
+the mail itself.
+Does the dtc script looks for libyaml and its header files at any 
+default or specific location?
 
 Regards,
-Daniel
+Dilip
+
 
 >
->
-> $  git grep  asm/asm-prototypes.h
-> arch/arm64/include/asm/asm-prototypes.h: * ... kbuild will
-> automatically pick these up from <asm/asm-prototypes.h> and
-> arch/powerpc/kernel/early_32.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/irq.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/machine_kexec_64.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/process.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/prom_init.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/ptrace.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/security.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/setup_32.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/signal_32.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/signal_64.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/smp.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/syscalls.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/tau_6xx.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/time.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/trace/ftrace.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kernel/traps.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kvm/book3s_emulate.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kvm/book3s_hv.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kvm/book3s_hv_builtin.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kvm/book3s_hv_rm_xive.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/kvm/book3s_pr.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/lib/vmx-helper.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/mm/book3s64/hash_utils.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/mm/book3s64/slb.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/platforms/powernv/idle.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/platforms/powernv/opal-call.c:#include <asm/asm-prototypes.h>
-> arch/powerpc/platforms/powernv/opal-tracepoints.c:#include
-> <asm/asm-prototypes.h>
-> arch/powerpc/platforms/pseries/lpar.c:#include <asm/asm-prototypes.h>
-> scripts/Makefile.build:# .S file exports must have their C prototypes
-> defined in asm/asm-prototypes.h
-> scripts/Makefile.build:     echo "\#include <asm/asm-prototypes.h>" ;
->                             \
-> scripts/Makefile.build:ASM_PROTOTYPES := $(wildcard
-> $(srctree)/arch/$(SRCARCH)/include/asm/asm-prototypes.h)
->
->
->
-> -- 
-> Best Regards
-> Masahiro Yamada
+> Rob
