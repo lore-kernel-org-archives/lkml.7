@@ -2,293 +2,222 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C5AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E1FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE36B21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17477205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp3gfkFi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B7HB8HTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfH0HMg (ORCPT
+        id S1728336AbfH0HNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:12:36 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:33497 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfH0HMg (ORCPT
+        Tue, 27 Aug 2019 03:13:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59814 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfH0HNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:12:36 -0400
-Received: by mail-yw1-f67.google.com with SMTP id e65so7551395ywh.0;
-        Tue, 27 Aug 2019 00:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tu5xcNElhBaNnfeG0jVQbHeyzi3d6ikBp6zzIrvcXtw=;
-        b=cp3gfkFiu31HWR9vnfOFwlABLnsyBxCJ9ycKKjNtISpm2YWxnn5n+AiDgdO+CMtqzx
-         mB+V8ZjrjTbxAIlyLglRqu8OFbw23CSxqufF8vtslc8c9N/b+suywUCnupVMHzEnJdVT
-         MwPvD1zlTGnBQTSEWhwoHmltmguEFtVvUfeokgxYqhwgegYCq5j1edE6otSMcbOQXgQ8
-         SHSZevGIzuKpcKzFwggCpRV6aDFZQhAfsEsx08Sln1pg5q0xa7KMRRGOSLZl0KOdsdFW
-         zF9r3o6dTT6XkC0LC4MJ0XfW0PBlt7xadJ4lwdXY7MJwkTKd8aSGqvLhMWXmE/EIQINO
-         1igg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tu5xcNElhBaNnfeG0jVQbHeyzi3d6ikBp6zzIrvcXtw=;
-        b=s8vew9CUwa1ghp9Vg1DoUZJ4LPpt7l0cJn82LaBsBT83+qjgQQRFh87oBHXj5zfnh1
-         XyR61GPSAFx44Yj7/2BNGhw6zN0ER21hzLwTBH5fKAQDehwz7+KRBMtlb0DJZLM2FhZj
-         vfpe0fodisbOG0LUvaHqHgt+4Vf66kz4JcTD1A+FRHHB/K/lpECFke9V84G1OreW8yUD
-         jqnDu1TmOA4Fhlk/b7DFmkw6UDz2Yykz8PYXAXNL5eSfhvYoYBbDHJzPQj7PZfn/zTbs
-         Bcue/dp+vnzw1rixqF7+QGhCwhZT2vXBDnwjsK5flqqkhxqtwb7T8tOTGEgXJKlieAVw
-         w0eQ==
-X-Gm-Message-State: APjAAAWhg/6s3xRYO156pex94LQta8ocCU8Riqsjxy4w73Mc3k9Id0AL
-        OvTgKOaK5Ro0COsLHZFrLJ2buvDBzydrEEHFRuY=
-X-Google-Smtp-Source: APXvYqykMWKW8pwv+Tys0T7QhtHLFhPv95dbvkyOqQBMPqRNahlsqWe1Z35At/qshXxc70ZxCuZ7yUTjVqhfzKH63EU=
-X-Received: by 2002:a0d:d596:: with SMTP id x144mr14943989ywd.69.1566889955150;
- Tue, 27 Aug 2019 00:12:35 -0700 (PDT)
+        Tue, 27 Aug 2019 03:13:13 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R7D0kq131025;
+        Tue, 27 Aug 2019 02:13:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566889980;
+        bh=Qz1caDsmTLrcgY1LRoE54Osz0mu6gtZdadLVqIgskSo=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=B7HB8HTBua5z0KnMw9zNx6j9kSItbx5sZCqo1X8Fwsr4UyxzDWxGv7NlFsrfSB1sb
+         Oqxxg1/AOu0yXCs6k6/nBJhhKjvf49y6kwp+Hkdim9aE9Nx6frza6vYjo86gzb+CDc
+         JMrgxOdPdE4WyUGowJy0+A49YLpo9auoD+pKRo8s=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R7D0O6007391
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 27 Aug 2019 02:13:00 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
+ Aug 2019 02:13:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 27 Aug 2019 02:13:00 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R7Cu87034505;
+        Tue, 27 Aug 2019 02:12:57 -0500
+Subject: Re: [RESEND PATCH v3 13/20] mtd: spi-nor: Add a ->convert_addr()
+ method
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
+        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
+ <20190826120821.16351-14-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <b6db18f9-3eb9-6bd6-8a9a-3b7320c48739@ti.com>
+Date:   Tue, 27 Aug 2019 12:43:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190826074400.54794-1-kkamagui@gmail.com> <20190826113239.2tliwil35gsqap54@linux.intel.com>
-In-Reply-To: <20190826113239.2tliwil35gsqap54@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Tue, 27 Aug 2019 16:12:23 +0900
-Message-ID: <CAHjaAcTw5O+UNf6OEhLFaosx+4Yx6HtxbJ4RQsPPBVUUhANh4g@mail.gmail.com>
-Subject: Re: [PATCH] tpm: tpm_crb: Fix an improper buffer size calculation bug
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190826120821.16351-14-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Mon, Aug 26, 2019 at 04:44:00PM +0900, Seunghun Han wrote:
-> > I'm Seunghun Han and work at the Affiliated Institute of ETRI. I found
->
-> You can drop the first sentence from the commit message. The SoB below
-> is sufficient.
 
-Thank you, and I will remove it from next version of the patch.
 
-> > a bug related to improper buffer size calculation in crb_fixup_cmd_size
-> > function.
->
-> The purpose is to cap to the ACPI region when we partially overlap to
-> workaround BIOS's reporting corrupted ACPI tables so that we don't get
-> failure from devm_ioremap().
->
-> The only funky thing in that function is that it lets through a buffer
-> that is fully outside the ACPI region. There actually exists hardware
-> with this configuration.
+On 26/08/19 5:38 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Boris Brezillon <boris.brezillon@bootlin.com>
+> 
+> In order to separate manufacturer quirks from the core we need to get
+> rid of all the manufacturer specific flags, like the
+> SNOR_F_S3AN_ADDR_DEFAULT one.
+> 
+> This can easily be replaced by a ->convert_addr() hook, which when
+> implemented will provide the core with an easy way to convert an
+> absolute address into something the flash understands.
+> 
+> Right now the only user are the S3AN chips, but other manufacturers
+> can implement it if needed.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
 
-Yes, I know it. However, my machine has two ACPI regions (command
-buffer and response buffer) below, and the crb_fixup_cmd_size()
-function couldn't check the point, "a buffer that if fully outside the
-ACPI region". I will explain the exact case at the end of my email.
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-79a39000-79b6afff : ACPI Non-volatile Storage
-  79b4b000-79b4bfff : MSFT0101:00
-  79b4f000-79b4ffff : MSFT0101:00
+Regards
+Vignesh
 
-> > When the TPM CRB regions are two or more, the crb_map_io function calls
-> > crb_fixup_cmd_size twice to calculate command buffer size and response
-> > buffer size. The purpose of crb_fixup_cmd_size function is to trust
-> > the ACPI region information.
->
-> This is not true. The driver deals with only one ACPI region ATM.
+> v3: no changes, rebase on previous commits
+> 
+>  drivers/mtd/spi-nor/spi-nor.c | 24 ++++++++++++++----------
+>  include/linux/mtd/spi-nor.h   | 17 ++++++++++-------
+>  2 files changed, 24 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index c862a59ce9df..b96a7066a36c 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -899,10 +899,9 @@ static void spi_nor_unlock_and_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
+>   * Addr can safely be unsigned int, the biggest S3AN device is smaller than
+>   * 4 MiB.
+>   */
+> -static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
+> +static u32 s3an_convert_addr(struct spi_nor *nor, u32 addr)
+>  {
+> -	unsigned int offset;
+> -	unsigned int page;
+> +	u32 offset, page;
+>  
+>  	offset = addr % nor->page_size;
+>  	page = addr / nor->page_size;
+> @@ -911,6 +910,14 @@ static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
+>  	return page | offset;
+>  }
+>  
+> +static u32 spi_nor_convert_addr(struct spi_nor *nor, loff_t addr)
+> +{
+> +	if (!nor->params.convert_addr)
+> +		return addr;
+> +
+> +	return nor->params.convert_addr(nor, addr);
+> +}
+> +
+>  /*
+>   * Initiate the erasure of a single sector
+>   */
+> @@ -918,8 +925,7 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+>  {
+>  	int i;
+>  
+> -	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
+> -		addr = spi_nor_s3an_addr_convert(nor, addr);
+> +	addr = spi_nor_convert_addr(nor, addr);
+>  
+>  	if (nor->erase)
+>  		return nor->erase(nor, addr);
+> @@ -2535,8 +2541,7 @@ static int spi_nor_read(struct mtd_info *mtd, loff_t from, size_t len,
+>  	while (len) {
+>  		loff_t addr = from;
+>  
+> -		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
+> -			addr = spi_nor_s3an_addr_convert(nor, addr);
+> +		addr = spi_nor_convert_addr(nor, addr);
+>  
+>  		ret = spi_nor_read_data(nor, addr, len, buf);
+>  		if (ret == 0) {
+> @@ -2680,8 +2685,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
+>  		page_remain = min_t(size_t,
+>  				    nor->page_size - page_offset, len - i);
+>  
+> -		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
+> -			addr = spi_nor_s3an_addr_convert(nor, addr);
+> +		addr = spi_nor_convert_addr(nor, addr);
+>  
+>  		write_enable(nor);
+>  		ret = spi_nor_write_data(nor, addr, page_remain, buf + i);
+> @@ -2748,7 +2752,7 @@ static int s3an_nor_scan(struct spi_nor *nor)
+>  		nor->mtd.erasesize = 8 * nor->page_size;
+>  	} else {
+>  		/* Flash in Default addressing mode */
+> -		nor->flags |= SNOR_F_S3AN_ADDR_DEFAULT;
+> +		nor->params.convert_addr = s3an_convert_addr;
+>  	}
+>  
+>  	return 0;
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index ea3bcac54dc2..35aad92a4ff8 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -237,13 +237,12 @@ enum spi_nor_option_flags {
+>  	SNOR_F_USE_FSR		= BIT(0),
+>  	SNOR_F_HAS_SR_TB	= BIT(1),
+>  	SNOR_F_NO_OP_CHIP_ERASE	= BIT(2),
+> -	SNOR_F_S3AN_ADDR_DEFAULT = BIT(3),
+> -	SNOR_F_READY_XSR_RDY	= BIT(4),
+> -	SNOR_F_USE_CLSR		= BIT(5),
+> -	SNOR_F_BROKEN_RESET	= BIT(6),
+> -	SNOR_F_4B_OPCODES	= BIT(7),
+> -	SNOR_F_HAS_4BAIT	= BIT(8),
+> -	SNOR_F_HAS_LOCK		= BIT(9),
+> +	SNOR_F_READY_XSR_RDY	= BIT(3),
+> +	SNOR_F_USE_CLSR		= BIT(4),
+> +	SNOR_F_BROKEN_RESET	= BIT(5),
+> +	SNOR_F_4B_OPCODES	= BIT(6),
+> +	SNOR_F_HAS_4BAIT	= BIT(7),
+> +	SNOR_F_HAS_LOCK		= BIT(8),
+>  };
+>  
+>  /**
+> @@ -496,6 +495,9 @@ struct spi_nor_locking_ops {
+>   *                      Table.
+>   * @quad_enable:	enables SPI NOR quad mode.
+>   * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
+> + * @convert_addr:	converts an absolute address into something the flash
+> + *                      will understand. Particularly useful when pagesize is
+> + *                      not a power-of-2.
+>   * @locking_ops:	SPI NOR locking methods.
+>   */
+>  struct spi_nor_flash_parameter {
+> @@ -510,6 +512,7 @@ struct spi_nor_flash_parameter {
+>  
+>  	int (*quad_enable)(struct spi_nor *nor);
+>  	int (*set_4byte)(struct spi_nor *nor, bool enable);
+> +	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
+>  
+>  	const struct spi_nor_locking_ops *locking_ops;
+>  };
+> 
 
-Yes, the driver deals with only one ACPI region, and it works fine in
-most cases. However, two ACPI regions are in the system like above,
-then crb_map_io() function calls crb_map_res() function twice.
-crb_map_res() function calls devm_ioremap_resouce(). So, TPM CRB
-driver handles two separated regions, command buffer and response
-buffer. I will also explain in detail at the end of my email.
-
->
-> > However, the function compares only io_res argument with start and size
-> > arguments.  It means the io_res argument is one of command buffer and
-> > response buffer regions. It also means the other region is not calculated
-> > correctly by the function because io_res argument doesn't cover all TPM
-> > CRB regions.
->
-> The driver gets command and response buffer metrics from the TPM2 ACPI
-> table, not from the ACPI region.
-
-I'm sorry for my mistake. I checked it.
-
->
-> > To fix this bug, I change crb_check_resource function for storing all TPB
-> > CRB regions to a list and use the list to calculate command buffer size
-> > and response buffer size correctly.
->
-> This cannot be categorized as a bug. It is simply as new type of hardware.
-> Can you explain in detail what type of hardware are you using?
-
-I will also explain it at the end of my email.
-
->
-> > ---
-> >  drivers/char/tpm/tpm_crb.c | 50 ++++++++++++++++++++++++++------------
-> >  1 file changed, 34 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> > index e59f1f91d7f3..b0e94e02e5eb 100644
-> > --- a/drivers/char/tpm/tpm_crb.c
-> > +++ b/drivers/char/tpm/tpm_crb.c
-> > @@ -442,6 +442,9 @@ static int crb_check_resource(struct acpi_resource *ares, void *data)
-> >           acpi_dev_resource_address_space(ares, &win)) {
-> >               *io_res = *res;
-> >               io_res->name = NULL;
-> > +
-> > +             /* Add this TPM CRB resource to the list */
-> > +             return 0;
-> >       }
-> >
-> >       return 1;
-> > @@ -471,20 +474,30 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
-> >   * region vs the registers. Trust the ACPI region. Such broken systems
-> >   * probably cannot send large TPM commands since the buffer will be truncated.
-> >   */
-> > -static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
-> > +static u64 crb_fixup_cmd_size(struct device *dev, struct list_head *resources,
-> >                             u64 start, u64 size)
->
-> With a quick spin w/o knowing the details of the hardware I'm dealing
-> with it you should probably reduce the fixup function as
->
-> static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
->                               u64 start, u64 size)
-> {
->         if (start + size - 1 <= io_res->end)
->                  return size;
->
->         dev_err(dev,
->                  FW_BUG "ACPI region does not cover the entire command/response buffer. %pr vs %llx %llx\n",
->                  io_res, start, size);
->
->         return io_res->end - start + 1;
-> }
->
-> Then call this inside the loop.
-
-Thank you for your advice. I will change it on your advice.
-
->
-> Looking at your change it does not make much sense to me.
->
-> There is a weird asymmetry in it:
->
-> 1. The code loops through all found ACPI regions when looking for
->    intersections with the command and response buffers.
-> 2. The devm_ioremap() is done only to the last seen ACPI region. Why the
->    multiple regions matter for fixup's but not in this case?
->
-> /Jarkko
-
-I got an AMD system which had a Ryzen Threadripper 1950X and MSI
-mainboard. I had a problem with AMD's fTPM, and my machine showed an
-error message below.
-
-[  5.732084] tpm_crb MSFT0101:00: can't request region for resource
-[mem 0x79b4f000-0x79b4ffff]
-[  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
-
-When I saw the iomem, I found two fTPM regions were in the ACPI NVS
-area. The regions are below.
-
-79a39000-79b6afff : ACPI Non-volatile Storage
-  79b4b000-79b4bfff : MSFT0101:00
-  79b4f000-79b4ffff : MSFT0101:00
-
-I analyzed this issue and will explain in detail what happened in my system.
-1) When the system was booted, acpi_bus_scan() function found two
-MSFT0101:00 resources and inserted them into iomem_resource. The
-regions were [0x79b4b000-0x79b4bfff] and [0x79b4f000-0x79b4ffff]. From
-now, I will call the first one Region A and the second one Region B.
-
-2) When the tpm_crb driver was loaded, crb_map_io() function was
-called. Then, crb_map_io() called acpi_dev_get_resources(), and it got
-Region B for the io_res variable because it found the last region from
-iomem_resource as you said.
-
-3) crb_map_io() function called devm_ioremap_resource() with io_res
-(Region B). However, it returned fail because ACPI NVS area was set to
-the busy area.
-
-4*) So, I removed the busy bit from ACPI NVS by changing
-do_mark_busy() function. I sent the patch to you and here is the link,
-https://lkml.org/lkml/2019/8/26/163 . After patching it,
-devm_ioremap_resource() returned successfully. Then, crb_map_io()
-called crb_map_res() with io_res and buf->control_address variables,
-and it also returned successfully.
-
-5)  crb_map_io() got command buffer's physical address and size from
-priv->regs_t->ctrl_cmd_pa_high/low and ctrl_cmd_size. The results were
-that cmd_pa was 0x79b4b000 and the size was 0x4000. cmd_pa was in
-Region A, however, io_res was Region B as I mentioned before. So, when
-crb_map_io() called crb_fixup_cmd_size() with io_res and 0x4000
-arguments, the function returned 0x4000, not 0xfff becuase cmd_pa was
-outside of Region B.
-
-6) crb_map_io() called crb_map_res() with io_res (Region B), cmd_pa
-(Region A), and cmd_size (0x4000), then the crb_map_res() tried to
-call devm_ioremap_resource() because io_res didn't contain cmd_pa and
-size. But, Region A's size was 0xfff, so devm_ioremap_resource()
-couldn't allocate resource and failed. If crb_fixup_cmd_size()
-compared cmd_pa/size with all regions, it could find Region A and
-return the correct size 0xfff.
-
-7*) So, I changed crb_fixup_cmd_size() with the attached patch so that
-it compared arguments with all regions. After that, the function
-returned the correct size 0xfff, and crb_map_res() added Region A and
-returned successfully.
-
-8) crb_map_io() got response buffer's physical address and size from
-priv->regs_t->ctrl_rsp_pa and ctrl_rsp_size. The results were that
-rsp_pa was 0x79b4f000 and the size is 0x4000. rsp_pa was in Region B,
-and the new crb_fixup_cmd_size() I fixed returned 0xfff.
-
-9) crb_map_io() called crb_map_res() with rsp_pa (Region B) and
-rsp_size (0xfff) because cmd_pa (0x79b4b000) was not equal to rsp_pa
-(0x79b4f000). The function returned successfully, and TPM was also
-registered successfully.
-
-10*) After applying my patches, AMD's fTPM worked fine and final iomem is below.
-
-79a39000-79b6afff : ACPI Non-volatile Storage
-  79b4b000-79b4bfff : MSFT0101:00
-    79b4b000-79b4bfff : MSFT0101:00
-  79b4f000-79b4ffff : MSFT0101:00
-    79b4f000-79b4ffff : MSFT0101:00
-
-Lastly, I would like to answer your two questions and request something.
-
-> 1. The code loops through all found ACPI regions when looking for
->    intersections with the command and response buffers.
-
-As I said, the purpose of the code loop is to find the exact buffer
-size and so that I don't get failure from crb_map_res and(). If it
-doesn't check all regions, then it returns the passed size again and
-causes failure.
-
-> 2. The devm_ioremap() is done only to the last seen ACPI region. Why the
->    multiple regions matter for fixup's but not in this case?
-
-Actually, if the system has two regions as you have seen above,
-devm_ioremap() is called again because of crb_map_res() function. So,
-multiple regions are matters in this case.
-
-If you are OK, I would like to make a patch v2 on your advice. I also
-would like to ask you about the other patch I sent to you,
-https://lkml.org/lkml/2019/8/26/163 . Would you give me some advice
-about them?
-
-Seunghun
+-- 
+Regards
+Vignesh
