@@ -2,182 +2,101 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7102C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D3CC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C925206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJ2iFn7a"
+	by mail.kernel.org (Postfix) with ESMTP id 8363821872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 09:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbfH0Jbm (ORCPT
+        id S1729880AbfH0Jba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 05:31:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41513 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729784AbfH0Jbk (ORCPT
+        Tue, 27 Aug 2019 05:31:30 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:11957 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729750AbfH0Jb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 05:31:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so12362241pgg.8;
-        Tue, 27 Aug 2019 02:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=5MtLSAT1Tzreq71yap21NOgQKtdyfFLfctGgPcM22Ac=;
-        b=WJ2iFn7a4d3B1jfWkj5NB6w9UELUqGuxBy8jHmT3dPX0RHhuG/77r0Yc/jV6YAT5ko
-         ktemwF5n8CFmGSN/rGtJuEnXtS3sAeh/cM8ggJt+1dCwapM9BsAlBF46X1pmZ0hOjK87
-         4pQEIXdmYheYx1tELuDdQqOhLpTslNKH8dMG7ySRIv5lB0yhlt63dj8nrvc3pzyHg7pN
-         OTr3btE5/znCf4SXO09lXXdwtmOrfw5R8MRROnwK6VqVc3r03aMSmkE/9g1kxIpZoJq/
-         yIVZ2V6erW8n8hN2n8D4PfCCKLZrn7Fg9UpqWFm1R2680PBFtdV+Y+6TrTevUOTWOITC
-         L/6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=5MtLSAT1Tzreq71yap21NOgQKtdyfFLfctGgPcM22Ac=;
-        b=jIa1FTypTs0htNj7LjFliYm22PI3LLcG3A6hjP+E8xxi6NzamHOTSXH4TEaV9ZMrUb
-         q2eP351kzzuJH4FttmfhWH1t1+58S5ZxqMX/A955Sn0lZqHYu9/1BUXwJg6ecM5dkshf
-         tjPhWSdmMTM25mKC0K7AdDrAG+z84Zl34xSG92Zqhvaz5v0/IQb+hioj5elzGd6Hf6AC
-         u0EN9TYv39YJ8Qzeqg9wyBxZjLc97QOhs/w5RW1Tfb/q81djbf4ZEyusQM8MkJ4OZRIF
-         /YlmaAJ6dtLhbQSqRXoJvAaMTO/y3YSruRV2BEldQKf1TzOQ9Spg+jB4zoqHhjCL71zh
-         T1jQ==
-X-Gm-Message-State: APjAAAVXaZHx58JrTQw8SqUWZCoO2L744gmAkXnaK9CDsWN3DBZhefkB
-        PnbJVPTDKq+pnfprJ83Bhhhx5GgH
-X-Google-Smtp-Source: APXvYqzbH2MqlG3cteW7VGmAj5Ut/iP40M4geGhNHMTdbaRYpe3f/DbZvtF5+JKagO3P/GiOz/y7Bw==
-X-Received: by 2002:aa7:8a04:: with SMTP id m4mr24834217pfa.65.1566898299133;
-        Tue, 27 Aug 2019 02:31:39 -0700 (PDT)
-Received: from localhost (14-202-91-55.tpgi.com.au. [14.202.91.55])
-        by smtp.gmail.com with ESMTPSA id l7sm9826287pff.35.2019.08.27.02.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2019 02:31:38 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 19:31:02 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC 0/3] New idle device-tree format and support for versioned
- stop state
-To:     devicetree@vger.kernel.org,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        paulus@samba.org
-Cc:     daniel.lezcano@linaro.org, ego@linux.vnet.ibm.com,
-        mikey@neuling.org, mpe@ellerman.id.au, rjw@rjwysocki.net,
-        svaidy@linux.ibm.com
-References: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
-In-Reply-To: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+        Tue, 27 Aug 2019 05:31:27 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Razvan.Stefanescu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Razvan.Stefanescu@microchip.com";
+  x-sender="Razvan.Stefanescu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Razvan.Stefanescu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Razvan.Stefanescu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: WU9m2Yh9AyzMQi/6XtTrKZl0vfA1qPyDztmnC1ra1IDqZ105/A1q2N9zGWqO3RtCa6Q3JDdsuk
+ ifmt9MFhNsp7LAYLLbNELOFJJtrqQS/rqYfJSu+cVUUAlm9SlumiQrSdUP+liMRQAp7noqb9po
+ 21NCCNJdeZvL3oCPfAs9nW1xSq7NgVXq6xVTW/EeWroIdO/cIUTsKL7YgNCsOQmoSviSb8qe4y
+ GZILk1FJEuJJ7jQtydK/lr4/3hgEfHdrc6/f+XbabrwIHtW9X92mSRVs+/np7iUR6tRVs+nXjw
+ uoA=
+X-IronPort-AV: E=Sophos;i="5.64,436,1559545200"; 
+   d="scan'208";a="46731630"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Aug 2019 02:31:26 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 27 Aug 2019 02:31:25 -0700
+Received: from rob-ult-m50855.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Tue, 27 Aug 2019 02:31:23 -0700
+From:   Razvan Stefanescu <razvan.stefanescu@microchip.com>
+To:     Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Razvan Stefanescu" <razvan.stefanescu@microchip.com>
+Subject: [PATCH 2/4] net: dsa: microchip: add KSZ8563 compatibility string
+Date:   Tue, 27 Aug 2019 12:31:08 +0300
+Message-ID: <20190827093110.14957-3-razvan.stefanescu@microchip.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190827093110.14957-1-razvan.stefanescu@microchip.com>
+References: <20190827093110.14957-1-razvan.stefanescu@microchip.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1566894003.kb57vy8ri2.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Abhishek Goel's on August 23, 2019 5:09 pm:
-> Background
-> ------------------
->=20
-> Previously if a older kernel runs on a newer firmware, it may enable
-> all available states irrespective of its capability of handling it.
-> Consider a case that some stop state has a bug, we end up disabling all
-> the stop states. This patch introduces selective control to solve this
-> problem.
->=20
-> Previous version of these patches can be found at:
-> https://lkml.org/lkml/2018/10/11/544
-> These patch however also had patches for support of opal save-restore
-> which now I am decoupling and will take them seperately.
-> I have posted the corresponding skiboot patches for this kernel patchset
-> here : https://patchwork.ozlabs.org/cover/1144587/
->=20
-> What's new?
-> --------------------
->=20
-> Add stop states under ibm,idle-states in addition to the current array
-> based device tree properties.
->=20
-> New device tree format adds a compatible flag which has version
-> corresponding to every state, so that only kernel which has the capabilit=
-y
-> to handle the version of stop state will enable it. Drawback of the array
-> based dt node is that versioning of idle states is not possible.
->=20
-> Older kernel will still see stop0 and stop0_lite in older format and we
-> will deprecate it after some time.
->=20
-> Consider a case that stop4 has a bug. We take the following steps to
-> mitigate the problem.
->=20
-> 1) Change compatible string for stop4 in OPAL to "stop4,v2" from
-> "stop4,v1", i.e. basicallly bump up the previous version and ship the
-> new firmware.
->=20
-> 2) The kernel will ignore stop4 as it won't be able to recognize this
-> new version. Kernel will also ignore all the deeper states because its
-> possible that a cpu have requested for a deeper state but was never able
-> to enter into it. But we will still have shallower states that are there
-> before stop 4. This, thus prevents from completely disabling stop states.
->=20
-> Linux kernel can now look at the version string and decide if it has the
-> ability to handle that idle state. Henceforth, if kernel does not know
-> about a version, it will skip that state and all the deeper state.
->=20
-> Once when the workaround are implemented into the kernel, we can bump up
-> the known version in kernel for that state, so that support can be
-> enabled once again in kernel.
->=20
-> New Device-tree :
->=20
-> Final output
->        power-mgt {
->             ...
->          ibm,enabled-stop-levels =3D <0xec000000>;
->          ibm,cpu-idle-state-psscr-mask =3D <0x0 0x3003ff 0x0 0x3003ff>;
->          ibm,cpu-idle-state-latencies-ns =3D <0x3e8 0x7d0>;
->          ibm,cpu-idle-state-psscr =3D <0x0 0x330 0x0 0x300330>;
->          ibm,cpu-idle-state-flags =3D <0x100000 0x101000>;
->          ibm,cpu-idle-state-residency-ns =3D <0x2710 0x4e20>;
->          ibm,idle-states {
->                      stop4 {
->                          flags =3D <0x207000>;
->                          compatible =3D "stop4,v1",
->                          psscr-mask =3D <0x0 0x3003ff>;
->                          latency-ns =3D <0x186a0>;
->                          residency-ns =3D <0x989680>;
->                          psscr =3D <0x0 0x300374>;
-> 			 ...
->                   };
->                     ...
->                     stop11 {
->                          ...
->                          compatible =3D "stop11,v1",
->                          ...
->                   };
->              };
+It is a 3-Port 10/100 Ethernet Switch with 1588v2 PTP.
 
-I'm not sure about this. I think the real problem we have is that the
-OPAL stop API is not actually implementation independent. Because we
-*can* selectively disable stop states in the firmware if there is a
-hardware/firmware problem with them.
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+---
+ drivers/net/dsa/microchip/ksz9477_spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-So we need a way to rev ISA/Book4/OPAL stuff so the kernel won't try
-to use it if it's incapable.
+diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
+index a226b389e12d..2e402e4d866f 100644
+--- a/drivers/net/dsa/microchip/ksz9477_spi.c
++++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+@@ -80,6 +80,7 @@ static const struct of_device_id ksz9477_dt_ids[] = {
+ 	{ .compatible = "microchip,ksz9897" },
+ 	{ .compatible = "microchip,ksz9893" },
+ 	{ .compatible = "microchip,ksz9563" },
++	{ .compatible = "microchip,ksz8563" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
+-- 
+2.20.1
 
-We have that today in dt-cpu-ftrs. POWER9 advertises the "idle-stop"
-feature. An incompatible implementation could advertise idle-stop-v4.
-
-That won't allow individual states to remain back compatible, but if=20
-there is a new implementation which changes any behaviour it needs to be=20
-incopmatible, even if Linux happens to not rely on said behaviour yet. =20
-So I don't think we can keep any of them (except stop0 lite) compatible,=20
-so I don't see a real downside (we'll have to discuss this offline).
-
-Thanks,
-Nick
-=
