@@ -2,70 +2,72 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFFDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F05C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50532077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F2D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="thwZre+v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cr6sZbnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbfH0Uk2 (ORCPT
+        id S1730582AbfH0Ukd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:40:28 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:45267 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfH0Uk2 (ORCPT
+        Tue, 27 Aug 2019 16:40:33 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:39431 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbfH0Ukc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:40:28 -0400
-Received: by mail-vk1-f202.google.com with SMTP id c65so223547vkg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:40:27 -0700 (PDT)
+        Tue, 27 Aug 2019 16:40:32 -0400
+Received: by mail-vs1-f73.google.com with SMTP id o23so148711vsj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 13:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=J7Ohnds+A9ovXQdZzadUakafh+P4fUUaEWG9NoT89Rg=;
-        b=thwZre+vfdeUyR0h7L2yCKuWA2znWIDH+Bw7v7hNIdznHaTRSi2dsWr3wHsdxO5p2G
-         4gap3akaSI0XfBlo7jufAwxKZ3gFY2xTQhQtb2CtE3fSc4QSPbWt1num9gjZ2SJN9rwk
-         zgs7mEYf1ClluXfrZ+VWcTZvq+mWam6tr+IG43JjpG4tILrmVPlYYsE0Z23N1CRi2r1T
-         pbZ/Q/odS6M9ZxhTIXoh6xKlSJyoNhrnudn7/X0TKXw+A0wazeC0JR/4VrTlrriCrZA1
-         Vd2mTJjsENlTw4i9LHws9DWjxcQe9KdUbgidIcVOsTZWkhX74cfLGNcDbbXeEjlfha9D
-         dd1g==
+        bh=xQrOvf6S08H+KmBAkcZg6Qy0/dGwEEfJY69WYmdUssY=;
+        b=Cr6sZbnxHtYHnAGDqNRJ0FYHYH/GhPMxGWgZ0E1UyOgZ2uUKdW7UtB3boil4bOmtBO
+         TEXe8zVaIrDmO8ryzIea/9FyEKmZD9T/fSzwoKLPtcRtjGEQHa7xSp5SQeqpClGWv6BM
+         SeXkb5yPAB30IBpi2HpQuDPjjoy5IN71DzcHu83nTNdC2IDIkA70+YibTr15PmD5Sg6w
+         Abl6Zhb9AR49yJ07plNgEteWk6Grmuk0RJNIo01hzjf9StymCDZrZkedUsvfbxP1m66X
+         lH+I1aPIoI+3A69yJ2FYxZalEvx04Lb1Z0daETZRDZo1bPpundCAp4p7rKh99SlbQizp
+         DrIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=J7Ohnds+A9ovXQdZzadUakafh+P4fUUaEWG9NoT89Rg=;
-        b=NTR1L0m3zjJn6iqxeawFxc42fxLlfSahJLpyiM77BPLTW9fUdITRQpQVkLih3szRVy
-         Veg8VtEmQGVs0rdRV6QpRgbi54ovY+zQ59Lbr2TksqEg1v94UF+qwAHCbTB6MSkJyc25
-         +1Z3nk3fk8RAwS7Y4cK7vM/E6lUZy9nprl87yeGXYIWLl6CHtmTp669Nv/LKVoZ/0+gc
-         h0A6y3Yknsm5oynWZtIUgy5i9uacAFMcENB9LlMYkNnHt3c6QGpYkDVLWcav2xEY49P8
-         bE5003k3rNNzhXc1MsBVy0sRJhbHogYatVK6+tPMzoebjbfvBCMVK8FF0DghDk8rUPFM
-         h+iw==
-X-Gm-Message-State: APjAAAVED0ET97wwox/hrq0ZoRjuKzqlqD1JbeiyeeECr+d2lrxFuFT/
-        DhURFWSKOTpKrwRxrk+6vZxY6+e1D3IMmGvaY/g=
-X-Google-Smtp-Source: APXvYqy/PLRZlpLAsk27WTRD4dZL1O5ZR6iz8NhWZpTEB8c+hA0EfY3oBXryLtS+NehDuiSYW1CfI1zpr2wNRYeSkkc=
-X-Received: by 2002:a1f:fc0a:: with SMTP id a10mr437887vki.21.1566938426805;
- Tue, 27 Aug 2019 13:40:26 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 13:39:54 -0700
+        bh=xQrOvf6S08H+KmBAkcZg6Qy0/dGwEEfJY69WYmdUssY=;
+        b=cOAIRn5Y6u48zMofZcvslcuQl3W0GELIaIzGXKSIHgGv0P0Arf+85sXGBfKt34VQk2
+         +gUtBVAsWpvKsZ8Kxb365vNWOUTsoCWc0cNaDNxm0emEZCl39+rJOCPVqJVPC24OXB+e
+         ocSM3T8+W7pcA+DywLkJf882mE0+S7ASlxMvQH79Qaxe6K3tD5dl5EfkmYrM343JASbn
+         E6+rSswy7DSWlZBuMJsbgc84zCrciOWKQ0Bpj8a4GiawnnxrM5o6YV7FgOG9h5IN/gWK
+         l0ZnsqiEaM/lw08t9uXACfk5nr/dUzrQy10osabR9iAyu2BQJlxt17+yncIcxeFe07j6
+         B0Pg==
+X-Gm-Message-State: APjAAAWr4ZENOVDVgbO9fmPOnsKpgOcjX7BV446l12mCCv8OtTbqi2vB
+        kiukay7C/+c0DuS653byWz9kXDBp7rW7JnXXfPY=
+X-Google-Smtp-Source: APXvYqwFNFeBW++SLUxMrYNfs5C7l8YWd0rPF5pQo8o9ESGMl9RzXHc0MfpFspGKwT+SdxbWiadgkSIk3vxfYHB3syQ=
+X-Received: by 2002:ab0:634d:: with SMTP id f13mr120429uap.58.1566938431654;
+ Tue, 27 Aug 2019 13:40:31 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 13:39:55 -0700
 In-Reply-To: <20190827204007.201890-1-ndesaulniers@google.com>
-Message-Id: <20190827204007.201890-2-ndesaulniers@google.com>
+Message-Id: <20190827204007.201890-3-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20190827204007.201890-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v2 01/14] s390/boot: perfer __section from compiler_attributes.h
+Subject: [PATCH v2 02/14] include/linux/compiler.h: prefer __section from compiler_attributes.h
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     miguel.ojeda.sandonis@gmail.com
 Cc:     sedat.dilek@gmail.com, will@kernel.org, jpoimboe@redhat.com,
         naveen.n.rao@linux.vnet.ibm.com, davem@davemloft.net,
         paul.burton@mips.com, clang-built-linux@googlegroups.com,
         linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,29 +78,72 @@ GCC unescapes escaped string section names while Clang does not. Because
 __section uses the `#` stringification operator for the section name, it
 doesn't need to be escaped.
 
+This fixes an Oops observed in distro's that use systemd and not
+net.core.bpf_jit_enable=1, when their kernels are compiled with Clang.
+
+Instead, we should:
+1. Prefer __section(.section_name_no_quotes).
+2. Only use __attribute__((__section(".section"))) when creating the
+section name via C preprocessor (see the definition of __define_initcall
+in arch/um/include/shared/init.h).
+
 This antipattern was found with:
 $ grep -e __section\(\" -e __section__\(\" -r
 
+See the discussions in:
+Link: https://bugs.llvm.org/show_bug.cgi?id=42950
+Link: https://marc.info/?l=linux-netdev&m=156412960619946&w=2
+Link: Link: https://github.com/ClangBuiltLinux/linux/issues/619
+Cc: <stable@vger.kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
 Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
 Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/s390/boot/startup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/compiler.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/boot/startup.c b/arch/s390/boot/startup.c
-index 7b0d05414618..26493c4ff04b 100644
---- a/arch/s390/boot/startup.c
-+++ b/arch/s390/boot/startup.c
-@@ -46,7 +46,7 @@ struct diag_ops __bootdata_preserved(diag_dma_ops) = {
- 	.diag0c = _diag0c_dma,
- 	.diag308_reset = _diag308_reset_dma
- };
--static struct diag210 _diag210_tmp_dma __section(".dma.data");
-+static struct diag210 _diag210_tmp_dma __section(.dma.data);
- struct diag210 *__bootdata_preserved(__diag210_tmp_dma) = &_diag210_tmp_dma;
- void _swsusp_reset_dma(void);
- unsigned long __bootdata_preserved(__swsusp_reset_dma) = __pa(_swsusp_reset_dma);
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index f0fd5636fddb..5e88e7e33abe 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -24,7 +24,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 			long ______r;					\
+ 			static struct ftrace_likely_data		\
+ 				__aligned(4)				\
+-				__section("_ftrace_annotated_branch")	\
++				__section(_ftrace_annotated_branch)	\
+ 				______f = {				\
+ 				.data.func = __func__,			\
+ 				.data.file = __FILE__,			\
+@@ -60,7 +60,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ #define __trace_if_value(cond) ({			\
+ 	static struct ftrace_branch_data		\
+ 		__aligned(4)				\
+-		__section("_ftrace_branch")		\
++		__section(_ftrace_branch)		\
+ 		__if_trace = {				\
+ 			.func = __func__,		\
+ 			.file = __FILE__,		\
+@@ -118,7 +118,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 	".popsection\n\t"
+ 
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+-#define __annotate_jump_table __section(".rodata..c_jump_table")
++#define __annotate_jump_table __section(.rodata..c_jump_table)
+ 
+ #else
+ #define annotate_reachable()
+@@ -298,7 +298,7 @@ unsigned long read_word_at_a_time(const void *addr)
+  * visible to the compiler.
+  */
+ #define __ADDRESSABLE(sym) \
+-	static void * __section(".discard.addressable") __used \
++	static void * __section(.discard.addressable) __used \
+ 		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
+ 
+ /**
 -- 
 2.23.0.187.g17f5b7556c-goog
 
