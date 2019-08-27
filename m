@@ -2,159 +2,129 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2BEC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5799EC3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6030120850
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C5320850
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aVOS0QUT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rlLf2ah1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfH0ATh (ORCPT
+        id S1727941AbfH0AT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:19:37 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58186 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfH0ATh (ORCPT
+        Mon, 26 Aug 2019 20:19:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34516 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfH0ATz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:19:37 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A98522EE;
-        Tue, 27 Aug 2019 02:19:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566865173;
-        bh=b1IWTKBE4UNZojeNpwZ778+qPdPRYX/fimB2+YFE358=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aVOS0QUTdeeEKHIc3la6YAwSZ4hRlcpUZkCOo9xF4/y1qt4UKquoWQ/7pq4fD/BjA
-         oRXwFZueDweOSokmQU2WI1pFEw1nhmJ2Ve4W1eL9JJzLkA2sJ70eO0gV2YRow5VqGF
-         Syn/9Qvg/FInHN0XpSjg5Br/0bXzW5+74797AzAQ=
-Date:   Tue, 27 Aug 2019 03:19:27 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: Re: [PATCH v3 13/14] drm: rcar-du: kms: Update CMM in atomic commit
- tail
-Message-ID: <20190827001927.GA5926@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-14-jacopo+renesas@jmondi.org>
- <20190827000017.GB5274@pendragon.ideasonboard.com>
+        Mon, 26 Aug 2019 20:19:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so11587840pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hEEzzkdeRsczZgOxP6fZZQbk+BsAjtf5i89GMJdNvlE=;
+        b=rlLf2ah1lkpxv0U4sCKox8teYypFOsXhPw8Tiz+SNCVDdyx4vxv9LfOgcNYsNS+y83
+         Yg8HzPGc8JUgeBKk3Y2PX+C6aGW6qoUtel5U5CIfMXnlcd+S/IBtU0XpZ+qJ/JOjxarD
+         j/OE/JjfpvfD8gTDgShCI4D93Zslm+cAAMdMy5AuO8bY0ovqd1N4Eeqw/ZZsB+cV9KZk
+         E95+VcgDt12U1PKk6YwfKBE5UyiBXuEZffnmHhZNAIc1BMj+PhulPKqKi9XAS5AhiLce
+         gMt9DGZc8pfbPA6NP32hvvW4qr5XdG4+KzQDbnE6bP2somHVDqq+XLFb24EFtCnMTeMn
+         gJaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hEEzzkdeRsczZgOxP6fZZQbk+BsAjtf5i89GMJdNvlE=;
+        b=OU91QUYoMU3w6LI8pSHIxN609K2o1Ppvqz8G4K/eBtra+C4CUrI+bl/4ryeCAyVmXH
+         uAZC1BJg497w9r1/aMIQyQIYhJHF6YSi3I77iam+NbsZA6qEJd8DE95SX0sHDVbFkOBS
+         7TPkHPEASERLvSc50qyyOqNRgHXhGOptFjBrz5kQJUY5+XfJ0+mJZMsKjlx7FfXx1Pws
+         EoYr1oJzWpoZS40dEblOo3XJ5JuZDJ6mknDl0urjTPqSYFfogZQ6Ey7scA5+pGaPvKGP
+         TgOYT5del5Jn9G4SK2ksi8A5LIQESxbvZj/3wv3mso0q6ZUKYC0s3A7J9Z/HTBm6OoMu
+         oP+w==
+X-Gm-Message-State: APjAAAUjikzxdterYyWr4Y8NLIsQbhWIM6A64cYX9uAak7iBsuCfRIXN
+        1tKDRzt5VmZ0VwaQHxvReINExEFoeg1AvS1O9FrKjg==
+X-Google-Smtp-Source: APXvYqxHnCdlzUczP/jzH7EyDlrfTM8SgWVtE5IiAWt81GfWcFP3LsN64bL6ZIOrHbsimWRUCdvbNDymaO/b10v3kbg=
+X-Received: by 2002:aa7:8085:: with SMTP id v5mr21870548pff.165.1566865194432;
+ Mon, 26 Aug 2019 17:19:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190827000017.GB5274@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+ <20190812215052.71840-8-ndesaulniers@google.com> <20190815093848.tremcmaftzspuzzj@pburton-laptop>
+In-Reply-To: <20190815093848.tremcmaftzspuzzj@pburton-laptop>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 26 Aug 2019 17:19:43 -0700
+Message-ID: <CAKwvOdm4PgZten24afX5yiccYPjperVaW24bDms4ocf6ROdPjg@mail.gmail.com>
+Subject: Re: [PATCH 08/16] mips: prefer __section from compiler_attributes.h
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sedat.dilek@gmail.com" <sedat.dilek@gmail.com>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "yhs@fb.com" <yhs@fb.com>,
+        "miguel.ojeda.sandonis@gmail.com" <miguel.ojeda.sandonis@gmail.com>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:00:17AM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
-> 
-> Thank you for the patch.
-> 
-> On Sun, Aug 25, 2019 at 03:51:53PM +0200, Jacopo Mondi wrote:
-> > Update CMM settings at in the atomic commit tail helper method.
-> > 
-> > The CMM is updated with new gamma values provided to the driver
-> > in the GAMMA_LUT blob property.
-> > 
-> > Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+On Thu, Aug 15, 2019 at 2:38 AM Paul Burton <paul.burton@mips.com> wrote:
+>
+> Hi Nick,
+>
+> On Mon, Aug 12, 2019 at 02:50:41PM -0700, Nick Desaulniers wrote:
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> It would be good to add a commit message, even if it's just a line
+> repeating the subject & preferably describing the motivation.
+>
 > > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > index 61ca1d3c379a..047fdb982a11 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/wait.h>
-> >  
-> > +#include "rcar_cmm.h"
-> >  #include "rcar_du_crtc.h"
-> >  #include "rcar_du_drv.h"
-> >  #include "rcar_du_encoder.h"
-> > @@ -368,6 +369,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-> >   * Atomic Check and Update
-> >   */
-> >  
-> > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> > +					     struct drm_crtc_state *old_state)
-> > +{
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +	struct rcar_cmm_config cmm_config = {};
-> > +
-> > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> > +		return;
-> > +
-> > +	if (!crtc->state->gamma_lut) {
-> > +		cmm_config.lut.enable = false;
-> > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +
-> > +		return;
-> > +	}
-> > +
-> > +	cmm_config.lut.enable = true;
-> > +	cmm_config.lut.table = (struct drm_color_lut *)
-> > +			       crtc->state->gamma_lut->data;
-> > +
-> > +	/* Set LUT table size to 0 if entries should not be updated. */
-> > +	if (!old_state->gamma_lut ||
-> > +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
-> > +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> > +				    / sizeof(cmm_config.lut.table[0]);
-> 
-> It has just occurred to me that the hardware only support LUTs of
-> exactly 256 entries. Should we remove cmm_config.lut.size (simplifying
-> the code in the CMM driver), and add a check to the CRTC .atomic_check()
-> handler to reject invalid LUTs ? Sorry for not having caught this
-> earlier.
+> >  arch/mips/include/asm/cache.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/mips/include/asm/cache.h b/arch/mips/include/asm/cache.h
+> > index 8b14c2706aa5..af2d943580ee 100644
+> > --- a/arch/mips/include/asm/cache.h
+> > +++ b/arch/mips/include/asm/cache.h
+> > @@ -14,6 +14,6 @@
+> >  #define L1_CACHE_SHIFT               CONFIG_MIPS_L1_CACHE_SHIFT
+> >  #define L1_CACHE_BYTES               (1 << L1_CACHE_SHIFT)
+> >
+> > -#define __read_mostly __attribute__((__section__(".data..read_mostly")))
+> > +#define __read_mostly __section(.data..read_mostly)
+> >
+> >  #endif /* _ASM_CACHE_H */
+> > --
+> > 2.23.0.rc1.153.gdeed80330f-goog
+>
+> I'm not copied on the rest of the series so I'm not sure what your
+> expectations are about where this should be applied. Let me know if
+> you'd prefer this to go through mips-next, otherwise:
+>
+>     Acked-by: Paul Burton <paul.burton@mips.com>
 
-Just an additional comment, if we drop the size field, then the
-cmm_config.lut.table pointer should be set to NULL when the LUT contents
-don't need to be updated.
-
-> > +	else
-> > +		cmm_config.lut.size = 0;
-> > +
-> > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +}
-> > +
-> >  static int rcar_du_atomic_check(struct drm_device *dev,
-> >  				struct drm_atomic_state *state)
-> >  {
-> > @@ -410,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
-> >  			rcdu->dpad1_source = rcrtc->index;
-> >  	}
-> >  
-> > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> > +
-> >  	/* Apply the atomic update. */
-> >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-> >  	drm_atomic_helper_commit_planes(dev, old_state,
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-
+Thanks Paul, going to send this up via Miguel's tree, if you don't
+mind.  Updating my series now.  (Will probably avoid running
+get_maintainer.pl on every patch...too hard to cc everyone on the
+whole series).
 -- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+~Nick Desaulniers
