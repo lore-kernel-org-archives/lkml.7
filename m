@@ -2,51 +2,54 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC31C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCD4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420B52173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334702186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893141;
-	bh=4P/gAouZIdFMsBneTHs1ZtIaXiQfH/mCP8xF6/oNNHU=;
+	s=default; t=1566893143;
+	bh=csSfjwxSUvEH7WsttKF+LGRqTSc7mgMPIgBk3UMBVcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWEf2cCk32Y9fwCe2LAyzSPhn+klR4SF3+t3G4wJwkyv3t5liMGdn7ZJd5MZ4PdMm
-	 l1THuHz5f4PlNZB5Dz5GiBmTP4nyWx68Hd9qoT20a5KTbysY6ywupKQIcJyaUKOz4Q
-	 O7arY0bytbXCuyFpXO8rFGM+C0jLMhUgrHjotUf8=
+	b=wlIyV2pcdpCUB5pjGXAy4BZ8kbNJvXTVJ319alq1QnJmz2wlmVhJlsJRaVqqjE+xz
+	 fLg/xefVGA14H8RR+shXws+Ftj5cet2GSkvwY/Vn/9zk09BPKG/85AXgjO2jX0Scmj
+	 Lu7JO2wVYmMzhwNW8ljhllt+HbQ7csMAT7OigJZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732856AbfH0IFk (ORCPT
+        id S1732871AbfH0IFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 04:05:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:05:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732838AbfH0IFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 04:05:37 -0400
+        id S1732435AbfH0IFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 04:05:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E6E2173E;
-        Tue, 27 Aug 2019 08:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B102173E;
+        Tue, 27 Aug 2019 08:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566893137;
-        bh=4P/gAouZIdFMsBneTHs1ZtIaXiQfH/mCP8xF6/oNNHU=;
+        s=default; t=1566893139;
+        bh=csSfjwxSUvEH7WsttKF+LGRqTSc7mgMPIgBk3UMBVcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p38NCP7o/QXJoCVlVz9kuxPIx8ahvmJkwEhSFM0dnqTPCZfCIcgAfshYqr6l7C5o+
-         0AejRPF9ROeVj3Xm7RK07w0AlFEPZLb0vmzEvNQs2ppuPNLn5ko+nrSp7TBBcLQh2V
-         4vB34v7MoZ6Fi8lajzFgV9ksACAEbQlXvQgW3MnU=
+        b=fkeOek4E+B8n5IVtPyCpVxq/9Vsnps0YkCyUKC9mpRJA5l/9MC/t6EsXL8ojFaNbf
+         vk4dngMxEGJSKHeoYWOFljXjUpCqx4JzCEtdv7CqCKzSa5Ez3BedVb/xFyCFdvAUnU
+         /PyoydVy34XLkZp2Bnv8ovEKrAA5gl8mJOjFrMmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 106/162] dt-bindings: riscv: fix the schema compatible string for the HiFive Unleashed board
-Date:   Tue, 27 Aug 2019 09:50:34 +0200
-Message-Id: <20190827072742.007693245@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 5.2 133/162] IB/hfi1: Drop stale TID RDMA packets that cause TIDErr
+Date:   Tue, 27 Aug 2019 09:51:01 +0200
+Message-Id: <20190827072743.191279632@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072738.093683223@linuxfoundation.org>
 References: <20190827072738.093683223@linuxfoundation.org>
@@ -59,40 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b390e0bfd2996f1215231395f4e25a4c011eeaf9 ]
+From: Kaike Wan <kaike.wan@intel.com>
 
-The YAML binding document for SiFive boards has an incorrect
-compatible string for the HiFive Unleashed board.  Change it to match
-the name of the board on the SiFive web site:
+commit d9d1f5e7bb82415591e8b62b222cbb88c4797ef3 upstream.
 
-   https://www.sifive.com/boards/hifive-unleashed
+In a congested fabric with adaptive routing enabled, traces show that
+packets could be delivered out of order. A stale TID RDMA data packet
+could lead to TidErr if the TID entries have been released by duplicate
+data packets generated from retries, and subsequently erroneously force
+the qp into error state in the current implementation.
 
-which also matches the contents of the board DT data file:
+Since the payload has already been dropped by hardware, the packet can
+be simply dropped and it is no longer necessary to put the qp into
+error state.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts#n13
+Fixes: 9905bf06e890 ("IB/hfi1: Add functions to receive TID RDMA READ response")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Link: https://lore.kernel.org/r/20190815192058.105923.72324.stgit@awfm-01.aw.intel.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/riscv/sifive.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/tid_rdma.c |   47 ++--------------------------------
+ 1 file changed, 3 insertions(+), 44 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
-index 9d17dc2f3f843..3ab532713dc12 100644
---- a/Documentation/devicetree/bindings/riscv/sifive.yaml
-+++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-@@ -19,7 +19,7 @@ properties:
-   compatible:
-     items:
-       - enum:
--          - sifive,freedom-unleashed-a00
-+          - sifive,hifive-unleashed-a00
-       - const: sifive,fu540-c000
-       - const: sifive,fu540
- ...
--- 
-2.20.1
-
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.c
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+@@ -2576,18 +2576,9 @@ void hfi1_kern_read_tid_flow_free(struct
+ 	hfi1_kern_clear_hw_flow(priv->rcd, qp);
+ }
+ 
+-static bool tid_rdma_tid_err(struct hfi1_ctxtdata *rcd,
+-			     struct hfi1_packet *packet, u8 rcv_type,
+-			     u8 opcode)
++static bool tid_rdma_tid_err(struct hfi1_packet *packet, u8 rcv_type)
+ {
+ 	struct rvt_qp *qp = packet->qp;
+-	struct hfi1_qp_priv *qpriv = qp->priv;
+-	u32 ipsn;
+-	struct ib_other_headers *ohdr = packet->ohdr;
+-	struct rvt_ack_entry *e;
+-	struct tid_rdma_request *req;
+-	struct rvt_dev_info *rdi = ib_to_rvt(qp->ibqp.device);
+-	u32 i;
+ 
+ 	if (rcv_type >= RHF_RCV_TYPE_IB)
+ 		goto done;
+@@ -2604,41 +2595,9 @@ static bool tid_rdma_tid_err(struct hfi1
+ 	if (rcv_type == RHF_RCV_TYPE_EAGER) {
+ 		hfi1_restart_rc(qp, qp->s_last_psn + 1, 1);
+ 		hfi1_schedule_send(qp);
+-		goto done_unlock;
+-	}
+-
+-	/*
+-	 * For TID READ response, error out QP after freeing the tid
+-	 * resources.
+-	 */
+-	if (opcode == TID_OP(READ_RESP)) {
+-		ipsn = mask_psn(be32_to_cpu(ohdr->u.tid_rdma.r_rsp.verbs_psn));
+-		if (cmp_psn(ipsn, qp->s_last_psn) > 0 &&
+-		    cmp_psn(ipsn, qp->s_psn) < 0) {
+-			hfi1_kern_read_tid_flow_free(qp);
+-			spin_unlock(&qp->s_lock);
+-			rvt_rc_error(qp, IB_WC_LOC_QP_OP_ERR);
+-			goto done;
+-		}
+-		goto done_unlock;
+ 	}
+ 
+-	/*
+-	 * Error out the qp for TID RDMA WRITE
+-	 */
+-	hfi1_kern_clear_hw_flow(qpriv->rcd, qp);
+-	for (i = 0; i < rvt_max_atomic(rdi); i++) {
+-		e = &qp->s_ack_queue[i];
+-		if (e->opcode == TID_OP(WRITE_REQ)) {
+-			req = ack_to_tid_req(e);
+-			hfi1_kern_exp_rcv_clear_all(req);
+-		}
+-	}
+-	spin_unlock(&qp->s_lock);
+-	rvt_rc_error(qp, IB_WC_LOC_LEN_ERR);
+-	goto done;
+-
+-done_unlock:
++	/* Since no payload is delivered, just drop the packet */
+ 	spin_unlock(&qp->s_lock);
+ done:
+ 	return true;
+@@ -2927,7 +2886,7 @@ bool hfi1_handle_kdeth_eflags(struct hfi
+ 		if (lnh == HFI1_LRH_GRH)
+ 			goto r_unlock;
+ 
+-		if (tid_rdma_tid_err(rcd, packet, rcv_type, opcode))
++		if (tid_rdma_tid_err(packet, rcv_type))
+ 			goto r_unlock;
+ 	}
+ 
 
 
