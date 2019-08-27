@@ -2,126 +2,129 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AEEC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C49CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057982070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F15206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 18:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566931172;
+	bh=mA6/COdlY32LtWt962o3G5YVRffVgo1lKDPVMKMavrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YuQINBcvTJy7Lm4M8oWx0TQeSYq419kbqLb2kjj0Ri0tyVRcOo4kgNmchB9TXc7Z8
+	 SlkpM3QrPvaBydco1/dn2gI1eWlj3TOaePt+zgDiKI7kO/O1NUfV5KUxYCeTKHAoEr
+	 hr+9n2OoHRfy1oC5zliF91UYdrJBrmpT6TfgDjBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbfH0Sfy (ORCPT
+        id S1730463AbfH0Sjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 14:35:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:9523 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbfH0Sfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 14:35:53 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C8934E832;
-        Tue, 27 Aug 2019 18:35:53 +0000 (UTC)
-Received: from flask (unknown [10.43.2.55])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 77BF460C05;
-        Tue, 27 Aug 2019 18:35:50 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Tue, 27 Aug 2019 20:35:49 +0200
-Date:   Tue, 27 Aug 2019 20:35:49 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] KVM: x86: Don't update RIP or do single-step on faulting
- emulation
-Message-ID: <20190827183549.GC65641@flask>
-References: <20190823205544.24052-1-sean.j.christopherson@intel.com>
+        Tue, 27 Aug 2019 14:39:31 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41943 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729779AbfH0Sja (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 14:39:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o101so134404ota.8;
+        Tue, 27 Aug 2019 11:39:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XMfpx8zaYFv8FB4sdyqjlN5h9P+ymLOJHIBXDCz83lw=;
+        b=RM3iTfg94Sp11I7dq9Cb0WBP8TJ5XRBib4cii0Mypj+gvMfJLFd2T+tqEzKDFEqlwu
+         znl+oY7YP02WAyXiSB9D0rzj32ZA1pOx8XZpF2jW1ABWJb8LAl5NVzel22XSeSnG9Sz4
+         fQD+sWcQdCdTG4b5nsIGQzjRd+AtZLkr343KWbrx/2i5bHOLRTJGskNREcoaldH4G57V
+         Wu3pV3tNBxTl7603iU/3UeeMuZDKd8HUan0vWzZ6aeQi9GMdLBEByOtrrIgwpHBOqiF3
+         Cu13ynDH0NcNrVajRhanlpzjWb0r6e8G8xPHsG3jgiV+1TL1u/jIcbbL26HoU68829sF
+         mcBg==
+X-Gm-Message-State: APjAAAWMbGTWk6oNvozJt8XTs4nhf+pLcHzw7TovELpVO6j6JFKiCMXF
+        M2AeJ1j8dVLUVVyTqNdSqw==
+X-Google-Smtp-Source: APXvYqzoemcNCPbstiXM/G8dfEnWRe5MtRuqF2QfOKr+DAg0PvZiCXcrcG6fxo8TiaEvdRGl8Ab2hg==
+X-Received: by 2002:a9d:170b:: with SMTP id i11mr40703ota.60.1566931169589;
+        Tue, 27 Aug 2019 11:39:29 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z16sm3966oic.10.2019.08.27.11.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 11:39:25 -0700 (PDT)
+Date:   Tue, 27 Aug 2019 13:39:24 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
+Message-ID: <20190827183924.GA24178@bogus>
+References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+ <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190823205544.24052-1-sean.j.christopherson@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 27 Aug 2019 18:35:53 +0000 (UTC)
+In-Reply-To: <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-08-23 13:55-0700, Sean Christopherson:
-> Don't advance RIP or inject a single-step #DB if emulation signals a
-> fault.  This logic applies to all state updates that are conditional on
-> clean retirement of the emulation instruction, e.g. updating RFLAGS was
-> previously handled by commit 38827dbd3fb85 ("KVM: x86: Do not update
-> EFLAGS on faulting emulation").
+On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+
+The subject should indicate this is for Mediatek.
+
 > 
-> Not advancing RIP is likely a nop, i.e. ctxt->eip isn't updated with
-> ctxt->_eip until emulation "retires" anyways.  Skipping #DB injection
-> fixes a bug reported by Andy Lutomirski where a #UD on SYSCALL due to
-> invalid state with RFLAGS.RF=1 would loop indefinitely due to emulation
-> overwriting the #UD with #DB and thus restarting the bad SYSCALL over
-> and over.
+> This adds a property "num-pwms" in example so that we could
+> specify the number of PWM channels via device tree.
 > 
-> Cc: Nadav Amit <nadav.amit@gmail.com>
-> Cc: stable@vger.kernel.org
-> Reported-by: Andy Lutomirski <luto@kernel.org>
-> Fixes: 663f4c61b803 ("KVM: x86: handle singlestep during emulation")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 > ---
+> Changes since v5:
+> - Add an Acked-by tag
+> - This file is original v4 patch 5/10
+> (https://patchwork.kernel.org/patch/11102577/)
 > 
-> Note, this has minor conflict with my recent series to cleanup the
-> emulator return flows[*].  The end result should look something like:
+> Change-Id: I429048afeffa96f3f14533910efe242f88776043
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
->                 if (!ctxt->have_exception ||
->                     exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
->                         kvm_rip_write(vcpu, ctxt->eip);
->                         if (r && ctxt->tf)
->                                 r = kvm_vcpu_do_singlestep(vcpu);
->                         __kvm_set_rflags(vcpu, ctxt->eflags);
->                 }
-> 
-> [*] https://lkml.kernel.org/r/20190823010709.24879-1-sean.j.christopherson@intel.com
-> 
->  arch/x86/kvm/x86.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b4cfd786d0b6..d2962671c3d3 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6611,12 +6611,13 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
->  		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
->  		toggle_interruptibility(vcpu, ctxt->interruptibility);
->  		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
-> -		kvm_rip_write(vcpu, ctxt->eip);
-> -		if (r == EMULATE_DONE && ctxt->tf)
-> -			kvm_vcpu_do_singlestep(vcpu, &r);
->  		if (!ctxt->have_exception ||
-> -		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
-> +		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> index 991728cb46cb..ea95b490a913 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> @@ -14,12 +14,12 @@ Required properties:
+>                  has no clocks
+>     - "top": the top clock generator
+>     - "main": clock used by the PWM core
+> -   - "pwm1-8": the eight per PWM clocks for mt2712
+> -   - "pwm1-6": the six per PWM clocks for mt7622
+> -   - "pwm1-5": the five per PWM clocks for mt7623
+> +   - "pwm1-N": the PWM clocks for each channel
+> +   where N starting from 1 to the maximum number of PWM channels
 
-Hm, EXCPT_TRAP is either #OF, #BP, or another #DB, none of which we want
-to override.  The first two disable TF and the last one is the same as
-its fault variant must take other path, so it works out in the end...
+Once converted to schema, you are going to be back to listing them out.
 
-I've fixed the RF in commit message when applying, thanks.
+>   - pinctrl-names: Must contain a "default" entry.
+>   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+>     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> + - num-pwms: the number of PWM channels.
 
----
-We still seem to have at least a minor problem with single stepping:
+You can't add new required properties without breaking compatibility. 
 
-SDM, Interrupt 1—Debug Exception (#DB):
+You already have to imply the number of channels from the compatible (or 
+number of clocks) and you have to keep doing so to maintain 
+compatibility, so why not just keep doing that for new chips?
 
-  The following items detail the treatment of debug exceptions on the
-  instruction boundary following execution of the MOV or the POP
-  instruction that loads the SS register:
-    • If EFLAGS.TF is 1, no single-step trap is generated.
-
-I think a check for KVM_X86_SHADOW_INT_MOV_SS in
-kvm_vcpu_do_singlestep() is missing.
+Rob
