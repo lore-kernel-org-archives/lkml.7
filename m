@@ -2,94 +2,172 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9B8C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A1BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0CB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 21:59:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fqX7HAuz"
+	by mail.kernel.org (Postfix) with ESMTP id 2D0AA20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 22:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566943259;
+	bh=PS/QwP4Xax9g527ItgaFxeFjQ7qAcrtvuXy5R4KNyhw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=bfN5cr6mhdHh/2ZPmd3+71QJCVSil/+gf3gI0Jt8e8jSNLX1NOedf7UX5B7ZK84o/
+	 phIPbxi43cPnlCWjcSVZnml9VGUR1gwqst1DNxGI5yg431RcG47uYSTktN6aAABM1D
+	 FQzXFOnvc6VF1xLiA344CGS0sDUhv1Yfm2mAflKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfH0V7O (ORCPT
+        id S1726289AbfH0WA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 17:59:14 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38241 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfH0V7N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 17:59:13 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w11so199285plp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 14:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=TdYOcDy5jsMWziyheC0sLWKkoIn520mmauZjzHRKXw0=;
-        b=fqX7HAuzT5KuFfsn8d+HExjzxkOeMp9ciR59skQfXichfF0DxduVaNwQa72F8i2JRJ
-         RcqtQKXAMQAjfhy1CJChhtF3Sv538PUx6V+L2FZJ/YtfvFAsJYwh2hca4OiQtCwBo9OU
-         VwkmnGUC9flIc+hJlh+bpiWQN35phBb0UYpHysFLpKvvDRLPvxMvJ4WUB5kl579mWgYs
-         bAQindBZCEfngbh3o6ERCSUnxUSw2SpKuPE4eKM1o1jcYpeviPzHreexlsNAf4KHD2cN
-         pDTAB49gxvQx3+ZQK9tVGn5gGVTDK2oG3ZS1sD4ab4bIaRI8r81jBAQbtua9fkMRiijQ
-         63CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=TdYOcDy5jsMWziyheC0sLWKkoIn520mmauZjzHRKXw0=;
-        b=jfD1LvBSJvgi5iHpnvVFywteTcCIVH26EPSK/51TDykEODZ3imdtvJ2XlqC6U+0y6+
-         2VWg45PSoi9CMDP27n8Zu0tUVX4Gy27lyw1SfNtOMwOtqbbGgnxdSDF34jY7jmDo1EZr
-         UTWjhzic7I4o5BLv9KNKy03R+0i0/RgoZQJKVpihspws/3SaWol5d7RsiBPyS2ocvNoJ
-         Oyg8ArVUkrWHgs7jcjW8UxF13TVYeKkAbK7wav/GbdOHO0XGQGQyvR2vCBczwnjyFx9m
-         tX2eyzOMwyAfnHtKc2yWkxitFy/F2KkxjykS5iej0gnnw4hXznpblL2YrEg3UAXadR+n
-         wJsQ==
-X-Gm-Message-State: APjAAAVWA6TmNSxxs/d9RowEZA88sJMwwi9L0R+nXCcomCRgVElBvEU5
-        HatsHp/KahZ7b7ZoX/fA/29LOA==
-X-Google-Smtp-Source: APXvYqws8hfOSYTfuqQpuIYlzKB7o2Sp5rFJ3VOL35Gaol7mqdAOiWBTbpZz0mLm3qMRR7/MJdUF5g==
-X-Received: by 2002:a17:902:9b86:: with SMTP id y6mr1087338plp.217.1566943152953;
-        Tue, 27 Aug 2019 14:59:12 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:cc35:e750:308e:47f])
-        by smtp.gmail.com with ESMTPSA id e17sm175950pjt.6.2019.08.27.14.59.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 14:59:12 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RESEND PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
-In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
-References: <20190823070248.25832-1-narmstrong@baylibre.com>
-Date:   Tue, 27 Aug 2019 14:59:11 -0700
-Message-ID: <7htva2uv68.fsf@baylibre.com>
+        Tue, 27 Aug 2019 18:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbfH0WA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 18:00:57 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 077D32070B;
+        Tue, 27 Aug 2019 22:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566943256;
+        bh=PS/QwP4Xax9g527ItgaFxeFjQ7qAcrtvuXy5R4KNyhw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bi2IrWWe/7PtGt1+NJhcsHsNOSc4/7KQ4HaHP2+ovZn1/EcUZdvDbZ8fWztRml/Nn
+         NPf/qENpTXyyPtKXsdeWUiF/Sfl85SerhYGHl9scCqEuHi/XPaYN3pdpV+Vj9W+p5D
+         PGAEAV/1D3H6aiDR35ymNCUmRRt+aNhY2L3F1/e0=
+Subject: Re: [PATCH v1] kunit: fix failure to build without printk
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        shuah <shuah@kernel.org>
+References: <20190827174932.44177-1-brendanhiggins@google.com>
+ <ae9b9102-187c-eefe-d377-6efa63de2d28@kernel.org>
+ <CAFd5g473nZAfM4D=Vkr54O_+nn=MSt3dzuDcXzNMZGRDWg1nxA@mail.gmail.com>
+ <CAFd5g47rSBJS8QVH6d5HqoJW5PJXdNnkoP6WcvQCFUqHUEmDzw@mail.gmail.com>
+ <CAFd5g44A5vtgxBYErP4mCGwDgOHEMYUXCDSF=d9bYB3ktpW5jA@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <10b44374-829d-0daa-8fb0-4450582cb40c@kernel.org>
+Date:   Tue, 27 Aug 2019 16:00:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAFd5g44A5vtgxBYErP4mCGwDgOHEMYUXCDSF=d9bYB3ktpW5jA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On 8/27/19 3:36 PM, Brendan Higgins wrote:
+> On Tue, Aug 27, 2019 at 2:09 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+>>
+>> On Tue, Aug 27, 2019 at 2:03 PM Brendan Higgins
+>> <brendanhiggins@google.com> wrote:
+>>>
+>>> On Tue, Aug 27, 2019 at 1:21 PM shuah <shuah@kernel.org> wrote:
+>>>>
+>>>> On 8/27/19 11:49 AM, Brendan Higgins wrote:
+>>>>> Previously KUnit assumed that printk would always be present, which is
+>>>>> not a valid assumption to make. Fix that by ifdefing out functions which
+>>>>> directly depend on printk core functions similar to what dev_printk
+>>>>> does.
+>>>>>
+>>>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>>>>> Link: https://lore.kernel.org/linux-kselftest/0352fae9-564f-4a97-715a-fabe016259df@kernel.org/T/#t
+>>>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>>>> ---
+>>>>>    include/kunit/test.h |  7 +++++++
+>>>>>    kunit/test.c         | 41 ++++++++++++++++++++++++-----------------
+>>>>>    2 files changed, 31 insertions(+), 17 deletions(-)
+>>>>>
+>>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+>>>>> index 8b7eb03d4971..339af5f95c4a 100644
+>>>>> --- a/include/kunit/test.h
+>>>>> +++ b/include/kunit/test.h
+>>>>> @@ -339,9 +339,16 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+>>> [...]
+>>>> Okay after reviewing this, I am not sure why you need to do all
+>>>> this.
+>>>>
+>>>> Why can't you just change the root function that throws the warn:
+>>>>
+>>>>    static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+>>>> {
+>>>>           return vprintk_emit(0, level, NULL, 0, fmt, args);
+>>>> }
+>>>>
+>>>> You aren'r really doing anything extra here, other than calling
+>>>> vprintk_emit()
+>>>
+>>> Yeah, I did that a while ago. I think it was a combination of trying
+>>> to avoid an extra layer of adding and then removing the log level, and
+>>> that's what dev_printk and friends did.
+>>>
+>>> But I think you are probably right. It's a lot of maintenance overhead
+>>> to get rid of that. Probably best to just use what the printk people
+>>> have.
+>>>
+>>>> Unless I am missing something, can't you solve this problem by including
+>>>> printk.h and let it handle the !CONFIG_PRINTK case?
+>>>
+>>> Randy, I hope you don't mind, but I am going to ask you to re-ack my
+>>> next revision since it basically addresses the problem in a totally
+>>> different way.
+>>
+>> Actually, scratch that. Checkpatch doesn't like me calling printk
+>> without using a KERN_<LEVEL>.
+>>
+>> Now that I am thinking back to when I wrote this. I think it also
+>> might not like using a dynamic KERN_<LEVEL> either (printk("%s my
+>> message", KERN_INFO)).
+>>
+>> I am going to have to do some more investigation.
+> 
+> Alright, I am pretty sure it is safe to do printk("%smessage", KERN_<LEVEL>);
+> 
+> Looking at the printk implementation, it appears to do the format
+> before it checks the log level:
+> 
+> https://elixir.bootlin.com/linux/v5.2.10/source/kernel/printk/printk.c#L1907
+> 
+> So I am pretty sure we can do it either with the vprintk_emit or with printk.
 
-> This is the first set of DT fixes following the first YAML bindings conversion
-> at [1], [2] and [3].
->
-> After this set of fixes, the remaining errors are :
-> meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
-> meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->
-> These are only cosmetic changes, and should not break drivers implementation
-> following the bindings.
+Let me see if we are on the same page first. I am asking if you can
+just include printk.h for vprintk_emit() define for both CONFIG_PRINTK
+and !CONFIG_PRINTK cases.
 
-Queued for v5.4,
+I am not asking you to use printk() in place of vprintk_emit().
+It is perfectly fine to use vprintk_emit()
 
-Thanks,
+> 
+> So it appears that we have to weigh the following trade-offs:
+> 
+> Using vprintk_emit:
+> 
+> Pros:
+>   - That's what dev_printk uses.
 
-Kevin
+Not sure what you mean by this. I am suggesting if you can just
+call vprintk_emit() and include printk.h and not have to ifdef
+around all the other callers of kunit_vprintk_emit()
+
+Yes. There is the other issue of why do you need the complexity
+of having kunit_vprintk_emit() at all.
+
+thanks,
+-- Shuah
+
