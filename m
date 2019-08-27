@@ -2,157 +2,180 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D18821872
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A357D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 05:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBPtAp0W"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YMsm+o6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfH0FzA (ORCPT
+        id S1728546AbfH0F7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 01:55:00 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37714 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfH0Fy7 (ORCPT
+        Tue, 27 Aug 2019 01:59:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39424 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfH0F7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 01:54:59 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w67so5988856lff.4
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 22:54:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N+vpsDloTUdy5MvFdUSFeHVMIbrM4Okd8BXV+IVwifM=;
-        b=tBPtAp0WoXthyCDuxt0/UFLRqezDiJevoRKm/SOQIUlGRldn152fQioRxeB7al5xxT
-         sVoOIxaT/VuG5XuiKbuOW9+y1OHW9NHrC/uPtx+grRsTws3Vq7QqhSTz6j+4C26nCUqr
-         LDMbBJz9Sa7OUTHFnJspqelzZyXBxk3eFAElrk3MWHmSUzcbICTCuExINBxSK/XylvvR
-         ohpvOvP1+OoJDBUHQJQWotFSoTwt7NYPl+x0e1RajCT2jLQU3sCCkvBLETeYiSi3H541
-         rDNr7/WbU2NPl9VrKwbfQ/oxycmkvFye7tObGO23O2OCVf9LLaBGOow+JWnc2DkFAg20
-         8Ojw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N+vpsDloTUdy5MvFdUSFeHVMIbrM4Okd8BXV+IVwifM=;
-        b=aKIUjmX+388vTNRpMXtMCv4lXSpf0hgN/Js9R+MrDnhuv/Y1d3y80KajzZWe3GWb7H
-         hVw2N9+hkQq9ZioqHirUXjQHnIvrfjryKlvheKiqpWMfO+eqmnEdRmxa1D/oHqQ5u1o4
-         qQ/S8TLjfIgT7YL6poTZMwigJpb442Rk9W9tpg4pF75VQYUjCu9qijiSjJlh1vN0idCt
-         APJACHhdGheAgpBpGweWZqog26Au1QcLZFm/SmpH99f1w7H55uiCyz5VfeShAFZqbMaW
-         jXw5XMbvCP4Zraudeqa8NDHZfeQuyUWwppgpr6wHY7d/SVX3CAxEv5bxe6gfmlRyzMB4
-         Gu9Q==
-X-Gm-Message-State: APjAAAXH2Dn4yLSqNuYynwRry9Qr03MoW95xDIS0KQDy3doRl7cM8+Ls
-        V+hUTkBIRdRC3jdBMZQFuBBR0BudiRC3nkYURlU=
-X-Google-Smtp-Source: APXvYqzidw7it9RFvQO3QHpIyQRWnqyn2HDPGgcq72wbtDx3y1RWj/BFazwXFiWSboCAudwrFQw+mF1nebwphQAgI5I=
-X-Received: by 2002:ac2:563c:: with SMTP id b28mr12969143lff.93.1566885297683;
- Mon, 26 Aug 2019 22:54:57 -0700 (PDT)
+        Tue, 27 Aug 2019 01:59:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7R5xSHV087937;
+        Tue, 27 Aug 2019 00:59:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566885568;
+        bh=P4oNuerC0LXCGxytQnNK5ZvXLlbp4WG7fggGH4SexHA=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=YMsm+o6gEfozuhAyKFfpLA022t7HmAkv9JTcolEqnneQAcGDrhKOP7FnJYrQno+du
+         NjA4/eg6wD6XcPALz+OPuziyjJXp5kqbtr34zGOiRRHUiGer0hQ8TI0Gu3uIVCLimF
+         vHNIgKjNTzvAtF7x6CSzqxHgF7q2HkN3F09bLIcY=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7R5xSZU100761
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 27 Aug 2019 00:59:28 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 27
+ Aug 2019 00:59:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 27 Aug 2019 00:59:27 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7R5xO7I057803;
+        Tue, 27 Aug 2019 00:59:25 -0500
+Subject: Re: [RESEND PATCH v3 08/20] mtd: spi-nor: Split spi_nor_init_params()
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>,
+        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190826120821.16351-1-tudor.ambarus@microchip.com>
+ <20190826120821.16351-9-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <db529e35-801c-efb2-1f05-922fbcb98aef@ti.com>
+Date:   Tue, 27 Aug 2019 11:30:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190826180734.15801-1-codekipper@gmail.com> <20190826180734.15801-2-codekipper@gmail.com>
- <CAGb2v651jVp+J2eyWh7vw-yHmFTVy4eaMjHV0FvOF17C5_Hswg@mail.gmail.com>
-In-Reply-To: <CAGb2v651jVp+J2eyWh7vw-yHmFTVy4eaMjHV0FvOF17C5_Hswg@mail.gmail.com>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Tue, 27 Aug 2019 07:54:45 +0200
-Message-ID: <CAEKpxBmCg4AkqKM-O3C76gto+mPWyEdDbviAmRJ8PxLOOMTJ7w@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v6 1/3] ASoC: sun4i-i2s: incorrect regmap
- for A83T
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190826120821.16351-9-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 27 Aug 2019 at 06:13, Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Tue, Aug 27, 2019 at 2:07 AM <codekipper@gmail.com> wrote:
-> >
-> > From: Marcus Cooper <codekipper@gmail.com>
-> >
-> > The regmap configuration is set up for the legacy block on the
-> > A83T whereas it uses the new block with a larger register map.
->
-> Looking at the code Allwinner previously released [1], that doesn't seem to be
-> the case. Keep in mind that the register map shown in the user manual is for
-> the TDM interface, which we don't actually support right now.
 
-Should it matter what we support right now?, the block according to the user
-manual shows the bigger range. I don't have a A83T device and from what I
-gather not many users do. But the compatible for the H3 has been removed
-and replaced with the settings for the A83T which also has default settings in
-registers further up than SUNXI_RXCHMAP.
 
->
-> The file shows the base address as 0x01c22800, and the last defined register
-> is SUNXI_RXCHMAP at 0x3c.
->
-> The I2S driver [2] also shows that it is the old register map size, but with
-> TX_FIFO and INT_STA swapped around. This might mean that it would need a
-> separate regmap_config, as the read/write callbacks need to be changed to
-> fit the swapped registers.
->
-> Finally, the TDM driver [3], which matches the TDM section in the manual, shows
-> a larger register map.
->
-> A83T is SUN8IW6, while SUN8IW7 refers to the H3.
+On 26/08/19 5:38 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> Add functions to delimit what the chunks of code do:
+> 
+> static void spi_nor_init_params()
+> {
+> 	spi_nor_info_init_params()
+> 	spi_nor_manufacturer_init_params()
+> 	spi_nor_sfdp_init_params()
+> }
+> 
+> Add descriptions to all methods.
+> 
+> spi_nor_init_params() becomes of type void, as all its children
+> return void.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> ---
+> v3: rename spi_nor_legacy_init_params() to spi_nor_info_init_params()
 
-Since when have we trusted Allwinner code?, the TDM labelled block
-clearly supports
-I2S. The biggest use case for this block is getting HDMI audio working
-on the newer
-devices(LibreELEC nightlies has a user base of over 300) and I've tested this on
-numerous set ups over the last couple of years.
 
-Failing that reverting (3e9acd7ac693: "ASoC: sun4i-i2s: Remove
-duplicated quirks structure")
-would help.
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-BR,
-CK
->
-> ChenYu
->
-> [1] https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/hdmiaudio/sunxi-hdmipcm.h
-> [2] https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/i2s0/sunxi-i2s0.h
-> [3] https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/sound/soc/sunxi/daudio0/sunxi-daudio0.h
->
-> > Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > ---
-> >  sound/soc/sunxi/sun4i-i2s.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index 57bf2a33753e..34575a8aa9f6 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -1100,7 +1100,7 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
-> >  static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
-> >         .has_reset              = true,
-> >         .reg_offset_txdata      = SUN8I_I2S_FIFO_TX_REG,
-> > -       .sun4i_i2s_regmap       = &sun4i_i2s_regmap_config,
-> > +       .sun4i_i2s_regmap       = &sun8i_i2s_regmap_config,
-> >         .field_clkdiv_mclk_en   = REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
-> >         .field_fmt_wss          = REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
-> >         .field_fmt_sr           = REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
-> > --
-> > 2.23.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190826180734.15801-2-codekipper%40gmail.com.
+Minor nits below...
+
+[...]
+>  
+> +/**
+> + * spi_nor_init_params() - Initialize the flash's parameters and settings.
+> + * @nor:	pointer to a 'struct spi-nor'.
+> + *
+> + * The flash parameters and settings are initialized based on a sequence of
+> + * calls that are ordered by priority:
+> + *
+> + * 1/ Default flash parameters initialization. The initializations are done
+> + *    based on nor->info data:
+> + *		spi_nor_info_init_params()
+> + *
+> + * which can be overwritten by:
+> + * 2/ Manufacturer flash parameters initialization. The initializations are
+> + *    done based on MFR register, or when the decisions can not be done solely
+> + *    based on MFR, by using specific flash_info tweeks, ->default_init():
+> + *		spi_nor_manufacturer_init_params()
+> + *
+> + * which can be overwritten by:
+> + * 3/ SFDP flash parameters initialization. JESD216 SFDP is a standard and
+> + *    should be more accurate that the above.
+> + *		spi_nor_sfdp_init_params()
+> + *
+> + *    Please not that there is a ->post_bfpt() fixup hook that can overwrite the
+
+s/not/note
+
+> + *    flash parameters and settings imediately after parsing the Basic Flash
+
+s/imediately/immediately
+
+> + *    Parameter Table.
+> + */
+> +static void spi_nor_init_params(struct spi_nor *nor)
+> +{
+> +	spi_nor_info_init_params(nor);
+>  
+>  	spi_nor_manufacturer_init_params(nor);
+>  
+> -	if ((info->flags & (SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)) &&
+> -	    !(info->flags & SPI_NOR_SKIP_SFDP)) {
+> -		struct spi_nor_flash_parameter sfdp_params;
+> -
+> -		memcpy(&sfdp_params, params, sizeof(sfdp_params));
+> -
+> -		if (spi_nor_parse_sfdp(nor, &sfdp_params)) {
+> -			nor->addr_width = 0;
+> -			nor->flags &= ~SNOR_F_4B_OPCODES;
+> -		} else {
+> -			memcpy(params, &sfdp_params, sizeof(*params));
+> -		}
+> -	}
+> -
+> -	return 0;
+> +	if ((nor->info->flags & (SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)) &&
+> +	    !(nor->info->flags & SPI_NOR_SKIP_SFDP))
+> +		spi_nor_sfdp_init_params(nor);
+>  }
+>  
+>  static int spi_nor_select_read(struct spi_nor *nor,
+> @@ -4670,10 +4715,8 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  	    nor->info->flags & SPI_NOR_HAS_LOCK)
+>  		nor->clear_sr_bp = spi_nor_clear_sr_bp;
+>  
+> -	/* Parse the Serial Flash Discoverable Parameters table. */
+> -	ret = spi_nor_init_params(nor);
+> -	if (ret)
+> -		return ret;
+> +	/* Init flash parameters based on flash_info struct and SFDP */
+> +	spi_nor_init_params(nor);
+>  
+>  	if (!mtd->name)
+>  		mtd->name = dev_name(dev);
+> 
+
+-- 
+Regards
+Vignesh
