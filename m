@@ -2,70 +2,119 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05728C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95380C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE64F214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566939304;
-	bh=UxQO7FIOj6mG250fGU5cCX/bdK2Gf+7g6CRwXFKg+1A=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=AmctuMOiSE/26LD/qDamZR0WJnhA127oGI1bCyZd4jbyfrocbj+jgJZTw51D8pyCS
-	 NZR2jUV6Sh4p+VqPblEhghbEFD+fKVlpOCbbovSNm0eBgd7n0rs98TpSvv16GUbk4h
-	 /DnMiVTj0zIAKWENRWEkL+eS0EWPILyHKBgdEIOA=
+	by mail.kernel.org (Postfix) with ESMTP id 68FFC20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 20:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="iN/lZg2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfH0UzD (ORCPT
+        id S1730438AbfH0U4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 16:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfH0UzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 16:55:03 -0400
-Subject: Re: [GIT PULL] Please pull NFS client bugfixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566939302;
-        bh=UxQO7FIOj6mG250fGU5cCX/bdK2Gf+7g6CRwXFKg+1A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=miY4KzuAcffHbLKmPIK1HX8lHlyvBPivEcfbE59DVY8QFWlEXfMmiPKqyXJhjISfc
-         iGVxBz1OrEn8gkwcwRfKRRrqYVy/shg3lDXoc640npsYdezQRzPHU3EwgQ1lawxrME
-         FhvnsPCxCMSK1ElDp6GI2FIzaBgzIL10REv+5Ekc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <e5010947fb92781e7e5eebc6750fa61d0c5e2399.camel@hammerspace.com>
-References: <e5010947fb92781e7e5eebc6750fa61d0c5e2399.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <e5010947fb92781e7e5eebc6750fa61d0c5e2399.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
- tags/nfs-for-5.3-3
-X-PR-Tracked-Commit-Id: 99300a85260c2b7febd57082a617d1062532067e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9e8312f5e160ade069e131d54ab8652cf0e86e1a
-Message-Id: <156693930273.9420.6053224282397353518.pr-tracker-bot@kernel.org>
-Date:   Tue, 27 Aug 2019 20:55:02 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Tue, 27 Aug 2019 16:56:11 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60188 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfH0U4K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 16:56:10 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 35CF2886BF;
+        Wed, 28 Aug 2019 08:56:06 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1566939366;
+        bh=Qkj1mG0wHsGHa/gKm5/x9q0JZlgBpJKgAE+1iQkqh2Q=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=iN/lZg2JjWlXXd7voA+WGY6nUBTzOuOMmdO6MEpyAcO5ls/YCOx4rTVA4nDNs7r9H
+         aLJ9wjk8ZPdg6LYkDaNWao/pkECE2/NEzyil5tR2jNFXWfpmAq0vnqycnZD8N3uPZL
+         qV/5p3eBVw29pmpXD79jKWyqrGMF4J3GMa9b8i6IH5gZwdrMi3KKvoGgzhHdHMG6N6
+         dlfUOmPEOlsGdPgkbab4LlF3wi5cd2mIeYxoZpcwaVhlWt71E707/1aCVeneqMv8+R
+         3oByeNDpbuVz2Nv/Z2/zHNIJEa8aKFSFbt0S2dpIkJlZiM2ROO9Q+GojJZqV2xL9uV
+         8AFUJX/3Bxm8w==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d6598e60001>; Wed, 28 Aug 2019 08:56:06 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 28 Aug 2019 08:56:05 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 28 Aug 2019 08:56:05 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregory.clement@free-electrons.com" 
+        <gregory.clement@free-electrons.com>,
+        "jlu@pengutronix.de" <jlu@pengutronix.de>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "patches@armlinux.org.uk" <patches@armlinux.org.uk>
+Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+Thread-Topic: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+Thread-Index: AQHVOGTGof7sJp7iK06MfTI7WDVk4qcIBgyAgAABHQCABA5YgIACH/QAgADERoA=
+Date:   Tue, 27 Aug 2019 20:56:05 +0000
+Message-ID: <b1e2e5b325b3c4453e2ed63c17e1e11d6b24f099.camel@alliedtelesis.co.nz>
+References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
+         <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
+         <20190823104621.GY13294@shell.armlinux.org.uk>
+         <20190823105020.GZ13294@shell.armlinux.org.uk>
+         <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
+         <20190827091336.GI13294@shell.armlinux.org.uk>
+In-Reply-To: <20190827091336.GI13294@shell.armlinux.org.uk>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:2872:a49:e4e9:7214]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DB7AD1FE2BCAAD49A227E6CDD248BBBA@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 27 Aug 2019 19:26:51 +0000:
-
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.3-3
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9e8312f5e160ade069e131d54ab8652cf0e86e1a
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+T24gVHVlLCAyMDE5LTA4LTI3IGF0IDEwOjEzICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggYWRtaW4NCndyb3RlOg0KPiBPbiBNb24sIEF1ZyAyNiwgMjAxOSBhdCAxMjo0Njo0NEFNICsw
+MDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiA+IEhpIFJ1c3NlbGwsDQo+ID4gDQo+ID4gT24g
+RnJpLCAyMDE5LTA4LTIzIGF0IDExOjUwICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgg
+YWRtaW4NCj4gPiB3cm90ZToNCj4gPiA+IE9uIEZyaSwgQXVnIDIzLCAyMDE5IGF0IDExOjQ2OjIx
+QU0gKzAxMDAsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eA0KPiA+ID4gYWRtaW4gd3JvdGU6DQo+
+ID4gPiA+IEkgY2FuJ3QgYXBwbHkgdGhpcyBzZXJpZXMgLSB0aGlzIGZpbGUgZG9lcyBub3QgZXhp
+c3QgaW4gbXkgdHJlZSwNCj4gPiA+ID4gYW5kDQo+ID4gPiA+IGZyb20gd2hhdCBnaXQgdGVsbHMg
+bWUsIGl0IG5ldmVyIGhhcyBleGlzdGVkLiAgTWF5YmUgaXQncyBpbg0KPiA+ID4gPiBzb21lb25l
+DQo+ID4gPiA+IGVsc2VzIHRyZWU/DQo+ID4gPiANCj4gPiA+IEkgdGhpbmsgdGhlIGZpbGUgaXMg
+aW4gbXkgdHJlZSwganVzdCBhcyBhcmNoL2FybS9tbS9jYWNoZS1hdXJvcmEtbDIuaA0KPiA+ID4g
+d2hpY2ggaXMgd2hlcmUgaXQgaGFzIGJlZW4gc2luY2UgaXQgd2FzIG9yaWdpbmFsbHkgc3VibWl0
+dGVkIGluIDIwMTIuDQo+ID4gDQo+ID4gU29ycnkgdGhlcmUgaXMgYSBtaXNzaW5nIHBhdGNoIHRo
+YXQgbW92ZXMgaXQgbmV4dCB0byB0aGUNCj4gPiBoYXJkd2FyZS9jYWNoZS0qLmguIEkgY2FuIHNl
+bmQgdGhlIG1pc3NpbmcgcGF0Y2ggb3IgSSBjYW4gcmUtc2VuZCB0aGUNCj4gPiB3aG9sZSBzZXJp
+ZXMuIElmIEkgZG8gc2VuZCB0aGUgd2hvbGUgc2VyaWVzIGRvIHlvdSB3YW50IG1lIHRvIHJlYmFz
+ZSBpdA0KPiA+IGFnYWluc3QgYSBwYXJ0aWN1bGFyIHRhZy90cmVlPw0KPiANCj4gSnVzdCBzZW5k
+IHRoZSBzaW5nbGUgcGF0Y2ggdG8gdGhlIHBhdGNoIHRyYWNrZXIgLSBoYXZpbmcgaXQgYWdhaW5z
+dA0KPiA1LjMtcmMgaXMgZmluZSAoSSBkb24ndCB0aGluayBhbnl0aGluZyBoYXMgY2hhbmdlZCBm
+b3IgYSBsb25nIHRpbWUNCj4gd2l0aCB0aGF0IGZpbGUuKQ0KDQpEb25lIA0KaHR0cHM6Ly93d3cu
+YXJtbGludXgub3JnLnVrL2RldmVsb3Blci9wYXRjaGVzL3ZpZXdwYXRjaC5waHA/aWQ9ODkwMi8x
+DQoNCkknbSBzdGlsbCBub3QgZW50aXJlbHkgc3VyZSB3aGF0IHRvIHB1dCBmb3IgdGhlIEtlcm5l
+bFZlcnNpb24gdGFnLiBJbg0KaGluZHNpZ2h0IHRoaW5rIEkgbWlzaW50ZXJwcmV0ZWQgeW91ciBj
+b21tZW50IGFib3ZlIGFuZCBzZXQgaXQgdG8gNS4zcmMNCih3aGVyZSB5b3UgbWVhbnQgYSBzZXJp
+ZXMgYmFzZWQgb24gNS4zLXJjWCBzaG91bGQgYXBwbHkgY2xlYW5seSkuIEl0DQpwcm9iYWJseSBz
+aG91bGQgaGF2ZSBiZWVuIG5leHQgb3IgbWFzdGVyIGJlY2F1c2UgaXQncyB3YXkgcGFzdCB0aGUN
+Cm1lcmdlIHdpbmRvdyBmb3IgNS4zLg0KDQo=
