@@ -5,56 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60043C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90378C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3367F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFC021872
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892382;
-	bh=ufF3t1CWQkT46mQdMzFeTuoDkBirTgFqwuYqOxLy9ig=;
+	s=default; t=1566892386;
+	bh=fp7pC5A6v8DesicfVH1brRId9ycSV71FJmTtEnSVlJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AclTrFgivaCuBirjJsufTCUday6MpY6sE2xeAzx6X2aWvrcVm1Zx4rHMZcmwdI+c+
-	 8i/ciS0PlFIGxkspnCZDxlmyCUWCX5Eo6imFd01O2yDLMU35SjX+98Dpp6GPHgsahs
-	 34Oeckwa+Iooeta2/jZfB+Y08x8sNoIGmjKWTjgQ=
+	b=mZbKRpqiv9G4u1ru/qDtQz7DeHjcWMQzPeht3Cm00UYIrm/xmxgTlqAtgCvJNz5nQ
+	 2zks+Pic4BsUA/RiQRkCaM1TUq8ePBUqnz+mluBijmOVkaoeQe0hUs3STveIkRlPqH
+	 WHftOIfXlhYH4QXd8hLssqMszU0lmOLnygWd7wQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbfH0HxB (ORCPT
+        id S1728715AbfH0HxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:53:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729632AbfH0Hwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:52:55 -0400
+        id S1729665AbfH0HxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:53:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C722173E;
-        Tue, 27 Aug 2019 07:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EB22173E;
+        Tue, 27 Aug 2019 07:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892374;
-        bh=ufF3t1CWQkT46mQdMzFeTuoDkBirTgFqwuYqOxLy9ig=;
+        s=default; t=1566892380;
+        bh=fp7pC5A6v8DesicfVH1brRId9ycSV71FJmTtEnSVlJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bj2R8QfejpLT9o0iRAFt0TUY7ORlgGUuTmdnGPm2QyGwpBdHW9YR1GT56Dhe+o4bZ
-         xPVS6PdjWD1k7ZwTHxWwZcfAcnY28EaDVnPevyfrA2a46lz9OgboPsraNDxmgSEpGX
-         L0Jp/1AXeVXJ7Fon/Febc1iX5bITt0ORu0YwQgIs=
+        b=2GFEm7U42ypy5dnBVXRBEuoHFr9PpSNmz7zXFIqI87Vr+bfGlC2aWgO0FgBmBF1+G
+         J8cOVn+vSaU9H6OvzooUBAgC1QgF1/D+fZ+qIO+oYFGbctAR/bKApEyyeumBICuTQC
+         xE6epzbIuIAk4FW2PYdEFR3bRhA9kXE4ngt5sUQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, He Zhe <zhe.he@windriver.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/62] perf cpumap: Fix writing to illegal memory in handling cpumap mask
-Date:   Tue, 27 Aug 2019 09:50:38 +0200
-Message-Id: <20190827072702.651098086@linuxfoundation.org>
+Subject: [PATCH 4.14 35/62] selftests: kvm: Adding config fragments
+Date:   Tue, 27 Aug 2019 09:50:40 +0200
+Message-Id: <20190827072702.740044582@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -67,46 +60,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed ]
+[ Upstream commit c096397c78f766db972f923433031f2dec01cae0 ]
 
-cpu_map__snprint_mask() would write to illegal memory pointed by
-zalloc(0) when there is only one cpu.
+selftests kvm test cases need pre-required kernel configs for the test
+to get pass.
 
-This patch fixes the calculation and adds sanity check against the input
-parameters.
-
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
-Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cpumap.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/selftests/kvm/config | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/config
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 383674f448fcd..f93846edc1e0d 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -701,7 +701,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
- 	unsigned char *bitmap;
- 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
- 
--	bitmap = zalloc((last_cpu + 7) / 8);
-+	if (buf == NULL)
-+		return 0;
-+
-+	bitmap = zalloc(last_cpu / 8 + 1);
- 	if (bitmap == NULL) {
- 		buf[0] = '\0';
- 		return 0;
+diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
+new file mode 100644
+index 0000000000000..63ed533f73d6e
+--- /dev/null
++++ b/tools/testing/selftests/kvm/config
+@@ -0,0 +1,3 @@
++CONFIG_KVM=y
++CONFIG_KVM_INTEL=y
++CONFIG_KVM_AMD=y
 -- 
 2.20.1
 
