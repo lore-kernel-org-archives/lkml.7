@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB53AC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2439BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33AD206BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D02206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 07:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566892586;
-	bh=IMouhFbAtyRnrffhXqdRzpnr6dJAf9xPKL2fxq5ru5Q=;
+	s=default; t=1566892591;
+	bh=4K/hEkkHciDKVKUWejVq+KiKrvvvlnJGrL9V3ZOtjw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JOKQ6+G2YTqpS2ABIb6nkIsQ9Gl77ezFLiP9EkHKGR1kXo2KN4+DelI2gd7PwBnbv
-	 e/ajxighX5F0BlndYutlromjskKQeT7/aW/LEd1qNZkNrCEAe4FAHHZCbLn+EQBsWQ
-	 588Y07qz0HKBQaU9Rqr7aA3jXJxyasyu8aFAgD4M=
+	b=Dw6aaaDq4WoXxFVFmikmUDeW6DuKjIWTTzf0ad+8/YHNQahtFUPKRRBweDe9O6ANF
+	 EWo3OmJn2NRV4ixwyQCoDKydg3VLQzbLpPZfdqZLr6fcLMSkY7pOGoSc+35CuyUVpg
+	 yDQ/EygZtpqQiorKM75WSnua90oi9Nt2t7adEAao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbfH0H4Z (ORCPT
+        id S1730617AbfH0H43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48310 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 03:56:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbfH0H4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:56:22 -0400
+        id S1728948AbfH0H41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:56:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E88D0206BF;
-        Tue, 27 Aug 2019 07:56:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F198206BA;
+        Tue, 27 Aug 2019 07:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892581;
-        bh=IMouhFbAtyRnrffhXqdRzpnr6dJAf9xPKL2fxq5ru5Q=;
+        s=default; t=1566892587;
+        bh=4K/hEkkHciDKVKUWejVq+KiKrvvvlnJGrL9V3ZOtjw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCk4XJ0PopMCAmwlHh/ow2TnReX3NG8poNWX4cPgKKN8GRv1Nfl+DTIuM3LIdcZ4s
-         XdDlu/cE9AaSFa2208iE+yj6GFQ2TruiBhO+6qIMrwXvlz4HMEedL8wGCKKlOfltJX
-         7l/Gq96UVxuyhzpg2poOgHVx86qZSDRivhYVzg/g=
+        b=yS3/38wawfEu7wRSg6flBYOMJV0SQiFTBAiikCEgz0AGVWcoWWYBQQzYNBdboKbYQ
+         e8U+bADfO2n4jo8VMmpBp4jSfbrcmHadyZCHtRHi7PvDDQwGvViSuxPOeUevF8QhGa
+         ZN0E4QtD5rkqFkTvwkP8DhzNCs/cfW5B88esvT+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/98] s390: put _stext and _etext into .text section
-Date:   Tue, 27 Aug 2019 09:50:20 +0200
-Message-Id: <20190827072720.380385106@linuxfoundation.org>
+Subject: [PATCH 4.19 43/98] net: stmmac: Fix issues when number of Queues >= 4
+Date:   Tue, 27 Aug 2019 09:50:22 +0200
+Message-Id: <20190827072720.479152287@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072718.142728620@linuxfoundation.org>
 References: <20190827072718.142728620@linuxfoundation.org>
@@ -61,55 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 24350fdadbdec780406a1ef988e6cd3875e374a8 ]
+[ Upstream commit e8df7e8c233a18d2704e37ecff47583b494789d3 ]
 
-Perf relies on _etext and _stext symbols being one of 't', 'T', 'v' or
-'V'. Put them into .text section to guarantee that.
+When queues >= 4 we use different registers but we were not subtracting
+the offset of 4. Fix this.
 
-Also moves padding to page boundary inside .text which has an effect that
-.text section is now padded with nops rather than 0's, which apparently
-has been the initial intention for specifying 0x0700 fill expression.
+Found out by Coverity.
 
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vmlinux.lds.S | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 4 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index b43f8d33a3697..18ede6e806b91 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -31,10 +31,9 @@ PHDRS {
- SECTIONS
- {
- 	. = 0x100000;
--	_stext = .;		/* Start of text section */
- 	.text : {
--		/* Text and read-only data */
--		_text = .;
-+		_stext = .;		/* Start of text section */
-+		_text = .;		/* Text and read-only data */
- 		HEAD_TEXT
- 		TEXT_TEXT
- 		SCHED_TEXT
-@@ -46,11 +45,10 @@ SECTIONS
- 		*(.text.*_indirect_*)
- 		*(.fixup)
- 		*(.gnu.warning)
-+		. = ALIGN(PAGE_SIZE);
-+		_etext = .;		/* End of text section */
- 	} :text = 0x0700
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index d0e6e1503581f..48cf5e2b24417 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -88,6 +88,8 @@ static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
+ 	u32 value;
  
--	. = ALIGN(PAGE_SIZE);
--	_etext = .;		/* End of text section */
--
- 	NOTES :text :note
+ 	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
++	if (queue >= 4)
++		queue -= 4;
  
- 	.dummy : { *(.dummy) } :data
+ 	value = readl(ioaddr + base_register);
+ 
+@@ -105,6 +107,8 @@ static void dwmac4_tx_queue_priority(struct mac_device_info *hw,
+ 	u32 value;
+ 
+ 	base_register = (queue < 4) ? GMAC_TXQ_PRTY_MAP0 : GMAC_TXQ_PRTY_MAP1;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + base_register);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index d182f82f7b586..870302a7177e2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -106,6 +106,8 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
+ 	u32 value, reg;
+ 
+ 	reg = (queue < 4) ? XGMAC_RXQ_CTRL2 : XGMAC_RXQ_CTRL3;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + reg);
+ 	value &= ~XGMAC_PSRQ(queue);
+@@ -169,6 +171,8 @@ static void dwxgmac2_map_mtl_to_dma(struct mac_device_info *hw, u32 queue,
+ 	u32 value, reg;
+ 
+ 	reg = (queue < 4) ? XGMAC_MTL_RXQ_DMA_MAP0 : XGMAC_MTL_RXQ_DMA_MAP1;
++	if (queue >= 4)
++		queue -= 4;
+ 
+ 	value = readl(ioaddr + reg);
+ 	value &= ~XGMAC_QxMDMACH(queue);
 -- 
 2.20.1
 
