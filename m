@@ -2,70 +2,69 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDB9C3A59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A74BC3A59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A43A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CC5206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 00:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYYRaH+H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TbRrANRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfH0Add (ORCPT
+        id S1728488AbfH0Aeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 26 Aug 2019 20:33:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35606 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfH0Add (ORCPT
+        Mon, 26 Aug 2019 20:34:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35673 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbfH0Aef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 26 Aug 2019 20:33:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d85so12920068pfd.2;
-        Mon, 26 Aug 2019 17:33:32 -0700 (PDT)
+        Mon, 26 Aug 2019 20:34:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d85so12921437pfd.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Aug 2019 17:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=T2qfXAOzBkKONr1D7gAvKeuCZNsV3DxCRylYnjCYyJU=;
-        b=nYYRaH+HM1YBYw4ZVd4OOraYsb7gEf+zg5z592juVKAJIVia5DBkFjy8a+grLFHwtI
-         0A0ZbtdvNjEigkXCL/MzRKPoeo4p6+V26tFnqqAXipgnLkKOSMq85UPE+8/B/7nqSTnd
-         WU1whHH+2Fc9G+xJwJ73ws6TxzNLKdQun+W/C86GMmlSbzR6JGlpYik8trZaxpmibUl+
-         8ucKm3kO8o6kfmB4PcbqEeKZ+ySWtUrwXNOnWi7KExS2rFCzFh3KWfGJ38mShew4dqYw
-         2Bd540kJtjFq0wjTAdAAhTRfTTB2N1p9H0r3/F/yU7kjtXVXQ/hUtvd+5EQ+1BijV/T1
-         a0/w==
+        bh=3Vs+TQr7hHy2v8MzMkCOjJVcnNTmLTAgeFS/JpBulfo=;
+        b=TbRrANRIH92j2fSmCx5BdSbQOzmBU/XbqoZ7xd1Ww6AaUEz68WzvbdIanurUAl4uCi
+         TY5ohivdtzQn+XaVmJg6fPUKxrj24BAg74pSnwI7DkAuOrdvMiXXCrTy2hSlOyRnUj+6
+         wtSltIyQcEmY1aect58Y183r1a351O76l3nNE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=T2qfXAOzBkKONr1D7gAvKeuCZNsV3DxCRylYnjCYyJU=;
-        b=BA1UJhYNgN0tdiqEypU2RsQwnep8DJpGDjtKJHaxsy4IkPfL7yQiviZwzWlsOtb8g2
-         LLvrt3A0UqRav74jU9+1VG8PzR3jM+/pWek4hJCxMrgz0KwI2ZKSGIaZdpbclLUMBk6t
-         mvhKiTnmxyJJdQrZTYk/slpw7/F+ijAYYcWrlK6otu5ZbeHGw+fdyIiBcehb3dnI2FFr
-         X7eAxeOhPrne6nadCNp5b0zUIgkl95PScZKuc8qXkj7DeulllZl3myeynAd5ly5lS7x4
-         ICOGDOc04hMr0E7c1tjwaAKMM/tpXgjAHKwZ3KAQlxhfIRQlkgLmuDmpo8YOjxSjIWHJ
-         LNNg==
-X-Gm-Message-State: APjAAAUlxwVAhCdlBhELCusUjCOTvLTV1JPWbWkTW3Gx/CY/glL0+Qpu
-        Ndi084+ysuwLiS1gonpaIpzFctWd
-X-Google-Smtp-Source: APXvYqz8+HKbrlFf6IxI5Y5b/BT6mc7tM5Uzli66SoeFFxln9eKu4UNtls3Zc18l/oJAfC33gWlMdQ==
-X-Received: by 2002:a62:f245:: with SMTP id y5mr23245108pfl.156.1566866012401;
-        Mon, 26 Aug 2019 17:33:32 -0700 (PDT)
-Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id j5sm10137640pgp.59.2019.08.26.17.33.29
+        bh=3Vs+TQr7hHy2v8MzMkCOjJVcnNTmLTAgeFS/JpBulfo=;
+        b=FZfovtVbMVdZJcoOggIgBqKXL0dW6W0ZrN1OsolWBUrxvmiuLP/o4+UrQxXhsfAub2
+         PKIVCFsGjFzOctfxcI9Bdjh9AOnpQBVJr6OPhVVkyA+DPFOcH4pJKS6nToec4XvPx5ki
+         oRC7tPwq2xDvS2ghtYJDNN17K/AkySF/cEdMkXecpwB9MqVM2dZ5loe7KXx2LfubUtCb
+         7O5BFdohtZzeRxBcUdVejRUODk56xRjMsoWILdPS3upkIAgvP0GkMcZA6oV0zW1ex8kS
+         A2PQw2yS1GAoldk0JFKsAnMp+nulYP9Uwtz6qA85ELgeU3ZaHlV8e5+Uqq8kmi3HB/Io
+         mc6g==
+X-Gm-Message-State: APjAAAX/tW/+lSkQz15qvPrGrhpzYL6OJ3RaOIwqCuV03/tRyEp1cDmM
+        M+nK1fmzjOQMrpI+Eq7FOYPZlQ==
+X-Google-Smtp-Source: APXvYqyXHySgZZYqvzNM28Yd+pRvNdNbnVHxIZpOA4FgrKCaNtwMUDuAlL2eCKLsx6jrUwC8C3dTJQ==
+X-Received: by 2002:a05:6a00:8e:: with SMTP id c14mr22563388pfj.241.1566866074901;
+        Mon, 26 Aug 2019 17:34:34 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id a23sm9081429pfc.71.2019.08.26.17.34.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 17:33:31 -0700 (PDT)
-From:   Ben Chuang <benchuanggli@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
-        Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V6 5/5] mmc: host: sdhci-pci: Add Genesys Logic GL975x support
-Date:   Tue, 27 Aug 2019 08:33:35 +0800
-Message-Id: <20190827003335.2494-1-benchuanggli@gmail.com>
-X-Mailer: git-send-email 2.22.1
+        Mon, 26 Aug 2019 17:34:34 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wgong@codeaurora.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Alagu Sankar <alagusankar@silex-india.com>,
+        briannorris@chromium.org, tientzu@chromium.org
+Subject: [PATCH,RFC] ath10k: Fix skb->len (properly) in ath10k_sdio_mbox_rx_packet
+Date:   Tue, 27 Aug 2019 08:33:26 +0800
+Message-Id: <20190827003326.147452-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,433 +72,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+(not a formal patch, take this as a bug report for now, I can clean
+up depending on the feedback I get here)
 
-Add support for the GL9750 and GL9755 chipsets.
+There's at least 3 issues here, and the patch fixes 2/3 only, I'm not sure
+how/if 1 should be handled.
+ 1. ath10k_sdio_mbox_rx_alloc allocating skb of a incorrect size (too
+    small)
+ 2. ath10k_sdio_mbox_rx_packet calling skb_put with that incorrect size.
+ 3. ath10k_sdio_mbox_rx_process_packet attempts to fixup the size, but
+    does not use proper skb_put commands to do so, so we end up with
+    a mismatch between skb->head + skb->tail and skb->data + skb->len.
 
-Enable v4 mode and wait 5ms after set 1.8V signal enable for GL9750/
-GL9755. Fix the value of SDHCI_MAX_CURRENT register and use the vendor
-tuning flow for GL9750.
+Let's start with 3, this is quite serious as this and causes corruptions
+in the TCP stack, as the stack tries to coalesce packets, and relies on
+skb->tail being correct (that is, skb_tail_pointer must point to the
+first byte _after_ the data): one must never manipulate skb->len
+directly.
 
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
+Instead, we need to use skb_put to allocate more space (which updates
+skb->len and skb->tail). But it seems odd to do that in
+ath10k_sdio_mbox_rx_process_packet, so I move the code to
+ath10k_sdio_mbox_rx_packet (point 2 above).
+
+However, there is still something strange (point 1 above), why is
+ath10k_sdio_mbox_rx_alloc allocating packets of the incorrect
+(too small?) size? What happens if the packet is bigger than alloc_len?
+Does this lead to corruption/lost data?
+
+Fixes: 8530b4e7b22bc3b ("ath10k: sdio: set skb len for all rx packets")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+
 ---
- drivers/mmc/host/Makefile         |   2 +-
- drivers/mmc/host/sdhci-pci-core.c |   2 +
- drivers/mmc/host/sdhci-pci-gli.c  | 354 ++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci-pci.h      |   5 +
- 4 files changed, 362 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mmc/host/sdhci-pci-gli.c
 
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 73578718f119..661445415090 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_MMC_MXS)		+= mxs-mmc.o
- obj-$(CONFIG_MMC_SDHCI)		+= sdhci.o
- obj-$(CONFIG_MMC_SDHCI_PCI)	+= sdhci-pci.o
- sdhci-pci-y			+= sdhci-pci-core.o sdhci-pci-o2micro.o sdhci-pci-arasan.o \
--				   sdhci-pci-dwc-mshc.o
-+				   sdhci-pci-dwc-mshc.o sdhci-pci-gli.o
- obj-$(subst m,y,$(CONFIG_MMC_SDHCI_PCI))	+= sdhci-pci-data.o
- obj-$(CONFIG_MMC_SDHCI_ACPI)	+= sdhci-acpi.o
- obj-$(CONFIG_MMC_SDHCI_PXAV3)	+= sdhci-pxav3.o
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 4154ee11b47d..e5835fbf73bc 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -1682,6 +1682,8 @@ static const struct pci_device_id pci_ids[] = {
- 	SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
- 	SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
- 	SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
-+	SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
-+	SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
- 	SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
- 	/* Generic SD host controller */
- 	{PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-new file mode 100644
-index 000000000000..d0ca3c60f8de
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -0,0 +1,354 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Genesys Logic, Inc.
-+ *
-+ * Authors: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-+ *
-+ * Version: v0.9.0 (2019-08-08)
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/pci.h>
-+#include <linux/mmc/mmc.h>
-+#include <linux/delay.h>
-+#include "sdhci.h"
-+#include "sdhci-pci.h"
-+
-+/*  Genesys Logic extra registers */
-+#define SDHCI_GLI_9750_WT         0x800
-+#define   SDHCI_GLI_9750_WT_EN      BIT(0)
-+#define   GLI_9750_WT_EN_ON	    0x1
-+#define   GLI_9750_WT_EN_OFF	    0x0
-+
-+#define SDHCI_GLI_9750_DRIVING      0x860
-+#define   SDHCI_GLI_9750_DRIVING_1    GENMASK(11, 0)
-+#define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
-+#define   GLI_9750_DRIVING_1_VALUE    0xFFF
-+#define   GLI_9750_DRIVING_2_VALUE    0x3
-+
-+#define SDHCI_GLI_9750_PLL	      0x864
-+#define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
-+#define   SDHCI_GLI_9750_PLL_TX2_DLY    GENMASK(22, 20)
-+#define   GLI_9750_PLL_TX2_INV_VALUE    0x1
-+#define   GLI_9750_PLL_TX2_DLY_VALUE    0x0
-+
-+#define SDHCI_GLI_9750_SW_CTRL      0x874
-+#define   SDHCI_GLI_9750_SW_CTRL_4    GENMASK(7, 6)
-+#define   GLI_9750_SW_CTRL_4_VALUE    0x3
-+
-+#define SDHCI_GLI_9750_MISC            0x878
-+#define   SDHCI_GLI_9750_MISC_TX1_INV    BIT(2)
-+#define   SDHCI_GLI_9750_MISC_RX_INV     BIT(3)
-+#define   SDHCI_GLI_9750_MISC_TX1_DLY    GENMASK(6, 4)
-+#define   GLI_9750_MISC_TX1_INV_VALUE    0x0
-+#define   GLI_9750_MISC_RX_INV_ON        0x1
-+#define   GLI_9750_MISC_RX_INV_OFF       0x0
-+#define   GLI_9750_MISC_RX_INV_VALUE     GLI_9750_MISC_RX_INV_OFF
-+#define   GLI_9750_MISC_TX1_DLY_VALUE    0x5
-+
-+#define SDHCI_GLI_9750_TUNING_CONTROL	          0x540
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_EN          BIT(4)
-+#define   GLI_9750_TUNING_CONTROL_EN_ON             0x1
-+#define   GLI_9750_TUNING_CONTROL_EN_OFF            0x0
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1    BIT(16)
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2    GENMASK(20, 19)
-+#define   GLI_9750_TUNING_CONTROL_GLITCH_1_VALUE    0x1
-+#define   GLI_9750_TUNING_CONTROL_GLITCH_2_VALUE    0x2
-+
-+#define SDHCI_GLI_9750_TUNING_PARAMETERS           0x544
-+#define   SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY    GENMASK(2, 0)
-+#define   GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE    0x1
-+
-+#define GLI_MAX_TUNING_LOOP 40
-+
-+/* Genesys Logic chipset */
-+static inline void gl9750_wt_on(struct sdhci_host *host)
-+{
-+	u32 wt_value = 0;
-+	u32 wt_enable = 0;
-+
-+	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-+	wt_enable = FIELD_GET(SDHCI_GLI_9750_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9750_WT_EN_ON)
-+		return;
-+
-+	wt_value &= ~SDHCI_GLI_9750_WT_EN;
-+	wt_value |= FIELD_PREP(SDHCI_GLI_9750_WT_EN, GLI_9750_WT_EN_ON);
-+
-+	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-+}
-+
-+static inline void gl9750_wt_off(struct sdhci_host *host)
-+{
-+	u32 wt_value = 0;
-+	u32 wt_enable = 0;
-+
-+	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-+	wt_enable = FIELD_GET(SDHCI_GLI_9750_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9750_WT_EN_OFF)
-+		return;
-+
-+	wt_value &= ~SDHCI_GLI_9750_WT_EN;
-+	wt_value |= FIELD_PREP(SDHCI_GLI_9750_WT_EN, GLI_9750_WT_EN_OFF);
-+
-+	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-+}
-+
-+static void gli_set_9750(struct sdhci_host *host)
-+{
-+	u32 driving_value = 0;
-+	u32 pll_value = 0;
-+	u32 sw_ctrl_value = 0;
-+	u32 misc_value = 0;
-+	u32 parameter_value = 0;
-+	u32 control_value = 0;
-+
-+	u16 ctrl2 = 0;
-+
-+	gl9750_wt_on(host);
-+
-+	driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-+	pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-+	sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-+	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+	parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-+	control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	driving_value &= ~(SDHCI_GLI_9750_DRIVING_1);
-+	driving_value &= ~(SDHCI_GLI_9750_DRIVING_2);
-+	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_1,
-+				    GLI_9750_DRIVING_1_VALUE);
-+	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
-+				    GLI_9750_DRIVING_2_VALUE);
-+	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
-+
-+	sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
-+	sw_ctrl_value |= FIELD_PREP(SDHCI_GLI_9750_SW_CTRL_4,
-+				    GLI_9750_SW_CTRL_4_VALUE);
-+	sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
-+
-+	/* reset the tuning flow after reinit and before starting tuning */
-+	pll_value &= ~SDHCI_GLI_9750_PLL_TX2_INV;
-+	pll_value &= ~SDHCI_GLI_9750_PLL_TX2_DLY;
-+	pll_value |= FIELD_PREP(SDHCI_GLI_9750_PLL_TX2_INV,
-+				GLI_9750_PLL_TX2_INV_VALUE);
-+	pll_value |= FIELD_PREP(SDHCI_GLI_9750_PLL_TX2_DLY,
-+				GLI_9750_PLL_TX2_DLY_VALUE);
-+
-+	misc_value &= ~SDHCI_GLI_9750_MISC_TX1_INV;
-+	misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+	misc_value &= ~SDHCI_GLI_9750_MISC_TX1_DLY;
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_TX1_INV,
-+				 GLI_9750_MISC_TX1_INV_VALUE);
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+				 GLI_9750_MISC_RX_INV_VALUE);
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_TX1_DLY,
-+				 GLI_9750_MISC_TX1_DLY_VALUE);
-+
-+	parameter_value &= ~SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY;
-+	parameter_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY,
-+				      GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE);
-+
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1;
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1,
-+				    GLI_9750_TUNING_CONTROL_GLITCH_1_VALUE);
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2,
-+				    GLI_9750_TUNING_CONTROL_GLITCH_2_VALUE);
-+
-+	sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
-+	sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+
-+	/* disable tuned clk */
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-+
-+	/* enable tuning parameters control */
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_EN;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_EN,
-+				    GLI_9750_TUNING_CONTROL_EN_ON);
-+	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	/* write tuning parameters */
-+	sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
-+
-+	/* disable tuning parameters control */
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_EN;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_EN,
-+				    GLI_9750_TUNING_CONTROL_EN_OFF);
-+	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	/* clear tuned clk */
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-+
-+	udelay(1);
-+
-+	gl9750_wt_off(host);
-+}
-+
-+static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
-+{
-+	u32 misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+
-+	gl9750_wt_on(host);
-+
-+	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+	if (b) {
-+		misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+		misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+					 GLI_9750_MISC_RX_INV_ON);
-+		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+	} else {
-+		misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+		misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+					 GLI_9750_MISC_RX_INV_OFF);
-+		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+	}
-+
-+	gl9750_wt_off(host);
-+}
-+
-+static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-+{
-+	int i;
-+	int rx_inv = 0;
-+
-+	for (rx_inv = 0; rx_inv < 2; rx_inv++) {
-+		if (rx_inv & 0x1)
-+			gli_set_9750_rx_inv(host, true);
-+		else
-+			gli_set_9750_rx_inv(host, false);
-+
-+		sdhci_start_tuning(host);
-+
-+		for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-+			u16 ctrl;
-+
-+			sdhci_send_tuning(host, opcode);
-+
-+			if (!host->tuning_done) {
-+				if (rx_inv == 1) {
-+					pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-+						mmc_hostname(host->mmc));
-+					sdhci_abort_tuning(host, opcode);
-+					return -ETIMEDOUT;
-+				}
-+				sdhci_abort_tuning(host, opcode);
-+				break;
-+			}
-+
-+			ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
-+				if (ctrl & SDHCI_CTRL_TUNED_CLK)
-+					return 0; /* Success! */
-+				break;
-+			}
-+		}
-+	}
-+
-+	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-+		mmc_hostname(host->mmc));
-+	sdhci_reset_tuning(host);
-+	return -EAGAIN;
-+}
-+
-+static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
-+{
-+	host->mmc->retune_period = 0;
-+	if (host->tuning_mode == SDHCI_TUNING_MODE_1)
-+		host->mmc->retune_period = host->tuning_count;
-+
-+	gli_set_9750(host);
-+	host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
-+	sdhci_end_tuning(host);
-+
-+	return 0;
-+}
-+
-+static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
-+{
-+	struct sdhci_host *host = slot->host;
-+
-+	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+	sdhci_enable_v4_mode(host);
-+
-+	return 0;
-+}
-+
-+static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
-+{
-+	struct sdhci_host *host = slot->host;
-+
-+	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+	sdhci_enable_v4_mode(host);
-+
-+	return 0;
-+}
-+
-+static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-+{
-+	usleep_range(5000, 5500);
-+}
-+
-+static void sdhci_gl9750_reset(struct sdhci_host *host, u8 mask)
-+{
-+	sdhci_reset(host, mask);
-+	gli_set_9750(host);
-+}
-+
-+#ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
-+static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
-+{
-+	u32 value;
-+
-+	value = readl(host->ioaddr + reg);
-+	if (unlikely(reg == SDHCI_MAX_CURRENT)) {
-+		if (!(value & 0xff))
-+			value |= 0xc8;
-+	}
-+	return value;
-+}
-+#endif
-+
-+static const struct sdhci_ops sdhci_gl9755_ops = {
-+	.set_clock		= sdhci_set_clock,
-+	.enable_dma		= sdhci_pci_enable_dma,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+	.voltage_switch		= sdhci_gli_voltage_switch,
-+};
-+
-+const struct sdhci_pci_fixes sdhci_gl9755 = {
-+	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-+	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-+	.probe_slot	= gli_probe_slot_gl9755,
-+	.ops            = &sdhci_gl9755_ops,
-+};
-+
-+static const struct sdhci_ops sdhci_gl9750_ops = {
-+#ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
-+	.read_l                 = sdhci_gl9750_readl,
-+#endif
-+	.set_clock		= sdhci_set_clock,
-+	.enable_dma		= sdhci_pci_enable_dma,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_gl9750_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+	.voltage_switch		= sdhci_gli_voltage_switch,
-+	.platform_execute_tuning = gl9750_execute_tuning,
-+};
-+
-+const struct sdhci_pci_fixes sdhci_gl9750 = {
-+	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-+	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-+	.probe_slot	= gli_probe_slot_gl9750,
-+	.ops            = &sdhci_gl9750_ops,
-+};
-+
-diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-index e5dc6e44c7a4..738ba5afcc20 100644
---- a/drivers/mmc/host/sdhci-pci.h
-+++ b/drivers/mmc/host/sdhci-pci.h
-@@ -65,6 +65,9 @@
+One simple way to test this is this scriplet, that sends a lot of
+small packets over SSH:
+(for i in `seq 1 300`; do echo $i; sleep 0.1; done) | ssh $IP cat
+
+In my testing it rarely ever reach 300 without failure.
+
+ drivers/net/wireless/ath/ath10k/sdio.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index 8ed4fbd8d6c3888..a9f5002863ee7bb 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -381,16 +381,14 @@ static int ath10k_sdio_mbox_rx_process_packet(struct ath10k *ar,
+ 	struct ath10k_htc_hdr *htc_hdr = (struct ath10k_htc_hdr *)skb->data;
+ 	bool trailer_present = htc_hdr->flags & ATH10K_HTC_FLAG_TRAILER_PRESENT;
+ 	enum ath10k_htc_ep_id eid;
+-	u16 payload_len;
+ 	u8 *trailer;
+ 	int ret;
  
- #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
+-	payload_len = le16_to_cpu(htc_hdr->len);
+-	skb->len = payload_len + sizeof(struct ath10k_htc_hdr);
++	/* TODO: Remove this? */
++	WARN_ON(skb->len != le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr));
  
-+#define PCI_DEVICE_ID_GLI_9755		0x9755
-+#define PCI_DEVICE_ID_GLI_9750		0x9750
-+
- /*
-  * PCI device class and mask
-  */
-@@ -185,5 +188,7 @@ int sdhci_pci_enable_dma(struct sdhci_host *host);
- extern const struct sdhci_pci_fixes sdhci_arasan;
- extern const struct sdhci_pci_fixes sdhci_snps;
- extern const struct sdhci_pci_fixes sdhci_o2;
-+extern const struct sdhci_pci_fixes sdhci_gl9750;
-+extern const struct sdhci_pci_fixes sdhci_gl9755;
+ 	if (trailer_present) {
+-		trailer = skb->data + sizeof(*htc_hdr) +
+-			  payload_len - htc_hdr->trailer_len;
++		trailer = skb->data + skb->len - htc_hdr->trailer_len;
  
- #endif /* __SDHCI_PCI_H */
+ 		eid = pipe_id_to_eid(htc_hdr->eid);
+ 
+@@ -637,8 +635,16 @@ static int ath10k_sdio_mbox_rx_packet(struct ath10k *ar,
+ 	ret = ath10k_sdio_readsb(ar, ar_sdio->mbox_info.htc_addr,
+ 				 skb->data, pkt->alloc_len);
+ 	pkt->status = ret;
+-	if (!ret)
++	if (!ret) {
++		/* Update actual length. */
++		/* FIXME: This looks quite wrong, why is pkt->act_len not
++		 * correct in the first place?
++		 */
++		struct ath10k_htc_hdr *htc_hdr =
++			(struct ath10k_htc_hdr *)skb->data;
++		pkt->act_len = le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr);
+ 		skb_put(skb, pkt->act_len);
++	}
+ 
+ 	return ret;
+ }
 -- 
-2.22.1
+2.23.0.187.g17f5b7556c-goog
 
