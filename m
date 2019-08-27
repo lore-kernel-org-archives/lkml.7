@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C893CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A169C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A13C3206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6CA206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 08:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566893772;
-	bh=udaqUPiPzuY0HXY31O3O3v6qDWZt9qyS0+RjrPuCBtQ=;
+	s=default; t=1566893778;
+	bh=GfJ9CA+FnmOmJgMvLBMy5H/eRhMID16zoKjq6w4U1+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wLmd/IpZTbr8liqQHQ0/gHyBEgT52onaiSRtB2pbgsP8griPeS7Ueg7gu6mHCr8Jn
-	 hi4uGjENU5onIQ0tc9ZStdVxWJzXWl7tSBet7TaF6J0li122XyaWkM7exsEVi3tJFd
-	 3gi6dymeHO0H/OOPlogMb7KXmevL1YxZHsszNnLg=
+	b=adI+ISjntwhMskUhIRc3MnlunO4qxQQXCmDKJXAiMv54CD/dOZrrL5IDtK2ON8UQc
+	 1m6tshKr7tzM+8G97bdIsHccWkmoiAwITM0APyXaRBA8lainzcvYHArxqQydOqUNy5
+	 XNlNLwOnzajhrMdsqjGyWZ3+iUz8u7i0AhrKQI/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfH0HyU (ORCPT
+        id S1730656AbfH0IQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 03:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
+        Tue, 27 Aug 2019 04:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729429AbfH0HyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 03:54:14 -0400
+        id S1730002AbfH0HyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 03:54:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B7F1206BF;
-        Tue, 27 Aug 2019 07:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E5F206BF;
+        Tue, 27 Aug 2019 07:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566892452;
-        bh=udaqUPiPzuY0HXY31O3O3v6qDWZt9qyS0+RjrPuCBtQ=;
+        s=default; t=1566892455;
+        bh=GfJ9CA+FnmOmJgMvLBMy5H/eRhMID16zoKjq6w4U1+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mo2mY0ynXxsRUb1JPEG3MVxQleHNcqmXSzqnh08GVHn2UGOVdD7hSiYsGNjHahr+A
-         +Nkd87YKbPDsc/8pyei/TyOnRrA0nPuUaGqXUe+9+MOXndiIUrS90zQ2GqNxrQlB4O
-         /xj4xOGX9J/8etf0nTNdAt2va9JDyDAzRULLLMRs=
+        b=Vlazf1BpXzqFhKrNNI0A15+ND7bqe1qiUMDfqH/mgL/olxFcgtb6Dia0S5JrEJFnM
+         g3N3pLIuM0k++QpLpRfZ9XqKyl3aMWGSnTrnjRCUDXDD0wZIOYcJGL3iSX9kLD7ZQo
+         wPLVKosFUuTm0eNoZOPm6IFMWeqt+VAQy8YdYjm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, alastair@d-silva.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 53/62] dm zoned: improve error handling in reclaim
-Date:   Tue, 27 Aug 2019 09:50:58 +0200
-Message-Id: <20190827072703.613048843@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 62/62] powerpc: Allow flush_(inval_)dcache_range to work across ranges >4GB
+Date:   Tue, 27 Aug 2019 09:51:07 +0200
+Message-Id: <20190827072704.089508645@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190827072659.803647352@linuxfoundation.org>
 References: <20190827072659.803647352@linuxfoundation.org>
@@ -60,153 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit b234c6d7a703661b5045c5bf569b7c99d2edbf88 upstream.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-There are several places in reclaim code where errors are not
-propagated to the main function, dmz_reclaim(). This function
-is responsible for unlocking zones that might be still locked
-at the end of any failed reclaim iterations. As the result,
-some device zones may be left permanently locked for reclaim,
-degrading target's capability to reclaim zones.
+The upstream commit:
+22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+has a similar effect, but since it is a rewrite of the assembler to C, is
+too invasive for stable. This patch is a minimal fix to address the issue in
+assembler.
 
-This patch fixes these issues as follows -
+This patch applies cleanly to v5.2, v4.19 & v4.14.
 
-Make sure that dmz_reclaim_buf(), dmz_reclaim_seq_data() and
-dmz_reclaim_rnd_data() return error codes to the caller.
+When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-dmz_reclaim() function is renamed to dmz_do_reclaim() to avoid
-clashing with "struct dmz_reclaim" and is modified to return the
-error to the caller.
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
 
-dmz_get_zone_for_reclaim() now returns an error instead of NULL
-pointer and reclaim code checks for that error.
-
-Error logging/debug messages are added where necessary.
-
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-zoned-metadata.c |    4 ++--
- drivers/md/dm-zoned-reclaim.c  |   28 +++++++++++++++++++---------
- 2 files changed, 21 insertions(+), 11 deletions(-)
+ arch/powerpc/kernel/misc_64.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1534,7 +1534,7 @@ static struct dm_zone *dmz_get_rnd_zone_
- 	struct dm_zone *zone;
- 
- 	if (list_empty(&zmd->map_rnd_list))
--		return NULL;
-+		return ERR_PTR(-EBUSY);
- 
- 	list_for_each_entry(zone, &zmd->map_rnd_list, link) {
- 		if (dmz_is_buf(zone))
-@@ -1545,7 +1545,7 @@ static struct dm_zone *dmz_get_rnd_zone_
- 			return dzone;
- 	}
- 
--	return NULL;
-+	return ERR_PTR(-EBUSY);
- }
- 
- /*
---- a/drivers/md/dm-zoned-reclaim.c
-+++ b/drivers/md/dm-zoned-reclaim.c
-@@ -217,7 +217,7 @@ static int dmz_reclaim_buf(struct dmz_re
- 
- 	dmz_unlock_flush(zmd);
- 
--	return 0;
-+	return ret;
- }
- 
- /*
-@@ -261,7 +261,7 @@ static int dmz_reclaim_seq_data(struct d
- 
- 	dmz_unlock_flush(zmd);
- 
--	return 0;
-+	return ret;
- }
- 
- /*
-@@ -314,7 +314,7 @@ static int dmz_reclaim_rnd_data(struct d
- 
- 	dmz_unlock_flush(zmd);
- 
--	return 0;
-+	return ret;
- }
- 
- /*
-@@ -336,7 +336,7 @@ static void dmz_reclaim_empty(struct dmz
- /*
-  * Find a candidate zone for reclaim and process it.
-  */
--static void dmz_reclaim(struct dmz_reclaim *zrc)
-+static int dmz_do_reclaim(struct dmz_reclaim *zrc)
- {
- 	struct dmz_metadata *zmd = zrc->metadata;
- 	struct dm_zone *dzone;
-@@ -346,8 +346,8 @@ static void dmz_reclaim(struct dmz_recla
- 
- 	/* Get a data zone */
- 	dzone = dmz_get_zone_for_reclaim(zmd);
--	if (!dzone)
--		return;
-+	if (IS_ERR(dzone))
-+		return PTR_ERR(dzone);
- 
- 	start = jiffies;
- 
-@@ -393,13 +393,20 @@ static void dmz_reclaim(struct dmz_recla
- out:
- 	if (ret) {
- 		dmz_unlock_zone_reclaim(dzone);
--		return;
-+		return ret;
- 	}
- 
--	(void) dmz_flush_metadata(zrc->metadata);
-+	ret = dmz_flush_metadata(zrc->metadata);
-+	if (ret) {
-+		dmz_dev_debug(zrc->dev,
-+			      "Metadata flush for zone %u failed, err %d\n",
-+			      dmz_id(zmd, rzone), ret);
-+		return ret;
-+	}
- 
- 	dmz_dev_debug(zrc->dev, "Reclaimed zone %u in %u ms",
- 		      dmz_id(zmd, rzone), jiffies_to_msecs(jiffies - start));
-+	return 0;
- }
- 
- /*
-@@ -444,6 +451,7 @@ static void dmz_reclaim_work(struct work
- 	struct dmz_metadata *zmd = zrc->metadata;
- 	unsigned int nr_rnd, nr_unmap_rnd;
- 	unsigned int p_unmap_rnd;
-+	int ret;
- 
- 	if (!dmz_should_reclaim(zrc)) {
- 		mod_delayed_work(zrc->wq, &zrc->work, DMZ_IDLE_PERIOD);
-@@ -473,7 +481,9 @@ static void dmz_reclaim_work(struct work
- 		      (dmz_target_idle(zrc) ? "Idle" : "Busy"),
- 		      p_unmap_rnd, nr_unmap_rnd, nr_rnd);
- 
--	dmz_reclaim(zrc);
-+	ret = dmz_do_reclaim(zrc);
-+	if (ret)
-+		dmz_dev_debug(zrc->dev, "Reclaim error %d\n", ret);
- 
- 	dmz_schedule_reclaim(zrc);
- }
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -134,7 +134,7 @@ _GLOBAL_TOC(flush_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+ 0:	dcbst	0,r6
+@@ -190,7 +190,7 @@ _GLOBAL(flush_inval_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	sync
+ 	isync
 
 
