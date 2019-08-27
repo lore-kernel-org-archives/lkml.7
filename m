@@ -2,147 +2,384 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E0BC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBFCC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883752054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377A4206BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 13:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RVu3MC11"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYfEAi38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbfH0NZE (ORCPT
+        id S1730111AbfH0NZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 09:25:04 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:40032 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfH0NZE (ORCPT
+        Tue, 27 Aug 2019 09:25:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42383 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729997AbfH0NZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 09:25:04 -0400
-Received: by mail-vk1-f196.google.com with SMTP id b204so4779878vka.7
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:25:03 -0700 (PDT)
+        Tue, 27 Aug 2019 09:25:05 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t12so21233936qtp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 06:25:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UcidXSfl4Z3vHSHUGEtHekVKS8cSrikyMMH4+bTgZ4M=;
-        b=RVu3MC11jWStUaJWi98HfO3dbKm9C5Co8wjxsZWOo/mNHQ+5mqEUp10/RpXdwCuczF
-         k8/z8CMpLF76qiJoqdzys/nxDLQCGi8UvOtNQts1UmBii+EppSvoXLAJJH2NV0LGoCd7
-         4nRrgjlHGyuMTENDRa8GF3RcqJ6kG7Ef2T8xE8nRQkROzDX/NxN5XuVzVklBA2Jh4m3b
-         Rpvog8ZOLY5lJ9MbqUEnRlQdXAW0lZ/0dQN4ccIdrwR8ne5YPmGGy7c5kOr1AzFQk9fD
-         3Cn1hMyu83oC77lxGU0Gs/eraAg/vf6fpzOEoGZoO4STbJ0ClR14j6Y5Ux6x5/FENXAZ
-         1z4A==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=diB9QR+fjAYcqnIfXIkXcRUq1U2FSgAV8l7GeX/ce9M=;
+        b=qYfEAi38itlyzUaW5Cxd2p9zJeX1LDqmFHLncGFl1Uwjtab9nGt5zWvFxztbL2Ns2J
+         nygs6N1ZTAOPJwswH7dwzn2yB/A5tzxihTvZpN8qytcKS0KlyIokcZW3VTjSA5O9Cil6
+         r3U/HPwKG6Fr1fC1xP96nA5jzIgVjmsVoKfbFFqMGUueyesEAispnupDTwaj2Wgv3q2Y
+         J+YCxfIXjCDd+jF5aexHwOU+bXFxHrHOzODIrsgKcOSHj4YkznWbrGTih+WReq4ivIze
+         Qd/KzySr9LQ/FQve0w3ppITv0VZrP/WhkwcJH83jhuJmD1eh25R+JPf1WEmPdSbTWzDV
+         FtBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UcidXSfl4Z3vHSHUGEtHekVKS8cSrikyMMH4+bTgZ4M=;
-        b=BilwXktYy/ZS6OXzc6gyiAHcZHCpeTxdFIoYlmV3HYj1RCnxnI906mZBshpwnCZUuY
-         a4ZnWXJ9DOuC3SbLJrzZtH9RXMR3MtDtuspPw/jg9r/b9YkZG1rs/7pIavXmRWp0SlsA
-         fJmY0MVHndqdkTCLLqEgU4iElIJUJdWCwTUqRVZH3/gpwNpMztwfU+YSGl8w0loUQAoP
-         9qXzyhWwesFJJAXxdfZuvM1HCZOPVTyvaAEJoRRydo7aBzEh+pFlKGc7FhFdyIqrSUDY
-         ks/pinAx2R5WVmbUbWYpAENbPvGR0e7HbBc3gC2NxazQYoKUIi2yr9dNBpzGRjEINTqq
-         pPNw==
-X-Gm-Message-State: APjAAAWOjaTfdDqM9mCgDuCOi6BjTH2uIG4U4OgGabTq4dsC633lOP/X
-        NGK7a1ATJb1EI7EKZt6vdTNbHlceZF6xpst36Xjb9voj
-X-Google-Smtp-Source: APXvYqw4rRg5A1BUZRNkhA0iBmBLWQcJBY43NvkoqQo3uQzksvmf6IWqHjVjTq74W1HznjN4U6L+Pcy1Ay77XLTU/Qg=
-X-Received: by 2002:a1f:5185:: with SMTP id f127mr10726260vkb.52.1566912302772;
- Tue, 27 Aug 2019 06:25:02 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=diB9QR+fjAYcqnIfXIkXcRUq1U2FSgAV8l7GeX/ce9M=;
+        b=b12Z+lJZG5Apqr8qSSEBVZ7CdGcAfrBP26LLWl2IzBfdWeOvJ/1JAk4ZFSujkeoNjt
+         MvHm7SleMbLp/LeKYcP2mup7HtpLORNUNZ6g4oMT39icwZrVn+LP57SugScIaaTZVTAw
+         w9eEwnkWu8r+PFu8WfG1iQhlY6XEfbJNww93kfkRe8NeYPX33jsKVsVmEQGJXhfyvgrE
+         fcOeAvd3i0g4M/HB6lQ5bfEtG/uD+Bd5gdXc2zXZFLTlGdzRTl7aKdzEDh6yvy7EZ59n
+         tMB16OkIh30fjykCjvDK/HL5UNapNkEoPAKLepsm2u6mv0DqVZrS1/SdlkwQrvLqN81w
+         8IVQ==
+X-Gm-Message-State: APjAAAVHjzYt8YYzplUA7v70dtxec62Tg4JubphZihZSMfdGjnB17pP8
+        vhDGXPRHRsiDSFgxoobWMQQ=
+X-Google-Smtp-Source: APXvYqzHnkejo7iXyMOPs2PrKR1R1hd26MiUI3X1WtNAeIfrFJxJDzJO+agxAifPrwiHnkopsZ4K8A==
+X-Received: by 2002:aed:3363:: with SMTP id u90mr22634111qtd.7.1566912303567;
+        Tue, 27 Aug 2019 06:25:03 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id h4sm8075921qtq.82.2019.08.27.06.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2019 06:25:02 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C903840916; Tue, 27 Aug 2019 10:24:59 -0300 (-03)
+Date:   Tue, 27 Aug 2019 10:24:59 -0300
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] perf arch powerpc: Sync powerpc syscall.tbl
+Message-ID: <20190827132459.GA20877@kernel.org>
+References: <20190827071458.19897-1-naveen.n.rao@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
-In-Reply-To: <20190825150558.15173-1-alejandro.gonzalez.correo@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 27 Aug 2019 15:24:26 +0200
-Message-ID: <CAPDyKFr5opD2yBXmFRBY-9oA_3ShVv0GPFRO8Q_8TEiT+z2pQA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sunxi: fix unusuable eMMC on some H6 boards by
- disabling DDR
-To:     =?UTF-8?Q?Alejandro_Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827071458.19897-1-naveen.n.rao@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 25 Aug 2019 at 17:06, Alejandro Gonz=C3=A1lez
-<alejandro.gonzalez.correo@gmail.com> wrote:
->
-> Some Allwinner H6 boards have timing problems when dealing with
-> DDR-capable eMMC cards. These boards include the Pine H64 and Tanix TX6.
->
-> These timing problems result in out of sync communication between the
-> driver and the eMMC, which renders the memory unsuable for every
-> operation but some basic commmands, like reading the status register.
->
-> The cause of these timing problems is not yet well known, but they go
-> away by disabling DDR mode operation in the driver. Like on some H5
-> boards, it might be that the traces are not precise enough to support
-> these speeds. However, Jernej Skrabec compared the BSP driver with this
-> driver, and found that the BSP driver configures pinctrl to operate at
-> 1.8 V when entering DDR mode (although 3.3 V operation is supported), whi=
-le
-> the mainline kernel lacks any mechanism to switch voltages dynamically.
-> Finally, other possible cause might be some timing parameter that is
-> different on the H6 with respect to other SoCs.
->
-> Therefore, as this fix works reliably, the kernel lacks the required
-> dynamic pinctrl control for now and a slow eMMC is better than a not
-> working eMMC, just disable DDR operation for now on H6-compatible
-> devices.
->
-> Signed-off-by: Alejandro Gonz=C3=A1lez <alejandro.gonzalez.correo@gmail.c=
-om>
+Em Tue, Aug 27, 2019 at 12:44:58PM +0530, Naveen N. Rao escreveu:
+> Copy over powerpc syscall.tbl to grab changes from the below commits:
+>   commit cee3536d24a1 ("powerpc: Wire up clone3 syscall")
+>   commit 1a271a68e030 ("arch: mark syscall number 435 reserved for clone3")
+>   commit 7615d9e1780e ("arch: wire-up pidfd_open()")
+>   commit d8076bdb56af ("uapi: Wire up the mount API syscalls on non-x86 arches [ver #2]")
+>   commit 39036cd27273 ("arch: add pidfd and io_uring syscalls everywhere")
+>   commit 48166e6ea47d ("y2038: add 64-bit time_t syscalls to all 32-bit architectures")
+>   commit d33c577cccd0 ("y2038: rename old time and utime syscalls")
+>   commit 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
+>   commit 8dabe7245bbc ("y2038: syscalls: rename y2038 compat syscalls")
+>   commit 0d6040d46817 ("arch: add split IPC system calls where needed")
+> 
+> Reported-by: Nicholas Piggin <npiggin@gmail.com>
 
-Assuming this should go stable as well? Perhaps you can find a
-relevant commit that we can put as a fixes tag as well?
+Thanks, applied to perf/core.
 
-Kind regards
-Uffe
+- Arnaldo
 
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 > ---
->  drivers/mmc/host/sunxi-mmc.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-> index d577a6b0ceae..dac57d76d009 100644
-> --- a/drivers/mmc/host/sunxi-mmc.c
-> +++ b/drivers/mmc/host/sunxi-mmc.c
-> @@ -1395,14 +1395,17 @@ static int sunxi_mmc_probe(struct platform_device=
- *pdev)
->
->         /*
->          * Some H5 devices do not have signal traces precise enough to
-> -        * use HS DDR mode for their eMMC chips.
-> +        * use HS DDR mode for their eMMC chips. Other H6 devices operate
-> +        * unreliably on HS DDR mode, too.
->          *
->          * We still enable HS DDR modes for all the other controller
-> -        * variants that support them.
-> +        * variants that support them properly.
->          */
->         if ((host->cfg->clk_delays || host->use_new_timings) &&
->             !of_device_is_compatible(pdev->dev.of_node,
-> -                                    "allwinner,sun50i-h5-emmc"))
-> +                                    "allwinner,sun50i-h5-emmc") &&
-> +           !of_device_is_compatible(pdev->dev.of_node,
-> +                                    "allwinner,sun50i-h6-emmc"))
->                 mmc->caps      |=3D MMC_CAP_1_8V_DDR | MMC_CAP_3_3V_DDR;
->
->         ret =3D mmc_of_parse(mmc);
-> --
-> 2.20.1
->
+>  .../arch/powerpc/entry/syscalls/syscall.tbl   | 146 ++++++++++++++----
+>  1 file changed, 119 insertions(+), 27 deletions(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+> index db3bbb8744af..43f736ed47f2 100644
+> --- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+> +++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+> @@ -20,7 +20,9 @@
+>  10	common	unlink				sys_unlink
+>  11	nospu	execve				sys_execve			compat_sys_execve
+>  12	common	chdir				sys_chdir
+> -13	common	time				sys_time			compat_sys_time
+> +13	32	time				sys_time32
+> +13	64	time				sys_time
+> +13	spu	time				sys_time
+>  14	common	mknod				sys_mknod
+>  15	common	chmod				sys_chmod
+>  16	common	lchown				sys_lchown
+> @@ -36,14 +38,17 @@
+>  22	spu	umount				sys_ni_syscall
+>  23	common	setuid				sys_setuid
+>  24	common	getuid				sys_getuid
+> -25	common	stime				sys_stime			compat_sys_stime
+> +25	32	stime				sys_stime32
+> +25	64	stime				sys_stime
+> +25	spu	stime				sys_stime
+>  26	nospu	ptrace				sys_ptrace			compat_sys_ptrace
+>  27	common	alarm				sys_alarm
+>  28	32	oldfstat			sys_fstat			sys_ni_syscall
+>  28	64	oldfstat			sys_ni_syscall
+>  28	spu	oldfstat			sys_ni_syscall
+>  29	nospu	pause				sys_pause
+> -30	nospu	utime				sys_utime			compat_sys_utime
+> +30	32	utime				sys_utime32
+> +30	64	utime				sys_utime
+>  31	common	stty				sys_ni_syscall
+>  32	common	gtty				sys_ni_syscall
+>  33	common	access				sys_access
+> @@ -157,7 +162,9 @@
+>  121	common	setdomainname			sys_setdomainname
+>  122	common	uname				sys_newuname
+>  123	common	modify_ldt			sys_ni_syscall
+> -124	common	adjtimex			sys_adjtimex			compat_sys_adjtimex
+> +124	32	adjtimex			sys_adjtimex_time32
+> +124	64	adjtimex			sys_adjtimex
+> +124	spu	adjtimex			sys_adjtimex
+>  125	common	mprotect			sys_mprotect
+>  126	32	sigprocmask			sys_sigprocmask			compat_sys_sigprocmask
+>  126	64	sigprocmask			sys_ni_syscall
+> @@ -198,8 +205,12 @@
+>  158	common	sched_yield			sys_sched_yield
+>  159	common	sched_get_priority_max		sys_sched_get_priority_max
+>  160	common	sched_get_priority_min		sys_sched_get_priority_min
+> -161	common	sched_rr_get_interval		sys_sched_rr_get_interval	compat_sys_sched_rr_get_interval
+> -162	common	nanosleep			sys_nanosleep			compat_sys_nanosleep
+> +161	32	sched_rr_get_interval		sys_sched_rr_get_interval_time32
+> +161	64	sched_rr_get_interval		sys_sched_rr_get_interval
+> +161	spu	sched_rr_get_interval		sys_sched_rr_get_interval
+> +162	32	nanosleep			sys_nanosleep_time32
+> +162	64	nanosleep			sys_nanosleep
+> +162	spu	nanosleep			sys_nanosleep
+>  163	common	mremap				sys_mremap
+>  164	common	setresuid			sys_setresuid
+>  165	common	getresuid			sys_getresuid
+> @@ -213,7 +224,8 @@
+>  173	nospu	rt_sigaction			sys_rt_sigaction		compat_sys_rt_sigaction
+>  174	nospu	rt_sigprocmask			sys_rt_sigprocmask		compat_sys_rt_sigprocmask
+>  175	nospu	rt_sigpending			sys_rt_sigpending		compat_sys_rt_sigpending
+> -176	nospu	rt_sigtimedwait			sys_rt_sigtimedwait		compat_sys_rt_sigtimedwait
+> +176	32	rt_sigtimedwait			sys_rt_sigtimedwait_time32	compat_sys_rt_sigtimedwait_time32
+> +176	64	rt_sigtimedwait			sys_rt_sigtimedwait
+>  177	nospu 	rt_sigqueueinfo			sys_rt_sigqueueinfo		compat_sys_rt_sigqueueinfo
+>  178	nospu 	rt_sigsuspend			sys_rt_sigsuspend		compat_sys_rt_sigsuspend
+>  179	common	pread64				sys_pread64			compat_sys_pread64
+> @@ -260,7 +272,9 @@
+>  218	common	removexattr			sys_removexattr
+>  219	common	lremovexattr			sys_lremovexattr
+>  220	common	fremovexattr			sys_fremovexattr
+> -221	common	futex				sys_futex			compat_sys_futex
+> +221	32	futex				sys_futex_time32
+> +221	64	futex				sys_futex
+> +221	spu	futex				sys_futex
+>  222	common	sched_setaffinity		sys_sched_setaffinity		compat_sys_sched_setaffinity
+>  223	common	sched_getaffinity		sys_sched_getaffinity		compat_sys_sched_getaffinity
+>  # 224 unused
+> @@ -268,7 +282,9 @@
+>  226	32	sendfile64			sys_sendfile64			compat_sys_sendfile64
+>  227	common	io_setup			sys_io_setup			compat_sys_io_setup
+>  228	common	io_destroy			sys_io_destroy
+> -229	common	io_getevents			sys_io_getevents		compat_sys_io_getevents
+> +229	32	io_getevents			sys_io_getevents_time32
+> +229	64	io_getevents			sys_io_getevents
+> +229	spu	io_getevents			sys_io_getevents
+>  230	common	io_submit			sys_io_submit			compat_sys_io_submit
+>  231	common	io_cancel			sys_io_cancel
+>  232	nospu	set_tid_address			sys_set_tid_address
+> @@ -280,19 +296,33 @@
+>  238	common	epoll_wait			sys_epoll_wait
+>  239	common	remap_file_pages		sys_remap_file_pages
+>  240	common	timer_create			sys_timer_create		compat_sys_timer_create
+> -241	common	timer_settime			sys_timer_settime		compat_sys_timer_settime
+> -242	common	timer_gettime			sys_timer_gettime		compat_sys_timer_gettime
+> +241	32	timer_settime			sys_timer_settime32
+> +241	64	timer_settime			sys_timer_settime
+> +241	spu	timer_settime			sys_timer_settime
+> +242	32	timer_gettime			sys_timer_gettime32
+> +242	64	timer_gettime			sys_timer_gettime
+> +242	spu	timer_gettime			sys_timer_gettime
+>  243	common	timer_getoverrun		sys_timer_getoverrun
+>  244	common	timer_delete			sys_timer_delete
+> -245	common	clock_settime			sys_clock_settime		compat_sys_clock_settime
+> -246	common	clock_gettime			sys_clock_gettime		compat_sys_clock_gettime
+> -247	common	clock_getres			sys_clock_getres		compat_sys_clock_getres
+> -248	common	clock_nanosleep			sys_clock_nanosleep		compat_sys_clock_nanosleep
+> +245	32	clock_settime			sys_clock_settime32
+> +245	64	clock_settime			sys_clock_settime
+> +245	spu	clock_settime			sys_clock_settime
+> +246	32	clock_gettime			sys_clock_gettime32
+> +246	64	clock_gettime			sys_clock_gettime
+> +246	spu	clock_gettime			sys_clock_gettime
+> +247	32	clock_getres			sys_clock_getres_time32
+> +247	64	clock_getres			sys_clock_getres
+> +247	spu	clock_getres			sys_clock_getres
+> +248	32	clock_nanosleep			sys_clock_nanosleep_time32
+> +248	64	clock_nanosleep			sys_clock_nanosleep
+> +248	spu	clock_nanosleep			sys_clock_nanosleep
+>  249	32	swapcontext			ppc_swapcontext			ppc32_swapcontext
+>  249	64	swapcontext			ppc64_swapcontext
+>  249	spu	swapcontext			sys_ni_syscall
+>  250	common	tgkill				sys_tgkill
+> -251	common	utimes				sys_utimes			compat_sys_utimes
+> +251	32	utimes				sys_utimes_time32
+> +251	64	utimes				sys_utimes
+> +251	spu	utimes				sys_utimes
+>  252	common	statfs64			sys_statfs64			compat_sys_statfs64
+>  253	common	fstatfs64			sys_fstatfs64			compat_sys_fstatfs64
+>  254	32	fadvise64_64			ppc_fadvise64_64
+> @@ -308,8 +338,10 @@
+>  261	nospu	set_mempolicy			sys_set_mempolicy		compat_sys_set_mempolicy
+>  262	nospu	mq_open				sys_mq_open			compat_sys_mq_open
+>  263	nospu	mq_unlink			sys_mq_unlink
+> -264	nospu	mq_timedsend			sys_mq_timedsend		compat_sys_mq_timedsend
+> -265	nospu	mq_timedreceive			sys_mq_timedreceive		compat_sys_mq_timedreceive
+> +264	32	mq_timedsend			sys_mq_timedsend_time32
+> +264	64	mq_timedsend			sys_mq_timedsend
+> +265	32	mq_timedreceive			sys_mq_timedreceive_time32
+> +265	64	mq_timedreceive			sys_mq_timedreceive
+>  266	nospu	mq_notify			sys_mq_notify			compat_sys_mq_notify
+>  267	nospu	mq_getsetattr			sys_mq_getsetattr		compat_sys_mq_getsetattr
+>  268	nospu	kexec_load			sys_kexec_load			compat_sys_kexec_load
+> @@ -324,8 +356,10 @@
+>  277	nospu	inotify_rm_watch		sys_inotify_rm_watch
+>  278	nospu	spu_run				sys_spu_run
+>  279	nospu	spu_create			sys_spu_create
+> -280	nospu	pselect6			sys_pselect6			compat_sys_pselect6
+> -281	nospu	ppoll				sys_ppoll			compat_sys_ppoll
+> +280	32	pselect6			sys_pselect6_time32		compat_sys_pselect6_time32
+> +280	64	pselect6			sys_pselect6
+> +281	32	ppoll				sys_ppoll_time32		compat_sys_ppoll_time32
+> +281	64	ppoll				sys_ppoll
+>  282	common	unshare				sys_unshare
+>  283	common	splice				sys_splice
+>  284	common	tee				sys_tee
+> @@ -334,7 +368,9 @@
+>  287	common	mkdirat				sys_mkdirat
+>  288	common	mknodat				sys_mknodat
+>  289	common	fchownat			sys_fchownat
+> -290	common	futimesat			sys_futimesat			compat_sys_futimesat
+> +290	32	futimesat			sys_futimesat_time32
+> +290	64	futimesat			sys_futimesat
+> +290	spu	utimesat			sys_futimesat
+>  291	32	fstatat64			sys_fstatat64
+>  291	64	newfstatat			sys_newfstatat
+>  291	spu	newfstatat			sys_newfstatat
+> @@ -350,15 +386,21 @@
+>  301	common	move_pages			sys_move_pages			compat_sys_move_pages
+>  302	common	getcpu				sys_getcpu
+>  303	nospu	epoll_pwait			sys_epoll_pwait			compat_sys_epoll_pwait
+> -304	common	utimensat			sys_utimensat			compat_sys_utimensat
+> +304	32	utimensat			sys_utimensat_time32
+> +304	64	utimensat			sys_utimensat
+> +304	spu	utimensat			sys_utimensat
+>  305	common	signalfd			sys_signalfd			compat_sys_signalfd
+>  306	common	timerfd_create			sys_timerfd_create
+>  307	common	eventfd				sys_eventfd
+>  308	common	sync_file_range2		sys_sync_file_range2		compat_sys_sync_file_range2
+>  309	nospu	fallocate			sys_fallocate			compat_sys_fallocate
+>  310	nospu	subpage_prot			sys_subpage_prot
+> -311	common	timerfd_settime			sys_timerfd_settime		compat_sys_timerfd_settime
+> -312	common	timerfd_gettime			sys_timerfd_gettime		compat_sys_timerfd_gettime
+> +311	32	timerfd_settime			sys_timerfd_settime32
+> +311	64	timerfd_settime			sys_timerfd_settime
+> +311	spu	timerfd_settime			sys_timerfd_settime
+> +312	32	timerfd_gettime			sys_timerfd_gettime32
+> +312	64	timerfd_gettime			sys_timerfd_gettime
+> +312	spu	timerfd_gettime			sys_timerfd_gettime
+>  313	common	signalfd4			sys_signalfd4			compat_sys_signalfd4
+>  314	common	eventfd2			sys_eventfd2
+>  315	common	epoll_create1			sys_epoll_create1
+> @@ -389,11 +431,15 @@
+>  340	common	getsockopt			sys_getsockopt			compat_sys_getsockopt
+>  341	common	sendmsg				sys_sendmsg			compat_sys_sendmsg
+>  342	common	recvmsg				sys_recvmsg			compat_sys_recvmsg
+> -343	common	recvmmsg			sys_recvmmsg			compat_sys_recvmmsg
+> +343	32	recvmmsg			sys_recvmmsg_time32		compat_sys_recvmmsg_time32
+> +343	64	recvmmsg			sys_recvmmsg
+> +343	spu	recvmmsg			sys_recvmmsg
+>  344	common	accept4				sys_accept4
+>  345	common	name_to_handle_at		sys_name_to_handle_at
+>  346	common	open_by_handle_at		sys_open_by_handle_at		compat_sys_open_by_handle_at
+> -347	common	clock_adjtime			sys_clock_adjtime		compat_sys_clock_adjtime
+> +347	32	clock_adjtime			sys_clock_adjtime32
+> +347	64	clock_adjtime			sys_clock_adjtime
+> +347	spu	clock_adjtime			sys_clock_adjtime
+>  348	common	syncfs				sys_syncfs
+>  349	common	sendmmsg			sys_sendmmsg			compat_sys_sendmmsg
+>  350	common	setns				sys_setns
+> @@ -414,6 +460,7 @@
+>  363	spu	switch_endian			sys_ni_syscall
+>  364	common	userfaultfd			sys_userfaultfd
+>  365	common	membarrier			sys_membarrier
+> +# 366-377 originally left for IPC, now unused
+>  378	nospu	mlock2				sys_mlock2
+>  379	nospu	copy_file_range			sys_copy_file_range
+>  380	common	preadv2				sys_preadv2			compat_sys_preadv2
+> @@ -424,4 +471,49 @@
+>  385	nospu	pkey_free			sys_pkey_free
+>  386	nospu	pkey_mprotect			sys_pkey_mprotect
+>  387	nospu	rseq				sys_rseq
+> -388	nospu	io_pgetevents			sys_io_pgetevents		compat_sys_io_pgetevents
+> +388	32	io_pgetevents			sys_io_pgetevents_time32	compat_sys_io_pgetevents
+> +388	64	io_pgetevents			sys_io_pgetevents
+> +# room for arch specific syscalls
+> +392	64	semtimedop			sys_semtimedop
+> +393	common	semget				sys_semget
+> +394	common	semctl				sys_semctl			compat_sys_semctl
+> +395	common	shmget				sys_shmget
+> +396	common	shmctl				sys_shmctl			compat_sys_shmctl
+> +397	common	shmat				sys_shmat			compat_sys_shmat
+> +398	common	shmdt				sys_shmdt
+> +399	common	msgget				sys_msgget
+> +400	common	msgsnd				sys_msgsnd			compat_sys_msgsnd
+> +401	common	msgrcv				sys_msgrcv			compat_sys_msgrcv
+> +402	common	msgctl				sys_msgctl			compat_sys_msgctl
+> +403	32	clock_gettime64			sys_clock_gettime		sys_clock_gettime
+> +404	32	clock_settime64			sys_clock_settime		sys_clock_settime
+> +405	32	clock_adjtime64			sys_clock_adjtime		sys_clock_adjtime
+> +406	32	clock_getres_time64		sys_clock_getres		sys_clock_getres
+> +407	32	clock_nanosleep_time64		sys_clock_nanosleep		sys_clock_nanosleep
+> +408	32	timer_gettime64			sys_timer_gettime		sys_timer_gettime
+> +409	32	timer_settime64			sys_timer_settime		sys_timer_settime
+> +410	32	timerfd_gettime64		sys_timerfd_gettime		sys_timerfd_gettime
+> +411	32	timerfd_settime64		sys_timerfd_settime		sys_timerfd_settime
+> +412	32	utimensat_time64		sys_utimensat			sys_utimensat
+> +413	32	pselect6_time64			sys_pselect6			compat_sys_pselect6_time64
+> +414	32	ppoll_time64			sys_ppoll			compat_sys_ppoll_time64
+> +416	32	io_pgetevents_time64		sys_io_pgetevents		sys_io_pgetevents
+> +417	32	recvmmsg_time64			sys_recvmmsg			compat_sys_recvmmsg_time64
+> +418	32	mq_timedsend_time64		sys_mq_timedsend		sys_mq_timedsend
+> +419	32	mq_timedreceive_time64		sys_mq_timedreceive		sys_mq_timedreceive
+> +420	32	semtimedop_time64		sys_semtimedop			sys_semtimedop
+> +421	32	rt_sigtimedwait_time64		sys_rt_sigtimedwait		compat_sys_rt_sigtimedwait_time64
+> +422	32	futex_time64			sys_futex			sys_futex
+> +423	32	sched_rr_get_interval_time64	sys_sched_rr_get_interval	sys_sched_rr_get_interval
+> +424	common	pidfd_send_signal		sys_pidfd_send_signal
+> +425	common	io_uring_setup			sys_io_uring_setup
+> +426	common	io_uring_enter			sys_io_uring_enter
+> +427	common	io_uring_register		sys_io_uring_register
+> +428	common	open_tree			sys_open_tree
+> +429	common	move_mount			sys_move_mount
+> +430	common	fsopen				sys_fsopen
+> +431	common	fsconfig			sys_fsconfig
+> +432	common	fsmount				sys_fsmount
+> +433	common	fspick				sys_fspick
+> +434	common	pidfd_open			sys_pidfd_open
+> +435	nospu	clone3				ppc_clone3
+> -- 
+> 2.23.0
+
+-- 
+
+- Arnaldo
