@@ -2,104 +2,78 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1835C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652BFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31D5214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B90A214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 14:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfH0OPN (ORCPT
+        id S1728547AbfH0ORp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 10:15:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34013 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfH0OPM (ORCPT
+        Tue, 27 Aug 2019 10:17:45 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41726 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726065AbfH0ORp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 10:15:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x18so18662088ljh.1;
-        Tue, 27 Aug 2019 07:15:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KfeseVQWz48HAsLr5kcHWdtkdT6kJKG3U+x7h2FYyGM=;
-        b=aOGBqq4Z85flFdMhhFl9AvnbOfU7QDOmEVBPnoX21w4aDGd0QjB01vrR0GhSwtmw1L
-         dhb+Qa3SnEUgASCKtYNN3kRj9hV6w0R6o2tDd6/MxnXn6QZaKe/QbqKr85uzZ5w/u7bK
-         KJMCJz8JASMbf8OyuOzrMXrdIRoO+Co4Pty/fBQZrYb8EhY7HXsktEUDWLh5OcirFdMh
-         t01hzebLjzQVXg42WVcByA9x4z1Sb4nBlnohhoW66ooWM+JyFUzZWGpAwO3hHIj6tbok
-         N5GbLjUaLhs68IOPk6ciZc3cZfMOt2EWaC7EuV7MAdcybjrP3cnmZpsdCwHT+5Z4i8+v
-         8gog==
-X-Gm-Message-State: APjAAAXYirbHHlrkRAL+Iyc5m62UrRLjMBQiIdVa5Q0UJ5e4JfDWNju4
-        7P+bfJDedfXEGPiVKhg+rvBHofBOzIY4wxZL6Y8=
-X-Google-Smtp-Source: APXvYqynbPEMJ5NJosXQEn553TI+EwJm9qEyttNHdgRx0B6Cd7hXJqH69rtOKEoglJrjQ9eC04IA7D0x4NcOdaJK7k0=
-X-Received: by 2002:a2e:980d:: with SMTP id a13mr14098210ljj.145.1566915310400;
- Tue, 27 Aug 2019 07:15:10 -0700 (PDT)
+        Tue, 27 Aug 2019 10:17:45 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-14-7hY9DUGUPHysiFy6Id__jw-1; Tue, 27 Aug 2019 15:17:41 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 27 Aug 2019 15:17:40 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 27 Aug 2019 15:17:40 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Geert Uytterhoeven' <geert@linux-m68k.org>,
+        Joe Perches <joe@perches.com>
+CC:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
+ u64/pointer abuse
+Thread-Topic: [PATCH] RDMA/siw: Fix compiler warnings on 32-bit due to
+ u64/pointer abuse
+Thread-Index: AQHVVrGr4BhhBlFhpEW57H2RBHAQPacPFp7g
+Date:   Tue, 27 Aug 2019 14:17:40 +0000
+Message-ID: <dbc03b4ac1ef4ba2a807409676cf8066@AcuMS.aculab.com>
+References: <20190819100526.13788-1-geert@linux-m68k.org>
+ <581e7d79ed75484beb227672b2695ff14e1f1e34.camel@perches.com>
+ <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVh8dwd=77mHTqG80_D8DK+EtVGewRUJuaJzK1qRYrB+w@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20190822192451.5983-1-scott.branden@broadcom.com> <20190822192451.5983-7-scott.branden@broadcom.com>
-In-Reply-To: <20190822192451.5983-7-scott.branden@broadcom.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 27 Aug 2019 16:14:54 +0200
-Message-ID: <CAK8P3a1WBkmXbJx=rZMumxn7EN4bmA1AdZEgrWBVyQ3XNngU6Q@mail.gmail.com>
-Subject: Re: [PATCH 6/7] misc: bcm-vk: add Broadcom Valkyrie driver
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: 7hY9DUGUPHysiFy6Id__jw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 9:25 PM Scott Branden
-<scott.branden@broadcom.com> wrote:
->
-> Add Broadcom Valkyrie driver offload engine.
-> This driver interfaces to the Valkyrie PCIe offload engine to perform
-> should offload functions as video transcoding on multiple streams
-> in parallel.  Valkyrie device is booted from files loaded using
-> request_firmware_into_buf mechanism.  After booted card status is updated
-> and messages can then be sent to the card.
-> Such messages contain scatter gather list of addresses
-> to pull data from the host to perform operations on.
->
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Desmond Yan <desmond.yan@broadcom.com>
-> Signed-off-by: James Hu <james.hu@broadcom.com>
+RnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IDE5IEF1Z3VzdCAyMDE5IDE4OjE1DQou
+Li4NCj4gPiBJIHRoaW5rIGEgY2FzdCB0byB1bnNpZ25lZCBsb25nIGlzIHJhdGhlciBtb3JlIGNv
+bW1vbi4NCj4gPg0KPiA+IHVpbnRwdHJfdCBpcyB1c2VkIH4xMzAwIHRpbWVzIGluIHRoZSBrZXJu
+ZWwuDQo+ID4gSSBiZWxpZXZlIGEgY2FzdCB0byB1bnNpZ25lZCBsb25nIGlzIG11Y2ggbW9yZSBj
+b21tb24uDQo+IA0KPiBUaGF0IGlzIHRydWUsIGFzIHVpbnRwdHJfdCB3YXMgaW50cm9kdWNlZCBp
+biBDOTkuDQo+IFNpbWlsYXJseSwgdW5zaWduZWQgbG9uZyB3YXMgdXNlZCBiZWZvcmUgc2l6ZV90
+IGJlY2FtZSBjb21tb24uDQo+IA0KPiBIb3dldmVyLCBub3dhZGF5cyBzaXplX3QgYW5kIHVpbnRw
+dHJfdCBhcmUgcHJlZmVycmVkLg0KDQpJc24ndCB1aW50cHRyX3QgZGVmaW5lZCBieSB0aGUgc2Ft
+ZSBzdGFuZGFyZCBhcyB1aW50MzJfdD8NCklmIHRoZSBmb3JtZXIgaXMgYWxsb3dlZCBzbyBzaG91
+bGQgdGhlIGxhdHRlci4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lk
+ZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0K
+UmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-Can you explain the decision to make this is a standalone misc driver
-rather than hooking into the existing framework in drivers/media?
-
-There is an existing interface that looks like it could fit the hardware
-in include/media/v4l2-mem2mem.h. Have you considered using that?
-
-There is also support for video transcoding using GPUs in
-driver/gpu/drm/, that could also be used in theory, though it sounds
-like a less optimal fit.
-
-      Arnd
