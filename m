@@ -2,112 +2,105 @@ Return-Path: <SRS0=qJmF=WX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E85C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161B6C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77C7214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TXlm0q2x"
+	by mail.kernel.org (Postfix) with ESMTP id E8AE621883
+	for <linux-kernel@archiver.kernel.org>; Tue, 27 Aug 2019 23:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfH0XEq (ORCPT
+        id S1726397AbfH0XFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 27 Aug 2019 19:04:46 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34559 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfH0XEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 27 Aug 2019 19:04:45 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m10so766341qkk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Aug 2019 16:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twfAj3jJ2iISvtECbV5aZw57c7oT5wmcKVNF5jtBKzw=;
-        b=TXlm0q2xcS7/T/OenFpz5vi4Yo1hovc71pjCHSJFZtpy8c9XUnNxETQI04ONVL0JIb
-         xjCg1ybda4kro9E97QJSZSC/ihNDktOyYrdT8R26XLgljCtsNC1Vrq1jHptibE/6c1Nf
-         EnImq/F6CeVQdv8DhnroTOVUgpGI4Q53Tzi+7QBPIjjUtOvPjrzPVX/jcKew3UlbKL90
-         uUttussOAeggtW9AKfycy76g+BnNBWpDYxb+G9wjbjpqMtDqXs7hiScwYsQlSR3G6afw
-         kwtNsqYgOSibPsNyIiq4ivvhuJDj/CXdeSuB6tWCMVfMG0Gr1JdzT+6jpEuRLfpulGpr
-         muWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twfAj3jJ2iISvtECbV5aZw57c7oT5wmcKVNF5jtBKzw=;
-        b=EgtEgYPZ66ds6CH1Y1o238OweUNFqPpf+KxmJTPoYjuTZxWedX3ReGX0eT2V827FVK
-         rzEmqEN2uE1CmiyI5AjTlQmV3Y3cIieIhBMVnV8xauhTVbkUo3i5FZmeC6tbEmFxGnBX
-         ycqd60DeWjojQ454kiNXIRyKBpCeMhwXh+XE8VgVgv6Th5g7Xglwq+FVCN7JtsniEL07
-         ZbS3boDAIiNz20a8zvLGyeyO/vBajYT5eNywyQCV551Qvgi2fLQC/bbr8Ctj0sPg8lEC
-         AuYUk1QLLOg55z+ygAenS7NcVDT8LBPR7OR4PCd6s/Qx7X0ms/Y7o1ZOjI5ULLUUHRMR
-         eKaA==
-X-Gm-Message-State: APjAAAUPI/XOTZgP7frRdGHg+2xuKvpF3o7ILFbrylWgS1oOtIl7NzmM
-        taOsEuByWXArRsZEnSlyX4hMKA==
-X-Google-Smtp-Source: APXvYqxETSoB7i089gEAZo3heQkfBeRm4nuAsZXEBqnzkt2y4Au7XwxwXBZ3oa3XifiOiixuSCRIRg==
-X-Received: by 2002:a37:3d8:: with SMTP id 207mr671091qkd.191.1566947084848;
-        Tue, 27 Aug 2019 16:04:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-216-168.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.216.168])
-        by smtp.gmail.com with ESMTPSA id u28sm319212qtc.18.2019.08.27.16.04.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 27 Aug 2019 16:04:44 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i2kW3-0007TV-VG; Tue, 27 Aug 2019 20:04:43 -0300
-Date:   Tue, 27 Aug 2019 20:04:43 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 0/5] mmu notifer debug annotations
-Message-ID: <20190827230443.GA28580@ziepe.ca>
-References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
+        Tue, 27 Aug 2019 19:05:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51492 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfH0XFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 27 Aug 2019 19:05:11 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 29CCF85365;
+        Tue, 27 Aug 2019 23:05:11 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD67560F82;
+        Tue, 27 Aug 2019 23:04:57 +0000 (UTC)
+Date:   Wed, 28 Aug 2019 07:04:52 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190827230451.GB5263@ming.t460p>
+References: <20190827085344.30799-1-ming.lei@redhat.com>
+ <20190827085344.30799-2-ming.lei@redhat.com>
+ <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1908271817180.1939@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.DEB.2.21.1908271817180.1939@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 27 Aug 2019 23:05:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:14:20PM +0200, Daniel Vetter wrote:
-> Hi all,
+On Tue, Aug 27, 2019 at 06:19:00PM +0200, Thomas Gleixner wrote:
+> On Tue, 27 Aug 2019, Thomas Gleixner wrote:
+> > On Tue, 27 Aug 2019, Ming Lei wrote:
+> > > +/*
+> > > + * Update average irq interval with the Exponential Weighted Moving
+> > > + * Average(EWMA)
+> > > + */
+> > > +static void irq_update_interval(void)
+> > > +{
+> > > +#define IRQ_INTERVAL_EWMA_WEIGHT	128
+> > > +#define IRQ_INTERVAL_EWMA_PREV_FACTOR	127
+> > > +#define IRQ_INTERVAL_EWMA_CURR_FACTOR	(IRQ_INTERVAL_EWMA_WEIGHT - \
+> > > +		IRQ_INTERVAL_EWMA_PREV_FACTOR)
+> > 
+> > Please do not stick defines into a function body. That's horrible.
+> > 
+> > > +
+> > > +	int cpu = raw_smp_processor_id();
+> > > +	struct irq_interval *inter = per_cpu_ptr(&avg_irq_interval, cpu);
+> > > +	u64 delta = sched_clock_cpu(cpu) - inter->last_irq_end;
+> > 
+> > Why are you doing that raw_smp_processor_id() dance? The call site has
+> > interrupts and preemption disabled.
+> > 
+> > Also how is that supposed to work when sched_clock is jiffies based?
+> > 
+> > > +	inter->avg = (inter->avg * IRQ_INTERVAL_EWMA_PREV_FACTOR +
+> > > +		delta * IRQ_INTERVAL_EWMA_CURR_FACTOR) /
+> > > +		IRQ_INTERVAL_EWMA_WEIGHT;
+> > 
+> > We definitely are not going to have a 64bit multiplication and division on
+> > every interrupt. Asided of that this breaks 32bit builds all over the place.
 > 
-> Next round. Changes:
+> That said, we already have infrastructure for something like this in the
+> core interrupt code which is optimized to be lightweight in the fast path.
 > 
-> - I kept the two lockdep annotations patches since when I rebased this
->   before retesting linux-next didn't yet have them. Otherwise unchanged
->   except for a trivial conflict.
-> 
-> - Ack from Peter Z. on the kernel.h patch.
-> 
-> - Added annotations for non_block to invalidate_range_end. I can't test
->   that readily since i915 doesn't use it.
-> 
-> - Added might_sleep annotations to also make sure the mm side keeps up
->   it's side of the contract here around what's allowed and what's not.
-> 
-> Comments, feedback, review as usual very much appreciated.
-> 
-> 
-> Daniel Vetter (5):
->   mm, notifier: Add a lockdep map for invalidate_range_start/end
->   mm, notifier: Prime lockdep
->   mm, notifier: annotate with might_sleep()
+> kernel/irq/timings.c
 
-I took these ones to hmm.git as they have a small conflict with hmm's
-changes.
+irq/timings.c is much more complicated, especially it applies EWMA to
+compute each irq's average interval. However, we only need it for
+do_IRQ() to cover all interrupt & softirq handler.
 
->   kernel.h: Add non_block_start/end()
->   mm, notifier: Catch sleeping/blocking for !blockable
+Also CONFIG_IRQ_TIMINGS is usually disabled on distributions.
 
-Lets see about the checkpatch warning and review on these two please
-
-Thanks,
-Jason
+thanks,
+Ming
